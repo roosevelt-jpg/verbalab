@@ -95,7 +95,7 @@ export function BaobabClient({ brandName }: { brandName: string }) {
               <Link
                 key={c.href}
                 href={c.href}
-                className={c.primary ? 'baobab-cta__primary' : 'baobab-cta__ghost'}
+                className={'primary' in c && c.primary ? 'baobab-cta__primary' : 'baobab-cta__ghost'}
               >
                 {c.label}
               </Link>
