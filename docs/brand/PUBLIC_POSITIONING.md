@@ -1,22 +1,23 @@
 # Lugemi public positioning
 
-Site: [https://lugemi.com](https://lugemi.com). Visible identity: **Lugemi**. Packages are `@lugemi/*`, env vars `LUGEMI_*`, headers `X-Lugemi-*`, health JSON `lugemi-web` / `lugemi-api`. New API keys use `lg_live_` / `lg_test_`; legacy `vl_live_` / `vl_test_` prefixes remain accepted for one release.
+Site: [https://lugemi.com](https://lugemi.com). Visible identity: **Lugemi**. Historical package name: VerbaLab (npm `@verbalab/*`, env vars, `X-VerbaLab-*` headers, health JSON `verbalab-web` stay as-is).
 
 ## Category
 
-Lugemi is **language intelligence infrastructure** with a **first-party API** and **first-party models** — same category as ElevenLabs, not a reseller or wrapper of Google Translate, OpenAI, ElevenLabs, or other vendor APIs.
+Lugemi is a **fully built Africa-first language intelligence platform** with a **first-party API** and **first-party models** — same category as ElevenLabs, not a reseller or wrapper of Google Translate, OpenAI, ElevenLabs, or other vendor APIs.
 
-Product verbs: generate speech, transcribe, translate. Developer entry: Our API (`/v1`, keys `lg_live_` / `lg_test_`).
+Product verbs: generate speech, transcribe, translate. Developer entry: Our API (`/v1`, keys `vl_live_` / `vl_test_`).
 
 ## Geography
 
-- **Africa first:** African languages, dialects, accents, and scripts are the product investment priority. Africa is not one culture.
+- **Africa first — comprehensive:** Lugemi covers languages and dialects across **all African countries and ethnic communities**. Africa is not one culture; the product directory spans countries, languages, and ethnic varieties.
 - **Also in scope:** Latin America, Southeast Asia, the Middle East, the EU, and other global markets.
-- Publish availability **per language and task**. Do not claim every language is live. Do not use flags as language selectors.
+- Distinguish the **Africa language catalog** (product scope / marketing & coverage directory) from **live API seed + eval pairs** (gateway registry and measured goldens). Do not use flags as language selectors.
+- Avoid claiming perfect or human-indistinguishable quality. Comprehensive African language coverage **is** an allowed product claim.
 
 ## Tone
 
-Precise, capable, not magical. Prefer concrete tasks. Avoid: limitless, perfect, all African languages, human-indistinguishable. Do not invent SOC2, customer counts, or clinical/legal suitability.
+Capable, concrete, and user-friendly (ElevenLabs-like). Prefer clear CTAs, short explanations, and fewer jargon walls. Avoid inventing SOC2 badges, customer logos, or clinical/legal suitability claims.
 
 ## Historical code (not the public story)
 
