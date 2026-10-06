@@ -136,7 +136,11 @@ function pickBrowserVoice(lang: string): SpeechSynthesisVoice | null {
   return voices.find((v) => v.lang.toLowerCase().startsWith('en')) ?? voices[0] ?? null;
 }
 
-async function playViaServer(text: string, profile: DemoVoiceProfile): Promise<boolean> {
+async function playViaServer(
+  text: string,
+  profile: DemoVoiceProfile,
+  onStarted?: () => void,
+): Promise<boolean> {
   try {
     const res = await fetch('/api/demo/speech', {
       method: 'POST',
@@ -170,7 +174,10 @@ async function playViaServer(text: string, profile: DemoVoiceProfile): Promise<b
         URL.revokeObjectURL(url);
         reject(new Error('Audio playback failed'));
       };
-      void audio.play().catch(reject);
+      void audio
+        .play()
+        .then(() => onStarted?.())
+        .catch(reject);
     });
     return true;
   } catch {
@@ -178,7 +185,11 @@ async function playViaServer(text: string, profile: DemoVoiceProfile): Promise<b
   }
 }
 
-function playViaBrowser(text: string, profile: DemoVoiceProfile): Promise<void> {
+function playViaBrowser(
+  text: string,
+  profile: DemoVoiceProfile,
+  onStarted?: () => void,
+): Promise<void> {
   return new Promise((resolve, reject) => {
     if (typeof window === 'undefined' || !window.speechSynthesis) {
       reject(new Error('Speech synthesis unavailable in this browser'));
@@ -201,7 +212,10 @@ function playViaBrowser(text: string, profile: DemoVoiceProfile): Promise<void> 
       reject(new Error('Speech synthesis failed'));
     };
     // Chrome often needs voices loaded asynchronously
-    const speak = () => window.speechSynthesis.speak(utter);
+    const speak = () => {
+      window.speechSynthesis.speak(utter);
+      onStarted?.();
+    };
     if (window.speechSynthesis.getVoices().length === 0) {
       window.speechSynthesis.onvoiceschanged = () => {
         const v = pickBrowserVoice(profile.lang);
@@ -221,6 +235,7 @@ export async function playDemoSpeech(input: {
   voiceId?: string;
   lang?: string;
   label?: string;
+  onStarted?: () => void;
 }): Promise<{ mode: 'server' | 'browser'; profile: DemoVoiceProfile }> {
   const base =
     (input.voiceId && DEMO_VOICE_PROFILES[input.voiceId]) ||
@@ -233,9 +248,9 @@ export async function playDemoSpeech(input: {
     label: input.label ?? base.label,
   };
 
-  const usedServer = await playViaServer(input.text, profile);
+  const usedServer = await playViaServer(input.text, profile, input.onStarted);
   if (usedServer) return { mode: 'server', profile };
 
-  await playViaBrowser(input.text, profile);
+  await playViaBrowser(input.text, profile, input.onStarted);
   return { mode: 'browser', profile };
 }

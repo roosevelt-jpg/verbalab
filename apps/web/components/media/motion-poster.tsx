@@ -43,8 +43,7 @@ export function MotionPoster({
         <span className="lg-ana__play-disc" aria-hidden="true">
           {active ? (
             <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">
-              <rect x="4" y="3" width="3.5" height="12" rx="1" />
-              <rect x="10.5" y="3" width="3.5" height="12" rx="1" />
+              <rect x="4" y="4" width="10" height="10" rx="1.5" />
             </svg>
           ) : (
             <svg width="18" height="18" viewBox="0 0 18 18" fill="currentColor">

@@ -5,6 +5,7 @@ import { useAuth } from '@clerk/nextjs';
 import { useCallback, useEffect, useState, type CSSProperties } from 'react';
 import { API_URL, apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { AudioPreviewBar } from '@/components/media/audio-preview-bar';
 
 type Profile = { id: string; name: string; category: string; description: string };
 type Engine = {
@@ -119,7 +120,7 @@ export function VoiceEnhancementClient() {
           {busy ? 'Enhancing…' : 'Enhance'}
         </button>
         {meta ? <p style={{ color: 'var(--muted)', fontSize: '0.9rem' }}>{meta}</p> : null}
-        {audioUrl ? <audio controls src={audioUrl} style={{ width: '100%' }} /> : null}
+        {audioUrl ? <AudioPreviewBar src={audioUrl} label="Play enhanced audio" /> : null}
       </section>
 
       {profiles.length ? (

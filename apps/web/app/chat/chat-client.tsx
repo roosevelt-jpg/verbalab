@@ -13,6 +13,7 @@ import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
 import { API_URL, apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
 import { playDemoSpeech, stopDemoSpeech } from '@/lib/demo-speech';
 import {
   getSpeechRecognitionCtor,
@@ -303,12 +304,43 @@ export function ChatClient() {
     }
   }
 
-  async function playTranslation(text: string, lang: string) {
+  const [playingMsgId, setPlayingMsgId] = useState<string | null>(null);
+  const [loadingMsgId, setLoadingMsgId] = useState<string | null>(null);
+  const [playbackError, setPlaybackError] = useState<string | null>(null);
+  const playbackGen = useRef(0);
+
+  async function playTranslation(text: string, lang: string, msgId = 'auto') {
+    const token = ++playbackGen.current;
+    stopDemoSpeech();
+    setPlaybackError(null);
+    setPlayingMsgId(msgId);
+    setLoadingMsgId(msgId);
     try {
-      await playDemoSpeech({ text, lang, voiceId: lang.startsWith('sw') ? 'amara' : 'abe' });
-    } catch {
-      /* playback optional */
+      await playDemoSpeech({
+        text,
+        lang,
+        voiceId: lang.startsWith('sw') ? 'amara' : 'abe',
+        onStarted: () => {
+          if (token !== playbackGen.current) return;
+          setLoadingMsgId(null);
+        },
+      });
+    } catch (err) {
+      if (token !== playbackGen.current) return;
+      setPlaybackError(err instanceof Error ? err.message : 'Playback failed');
+    } finally {
+      if (token === playbackGen.current) {
+        setPlayingMsgId(null);
+        setLoadingMsgId(null);
+      }
     }
+  }
+
+  function stopTranslationPlayback() {
+    playbackGen.current += 1;
+    stopDemoSpeech();
+    setPlayingMsgId(null);
+    setLoadingMsgId(null);
   }
 
   async function sendChat(text: string) {
@@ -948,15 +980,33 @@ export function ChatClient() {
                   </div>
                   <div className="lg-chat-bubble-body">{msg.content}</div>
                   {msg.role === 'assistant' && msg.kind === 'live' ? (
-                    <button
-                      type="button"
-                      className="lg-chat-replay"
-                      onClick={() =>
-                        void playTranslation(msg.content, recognitionLangFor(msg.targetLang ?? 'en'))
-                      }
-                    >
-                      Play translation
-                    </button>
+                    <div className="lg-chat-replay-row">
+                      <DemoPlayStopButton
+                        active={playingMsgId === msg.id}
+                        loading={loadingMsgId === msg.id}
+                        variant="chip"
+                        label="Play translation"
+                        stopLabel="Stop"
+                        ariaLabel={
+                          playingMsgId === msg.id || loadingMsgId === msg.id
+                            ? 'Stop translation'
+                            : 'Play translation'
+                        }
+                        onStop={stopTranslationPlayback}
+                        onPlay={() =>
+                          void playTranslation(
+                            msg.content,
+                            recognitionLangFor(msg.targetLang ?? 'en'),
+                            msg.id,
+                          )
+                        }
+                      />
+                      {playbackError && playingMsgId === msg.id ? (
+                        <span className="lg-chat-replay-error" role="alert">
+                          {playbackError}
+                        </span>
+                      ) : null}
+                    </div>
                   ) : null}
                 </article>
               ))

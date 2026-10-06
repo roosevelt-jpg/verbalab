@@ -5,6 +5,7 @@ import { useAuth } from '@clerk/nextjs';
 import { useCallback, useEffect, useState, type CSSProperties } from 'react';
 import { API_URL, apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { AudioPreviewBar } from '@/components/media/audio-preview-bar';
 
 type Capability = { id: string; name: string; status: string; notes: string };
 type Engine = {
@@ -260,7 +261,7 @@ export function VoiceStudioClient() {
           </button>
         </div>
         {compiled ? <p style={{ color: 'var(--muted)', fontSize: '0.9rem' }}>{compiled}</p> : null}
-        {audioUrl ? <audio controls src={audioUrl} style={{ width: '100%' }} /> : null}
+        {audioUrl ? <AudioPreviewBar src={audioUrl} label="Play preview" /> : null}
       </section>
 
       <section style={{ marginBottom: '1.75rem', maxWidth: '44rem' }}>
@@ -300,7 +301,7 @@ export function VoiceStudioClient() {
           {compareUrls.map((c) => (
             <div key={c.voice}>
               <div style={{ fontSize: '0.85rem', marginBottom: '0.25rem' }}>{c.voice}</div>
-              <audio controls src={c.url} style={{ width: '100%' }} />
+              <AudioPreviewBar src={c.url} label={`Play ${c.voice}`} />
             </div>
           ))}
         </div>

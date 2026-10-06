@@ -5,6 +5,7 @@ import { useAuth } from '@clerk/nextjs';
 import { useCallback, useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { AudioPreviewBar } from '@/components/media/audio-preview-bar';
 import {
   NativeAccentVoicePicker,
   type VoicePickerValue,
@@ -240,11 +241,12 @@ export function VoiceClient() {
               Providers: chat={result.providers.chat}, tts={result.providers.tts} · voice={picker.voiceId}
             </p>
             {result.audioBase64 ? (
-              <audio
-                controls
-                src={`data:${result.mimeType};base64,${result.audioBase64}`}
-                style={{ marginTop: '0.75rem', width: '100%' }}
-              />
+              <div style={{ marginTop: '0.75rem' }}>
+                <AudioPreviewBar
+                  src={`data:${result.mimeType};base64,${result.audioBase64}`}
+                  label="Play agent reply"
+                />
+              </div>
             ) : null}
           </div>
         ) : null}

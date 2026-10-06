@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
+import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
 import { useDemoPlayer } from './use-demo-player';
 
 type PairMeta = {
@@ -40,7 +41,9 @@ export function TranslatePlayDemo({ compact = false }: { compact?: boolean }) {
   const [chatLog, setChatLog] = useState<Array<{ role: 'user' | 'agent'; text: string; lang: string; voice: string }>>(
     [],
   );
-  const { play, stop, playingId, status, error } = useDemoPlayer();
+  const { play, stop, playingId, loadingId, status, error } = useDemoPlayer();
+  const bothActive = playingId === 'tr-source' || playingId === 'tr-target';
+  const bothLoading = loadingId === 'tr-source' || loadingId === 'tr-target';
 
   useEffect(() => {
     void fetch('/api/demo/translate')
@@ -139,14 +142,16 @@ export function TranslatePlayDemo({ compact = false }: { compact?: boolean }) {
         <button type="button" className="vl-btn vl-btn-primary" disabled={busy} onClick={() => void runTranslate()}>
           {busy ? 'Translating…' : 'Translate'}
         </button>
-        <button
-          type="button"
-          className="vl-btn vl-btn-secondary"
+        <DemoPlayStopButton
+          active={bothActive}
+          loading={busy || bothLoading}
           disabled={busy}
-          onClick={() => void translateAndPlay()}
-        >
-          Translate &amp; play both
-        </button>
+          variant="secondary"
+          label="Translate & play both"
+          stopLabel="Stop"
+          onStop={stop}
+          onPlay={() => void translateAndPlay()}
+        />
       </div>
       {result ? (
         <div className="mkt-translate-result">
@@ -156,14 +161,14 @@ export function TranslatePlayDemo({ compact = false }: { compact?: boolean }) {
                 {result.sourceLabel}
               </p>
               <p className="mkt-translate-copy">{result.text}</p>
-              <button
-                type="button"
-                className="mkt-play-chip"
-                onClick={() => {
-                  if (playingId === 'tr-source') {
-                    stop();
-                    return;
-                  }
+              <DemoPlayStopButton
+                active={playingId === 'tr-source'}
+                loading={loadingId === 'tr-source'}
+                variant="chip"
+                label="Play source"
+                stopLabel="Stop"
+                onStop={stop}
+                onPlay={() => {
                   void play({
                     id: 'tr-source',
                     text: result.text,
@@ -171,23 +176,21 @@ export function TranslatePlayDemo({ compact = false }: { compact?: boolean }) {
                     lang: result.sourceLang,
                   });
                 }}
-              >
-                {playingId === 'tr-source' ? 'Stop' : 'Play source'}
-              </button>
+              />
             </div>
             <div>
               <p className="mkt-tts-label">
                 {result.targetLabel}
               </p>
               <p className="mkt-translate-copy">{result.translated}</p>
-              <button
-                type="button"
-                className="mkt-play-chip"
-                onClick={() => {
-                  if (playingId === 'tr-target') {
-                    stop();
-                    return;
-                  }
+              <DemoPlayStopButton
+                active={playingId === 'tr-target'}
+                loading={loadingId === 'tr-target'}
+                variant="chip"
+                label="Play translation"
+                stopLabel="Stop"
+                onStop={stop}
+                onPlay={() => {
                   void play({
                     id: 'tr-target',
                     text: result.translated,
@@ -195,9 +198,7 @@ export function TranslatePlayDemo({ compact = false }: { compact?: boolean }) {
                     lang: result.targetLang,
                   });
                 }}
-              >
-                {playingId === 'tr-target' ? 'Stop' : 'Play translation'}
-              </button>
+              />
             </div>
           </div>
           {result.note ? <p className="mkt-tts-hint">{result.note}</p> : null}
@@ -215,20 +216,23 @@ export function TranslatePlayDemo({ compact = false }: { compact?: boolean }) {
               <div className={turn.role === 'user' ? 'mkt-chat-bubble mkt-chat-user' : 'mkt-chat-bubble mkt-chat-agent'}>
                 {turn.text}
               </div>
-              <button
-                type="button"
-                className="mkt-play-chip"
-                onClick={() => {
+              <DemoPlayStopButton
+                active={playingId === `tr-chat-${i}`}
+                loading={loadingId === `tr-chat-${i}`}
+                variant="icon"
+                label="Play"
+                stopLabel="Stop"
+                ariaLabel={
+                  playingId === `tr-chat-${i}` || loadingId === `tr-chat-${i}`
+                    ? 'Stop turn'
+                    : 'Play turn'
+                }
+                onStop={stop}
+                onPlay={() => {
                   const id = `tr-chat-${i}`;
-                  if (playingId === id) {
-                    stop();
-                    return;
-                  }
                   void play({ id, text: turn.text, voiceId: turn.voice, lang: turn.lang });
                 }}
-              >
-                {playingId === `tr-chat-${i}` ? 'Stop' : 'Play'}
-              </button>
+              />
             </div>
           ))}
         </div>

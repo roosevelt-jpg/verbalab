@@ -1,5 +1,6 @@
 'use client';
 
+import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
 import { useDemoPlayer } from './use-demo-player';
 
 export function VoiceChipRow({
@@ -7,7 +8,7 @@ export function VoiceChipRow({
 }: {
   voices: Array<{ id: string; label: string; sample?: string; lang?: string }>;
 }) {
-  const { play, stop, playingId } = useDemoPlayer();
+  const { play, stop, playingId, loadingId, status, error } = useDemoPlayer();
 
   return (
     <div className="mkt-voice-play-row">
@@ -15,31 +16,36 @@ export function VoiceChipRow({
         const sample =
           v.sample ??
           `Hello from ${v.label}. This is a Lugemi voice preview for speaking agents.`;
-        const active = playingId === `chip-${v.id}`;
+        const id = `chip-${v.id}`;
+        const active = playingId === id;
+        const loading = loadingId === id;
         return (
-          <button
+          <DemoPlayStopButton
             key={v.id}
-            type="button"
-            className={active ? 'mkt-voice-chip is-active' : 'mkt-voice-chip'}
-            aria-pressed={active}
-            onClick={() => {
-              if (active) {
-                stop();
-                return;
-              }
+            active={active}
+            loading={loading}
+            variant="chip"
+            label={v.label}
+            stopLabel={v.label}
+            ariaLabel={active || loading ? `Stop ${v.label}` : `Play ${v.label}`}
+            onStop={stop}
+            onPlay={() => {
               void play({
-                id: `chip-${v.id}`,
+                id,
                 text: sample,
                 voiceId: v.id,
                 lang: v.lang,
                 label: v.label,
               });
             }}
-          >
-            {active ? `▶ ${v.label}` : `▶ ${v.label}`}
-          </button>
+          />
         );
       })}
+      {error || status ? (
+        <p className="mkt-tts-hint" role="status" aria-live="polite" style={{ flexBasis: '100%' }}>
+          {error ?? status}
+        </p>
+      ) : null}
     </div>
   );
 }

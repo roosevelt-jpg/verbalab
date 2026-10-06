@@ -2,13 +2,19 @@
 
 import { useState } from 'react';
 import type { CmsHeroDemo } from '@/data/cms-types';
+import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
 import { useDemoPlayer } from './use-demo-player';
 
 export function HeroTtsCard({ demo }: { demo: CmsHeroDemo }) {
   const [text, setText] = useState(demo.defaultText);
   const [voice, setVoice] = useState(demo.voices[0]?.id ?? '');
-  const { play, stop, playingId, status, error } = useDemoPlayer();
+  const { play, stop, playingId, loadingId, status, error } = useDemoPlayer();
   const selected = demo.voices.find((item) => item.id === voice);
+  const mainActive = playingId === 'hero-tts';
+  const mainLoading = loadingId === 'hero-tts';
+  const previewId = `hero-voice-${voice}`;
+  const previewActive = playingId === previewId;
+  const previewLoading = loadingId === previewId;
 
   return (
     <div className="mkt-tts-card">
@@ -46,14 +52,14 @@ export function HeroTtsCard({ demo }: { demo: CmsHeroDemo }) {
         </div>
       </fieldset>
       <div className="mkt-tts-actions">
-        <button
-          type="button"
-          className="vl-btn vl-btn-primary"
-          onClick={() => {
-            if (playingId === 'hero-tts') {
-              stop();
-              return;
-            }
+        <DemoPlayStopButton
+          active={mainActive}
+          loading={mainLoading}
+          variant="primary"
+          label="Play"
+          stopLabel="Stop"
+          onStop={stop}
+          onPlay={() => {
             void play({
               id: 'hero-tts',
               text,
@@ -61,24 +67,24 @@ export function HeroTtsCard({ demo }: { demo: CmsHeroDemo }) {
               label: selected?.label,
             });
           }}
-        >
-          {playingId === 'hero-tts' ? 'Stop' : 'Play'}
-        </button>
-        <button
-          type="button"
-          className="vl-btn vl-btn-secondary"
+        />
+        <DemoPlayStopButton
+          active={previewActive}
+          loading={previewLoading}
           disabled={!selected}
-          onClick={() => {
+          variant="secondary"
+          label="Preview voice"
+          stopLabel="Stop"
+          onStop={stop}
+          onPlay={() => {
             void play({
-              id: `hero-voice-${voice}`,
+              id: previewId,
               text: text || demo.defaultText,
               voiceId: voice,
               label: selected?.label,
             });
           }}
-        >
-          Preview voice
-        </button>
+        />
         <p className="mkt-tts-hint" role="status" aria-live="polite">
           {error ?? status ?? 'Press Play to hear this script in the selected voice.'}
         </p>

@@ -6,6 +6,7 @@ import { FormEvent, useEffect, useMemo, useRef, useState, type CSSProperties } f
 import { useAuth } from '@clerk/nextjs';
 import { API_URL, apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { AudioPreviewBar } from '@/components/media/audio-preview-bar';
 import {
   NativeAccentVoicePicker,
   type VoicePickerValue,
@@ -749,7 +750,7 @@ export function AudioClient() {
           ) : null}
           {isolatedUrl ? (
             <div>
-              <audio controls src={isolatedUrl} style={{ width: '100%' }} />
+              <AudioPreviewBar src={isolatedUrl} label="Play isolated audio" />
               <a
                 href={isolatedUrl}
                 download={isolatedFile?.name ?? 'lugemi-extracted.wav'}
@@ -915,7 +916,7 @@ export function AudioClient() {
                     <div style={{ fontSize: '0.8rem', color: 'var(--muted)', marginBottom: '0.25rem' }}>
                       {sampleFiles[i]?.name}
                     </div>
-                    <audio controls src={url} style={{ width: '100%' }} />
+                    <AudioPreviewBar src={url} label={`Play sample ${i + 1}`} />
                   </div>
                 ))}
               </div>
@@ -1028,7 +1029,7 @@ export function AudioClient() {
               Watermark required on this clone speech (`X-Lugemi-Watermark`).
             </p>
           ) : null}
-          <audio controls src={audioUrl} style={{ width: '100%' }} />
+          <AudioPreviewBar src={audioUrl} label="Play speech" />
           <a
             href={audioUrl}
             download="lugemi-speech.mp3"

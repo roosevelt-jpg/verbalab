@@ -5,6 +5,7 @@ import { useAuth } from '@clerk/nextjs';
 import { useCallback, useEffect, useState } from 'react';
 import { API_URL, apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { AudioPreviewBar } from '@/components/media/audio-preview-bar';
 
 type Profile = {
   id: string;
@@ -125,7 +126,7 @@ export function EmotionVoiceClient() {
         {mode ? (
           <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.85rem' }}>Mode: {mode}</p>
         ) : null}
-        {audioUrl ? <audio controls src={audioUrl} style={{ width: '100%' }} /> : null}
+        {audioUrl ? <AudioPreviewBar src={audioUrl} label="Play emotion preview" /> : null}
       </section>
 
       {engine ? (

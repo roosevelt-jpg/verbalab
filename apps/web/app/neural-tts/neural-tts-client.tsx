@@ -5,6 +5,7 @@ import { useAuth } from '@clerk/nextjs';
 import { useCallback, useEffect, useState } from 'react';
 import { apiFetch, API_URL } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { AudioPreviewBar } from '@/components/media/audio-preview-bar';
 
 type Capability = {
   id: string;
@@ -200,7 +201,7 @@ export function NeuralTtsClient() {
         {streamNote ? (
           <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.85rem' }}>{streamNote}</p>
         ) : null}
-        {audioUrl ? <audio controls src={audioUrl} style={{ width: '100%' }} /> : null}
+        {audioUrl ? <AudioPreviewBar src={audioUrl} label="Play synthesis" /> : null}
       </section>
 
       {engine ? (

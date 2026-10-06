@@ -6,6 +6,8 @@ import { useSearchParams } from 'next/navigation';
 import { API_URL, apiFetch } from '@/lib/api';
 import { BrandMark } from '@/components/brand-mark';
 import { CodePanel } from '@/components/code-panel';
+import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
+import { useDemoPlayer } from '@/components/marketing/use-demo-player';
 import { LocaleSelect } from '@/components/language-locale-select';
 import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 import { SITE_CONTENT } from '@/data/site-content';
@@ -29,8 +31,11 @@ export function PlaygroundClient() {
   );
   const [text, setText] = useState(SITE_CONTENT.playgroundDefaults.text);
   const [response, setResponse] = useState<string>('');
+  const [playText, setPlayText] = useState<string | null>(null);
+  const [playLang, setPlayLang] = useState('en');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const { play, stop, playingId, loadingId, status, error: playError } = useDemoPlayer();
 
   const curl =
     mode === 'languages'
@@ -50,6 +55,7 @@ export function PlaygroundClient() {
     setError(null);
     setLoading(true);
     setResponse('');
+    setPlayText(null);
     try {
       if (mode === 'languages') {
         const res = await apiFetch<unknown>('/v1/languages');
@@ -68,12 +74,20 @@ export function PlaygroundClient() {
         setResponse(JSON.stringify(res, null, 2));
         return;
       }
-      const res = await apiFetch<unknown>('/v1/translate', {
-        method: 'POST',
-        token: apiKey,
-        body: JSON.stringify({ text, source, target }),
-      });
+      const res = await apiFetch<{ text?: string; translatedText?: string; target?: string }>(
+        '/v1/translate',
+        {
+          method: 'POST',
+          token: apiKey,
+          body: JSON.stringify({ text, source, target }),
+        },
+      );
       setResponse(JSON.stringify(res, null, 2));
+      const spoken = res.translatedText ?? res.text;
+      if (spoken) {
+        setPlayText(spoken);
+        setPlayLang(res.target ?? target);
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Request failed');
     } finally {
@@ -193,6 +207,45 @@ export function PlaygroundClient() {
       </form>
 
       {error ? <p style={{ color: 'var(--bad)' }}>{error}</p> : null}
+      {playError ? (
+        <p style={{ color: 'var(--bad)' }} role="alert">
+          {playError}
+        </p>
+      ) : null}
+
+      {playText ? (
+        <div
+          className="vl-panel"
+          style={{
+            marginTop: '1rem',
+            padding: '1rem 1.15rem',
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '0.75rem',
+            alignItems: 'center',
+          }}
+        >
+          <DemoPlayStopButton
+            active={playingId === 'playground-result'}
+            loading={loadingId === 'playground-result'}
+            variant="primary"
+            label="Play translation"
+            stopLabel="Stop"
+            onStop={stop}
+            onPlay={() => {
+              void play({
+                id: 'playground-result',
+                text: playText,
+                lang: playLang,
+                voiceId: playLang.startsWith('sw') ? 'amara' : 'abe',
+              });
+            }}
+          />
+          <p className="mkt-tts-hint" role="status" aria-live="polite" style={{ margin: 0 }}>
+            {status ?? 'Hear the translated result with demo TTS.'}
+          </p>
+        </div>
+      ) : null}
 
       <div style={{ display: 'grid', gap: '1rem', marginTop: '1.25rem' }}>
         <CodePanel code={curl} label="cURL" />

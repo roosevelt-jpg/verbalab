@@ -1,5 +1,6 @@
 'use client';
 
+import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
 import { useDemoPlayer } from './use-demo-player';
 
 export function StudioSampleDemo({
@@ -9,7 +10,7 @@ export function StudioSampleDemo({
   sample: string;
   chips: string[];
 }) {
-  const { play, stop, playingId, status, error } = useDemoPlayer();
+  const { play, stop, playingId, loadingId, status, error } = useDemoPlayer();
   const chipVoice: Record<string, { voiceId: string; lang: string }> = {
     English: { voiceId: 'abe', lang: 'en-US' },
     Swahili: { voiceId: 'amara', lang: 'sw' },
@@ -27,16 +28,19 @@ export function StudioSampleDemo({
           const meta = chipVoice[chip] ?? { voiceId: 'amara', lang: 'en-US' };
           const id = `studio-${chip}`;
           const active = playingId === id;
+          const loading = loadingId === id;
           return (
-            <button
+            <DemoPlayStopButton
               key={chip}
-              type="button"
+              active={active}
+              loading={loading}
+              variant="chip"
               className={active || i === 1 ? 'is-on' : undefined}
-              onClick={() => {
-                if (active) {
-                  stop();
-                  return;
-                }
+              label={chip}
+              stopLabel={chip}
+              ariaLabel={active || loading ? `Stop ${chip}` : `Play ${chip}`}
+              onStop={stop}
+              onPlay={() => {
                 void play({
                   id,
                   text: sample,
@@ -45,21 +49,19 @@ export function StudioSampleDemo({
                   label: chip,
                 });
               }}
-            >
-              {active ? `▶ ${chip}` : chip}
-            </button>
+            />
           );
         })}
       </div>
       <div className="mkt-tts-actions" style={{ marginTop: 12 }}>
-        <button
-          type="button"
-          className="vl-btn vl-btn-primary"
-          onClick={() => {
-            if (playingId === 'studio-main') {
-              stop();
-              return;
-            }
+        <DemoPlayStopButton
+          active={playingId === 'studio-main'}
+          loading={loadingId === 'studio-main'}
+          variant="primary"
+          label="Play sample"
+          stopLabel="Stop"
+          onStop={stop}
+          onPlay={() => {
             void play({
               id: 'studio-main',
               text: sample,
@@ -67,9 +69,7 @@ export function StudioSampleDemo({
               lang: 'sw',
             });
           }}
-        >
-          {playingId === 'studio-main' ? 'Stop' : 'Play sample'}
-        </button>
+        />
         <p className="mkt-tts-hint" role="status" aria-live="polite">
           {error ?? status ?? 'Tap a language chip or Play sample to hear the studio draft.'}
         </p>

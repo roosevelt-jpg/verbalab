@@ -1,10 +1,12 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
 import { playDemoSpeech, stopDemoSpeech } from '@/lib/demo-speech';
 
 export function useDemoPlayer() {
   const [playingId, setPlayingId] = useState<string | null>(null);
+  const [loadingId, setLoadingId] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const gen = useRef(0);
@@ -23,13 +25,19 @@ export function useDemoPlayer() {
       stopDemoSpeech();
       setError(null);
       setPlayingId(input.id);
-      setStatus('Playing…');
+      setLoadingId(input.id);
+      setStatus('Loading…');
       try {
         const result = await playDemoSpeech({
           text: input.text,
           voiceId: input.voiceId,
           lang: input.lang,
           label: input.label,
+          onStarted: () => {
+            if (token !== gen.current) return;
+            setLoadingId(null);
+            setStatus('Playing…');
+          },
         });
         if (token !== gen.current) return;
         setStatus(
@@ -42,7 +50,10 @@ export function useDemoPlayer() {
         setError(err instanceof Error ? err.message : 'Playback failed');
         setStatus(null);
       } finally {
-        if (token === gen.current) setPlayingId(null);
+        if (token === gen.current) {
+          setPlayingId(null);
+          setLoadingId(null);
+        }
       }
     },
     [],
@@ -52,10 +63,20 @@ export function useDemoPlayer() {
     gen.current += 1;
     stopDemoSpeech();
     setPlayingId(null);
+    setLoadingId(null);
     setStatus('Stopped');
   }, []);
 
-  return { play, stop, playingId, status, error, isPlaying: playingId !== null };
+  return {
+    play,
+    stop,
+    playingId,
+    loadingId,
+    status,
+    error,
+    isPlaying: playingId !== null,
+    isLoading: loadingId !== null,
+  };
 }
 
 export function VoicePlayButton({
@@ -64,9 +85,9 @@ export function VoicePlayButton({
   lang,
   label,
   id,
-  className = 'vl-btn vl-btn-primary',
+  className,
   children,
-  size = 'md',
+  variant = 'primary',
 }: {
   text: string;
   voiceId?: string;
@@ -75,27 +96,27 @@ export function VoicePlayButton({
   id?: string;
   className?: string;
   children?: React.ReactNode;
-  size?: 'sm' | 'md';
+  variant?: 'icon' | 'chip' | 'primary' | 'secondary';
 }) {
-  const { play, stop, playingId, isPlaying } = useDemoPlayer();
+  const { play, stop, playingId, loadingId } = useDemoPlayer();
   const btnId = id ?? `play-${voiceId ?? 'default'}-${text.slice(0, 12)}`;
   const active = playingId === btnId;
+  const loading = loadingId === btnId;
+  const labelText = typeof children === 'string' ? children : 'Play';
 
   return (
-    <button
-      type="button"
+    <DemoPlayStopButton
+      active={active}
+      loading={loading}
       className={className}
-      style={size === 'sm' ? { padding: '0.35rem 0.75rem', fontSize: '0.85rem' } : undefined}
-      aria-pressed={active}
-      onClick={() => {
-        if (active || (isPlaying && playingId === btnId)) {
-          stop();
-          return;
-        }
+      variant={variant}
+      label={labelText}
+      stopLabel="Stop"
+      ariaLabel={active || loading ? 'Stop playback' : `Play ${label ?? labelText}`}
+      onStop={stop}
+      onPlay={() => {
         void play({ id: btnId, text, voiceId, lang, label });
       }}
-    >
-      {active ? 'Stop' : (children ?? 'Play')}
-    </button>
+    />
   );
 }

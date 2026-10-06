@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { API_URL, apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { AudioPreviewBar } from '@/components/media/audio-preview-bar';
 
 type Engine = {
   product: string;
@@ -167,7 +168,7 @@ export function AudioIntelligenceClient() {
             <p style={{ margin: '0 0 0.65rem', color: 'var(--muted)', fontSize: '0.85rem' }}>
               Energy VAD isolate + multi-band stems. Use as a clone sample in Voice Studio.
             </p>
-            <audio controls src={isolatedUrl} style={{ width: '100%' }} />
+            <AudioPreviewBar src={isolatedUrl} label="Play isolated audio" />
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.75rem' }}>
               <a
                 href={isolatedUrl}

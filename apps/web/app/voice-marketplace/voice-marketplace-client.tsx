@@ -5,6 +5,8 @@ import { useAuth } from '@clerk/nextjs';
 import { useCallback, useEffect, useState, type CSSProperties } from 'react';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
+import { useDemoPlayer } from '@/components/marketing/use-demo-player';
 
 type Listing = {
   id: string;
@@ -33,6 +35,7 @@ export function VoiceMarketplaceClient() {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const { play, stop, playingId, loadingId, status, error: playError } = useDemoPlayer();
 
   const load = useCallback(async () => {
     const token = await getToken();
@@ -137,7 +140,13 @@ export function VoiceMarketplaceClient() {
       </p>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
+      {playError ? <p style={{ color: '#b42318' }} role="alert">{playError}</p> : null}
       {message ? <p style={{ color: 'var(--muted)' }}>{message}</p> : null}
+      {status ? (
+        <p style={{ color: 'var(--muted)', fontSize: '0.85rem' }} role="status" aria-live="polite">
+          {status}
+        </p>
+      ) : null}
 
       <section style={{ display: 'grid', gap: '0.75rem', maxWidth: '40rem', marginBottom: '1.75rem' }}>
         <h2 style={h2}>Publish stock / own voice</h2>
@@ -179,7 +188,28 @@ export function VoiceMarketplaceClient() {
                 {l.ratingAverage != null ? ` · ★ ${l.ratingAverage} (${l.ratingCount})` : ''}
                 {l.publisherName ? ` · ${l.publisherName}` : ''}
               </div>
-              <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem', alignItems: 'center' }}>
+                <DemoPlayStopButton
+                  active={playingId === `mp-${l.id}`}
+                  loading={loadingId === `mp-${l.id}`}
+                  variant="chip"
+                  label="Play preview"
+                  stopLabel="Stop"
+                  ariaLabel={
+                    playingId === `mp-${l.id}` || loadingId === `mp-${l.id}`
+                      ? `Stop ${l.title}`
+                      : `Play preview of ${l.title}`
+                  }
+                  onStop={stop}
+                  onPlay={() => {
+                    void play({
+                      id: `mp-${l.id}`,
+                      text: `Hello from ${l.title}. This is a Lugemi marketplace voice preview.`,
+                      voiceId: l.sourceVoiceId,
+                      label: l.title,
+                    });
+                  }}
+                />
                 <button type="button" disabled={busy} onClick={() => void install(l.id)} style={secondary}>
                   License / install
                 </button>

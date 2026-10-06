@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useState, type CSSProperties } from 'react';
 import { API_URL, apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { AudioPreviewBar } from '@/components/media/audio-preview-bar';
 import { LocaleSelect } from '@/components/language-locale-select';
 import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
@@ -178,7 +179,7 @@ export function InterpretClient() {
             </div>
             <div style={{ marginTop: '0.35rem', whiteSpace: 'pre-wrap', lineHeight: 1.55 }}>{result.targetText}</div>
           </div>
-          {audioUrl ? <audio controls src={audioUrl} style={{ width: '100%' }} /> : null}
+          {audioUrl ? <AudioPreviewBar src={audioUrl} label="Play interpretation" /> : null}
         </div>
       ) : null}
     </AppShell>
