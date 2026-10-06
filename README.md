@@ -4,7 +4,7 @@ First-party **language intelligence infrastructure**. Site: [lugemi.com](https:/
 
 Lugemi is in the same category as ElevenLabs: **our API** and **our models** — generate speech, transcribe, and translate. We do not position the product as a wrapper around Google Translate, OpenAI, ElevenLabs, or other vendor APIs.
 
-**Africa first:** African languages, dialects, accents, and scripts are the product investment priority. We also support (and intend to expand in) **Latin America, Southeast Asia, the Middle East, the EU**, and other global markets. Coverage is published per language and task; we do not claim every language is live, treat Africa as one culture, or use flags as language selectors.
+**Africa first:** Lugemi is a fully built Africa-first language intelligence platform covering languages and dialects across **all African countries and ethnic communities**. We also support **Latin America, Southeast Asia, the Middle East, the EU**, and other global markets. The Africa language catalog documents product scope; live API seed and eval pairs publish gateway availability. Do not treat Africa as one culture or use flags as language selectors.
 
 Visible brand, packages, env vars, `X-Lugemi-*` headers, and health JSON (`lugemi-web` / `lugemi-api`) are **Lugemi**. Legacy API key prefixes `vl_live_` / `vl_test_` are still accepted for one release; new keys use `lg_live_` / `lg_test_`. See `docs/brand/LUGEMI_BRAND_GUIDELINES.md` and `docs/brand/PUBLIC_POSITIONING.md`.
 

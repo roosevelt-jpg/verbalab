@@ -27,12 +27,12 @@ type Overview = {
 };
 
 const QUICK_LINKS = [
-  { href: '/translate', label: 'Translate', primary: true },
-  { href: '/audio', label: 'Voice Studio', primary: false },
-  { href: '/playground', label: 'API playground', primary: false },
-  { href: '/docs', label: 'API docs', primary: false },
-  { href: '/keys', label: 'API keys', primary: false },
-  { href: '/developers', label: 'Developers', primary: false },
+  { href: '/translate', label: '1. Translate', primary: true },
+  { href: '/speech', label: '2. Speech', primary: true },
+  { href: '/keys', label: '3. API keys', primary: false },
+  { href: '/docs', label: '4. Docs', primary: false },
+  { href: '/playground', label: 'Playground', primary: false },
+  { href: '/coverage', label: 'Coverage', primary: false },
 ];
 
 export function DashboardClient() {
@@ -64,11 +64,11 @@ export function DashboardClient() {
           color: 'var(--brand-navy)',
         }}
       >
-        Dashboard
+        Welcome to Lugemi
       </h1>
-      <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '36rem', lineHeight: 1.6 }}>
-        Organization, workspace, residency, and plan at a glance. Product work happens in Translate, Voice Studio, and
-        the Lugemi API console.
+      <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '40rem', lineHeight: 1.6 }}>
+        Here is what to do next: translate text, generate speech, create an API key, or open the docs. Your organization,
+        workspace, and usage sit below when you need them.
       </p>
 
       {error ? <p style={{ color: '#b42318', marginBottom: '1rem' }}>{error}</p> : null}

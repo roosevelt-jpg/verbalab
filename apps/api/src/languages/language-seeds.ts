@@ -39,4 +39,17 @@ export const LANGUAGE_SEEDS: LanguageSeed[] = [
   { code: 'tn', nameEn: 'Tswana', nameNative: 'Setswana', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'st', nameEn: 'Southern Sotho', nameNative: 'Sesotho', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'af', nameEn: 'Afrikaans', nameNative: 'Afrikaans', script: 'Latn', familyCode: 'indo_european', tier: 'strategic_african' },
+
+  { code: 'om', nameEn: 'Oromo', nameNative: 'Afaan Oromoo', script: 'Latn', familyCode: 'afro_asiatic', tier: 'strategic_african' },
+  { code: 'ti', nameEn: 'Tigrinya', nameNative: 'ትግርኛ', script: 'Ethi', familyCode: 'afro_asiatic', tier: 'strategic_african' },
+  { code: 'wo', nameEn: 'Wolof', nameNative: 'Wolof', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
+  { code: 'lg', nameEn: 'Luganda', nameNative: 'Luganda', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
+  { code: 'ak', nameEn: 'Akan', nameNative: 'Akan', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
+  { code: 'ee', nameEn: 'Ewe', nameNative: 'Eʋegbe', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
+  { code: 'bm', nameEn: 'Bambara', nameNative: 'Bamanankan', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
+  { code: 'ln', nameEn: 'Lingala', nameNative: 'Lingála', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
+  { code: 'ny', nameEn: 'Chichewa', nameNative: 'Chichewa', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
+  { code: 'mg', nameEn: 'Malagasy', nameNative: 'Malagasy', script: 'Latn', familyCode: 'austronesian', tier: 'strategic_african' },
+  { code: 'ff', nameEn: 'Fula', nameNative: 'Fulfulde', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
+  { code: 'pcm', nameEn: 'Nigerian Pidgin', nameNative: 'Naijá', script: 'Latn', familyCode: 'creole', tier: 'strategic_african' },
 ];

@@ -61,9 +61,9 @@ export function DevelopersClient() {
         Developers
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '40rem', lineHeight: 1.6 }}>
-        Lugemi API: generate speech, transcribe, and translate with first-party models. Africa-first coverage, with
-        LATAM, Southeast Asia, the Middle East, and the EU in strategic scope. Use API keys, the TypeScript SDK, CLI,
-        OpenAPI, and the playground. Soft <code className="vl-code">lg_test_</code> keys share this cluster and quota —
+        Build with Lugemi in minutes: create an API key, install <code className="vl-code">@verbalab/sdk</code>, and
+        call translate or speech. Africa-first coverage across countries and communities; LATAM, Southeast Asia, the
+        Middle East, and the EU also in scope. Soft <code className="vl-code">vl_test_</code> keys share this cluster —
         not a separate sandbox plane.
       </p>
 

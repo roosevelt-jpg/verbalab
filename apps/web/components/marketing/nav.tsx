@@ -5,17 +5,12 @@ import { useState } from 'react';
 import { BrandMark } from '@/components/brand-mark';
 
 const LINKS = [
-  { href: '#research', label: 'Research' },
   { href: '#products', label: 'Products' },
-  { href: '/docs', label: 'Developers' },
-  { href: '#safety', label: 'Safety' },
-  { href: '#enterprise', label: 'Enterprise' },
-  { href: '#api', label: 'Open source' },
-  { href: '#updates', label: 'Careers' },
-  { href: '#updates', label: 'News' },
   { href: '/coverage', label: 'Coverage' },
+  { href: '#create', label: 'Use cases' },
+  { href: '#research', label: 'Research' },
+  { href: '#safety', label: 'Safety' },
   { href: '/docs', label: 'Docs' },
-  { href: '/sign-in', label: 'Sign in' },
 ] as const;
 
 function NavList({ onNavigate }: { onNavigate?: () => void }) {
@@ -43,11 +38,14 @@ export function MarketingNav() {
           <NavList />
         </nav>
         <div className="mkt-nav-actions">
+          <Link href="/sign-in" className="mkt-nav-text" style={{ textDecoration: 'none' }}>
+            Log in
+          </Link>
+          <Link href="/sign-in" className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none' }}>
+            Open console
+          </Link>
           <Link href="/sign-up" className="vl-btn vl-btn-primary" style={{ textDecoration: 'none' }}>
             Sign up
-          </Link>
-          <Link href="#contact" className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none' }}>
-            Contact sales
           </Link>
           <button
             type="button"

@@ -89,7 +89,8 @@ export function PlaygroundClient() {
         API playground
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0', maxWidth: '38rem', lineHeight: 1.6 }}>
-        Try translate, detect, and languages against the Lugemi API. No Clerk session required for API-key calls.
+        Paste a <code className="vl-code">vl_live_</code> or <code className="vl-code">vl_test_</code> key and try
+        translate or detect. List languages without a key. Copy the cURL below into your terminal when it looks right.
       </p>
 
       <div className="vl-player-bar" style={{ marginTop: '1.25rem' }}>
@@ -122,7 +123,7 @@ export function PlaygroundClient() {
               className="vl-field vl-code"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
-              placeholder="lg_live_... or lg_test_..."
+              placeholder="vl_live_... or vl_test_..."
               required
             />
           </label>

@@ -12,13 +12,13 @@ const LANGUAGES: LanguageCard[] = [
   { code: 'ha', native: 'Hausa', en: 'Hausa' },
   { code: 'am', native: 'አማርኛ', en: 'Amharic', lang: 'am' },
   { code: 'zu', native: 'isiZulu', en: 'Zulu' },
+  { code: 'ig', native: 'Igbo', en: 'Igbo' },
+  { code: 'ak', native: 'Twi', en: 'Akan' },
+  { code: 'wo', native: 'Wolof', en: 'Wolof' },
+  { code: 'lg', native: 'Luganda', en: 'Luganda' },
+  { code: 'om', native: 'Afaan Oromoo', en: 'Oromo' },
   { code: 'ar', native: 'العربية', en: 'Arabic', lang: 'ar', dir: 'rtl' },
-  { code: 'es', native: 'Español', en: 'Spanish' },
-  { code: 'pt', native: 'Português', en: 'Portuguese' },
-  { code: 'id', native: 'Bahasa Indonesia', en: 'Indonesian' },
-  { code: 'hi', native: 'हिन्दी', en: 'Hindi', lang: 'hi' },
   { code: 'fr', native: 'Français', en: 'French' },
-  { code: 'de', native: 'Deutsch', en: 'German' },
 ];
 
 export function LanguagePlayers() {
@@ -29,28 +29,30 @@ export function LanguagePlayers() {
           Language samples
         </p>
         <p className="mkt-lede" style={{ marginTop: 0, marginBottom: 24 }}>
-          Seed-registry languages spanning Africa-first coverage plus Latin America, Southeast Asia, the Middle
-          East, and the EU. Playback ships when a generated sample exists — these controls do not autoplay and do
-          not pretend to measure audio.
+          Africa-first samples spanning the Lugemi catalog — languages and dialects across African countries and
+          ethnic communities, plus global-scope languages. Playback ships when a generated sample exists; these
+          controls do not autoplay.
         </p>
         <div className="mkt-player-row">
           {LANGUAGES.map((item) => (
             <article key={item.code} className="mkt-player">
-              <div className="mkt-disc" aria-hidden="true" />
+              <div className="mkt-player-top">
+                <div className="mkt-disc" aria-hidden="true" />
+                <button
+                  type="button"
+                  className="mkt-play"
+                  disabled
+                  aria-label={`${item.en} sample coming`}
+                >
+                  Sample coming
+                </button>
+              </div>
               <div className="mkt-player-meta">
                 <div className="mkt-player-name" lang={item.lang} dir={item.dir}>
                   {item.native}
                 </div>
                 <div className="mkt-player-en">{item.en}</div>
               </div>
-              <button
-                type="button"
-                className="mkt-play"
-                disabled
-                aria-label={`${item.en} sample coming`}
-              >
-                Sample coming
-              </button>
             </article>
           ))}
         </div>
