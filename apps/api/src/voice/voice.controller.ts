@@ -38,8 +38,8 @@ export class VoiceController {
     private readonly prisma: PrismaService,
   ) {}
 
+  /** Public config probe for Voice FAQ / Studio — no secrets, auth optional. */
   @Get('status')
-  @UseGuards(ClerkAuthGuard)
   status() {
     const base = this.twilio.webhookBaseUrl();
     return {
