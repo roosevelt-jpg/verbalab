@@ -20,17 +20,26 @@ export function AuditClient() {
   const { getToken, isLoaded } = useAuth();
   const [events, setEvents] = useState<AuditRow[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!isLoaded) return;
     void (async () => {
+      setLoading(true);
       try {
         const token = await getToken();
-        if (!token) throw new Error('Not signed in');
+        if (!token) {
+          setError('Sign in to view your organization audit trail.');
+          setEvents([]);
+          return;
+        }
         const data = await apiFetch<AuditRow[]>('/v1/audit-events?limit=100', { token });
         setEvents(data);
+        setError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load audit log');
+      } finally {
+        setLoading(false);
       }
     })();
   }, [getToken, isLoaded]);
@@ -41,7 +50,8 @@ export function AuditClient() {
         Audit log
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0' }}>
-        Sign-ins, API key changes, and translate calls for your organization (owners and admins).
+        Sign-ins, API key changes, voice clone integrity events, and translate calls for your organization
+        (owners and admins). Linked from Language Integrity.
       </p>
 
       {error ? <p style={{ color: 'var(--bad)' }}>{error}</p> : null}
@@ -71,7 +81,8 @@ export function AuditClient() {
         ))}
       </ul>
 
-      {!error && events.length === 0 ? (
+      {!error && loading ? <p style={{ color: 'var(--muted)' }}>Loading audit trail…</p> : null}
+      {!error && !loading && events.length === 0 ? (
         <p style={{ color: 'var(--muted)' }}>No audit events yet.</p>
       ) : null}
     </AppShell>

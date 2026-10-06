@@ -139,6 +139,7 @@ function groupContainsPath(group: NavGroup, pathname: string) {
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const chatImmersive = pathname === '/chat' || pathname.startsWith('/chat/');
   const [navOpen, setNavOpen] = useState(false);
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};
@@ -192,11 +193,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      <div className="vl-console-body">
+      <div className={`vl-console-body${chatImmersive ? ' vl-console-body--chat' : ''}`}>
         <aside
           id="vl-console-nav"
-          className={`vl-console-sidebar${navOpen ? ' is-open' : ''}`}
+          className={`vl-console-sidebar${navOpen ? ' is-open' : ''}${chatImmersive ? ' vl-console-sidebar--chat-hidden' : ''}`}
           aria-label="Console navigation"
+          hidden={chatImmersive && !navOpen}
         >
           <nav className="vl-console-nav">
             {NAV_GROUPS.map((group) => {
@@ -248,8 +250,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           />
         ) : null}
 
-        <main
-          className={`vl-console-main vl-fade-up${pathname === '/chat' || pathname.startsWith('/chat/') ? ' vl-console-main--chat' : ''}`}
+          <main
+          className={`vl-console-main vl-fade-up${chatImmersive ? ' vl-console-main--chat' : ''}`}
         >
           {children}
         </main>

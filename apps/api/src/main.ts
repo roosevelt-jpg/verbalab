@@ -20,13 +20,15 @@ async function bootstrap() {
     'https://www.lugemi.com',
     'https://api.lugemi.com',
   ];
-  // Local Studio (:43125) + legacy Next (:3000) — keep reachable even if CORS_ORIGIN is incomplete.
-  const localStudioCorsOrigins = [
-    'http://127.0.0.1:43125',
-    'http://localhost:43125',
+  // Local Studio ports + legacy Next (:3000) — keep reachable even if CORS_ORIGIN is incomplete.
+  // Agents often spin Studio on 43123–43130; missing one origin surfaces as browser "Cannot reach API".
+  const localStudioCorsOrigins: string[] = [
     'http://127.0.0.1:3000',
     'http://localhost:3000',
   ];
+  for (let port = 43123; port <= 43130; port += 1) {
+    localStudioCorsOrigins.push(`http://127.0.0.1:${port}`, `http://localhost:${port}`);
+  }
   const corsRaw = process.env.CORS_ORIGIN ?? 'http://localhost:3000';
   const corsOrigins = new Set(
     [

@@ -61,6 +61,7 @@ export function LanguageIntegrityClient() {
   const [policy, setPolicy] = useState<Policy | null>(null);
   const [library, setLibrary] = useState<Clone[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
 
   const [watermark, setWatermark] = useState('required');
   const [consent, setConsent] = useState(true);
@@ -71,28 +72,39 @@ export function LanguageIntegrityClient() {
   const [verifyBusy, setVerifyBusy] = useState(false);
 
   const load = useCallback(async () => {
-    const [eng, proto, pol] = await Promise.all([
-      apiFetch<Engine>('/v1/language-integrity/engine'),
-      apiFetch<Protocol>('/v1/language-integrity/protocol'),
-      apiFetch<Policy>('/v1/voice-cloning/consent/policy').catch(() => null),
-    ]);
-    setEngine(eng);
-    setProtocol(proto);
-    setPolicy(pol);
-
-    if (!isLoaded) return;
+    setLoading(true);
+    setError(null);
     try {
-      const token = await getToken();
-      if (!token) return;
-      const lib = await apiFetch<{ library: Clone[] }>('/v1/voice-cloning/library', { token });
-      setLibrary(lib.library ?? []);
-    } catch {
-      // Signed-out operators still see public integrity surfaces.
+      const [eng, proto, pol] = await Promise.all([
+        apiFetch<Engine>('/v1/language-integrity/engine'),
+        apiFetch<Protocol>('/v1/language-integrity/protocol'),
+        apiFetch<Policy>('/v1/voice-cloning/consent/policy').catch(() => null),
+      ]);
+      setEngine(eng);
+      setProtocol(proto);
+      setPolicy(pol);
+
+      if (isLoaded) {
+        try {
+          const token = await getToken();
+          if (token) {
+            const lib = await apiFetch<{ library: Clone[] }>('/v1/voice-cloning/library', { token });
+            setLibrary(lib.library ?? []);
+          }
+        } catch {
+          // Signed-out operators still see public integrity surfaces.
+        }
+      }
+    } finally {
+      setLoading(false);
     }
   }, [getToken, isLoaded]);
 
   useEffect(() => {
-    void load().catch((err: Error) => setError(err.message));
+    void load().catch((err: Error) => {
+      setError(err.message);
+      setLoading(false);
+    });
   }, [load]);
 
   async function runVerify() {
@@ -108,6 +120,7 @@ export function LanguageIntegrityClient() {
         attestationNotes: notes,
         audioClaimText: claim,
       };
+      // Prefer public verify; use workspace verify only when signed in with a clone id.
       const path =
         token && cloneId.trim()
           ? '/v1/language-integrity/verify/workspace'
@@ -134,7 +147,19 @@ export function LanguageIntegrityClient() {
         and protocol, not foolproof deepfake detection.
       </p>
 
-      {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
+      {error ? (
+        <p style={{ color: '#b42318' }}>
+          {error}{' '}
+          <button
+            type="button"
+            className="vl-btn vl-btn-secondary"
+            style={{ marginLeft: '0.5rem', minHeight: 32, padding: '0.25rem 0.65rem' }}
+            onClick={() => void load().catch((err: Error) => setError(err.message))}
+          >
+            Retry
+          </button>
+        </p>
+      ) : null}
 
       {engine ? (
         <section style={panelStyle} aria-labelledby="integrity-status">
@@ -182,8 +207,10 @@ export function LanguageIntegrityClient() {
             </p>
           ) : null}
         </section>
-      ) : (
+      ) : loading ? (
         <p style={{ color: 'var(--muted)' }}>Loading integrity engine…</p>
+      ) : (
+        <p style={{ color: 'var(--muted)' }}>Integrity engine unavailable.</p>
       )}
 
       <section style={panelStyle} aria-labelledby="integrity-verify">
@@ -330,7 +357,13 @@ export function LanguageIntegrityClient() {
             {engine.capabilities.map((c) => (
               <li key={c.id} style={{ borderTop: '1px solid var(--line)', paddingTop: '0.55rem' }}>
                 <strong>
-                  {c.name}
+                  {c.console ? (
+                    <Link href={c.console} style={{ color: 'inherit', textDecoration: 'underline' }}>
+                      {c.name}
+                    </Link>
+                  ) : (
+                    c.name
+                  )}
                 </strong>
                 <div style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>
                   {c.notes}

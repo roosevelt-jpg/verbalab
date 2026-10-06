@@ -67,16 +67,20 @@ export function VoiceClient() {
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(async () => {
-    const token = await getToken();
-    if (!token) throw new Error('Not signed in');
-    const [st, prof] = await Promise.all([
-      apiFetch<VoiceStatus>('/v1/voice/status', { token }),
-      apiFetch<{ profiles: EmotionProfile[] }>('/v1/emotion-voice/profiles', { token }).catch(
-        () => ({ profiles: [] as EmotionProfile[] }),
-      ),
-    ]);
+    // Public status probe — no auth required (simulate/profiles still need a session).
+    const st = await apiFetch<VoiceStatus>('/v1/voice/status');
     setStatus(st);
-    if (prof.profiles?.length) setProfiles(prof.profiles);
+
+    const token = await getToken().catch(() => null);
+    if (!token) return;
+    try {
+      const prof = await apiFetch<{ profiles: EmotionProfile[] }>('/v1/emotion-voice/profiles', {
+        token,
+      });
+      if (prof.profiles?.length) setProfiles(prof.profiles);
+    } catch {
+      // Profiles are optional enrichment when signed in.
+    }
   }, [getToken]);
 
   useEffect(() => {

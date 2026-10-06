@@ -39,6 +39,8 @@ export function AccentsClient() {
   const load = useCallback(async () => {
     const res = await apiFetch<{ data: AccentRow[] }>('/v1/accents');
     setAccents(res.data);
+    // Public engine probe — soft-fail so registry list still renders.
+    await apiFetch<{ product: string }>('/v1/accents/engine').catch(() => null);
   }, []);
 
   useEffect(() => {

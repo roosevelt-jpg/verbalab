@@ -629,20 +629,33 @@ textarea {
   min-height: calc(100vh - 3.5rem);
 }
 
+/* Chat Studio immerses into library + conversation (ChatGPT-like). Menu still opens full nav. */
+.vl-console-body--chat {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 900px) {
+  .vl-console-body--chat .vl-console-sidebar--chat-hidden:not(.is-open) {
+    display: none;
+  }
+}
+
+
 .lg-chat-studio {
   display: grid;
-  grid-template-columns: 13.5rem minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 0;
   min-height: calc(100vh - 3.5rem);
   width: 100%;
+  position: relative;
   background:
-    radial-gradient(ellipse 50% 35% at 70% 0%, rgba(0, 184, 174, 0.08), transparent 55%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.72), rgba(246, 248, 252, 0.95));
+    radial-gradient(ellipse 55% 40% at 50% -8%, rgba(0, 184, 174, 0.1), transparent 58%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.78), rgba(246, 248, 252, 0.96));
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 820px) {
   .lg-chat-studio {
-    grid-template-columns: 13.5rem minmax(0, 1fr) 17rem;
+    grid-template-columns: 15.5rem minmax(0, 1fr);
   }
 }
 
@@ -652,7 +665,7 @@ textarea {
   gap: 0.75rem;
   padding: 1rem 0.75rem 1.5rem;
   border-right: 1px solid var(--border-subtle);
-  background: rgba(255, 255, 255, 0.65);
+  background: rgba(255, 255, 255, 0.72);
   backdrop-filter: blur(8px);
 }
 
@@ -830,9 +843,12 @@ textarea {
   flex-wrap: wrap;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 1rem;
-  padding: 1.15rem 1.25rem 0.85rem;
+  gap: 0.85rem 1rem;
+  padding: 0.85rem 1.25rem 0.7rem;
   border-bottom: 1px solid var(--border-subtle);
+  max-width: 48rem;
+  width: 100%;
+  margin: 0 auto;
 }
 
 .lg-chat-toolbar-actions {
@@ -875,50 +891,55 @@ textarea {
 .lg-chat-thread {
   flex: 1;
   overflow-y: auto;
-  padding: 1.25rem 1.25rem 0.5rem;
+  padding: 1.5rem 1rem 0.75rem;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
-  max-width: 52rem;
+  gap: 0.95rem;
+  max-width: 48rem;
   width: 100%;
   margin: 0 auto;
 }
 
 .lg-chat-empty {
   margin: auto 0;
-  padding: 1.5rem 0.5rem 2rem;
+  padding: 2rem 0.75rem 2.5rem;
   text-align: center;
-  animation: vl-fade-up 0.28s ease-out both;
+  animation: vl-fade-up 0.32s ease-out both;
 }
 
 .lg-chat-empty-brand {
-  margin: 0 0 0.35rem;
+  margin: 0 0 0.55rem;
   font-family: var(--font-display);
-  font-size: 2rem;
+  font-size: clamp(1.85rem, 4vw, 2.35rem);
   font-weight: 720;
-  letter-spacing: -0.04em;
-  color: var(--brand-navy);
+  letter-spacing: -0.045em;
+  background: linear-gradient(120deg, var(--brand-navy) 20%, var(--action-primary) 90%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .lg-chat-empty h2 {
   margin: 0;
   font-family: var(--font-display);
-  font-size: 1.35rem;
-  letter-spacing: -0.02em;
-  font-weight: 650;
+  font-size: clamp(1.2rem, 2.6vw, 1.55rem);
+  letter-spacing: -0.025em;
+  font-weight: 600;
+  color: var(--ink);
 }
 
 .lg-chat-empty > p {
-  margin: 0.55rem auto 0;
-  max-width: 32rem;
+  margin: 0.65rem auto 0;
+  max-width: 28rem;
   color: var(--muted);
   line-height: 1.55;
+  font-size: 0.95rem;
 }
 
 .lg-chat-suggestions {
   display: grid;
-  gap: 0.55rem;
-  margin-top: 1.25rem;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
   text-align: left;
 }
 
@@ -930,21 +951,28 @@ textarea {
 
 .lg-chat-suggestion {
   border: 1px solid var(--border-subtle);
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 12px;
-  padding: 0.85rem 1rem;
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: 14px;
+  padding: 0.9rem 1rem;
   text-align: left;
   font: inherit;
-  font-size: 0.9rem;
-  line-height: 1.4;
+  font-size: 0.88rem;
+  line-height: 1.45;
   color: var(--ink);
   cursor: pointer;
-  transition: border-color 0.15s ease, transform 0.15s ease;
+  transition: border-color 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 1px 0 rgba(16, 38, 77, 0.03);
 }
 
-.lg-chat-suggestion:hover {
-  border-color: rgba(0, 124, 120, 0.45);
+.lg-chat-suggestion:hover:not(:disabled) {
+  border-color: rgba(0, 124, 120, 0.4);
   transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(16, 38, 77, 0.06);
+}
+
+.lg-chat-suggestion:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .lg-chat-bubble {
@@ -1080,35 +1108,95 @@ textarea {
 .lg-chat-composer {
   position: sticky;
   bottom: 0;
-  padding: 0.75rem 1.25rem 1.25rem;
-  background: linear-gradient(180deg, transparent, rgba(246, 248, 252, 0.96) 28%);
-  max-width: 52rem;
+  padding: 0.65rem 1rem 1.1rem;
+  background: linear-gradient(180deg, transparent, rgba(246, 248, 252, 0.97) 24%);
+  max-width: 48rem;
   width: 100%;
   margin: 0 auto;
 }
 
-.lg-chat-composer-langs {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
-  gap: 0.55rem;
+.lg-chat-lang-wrap {
+  position: relative;
   margin-bottom: 0.55rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.lg-chat-lang-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 34px;
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--brand-navy);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.lg-chat-lang-trigger svg {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+}
+
+.lg-chat-lang-trigger:hover,
+.lg-chat-lang-trigger[aria-expanded='true'] {
+  border-color: rgba(0, 124, 120, 0.4);
+  background: #fff;
+}
+
+.lg-chat-lang-code {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+.lg-chat-lang-popover {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 0.45rem);
+  z-index: 24;
+  width: min(22rem, calc(100vw - 2rem));
+  padding: 0.85rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 16px 40px rgba(16, 38, 77, 0.14);
+  display: grid;
+  gap: 0.65rem;
+  animation: vl-fade-up 0.16s ease-out both;
+}
+
+.lg-chat-lang-popover-title {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 .lg-chat-inline-label {
   margin: 0;
   font-size: 0.72rem;
+  display: grid;
+  gap: 0.3rem;
 }
 
 .lg-chat-composer-box {
   display: grid;
   grid-template-columns: auto 1fr auto auto;
-  gap: 0.45rem;
+  gap: 0.35rem;
   align-items: end;
-  padding: 0.45rem;
+  padding: 0.4rem;
   border: 1px solid var(--border-subtle);
-  border-radius: 18px;
+  border-radius: 26px;
   background: #fff;
-  box-shadow: 0 10px 30px rgba(16, 38, 77, 0.06);
+  box-shadow: 0 10px 28px rgba(16, 38, 77, 0.07);
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
@@ -1126,33 +1214,48 @@ textarea {
 }
 
 .lg-chat-icon-btn {
-  min-height: 42px;
-  padding: 0.45rem 0.7rem;
-  border-radius: 12px;
-  border: 1px solid var(--border-subtle);
-  background: var(--surface-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
   color: var(--brand-navy);
-  font: inherit;
-  font-size: 0.78rem;
-  font-weight: 650;
   cursor: pointer;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.lg-chat-icon-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+.lg-chat-icon-btn:hover:not(:disabled) {
+  background: rgba(0, 124, 120, 0.08);
 }
 
 .lg-chat-icon-btn:disabled {
-  opacity: 0.55;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
 .lg-chat-mic.is-recording {
   background: #b42318;
-  border-color: #b42318;
   color: #fff;
   animation: lg-chat-pulse 1s ease-in-out infinite;
 }
 
+.lg-chat-mic.is-recording:hover:not(:disabled) {
+  background: #912018;
+}
+
 .lg-chat-input {
   width: 100%;
-  min-height: 42px;
+  min-height: 40px;
   max-height: 8rem;
   resize: none;
   border: none;
@@ -1161,28 +1264,67 @@ textarea {
   font: inherit;
   font-size: 0.98rem;
   line-height: 1.45;
-  padding: 0.55rem 0.25rem;
+  padding: 0.55rem 0.2rem;
   color: var(--ink);
 }
 
 .lg-chat-send {
-  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  min-width: 40px;
+  padding: 0;
+  border-radius: 999px;
+  border: none;
+  background: var(--action-primary);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.12s ease, opacity 0.12s ease;
+}
+
+.lg-chat-send svg {
+  width: 18px;
+  height: 18px;
+}
+
+.lg-chat-send:hover:not(:disabled) {
+  background: #006b68;
+}
+
+.lg-chat-send:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
 .lg-chat-composer-hint {
-  margin: 0.45rem 0.2rem 0;
+  margin: 0.45rem 0.35rem 0;
   color: var(--muted);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   line-height: 1.4;
+  text-align: center;
+}
+
+.lg-chat-plugins-backdrop {
+  position: fixed;
+  inset: 3.5rem 0 0;
+  z-index: 27;
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: rgba(16, 38, 77, 0.28);
+  cursor: pointer;
 }
 
 .lg-chat-plugins {
   display: none;
   flex-direction: column;
-  border-left: 1px solid var(--border-subtle);
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.97);
   padding: 1rem 0.9rem 1.5rem;
   overflow-y: auto;
+  backdrop-filter: blur(10px);
 }
 
 .lg-chat-plugins.is-open {
@@ -1192,26 +1334,16 @@ textarea {
   right: 0;
   bottom: 0;
   z-index: 28;
-  width: min(20rem, 92vw);
-  box-shadow: -12px 0 40px rgba(16, 38, 77, 0.12);
+  width: min(22rem, 94vw);
+  box-shadow: -16px 0 48px rgba(16, 38, 77, 0.16);
   animation: vl-fade-up 0.18s ease-out both;
-}
-
-@media (min-width: 1100px) {
-  .lg-chat-plugins {
-    display: flex;
-    position: static;
-    box-shadow: none;
-  }
-
-  .lg-chat-plugins-close {
-    display: none;
-  }
+  border-left: 1px solid var(--border-subtle);
 }
 
 .lg-chat-plugins-head {
   position: relative;
   margin-bottom: 0.85rem;
+  padding-right: 1.75rem;
 }
 
 .lg-chat-plugins-head h2 {
@@ -1322,6 +1454,7 @@ textarea {
   .lg-chat-empty,
   .lg-chat-bubble,
   .lg-chat-plugins.is-open,
+  .lg-chat-lang-popover,
   .lg-chat-listening,
   .lg-chat-live-banner,
   .lg-chat-mic.is-recording {

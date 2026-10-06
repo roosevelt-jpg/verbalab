@@ -116,11 +116,23 @@ export function BillingClient() {
   const [usingLocalBilling, setUsingLocalBilling] = useState(false);
 
   const load = useCallback(async () => {
-    const token = await getToken();
-    if (!token) throw new Error('Not signed in');
-
     // Seed catalog immediately so Stripe-off / API blips never blank the page.
     setPlans(WEB_BILLING_PLANS);
+
+    // Public plans catalog — no auth required.
+    try {
+      const planRes = await apiFetch<{ plans: PlanCard[] }>('/v1/billing/plans');
+      setPlans(onlyFourPlans(planRes.plans));
+    } catch {
+      setPlans(WEB_BILLING_PLANS);
+    }
+
+    const token = await getToken();
+    if (!token) {
+      setSummary(localMockSummary());
+      setUsingLocalBilling(true);
+      return;
+    }
 
     try {
       const [billing, memberRows] = await Promise.all([
@@ -141,13 +153,6 @@ export function BillingClient() {
       } else {
         throw err;
       }
-    }
-
-    try {
-      const planRes = await apiFetch<{ plans: PlanCard[] }>('/v1/billing/plans', { token });
-      setPlans(onlyFourPlans(planRes.plans));
-    } catch {
-      setPlans(WEB_BILLING_PLANS);
     }
   }, [getToken]);
 

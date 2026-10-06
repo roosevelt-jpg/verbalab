@@ -38,14 +38,18 @@ export function AccentIntelligenceClient() {
   const [loading, setLoading] = useState(false);
 
   const refresh = useCallback(async () => {
-    const token = await getToken();
-    if (!token) throw new Error('Not signed in');
-    const [eng, stats] = await Promise.all([
-      apiFetch<Engine>('/v1/accents/engine', { token }),
-      apiFetch<Analytics>('/v1/accents/analytics', { token }),
-    ]);
+    // Engine catalog is public; analytics needs a session.
+    const eng = await apiFetch<Engine>('/v1/accents/engine');
     setEngine(eng);
-    setAnalytics(stats);
+
+    const token = await getToken().catch(() => null);
+    if (!token) return;
+    try {
+      const stats = await apiFetch<Analytics>('/v1/accents/analytics', { token });
+      setAnalytics(stats);
+    } catch {
+      // Analytics is optional when signed out / soft-failing.
+    }
   }, [getToken]);
 
   useEffect(() => {
