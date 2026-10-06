@@ -292,6 +292,23 @@ export function CmsEditor() {
                 })
               }
             />
+            <Field
+              label="Language bar (one language per line)"
+              value={doc.languageBar.languages.join('\n')}
+              multiline
+              rows={8}
+              onChange={(v) =>
+                setDoc({
+                  ...doc,
+                  languageBar: {
+                    languages: v
+                      .split('\n')
+                      .map((line) => line.trim())
+                      .filter(Boolean),
+                  },
+                })
+              }
+            />
           </>
         ) : null}
 

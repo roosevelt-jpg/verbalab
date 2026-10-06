@@ -65,7 +65,7 @@ export function MarketingHome({ content }: { content: CmsDocument }) {
           </div>
         </section>
 
-        <LanguageBar />
+        <LanguageBar languages={content.languageBar.languages} />
 
         <section className="mkt-section" id="products" aria-labelledby="mkt-products-title">
           <div className="mkt-wrap">

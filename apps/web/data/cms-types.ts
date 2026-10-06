@@ -105,6 +105,7 @@ export type CmsDocument = {
     media?: CmsMedia;
     demo: CmsHeroDemo;
   };
+  languageBar: { languages: string[] };
   products: CmsSectionBlock & { items: CmsProductCard[] };
   useCases: CmsSectionBlock & { items: CmsUseCase[] };
   hubs: CmsSectionBlock & { items: CmsShipWay[] };

@@ -1,26 +1,9 @@
-const HIGHLIGHT_NAMES = [
-  'English',
-  'French',
-  'Swahili',
-  'Zulu',
-  'Amharic',
-  'Oromo',
-  'Igbo',
-  'Twi',
-  'Hausa',
-  'Afrikaans',
-  'Arabic',
-  'Somali',
-  'Yoruba',
-  'Portuguese',
-] as const;
-
-export function LanguageBar() {
+export function LanguageBar({ languages }: { languages: string[] }) {
   return (
     <section className="mkt-lang-bar" aria-label="Featured languages">
       <div className="mkt-wrap">
         <ul className="mkt-lang-list">
-          {HIGHLIGHT_NAMES.map((name) => (
+          {languages.map((name) => (
             <li key={name}>{name}</li>
           ))}
           <li aria-hidden="true">+</li>
