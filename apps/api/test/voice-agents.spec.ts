@@ -112,6 +112,14 @@ describe('Voice agents', () => {
     await app.close();
   });
 
+  it('GET /v1/voice/status returns 200 without auth (Voice FAQ probe)', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/voice/status').expect(200);
+    expect(res.body.provider).toBe('twilio');
+    expect(typeof res.body.disabled).toBe('boolean');
+    expect(typeof res.body.twilioConfigured).toBe('boolean');
+    expect(res.body.defaultVoice).toBeTruthy();
+  });
+
   it('simulates a text FAQ turn with STT/LLM/TTS fixtures', async () => {
     const org = await seedOrg(prisma, `voice_sim_${Date.now()}`);
     const key = await apiKeys.create({

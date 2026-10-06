@@ -2154,9 +2154,9 @@ export const openApiDocument = {
       get: {
         summary: 'Voice FAQ / Twilio configuration status',
         operationId: 'getVoiceStatus',
-        security: [{ ClerkAuth: [] }],
+        security: [],
         responses: {
-          '200': { description: 'Config flags and webhook URLs' },
+          '200': { description: 'Config flags and webhook URLs (public probe; no secrets)' },
         },
       },
     },
