@@ -629,6 +629,17 @@ textarea {
   min-height: calc(100vh - 3.5rem);
 }
 
+/* Chat Studio immerses into library + conversation (ChatGPT-like). Menu still opens full nav. */
+.vl-console-body--chat {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+@media (min-width: 900px) {
+  .vl-console-body--chat .vl-console-sidebar--chat-hidden:not(.is-open) {
+    display: none;
+  }
+}
+
 .lg-chat-studio {
   display: grid;
   grid-template-columns: 13.5rem minmax(0, 1fr);

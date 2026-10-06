@@ -147,6 +147,60 @@ function titleFromText(text: string) {
   return t.length > 42 ? `${t.slice(0, 42)}…` : t || 'New chat';
 }
 
+function IconPaperclip({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M14.5 7.5 8.2 13.8a3.2 3.2 0 1 0 4.5 4.5l7.1-7.1a4.8 4.8 0 1 0-6.8-6.8L5.3 12.1"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function IconMic({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect x="9" y="3.5" width="6" height="11" rx="3" stroke="currentColor" strokeWidth="1.75" />
+      <path
+        d="M6.5 11.5a5.5 5.5 0 0 0 11 0M12 17v3.5M9 20.5h6"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function IconSend({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M5.2 12 19 5.5 14.2 18.5l-1.6-5.2L5.2 12Z"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function IconGlobe({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="8.25" stroke="currentColor" strokeWidth="1.75" />
+      <path
+        d="M3.75 12h16.5M12 3.75c2.4 2.5 3.6 5.3 3.6 8.25S14.4 17.75 12 20.25c-2.4-2.5-3.6-5.3-3.6-8.25S9.6 6.25 12 3.75Z"
+        stroke="currentColor"
+        strokeWidth="1.75"
+      />
+    </svg>
+  );
+}
+
 export function ChatClient() {
   const { getToken, isLoaded } = useAuth();
   const fileInputId = useId();
@@ -171,7 +225,9 @@ export function ChatClient() {
   const [mode, setMode] = useState<'chat' | 'live'>('chat');
   const [pluginsOpen, setPluginsOpen] = useState(false);
   const [libraryOpen, setLibraryOpen] = useState(false);
+  const [langOpen, setLangOpen] = useState(false);
   const [connected, setConnected] = useState<Record<string, boolean>>({});
+  const langPopoverRef = useRef<HTMLDivElement | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [recording, setRecording] = useState(false);
@@ -226,6 +282,23 @@ export function ChatClient() {
       stopDemoSpeech();
     };
   }, []);
+
+  useEffect(() => {
+    if (!langOpen) return;
+    function onPointerDown(event: MouseEvent) {
+      const el = langPopoverRef.current;
+      if (el && !el.contains(event.target as Node)) setLangOpen(false);
+    }
+    function onKey(event: KeyboardEvent) {
+      if (event.key === 'Escape') setLangOpen(false);
+    }
+    document.addEventListener('mousedown', onPointerDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onPointerDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [langOpen]);
 
   const ensureConversation = useCallback((): string => {
     if (activeIdRef.current) return activeIdRef.current;
@@ -852,6 +925,7 @@ export function ChatClient() {
               className={`lg-chat-side-link${pluginsOpen ? ' is-active' : ''}`}
               onClick={() => {
                 setPluginsOpen(true);
+                setLangOpen(false);
                 setLibraryOpen(false);
               }}
             >
@@ -909,9 +983,10 @@ export function ChatClient() {
             <div>
               <h1 style={titleStyle}>Chat Studio</h1>
               <p style={ledeStyle}>
-                Powered by Lugemi Atlas — complex multilingual reasoning and dialect nuance. Record
-                for live Baobab translation, upload documents/video/voice, or connect office tools.
-                {servingFrom ? (<><span style={{ color: 'var(--brand-navy)' }}> Serving from {servingFrom}.</span></>) : null}
+                Lugemi Atlas · Baobab translate
+                {servingFrom ? (
+                  <span style={{ color: 'var(--brand-navy)' }}> · Serving from {servingFrom}</span>
+                ) : null}
               </p>
             </div>
             <div className="lg-chat-toolbar-actions">
@@ -956,8 +1031,8 @@ export function ChatClient() {
                 <p className="lg-chat-empty-brand">Lugemi</p>
                 <h2>What’s on your mind today?</h2>
                 <p>
-                  Click <strong>Record</strong> for instant live translation, attach a document, video, or
-                  voice file, or open Plugins to connect office, storage, and email tools.
+                  Mic for live Baobab translation, attach a document/video/voice file, or open Plugins
+                  for office, storage, and email tools.
                 </p>
                 <div className="lg-chat-suggestions">
                   {SUGGESTIONS.map((s) => (
@@ -965,9 +1040,11 @@ export function ChatClient() {
                       key={s}
                       type="button"
                       className="lg-chat-suggestion"
+                      disabled={loading || recording}
                       onClick={() => {
                         setMode('chat');
-                        setInput(s);
+                        setLangOpen(false);
+                        void sendChat(s);
                       }}
                     >
                       {s}
@@ -1047,61 +1124,80 @@ export function ChatClient() {
           ) : null}
 
           <form className="lg-chat-composer" onSubmit={onSubmit}>
-            <div className="lg-chat-composer-row lg-chat-composer-langs">
-              {mode === 'chat' ? (
-                <label className="vl-label lg-chat-inline-label">
-                  Translate reply
-                  <LocaleSelect
-              className="vl-field"
-              value={translateReplyTo}
-              onChange={setTranslateReplyTo}
-              languages={catalog.languages}
-              locales={catalog.locales}
-              dialects={catalog.dialects}
-              accents={catalog.accents}
-              allowEmpty
-              emptyLabel="Off"
-            />
-                </label>
-              ) : (
-                <label className="vl-label lg-chat-inline-label">
-                  Live target
-                  <LocaleSelect
-              className="vl-field"
-              value={liveTarget}
-              onChange={setLiveTarget}
-              languages={catalog.languages}
-              locales={catalog.locales}
-              dialects={catalog.dialects}
-              accents={catalog.accents}
-            />
-                </label>
-              )}
-              <label className="vl-label lg-chat-inline-label">
-                Upload source
-                <LocaleSelect
-              className="vl-field"
-              value={uploadSource}
-              onChange={setUploadSource}
-              languages={catalog.languages}
-              locales={catalog.locales}
-              dialects={catalog.dialects}
-              accents={catalog.accents}
-              allowAuto
-            />
-              </label>
-              <label className="vl-label lg-chat-inline-label">
-                Upload target
-                <LocaleSelect
-              className="vl-field"
-              value={uploadTarget}
-              onChange={setUploadTarget}
-              languages={catalog.languages}
-              locales={catalog.locales}
-              dialects={catalog.dialects}
-              accents={catalog.accents}
-            />
-              </label>
+            <div className="lg-chat-lang-wrap" ref={langPopoverRef}>
+              <button
+                type="button"
+                className="lg-chat-lang-trigger"
+                aria-expanded={langOpen}
+                aria-haspopup="dialog"
+                onClick={() => setLangOpen((v) => !v)}
+              >
+                <IconGlobe />
+                <span className="lg-chat-lang-code">
+                  {mode === 'live'
+                    ? liveTarget || 'lang'
+                    : translateReplyTo || uploadTarget || 'lang'}
+                </span>
+              </button>
+              {langOpen ? (
+                <div className="lg-chat-lang-popover" role="dialog" aria-label="Language settings">
+                  <p className="lg-chat-lang-popover-title">Languages</p>
+                  {mode === 'chat' ? (
+                    <label className="vl-label lg-chat-inline-label">
+                      Translate reply
+                      <LocaleSelect
+                        className="vl-field"
+                        value={translateReplyTo}
+                        onChange={setTranslateReplyTo}
+                        languages={catalog.languages}
+                        locales={catalog.locales}
+                        dialects={catalog.dialects}
+                        accents={catalog.accents}
+                        allowEmpty
+                        emptyLabel="Off"
+                      />
+                    </label>
+                  ) : (
+                    <label className="vl-label lg-chat-inline-label">
+                      Live target
+                      <LocaleSelect
+                        className="vl-field"
+                        value={liveTarget}
+                        onChange={setLiveTarget}
+                        languages={catalog.languages}
+                        locales={catalog.locales}
+                        dialects={catalog.dialects}
+                        accents={catalog.accents}
+                      />
+                    </label>
+                  )}
+                  <label className="vl-label lg-chat-inline-label">
+                    Upload source
+                    <LocaleSelect
+                      className="vl-field"
+                      value={uploadSource}
+                      onChange={setUploadSource}
+                      languages={catalog.languages}
+                      locales={catalog.locales}
+                      dialects={catalog.dialects}
+                      accents={catalog.accents}
+                      allowAuto
+                    />
+                  </label>
+                  <label className="vl-label lg-chat-inline-label">
+                    Upload target
+                    <LocaleSelect
+                      className="vl-field"
+                      value={uploadTarget}
+                      onChange={setUploadTarget}
+                      languages={catalog.languages}
+                      locales={catalog.locales}
+                      dialects={catalog.dialects}
+                      accents={catalog.accents}
+                    />
+                  </label>
+                </div>
+              ) : null}
             </div>
 
             <div className="lg-chat-composer-box">
@@ -1121,7 +1217,7 @@ export function ChatClient() {
                 disabled={loading}
                 onClick={() => fileRef.current?.click()}
               >
-                Attach
+                <IconPaperclip />
               </button>
               <textarea
                 className="lg-chat-input"
@@ -1156,23 +1252,33 @@ export function ChatClient() {
                 disabled={loading && !recording}
                 onClick={toggleRecord}
               >
-                {recording ? 'Stop' : 'Record'}
+                <IconMic />
               </button>
               <button
                 type="submit"
-                className="vl-btn vl-btn-primary lg-chat-send"
+                className="lg-chat-send"
+                aria-label={mode === 'live' ? 'Translate' : 'Send'}
+                title={mode === 'live' ? 'Translate' : 'Send'}
                 disabled={loading || !input.trim()}
               >
-                {mode === 'live' ? 'Translate' : 'Send'}
+                <IconSend />
               </button>
             </div>
             <p className="lg-chat-composer-hint">
-              Record translates each finished phrase in realtime. Attach accepts documents, video, and
-              voice. Plugins connect office, storage, and email tools. Enter to send · Shift+Enter for
-              newline.
+              Mic translates finished phrases in realtime · Attach docs, video, or voice · Plugins
+              connect office tools · Enter to send · Shift+Enter for newline
             </p>
           </form>
         </section>
+
+        {pluginsOpen ? (
+          <button
+            type="button"
+            className="lg-chat-plugins-backdrop"
+            aria-label="Dismiss plugins"
+            onClick={() => setPluginsOpen(false)}
+          />
+        ) : null}
 
         <aside className={`lg-chat-plugins${pluginsOpen ? ' is-open' : ''}`} aria-label="Connectors and plugins">
           <div className="lg-chat-plugins-head">
