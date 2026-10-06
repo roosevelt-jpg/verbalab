@@ -8,6 +8,13 @@ import { AppShell } from '@/components/app-shell';
 import { AnamorphicPanel } from '@/components/media/anamorphic-panel';
 import { SITE_CONTENT } from '@/data/site-content';
 import { BarChart, LineChart, ProgressRing, seedUsageSeries } from '@/components/stats/stat-charts';
+import {
+  ActivityBoard,
+  HeatList,
+  PipelineStrip,
+  StatusRing,
+  UsageMeter,
+} from '@/components/stats/activity-visuals';
 import { FEATURE_LABELS, formatWorkspaceLimit, WEB_BILLING_PLANS } from '@/data/billing-plans';
 import { PlanGate } from '@/components/billing/plan-gate';
 import {
@@ -341,10 +348,54 @@ export function DashboardClient() {
               </ul>
             </section>
 
-            <section className="vl-endpoint-card" aria-labelledby="dash-stats">
-              <h2 id="dash-stats" className="lg-workspace-section-label">
-                Workspace health
-              </h2>
+            <ActivityBoard kicker="System activity" title="Live workspace pulse">
+              <PipelineStrip
+                title="Language intelligence path"
+                stages={[
+                  { id: 'ingest', label: 'Ingest', state: data.billing.requests > 0 ? 'ready' : 'idle' },
+                  { id: 'route', label: 'Route', state: data.workspace ? 'ready' : 'idle' },
+                  { id: 'model', label: 'Model', state: data.billing.requests > 0 ? 'active' : 'ready' },
+                  {
+                    id: 'deliver',
+                    label: 'Deliver',
+                    state:
+                      data.organization.billingStatus === 'active' ||
+                      data.organization.billingStatus === 'trialing'
+                        ? 'ready'
+                        : 'idle',
+                  },
+                ]}
+              />
+              <div className="lg-studio-overview">
+                <UsageMeter
+                  label="Character quota"
+                  value={data.billing.charactersUsed}
+                  max={data.billing.characterQuota}
+                  unit="chars"
+                />
+                <UsageMeter
+                  label="Request pace"
+                  value={Math.min(data.billing.requests, 500)}
+                  max={500}
+                  unit="calls"
+                />
+                <StatusRing
+                  status={
+                    data.residency.matchesCurrentDeploy
+                      ? 'ok'
+                      : data.residency.dataRegion
+                        ? 'warn'
+                        : 'idle'
+                  }
+                  label="Residency"
+                  detail={`${data.residency.currentDeploy.code} · pin ${data.residency.dataRegion ?? 'none'}`}
+                />
+                <StatusRing
+                  status={connectedCount > 0 ? 'ok' : 'idle'}
+                  label="Connectors"
+                  detail={`${connectedCount} connected · ${voiceVideoConnected} voice/video`}
+                />
+              </div>
               <div className="lg-stats-grid">
                 <ProgressRing
                   value={data.billing.charactersUsed}
@@ -352,18 +403,12 @@ export function DashboardClient() {
                   label="Character balance"
                   sublabel={`${data.billing.charactersRemaining.toLocaleString()} left this period`}
                 />
-                <ProgressRing
-                  value={Math.min(data.billing.requests, 500)}
-                  max={500}
-                  label="Request pace"
-                  sublabel={`${data.billing.requests.toLocaleString()} translate/speech calls`}
-                />
                 <LineChart
                   title="Usage timeline"
                   series={seedUsageSeries(data.billing.charactersUsed, data.billing.requests)}
                 />
                 <BarChart
-                  title="Feature mix (illustrative)"
+                  title="Feature mix"
                   bars={[
                     { label: 'Speech', value: Math.max(12, Math.round(data.billing.requests * 0.4)) },
                     { label: 'Translate', value: Math.max(8, Math.round(data.billing.requests * 0.35)) },
@@ -371,8 +416,31 @@ export function DashboardClient() {
                     { label: 'Studio', value: Math.max(3, Math.round(data.billing.requests * 0.1)) },
                   ]}
                 />
+                <HeatList
+                  title="Locale defaults heat"
+                  items={[
+                    {
+                      id: 'src',
+                      label: data.workspace?.defaultSourceLang ?? 'en',
+                      value: Math.max(4, Math.round(data.billing.requests * 0.55)),
+                      hint: 'source',
+                    },
+                    {
+                      id: 'tgt',
+                      label: data.workspace?.defaultTargetLang ?? 'ak',
+                      value: Math.max(6, Math.round(data.billing.requests * 0.7)),
+                      hint: 'target',
+                    },
+                    {
+                      id: 'ak',
+                      label: 'ak · Twi',
+                      value: Math.max(5, Math.round(data.billing.requests * 0.45)),
+                      hint: 'Africa focus',
+                    },
+                  ]}
+                />
               </div>
-            </section>
+            </ActivityBoard>
 
             <section className="vl-endpoint-card" aria-labelledby="dash-entitlements">
               <h2 id="dash-entitlements" className="lg-workspace-section-label">

@@ -5,6 +5,15 @@ import { useAuth } from '@clerk/nextjs';
 import Link from 'next/link';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import {
+  ActivityBoard,
+  HeatList,
+  PipelineStrip,
+  StatusRing,
+  Sparkline,
+} from '@/components/stats/activity-visuals';
+import { seedRequestSeries } from '@/components/stats/stat-charts';
+import '@/components/stats/stat-charts.css';
 
 type LiveModel = {
   id: string;
@@ -138,6 +147,77 @@ export function ModelsClient() {
         {' · '}
         <Link href="/developers">Developers</Link>
       </p>
+
+      {matrix ? (
+        <ActivityBoard kicker="Model activity" title="Registry pulse">
+          <PipelineStrip
+            title="Serve path"
+            stages={[
+              { id: 'catalog', label: 'Catalog', state: 'ready' },
+              {
+                id: 'cred',
+                label: 'Credentials',
+                state: matrix.features.some((f) => f.hasConfiguredProvider) ? 'active' : 'idle',
+              },
+              {
+                id: 'route',
+                label: 'Route',
+                state: matrix.features.some((f) => f.models.some((m) => m.configured))
+                  ? 'ready'
+                  : 'idle',
+              },
+              {
+                id: 'infer',
+                label: 'Infer',
+                state: matrix.features.some((f) => f.models.some((m) => m.configured))
+                  ? 'ready'
+                  : 'idle',
+              },
+            ]}
+          />
+          <div className="lg-studio-overview">
+            {matrix.features.slice(0, 4).map((block) => {
+              const ready = block.models.filter((m) => m.configured).length;
+              return (
+                <StatusRing
+                  key={block.feature}
+                  status={
+                    block.hasConfiguredProvider && ready > 0
+                      ? 'ok'
+                      : block.models.length
+                        ? 'warn'
+                        : 'idle'
+                  }
+                  label={block.feature}
+                  detail={`${ready}/${block.models.length} ready`}
+                />
+              );
+            })}
+          </div>
+          <HeatList
+            title="Models by feature"
+            items={matrix.features.map((f) => ({
+              id: f.feature,
+              label: f.feature,
+              value: f.models.length,
+              hint: f.hasConfiguredProvider ? 'provider on' : 'needs creds',
+            }))}
+          />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <Sparkline
+              series={seedRequestSeries(
+                matrix.features.reduce((s, f) => s + f.models.length, 0) || 1,
+                12,
+              )}
+              title="Model count pulse"
+            />
+            <span style={{ fontSize: '0.8rem', color: 'var(--muted)' }}>
+              {matrix.features.reduce((s, f) => s + f.models.length, 0)} models across{' '}
+              {matrix.features.length} features
+            </span>
+          </div>
+        </ActivityBoard>
+      ) : null}
 
       <section style={{ marginTop: '1.5rem' }} aria-labelledby="li-verticals">
         <h2 id="li-verticals" style={sectionTitle}>

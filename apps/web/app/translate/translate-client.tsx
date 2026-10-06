@@ -8,6 +8,14 @@ import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
 import { LocaleSelect } from '@/components/language-locale-select';
 import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
+import {
+  ActivityBoard,
+  HeatList,
+  PipelineStrip,
+  StatusRing,
+  LivePulse,
+} from '@/components/stats/activity-visuals';
+import '@/components/stats/stat-charts.css';
 
 type Engine = {
   product: string;
@@ -93,6 +101,7 @@ export function TranslateClient() {
 
   return (
     <AppShell>
+      <p className="lg-workspace-kicker">Language Intelligence</p>
       <h1 style={titleStyle}>Translate</h1>
       <p style={ledeStyle}>
         Default pair is English → Twi (Akan, Ghana / <code className="vl-code">ak</code> ·{' '}\n        <code className="vl-code">ak-GH</code>). Pick any language or BCP-47 locale from the dropdowns —
@@ -132,6 +141,62 @@ export function TranslateClient() {
           </ul>
         </div>
       ) : null}
+
+      <ActivityBoard kicker="Translate overview" title="Baobab path & locale coverage">
+        <div style={{ display: 'flex', justifyContent: 'space-between', gap: '0.75rem', flexWrap: 'wrap', alignItems: 'start' }}>
+          <PipelineStrip
+            title="Live translate path"
+            stages={[
+              { id: 'source', label: 'Source', state: text.trim() ? 'ready' : 'idle' },
+              {
+                id: 'detect',
+                label: 'Detect',
+                state: detectedSource ? 'ready' : source === 'auto' ? 'active' : 'idle',
+              },
+              { id: 'mt', label: 'Baobab', state: loading ? 'active' : result ? 'ready' : 'idle' },
+              { id: 'out', label: 'Output', state: result ? 'ready' : error ? 'error' : 'idle' },
+            ]}
+          />
+          <LivePulse label={loading ? 'Translating' : catalog.loading ? 'Loading catalog' : 'Ready'} />
+        </div>
+        <div className="lg-studio-overview">
+          <StatusRing
+            status={catalog.loading ? 'idle' : catalog.languages.length ? 'ok' : 'bad'}
+            label="Language catalog"
+            detail={
+              catalog.loading
+                ? 'Loading…'
+                : `${catalog.languages.length} languages · ${catalog.locales.length} locale packs`
+            }
+          />
+          <StatusRing
+            status={engine ? 'ok' : 'idle'}
+            label="Engine"
+            detail={engine?.product ?? 'Waiting for engine metadata'}
+          />
+          <StatusRing
+            status={result ? 'ok' : loading ? 'warn' : 'idle'}
+            label="Last job"
+            detail={
+              characters != null
+                ? `${characters.toLocaleString()} characters`
+                : loading
+                  ? 'In flight'
+                  : 'No result yet'
+            }
+          />
+        </div>
+        <HeatList
+          title="Locale coverage (catalog heat)"
+          empty="No languages loaded"
+          items={catalog.languages.slice(0, 10).map((l, i) => ({
+            id: l.code,
+            label: `${l.code} · ${l.name}`,
+            value: Math.max(1, 14 - i),
+            hint: l.nativeName || l.code,
+          }))}
+        />
+      </ActivityBoard>
 
       {catalog.loading ? (
         <p style={{ color: 'var(--muted)', marginTop: '1.25rem' }}>Loading languages and locales…</p>

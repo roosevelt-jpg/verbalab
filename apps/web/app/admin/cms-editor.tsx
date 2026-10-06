@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { CmsDocument, CmsPage } from '@/data/cms-types';
 import { parseCmsSections, serializeCmsSections } from '@/lib/cms-section-text';
+import { CmsMediaField } from '@/components/admin/cms-media-field';
 
 type Tab =
   | 'hero'
@@ -228,25 +229,12 @@ export function CmsEditor() {
                 })
               }
             />
-            <Field
-              label="Hero image URL"
-              value={doc.hero.media?.imageUrl ?? ''}
-              onChange={(v) =>
-                setDoc({
-                  ...doc,
-                  hero: { ...doc.hero, media: { ...doc.hero.media, imageUrl: v || undefined } },
-                })
-              }
-            />
-            <Field
-              label="Hero video URL"
-              value={doc.hero.media?.videoUrl ?? ''}
-              onChange={(v) =>
-                setDoc({
-                  ...doc,
-                  hero: { ...doc.hero, media: { ...doc.hero.media, videoUrl: v || undefined } },
-                })
-              }
+            <CmsMediaField
+              label="Hero media"
+              uploadLabel="Hero media"
+              value={doc.hero.media}
+              onChange={(media) => setDoc({ ...doc, hero: { ...doc.hero, media } })}
+              onUploaded={() => void load()}
             />
             <Field
               label="Demo title"
@@ -448,29 +436,16 @@ export function CmsEditor() {
                     setDoc({ ...doc, products: { ...doc.products, items } });
                   }}
                 />
-                <Field
-                  label="Image URL"
-                  value={item.media?.imageUrl ?? ''}
-                  onChange={(v) => {
+                <CmsMediaField
+                  label={`${item.name} media`}
+                  uploadLabel={`Product · ${item.name}`}
+                  value={item.media}
+                  onChange={(media) => {
                     const items = [...doc.products.items];
-                    items[idx] = {
-                      ...item,
-                      media: { ...item.media, imageUrl: v || undefined },
-                    };
+                    items[idx] = { ...item, media };
                     setDoc({ ...doc, products: { ...doc.products, items } });
                   }}
-                />
-                <Field
-                  label="Video URL"
-                  value={item.media?.videoUrl ?? ''}
-                  onChange={(v) => {
-                    const items = [...doc.products.items];
-                    items[idx] = {
-                      ...item,
-                      media: { ...item.media, videoUrl: v || undefined },
-                    };
-                    setDoc({ ...doc, products: { ...doc.products, items } });
-                  }}
+                  onUploaded={() => void load()}
                 />
               </div>
             ))}
@@ -500,49 +475,24 @@ export function CmsEditor() {
               multiline
               onChange={(v) => setDoc({ ...doc, creative: { ...doc.creative, moduleBody: v } })}
             />
-            <Field
-              label="Creative image URL"
-              value={doc.creative.media?.imageUrl ?? ''}
-              onChange={(v) =>
-                setDoc({
-                  ...doc,
-                  creative: {
-                    ...doc.creative,
-                    media: { ...doc.creative.media, imageUrl: v || undefined },
-                  },
-                })
-              }
-            />
-            <Field
-              label="Creative video URL"
-              value={doc.creative.media?.videoUrl ?? ''}
-              onChange={(v) =>
-                setDoc({
-                  ...doc,
-                  creative: {
-                    ...doc.creative,
-                    media: { ...doc.creative.media, videoUrl: v || undefined },
-                  },
-                })
-              }
+            <CmsMediaField
+              label="Creative section media"
+              uploadLabel="Creative section"
+              value={doc.creative.media}
+              onChange={(media) => setDoc({ ...doc, creative: { ...doc.creative, media } })}
+              onUploaded={() => void load()}
             />
             <Field
               label="Agents title"
               value={doc.agents.title}
               onChange={(v) => setDoc({ ...doc, agents: { ...doc.agents, title: v } })}
             />
-            <Field
-              label="Agents image URL"
-              value={doc.agents.media?.imageUrl ?? ''}
-              onChange={(v) =>
-                setDoc({
-                  ...doc,
-                  agents: {
-                    ...doc.agents,
-                    media: { ...doc.agents.media, imageUrl: v || undefined },
-                  },
-                })
-              }
+            <CmsMediaField
+              label="Agents section media"
+              uploadLabel="Agents section"
+              value={doc.agents.media}
+              onChange={(media) => setDoc({ ...doc, agents: { ...doc.agents, media } })}
+              onUploaded={() => void load()}
             />
             <Field
               label="API title"
@@ -689,25 +639,12 @@ export function CmsEditor() {
               rows={6}
               onChange={(v) => updatePage((p) => ({ ...p, body: v }))}
             />
-            <Field
-              label="Image URL"
-              value={selectedPage.media?.imageUrl ?? ''}
-              onChange={(v) =>
-                updatePage((p) => ({
-                  ...p,
-                  media: { ...p.media, imageUrl: v || undefined },
-                }))
-              }
-            />
-            <Field
-              label="Video URL"
-              value={selectedPage.media?.videoUrl ?? ''}
-              onChange={(v) =>
-                updatePage((p) => ({
-                  ...p,
-                  media: { ...p.media, videoUrl: v || undefined },
-                }))
-              }
+            <CmsMediaField
+              label="Page hero media"
+              uploadLabel={`Page · ${selectedPage.slug}`}
+              value={selectedPage.media}
+              onChange={(media) => updatePage((p) => ({ ...p, media }))}
+              onUploaded={() => void load()}
             />
             <Field
               label="Primary CTA label"
@@ -750,8 +687,52 @@ export function CmsEditor() {
             <p style={{ color: 'var(--muted)', margin: 0, fontSize: '0.85rem', lineHeight: 1.45 }}>
               Use <code className="vl-code">[guide]</code> or <code className="vl-code">[api]</code> for
               ProductGuideKit blocks. Content sections omit the tag. Steps start with{' '}
-              <code className="vl-code">&gt;</code>; links with <code className="vl-code">@</code>.
+              <code className="vl-code">&gt;</code>; links with <code className="vl-code">@</code>. Copy stays
+              in the text field above; media uploads below are separate.
             </p>
+            {(selectedPage.sections ?? []).length > 0 ? (
+              <div style={{ display: 'grid', gap: '0.85rem' }}>
+                <strong style={{ fontSize: '0.9rem', color: 'var(--brand-navy)' }}>
+                  Section media (text + image/video cards)
+                </strong>
+                {(selectedPage.sections ?? []).map((section, sIdx) => (
+                  <div
+                    key={section.id}
+                    style={{
+                      display: 'grid',
+                      gap: '0.55rem',
+                      padding: '0.85rem',
+                      border: '1px solid rgba(16,38,77,0.1)',
+                      borderRadius: 12,
+                    }}
+                  >
+                    <div style={{ fontWeight: 650 }}>{section.title || `Section ${sIdx + 1}`}</div>
+                    <p style={{ margin: 0, fontSize: '0.82rem', color: 'var(--muted)' }}>
+                      {(section.body || '').slice(0, 140)}
+                      {(section.body || '').length > 140 ? '…' : ''}
+                    </p>
+                    <CmsMediaField
+                      label="Card media"
+                      uploadLabel={`Section · ${section.title || section.id}`}
+                      value={section.media}
+                      onChange={(media) =>
+                        updatePage((p) => ({
+                          ...p,
+                          sections: (p.sections ?? []).map((s, i) =>
+                            i === sIdx ? { ...s, media } : s,
+                          ),
+                        }))
+                      }
+                      onUploaded={() => void load()}
+                    />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--muted)' }}>
+                Add section text blocks above, then upload image/video media for each card here.
+              </p>
+            )}
             <button
               type="button"
               className="vl-btn"
@@ -777,12 +758,21 @@ export function CmsEditor() {
         {tab === 'media' ? (
           <>
             <Field label="Upload label" value={uploadLabel} onChange={setUploadLabel} />
-            <label className="vl-btn" style={{ display: 'inline-flex', cursor: 'pointer' }}>
-              Upload image or video
+            <label
+              className="vl-btn vl-btn-primary"
+              style={{
+                display: 'inline-flex',
+                cursor: busy ? 'wait' : 'pointer',
+                opacity: busy ? 0.65 : 1,
+                width: 'fit-content',
+              }}
+            >
+              {busy ? 'Uploading…' : 'Upload image or video'}
               <input
                 type="file"
                 accept="image/*,video/*"
                 hidden
+                disabled={busy}
                 onChange={(e) => {
                   const file = e.target.files?.[0];
                   if (file) void onUpload(file);
@@ -791,22 +781,57 @@ export function CmsEditor() {
               />
             </label>
             <p style={{ color: 'var(--muted)', margin: 0, fontSize: '0.9rem' }}>
-              Uploads land in <code className="vl-code">/cms-media/</code>. Paste the URL into any
-              image/video field on Hero, Products, Sections, or Pages.
+              Uploads store under <code className="vl-code">public/cms-media/</code>. Prefer Upload on
+              Hero, Products, and page section cards — copy stays plain text; media is separate.
             </p>
-            <ul style={{ margin: 0, paddingLeft: '1.1rem', display: 'grid', gap: '0.5rem' }}>
-              {doc.mediaLibrary.map((m) => (
-                <li key={m.id}>
-                  <strong>{m.label}</strong> · {m.kind} ·{' '}
-                  <code className="vl-code" style={{ fontSize: '0.75rem' }}>
-                    {m.url}
-                  </code>
-                </li>
-              ))}
-              {doc.mediaLibrary.length === 0 ? (
-                <li style={{ color: 'var(--muted)' }}>No uploads yet.</li>
-              ) : null}
-            </ul>
+            {doc.mediaLibrary.length === 0 ? (
+              <p style={{ margin: 0, color: 'var(--muted)' }}>
+                Library empty — upload an image or video to get started.
+              </p>
+            ) : (
+              <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: '0.65rem' }}>
+                {doc.mediaLibrary.map((m) => (
+                  <li
+                    key={m.id}
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '5rem 1fr',
+                      gap: '0.75rem',
+                      alignItems: 'center',
+                      padding: '0.55rem',
+                      border: '1px solid rgba(16,38,77,0.08)',
+                      borderRadius: 10,
+                      background: 'var(--surface-canvas)',
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: '5rem',
+                        height: '3.5rem',
+                        borderRadius: 6,
+                        overflow: 'hidden',
+                        background: '#0b1426',
+                      }}
+                    >
+                      {m.kind === 'video' ? (
+                        <video src={m.url} muted style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      ) : (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={m.url} alt={m.alt ?? m.label} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                      )}
+                    </div>
+                    <div>
+                      <strong>{m.label}</strong> · {m.kind}
+                      <div>
+                        <code className="vl-code" style={{ fontSize: '0.75rem' }}>
+                          {m.url}
+                        </code>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            )}
           </>
         ) : null}
 

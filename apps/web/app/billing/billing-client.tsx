@@ -4,7 +4,13 @@ import { useAuth } from '@clerk/nextjs';
 import { useCallback, useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
-import { ProgressRing } from '@/components/stats/stat-charts';
+import { ProgressRing, LineChart, seedUsageSeries } from '@/components/stats/stat-charts';
+import {
+  ActivityBoard,
+  UsageMeter,
+  StatusRing,
+  PipelineStrip,
+} from '@/components/stats/activity-visuals';
 import { FEATURE_LABELS, formatWorkspaceLimit } from '@/data/billing-plans';
 import '@/components/stats/stat-charts.css';
 
@@ -139,17 +145,47 @@ export function BillingClient() {
 
       {summary ? (
         <div style={{ marginTop: '1.5rem', display: 'grid', gap: '1.25rem' }}>
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(12rem, 1fr))',
-              gap: '0.75rem',
-              alignItems: 'stretch',
-            }}
-          >
-            <Stat label="Current plan" value={summary.planName} />
-            <Stat label="Status" value={summary.billingStatus} />
-            <div className="vl-endpoint-card" style={{ display: 'flex', alignItems: 'center' }}>
+          <ActivityBoard kicker="Usage meters" title="Billing activity">
+            <PipelineStrip
+              title="Metering path"
+              stages={[
+                { id: 'plan', label: 'Plan', state: 'ready' },
+                { id: 'meter', label: 'Meter', state: summary.requests > 0 ? 'active' : 'idle' },
+                {
+                  id: 'quota',
+                  label: 'Quota',
+                  state:
+                    summary.charactersUsed / Math.max(summary.characterQuota, 1) > 0.9
+                      ? 'error'
+                      : 'ready',
+                },
+                { id: 'pay', label: 'Billing', state: summary.stripeConfigured ? 'ready' : 'idle' },
+              ]}
+            />
+            <div className="lg-studio-overview">
+              <UsageMeter
+                label="Character quota"
+                value={summary.charactersUsed}
+                max={summary.characterQuota}
+                unit="chars"
+              />
+              <UsageMeter
+                label="Requests this period"
+                value={summary.requests}
+                max={Math.max(summary.requests, 100)}
+                unit="calls"
+              />
+              <StatusRing
+                status={
+                  summary.billingStatus === 'active' || summary.billingStatus === 'trialing'
+                    ? 'ok'
+                    : summary.billingStatus === 'past_due'
+                      ? 'bad'
+                      : 'warn'
+                }
+                label={summary.planName}
+                detail={summary.billingStatus}
+              />
               <ProgressRing
                 value={summary.charactersUsed}
                 max={summary.characterQuota}
@@ -157,7 +193,11 @@ export function BillingClient() {
                 sublabel={`${summary.charactersRemaining.toLocaleString()} remaining`}
               />
             </div>
-          </div>
+            <LineChart
+              title="Usage trend"
+              series={seedUsageSeries(summary.charactersUsed, summary.requests)}
+            />
+          </ActivityBoard>
 
           <div
             style={{
