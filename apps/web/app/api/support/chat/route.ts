@@ -247,8 +247,6 @@ export async function POST(request: Request) {
     }
   }
 
-  void apiKey;
-
   if (wantsHuman(message)) {
     return NextResponse.json({
       reply:
