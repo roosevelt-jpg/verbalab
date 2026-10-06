@@ -27,11 +27,12 @@ export class PortfolioController {
 
     let corridors = PORTFOLIO_CORRIDORS;
     if (countryNeedle) {
-      corridors = corridors.filter(
-        (c) =>
-          c.countryCode.toLowerCase() === countryNeedle ||
-          c.countryName.toLowerCase().includes(countryNeedle),
-      );
+      corridors = corridors.filter((c) => {
+        if (c.countryCode.toLowerCase() === countryNeedle) return true;
+        // Avoid 2-letter ISO codes matching substrings (e.g. ng ⊂ Congo/Angola).
+        if (countryNeedle.length <= 2) return false;
+        return c.countryName.toLowerCase().includes(countryNeedle);
+      });
     }
     if (regionNeedle) {
       corridors = corridors.filter((c) => c.region.toLowerCase().includes(regionNeedle));
@@ -52,10 +53,9 @@ export class PortfolioController {
 
     const countries = portfolioCountrySummaries().filter((row) => {
       if (countryNeedle) {
-        return (
-          row.code.toLowerCase() === countryNeedle ||
-          row.nameEn.toLowerCase().includes(countryNeedle)
-        );
+        if (row.code.toLowerCase() === countryNeedle) return true;
+        if (countryNeedle.length <= 2) return false;
+        return row.nameEn.toLowerCase().includes(countryNeedle);
       }
       if (regionNeedle) return row.region.toLowerCase().includes(regionNeedle);
       if (needle) {
