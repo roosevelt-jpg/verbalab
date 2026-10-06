@@ -1472,6 +1472,17 @@ export const openApiDocument = {
         responses: { '200': { description: '{ admin: boolean }' } },
       },
     },
+    '/v1/admin/plans': {
+      get: {
+        summary: 'List Lugemi plan filters for the admin console',
+        operationId: 'adminListPlans',
+        security: [{ ClerkAuth: [] }],
+        responses: {
+          '200': { description: 'Plan id/name pairs' },
+          '403': { description: 'Not a platform admin' },
+        },
+      },
+    },
     '/v1/admin/workspaces': {
       get: {
         summary: 'List all workspaces (platform admin)',
@@ -1578,6 +1589,18 @@ export const openApiDocument = {
         security: [{ ClerkAuth: [] }],
         parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
         responses: { '201': { description: 'organizationId + workspaceId' } },
+      },
+    },
+    '/v1/admin/workspaces/{id}/revoke-keys': {
+      post: {
+        summary: 'Revoke all API keys for a workspace',
+        operationId: 'adminRevokeWorkspaceKeys',
+        security: [{ ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: {
+          '201': { description: 'Keys revoked' },
+          '403': { description: 'Not a platform admin' },
+        },
       },
     },
     '/v1/admin/workspaces/{id}/invites': {

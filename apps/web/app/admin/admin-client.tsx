@@ -2,9 +2,19 @@
 
 import { useAuth } from '@clerk/nextjs';
 import { useCallback, useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
 import { CmsEditor } from './cms-editor';
+
+function softFailMessage(err: unknown, fallback: string): string {
+  if (!(err instanceof Error)) return fallback;
+  const msg = err.message;
+  if (/load failed|failed to fetch|networkerror|network request failed|cannot reach api/i.test(msg)) {
+    return 'Cannot reach the admin API. Check that the API is on :3001 and CORS_ORIGIN includes this origin.';
+  }
+  return msg || fallback;
+}
 
 type OrgRow = {
   id: string;
@@ -32,6 +42,7 @@ type AdminTab = 'cms' | 'orgs';
 
 export function AdminClient() {
   const { getToken, isLoaded } = useAuth();
+  const router = useRouter();
   const [tab, setTab] = useState<AdminTab>('cms');
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [q, setQ] = useState('');
@@ -45,16 +56,19 @@ export function AdminClient() {
     const token = await getToken();
     if (!token) {
       setIsAdmin(false);
+      const redirect = encodeURIComponent('/admin');
+      router.replace(`/sign-in?redirect_url=${redirect}`);
       return;
     }
     try {
       const status = await apiFetch<{ admin: boolean }>('/v1/admin/status', { token });
       setIsAdmin(status.admin);
-    } catch {
+    } catch (err) {
       // CMS remains available via Next /api/cms when Clerk allowlist is empty in local/dev.
       setIsAdmin(false);
+      setError(softFailMessage(err, 'Unable to verify platform admin status'));
     }
-  }, [getToken]);
+  }, [getToken, router]);
 
   const search = useCallback(
     async (query: string, plan = planFilter) => {
@@ -75,7 +89,7 @@ export function AdminClient() {
 
   useEffect(() => {
     if (!isLoaded) return;
-    void checkStatus().catch((err: Error) => setError(err.message));
+    void checkStatus().catch((err: unknown) => setError(softFailMessage(err, 'Admin status check failed')));
   }, [isLoaded, checkStatus]);
 
   useEffect(() => {
@@ -92,7 +106,7 @@ export function AdminClient() {
       const detail = await apiFetch<OrgDetail>(`/v1/admin/organizations/${id}`, { token });
       setSelected(detail);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load org');
+      setError(softFailMessage(err, 'Failed to load org'));
     } finally {
       setBusy(false);
     }
@@ -108,7 +122,7 @@ export function AdminClient() {
       await openOrg(id);
       await search(q);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Revoke failed');
+      setError(softFailMessage(err, 'Revoke failed'));
     } finally {
       setBusy(false);
     }
@@ -131,7 +145,7 @@ export function AdminClient() {
       await openOrg(id);
       await search(q);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Update failed');
+      setError(softFailMessage(err, 'Update failed'));
     } finally {
       setBusy(false);
     }

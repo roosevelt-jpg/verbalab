@@ -2,10 +2,22 @@
 
 import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
+import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { apiFetch, setStoredAdminOrgId, setStoredWorkspaceId } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
 import { LivePulse, Sparkline, StatusRing, UsageMeter } from '@/components/stats/activity-visuals';
+
+function softFailMessage(err: unknown, fallback: string): string {
+  if (!(err instanceof Error)) return fallback;
+  const msg = err.message;
+  // Never surface raw WebKit/Chromium TypeError: Load failed in the console overlay path.
+  if (/load failed|failed to fetch|networkerror|network request failed|cannot reach api/i.test(msg)) {
+    return 'Cannot reach the admin API. Check that the API is on :3001 and CORS_ORIGIN includes this origin.';
+  }
+  if (/not signed in/i.test(msg)) return 'Sign in required.';
+  return msg || fallback;
+}
 
 type WorkspaceRow = {
   id: string;
@@ -96,7 +108,9 @@ const FLAG_KEYS = [
 
 export function AdminWorkspacesClient() {
   const { getToken, isLoaded } = useAuth();
+  const router = useRouter();
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+  const [signedOut, setSignedOut] = useState(false);
   const [tab, setTab] = useState<Tab>('directory');
   const [q, setQ] = useState('');
   const [plan, setPlan] = useState('');
@@ -147,31 +161,37 @@ export function AdminWorkspacesClient() {
       try {
         const token = await getToken();
         if (!token) {
+          setSignedOut(true);
           setIsAdmin(false);
+          const redirect = encodeURIComponent('/admin/workspaces');
+          router.replace(`/sign-in?redirect_url=${redirect}`);
           return;
         }
+        setSignedOut(false);
         const s = await apiFetch<{ admin: boolean }>('/v1/admin/status', { token });
         setIsAdmin(s.admin);
-      } catch {
+      } catch (err) {
+        // Auth/network soft-fail: do not throw into Next error overlay.
         setIsAdmin(false);
+        setError(softFailMessage(err, 'Unable to verify platform admin status'));
       }
     })();
-  }, [isLoaded, getToken]);
+  }, [isLoaded, getToken, router]);
 
   useEffect(() => {
     if (!isAdmin) return;
-    if (tab === 'directory') void loadList().catch((e: Error) => setError(e.message));
+    if (tab === 'directory') void loadList().catch((e) => setError(softFailMessage(e, 'Load failed')));
     if (tab === 'analytics') {
       void tokenFn()
         .then((token) => apiFetch<Analytics>('/v1/admin/workspaces/analytics', { token }))
         .then(setAnalytics)
-        .catch((e: Error) => setError(e.message));
+        .catch((e) => setError(softFailMessage(e, 'Analytics failed')));
     }
     if (tab === 'audit') {
       void tokenFn()
         .then((token) => apiFetch<AuditRow[]>('/v1/admin/workspaces/audit?limit=80', { token }))
         .then(setAuditRows)
-        .catch((e: Error) => setError(e.message));
+        .catch((e) => setError(softFailMessage(e, 'Audit load failed')));
     }
   }, [isAdmin, tab, loadList, tokenFn]);
 
@@ -186,7 +206,7 @@ export function AdminWorkspacesClient() {
       setEditQuota(detail.characterQuota);
       setEditRegion(detail.dataRegion ?? '');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Load failed');
+      setError(softFailMessage(err, 'Load failed'));
     } finally {
       setBusy(false);
     }
@@ -205,7 +225,7 @@ export function AdminWorkspacesClient() {
       await loadList();
       setMessage(suspend ? 'Workspace suspended' : 'Workspace resumed');
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Update failed');
+      setError(softFailMessage(err, 'Update failed'));
     } finally {
       setBusy(false);
     }
@@ -223,7 +243,7 @@ export function AdminWorkspacesClient() {
       if (res.workspaceId) setStoredWorkspaceId(res.workspaceId);
       window.location.href = '/dashboard';
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Open-as failed');
+      setError(softFailMessage(err, 'Open-as failed'));
       setBusy(false);
     }
   }
@@ -257,7 +277,7 @@ export function AdminWorkspacesClient() {
         await loadList();
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Bulk failed');
+      setError(softFailMessage(err, 'Bulk failed'));
     } finally {
       setBusy(false);
     }
@@ -292,7 +312,19 @@ export function AdminWorkspacesClient() {
         {error ? <p className="lg-admin-banner lg-admin-banner--bad">{error}</p> : null}
         {message ? <p className="lg-admin-banner lg-admin-banner--ok">{message}</p> : null}
 
-        {isAdmin === false ? (
+        {signedOut ? (
+          <section className="vl-panel lg-admin-empty">
+            <h2>Sign in required</h2>
+            <p>
+              Redirecting to sign-in…{' '}
+              <Link href="/sign-in?redirect_url=%2Fadmin%2Fworkspaces">Continue to sign-in</Link>
+              {' · '}
+              <Link href="/dev-login">/dev-login</Link>
+            </p>
+          </section>
+        ) : null}
+
+        {isAdmin === false && !signedOut ? (
           <section className="vl-panel lg-admin-empty">
             <h2>Platform admin required</h2>
             <p>
@@ -303,7 +335,7 @@ export function AdminWorkspacesClient() {
           </section>
         ) : null}
 
-        {isAdmin === null ? <p style={{ color: 'var(--muted)' }}>Checking access…</p> : null}
+        {isAdmin === null && !signedOut ? <p style={{ color: 'var(--muted)' }}>Checking access…</p> : null}
 
         {isAdmin ? (
           <>
@@ -445,7 +477,12 @@ export function AdminWorkspacesClient() {
                           <button type="button" className="vl-btn" disabled={busy} onClick={() => void suspendOrResume(selected.id, true)} style={{ background: 'var(--bad)', color: '#fff', border: 'none' }}>Suspend</button>
                         )}
                       </div>
-                      <UsageMeter label="Character quota (period)" value={selected.quotas.usedCharacters} max={selected.quotas.characterQuota} unit="chars" />
+                      <UsageMeter
+                        label="Character quota (period)"
+                        value={selected.quotas?.usedCharacters ?? selected.usage?.characters ?? 0}
+                        max={selected.quotas?.characterQuota ?? selected.characterQuota ?? 0}
+                        unit="chars"
+                      />
 
                       <div className="lg-admin-section">
                         <h3>Billing & region</h3>
@@ -522,9 +559,9 @@ export function AdminWorkspacesClient() {
                       <div className="lg-admin-section">
                         <h3>Connectors</h3>
                         <ul>
-                          {selected.connectors.slack.map((c) => <li key={c.id}>Slack · {c.name}</li>)}
-                          {selected.connectors.marketplace.map((c) => <li key={c.id}>{c.kind} · {c.name}</li>)}
-                          {!selected.connectors.slack.length && !selected.connectors.marketplace.length ? <li style={{ color: 'var(--muted)' }}>None installed</li> : null}
+                          {(selected.connectors?.slack ?? []).map((c) => <li key={c.id}>Slack · {c.name}</li>)}
+                          {(selected.connectors?.marketplace ?? []).map((c) => <li key={c.id}>{c.kind} · {c.name}</li>)}
+                          {!(selected.connectors?.slack?.length) && !(selected.connectors?.marketplace?.length) ? <li style={{ color: 'var(--muted)' }}>None installed</li> : null}
                         </ul>
                       </div>
 
@@ -568,7 +605,7 @@ export function AdminWorkspacesClient() {
                   <div className="vl-panel" style={{ padding: '1.1rem', marginTop: '1rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                       <h2 style={{ margin: 0, fontSize: '1.05rem' }}>Translate characters (14d)</h2>
-                      <Sparkline series={analytics.sparklineCharacters} title="Characters" />
+                      <Sparkline series={analytics.sparklineCharacters ?? []} title="Characters" />
                     </div>
                   </div>
                   <div className="lg-admin-columns" style={{ marginTop: '1rem' }}>
@@ -630,7 +667,7 @@ export function AdminWorkspacesClient() {
                       setCreateForm({ name: '', plan: 'free', ownerEmail: '', dataRegion: '' });
                       setTab('directory'); setPage(1); await openDetail(created.id); await loadList(); setMessage('Workspace created');
                     } catch (err) {
-                      setError(err instanceof Error ? err.message : 'Create failed');
+                      setError(softFailMessage(err, 'Create failed'));
                     } finally { setBusy(false); }
                   })()}>Create workspace</button>
                 </div>

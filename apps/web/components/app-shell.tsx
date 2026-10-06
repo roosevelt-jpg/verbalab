@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { UserButton } from '@clerk/nextjs';
+import { UserButton, SignedIn } from '@clerk/nextjs';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { WorkspaceSwitcher } from '@/components/workspace-switcher';
 import { BrandMark } from '@/components/brand-mark';
@@ -174,7 +174,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
         <div className="vl-console-header-right">
           <WorkspaceSwitcher />
-          {isClerkConfigured() ? <UserButton afterSignOutUrl="/" /> : null}
+          {isClerkConfigured() ? (
+            <SignedIn>
+              <UserButton afterSignOutUrl="/" />
+            </SignedIn>
+          ) : null}
         </div>
       </header>
 
