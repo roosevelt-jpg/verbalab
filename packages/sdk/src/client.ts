@@ -1203,6 +1203,29 @@ export class Lugemi {
     return this.requestJson('/v1/model-registry/engine', { method: 'GET' });
   }
 
+  /** Live Models Engine matrix (public) — Lugemi + vendor readiness per feature. */
+  async modelsLive(): Promise<{
+    asOf: string;
+    disclaimer: string;
+    features: Array<{
+      feature: string;
+      hasConfiguredProvider: boolean;
+      models: Array<{
+        id: string;
+        slug: string;
+        displayName: string;
+        kind: string;
+        provider: string | null;
+        baseModel: string;
+        configured: boolean;
+        envKey: string | null;
+        notes: string | null;
+      }>;
+    }>;
+  }> {
+    return this.requestJson('/v1/models/live', { method: 'GET' });
+  }
+
   async atlasEngine(): Promise<{
     product: string;
     note: string;
