@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
+import { isClerkConfigured } from '@/lib/clerk-config';
 import { useEffect, useRef, useState } from 'react';
 import { API_URL, apiFetch } from '@/lib/api';
 import { CreativeShell } from '@/components/creative/creative-shell';
@@ -22,8 +23,21 @@ import {
 
 type Voice = { id: string; name: string };
 
+
 export function CreativeDubbingClient() {
+  if (!isClerkConfigured()) {
+    return <CreativeDubbingClientInner getToken={async () => null} isLoaded={true} />;
+  }
+  return <CreativeDubbingClientAuthed />;
+}
+
+function CreativeDubbingClientAuthed() {
   const { getToken, isLoaded } = useAuth();
+  return <CreativeDubbingClientInner getToken={getToken} isLoaded={isLoaded} />;
+}
+
+function CreativeDubbingClientInner({ getToken, isLoaded }: { getToken: any; isLoaded: any }) {
+  // auth via props: getToken, isLoaded
   const catalog = useLocaleCatalog();
   const credits = useCreativeCredits();
   const inputRef = useRef<HTMLInputElement>(null);

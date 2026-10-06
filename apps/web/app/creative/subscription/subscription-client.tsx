@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
+import { isClerkConfigured } from '@/lib/clerk-config';
 import { useCallback, useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { CreativeShell } from '@/components/creative/creative-shell';
@@ -90,8 +91,21 @@ const API_MODELS = [
   },
 ];
 
+
 export function CreativeSubscriptionClient() {
+  if (!isClerkConfigured()) {
+    return <CreativeSubscriptionClientInner getToken={async () => null} isLoaded={true} />;
+  }
+  return <CreativeSubscriptionClientAuthed />;
+}
+
+function CreativeSubscriptionClientAuthed() {
   const { getToken, isLoaded } = useAuth();
+  return <CreativeSubscriptionClientInner getToken={getToken} isLoaded={isLoaded} />;
+}
+
+function CreativeSubscriptionClientInner({ getToken, isLoaded }: { getToken: any; isLoaded: any }) {
+  // auth via props: getToken, isLoaded
   const [tab, setTab] = useState<Tab>('creative');
   const [plans, setPlans] = useState<PlanCard[]>(WEB_BILLING_PLANS);
   const [summary, setSummary] = useState<BillingSummary | null>(null);

@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
+import { isClerkConfigured } from '@/lib/clerk-config';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { API_URL } from '@/lib/api';
 import { CreativeShell } from '@/components/creative/creative-shell';
@@ -26,8 +27,21 @@ type IsolateResult = {
   durationSeconds?: number;
 };
 
+
 export function CreativeVoiceIsolatorClient() {
+  if (!isClerkConfigured()) {
+    return <CreativeVoiceIsolatorClientInner getToken={async () => null} isLoaded={true} />;
+  }
+  return <CreativeVoiceIsolatorClientAuthed />;
+}
+
+function CreativeVoiceIsolatorClientAuthed() {
   const { getToken, isLoaded } = useAuth();
+  return <CreativeVoiceIsolatorClientInner getToken={getToken} isLoaded={isLoaded} />;
+}
+
+function CreativeVoiceIsolatorClientInner({ getToken, isLoaded }: { getToken: any; isLoaded: any }) {
+  // auth via props: getToken, isLoaded
   const credits = useCreativeCredits();
   const inputRef = useRef<HTMLInputElement>(null);
   const sessionRef = useRef<RecordingSession | null>(null);

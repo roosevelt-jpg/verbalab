@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
+import { isClerkConfigured } from '@/lib/clerk-config';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { API_URL, apiFetch } from '@/lib/api';
 import { CreativeShell } from '@/components/creative/creative-shell';
@@ -24,8 +25,21 @@ type Voice = {
   personality?: string;
 };
 
+
 export function CreativeVoiceChangerClient() {
+  if (!isClerkConfigured()) {
+    return <CreativeVoiceChangerClientInner getToken={async () => null} isLoaded={true} />;
+  }
+  return <CreativeVoiceChangerClientAuthed />;
+}
+
+function CreativeVoiceChangerClientAuthed() {
   const { getToken, isLoaded } = useAuth();
+  return <CreativeVoiceChangerClientInner getToken={getToken} isLoaded={isLoaded} />;
+}
+
+function CreativeVoiceChangerClientInner({ getToken, isLoaded }: { getToken: any; isLoaded: any }) {
+  // auth via props: getToken, isLoaded
   const credits = useCreativeCredits();
   const inputRef = useRef<HTMLInputElement>(null);
   const sessionRef = useRef<RecordingSession | null>(null);

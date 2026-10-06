@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
+import { isClerkConfigured } from '@/lib/clerk-config';
 import { useCallback, useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { CreativeShell } from '@/components/creative/creative-shell';
@@ -21,8 +22,21 @@ const TEMPLATES = [
   { title: 'Book cover design', href: '/creative/image-video', art: 'linear-gradient(135deg,#163a5a,#087f78)' },
 ];
 
+
 export function CreativeFlowsClient() {
+  if (!isClerkConfigured()) {
+    return <CreativeFlowsClientInner getToken={async () => null} isLoaded={true} />;
+  }
+  return <CreativeFlowsClientAuthed />;
+}
+
+function CreativeFlowsClientAuthed() {
   const { getToken, isLoaded } = useAuth();
+  return <CreativeFlowsClientInner getToken={getToken} isLoaded={isLoaded} />;
+}
+
+function CreativeFlowsClientInner({ getToken, isLoaded }: { getToken: any; isLoaded: any }) {
+  // auth via props: getToken, isLoaded
   const [rows, setRows] = useState<Workflow[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
