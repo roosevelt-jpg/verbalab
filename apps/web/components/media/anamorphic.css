@@ -226,9 +226,9 @@
 
 .lg-ana[data-variant='agents'] {
   background:
-    radial-gradient(ellipse 80% 70% at 25% 30%, rgba(180, 120, 255, 0.35), transparent 55%),
-    radial-gradient(ellipse 70% 60% at 85% 70%, rgba(16, 38, 77, 0.85), transparent 50%),
-    linear-gradient(145deg, #141028 0%, #3a2860 50%, #6b4aa8 100%);
+    radial-gradient(ellipse 80% 70% at 25% 30%, rgba(0, 184, 174, 0.38), transparent 55%),
+    radial-gradient(ellipse 70% 60% at 85% 70%, rgba(16, 38, 77, 0.88), transparent 50%),
+    linear-gradient(145deg, #0b1a36 0%, #123a48 48%, #007c78 100%);
 }
 
 .lg-ana[data-variant='api'] {

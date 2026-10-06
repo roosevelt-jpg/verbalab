@@ -1693,7 +1693,7 @@ export const CMS_DEFAULTS: CmsDocument = {
   console: {
     dashboardWelcome: {
       title: 'Language Intelligence operator home',
-      lead: 'Africa-first Workspace Console — manage identity, profile, API keys, Chat Studio, model selection, live dialect demos, and platform connectors. Trade, negotiate, and educate with real live dialect translations; Lugemi voice/video sync stays clean without external audio noise.',
+      lead: 'Africa-first Workspace Console — manage identity, API keys, Chat Studio, models, dialect demos, and connectors from one calm command center.',
       starterCards: [
         {
           title: 'Builders hub',
@@ -1712,7 +1712,7 @@ export const CMS_DEFAULTS: CmsDocument = {
         },
         {
           title: 'Install connectors',
-          body: 'One-key plugins for Twilio, VAPI, Google Voice, Higgsfield, Google Video, and office stacks.',
+          body: 'One-key plugins for telephony, voice agents, realtime rooms, video beds, and office stacks.',
           href: '/connectors',
         },
         {

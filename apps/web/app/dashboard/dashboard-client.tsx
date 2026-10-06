@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
 import { AnamorphicPanel } from '@/components/media/anamorphic-panel';
@@ -15,12 +15,19 @@ import {
   StatusRing,
   UsageMeter,
 } from '@/components/stats/activity-visuals';
-import { FEATURE_LABELS, formatWorkspaceLimit, WEB_BILLING_PLANS } from '@/data/billing-plans';
+import {
+  FEATURE_LABELS,
+  FEATURE_MIN_PLAN,
+  formatWorkspaceLimit,
+  planById,
+  WEB_BILLING_PLANS,
+} from '@/data/billing-plans';
 import { PlanGate } from '@/components/billing/plan-gate';
 import {
   PLATFORM_CONNECTORS,
   countConnected,
   loadInstalls,
+  saveInstalls,
   type ConnectorInstall,
 } from '@/lib/connectors-catalog';
 import '@/components/media/anamorphic.css';
@@ -53,12 +60,45 @@ type Overview = {
     name: string;
     rank: number;
     features: string[];
+    planFeatures?: string[];
     workspaceLimit: number;
     workspaceUsed: number;
     canCreateWorkspace: boolean;
   };
   account: { role: string };
 };
+
+type IdentityOverview = {
+  profile?: { name: string | null; email: string | null };
+  organization: { name: string; plan: string };
+  session: { role: string };
+};
+
+type UsageSummary = {
+  periodStart: string;
+  requests: number;
+  characters: number;
+  translate?: { requests: number; characters: number };
+  stt?: { requests: number; seconds: number; minutes: number };
+  tts?: { requests: number; characters: number };
+  chat?: { requests: number; tokens: number };
+  embeddings?: { requests: number; tokens: number };
+};
+
+type AnalyticsOverview = {
+  byFeature: Array<{ feature: string; requests: number; units: number }>;
+  byLanguagePair: Array<{ source: string; target: string; requests: number; characters: number }>;
+};
+
+/** Generic connector tiles — Lugemi capability labels, no third-party brand names. */
+const CONNECTOR_TILES = [
+  { id: 'twilio', label: 'Telephony bridge', category: 'Voice', hint: 'PSTN / messaging voice path' },
+  { id: 'vapi', label: 'Voice agent runtime', category: 'Voice', hint: 'Realtime agent speech layer' },
+  { id: 'livekit', label: 'Realtime rooms', category: 'Voice', hint: 'Low-latency room audio' },
+  { id: 'retell', label: 'Outbound dialer agents', category: 'Voice', hint: 'Campaign-style voice loops' },
+  { id: 'higgsfield', label: 'Lip-sync video bed', category: 'Video', hint: 'Voice-led video render' },
+  { id: 'google-video', label: 'Localized video export', category: 'Video', hint: 'Dialect-true media out' },
+] as const;
 
 const COMMAND_LINKS = [
   { href: '/identity', label: 'Identity', hint: 'Profile & team' },
@@ -83,18 +123,22 @@ const AFRICA_MISSIONS = [
   {
     id: 'negotiate',
     title: 'Negotiate',
-    body: 'Voice agents that hold the room: speak back in the dialect your counterpart uses, with Lugemi Echo Voice — proprietary Africa-first audio.',
+    body: 'Voice agents that hold the room: speak back in the dialect your counterpart uses, with Lugemi Echo Voice.',
     href: '/chat',
     cta: 'Open Chat Studio',
   },
   {
     id: 'educate',
     title: 'Educate',
-    body: 'Classroom and training loops with realtime phrase translation. Teachers and learners stay in their language while content stays accurate.',
+    body: 'Classroom and training loops with realtime phrase translation. Teachers and learners stay in their language.',
     href: '/playground?source=en&target=ak',
     cta: 'Try playground demo',
   },
 ] as const;
+
+const ENTITLEMENT_FEATURES = WEB_BILLING_PLANS.flatMap((p) => p.features).filter(
+  (f, i, arr) => arr.indexOf(f) === i,
+);
 
 const PROFILE_KEY = 'lugemi_workspace_profile_v1';
 
@@ -116,10 +160,27 @@ function saveProfile(p: ProfileLocal) {
   window.localStorage.setItem(PROFILE_KEY, JSON.stringify(p));
 }
 
+function featureOn(data: Overview, feature: string): boolean {
+  if (typeof data.featureFlags[feature] === 'boolean') return data.featureFlags[feature]!;
+  return (
+    data.entitlements?.features.includes(feature) ??
+    Boolean(data.entitlements?.planFeatures?.includes(feature))
+  );
+}
+
+function featureOnPlan(data: Overview, feature: string): boolean {
+  if (data.entitlements?.planFeatures?.includes(feature)) return true;
+  return planById(data.organization.plan).features.includes(feature);
+}
+
 export function DashboardClient() {
   const { getToken, isLoaded } = useAuth();
   const [data, setData] = useState<Overview | null>(null);
+  const [identity, setIdentity] = useState<IdentityOverview | null>(null);
+  const [usage, setUsage] = useState<UsageSummary | null>(null);
+  const [analytics, setAnalytics] = useState<AnalyticsOverview | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [toggleBusy, setToggleBusy] = useState<string | null>(null);
   const [installs, setInstalls] = useState<Record<string, ConnectorInstall>>({});
   const [profile, setProfile] = useState<ProfileLocal>({ displayName: '', imageDataUrl: null });
   const welcome = SITE_CONTENT.dashboardWelcome;
@@ -127,8 +188,16 @@ export function DashboardClient() {
   const load = useCallback(async () => {
     const token = await getToken();
     if (!token) throw new Error('Not signed in');
-    const overview = await apiFetch<Overview>('/v1/cloud/overview', { token });
+    const [overview, idRes, usageRes, analyticsRes] = await Promise.all([
+      apiFetch<Overview>('/v1/cloud/overview', { token }),
+      apiFetch<IdentityOverview>('/v1/identity/overview', { token }).catch(() => null),
+      apiFetch<UsageSummary>('/v1/usage/summary', { token }).catch(() => null),
+      apiFetch<AnalyticsOverview>('/v1/analytics/overview', { token }).catch(() => null),
+    ]);
     setData(overview);
+    setIdentity(idRes);
+    setUsage(usageRes);
+    setAnalytics(analyticsRes);
   }, [getToken]);
 
   useEffect(() => {
@@ -140,6 +209,111 @@ export function DashboardClient() {
     setInstalls(loadInstalls());
     setProfile(loadProfile());
   }, []);
+
+  useEffect(() => {
+    if (!identity?.profile?.name) return;
+    setProfile((prev) => {
+      if (prev.displayName.trim()) return prev;
+      const next = { ...prev, displayName: identity.profile?.name ?? '' };
+      saveProfile(next);
+      return next;
+    });
+  }, [identity]);
+
+  const displayName = useMemo(() => {
+    if (profile.displayName.trim()) return profile.displayName.trim();
+    return identity?.profile?.name?.trim() || identity?.profile?.email || 'Operator';
+  }, [profile.displayName, identity]);
+
+  const connectedCount = countConnected(installs);
+  const voiceVideoConnected = PLATFORM_CONNECTORS.filter(
+    (c) => (c.category === 'voice' || c.category === 'video') && installs[c.id]?.connected,
+  ).length;
+
+  const charsUsed = data?.billing.charactersUsed ?? usage?.characters ?? 0;
+  const charQuota = data?.billing.characterQuota ?? 0;
+  const charsRemaining = data?.billing.charactersRemaining ?? Math.max(0, charQuota - charsUsed);
+  const requestCount =
+    data?.billing.requests ??
+    usage?.requests ??
+    (usage
+      ? (usage.translate?.requests ?? 0) +
+        (usage.stt?.requests ?? 0) +
+        (usage.tts?.requests ?? 0) +
+        (usage.chat?.requests ?? 0)
+      : 0);
+  const hasUsage = charsUsed > 0 || requestCount > 0;
+
+  const featureBars = useMemo(() => {
+    if (analytics?.byFeature?.length) {
+      const wanted = [
+        { key: /speech|stt|tts|audio/i, label: 'Speech' },
+        { key: /translate|mt/i, label: 'Translate' },
+        { key: /agent|voice|chat/i, label: 'Agents' },
+        { key: /studio|playground|console/i, label: 'Studio' },
+      ];
+      return wanted.map(({ key, label }) => {
+        const sum = analytics.byFeature
+          .filter((f) => key.test(f.feature))
+          .reduce((acc, f) => acc + f.requests, 0);
+        return { label, value: sum };
+      });
+    }
+    if (!usage) return [
+      { label: 'Speech', value: 0 },
+      { label: 'Translate', value: 0 },
+      { label: 'Agents', value: 0 },
+      { label: 'Studio', value: 0 },
+    ];
+    return [
+      { label: 'Speech', value: (usage.stt?.requests ?? 0) + (usage.tts?.requests ?? 0) },
+      { label: 'Translate', value: usage.translate?.requests ?? 0 },
+      { label: 'Agents', value: usage.chat?.requests ?? 0 },
+      { label: 'Studio', value: usage.embeddings?.requests ?? 0 },
+    ];
+  }, [analytics, usage]);
+
+  const localeHeat = useMemo(() => {
+    if (analytics?.byLanguagePair?.length) {
+      return analytics.byLanguagePair.slice(0, 4).map((pair, i) => ({
+        id: `${pair.source}-${pair.target}-${i}`,
+        label: `${pair.source} → ${pair.target}`,
+        value: pair.requests,
+        hint: `${pair.characters.toLocaleString()} chars`,
+      }));
+    }
+    const src = data?.workspace?.defaultSourceLang ?? 'en';
+    const tgt = data?.workspace?.defaultTargetLang ?? 'ak';
+    if (!hasUsage) {
+      return [
+        { id: 'src', label: src, value: 0, hint: 'source default' },
+        { id: 'tgt', label: tgt, value: 0, hint: 'target default' },
+        { id: 'ak', label: 'ak · Twi', value: 0, hint: 'Africa focus' },
+      ];
+    }
+    return [
+      {
+        id: 'src',
+        label: src,
+        value: Math.max(1, Math.round(requestCount * 0.55)),
+        hint: 'source',
+      },
+      {
+        id: 'tgt',
+        label: tgt,
+        value: Math.max(1, Math.round(requestCount * 0.7)),
+        hint: 'target',
+      },
+      {
+        id: 'ak',
+        label: 'ak · Twi',
+        value: Math.max(1, Math.round(requestCount * 0.45)),
+        hint: 'Africa focus',
+      },
+    ];
+  }, [analytics, data, hasUsage, requestCount]);
+
+  const usageSeries = hasUsage ? seedUsageSeries(charsUsed, requestCount) : Array.from({ length: 14 }, () => 0);
 
   function onProfileImage(file: File | null) {
     if (!file) return;
@@ -160,22 +334,66 @@ export function DashboardClient() {
     reader.readAsDataURL(file);
   }
 
-  const connectedCount = countConnected(installs);
-  const voiceVideoConnected = PLATFORM_CONNECTORS.filter(
-    (c) => (c.category === 'voice' || c.category === 'video') && installs[c.id]?.connected,
-  ).length;
+  function quickInstall(id: string) {
+    const next: ConnectorInstall = {
+      ...(installs[id] ?? { connected: false }),
+      connected: true,
+      connectedAt: Date.now(),
+    };
+    const map = { ...installs, [id]: next };
+    setInstalls(map);
+    saveInstalls(map);
+  }
+
+  async function toggleEntitlement(feature: string, enabled: boolean) {
+    if (!data) return;
+    if (!featureOnPlan(data, feature)) return;
+    if (data.account.role !== 'owner' && data.account.role !== 'admin') {
+      setError('Only owners and admins can change workspace entitlements.');
+      return;
+    }
+    setToggleBusy(feature);
+    setError(null);
+    try {
+      const token = await getToken();
+      if (!token) throw new Error('Not signed in');
+      const res = await apiFetch<{
+        flags: Record<string, boolean>;
+        entitlements: Overview['entitlements'];
+      }>('/v1/feature-flags', {
+        method: 'PATCH',
+        token,
+        body: JSON.stringify({ overrides: { [feature]: enabled } }),
+      });
+      setData((prev) =>
+        prev
+          ? {
+              ...prev,
+              featureFlags: { ...prev.featureFlags, ...res.flags },
+              entitlements: res.entitlements ?? prev.entitlements,
+            }
+          : prev,
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not update entitlement');
+    } finally {
+      setToggleBusy(null);
+    }
+  }
+
+  const canManageFlags = data?.account.role === 'owner' || data?.account.role === 'admin';
 
   return (
     <AppShell>
       <div className="lg-workspace-hub">
         <header className="lg-workspace-hero">
           <div className="lg-workspace-hero__copy">
-            <p className="lg-workspace-kicker">Lugemi Workspace Console</p>
+            <p className="lg-workspace-brand">Lugemi</p>
+            <p className="lg-workspace-kicker">Workspace Console</p>
             <h1 className="lg-workspace-title">{welcome.title}</h1>
-            <p className="lg-workspace-lead">{welcome.lead}</p>
-            <p className="lg-workspace-sync">
-              Voice/video sync stays on Lugemi: one speech path, dialect-true audio, no external voice
-              overlay noise in the render chain.
+            <p className="lg-workspace-lead">
+              Calm command center for Africa-first language intelligence — identity, usage, connectors,
+              and dialect demos in one place.
             </p>
             <div className="lg-workspace-hero__ctas">
               <Link href="/chat" className="vl-btn vl-btn-primary" style={{ textDecoration: 'none' }}>
@@ -188,23 +406,22 @@ export function DashboardClient() {
               >
                 Translate en → Twi
               </Link>
-              <Link href="/connectors" className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none' }}>
-                Install connectors
-              </Link>
             </div>
           </div>
           <div className="lg-workspace-hero__side">
-            <AnamorphicPanel variant="agents" size="sm" label="Operator home" />
+            <AnamorphicPanel variant="voice" size="sm" label="Operator home" />
             <section className="lg-workspace-profile" aria-labelledby="dash-profile">
               <h2 id="dash-profile" className="lg-workspace-section-label">
-                Profile
+                Identity
               </h2>
               <div className="lg-workspace-profile__row">
                 <label className="lg-workspace-avatar" title="Set profile image">
                   {profile.imageDataUrl ? (
                     <img src={profile.imageDataUrl} alt="" />
                   ) : (
-                    <span aria-hidden="true">LG</span>
+                    <span aria-hidden="true">
+                      {(displayName.slice(0, 2) || 'LG').toUpperCase()}
+                    </span>
                   )}
                   <input
                     type="file"
@@ -226,8 +443,10 @@ export function DashboardClient() {
                     aria-label="Display name"
                   />
                   <p className="lg-workspace-profile__hint">
-                    Stored in this browser · full org settings in{' '}
-                    <Link href="/identity">Identity</Link>
+                    {identity?.organization.name
+                      ? `${identity.organization.name} · `
+                      : null}
+                    <Link href="/identity">Identity settings</Link>
                   </p>
                 </div>
               </div>
@@ -235,38 +454,8 @@ export function DashboardClient() {
           </div>
         </header>
 
-        <nav className="lg-workspace-command" aria-label="Workspace command center">
-          {COMMAND_LINKS.map((link) => (
-            <Link key={link.href} href={link.href} className="lg-workspace-command__item">
-              <span className="lg-workspace-command__label">{link.label}</span>
-              <span className="lg-workspace-command__hint">{link.hint}</span>
-            </Link>
-          ))}
-        </nav>
-
-        <section className="lg-workspace-missions" aria-labelledby="dash-missions">
-          <div className="lg-workspace-missions__head">
-            <h2 id="dash-missions" className="lg-workspace-section-label">
-              Africa-first missions
-            </h2>
-            <p>
-              Trade, negotiate, and educate with real live dialect translations — English into African
-              languages with cultural context, not generic MT gloss.
-            </p>
-          </div>
-          <ul className="lg-workspace-missions__list">
-            {AFRICA_MISSIONS.map((m) => (
-              <li key={m.id}>
-                <h3>{m.title}</h3>
-                <p>{m.body}</p>
-                <Link href={m.href}>{m.cta} →</Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        {error ? <p style={{ color: '#b42318', marginBottom: '1rem' }}>{error}</p> : null}
-        {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading workspace…</p> : null}
+        {error ? <p className="lg-workspace-error">{error}</p> : null}
+        {!data && !error ? <p className="lg-workspace-loading">Loading workspace…</p> : null}
 
         {data ? (
           <div className="lg-workspace-body">
@@ -296,12 +485,13 @@ export function DashboardClient() {
                 <div>
                   <span className="lg-workspace-meta">Usage</span>
                   <strong>
-                    {data.billing.charactersUsed.toLocaleString()} /{' '}
-                    {data.billing.characterQuota.toLocaleString()}
+                    {charsUsed.toLocaleString()} / {charQuota.toLocaleString()}
                   </strong>
                   <span>
-                    {data.billing.charactersRemaining.toLocaleString()} left · {data.billing.requests}{' '}
-                    requests · <Link href="/billing">Billing</Link>
+                    {charsRemaining.toLocaleString()} left · {requestCount.toLocaleString()} requests ·{' '}
+                    <Link href="/billing">Billing</Link>
+                    {' · '}
+                    <Link href="/usage">Usage</Link>
                   </span>
                 </div>
                 <div>
@@ -318,32 +508,49 @@ export function DashboardClient() {
               </div>
             </section>
 
+            <nav className="lg-workspace-command" aria-label="Workspace modules">
+              {COMMAND_LINKS.map((link) => (
+                <Link key={link.href} href={link.href} className="lg-workspace-command__item">
+                  <span className="lg-workspace-command__label">{link.label}</span>
+                  <span className="lg-workspace-command__hint">{link.hint}</span>
+                </Link>
+              ))}
+            </nav>
+
             <section className="lg-workspace-connectors-preview" aria-labelledby="dash-connectors">
               <div className="lg-workspace-connectors-preview__head">
                 <h2 id="dash-connectors" className="lg-workspace-section-label">
                   Plugin installer
                 </h2>
                 <p>
-                  {connectedCount} connected · {voiceVideoConnected} voice/video · LiveKit, Retell,
-                  Africa&apos;s Talking, WhatsApp Cloud, CRM, LMS, and more — one API integration each.
+                  {connectedCount} connected · {voiceVideoConnected} voice/video paths. Install Lugemi
+                  speech bridges into your stack — one integration each.
                 </p>
                 <Link href="/connectors" className="vl-btn vl-btn-primary" style={{ textDecoration: 'none' }}>
                   Open installer
                 </Link>
               </div>
               <ul className="lg-workspace-connectors-preview__list">
-                {PLATFORM_CONNECTORS.filter((c) => c.category === 'voice' || c.category === 'video')
-                  .slice(0, 6)
-                  .map((c) => {
-                    const on = Boolean(installs[c.id]?.connected);
-                    return (
-                      <li key={c.id} className={on ? 'is-on' : undefined}>
-                        <strong>{c.name}</strong>
-                        <span>{c.category}</span>
-                        <em>{on ? 'Connected' : 'Install'}</em>
-                      </li>
-                    );
-                  })}
+                {CONNECTOR_TILES.map((tile) => {
+                  const on = Boolean(installs[tile.id]?.connected);
+                  return (
+                    <li key={tile.id} className={on ? 'is-on' : undefined}>
+                      <strong>{tile.label}</strong>
+                      <span>{tile.category}</span>
+                      {on ? (
+                        <Link href={`/connectors#${tile.id}`}>Connected</Link>
+                      ) : (
+                        <button
+                          type="button"
+                          className="lg-workspace-install-btn"
+                          onClick={() => quickInstall(tile.id)}
+                        >
+                          Install
+                        </button>
+                      )}
+                    </li>
+                  );
+                })}
               </ul>
             </section>
 
@@ -351,9 +558,9 @@ export function DashboardClient() {
               <PipelineStrip
                 title="Language intelligence path"
                 stages={[
-                  { id: 'ingest', label: 'Ingest', state: data.billing.requests > 0 ? 'ready' : 'idle' },
+                  { id: 'ingest', label: 'Ingest', state: requestCount > 0 ? 'ready' : 'idle' },
                   { id: 'route', label: 'Route', state: data.workspace ? 'ready' : 'idle' },
-                  { id: 'model', label: 'Model', state: data.billing.requests > 0 ? 'active' : 'ready' },
+                  { id: 'model', label: 'Model', state: requestCount > 0 ? 'active' : 'ready' },
                   {
                     id: 'deliver',
                     label: 'Deliver',
@@ -368,13 +575,13 @@ export function DashboardClient() {
               <div className="lg-studio-overview">
                 <UsageMeter
                   label="Character quota"
-                  value={data.billing.charactersUsed}
-                  max={data.billing.characterQuota}
+                  value={charsUsed}
+                  max={Math.max(charQuota, 1)}
                   unit="chars"
                 />
                 <UsageMeter
                   label="Request pace"
-                  value={Math.min(data.billing.requests, 500)}
+                  value={Math.min(requestCount, 500)}
                   max={500}
                   unit="calls"
                 />
@@ -395,76 +602,74 @@ export function DashboardClient() {
                   detail={`${connectedCount} connected · ${voiceVideoConnected} voice/video`}
                 />
               </div>
-              <div className="lg-stats-grid">
-                <ProgressRing
-                  value={data.billing.charactersUsed}
-                  max={data.billing.characterQuota}
-                  label="Character balance"
-                  sublabel={`${data.billing.charactersRemaining.toLocaleString()} left this period`}
-                />
-                <LineChart
-                  title="Usage timeline"
-                  series={seedUsageSeries(data.billing.charactersUsed, data.billing.requests)}
-                />
-                <BarChart
-                  title="Feature mix"
-                  bars={[
-                    { label: 'Speech', value: Math.max(12, Math.round(data.billing.requests * 0.4)) },
-                    { label: 'Translate', value: Math.max(8, Math.round(data.billing.requests * 0.35)) },
-                    { label: 'Agents', value: Math.max(4, Math.round(data.billing.requests * 0.15)) },
-                    { label: 'Studio', value: Math.max(3, Math.round(data.billing.requests * 0.1)) },
-                  ]}
-                />
-                <HeatList
-                  title="Locale defaults heat"
-                  items={[
-                    {
-                      id: 'src',
-                      label: data.workspace?.defaultSourceLang ?? 'en',
-                      value: Math.max(4, Math.round(data.billing.requests * 0.55)),
-                      hint: 'source',
-                    },
-                    {
-                      id: 'tgt',
-                      label: data.workspace?.defaultTargetLang ?? 'ak',
-                      value: Math.max(6, Math.round(data.billing.requests * 0.7)),
-                      hint: 'target',
-                    },
-                    {
-                      id: 'ak',
-                      label: 'ak · Twi',
-                      value: Math.max(5, Math.round(data.billing.requests * 0.45)),
-                      hint: 'Africa focus',
-                    },
-                  ]}
-                />
-              </div>
+              {hasUsage ? (
+                <div className="lg-stats-grid">
+                  <ProgressRing
+                    value={charsUsed}
+                    max={Math.max(charQuota, 1)}
+                    label="Character balance"
+                    sublabel={`${charsRemaining.toLocaleString()} left this period`}
+                  />
+                  <LineChart title="Usage timeline" series={usageSeries} />
+                  <BarChart title="Feature mix" bars={featureBars} />
+                  <HeatList title="Locale defaults heat" items={localeHeat} />
+                </div>
+              ) : (
+                <p className="lg-workspace-empty">
+                  No usage yet this period. Run a translate or speech call — metrics fill from billing,
+                  usage, and analytics APIs.
+                </p>
+              )}
             </ActivityBoard>
 
-            <section className="vl-endpoint-card" aria-labelledby="dash-entitlements">
+            <section className="lg-workspace-entitlements" aria-labelledby="dash-entitlements">
               <h2 id="dash-entitlements" className="lg-workspace-section-label">
                 Workspace entitlements
               </h2>
-              <p style={{ margin: '0 0 0.75rem', color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.5 }}>
-                This workspace inherits your {data.billing.planName} subscription — features unlock with
-                the plan, tiered.
+              <p className="lg-workspace-entitlements__lead">
+                Features unlocked by your {data.billing.planName} plan. Toggle on/off for this workspace
+                {canManageFlags ? '' : ' (owners and admins can change)'}.
               </p>
               <ul className="lg-workspace-flags">
-                {WEB_BILLING_PLANS.flatMap((p) => p.features)
-                  .filter((f, i, arr) => arr.indexOf(f) === i)
-                  .map((feature) => {
-                    const on =
-                      data.entitlements?.features.includes(feature) ??
-                      Boolean(data.featureFlags[feature]);
-                    return (
-                      <li key={feature} className="vl-tag" style={{ opacity: on ? 1 : 0.5 }}>
-                        <span>{FEATURE_LABELS[feature] ?? feature}</span>
-                        <span style={{ fontWeight: 700 }}>{on ? 'On' : 'Locked'}</span>
-                      </li>
-                    );
-                  })}
+                {ENTITLEMENT_FEATURES.map((feature) => {
+                  const onPlan = featureOnPlan(data, feature);
+                  const on = featureOn(data, feature);
+                  const locked = !onPlan;
+                  const busy = toggleBusy === feature;
+                  const minPlan = FEATURE_MIN_PLAN[feature];
+                  return (
+                    <li key={feature} className={`lg-workspace-flag${locked ? ' is-locked' : ''}`}>
+                      <div className="lg-workspace-flag__copy">
+                        <span className="lg-workspace-flag__label">
+                          {FEATURE_LABELS[feature] ?? feature}
+                        </span>
+                        {locked ? (
+                          <span className="lg-workspace-flag__hint">
+                            Requires {minPlan ? planById(minPlan).name : 'upgrade'} ·{' '}
+                            <Link href="/billing">Upgrade</Link>
+                          </span>
+                        ) : (
+                          <span className="lg-workspace-flag__hint">
+                            {on ? 'Enabled for this workspace' : 'Disabled for this workspace'}
+                          </span>
+                        )}
+                      </div>
+                      <button
+                        type="button"
+                        role="switch"
+                        aria-checked={locked ? false : on}
+                        aria-label={`${FEATURE_LABELS[feature] ?? feature}${locked ? ' (plan locked)' : ''}`}
+                        className={`lg-toggle${on && !locked ? ' is-on' : ''}`}
+                        disabled={locked || busy || !canManageFlags}
+                        onClick={() => void toggleEntitlement(feature, !on)}
+                      >
+                        <span className="lg-toggle__thumb" />
+                      </button>
+                    </li>
+                  );
+                })}
               </ul>
-              <div style={{ marginTop: '0.85rem' }}>
+              <div className="lg-workspace-entitlements__gate">
                 <PlanGate
                   feature="marketplace"
                   currentPlan={data.organization.plan}
@@ -472,6 +677,27 @@ export function DashboardClient() {
                   compact
                 />
               </div>
+            </section>
+
+            <section className="lg-workspace-missions" aria-labelledby="dash-missions">
+              <div className="lg-workspace-missions__head">
+                <h2 id="dash-missions" className="lg-workspace-section-label">
+                  Africa-first missions
+                </h2>
+                <p>
+                  Trade, negotiate, and educate with live dialect translations — cultural context, not
+                  generic MT gloss.
+                </p>
+              </div>
+              <ul className="lg-workspace-missions__list">
+                {AFRICA_MISSIONS.map((m) => (
+                  <li key={m.id}>
+                    <h3>{m.title}</h3>
+                    <p>{m.body}</p>
+                    <Link href={m.href}>{m.cta} →</Link>
+                  </li>
+                ))}
+              </ul>
             </section>
 
             <section className="vl-player-bar" aria-label="Quick demos">

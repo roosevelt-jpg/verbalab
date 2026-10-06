@@ -1463,8 +1463,19 @@ textarea {
 }
 
 /* —— Workspace Console hub —— */
+.lg-workspace-brand {
+  margin: 0 0 0.15rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.85rem, 3.2vw, 2.55rem);
+  font-weight: 760;
+  letter-spacing: -0.04em;
+  color: var(--brand-navy);
+  line-height: 1.05;
+  animation: vl-fade-up 0.4s ease both;
+}
+
 .lg-workspace-kicker {
-  margin: 0 0 0.35rem;
+  margin: 0 0 0.45rem;
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -1474,32 +1485,41 @@ textarea {
 
 .lg-workspace-title {
   font-family: var(--font-display);
-  font-size: clamp(1.65rem, 2.4vw, 2.15rem);
-  font-weight: 720;
-  letter-spacing: -0.03em;
-  margin: 0 0 0.4rem;
+  font-size: clamp(1.35rem, 2vw, 1.75rem);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.45rem;
   color: var(--brand-navy);
-  line-height: 1.15;
+  line-height: 1.2;
 }
 
 .lg-workspace-lead {
   color: var(--muted);
   margin: 0;
-  max-width: 40rem;
-  line-height: 1.6;
-  font-size: 0.98rem;
+  max-width: 36rem;
+  line-height: 1.55;
+  font-size: 0.95rem;
 }
 
-.lg-workspace-sync {
-  margin: 0.75rem 0 0;
-  max-width: 38rem;
-  padding: 0.65rem 0.85rem;
-  border-left: 3px solid var(--action-primary);
-  background: linear-gradient(90deg, rgba(0, 184, 174, 0.1), transparent 85%);
-  color: var(--text-primary);
-  font-size: 0.88rem;
+.lg-workspace-error {
+  color: #b42318;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.lg-workspace-loading,
+.lg-workspace-empty {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.92rem;
   line-height: 1.5;
-  animation: vl-fade-up 0.55s ease both;
+}
+
+.lg-workspace-empty {
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-control);
+  border: 1px dashed var(--border-subtle);
+  background: rgba(16, 38, 77, 0.02);
 }
 
 .lg-workspace-section-label {
@@ -1518,11 +1538,15 @@ textarea {
 
 .lg-workspace-hero {
   display: grid;
-  gap: 1.25rem;
-  grid-template-columns: minmax(0, 1.35fr) minmax(14rem, 0.85fr);
+  gap: 1.5rem;
+  grid-template-columns: minmax(0, 1.4fr) minmax(13rem, 0.75fr);
   align-items: start;
-  padding: 0.25rem 0 0.5rem;
+  padding: 0.35rem 0 0.75rem;
   animation: vl-fade-up 0.45s ease both;
+  background:
+    radial-gradient(ellipse 70% 90% at 0% 0%, rgba(0, 184, 174, 0.08), transparent 55%),
+    radial-gradient(ellipse 50% 70% at 100% 10%, rgba(16, 38, 77, 0.05), transparent 50%);
+  border-radius: var(--radius-card);
 }
 
 .lg-workspace-hero__ctas {
@@ -1787,13 +1811,46 @@ textarea {
   text-transform: capitalize;
 }
 
-.lg-workspace-connectors-preview__list em {
+.lg-workspace-connectors-preview__list a,
+.lg-workspace-install-btn {
   grid-row: 1 / span 2;
   align-self: center;
+  justify-self: end;
   font-style: normal;
   font-weight: 700;
   font-size: 0.75rem;
   color: var(--action-primary);
+  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.lg-workspace-install-btn:hover,
+.lg-workspace-connectors-preview__list a:hover {
+  text-decoration: underline;
+}
+
+.lg-workspace-entitlements {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
+  padding: 1.1rem 1.25rem;
+  background:
+    linear-gradient(180deg, rgba(0, 184, 174, 0.04), transparent 40%),
+    var(--surface-canvas);
+}
+
+.lg-workspace-entitlements__lead {
+  margin: 0 0 0.85rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.lg-workspace-entitlements__gate {
+  margin-top: 0.85rem;
 }
 
 .lg-workspace-flags {
@@ -1801,14 +1858,89 @@ textarea {
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 0.45rem;
-  grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr));
+  gap: 0.55rem;
+  grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
 }
 
-.lg-workspace-flags .vl-tag {
+.lg-workspace-flag {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: 0.75rem;
+  padding: 0.7rem 0.85rem;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-canvas);
+}
+
+.lg-workspace-flag.is-locked {
+  opacity: 0.72;
+  background: rgba(16, 38, 77, 0.02);
+}
+
+.lg-workspace-flag__copy {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.lg-workspace-flag__label {
+  font-weight: 650;
+  color: var(--brand-navy);
+  font-size: 0.9rem;
+}
+
+.lg-workspace-flag__hint {
+  font-size: 0.75rem;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.lg-workspace-flag__hint a {
+  color: var(--action-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.lg-toggle {
+  --lg-toggle-w: 2.55rem;
+  --lg-toggle-h: 1.4rem;
+  position: relative;
+  width: var(--lg-toggle-w);
+  height: var(--lg-toggle-h);
+  border-radius: 999px;
+  border: 1px solid rgba(16, 38, 77, 0.18);
+  background: rgba(16, 38, 77, 0.12);
+  padding: 0;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease;
+}
+
+.lg-toggle.is-on {
+  background: var(--action-primary);
+  border-color: transparent;
+}
+
+.lg-toggle:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.lg-toggle__thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: calc(var(--lg-toggle-h) - 6px);
+  height: calc(var(--lg-toggle-h) - 6px);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(16, 38, 77, 0.25);
+  transition: transform 0.18s ease;
+}
+
+.lg-toggle.is-on .lg-toggle__thumb {
+  transform: translateX(calc(var(--lg-toggle-w) - var(--lg-toggle-h)));
 }
 
 /* —— Connectors installer —— */
@@ -2062,16 +2194,38 @@ textarea {
   .lg-workspace-operator__strip {
     grid-template-columns: 1fr;
   }
+
+  .lg-workspace-flags {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .lg-workspace-brand {
+    font-size: 1.65rem;
+  }
+
+  .lg-workspace-hero__ctas {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .lg-workspace-command {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .lg-workspace-hero,
+  .lg-workspace-brand,
   .lg-workspace-command,
   .lg-workspace-missions,
-  .lg-workspace-sync,
   .lg-connectors-hero,
-  .lg-connectors-install__body {
+  .lg-connectors-install__body,
+  .lg-toggle,
+  .lg-toggle__thumb {
     animation: none;
+    transition: none;
   }
 }
 

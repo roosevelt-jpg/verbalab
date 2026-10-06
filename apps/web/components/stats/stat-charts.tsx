@@ -118,7 +118,10 @@ export function BarChart({
           <div key={b.label} className="lg-bar-row">
             <span className="lg-bar-label">{b.label}</span>
             <span className="lg-bar-track">
-              <span className="lg-bar-fill" style={{ width: `${Math.max(4, (b.value / max) * 100)}%` }} />
+              <span
+                className="lg-bar-fill"
+                style={{ width: b.value === 0 ? '0%' : `${Math.max(4, (b.value / max) * 100)}%` }}
+              />
             </span>
             <span className="lg-bar-value">{b.value.toLocaleString()}</span>
           </div>
@@ -186,8 +189,11 @@ export function DualLineChart({
   );
 }
 
-/** Deterministic spark series from seed metrics (until day-bucket API ships). */
+/** Deterministic spark series from aggregate usage when day buckets are unavailable. */
 export function seedUsageSeries(used: number, requests: number, days = 14): number[] {
+  if (used <= 0 && requests <= 0) {
+    return Array.from({ length: days }, () => 0);
+  }
   const base = Math.max(1, Math.floor(used / Math.max(days, 1)));
   const reqBase = Math.max(1, Math.floor(requests / Math.max(days, 1)));
   return Array.from({ length: days }, (_, i) => {

@@ -60,7 +60,7 @@ export function UsageMeter({
         aria-valuemin={0}
         aria-valuemax={100}
       >
-        <span className="lg-usage-meter__fill" style={{ width: `${Math.max(2, pct)}%` }} />
+        <span className="lg-usage-meter__fill" style={{ width: pct === 0 ? '0%' : `${Math.max(2, pct)}%` }} />
       </div>
       <div className="lg-stat-sub">
         {value.toLocaleString()}
