@@ -164,6 +164,10 @@ export function ModelsClient() {
           'Proprietary Lugemi model families — Atlas, Baobab, Echo, Vector, Lex, Civic, Cover, Accord, Sentinel, Fusion — for complex multilingual reasoning, dialect, and vertical tasks. Lugemi-owned intelligence, not third-party wrappers.'}
       </p>
       <p style={{ margin: '0.65rem 0 0', fontSize: '0.9rem' }}>
+        <Link href="/baobab">Baobab canopy</Link>
+        {' · '}
+        <Link href="/verified-interpreter">Verified Interpreter</Link>
+        {' · '}
         <Link href="/translate">Translate (English → Twi)</Link>
         {' · '}
         <Link href="/language-intelligence">Language Intelligence</Link>

@@ -1,0 +1,538 @@
+/* Lugemi /baobab — cinematic next-model canopy, navy/teal only */
+
+.baobab-page {
+  --bb-navy: #10264d;
+  --bb-teal: #00b8ae;
+  --bb-deep: #007c78;
+  --bb-ink: #f7fafc;
+  --bb-muted: rgba(182, 195, 213, 0.92);
+  --bb-display: var(--font-syne), var(--font-ui), sans-serif;
+  position: relative;
+  color: var(--bb-ink);
+  background: #071018;
+  overflow-x: hidden;
+}
+
+.baobab-page a {
+  color: inherit;
+}
+
+.baobab-hero {
+  position: relative;
+  min-height: min(100svh, 900px);
+  display: grid;
+  align-items: end;
+  padding: 0;
+  isolation: isolate;
+}
+
+.baobab-hero__visual {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.baobab-hero__veil {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgba(7, 16, 24, 0.35) 0%, rgba(7, 16, 24, 0.15) 40%, rgba(7, 16, 24, 0.88) 100%),
+    radial-gradient(ellipse 70% 50% at 70% 30%, rgba(0, 184, 174, 0.18), transparent 60%);
+}
+
+.baobab-hero__copy {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 7rem 24px 3.5rem;
+  animation: baobab-rise 0.7s ease both;
+}
+
+.baobab-brand {
+  margin: 0;
+  font-family: var(--bb-display);
+  font-size: clamp(3rem, 9vw, 5.5rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+  color: #fff;
+  text-shadow: 0 8px 40px rgba(0, 0, 0, 0.45);
+}
+
+.baobab-brand span {
+  display: block;
+  color: var(--bb-teal);
+  font-size: 0.42em;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 0.55rem;
+  text-shadow: none;
+}
+
+.baobab-headline {
+  margin: 1.1rem 0 0;
+  max-width: 22ch;
+  font-family: var(--bb-display);
+  font-size: clamp(1.45rem, 3.2vw, 2.15rem);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: rgba(247, 250, 252, 0.96);
+}
+
+.baobab-lead {
+  margin: 0.85rem 0 0;
+  max-width: 36rem;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--bb-muted);
+}
+
+.baobab-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: 1.75rem;
+}
+
+.baobab-cta a {
+  text-decoration: none;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.65rem 1.1rem;
+  border-radius: 8px;
+  font-weight: 650;
+  font-size: 0.9rem;
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.baobab-cta a:hover,
+.baobab-cta a:focus-visible {
+  transform: translateY(-1px);
+}
+
+.baobab-cta__primary {
+  background: var(--bb-teal);
+  color: var(--bb-navy);
+}
+
+.baobab-cta__primary:hover,
+.baobab-cta__primary:focus-visible {
+  background: #7ff5ef;
+}
+
+.baobab-cta__ghost {
+  background: rgba(16, 38, 77, 0.45);
+  border: 1px solid rgba(0, 184, 174, 0.45);
+  color: #fff;
+  backdrop-filter: blur(8px);
+}
+
+.baobab-cta__ghost:hover,
+.baobab-cta__ghost:focus-visible {
+  border-color: var(--bb-teal);
+  background: rgba(0, 124, 120, 0.35);
+}
+
+.baobab-plane {
+  position: absolute;
+  inset: 0;
+  perspective: 1100px;
+  transform-style: preserve-3d;
+  cursor: crosshair;
+  touch-action: none;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 90% 70% at 25% 20%, rgba(0, 184, 174, 0.28), transparent 55%),
+    radial-gradient(ellipse 70% 60% at 85% 75%, rgba(16, 38, 77, 0.9), transparent 50%),
+    linear-gradient(155deg, #050d18 0%, #10264d 48%, #0a2f34 100%);
+}
+
+.baobab-plane__stage {
+  position: absolute;
+  inset: -4%;
+  transform-style: preserve-3d;
+  transform-origin: 50% 55%;
+  will-change: transform;
+}
+
+.baobab-plane__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: translateZ(0);
+}
+
+.baobab-plane__glass {
+  position: absolute;
+  border-radius: 28px;
+  border: 1px solid rgba(0, 184, 174, 0.28);
+  pointer-events: none;
+  backdrop-filter: blur(1.5px);
+}
+
+.baobab-plane__glass--back {
+  inset: 22% 16%;
+  transform: translateZ(-70px) scaleX(1.4) skewY(-5deg);
+  background: linear-gradient(120deg, rgba(0, 184, 174, 0.12), rgba(16, 38, 77, 0.2));
+  opacity: 0.7;
+}
+
+.baobab-plane__glass--mid {
+  inset: 14% 10%;
+  transform: translateZ(18px) scaleX(1.12) skewX(-7deg);
+  background: linear-gradient(145deg, rgba(0, 184, 174, 0.16), transparent 55%);
+  opacity: 0.85;
+}
+
+.baobab-plane__glass--front {
+  inset: 28% 22%;
+  transform: translateZ(72px) scaleX(0.9);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.16), transparent 42%),
+    linear-gradient(90deg, rgba(0, 184, 174, 0.32), rgba(16, 38, 77, 0.15));
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+}
+
+.baobab-plane__beam {
+  position: absolute;
+  inset: -25% -15%;
+  background: linear-gradient(
+    108deg,
+    transparent 38%,
+    rgba(0, 184, 174, 0.2) 48%,
+    rgba(255, 255, 255, 0.14) 50%,
+    rgba(0, 184, 174, 0.18) 52%,
+    transparent 62%
+  );
+  transform: translateZ(36px) skewX(-16deg);
+  animation: baobab-sweep 8s linear infinite;
+  pointer-events: none;
+}
+
+.baobab-plane__orbit {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+
+.baobab-plane__node {
+  position: absolute;
+  top: 48%;
+  left: 50%;
+  padding: 0.35rem 0.7rem;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(247, 250, 252, 0.75);
+  background: rgba(16, 38, 77, 0.55);
+  border: 1px solid rgba(0, 184, 174, 0.25);
+  white-space: nowrap;
+  pointer-events: auto;
+  transition: color 180ms ease, background 180ms ease, border-color 180ms ease;
+}
+
+.baobab-plane__node.is-active {
+  color: var(--bb-navy);
+  background: rgba(0, 184, 174, 0.95);
+  border-color: rgba(255, 255, 255, 0.45);
+  box-shadow: 0 8px 24px rgba(0, 184, 174, 0.35);
+}
+
+.baobab-plane__hint {
+  position: absolute;
+  right: 1.25rem;
+  bottom: 1.1rem;
+  z-index: 3;
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: rgba(182, 195, 213, 0.85);
+  pointer-events: none;
+}
+
+.baobab-section {
+  position: relative;
+  padding: 5rem 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 10% 0%, rgba(0, 184, 174, 0.1), transparent 55%),
+    #0a1424;
+}
+
+.baobab-section--mist {
+  background:
+    radial-gradient(ellipse 50% 40% at 90% 20%, rgba(0, 124, 120, 0.14), transparent 50%),
+    #0d1a2e;
+}
+
+.baobab-wrap {
+  width: 100%;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.baobab-kicker {
+  margin: 0 0 0.65rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--bb-teal);
+}
+
+.baobab-h2 {
+  margin: 0;
+  max-width: 18ch;
+  font-family: var(--bb-display);
+  font-size: clamp(1.75rem, 3.4vw, 2.55rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.15;
+  color: #fff;
+}
+
+.baobab-lede {
+  margin: 0.9rem 0 0;
+  max-width: 38rem;
+  font-size: 1.02rem;
+  line-height: 1.65;
+  color: var(--bb-muted);
+}
+
+.baobab-engine-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: 2.5rem;
+  background: rgba(0, 184, 174, 0.18);
+  border: 1px solid rgba(0, 184, 174, 0.22);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.baobab-engine {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 1.35rem 1.2rem 1.45rem;
+  background: #0c1a30;
+  text-decoration: none;
+  min-height: 100%;
+  transition: background 180ms ease;
+}
+
+.baobab-engine:hover,
+.baobab-engine:focus-visible {
+  background: #10264d;
+}
+
+.baobab-engine__name {
+  margin: 0;
+  font-family: var(--bb-display);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.baobab-engine__family {
+  margin: 0;
+  font-size: 0.72rem;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--bb-teal);
+}
+
+.baobab-engine__body {
+  margin: 0;
+  flex: 1;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--bb-muted);
+}
+
+.baobab-engine__go {
+  margin-top: 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 650;
+  color: var(--bb-teal);
+}
+
+.baobab-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 2.5rem;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.baobab-depth {
+  position: relative;
+  min-height: 280px;
+  border-radius: 16px;
+  overflow: hidden;
+  perspective: 900px;
+  background:
+    radial-gradient(ellipse 80% 70% at 30% 25%, rgba(0, 184, 174, 0.4), transparent 55%),
+    linear-gradient(145deg, #071018 0%, #10264d 50%, #007c78 100%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.baobab-depth__layer {
+  position: absolute;
+  inset: 12% 10%;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 184, 174, 0.3);
+  background: linear-gradient(120deg, rgba(0, 184, 174, 0.2), rgba(16, 38, 77, 0.15));
+  transform-style: preserve-3d;
+  animation: baobab-float 7s ease-in-out infinite;
+}
+
+.baobab-depth__layer--a {
+  transform: rotateX(14deg) rotateY(-18deg) translateZ(-20px) scaleX(1.2);
+  opacity: 0.55;
+  animation-delay: -2s;
+}
+
+.baobab-depth__layer--b {
+  transform: rotateX(10deg) rotateY(-12deg) translateZ(20px);
+  opacity: 0.85;
+}
+
+.baobab-depth__layer--c {
+  inset: 24% 20%;
+  transform: rotateX(8deg) rotateY(-8deg) translateZ(48px) scaleX(0.92);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.15), transparent 45%),
+    linear-gradient(90deg, rgba(0, 184, 174, 0.4), rgba(16, 38, 77, 0.2));
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+  animation-delay: -4s;
+}
+
+.baobab-list {
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 1rem;
+}
+
+.baobab-list li {
+  padding-left: 1.1rem;
+  border-left: 2px solid var(--bb-teal);
+}
+
+.baobab-list strong {
+  display: block;
+  font-size: 1rem;
+  color: #fff;
+  margin-bottom: 0.2rem;
+}
+
+.baobab-list span {
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: var(--bb-muted);
+}
+
+.baobab-band {
+  padding: 4rem 0;
+  background: linear-gradient(120deg, #10264d 0%, #0a2f34 55%, #007c78 100%);
+  text-align: center;
+}
+
+.baobab-band .baobab-h2 {
+  max-width: none;
+  margin-inline: auto;
+}
+
+.baobab-band .baobab-lede {
+  margin-inline: auto;
+}
+
+.baobab-band .baobab-cta {
+  justify-content: center;
+}
+
+@keyframes baobab-rise {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes baobab-sweep {
+  0% {
+    transform: translateX(-28%) translateZ(36px) skewX(-16deg);
+  }
+  100% {
+    transform: translateX(28%) translateZ(36px) skewX(-16deg);
+  }
+}
+
+@keyframes baobab-float {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.08);
+  }
+}
+
+@media (max-width: 960px) {
+  .baobab-engine-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .baobab-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .baobab-hero__copy {
+    padding-top: 5.5rem;
+    padding-bottom: 2.5rem;
+  }
+  .baobab-engine-grid {
+    grid-template-columns: 1fr;
+  }
+  .baobab-plane__node {
+    font-size: 0.62rem;
+    padding: 0.25rem 0.45rem;
+  }
+  .baobab-plane__hint {
+    left: 1rem;
+    right: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .baobab-hero__copy,
+  .baobab-plane__beam,
+  .baobab-depth__layer {
+    animation: none;
+  }
+}

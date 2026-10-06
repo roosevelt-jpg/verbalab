@@ -136,7 +136,9 @@ export LUGEMI_API_URL=${API_URL}`}
           </section>
 
           <section className="vl-endpoint-card">
-            <h2 style={sectionLabel}>Video platforms · MCP</h2>
+            <h2 id="mcp" style={sectionLabel}>
+              Video platforms · MCP
+            </h2>
             <p style={{ margin: '0 0 0.65rem', color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.55 }}>
               Wire Lugemi into video/agent tools via MCP: synthesize voice, translate scripts, or run a
               translate→speech dubbing line in one tool call.
