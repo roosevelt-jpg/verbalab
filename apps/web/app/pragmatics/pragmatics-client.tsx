@@ -34,7 +34,7 @@ export function PragmaticsClient() {
       const res = await apiFetch<Result>('/v1/pragmatics/translate', {
         method: 'POST',
         token: apiKey,
-        body: JSON.stringify({ text, target, mode, locale: 'sw-TZ' }),
+        body: JSON.stringify({ text, source: 'en', target, mode, locale: 'sw-TZ' }),
       });
       setResult(res);
     } catch (err) {

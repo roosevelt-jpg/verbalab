@@ -54,7 +54,7 @@ export class PragmaticsService {
     const speechAct = this.classifySpeechAct(text);
     const translated = await this.mt.translate({
       text,
-      source: input.source ?? 'auto',
+      source: input.source?.trim() || 'en',
       target,
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,
