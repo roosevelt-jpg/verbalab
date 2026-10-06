@@ -1,10 +1,14 @@
 import Link from 'next/link';
 import { AnamorphicPanel } from '@/components/media/anamorphic-panel';
 import type { CmsDocument } from '@/data/cms-types';
+import { AgentChatDemo } from './agent-chat-demo';
 import { HeroTtsCard } from './hero-tts-card';
 import { LanguageBar } from './language-bar';
 import { MarketingFooter } from './marketing-footer';
 import { MarketingNav } from './nav';
+import { StudioSampleDemo } from './studio-sample-demo';
+import { TranslatePlayDemo } from './translate-play-demo';
+import { VoiceChipRow } from './voice-chip-row';
 import './marketing.css';
 
 export function MarketingHome({ content }: { content: CmsDocument }) {
@@ -94,6 +98,32 @@ export function MarketingHome({ content }: { content: CmsDocument }) {
                 </article>
               ))}
             </div>
+            <div className="mkt-inline-demos" style={{ marginTop: '1.75rem' }}>
+              <p className="mkt-tts-label">Hear region voices</p>
+              <VoiceChipRow
+                voices={content.console.sampleVoices.slice(0, 6).map((v) => ({
+                  id: v.id,
+                  label: v.label,
+                  sample: `${v.label}. ${v.ethnicContext}. Lugemi speaking agents use this voice.`,
+                }))}
+              />
+            </div>
+          </div>
+        </section>
+
+        <section className="mkt-section mkt-section-mist" id="translate-demo" aria-labelledby="mkt-translate-demo-title">
+          <div className="mkt-wrap mkt-demo-split">
+            <div>
+              <p className="mkt-kicker">Try it</p>
+              <h2 className="mkt-h2" id="mkt-translate-demo-title">
+                Translate and hear it in realtime
+              </h2>
+              <p className="mkt-lede">
+                Pick a language pair, translate, then play the source and the translation — the same path speaking
+                agents use in chat turns.
+              </p>
+            </div>
+            <TranslatePlayDemo />
           </div>
         </section>
 
@@ -185,17 +215,7 @@ export function MarketingHome({ content }: { content: CmsDocument }) {
                     )}
                   </div>
                 ) : (
-                  <div className="mkt-fake-ui">
-                    <div className="mkt-fake-ui-bar">Studio sample</div>
-                    <p className="mkt-fake-ui-script">{creative.studioSample}</p>
-                    <div className="mkt-fake-chips">
-                      {creative.languageChips.map((chip, i) => (
-                        <span key={chip} className={i === 1 ? 'is-on' : undefined}>
-                          {chip}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+                  <StudioSampleDemo sample={creative.studioSample} chips={creative.languageChips} />
                 )}
               </div>
             </div>
@@ -238,11 +258,11 @@ export function MarketingHome({ content }: { content: CmsDocument }) {
                     )}
                   </div>
                 ) : (
-                  <div className="mkt-fake-chat">
-                    <div className="mkt-fake-ui-bar">{agents.transcriptTitle}</div>
-                    <div className="mkt-chat-bubble mkt-chat-user">{agents.transcriptUser}</div>
-                    <div className="mkt-chat-bubble mkt-chat-agent">{agents.transcriptAgent}</div>
-                  </div>
+                  <AgentChatDemo
+                    title={agents.transcriptTitle}
+                    userText={agents.transcriptUser}
+                    agentText={agents.transcriptAgent}
+                  />
                 )}
               </div>
             </div>

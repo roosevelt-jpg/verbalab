@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { AnamorphicPanel } from '@/components/media/anamorphic-panel';
+import { CmsPageDemos } from '@/components/marketing/cms-page-demos';
 import { MarketingFooter } from '@/components/marketing/marketing-footer';
 import { MarketingNav } from '@/components/marketing/nav';
 import '@/components/marketing/marketing.css';
@@ -67,6 +68,7 @@ export default async function CmsMarketingPage({ params }: { params: Promise<{ s
             <p className="mkt-lede" style={{ maxWidth: '46rem' }}>
               {page.body}
             </p>
+            <CmsPageDemos slug={page.slug} />
             {page.sections && page.sections.length > 0 ? (
               <div className="mkt-feature-grid" style={{ marginTop: '2.5rem' }}>
                 {page.sections.map((section) => (

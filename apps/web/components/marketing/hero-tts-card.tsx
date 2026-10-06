@@ -2,18 +2,13 @@
 
 import { useState } from 'react';
 import type { CmsHeroDemo } from '@/data/cms-types';
+import { useDemoPlayer } from './use-demo-player';
 
 export function HeroTtsCard({ demo }: { demo: CmsHeroDemo }) {
   const [text, setText] = useState(demo.defaultText);
   const [voice, setVoice] = useState(demo.voices[0]?.id ?? '');
-  const [status, setStatus] = useState<string | null>(null);
-
-  function onPlay() {
-    const selected = demo.voices.find((item) => item.id === voice)?.label ?? 'Selected voice';
-    setStatus(
-      `${selected}: preview audio needs OWN_TTS_URL / console keys. Open Studio to generate speech — this card does not invent audio.`,
-    );
-  }
+  const { play, stop, playingId, status, error } = useDemoPlayer();
+  const selected = demo.voices.find((item) => item.id === voice);
 
   return (
     <div className="mkt-tts-card">
@@ -43,7 +38,6 @@ export function HeroTtsCard({ demo }: { demo: CmsHeroDemo }) {
               aria-pressed={item.id === voice}
               onClick={() => {
                 setVoice(item.id);
-                setStatus(null);
               }}
             >
               {item.label}
@@ -52,11 +46,41 @@ export function HeroTtsCard({ demo }: { demo: CmsHeroDemo }) {
         </div>
       </fieldset>
       <div className="mkt-tts-actions">
-        <button type="button" className="vl-btn vl-btn-primary" onClick={onPlay}>
-          Play
+        <button
+          type="button"
+          className="vl-btn vl-btn-primary"
+          onClick={() => {
+            if (playingId === 'hero-tts') {
+              stop();
+              return;
+            }
+            void play({
+              id: 'hero-tts',
+              text,
+              voiceId: voice,
+              label: selected?.label,
+            });
+          }}
+        >
+          {playingId === 'hero-tts' ? 'Stop' : 'Play'}
+        </button>
+        <button
+          type="button"
+          className="vl-btn vl-btn-secondary"
+          disabled={!selected}
+          onClick={() => {
+            void play({
+              id: `hero-voice-${voice}`,
+              text: text || demo.defaultText,
+              voiceId: voice,
+              label: selected?.label,
+            });
+          }}
+        >
+          Preview voice
         </button>
         <p className="mkt-tts-hint" role="status" aria-live="polite">
-          {status ?? demo.playHint}
+          {error ?? status ?? 'Press Play to hear this script in the selected voice.'}
         </p>
       </div>
     </div>

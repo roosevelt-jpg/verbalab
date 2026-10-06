@@ -121,8 +121,9 @@
 .mkt-voice-chip.is-active, .mkt-voice-chip[aria-pressed='true'] {
   background: rgba(0, 124, 120, 0.12); border-color: var(--action-primary); color: var(--action-primary);
 }
-.mkt-tts-actions { display: grid; gap: 10px; margin-top: 16px; }
+.mkt-tts-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 16px; }
 .mkt-tts-actions .vl-btn { justify-self: start; }
+.mkt-tts-actions .mkt-tts-hint { flex: 1 1 12rem; margin: 0; }
 .mkt-tts-hint { margin: 0; font-size: 0.8rem; line-height: 1.5; color: var(--text-secondary); }
 
 .mkt-lang-bar { padding: 10px 0 32px; }
@@ -224,19 +225,53 @@
   color: var(--text-secondary); line-height: 1.55; font-size: 0.92rem;
 }
 .mkt-fake-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
-.mkt-fake-chips span {
+.mkt-fake-chips span, .mkt-fake-chips button {
   font-size: 0.78rem; font-weight: 600; padding: 6px 10px; border-radius: 999px;
   border: 1px solid var(--border-subtle); color: var(--text-secondary);
+  background: var(--surface-canvas); cursor: pointer; font-family: inherit;
 }
-.mkt-fake-chips span.is-on {
+.mkt-fake-chips span.is-on, .mkt-fake-chips button.is-on {
   background: rgba(0, 124, 120, 0.12); border-color: var(--action-primary); color: var(--action-primary);
 }
 .mkt-chat-bubble {
   padding: 12px 14px; border-radius: 12px; font-size: 0.9rem; line-height: 1.5;
-  margin-top: 10px; max-width: 92%;
+  margin-top: 0; max-width: 92%;
 }
 .mkt-chat-user { background: var(--surface-muted); color: var(--text-primary); margin-left: auto; }
 .mkt-chat-agent { background: rgba(0, 124, 120, 0.12); color: var(--brand-navy); }
+.mkt-chat-row {
+  display: flex; align-items: flex-end; gap: 8px; margin-top: 10px; justify-content: flex-end;
+}
+.mkt-chat-row-agent { justify-content: flex-start; }
+.mkt-play-chip {
+  flex-shrink: 0; border-radius: 999px; border: 1px solid var(--border-subtle);
+  background: var(--surface-canvas); color: var(--action-primary); font-weight: 650;
+  font-size: 0.75rem; padding: 6px 10px; cursor: pointer; font-family: inherit;
+}
+.mkt-play-chip:hover { border-color: var(--action-primary); }
+.mkt-chat-demo-actions { display: grid; gap: 8px; margin-top: 14px; }
+.mkt-chat-demo-actions .vl-btn { justify-self: start; }
+.mkt-voice-play-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.mkt-translate-demo {
+  background: var(--surface-canvas); border: 1px solid var(--border-subtle);
+  border-radius: 16px; padding: 18px; box-shadow: 0 14px 36px rgba(16, 38, 77, 0.08);
+}
+.mkt-translate-select { width: 100%; margin-bottom: 10px; }
+.mkt-translate-result { margin-top: 14px; }
+.mkt-translate-result-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+}
+.mkt-translate-copy {
+  margin: 0 0 8px; padding: 12px; border-radius: 10px; background: var(--surface-muted);
+  color: var(--text-secondary); line-height: 1.5; font-size: 0.92rem; min-height: 3.5rem;
+}
+.mkt-demo-split {
+  display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 32px; align-items: start;
+}
+.mkt-page-demos { margin-top: 2rem; max-width: 40rem; }
+.mkt-tts-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 16px; }
+.mkt-tts-actions .mkt-tts-hint { flex: 1 1 12rem; margin: 0; }
 
 .mkt-api-split {
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
@@ -351,7 +386,8 @@
   .mkt-nav-mobile .mkt-nav-links { flex-direction: column; align-items: stretch; padding: 8px 0 12px; }
   .mkt-hero { padding: 32px 0 16px; }
   .mkt-hero-grid, .mkt-page-hero-grid, .mkt-module, .mkt-module-reverse, .mkt-card-grid-3, .mkt-card-grid-4,
-  .mkt-usecase-grid, .mkt-footer-grid, .mkt-api-split, .mkt-feature-grid, .mkt-timeline {
+  .mkt-usecase-grid, .mkt-footer-grid, .mkt-api-split, .mkt-feature-grid, .mkt-timeline,
+  .mkt-demo-split, .mkt-translate-result-row {
     grid-template-columns: 1fr;
   }
   .mkt-lang-list { border-radius: 16px; justify-content: flex-start; }
