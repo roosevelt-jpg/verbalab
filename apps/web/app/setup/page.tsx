@@ -1,4 +1,11 @@
+import { redirect } from 'next/navigation';
+import { isClerkConfigured } from '@/lib/clerk-config';
+
 export default function SetupPage() {
+  if (isClerkConfigured()) {
+    redirect('/');
+  }
+
   return (
     <main style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', padding: '2rem' }}>
       <div className="vl-panel vl-fade-up" style={{ maxWidth: '40rem', padding: '2rem' }}>

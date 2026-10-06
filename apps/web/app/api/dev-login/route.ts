@@ -2,13 +2,20 @@ import { NextResponse } from 'next/server';
 
 /**
  * Local/dev helper: mint a Clerk sign-in ticket for the seeded reviewer user.
- * Only works with sk_test_ secrets — never enables itself for live keys.
+ * Enabled for sk_test_ secrets, or for any secret when ALLOW_CLERK_DEV_LOGIN=true
+ * (local override for live keys — never set that flag in production).
  */
 export async function POST() {
   const secretKey = process.env.CLERK_SECRET_KEY?.trim();
-  if (!secretKey?.startsWith('sk_test_')) {
+  const allowLive =
+    process.env.ALLOW_CLERK_DEV_LOGIN === '1' || process.env.ALLOW_CLERK_DEV_LOGIN === 'true';
+  if (!secretKey || (!secretKey.startsWith('sk_test_') && !allowLive)) {
     return NextResponse.json(
-      { error: 'dev_login_disabled', message: 'Dev login requires a Clerk test secret (sk_test_).' },
+      {
+        error: 'dev_login_disabled',
+        message:
+          'Dev login requires a Clerk test secret (sk_test_) or ALLOW_CLERK_DEV_LOGIN=true for local live keys.',
+      },
       { status: 403 },
     );
   }
