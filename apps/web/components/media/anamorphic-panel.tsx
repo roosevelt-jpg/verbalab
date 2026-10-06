@@ -1,0 +1,52 @@
+'use client';
+
+import './anamorphic.css';
+
+type Variant = 'voice' | 'speech' | 'translate' | 'agents' | 'api' | 'coverage' | 'hub' | 'hero';
+type Size = 'sm' | 'md' | 'lg' | 'hero';
+
+const LABELS: Record<Variant, string> = {
+  voice: 'Voice plane',
+  speech: 'Speech plane',
+  translate: 'Translate plane',
+  agents: 'Agent plane',
+  api: 'API plane',
+  coverage: 'Coverage plane',
+  hub: 'Platform plane',
+  hero: 'Lugemi depth',
+};
+
+export function AnamorphicPanel({
+  variant = 'hub',
+  size = 'md',
+  label,
+  className = '',
+}: {
+  variant?: Variant;
+  size?: Size;
+  label?: string;
+  className?: string;
+}) {
+  const sizeClass =
+    size === 'sm' ? 'lg-ana--sm' : size === 'lg' ? 'lg-ana--lg' : size === 'hero' ? 'lg-ana--hero' : '';
+
+  return (
+    <div
+      className={`lg-ana ${sizeClass} ${className}`.trim()}
+      data-variant={variant}
+      aria-hidden={label ? undefined : true}
+      role={label ? 'img' : undefined}
+      aria-label={label}
+    >
+      <div className="lg-ana__stage">
+        <div className="lg-ana__layer lg-ana__layer--back" />
+        <div className="lg-ana__layer lg-ana__layer--mid" />
+        <div className="lg-ana__layer lg-ana__layer--front" />
+        <div className="lg-ana__orb" />
+        <div className="lg-ana__orb lg-ana__orb--alt" />
+        <div className="lg-ana__beam" />
+      </div>
+      <span className="lg-ana__label">{label ?? LABELS[variant]}</span>
+    </div>
+  );
+}

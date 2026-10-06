@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Lugemi voice depth">
+  <defs>
+    <linearGradient id="vbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#10264d"/>
+      <stop offset="100%" stop-color="#007c78"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="400" fill="url(#vbg)"/>
+  <g transform="translate(320 200) rotate(-12) scale(1.4 0.65)">
+    <ellipse cx="0" cy="0" rx="160" ry="100" fill="#00b8ae" fill-opacity="0.25" stroke="#00b8ae" stroke-width="2"/>
+    <ellipse cx="0" cy="0" rx="110" ry="70" fill="#ffffff" fill-opacity="0.08"/>
+    <ellipse cx="0" cy="0" rx="60" ry="40" fill="#00b8ae" fill-opacity="0.45"/>
+  </g>
+  <circle cx="160" cy="120" r="48" fill="#7ff5ef" opacity="0.35"/>
+</svg>
