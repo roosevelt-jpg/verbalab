@@ -218,10 +218,10 @@ export function ChatClient() {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [input, setInput] = useState('');
-  const [translateReplyTo, setTranslateReplyTo] = useState('sw');
-  const [liveTarget, setLiveTarget] = useState('sw');
+  const [translateReplyTo, setTranslateReplyTo] = useState('ak');
+  const [liveTarget, setLiveTarget] = useState('ak');
   const [uploadSource, setUploadSource] = useState('auto');
-  const [uploadTarget, setUploadTarget] = useState('sw');
+  const [uploadTarget, setUploadTarget] = useState('ak');
   const [mode, setMode] = useState<'chat' | 'live'>('chat');
   const [pluginsOpen, setPluginsOpen] = useState(false);
   const [connected, setConnected] = useState<Record<string, boolean>>({});

@@ -26,13 +26,14 @@ export class ModelsService implements OnModuleInit {
 
   async ensureVendorDefaults() {
     for (const seed of VENDOR_MODEL_SEEDS) {
+      const kind = seed.kind ?? 'vendor';
       await this.prisma.modelRegistryEntry.upsert({
         where: { slug: seed.slug },
         create: {
           slug: seed.slug,
           displayName: seed.displayName,
           feature: seed.feature,
-          kind: 'vendor',
+          kind,
           provider: seed.provider,
           baseModel: seed.baseModel,
           status: 'ready',
@@ -42,7 +43,7 @@ export class ModelsService implements OnModuleInit {
         update: {
           displayName: seed.displayName,
           feature: seed.feature,
-          kind: 'vendor',
+          kind,
           provider: seed.provider,
           baseModel: seed.baseModel,
           notes: seed.notes,
@@ -90,7 +91,9 @@ export class ModelsService implements OnModuleInit {
         .map((m) => {
           const seed = VENDOR_MODEL_SEEDS.find((s) => s.slug === m.slug);
           const configured =
-            m.kind === 'vendor' ? envConfigured(seed?.envKey ?? null) : Boolean(m.artifactUri);
+            m.kind === 'vendor' || m.kind === 'lugemi' || m.kind === 'http'
+              ? envConfigured(seed?.envKey ?? (m.metricsJson as { envKey?: string | null } | null)?.envKey ?? null)
+              : Boolean(m.artifactUri);
           return {
             id: m.id,
             slug: m.slug,
@@ -118,7 +121,7 @@ export class ModelsService implements OnModuleInit {
     return {
       asOf: new Date().toISOString(),
       disclaimer:
-        'Registry tracks which bought or fine-tuned adapters are marked ready per feature. Optional externalUrl links to W&B/vendor docs — this is not MLflow.',
+        'Lugemi Language Intelligence models are first-party. Vendor adapters remain as optional fallbacks. This registry is not MLflow.',
       features: byFeature,
     };
   }

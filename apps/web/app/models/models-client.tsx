@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type CSSProperties } from 'react';
 import { useAuth } from '@clerk/nextjs';
+import Link from 'next/link';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
 
@@ -32,6 +33,57 @@ type LiveMatrix = {
   features: FeatureBlock[];
 };
 
+const VERTICALS = [
+  {
+    id: 'voice',
+    title: 'Voice',
+    body: 'Lugemi TTS and ASR for African accents — own:* production voices.',
+    href: '/audio',
+  },
+  {
+    id: 'video',
+    title: 'Video',
+    body: 'MCP/CLI voice generation for dubbing and content pipelines.',
+    href: '/developers',
+  },
+  {
+    id: 'chat',
+    title: 'Chat',
+    body: 'Chat Intelligence for culture, lifestyle, and routines — not a generic chatbot skin.',
+    href: '/chat',
+  },
+  {
+    id: 'law',
+    title: 'Law',
+    body: 'Legal language packs and jurisdiction-aware glossaries.',
+    href: '/models',
+  },
+  {
+    id: 'government',
+    title: 'Government',
+    body: 'Citizen-service bilingual notices and public-sector forms.',
+    href: '/models',
+  },
+  {
+    id: 'insurance',
+    title: 'Insurance',
+    body: 'Claims and policy language across African markets.',
+    href: '/models',
+  },
+  {
+    id: 'compliance',
+    title: 'Compliance',
+    body: 'KYC, AML, and disclosure localization with audit-friendly wording.',
+    href: '/models',
+  },
+  {
+    id: 'security',
+    title: 'Security',
+    body: 'Threat and policy language understanding across locales.',
+    href: '/models',
+  },
+];
+
 export function ModelsClient() {
   const { getToken, isLoaded } = useAuth();
   const [matrix, setMatrix] = useState<LiveMatrix | null>(null);
@@ -40,7 +92,6 @@ export function ModelsClient() {
   useEffect(() => {
     void (async () => {
       try {
-        // Public live matrix — no token required
         const data = await apiFetch<LiveMatrix>('/v1/models/live');
         setMatrix(data);
       } catch (err) {
@@ -51,19 +102,47 @@ export function ModelsClient() {
 
   useEffect(() => {
     if (!isLoaded || !getToken) return;
-    // Warm session; catalog list is optional for signed-in users
     void getToken().catch(() => undefined);
   }, [getToken, isLoaded]);
 
   return (
     <AppShell>
-      <h1 style={titleStyle}>Model registry</h1>
+      <h1 style={titleStyle}>Lugemi models</h1>
       <p style={ledeStyle}>
-        Which bought provider or fine-tuned adapter is marked ready per feature. Optional links to
-        Weights &amp; Biases — not an in-house MLflow.
+        Like Grok, Claude, and ChatGPT — Lugemi ships its own Language Intelligence models for voice,
+        video, chat, security, law, government, insurance, and compliance. Infrastructure for African
+        languages, accents, culture, and routines — not just another translation wrapper.
       </p>
+
+      <section style={{ marginTop: '1.5rem' }} aria-labelledby="li-verticals">
+        <h2 id="li-verticals" style={sectionTitle}>
+          Language Intelligence families
+        </h2>
+        <ul
+          style={{
+            margin: 0,
+            padding: 0,
+            listStyle: 'none',
+            display: 'grid',
+            gap: '0.75rem',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(14rem, 1fr))',
+          }}
+        >
+          {VERTICALS.map((v) => (
+            <li key={v.id} className="vl-panel" style={{ padding: '0.9rem 1rem' }}>
+              <Link href={v.href} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <div style={{ fontWeight: 650, color: 'var(--brand-navy)' }}>{v.title}</div>
+                <p style={{ margin: '0.35rem 0 0', color: 'var(--muted)', fontSize: '0.85rem', lineHeight: 1.45 }}>
+                  {v.body}
+                </p>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
       {matrix?.disclaimer ? (
-        <p style={{ color: 'var(--muted)', fontSize: '0.9rem', marginTop: '0.75rem' }}>
+        <p style={{ color: 'var(--muted)', fontSize: '0.9rem', marginTop: '1.25rem' }}>
           {matrix.disclaimer}
         </p>
       ) : null}
@@ -71,14 +150,14 @@ export function ModelsClient() {
 
       <div style={{ marginTop: '1.75rem', display: 'grid', gap: '1.25rem' }}>
         {!matrix ? (
-          <p style={{ color: 'var(--muted)' }}>Loading…</p>
+          <p style={{ color: 'var(--muted)' }}>Loading registry…</p>
         ) : (
           matrix.features.map((block) => (
             <section key={block.feature}>
               <h2 style={sectionTitle}>
                 {block.feature}{' '}
                 <span style={{ color: 'var(--muted)', fontWeight: 500, fontSize: '0.9rem' }}>
-                  {block.hasConfiguredProvider ? '· credentials ok / artifact present' : '· needs credentials'}
+                  {block.hasConfiguredProvider ? '· ready' : '· needs credentials'}
                 </span>
               </h2>
               <div style={{ display: 'grid', gap: '0.5rem' }}>
@@ -89,12 +168,15 @@ export function ModelsClient() {
                     <div key={m.id} className="vl-panel" style={{ padding: '0.9rem 1.1rem' }}>
                       <div style={{ fontFamily: 'var(--font-display)', fontWeight: 650 }}>
                         {m.displayName}
+                        {m.kind === 'lugemi' ? (
+                          <span className="vl-tag" style={{ marginLeft: '0.5rem' }}>
+                            Lugemi
+                          </span>
+                        ) : null}
                       </div>
                       <div style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>
                         {m.kind} · {m.provider ?? '—'} · {m.baseModel}
-                        {m.sourceLang && m.targetLang
-                          ? ` · ${m.sourceLang}→${m.targetLang}`
-                          : ''}
+                        {m.sourceLang && m.targetLang ? ` · ${m.sourceLang}→${m.targetLang}` : ''}
                         {m.configured ? ' · ready to call' : ' · not configured'}
                       </div>
                       {m.notes ? (
@@ -127,18 +209,21 @@ export function ModelsClient() {
 const titleStyle: CSSProperties = {
   margin: 0,
   fontFamily: 'var(--font-display)',
+  fontSize: '1.85rem',
+  fontWeight: 720,
   letterSpacing: '-0.03em',
-  fontSize: '2rem',
+  color: 'var(--brand-navy)',
 };
 
 const ledeStyle: CSSProperties = {
   color: 'var(--muted)',
-  margin: '0.5rem 0 0',
+  margin: '0.45rem 0 0',
+  maxWidth: '44rem',
   lineHeight: 1.55,
 };
 
 const sectionTitle: CSSProperties = {
-  fontFamily: 'var(--font-display)',
-  fontSize: '1.15rem',
-  margin: '0 0 0.65rem',
+  fontSize: '1.05rem',
+  margin: '0 0 0.55rem',
+  color: 'var(--brand-navy)',
 };

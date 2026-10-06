@@ -1,17 +1,24 @@
 'use client';
 
-import { FormEvent, useEffect, useState, type CSSProperties } from 'react';
+import { FormEvent, useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { LanguageLocaleSelect } from '@/components/language-locale-select';
 
-type Language = { code: string; name: string; tier: string };
+type Language = { code: string; name: string; nativeName?: string | null; tier: string };
+type LocalePack = { languageCode: string; bcp47: string | null };
+
+/** Default Translation Panel pair: English → Twi (Akan / Ghana). */
+const DEFAULT_SOURCE = 'en';
+const DEFAULT_TARGET = 'ak';
 
 export function TranslateClient() {
   const { getToken, isLoaded } = useAuth();
   const [languages, setLanguages] = useState<Language[]>([]);
-  const [source, setSource] = useState('en');
-  const [target, setTarget] = useState('sw');
+  const [locales, setLocales] = useState<LocalePack[]>([]);
+  const [source, setSource] = useState(DEFAULT_SOURCE);
+  const [target, setTarget] = useState(DEFAULT_TARGET);
   const [text, setText] = useState('');
   const [result, setResult] = useState('');
   const [characters, setCharacters] = useState<number | null>(null);
@@ -20,10 +27,24 @@ export function TranslateClient() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    void apiFetch<{ data: Language[] }>('/v1/languages')
-      .then((res) => setLanguages(res.data))
+    void Promise.all([
+      apiFetch<{ data: Language[] }>('/v1/languages'),
+      apiFetch<{ data: LocalePack[] }>('/v1/locales').catch(() => ({ data: [] as LocalePack[] })),
+    ])
+      .then(([langRes, locRes]) => {
+        setLanguages(langRes.data);
+        setLocales(locRes.data);
+        const hasAk = langRes.data.some((l) => l.code === 'ak');
+        if (hasAk) setTarget('ak');
+      })
       .catch((err: Error) => setError(err.message));
   }, []);
+
+  const targetHint = useMemo(() => {
+    const pack = locales.find((l) => l.languageCode === target);
+    if (pack?.bcp47) return `Locale ${pack.bcp47}`;
+    return null;
+  }, [locales, target]);
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -63,30 +84,33 @@ export function TranslateClient() {
   return (
     <AppShell>
       <h1 style={titleStyle}>Translate</h1>
-      <p style={ledeStyle}>Paste text, pick a pair, get a metered translation.</p>
+      <p style={ledeStyle}>
+        Default pair is English → Twi (Akan, Ghana). Pick any supported language or locale code from the
+        dropdowns — Lugemi Language Intelligence, not a generic vendor panel.
+      </p>
 
       <form onSubmit={onSubmit} className="vl-panel" style={{ display: 'grid', gap: '1rem', padding: '1.35rem', marginTop: '1.5rem' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <label className="vl-label">
             Source
-            <select value={source} onChange={(e) => setSource(e.target.value)} className="vl-field">
-              <option value="auto">Auto-detect</option>
-              {languages.map((lang) => (
-                <option key={lang.code} value={lang.code}>
-                  {lang.name} ({lang.code})
-                </option>
-              ))}
-            </select>
+            <LanguageLocaleSelect
+              value={source}
+              onChange={setSource}
+              languages={languages}
+              locales={locales}
+              allowAuto
+              className="vl-field"
+            />
           </label>
           <label className="vl-label">
-            Target
-            <select value={target} onChange={(e) => setTarget(e.target.value)} className="vl-field">
-              {languages.map((lang) => (
-                <option key={lang.code} value={lang.code}>
-                  {lang.name} ({lang.code})
-                </option>
-              ))}
-            </select>
+            Target{targetHint ? <span style={{ color: 'var(--muted)', fontWeight: 500 }}> · {targetHint}</span> : null}
+            <LanguageLocaleSelect
+              value={target}
+              onChange={setTarget}
+              languages={languages}
+              locales={locales}
+              className="vl-field"
+            />
           </label>
         </div>
         <textarea
@@ -119,13 +143,14 @@ export function TranslateClient() {
         <div
           data-testid="translate-result"
           className="vl-panel"
-          style={{ marginTop: '1.25rem', padding: '1.2rem', background: 'var(--bg-soft)', border: 'none' }}
+          style={{ marginTop: '1.25rem', padding: '1.1rem 1.25rem' }}
         >
-          <div style={{ color: 'var(--muted)', fontSize: '0.85rem', marginBottom: '0.55rem' }}>
-            Result {characters != null ? `· ${characters} characters` : ''}
+          <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '0.4rem' }}>
+            Result
+            {characters != null ? ` · ${characters} characters` : ''}
             {detectedSource ? ` · detected ${detectedSource}` : ''}
           </div>
-          <div style={{ whiteSpace: 'pre-wrap', lineHeight: 1.55, fontSize: '1.05rem' }}>{result}</div>
+          <p style={{ margin: 0, whiteSpace: 'pre-wrap', lineHeight: 1.55 }}>{result}</p>
         </div>
       ) : null}
     </AppShell>
@@ -135,8 +160,15 @@ export function TranslateClient() {
 const titleStyle: CSSProperties = {
   margin: 0,
   fontFamily: 'var(--font-display)',
+  fontSize: '1.85rem',
+  fontWeight: 720,
   letterSpacing: '-0.03em',
-  fontSize: '2rem',
+  color: 'var(--brand-navy)',
 };
 
-const ledeStyle: CSSProperties = { color: 'var(--muted)', margin: '0.5rem 0 0' };
+const ledeStyle: CSSProperties = {
+  color: 'var(--muted)',
+  margin: '0.45rem 0 0',
+  maxWidth: '42rem',
+  lineHeight: 1.55,
+};

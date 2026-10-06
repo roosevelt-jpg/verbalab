@@ -135,7 +135,7 @@ model Workspace {
   organizationId     String   @map("organization_id")
   name               String
   defaultSourceLang  String   @default("en") @map("default_source_lang")
-  defaultTargetLang  String   @default("sw") @map("default_target_lang")
+  defaultTargetLang  String   @default("ak") @map("default_target_lang")
   createdAt          DateTime @default(now()) @map("created_at")
   updatedAt          DateTime @updatedAt @map("updated_at")
 

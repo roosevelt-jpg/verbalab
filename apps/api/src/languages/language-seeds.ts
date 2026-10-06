@@ -44,7 +44,7 @@ export const LANGUAGE_SEEDS: LanguageSeed[] = [
   { code: 'ti', nameEn: 'Tigrinya', nameNative: 'ትግርኛ', script: 'Ethi', familyCode: 'afro_asiatic', tier: 'strategic_african' },
   { code: 'wo', nameEn: 'Wolof', nameNative: 'Wolof', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'lg', nameEn: 'Luganda', nameNative: 'Luganda', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
-  { code: 'ak', nameEn: 'Akan', nameNative: 'Akan', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
+  { code: 'ak', nameEn: 'Akan (Twi)', nameNative: 'Twi', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'ee', nameEn: 'Ewe', nameNative: 'Eʋegbe', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'bm', nameEn: 'Bambara', nameNative: 'Bamanankan', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'ln', nameEn: 'Lingala', nameNative: 'Lingála', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },

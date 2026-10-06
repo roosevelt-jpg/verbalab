@@ -95,4 +95,21 @@ export const LOCALE_PACK_SEEDS: LocalePackSeed[] = [
     doNotTranslate: ['Addis Ababa', 'አዲስ አበባ', 'AU', 'UNECA', 'Ethio Telecom'],
     culturalNotes: 'Geʽez script; keep proper names and Latin brand forms intact when mixed scripts appear.',
   },
+  {
+    languageCode: 'ak',
+    bcp47: 'ak-GH',
+    dateNotes: 'DMY common in Ghanaian administrative text. Gregorian calendar in digital UIs.',
+    numberNotes: 'Arabic digits. Prefer glossary spellings for Asante vs Akuapem Twi where tone/orthography differs.',
+    currencyCode: 'GHS',
+    currencyNotes: 'Ghanaian cedi (GH₵ / GHS).',
+    honorifics: [
+      { form: 'Papa', usage: 'Respectful male elder address' },
+      { form: 'Maame', usage: 'Respectful female elder address' },
+      { form: 'Nana', usage: 'Chief / elder honorific' },
+      { form: 'Dokota', usage: 'Doctor' },
+    ],
+    doNotTranslate: ['Accra', 'Kumasi', 'Ghana', 'ECOWAS', 'AU', 'Bank of Ghana', 'Lugemi'],
+    culturalNotes:
+      'Default Lugemi Translation Panel target (English → Twi / Akan). Asante Twi is the common spoken variety; keep chieftaincy titles and toponyms intact.',
+  },
 ];

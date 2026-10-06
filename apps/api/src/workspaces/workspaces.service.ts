@@ -123,7 +123,7 @@ export class WorkspacesService {
         organizationId: input.organizationId,
         name,
         defaultSourceLang: (input.defaultSourceLang ?? 'en').trim() || 'en',
-        defaultTargetLang: (input.defaultTargetLang ?? 'sw').trim() || 'sw',
+        defaultTargetLang: (input.defaultTargetLang ?? 'ak').trim() || 'ak',
       },
     });
     await this.audit.record({
