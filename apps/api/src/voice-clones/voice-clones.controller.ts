@@ -14,27 +14,30 @@ import { memoryStorage } from 'multer';
 import type { Request } from 'express';
 import { VoiceClonesService } from './voice-clones.service';
 import { ClerkAuthGuard, SessionContext } from '../common/guards/clerk-auth.guard';
+import { TranslateAuthGuard, TranslateAuthContext } from '../common/guards/translate-auth.guard';
 import { CurrentSession } from '../common/decorators/auth.decorators';
 import { audioMaxBytes } from '../audio/audio-limits';
 import { ApiException } from '../common/errors/api-exception';
 import { HttpStatus } from '@nestjs/common';
 
 @Controller('v1/voice-clones')
-@UseGuards(ClerkAuthGuard)
 export class VoiceClonesController {
   constructor(private readonly clones: VoiceClonesService) {}
 
   @Get()
-  list(@CurrentSession() session: SessionContext) {
-    return this.clones.list(session.organizationId, session.workspaceId);
+  @UseGuards(TranslateAuthGuard)
+  list(@Req() req: Request & { translateAuth: TranslateAuthContext }) {
+    return this.clones.list(req.translateAuth.organizationId, req.translateAuth.workspaceId);
   }
 
   @Get(':id')
-  get(@CurrentSession() session: SessionContext, @Param('id') id: string) {
-    return this.clones.get(session.organizationId, session.workspaceId, id);
+  @UseGuards(TranslateAuthGuard)
+  get(@Req() req: Request & { translateAuth: TranslateAuthContext }, @Param('id') id: string) {
+    return this.clones.get(req.translateAuth.organizationId, req.translateAuth.workspaceId, id);
   }
 
   @Post()
+  @UseGuards(ClerkAuthGuard)
   @UseInterceptors(
     FilesInterceptor('samples', 5, {
       storage: memoryStorage(),
@@ -70,6 +73,7 @@ export class VoiceClonesController {
   }
 
   @Post(':id/review')
+  @UseGuards(ClerkAuthGuard)
   review(
     @CurrentSession() session: SessionContext,
     @Param('id') id: string,
@@ -96,6 +100,7 @@ export class VoiceClonesController {
   }
 
   @Post(':id/disable')
+  @UseGuards(ClerkAuthGuard)
   disable(
     @CurrentSession() session: SessionContext,
     @Param('id') id: string,

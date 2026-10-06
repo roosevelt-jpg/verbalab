@@ -111,6 +111,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/developers', label: 'Developers' },
       { href: '/playground', label: 'Playground' },
       { href: '/docs', label: 'Docs' },
+      { href: '/mcp', label: 'MCP' },
       { href: '/keys', label: 'API keys' },
       { href: '/graphql', label: 'GraphQL' },
       { href: '/usage', label: 'Usage' },

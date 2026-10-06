@@ -601,6 +601,19 @@ export const openApiDocument = {
         },
       },
     },
+    '/v1/mcp': {
+      get: {
+        summary: 'Lugemi MCP discovery',
+        operationId: 'getMcpDiscovery',
+        responses: { '200': { description: 'MCP server info, tools, and install transports' } },
+      },
+      post: {
+        summary: 'Lugemi MCP Streamable HTTP (JSON-RPC)',
+        operationId: 'postMcp',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '200': { description: 'JSON-RPC result' }, '202': { description: 'Notification ack' } },
+      },
+    },
     '/v1/mix/engine': {
       get: {
         summary: 'Lugemi Mix engine',

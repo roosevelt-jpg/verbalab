@@ -20,6 +20,7 @@ type Overview = {
   sdk: {
     typescript: { name: string; version: string; install: string };
     cli: { name: string; bin: string; install: string; commands: string[] };
+    mcp: { name: string; bin: string; tools: string[]; models?: string[] };
   };
   applications: { mappedTo: string; data: { id: string; name: string; isCurrent: boolean }[] };
   sandbox: { separateCluster: boolean; note: string };
@@ -137,11 +138,10 @@ export LUGEMI_API_URL=${API_URL}`}
 
           <section className="vl-endpoint-card">
             <h2 id="mcp" style={sectionLabel}>
-              Video platforms · MCP
+              Lugemi MCP
             </h2>
             <p style={{ margin: '0 0 0.65rem', color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.55 }}>
-              Wire Lugemi into video/agent tools via MCP: synthesize voice, translate scripts, or run a
-              translate→speech dubbing line in one tool call.
+              Agent IDE connector for Baobab translate, Echo speech/STT, Mix, accents, and Atlas models. See /mcp.
             </p>
             <CodePanel
               label="MCP + CLI"

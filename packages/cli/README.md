@@ -16,12 +16,14 @@ lugemi speech --text "Akwaaba" --voice own:ak-gh-female --language ak --out line
 lugemi video-voice --text "Welcome" --source en --target ak --voice own:ak-gh-female --out dub.mp3
 ```
 
-## MCP (video platforms / agent IDEs)
+## MCP (agent IDEs)
 
 ```bash
 pnpm --filter @lugemi/mcp build
 LUGEMI_API_KEY=lg_live_... node packages/mcp/dist/index.js
 ```
+
+Hosted: `POST https://api.lugemi.com/v1/mcp` with Bearer `lg_live_…`. See `docs/mcp.md` and `/mcp`.
 
 ## Mobile
 
