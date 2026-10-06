@@ -37,7 +37,11 @@ export class DialectsService implements OnModuleInit {
   }
 
   async seed() {
+    let seeded = 0;
     for (const d of DIALECT_SEEDS) {
+      const language = await this.prisma.language.findUnique({ where: { code: d.languageCode } });
+      if (!language) continue;
+      seeded += 1;
       await this.prisma.dialect.upsert({
         where: { code: d.code },
         create: {
@@ -60,7 +64,7 @@ export class DialectsService implements OnModuleInit {
       });
     }
     this.logger.log(
-      JSON.stringify({ event: 'dialects.seeded', count: DIALECT_SEEDS.length }),
+      JSON.stringify({ event: 'dialects.seeded', count: seeded }),
     );
   }
 

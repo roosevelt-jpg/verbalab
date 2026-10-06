@@ -106,5 +106,5 @@ export const ACCENT_SEEDS: AccentSeed[] = [
   { code: 'ig-ng', languageCode: 'ig', nameEn: 'Nigerian Igbo (spoken)', region: 'NG', cueTerms: ['ndewo', 'daalụ', 'kedu', 'biko'], notes: 'Spoken Igbo greeting cues.' },
   { code: 'wo-sn', languageCode: 'wo', nameEn: 'Senegalese Wolof (spoken)', region: 'SN', cueTerms: ['nanga def', 'jërëjëf', 'waaw'], notes: 'Spoken Wolof cues.' },
   { code: 'pcm-ng', languageCode: 'pcm', nameEn: 'Nigerian Pidgin (spoken)', region: 'NG', cueTerms: ['how far', 'abeg', 'wahala'], notes: 'Naijá spoken cues.' },
-  { code: 'xh-za', languageCode: 'xh', nameEn: 'South African Xhosa (spoken)', region: 'ZA', cueTerms: ['molo', 'enkosi', 'unjani'], notes: 'Spoken isiXhosa cues.' },
+  { code: 'xh-za', languageCode: 'xh', nameEn: 'South African Xhosa (spoken)', region: 'ZA', cueTerms: ['molo', 'enkosi', 'unjani'], notes: 'Spoken isiXhosa cues.' }
 ];

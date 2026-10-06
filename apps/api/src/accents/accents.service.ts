@@ -36,7 +36,11 @@ export class AccentsService implements OnModuleInit {
   }
 
   async seed() {
+    let seeded = 0;
     for (const a of ACCENT_SEEDS) {
+      const language = await this.prisma.language.findUnique({ where: { code: a.languageCode } });
+      if (!language) continue;
+      seeded += 1;
       await this.prisma.accent.upsert({
         where: { code: a.code },
         create: {
@@ -60,7 +64,7 @@ export class AccentsService implements OnModuleInit {
         },
       });
     }
-    this.logger.log(JSON.stringify({ event: 'accents.seeded', count: ACCENT_SEEDS.length }));
+    this.logger.log(JSON.stringify({ event: 'accents.seeded', count: seeded }));
   }
 
   async list(languageCode?: string) {
