@@ -246,6 +246,22 @@ importers:
         specifier: ^8.18.2
         version: 8.69.0(eslint@9.39.5(jiti@2.7.0))(typescript@5.9.3)
 
+  packages/mcp:
+    dependencies:
+      '@lugemi/sdk':
+        specifier: workspace:*
+        version: link:../sdk
+    devDependencies:
+      '@lugemi/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
+      '@types/node':
+        specifier: ^22.10.2
+        version: 22.20.1
+      typescript:
+        specifier: ^5.7.2
+        version: 5.9.3
+
   packages/sdk:
     devDependencies:
       '@lugemi/eslint-config':
