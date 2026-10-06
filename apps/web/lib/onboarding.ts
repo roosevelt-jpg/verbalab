@@ -118,3 +118,24 @@ export function saveOnboardingLocal(state: OnboardingState) {
 export function destinationForPlatform(platform: OnboardingPlatform | null): string {
   return platform === 'agents' ? '/chat' : '/creative';
 }
+
+/** Persist a completed free-plan profile so later visits skip the setup wizard. */
+export function markOnboardingSkipped(
+  platform: OnboardingPlatform = 'creative',
+  base: OnboardingState = EMPTY_ONBOARDING_STATE,
+): OnboardingState {
+  const next: OnboardingState = {
+    ...base,
+    platform,
+    planId: base.planId ?? 'free',
+    billingInterval: base.billingInterval ?? 'monthly',
+    ageConfirmed: true,
+    completed: true,
+    step: 3,
+  };
+  saveOnboardingLocal(next);
+  return next;
+}
+
+/** Local/dev: open `/onboarding?skipOnboarding=1` (optional `&platform=agents`). */
+export const SKIP_ONBOARDING_PATH = '/onboarding?skipOnboarding=1';

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { OnboardingClient } from './onboarding-client';
 
 export const metadata: Metadata = {
@@ -8,5 +9,9 @@ export const metadata: Metadata = {
 };
 
 export default function OnboardingPage() {
-  return <OnboardingClient />;
+  return (
+    <Suspense fallback={<p style={{ padding: '2rem', color: 'var(--muted)' }}>Loading…</p>}>
+      <OnboardingClient />
+    </Suspense>
+  );
 }
