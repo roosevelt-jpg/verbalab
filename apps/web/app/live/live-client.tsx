@@ -5,6 +5,8 @@ import { apiFetch } from '@/lib/api';
 import { PortfolioShell } from '@/components/portfolio/portfolio-shell';
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
 import { useDemoPlayer } from '@/components/marketing/use-demo-player';
+import { LocaleSelect } from '@/components/language-locale-select';
+import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
 type LiveEvent = {
   event_id: string;
@@ -17,6 +19,7 @@ type LiveEvent = {
 };
 
 export function LiveClient() {
+  const catalog = useLocaleCatalog();
   const [apiKey, setApiKey] = useState('');
   const [sourceLanguage, setSourceLanguage] = useState('ak');
   const [targetLanguage, setTargetLanguage] = useState('en');
@@ -109,11 +112,27 @@ export function LiveClient() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
           <label style={{ display: 'grid', gap: '0.25rem' }}>
             <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Source language</span>
-            <input className="vl-field" value={sourceLanguage} onChange={(e) => setSourceLanguage(e.target.value)} />
+            <LocaleSelect
+              className="vl-field"
+              value={sourceLanguage}
+              onChange={setSourceLanguage}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+            />
           </label>
           <label style={{ display: 'grid', gap: '0.25rem' }}>
             <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Target language</span>
-            <input className="vl-field" value={targetLanguage} onChange={(e) => setTargetLanguage(e.target.value)} />
+            <LocaleSelect
+              className="vl-field"
+              value={targetLanguage}
+              onChange={setTargetLanguage}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+            />
           </label>
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
@@ -183,7 +202,7 @@ export function LiveClient() {
             active={playingId === 'live-spoken'}
             loading={loadingId === 'live-spoken'}
             variant="secondary"
-            onPlay={() => void play({ id: 'live-spoken', text: lastSpoken.text!, lang: 'en' })}
+            onPlay={() => void play({ id: 'live-spoken', text: lastSpoken.text!, lang: targetLanguage })}
             onStop={() => stop()}
             label="Play last spoken / repair"
           />

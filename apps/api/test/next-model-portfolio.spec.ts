@@ -132,9 +132,13 @@ describe('Next model portfolio (00–07 contracts)', () => {
     const engine = await request(app.getHttpServer()).get('/v1/portfolio/engine').expect(200);
     expect(engine.body.product).toMatch(/Verified Interpreter/i);
     const corridors = await request(app.getHttpServer()).get('/v1/portfolio/corridors').expect(200);
-    expect(corridors.body.corridors.length).toBeGreaterThanOrEqual(2);
+    expect(corridors.body.corridors.length).toBeGreaterThanOrEqual(200);
+    expect(corridors.body.total).toBe(corridors.body.corridors.length);
     expect(corridors.body.corridors.some((c: { id: string }) => c.id === 'twi-english')).toBe(true);
     expect(corridors.body.corridors.some((c: { id: string }) => c.id === 'yoruba-english')).toBe(true);
+    const mixEngine = await request(app.getHttpServer()).get('/v1/mix/engine').expect(200);
+    expect(mixEngine.body.corridor_count).toBe(corridors.body.total);
+    expect(mixEngine.body.evaluated_varieties.length).toBe(corridors.body.total);
   });
 
   it('Mix transcribe-translate returns spans and entity alignment (01)', async () => {

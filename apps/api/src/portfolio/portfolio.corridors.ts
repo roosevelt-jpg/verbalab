@@ -45,6 +45,18 @@ const PREFERRED_VARIETY: Record<string, string> = {
   tn: 'tn-BW',
 };
 
+/** Stable corridor ids for historically published strategic pairs. */
+const STABLE_CORRIDOR_IDS: Record<string, string> = {
+  ak: 'twi-english',
+  yo: 'yoruba-english',
+  ha: 'hausa-english',
+  sw: 'swahili-english',
+  ig: 'igbo-english',
+  am: 'amharic-english',
+  ee: 'ewe-english',
+  zu: 'zulu-english',
+};
+
 /** Corridors with historical demo calibration / design-partner evaluation. */
 const EVALUATED_CODES = new Set(['ak', 'yo', 'sw', 'ha', 'ig', 'am', 'ee', 'zu']);
 
@@ -77,7 +89,7 @@ export function buildPortfolioCorridors(): PortfolioCorridor[] {
   for (const lang of LANGUAGE_SEEDS) {
     if (lang.code === 'en') continue;
     const varietyId = primaryBcp47(lang.code);
-    const id = corridorSlug(lang.code, lang.nameEn);
+    const id = STABLE_CORRIDOR_IDS[lang.code] ?? corridorSlug(lang.code, lang.nameEn);
     corridors.push({
       id,
       sourceTags: [lang.code, 'en'],

@@ -3,6 +3,8 @@
 import { FormEvent, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { PortfolioShell } from '@/components/portfolio/portfolio-shell';
+import { LocaleSelect } from '@/components/language-locale-select';
+import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
 type InterpretResult = {
   region_id: string;
@@ -25,12 +27,14 @@ type InterpretResult = {
 };
 
 export function GroundedClient() {
+  const catalog = useLocaleCatalog();
   const [apiKey, setApiKey] = useState('');
   const [documentRef, setDocumentRef] = useState('bill_demo_001');
   const [documentText, setDocumentText] = useState(
     'Service charge GHS 45.00\nVAT GHS 7.20\nTotal due GHS 52.20\nPayment due tomorrow',
   );
   const [utterance, setUtterance] = useState('What is this charge on the selected line?');
+  const [sourceLanguage, setSourceLanguage] = useState('en');
   const [targetLanguage, setTargetLanguage] = useState('en');
   const [region, setRegion] = useState({ page: 1, x: 40, y: 120, width: 320, height: 48 });
   const [wrongRegion, setWrongRegion] = useState(false);
@@ -61,7 +65,7 @@ export function GroundedClient() {
           region: activeRegion,
           utterance,
           targetLanguage,
-          sourceLanguage: 'en',
+          sourceLanguage,
           mode: 'interpret',
         }),
       });
@@ -76,7 +80,7 @@ export function GroundedClient() {
   return (
     <PortfolioShell
       title="Lugemi Grounded"
-      lede="Speech plus the selected visual referent. Returns document evidence, speaker claim, and translation separately. Highlights the referenced region and supports wrong-region correction. Target language covers the full registry. Assistive document communication only."
+      lede="Speech plus the selected visual referent. Returns document evidence, speaker claim, and translation separately. Highlights the referenced region and supports wrong-region correction. Source/target languages cover the full registry. Assistive document communication only."
     >
       <form onSubmit={onSubmit} className="vl-panel" style={{ padding: '1rem', display: 'grid', gap: '0.75rem' }}>
         <label style={{ display: 'grid', gap: '0.25rem' }}>
@@ -112,9 +116,31 @@ export function GroundedClient() {
               />
             </label>
           ))}
-          <label style={{ display: 'grid', gap: '0.2rem' }}>
-            <span style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>target</span>
-            <input className="vl-field" value={targetLanguage} onChange={(e) => setTargetLanguage(e.target.value)} />
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+          <label style={{ display: 'grid', gap: '0.25rem' }}>
+            <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Source language</span>
+            <LocaleSelect
+              className="vl-field"
+              value={sourceLanguage}
+              onChange={setSourceLanguage}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+            />
+          </label>
+          <label style={{ display: 'grid', gap: '0.25rem' }}>
+            <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Target language</span>
+            <LocaleSelect
+              className="vl-field"
+              value={targetLanguage}
+              onChange={setTargetLanguage}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+            />
           </label>
         </div>
         <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
