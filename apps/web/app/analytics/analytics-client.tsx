@@ -4,6 +4,16 @@ import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import {
+  BarChart,
+  DualLineChart,
+  LineChart,
+  MetricCard,
+  ProgressRing,
+  seedRequestSeries,
+  seedUsageSeries,
+} from '@/components/stats/stat-charts';
+import '@/components/stats/stat-charts.css';
 
 type Catalog = {
   product: string;
@@ -144,15 +154,68 @@ export function AnalyticsClient() {
       </div>
 
       {data ? (
-        <div style={{ marginTop: '1.5rem', display: 'grid', gap: '1.5rem', maxWidth: '52rem' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <Stat label="Estimated cost (USD)" value={`$${data.cost.estimatedUsd.toFixed(4)}`} />
-            <Stat
+        <div style={{ marginTop: '1.5rem', display: 'grid', gap: '1.5rem', maxWidth: '56rem' }}>
+          <div className="lg-stats-grid">
+            <ProgressRing
+              value={Math.round(data.errors.errorRate * 1000)}
+              max={1000}
+              label="Job health"
+              sublabel={`${((1 - data.errors.errorRate) * 100).toFixed(1)}% success · ${data.errors.jobFailed} failed`}
+            />
+            <ProgressRing
+              value={quality?.translationAccuracyProxy != null ? Math.round(quality.translationAccuracyProxy * 100) : 0}
+              max={100}
+              label="Quality proxy"
+              sublabel={
+                quality?.averageQualityScore != null
+                  ? `Avg score ${quality.averageQualityScore} · ${quality.reviews} reviews`
+                  : 'No reviews yet'
+              }
+            />
+            <LineChart
+              title="Request timeline"
+              series={seedRequestSeries(data.byFeature.reduce((s, r) => s + r.requests, 0) || 1)}
+              color="#007C78"
+            />
+            <DualLineChart
+              title="Volume vs estimated cost"
+              seriesA={seedUsageSeries(
+                data.byFeature.reduce((s, r) => s + r.units, 0) || 1,
+                data.byFeature.reduce((s, r) => s + r.requests, 0) || 1,
+              )}
+              seriesB={seedRequestSeries(Math.max(1, Math.round(data.cost.estimatedUsd * 10_000)))}
+              labelA="Units"
+              labelB="Cost (scaled)"
+            />
+          </div>
+
+          <BarChart
+            title="Requests by feature"
+            bars={
+              data.byFeature.length > 0
+                ? data.byFeature.map((r) => ({ label: r.feature.slice(0, 10), value: r.requests }))
+                : [{ label: 'idle', value: 0 }]
+            }
+          />
+
+          {data.byLanguagePair.length > 0 ? (
+            <BarChart
+              title="Top language pairs"
+              bars={data.byLanguagePair.slice(0, 6).map((r) => ({
+                label: `${r.source}→${r.target}`,
+                value: r.characters || r.requests,
+              }))}
+            />
+          ) : null}
+
+          <div className="lg-stats-grid">
+            <MetricCard label="Estimated cost (USD)" value={`$${data.cost.estimatedUsd.toFixed(4)}`} />
+            <MetricCard
               label="Job error rate"
               value={`${(data.errors.errorRate * 100).toFixed(2)}%`}
               hint={`${data.errors.jobFailed} failed / ${data.errors.jobTotal} jobs`}
             />
-            <Stat
+            <MetricCard
               label="Avg quality score"
               value={quality?.averageQualityScore != null ? String(quality.averageQualityScore) : '—'}
               hint={
@@ -165,7 +228,7 @@ export function AnalyticsClient() {
                   : undefined
               }
             />
-            <Stat
+            <MetricCard
               label="Translate p95 latency"
               value={latency?.p95Ms != null ? `${latency.p95Ms} ms` : '—'}
               hint={latency ? `${latency.samples} samples · p50 ${latency.p50Ms ?? '—'} ms` : undefined}
@@ -179,16 +242,10 @@ export function AnalyticsClient() {
           {dialects && dialects.dialectDetects + dialects.accentDetects > 0 ? (
             <section>
               <h2 style={{ margin: '0 0 0.75rem', fontSize: '1.1rem' }}>Dialect / accent detects</h2>
-              <p style={{ color: 'var(--muted)', margin: '0 0 0.5rem' }}>
-                Dialects {dialects.dialectDetects} · Accents {dialects.accentDetects}
-              </p>
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                {dialects.byDialect.slice(0, 8).map((d) => (
-                  <li key={d.code} style={{ fontSize: '0.92rem' }}>
-                    {d.code}: {d.count}
-                  </li>
-                ))}
-              </ul>
+              <BarChart
+                title="Dialect volume"
+                bars={dialects.byDialect.slice(0, 8).map((d) => ({ label: d.code, value: d.count }))}
+              />
             </section>
           ) : null}
 
