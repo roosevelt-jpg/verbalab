@@ -1,6 +1,6 @@
 import { echoVoiceIdentityVariantSeeds } from './echo-voice-identity-variants.seeds';
 
-/** Gateway features tracked in the model registry (+ Language Intelligence). */
+/** Gateway features tracked in the model registry (+ Language Intelligence + next portfolio). */
 export const MODEL_FEATURES = [
   'translate',
   'stt',
@@ -15,6 +15,13 @@ export const MODEL_FEATURES = [
   'government',
   'insurance',
   'compliance',
+  'mix',
+  'fidelity',
+  'live',
+  'pragmatics',
+  'language_kit',
+  'edge',
+  'grounded',
 ] as const;
 
 export type ModelFeature = (typeof MODEL_FEATURES)[number];
@@ -297,6 +304,90 @@ export const VENDOR_MODEL_SEEDS: VendorDefaultSeed[] = [
     role: 'primary',
     kind: 'lugemi',
   },
+  {
+    slug: 'lugemi-mix',
+    feature: 'mix',
+    provider: 'lugemi',
+    displayName: 'Lugemi Mix',
+    baseModel: 'lugemi-mix-v1',
+    notes:
+      'Meaning-preserving mixed-language speech. Joint transcription/translation with switch spans, protected names, and uncertainty reasons. Pilot: Twi–English and Yoruba–English. Local cascade adapter — no external keys.',
+    envKey: null,
+    role: 'primary',
+    kind: 'lugemi',
+  },
+  {
+    slug: 'lugemi-fidelity',
+    feature: 'fidelity',
+    provider: 'lugemi',
+    displayName: 'Lugemi Fidelity',
+    baseModel: 'lugemi-fidelity-v1',
+    notes:
+      'Translation verification and clarification via meaning ledger. Accept/retry/clarify/review with calibrated critical-error detection. Local verifier — not certified interpretation.',
+    envKey: null,
+    role: 'primary',
+    kind: 'lugemi',
+  },
+  {
+    slug: 'lugemi-live',
+    feature: 'live',
+    provider: 'lugemi',
+    displayName: 'Lugemi Live',
+    baseModel: 'lugemi-live-v1',
+    notes:
+      'Incremental interpretation with commit/repair policy. Provisional → committed → spoken; audible repair of already spoken mistakes. Local streaming cascade.',
+    envKey: null,
+    role: 'primary',
+    kind: 'lugemi',
+  },
+  {
+    slug: 'lugemi-pragmatics',
+    feature: 'pragmatics',
+    provider: 'lugemi',
+    displayName: 'Lugemi Pragmatics',
+    baseModel: 'lugemi-pragmatics-v1',
+    notes:
+      'Speech-act and register preservation. Modes: faithful (default), literal, localized. Never silently mixes modes or turns refusal into consent.',
+    envKey: null,
+    role: 'primary',
+    kind: 'lugemi',
+  },
+  {
+    slug: 'lugemi-language-kit',
+    feature: 'language_kit',
+    provider: 'lugemi',
+    displayName: 'Lugemi Language Kit',
+    baseModel: 'lugemi-language-kit-v1',
+    notes:
+      'Evidence-gated language onboarding. Draft→released stages with separate ASR/translation/synthesis coverage. Registry entry is not a model release.',
+    envKey: null,
+    role: 'primary',
+    kind: 'lugemi',
+  },
+  {
+    slug: 'lugemi-edge',
+    feature: 'edge',
+    provider: 'lugemi',
+    displayName: 'Lugemi Edge',
+    baseModel: 'lugemi-edge-v1',
+    notes:
+      'Verified offline corridor packs (local | cloud_allowed | cloud_forbidden). Signed manifests, hash verify, no silent cloud fallback when forbidden. Android 4GB pilot class.',
+    envKey: null,
+    role: 'primary',
+    kind: 'lugemi',
+  },
+  {
+    slug: 'lugemi-grounded',
+    feature: 'grounded',
+    provider: 'lugemi',
+    displayName: 'Lugemi Grounded',
+    baseModel: 'lugemi-grounded-v1',
+    notes:
+      'Speech plus selected visual referent. Returns document_evidence, speaker_claim, and translation separately with discrepancy flags. Assistive document communication only.',
+    envKey: null,
+    role: 'primary',
+    kind: 'lugemi',
+  },
   ...echoVoiceIdentityVariantSeeds(),
 ];
 
@@ -314,6 +405,13 @@ export const MODEL_SLUG_ALIASES: Record<string, string> = {
   'lugemi-government': 'lugemi-civic',
   'lugemi-insurance': 'lugemi-cover',
   'lugemi-compliance': 'lugemi-accord',
+  'lugemi-mix-speech': 'lugemi-mix',
+  'lugemi-verified-fidelity': 'lugemi-fidelity',
+  'lugemi-live-interpret': 'lugemi-live',
+  'lugemi-pragmatics-translate': 'lugemi-pragmatics',
+  'lugemi-lang-kit': 'lugemi-language-kit',
+  'lugemi-edge-pack': 'lugemi-edge',
+  'lugemi-grounded-interpret': 'lugemi-grounded',
 };
 
 export function envConfigured(envKey: string | null): boolean {

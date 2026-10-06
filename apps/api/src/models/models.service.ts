@@ -155,7 +155,7 @@ export class ModelsService implements OnModuleInit {
     return {
       asOf: new Date().toISOString(),
       disclaimer:
-        'Lugemi proprietary Language Intelligence model families (Baobab, Atlas, Echo, Vector, Lex, Civic, Cover, Accord, Sentinel, Fusion). Optional legacy adapters are silent fallbacks only — never branded in product UI. This registry is not MLflow.',
+        'Lugemi proprietary Language Intelligence model families (Baobab, Atlas, Echo, Vector, Lex, Civic, Cover, Accord, Sentinel, Fusion) plus next-model portfolio (Mix, Fidelity, Live, Pragmatics, Language Kit, Edge, Grounded). Optional legacy adapters are silent fallbacks only — never branded in product UI. This registry is not MLflow.',
       features: byFeature,
     };
   }

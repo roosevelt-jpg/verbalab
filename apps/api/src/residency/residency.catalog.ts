@@ -288,6 +288,13 @@ export function defaultHostingForModelSlug(slug: string): ModelHostingSeed {
     'lugemi-civic': 'af-east-1', // public sector — East Africa
     'lugemi-cover': 'af-south-1', // insurance — Southern Africa
     'lugemi-accord': 'me-central', // compliance / KYC — ME + AF corridor
+    'lugemi-mix': 'af-west-1', // Accra — mixed-language pilot corridors
+    'lugemi-fidelity': 'af-west-1', // Accra — verifier with Trust
+    'lugemi-live': 'af-west-2', // Lagos — streaming interpretation
+    'lugemi-pragmatics': 'af-west-1',
+    'lugemi-language-kit': 'af-west-1',
+    'lugemi-edge': 'af-west-1', // edge packs authored near Africa-first hubs
+    'lugemi-grounded': 'af-south-1', // Cape Town — docs + vision
   };
 
   if (map[slug]) return hostingFromDataCenter(map[slug]!);
@@ -303,6 +310,13 @@ export function defaultHostingForModelSlug(slug: string): ModelHostingSeed {
   if (slug.startsWith('lugemi-cover')) return hostingFromDataCenter('af-south-1');
   if (slug.startsWith('lugemi-accord')) return hostingFromDataCenter('me-central');
   if (slug.startsWith('lugemi-sentinel')) return hostingFromDataCenter('eu-west');
+  if (slug.startsWith('lugemi-mix')) return hostingFromDataCenter('af-west-1');
+  if (slug.startsWith('lugemi-fidelity')) return hostingFromDataCenter('af-west-1');
+  if (slug.startsWith('lugemi-live')) return hostingFromDataCenter('af-west-2');
+  if (slug.startsWith('lugemi-pragmatics')) return hostingFromDataCenter('af-west-1');
+  if (slug.startsWith('lugemi-language-kit')) return hostingFromDataCenter('af-west-1');
+  if (slug.startsWith('lugemi-edge')) return hostingFromDataCenter('af-west-1');
+  if (slug.startsWith('lugemi-grounded')) return hostingFromDataCenter('af-south-1');
   if (slug.startsWith('lugemi-')) return hostingFromDataCenter('af-west-1');
 
   // Legacy adapters — us-east silent fallback host tag (not branded).

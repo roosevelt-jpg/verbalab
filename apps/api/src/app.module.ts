@@ -69,6 +69,14 @@ import { ModelTrainingPlatformModule } from './model-training-platform/model-tra
 import { ModelEvaluationPlatformModule } from './model-evaluation-platform/model-evaluation-platform.module';
 import { ModelRegistryModule } from './model-registry/model-registry.module';
 import { AtlasModule } from './atlas/atlas.module';
+import { PortfolioModule } from './portfolio/portfolio.module';
+import { MixModule } from './mix/mix.module';
+import { FidelityModule } from './fidelity/fidelity.module';
+import { LiveModule } from './live/live.module';
+import { PragmaticsModule } from './pragmatics/pragmatics.module';
+import { LanguageKitsModule } from './language-kits/language-kits.module';
+import { EdgeModule } from './edge-packs/edge.module';
+import { GroundedModule } from './grounded/grounded.module';
 import { AiFabricModule } from './ai-fabric/ai-fabric.module';
 import { EventFabricModule } from './event-fabric/event-fabric.module';
 import { ContextFabricModule } from './context-fabric/context-fabric.module';
@@ -261,6 +269,14 @@ import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
     ModelEvaluationPlatformModule,
     ModelRegistryModule,
     AtlasModule,
+    PortfolioModule,
+    MixModule,
+    FidelityModule,
+    LiveModule,
+    PragmaticsModule,
+    LanguageKitsModule,
+    EdgeModule,
+    GroundedModule,
     AiFabricModule,
     EventFabricModule,
     ContextFabricModule,
