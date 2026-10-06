@@ -8,9 +8,9 @@ import {
 } from './workflow-runtime.catalog';
 
 /**
- * Local allowlist + Policy Runtime hard gate.
+ * Local allowlist + Policy Runtime hard gate (VL-220 / VL-222).
  */
-@Injectable
+@Injectable()
 export class WorkflowPolicyGate {
   constructor(private readonly policyRuntime: PolicyRuntimeService) {}
 
@@ -26,7 +26,7 @@ export class WorkflowPolicyGate {
     policy: 'policy-runtime';
     hardGate: true;
   }> {
-    const action = (input.action ?? '').trim;
+    const action = (input.action ?? '').trim();
     if (!action) {
       throw new ApiException(
         'workflow_policy_denied',
@@ -80,7 +80,7 @@ export class WorkflowPolicyGate {
     const list = Array.isArray(raw) ? raw : [];
     const out: WorkflowPermission[] = [];
     for (const p of list) {
-      const id = String(p).trim;
+      const id = String(p).trim();
       if (
         (WORKFLOW_PERMISSIONS as readonly string[]).includes(id) &&
         !out.includes(id as WorkflowPermission)

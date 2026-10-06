@@ -19,8 +19,8 @@ export class ListInferenceProductsHandler
     @Inject(INFERENCE_CATALOG_PORT) private readonly catalog: InferenceCatalogPort,
   ) {}
 
-  execute: Promise<InferenceProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<InferenceProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 
@@ -32,8 +32,8 @@ export class GetInferenceProductsBundleHandler
     @Inject(INFERENCE_CATALOG_PORT) private readonly catalog: InferenceCatalogPort,
   ) {}
 
-  execute: Promise<InferenceProductsBundle> {
-    return Promise.resolve(this.catalog.products);
+  execute(): Promise<InferenceProductsBundle> {
+    return Promise.resolve(this.catalog.products());
   }
 }
 

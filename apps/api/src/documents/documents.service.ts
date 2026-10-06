@@ -17,7 +17,7 @@ import { AuditService } from '../audit/audit.service';
 const DOCX_MIME = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
 const PDF_MIME = 'application/pdf';
 
-@Injectable
+@Injectable()
 export class DocumentsService {
   constructor(
     private readonly prisma: PrismaService,
@@ -28,7 +28,7 @@ export class DocumentsService {
   ) {}
 
   assertAllowedUpload(file: { size: number; mimetype: string; originalname: string }) {
-    const max = documentMaxBytes;
+    const max = documentMaxBytes();
     if (file.size > max) {
       throw new ApiException(
         'validation_error',
@@ -36,7 +36,7 @@ export class DocumentsService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const name = file.originalname.toLowerCase;
+    const name = file.originalname.toLowerCase();
     const ok =
       file.mimetype === DOCX_MIME ||
       file.mimetype === PDF_MIME ||
@@ -62,7 +62,7 @@ export class DocumentsService {
     target: string;
   }) {
     this.assertAllowedUpload(input.file);
-    const storageKey = `${input.organizationId}/${randomUUID}-${sanitizeFilename(input.file.originalname)}`;
+    const storageKey = `${input.organizationId}/${randomUUID()}-${sanitizeFilename(input.file.originalname)}`;
     await this.storage.writeBuffer(storageKey, input.file.buffer);
 
     return this.prisma.document.create({
@@ -150,7 +150,7 @@ export class DocumentsService {
 
     const baseName = stripExtension(sourceDoc.filename) + `.${parsed.target}`;
     const packed = await this.codec.pack(translatedChunks, extracted.format, baseName);
-    const storageKey = `${job.organizationId}/${randomUUID}-${sanitizeFilename(packed.filename)}`;
+    const storageKey = `${job.organizationId}/${randomUUID()}-${sanitizeFilename(packed.filename)}`;
     await this.storage.writeBuffer(storageKey, packed.buffer);
 
     const output = await this.prisma.document.create({
@@ -205,7 +205,7 @@ function stripExtension(name: string): string {
 }
 
 function guessMime(filename: string): string {
-  const lower = filename.toLowerCase;
+  const lower = filename.toLowerCase();
   if (lower.endsWith('.docx')) return DOCX_MIME;
   if (lower.endsWith('.pdf')) return PDF_MIME;
   return 'application/octet-stream';

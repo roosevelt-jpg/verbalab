@@ -6,18 +6,18 @@ export class AiSafetyPlatformController {
   constructor(private readonly service: AiSafetyPlatformService) {}
 
   @Get('engine')
-  engine {
-    return this.service.engine;
+  engine() {
+    return this.service.engine();
   }
 
   @Get('products')
-  products {
-    return this.service.engine;
+  products() {
+    return this.service.engine();
   }
 
   @Get('monitoring')
-  monitoring {
-    return this.service.monitoring;
+  monitoring() {
+    return this.service.monitoring();
   }
 
   @Get('detections')
@@ -36,7 +36,7 @@ export class AiSafetyPlatformController {
   }
 
   @Post('evaluate')
-  evaluate(@Body body: { action?: string; detectionId?: string }) {
+  evaluate(@Body() body: { action?: string; detectionId?: string }) {
     return this.service.evaluate(body ?? {});
   }
 

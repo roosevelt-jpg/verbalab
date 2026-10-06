@@ -6,15 +6,15 @@ import {
   TrustCloudProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestTrustCloudCatalogAdapter implements TrustCloudCatalogPort {
   constructor(private readonly service: TrustCloudService) {}
 
-  engine: TrustCloudEngineBundle {
-    return this.service.products;
+  engine(): TrustCloudEngineBundle {
+    return this.service.products();
   }
 
-  listProducts: TrustCloudProductRow[] {
-    return this.service.products.products;
+  listProducts(): TrustCloudProductRow[] {
+    return this.service.products().products;
   }
 }

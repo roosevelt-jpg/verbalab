@@ -12,12 +12,12 @@ export type LatencySnapshot = {
  * In-process rolling window of translate latencies for SLA-style p95.
  * Not a metrics cloud — single instance only.
  */
-@Injectable
+@Injectable()
 export class TranslateLatencyService {
   private readonly samples: number[] = [];
   private readonly capacity: number;
 
-  constructor {
+  constructor() {
     const raw = Number(process.env.TRANSLATE_LATENCY_SAMPLES ?? 1000);
     this.capacity = Number.isFinite(raw) && raw > 10 ? Math.floor(raw) : 1000;
   }
@@ -36,7 +36,7 @@ export class TranslateLatencyService {
     return sorted[idx] ?? null;
   }
 
-  snapshot: LatencySnapshot {
+  snapshot(): LatencySnapshot {
     if (this.samples.length === 0) {
       return { samples: 0, p50Ms: null, p95Ms: null, p99Ms: null, maxMs: null };
     }

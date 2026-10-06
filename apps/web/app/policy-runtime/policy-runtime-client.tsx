@@ -31,15 +31,15 @@ type Policy = {
   enabled: boolean;
 };
 
-export function PolicyRuntimeClient {
-  const { getToken, isLoaded } = useAuth;
+export function PolicyRuntimeClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [policies, setPolicies] = useState<Policy[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<string | null>(null);
 
-  const load = useCallback(async  => {
-    const token = await getToken;
+  const load = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, list] = await Promise.all([
       apiFetch<Engine>('/v1/policy-runtime/engine', { token }),
@@ -49,15 +49,15 @@ export function PolicyRuntimeClient {
     setPolicies(list.policies);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void load.catch((err: Error) => setError(err.message));
+    void load().catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
-  const createAndEvaluate = useCallback(async  => {
+  const createAndEvaluate = useCallback(async () => {
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const created = await apiFetch<{ policy: Policy }>('/v1/policy-runtime/policies', {
         token,
@@ -94,7 +94,7 @@ export function PolicyRuntimeClient {
       setResult(
         `${created.policy.id}\nmemory.put allowed=${evalDeny.allowed} hardGate=${evalDeny.hardGate} logOnly=${evalDeny.logOnly}\n${evalDeny.reason}\nshell.exec allowed=${evalGlobal.allowed}\n${evalGlobal.reason}`,
       );
-      await load;
+      await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Policy action failed');
     }
@@ -103,7 +103,7 @@ export function PolicyRuntimeClient {
   return (
     <AppShell>
       <main style={{ maxWidth: 720, margin: '0 auto', padding: '2rem 1.25rem 4rem' }}>
-        <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.85rem' }}>AI Kernel</p>
+        <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.85rem' }}>AI Kernel · VL-222</p>
         <h1 style={{ margin: '0.35rem 0 0.5rem', fontSize: '1.75rem' }}>Policy Runtime</h1>
         <p style={{ color: 'var(--muted)', lineHeight: 1.55 }}>
           Hard-gate enforcement for Agent / Workflow / Plugin. Denies return 403 — not log-only.
@@ -131,7 +131,7 @@ export function PolicyRuntimeClient {
         ) : null}
 
         <section style={{ marginTop: '1.75rem' }}>
-          <button type="button" onClick={ => void createAndEvaluate}>
+          <button type="button" onClick={() => void createAndEvaluate()}>
             Create deny policy + evaluate
           </button>
           {result ? (

@@ -27,8 +27,8 @@ export type StreamSurface = {
   notes: string;
 };
 
-/** Existing + hub stream surfaces. */
-export function streamingSurfaces: StreamSurface[] {
+/** Existing + hub stream surfaces (VL-208). */
+export function streamingSurfaces(): StreamSurface[] {
   return [
     {
       id: 'speech-sse',
@@ -68,7 +68,7 @@ export function streamingSurfaces: StreamSurface[] {
       transport: 'sse',
       api: 'POST /v1/streaming-runtime/stream',
       existing: false,
-      notes: 'Sandbox token-chunk SSE via Streaming Runtime hub. Full OpenAI token stream OS deferred.',
+      notes: 'Sandbox token-chunk SSE via Streaming Runtime hub (VL-208). Full OpenAI token stream OS deferred.',
     },
     {
       id: 'video-stream',
@@ -93,7 +93,7 @@ export function streamingSurfaces: StreamSurface[] {
   ];
 }
 
-export function streamingTransports {
+export function streamingTransports() {
   return [
     {
       id: 'sse',
@@ -117,14 +117,14 @@ export function streamingTransports {
 }
 
 /**
- * Library Phase 75 → Streaming Runtime.
+ * Library Phase 75 → Streaming Runtime (VL-208).
  * Hub over existing SSE + sandbox chunk stream — not a WebSocket/gRPC/video OS.
  */
-export function streamingRuntimeCatalog {
+export function streamingRuntimeCatalog() {
   return {
     product: 'Lugemi Streaming Runtime',
     note:
-      'Streaming Runtime. Catalogs speech/voice/translation SSE already shipped in product clouds, plus a sandbox LLM/token chunk SSE on this hub. Primary transport is SSE. WebSockets, gRPC, and video streaming OS deferred. Does not regenerate translate/speech/TTS streams.',
+      'Streaming Runtime (VL-208). Catalogs speech/voice/translation SSE already shipped in product clouds, plus a sandbox LLM/token chunk SSE on this hub. Primary transport is SSE. WebSockets, gRPC, and video streaming OS deferred. Does not regenerate translate/speech/TTS streams.',
     capabilities: [
       {
         id: 'speech-streaming',
@@ -208,7 +208,7 @@ export function streamingRuntimeCatalog {
         name: 'Analytics',
         status: 'shipped',
         api: 'GET /v1/streaming-runtime/analytics',
-        notes: 'Session aggregates — ≠ .',
+        notes: 'Session aggregates — ≠ VL-212.',
       },
       {
         id: 'rest',
@@ -221,7 +221,7 @@ export function streamingRuntimeCatalog {
         id: 'sdk',
         name: 'SDK',
         status: 'shipped',
-        api: 'streamingRuntimeEngine',
+        api: 'streamingRuntimeEngine()',
         notes: '@lugemi/sdk',
       },
       {
@@ -263,20 +263,20 @@ export function streamingRuntimeCatalog {
   };
 }
 
-export function streamingRuntimeMode: 'sandbox' | 'disabled' {
-  const raw = (process.env.LUGEMI_STREAMING_RUNTIME_MODE ?? 'sandbox').toLowerCase;
+export function streamingRuntimeMode(): 'sandbox' | 'disabled' {
+  const raw = (process.env.LUGEMI_STREAMING_RUNTIME_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
 
-export function streamingCeilings {
+export function streamingCeilings() {
   const maxChunks = Math.max(
     4,
     Number(process.env.LUGEMI_STREAMING_MAX_CHUNKS ?? '64') || 64,
   );
   return {
     maxChunksPerStream: Math.min(maxChunks, 256),
-    mode: streamingRuntimeMode,
+    mode: streamingRuntimeMode(),
     note: 'Hard ceiling on sandbox SSE chunks per stream request.',
   };
 }

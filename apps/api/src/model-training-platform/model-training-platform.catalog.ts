@@ -31,35 +31,35 @@ export type MtpMethod = {
 };
 
 /**
- * Library Phase 102 → Model Training Platform.
- * Orchestration hub over existing rented-GPU jobs — not a frontier training cluster.
+ * Library Phase 102 → Model Training Platform (VL-235).
+ * Orchestration hub over VL-111 rented-GPU jobs — not a frontier training cluster.
  */
-export function modelTrainingPlatformCatalog {
+export function modelTrainingPlatformCatalog() {
   return {
     product: 'Lugemi Model Training Platform',
     note:
-      'Model Training Platform. Catalogs LoRA/instruction-tuning orchestration over existing `/v1/training-jobs`. Experiment plans are sandbox-tracked. Does not ship distributed GPU clusters, RLHF/DPO labs, or trained competitive foundation weights (Volume 9 README).',
+      'Model Training Platform (VL-235). Catalogs LoRA/instruction-tuning orchestration over existing `/v1/training-jobs` (VL-111). Experiment plans are sandbox-tracked. Does not ship distributed GPU clusters, RLHF/DPO labs, or trained competitive foundation weights (Volume 9 README).',
     capabilities: [
       {
         id: 'training-orchestration',
         name: 'Training Orchestration',
         status: 'partial',
         api: 'POST /v1/model-training-platform/experiments',
-        notes: 'Experiment plans + handoff to launchers.',
+        notes: 'Experiment plans + handoff to VL-111 launchers.',
       },
       {
         id: 'lora',
         name: 'LoRA',
         status: 'partial',
         api: 'POST /v1/training-jobs',
-        notes: 'Supported method → rented-GPU / manual jobs.',
+        notes: 'Supported method → rented-GPU / manual jobs (VL-111).',
       },
       {
         id: 'instruction-tuning',
         name: 'Instruction Tuning',
         status: 'partial',
         api: 'POST /v1/training-jobs',
-        notes: 'Pack metadata via existing; not a research lab.',
+        notes: 'Pack metadata via VL-111; not a research lab.',
       },
       {
         id: 'experiment-tracking',
@@ -87,7 +87,7 @@ export function modelTrainingPlatformCatalog {
         name: 'Model Versioning',
         status: 'partial',
         api: 'GET /v1/models/live',
-        notes: 'Links registry; full FMC registry is .',
+        notes: 'Links VL-110 registry; full FMC registry is VL-237.',
       },
       {
         id: 'distributed-training',
@@ -125,12 +125,12 @@ export function modelTrainingPlatformCatalog {
         notes: 'Synthetic data generation pipeline deferred.',
       },
     ] satisfies MtpCapability[],
-    honesty: modelTrainingPlatformHonesty,
+    honesty: modelTrainingPlatformHonesty(),
     docs: '/docs/MODEL_TRAINING_PLATFORM.md',
   };
 }
 
-export function modelTrainingMethods: MtpMethod[] {
+export function modelTrainingMethods(): MtpMethod[] {
   return [
     {
       id: 'lora',
@@ -138,7 +138,7 @@ export function modelTrainingMethods: MtpMethod[] {
       status: 'partial',
       launchable: true,
       existingApi: 'POST /v1/training-jobs',
-      notes: 'Create experiment then hand off to rented-GPU / manual launch.',
+      notes: 'Create experiment then hand off to VL-111 rented-GPU / manual launch.',
     },
     {
       id: 'instruction_tuning',
@@ -146,7 +146,7 @@ export function modelTrainingMethods: MtpMethod[] {
       status: 'partial',
       launchable: true,
       existingApi: 'POST /v1/training-jobs',
-      notes: 'Same job path with instruction-tuning method tag.',
+      notes: 'Same VL-111 job path with instruction-tuning method tag.',
     },
     {
       id: 'checkpointing',
@@ -170,7 +170,7 @@ export function modelTrainingMethods: MtpMethod[] {
       status: 'partial',
       launchable: false,
       existingApi: 'GET /v1/training-jobs/launchers',
-      notes: 'Surfaces launcher configuration.',
+      notes: 'Surfaces VL-111 launcher configuration.',
     },
     {
       id: 'model_versioning',
@@ -178,7 +178,7 @@ export function modelTrainingMethods: MtpMethod[] {
       status: 'partial',
       launchable: false,
       existingApi: 'GET /v1/models/live',
-      notes: 'Defers full FMC registry to ; uses today.',
+      notes: 'Defers full FMC registry to VL-237; uses VL-110 today.',
     },
     {
       id: 'qlora',
@@ -223,7 +223,7 @@ export function modelTrainingMethods: MtpMethod[] {
   ];
 }
 
-export function modelTrainingPlatformArchitectureNotes {
+export function modelTrainingPlatformArchitectureNotes() {
   return {
     style: 'nest_modular_monolith',
     ddd: 'bounded_model_training_platform',
@@ -252,7 +252,7 @@ export function modelTrainingPlatformArchitectureNotes {
   };
 }
 
-export function modelTrainingPlatformHonesty {
+export function modelTrainingPlatformHonesty() {
   return {
     trainsCompetitiveFoundationWeights: false,
     distributedTrainingOs: false,
@@ -269,13 +269,13 @@ export function modelTrainingPlatformHonesty {
   };
 }
 
-export function modelTrainingCeilings {
+export function modelTrainingCeilings() {
   return {
     maxExperimentsPerOrg: 100,
     maxCheckpointsPerExperiment: 50,
     maxHyperparamKeys: 32,
     mode: 'sandbox',
     note:
-      'Sandbox ceilings for experiment plans. Real GPU spend remains gated by Pro + Cost Optimization.',
+      'Sandbox ceilings for experiment plans. Real GPU spend remains gated by VL-111 Pro + Cost Optimization.',
   };
 }

@@ -46,18 +46,18 @@ export type PolicyHardGateInput = {
 const RUNTIME = 'policy-runtime';
 const KERNEL_LAYER = 'kernel';
 
-@Injectable
+@Injectable()
 export class PolicyRuntimeService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
   ) {}
 
-  engine {
+  engine() {
     return {
-      ...policyRuntimeCatalog,
-      ceilings: policyRuntimeCeilings,
-      mode: policyRuntimeMode,
+      ...policyRuntimeCatalog(),
+      ceilings: policyRuntimeCeilings(),
+      mode: policyRuntimeMode(),
       safety: {
         hardGate: true,
         logOnlyForbidden: true,
@@ -68,7 +68,7 @@ export class PolicyRuntimeService {
     };
   }
 
-  kinds {
+  kinds() {
     return {
       kinds: POLICY_KINDS.map((id) => ({ id })),
       globalDenies: POLICY_GLOBAL_DENIES.map((id) => ({ id })),
@@ -121,8 +121,8 @@ export class PolicyRuntimeService {
       permissions?: string[];
     },
   ) {
-    const action = (input.action ?? '').trim;
-    const runtime = (input.runtime ?? '*').trim as PolicyRuntimeTarget | string;
+    const action = (input.action ?? '').trim();
+    const runtime = (input.runtime ?? '*').trim() as PolicyRuntimeTarget | string;
     if (!action) {
       return {
         allowed: false,
@@ -148,7 +148,7 @@ export class PolicyRuntimeService {
 
     // Even when mode=disabled, global denies above still apply.
     // Org policies apply only in enforce mode.
-    if (policyRuntimeMode === 'enforce') {
+    if (policyRuntimeMode() === 'enforce') {
       const policies = await this.loadEnabledPolicies(input);
       const denyMatches = policies.filter(
         (p) =>
@@ -180,7 +180,7 @@ export class PolicyRuntimeService {
       runtime,
       subjectId: input.subjectId ?? null,
       engine: 'policy-runtime' as const,
-      honesty: policyRuntimeCatalog.honesty,
+      honesty: policyRuntimeCatalog().honesty,
     };
   }
 
@@ -195,12 +195,12 @@ export class PolicyRuntimeService {
       enabled?: boolean;
     },
   ) {
-    this.assertEnabledForMutations;
-    const name = (input.name ?? '').trim;
+    this.assertEnabledForMutations();
+    const name = (input.name ?? '').trim();
     if (!name) {
       throw new ApiException('validation_error', 'name is required', HttpStatus.BAD_REQUEST);
     }
-    const kind = (input.kind ?? 'security').trim as PolicyKind;
+    const kind = (input.kind ?? 'security').trim() as PolicyKind;
     if (!POLICY_KINDS.includes(kind)) {
       throw new ApiException(
         'validation_error',
@@ -214,7 +214,7 @@ export class PolicyRuntimeService {
       // deny is the load-bearing enforcement path (README: hard gate).
     }
     const actions = Array.isArray(input.actions)
-      ? input.actions.map((a) => String(a).trim).filter(Boolean).slice(0, 50)
+      ? input.actions.map((a) => String(a).trim()).filter(Boolean).slice(0, 50)
       : [];
     if (actions.length === 0) {
       throw new ApiException(
@@ -228,11 +228,11 @@ export class PolicyRuntimeService {
         ? input.targets
         : ['*']
     )
-      .map((t) => String(t).trim)
+      .map((t) => String(t).trim())
       .filter(Boolean)
       .slice(0, 10) as PolicyRuntimeTarget[];
 
-    const ceilings = policyRuntimeCeilings;
+    const ceilings = policyRuntimeCeilings();
     const existing = await this.listPolicies(input);
     if (existing.policies.length >= ceilings.maxPoliciesPerWorkspace) {
       throw new ApiException(
@@ -242,16 +242,16 @@ export class PolicyRuntimeService {
       );
     }
 
-    const now = new Date.toISOString;
+    const now = new Date().toISOString();
     const policy: PolicyRecord = {
-      id: `pol_${randomUUID.replace(/-/g, '').slice(0, 16)}`,
+      id: `pol_${randomUUID().replace(/-/g, '').slice(0, 16)}`,
       name: name.slice(0, 80),
       kind,
       effect,
       actions,
       targets,
       enabled: input.enabled !== false,
-      region: input.region?.trim.slice(0, 32) || undefined,
+      region: input.region?.trim().slice(0, 32) || undefined,
       createdAt: now,
       updatedAt: now,
     };
@@ -273,7 +273,7 @@ export class PolicyRuntimeService {
 
     return {
       policy,
-      honesty: policyRuntimeCatalog.honesty,
+      honesty: policyRuntimeCatalog().honesty,
       note: 'Policy stored. Deny policies hard-block matching Agent/Workflow/Plugin actions.',
     };
   }
@@ -292,10 +292,10 @@ export class PolicyRuntimeService {
   }
 
   async setEnabled(input: AuthCtx & { id?: string; enabled?: boolean }) {
-    this.assertEnabledForMutations;
+    this.assertEnabledForMutations();
     const policy = await this.requirePolicy(input, input.id);
     policy.enabled = Boolean(input.enabled);
-    policy.updatedAt = new Date.toISOString;
+    policy.updatedAt = new Date().toISOString();
     await this.writeRecord(input, {
       key: `policy:${policy.id}`,
       content: policy,
@@ -312,7 +312,7 @@ export class PolicyRuntimeService {
   }
 
   async analytics(input: AuthCtx) {
-    const start = new Date;
+    const start = new Date();
     start.setUTCDate(1);
     start.setUTCHours(0, 0, 0, 0);
     const actions = [
@@ -333,18 +333,18 @@ export class PolicyRuntimeService {
     );
     const policies = await this.listPolicies(input);
     return {
-      periodStart: start.toISOString,
+      periodStart: start.toISOString(),
       workspaceId: input.workspaceId,
       policyCount: policies.policies.length,
       events: counts.reduce((s, c) => s + c.count, 0),
       byAction: Object.fromEntries(counts.map((c) => [c.action, c.count])),
-      honesty: policyRuntimeCatalog.honesty,
+      honesty: policyRuntimeCatalog().honesty,
     };
   }
 
   async monitoring(input: AuthCtx) {
     const [engine, analytics] = await Promise.all([
-      Promise.resolve(this.engine),
+      Promise.resolve(this.engine()),
       this.analytics(input),
     ]);
     return {
@@ -385,8 +385,8 @@ export class PolicyRuntimeService {
     });
   }
 
-  private assertEnabledForMutations {
-    if (policyRuntimeMode === 'disabled') {
+  private assertEnabledForMutations() {
+    if (policyRuntimeMode() === 'disabled') {
       throw new ApiException(
         'policy_runtime_disabled',
         'Policy Runtime mutations disabled (LUGEMI_POLICY_RUNTIME_MODE=disabled). Global hard denies still apply to runtime gates.',
@@ -396,7 +396,7 @@ export class PolicyRuntimeService {
   }
 
   private async requirePolicy(input: AuthCtx, id?: string) {
-    const policyId = (id ?? '').trim;
+    const policyId = (id ?? '').trim();
     if (!policyId) {
       throw new ApiException('validation_error', 'policy id is required', HttpStatus.BAD_REQUEST);
     }
@@ -447,7 +447,7 @@ export class PolicyRuntimeService {
           key: opts.replaceKey,
           deletedAt: null,
         },
-        data: { deletedAt: new Date },
+        data: { deletedAt: new Date() },
       });
     }
     return this.prisma.memoryRecord.create({

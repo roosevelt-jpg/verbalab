@@ -17,7 +17,7 @@ import { isStyleProfileId } from '../style/style-profiles';
 
 const MAX_CHARS = 12_000;
 
-@Injectable
+@Injectable()
 export class GrammarService {
   private readonly logger = new Logger(GrammarService.name);
 
@@ -29,8 +29,8 @@ export class GrammarService {
     private readonly style: StyleService,
   ) {}
 
-  intelligence {
-    return grammarIntelligenceCatalog;
+  intelligence() {
+    return grammarIntelligenceCatalog();
   }
 
   async spell(input: {
@@ -42,7 +42,7 @@ export class GrammarService {
     apiKeyId?: string;
     ip?: string;
   }) {
-    const text = input.text.trim;
+    const text = input.text.trim();
     if (!text) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }
@@ -54,8 +54,8 @@ export class GrammarService {
       );
     }
 
-    let language = input.language?.trim.toLowerCase || 'en';
-    if (!input.language?.trim) {
+    let language = input.language?.trim().toLowerCase() || 'en';
+    if (!input.language?.trim()) {
       const detected = await this.gateway.detect({ text });
       language = detected.language;
     }
@@ -102,7 +102,7 @@ export class GrammarService {
       issueCount: full.issueCount,
       provider: full.provider,
       model: full.model,
-      note: 'Sentence correction via grammar pipeline.',
+      note: 'Sentence correction via grammar pipeline (VL-142).',
     };
   }
 
@@ -163,12 +163,12 @@ export class GrammarService {
       suggestions,
       suggestionCount: suggestions.length,
       providers: { grammar: grammar.provider, style: style.provider },
-      note: 'Combined grammar + style writing suggestions. Domain profiles are tone-only.',
+      note: 'Combined grammar + style writing suggestions (VL-142). Domain profiles are tone-only.',
     };
   }
 
   async analytics(organizationId: string) {
-    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const [checks, spells, styles] = await Promise.all([
       this.prisma.auditEvent.count({
         where: {
@@ -211,7 +211,7 @@ export class GrammarService {
     apiKeyId?: string;
     ip?: string;
   }) {
-    const text = input.text.trim;
+    const text = input.text.trim();
     if (!text) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }
@@ -223,7 +223,7 @@ export class GrammarService {
       );
     }
 
-    let language = input.language?.trim.toLowerCase || '';
+    let language = input.language?.trim().toLowerCase() || '';
     let languageProvider = 'hint';
     let languageConfidence = 1;
     if (!language) {
@@ -239,12 +239,12 @@ export class GrammarService {
     let provider: 'rules' | 'llm' | 'rules+llm' = 'rules';
     let model: string | null = null;
 
-    if (process.env.OPENAI_API_KEY?.trim) {
+    if (process.env.OPENAI_API_KEY?.trim()) {
       const llm = await this.assistWithLlm(text, language);
       if (llm) {
         model = llm.model;
         provider = issues.length > 0 ? 'rules+llm' : 'llm';
-        if (llm.corrected.trim) corrected = llm.corrected.trim;
+        if (llm.corrected.trim()) corrected = llm.corrected.trim();
         if (llm.issues.length > 0) {
           issues = this.mergeIssues(issues, llm.issues);
         }
@@ -360,11 +360,11 @@ export class GrammarService {
           const row = item as Record<string, unknown>;
           const type = this.asIssueType(row.type);
           const severity = this.asSeverity(row.severity);
-          if (typeof row.message !== 'string' || !row.message.trim) continue;
+          if (typeof row.message !== 'string' || !row.message.trim()) continue;
           issues.push({
             type,
             severity,
-            message: row.message.trim,
+            message: row.message.trim(),
             original: typeof row.original === 'string' ? row.original : undefined,
             suggestion: typeof row.suggestion === 'string' ? row.suggestion : undefined,
           });

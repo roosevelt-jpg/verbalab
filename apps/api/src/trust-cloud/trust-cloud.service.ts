@@ -8,16 +8,16 @@ import {
   trustCloudRoutingTable,
 } from './trust-cloud.catalog';
 
-@Injectable
+@Injectable()
 export class TrustCloudService {
   constructor(private readonly usage: UsageService) {}
 
-  products {
+  products() {
     return {
       product: 'Lugemi Trust Cloud',
-      products: trustCloudProductCatalog,
-      architecture: trustCloudArchitectureNotes,
-      honesty: trustCloudHonesty,
+      products: trustCloudProductCatalog(),
+      architecture: trustCloudArchitectureNotes(),
+      honesty: trustCloudHonesty(),
       safety: {
         policyRuntimeIntegrated: true,
         traditionalKnowledgeConsentRequired: true,
@@ -30,19 +30,19 @@ export class TrustCloudService {
       },
       docs: '/docs/TRUST_CLOUD.md',
       note:
-        'Trust Cloud Foundation. Enforcement/governance layer over existing systems. Not Okta/GRC/certification/SIEM/Platform Engineering OS.',
+        'Trust Cloud Foundation (VL-292). Enforcement/governance layer over existing systems. Not Okta/GRC/certification/SIEM/Platform Engineering OS.',
     };
   }
 
-  routing {
+  routing() {
     return {
-      routes: trustCloudRoutingTable,
-      products: trustCloudProductCatalog.map((p) => ({
+      routes: trustCloudRoutingTable(),
+      products: trustCloudProductCatalog().map((p) => ({
         id: p.id,
         status: p.status,
         api: p.api,
       })),
-      honesty: trustCloudHonesty,
+      honesty: trustCloudHonesty(),
       note: 'Static Trust Cloud discovery catalog for Foundation.',
       docs: '/docs/TRUST_CLOUD.md',
     };
@@ -61,9 +61,9 @@ export class TrustCloudService {
         chat: usageSummary.chat,
         embeddings: usageSummary.embeddings,
       },
-      products: trustCloudProductCatalog,
-      architecture: trustCloudArchitectureNotes,
-      honesty: trustCloudHonesty,
+      products: trustCloudProductCatalog(),
+      architecture: trustCloudArchitectureNotes(),
+      honesty: trustCloudHonesty(),
       safety: {
         policyRuntimeIntegrated: true,
         traditionalKnowledgeConsentRequired: true,
@@ -100,18 +100,18 @@ export class TrustCloudService {
       },
       docs: '/docs/TRUST_CLOUD.md',
       note:
-        'Trust Cloud (–301). Discovery hub over safety/governance/explainability/privacy/compliance/risk/identity/analytics; Production Audit closes the volume.',
+        'Trust Cloud (VL-292–301). Discovery hub over safety/governance/explainability/privacy/compliance/risk/identity/analytics; Production Audit closes the volume.',
     };
   }
 
-  monitoring {
-    const products = trustCloudProductCatalog;
+  monitoring() {
+    const products = trustCloudProductCatalog();
     return {
       mode: 'foundation',
       products: products.map((p) => ({ id: p.id, status: p.status })),
-      architecture: trustCloudArchitectureNotes,
-      honesty: trustCloudHonesty,
-      note: 'Trust Cloud monitoring snapshot.',
+      architecture: trustCloudArchitectureNotes(),
+      honesty: trustCloudHonesty(),
+      note: 'Trust Cloud monitoring snapshot (VL-292).',
     };
   }
 }

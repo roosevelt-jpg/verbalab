@@ -10,7 +10,7 @@ export type AccentSeed = {
 };
 
 /**
- * Curated spoken accent profiles — African-priority.
+ * Curated spoken accent profiles (VL-132) — African-priority.
  * Labels are profiles inferred from transcript cues after STT or from text.
  * Not an acoustic phonetics / unlimited accent catalog.
  */

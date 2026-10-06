@@ -13,13 +13,13 @@ type GqlReq = Request & {
   translateAuth?: TranslateAuthContext;
 };
 
-@Resolver
+@Resolver()
 export class LanguageAnalyticsGraphqlResolver {
   constructor(private readonly analytics: AnalyticsService) {}
 
-  @Query( => GqlLanguageAnalytics, { name: 'languageAnalytics' })
-  languageAnalytics: GqlLanguageAnalytics {
-    const c = this.analytics.catalog;
+  @Query(() => GqlLanguageAnalytics, { name: 'languageAnalytics' })
+  languageAnalytics(): GqlLanguageAnalytics {
+    const c = this.analytics.catalog();
     return {
       product: c.product,
       note: c.note,
@@ -28,12 +28,12 @@ export class LanguageAnalyticsGraphqlResolver {
     };
   }
 
-  @Query( => GqlAnalyticsOverviewSummary, { name: 'analyticsOverview' })
+  @Query(() => GqlAnalyticsOverviewSummary, { name: 'analyticsOverview' })
   @UseGuards(TranslateAuthGuard)
   async analyticsOverview(
     @Context('req') req: GqlReq,
-    @Args('from', { type:  => String, nullable: true }) from?: string,
-    @Args('to', { type:  => String, nullable: true }) to?: string,
+    @Args('from', { type: () => String, nullable: true }) from?: string,
+    @Args('to', { type: () => String, nullable: true }) to?: string,
   ): Promise<GqlAnalyticsOverviewSummary> {
     const auth = req.translateAuth!;
     const overview = await this.analytics.overview({
@@ -51,12 +51,12 @@ export class LanguageAnalyticsGraphqlResolver {
     };
   }
 
-  @Query( => GqlEnterpriseAnalyticsReport, { name: 'enterpriseAnalyticsReport' })
+  @Query(() => GqlEnterpriseAnalyticsReport, { name: 'enterpriseAnalyticsReport' })
   @UseGuards(TranslateAuthGuard)
   async enterpriseAnalyticsReport(
     @Context('req') req: GqlReq,
-    @Args('from', { type:  => String, nullable: true }) from?: string,
-    @Args('to', { type:  => String, nullable: true }) to?: string,
+    @Args('from', { type: () => String, nullable: true }) from?: string,
+    @Args('to', { type: () => String, nullable: true }) to?: string,
   ): Promise<GqlEnterpriseAnalyticsReport> {
     const auth = req.translateAuth!;
     const report = await this.analytics.enterpriseReport({

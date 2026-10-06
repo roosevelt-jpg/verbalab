@@ -28,7 +28,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_km_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_km_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -42,23 +42,23 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Knowledge Memory',  => {
+describe('Knowledge Memory (VL-199)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let storageDir: string;
 
-  beforeAll(async  => {
-    storageDir = await mkdtemp(join(tmpdir, 'lugemi-km-'));
+  beforeAll(async () => {
+    storageDir = await mkdtemp(join(tmpdir(), 'lugemi-km-'));
     process.env.DOCUMENT_STORAGE_DIR = storageDir;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -82,12 +82,12 @@ describe('Knowledge Memory',  => {
     });
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
     await rm(storageDir, { recursive: true, force: true });
   });
 
-  it('documents Knowledge Memory honesty (not Mem0 OS; distinct from Memory Cloud)',  => {
+  it('documents Knowledge Memory honesty (not Mem0 OS; distinct from Memory Cloud)', () => {
     const doc = join(root, 'docs/KNOWLEDGE_MEMORY.md');
     const adr = join(root, 'docs/adr/0110-knowledge-memory.md');
     expect(existsSync(doc)).toBe(true);
@@ -95,12 +95,12 @@ describe('Knowledge Memory',  => {
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/Mem0|Zep/i);
     expect(text).toMatch(/Memory Cloud/i);
-    expect(text).toMatch(/);
+    expect(text).toMatch(/VL-183/);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
   });
 
-  it('exposes engine with honest flags', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes engine with honest flags', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/knowledge-memory/engine')
       .expect(200);
     expect(res.body.product).toContain('Knowledge Memory');
@@ -110,14 +110,14 @@ describe('Knowledge Memory',  => {
     expect(res.body.honesty.distinctFromMemoryCloud).toBe(true);
     expect(res.body.honesty.orgWorkspaceScoped).toBe(true);
 
-    const scopes = await request(app.getHttpServer)
+    const scopes = await request(app.getHttpServer())
       .get('/v1/knowledge-memory/scopes')
       .expect(200);
     expect(scopes.body.scopes.some((s: { id: string }) => s.id === 'user')).toBe(true);
     expect(scopes.body.layer).toBe('knowledge');
   });
 
-  it('creates, evolves, versions, and links to knowledge documents', async  => {
+  it('creates, evolves, versions, and links to knowledge documents', async () => {
     const org = await seedOrg(prisma, 'km');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -126,13 +126,13 @@ describe('Knowledge Memory',  => {
       name: 'km-key',
     });
 
-    const doc = await request(app.getHttpServer)
+    const doc = await request(app.getHttpServer())
       .post('/v1/knowledge/documents')
       .set('Authorization', `Bearer ${key.secret}`)
       .attach('file', Buffer.from('# HQ\n\nLugemi HQ is in Nairobi.'), 'hq.md')
       .expect(201);
 
-    const created = await request(app.getHttpServer)
+    const created = await request(app.getHttpServer())
       .post('/v1/knowledge-memory/memories')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -146,7 +146,7 @@ describe('Knowledge Memory',  => {
     expect(created.body.documentId).toBe(doc.body.id);
     expect(created.body.version).toBe(1);
 
-    const userMem = await request(app.getHttpServer)
+    const userMem = await request(app.getHttpServer())
       .post('/v1/knowledge-memory/memories')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -158,7 +158,7 @@ describe('Knowledge Memory',  => {
     expect(userMem.body.scope).toBe('user');
     expect(userMem.body.subjectUserId).toBe(org.memberships[0]!.userId);
 
-    const evolved = await request(app.getHttpServer)
+    const evolved = await request(app.getHttpServer())
       .post(`/v1/knowledge-memory/memories/${created.body.id}/evolve`)
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -170,7 +170,7 @@ describe('Knowledge Memory',  => {
     expect(evolved.body.evolutionCount).toBe(1);
     expect(evolved.body.content).toContain('Kenya');
 
-    const versions = await request(app.getHttpServer)
+    const versions = await request(app.getHttpServer())
       .get(`/v1/knowledge-memory/memories/${created.body.id}/versions`)
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -179,7 +179,7 @@ describe('Knowledge Memory',  => {
     expect(versions.body.history[0].content).toContain('Nairobi');
     expect(versions.body.history[0].reason).toBe('add country');
 
-    const search = await request(app.getHttpServer)
+    const search = await request(app.getHttpServer())
       .post('/v1/knowledge-memory/search')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ query: 'Nairobi' })
@@ -187,13 +187,13 @@ describe('Knowledge Memory',  => {
     expect(search.body.hits.some((h: { id: string }) => h.id === created.body.id)).toBe(true);
 
     // Plain Memory Cloud rows without layer=knowledge must not appear.
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .post('/v1/memory-cloud/memories')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ scope: 'workspace', kind: 'long_term', content: 'Intelligence-only memory row.' })
       .expect(201);
 
-    const listed = await request(app.getHttpServer)
+    const listed = await request(app.getHttpServer())
       .get('/v1/knowledge-memory/memories')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -202,7 +202,7 @@ describe('Knowledge Memory',  => {
       listed.body.data.some((m: { content: string }) => m.content.includes('Intelligence-only')),
     ).toBe(false);
 
-    const analytics = await request(app.getHttpServer)
+    const analytics = await request(app.getHttpServer())
       .get('/v1/knowledge-memory/analytics')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -211,8 +211,8 @@ describe('Knowledge Memory',  => {
     expect(analytics.body.evolved).toBeGreaterThanOrEqual(1);
   });
 
-  it('exposes knowledgeMemoryEngine via GraphQL', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes knowledgeMemoryEngine via GraphQL', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query:
@@ -220,7 +220,7 @@ describe('Knowledge Memory',  => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.knowledgeMemoryEngine.mem0Os).toBe(false);
     expect(res.body.data.knowledgeMemoryEngine.regeneratesMemoryCloud).toBe(false);
     expect(res.body.data.knowledgeMemoryEngine.extendsVl183).toBe(true);

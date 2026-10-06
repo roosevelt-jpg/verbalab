@@ -22,8 +22,8 @@ export class ListKnowledgeFabricCapabilitiesHandler
     private readonly catalog: KnowledgeFabricCatalogPort,
   ) {}
 
-  execute: Promise<KnowledgeFabricCapabilityRow[]> {
-    return Promise.resolve(this.catalog.listCapabilities);
+  execute(): Promise<KnowledgeFabricCapabilityRow[]> {
+    return Promise.resolve(this.catalog.listCapabilities());
   }
 }
 
@@ -36,8 +36,8 @@ export class ListKnowledgeFabricRoutesHandler
     private readonly catalog: KnowledgeFabricCatalogPort,
   ) {}
 
-  execute: Promise<KnowledgeFabricRouteRow[]> {
-    return Promise.resolve(this.catalog.listRoutes);
+  execute(): Promise<KnowledgeFabricRouteRow[]> {
+    return Promise.resolve(this.catalog.listRoutes());
   }
 }
 
@@ -50,8 +50,8 @@ export class GetKnowledgeFabricProductsBundleHandler
     private readonly catalog: KnowledgeFabricCatalogPort,
   ) {}
 
-  execute: Promise<KnowledgeFabricProductsBundle> {
-    return Promise.resolve(this.catalog.products);
+  execute(): Promise<KnowledgeFabricProductsBundle> {
+    return Promise.resolve(this.catalog.products());
   }
 }
 

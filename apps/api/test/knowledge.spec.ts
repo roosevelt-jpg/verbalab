@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_know_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_know_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -40,23 +40,23 @@ function fakeEmbedding(seed: number): number[] {
   return Array.from({ length: 1536 }, (_, i) => Math.sin((seed + 1) * (i + 1) * 0.01) * 0.1);
 }
 
-describe('Knowledge + RAG',  => {
+describe('Knowledge + RAG (VL-062)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let storageDir: string;
 
-  beforeAll(async  => {
-    storageDir = await mkdtemp(join(tmpdir, 'lugemi-know-'));
+  beforeAll(async () => {
+    storageDir = await mkdtemp(join(tmpdir(), 'lugemi-know-'));
     process.env.DOCUMENT_STORAGE_DIR = storageDir;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -82,7 +82,7 @@ describe('Knowledge + RAG',  => {
     gateway.setChatProviderForTests({
       name: 'fixture_chat',
       async complete(input) {
-        const user = [...input.messages].reverse.find((m) => m.role === 'user');
+        const user = [...input.messages].reverse().find((m) => m.role === 'user');
         return {
           message: {
             role: 'assistant',
@@ -99,12 +99,12 @@ describe('Knowledge + RAG',  => {
     });
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
     await rm(storageDir, { recursive: true, force: true });
   });
 
-  it('uploads a text document, lists it, and answers with citations', async  => {
+  it('uploads a text document, lists it, and answers with citations', async () => {
     const org = await seedOrg(prisma, 'rag');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -118,7 +118,7 @@ describe('Knowledge + RAG',  => {
       'utf8',
     );
 
-    const upload = await request(app.getHttpServer)
+    const upload = await request(app.getHttpServer())
       .post('/v1/knowledge/documents')
       .set('Authorization', `Bearer ${key.secret}`)
       .attach('file', body, 'hq.txt')
@@ -127,13 +127,13 @@ describe('Knowledge + RAG',  => {
     expect(upload.body.status).toBe('ready');
     expect(upload.body.chunkCount).toBeGreaterThanOrEqual(1);
 
-    const listed = await request(app.getHttpServer)
+    const listed = await request(app.getHttpServer())
       .get('/v1/knowledge/documents')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(listed.body.data.some((d: { id: string }) => d.id === upload.body.id)).toBe(true);
 
-    const answer = await request(app.getHttpServer)
+    const answer = await request(app.getHttpServer())
       .post('/v1/knowledge/query')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ question: 'Where is Lugemi HQ?' })
@@ -145,7 +145,7 @@ describe('Knowledge + RAG',  => {
     expect(answer.body.provider).toBe('fixture_chat');
   });
 
-  it('deletes a knowledge document', async  => {
+  it('deletes a knowledge document', async () => {
     const org = await seedOrg(prisma, 'ragdel');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -154,13 +154,13 @@ describe('Knowledge + RAG',  => {
       name: 'del-key',
     });
 
-    const upload = await request(app.getHttpServer)
+    const upload = await request(app.getHttpServer())
       .post('/v1/knowledge/documents')
       .set('Authorization', `Bearer ${key.secret}`)
       .attach('file', Buffer.from('Short note about Swahili greetings: Habari.'), 'note.txt')
       .expect(201);
 
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .delete(`/v1/knowledge/documents/${upload.body.id}`)
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);

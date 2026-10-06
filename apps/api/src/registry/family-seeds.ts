@@ -5,7 +5,7 @@ export type FamilySeed = {
   notes?: string;
 };
 
-/** Curated families covering Lugemi registry languages. */
+/** Curated families covering Lugemi registry languages (VL-139). */
 export const FAMILY_SEEDS: FamilySeed[] = [
   {
     code: 'indo_european',

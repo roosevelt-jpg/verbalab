@@ -3,24 +3,24 @@ import { visionRuntimeEngineCatalog } from './vision-runtime.catalog';
 import { DocumentsService } from '../documents/documents.service';
 import { OcrService } from '../ocr/ocr.service';
 
-@Injectable
+@Injectable()
 export class VisionRuntimeService {
   constructor(
     private readonly documents: DocumentsService,
     private readonly ocr: OcrService
   ) {}
 
-  engine {
-    return visionRuntimeEngineCatalog;
+  engine() {
+    return visionRuntimeEngineCatalog();
   }
 
   /** Route/execute façade: returns upstream endpoint + live status from injected product services. */
   route(capability?: string) {
-    const catalog = this.engine;
-    const q = (capability ?? '').trim.toLowerCase;
+    const catalog = this.engine();
+    const q = (capability ?? '').trim().toLowerCase();
     const capabilities = catalog.capabilities.filter((c) => {
       if (!q) return true;
-      return c.id.includes(q) || c.name.toLowerCase.includes(q);
+      return c.id.includes(q) || c.name.toLowerCase().includes(q);
     });
     const upstreamStatus = [
       {
@@ -55,11 +55,11 @@ export class VisionRuntimeService {
   }
 
   list(query?: string) {
-    const catalog = this.engine;
-    const q = (query ?? '').trim.toLowerCase;
+    const catalog = this.engine();
+    const q = (query ?? '').trim().toLowerCase();
     const rows = catalog.routes.filter((row) => {
       if (!q) return true;
-      return JSON.stringify(row).toLowerCase.includes(q);
+      return JSON.stringify(row).toLowerCase().includes(q);
     });
     return {
       routes: rows,
@@ -76,8 +76,8 @@ export class VisionRuntimeService {
     return this.list(query);
   }
 
-  monitoring {
-    const catalog = this.engine;
+  monitoring() {
+    const catalog = this.engine();
     return {
       mode: 'vision-runtime',
       count: catalog.routes.length,
@@ -85,7 +85,7 @@ export class VisionRuntimeService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'VisionRuntime monitoring snapshot.',
+      note: 'VisionRuntime monitoring snapshot (VL-328).',
     };
   }
 }

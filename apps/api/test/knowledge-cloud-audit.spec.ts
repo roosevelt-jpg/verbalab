@@ -16,7 +16,7 @@ const apiSrc = join(root, 'apps/api/src');
 function walkTsFiles(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory) {
+    if (name.isDirectory()) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       walkTsFiles(p, out);
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_kcaudit_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_kcaudit_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -49,19 +49,19 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Knowledge Cloud Production Audit',  => {
+describe('Knowledge Cloud Production Audit (VL-203)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let rawKey: string;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    }).compile();
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
     const org = await seedOrg(prisma, 'kca');
@@ -74,11 +74,11 @@ describe('Knowledge Cloud Production Audit',  => {
     rawKey = created.secret;
   }, 120_000);
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('ships audit ADR, blueprint ADR, and report pack',  => {
+  it('ships audit ADR, blueprint ADR, and report pack', () => {
     expect(existsSync(join(root, 'docs/adr/0114-knowledge-cloud-production-audit.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0080-lugemi-cloud-blueprint.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/CLOUD_BLUEPRINT.md'))).toBe(true);
@@ -96,7 +96,7 @@ describe('Knowledge Cloud Production Audit',  => {
     expect(readiness).toMatch(/Inference Cloud/i);
   });
 
-  it('has no TODO/FIXME/implement-later markers in Knowledge Cloud source trees',  => {
+  it('has no TODO/FIXME/implement-later markers in Knowledge Cloud source trees', () => {
     const roots = [
       join(apiSrc, 'knowledge-cloud'),
       join(apiSrc, 'knowledge-base'),
@@ -121,7 +121,7 @@ describe('Knowledge Cloud Production Audit',  => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes integrated Knowledge Cloud catalogs', async  => {
+  it('exposes integrated Knowledge Cloud catalogs', async () => {
     const paths = [
       '/v1/knowledge-cloud/products',
       '/v1/knowledge-base/engine',
@@ -135,20 +135,20 @@ describe('Knowledge Cloud Production Audit',  => {
       '/v1/knowledge-analytics/engine',
     ];
     for (const path of paths) {
-      const res = await request(app.getHttpServer).get(path).expect(200);
-      expect(res.body).toBeTruthy;
+      const res = await request(app.getHttpServer()).get(path).expect(200);
+      expect(res.body).toBeTruthy();
     }
   });
 
-  it('rejects unauthenticated knowledge analytics and knowledge memory list (security)', async  => {
-    const overview = await request(app.getHttpServer).get('/v1/knowledge-analytics/overview');
+  it('rejects unauthenticated knowledge analytics and knowledge memory list (security)', async () => {
+    const overview = await request(app.getHttpServer()).get('/v1/knowledge-analytics/overview');
     expect([401, 403, 503]).toContain(overview.status);
 
-    const memories = await request(app.getHttpServer).get('/v1/knowledge-memory/memories');
+    const memories = await request(app.getHttpServer()).get('/v1/knowledge-memory/memories');
     expect([401, 403, 503]).toContain(memories.status);
   });
 
-  it('runs bounded sequential load smoke on public knowledge catalogs', async  => {
+  it('runs bounded sequential load smoke on public knowledge catalogs', async () => {
     const paths = [
       '/v1/knowledge-cloud/products',
       '/v1/knowledge-base/engine',
@@ -161,27 +161,27 @@ describe('Knowledge Cloud Production Audit',  => {
       '/v1/knowledge-apis/engine',
       '/v1/knowledge-analytics/engine',
     ];
-    const started = Date.now;
+    const started = Date.now();
     const iterations = 24;
     for (let i = 0; i < iterations; i++) {
       const path = paths[i % paths.length]!;
-      await request(app.getHttpServer).get(path).expect(200);
+      await request(app.getHttpServer()).get(path).expect(200);
     }
-    const elapsed = Date.now - started;
+    const elapsed = Date.now() - started;
     expect(elapsed).toBeLessThan(30_000);
     expect(iterations).toBe(24);
   });
 
-  it('runs bounded rapid stress smoke on knowledge products catalog', async  => {
-    const started = Date.now;
+  it('runs bounded rapid stress smoke on knowledge products catalog', async () => {
+    const started = Date.now();
     for (let i = 0; i < 12; i++) {
-      await request(app.getHttpServer).get('/v1/knowledge-cloud/products').expect(200);
+      await request(app.getHttpServer()).get('/v1/knowledge-cloud/products').expect(200);
     }
-    expect(Date.now - started).toBeLessThan(15_000);
+    expect(Date.now() - started).toBeLessThan(15_000);
   });
 
-  it('GraphQL Knowledge Cloud façade queries respond with honesty flags', async  => {
-    const res = await request(app.getHttpServer)
+  it('GraphQL Knowledge Cloud façade queries respond with honesty flags', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .set('Authorization', `Bearer ${rawKey}`)
       .send({
@@ -199,7 +199,7 @@ describe('Knowledge Cloud Production Audit',  => {
         }`,
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.knowledgeProducts.length).toBeGreaterThan(8);
     expect(res.body.data.knowledgeBaseEngine.confluenceOs).toBe(false);
     expect(res.body.data.enterpriseSearchEngine.elasticOs).toBe(false);
@@ -213,13 +213,13 @@ describe('Knowledge Cloud Production Audit',  => {
     expect(res.body.data.knowledgeAnalytics.aggregatesOnly).toBe(true);
   });
 
-  it('documents 12-layer cloud blueprint with Knowledge Cloud closed',  => {
+  it('documents 12-layer cloud blueprint with Knowledge Cloud closed', () => {
     const blueprint = readFileSync(join(root, 'docs/adr/0080-lugemi-cloud-blueprint.md'), 'utf8');
     expect(blueprint).toContain('Cloud Foundation');
     expect(blueprint).toContain('Production Audit');
     expect(blueprint).toContain('Knowledge');
-    expect(blueprint).toContain('');
+    expect(blueprint).toContain('VL-203');
     const living = readFileSync(join(root, 'docs/CLOUD_BLUEPRINT.md'), 'utf8');
-    expect(living).toMatch(/\s*→\s*);
+    expect(living).toMatch(/VL-193\s*→\s*VL-203/);
   });
 });

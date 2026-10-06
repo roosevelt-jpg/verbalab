@@ -1,5 +1,5 @@
 /**
- * Library Phase 154 → AgentOps Platform.
+ * Library Phase 154 → AgentOps Platform (VL-287).
  * Over Agent Runtime. policyViolationsVisible=true — surface for humans, not log-only.
  */
 export type AgentPolicyViolation = {
@@ -13,7 +13,7 @@ export type AgentPolicyViolation = {
   notes: string;
 };
 
-export function agentopsPolicyViolations: AgentPolicyViolation[] {
+export function agentopsPolicyViolations(): AgentPolicyViolation[] {
   return [
     {
       id: 'apol-001',
@@ -48,8 +48,8 @@ export function agentopsPolicyViolations: AgentPolicyViolation[] {
   ];
 }
 
-export function agentopsPlatformEngineCatalog {
-  const policyViolations = agentopsPolicyViolations;
+export function agentopsPlatformEngineCatalog() {
+  const policyViolations = agentopsPolicyViolations();
   return {
     product: 'Lugemi AgentOps Platform',
     capabilities: [
@@ -93,6 +93,6 @@ export function agentopsPlatformEngineCatalog {
       note: 'Policy violations and blocked actions are surfaced in engine/monitoring for humans — not log-only.',
     },
     docs: '/docs/AGENTOPS_PLATFORM.md',
-    note: 'AgentOps Platform. Lifecycle/versioning/eval/monitoring/replay/memory/analytics/safety with human-visible policy violations.',
+    note: 'AgentOps Platform (VL-287). Lifecycle/versioning/eval/monitoring/replay/memory/analytics/safety with human-visible policy violations.',
   };
 }

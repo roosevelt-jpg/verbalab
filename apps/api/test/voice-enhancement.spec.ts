@@ -23,7 +23,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_ve_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_ve_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -49,29 +49,29 @@ function toneWav(freq = 440, seconds = 0.5): Buffer {
   return encodeWavPcm16(samples, sampleRate);
 }
 
-describe('Voice Enhancement Platform',  => {
+describe('Voice Enhancement Platform (VL-175)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('documents Voice Enhancement honesty (not Krisp / Adobe Enhance)',  => {
+  it('documents Voice Enhancement honesty (not Krisp / Adobe Enhance)', () => {
     const doc = join(root, 'docs/VOICE_ENHANCEMENT.md');
     const adr = join(root, 'docs/adr/0086-voice-enhancement.md');
     expect(existsSync(doc)).toBe(true);
@@ -81,8 +81,8 @@ describe('Voice Enhancement Platform',  => {
     expect(text).toContain('Echo Cancellation');
   });
 
-  it('applies microphone_cleanup profile via DSP chain',  => {
-    const wav = toneWav;
+  it('applies microphone_cleanup profile via DSP chain', () => {
+    const wav = toneWav();
     const result = applyEnhancementProfile(wav, 'microphone_cleanup');
     expect(result.profile.id).toBe('microphone_cleanup');
     expect(result.stepsApplied).toContain('enhance_strong');
@@ -90,15 +90,15 @@ describe('Voice Enhancement Platform',  => {
     expect(result.note).toMatch(/not spectral ML/i);
   });
 
-  it('exposes engine with spectralMlDenoise=false and echo deferred', async  => {
-    const engine = await request(app.getHttpServer).get('/v1/voice-enhancement/engine').expect(200);
+  it('exposes engine with spectralMlDenoise=false and echo deferred', async () => {
+    const engine = await request(app.getHttpServer()).get('/v1/voice-enhancement/engine').expect(200);
     expect(engine.body.product).toBe('Lugemi Voice Enhancement');
     expect(engine.body.honesty.spectralMlDenoise).toBe(false);
     expect(engine.body.honesty.liveAec).toBe(false);
     const echoCap = engine.body.capabilities.find((c: { id: string }) => c.id === 'echo-cancellation');
     expect(echoCap.status).toBe('deferred');
 
-    const profiles = await request(app.getHttpServer).get('/v1/voice-enhancement/profiles').expect(200);
+    const profiles = await request(app.getHttpServer()).get('/v1/voice-enhancement/profiles').expect(200);
     const ids = profiles.body.profiles.map((p: { id: string }) => p.id);
     expect(ids).toEqual(
       expect.arrayContaining([
@@ -112,12 +112,12 @@ describe('Voice Enhancement Platform',  => {
       ]),
     );
 
-    const echo = await request(app.getHttpServer).get('/v1/voice-enhancement/echo').expect(200);
+    const echo = await request(app.getHttpServer()).get('/v1/voice-enhancement/echo').expect(200);
     expect(echo.body.available).toBe(false);
     expect(echo.body.status).toBe('deferred');
   });
 
-  it('enhances with profile and returns wav base64', async  => {
+  it('enhances with profile and returns wav base64', async () => {
     const org = await seedOrg(prisma, 've');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -126,21 +126,21 @@ describe('Voice Enhancement Platform',  => {
       name: 've-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/voice-enhancement/enhance')
       .set('Authorization', `Bearer ${key.secret}`)
       .field('profile', 'meeting_cleanup')
-      .attach('file', toneWav, 'tone.wav')
+      .attach('file', toneWav(), 'tone.wav')
       .expect(200);
 
     expect(res.body.profile).toBe('meeting_cleanup');
     expect(res.body.format).toBe('wav');
-    expect(res.body.audioBase64).toBeTruthy;
+    expect(res.body.audioBase64).toBeTruthy();
     expect(res.body.stepsApplied).toEqual(expect.arrayContaining(['enhance', 'isolate']));
   });
 
-  it('exposes voiceEnhancementEngine via GraphQL', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes voiceEnhancementEngine via GraphQL', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query:
@@ -148,7 +148,7 @@ describe('Voice Enhancement Platform',  => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.voiceEnhancementEngine.spectralMlDenoise).toBe(false);
     expect(res.body.data.voiceEnhancementEngine.liveAec).toBe(false);
     expect(res.body.data.voiceEnhancementProfiles.length).toBeGreaterThanOrEqual(6);

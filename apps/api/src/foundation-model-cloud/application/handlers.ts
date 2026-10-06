@@ -20,8 +20,8 @@ export class ListFoundationModelCloudProductsHandler
     private readonly catalog: FoundationModelCloudCatalogPort,
   ) {}
 
-  execute: Promise<FmcProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<FmcProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 
@@ -34,8 +34,8 @@ export class GetFoundationModelCloudProductsBundleHandler
     private readonly catalog: FoundationModelCloudCatalogPort,
   ) {}
 
-  execute: Promise<FmcProductsBundle> {
-    return Promise.resolve(this.catalog.products);
+  execute(): Promise<FmcProductsBundle> {
+    return Promise.resolve(this.catalog.products());
   }
 }
 

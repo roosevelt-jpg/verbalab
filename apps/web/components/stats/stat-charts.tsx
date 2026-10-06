@@ -95,7 +95,7 @@ export function LineChart({
         <polyline points={pts} fill="none" stroke={color} strokeWidth="2.5" strokeLinejoin="round" />
       </svg>
       <div className="lg-stat-sub">
-        Last {series.length} days · peak {max.toLocaleString}
+        Last {series.length} days · peak {max.toLocaleString()}
         {unitLabel ? ` ${unitLabel}` : ''}
       </div>
     </div>
@@ -120,7 +120,7 @@ export function BarChart({
             <span className="lg-bar-track">
               <span className="lg-bar-fill" style={{ width: `${Math.max(4, (b.value / max) * 100)}%` }} />
             </span>
-            <span className="lg-bar-value">{b.value.toLocaleString}</span>
+            <span className="lg-bar-value">{b.value.toLocaleString()}</span>
           </div>
         ))}
       </div>

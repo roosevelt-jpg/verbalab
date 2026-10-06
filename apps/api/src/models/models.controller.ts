@@ -11,11 +11,11 @@ export class ModelsController {
 
   /** Public live matrix — which adapters are ready per feature. */
   @Get('live')
-  live {
-    return this.models.liveMatrix;
+  live() {
+    return this.models.liveMatrix();
   }
 
-  @Get
+  @Get()
   @UseGuards(ClerkAuthGuard)
   list(@Query('feature') feature?: string) {
     if (feature) this.models.assertFeature(feature);
@@ -32,9 +32,9 @@ export class ModelsController {
   @UseGuards(ClerkAuthGuard, PlatformAdminGuard)
   setExternalUrl(
     @Param('idOrSlug') idOrSlug: string,
-    @Body body: { externalUrl?: string | null; notes?: string },
-    @CurrentSession session: SessionContext,
-    @Req req: Request,
+    @Body() body: { externalUrl?: string | null; notes?: string },
+    @CurrentSession() session: SessionContext,
+    @Req() req: Request,
   ) {
     return this.models.setExternalUrl({
       idOrSlug,
@@ -50,9 +50,9 @@ export class ModelsController {
   @UseGuards(ClerkAuthGuard, PlatformAdminGuard)
   setStatus(
     @Param('idOrSlug') idOrSlug: string,
-    @Body body: { status?: 'ready' | 'retired' | 'draft' },
-    @CurrentSession session: SessionContext,
-    @Req req: Request,
+    @Body() body: { status?: 'ready' | 'retired' | 'draft' },
+    @CurrentSession() session: SessionContext,
+    @Req() req: Request,
   ) {
     return this.models.setStatus({
       idOrSlug,

@@ -133,10 +133,10 @@ const CHALLENGE_WORDS = [
   'cairo',
 ];
 
-export function createLivenessChallenge {
-  const pick = [...CHALLENGE_WORDS].sort( => Math.random - 0.5).slice(0, 3);
+export function createLivenessChallenge() {
+  const pick = [...CHALLENGE_WORDS].sort(() => Math.random() - 0.5).slice(0, 3);
   return {
-    challengeId: `live_${Date.now.toString(36)}_${randomSuffix}`,
+    challengeId: `live_${Date.now().toString(36)}_${randomSuffix()}`,
     phrase: pick.join(' '),
     minDurationSeconds: 1.2,
     expiresInSeconds: 120,
@@ -145,8 +145,8 @@ export function createLivenessChallenge {
   };
 }
 
-function randomSuffix {
-  return Math.random.toString(36).slice(2, 8);
+function randomSuffix() {
+  return Math.random().toString(36).slice(2, 8);
 }
 
 export function assessLiveness(

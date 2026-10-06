@@ -6,16 +6,16 @@ import {
   ResearchAnalyticsProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestResearchAnalyticsCatalogAdapter implements ResearchAnalyticsCatalogPort {
   constructor(private readonly service: ResearchAnalyticsService) {}
 
-  engine: ResearchAnalyticsEngineBundle {
-    return this.service.engine;
+  engine(): ResearchAnalyticsEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: ResearchAnalyticsProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): ResearchAnalyticsProductRow[] {
+    const bundle = this.engine() as {
       products?: ResearchAnalyticsProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestResearchAnalyticsCatalogAdapter implements ResearchAnalyticsCat
         status: 'shipped',
         api: 'GET /v1/research-analytics/engine',
         console: '/research-analytics',
-        notes: ' shipped.',
+        notes: 'VL-279 shipped.',
       },
     ];
   }

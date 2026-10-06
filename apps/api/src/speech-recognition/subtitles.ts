@@ -27,18 +27,18 @@ export function formatVttTimestamp(seconds: number): string {
 
 export function segmentsToSrt(segments: SttSegment[]): string {
   return segments
-    .filter((s) => s.text.trim)
+    .filter((s) => s.text.trim())
     .map((s, i) => {
-      return `${i + 1}\n${formatSrtTimestamp(s.start)} --> ${formatSrtTimestamp(s.end)}\n${s.text.trim}\n`;
+      return `${i + 1}\n${formatSrtTimestamp(s.start)} --> ${formatSrtTimestamp(s.end)}\n${s.text.trim()}\n`;
     })
     .join('\n');
 }
 
 export function segmentsToVtt(segments: SttSegment[]): string {
   const body = segments
-    .filter((s) => s.text.trim)
+    .filter((s) => s.text.trim())
     .map((s) => {
-      return `${formatVttTimestamp(s.start)} --> ${formatVttTimestamp(s.end)}\n${s.text.trim}\n`;
+      return `${formatVttTimestamp(s.start)} --> ${formatVttTimestamp(s.end)}\n${s.text.trim()}\n`;
     })
     .join('\n');
   return `WEBVTT\n\n${body}`;
@@ -50,7 +50,7 @@ export function renderSubtitles(segments: SttSegment[], format: SubtitleFormat):
 
 /** Light punctuation/capitalization normalize for Whisper output. */
 export function normalizeTranscriptText(text: string): string {
-  let out = text.replace(/\s+/g, ' ').trim;
+  let out = text.replace(/\s+/g, ' ').trim();
   if (!out) return out;
   // Ensure terminal punctuation on the last sentence when missing.
   if (!/[.!?…"»)]$/.test(out)) {
@@ -58,10 +58,10 @@ export function normalizeTranscriptText(text: string): string {
   }
   // Capitalize sentence starts.
   out = out.replace(/(^|[.!?]\s+)([a-z])/g, (_, prefix: string, ch: string) => {
-    return `${prefix}${ch.toUpperCase}`;
+    return `${prefix}${ch.toUpperCase()}`;
   });
   if (/^[a-z]/.test(out)) {
-    out = out.charAt(0).toUpperCase + out.slice(1);
+    out = out.charAt(0).toUpperCase() + out.slice(1);
   }
   return out;
 }

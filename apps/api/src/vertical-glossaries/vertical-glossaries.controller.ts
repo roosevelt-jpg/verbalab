@@ -9,26 +9,26 @@ import { CurrentSession } from '../common/decorators/auth.decorators';
 export class VerticalGlossariesController {
   constructor(private readonly verticals: VerticalGlossariesService) {}
 
-  @Get
-  list(@CurrentSession session: SessionContext) {
+  @Get()
+  list(@CurrentSession() session: SessionContext) {
     return this.verticals.list(session.organizationId, session.workspaceId);
   }
 
   @Get('installs')
-  installs(@CurrentSession session: SessionContext) {
+  installs(@CurrentSession() session: SessionContext) {
     return this.verticals.listInstalls(session.organizationId, session.workspaceId);
   }
 
   @Get(':id')
-  get(@CurrentSession session: SessionContext, @Param('id') id: string) {
+  get(@CurrentSession() session: SessionContext, @Param('id') id: string) {
     return this.verticals.get(session.organizationId, session.workspaceId, id);
   }
 
   @Post(':id/install')
   install(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Param('id') id: string,
-    @Req req: Request,
+    @Req() req: Request,
   ) {
     return this.verticals.install({
       organizationId: session.organizationId,

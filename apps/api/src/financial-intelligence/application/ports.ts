@@ -1,4 +1,4 @@
-/** Application ports for Financial Intelligence. */
+/** Application ports for Financial Intelligence (VL-266). */
 
 export type FinancialIntelligenceProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type FinancialIntelligenceEngineBundle = ReturnType<
 >;
 
 export interface FinancialIntelligenceCatalogPort {
-  engine: FinancialIntelligenceEngineBundle;
-  listProducts: FinancialIntelligenceProductRow[];
+  engine(): FinancialIntelligenceEngineBundle;
+  listProducts(): FinancialIntelligenceProductRow[];
 }
 
 export const FINANCIAL_INTELLIGENCE_CATALOG_PORT = Symbol('FINANCIAL_INTELLIGENCE_CATALOG_PORT');

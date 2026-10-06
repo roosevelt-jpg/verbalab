@@ -45,7 +45,7 @@ type ReplicateRecord = {
   note: string;
 };
 
-@Injectable
+@Injectable()
 export class MemoryFabricService {
   private routePlans = 0;
   private pipelines = 0;
@@ -68,7 +68,7 @@ export class MemoryFabricService {
   ) {}
 
   /** Test hook. */
-  resetCounters {
+  resetCounters() {
     this.routePlans = 0;
     this.pipelines = 0;
     this.distributions = 0;
@@ -80,18 +80,18 @@ export class MemoryFabricService {
     this.replicateLog.length = 0;
   }
 
-  products {
-    const cacheEngine = this.intelligentCache.engine;
+  products() {
+    const cacheEngine = this.intelligentCache.engine();
     return {
       product: 'Lugemi Memory Fabric',
-      products: memoryFabricCapabilityCatalog,
-      routes: memoryFabricRoutingTable,
-      pipelines: memoryFabricPipelines,
-      versions: memoryFabricVersions,
-      memoryRuntime: this.memoryRuntime.engine,
+      products: memoryFabricCapabilityCatalog(),
+      routes: memoryFabricRoutingTable(),
+      pipelines: memoryFabricPipelines(),
+      versions: memoryFabricVersions(),
+      memoryRuntime: this.memoryRuntime.engine(),
       memoryCloud: {
-        product: this.memoryCloud.engine.product,
-        honesty: this.memoryCloud.engine.honesty,
+        product: this.memoryCloud.engine().product,
+        honesty: this.memoryCloud.engine().honesty,
         console: '/memory-cloud',
       },
       intelligentCache: {
@@ -99,24 +99,24 @@ export class MemoryFabricService {
         honesty: cacheEngine.honesty,
         console: '/intelligent-cache',
       },
-      architecture: memoryFabricArchitectureNotes,
-      honesty: memoryFabricHonesty,
+      architecture: memoryFabricArchitectureNotes(),
+      honesty: memoryFabricHonesty(),
       safety: {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric must hard-gate across fabric buses when shipped — not log-only.',
+          'Policy Fabric (VL-247) must hard-gate across fabric buses when shipped — not log-only.',
       },
       docs: '/docs/MEMORY_FABRIC.md',
       note:
-        'Memory Fabric. Cross-cloud memory router over Memory Runtime. Not Mem0 or multi-region replication OS.',
+        'Memory Fabric (VL-245). Cross-cloud memory router over Memory Runtime. Not Mem0 or multi-region replication OS.',
     };
   }
 
-  routes {
+  routes() {
     return {
-      routes: memoryFabricRoutingTable,
-      honesty: memoryFabricHonesty,
+      routes: memoryFabricRoutingTable(),
+      honesty: memoryFabricHonesty(),
       docs: '/docs/MEMORY_FABRIC.md',
       note: 'Static memory-intent → Runtime/Cloud handoff catalog.',
     };
@@ -124,30 +124,30 @@ export class MemoryFabricService {
 
   route(input: { kinds?: string[] }) {
     this.routePlans += 1;
-    const table = memoryFabricRoutingTable;
+    const table = memoryFabricRoutingTable();
     const kinds = input.kinds?.length
-      ? input.kinds.map((k) => k.toLowerCase)
+      ? input.kinds.map((k) => k.toLowerCase())
       : table.map((r) => r.kind);
     const selected = table.filter((r) => kinds.includes(r.kind));
     const missing = kinds.filter((k) => !table.some((r) => r.kind === k));
     return {
       plan: selected,
       missing,
-      honesty: memoryFabricHonesty,
+      honesty: memoryFabricHonesty(),
       note: 'Memory Router plan — does not write MemoryRecords itself.',
     };
   }
 
   pipeline(input: { pipelineId?: string; steps?: string[] }) {
     this.pipelines += 1;
-    const catalog = memoryFabricPipelines;
+    const catalog = memoryFabricPipelines();
     const chosen =
       catalog.find((p) => p.id === input.pipelineId) ??
       (input.steps?.length
         ? {
             id: 'custom',
             name: 'Custom Pipeline',
-            steps: input.steps.map((s) => s.toLowerCase),
+            steps: input.steps.map((s) => s.toLowerCase()),
             notes: 'Caller-supplied step list.',
           }
         : catalog[0]!);
@@ -157,22 +157,22 @@ export class MemoryFabricService {
       pipeline: chosen,
       plan: routed.plan,
       missing: routed.missing,
-      honesty: memoryFabricHonesty,
+      honesty: memoryFabricHonesty(),
       note: 'Pipeline is an ordered handoff plan — each step runs via Memory Runtime APIs.',
     };
   }
 
-  versions {
+  versions() {
     return {
-      versions: memoryFabricVersions,
-      honesty: memoryFabricHonesty,
+      versions: memoryFabricVersions(),
+      honesty: memoryFabricHonesty(),
       docs: '/docs/MEMORY_FABRIC.md',
       note: 'Fabric router/pipeline versions — Runtime owns MemoryRecords.',
     };
   }
 
-  cacheHandoff {
-    const engine = this.intelligentCache.engine;
+  cacheHandoff() {
+    const engine = this.intelligentCache.engine();
     return {
       cache: {
         target: 'intelligent-cache',
@@ -185,7 +185,7 @@ export class MemoryFabricService {
         note:
           'Memory Fabric does not auto-cache every put/search. Opt into Intelligent Cache namespaces explicitly.',
       },
-      honesty: memoryFabricHonesty,
+      honesty: memoryFabricHonesty(),
       docs: '/docs/MEMORY_FABRIC.md',
     };
   }
@@ -201,7 +201,7 @@ export class MemoryFabricService {
         mode: r.kind === 'cloud' ? 'catalog' : 'handoff',
       })),
       missing: plan.missing,
-      honesty: memoryFabricHonesty,
+      honesty: memoryFabricHonesty(),
       note: 'Federation is a product-handoff catalog — not cross-tenant memory mesh.',
     };
   }
@@ -210,7 +210,7 @@ export class MemoryFabricService {
     this.syncs += 1;
     return {
       ...(await this.memoryRuntime.sync(auth)),
-      honesty: memoryFabricHonesty,
+      honesty: memoryFabricHonesty(),
       docs: '/docs/MEMORY_FABRIC.md',
       note: 'Sync façade over Memory Runtime sandbox stamp — not multi-region replication.',
     };
@@ -219,7 +219,7 @@ export class MemoryFabricService {
   async list(auth: AuthCtx & { scope?: string; kind?: string; limit?: number }) {
     return {
       ...(await this.memoryRuntime.list(auth)),
-      honesty: memoryFabricHonesty,
+      honesty: memoryFabricHonesty(),
       docs: '/docs/MEMORY_FABRIC.md',
       note: 'List façade over Memory Runtime.',
     };
@@ -230,7 +230,7 @@ export class MemoryFabricService {
   ) {
     return {
       ...(await this.memoryRuntime.search(auth)),
-      honesty: memoryFabricHonesty,
+      honesty: memoryFabricHonesty(),
       docs: '/docs/MEMORY_FABRIC.md',
       note: 'Search façade over Memory Runtime.',
     };
@@ -249,19 +249,19 @@ export class MemoryFabricService {
         : peers;
 
     const record: ReplicateRecord = {
-      id: randomUUID,
+      id: randomUUID(),
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,
       targets: targets.map((t) => t.id),
       status: 'planned',
-      at: new Date.toISOString,
+      at: new Date().toISOString(),
       note: 'Same-org replication plan — does not copy MemoryRecords across regions.',
     };
     this.replicateLog.push(record);
     return {
       replication: record,
       peers: targets,
-      honesty: memoryFabricHonesty,
+      honesty: memoryFabricHonesty(),
       note: 'Replication plan only — not multi-region replication OS.',
     };
   }
@@ -295,13 +295,13 @@ export class MemoryFabricService {
         : peers;
 
     const record: DistRecord = {
-      id: randomUUID,
+      id: randomUUID(),
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,
       targets: targets.map((t) => t.id),
       kinds: plan.plan.map((p) => p.kind),
       status: 'planned',
-      at: new Date.toISOString,
+      at: new Date().toISOString(),
     };
 
     let event: Awaited<ReturnType<EventFabricBus['publish']>> | null = null;
@@ -329,7 +329,7 @@ export class MemoryFabricService {
       plan: plan.plan,
       peers: targets,
       event,
-      honesty: memoryFabricHonesty,
+      honesty: memoryFabricHonesty(),
       note: 'Distribution plan for same-org workspaces — does not replicate MemoryRecords automatically.',
     };
   }
@@ -343,7 +343,7 @@ export class MemoryFabricService {
     });
   }
 
-  monitoring {
+  monitoring() {
     return {
       mode: 'memory_fabric',
       counters: {
@@ -359,12 +359,12 @@ export class MemoryFabricService {
         distributions: this.distLog.slice(-10),
         replications: this.replicateLog.slice(-10),
       },
-      products: memoryFabricCapabilityCatalog.map((p) => ({
+      products: memoryFabricCapabilityCatalog().map((p) => ({
         id: p.id,
         status: p.status,
       })),
-      honesty: memoryFabricHonesty,
-      note: 'Memory Fabric monitoring.',
+      honesty: memoryFabricHonesty(),
+      note: 'Memory Fabric monitoring (VL-245).',
     };
   }
 
@@ -383,11 +383,11 @@ export class MemoryFabricService {
         embeddings: usageSummary.embeddings,
       },
       workspace: { peerWorkspaces: peers.length },
-      products: memoryFabricCapabilityCatalog,
-      routes: memoryFabricRoutingTable,
-      pipelines: memoryFabricPipelines,
-      architecture: memoryFabricArchitectureNotes,
-      honesty: memoryFabricHonesty,
+      products: memoryFabricCapabilityCatalog(),
+      routes: memoryFabricRoutingTable(),
+      pipelines: memoryFabricPipelines(),
+      architecture: memoryFabricArchitectureNotes(),
+      honesty: memoryFabricHonesty(),
       counters: {
         routePlans: this.routePlans,
         pipelines: this.pipelines,
@@ -401,7 +401,7 @@ export class MemoryFabricService {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
+          'Policy Fabric (VL-247) must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
       },
       deferred: {
         agentFabric: false,
@@ -427,7 +427,7 @@ export class MemoryFabricService {
       },
       docs: '/docs/MEMORY_FABRIC.md',
       note:
-        'Memory Fabric. Router + sync/distribute/federation over Memory Runtime; same-org plans only.',
+        'Memory Fabric (VL-245). Router + sync/distribute/federation over Memory Runtime; same-org plans only.',
     };
   }
 }

@@ -19,7 +19,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory) out.push(...walkTsFiles(full));
+    if (statSync(full).isDirectory()) out.push(...walkTsFiles(full));
     else if (full.endsWith('.ts')) out.push(full);
   }
   return out;
@@ -34,7 +34,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_rf_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_rf_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -51,7 +51,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Reasoning Fabric',  => {
+describe('Reasoning Fabric (VL-244)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -59,30 +59,30 @@ describe('Reasoning Fabric',  => {
   let bus: EventFabricBus;
   const prevMode = process.env.LUGEMI_REASONING_RUNTIME_MODE;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     process.env.EVENT_FABRIC_MEMORY = '1';
     process.env.LUGEMI_REASONING_RUNTIME_MODE = 'sandbox';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    }).compile();
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
     fabric = app.get(ReasoningFabricService);
     bus = app.get(EventFabricBus);
-    bus.resetForTests;
-    fabric.resetCounters;
+    bus.resetForTests();
+    fabric.resetCounters();
   });
 
-  afterAll(async  => {
+  afterAll(async () => {
     if (prevMode === undefined) delete process.env.LUGEMI_REASONING_RUNTIME_MODE;
     else process.env.LUGEMI_REASONING_RUNTIME_MODE = prevMode;
-    await app.close;
+    await app.close();
   });
 
-  it('documents Reasoning Fabric honesty (extends Reasoning Runtime; not custom reasoner OS)',  => {
+  it('documents Reasoning Fabric honesty (extends Reasoning Runtime; not custom reasoner OS)', () => {
     const doc = join(root, 'docs/REASONING_FABRIC.md');
     const adr = join(root, 'docs/adr/0146-reasoning-fabric.md');
     const phase = join(
@@ -93,13 +93,13 @@ describe('Reasoning Fabric',  => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(phase)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
+    expect(text).toContain('VL-244');
     expect(text).toMatch(/Reasoning Runtime/i);
     expect(text).toMatch(/custom reasoner/i);
     expect(text).toMatch(/hard gate|hard-gate/i);
   });
 
-  it('has no TODO/FIXME/implement-later markers in Reasoning Fabric source',  => {
+  it('has no TODO/FIXME/implement-later markers in Reasoning Fabric source', () => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const file of walkTsFiles(join(apiSrc, 'reasoning-fabric'))) {
@@ -109,8 +109,8 @@ describe('Reasoning Fabric',  => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes catalog, routes, pipelines, cache, and federation with honesty', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes catalog, routes, pipelines, cache, and federation with honesty', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/reasoning-fabric/products')
       .expect(200);
     expect(res.body.product).toBe('Lugemi Reasoning Fabric');
@@ -128,12 +128,12 @@ describe('Reasoning Fabric',  => {
     const hub = res.body.products.find((p: { id: string }) => p.id === 'reasoning-fabric');
     expect(hub.status).toBe('shipped');
 
-    const routes = await request(app.getHttpServer)
+    const routes = await request(app.getHttpServer())
       .get('/v1/reasoning-fabric/routes')
       .expect(200);
     expect(routes.body.routes.some((r: { kind: string }) => r.kind === 'reason')).toBe(true);
 
-    const plan = await request(app.getHttpServer)
+    const plan = await request(app.getHttpServer())
       .post('/v1/reasoning-fabric/route')
       .send({ kinds: ['plan', 'reason', 'nope'] })
       .expect(200);
@@ -142,27 +142,27 @@ describe('Reasoning Fabric',  => {
     );
     expect(plan.body.missing).toContain('nope');
 
-    const pipeline = await request(app.getHttpServer)
+    const pipeline = await request(app.getHttpServer())
       .post('/v1/reasoning-fabric/pipeline')
       .send({ pipelineId: 'plan-reason-evaluate' })
       .expect(200);
     expect(pipeline.body.pipeline.steps).toEqual(['plan', 'reason', 'evaluate']);
     expect(pipeline.body.plan.length).toBe(3);
 
-    const cache = await request(app.getHttpServer).get('/v1/reasoning-fabric/cache').expect(200);
+    const cache = await request(app.getHttpServer()).get('/v1/reasoning-fabric/cache').expect(200);
     expect(cache.body.cache.target).toBe('intelligent-cache');
 
-    const fed = await request(app.getHttpServer)
+    const fed = await request(app.getHttpServer())
       .post('/v1/reasoning-fabric/federate')
       .send({ kinds: ['cloud', 'history'] })
       .expect(200);
     expect(fed.body.federation.length).toBe(2);
   });
 
-  it('distributes same-org peers and lists empty history via Runtime façade', async  => {
-    bus.resetForTests;
-    fabric.resetCounters;
-    const org = await seedOrg(prisma, `rf_${Date.now}`);
+  it('distributes same-org peers and lists empty history via Runtime façade', async () => {
+    bus.resetForTests();
+    fabric.resetCounters();
+    const org = await seedOrg(prisma, `rf_${Date.now()}`);
     const primary = org.workspaces.find((w) => w.name === 'Default')!;
     const peer = org.workspaces.find((w) => w.name === 'Peer')!;
     const key = await apiKeys.create({
@@ -172,7 +172,7 @@ describe('Reasoning Fabric',  => {
       name: 'rf-key',
     });
 
-    const dist = await request(app.getHttpServer)
+    const dist = await request(app.getHttpServer())
       .post('/v1/reasoning-fabric/distribute')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -184,22 +184,22 @@ describe('Reasoning Fabric',  => {
     expect(dist.body.distribution.targets).toContain(peer.id);
     expect(dist.body.event.type).toBe('com.lugemi.reasoning.distributed');
 
-    const history = await request(app.getHttpServer)
+    const history = await request(app.getHttpServer())
       .get('/v1/reasoning-fabric/history')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(Array.isArray(history.body.runs)).toBe(true);
     expect(history.body.honesty.regeneratesReasoningRuntime).toBe(false);
 
-    const monitoring = await request(app.getHttpServer)
+    const monitoring = await request(app.getHttpServer())
       .get('/v1/reasoning-fabric/monitoring')
       .expect(200);
     expect(monitoring.body.counters.distributions).toBeGreaterThan(0);
     expect(monitoring.body.counters.pipelines).toBeGreaterThanOrEqual(0);
   });
 
-  it('exposes overview and GraphQL CQRS façades', async  => {
-    const org = await seedOrg(prisma, `rf_ov_${Date.now}`);
+  it('exposes overview and GraphQL CQRS façades', async () => {
+    const org = await seedOrg(prisma, `rf_ov_${Date.now()}`);
     const overview = await fabric.overview({
       userId: org.memberships[0].userId,
       organizationId: org.id,
@@ -212,22 +212,22 @@ describe('Reasoning Fabric',  => {
     expect(overview.links.reasoningFabric).toBe('/reasoning-fabric');
     expect(overview.honesty.extendsReasoningRuntime).toBe(true);
 
-    const caps = await request(app.getHttpServer)
+    const caps = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query: '{ reasoningFabricCapabilities { id name status api notes } }',
       })
       .expect(200);
-    expect(caps.body.errors).toBeUndefined;
+    expect(caps.body.errors).toBeUndefined();
     expect(caps.body.data.reasoningFabricCapabilities.length).toBeGreaterThan(5);
 
-    const routes = await request(app.getHttpServer)
+    const routes = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query: '{ reasoningFabricRoutes { kind name target api cloud notes } }',
       })
       .expect(200);
-    expect(routes.body.errors).toBeUndefined;
+    expect(routes.body.errors).toBeUndefined();
     expect(
       routes.body.data.reasoningFabricRoutes.some((r: { kind: string }) => r.kind === 'plan'),
     ).toBe(true);

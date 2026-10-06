@@ -10,12 +10,12 @@ export type EmotionVoiceCapability = {
   notes: string;
 };
 
-/** Library Phase 30 → Emotion Voice Engine. */
-export function emotionVoiceEngineCatalog {
+/** Library Phase 30 → Emotion Voice Engine (VL-173). */
+export function emotionVoiceEngineCatalog() {
   return {
     product: 'Lugemi Emotion Voice',
     note:
-      'Emotion-conditioned synthesis façade over Neural TTS. Soft prosody + voice recommendations for OpenAI/own voices; partial clone provider style settings on clone:{id}. Not trained expressive TTS / Hume / Azure Neural Emotion. Distinct from Speech Emotion Intelligence detection.',
+      'Emotion-conditioned synthesis façade over Neural TTS (VL-171). Soft prosody + voice recommendations for OpenAI/own voices; partial clone provider style settings on clone:{id}. Not trained expressive TTS / Hume / Azure Neural Emotion. Distinct from Speech Emotion Intelligence detection (VL-154).',
     capabilities: [
       {
         id: 'emotion-profiles',
@@ -37,7 +37,7 @@ export function emotionVoiceEngineCatalog {
         name: 'Streaming Emotion Synthesis',
         status: 'partial',
         api: 'POST /v1/emotion-voice/stream',
-        notes: 'Chunk SSE after synthesis (same honesty as ).',
+        notes: 'Chunk SSE after synthesis (same honesty as VL-171).',
       },
       {
         id: 'happy',
@@ -148,7 +148,7 @@ export function emotionVoiceEngineCatalog {
     related: {
       speechEmotionDetection: '/docs/EMOTION_INTELLIGENCE.md',
       neuralTts: '/docs/NEURAL_TTS.md',
-      note: ' detects emotion in speech/text. synthesizes with emotion profiles.',
+      note: 'VL-154 detects emotion in speech/text. VL-173 synthesizes with emotion profiles.',
     },
     links: {
       console: '/emotion-voice',

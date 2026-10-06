@@ -9,10 +9,10 @@ export type DomainTerm = {
 };
 
 /**
- * Library Phase 135 → Agricultural Intelligence.
+ * Library Phase 135 → Agricultural Intelligence (VL-268).
  * Domain vocabulary + safety flags for African Intelligence Cloud.
  */
-export function agriculturalIntelligenceEngineCatalog {
+export function agriculturalIntelligenceEngineCatalog() {
   const terms: DomainTerm[] = [
       {
         id: 'agri-crops',
@@ -46,7 +46,7 @@ export function agriculturalIntelligenceEngineCatalog {
   return {
     product: 'Lugemi Agricultural Intelligence',
     note:
-      'Agricultural Intelligence. Domain terms/services catalog for African Intelligence Cloud with domain-specific safety flags. Extends Knowledge/Intelligence clouds — not a vertical operations OS.',
+      'Agricultural Intelligence (VL-268). Domain terms/services catalog for African Intelligence Cloud with domain-specific safety flags. Extends Knowledge/Intelligence clouds — not a vertical operations OS.',
     capabilities: terms,
     terms,
     architecture: {

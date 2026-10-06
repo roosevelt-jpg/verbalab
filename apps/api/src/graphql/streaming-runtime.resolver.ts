@@ -2,13 +2,13 @@ import { Query, Resolver } from '@nestjs/graphql';
 import { StreamingRuntimeService } from '../streaming-runtime/streaming-runtime.service';
 import { GqlStreamingRuntimeEngine } from './gql.types';
 
-@Resolver
+@Resolver()
 export class StreamingRuntimeGraphqlResolver {
   constructor(private readonly streaming: StreamingRuntimeService) {}
 
-  @Query( => GqlStreamingRuntimeEngine, { name: 'streamingRuntimeEngine' })
-  streamingRuntimeEngine: GqlStreamingRuntimeEngine {
-    const c = this.streaming.engine;
+  @Query(() => GqlStreamingRuntimeEngine, { name: 'streamingRuntimeEngine' })
+  streamingRuntimeEngine(): GqlStreamingRuntimeEngine {
+    const c = this.streaming.engine();
     return {
       product: c.product,
       note: c.note,

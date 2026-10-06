@@ -1,4 +1,4 @@
-/** Application ports for Evaluation Platform. */
+/** Application ports for Evaluation Platform (VL-275). */
 
 export type EvaluationPlatformProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type EvaluationPlatformEngineBundle = ReturnType<
 >;
 
 export interface EvaluationPlatformCatalogPort {
-  engine: EvaluationPlatformEngineBundle;
-  listProducts: EvaluationPlatformProductRow[];
+  engine(): EvaluationPlatformEngineBundle;
+  listProducts(): EvaluationPlatformProductRow[];
 }
 
 export const EVALUATION_PLATFORM_CATALOG_PORT = Symbol('EVALUATION_PLATFORM_CATALOG_PORT');

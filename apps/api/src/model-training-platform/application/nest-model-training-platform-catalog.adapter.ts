@@ -7,17 +7,17 @@ import {
   MtpMethodRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestModelTrainingPlatformCatalogAdapter
   implements ModelTrainingPlatformCatalogPort
 {
   constructor(private readonly platform: ModelTrainingPlatformService) {}
 
-  engine: MtpEngineBundle {
-    return this.platform.engine;
+  engine(): MtpEngineBundle {
+    return this.platform.engine();
   }
 
-  listMethods: MtpMethodRow[] {
-    return modelTrainingMethods;
+  listMethods(): MtpMethodRow[] {
+    return modelTrainingMethods();
   }
 }

@@ -23,7 +23,7 @@ export type GpuPool = {
 };
 
 /** Sandbox pool catalog — logical only; no cloud GPU API behind these IDs. */
-export function gpuPools: GpuPool[] {
+export function gpuPools(): GpuPool[] {
   return [
     {
       id: 'sandbox-nvidia-t4',
@@ -72,7 +72,7 @@ export function gpuPools: GpuPool[] {
   ];
 }
 
-export function gpuVendors {
+export function gpuVendors() {
   return [
     {
       id: 'nvidia' as const,
@@ -96,14 +96,14 @@ export function gpuVendors {
 }
 
 /**
- * Library Phase 72 → GPU Platform.
+ * Library Phase 72 → GPU Platform (VL-205).
  * Sandbox scheduler + hard ceilings — not a GPU hyperscaler OS.
  */
-export function gpuPlatformCatalog {
+export function gpuPlatformCatalog() {
   return {
     product: 'Lugemi GPU Platform',
     note:
-      'Sandbox GPU pools/scheduling/quotas/autoscaling with hard instance and spend ceilings. Logical allocations only — does not call AWS/GCP/Azure GPU APIs. Not a hyperscaler GPU OS, MIG sharing suite, or distributed training fabric.',
+      'Sandbox GPU pools/scheduling/quotas/autoscaling with hard instance and spend ceilings (VL-205). Logical allocations only — does not call AWS/GCP/Azure GPU APIs. Not a hyperscaler GPU OS, MIG sharing suite, or distributed training fabric.',
     capabilities: [
       {
         id: 'nvidia',
@@ -235,14 +235,14 @@ export function gpuPlatformCatalog {
 
 export type GpuProvisionMode = 'disabled' | 'sandbox';
 
-export function gpuProvisionMode: GpuProvisionMode {
-  const raw = (process.env.LUGEMI_GPU_PROVISION_MODE ?? 'sandbox').toLowerCase;
+export function gpuProvisionMode(): GpuProvisionMode {
+  const raw = (process.env.LUGEMI_GPU_PROVISION_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
 
 /** Hard ceilings — not soft targets. */
-export function gpuCeilings {
+export function gpuCeilings() {
   const maxInstances = Math.max(
     1,
     Number(process.env.LUGEMI_GPU_MAX_INSTANCES ?? '2') || 2,
@@ -254,7 +254,7 @@ export function gpuCeilings {
   return {
     maxInstances: Math.min(maxInstances, 8),
     maxSpendUsd: Math.min(maxSpendUsd, 500),
-    provisionMode: gpuProvisionMode,
+    provisionMode: gpuProvisionMode(),
     note:
       'Hard ceilings enforced on allocate/scale. Do not point at a production cloud billing account. No open-ended autoscale.',
   };

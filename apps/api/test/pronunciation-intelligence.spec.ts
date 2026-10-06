@@ -23,7 +23,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_pron_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_pron_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -37,29 +37,29 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Pronunciation Intelligence',  => {
+describe('Pronunciation Intelligence (VL-156)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('documents Pronunciation Intelligence honesty',  => {
+  it('documents Pronunciation Intelligence honesty', () => {
     const doc = join(root, 'docs/PRONUNCIATION_INTELLIGENCE.md');
     const adr = join(root, 'docs/adr/0075-pronunciation-intelligence.md');
     expect(existsSync(doc)).toBe(true);
@@ -70,8 +70,8 @@ describe('Pronunciation Intelligence',  => {
     expect(text).not.toMatch(/ELSA.*shipped/i);
   });
 
-  it('exposes pronunciation engine with forced alignment deferred', async  => {
-    const res = await request(app.getHttpServer).get('/v1/pronunciation/engine').expect(200);
+  it('exposes pronunciation engine with forced alignment deferred', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/pronunciation/engine').expect(200);
     expect(res.body.product).toContain('Pronunciation');
     const fa = res.body.capabilities.find((c: { id: string }) => c.id === 'forced-alignment');
     expect(fa.status).toBe('deferred');
@@ -80,7 +80,7 @@ describe('Pronunciation Intelligence',  => {
     );
   });
 
-  it('assesses text hypothesis and records analytics', async  => {
+  it('assesses text hypothesis and records analytics', async () => {
     const org = await seedOrg(prisma, 'pron');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -89,7 +89,7 @@ describe('Pronunciation Intelligence',  => {
       name: 'pron-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/pronunciation/assess')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -103,7 +103,7 @@ describe('Pronunciation Intelligence',  => {
     expect(res.body.scores.accuracy).toBe(100);
     expect(res.body.coaching.length).toBeGreaterThan(0);
 
-    const score = await request(app.getHttpServer)
+    const score = await request(app.getHttpServer())
       .post('/v1/pronunciation/score')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -114,7 +114,7 @@ describe('Pronunciation Intelligence',  => {
       .expect(200);
     expect(score.body.scores.accuracy).toBeLessThan(100);
 
-    const phonemes = await request(app.getHttpServer)
+    const phonemes = await request(app.getHttpServer())
       .post('/v1/pronunciation/phonemes')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'hello world', language: 'en' })
@@ -122,14 +122,14 @@ describe('Pronunciation Intelligence',  => {
     expect(phonemes.body.words.length).toBe(2);
     expect(phonemes.body.words[0].phonemes.length).toBeGreaterThan(0);
 
-    const analytics = await request(app.getHttpServer)
+    const analytics = await request(app.getHttpServer())
       .get('/v1/pronunciation/analytics')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(analytics.body.total).toBeGreaterThanOrEqual(2);
   });
 
-  it('streams SSE assess events', async  => {
+  it('streams SSE assess events', async () => {
     const org = await seedOrg(prisma, 'stream');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -138,7 +138,7 @@ describe('Pronunciation Intelligence',  => {
       name: 'stream-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/pronunciation/assess/stream')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -153,16 +153,16 @@ describe('Pronunciation Intelligence',  => {
     expect(res.text).toContain('event: done');
   });
 
-  it('exposes pronunciationEngine via GraphQL', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes pronunciationEngine via GraphQL', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({ query: '{ pronunciationEngine { product capabilities { id status } } }' })
       .expect(200);
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.pronunciationEngine.product).toContain('Pronunciation');
   });
 
-  it('aligns words and analyzes phonemes',  => {
+  it('aligns words and analyzes phonemes', () => {
     const alignment = alignWords(tokenize('hello world'), tokenize('hello word'));
     expect(alignment.some((a) => a.status === 'substitution' || a.status === 'correct')).toBe(true);
     const phones = analyzePhonemes('hello swahili', 'sw');

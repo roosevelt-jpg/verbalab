@@ -110,9 +110,9 @@ function groupContainsPath(group: NavGroup, pathname: string) {
 }
 
 export function AppShell({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname;
+  const pathname = usePathname();
   const [navOpen, setNavOpen] = useState(false);
-  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>( => {
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};
     for (const group of NAV_GROUPS) {
       initial[group.id] = groupContainsPath(group, pathname) || group.id === 'developer' || group.id === 'admin';
@@ -120,7 +120,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     return initial;
   });
 
-  useEffect( => {
+  useEffect(() => {
     setOpenGroups((prev) => {
       const next = { ...prev };
       for (const group of NAV_GROUPS) {
@@ -144,7 +144,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             className="vl-console-menu-btn"
             aria-expanded={navOpen}
             aria-controls="vl-console-nav"
-            onClick={ => setNavOpen((v) => !v)}
+            onClick={() => setNavOpen((v) => !v)}
           >
             Menu
           </button>
@@ -153,7 +153,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         </div>
         <div className="vl-console-header-right">
           <WorkspaceSwitcher />
-          {isClerkConfigured ? <UserButton afterSignOutUrl="/" /> : null}
+          {isClerkConfigured() ? <UserButton afterSignOutUrl="/" /> : null}
         </div>
       </header>
 
@@ -173,7 +173,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     type="button"
                     className={`vl-console-nav-group-btn${groupActive ? ' is-active' : ''}`}
                     aria-expanded={expanded}
-                    onClick={ => toggleGroup(group.id)}
+                    onClick={() => toggleGroup(group.id)}
                   >
                     <span>{group.label}</span>
                     <span className="vl-console-chevron" aria-hidden="true">
@@ -209,7 +209,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             type="button"
             className="vl-console-backdrop"
             aria-label="Close navigation"
-            onClick={ => setNavOpen(false)}
+            onClick={() => setNavOpen(false)}
           />
         ) : null}
 

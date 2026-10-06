@@ -1,5 +1,5 @@
 import { DataPlaneCloudClient } from './data-plane-cloud-client';
 
-export default function DataPlaneCloudPage {
+export default function DataPlaneCloudPage() {
   return <DataPlaneCloudClient />;
 }

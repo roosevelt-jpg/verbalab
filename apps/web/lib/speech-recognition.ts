@@ -6,10 +6,10 @@ export type SpeechRecognitionLike = {
   lang: string;
   onresult: ((event: SpeechRecognitionEventLike) => void) | null;
   onerror: ((event: { error: string }) => void) | null;
-  onend: ( => void) | null;
-  start:  => void;
-  stop:  => void;
-  abort:  => void;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+  abort: () => void;
 };
 
 export type SpeechRecognitionEventLike = {
@@ -21,18 +21,18 @@ export type SpeechRecognitionEventLike = {
 };
 
 type SpeechWindow = Window & {
-  SpeechRecognition?: new  => SpeechRecognitionLike;
-  webkitSpeechRecognition?: new  => SpeechRecognitionLike;
+  SpeechRecognition?: new () => SpeechRecognitionLike;
+  webkitSpeechRecognition?: new () => SpeechRecognitionLike;
 };
 
-export function getSpeechRecognitionCtor: (new  => SpeechRecognitionLike) | null {
+export function getSpeechRecognitionCtor(): (new () => SpeechRecognitionLike) | null {
   if (typeof window === 'undefined') return null;
   const w = window as SpeechWindow;
   return w.SpeechRecognition ?? w.webkitSpeechRecognition ?? null;
 }
 
-export function speechRecognitionSupported: boolean {
-  return Boolean(getSpeechRecognitionCtor);
+export function speechRecognitionSupported(): boolean {
+  return Boolean(getSpeechRecognitionCtor());
 }
 
 /** Map BCP-47 / ISO language codes to a recognition locale hint. */

@@ -24,13 +24,13 @@ export class EnterpriseRagController {
   constructor(private readonly enterpriseRag: EnterpriseRagService) {}
 
   @Get('engine')
-  engine {
-    return this.enterpriseRag.engine;
+  engine() {
+    return this.enterpriseRag.engine();
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req req: AuthedReq) {
+  analytics(@Req() req: AuthedReq) {
     return this.enterpriseRag.analytics(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -39,7 +39,7 @@ export class EnterpriseRagController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req req: AuthedReq) {
+  monitoring(@Req() req: AuthedReq) {
     return this.enterpriseRag.monitoring(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -48,7 +48,7 @@ export class EnterpriseRagController {
 
   @Post('chunk')
   @HttpCode(HttpStatus.OK)
-  chunk(@Body body: { text?: string; size?: number; overlap?: number }) {
+  chunk(@Body() body: { text?: string; size?: number; overlap?: number }) {
     return this.enterpriseRag.chunk(body);
   }
 
@@ -56,8 +56,8 @@ export class EnterpriseRagController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   retrieve(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       query?: string;
       mode?: string;
@@ -92,8 +92,8 @@ export class EnterpriseRagController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   query(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       question?: string;
       mode?: string;

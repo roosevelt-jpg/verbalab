@@ -17,8 +17,8 @@ export class GetEducationIntelligenceEngineHandler
     private readonly catalog: EducationIntelligenceCatalogPort,
   ) {}
 
-  execute: Promise<EducationIntelligenceEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<EducationIntelligenceEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListEducationIntelligenceProductsHandler
     private readonly catalog: EducationIntelligenceCatalogPort,
   ) {}
 
-  execute: Promise<EducationIntelligenceProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<EducationIntelligenceProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

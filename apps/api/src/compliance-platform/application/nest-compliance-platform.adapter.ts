@@ -6,16 +6,16 @@ import {
   CompliancePlatformProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestCompliancePlatformCatalogAdapter implements CompliancePlatformCatalogPort {
   constructor(private readonly service: CompliancePlatformService) {}
 
-  engine: CompliancePlatformEngineBundle {
-    return this.service.engine;
+  engine(): CompliancePlatformEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: CompliancePlatformProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): CompliancePlatformProductRow[] {
+    const bundle = this.engine() as {
       products?: CompliancePlatformProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestCompliancePlatformCatalogAdapter implements CompliancePlatformC
         status: 'shipped',
         api: 'GET /v1/compliance-platform/engine',
         console: '/compliance-platform',
-        notes: ' shipped.',
+        notes: 'VL-297 shipped.',
       },
     ];
   }

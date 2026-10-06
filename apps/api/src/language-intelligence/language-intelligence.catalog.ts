@@ -8,8 +8,8 @@ export type LanguageIntelCapability = {
   notes: string;
 };
 
-/** Library Phase 12 → Lugemi Language Intelligence. */
-export function languageIntelligenceCatalog {
+/** Library Phase 12 → Lugemi Language Intelligence (VL-144). */
+export function languageIntelligenceCatalog() {
   return {
     product: 'Language Intelligence',
     note:
@@ -20,21 +20,21 @@ export function languageIntelligenceCatalog {
         name: 'Language detection',
         status: 'shipped',
         api: 'POST /v1/detect',
-        notes: 'Google + franc; also via analyze.',
+        notes: 'Google + franc (VL-054); also via analyze.',
       },
       {
         id: 'dialect_detection',
         name: 'Dialect detection',
         status: 'shipped',
         api: 'POST /v1/dialects/detect',
-        notes: 'Curated cue scoring.',
+        notes: 'Curated cue scoring (VL-131).',
       },
       {
         id: 'accent_detection',
         name: 'Accent detection',
         status: 'shipped',
         api: 'POST /v1/accents/detect',
-        notes: 'Spoken profiles + STT/text cues. Not acoustic phonetics ID.',
+        notes: 'Spoken profiles + STT/text cues (VL-132). Not acoustic phonetics ID.',
       },
       {
         id: 'intent',

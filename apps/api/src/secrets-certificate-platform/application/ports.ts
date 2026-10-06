@@ -1,4 +1,4 @@
-/** Application ports for Secrets & Certificate Platform. */
+/** Application ports for Secrets & Certificate Platform (VL-320). */
 
 export type SecretsCertificatePlatformProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type SecretsCertificatePlatformEngineBundle = ReturnType<
 >;
 
 export interface SecretsCertificatePlatformCatalogPort {
-  engine: SecretsCertificatePlatformEngineBundle;
-  listProducts: SecretsCertificatePlatformProductRow[];
+  engine(): SecretsCertificatePlatformEngineBundle;
+  listProducts(): SecretsCertificatePlatformProductRow[];
 }
 
 export const SECRETS_CERTIFICATE_PLATFORM_CATALOG_PORT = Symbol('SECRETS_CERTIFICATE_PLATFORM_CATALOG_PORT');

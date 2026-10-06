@@ -19,7 +19,7 @@ export function voiceCloneIdFromVoice(voice: string): string | null {
   return voice.slice(VOICE_CLONE_PREFIX.length) || null;
 }
 
-@Injectable
+@Injectable()
 export class VoiceClonesService {
   private fixtureOverride: FixtureVoiceCloneAdapter | null = null;
 
@@ -44,12 +44,12 @@ export class VoiceClonesService {
     }
   }
 
-  private provider {
+  private provider() {
     if (this.fixtureOverride) return this.fixtureOverride;
-    if (process.env.VOICE_CLONE_FIXTURE === '1') return new FixtureVoiceCloneAdapter;
+    if (process.env.VOICE_CLONE_FIXTURE === '1') return new FixtureVoiceCloneAdapter();
     return new VendorVoiceCloneAdapter(
-      process.env.VENDOR_VOICE_CLONE_API_KEY?.trim ||
-        process.env.ELEVENLABS_API_KEY?.trim ||
+      process.env.VENDOR_VOICE_CLONE_API_KEY?.trim() ||
+        process.env.ELEVENLABS_API_KEY?.trim() ||
         '',
     );
   }
@@ -164,7 +164,7 @@ export class VoiceClonesService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const notes = input.consentNotes?.trim ?? '';
+    const notes = input.consentNotes?.trim() ?? '';
     if (notes.length < 8) {
       throw new ApiException(
         'validation_error',
@@ -172,7 +172,7 @@ export class VoiceClonesService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const name = input.name?.trim ?? '';
+    const name = input.name?.trim() ?? '';
     if (!name) {
       throw new ApiException('validation_error', 'name is required', HttpStatus.BAD_REQUEST);
     }
@@ -195,7 +195,7 @@ export class VoiceClonesService {
     }
 
     const ownershipAttested = Boolean(input.ownershipAttested);
-    const ownershipNotes = input.ownershipNotes?.trim ?? '';
+    const ownershipNotes = input.ownershipNotes?.trim() ?? '';
     if (cloneMode === 'professional') {
       if (!ownershipAttested || ownershipNotes.length < 8) {
         throw new ApiException(
@@ -211,7 +211,7 @@ export class VoiceClonesService {
 
     const keys: string[] = [];
     for (const file of input.files) {
-      const key = `voices/${input.organizationId}/${randomUUID}-${file.originalname}`;
+      const key = `voices/${input.organizationId}/${randomUUID()}-${file.originalname}`;
       await this.storage.writeBuffer(key, file.buffer);
       keys.push(key);
     }
@@ -225,13 +225,13 @@ export class VoiceClonesService {
         cloneMode,
         consentAttested: true,
         consentNotes: notes,
-        consentAttestedAt: new Date,
+        consentAttestedAt: new Date(),
         consentAttestedBy: input.userId,
         ownershipAttested,
         ownershipNotes,
         ownerUserId: input.userId,
         licenseType,
-        licenseNotes: input.licenseNotes?.trim ?? '',
+        licenseNotes: input.licenseNotes?.trim() ?? '',
         permissions: permissions as unknown as Prisma.InputJsonValue,
         watermarkRequired: true,
         sampleStorageKeys: keys as Prisma.InputJsonValue,
@@ -273,7 +273,7 @@ export class VoiceClonesService {
   }) {
     this.assertOwnerOrAdmin(input.role);
     const row = await this.requireClone(input.organizationId, input.workspaceId, input.id);
-    const notes = input.ownershipNotes?.trim ?? '';
+    const notes = input.ownershipNotes?.trim() ?? '';
     if (input.ownershipAttested && notes.length < 8) {
       throw new ApiException(
         'validation_error',
@@ -317,7 +317,7 @@ export class VoiceClonesService {
       where: { id: row.id },
       data: {
         licenseType,
-        licenseNotes: input.licenseNotes?.trim ?? row.licenseNotes,
+        licenseNotes: input.licenseNotes?.trim() ?? row.licenseNotes,
       },
     });
     await this.audit.record({
@@ -391,9 +391,9 @@ export class VoiceClonesService {
       where: { id: row.id },
       data: {
         enrollmentVerified: true,
-        enrollmentVerifiedAt: new Date,
+        enrollmentVerifiedAt: new Date(),
         enrollmentVerifyNotes:
-          input.notes?.trim ||
+          input.notes?.trim() ||
           `Sample count ${row.sampleCount} meets ${row.cloneMode} enrollment bar; consent present`,
       },
     });
@@ -462,9 +462,9 @@ export class VoiceClonesService {
         where: { id: row.id },
         data: {
           status: 'rejected',
-          reviewNotes: input.reviewNotes?.trim || 'Rejected in abuse review',
+          reviewNotes: input.reviewNotes?.trim() || 'Rejected in abuse review',
           reviewedBy: input.userId,
-          reviewedAt: new Date,
+          reviewedAt: new Date(),
         },
       });
       await this.audit.record({
@@ -482,7 +482,7 @@ export class VoiceClonesService {
     const samples: VoiceCloneSample[] = [];
     for (const key of keys) {
       const buffer = await this.storage.readBuffer(key);
-      const filename = key.split('/').pop ?? 'sample.wav';
+      const filename = key.split('/').pop() ?? 'sample.wav';
       samples.push({
         filename,
         mimeType: filename.endsWith('.mp3') ? 'audio/mpeg' : 'audio/wav',
@@ -490,7 +490,7 @@ export class VoiceClonesService {
       });
     }
 
-    const created = await this.provider.createClone({
+    const created = await this.provider().createClone({
       name: row.name,
       description: `Lugemi clone ${row.id}. Consent: ${row.consentNotes}`,
       samples,
@@ -502,9 +502,9 @@ export class VoiceClonesService {
         status: 'approved',
         provider: created.provider,
         providerVoiceId: created.providerVoiceId,
-        reviewNotes: input.reviewNotes?.trim || 'Approved after consent abuse review',
+        reviewNotes: input.reviewNotes?.trim() || 'Approved after consent abuse review',
         reviewedBy: input.userId,
-        reviewedAt: new Date,
+        reviewedAt: new Date(),
       },
     });
 
@@ -549,7 +549,7 @@ export class VoiceClonesService {
       where: { id: row.id },
       data: {
         status: 'disabled',
-        disabledReason: input.reason?.trim || 'Disabled for abuse / policy',
+        disabledReason: input.reason?.trim() || 'Disabled for abuse / policy',
       },
     });
 
@@ -617,7 +617,7 @@ export class VoiceClonesService {
       style: number;
     };
   }) {
-    return this.provider.synthesize({
+    return this.provider().synthesize({
       text: input.text,
       voice: input.voice,
       providerVoiceId: input.providerVoiceId,

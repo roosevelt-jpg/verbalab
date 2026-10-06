@@ -17,8 +17,8 @@ export class GetSyntheticDataPlatformEngineHandler
     private readonly catalog: SyntheticDataPlatformCatalogPort,
   ) {}
 
-  execute: Promise<SyntheticDataPlatformEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<SyntheticDataPlatformEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListSyntheticDataPlatformProductsHandler
     private readonly catalog: SyntheticDataPlatformCatalogPort,
   ) {}
 
-  execute: Promise<SyntheticDataPlatformProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<SyntheticDataPlatformProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

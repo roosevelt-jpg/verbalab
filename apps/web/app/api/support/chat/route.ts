@@ -116,7 +116,7 @@ const COMPLEX =
   /refund|chargeback|lawsuit|legal hold|breach|compromised|hacked|phishing|delete (my )?account|gdpr erasure|data deletion request|speak to (a )?human|talk to (a )?(person|agent|human)|escalate/i;
 
 function matchFaq(text: string): FaqItem | null {
-  const lower = text.toLowerCase;
+  const lower = text.toLowerCase();
   let best: FaqItem | null = null;
   let score = 0;
   for (const item of FAQ) {
@@ -134,7 +134,7 @@ function wantsHuman(text: string) {
 }
 
 async function persistTicket(ticket: Record<string, unknown>) {
-  const dir = join(process.cwd, '.data', 'support');
+  const dir = join(process.cwd(), '.data', 'support');
   await mkdir(dir, { recursive: true });
   await appendFile(join(dir, 'escalations.jsonl'), `${JSON.stringify(ticket)}\n`, 'utf8');
 }
@@ -148,28 +148,28 @@ export async function POST(request: Request) {
     escalateOnly?: boolean;
   };
   try {
-    body = (await request.json) as typeof body;
+    body = (await request.json()) as typeof body;
   } catch {
     return NextResponse.json({ error: { message: 'Invalid JSON' } }, { status: 400 });
   }
 
-  const message = typeof body.message === 'string' ? body.message.trim : '';
+  const message = typeof body.message === 'string' ? body.message.trim() : '';
   if (!message) {
     return NextResponse.json({ error: { message: 'message required' } }, { status: 400 });
   }
 
   // Explicit escalation ticket (from UI after user confirms)
   if (body.escalateOnly) {
-    const ticketId = `sup_${Date.now.toString(36)}_${Math.random.toString(36).slice(2, 8)}`;
+    const ticketId = `sup_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
     await persistTicket({
       id: ticketId,
-      createdAt: new Date.toISOString,
+      createdAt: new Date().toISOString(),
       email: body.email ?? null,
       orgId: body.orgId ?? null,
       message,
       history: (body.history ?? []).slice(-12),
       source: 'support_chat',
-    }).catch( => undefined);
+    }).catch(() => undefined);
     return NextResponse.json({
       reply: `Human escalation ticket ${ticketId} is queued. A Lugemi teammate will follow up${
         body.email ? ` at ${body.email}` : ''
@@ -201,7 +201,7 @@ export async function POST(request: Request) {
     });
   }
 
-  const openAiKey = process.env.OPENAI_API_KEY?.trim;
+  const openAiKey = process.env.OPENAI_API_KEY?.trim();
   if (openAiKey) {
     try {
       const upstream = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -225,12 +225,12 @@ export async function POST(request: Request) {
         }),
       });
       if (upstream.ok) {
-        const data = (await upstream.json) as {
+        const data = (await upstream.json()) as {
           choices?: Array<{ message?: { content?: string } }>;
         };
-        let reply = data.choices?.[0]?.message?.content?.trim ?? '';
+        let reply = data.choices?.[0]?.message?.content?.trim() ?? '';
         const escalate = /ESCALATE|escalat|human support|support ticket/i.test(reply) || wantsHuman(message);
-        reply = reply.replace(/\bESCALATE\b/g, '').trim;
+        reply = reply.replace(/\bESCALATE\b/g, '').trim();
         if (reply) {
           return NextResponse.json({
             reply,

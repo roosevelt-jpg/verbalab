@@ -11,11 +11,11 @@ type Engine = {
   safety?: { note?: string } & Record<string, unknown>;
 };
 
-export function FinopsPlatformClient {
+export function FinopsPlatformClient() {
   const [data, setData] = useState<Engine | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect( => {
+  useEffect(() => {
     void apiFetch<Engine>('/v1/finops-platform/engine')
       .then(setData)
       .catch((err: Error) => setError(err.message));

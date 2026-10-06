@@ -41,20 +41,20 @@ type Overview = {
   note: string;
 };
 
-export function KnowledgeCloudClient {
-  const { getToken, isLoaded } = useAuth;
+export function KnowledgeCloudClient() {
+  const { getToken, isLoaded } = useAuth();
   const [data, setData] = useState<Overview | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async  => {
-    const token = await getToken;
+  const load = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     setData(await apiFetch<Overview>('/v1/knowledge-cloud/overview', { token }));
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void load.catch((err: Error) => setError(err.message));
+    void load().catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
   return (
@@ -71,7 +71,7 @@ export function KnowledgeCloudClient {
         Knowledge Cloud
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        Enterprise knowledge hub over existing RAG and Intelligence Cloud. Extends existing
+        Enterprise knowledge hub over VL-062 RAG and Intelligence Cloud. Extends existing
         knowledge surfaces — does not invent a SharePoint/ontology OS.
       </p>
 
@@ -137,7 +137,7 @@ export function KnowledgeCloudClient {
           <section>
             <h2 style={label}>Architecture honesty</h2>
             <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.55 }}>
-              Extends existing {data.architecture.extendsVl062 ? 'yes' : 'no'} · Regenerates prior{' '}
+              Extends VL-062 {data.architecture.extendsVl062 ? 'yes' : 'no'} · Regenerates VL-062{' '}
               {data.architecture.regeneratesVl062 ? 'yes' : 'no'} · Enterprise knowledge OS{' '}
               {data.architecture.enterpriseKnowledgeOs ? 'yes' : 'no'} · Ontology OS{' '}
               {data.architecture.ontologyOs ? 'yes' : 'no'} · pgvector{' '}

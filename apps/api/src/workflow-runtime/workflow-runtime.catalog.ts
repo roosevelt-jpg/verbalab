@@ -22,7 +22,7 @@ export const WORKFLOW_PERMISSIONS = [
 
 export type WorkflowPermission = (typeof WORKFLOW_PERMISSIONS)[number];
 
-/** Always denied — never grantable in . */
+/** Always denied — never grantable in VL-220. */
 export const WORKFLOW_DENIED_ACTIONS = [
   'external.execute',
   'billing.charge',
@@ -32,13 +32,13 @@ export const WORKFLOW_DENIED_ACTIONS = [
   'workflow.execute_live',
 ] as const;
 
-export function workflowRuntimeMode: 'disabled' | 'sandbox' {
-  const raw = (process.env.LUGEMI_WORKFLOW_RUNTIME_MODE ?? 'sandbox').toLowerCase;
+export function workflowRuntimeMode(): 'disabled' | 'sandbox' {
+  const raw = (process.env.LUGEMI_WORKFLOW_RUNTIME_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
 
-export function workflowRuntimeCeilings {
+export function workflowRuntimeCeilings() {
   return {
     maxWorkflowsPerWorkspace: Math.min(
       100,
@@ -52,21 +52,21 @@ export function workflowRuntimeCeilings {
       5,
       Math.max(0, Number(process.env.LUGEMI_WORKFLOW_RUNTIME_MAX_RETRIES ?? '2') || 2),
     ),
-    mode: workflowRuntimeMode,
+    mode: workflowRuntimeMode(),
     liveStepExecution: false,
-    note: 'Sandbox workflow runtime. Live open step execution against real accounts is forbidden in .',
+    note: 'Sandbox workflow runtime. Live open step execution against real accounts is forbidden in VL-220.',
   };
 }
 
 /**
- * Library Phase 87 → Workflow Runtime.
+ * Library Phase 87 → Workflow Runtime (VL-220).
  * Scoped permissions + sandbox required. Extends /v1/workflows — not Temporal/Airflow OS.
  */
-export function workflowRuntimeCatalog {
+export function workflowRuntimeCatalog() {
   return {
     product: 'Lugemi Workflow Runtime',
     note:
-      'Workflow Runtime. Multi-step sandbox workflows with hard permission allowlists, sequential/parallel step plans, retries, human-approval stubs, rollback markers, versioning, and replay. Extends existing /v1/workflows product — does not regenerate it or invent a Temporal/Airflow OS. Actions are sandboxed; Policy Runtime is wired as a hard gate via WorkflowPolicyGate.',
+      'Workflow Runtime (VL-220). Multi-step sandbox workflows with hard permission allowlists, sequential/parallel step plans, retries, human-approval stubs, rollback markers, versioning, and replay. Extends existing /v1/workflows product — does not regenerate it or invent a Temporal/Airflow OS. Actions are sandboxed; Policy Runtime (VL-222) is wired as a hard gate via WorkflowPolicyGate.',
     capabilities: [
       {
         id: 'workflow-execution',
@@ -163,7 +163,7 @@ export function workflowRuntimeCatalog {
         id: 'sdk',
         name: 'SDK',
         status: 'shipped',
-        api: 'workflowRuntimeEngine',
+        api: 'workflowRuntimeEngine()',
         notes: '@lugemi/sdk',
       },
       {

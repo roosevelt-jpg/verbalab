@@ -23,7 +23,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_own_tts_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_own_tts_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -37,41 +37,41 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Own TTS path',  => {
+describe('Own TTS path (VL-121)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let gateway: GatewayService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
     gateway = app.get(GatewayService);
-    gateway.setOwnTtsProviderForTests(new FixtureOwnTtsAdapter);
+    gateway.setOwnTtsProviderForTests(new FixtureOwnTtsAdapter());
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('lists own:* African voices beside stock OpenAI voices', async  => {
-    const res = await request(app.getHttpServer).get('/v1/audio/voices').expect(200);
+  it('lists own:* African voices beside stock OpenAI voices', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/audio/voices').expect(200);
     const ids = (res.body.data as { id: string; provider: string }[]).map((v) => v.id);
     expect(ids).toEqual(expect.arrayContaining(['alloy', 'own:sw-aisha', 'own:yo-tunde', 'own:am-hanna']));
     const own = (res.body.data as { id: string; provider: string }[]).find((v) => v.id === 'own:sw-aisha');
     expect(own?.provider).toMatch(/own_tts/);
   });
 
-  it('synthesizes via own TTS fixture without claiming a live GPU', async  => {
-    const org = await seedOrg(prisma, `own_tts_${Date.now}`);
+  it('synthesizes via own TTS fixture without claiming a live GPU', async () => {
+    const org = await seedOrg(prisma, `own_tts_${Date.now()}`);
     const created = await apiKeys.create({
       organizationId: org.id,
       workspaceId: org.workspaces[0].id,
@@ -79,7 +79,7 @@ describe('Own TTS path',  => {
       userId: org.memberships[0].userId,
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/audio/speech')
       .set('Authorization', `Bearer ${created.secret}`)
       .send({ text: 'Habari', voice: 'own:sw-aisha', language: 'sw', format: 'wav' })
@@ -90,7 +90,7 @@ describe('Own TTS path',  => {
     expect(Buffer.from(res.body).length).toBeGreaterThan(40);
   });
 
-  it('ships adapter + ADR + studio optgroup',  => {
+  it('ships adapter + ADR + studio optgroup', () => {
     expect(existsSync(join(root, 'apps/api/src/gateway/own-tts.adapter.ts'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0045-own-tts-rented.md'))).toBe(true);
     const client = readFileSync(join(root, 'apps/web/app/audio/audio-client.tsx'), 'utf8');

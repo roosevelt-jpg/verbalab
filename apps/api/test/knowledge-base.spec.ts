@@ -28,7 +28,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_ekb_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_ekb_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -45,23 +45,23 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Enterprise Knowledge Base',  => {
+describe('Enterprise Knowledge Base (VL-194)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let storageDir: string;
 
-  beforeAll(async  => {
-    storageDir = await mkdtemp(join(tmpdir, 'lugemi-ekb-'));
+  beforeAll(async () => {
+    storageDir = await mkdtemp(join(tmpdir(), 'lugemi-ekb-'));
     process.env.DOCUMENT_STORAGE_DIR = storageDir;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -86,12 +86,12 @@ describe('Enterprise Knowledge Base',  => {
     });
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
     await rm(storageDir, { recursive: true, force: true });
   });
 
-  it('documents EKB honesty (not Confluence OS) + tenant scoping',  => {
+  it('documents EKB honesty (not Confluence OS) + tenant scoping', () => {
     const doc = join(root, 'docs/ENTERPRISE_KNOWLEDGE_BASE.md');
     const adr = join(root, 'docs/adr/0105-enterprise-knowledge-base.md');
     expect(existsSync(doc)).toBe(true);
@@ -99,11 +99,11 @@ describe('Enterprise Knowledge Base',  => {
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/org\/workspace/i);
     expect(text).toMatch(/Confluence/i);
-    expect(text).toContain('');
+    expect(text).toContain('VL-062');
   });
 
-  it('exposes engine with honest flags', async  => {
-    const res = await request(app.getHttpServer).get('/v1/knowledge-base/engine').expect(200);
+  it('exposes engine with honest flags', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/knowledge-base/engine').expect(200);
     expect(res.body.product).toContain('Knowledge Base');
     expect(res.body.honesty.confluenceOs).toBe(false);
     expect(res.body.honesty.sharePointParity).toBe(false);
@@ -113,14 +113,14 @@ describe('Enterprise Knowledge Base',  => {
     expect(res.body.honesty.extendsVl062).toBe(true);
     expect(res.body.honesty.regeneratesVl062).toBe(false);
 
-    const kinds = await request(app.getHttpServer)
+    const kinds = await request(app.getHttpServer())
       .get('/v1/knowledge-base/content-kinds')
       .expect(200);
     expect(kinds.body.kinds.some((k: { id: string }) => k.id === 'markdown')).toBe(true);
     expect(kinds.body.deferred).toEqual(expect.arrayContaining(['image', 'video', 'audio']));
   });
 
-  it('scopes documents to workspace and supports collection/tags/revise-meta', async  => {
+  it('scopes documents to workspace and supports collection/tags/revise-meta', async () => {
     const org = await seedOrg(prisma, 'ekb');
     const wsA = org.workspaces[0]!;
     const wsB = org.workspaces[1]!;
@@ -137,7 +137,7 @@ describe('Enterprise Knowledge Base',  => {
       name: 'ekb-b',
     });
 
-    const uploaded = await request(app.getHttpServer)
+    const uploaded = await request(app.getHttpServer())
       .post('/v1/knowledge/documents')
       .set('Authorization', `Bearer ${keyA.secret}`)
       .field('collection', 'policies')
@@ -151,24 +151,24 @@ describe('Enterprise Knowledge Base',  => {
     expect(uploaded.body.contentKind).toBe('policy');
     expect(uploaded.body.version).toBe(1);
 
-    const listedA = await request(app.getHttpServer)
+    const listedA = await request(app.getHttpServer())
       .get('/v1/knowledge-base/documents')
       .query({ collection: 'policies', tag: 'hr' })
       .set('Authorization', `Bearer ${keyA.secret}`)
       .expect(200);
     expect(listedA.body.data.some((d: { id: string }) => d.id === uploaded.body.id)).toBe(true);
 
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .get(`/v1/knowledge/documents/${uploaded.body.id}`)
       .set('Authorization', `Bearer ${keyB.secret}`)
       .expect(404);
 
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .get(`/v1/knowledge-base/documents/${uploaded.body.id}`)
       .set('Authorization', `Bearer ${keyB.secret}`)
       .expect(404);
 
-    const revised = await request(app.getHttpServer)
+    const revised = await request(app.getHttpServer())
       .post(`/v1/knowledge-base/documents/${uploaded.body.id}/revise-meta`)
       .set('Authorization', `Bearer ${keyA.secret}`)
       .send({ tags: ['hr', 'updated'], collection: 'policies-v2' })
@@ -177,7 +177,7 @@ describe('Enterprise Knowledge Base',  => {
     expect(revised.body.collection).toBe('policies-v2');
     expect(revised.body.tags).toEqual(expect.arrayContaining(['hr', 'updated']));
 
-    const collections = await request(app.getHttpServer)
+    const collections = await request(app.getHttpServer())
       .get('/v1/knowledge-base/collections')
       .set('Authorization', `Bearer ${keyA.secret}`)
       .expect(200);
@@ -185,15 +185,15 @@ describe('Enterprise Knowledge Base',  => {
       true,
     );
 
-    const analytics = await request(app.getHttpServer)
+    const analytics = await request(app.getHttpServer())
       .get('/v1/knowledge-base/analytics')
       .set('Authorization', `Bearer ${keyA.secret}`)
       .expect(200);
     expect(analytics.body.documents).toBeGreaterThanOrEqual(1);
   });
 
-  it('exposes knowledgeBaseEngine via GraphQL', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes knowledgeBaseEngine via GraphQL', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query:
@@ -201,7 +201,7 @@ describe('Enterprise Knowledge Base',  => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.knowledgeBaseEngine.confluenceOs).toBe(false);
     expect(res.body.data.knowledgeBaseEngine.orgWorkspaceScoped).toBe(true);
     expect(res.body.data.knowledgeBaseEngine.extendsVl062).toBe(true);

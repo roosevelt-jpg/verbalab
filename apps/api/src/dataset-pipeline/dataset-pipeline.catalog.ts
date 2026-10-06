@@ -1,8 +1,8 @@
 /**
- * Library Phase 149 → Dataset Pipeline.
- * Extends dataset marketplace / — does not regenerate Dataset Cloud OS.
+ * Library Phase 149 → Dataset Pipeline (VL-282).
+ * Extends dataset marketplace / VL-101 — does not regenerate Dataset Cloud OS.
  */
-export function datasetPipelineEngineCatalog {
+export function datasetPipelineEngineCatalog() {
   return {
     product: 'Lugemi Dataset Pipeline',
     capabilities: [
@@ -60,6 +60,6 @@ export function datasetPipelineEngineCatalog {
       note: 'PII must clear before training/feedback use.',
     },
     docs: '/docs/DATASET_PIPELINE.md',
-    note: 'Dataset Pipeline. Validation/cleaning/normalization/dedup/PII/annotation/versioning/quality/approval/lineage/cards.',
+    note: 'Dataset Pipeline (VL-282). Validation/cleaning/normalization/dedup/PII/annotation/versioning/quality/approval/lineage/cards.',
   };
 }

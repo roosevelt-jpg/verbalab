@@ -24,25 +24,25 @@ type AnalyzeResult = {
   note: string;
 };
 
-export function LanguageIntelligenceClient {
-  const { getToken, isLoaded } = useAuth;
+export function LanguageIntelligenceClient() {
+  const { getToken, isLoaded } = useAuth();
   const [overview, setOverview] = useState<Overview | null>(null);
   const [text, setText] = useState('Thank you! Can you please translate this into Swahili?');
   const [result, setResult] = useState<AnalyzeResult | null>(null);
   const [streamLog, setStreamLog] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async  => {
+  const load = useCallback(async () => {
     setOverview(await apiFetch<Overview>('/v1/language-intelligence'));
   }, []);
 
-  useEffect( => {
-    void load.catch((err: Error) => setError(err.message));
+  useEffect(() => {
+    void load().catch((err: Error) => setError(err.message));
   }, [load]);
 
-  async function runAnalyze {
+  async function runAnalyze() {
     setError(null);
-    const token = await getToken;
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     setResult(
       await apiFetch<AnalyzeResult>('/v1/language-intelligence/analyze', {
@@ -53,10 +53,10 @@ export function LanguageIntelligenceClient {
     );
   }
 
-  async function runStream {
+  async function runStream() {
     setError(null);
     setStreamLog([]);
-    const token = await getToken;
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const res = await fetch(`${API_URL}/v1/language-intelligence/analyze/stream`, {
       method: 'POST',
@@ -68,16 +68,16 @@ export function LanguageIntelligenceClient {
       body: JSON.stringify({ text, includeDialect: true }),
     });
     if (!res.ok || !res.body) throw new Error(`Stream failed (${res.status})`);
-    const reader = res.body.getReader;
-    const decoder = new TextDecoder;
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
     let buffer = '';
     const lines: string[] = [];
     while (true) {
-      const { done, value } = await reader.read;
+      const { done, value } = await reader.read();
       if (done) break;
       buffer += decoder.decode(value, { stream: true });
       const parts = buffer.split('\n\n');
-      buffer = parts.pop ?? '';
+      buffer = parts.pop() ?? '';
       for (const part of parts) {
         const event = part.match(/^event: (.+)$/m)?.[1] ?? 'message';
         const data = part.match(/^data: (.+)$/m)?.[1] ?? '';
@@ -118,7 +118,7 @@ export function LanguageIntelligenceClient {
           type="button"
           className="vl-button"
           disabled={!isLoaded}
-          onClick={ => void runAnalyze.catch((e: Error) => setError(e.message))}
+          onClick={() => void runAnalyze().catch((e: Error) => setError(e.message))}
         >
           Analyze
         </button>
@@ -126,7 +126,7 @@ export function LanguageIntelligenceClient {
           type="button"
           className="vl-button"
           disabled={!isLoaded}
-          onClick={ => void runStream.catch((e: Error) => setError(e.message))}
+          onClick={() => void runStream().catch((e: Error) => setError(e.message))}
         >
           Realtime stream
         </button>

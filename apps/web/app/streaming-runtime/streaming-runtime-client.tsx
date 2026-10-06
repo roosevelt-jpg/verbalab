@@ -31,16 +31,16 @@ type Surface = {
   existing: boolean;
 };
 
-export function StreamingRuntimeClient {
-  const { getToken, isLoaded } = useAuth;
+export function StreamingRuntimeClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [surfaces, setSurfaces] = useState<Surface[]>([]);
   const [chunks, setChunks] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const refresh = useCallback(async  => {
-    const token = await getToken;
+  const refresh = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, surf] = await Promise.all([
       apiFetch<Engine>('/v1/streaming-runtime/engine', { token }),
@@ -50,17 +50,17 @@ export function StreamingRuntimeClient {
     setSurfaces(surf.surfaces);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void refresh.catch((err: Error) => setError(err.message));
+    void refresh().catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
-  const runDemo = async  => {
+  const runDemo = async () => {
     setBusy(true);
     setError(null);
     setChunks([]);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://127.0.0.1:3001';
       const res = await fetch(`${base}/v1/streaming-runtime/stream`, {
@@ -75,16 +75,16 @@ export function StreamingRuntimeClient {
         }),
       });
       if (!res.ok || !res.body) throw new Error(`Stream failed (${res.status})`);
-      const reader = res.body.getReader;
-      const decoder = new TextDecoder;
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
       let buf = '';
       const collected: string[] = [];
       while (true) {
-        const { done, value } = await reader.read;
+        const { done, value } = await reader.read();
         if (done) break;
         buf += decoder.decode(value, { stream: true });
         const parts = buf.split('\n\n');
-        buf = parts.pop ?? '';
+        buf = parts.pop() ?? '';
         for (const part of parts) {
           const dataLine = part.split('\n').find((l) => l.startsWith('data: '));
           if (!dataLine) continue;
@@ -159,7 +159,7 @@ export function StreamingRuntimeClient {
         <button
           type="button"
           disabled={busy}
-          onClick={ => void runDemo}
+          onClick={() => void runDemo()}
           style={{
             marginTop: '0.85rem',
             border: '1px solid var(--border)',

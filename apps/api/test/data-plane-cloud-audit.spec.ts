@@ -17,7 +17,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory) {
+    if (name.isDirectory()) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       out.push(...walkTsFiles(p));
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -27,23 +27,23 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Data Plane Cloud Production Audit',  => {
+describe('Data Plane Cloud Production Audit (VL-333)', () => {
   let app: INestApplication<App>;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    }).compile();
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
   }, 120_000);
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('ships audit pack and ADR-0235',  => {
+  it('ships audit pack and ADR-0235', () => {
     expect(existsSync(join(root, 'docs/adr/0235-data-plane-cloud-production-audit.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/DATA_PLANE_CLOUD.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/data-plane-cloud-audit/PRODUCTION_READINESS.md'))).toBe(true);
@@ -56,7 +56,7 @@ describe('Data Plane Cloud Production Audit',  => {
     ).toBe(true);
   });
 
-  it('has no TODO/FIXME markers across Volume 18 hubs',  => {
+  it('has no TODO/FIXME markers across Volume 18 hubs', () => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const slug of VOLUME18_HUBS) {
@@ -73,8 +73,8 @@ describe('Data Plane Cloud Production Audit',  => {
     expect(hits).toEqual([]);
   });
 
-  it('foundation catalogs all shipped products', async  => {
-    const res = await request(app.getHttpServer)
+  it('foundation catalogs all shipped products', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/data-plane-cloud/products')
       .expect(200);
     expect(res.body.honesty.managesOrgsPoliciesBilling).toBe(false);
@@ -86,9 +86,9 @@ describe('Data Plane Cloud Production Audit',  => {
     expect(ids).toContain('data-plane-cloud');
   });
 
-  it('each runtime is a thinExecutionLayer with routesTo', async  => {
+  it('each runtime is a thinExecutionLayer with routesTo', async () => {
     for (const slug of RUNTIME_HUBS) {
-      const res = await request(app.getHttpServer)
+      const res = await request(app.getHttpServer())
         .get(`/v1/${slug}/engine`)
         .expect(200);
       expect(res.body.honesty.thinExecutionLayer).toBe(true);
@@ -98,7 +98,7 @@ describe('Data Plane Cloud Production Audit',  => {
     }
   });
 
-  it('spot-checks runtimes do not contain full MT/STT implementations',  => {
+  it('spot-checks runtimes do not contain full MT/STT implementations', () => {
     const bannedImpl = /class TranslateService|decodeAudioBuffer|whisperTranscribe|tesseractRecognize|neuralTtsEngine|buildRagIndex/i;
     const hits: string[] = [];
     for (const slug of RUNTIME_HUBS) {
@@ -109,7 +109,7 @@ describe('Data Plane Cloud Production Audit',  => {
     expect(hits).toEqual([]);
   });
 
-  it('does not create a second streaming-runtime module under data plane',  => {
+  it('does not create a second streaming-runtime module under data plane', () => {
     expect(existsSync(join(apiSrc, 'data-plane-streaming'))).toBe(true);
     // Volume 7 module remains the sole streaming-runtime implementation directory name for product logic
     expect(existsSync(join(apiSrc, 'streaming-runtime'))).toBe(true);
@@ -118,21 +118,21 @@ describe('Data Plane Cloud Production Audit',  => {
     expect(facade).toMatch(/streaming-runtime/);
   });
 
-  it('GPU budget honesty', async  => {
-    const res = await request(app.getHttpServer).get('/v1/gpu-runtime/engine').expect(200);
+  it('GPU budget honesty', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/gpu-runtime/engine').expect(200);
     expect(res.body.honesty.gpuBudgetLimitsRequired).toBe(true);
     expect(res.body.honesty.rayOs).toBe(false);
     expect(res.body.honesty.kubernetesGpuOs).toBe(false);
   });
 
-  it('auth smoke on overview', async  => {
-    const res = await request(app.getHttpServer).get('/v1/data-plane-cloud/overview');
+  it('auth smoke on overview', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/data-plane-cloud/overview');
     expect([401, 403, 503]).toContain(res.status);
   });
 
-  it('GraphQL honesty fields', async  => {
-    const started = Date.now;
-    const gql = await request(app.getHttpServer)
+  it('GraphQL honesty fields', async () => {
+    const started = Date.now();
+    const gql = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query: `{
@@ -148,8 +148,8 @@ describe('Data Plane Cloud Production Audit',  => {
         }`,
       })
       .expect(200);
-    expect(Date.now - started).toBeLessThan(5_000);
-    expect(gql.body.errors).toBeUndefined;
+    expect(Date.now() - started).toBeLessThan(5_000);
+    expect(gql.body.errors).toBeUndefined();
     expect(gql.body.data.dataPlaneCloudProducts.length).toBeGreaterThan(8);
     expect(gql.body.data.translationRuntimeEngine.thinExecutionLayer).toBe(true);
     expect(gql.body.data.translationRuntimeEngine.duplicatesProductLogic).toBe(false);
@@ -157,7 +157,7 @@ describe('Data Plane Cloud Production Audit',  => {
     expect(gql.body.data.dataPlaneStreamingEngine.serviceMeshOs).toBe(false);
   });
 
-  it('rejects inventing Service Mesh / VAIOS in this volume',  => {
+  it('rejects inventing Service Mesh / VAIOS in this volume', () => {
     const readiness = readFileSync(
       join(root, 'docs/data-plane-cloud-audit/PRODUCTION_READINESS.md'),
       'utf8',

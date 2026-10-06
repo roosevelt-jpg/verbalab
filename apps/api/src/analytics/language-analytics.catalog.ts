@@ -8,8 +8,8 @@ export type LanguageAnalyticsCapability = {
   notes: string;
 };
 
-/** Library Phase 14 → Lugemi Language Analytics. */
-export function languageAnalyticsCatalog {
+/** Library Phase 14 → Lugemi Language Analytics (VL-146). */
+export function languageAnalyticsCatalog() {
   return {
     product: 'Language Analytics',
     note:
@@ -20,7 +20,7 @@ export function languageAnalyticsCatalog {
         name: 'Translation usage',
         status: 'shipped',
         api: 'GET /v1/analytics/translation',
-        notes: 'From translation_requests.',
+        notes: 'From translation_requests (VL-085/146).',
       },
       {
         id: 'language_usage',

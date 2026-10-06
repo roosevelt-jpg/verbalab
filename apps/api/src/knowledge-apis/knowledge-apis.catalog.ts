@@ -8,8 +8,8 @@ export type KnowledgeApisCapability = {
   notes: string;
 };
 
-/** Public Knowledge Cloud API surfaces catalogued by this pack. */
-export function knowledgeApiSurfaces {
+/** Public Knowledge Cloud API surfaces catalogued by this pack (VL-201). */
+export function knowledgeApiSurfaces() {
   return [
     {
       product: 'knowledge-cloud',
@@ -106,7 +106,7 @@ export function knowledgeApiSurfaces {
 export const KNOWLEDGE_WEBHOOK_EVENTS = [
   {
     id: 'knowledge.document_ready',
-    notes: 'Emitted when a knowledge document finishes ingest (via job/webhook patterns where wired).',
+    notes: 'Emitted when a VL-062 knowledge document finishes ingest (via job/webhook patterns where wired).',
   },
   {
     id: 'knowledge_intelligence.discovered',
@@ -123,14 +123,14 @@ export const KNOWLEDGE_WEBHOOK_EVENTS = [
 ] as const;
 
 /**
- * Library Phase 68 → Enterprise Knowledge APIs.
+ * Library Phase 68 → Enterprise Knowledge APIs (VL-201).
  * Public API pack for Knowledge Cloud — not a gRPC/Kafka API platform OS.
  */
-export function knowledgeApisCatalog {
+export function knowledgeApisCatalog() {
   return {
     product: 'Lugemi Enterprise Knowledge APIs',
     note:
-      'Public-facing API pack for Knowledge Cloud: REST catalog, GraphQL façades, OpenAPI, SDK/CLI, developer portal links, signed webhooks, and light SSE event tails. Extends existing + Volume 6 hubs. Not a gRPC mesh, Kafka event-streaming OS, or multi-language SDK generator factory.',
+      'Public-facing API pack for Knowledge Cloud (VL-201): REST catalog, GraphQL façades, OpenAPI, SDK/CLI, developer portal links, signed webhooks, and light SSE event tails. Extends VL-062 + Volume 6 hubs. Not a gRPC mesh, Kafka event-streaming OS, or multi-language SDK generator factory.',
     capabilities: [
       {
         id: 'rest',
@@ -193,7 +193,7 @@ export function knowledgeApisCatalog {
         name: 'Developer Portal',
         status: 'shipped',
         api: 'GET /v1/developer/overview',
-        notes: 'Extends developers + this pack console.',
+        notes: 'Extends VL-127 /developers + this pack console.',
       },
       {
         id: 'openapi',
@@ -228,7 +228,7 @@ export function knowledgeApisCatalog {
         name: 'Analytics',
         status: 'shipped',
         api: 'GET /v1/knowledge-apis/analytics',
-        notes: 'Pack usage audits (≠ Knowledge Analytics).',
+        notes: 'Pack usage audits (≠ VL-202 Knowledge Analytics).',
       },
     ] satisfies KnowledgeApisCapability[],
     honesty: {

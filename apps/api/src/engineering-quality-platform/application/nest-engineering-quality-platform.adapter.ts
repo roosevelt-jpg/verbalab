@@ -6,16 +6,16 @@ import {
   EngineeringQualityPlatformProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestEngineeringQualityPlatformCatalogAdapter implements EngineeringQualityPlatformCatalogPort {
   constructor(private readonly service: EngineeringQualityPlatformService) {}
 
-  engine: EngineeringQualityPlatformEngineBundle {
-    return this.service.engine;
+  engine(): EngineeringQualityPlatformEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: EngineeringQualityPlatformProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): EngineeringQualityPlatformProductRow[] {
+    const bundle = this.engine() as {
       products?: EngineeringQualityPlatformProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestEngineeringQualityPlatformCatalogAdapter implements Engineering
         status: 'shipped',
         api: 'GET /v1/engineering-quality-platform/engine',
         console: '/engineering-quality-platform',
-        notes: ' shipped.',
+        notes: 'VL-348 shipped.',
       },
     ];
   }

@@ -6,17 +6,17 @@ import {
 } from '../prompt-fabric/application/messages';
 import { GqlPromptFabricCapability, GqlPromptFabricRoute } from './gql.types';
 
-@Resolver
+@Resolver()
 export class PromptFabricGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query( => [GqlPromptFabricCapability], { name: 'promptFabricCapabilities' })
-  promptFabricCapabilities: Promise<GqlPromptFabricCapability[]> {
-    return this.queries.execute(new ListPromptFabricCapabilitiesQuery);
+  @Query(() => [GqlPromptFabricCapability], { name: 'promptFabricCapabilities' })
+  promptFabricCapabilities(): Promise<GqlPromptFabricCapability[]> {
+    return this.queries.execute(new ListPromptFabricCapabilitiesQuery());
   }
 
-  @Query( => [GqlPromptFabricRoute], { name: 'promptFabricRoutes' })
-  promptFabricRoutes: Promise<GqlPromptFabricRoute[]> {
-    return this.queries.execute(new ListPromptFabricRoutesQuery);
+  @Query(() => [GqlPromptFabricRoute], { name: 'promptFabricRoutes' })
+  promptFabricRoutes(): Promise<GqlPromptFabricRoute[]> {
+    return this.queries.execute(new ListPromptFabricRoutesQuery());
   }
 }

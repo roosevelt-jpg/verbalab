@@ -15,20 +15,20 @@ export type RegistryValidateInput = {
   bcp47?: string;
 };
 
-@Injectable
+@Injectable()
 export class RegistryService implements OnModuleInit, OnApplicationBootstrap {
   constructor(private readonly prisma: PrismaService) {}
 
-  async onModuleInit {
+  async onModuleInit() {
     await seedFamiliesAndScripts(this.prisma);
   }
 
   /** Rules reference language codes — run after LanguagesService seeds. */
-  async onApplicationBootstrap {
+  async onApplicationBootstrap() {
     await seedLinguisticRules(this.prisma);
   }
 
-  async overview {
+  async overview() {
     const [
       languages,
       families,
@@ -44,14 +44,14 @@ export class RegistryService implements OnModuleInit, OnApplicationBootstrap {
       phoneticRules,
       morphologyRules,
     ] = await Promise.all([
-      this.prisma.language.count,
-      this.prisma.languageFamily.count,
-      this.prisma.writingSystem.count,
-      this.prisma.dialect.count,
-      this.prisma.accent.count,
-      this.prisma.localePack.count,
-      this.prisma.countryPack.count,
-      this.prisma.linguisticRule.count,
+      this.prisma.language.count(),
+      this.prisma.languageFamily.count(),
+      this.prisma.writingSystem.count(),
+      this.prisma.dialect.count(),
+      this.prisma.accent.count(),
+      this.prisma.localePack.count(),
+      this.prisma.countryPack.count(),
+      this.prisma.linguisticRule.count(),
       this.prisma.writingSystem.count({ where: { kind: WritingSystemKind.alphabet } }),
       this.prisma.linguisticRule.count({ where: { kind: LinguisticRuleKind.pronunciation } }),
       this.prisma.linguisticRule.count({ where: { kind: LinguisticRuleKind.grammar } }),
@@ -99,13 +99,13 @@ export class RegistryService implements OnModuleInit, OnApplicationBootstrap {
     };
   }
 
-  listFamilies {
+  listFamilies() {
     return this.prisma.languageFamily.findMany({ orderBy: { code: 'asc' } });
   }
 
   async getFamily(code: string) {
     const family = await this.prisma.languageFamily.findUnique({
-      where: { code: code.toLowerCase },
+      where: { code: code.toLowerCase() },
       include: { languages: { orderBy: { code: 'asc' } } },
     });
     if (!family) {
@@ -212,7 +212,7 @@ export class RegistryService implements OnModuleInit, OnApplicationBootstrap {
     }
     if (input.family) {
       const family = await this.prisma.languageFamily.findUnique({
-        where: { code: input.family.toLowerCase },
+        where: { code: input.family.toLowerCase() },
       });
       if (!family) errors.push(`family "${input.family}" is not in the registry`);
       else resolved.family = family;
@@ -223,8 +223,8 @@ export class RegistryService implements OnModuleInit, OnApplicationBootstrap {
       else resolved.rule = rule;
     }
     if (input.bcp47) {
-      const tag = input.bcp47.trim;
-      const langPart = tag.split(/[-_]/)[0]?.toLowerCase;
+      const tag = input.bcp47.trim();
+      const langPart = tag.split(/[-_]/)[0]?.toLowerCase();
       if (!langPart) errors.push('bcp47 tag is empty');
       else {
         const lang = await this.prisma.language.findUnique({ where: { code: langPart } });
@@ -241,7 +241,7 @@ export class RegistryService implements OnModuleInit, OnApplicationBootstrap {
     };
   }
 
-  async analytics {
+  async analytics() {
     const [byTier, byFamily, byScript, byRuleKind, byWritingKind] = await Promise.all([
       this.prisma.language.groupBy({ by: ['tier'], _count: { _all: true } }),
       this.prisma.language.groupBy({ by: ['familyCode'], _count: { _all: true } }),
@@ -250,9 +250,9 @@ export class RegistryService implements OnModuleInit, OnApplicationBootstrap {
       this.prisma.writingSystem.groupBy({ by: ['kind'], _count: { _all: true } }),
     ]);
 
-    const overview = await this.overview;
+    const overview = await this.overview();
     return {
-      asOf: new Date.toISOString,
+      asOf: new Date().toISOString(),
       counts: overview.counts,
       languagesByTier: byTier.map((r) => ({ tier: r.tier, count: r._count._all })),
       languagesByFamily: byFamily.map((r) => ({
@@ -266,7 +266,7 @@ export class RegistryService implements OnModuleInit, OnApplicationBootstrap {
     };
   }
 
-  async health {
+  async health() {
     const languages = await this.prisma.language.findMany({
       select: { code: true, script: true, familyCode: true },
     });
@@ -287,12 +287,12 @@ export class RegistryService implements OnModuleInit, OnApplicationBootstrap {
       }
     }
 
-    const overview = await this.overview;
+    const overview = await this.overview();
     return {
       status: issues.length === 0 ? ('ok' as const) : ('degraded' as const),
       issues,
       counts: overview.counts,
-      checkedAt: new Date.toISOString,
+      checkedAt: new Date().toISOString(),
     };
   }
 }

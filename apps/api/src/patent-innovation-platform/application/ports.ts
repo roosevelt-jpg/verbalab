@@ -1,4 +1,4 @@
-/** Application ports for Patent & Innovation Platform. */
+/** Application ports for Patent & Innovation Platform (VL-277). */
 
 export type PatentInnovationPlatformProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type PatentInnovationPlatformEngineBundle = ReturnType<
 >;
 
 export interface PatentInnovationPlatformCatalogPort {
-  engine: PatentInnovationPlatformEngineBundle;
-  listProducts: PatentInnovationPlatformProductRow[];
+  engine(): PatentInnovationPlatformEngineBundle;
+  listProducts(): PatentInnovationPlatformProductRow[];
 }
 
 export const PATENT_INNOVATION_PLATFORM_CATALOG_PORT = Symbol('PATENT_INNOVATION_PLATFORM_CATALOG_PORT');

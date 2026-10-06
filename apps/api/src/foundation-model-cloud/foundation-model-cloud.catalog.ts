@@ -11,11 +11,11 @@ export type FmcProductRow = {
 };
 
 /**
- * Library Phase 91 → Foundation Model Cloud Foundation.
+ * Library Phase 91 → Foundation Model Cloud Foundation (VL-224).
  * Catalog of Lugemi model-family products. Named models are scaffolds —
  * this hub does not train competitive foundation weights (Volume 9 README).
  */
-export function foundationModelCloudCatalog: FmcProductRow[] {
+export function foundationModelCloudCatalog(): FmcProductRow[] {
   return [
     {
       id: 'foundation-model-cloud',
@@ -25,7 +25,7 @@ export function foundationModelCloudCatalog: FmcProductRow[] {
       console: '/foundation-model-cloud',
       modality: 'hub',
       notes:
-        'First-class model-family hub. Extends Inference Cloud + AI Kernel — does not regenerate Volumes 1–8. Does not ship trained competitive weights.',
+        'First-class model-family hub (VL-224). Extends Inference Cloud + AI Kernel — does not regenerate Volumes 1–8. Does not ship trained competitive weights.',
     },
     {
       id: 'atlas',
@@ -35,7 +35,7 @@ export function foundationModelCloudCatalog: FmcProductRow[] {
       console: '/atlas',
       modality: 'multilingual_reasoning',
       notes:
-        'Large multilingual reasoning family scaffold (Phase 92 / ). Interface + MLOps handoffs — not trained Atlas weights.',
+        'Large multilingual reasoning family scaffold (Phase 92 / VL-225). Interface + MLOps handoffs — not trained Atlas weights.',
     },
     {
       id: 'baobab',
@@ -44,7 +44,7 @@ export function foundationModelCloudCatalog: FmcProductRow[] {
       api: null,
       console: null,
       modality: 'african_languages',
-      notes: 'African language foundation family scaffold (Phase 93 / ).',
+      notes: 'African language foundation family scaffold (Phase 93 / VL-226).',
     },
     {
       id: 'echo',
@@ -53,7 +53,7 @@ export function foundationModelCloudCatalog: FmcProductRow[] {
       api: null,
       console: null,
       modality: 'speech_audio',
-      notes: 'Speech/audio family scaffold (Phase 94 / ). Extends Speech Cloud — not a new STT OS.',
+      notes: 'Speech/audio family scaffold (Phase 94 / VL-227). Extends Speech Cloud — not a new STT OS.',
     },
     {
       id: 'voice',
@@ -62,7 +62,7 @@ export function foundationModelCloudCatalog: FmcProductRow[] {
       api: null,
       console: null,
       modality: 'voice_synthesis',
-      notes: 'Voice synthesis/cloning family scaffold (Phase 95 / ). Extends Voice Cloud.',
+      notes: 'Voice synthesis/cloning family scaffold (Phase 95 / VL-228). Extends Voice Cloud.',
     },
     {
       id: 'vision',
@@ -71,7 +71,7 @@ export function foundationModelCloudCatalog: FmcProductRow[] {
       api: null,
       console: null,
       modality: 'vision_documents',
-      notes: 'Vision/document understanding family scaffold (Phase 96 / ).',
+      notes: 'Vision/document understanding family scaffold (Phase 96 / VL-229).',
     },
     {
       id: 'vector',
@@ -80,7 +80,7 @@ export function foundationModelCloudCatalog: FmcProductRow[] {
       api: null,
       console: null,
       modality: 'embeddings',
-      notes: 'Embedding family scaffold (Phase 97 / ). Extends Embedding Cloud.',
+      notes: 'Embedding family scaffold (Phase 97 / VL-230). Extends Embedding Cloud.',
     },
     {
       id: 'reason',
@@ -89,7 +89,7 @@ export function foundationModelCloudCatalog: FmcProductRow[] {
       api: null,
       console: null,
       modality: 'reasoning_planning',
-      notes: 'Reasoning/planning family scaffold (Phase 98 / ). Extends Reasoning Cloud/Runtime.',
+      notes: 'Reasoning/planning family scaffold (Phase 98 / VL-231). Extends Reasoning Cloud/Runtime.',
     },
     {
       id: 'edge',
@@ -98,7 +98,7 @@ export function foundationModelCloudCatalog: FmcProductRow[] {
       api: null,
       console: null,
       modality: 'on_device_slm',
-      notes: 'On-device SLM family scaffold (Phase 99 / ).',
+      notes: 'On-device SLM family scaffold (Phase 99 / VL-232).',
     },
     {
       id: 'fusion',
@@ -107,7 +107,7 @@ export function foundationModelCloudCatalog: FmcProductRow[] {
       api: null,
       console: null,
       modality: 'multimodal',
-      notes: 'Multimodal fusion family scaffold (Phase 100 / ).',
+      notes: 'Multimodal fusion family scaffold (Phase 100 / VL-233).',
     },
     {
       id: 'translate',
@@ -116,7 +116,7 @@ export function foundationModelCloudCatalog: FmcProductRow[] {
       api: null,
       console: null,
       modality: 'translation',
-      notes: 'Translation family scaffold (Phase 101 / ). Extends Language Cloud — not a new MT OS.',
+      notes: 'Translation family scaffold (Phase 101 / VL-234). Extends Language Cloud — not a new MT OS.',
     },
     {
       id: 'model-training-platform',
@@ -126,7 +126,7 @@ export function foundationModelCloudCatalog: FmcProductRow[] {
       console: '/model-training-platform',
       modality: 'mlops',
       notes:
-        'Training orchestration over existing (Phase 102 / ). Experiment plans + LoRA/instruction handoff — not distributed/RLHF lab.',
+        'Training orchestration over VL-111 (Phase 102 / VL-235). Experiment plans + LoRA/instruction handoff — not distributed/RLHF lab.',
     },
     {
       id: 'model-evaluation-platform',
@@ -136,7 +136,7 @@ export function foundationModelCloudCatalog: FmcProductRow[] {
       console: '/model-evaluation-platform',
       modality: 'mlops',
       notes:
-        'Eval hub over sandbox bias/safety/latency (Phase 103 / ). MMLU/HumanEval deferred; no SOTA claims.',
+        'Eval hub over VL-100 + sandbox bias/safety/latency (Phase 103 / VL-236). MMLU/HumanEval deferred; no SOTA claims.',
     },
     {
       id: 'model-registry',
@@ -146,12 +146,12 @@ export function foundationModelCloudCatalog: FmcProductRow[] {
       console: '/model-registry',
       modality: 'mlops',
       notes:
-        'Registry governance over existing (Phase 104 / ). Cards/versions/approvals/deploy plans — not MLflow/traffic-mesh OS.',
+        'Registry governance over VL-110 (Phase 104 / VL-237). Cards/versions/approvals/deploy plans — not MLflow/traffic-mesh OS.',
     },
   ];
 }
 
-export function foundationModelCloudArchitectureNotes {
+export function foundationModelCloudArchitectureNotes() {
   return {
     style: 'nest_modular_monolith',
     ddd: 'bounded_foundation_model_cloud_hub',
@@ -178,7 +178,7 @@ export function foundationModelCloudArchitectureNotes {
   };
 }
 
-export function foundationModelCloudHonesty {
+export function foundationModelCloudHonesty() {
   return {
     trainsCompetitiveFoundationWeights: false,
     shipsTrainedAtlasBaobabEtc: false,

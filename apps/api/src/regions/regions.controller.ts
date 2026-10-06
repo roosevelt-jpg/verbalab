@@ -5,28 +5,28 @@ import { ClerkAuthGuard, SessionContext } from '../common/guards/clerk-auth.guar
 import { CurrentSession } from '../common/decorators/auth.decorators';
 import { ApiException } from '../common/errors/api-exception';
 
-@Controller
+@Controller()
 export class RegionsController {
   constructor(private readonly regions: RegionsService) {}
 
   /** Public catalog of residency islands. */
   @Get('v1/regions')
-  list {
-    return this.regions.list;
+  list() {
+    return this.regions.list();
   }
 
   @Get('v1/organization/residency')
   @UseGuards(ClerkAuthGuard)
-  getResidency(@CurrentSession session: SessionContext) {
+  getResidency(@CurrentSession() session: SessionContext) {
     return this.regions.getOrgResidency(session.organizationId);
   }
 
   @Patch('v1/organization/residency')
   @UseGuards(ClerkAuthGuard)
   setResidency(
-    @CurrentSession session: SessionContext,
-    @Body body: { dataRegion?: string | null },
-    @Req req: Request,
+    @CurrentSession() session: SessionContext,
+    @Body() body: { dataRegion?: string | null },
+    @Req() req: Request,
   ) {
     if (!Object.prototype.hasOwnProperty.call(body ?? {}, 'dataRegion')) {
       throw new ApiException(

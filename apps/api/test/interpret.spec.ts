@@ -18,7 +18,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_interp_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_interp_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -32,7 +32,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-function tinyWav: Buffer {
+function tinyWav(): Buffer {
   const dataSize = 64;
   const buffer = Buffer.alloc(44 + dataSize);
   buffer.write('RIFF', 0);
@@ -51,19 +51,19 @@ function tinyWav: Buffer {
   return buffer;
 }
 
-describe('Live interpreter',  => {
+describe('Live interpreter (VL-061)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -71,7 +71,7 @@ describe('Live interpreter',  => {
     const gateway = app.get(GatewayService);
     gateway.setSttProviderForTests({
       name: 'fixture_stt',
-      async transcribe {
+      async transcribe() {
         return {
           text: 'Hello friend',
           language: 'en',
@@ -83,7 +83,7 @@ describe('Live interpreter',  => {
     });
     gateway.setDetectProviderForTests({
       name: 'fixture_detect',
-      async detect {
+      async detect() {
         return { language: 'en', confidence: 0.99, provider: 'fixture_detect' };
       },
     });
@@ -102,7 +102,7 @@ describe('Live interpreter',  => {
     });
     gateway.setTtsProviderForTests({
       name: 'fixture_tts',
-      listVoices {
+      listVoices() {
         return [
           {
             id: 'alloy',
@@ -127,11 +127,11 @@ describe('Live interpreter',  => {
     });
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('runs STT → MT → TTS and returns audioBase64', async  => {
+  it('runs STT → MT → TTS and returns audioBase64', async () => {
     const org = await seedOrg(prisma, 'interp');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -140,12 +140,12 @@ describe('Live interpreter',  => {
       name: 'interp-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/interpret')
       .set('Authorization', `Bearer ${key.secret}`)
       .field('target', 'sw')
       .field('voice', 'alloy')
-      .attach('file', tinyWav, 'hello.wav')
+      .attach('file', tinyWav(), 'hello.wav')
       .expect(200);
 
     expect(res.body.sourceText).toBe('Hello friend');
@@ -176,7 +176,7 @@ describe('Live interpreter',  => {
     expect(ttsEvents).toBe(1);
   });
 
-  it('skips MT when source equals target', async  => {
+  it('skips MT when source equals target', async () => {
     const org = await seedOrg(prisma, 'interpsame');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -185,21 +185,21 @@ describe('Live interpreter',  => {
       name: 'same-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/interpret')
       .set('Authorization', `Bearer ${key.secret}`)
       .field('source', 'en')
       .field('target', 'en')
       .field('voice', 'alloy')
-      .attach('file', tinyWav, 'same.wav')
+      .attach('file', tinyWav(), 'same.wav')
       .expect(200);
 
     expect(res.body.skippedMt).toBe(true);
     expect(res.body.targetText).toBe('Hello friend');
-    expect(res.body.providers.mt).toBeNull;
+    expect(res.body.providers.mt).toBeNull();
   });
 
-  it('requires target and voice', async  => {
+  it('requires target and voice', async () => {
     const org = await seedOrg(prisma, 'interpbad');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -208,10 +208,10 @@ describe('Live interpreter',  => {
       name: 'bad-key',
     });
 
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .post('/v1/interpret')
       .set('Authorization', `Bearer ${key.secret}`)
-      .attach('file', tinyWav, 'bad.wav')
+      .attach('file', tinyWav(), 'bad.wav')
       .expect(400);
   });
 });

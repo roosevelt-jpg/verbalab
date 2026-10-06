@@ -22,7 +22,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_jobs_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_jobs_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -43,8 +43,8 @@ async function waitForJob(
   opts: { timeoutMs?: number; awaitWebhook?: boolean } = {},
 ) {
   const timeoutMs = opts.timeoutMs ?? 5000;
-  const start = Date.now;
-  while (Date.now - start < timeoutMs) {
+  const start = Date.now();
+  while (Date.now() - start < timeoutMs) {
     const job = await jobs.get(organizationId, jobId);
     const terminal = job.status === 'succeeded' || job.status === 'failed';
     if (terminal) {
@@ -57,21 +57,21 @@ async function waitForJob(
   throw new Error(`Job ${jobId} did not finish in time`);
 }
 
-describe('Jobs + webhooks',  => {
+describe('Jobs + webhooks (VL-044)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let jobs: JobsService;
   let webhooks: WebhookService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -93,11 +93,11 @@ describe('Jobs + webhooks',  => {
     });
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('signs and verifies webhook payloads', async  => {
+  it('signs and verifies webhook payloads', async () => {
     const secret = 'whsec_test';
     const timestamp = '1710000000';
     const body = '{"event":"job.succeeded"}';
@@ -106,7 +106,7 @@ describe('Jobs + webhooks',  => {
     expect(webhooks.verifySignature(secret, timestamp, body, 'v1=deadbeef')).toBe(false);
   });
 
-  it('creates batch_translate job, processes inline, polls status', async  => {
+  it('creates batch_translate job, processes inline, polls status', async () => {
     const org = await seedOrg(prisma, 'batch');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -115,7 +115,7 @@ describe('Jobs + webhooks',  => {
       name: 'jobs-key',
     });
 
-    const created = await request(app.getHttpServer)
+    const created = await request(app.getHttpServer())
       .post('/v1/jobs')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -132,7 +132,7 @@ describe('Jobs + webhooks',  => {
       .expect(201);
 
     expect(created.body.status).toBe('queued');
-    expect(created.body.id).toBeTruthy;
+    expect(created.body.id).toBeTruthy();
 
     const done = await waitForJob(jobs, org.id, created.body.id);
     expect(done.status).toBe('succeeded');
@@ -145,20 +145,20 @@ describe('Jobs + webhooks',  => {
       ],
     });
 
-    const polled = await request(app.getHttpServer)
+    const polled = await request(app.getHttpServer())
       .get(`/v1/jobs/${created.body.id}`)
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(polled.body.status).toBe('succeeded');
 
-    const listed = await request(app.getHttpServer)
+    const listed = await request(app.getHttpServer())
       .get('/v1/jobs')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(listed.body.some((j: { id: string }) => j.id === created.body.id)).toBe(true);
   });
 
-  it('delivers signed webhook on success', async  => {
+  it('delivers signed webhook on success', async () => {
     const received: Array<{
       headers: IncomingMessage['headers'];
       body: string;
@@ -167,7 +167,7 @@ describe('Jobs + webhooks',  => {
     const server = createServer((req: IncomingMessage, res: ServerResponse) => {
       const chunks: Buffer[] = [];
       req.on('data', (c) => chunks.push(c));
-      req.on('end',  => {
+      req.on('end', () => {
         received.push({
           headers: req.headers,
           body: Buffer.concat(chunks).toString('utf8'),
@@ -177,8 +177,8 @@ describe('Jobs + webhooks',  => {
       });
     });
 
-    await new Promise<void>((resolve) => server.listen(0, '127.0.0.1',  => resolve));
-    const { port } = server.address as AddressInfo;
+    await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', () => resolve()));
+    const { port } = server.address() as AddressInfo;
     const webhookUrl = `http://127.0.0.1:${port}/hook`;
 
     try {
@@ -190,7 +190,7 @@ describe('Jobs + webhooks',  => {
         name: 'hook-key',
       });
 
-      const created = await request(app.getHttpServer)
+      const created = await request(app.getHttpServer())
         .post('/v1/jobs')
         .set('Authorization', `Bearer ${key.secret}`)
         .send({
@@ -219,7 +219,7 @@ describe('Jobs + webhooks',  => {
       const timestamp = String(received[0]!.headers['x-lugemi-timestamp']);
       const signature = String(received[0]!.headers['x-lugemi-signature']);
       const orgRow = await prisma.organization.findUniqueOrThrow({ where: { id: org.id } });
-      expect(orgRow.webhookSigningSecret).toBeTruthy;
+      expect(orgRow.webhookSigningSecret).toBeTruthy();
       expect(
         webhooks.verifySignature(
           orgRow.webhookSigningSecret!,
@@ -230,12 +230,12 @@ describe('Jobs + webhooks',  => {
       ).toBe(true);
     } finally {
       await new Promise<void>((resolve, reject) =>
-        server.close((err) => (err ? reject(err) : resolve)),
+        server.close((err) => (err ? reject(err) : resolve())),
       );
     }
   });
 
-  it('rejects invalid job payloads', async  => {
+  it('rejects invalid job payloads', async () => {
     const org = await seedOrg(prisma, 'bad');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -244,13 +244,13 @@ describe('Jobs + webhooks',  => {
       name: 'bad-key',
     });
 
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .post('/v1/jobs')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ type: 'nope', input: { source: 'en', target: 'sw', items: [] } })
       .expect(400);
 
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .post('/v1/jobs')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({

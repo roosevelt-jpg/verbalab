@@ -1,5 +1,5 @@
 /**
- * Lightweight acoustic fingerprint for enrollment / verification.
+ * Lightweight acoustic fingerprint for enrollment / verification (VL-152).
  * Not a NIST-grade biometric template — energy + spectral envelope features only.
  */
 
@@ -199,7 +199,7 @@ export function diarizeSegmentsByGaps(
     speakerLabel: `SPEAKER_${String.fromCharCode(65 + t.speakerIndex)}`,
     start: t.start,
     end: t.end,
-    text: t.texts.join(' ').trim,
+    text: t.texts.join(' ').trim(),
     segmentIds: t.segmentIds,
   }));
 }

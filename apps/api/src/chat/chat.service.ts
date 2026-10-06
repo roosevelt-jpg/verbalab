@@ -10,17 +10,17 @@ import { LUGEMI_CHAT_SYSTEM } from './chat-prompt';
 import { PromptsService } from '../prompts/prompts.service';
 
 export { LUGEMI_CHAT_SYSTEM } from './chat-prompt';
-export function chatMaxMessages: number {
+export function chatMaxMessages(): number {
   const raw = Number(process.env.CHAT_MAX_MESSAGES ?? 40);
   return Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 40;
 }
 
-export function chatMaxMessageChars: number {
+export function chatMaxMessageChars(): number {
   const raw = Number(process.env.CHAT_MAX_MESSAGE_CHARS ?? 8_000);
   return Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 8_000;
 }
 
-@Injectable
+@Injectable()
 export class ChatService {
   constructor(
     private readonly gateway: GatewayService,
@@ -36,7 +36,7 @@ export class ChatService {
       throw new ApiException('validation_error', 'messages must be a non-empty array', HttpStatus.BAD_REQUEST);
     }
 
-    const maxMessages = chatMaxMessages;
+    const maxMessages = chatMaxMessages();
     if (raw.length > maxMessages) {
       throw new ApiException(
         'validation_error',
@@ -45,7 +45,7 @@ export class ChatService {
       );
     }
 
-    const maxChars = chatMaxMessageChars;
+    const maxChars = chatMaxMessageChars();
     const allowed: ChatRole[] = ['user', 'assistant', 'system'];
     const messages: ChatMessage[] = [];
 
@@ -62,7 +62,7 @@ export class ChatService {
           HttpStatus.BAD_REQUEST,
         );
       }
-      if (typeof content !== 'string' || content.trim.length === 0) {
+      if (typeof content !== 'string' || content.trim().length === 0) {
         throw new ApiException(
           'validation_error',
           'message.content must be a non-empty string',
@@ -110,13 +110,13 @@ export class ChatService {
       ...conversation,
     ];
 
-    if (input.model !== undefined && (typeof input.model !== 'string' || !input.model.trim)) {
+    if (input.model !== undefined && (typeof input.model !== 'string' || !input.model.trim())) {
       throw new ApiException('validation_error', 'model must be a non-empty string', HttpStatus.BAD_REQUEST);
     }
 
     const result = await this.gateway.chat({
       messages,
-      model: input.model?.trim || undefined,
+      model: input.model?.trim() || undefined,
     });
 
     let reply = result.message.content;
@@ -175,7 +175,7 @@ export class ChatService {
     });
 
     return {
-      id: `chatcmpl_${Date.now}`,
+      id: `chatcmpl_${Date.now()}`,
       object: 'chat.completion',
       model: result.model,
       provider: result.provider,

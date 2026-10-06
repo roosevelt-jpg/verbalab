@@ -7,7 +7,7 @@ import { CurrentSession } from '../common/decorators/auth.decorators';
 import { ApiException } from '../common/errors/api-exception';
 
 /**
- * surface for rented-GPU training jobs (same `fine_tune_jobs` table as ).
+ * VL-111 surface for rented-GPU training jobs (same `fine_tune_jobs` table as VL-104).
  */
 @Controller('v1/training-jobs')
 export class TrainingJobsController {
@@ -15,8 +15,8 @@ export class TrainingJobsController {
 
   @Get('launchers')
   @UseGuards(ClerkAuthGuard)
-  launchers {
-    return this.finetunes.launcherStatus;
+  launchers() {
+    return this.finetunes.launcherStatus();
   }
 
   /**
@@ -26,7 +26,7 @@ export class TrainingJobsController {
   @Post('callback')
   callback(
     @Headers('x-lugemi-training-token') headerToken: string | undefined,
-    @Body
+    @Body()
     body: {
       jobId?: string;
       callbackToken?: string;
@@ -65,17 +65,17 @@ export class TrainingJobsController {
     });
   }
 
-  @Get
+  @Get()
   @UseGuards(ClerkAuthGuard)
-  list(@CurrentSession session: SessionContext) {
+  list(@CurrentSession() session: SessionContext) {
     return this.finetunes.listJobs(session.organizationId);
   }
 
-  @Post
+  @Post()
   @UseGuards(ClerkAuthGuard)
   create(
-    @CurrentSession session: SessionContext,
-    @Body
+    @CurrentSession() session: SessionContext,
+    @Body()
     body: {
       sourceLang?: string;
       targetLang?: string;
@@ -83,7 +83,7 @@ export class TrainingJobsController {
       baseModel?: string;
       datasetAssetId?: string;
     },
-    @Req req: Request,
+    @Req() req: Request,
   ) {
     return this.finetunes.createJob({
       organizationId: session.organizationId,
@@ -100,16 +100,16 @@ export class TrainingJobsController {
 
   @Get(':id')
   @UseGuards(ClerkAuthGuard)
-  get(@CurrentSession session: SessionContext, @Param('id') id: string) {
+  get(@CurrentSession() session: SessionContext, @Param('id') id: string) {
     return this.finetunes.getJob(session.organizationId, id);
   }
 
   @Post(':id/launch')
   @UseGuards(ClerkAuthGuard)
   launch(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Param('id') id: string,
-    @Req req: Request,
+    @Req() req: Request,
   ) {
     return this.finetunes.launchJob({
       organizationId: session.organizationId,
@@ -123,9 +123,9 @@ export class TrainingJobsController {
   @Post(':id/complete')
   @UseGuards(ClerkAuthGuard)
   complete(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Param('id') id: string,
-    @Body
+    @Body()
     body: {
       artifactKind?: string;
       artifactUri?: string;
@@ -133,7 +133,7 @@ export class TrainingJobsController {
       promote?: boolean;
       displayName?: string;
     },
-    @Req req: Request,
+    @Req() req: Request,
   ) {
     return this.finetunes.completeJob({
       organizationId: session.organizationId,

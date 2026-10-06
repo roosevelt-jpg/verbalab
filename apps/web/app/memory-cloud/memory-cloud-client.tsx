@@ -27,8 +27,8 @@ type Memory = {
   version: number;
 };
 
-export function MemoryCloudClient {
-  const { getToken, isLoaded } = useAuth;
+export function MemoryCloudClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [memories, setMemories] = useState<Memory[]>([]);
@@ -39,8 +39,8 @@ export function MemoryCloudClient {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(async  => {
-    const token = await getToken;
+  const refresh = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, an, list] = await Promise.all([
       apiFetch<Engine>('/v1/memory-cloud/engine', { token }),
@@ -52,17 +52,17 @@ export function MemoryCloudClient {
     setMemories(list.data);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void refresh.catch((err: Error) => setError(err.message));
+    void refresh().catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
-  async function createMemory {
+  async function createMemory() {
     setLoading(true);
     setError(null);
     setResult(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const body = await apiFetch<Memory>('/v1/memory-cloud/memories', {
         token,
@@ -70,7 +70,7 @@ export function MemoryCloudClient {
         body: { content, scope, kind },
       });
       setResult(JSON.stringify(body, null, 2));
-      await refresh;
+      await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Create failed');
     } finally {
@@ -78,18 +78,18 @@ export function MemoryCloudClient {
     }
   }
 
-  async function exportMemories {
+  async function exportMemories() {
     setLoading(true);
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const body = await apiFetch<{ count: number; exportedAt: string; note: string }>(
         '/v1/memory-cloud/export',
         { token, method: 'POST', body: {} },
       );
       setResult(JSON.stringify(body, null, 2));
-      await refresh;
+      await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Export failed');
     } finally {
@@ -97,19 +97,19 @@ export function MemoryCloudClient {
     }
   }
 
-  async function eraseAll {
+  async function eraseAll() {
     if (!window.confirm('Hard-erase all workspace memories? This cannot be undone.')) return;
     setLoading(true);
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const body = await apiFetch<{ erased: boolean; count: number; note: string }>(
         '/v1/memory-cloud/erase',
         { token, method: 'POST', body: { confirm: true, hard: true } },
       );
       setResult(JSON.stringify(body, null, 2));
-      await refresh;
+      await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erase failed');
     } finally {
@@ -181,13 +181,13 @@ export function MemoryCloudClient {
               <option value="shared">shared</option>
               <option value="semantic">semantic</option>
             </select>
-            <button type="button" disabled={loading} style={primary} onClick={ => void createMemory}>
+            <button type="button" disabled={loading} style={primary} onClick={() => void createMemory()}>
               Save
             </button>
-            <button type="button" disabled={loading} style={secondary} onClick={ => void exportMemories}>
+            <button type="button" disabled={loading} style={secondary} onClick={() => void exportMemories()}>
               Export (GDPR)
             </button>
-            <button type="button" disabled={loading} style={danger} onClick={ => void eraseAll}>
+            <button type="button" disabled={loading} style={danger} onClick={() => void eraseAll()}>
               Erase all
             </button>
           </div>

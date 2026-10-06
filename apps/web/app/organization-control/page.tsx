@@ -1,5 +1,5 @@
 import { OrganizationControlClient } from './organization-control-client';
 
-export default function OrganizationControlPage {
+export default function OrganizationControlPage() {
   return <OrganizationControlClient />;
 }

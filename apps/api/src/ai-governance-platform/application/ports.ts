@@ -1,4 +1,4 @@
-/** Application ports for AI Governance Platform. */
+/** Application ports for AI Governance Platform (VL-294). */
 
 export type AiGovernancePlatformProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type AiGovernancePlatformEngineBundle = ReturnType<
 >;
 
 export interface AiGovernancePlatformCatalogPort {
-  engine: AiGovernancePlatformEngineBundle;
-  listProducts: AiGovernancePlatformProductRow[];
+  engine(): AiGovernancePlatformEngineBundle;
+  listProducts(): AiGovernancePlatformProductRow[];
 }
 
 export const AI_GOVERNANCE_PLATFORM_CATALOG_PORT = Symbol('AI_GOVERNANCE_PLATFORM_CATALOG_PORT');

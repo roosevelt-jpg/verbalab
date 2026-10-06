@@ -8,8 +8,8 @@ export type AudioCapability = {
   notes: string;
 };
 
-/** Library Phase 21 → Audio Intelligence. */
-export function audioEngineCatalog {
+/** Library Phase 21 → Audio Intelligence (VL-155). */
+export function audioEngineCatalog() {
   return {
     product: 'Lugemi Audio Intelligence',
     note:

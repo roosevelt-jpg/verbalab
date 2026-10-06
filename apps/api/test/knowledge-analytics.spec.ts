@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_ka_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_ka_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,29 +35,29 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Knowledge Analytics',  => {
+describe('Knowledge Analytics (VL-202)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('documents Knowledge Analytics honesty (not sibling analytics / BI OS)',  => {
+  it('documents Knowledge Analytics honesty (not sibling analytics / BI OS)', () => {
     const doc = join(root, 'docs/KNOWLEDGE_ANALYTICS.md');
     const adr = join(root, 'docs/adr/0113-knowledge-analytics.md');
     expect(existsSync(doc)).toBe(true);
@@ -66,11 +66,11 @@ describe('Knowledge Analytics',  => {
     expect(text).toMatch(/Language\/Speech\/Voice\/Intelligence/i);
     expect(text).toMatch(/BI/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
-    expect(text).toContain('');
+    expect(text).toContain('VL-202');
   });
 
-  it('exposes engine with honest separation flags', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes engine with honest separation flags', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/knowledge-analytics/engine')
       .expect(200);
     expect(res.body.product).toContain('Knowledge Analytics');
@@ -83,7 +83,7 @@ describe('Knowledge Analytics',  => {
     expect(res.body.honesty.orgWorkspaceScoped).toBe(true);
   });
 
-  it('returns overview/usage/report for org with seeded knowledge data', async  => {
+  it('returns overview/usage/report for org with seeded knowledge data', async () => {
     const org = await seedOrg(prisma, 'ka');
     const workspaceId = org.workspaces[0]!.id;
     const key = await apiKeys.create({
@@ -137,7 +137,7 @@ describe('Knowledge Analytics',  => {
       ],
     });
 
-    const overview = await request(app.getHttpServer)
+    const overview = await request(app.getHttpServer())
       .get('/v1/knowledge-analytics/overview')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -146,7 +146,7 @@ describe('Knowledge Analytics',  => {
     expect(overview.body.search.searches).toBeGreaterThanOrEqual(2);
     expect(overview.body.confidence.samples).toBeGreaterThanOrEqual(1);
 
-    const usage = await request(app.getHttpServer)
+    const usage = await request(app.getHttpServer())
       .get('/v1/knowledge-analytics/usage')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -154,7 +154,7 @@ describe('Knowledge Analytics',  => {
       usage.body.bySurface.some((s: { surface: string }) => s.surface === 'enterprise_search'),
     ).toBe(true);
 
-    const report = await request(app.getHttpServer)
+    const report = await request(app.getHttpServer())
       .get('/v1/knowledge-analytics/report')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -163,8 +163,8 @@ describe('Knowledge Analytics',  => {
     expect(report.body.search.zeroHitSearches).toBeGreaterThanOrEqual(1);
   });
 
-  it('exposes knowledgeAnalytics via GraphQL', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes knowledgeAnalytics via GraphQL', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query:
@@ -172,7 +172,7 @@ describe('Knowledge Analytics',  => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.knowledgeAnalytics.regeneratesIntelligenceAnalytics).toBe(false);
     expect(res.body.data.knowledgeAnalytics.biDashboardOs).toBe(false);
     expect(res.body.data.knowledgeAnalytics.aggregatesOnly).toBe(true);

@@ -1,14 +1,14 @@
 export type AnalyticsStatus = 'shipped' | 'partial' | 'deferred';
 
 /**
- * Library Phase 146 → Research Analytics.
+ * Library Phase 146 → Research Analytics (VL-279).
  * Honest static/computed summary aggregating sibling Research Cloud catalogs.
  */
-export function researchAnalyticsEngineCatalog {
+export function researchAnalyticsEngineCatalog() {
   return {
     product: 'Lugemi Research Analytics',
     note:
-      'Research Analytics. Aggregates experiments/publications/patents/model progress/ROI/benchmark improvements/TRL from sibling catalogs — honest static/computed summary, not a BI OS.',
+      'Research Analytics (VL-279). Aggregates experiments/publications/patents/model progress/ROI/benchmark improvements/TRL from sibling catalogs — honest static/computed summary, not a BI OS.',
     snapshot: {
       experiments: { trackedRuns: 3, completed: 2, running: 1 },
       publications: { records: 5, withDoi: 0, doiRegistryOs: false },

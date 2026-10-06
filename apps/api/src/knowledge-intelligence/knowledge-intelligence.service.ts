@@ -13,22 +13,22 @@ type AuthCtx = {
   ip?: string;
 };
 
-@Injectable
+@Injectable()
 export class KnowledgeIntelligenceService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
   ) {}
 
-  engine {
-    return knowledgeIntelligenceCatalog;
+  engine() {
+    return knowledgeIntelligenceCatalog();
   }
 
   private tokens(text: string): string[] {
     return [
       ...new Set(
         text
-          .toLowerCase
+          .toLowerCase()
           .split(/[^a-z0-9]+/)
           .filter((t) => t.length >= 3),
       ),
@@ -121,15 +121,15 @@ export class KnowledgeIntelligenceService {
       ontologyConcepts: concepts,
       memoryRows: memories,
       knowledgeMemories,
-      note: 'Knowledge Intelligence insight snapshot.',
-      honesty: this.engine.honesty,
+      note: 'Knowledge Intelligence insight snapshot (VL-200).',
+      honesty: this.engine().honesty,
     };
   }
 
   async discover(
     input: AuthCtx & { query?: string; limit?: number },
   ) {
-    const query = input.query?.trim;
+    const query = input.query?.trim();
     if (!query) {
       throw new ApiException('validation_error', 'query is required', HttpStatus.BAD_REQUEST);
     }
@@ -143,7 +143,7 @@ export class KnowledgeIntelligenceService {
           OR: [
             { filename: { contains: query, mode: 'insensitive' } },
             { collection: { contains: query, mode: 'insensitive' } },
-            { tags: { has: query.toLowerCase } },
+            { tags: { has: query.toLowerCase() } },
             { contentKind: { contains: query, mode: 'insensitive' } },
           ],
         },
@@ -245,8 +245,8 @@ export class KnowledgeIntelligenceService {
     const seedTokens = new Set([
       ...this.tokens(doc.filename),
       ...doc.tags,
-      ...(doc.collection ? [doc.collection.toLowerCase] : []),
-      ...(doc.contentKind ? [doc.contentKind.toLowerCase] : []),
+      ...(doc.collection ? [doc.collection.toLowerCase()] : []),
+      ...(doc.contentKind ? [doc.contentKind.toLowerCase()] : []),
     ]);
 
     const scored = candidates
@@ -303,7 +303,7 @@ export class KnowledgeIntelligenceService {
 
   async recommend(input: AuthCtx & { query?: string; limit?: number }) {
     const take = Math.min(Math.max(input.limit ?? 8, 1), 20);
-    const q = input.query?.trim.toLowerCase ?? '';
+    const q = input.query?.trim().toLowerCase() ?? '';
     const docs = await this.prisma.knowledgeDocument.findMany({
       where: {
         organizationId: input.organizationId,
@@ -319,7 +319,7 @@ export class KnowledgeIntelligenceService {
         let score = 0.2 + Math.min(0.3, d.chunkCount * 0.02);
         const reasons: string[] = ['ready'];
         if (q) {
-          if (d.filename.toLowerCase.includes(q)) {
+          if (d.filename.toLowerCase().includes(q)) {
             score += 0.4;
             reasons.push('filename_match');
           }
@@ -327,7 +327,7 @@ export class KnowledgeIntelligenceService {
             score += 0.25;
             reasons.push('tag_match');
           }
-          if (d.collection.toLowerCase.includes(q)) {
+          if (d.collection.toLowerCase().includes(q)) {
             score += 0.15;
             reasons.push('collection_match');
           }
@@ -358,7 +358,7 @@ export class KnowledgeIntelligenceService {
     });
 
     return {
-      query: input.query?.trim || null,
+      query: input.query?.trim() || null,
       recommendations: ranked,
       note: 'Light heuristic recommendations — not collaborative filtering OS.',
       honesty: { retailRecommenderOs: false },
@@ -447,7 +447,7 @@ export class KnowledgeIntelligenceService {
       for (let j = i + 1; j < docs.length; j++) {
         const a = docs[i]!;
         const b = docs[j]!;
-        if (a.filename.toLowerCase === b.filename.toLowerCase) {
+        if (a.filename.toLowerCase() === b.filename.toLowerCase()) {
           pairs.push({
             a: { id: a.id, filename: a.filename },
             b: { id: b.id, filename: b.filename },
@@ -456,8 +456,8 @@ export class KnowledgeIntelligenceService {
           });
           continue;
         }
-        const ca = a.chunks[0]?.content.slice(0, 120).toLowerCase ?? '';
-        const cb = b.chunks[0]?.content.slice(0, 120).toLowerCase ?? '';
+        const ca = a.chunks[0]?.content.slice(0, 120).toLowerCase() ?? '';
+        const cb = b.chunks[0]?.content.slice(0, 120).toLowerCase() ?? '';
         if (ca && cb && ca === cb) {
           pairs.push({
             a: { id: a.id, filename: a.filename },
@@ -519,7 +519,7 @@ export class KnowledgeIntelligenceService {
           version: m.version,
           evolutionCount: Array.isArray(meta.evolution) ? meta.evolution.length : 0,
           preview: m.content.slice(0, 120),
-          updatedAt: m.updatedAt.toISOString,
+          updatedAt: m.updatedAt.toISOString(),
         };
       });
 
@@ -528,7 +528,7 @@ export class KnowledgeIntelligenceService {
         id: d.id,
         filename: d.filename,
         version: d.version,
-        updatedAt: d.updatedAt.toISOString,
+        updatedAt: d.updatedAt.toISOString(),
       })),
       evolvedMemories,
       note: 'Evolution snapshot from doc versions + Knowledge Memory trails — not a knowledge VCS OS.',
@@ -573,7 +573,7 @@ export class KnowledgeIntelligenceService {
   }
 
   async analytics(organizationId: string, workspaceId: string) {
-    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const insight = await this.insight(organizationId, workspaceId);
     const actions = [
       'knowledge_intelligence.discovered',
@@ -592,13 +592,13 @@ export class KnowledgeIntelligenceService {
     );
     return {
       ...insight,
-      auditsLast30d: Object.fromEntries(actions.map((a, i) => [a.split('.').pop!, counts[i]])),
-      note: 'Knowledge Intelligence analytics. ≠ Knowledge Analytics pack.',
+      auditsLast30d: Object.fromEntries(actions.map((a, i) => [a.split('.').pop()!, counts[i]])),
+      note: 'Knowledge Intelligence analytics (VL-200). ≠ VL-202 Knowledge Analytics pack.',
     };
   }
 
   async monitoring(organizationId: string, workspaceId: string) {
-    const engine = this.engine;
+    const engine = this.engine();
     const analytics = await this.analytics(organizationId, workspaceId);
     return {
       ...analytics,

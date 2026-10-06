@@ -16,10 +16,10 @@ export type IpPortfolioItem = {
 };
 
 /**
- * Library Phase 144 → Patent & Innovation Platform.
+ * Library Phase 144 → Patent & Innovation Platform (VL-277).
  * usptoOs=false — tracking catalog, not a legal filing system.
  */
-export function patentInnovationPlatformEngineCatalog {
+export function patentInnovationPlatformEngineCatalog() {
   const portfolio: IpPortfolioItem[] = [
     {
       id: 'ip-001',
@@ -40,13 +40,13 @@ export function patentInnovationPlatformEngineCatalog {
       title: 'Synthetic label propagation for sensitive domains',
       disclosureStatus: 'idea',
       priorArtNotes: 'Idea slot only.',
-      notes: 'Tracks honesty requirement from .',
+      notes: 'Tracks honesty requirement from VL-273.',
     },
   ];
   return {
     product: 'Lugemi Patent & Innovation Platform',
     note:
-      'Patent & Innovation Platform. Disclosure workflow + IP portfolio tracking — usptoOs=false. Not a legal filing system or USPTO OS.',
+      'Patent & Innovation Platform (VL-277). Disclosure workflow + IP portfolio tracking — usptoOs=false. Not a legal filing system or USPTO OS.',
     portfolio,
     capabilities: [
       { id: 'tracking', name: 'Patent tracking', status: 'shipped' as PatentStatus, api: 'GET /v1/patent-innovation-platform/portfolio', notes: 'Portfolio list.' },

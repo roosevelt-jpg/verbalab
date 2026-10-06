@@ -40,11 +40,11 @@ export function TranslatePlayDemo({ compact = false }: { compact?: boolean }) {
   const [chatLog, setChatLog] = useState<Array<{ role: 'user' | 'agent'; text: string; lang: string; voice: string }>>(
     [],
   );
-  const { play, stop, playingId, status, error } = useDemoPlayer;
+  const { play, stop, playingId, status, error } = useDemoPlayer();
 
-  useEffect( => {
+  useEffect(() => {
     void fetch('/api/demo/translate')
-      .then((r) => r.json)
+      .then((r) => r.json())
       .then((data: { pairs: PairMeta[] }) => {
         setPairs(data.pairs ?? []);
         const first = data.pairs?.[0];
@@ -53,12 +53,12 @@ export function TranslatePlayDemo({ compact = false }: { compact?: boolean }) {
           setText(first.text);
         }
       })
-      .catch( => undefined);
+      .catch(() => undefined);
   }, []);
 
   const selected = pairs.find((p) => p.id === pairId) ?? pairs[0];
 
-  const runTranslate = useCallback(async  => {
+  const runTranslate = useCallback(async () => {
     if (!selected) return;
     setBusy(true);
     try {
@@ -67,7 +67,7 @@ export function TranslatePlayDemo({ compact = false }: { compact?: boolean }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ text, pairId: selected.id, source: selected.source, target: selected.target }),
       });
-      const body = (await res.json) as TranslateResult;
+      const body = (await res.json()) as TranslateResult;
       setResult(body);
       setChatLog((prev) => [
         ...prev.slice(-4),
@@ -80,8 +80,8 @@ export function TranslatePlayDemo({ compact = false }: { compact?: boolean }) {
     }
   }, [selected, text]);
 
-  async function translateAndPlay {
-    const body = await runTranslate;
+  async function translateAndPlay() {
+    const body = await runTranslate();
     if (!body) return;
     await play({
       id: 'tr-source',
@@ -136,14 +136,14 @@ export function TranslatePlayDemo({ compact = false }: { compact?: boolean }) {
         rows={compact ? 3 : 4}
       />
       <div className="mkt-tts-actions">
-        <button type="button" className="vl-btn vl-btn-primary" disabled={busy} onClick={ => void runTranslate}>
+        <button type="button" className="vl-btn vl-btn-primary" disabled={busy} onClick={() => void runTranslate()}>
           {busy ? 'Translating…' : 'Translate'}
         </button>
         <button
           type="button"
           className="vl-btn vl-btn-secondary"
           disabled={busy}
-          onClick={ => void translateAndPlay}
+          onClick={() => void translateAndPlay()}
         >
           Translate &amp; play both
         </button>
@@ -159,9 +159,9 @@ export function TranslatePlayDemo({ compact = false }: { compact?: boolean }) {
               <button
                 type="button"
                 className="mkt-play-chip"
-                onClick={ => {
+                onClick={() => {
                   if (playingId === 'tr-source') {
-                    stop;
+                    stop();
                     return;
                   }
                   void play({
@@ -183,9 +183,9 @@ export function TranslatePlayDemo({ compact = false }: { compact?: boolean }) {
               <button
                 type="button"
                 className="mkt-play-chip"
-                onClick={ => {
+                onClick={() => {
                   if (playingId === 'tr-target') {
-                    stop;
+                    stop();
                     return;
                   }
                   void play({
@@ -218,10 +218,10 @@ export function TranslatePlayDemo({ compact = false }: { compact?: boolean }) {
               <button
                 type="button"
                 className="mkt-play-chip"
-                onClick={ => {
+                onClick={() => {
                   const id = `tr-chat-${i}`;
                   if (playingId === id) {
-                    stop;
+                    stop();
                     return;
                   }
                   void play({ id, text: turn.text, voiceId: turn.voice, lang: turn.lang });

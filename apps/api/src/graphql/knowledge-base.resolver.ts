@@ -2,13 +2,13 @@ import { Query, Resolver } from '@nestjs/graphql';
 import { KnowledgeBaseService } from '../knowledge-base/knowledge-base.service';
 import { GqlKnowledgeBaseEngine } from './gql.types';
 
-@Resolver
+@Resolver()
 export class KnowledgeBaseGraphqlResolver {
   constructor(private readonly knowledgeBase: KnowledgeBaseService) {}
 
-  @Query( => GqlKnowledgeBaseEngine, { name: 'knowledgeBaseEngine' })
-  knowledgeBaseEngine: GqlKnowledgeBaseEngine {
-    const c = this.knowledgeBase.engine;
+  @Query(() => GqlKnowledgeBaseEngine, { name: 'knowledgeBaseEngine' })
+  knowledgeBaseEngine(): GqlKnowledgeBaseEngine {
+    const c = this.knowledgeBase.engine();
     return {
       product: c.product,
       note: c.note,

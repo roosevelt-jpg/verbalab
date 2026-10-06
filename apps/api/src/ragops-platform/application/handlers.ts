@@ -17,8 +17,8 @@ export class GetRagopsPlatformEngineHandler
     private readonly catalog: RagopsPlatformCatalogPort,
   ) {}
 
-  execute: Promise<RagopsPlatformEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<RagopsPlatformEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListRagopsPlatformProductsHandler
     private readonly catalog: RagopsPlatformCatalogPort,
   ) {}
 
-  execute: Promise<RagopsPlatformProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<RagopsPlatformProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

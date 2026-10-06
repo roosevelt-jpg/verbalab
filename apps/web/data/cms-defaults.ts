@@ -20,7 +20,7 @@ function page(
 /** Seed CMS document — Admin edits persist to cms-store.json over these defaults. */
 export const CMS_DEFAULTS: CmsDocument = {
   version: 1,
-  updatedAt: new Date.toISOString,
+  updatedAt: new Date().toISOString(),
   brand: {
     name: 'Lugemi',
     domain: 'lugemi.com',
@@ -315,7 +315,7 @@ export const CMS_DEFAULTS: CmsDocument = {
       },
       {
         title: 'First-party positioning',
-        body: 'Product copy states Lugemi owns the API and models — not Google, OpenAI, wrappers.',
+        body: 'Product copy states Lugemi owns the API and models — not Google, OpenAI,  wrappers.',
       },
       {
         title: 'Speaking agents',

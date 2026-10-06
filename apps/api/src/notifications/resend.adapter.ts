@@ -50,7 +50,7 @@ export class ResendAdapter implements EmailProvider {
       signal: AbortSignal.timeout(15_000),
     });
 
-    const json = (await response.json.catch( => ({}))) as ResendResponse;
+    const json = (await response.json().catch(() => ({}))) as ResendResponse;
 
     if (!response.ok) {
       const message = json.message ?? json.name ?? `Resend HTTP ${response.status}`;

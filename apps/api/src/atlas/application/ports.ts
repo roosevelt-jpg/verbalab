@@ -1,4 +1,4 @@
-/** Application ports for Atlas scaffold. */
+/** Application ports for Atlas scaffold (VL-225). */
 
 export type AtlasCapabilityRow = {
   id: string;
@@ -13,8 +13,8 @@ export type AtlasEngineBundle = ReturnType<
 >;
 
 export interface AtlasCatalogPort {
-  engine: AtlasEngineBundle;
-  listCapabilities: AtlasCapabilityRow[];
+  engine(): AtlasEngineBundle;
+  listCapabilities(): AtlasCapabilityRow[];
 }
 
 export const ATLAS_CATALOG_PORT = Symbol('ATLAS_CATALOG_PORT');

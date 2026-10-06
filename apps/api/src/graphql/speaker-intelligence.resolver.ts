@@ -11,13 +11,13 @@ type GqlReq = Request & {
   sessionAuth?: SessionContext;
 };
 
-@Resolver
+@Resolver()
 export class SpeakerIntelligenceGraphqlResolver {
   constructor(private readonly speakers: SpeakerIntelligenceService) {}
 
-  @Query( => GqlSpeakerEngine, { name: 'speakerEngine' })
-  speakerEngine: GqlSpeakerEngine {
-    const catalog = this.speakers.engine;
+  @Query(() => GqlSpeakerEngine, { name: 'speakerEngine' })
+  speakerEngine(): GqlSpeakerEngine {
+    const catalog = this.speakers.engine();
     return {
       product: catalog.product,
       note: catalog.note,
@@ -25,7 +25,7 @@ export class SpeakerIntelligenceGraphqlResolver {
     };
   }
 
-  @Query( => [GqlSpeakerProfile], { name: 'speakerProfiles' })
+  @Query(() => [GqlSpeakerProfile], { name: 'speakerProfiles' })
   @UseGuards(TranslateAuthGuard)
   async speakerProfiles(@Context('req') req: GqlReq): Promise<GqlSpeakerProfile[]> {
     const auth = req.translateAuth!;
@@ -39,11 +39,11 @@ export class SpeakerIntelligenceGraphqlResolver {
     }));
   }
 
-  @Mutation( => GqlSpeakerProfile, { name: 'createSpeakerProfile' })
+  @Mutation(() => GqlSpeakerProfile, { name: 'createSpeakerProfile' })
   @UseGuards(TranslateAuthGuard)
   async createSpeakerProfile(
     @Args('displayName') displayName: string,
-    @Args('externalRef', { type:  => String, nullable: true }) externalRef: string | undefined,
+    @Args('externalRef', { type: () => String, nullable: true }) externalRef: string | undefined,
     @Context('req') req: GqlReq,
   ): Promise<GqlSpeakerProfile> {
     const auth = req.translateAuth!;

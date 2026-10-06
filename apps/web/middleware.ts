@@ -25,11 +25,11 @@ const clerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 export default clerkConfigured
   ? clerkMiddleware(async (auth, request) => {
       if (!isPublicRoute(request)) {
-        await auth.protect;
+        await auth.protect();
       }
     })
-  : function middleware {
-      return NextResponse.next;
+  : function middleware() {
+      return NextResponse.next();
     };
 
 export const config = {

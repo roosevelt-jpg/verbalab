@@ -1,4 +1,4 @@
-/** Application ports for Runtime Manager. */
+/** Application ports for Runtime Manager (VL-336). */
 
 export type RuntimeManagerProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type RuntimeManagerEngineBundle = ReturnType<
 >;
 
 export interface RuntimeManagerCatalogPort {
-  engine: RuntimeManagerEngineBundle;
-  listProducts: RuntimeManagerProductRow[];
+  engine(): RuntimeManagerEngineBundle;
+  listProducts(): RuntimeManagerProductRow[];
 }
 
 export const RUNTIME_MANAGER_CATALOG_PORT = Symbol('RUNTIME_MANAGER_CATALOG_PORT');

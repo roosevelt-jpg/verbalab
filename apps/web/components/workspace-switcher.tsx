@@ -26,16 +26,16 @@ type WorkspaceEntitlements = {
   unlimited: boolean;
 };
 
-export function WorkspaceSwitcher {
-  const { getToken, isLoaded } = useAuth;
+export function WorkspaceSwitcher() {
+  const { getToken, isLoaded } = useAuth();
   const [workspaces, setWorkspaces] = useState<WorkspaceRow[]>([]);
   const [entitlements, setEntitlements] = useState<WorkspaceEntitlements | null>(null);
   const [selected, setSelected] = useState<string>('');
   const [creating, setCreating] = useState(false);
 
-  const load = useCallback(async  => {
-    if (!isClerkConfigured) return;
-    const token = await getToken;
+  const load = useCallback(async () => {
+    if (!isClerkConfigured()) return;
+    const token = await getToken();
     if (!token) return;
     const res = await apiFetch<{ data: WorkspaceRow[]; entitlements?: WorkspaceEntitlements }>(
       '/v1/workspaces',
@@ -43,7 +43,7 @@ export function WorkspaceSwitcher {
     );
     setWorkspaces(res.data);
     if (res.entitlements) setEntitlements(res.entitlements);
-    const stored = getStoredWorkspaceId;
+    const stored = getStoredWorkspaceId();
     const current =
       res.data.find((w) => w.id === stored)?.id ??
       res.data.find((w) => w.isCurrent)?.id ??
@@ -55,22 +55,22 @@ export function WorkspaceSwitcher {
     }
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void load.catch( => {
+    void load().catch(() => {
       /* shell stays usable without workspace list */
     });
   }, [isLoaded, load]);
 
-  if (!isClerkConfigured || workspaces.length === 0) return null;
+  if (!isClerkConfigured() || workspaces.length === 0) return null;
 
   async function onChange(id: string) {
     setSelected(id);
     setStoredWorkspaceId(id);
-    window.location.reload;
+    window.location.reload();
   }
 
-  async function createWorkspace {
+  async function createWorkspace() {
     if (entitlements && !entitlements.canCreate) {
       window.alert(
         `Your ${entitlements.planName} plan includes ${formatWorkspaceLimit(entitlements.workspaceLimit)} workspace${entitlements.workspaceLimit === 1 ? '' : 's'}. Upgrade under Billing for more.`,
@@ -78,18 +78,18 @@ export function WorkspaceSwitcher {
       return;
     }
     const name = window.prompt('New workspace name');
-    if (!name?.trim) return;
+    if (!name?.trim()) return;
     setCreating(true);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) return;
       const created = await apiFetch<WorkspaceRow>('/v1/workspaces', {
         method: 'POST',
         token,
-        body: JSON.stringify({ name: name.trim }),
+        body: JSON.stringify({ name: name.trim() }),
       });
       setStoredWorkspaceId(created.id);
-      window.location.reload;
+      window.location.reload();
     } catch (err) {
       window.alert(err instanceof Error ? err.message : 'Could not create workspace');
       setCreating(false);
@@ -128,7 +128,7 @@ export function WorkspaceSwitcher {
       </select>
       <button
         type="button"
-        onClick={ => void createWorkspace}
+        onClick={() => void createWorkspace()}
         disabled={creating}
         title={
           atLimit

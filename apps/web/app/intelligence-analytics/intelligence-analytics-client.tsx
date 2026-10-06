@@ -30,14 +30,14 @@ type Overview = {
   note: string;
 };
 
-export function IntelligenceAnalyticsClient {
-  const { getToken, isLoaded } = useAuth;
+export function IntelligenceAnalyticsClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [overview, setOverview] = useState<Overview | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const refresh = useCallback(async  => {
-    const token = await getToken;
+  const refresh = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, ov] = await Promise.all([
       apiFetch<Engine>('/v1/intelligence-analytics/engine', { token }),
@@ -47,9 +47,9 @@ export function IntelligenceAnalyticsClient {
     setOverview(ov);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void refresh.catch((err: Error) => setError(err.message));
+    void refresh().catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
   return (

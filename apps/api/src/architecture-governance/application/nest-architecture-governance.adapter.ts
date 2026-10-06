@@ -6,16 +6,16 @@ import {
   ArchitectureGovernanceProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestArchitectureGovernanceCatalogAdapter implements ArchitectureGovernanceCatalogPort {
   constructor(private readonly service: ArchitectureGovernanceService) {}
 
-  engine: ArchitectureGovernanceEngineBundle {
-    return this.service.engine;
+  engine(): ArchitectureGovernanceEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: ArchitectureGovernanceProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): ArchitectureGovernanceProductRow[] {
+    const bundle = this.engine() as {
       products?: ArchitectureGovernanceProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestArchitectureGovernanceCatalogAdapter implements ArchitectureGov
         status: 'shipped',
         api: 'GET /v1/architecture-governance/engine',
         console: '/architecture-governance',
-        notes: ' shipped.',
+        notes: 'VL-346 shipped.',
       },
     ];
   }

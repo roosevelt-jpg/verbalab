@@ -30,8 +30,8 @@ type OrgDetail = OrgRow & {
 
 type AdminTab = 'cms' | 'orgs';
 
-export function AdminClient {
-  const { getToken, isLoaded } = useAuth;
+export function AdminClient() {
+  const { getToken, isLoaded } = useAuth();
   const [tab, setTab] = useState<AdminTab>('cms');
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [q, setQ] = useState('');
@@ -40,8 +40,8 @@ export function AdminClient {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const checkStatus = useCallback(async  => {
-    const token = await getToken;
+  const checkStatus = useCallback(async () => {
+    const token = await getToken();
     if (!token) {
       setIsAdmin(false);
       return;
@@ -57,10 +57,10 @@ export function AdminClient {
 
   const search = useCallback(
     async (query: string) => {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const data = await apiFetch<OrgRow[]>(
-        `/v1/admin/organizations${query.trim ? `?q=${encodeURIComponent(query.trim)}` : ''}`,
+        `/v1/admin/organizations${query.trim() ? `?q=${encodeURIComponent(query.trim())}` : ''}`,
         { token },
       );
       setRows(data);
@@ -68,12 +68,12 @@ export function AdminClient {
     [getToken],
   );
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void checkStatus.catch((err: Error) => setError(err.message));
+    void checkStatus().catch((err: Error) => setError(err.message));
   }, [isLoaded, checkStatus]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isAdmin || tab !== 'orgs') return;
     void search('').catch((err: Error) => setError(err.message));
   }, [isAdmin, search, tab]);
@@ -82,7 +82,7 @@ export function AdminClient {
     setError(null);
     setBusy(true);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const detail = await apiFetch<OrgDetail>(`/v1/admin/organizations/${id}`, { token });
       setSelected(detail);
@@ -97,7 +97,7 @@ export function AdminClient {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       await apiFetch(`/v1/admin/organizations/${id}/revoke-keys`, { method: 'POST', token });
       await openOrg(id);
@@ -113,7 +113,7 @@ export function AdminClient {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       await apiFetch(`/v1/admin/organizations/${id}/disable`, {
         method: 'POST',
@@ -146,7 +146,7 @@ export function AdminClient {
         <button
           type="button"
           className="vl-btn"
-          onClick={ => setTab('cms')}
+          onClick={() => setTab('cms')}
           style={{
             background: tab === 'cms' ? 'var(--ink)' : undefined,
             color: tab === 'cms' ? '#fff' : undefined,
@@ -158,7 +158,7 @@ export function AdminClient {
         <button
           type="button"
           className="vl-btn"
-          onClick={ => setTab('orgs')}
+          onClick={() => setTab('orgs')}
           style={{
             background: tab === 'orgs' ? 'var(--ink)' : undefined,
             color: tab === 'orgs' ? '#fff' : undefined,
@@ -191,7 +191,7 @@ export function AdminClient {
             <div style={{ marginTop: '1.5rem', display: 'grid', gap: '1.25rem' }}>
               <form
                 onSubmit={(e) => {
-                  e.preventDefault;
+                  e.preventDefault();
                   void search(q).catch((err: Error) => setError(err.message));
                 }}
                 style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}
@@ -214,7 +214,7 @@ export function AdminClient {
                     <button
                       type="button"
                       className="vl-panel"
-                      onClick={ => void openOrg(row.id)}
+                      onClick={() => void openOrg(row.id)}
                       style={{
                         width: '100%',
                         textAlign: 'left',
@@ -246,7 +246,7 @@ export function AdminClient {
                 <section className="vl-panel" style={{ padding: '1.25rem' }}>
                   <h2 style={{ margin: 0, fontSize: '1.15rem' }}>{selected.name}</h2>
                   <p style={{ color: 'var(--muted)', fontSize: '0.9rem' }}>
-                    Usage this period: {selected.usage.characters.toLocaleString} chars ·{' '}
+                    Usage this period: {selected.usage.characters.toLocaleString()} chars ·{' '}
                     {selected.usage.requests} translate requests
                     {selected.disabledAt ? ` · Disabled: ${selected.disabledReason ?? 'yes'}` : ''}
                   </p>
@@ -255,7 +255,7 @@ export function AdminClient {
                       type="button"
                       className="vl-btn"
                       disabled={busy}
-                      onClick={ => void revokeKeys(selected.id)}
+                      onClick={() => void revokeKeys(selected.id)}
                     >
                       Revoke all keys
                     </button>
@@ -264,7 +264,7 @@ export function AdminClient {
                         type="button"
                         className="vl-btn vl-btn-primary"
                         disabled={busy}
-                        onClick={ => void setDisabled(selected.id, false)}
+                        onClick={() => void setDisabled(selected.id, false)}
                       >
                         Re-enable org
                       </button>
@@ -273,7 +273,7 @@ export function AdminClient {
                         type="button"
                         className="vl-btn"
                         disabled={busy}
-                        onClick={ => void setDisabled(selected.id, true)}
+                        onClick={() => void setDisabled(selected.id, true)}
                         style={{ background: 'var(--bad)', color: '#fff', border: 'none' }}
                       >
                         Disable org

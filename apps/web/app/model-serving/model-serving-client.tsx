@@ -38,16 +38,16 @@ type Deployment = {
   status: string;
 };
 
-export function ModelServingClient {
-  const { getToken, isLoaded } = useAuth;
+export function ModelServingClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [kinds, setKinds] = useState<Kind[]>([]);
   const [deployments, setDeployments] = useState<Deployment[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const refresh = useCallback(async  => {
-    const token = await getToken;
+  const refresh = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, kindsRes, depRes] = await Promise.all([
       apiFetch<Engine>('/v1/model-serving/engine', { token }),
@@ -59,16 +59,16 @@ export function ModelServingClient {
     setDeployments(depRes.deployments);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void refresh.catch((err: Error) => setError(err.message));
+    void refresh().catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
-  const deployLlm = async  => {
+  const deployLlm = async () => {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       await apiFetch('/v1/model-serving/deployments', {
         token,
@@ -82,7 +82,7 @@ export function ModelServingClient {
           label: 'console',
         }),
       });
-      await refresh;
+      await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Deploy failed');
     } finally {
@@ -142,7 +142,7 @@ export function ModelServingClient {
         <button
           type="button"
           disabled={busy}
-          onClick={ => void deployLlm}
+          onClick={() => void deployLlm()}
           style={{
             marginTop: '0.85rem',
             border: '1px solid var(--border)',

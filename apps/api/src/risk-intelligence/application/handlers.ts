@@ -17,8 +17,8 @@ export class GetRiskIntelligenceEngineHandler
     private readonly catalog: RiskIntelligenceCatalogPort,
   ) {}
 
-  execute: Promise<RiskIntelligenceEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<RiskIntelligenceEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListRiskIntelligenceProductsHandler
     private readonly catalog: RiskIntelligenceCatalogPort,
   ) {}
 
-  execute: Promise<RiskIntelligenceProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<RiskIntelligenceProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

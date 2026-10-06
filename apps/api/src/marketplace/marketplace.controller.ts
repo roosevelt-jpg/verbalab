@@ -28,7 +28,7 @@ export class MarketplaceController {
 
   @Get('listings')
   list(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Query('mine') mine?: string,
     @Query('kind') kind?: string,
   ) {
@@ -39,22 +39,22 @@ export class MarketplaceController {
   }
 
   @Get('installs')
-  installs(@CurrentSession session: SessionContext) {
+  installs(@CurrentSession() session: SessionContext) {
     return this.marketplace.listInstalls(session.organizationId, session.workspaceId);
   }
 
   @Get('sales')
-  sales(@CurrentSession session: SessionContext) {
+  sales(@CurrentSession() session: SessionContext) {
     return this.marketplace.listSales(session.organizationId);
   }
 
   @Get('connect/status')
-  connectStatus(@CurrentSession session: SessionContext) {
+  connectStatus(@CurrentSession() session: SessionContext) {
     return this.billing.getConnectStatus(session.organizationId);
   }
 
   @Post('connect/onboard')
-  connectOnboard(@CurrentSession session: SessionContext, @Req req: Request) {
+  connectOnboard(@CurrentSession() session: SessionContext, @Req() req: Request) {
     if (session.role !== 'owner' && session.role !== 'admin') {
       throw new ApiException(
         'forbidden',
@@ -72,8 +72,8 @@ export class MarketplaceController {
   @Post('listings')
   @HttpCode(HttpStatus.CREATED)
   publish(
-    @CurrentSession session: SessionContext,
-    @Body
+    @CurrentSession() session: SessionContext,
+    @Body()
     body: {
       title?: string;
       description?: string;
@@ -81,7 +81,7 @@ export class MarketplaceController {
       priceCents?: number;
       currency?: string;
     },
-    @Req req: Request,
+    @Req() req: Request,
   ) {
     return this.marketplace.publish({
       organizationId: session.organizationId,
@@ -99,9 +99,9 @@ export class MarketplaceController {
 
   @Post('listings/:id/install')
   install(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Param('id') id: string,
-    @Req req: Request,
+    @Req() req: Request,
   ) {
     return this.marketplace.install({
       organizationId: session.organizationId,
@@ -115,9 +115,9 @@ export class MarketplaceController {
 
   @Delete('listings/:id')
   unpublish(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Param('id') id: string,
-    @Req req: Request,
+    @Req() req: Request,
   ) {
     return this.marketplace.unpublish({
       organizationId: session.organizationId,

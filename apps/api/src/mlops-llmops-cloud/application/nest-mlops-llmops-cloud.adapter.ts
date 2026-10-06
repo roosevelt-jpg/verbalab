@@ -6,16 +6,16 @@ import {
   MlopsLlmopsCloudProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestMlopsLlmopsCloudCatalogAdapter implements MlopsLlmopsCloudCatalogPort {
   constructor(private readonly service: MlopsLlmopsCloudService) {}
 
-  engine: MlopsLlmopsCloudEngineBundle {
-    return this.service.products;
+  engine(): MlopsLlmopsCloudEngineBundle {
+    return this.service.products();
   }
 
-  listProducts: MlopsLlmopsCloudProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): MlopsLlmopsCloudProductRow[] {
+    const bundle = this.engine() as {
       products?: MlopsLlmopsCloudProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestMlopsLlmopsCloudCatalogAdapter implements MlopsLlmopsCloudCatal
         status: 'shipped',
         api: 'GET /v1/mlops-llmops-cloud/engine',
         console: '/mlops-llmops-cloud',
-        notes: ' shipped.',
+        notes: 'VL-281 shipped.',
       },
     ];
   }

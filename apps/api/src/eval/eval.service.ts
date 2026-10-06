@@ -38,7 +38,7 @@ export type CoverageSnapshot = {
 const DISCLAIMER =
   'Scores are automatic reference metrics on small golden sets (exact match + character similarity). They measure harness output against references — not market leadership or human quality.';
 
-@Injectable
+@Injectable()
 export class EvalService {
   private lastSnapshot: CoverageSnapshot | null = null;
 
@@ -46,20 +46,20 @@ export class EvalService {
     private readonly gateway: GatewayService,
     private readonly languages: LanguagesService,
   ) {
-    this.lastSnapshot = this.readCommittedSnapshot;
+    this.lastSnapshot = this.readCommittedSnapshot();
   }
 
-  listGoldenPairs: GoldenPair[] {
+  listGoldenPairs(): GoldenPair[] {
     return GOLDEN_PAIRS;
   }
 
-  resultsPath {
-    return join(process.cwd, 'eval', 'results', 'latest.json');
+  resultsPath() {
+    return join(process.cwd(), 'eval', 'results', 'latest.json');
   }
 
-  private readCommittedSnapshot: CoverageSnapshot | null {
+  private readCommittedSnapshot(): CoverageSnapshot | null {
     try {
-      const path = this.resultsPath;
+      const path = this.resultsPath();
       if (!existsSync(path)) return null;
       return JSON.parse(readFileSync(path, 'utf8')) as CoverageSnapshot;
     } catch {
@@ -68,15 +68,15 @@ export class EvalService {
   }
 
   writeSnapshot(snapshot: CoverageSnapshot) {
-    const path = this.resultsPath;
+    const path = this.resultsPath();
     mkdirSync(dirname(path), { recursive: true });
     writeFileSync(path, `${JSON.stringify(snapshot, null, 2)}\n`, 'utf8');
     this.lastSnapshot = snapshot;
     return snapshot;
   }
 
-  getSnapshot: CoverageSnapshot | null {
-    return this.lastSnapshot ?? this.readCommittedSnapshot;
+  getSnapshot(): CoverageSnapshot | null {
+    return this.lastSnapshot ?? this.readCommittedSnapshot();
   }
 
   async runPair(
@@ -118,7 +118,7 @@ export class EvalService {
     }
 
     const snapshot: CoverageSnapshot = {
-      asOf: new Date.toISOString,
+      asOf: new Date().toISOString(),
       mode,
       disclaimer: DISCLAIMER,
       focusPairs: GOLDEN_PAIRS.map((p) => pairKey(p.sourceLang, p.targetLang)),
@@ -134,10 +134,10 @@ export class EvalService {
     return this.writeSnapshot(snapshot);
   }
 
-  async coverageMatrix {
-    const langs = await this.languages.list;
+  async coverageMatrix() {
+    const langs = await this.languages.list();
     const codes = new Set(langs.map((l) => l.code));
-    const snapshot = this.getSnapshot;
+    const snapshot = this.getSnapshot();
     const evaluated = new Map(
       (snapshot?.pairs ?? []).map((p) => [pairKey(p.sourceLang, p.targetLang), p]),
     );

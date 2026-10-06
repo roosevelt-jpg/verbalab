@@ -18,7 +18,7 @@ import {
 
 const MAX_CHARS = 12_000;
 
-@Injectable
+@Injectable()
 export class LanguageIntelligenceService {
   constructor(
     private readonly gateway: GatewayService,
@@ -28,12 +28,12 @@ export class LanguageIntelligenceService {
     private readonly prisma: PrismaService,
   ) {}
 
-  catalog {
-    return languageIntelligenceCatalog;
+  catalog() {
+    return languageIntelligenceCatalog();
   }
 
   async analytics(organizationId: string) {
-    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const [analyzes, sentiments, intents, confidences] = await Promise.all([
       this.prisma.auditEvent.count({
         where: { organizationId, action: 'language_intelligence.analyze', createdAt: { gte: since } },
@@ -81,7 +81,7 @@ export class LanguageIntelligenceService {
   }) {
     const text = this.requireText(input.text);
 
-    let language = input.language?.trim.toLowerCase || '';
+    let language = input.language?.trim().toLowerCase() || '';
     let languageConfidence = 1;
     let languageProvider = 'hint';
     if (!language) {
@@ -146,7 +146,7 @@ export class LanguageIntelligenceService {
       emotion: { label: emotion.label, confidence: emotion.confidence },
       readability: { score: readability.score, level: readability.level },
       complexity: { score: complexity.score, level: complexity.level },
-      note: 'Language Intelligence analyze. Intent/sentiment/emotion are heuristic; dialect/accent reuse 132.',
+      note: 'Language Intelligence analyze (VL-144). Intent/sentiment/emotion are heuristic; dialect/accent reuse VL-131/132.',
     };
 
     await this.recordAudit(input, 'language_intelligence.analyze', 'POST /v1/language-intelligence/analyze', {
@@ -172,7 +172,7 @@ export class LanguageIntelligenceService {
     const text = this.requireText(input.text);
     yield { event: 'start', data: { chars: [...text].length } };
 
-    let language = input.language?.trim.toLowerCase || '';
+    let language = input.language?.trim().toLowerCase() || '';
     let languageConfidence = 1;
     let languageProvider = 'hint';
     if (!language) {
@@ -238,7 +238,7 @@ export class LanguageIntelligenceService {
       streamed: true,
     });
 
-    yield { event: 'done', data: { note: 'SSE Language Intelligence stream.' } };
+    yield { event: 'done', data: { note: 'SSE Language Intelligence stream (VL-144).' } };
   }
 
   async sentiment(input: AuthTextInput) {
@@ -299,7 +299,7 @@ export class LanguageIntelligenceService {
   }) {
     const sourceText = this.requireText(input.sourceText);
     const targetText = this.requireText(input.targetText);
-    if (!input.sourceLang?.trim || !input.targetLang?.trim) {
+    if (!input.sourceLang?.trim() || !input.targetLang?.trim()) {
       throw new ApiException(
         'validation_error',
         'sourceLang and targetLang are required',
@@ -309,9 +309,9 @@ export class LanguageIntelligenceService {
     const estimate = estimateTranslationQuality({
       sourceText,
       targetText,
-      sourceLang: input.sourceLang.trim.toLowerCase,
-      targetLang: input.targetLang.trim.toLowerCase,
-      provider: input.provider?.trim || 'mt',
+      sourceLang: input.sourceLang.trim().toLowerCase(),
+      targetLang: input.targetLang.trim().toLowerCase(),
+      provider: input.provider?.trim() || 'mt',
     });
     const confidence = Number((estimate.score / 100).toFixed(3));
     await this.recordAudit(
@@ -325,7 +325,7 @@ export class LanguageIntelligenceService {
       confidence,
       needsReview: estimate.needsReview,
       reasons: estimate.reasons,
-      note: 'Heuristic translation confidence — not a trained QE model.',
+      note: 'Heuristic translation confidence (VL-144 / quality-estimate) — not a trained QE model.',
     };
   }
 
@@ -354,7 +354,7 @@ export class LanguageIntelligenceService {
   }
 
   private requireText(raw: string) {
-    const text = raw.trim;
+    const text = raw.trim();
     if (!text) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }

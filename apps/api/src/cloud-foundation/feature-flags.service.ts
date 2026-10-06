@@ -3,7 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ownTtsConfigured } from '../gateway/own-tts.adapter';
 import { isProOrAbove, planFromId, planHasFeature } from '../billing/plans';
 
-@Injectable
+@Injectable()
 export class FeatureFlagsService {
   constructor(private readonly prisma: PrismaService) {}
 
@@ -35,11 +35,11 @@ export class FeatureFlagsService {
         sso: planHasFeature(org.plan, 'sso'),
         dedicated: planHasFeature(org.plan, 'dedicated'),
         workspacesExtra: planHasFeature(org.plan, 'workspacesExtra'),
-        ownTts: ownTtsConfigured,
+        ownTts: ownTtsConfigured(),
         notifications: process.env.NOTIFICATIONS_DISABLED !== '1',
         slackConnector: process.env.SLACK_CONNECTOR_DISABLED !== '1',
         voiceAgent: process.env.VOICE_AGENT_DISABLED !== '1',
-        billingCheckout: Boolean(process.env.STRIPE_SECRET_KEY?.trim),
+        billingCheckout: Boolean(process.env.STRIPE_SECRET_KEY?.trim()),
       },
       /** Workspace inherits org subscription — tiered entitlement packaging. */
       entitlements: {

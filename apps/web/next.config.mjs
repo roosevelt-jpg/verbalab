@@ -1,4 +1,4 @@
-function apiConnectOrigins {
+function apiConnectOrigins() {
   const origins = new Set(['http://localhost:3001', 'http://127.0.0.1:3001']);
   const raw = process.env.NEXT_PUBLIC_API_URL;
   if (raw) {
@@ -13,7 +13,7 @@ function apiConnectOrigins {
 
 const nextConfig = {
   reactStrictMode: true,
-  async headers {
+  async headers() {
     return [
       {
         source: '/:path*',
@@ -24,7 +24,7 @@ const nextConfig = {
           {
             key: 'Permissions-Policy',
             // Chat Studio uses click-to-record (Web Speech / MediaRecorder).
-            value: 'camera=, microphone=(self), geolocation=',
+            value: 'camera=(), microphone=(self), geolocation=()',
           },
           {
             key: 'Content-Security-Policy',
@@ -35,7 +35,7 @@ const nextConfig = {
               "img-src 'self' data: blob: https:",
               "media-src 'self' blob:",
               "font-src 'self' data:",
-              `connect-src 'self' https: ${apiConnectOrigins}`,
+              `connect-src 'self' https: ${apiConnectOrigins()}`,
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'",

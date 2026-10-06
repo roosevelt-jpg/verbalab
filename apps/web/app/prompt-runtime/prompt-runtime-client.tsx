@@ -26,8 +26,8 @@ type Engine = {
 
 type Analytics = { events: number; byAction: Record<string, number> };
 
-export function PromptRuntimeClient {
-  const { getToken, isLoaded } = useAuth;
+export function PromptRuntimeClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -35,8 +35,8 @@ export function PromptRuntimeClient {
   const [variablesJson, setVariablesJson] = useState('{"locale":"sw"}');
   const [result, setResult] = useState<string | null>(null);
 
-  const load = useCallback(async  => {
-    const token = await getToken;
+  const load = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, ana] = await Promise.all([
       apiFetch<Engine>('/v1/prompt-runtime/engine', { token }),
@@ -46,15 +46,15 @@ export function PromptRuntimeClient {
     setAnalytics(ana);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void load.catch((err: Error) => setError(err.message));
+    void load().catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
-  const execute = useCallback(async  => {
+  const execute = useCallback(async () => {
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       let variables: Record<string, string> = {};
       try {
@@ -73,7 +73,7 @@ export function PromptRuntimeClient {
         body: JSON.stringify({ key, variables, useCache: true }),
       });
       setResult(`${res.key} · ${res.chars} chars · cache=${res.cache}\n\n${res.body.slice(0, 400)}`);
-      await load;
+      await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Execute failed');
     }
@@ -94,7 +94,7 @@ export function PromptRuntimeClient {
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
         Kernel prompt execution over{' '}
-        <Link href="/prompt-intelligence">Prompt Intelligence</Link> / versioned prompts.
+        <Link href="/prompt-intelligence">Prompt Intelligence</Link> / VL-086 versioned prompts.
         Resolve, variables, validate, opt-in cache — does not call an LLM or invent a research lab.
       </p>
 
@@ -112,7 +112,7 @@ export function PromptRuntimeClient {
           placeholder='{"locale":"sw"}'
           style={{ ...input, minWidth: '14rem', flex: 1 }}
         />
-        <button type="button" onClick={ => void execute} style={btn}>
+        <button type="button" onClick={() => void execute()} style={btn}>
           Execute
         </button>
       </div>

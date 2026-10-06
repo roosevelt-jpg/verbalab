@@ -36,7 +36,7 @@ type Analytics = {
 type Health = { status: string; issues: string[]; checkedAt: string };
 type ValidateResult = { valid: boolean; errors: string[] };
 
-export function RegistryClient {
+export function RegistryClient() {
   const [overview, setOverview] = useState<Overview | null>(null);
   const [languages, setLanguages] = useState<Language[]>([]);
   const [families, setFamilies] = useState<Family[]>([]);
@@ -49,7 +49,7 @@ export function RegistryClient {
   const [tab, setTab] = useState<'languages' | 'families' | 'scripts' | 'rules'>('languages');
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async  => {
+  const load = useCallback(async () => {
     const [ov, langs, fam, scr, rul, an, hp] = await Promise.all([
       apiFetch<Overview>('/v1/registry'),
       apiFetch<{ data: Language[] }>('/v1/languages'),
@@ -68,17 +68,17 @@ export function RegistryClient {
     setHealth(hp);
   }, []);
 
-  useEffect( => {
-    void load.catch((err: Error) => setError(err.message));
+  useEffect(() => {
+    void load().catch((err: Error) => setError(err.message));
   }, [load]);
 
-  async function runValidate {
+  async function runValidate() {
     setError(null);
     try {
       setValidateResult(
         await apiFetch<ValidateResult>('/v1/registry/validate', {
           method: 'POST',
-          body: JSON.stringify({ language: validateCode.trim }),
+          body: JSON.stringify({ language: validateCode.trim() }),
         }),
       );
     } catch (err) {
@@ -161,7 +161,7 @@ export function RegistryClient {
               style={{ minWidth: '8rem' }}
             />
           </label>
-          <button type="button" className="vl-button" onClick={ => void runValidate}>
+          <button type="button" className="vl-button" onClick={() => void runValidate()}>
             Validate
           </button>
         </div>
@@ -177,7 +177,7 @@ export function RegistryClient {
           <button
             key={t}
             type="button"
-            onClick={ => setTab(t)}
+            onClick={() => setTab(t)}
             style={{
               background: 'none',
               border: 0,

@@ -18,8 +18,8 @@ type Engine = {
 const DEFAULT_SOURCE = 'en';
 const DEFAULT_TARGET = 'ak';
 
-export function TranslateClient {
-  const { getToken, isLoaded } = useAuth;
+export function TranslateClient() {
+  const { getToken, isLoaded } = useAuth();
   const [languages, setLanguages] = useState<Language[]>([]);
   const [locales, setLocales] = useState<LocalePack[]>([]);
   const [engine, setEngine] = useState<Engine | null>(null);
@@ -32,11 +32,11 @@ export function TranslateClient {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect( => {
+  useEffect(() => {
     void Promise.all([
       apiFetch<{ data: Language[] }>('/v1/languages'),
-      apiFetch<{ data: LocalePack[] }>('/v1/locales').catch( => ({ data: [] as LocalePack[] })),
-      apiFetch<Engine>('/v1/translate/engine').catch( => null),
+      apiFetch<{ data: LocalePack[] }>('/v1/locales').catch(() => ({ data: [] as LocalePack[] })),
+      apiFetch<Engine>('/v1/translate/engine').catch(() => null),
     ])
       .then(([langRes, locRes, eng]) => {
         setLanguages(langRes.data);
@@ -48,18 +48,18 @@ export function TranslateClient {
       .catch((err: Error) => setError(err.message));
   }, []);
 
-  const targetHint = useMemo( => {
+  const targetHint = useMemo(() => {
     const pack = locales.find((l) => l.languageCode === target);
     if (pack?.bcp47) return `Locale ${pack.bcp47}`;
     return null;
   }, [locales, target]);
 
   async function onSubmit(event: FormEvent) {
-    event.preventDefault;
+    event.preventDefault();
     setError(null);
     setLoading(true);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const res = await apiFetch<{
         text: string;

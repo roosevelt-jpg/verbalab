@@ -1,4 +1,4 @@
-/** Application ports for Agricultural Intelligence. */
+/** Application ports for Agricultural Intelligence (VL-268). */
 
 export type AgriculturalIntelligenceProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type AgriculturalIntelligenceEngineBundle = ReturnType<
 >;
 
 export interface AgriculturalIntelligenceCatalogPort {
-  engine: AgriculturalIntelligenceEngineBundle;
-  listProducts: AgriculturalIntelligenceProductRow[];
+  engine(): AgriculturalIntelligenceEngineBundle;
+  listProducts(): AgriculturalIntelligenceProductRow[];
 }
 
 export const AGRICULTURAL_INTELLIGENCE_CATALOG_PORT = Symbol('AGRICULTURAL_INTELLIGENCE_CATALOG_PORT');

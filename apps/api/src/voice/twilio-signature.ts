@@ -8,7 +8,7 @@ export function signTwilioRequest(authToken: string, url: string, params: Record
   const data =
     url +
     Object.keys(params)
-      .sort
+      .sort()
       .reduce((acc, key) => acc + key + params[key], '');
   return createHmac('sha1', authToken).update(Buffer.from(data, 'utf-8')).digest('base64');
 }

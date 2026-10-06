@@ -6,16 +6,16 @@ import {
   ResearchCloudProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestResearchCloudCatalogAdapter implements ResearchCloudCatalogPort {
   constructor(private readonly service: ResearchCloudService) {}
 
-  engine: ResearchCloudEngineBundle {
-    return this.service.products;
+  engine(): ResearchCloudEngineBundle {
+    return this.service.products();
   }
 
-  listProducts: ResearchCloudProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): ResearchCloudProductRow[] {
+    const bundle = this.engine() as {
       products?: ResearchCloudProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestResearchCloudCatalogAdapter implements ResearchCloudCatalogPort
         status: 'shipped',
         api: 'GET /v1/research-cloud/engine',
         console: '/research-cloud',
-        notes: ' shipped.',
+        notes: 'VL-271 shipped.',
       },
     ];
   }

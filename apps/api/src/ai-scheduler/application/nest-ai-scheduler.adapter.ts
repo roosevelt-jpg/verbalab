@@ -6,16 +6,16 @@ import {
   AiSchedulerProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestAiSchedulerCatalogAdapter implements AiSchedulerCatalogPort {
   constructor(private readonly service: AiSchedulerService) {}
 
-  engine: AiSchedulerEngineBundle {
-    return this.service.engine;
+  engine(): AiSchedulerEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: AiSchedulerProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): AiSchedulerProductRow[] {
+    const bundle = this.engine() as {
       products?: AiSchedulerProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestAiSchedulerCatalogAdapter implements AiSchedulerCatalogPort {
         status: 'shipped',
         api: 'GET /v1/ai-scheduler/engine',
         console: '/ai-scheduler',
-        notes: ' shipped.',
+        notes: 'VL-335 shipped.',
       },
     ];
   }

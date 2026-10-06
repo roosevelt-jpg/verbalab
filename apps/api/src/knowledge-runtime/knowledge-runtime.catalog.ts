@@ -1,18 +1,18 @@
 /**
- * Library Phase 196 → Knowledge Runtime.
- * Knowledge Runtime. Thin layer over knowledge-cloud / knowledge / knowledge-fabric — routes search/graph/RAG/semantic/ontology.
+ * Library Phase 196 → Knowledge Runtime (VL-329).
+ * Knowledge Runtime (VL-329). Thin layer over knowledge-cloud / knowledge / knowledge-fabric — routes search/graph/RAG/semantic/ontology.
  */
-export function knowledgeRuntimeEngineCatalog {
+export function knowledgeRuntimeEngineCatalog() {
   return {
     product: 'Lugemi Knowledge Runtime',
     thinExecutionLayer: true,
     duplicatesProductLogic: false,
     capabilities: [
-      { id: 'search', name: 'Knowledge Search Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
-      { id: 'graph', name: 'Knowledge Graph Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
-      { id: 'rag', name: 'RAG Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
-      { id: 'semantic', name: 'Semantic Retrieval Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
-      { id: 'ontology', name: 'Ontology Routing', status: 'shipped', notes: ' routing capability — not a new engine.' }
+      { id: 'search', name: 'Knowledge Search Routing', status: 'shipped', notes: 'VL-329 routing capability — not a new engine.' },
+      { id: 'graph', name: 'Knowledge Graph Routing', status: 'shipped', notes: 'VL-329 routing capability — not a new engine.' },
+      { id: 'rag', name: 'RAG Routing', status: 'shipped', notes: 'VL-329 routing capability — not a new engine.' },
+      { id: 'semantic', name: 'Semantic Retrieval Routing', status: 'shipped', notes: 'VL-329 routing capability — not a new engine.' },
+      { id: 'ontology', name: 'Ontology Routing', status: 'shipped', notes: 'VL-329 routing capability — not a new engine.' }
     ],
     routes: [
       {
@@ -60,9 +60,9 @@ export function knowledgeRuntimeEngineCatalog {
       duplicatesProductLogic: false,
       managesOrgsPoliciesBilling: false,
       serviceMeshOs: false,
-      note: 'Knowledge Runtime. Thin layer over knowledge-cloud / knowledge / knowledge-fabric — routes search/graph/RAG/semantic/ontology.',
+      note: 'Knowledge Runtime (VL-329). Thin layer over knowledge-cloud / knowledge / knowledge-fabric — routes search/graph/RAG/semantic/ontology.',
     },
     docs: '/docs/KNOWLEDGE_RUNTIME.md',
-    note: 'Knowledge Runtime. Thin layer over knowledge-cloud / knowledge / knowledge-fabric — routes search/graph/RAG/semantic/ontology.',
+    note: 'Knowledge Runtime (VL-329). Thin layer over knowledge-cloud / knowledge / knowledge-fabric — routes search/graph/RAG/semantic/ontology.',
   };
 }

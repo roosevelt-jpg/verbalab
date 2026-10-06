@@ -1,4 +1,4 @@
-/** Application ports for Ecosystem Cloud Foundation. */
+/** Application ports for Ecosystem Cloud Foundation (VL-249). */
 
 export type EcosystemProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type EcosystemProductsBundle = ReturnType<
 >;
 
 export interface EcosystemCatalogPort {
-  products: EcosystemProductsBundle;
-  listProducts: EcosystemProductRow[];
+  products(): EcosystemProductsBundle;
+  listProducts(): EcosystemProductRow[];
 }
 
 export const ECOSYSTEM_CATALOG_PORT = Symbol('ECOSYSTEM_CATALOG_PORT');

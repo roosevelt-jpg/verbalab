@@ -33,7 +33,7 @@ type ConnectorSnapshot = {
   ratingCount: number;
 };
 
-@Injectable
+@Injectable()
 export class ConnectorMarketplaceService {
   constructor(
     private readonly prisma: PrismaService,
@@ -42,8 +42,8 @@ export class ConnectorMarketplaceService {
     private readonly fabricGate: FabricPolicyGate,
   ) {}
 
-  engine {
-    return connectorMarketplaceEngineCatalog;
+  engine() {
+    return connectorMarketplaceEngineCatalog();
   }
 
   private assertOwnerOrAdmin(role: string) {
@@ -81,7 +81,7 @@ export class ConnectorMarketplaceService {
   }
 
   private parseCategory(raw?: string): ConnectorMarketplaceCategory {
-    const value = (raw ?? '').trim.toLowerCase;
+    const value = (raw ?? '').trim().toLowerCase();
     if (!(CONNECTOR_MARKETPLACE_CATEGORIES as readonly string[]).includes(value)) {
       throw new ApiException(
         'validation_error',
@@ -133,8 +133,8 @@ export class ConnectorMarketplaceService {
       publisherOrgId: row.publisherOrgId,
       publisherWorkspaceId: row.publisherWorkspaceId,
       publisherName: row.publisherOrg?.name ?? null,
-      createdAt: row.createdAt.toISOString,
-      updatedAt: row.updatedAt.toISOString,
+      createdAt: row.createdAt.toISOString(),
+      updatedAt: row.updatedAt.toISOString(),
     };
   }
 
@@ -184,7 +184,7 @@ export class ConnectorMarketplaceService {
         .map((r) => ({
           id: r.id,
           listingId: r.listingId,
-          installedAt: r.installedAt.toISOString,
+          installedAt: r.installedAt.toISOString(),
           listing: this.serialize(r.listing),
         })),
     };
@@ -209,7 +209,7 @@ export class ConnectorMarketplaceService {
           applicationFeeCents: r.applicationFeeCents,
           currency: r.currency,
           status: r.status,
-          createdAt: r.createdAt.toISOString,
+          createdAt: r.createdAt.toISOString(),
         })),
       honesty: {
         platformFeeBps: PLATFORM_FEE_BPS,
@@ -219,7 +219,7 @@ export class ConnectorMarketplaceService {
         liveConnectorExecution: false,
         ipaasOs: false,
       },
-      note: 'Recorded receipts only. Creator Economy expands payout math — hand-check before live creators.',
+      note: 'Recorded receipts only. Creator Economy (VL-258) expands payout math — hand-check before live creators.',
     };
   }
 
@@ -249,7 +249,7 @@ export class ConnectorMarketplaceService {
       permissions: ['marketplace.publish'],
     });
 
-    const key = (input.connectorKey ?? '').trim.toLowerCase;
+    const key = (input.connectorKey ?? '').trim().toLowerCase();
     if (!key) {
       throw new ApiException(
         'validation_error',
@@ -278,15 +278,15 @@ export class ConnectorMarketplaceService {
       );
     }
 
-    const title = (input.title ?? catalogEntry.name).trim.slice(0, 120);
+    const title = (input.title ?? catalogEntry.name).trim().slice(0, 120);
     if (!title) {
       throw new ApiException('validation_error', 'title is required', HttpStatus.BAD_REQUEST);
     }
 
     const priceCents = Math.max(0, Math.floor(Number(input.priceCents ?? 0) || 0));
-    const currency = (input.currency ?? 'usd').trim.toLowerCase.slice(0, 8) || 'usd';
+    const currency = (input.currency ?? 'usd').trim().toLowerCase().slice(0, 8) || 'usd';
     const connectorVersion =
-      (input.connectorVersion ?? 'v1').trim.slice(0, 64) || 'v1';
+      (input.connectorVersion ?? 'v1').trim().slice(0, 64) || 'v1';
 
     const snapshot: ConnectorSnapshot = {
       hub: HUB,
@@ -311,7 +311,7 @@ export class ConnectorMarketplaceService {
         kind: LISTING_KIND,
         title,
         description:
-          input.description?.trim.slice(0, 500) ||
+          input.description?.trim().slice(0, 500) ||
           catalogEntry.notes ||
           `${catalogEntry.name} marketplace listing`,
         status: 'published',
@@ -341,7 +341,7 @@ export class ConnectorMarketplaceService {
 
     return {
       listing: this.serialize(listing),
-      honesty: this.engine.honesty,
+      honesty: this.engine().honesty,
       note:
         'Connector listing published as an entitlement SKU over the built-in catalog. Install grants entitlement — not live arbitrary outbound or iPaaS.',
     };
@@ -384,7 +384,7 @@ export class ConnectorMarketplaceService {
     const next: ConnectorSnapshot = {
       ...snap,
       connectorVersion:
-        (input.connectorVersion ?? snap.connectorVersion).trim.slice(0, 64) ||
+        (input.connectorVersion ?? snap.connectorVersion).trim().slice(0, 64) ||
         snap.connectorVersion,
       verified: true,
       liveConnectorExecution: false,
@@ -396,7 +396,7 @@ export class ConnectorMarketplaceService {
       where: { id: listing.id },
       data: {
         snapshot: next as unknown as Prisma.InputJsonValue,
-        description: input.description?.trim.slice(0, 500) ?? listing.description,
+        description: input.description?.trim().slice(0, 500) ?? listing.description,
         status: 'published',
       },
       include: { publisherOrg: { select: { name: true } } },
@@ -531,7 +531,7 @@ export class ConnectorMarketplaceService {
         listingId: listing.id,
         connectorKey: snap.connectorKey,
         connectorVersion: snap.connectorVersion,
-        installedAt: install.installedAt.toISOString,
+        installedAt: install.installedAt.toISOString(),
       },
       entitlement: {
         workspaceId: input.workspaceId,
@@ -544,7 +544,7 @@ export class ConnectorMarketplaceService {
           'Connector entitlement only — Slack uses existing /v1/connectors/slack paths; generic SKUs are metadata entitlements, not live iPaaS outbound.',
       },
       sale,
-      honesty: this.engine.honesty,
+      honesty: this.engine().honesty,
       note: 'Installed connector entitlement. Not Zapier/iPaaS or live arbitrary outbound.',
     };
   }
@@ -630,8 +630,8 @@ export class ConnectorMarketplaceService {
       listingId: listing.id,
       organizationId: input.organizationId,
       rating,
-      body: input.body?.trim.slice(0, 1000) || undefined,
-      createdAt: new Date.toISOString,
+      body: input.body?.trim().slice(0, 1000) || undefined,
+      createdAt: new Date().toISOString(),
     };
 
     if (existing) {
@@ -739,19 +739,19 @@ export class ConnectorMarketplaceService {
       installs,
       sales,
       reviews,
-      honesty: this.engine.honesty,
-      note: 'Connector marketplace aggregates. Payout depth deferred to Creator Economy.',
+      honesty: this.engine().honesty,
+      note: 'Connector marketplace aggregates. Payout depth deferred to Creator Economy (VL-258).',
     };
   }
 
-  monitoring {
-    const engine = this.engine;
+  monitoring() {
+    const engine = this.engine();
     return {
       mode: 'connector-marketplace',
       products: engine.capabilities.map((c) => ({ id: c.id, status: c.status })),
       honesty: engine.honesty,
       safety: engine.safety,
-      note: 'Connector Marketplace monitoring snapshot.',
+      note: 'Connector Marketplace monitoring snapshot (VL-256).',
     };
   }
 }

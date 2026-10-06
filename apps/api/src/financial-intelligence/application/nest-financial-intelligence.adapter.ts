@@ -6,16 +6,16 @@ import {
   FinancialIntelligenceProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestFinancialIntelligenceCatalogAdapter implements FinancialIntelligenceCatalogPort {
   constructor(private readonly service: FinancialIntelligenceService) {}
 
-  engine: FinancialIntelligenceEngineBundle {
-    return this.service.engine;
+  engine(): FinancialIntelligenceEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: FinancialIntelligenceProductRow[] {
-    const bundle = this.engine as { products?: FinancialIntelligenceProductRow[]; capabilities?: FinancialIntelligenceProductRow[] };
+  listProducts(): FinancialIntelligenceProductRow[] {
+    const bundle = this.engine() as { products?: FinancialIntelligenceProductRow[]; capabilities?: FinancialIntelligenceProductRow[] };
     if (Array.isArray(bundle.products)) return bundle.products;
     if (Array.isArray(bundle.capabilities)) {
       return bundle.capabilities.map((c) => ({
@@ -34,7 +34,7 @@ export class NestFinancialIntelligenceCatalogAdapter implements FinancialIntelli
         status: 'shipped',
         api: 'GET /v1/financial-intelligence/engine',
         console: '/financial-intelligence',
-        notes: ' shipped.',
+        notes: 'VL-266 shipped.',
       },
     ];
   }

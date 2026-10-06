@@ -1,4 +1,4 @@
-/** Application ports for Architecture Governance. */
+/** Application ports for Architecture Governance (VL-346). */
 
 export type ArchitectureGovernanceProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type ArchitectureGovernanceEngineBundle = ReturnType<
 >;
 
 export interface ArchitectureGovernanceCatalogPort {
-  engine: ArchitectureGovernanceEngineBundle;
-  listProducts: ArchitectureGovernanceProductRow[];
+  engine(): ArchitectureGovernanceEngineBundle;
+  listProducts(): ArchitectureGovernanceProductRow[];
 }
 
 export const ARCHITECTURE_GOVERNANCE_CATALOG_PORT = Symbol('ARCHITECTURE_GOVERNANCE_CATALOG_PORT');

@@ -6,16 +6,16 @@ import {
   RagopsPlatformProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestRagopsPlatformCatalogAdapter implements RagopsPlatformCatalogPort {
   constructor(private readonly service: RagopsPlatformService) {}
 
-  engine: RagopsPlatformEngineBundle {
-    return this.service.engine;
+  engine(): RagopsPlatformEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: RagopsPlatformProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): RagopsPlatformProductRow[] {
+    const bundle = this.engine() as {
       products?: RagopsPlatformProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestRagopsPlatformCatalogAdapter implements RagopsPlatformCatalogPo
         status: 'shipped',
         api: 'GET /v1/ragops-platform/engine',
         console: '/ragops-platform',
-        notes: ' shipped.',
+        notes: 'VL-286 shipped.',
       },
     ];
   }

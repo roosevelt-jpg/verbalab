@@ -8,13 +8,13 @@ export class SpeechCloudController {
   constructor(private readonly speechCloud: SpeechCloudService) {}
 
   @Get('products')
-  products {
-    return this.speechCloud.products;
+  products() {
+    return this.speechCloud.products();
   }
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession session: SessionContext) {
+  overview(@CurrentSession() session: SessionContext) {
     return this.speechCloud.overview(session);
   }
 }

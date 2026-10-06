@@ -16,8 +16,8 @@ export class GetCreatorEconomyEngineHandler
     private readonly catalog: CreatorEconomyCatalogPort,
   ) {}
 
-  execute: Promise<CreatorEconomyEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<CreatorEconomyEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 

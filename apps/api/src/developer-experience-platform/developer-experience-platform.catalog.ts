@@ -1,19 +1,19 @@
 /**
- * Library Phase 178 → Developer Experience Platform.
- * Developer Experience Platform. CLI/SDK/codegen/docs/AI assistant/repo health/analytics catalog. Extends SDK/CLI. ideOs=false.
+ * Library Phase 178 → Developer Experience Platform (VL-311).
+ * Developer Experience Platform (VL-311). CLI/SDK/codegen/docs/AI assistant/repo health/analytics catalog. Extends VL-127/SDK/CLI. ideOs=false.
  */
-export function developerExperiencePlatformEngineCatalog {
+export function developerExperiencePlatformEngineCatalog() {
   return {
     product: 'Lugemi Developer Experience Platform',
     capabilities: [
-      { id: 'cli', name: 'CLI', status: 'shipped', notes: ' capability.' },
-      { id: 'sdk_gen', name: 'SDK Generation', status: 'shipped', notes: ' capability.' },
-      { id: 'codegen', name: 'Codegen', status: 'shipped', notes: ' capability.' },
-      { id: 'docs', name: 'Docs Portal', status: 'shipped', notes: ' capability.' },
-      { id: 'ai_assistant', name: 'AI Assistant', status: 'shipped', notes: ' capability.' },
-      { id: 'repo_health', name: 'Repo Health', status: 'shipped', notes: ' capability.' },
-      { id: 'analytics', name: 'DX Analytics', status: 'shipped', notes: ' capability.' },
-      { id: 'knowledge', name: 'Knowledge Portal', status: 'shipped', notes: ' capability.' }
+      { id: 'cli', name: 'CLI', status: 'shipped', notes: 'VL-311 capability.' },
+      { id: 'sdk_gen', name: 'SDK Generation', status: 'shipped', notes: 'VL-311 capability.' },
+      { id: 'codegen', name: 'Codegen', status: 'shipped', notes: 'VL-311 capability.' },
+      { id: 'docs', name: 'Docs Portal', status: 'shipped', notes: 'VL-311 capability.' },
+      { id: 'ai_assistant', name: 'AI Assistant', status: 'shipped', notes: 'VL-311 capability.' },
+      { id: 'repo_health', name: 'Repo Health', status: 'shipped', notes: 'VL-311 capability.' },
+      { id: 'analytics', name: 'DX Analytics', status: 'shipped', notes: 'VL-311 capability.' },
+      { id: 'knowledge', name: 'Knowledge Portal', status: 'shipped', notes: 'VL-311 capability.' }
     ],
     devex: [
       {
@@ -63,7 +63,7 @@ export function developerExperiencePlatformEngineCatalog {
         name: 'dx-analytics',
         kind: 'analytics',
         status: 'shipped',
-        notes: 'Adoption analytics handoff to ',
+        notes: 'Adoption analytics handoff to VL-312',
       },
       {
         id: 'dx-knowledge',
@@ -83,9 +83,9 @@ export function developerExperiencePlatformEngineCatalog {
     },
     safety: {
       ideOs: false,
-      note: 'Developer Experience Platform. CLI/SDK/codegen/docs/AI assistant/repo health/analytics catalog. Extends SDK/CLI. ideOs=false.',
+      note: 'Developer Experience Platform (VL-311). CLI/SDK/codegen/docs/AI assistant/repo health/analytics catalog. Extends VL-127/SDK/CLI. ideOs=false.',
     },
     docs: '/docs/DEVELOPER_EXPERIENCE_PLATFORM.md',
-    note: 'Developer Experience Platform. CLI/SDK/codegen/docs/AI assistant/repo health/analytics catalog. Extends SDK/CLI. ideOs=false.',
+    note: 'Developer Experience Platform (VL-311). CLI/SDK/codegen/docs/AI assistant/repo health/analytics catalog. Extends VL-127/SDK/CLI. ideOs=false.',
   };
 }

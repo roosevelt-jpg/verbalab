@@ -1,4 +1,4 @@
-/** Application ports for Training Pipeline. */
+/** Application ports for Training Pipeline (VL-283). */
 
 export type TrainingPipelineProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type TrainingPipelineEngineBundle = ReturnType<
 >;
 
 export interface TrainingPipelineCatalogPort {
-  engine: TrainingPipelineEngineBundle;
-  listProducts: TrainingPipelineProductRow[];
+  engine(): TrainingPipelineEngineBundle;
+  listProducts(): TrainingPipelineProductRow[];
 }
 
 export const TRAINING_PIPELINE_CATALOG_PORT = Symbol('TRAINING_PIPELINE_CATALOG_PORT');

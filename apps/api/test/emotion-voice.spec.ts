@@ -23,7 +23,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_ev_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_ev_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -37,26 +37,26 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Emotion Voice Engine',  => {
+describe('Emotion Voice Engine (VL-173)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
 
     app.get(GatewayService).setTtsProviderForTests({
       name: 'fixture',
-      listVoices {
+      listVoices() {
         return [
           {
             id: 'nova',
@@ -88,30 +88,30 @@ describe('Emotion Voice Engine',  => {
     });
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('documents Emotion Voice as synthesis (not detection / trained TTS)',  => {
+  it('documents Emotion Voice as synthesis (not VL-154 detection / trained TTS)', () => {
     const doc = join(root, 'docs/EMOTION_VOICE.md');
     const adr = join(root, 'docs/adr/0084-emotion-voice.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toContain('synthesis');
-    expect(text).toContain('');
+    expect(text).toContain('VL-154');
     expect(text).toMatch(/is \*\*not\*\* a trained expressive TTS/i);
   });
 
-  it('soft prosody never injects spoken stage directions',  => {
+  it('soft prosody never injects spoken stage directions', () => {
     const out = applySoftProsody('Hello there.', 'bright');
-    expect(out.toLowerCase).not.toContain('say');
-    expect(out.toLowerCase).not.toContain('happily');
+    expect(out.toLowerCase()).not.toContain('say');
+    expect(out.toLowerCase()).not.toContain('happily');
     expect(out.endsWith('!')).toBe(true);
   });
 
-  it('exposes engine + profiles with honest trainedExpressiveModel=false', async  => {
-    const engine = await request(app.getHttpServer).get('/v1/emotion-voice/engine').expect(200);
+  it('exposes engine + profiles with honest trainedExpressiveModel=false', async () => {
+    const engine = await request(app.getHttpServer()).get('/v1/emotion-voice/engine').expect(200);
     expect(engine.body.product).toBe('Lugemi Emotion Voice');
     expect(engine.body.architecture.trainedExpressiveModel).toBe(false);
     expect(engine.body.related.speechEmotionDetection).toContain('EMOTION_INTELLIGENCE');
@@ -119,7 +119,7 @@ describe('Emotion Voice Engine',  => {
     const synth = engine.body.capabilities.find((c: { id: string }) => c.id === 'emotion-synthesis');
     expect(synth.status).toBe('partial');
 
-    const profiles = await request(app.getHttpServer).get('/v1/emotion-voice/profiles').expect(200);
+    const profiles = await request(app.getHttpServer()).get('/v1/emotion-voice/profiles').expect(200);
     const ids = profiles.body.profiles.map((p: { id: string }) => p.id);
     expect(ids).toEqual(
       expect.arrayContaining([
@@ -140,7 +140,7 @@ describe('Emotion Voice Engine',  => {
     );
   });
 
-  it('synthesizes with emotion profile and preferred voice', async  => {
+  it('synthesizes with emotion profile and preferred voice', async () => {
     const org = await seedOrg(prisma, 'ev');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -149,7 +149,7 @@ describe('Emotion Voice Engine',  => {
       name: 'ev-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/emotion-voice/synthesize')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'Hello there.', emotion: 'happy' })
@@ -161,8 +161,8 @@ describe('Emotion Voice Engine',  => {
     expect(Buffer.from(res.body).toString('utf8')).toContain('AUDIO:nova:');
   });
 
-  it('exposes emotionVoiceEngine via GraphQL', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes emotionVoiceEngine via GraphQL', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query:
@@ -170,7 +170,7 @@ describe('Emotion Voice Engine',  => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.emotionVoiceEngine.trainedExpressiveModel).toBe(false);
     expect(res.body.data.emotionVoiceProfiles.length).toBeGreaterThanOrEqual(13);
   });

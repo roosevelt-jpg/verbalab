@@ -1,4 +1,4 @@
-/** Application ports for Speech Cloud. Implemented by Nest adapters. */
+/** Application ports for Speech Cloud (VL-150). Implemented by Nest adapters. */
 
 export type SpeechProductRow = {
   id: string;
@@ -20,8 +20,8 @@ export type SpeechProductsBundle = {
 };
 
 export interface SpeechCatalogPort {
-  products: SpeechProductsBundle;
-  listProducts: SpeechProductRow[];
+  products(): SpeechProductsBundle;
+  listProducts(): SpeechProductRow[];
 }
 
 export const SPEECH_CATALOG_PORT = Symbol('SPEECH_CATALOG_PORT');

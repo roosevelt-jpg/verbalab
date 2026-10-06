@@ -20,7 +20,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_tj_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_tj_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -34,42 +34,42 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Training jobs',  => {
+describe('Training jobs (VL-111)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;
   let finetunes: FineTunesService;
   const prevFixture = process.env.TRAINING_FIXTURE;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     process.env.TRAINING_FIXTURE = '1';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     billing = app.get(BillingService);
     finetunes = app.get(FineTunesService);
   });
 
-  afterAll(async  => {
+  afterAll(async () => {
     process.env.TRAINING_FIXTURE = prevFixture;
-    await app.close;
+    await app.close();
   });
 
-  it('reports launcher configuration without inventing Modal readiness',  => {
-    const status = finetunes.launcherStatus;
+  it('reports launcher configuration without inventing Modal readiness', () => {
+    const status = finetunes.launcherStatus();
     expect(status.launchers.find((l) => l.name === 'manual')?.configured).toBe(true);
     expect(status.launchers.find((l) => l.name === 'fixture')?.configured).toBe(true);
     expect(status.callbackUrl).toContain('/v1/training-jobs/callback');
   });
 
-  it('Modal launcher refuses when launch URL is missing', async  => {
-    const modal = new ModalTrainingLauncher;
+  it('Modal launcher refuses when launch URL is missing', async () => {
+    const modal = new ModalTrainingLauncher();
     await expect(
       modal.launch({
         jobId: 'j1',
@@ -84,10 +84,10 @@ describe('Training jobs',  => {
     ).rejects.toMatchObject({ code: 'provider_not_configured' } satisfies Partial<ApiException>);
   });
 
-  it('fixture launch runs then callback completes and promotes', async  => {
-    const org = await seedOrg(prisma, `tjfix_${Date.now}`);
+  it('fixture launch runs then callback completes and promotes', async () => {
+    const org = await seedOrg(prisma, `tjfix_${Date.now()}`);
     await billing.applyEntitlementForTests({ organizationId: org.id, plan: 'pro' });
-    finetunes.setLauncherForTests(new FixtureTrainingLauncher);
+    finetunes.setLauncherForTests(new FixtureTrainingLauncher());
 
     const created = await finetunes.createJob({
       organizationId: org.id,
@@ -106,9 +106,9 @@ describe('Training jobs',  => {
     });
     expect(launched.status).toBe('running');
     expect(launched.externalJobId).toMatch(/^fixture:/);
-    expect(launched.callbackToken).toBeTruthy;
+    expect(launched.callbackToken).toBeTruthy();
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/training-jobs/callback')
       .set('X-Lugemi-Training-Token', launched.callbackToken as string)
       .send({
@@ -122,7 +122,7 @@ describe('Training jobs',  => {
     expect(res.status).toBeLessThan(300);
     const job = await prisma.fineTuneJob.findUniqueOrThrow({ where: { id: created.id } });
     expect(job.status).toBe('succeeded');
-    expect(job.finishedAt).toBeTruthy;
+    expect(job.finishedAt).toBeTruthy();
 
     const model = await prisma.modelRegistryEntry.findFirst({
       where: { fineTuneJobId: created.id, status: 'ready' },
@@ -141,8 +141,8 @@ describe('Training jobs',  => {
     finetunes.setLauncherForTests(null);
   });
 
-  it('rejects bad callback tokens', async  => {
-    await request(app.getHttpServer)
+  it('rejects bad callback tokens', async () => {
+    await request(app.getHttpServer())
       .post('/v1/training-jobs/callback')
       .send({
         jobId: 'missing',

@@ -18,7 +18,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_det_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_det_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -32,19 +32,19 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Language detection',  => {
+describe('Language detection (VL-054)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -52,7 +52,7 @@ describe('Language detection',  => {
     const gateway = app.get(GatewayService);
     gateway.setDetectProviderForTests({
       name: 'fixture_detect',
-      async detect {
+      async detect() {
         return { language: 'en', confidence: 0.91, provider: 'fixture_detect' };
       },
     });
@@ -71,11 +71,11 @@ describe('Language detection',  => {
     });
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('POST /v1/detect returns language + confidence', async  => {
+  it('POST /v1/detect returns language + confidence', async () => {
     const org = await seedOrg(prisma, 'det');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -84,7 +84,7 @@ describe('Language detection',  => {
       name: 'det-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/detect')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'Hello world' })
@@ -95,7 +95,7 @@ describe('Language detection',  => {
     expect(res.body.provider).toBe('fixture_detect');
   });
 
-  it('POST /v1/translate with source=auto resolves before MT', async  => {
+  it('POST /v1/translate with source=auto resolves before MT', async () => {
     const org = await seedOrg(prisma, 'detauto');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -104,7 +104,7 @@ describe('Language detection',  => {
       name: 'auto-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/translate')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'Hello', source: 'auto', target: 'sw' })

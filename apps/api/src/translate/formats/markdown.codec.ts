@@ -21,7 +21,7 @@ export function planMarkdown(md: string): FormatPlan {
   const skeletonParts = lines.map((line) => {
     if (line === '\n') return line;
     if (!/\S/.test(line)) return line;
-    if (/^__VLB\d+__$/.test(line.trim)) return line;
+    if (/^__VLB\d+__$/.test(line.trim())) return line;
 
     const heading = line.match(/^(#{1,6}\s+)(.+)$/);
     if (heading) {

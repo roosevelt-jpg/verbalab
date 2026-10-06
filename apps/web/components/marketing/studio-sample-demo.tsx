@@ -9,7 +9,7 @@ export function StudioSampleDemo({
   sample: string;
   chips: string[];
 }) {
-  const { play, stop, playingId, status, error } = useDemoPlayer;
+  const { play, stop, playingId, status, error } = useDemoPlayer();
   const chipVoice: Record<string, { voiceId: string; lang: string }> = {
     English: { voiceId: 'abe', lang: 'en-US' },
     Swahili: { voiceId: 'amara', lang: 'sw' },
@@ -32,9 +32,9 @@ export function StudioSampleDemo({
               key={chip}
               type="button"
               className={active || i === 1 ? 'is-on' : undefined}
-              onClick={ => {
+              onClick={() => {
                 if (active) {
-                  stop;
+                  stop();
                   return;
                 }
                 void play({
@@ -55,9 +55,9 @@ export function StudioSampleDemo({
         <button
           type="button"
           className="vl-btn vl-btn-primary"
-          onClick={ => {
+          onClick={() => {
             if (playingId === 'studio-main') {
-              stop;
+              stop();
               return;
             }
             void play({

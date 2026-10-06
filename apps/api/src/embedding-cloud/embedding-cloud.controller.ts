@@ -15,29 +15,29 @@ export class EmbeddingCloudController {
   constructor(private readonly embeddingCloud: EmbeddingCloudService) {}
 
   @Get('engine')
-  engine {
-    return this.embeddingCloud.engine;
+  engine() {
+    return this.embeddingCloud.engine();
   }
 
   @Get('models')
-  models {
-    return this.embeddingCloud.models;
+  models() {
+    return this.embeddingCloud.models();
   }
 
   @Get('modalities')
-  modalities {
-    return this.embeddingCloud.modalities;
+  modalities() {
+    return this.embeddingCloud.modalities();
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req req: AuthedReq) {
+  analytics(@Req() req: AuthedReq) {
     return this.embeddingCloud.analytics(req.translateAuth.organizationId);
   }
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req req: AuthedReq) {
+  monitoring(@Req() req: AuthedReq) {
     return this.embeddingCloud.monitoring(req.translateAuth.organizationId);
   }
 
@@ -45,8 +45,8 @@ export class EmbeddingCloudController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   embed(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: { input?: unknown; model?: string; modality?: string },
   ) {
     return this.embeddingCloud.embed({

@@ -54,7 +54,7 @@ const SHIPPED_PRODUCT_IDS = [
 function walkTsFiles(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory) {
+    if (name.isDirectory()) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       walkTsFiles(p, out);
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -66,23 +66,23 @@ function walkTsFiles(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-describe('Control Plane Cloud Production Audit',  => {
+describe('Control Plane Cloud Production Audit (VL-323)', () => {
   let app: INestApplication<App>;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    }).compile();
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
   }, 120_000);
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('ships audit ADR and report pack',  => {
+  it('ships audit ADR and report pack', () => {
     expect(existsSync(join(root, 'docs/adr/0225-control-plane-cloud-production-audit.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/CLOUD_BLUEPRINT.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/CONTROL_PLANE_CLOUD.md'))).toBe(true);
@@ -104,7 +104,7 @@ describe('Control Plane Cloud Production Audit',  => {
     expect(readiness).toMatch(/productionDeployRequiresAuthorization=true/i);
     expect(readiness).toMatch(/leastPrivilegeRequired=true/i);
     expect(readiness).toMatch(/dataPlaneOs=false/i);
-    expect(readiness).toMatch(/|Volume 17/i);
+    expect(readiness).toMatch(/VL-314|Volume 17/i);
 
     const adr = readFileSync(
       join(root, 'docs/adr/0225-control-plane-cloud-production-audit.md'),
@@ -112,10 +112,10 @@ describe('Control Plane Cloud Production Audit',  => {
     );
     expect(adr).toMatch(/Vitest audit gates|review gate|checklist/i);
     expect(adr).toMatch(/Data Plane|do not invent|Rejected/i);
-    expect(adr).toMatch(/Volume 17 closed|–323|closes/i);
+    expect(adr).toMatch(/Volume 17 closed|VL-314–323|closes/i);
   });
 
-  it('has no TODO/FIXME/implement-later markers in Volume 17 source trees',  => {
+  it('has no TODO/FIXME/implement-later markers in Volume 17 source trees', () => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const name of VOLUME17_DIRS) {
@@ -139,13 +139,13 @@ describe('Control Plane Cloud Production Audit',  => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes all Volume 17 catalogs as shipped with monitoring', async  => {
+  it('exposes all Volume 17 catalogs as shipped with monitoring', async () => {
     for (const path of ENGINE_PATHS) {
-      const res = await request(app.getHttpServer).get(path).expect(200);
-      expect(res.body).toBeTruthy;
+      const res = await request(app.getHttpServer()).get(path).expect(200);
+      expect(res.body).toBeTruthy();
     }
 
-    const hub = await request(app.getHttpServer)
+    const hub = await request(app.getHttpServer())
       .get('/v1/control-plane-cloud/products')
       .expect(200);
     expect(hub.body.honesty.executesInference).toBe(false);
@@ -160,8 +160,8 @@ describe('Control Plane Cloud Production Audit',  => {
     }
   });
 
-  it('enforces secrets metadata-only, deploy auth+rollback, least privilege', async  => {
-    const secrets = await request(app.getHttpServer)
+  it('enforces secrets metadata-only, deploy auth+rollback, least privilege', async () => {
+    const secrets = await request(app.getHttpServer())
       .get('/v1/secrets-certificate-platform/engine')
       .expect(200);
     expect(secrets.body.honesty.encryptedAtRest).toBe(true);
@@ -174,7 +174,7 @@ describe('Control Plane Cloud Production Audit',  => {
     expect(secretsBlob).not.toMatch(/"ciphertext"\s*:/);
     expect(secretsBlob).not.toMatch(/"dekWrapped"\s*:/);
 
-    const meta = await request(app.getHttpServer)
+    const meta = await request(app.getHttpServer())
       .get('/v1/secrets-certificate-platform/metadata')
       .expect(200);
     expect(meta.body.secrets[0]).toHaveProperty('name');
@@ -183,46 +183,46 @@ describe('Control Plane Cloud Production Audit',  => {
     expect(meta.body.secrets[0]).not.toHaveProperty('ciphertext');
     expect(meta.body.secrets[0]).not.toHaveProperty('value');
 
-    const blocked = await request(app.getHttpServer)
+    const blocked = await request(app.getHttpServer())
       .post('/v1/global-deployment-controller/promote')
       .send({ deploymentId: 'dep-api-prod', environment: 'production', authorized: false })
       .expect(201);
     expect(blocked.body.allowed).toBe(false);
 
-    const rollback = await request(app.getHttpServer)
+    const rollback = await request(app.getHttpServer())
       .get('/v1/global-deployment-controller/rollback')
       .expect(200);
     expect(rollback.body.rollbackPath).toBe(true);
     expect(rollback.body.rollbacks.length).toBeGreaterThan(0);
 
-    const roles = await request(app.getHttpServer)
+    const roles = await request(app.getHttpServer())
       .get('/v1/organization-control/roles')
       .expect(200);
     expect(roles.body.leastPrivilegeRequired).toBe(true);
     expect(roles.body.controlPlaneAdminNotDefault).toBe(true);
     expect(roles.body.defaultRole).toBe('viewer');
 
-    const policy = await request(app.getHttpServer)
+    const policy = await request(app.getHttpServer())
       .get('/v1/global-policy-engine/engine')
       .expect(200);
     expect(policy.body.honesty.policyRuntimeIntegrated).toBe(true);
     expect(policy.body.honesty.leastPrivilegeRequired).toBe(true);
 
-    const analytics = await request(app.getHttpServer)
+    const analytics = await request(app.getHttpServer())
       .get('/v1/control-plane-analytics/engine')
       .expect(200);
     expect(analytics.body.computedFromSiblings).toBe(true);
     expect(analytics.body.honesty.executesInference).toBe(false);
   });
 
-  it('rejects unauthenticated Control Plane overview (auth smoke)', async  => {
-    const res = await request(app.getHttpServer).get('/v1/control-plane-cloud/overview');
+  it('rejects unauthenticated Control Plane overview (auth smoke)', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/control-plane-cloud/overview');
     expect([401, 403, 503]).toContain(res.status);
   });
 
-  it('exposes GraphQL façades for Control Plane hubs', async  => {
-    const started = Date.now;
-    const gql = await request(app.getHttpServer)
+  it('exposes GraphQL façades for Control Plane hubs', async () => {
+    const started = Date.now();
+    const gql = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query: `{
@@ -238,8 +238,8 @@ describe('Control Plane Cloud Production Audit',  => {
         }`,
       })
       .expect(200);
-    expect(Date.now - started).toBeLessThan(5_000);
-    expect(gql.body.errors).toBeUndefined;
+    expect(Date.now() - started).toBeLessThan(5_000);
+    expect(gql.body.errors).toBeUndefined();
     expect(gql.body.data.controlPlaneCloudProducts.length).toBeGreaterThan(8);
     expect(gql.body.data.secretsCertificatePlatformEngine.encryptedAtRest).toBe(true);
     expect(gql.body.data.secretsCertificatePlatformEngine.hashicorpVaultOs).toBe(false);
@@ -249,7 +249,7 @@ describe('Control Plane Cloud Production Audit',  => {
     expect(gql.body.data.organizationControlEngine.controlPlaneAdminNotDefault).toBe(true);
   });
 
-  it('rejects inventing Data Plane in this volume',  => {
+  it('rejects inventing Data Plane in this volume', () => {
     const readiness = readFileSync(
       join(root, 'docs/control-plane-cloud-audit/PRODUCTION_READINESS.md'),
       'utf8',

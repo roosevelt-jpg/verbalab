@@ -6,16 +6,16 @@ import {
   AgentopsPlatformProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestAgentopsPlatformCatalogAdapter implements AgentopsPlatformCatalogPort {
   constructor(private readonly service: AgentopsPlatformService) {}
 
-  engine: AgentopsPlatformEngineBundle {
-    return this.service.engine;
+  engine(): AgentopsPlatformEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: AgentopsPlatformProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): AgentopsPlatformProductRow[] {
+    const bundle = this.engine() as {
       products?: AgentopsPlatformProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestAgentopsPlatformCatalogAdapter implements AgentopsPlatformCatal
         status: 'shipped',
         api: 'GET /v1/agentops-platform/engine',
         console: '/agentops-platform',
-        notes: ' shipped.',
+        notes: 'VL-287 shipped.',
       },
     ];
   }

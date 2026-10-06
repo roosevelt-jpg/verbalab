@@ -6,16 +6,16 @@ import {
   EmbeddingRuntimeProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestEmbeddingRuntimeCatalogAdapter implements EmbeddingRuntimeCatalogPort {
   constructor(private readonly service: EmbeddingRuntimeService) {}
 
-  engine: EmbeddingRuntimeEngineBundle {
-    return this.service.engine;
+  engine(): EmbeddingRuntimeEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: EmbeddingRuntimeProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): EmbeddingRuntimeProductRow[] {
+    const bundle = this.engine() as {
       products?: EmbeddingRuntimeProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestEmbeddingRuntimeCatalogAdapter implements EmbeddingRuntimeCatal
         status: 'shipped',
         api: 'GET /v1/embedding-runtime/engine',
         console: '/embedding-runtime',
-        notes: ' shipped.',
+        notes: 'VL-330 shipped.',
       },
     ];
   }

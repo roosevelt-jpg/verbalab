@@ -1,4 +1,4 @@
-/** Application ports for VAIOS Foundation. */
+/** Application ports for VAIOS Foundation (VL-334). */
 
 export type VaiosProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type VaiosEngineBundle = ReturnType<
 >;
 
 export interface VaiosCatalogPort {
-  engine: VaiosEngineBundle;
-  listProducts: VaiosProductRow[];
+  engine(): VaiosEngineBundle;
+  listProducts(): VaiosProductRow[];
 }
 
 export const VAIOS_CATALOG_PORT = Symbol('VAIOS_CATALOG_PORT');

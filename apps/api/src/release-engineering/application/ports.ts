@@ -1,4 +1,4 @@
-/** Application ports for Release Engineering. */
+/** Application ports for Release Engineering (VL-307). */
 
 export type ReleaseEngineeringProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type ReleaseEngineeringEngineBundle = ReturnType<
 >;
 
 export interface ReleaseEngineeringCatalogPort {
-  engine: ReleaseEngineeringEngineBundle;
-  listProducts: ReleaseEngineeringProductRow[];
+  engine(): ReleaseEngineeringEngineBundle;
+  listProducts(): ReleaseEngineeringProductRow[];
 }
 
 export const RELEASE_ENGINEERING_CATALOG_PORT = Symbol('RELEASE_ENGINEERING_CATALOG_PORT');

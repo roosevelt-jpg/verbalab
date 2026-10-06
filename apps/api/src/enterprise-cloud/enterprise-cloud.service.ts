@@ -7,7 +7,7 @@ import { SessionContext } from '../common/guards/clerk-auth.guard';
 import { isPlatformAdmin } from '../common/admin/platform-admin';
 import { currentRegionCode } from '../regions/regions.catalog';
 
-@Injectable
+@Injectable()
 export class EnterpriseCloudService {
   constructor(
     private readonly prisma: PrismaService,
@@ -92,7 +92,7 @@ export class EnterpriseCloudService {
           rateLimits: 'plan_entitled_redis',
         },
         cloud: {
-          deployRegion: currentRegionCode,
+          deployRegion: currentRegionCode(),
           dataRegionPin: org.dataRegion,
           residencyMatchesDeploy: residency.matchesCurrentDeploy,
           availabilityZones: false,

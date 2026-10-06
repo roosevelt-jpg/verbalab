@@ -32,8 +32,8 @@ const LICENSE_OPTIONS = [
   'custom',
 ];
 
-export function DatasetsClient {
-  const { getToken, isLoaded } = useAuth;
+export function DatasetsClient() {
+  const { getToken, isLoaded } = useAuth();
   const [rows, setRows] = useState<DatasetAsset[]>([]);
   const [title, setTitle] = useState('');
   const [licenseTag, setLicenseTag] = useState('university-mou');
@@ -47,33 +47,33 @@ export function DatasetsClient {
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const load = useCallback(async  => {
-    const token = await getToken;
+  const load = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     setRows(await apiFetch<DatasetAsset[]>('/v1/datasets', { token }));
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void (async  => {
+    void (async () => {
       try {
-        await load;
+        await load();
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load datasets');
       }
-    });
+    })();
   }, [isLoaded, load]);
 
   async function onUpload(event: FormEvent) {
-    event.preventDefault;
+    event.preventDefault();
     setBusy(true);
     setError(null);
     setMessage(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       if (!file) throw new Error('Choose a file');
-      const form = new FormData;
+      const form = new FormData();
       form.append('file', file);
       form.append('title', title);
       form.append('licenseTag', licenseTag);
@@ -87,14 +87,14 @@ export function DatasetsClient {
         headers: { Authorization: `Bearer ${token}` },
         body: form,
       });
-      const body = (await res.json) as DatasetAsset & { message?: string; error?: { message: string } };
+      const body = (await res.json()) as DatasetAsset & { message?: string; error?: { message: string } };
       if (!res.ok) throw new Error(body.error?.message ?? body.message ?? `Upload failed (${res.status})`);
       setTitle('');
       setConsentNotes('');
       setPartnerOrgName('');
       setFile(null);
       setMessage(`Stored “${body.title}” with legal metadata.`);
-      await load;
+      await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload failed');
     } finally {
@@ -106,11 +106,11 @@ export function DatasetsClient {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       await apiFetch(`/v1/datasets/${id}`, { method: 'DELETE', token });
       setMessage('Dataset archived and files unlinked.');
-      await load;
+      await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Archive failed');
     } finally {
@@ -119,18 +119,18 @@ export function DatasetsClient {
   }
 
   async function download(id: string, version: number, filename: string) {
-    const token = await getToken;
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const res = await fetch(`${API_URL}/v1/datasets/${id}/versions/${version}/content`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     if (!res.ok) throw new Error(`Download failed (${res.status})`);
-    const blob = await res.blob;
+    const blob = await res.blob();
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
     a.download = filename;
-    a.click;
+    a.click();
     URL.revokeObjectURL(url);
   }
 
@@ -218,7 +218,7 @@ export function DatasetsClient {
           <input type="file" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
           <button
             type="submit"
-            disabled={busy || !title.trim || !consentNotes.trim || !file}
+            disabled={busy || !title.trim() || !consentNotes.trim() || !file}
             style={{
               alignSelf: 'flex-start',
               padding: '0.55rem 1rem',
@@ -273,7 +273,7 @@ export function DatasetsClient {
                       <button
                         type="button"
                         disabled={busy}
-                        onClick={ =>
+                        onClick={() =>
                           void download(
                             row.id,
                             row.latestVersion!.version,
@@ -296,7 +296,7 @@ export function DatasetsClient {
                       <button
                         type="button"
                         disabled={busy}
-                        onClick={ => void archive(row.id)}
+                        onClick={() => void archive(row.id)}
                         style={{
                           padding: '0.4rem 0.75rem',
                           border: '1px solid #999',

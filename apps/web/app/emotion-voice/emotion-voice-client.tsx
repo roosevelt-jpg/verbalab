@@ -20,8 +20,8 @@ type Engine = {
   capabilities: Array<{ id: string; name: string; status: string; notes: string }>;
 };
 
-export function EmotionVoiceClient {
-  const { getToken, isLoaded } = useAuth;
+export function EmotionVoiceClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [text, setText] = useState('Thank you for calling. How can I help you today?');
@@ -31,8 +31,8 @@ export function EmotionVoiceClient {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const load = useCallback(async  => {
-    const token = await getToken;
+  const load = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, prof] = await Promise.all([
       apiFetch<Engine>('/v1/emotion-voice/engine', { token }),
@@ -42,16 +42,16 @@ export function EmotionVoiceClient {
     setProfiles(prof.profiles);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void load.catch((err: Error) => setError(err.message));
+    void load().catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
-  async function synthesize {
+  async function synthesize() {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const res = await fetch(`${API_URL}/v1/emotion-voice/synthesize`, {
         method: 'POST',
@@ -61,9 +61,9 @@ export function EmotionVoiceClient {
         },
         body: JSON.stringify({ text, emotion, format: 'mp3' }),
       });
-      if (!res.ok) throw new Error(await res.text);
+      if (!res.ok) throw new Error(await res.text());
       setMode(res.headers.get('X-Lugemi-Emotion-Mode'));
-      const blob = await res.blob;
+      const blob = await res.blob();
       if (audioUrl) URL.revokeObjectURL(audioUrl);
       setAudioUrl(URL.createObjectURL(blob));
     } catch (err) {
@@ -109,7 +109,7 @@ export function EmotionVoiceClient {
           </select>
         </label>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.65rem' }}>
-          <button type="button" disabled={busy} onClick={ => void synthesize} style={primaryBtn}>
+          <button type="button" disabled={busy} onClick={() => void synthesize()} style={primaryBtn}>
             Synthesize
           </button>
           <Link href="/emotion-intelligence" style={secondaryBtn}>

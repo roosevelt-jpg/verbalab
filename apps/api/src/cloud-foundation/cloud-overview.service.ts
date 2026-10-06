@@ -6,7 +6,7 @@ import { FeatureFlagsService } from './feature-flags.service';
 import { SessionContext } from '../common/guards/clerk-auth.guard';
 import { PrismaService } from '../prisma/prisma.service';
 
-@Injectable
+@Injectable()
 export class CloudOverviewService {
   constructor(
     private readonly prisma: PrismaService,

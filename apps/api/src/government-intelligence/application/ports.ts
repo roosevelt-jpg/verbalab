@@ -1,4 +1,4 @@
-/** Application ports for Government Intelligence. */
+/** Application ports for Government Intelligence (VL-264). */
 
 export type GovernmentIntelligenceProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type GovernmentIntelligenceEngineBundle = ReturnType<
 >;
 
 export interface GovernmentIntelligenceCatalogPort {
-  engine: GovernmentIntelligenceEngineBundle;
-  listProducts: GovernmentIntelligenceProductRow[];
+  engine(): GovernmentIntelligenceEngineBundle;
+  listProducts(): GovernmentIntelligenceProductRow[];
 }
 
 export const GOVERNMENT_INTELLIGENCE_CATALOG_PORT = Symbol('GOVERNMENT_INTELLIGENCE_CATALOG_PORT');

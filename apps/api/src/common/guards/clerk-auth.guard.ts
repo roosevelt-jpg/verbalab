@@ -16,7 +16,7 @@ export type SessionContext = {
   role: 'owner' | 'admin' | 'member';
 };
 
-@Injectable
+@Injectable()
 export class ClerkAuthGuard implements CanActivate {
   constructor(
     private readonly identity: IdentityService,
@@ -40,7 +40,7 @@ export class ClerkAuthGuard implements CanActivate {
       throw new ApiException('unauthorized', 'Missing Bearer token', HttpStatus.UNAUTHORIZED);
     }
 
-    const token = header.slice('Bearer '.length).trim;
+    const token = header.slice('Bearer '.length).trim();
 
     let clerkUserId: string;
     let email: string | undefined;
@@ -75,7 +75,7 @@ export class ClerkAuthGuard implements CanActivate {
       clerkOrgId,
       clerkOrgRole,
       orgName: clerkOrgId ? undefined : 'Personal',
-      preferredWorkspaceId: preferredWorkspaceId?.trim || undefined,
+      preferredWorkspaceId: preferredWorkspaceId?.trim() || undefined,
     });
 
     request.sessionAuth = session;

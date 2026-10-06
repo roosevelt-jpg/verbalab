@@ -20,7 +20,7 @@ type InterpretResult = {
   providers: { stt: string; mt: string | null; tts: string };
 };
 
-export function InterpretClient {
+export function InterpretClient() {
   const [apiKey, setApiKey] = useState('');
   const [languages, setLanguages] = useState<Language[]>([]);
   const [voices, setVoices] = useState<Voice[]>([]);
@@ -33,26 +33,26 @@ export function InterpretClient {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect( => {
+  useEffect(() => {
     void apiFetch<{ data: Language[] }>('/v1/languages')
       .then((res) => setLanguages(res.data))
-      .catch( => undefined);
+      .catch(() => undefined);
     void apiFetch<{ data: Voice[] }>('/v1/audio/voices')
       .then((res) => {
         setVoices(res.data);
         if (res.data[0]) setVoice(res.data[0].id);
       })
-      .catch( => undefined);
+      .catch(() => undefined);
   }, []);
 
-  useEffect( => {
-    return  => {
+  useEffect(() => {
+    return () => {
       if (audioUrl) URL.revokeObjectURL(audioUrl);
     };
   }, [audioUrl]);
 
   async function onSubmit(event: FormEvent) {
-    event.preventDefault;
+    event.preventDefault();
     setError(null);
     setResult(null);
     if (audioUrl) {
@@ -69,7 +69,7 @@ export function InterpretClient {
     }
     setLoading(true);
     try {
-      const form = new FormData;
+      const form = new FormData();
       form.append('file', file);
       form.append('target', target);
       form.append('voice', voice);
@@ -79,7 +79,7 @@ export function InterpretClient {
         headers: { Authorization: `Bearer ${apiKey}` },
         body: form,
       });
-      const body = (await res.json) as InterpretResult & { error?: { message: string } };
+      const body = (await res.json()) as InterpretResult & { error?: { message: string } };
       if (!res.ok) {
         throw new Error(body.error?.message ?? `Interpret failed (${res.status})`);
       }

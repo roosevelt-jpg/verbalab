@@ -6,7 +6,7 @@ import { GpuPlatformService } from '../gpu-platform/gpu-platform.service';
 import { GitopsPlatformService } from '../gitops-platform/gitops-platform.service';
 import { GlobalDeploymentControllerService } from '../global-deployment-controller/global-deployment-controller.service';
 
-@Injectable
+@Injectable()
 export class InfrastructureEngineeringStandardsService {
   constructor(
     private readonly finops: FinopsPlatformService,
@@ -16,48 +16,48 @@ export class InfrastructureEngineeringStandardsService {
     private readonly globalDeployment: GlobalDeploymentControllerService
   ) {}
 
-  engine {
-    return infrastructureEngineeringStandardsEngineCatalog;
+  engine() {
+    return infrastructureEngineeringStandardsEngineCatalog();
   }
 
   /** Catalog route: returns standards capability + live status from injected upstream services. */
   route(capability?: string) {
-    const catalog = this.engine;
-    const q = (capability ?? '').trim.toLowerCase;
+    const catalog = this.engine();
+    const q = (capability ?? '').trim().toLowerCase();
     const capabilities = catalog.capabilities.filter((c) => {
       if (!q) return true;
-      return c.id.includes(q) || c.name.toLowerCase.includes(q);
+      return c.id.includes(q) || c.name.toLowerCase().includes(q);
     });
     const upstreamStatus = [
       {
         module: 'finops-platform',
         method: 'engine',
         status: 'reachable',
-        upstream: this.finops.engine,
+        upstream: this.finops.engine(),
       },
       {
         module: 'secrets-certificate-platform',
         method: 'engine',
         status: 'reachable',
-        upstream: this.secrets.engine,
+        upstream: this.secrets.engine(),
       },
       {
         module: 'gpu-platform',
         method: 'engine',
         status: 'reachable',
-        upstream: this.gpuPlatform.engine,
+        upstream: this.gpuPlatform.engine(),
       },
       {
         module: 'gitops-platform',
         method: 'engine',
         status: 'reachable',
-        upstream: this.gitops.engine,
+        upstream: this.gitops.engine(),
       },
       {
         module: 'global-deployment-controller',
         method: 'engine',
         status: 'reachable',
-        upstream: this.globalDeployment.engine,
+        upstream: this.globalDeployment.engine(),
       }
     ];
     return {
@@ -81,11 +81,11 @@ export class InfrastructureEngineeringStandardsService {
   }
 
   list(query?: string) {
-    const catalog = this.engine;
-    const q = (query ?? '').trim.toLowerCase;
+    const catalog = this.engine();
+    const q = (query ?? '').trim().toLowerCase();
     const rows = catalog.routes.filter((row) => {
       if (!q) return true;
-      return JSON.stringify(row).toLowerCase.includes(q);
+      return JSON.stringify(row).toLowerCase().includes(q);
     });
     return {
       routes: rows,
@@ -102,8 +102,8 @@ export class InfrastructureEngineeringStandardsService {
     return this.list(query);
   }
 
-  monitoring {
-    const catalog = this.engine;
+  monitoring() {
+    const catalog = this.engine();
     return {
       mode: 'infrastructure-engineering-standards',
       count: catalog.routes.length,
@@ -114,7 +114,7 @@ export class InfrastructureEngineeringStandardsService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'InfrastructureEngineeringStandards monitoring snapshot.',
+      note: 'InfrastructureEngineeringStandards monitoring snapshot (VL-352).',
     };
   }
 }

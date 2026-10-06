@@ -23,7 +23,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_etm_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_etm_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -40,7 +40,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Enterprise Translation Memory Phase 13',  => {
+describe('Enterprise Translation Memory Phase 13 (VL-145)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -51,13 +51,13 @@ describe('Enterprise Translation Memory Phase 13',  => {
   let wsB: string;
   let userId: string;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    }).compile();
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
     tm = app.get(TmService);
@@ -76,22 +76,22 @@ describe('Enterprise Translation Memory Phase 13',  => {
     rawKey = created.secret;
   }, 120_000);
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('ships ADR and docs',  => {
+  it('ships ADR and docs', () => {
     expect(existsSync(join(root, 'docs/adr/0066-enterprise-translation-memory-phase-13.md'))).toBe(true);
     expect(readFileSync(join(root, 'docs/TM.md'), 'utf8')).toContain('/search');
   });
 
-  it('scores lexical similarity',  => {
+  it('scores lexical similarity', () => {
     expect(lexicalSimilarity('Official greeting', 'Official greetings')).toBeGreaterThan(0.7);
     expect(lexicalSimilarity('Hello', 'Completely different text')).toBeLessThan(0.4);
   });
 
-  it('exposes catalog with partial vector and shipped similarity', async  => {
-    const res = await request(app.getHttpServer).get('/v1/tm').expect(200);
+  it('exposes catalog with partial vector and shipped similarity', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/tm').expect(200);
     expect(res.body.product).toMatch(/Translation Memory/i);
     expect(
       res.body.capabilities.some(
@@ -105,7 +105,7 @@ describe('Enterprise Translation Memory Phase 13',  => {
     ).toBe(true);
   });
 
-  it('versions on update and supports enterprise exact fallback', async  => {
+  it('versions on update and supports enterprise exact fallback', async () => {
     const first = await tm.upsertApproved({
       organizationId: orgId,
       workspaceId: wsA,
@@ -146,7 +146,7 @@ describe('Enterprise Translation Memory Phase 13',  => {
     expect(hit?.scope).toBe('enterprise');
   });
 
-  it('searches similar segments via API', async  => {
+  it('searches similar segments via API', async () => {
     await tm.upsertApproved({
       organizationId: orgId,
       workspaceId: wsA,
@@ -158,7 +158,7 @@ describe('Enterprise Translation Memory Phase 13',  => {
       scope: 'workspace',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/tm/search')
       .set('Authorization', `Bearer ${rawKey}`)
       .send({
@@ -173,21 +173,21 @@ describe('Enterprise Translation Memory Phase 13',  => {
     expect(res.body.results[0].sourceText).toMatch(/application form/i);
   });
 
-  it('returns analytics and GraphQL tmIntelligence/searchTm', async  => {
-    const analytics = await request(app.getHttpServer)
+  it('returns analytics and GraphQL tmIntelligence/searchTm', async () => {
+    const analytics = await request(app.getHttpServer())
       .get('/v1/tm/analytics')
       .set('Authorization', `Bearer ${rawKey}`)
       .expect(200);
     expect(analytics.body.entries).toBeGreaterThan(0);
 
-    const catalog = await request(app.getHttpServer)
+    const catalog = await request(app.getHttpServer())
       .post('/graphql')
       .send({ query: '{ tmIntelligence { product shippedCount } }' })
       .expect(200);
-    expect(catalog.body.errors).toBeUndefined;
+    expect(catalog.body.errors).toBeUndefined();
     expect(catalog.body.data.tmIntelligence.shippedCount).toBeGreaterThan(4);
 
-    const search = await request(app.getHttpServer)
+    const search = await request(app.getHttpServer())
       .post('/graphql')
       .set('Authorization', `Bearer ${rawKey}`)
       .send({
@@ -204,7 +204,7 @@ describe('Enterprise Translation Memory Phase 13',  => {
         },
       })
       .expect(200);
-    expect(search.body.errors).toBeUndefined;
+    expect(search.body.errors).toBeUndefined();
     expect(search.body.data.searchTm.resultCount).toBeGreaterThan(0);
   });
 });

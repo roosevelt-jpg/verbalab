@@ -17,8 +17,8 @@ export class GetResourceManagerEngineHandler
     private readonly catalog: ResourceManagerCatalogPort,
   ) {}
 
-  execute: Promise<ResourceManagerEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<ResourceManagerEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListResourceManagerProductsHandler
     private readonly catalog: ResourceManagerCatalogPort,
   ) {}
 
-  execute: Promise<ResourceManagerProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<ResourceManagerProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

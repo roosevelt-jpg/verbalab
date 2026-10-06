@@ -21,14 +21,14 @@ export class GrammarController {
   constructor(private readonly grammar: GrammarService) {}
 
   @Get('intelligence')
-  intelligence {
-    return this.grammar.intelligence;
+  intelligence() {
+    return this.grammar.intelligence();
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
   analytics(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
     },
@@ -40,14 +40,14 @@ export class GrammarController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   check(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body body: { text?: string; language?: string },
+    @Body() body: { text?: string; language?: string },
   ) {
-    if (typeof body.text !== 'string' || body.text.trim.length === 0) {
+    if (typeof body.text !== 'string' || body.text.trim().length === 0) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }
     return this.grammar.check({
@@ -65,14 +65,14 @@ export class GrammarController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   spell(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body body: { text?: string; language?: string },
+    @Body() body: { text?: string; language?: string },
   ) {
-    if (typeof body.text !== 'string' || body.text.trim.length === 0) {
+    if (typeof body.text !== 'string' || body.text.trim().length === 0) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }
     return this.grammar.spell({
@@ -90,14 +90,14 @@ export class GrammarController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   correct(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body body: { text?: string; language?: string },
+    @Body() body: { text?: string; language?: string },
   ) {
-    if (typeof body.text !== 'string' || body.text.trim.length === 0) {
+    if (typeof body.text !== 'string' || body.text.trim().length === 0) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }
     return this.grammar.correct({
@@ -115,14 +115,14 @@ export class GrammarController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   suggest(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body body: { text?: string; language?: string; styleProfile?: string },
+    @Body() body: { text?: string; language?: string; styleProfile?: string },
   ) {
-    if (typeof body.text !== 'string' || body.text.trim.length === 0) {
+    if (typeof body.text !== 'string' || body.text.trim().length === 0) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }
     return this.grammar.suggest({

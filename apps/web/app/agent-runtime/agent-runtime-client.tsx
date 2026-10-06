@@ -31,16 +31,16 @@ type Agent = {
   permissions: string[];
 };
 
-export function AgentRuntimeClient {
-  const { getToken, isLoaded } = useAuth;
+export function AgentRuntimeClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [agents, setAgents] = useState<Agent[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState('East Africa trade desk');
   const [result, setResult] = useState<string | null>(null);
 
-  const load = useCallback(async  => {
-    const token = await getToken;
+  const load = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, list] = await Promise.all([
       apiFetch<Engine>('/v1/agent-runtime/engine', { token }),
@@ -50,15 +50,15 @@ export function AgentRuntimeClient {
     setAgents(list.agents);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void load.catch((err: Error) => setError(err.message));
+    void load().catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
-  const createAndRun = useCallback(async  => {
+  const createAndRun = useCallback(async () => {
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const created = await apiFetch<{ agent: Agent }>('/v1/agent-runtime/agents', {
         token,
@@ -93,7 +93,7 @@ export function AgentRuntimeClient {
           .map((s) => `${s.action}: ${s.allowed ? 'allowed' : 'denied'}`)
           .join('\n')}\n${run.note}`,
       );
-      await load;
+      await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Agent run failed');
     }
@@ -126,7 +126,7 @@ export function AgentRuntimeClient {
           placeholder="Agent name"
           style={{ ...input, minWidth: '14rem', flex: 1 }}
         />
-        <button type="button" onClick={ => void createAndRun} disabled={!name.trim} style={btn}>
+        <button type="button" onClick={() => void createAndRun()} disabled={!name.trim()} style={btn}>
           Create + sandbox run
         </button>
       </div>

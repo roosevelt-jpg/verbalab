@@ -35,16 +35,16 @@ type Plugin = {
   permissions: string[];
 };
 
-export function PluginRuntimeClient {
-  const { getToken, isLoaded } = useAuth;
+export function PluginRuntimeClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [plugins, setPlugins] = useState<Plugin[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState('Sandbox Formatter');
   const [result, setResult] = useState<string | null>(null);
 
-  const load = useCallback(async  => {
-    const token = await getToken;
+  const load = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, list] = await Promise.all([
       apiFetch<Engine>('/v1/plugin-runtime/engine', { token }),
@@ -54,15 +54,15 @@ export function PluginRuntimeClient {
     setPlugins(list.plugins);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void load.catch((err: Error) => setError(err.message));
+    void load().catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
-  const registerAndInvoke = useCallback(async  => {
+  const registerAndInvoke = useCallback(async () => {
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const created = await apiFetch<{ plugin: Plugin }>('/v1/plugin-runtime/plugins', {
         token,
@@ -100,7 +100,7 @@ export function PluginRuntimeClient {
           .map((s) => `${s.action}: ${s.allowed ? 'allowed' : 'denied'}`)
           .join('\n')}\n${inv.note}`,
       );
-      await load;
+      await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Plugin invoke failed');
     }
@@ -109,7 +109,7 @@ export function PluginRuntimeClient {
   return (
     <AppShell>
       <main style={{ maxWidth: 720, margin: '0 auto', padding: '2rem 1.25rem 4rem' }}>
-        <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.85rem' }}>AI Kernel</p>
+        <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.85rem' }}>AI Kernel · VL-221</p>
         <h1 style={{ margin: '0.35rem 0 0.5rem', fontSize: '1.75rem' }}>Plugin Runtime</h1>
         <p style={{ color: 'var(--muted)', lineHeight: 1.55 }}>
           Sandbox plugin registry with hard permission allowlists. Extends{' '}
@@ -148,7 +148,7 @@ export function PluginRuntimeClient {
               style={{ display: 'block', width: '100%', marginTop: 4, padding: '0.5rem' }}
             />
           </label>
-          <button type="button" onClick={ => void registerAndInvoke}>
+          <button type="button" onClick={() => void registerAndInvoke()}>
             Register, activate, invoke (sandbox)
           </button>
           {result ? (

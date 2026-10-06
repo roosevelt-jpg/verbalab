@@ -10,9 +10,9 @@ import { Request } from 'express';
 export class QualityController {
   constructor(private readonly quality: QualityService) {}
 
-  @Get
+  @Get()
   list(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Query('status') status?: string,
     @Query('needsReview') needsReviewRaw?: string,
     @Query('limit') limitRaw?: string,
@@ -29,10 +29,10 @@ export class QualityController {
 
   @Post(':id/accept')
   accept(
-    @CurrentSession session: SessionContext,
-    @Req req: Request,
+    @CurrentSession() session: SessionContext,
+    @Req() req: Request,
     @Param('id') id: string,
-    @Body body: { note?: string; addToTm?: boolean },
+    @Body() body: { note?: string; addToTm?: boolean },
   ) {
     return this.quality.accept({
       organizationId: session.organizationId,
@@ -46,10 +46,10 @@ export class QualityController {
 
   @Post(':id/reject')
   reject(
-    @CurrentSession session: SessionContext,
-    @Req req: Request,
+    @CurrentSession() session: SessionContext,
+    @Req() req: Request,
     @Param('id') id: string,
-    @Body body: { note?: string },
+    @Body() body: { note?: string },
   ) {
     return this.quality.reject({
       organizationId: session.organizationId,

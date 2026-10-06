@@ -12,7 +12,7 @@ import {
 const KINDS = ['voice', 'pack', 'language_pack', 'enterprise'] as const;
 const LICENSE_TYPES = ['personal', 'commercial', 'broadcast', 'enterprise', 'subscription'] as const;
 
-@Injectable
+@Injectable()
 export class VoiceMarketplaceService {
   constructor(
     private readonly prisma: PrismaService,
@@ -20,11 +20,11 @@ export class VoiceMarketplaceService {
     private readonly billing: BillingService,
   ) {}
 
-  engine {
-    return voiceMarketplaceEngineCatalog;
+  engine() {
+    return voiceMarketplaceEngineCatalog();
   }
 
-  languagePacks {
+  languagePacks() {
     return {
       packs: Object.entries(LANGUAGE_PACK_CATALOG).map(([id, p]) => ({
         id,
@@ -92,8 +92,8 @@ export class VoiceMarketplaceService {
       publisherOrgId: row.publisherOrgId,
       publisherWorkspaceId: row.publisherWorkspaceId,
       publisherName: row.publisherOrg?.name ?? null,
-      createdAt: row.createdAt.toISOString,
-      updatedAt: row.updatedAt.toISOString,
+      createdAt: row.createdAt.toISOString(),
+      updatedAt: row.updatedAt.toISOString(),
     };
   }
 
@@ -150,12 +150,12 @@ export class VoiceMarketplaceService {
     if (input.celebrityClaim) {
       throw new ApiException(
         'validation_error',
-        'Celebrity voice SKUs are forbidden without a verified rights chain ( out of scope).',
+        'Celebrity voice SKUs are forbidden without a verified rights chain (VL-177 out of scope).',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const kind = (input.kind ?? 'voice').trim.toLowerCase;
+    const kind = (input.kind ?? 'voice').trim().toLowerCase();
     if (!(KINDS as readonly string[]).includes(kind)) {
       throw new ApiException(
         'validation_error',
@@ -164,7 +164,7 @@ export class VoiceMarketplaceService {
       );
     }
 
-    const licenseType = (input.licenseType ?? 'personal').trim.toLowerCase;
+    const licenseType = (input.licenseType ?? 'personal').trim().toLowerCase();
     if (!(LICENSE_TYPES as readonly string[]).includes(licenseType)) {
       throw new ApiException(
         'validation_error',
@@ -173,16 +173,16 @@ export class VoiceMarketplaceService {
       );
     }
 
-    let sourceType = (input.sourceType ?? 'stock').trim.toLowerCase;
-    let sourceVoiceId = input.sourceVoiceId?.trim ?? '';
-    let voiceCloneId: string | null = input.voiceCloneId?.trim || null;
-    let title = input.title?.trim ?? '';
-    let description = input.description?.trim ?? '';
-    let language = input.language?.trim || null;
+    let sourceType = (input.sourceType ?? 'stock').trim().toLowerCase();
+    let sourceVoiceId = input.sourceVoiceId?.trim() ?? '';
+    let voiceCloneId: string | null = input.voiceCloneId?.trim() || null;
+    let title = input.title?.trim() ?? '';
+    let description = input.description?.trim() ?? '';
+    let language = input.language?.trim() || null;
     let snapshot: Record<string, unknown> = {};
 
     if (kind === 'language_pack') {
-      const packId = input.languagePackId?.trim || language || '';
+      const packId = input.languagePackId?.trim() || language || '';
       const pack = LANGUAGE_PACK_CATALOG[packId];
       if (!pack) {
         throw new ApiException(
@@ -248,7 +248,7 @@ export class VoiceMarketplaceService {
         if (!clone.ownershipAttested || !clone.consentAttested) {
           throw new ApiException(
             'validation_error',
-            'Clone must have consent + ownership attestation before marketplace publish',
+            'Clone must have consent + ownership attestation before marketplace publish (VL-172)',
             HttpStatus.BAD_REQUEST,
           );
         }
@@ -309,13 +309,13 @@ export class VoiceMarketplaceService {
         title,
         description,
         language,
-        gender: input.gender?.trim || null,
+        gender: input.gender?.trim() || null,
         licenseType,
-        licenseNotes: input.licenseNotes?.trim || '',
+        licenseNotes: input.licenseNotes?.trim() || '',
         rightsAttested: Boolean(input.rightsAttested) || sourceType !== 'clone',
         celebrityClaim: false,
         priceCents,
-        currency: (input.currency ?? 'usd').trim.toLowerCase || 'usd',
+        currency: (input.currency ?? 'usd').trim().toLowerCase() || 'usd',
         subscriptionInterval,
         status: 'published',
         snapshot,
@@ -397,7 +397,7 @@ export class VoiceMarketplaceService {
           id: existing.id,
           listingId: existing.listingId,
           licenseType: existing.licenseType,
-          installedAt: existing.installedAt.toISOString,
+          installedAt: existing.installedAt.toISOString(),
         },
         alreadyInstalled: true,
         note: 'License entitlement already present for this workspace.',
@@ -448,7 +448,7 @@ export class VoiceMarketplaceService {
         id: install.id,
         listingId: install.listingId,
         licenseType: install.licenseType,
-        installedAt: install.installedAt.toISOString,
+        installedAt: install.installedAt.toISOString(),
       },
       sale: sale
         ? {
@@ -478,7 +478,7 @@ export class VoiceMarketplaceService {
         id: r.id,
         listingId: r.listingId,
         licenseType: r.licenseType,
-        installedAt: r.installedAt.toISOString,
+        installedAt: r.installedAt.toISOString(),
         listing: this.serialize(r.listing),
       })),
     };
@@ -497,7 +497,7 @@ export class VoiceMarketplaceService {
         organizationId: r.organizationId,
         rating: r.rating,
         body: r.body,
-        createdAt: r.createdAt.toISOString,
+        createdAt: r.createdAt.toISOString(),
       })),
     };
   }
@@ -540,7 +540,7 @@ export class VoiceMarketplaceService {
           where: { id: existing.id },
           data: {
             rating,
-            body: input.body?.trim || '',
+            body: input.body?.trim() || '',
             userId: input.userId,
           },
         })
@@ -550,7 +550,7 @@ export class VoiceMarketplaceService {
             organizationId: input.organizationId,
             userId: input.userId,
             rating,
-            body: input.body?.trim || '',
+            body: input.body?.trim() || '',
           },
         });
 
@@ -581,7 +581,7 @@ export class VoiceMarketplaceService {
       listingId: review.listingId,
       rating: review.rating,
       body: review.body,
-      createdAt: review.createdAt.toISOString,
+      createdAt: review.createdAt.toISOString(),
     };
   }
 
@@ -636,7 +636,7 @@ export class VoiceMarketplaceService {
         applicationFeeCents: r.applicationFeeCents,
         currency: r.currency,
         status: r.status,
-        createdAt: r.createdAt.toISOString,
+        createdAt: r.createdAt.toISOString(),
       })),
     };
   }

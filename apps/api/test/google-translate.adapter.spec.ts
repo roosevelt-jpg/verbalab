@@ -2,12 +2,12 @@ import { describe, expect, it, vi } from 'vitest';
 import { GoogleTranslateAdapter } from '../src/gateway/google-translate.adapter';
 import { ApiException } from '../src/common/errors/api-exception';
 
-describe('GoogleTranslateAdapter',  => {
-  it('returns translated text from a fixture response', async  => {
-    const fetchImpl = vi.fn.mockResolvedValue({
+describe('GoogleTranslateAdapter', () => {
+  it('returns translated text from a fixture response', async () => {
+    const fetchImpl = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
-      json: async  => ({
+      json: async () => ({
         data: { translations: [{ translatedText: 'Habari' }] },
       }),
     });
@@ -18,28 +18,28 @@ describe('GoogleTranslateAdapter',  => {
     expect(result.text).toBe('Habari');
     expect(result.provider).toBe('google_translate');
     expect(result.characters).toBe(5);
-    expect(fetchImpl).toHaveBeenCalledOnce;
+    expect(fetchImpl).toHaveBeenCalledOnce();
   });
 
-  it('throws provider_not_configured when API key is missing', async  => {
+  it('throws provider_not_configured when API key is missing', async () => {
     const adapter = new GoogleTranslateAdapter('');
     await expect(
       adapter.translate({ text: 'Hello', source: 'en', target: 'sw' }),
     ).rejects.toMatchObject({ code: 'provider_not_configured' } satisfies Partial<ApiException>);
   });
 
-  it('retries once on HTTP 503 then succeeds', async  => {
+  it('retries once on HTTP 503 then succeeds', async () => {
     const fetchImpl = vi
-      .fn
+      .fn()
       .mockResolvedValueOnce({
         ok: false,
         status: 503,
-        json: async  => ({ error: { message: 'unavailable' } }),
+        json: async () => ({ error: { message: 'unavailable' } }),
       })
       .mockResolvedValueOnce({
         ok: true,
         status: 200,
-        json: async  => ({
+        json: async () => ({
           data: { translations: [{ translatedText: 'Habari' }] },
         }),
       });

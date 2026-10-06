@@ -17,8 +17,8 @@ export class GetExperimentPlatformEngineHandler
     private readonly catalog: ExperimentPlatformCatalogPort,
   ) {}
 
-  execute: Promise<ExperimentPlatformEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<ExperimentPlatformEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListExperimentPlatformProductsHandler
     private readonly catalog: ExperimentPlatformCatalogPort,
   ) {}
 
-  execute: Promise<ExperimentPlatformProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<ExperimentPlatformProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

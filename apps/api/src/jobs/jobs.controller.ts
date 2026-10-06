@@ -9,7 +9,7 @@ import { JobType } from './job.types';
 import { ClerkAuthGuard, SessionContext } from '../common/guards/clerk-auth.guard';
 import { WebhookService } from './webhook.service';
 
-@Controller
+@Controller()
 export class JobsController {
   constructor(
     private readonly jobs: JobsService,
@@ -20,8 +20,8 @@ export class JobsController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(ApiKeyGuard)
   create(
-    @CurrentApiKey auth: ApiKeyContext,
-    @Body
+    @CurrentApiKey() auth: ApiKeyContext,
+    @Body()
     body: {
       type?: string;
       input?: unknown;
@@ -48,7 +48,7 @@ export class JobsController {
   @Get('v1/jobs')
   @UseGuards(TranslateAuthGuard)
   list(
-    @Req req: Request & { translateAuth: TranslateAuthContext },
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
     @Query('limit') limitRaw?: string,
   ) {
     const limit = limitRaw ? Number(limitRaw) : 50;
@@ -57,14 +57,14 @@ export class JobsController {
 
   @Get('v1/jobs/:id')
   @UseGuards(TranslateAuthGuard)
-  get(@Req req: Request & { translateAuth: TranslateAuthContext }, @Param('id') id: string) {
+  get(@Req() req: Request & { translateAuth: TranslateAuthContext }, @Param('id') id: string) {
     return this.jobs.get(req.translateAuth.organizationId, id);
   }
 
   /** Reveal/create the org webhook signing secret (console session). */
   @Post('v1/webhooks/signing-secret')
   @UseGuards(ClerkAuthGuard)
-  async webhookSecret(@CurrentSession session: SessionContext) {
+  async webhookSecret(@CurrentSession() session: SessionContext) {
     if (session.role !== 'owner' && session.role !== 'admin') {
       throw new ApiException(
         'forbidden',

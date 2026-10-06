@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_tm_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_tm_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Translation memory',  => {
+describe('Translation memory (VL-051)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -43,14 +43,14 @@ describe('Translation memory',  => {
   let billing: BillingService;
   let gatewayCalls: number;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -74,16 +74,16 @@ describe('Translation memory',  => {
     });
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('normalizes whitespace for hashing',  => {
-    expect(normalizeTmSegment(' Hello world \n')).toBe('Hello world');
-    expect(hashTmSegment('Hello world')).toBe(hashTmSegment(' Hello world '));
+  it('normalizes whitespace for hashing', () => {
+    expect(normalizeTmSegment('  Hello   world \n')).toBe('Hello world');
+    expect(hashTmSegment('Hello world')).toBe(hashTmSegment('  Hello   world  '));
   });
 
-  it('bypasses vendor on exact TM hit and skips quota', async  => {
+  it('bypasses vendor on exact TM hit and skips quota', async () => {
     const org = await seedOrg(prisma, 'tmhit');
     await billing.applyEntitlementForTests({
       organizationId: org.id,
@@ -108,7 +108,7 @@ describe('Translation memory',  => {
     });
 
     const before = gatewayCalls;
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/translate')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'Official greeting', source: 'en', target: 'sw' })
@@ -122,7 +122,7 @@ describe('Translation memory',  => {
     expect(gatewayCalls).toBe(before);
 
     // Long text would exceed quota of 5 if it went to MT
-    const long = await request(app.getHttpServer)
+    const long = await request(app.getHttpServer())
       .post('/v1/translate')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'Official greeting', source: 'en', target: 'sw' })
@@ -130,7 +130,7 @@ describe('Translation memory',  => {
     expect(long.body.tmHit).toBe(true);
   });
 
-  it('calls vendor when no TM match', async  => {
+  it('calls vendor when no TM match', async () => {
     const org = await seedOrg(prisma, 'tmmiss');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -140,7 +140,7 @@ describe('Translation memory',  => {
     });
 
     const before = gatewayCalls;
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/translate')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'No memory yet', source: 'en', target: 'yo' })

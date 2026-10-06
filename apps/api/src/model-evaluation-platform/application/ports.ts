@@ -1,4 +1,4 @@
-/** Application ports for Model Evaluation Platform. */
+/** Application ports for Model Evaluation Platform (VL-236). */
 
 export type MepSuiteRow = {
   id: string;
@@ -14,8 +14,8 @@ export type MepEngineBundle = ReturnType<
 >;
 
 export interface ModelEvaluationPlatformCatalogPort {
-  engine: MepEngineBundle;
-  listSuites: MepSuiteRow[];
+  engine(): MepEngineBundle;
+  listSuites(): MepSuiteRow[];
 }
 
 export const MODEL_EVALUATION_PLATFORM_CATALOG_PORT = Symbol(

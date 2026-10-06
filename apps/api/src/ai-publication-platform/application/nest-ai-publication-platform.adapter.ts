@@ -6,16 +6,16 @@ import {
   AiPublicationPlatformProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestAiPublicationPlatformCatalogAdapter implements AiPublicationPlatformCatalogPort {
   constructor(private readonly service: AiPublicationPlatformService) {}
 
-  engine: AiPublicationPlatformEngineBundle {
-    return this.service.engine;
+  engine(): AiPublicationPlatformEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: AiPublicationPlatformProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): AiPublicationPlatformProductRow[] {
+    const bundle = this.engine() as {
       products?: AiPublicationPlatformProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestAiPublicationPlatformCatalogAdapter implements AiPublicationPla
         status: 'shipped',
         api: 'GET /v1/ai-publication-platform/engine',
         console: '/ai-publication-platform',
-        notes: ' shipped.',
+        notes: 'VL-276 shipped.',
       },
     ];
   }

@@ -36,16 +36,16 @@ type Discover = {
   ontologyConcepts: Array<{ name: string; type: string }>;
 };
 
-export function KnowledgeIntelligenceClient {
-  const { getToken, isLoaded } = useAuth;
+export function KnowledgeIntelligenceClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [insight, setInsight] = useState<Insight | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState('');
   const [discover, setDiscover] = useState<Discover | null>(null);
 
-  const load = useCallback(async  => {
-    const token = await getToken;
+  const load = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, ins] = await Promise.all([
       apiFetch<Engine>('/v1/knowledge-intelligence/engine', { token }),
@@ -55,15 +55,15 @@ export function KnowledgeIntelligenceClient {
     setInsight(ins);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void load.catch((err: Error) => setError(err.message));
+    void load().catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
-  const runDiscover = useCallback(async  => {
+  const runDiscover = useCallback(async () => {
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const res = await apiFetch<Discover>('/v1/knowledge-intelligence/discover', {
         token,
@@ -112,7 +112,7 @@ export function KnowledgeIntelligenceClient {
           placeholder="Discover query"
           style={{ ...input, minWidth: '16rem', flex: 1 }}
         />
-        <button type="button" onClick={ => void runDiscover} disabled={!query.trim} style={btn}>
+        <button type="button" onClick={() => void runDiscover()} disabled={!query.trim()} style={btn}>
           Discover
         </button>
       </div>

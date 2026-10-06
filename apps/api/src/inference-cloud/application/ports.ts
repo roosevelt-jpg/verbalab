@@ -1,4 +1,4 @@
-/** Application ports for Inference Cloud. Implemented by Nest adapters. */
+/** Application ports for Inference Cloud (VL-204). Implemented by Nest adapters. */
 
 export type InferenceProductRow = {
   id: string;
@@ -20,8 +20,8 @@ export type InferenceProductsBundle = {
 };
 
 export interface InferenceCatalogPort {
-  products: InferenceProductsBundle;
-  listProducts: InferenceProductRow[];
+  products(): InferenceProductsBundle;
+  listProducts(): InferenceProductRow[];
 }
 
 export const INFERENCE_CATALOG_PORT = Symbol('INFERENCE_CATALOG_PORT');

@@ -8,7 +8,7 @@ import {
   planWorkspaceLimit,
 } from '../billing/plans';
 
-@Injectable
+@Injectable()
 export class WorkspacesService {
   constructor(
     private readonly prisma: PrismaService,
@@ -96,7 +96,7 @@ export class WorkspacesService {
         HttpStatus.FORBIDDEN,
       );
     }
-    const name = input.name.trim;
+    const name = input.name.trim();
     if (!name) {
       throw new ApiException('validation_error', 'name is required', HttpStatus.BAD_REQUEST);
     }
@@ -122,8 +122,8 @@ export class WorkspacesService {
       data: {
         organizationId: input.organizationId,
         name,
-        defaultSourceLang: (input.defaultSourceLang ?? 'en').trim || 'en',
-        defaultTargetLang: (input.defaultTargetLang ?? 'ak').trim || 'ak',
+        defaultSourceLang: (input.defaultSourceLang ?? 'en').trim() || 'en',
+        defaultTargetLang: (input.defaultTargetLang ?? 'ak').trim() || 'ak',
       },
     });
     await this.audit.record({
@@ -164,12 +164,12 @@ export class WorkspacesService {
     const row = await this.prisma.workspace.update({
       where: { id: existing.id },
       data: {
-        ...(input.name !== undefined ? { name: input.name.trim || existing.name } : {}),
+        ...(input.name !== undefined ? { name: input.name.trim() || existing.name } : {}),
         ...(input.defaultSourceLang !== undefined
-          ? { defaultSourceLang: input.defaultSourceLang.trim || existing.defaultSourceLang }
+          ? { defaultSourceLang: input.defaultSourceLang.trim() || existing.defaultSourceLang }
           : {}),
         ...(input.defaultTargetLang !== undefined
-          ? { defaultTargetLang: input.defaultTargetLang.trim || existing.defaultTargetLang }
+          ? { defaultTargetLang: input.defaultTargetLang.trim() || existing.defaultTargetLang }
           : {}),
       },
     });

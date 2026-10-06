@@ -1,8 +1,8 @@
 /**
- * Library Phase 157 → AI Operations Dashboard.
+ * Library Phase 157 → AI Operations Dashboard (VL-290).
  * Aggregates sibling MLOps/LLMOps hubs into a unified snapshot.
  */
-export function aiOperationsDashboardEngineCatalog {
+export function aiOperationsDashboardEngineCatalog() {
   return {
     product: 'Lugemi AI Operations Dashboard',
     honesty: {
@@ -17,7 +17,7 @@ export function aiOperationsDashboardEngineCatalog {
       note: 'Dashboard surfaces AgentOps policy violations and Continuous Learning promote gate posture.',
     },
     docs: '/docs/AI_OPERATIONS_DASHBOARD.md',
-    note: 'AI Operations Dashboard. Unified snapshot over models/training/datasets/prompts/knowledge/inference/GPU/costs/drift/safety.',
+    note: 'AI Operations Dashboard (VL-290). Unified snapshot over models/training/datasets/prompts/knowledge/inference/GPU/costs/drift/safety.',
     snapshotSeed: {
       mode: 'sibling_aggregation',
     },

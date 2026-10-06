@@ -1,4 +1,4 @@
-/** Application ports for Global Policy Engine. */
+/** Application ports for Global Policy Engine (VL-317). */
 
 export type GlobalPolicyEngineProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type GlobalPolicyEngineEngineBundle = ReturnType<
 >;
 
 export interface GlobalPolicyEngineCatalogPort {
-  engine: GlobalPolicyEngineEngineBundle;
-  listProducts: GlobalPolicyEngineProductRow[];
+  engine(): GlobalPolicyEngineEngineBundle;
+  listProducts(): GlobalPolicyEngineProductRow[];
 }
 
 export const GLOBAL_POLICY_ENGINE_CATALOG_PORT = Symbol('GLOBAL_POLICY_ENGINE_CATALOG_PORT');

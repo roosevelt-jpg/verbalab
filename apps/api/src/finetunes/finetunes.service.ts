@@ -23,10 +23,10 @@ import {
   resolveTrainingLauncher,
 } from '../training/training-launchers';
 
-@Injectable
+@Injectable()
 export class FineTunesService implements OnModuleInit {
   private readonly logger = new Logger(FineTunesService.name);
-  private readonly readyByPair = new Map<string, ReadyFineTuneRoute>;
+  private readonly readyByPair = new Map<string, ReadyFineTuneRoute>();
   private launcherOverride: ReturnType<typeof resolveTrainingLauncher> | null = null;
 
   constructor(
@@ -42,23 +42,23 @@ export class FineTunesService implements OnModuleInit {
     this.launcherOverride = launcher;
   }
 
-  private publicApiBase: string {
+  private publicApiBase(): string {
     return (process.env.API_PUBLIC_URL ?? 'http://127.0.0.1:3001').replace(/\/$/, '');
   }
 
-  private callbackUrl: string {
-    return `${this.publicApiBase}/v1/training-jobs/callback`;
+  private callbackUrl(): string {
+    return `${this.publicApiBase()}/v1/training-jobs/callback`;
   }
 
-  launcherStatus {
+  launcherStatus() {
     const names = ['manual', 'modal', 'vertex', 'fixture'] as const;
     return {
-      callbackUrl: this.callbackUrl,
+      callbackUrl: this.callbackUrl(),
       launchers: names.map((name) => {
         const launcher = resolveTrainingLauncher(name);
         return {
           name,
-          configured: launcher.isConfigured,
+          configured: launcher.isConfigured(),
           notes:
             name === 'manual'
               ? 'Default. Attach artifacts after external GPU training.'
@@ -72,11 +72,11 @@ export class FineTunesService implements OnModuleInit {
     };
   }
 
-  async onModuleInit {
-    await this.refreshReadyCache;
+  async onModuleInit() {
+    await this.refreshReadyCache();
     this.gateway.setFineTuneRouting({
       resolve: (source, target) => this.resolveReady(source, target),
-      adapter: new FineTuneTranslateAdapter,
+      adapter: new FineTuneTranslateAdapter(),
     });
   }
 
@@ -98,11 +98,11 @@ export class FineTunesService implements OnModuleInit {
     return this.readyByPair.get(this.pairMapKey(sourceLang, targetLang)) ?? null;
   }
 
-  async refreshReadyCache {
+  async refreshReadyCache() {
     const rows = await this.prisma.modelRegistryEntry.findMany({
       where: { feature: 'translate', status: 'ready', kind: 'finetune' },
     });
-    this.readyByPair.clear;
+    this.readyByPair.clear();
     for (const row of rows) {
       if (!isFineTuneArtifactKind(row.artifactKind)) continue;
       this.readyByPair.set(this.pairMapKey(row.sourceLang, row.targetLang), {
@@ -117,9 +117,9 @@ export class FineTunesService implements OnModuleInit {
     }
   }
 
-  /** Pairs where coverage shows vendor metrics below thresholds. */
-  listCandidates {
-    const snapshot = this.evalService.getSnapshot;
+  /** Pairs where VL-100 coverage shows vendor metrics below thresholds. */
+  listCandidates() {
+    const snapshot = this.evalService.getSnapshot();
     const focus = new Set(
       GOLDEN_PAIRS.map((p) => pairKey(p.sourceLang, p.targetLang)),
     );
@@ -178,8 +178,8 @@ export class FineTunesService implements OnModuleInit {
     };
   }
 
-  packsDir {
-    return join(process.cwd, 'eval', 'finetune-packs');
+  packsDir() {
+    return join(process.cwd(), 'eval', 'finetune-packs');
   }
 
   exportTrainingPack(sourceLang: string, targetLang: string) {
@@ -194,7 +194,7 @@ export class FineTunesService implements OnModuleInit {
       );
     }
 
-    const dir = this.packsDir;
+    const dir = this.packsDir();
     mkdirSync(dir, { recursive: true });
     const jsonlPath = join(dir, `${sourceLang}-${targetLang}.jsonl`);
     const phraseMapPath = join(dir, `${sourceLang}-${targetLang}.phrase-map.json`);
@@ -223,7 +223,7 @@ export class FineTunesService implements OnModuleInit {
     });
   }
 
-  listModels {
+  listModels() {
     return this.prisma.modelRegistryEntry.findMany({
       orderBy: { updatedAt: 'desc' },
     });
@@ -243,7 +243,7 @@ export class FineTunesService implements OnModuleInit {
     this.assertOwnerOrAdmin(input.role);
     await this.billing.assertPro(input.organizationId);
 
-    if (!input.sourceLang?.trim || !input.targetLang?.trim) {
+    if (!input.sourceLang?.trim() || !input.targetLang?.trim()) {
       throw new ApiException(
         'validation_error',
         'sourceLang and targetLang are required',
@@ -357,7 +357,7 @@ export class FineTunesService implements OnModuleInit {
       );
     }
 
-    const callbackToken = newCallbackToken;
+    const callbackToken = newCallbackToken();
     const launcher =
       this.launcherOverride?.name === job.launcher
         ? this.launcherOverride
@@ -371,7 +371,7 @@ export class FineTunesService implements OnModuleInit {
         targetLang: job.targetLang,
         baseModel: job.baseModel,
         trainingPackPath: job.trainingPackPath,
-        callbackUrl: this.callbackUrl,
+        callbackUrl: this.callbackUrl(),
         callbackToken,
       });
 
@@ -383,7 +383,7 @@ export class FineTunesService implements OnModuleInit {
           callbackToken,
           errorMessage: launched.message ?? null,
           providerMeta: (launched.providerMeta ?? { launcher: job.launcher }) as Prisma.InputJsonValue,
-          startedAt: launched.status === 'running' ? new Date : null,
+          startedAt: launched.status === 'running' ? new Date() : null,
         },
       });
 
@@ -403,7 +403,7 @@ export class FineTunesService implements OnModuleInit {
 
       return {
         ...updated,
-        callbackUrl: this.callbackUrl,
+        callbackUrl: this.callbackUrl(),
         // Returned once so rented GPU workers can authenticate the callback.
         callbackToken,
       };
@@ -452,7 +452,7 @@ export class FineTunesService implements OnModuleInit {
         data: {
           status: 'failed',
           errorMessage: input.errorMessage ?? 'Remote training reported failure',
-          finishedAt: new Date,
+          finishedAt: new Date(),
           metricsJson: input.metricsJson ?? undefined,
         },
       });
@@ -503,7 +503,7 @@ export class FineTunesService implements OnModuleInit {
       throw new ApiException('not_found', 'Fine-tune job not found', HttpStatus.NOT_FOUND);
     }
 
-    let artifactUri = input.artifactUri?.trim ?? '';
+    let artifactUri = input.artifactUri?.trim() ?? '';
     if (input.useGoldenPhraseMap || (!artifactUri && input.artifactKind === 'phrase_map')) {
       const pack = this.exportTrainingPack(job.sourceLang, job.targetLang);
       artifactUri = pack.phraseMapPath;
@@ -527,7 +527,7 @@ export class FineTunesService implements OnModuleInit {
           artifactKind: input.artifactKind,
           artifactUri,
           errorMessage: null,
-          finishedAt: new Date,
+          finishedAt: new Date(),
         },
       });
 
@@ -571,7 +571,7 @@ export class FineTunesService implements OnModuleInit {
       return { job: updatedJob, model: null };
     });
 
-    await this.refreshReadyCache;
+    await this.refreshReadyCache();
 
     await this.audit.record({
       organizationId: input.organizationId,
@@ -610,7 +610,7 @@ export class FineTunesService implements OnModuleInit {
       where: { id: model.id },
       data: { status: 'retired' },
     });
-    await this.refreshReadyCache;
+    await this.refreshReadyCache();
 
     await this.audit.record({
       organizationId: input.organizationId,

@@ -14,7 +14,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory) {
+    if (name.isDirectory()) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       out.push(...walkTsFiles(p));
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -24,28 +24,28 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Knowledge Operating System',  => {
+describe('Knowledge Operating System (VL-341)', () => {
   let app: INestApplication<App>;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    }).compile();
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
   }, 120_000);
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('ships ADR and product doc',  => {
+  it('ships ADR and product doc', () => {
     expect(existsSync(join(root, 'docs/adr/0243-knowledge-operating-system.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/KNOWLEDGE_OPERATING_SYSTEM.md'))).toBe(true);
   });
 
-  it('has no TODO/FIXME markers in hub source',  => {
+  it('has no TODO/FIXME markers in hub source', () => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     const dir = join(apiSrc, 'knowledge-operating-system');
@@ -56,7 +56,7 @@ describe('Knowledge Operating System',  => {
     expect(hits).toEqual([]);
   });
 
-  it('does not embed a third parallel agent/workflow/memory engine',  => {
+  it('does not embed a third parallel agent/workflow/memory engine', () => {
     const dir = join(apiSrc, 'knowledge-operating-system');
     const bannedImpl = /class AgentExecutor|new WorkflowEngine|Mem0Client|createSandboxVm|kubernetesResourceController|linuxSyscallTable/i;
     const hits: string[] = [];
@@ -67,11 +67,11 @@ describe('Knowledge Operating System',  => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes engine/products with honesty gates', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes engine/products with honesty gates', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/knowledge-operating-system/engine')
       .expect(200);
-    expect(res.body.product).toBeTruthy;
+    expect(res.body.product).toBeTruthy();
     expect(res.body.honesty.unifyingOrchestrationLayer).toBe(true);
 
     expect(res.body.honesty.unifyingOrchestrationLayer).toBe(true);
@@ -89,7 +89,7 @@ describe('Knowledge Operating System',  => {
     expect(JSON.stringify(res.body.routesTo)).toContain('knowledge-cloud');
     expect(JSON.stringify(res.body.routesTo)).toContain('african-knowledge-graph');
 
-    const route = await request(app.getHttpServer)
+    const route = await request(app.getHttpServer())
       .get('/v1/knowledge-operating-system/route')
       .expect(200);
     expect(route.body.unifyingOrchestrationLayer).toBe(true);
@@ -98,10 +98,10 @@ describe('Knowledge Operating System',  => {
 
   });
 
-  it('exposes monitoring', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes monitoring', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/knowledge-operating-system/monitoring')
       .expect(200);
-    expect(res.body).toBeTruthy;
+    expect(res.body).toBeTruthy();
   });
 });

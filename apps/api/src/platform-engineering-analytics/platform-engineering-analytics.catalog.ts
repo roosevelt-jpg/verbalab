@@ -1,8 +1,8 @@
 /**
- * Library Phase 179 → Platform Engineering Analytics.
+ * Library Phase 179 → Platform Engineering Analytics (VL-312).
  * DORA + velocity/adoption/cost/reliability aggregation from sibling hubs.
  */
-export function platformEngineeringAnalyticsEngineCatalog {
+export function platformEngineeringAnalyticsEngineCatalog() {
   return {
     product: 'Lugemi Platform Engineering Analytics',
     capabilities: [
@@ -32,6 +32,6 @@ export function platformEngineeringAnalyticsEngineCatalog {
     },
     docs: '/docs/PLATFORM_ENGINEERING_ANALYTICS.md',
     note:
-      'Platform Engineering Analytics. DORA metrics + velocity/adoption/cost/reliability from siblings.',
+      'Platform Engineering Analytics (VL-312). DORA metrics + velocity/adoption/cost/reliability from siblings.',
   };
 }

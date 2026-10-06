@@ -22,7 +22,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_call_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_call_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -36,29 +36,29 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Call Intelligence',  => {
+describe('Call Intelligence (VL-158)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('documents Call Intelligence honesty',  => {
+  it('documents Call Intelligence honesty', () => {
     const doc = join(root, 'docs/CALL_INTELLIGENCE.md');
     const adr = join(root, 'docs/adr/0077-call-intelligence.md');
     expect(existsSync(doc)).toBe(true);
@@ -69,14 +69,14 @@ describe('Call Intelligence',  => {
     expect(text).not.toMatch(/Gong.*shipped/i);
   });
 
-  it('exposes call engine with realtime CCaaS deferred', async  => {
-    const res = await request(app.getHttpServer).get('/v1/call-intelligence/engine').expect(200);
+  it('exposes call engine with realtime CCaaS deferred', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/call-intelligence/engine').expect(200);
     expect(res.body.product).toContain('Call');
     const rt = res.body.capabilities.find((c: { id: string }) => c.id === 'realtime-ccaas');
     expect(rt.status).toBe('deferred');
   });
 
-  it('ingests transcript, analyzes, and reports', async  => {
+  it('ingests transcript, analyzes, and reports', async () => {
     const org = await seedOrg(prisma, 'call');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -85,7 +85,7 @@ describe('Call Intelligence',  => {
       name: 'call-key',
     });
 
-    const created = await request(app.getHttpServer)
+    const created = await request(app.getHttpServer())
       .post('/v1/call-intelligence/calls')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -97,31 +97,31 @@ describe('Call Intelligence',  => {
       .expect(201);
 
     expect(created.body.status).toBe('analyzed');
-    expect(created.body.summary).toBeTruthy;
-    expect(created.body.analysis.sentiment.label).toBeTruthy;
+    expect(created.body.summary).toBeTruthy();
+    expect(created.body.analysis.sentiment.label).toBeTruthy();
     expect(created.body.analysis.qa.score).toBeGreaterThan(0);
     expect(created.body.analysis.topics.length).toBeGreaterThan(0);
 
-    const listed = await request(app.getHttpServer)
+    const listed = await request(app.getHttpServer())
       .get('/v1/call-intelligence/calls')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(listed.body.data.length).toBeGreaterThanOrEqual(1);
 
-    const report = await request(app.getHttpServer)
+    const report = await request(app.getHttpServer())
       .get('/v1/call-intelligence/report')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(report.body.totalCalls).toBeGreaterThanOrEqual(1);
 
-    const analytics = await request(app.getHttpServer)
+    const analytics = await request(app.getHttpServer())
       .get('/v1/call-intelligence/analytics')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(analytics.body.total).toBeGreaterThanOrEqual(1);
   });
 
-  it('streams SSE analyze events', async  => {
+  it('streams SSE analyze events', async () => {
     const org = await seedOrg(prisma, 'stream');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -130,7 +130,7 @@ describe('Call Intelligence',  => {
       name: 'stream-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/call-intelligence/analyze/stream')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ transcript: 'Hi, thanks for the great support today. Goodbye.' })
@@ -141,16 +141,16 @@ describe('Call Intelligence',  => {
     expect(res.text).toContain('event: done');
   });
 
-  it('exposes callIntelligenceEngine via GraphQL', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes callIntelligenceEngine via GraphQL', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({ query: '{ callIntelligenceEngine { product capabilities { id status } } }' })
       .expect(200);
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.callIntelligenceEngine.product).toContain('Call');
   });
 
-  it('analyzes transcripts for topics and compliance',  => {
+  it('analyzes transcripts for topics and compliance', () => {
     const analysis = analyzeCallTranscript(
       'I hate this billing charge on card 4111 1111 1111 1111. Please refund.',
     );

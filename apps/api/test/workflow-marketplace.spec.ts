@@ -21,7 +21,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory) out.push(...walkTsFiles(full));
+    if (statSync(full).isDirectory()) out.push(...walkTsFiles(full));
     else if (full.endsWith('.ts')) out.push(full);
   }
   return out;
@@ -36,7 +36,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_wm_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_wm_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -50,7 +50,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Workflow Marketplace',  => {
+describe('Workflow Marketplace (VL-255)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -59,14 +59,14 @@ describe('Workflow Marketplace',  => {
   let marketplace: WorkflowMarketplaceService;
   const prevMode = process.env.LUGEMI_WORKFLOW_RUNTIME_MODE;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     process.env.LUGEMI_WORKFLOW_RUNTIME_MODE = 'sandbox';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    }).compile();
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
     billing = app.get(BillingService);
@@ -76,7 +76,7 @@ describe('Workflow Marketplace',  => {
     app.get(GatewayService).setChatProviderForTests({
       name: 'fixture_chat',
       async complete(input) {
-        const user = [...input.messages].reverse.find((m) => m.role === 'user');
+        const user = [...input.messages].reverse().find((m) => m.role === 'user');
         return {
           message: {
             role: 'assistant',
@@ -93,19 +93,19 @@ describe('Workflow Marketplace',  => {
     });
   });
 
-  afterAll(async  => {
+  afterAll(async () => {
     if (prevMode === undefined) delete process.env.LUGEMI_WORKFLOW_RUNTIME_MODE;
     else process.env.LUGEMI_WORKFLOW_RUNTIME_MODE = prevMode;
-    await app.close;
+    await app.close();
   });
 
-  it('documents Workflow Marketplace honesty (sandbox + Policy; not Zapier OS)',  => {
+  it('documents Workflow Marketplace honesty (sandbox + Policy; not Zapier OS)', () => {
     const doc = join(root, 'docs/WORKFLOW_MARKETPLACE.md');
     const adr = join(root, 'docs/adr/0157-workflow-marketplace.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
+    expect(text).toContain('VL-255');
     expect(text).toMatch(/sandbox/i);
     expect(text).toMatch(/Policy/i);
     expect(text).toMatch(/liveStepExecution/i);
@@ -113,7 +113,7 @@ describe('Workflow Marketplace',  => {
     expect(text).toMatch(/Stripe|storesRawCardData/i);
   });
 
-  it('has no TODO/FIXME markers in Workflow Marketplace source',  => {
+  it('has no TODO/FIXME markers in Workflow Marketplace source', () => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const file of walkTsFiles(join(apiSrc, 'workflow-marketplace'))) {
@@ -123,8 +123,8 @@ describe('Workflow Marketplace',  => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes engine with sandbox + Policy hard-gate honesty', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes engine with sandbox + Policy hard-gate honesty', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/workflow-marketplace/engine')
       .expect(200);
     expect(res.body.product).toBe('Lugemi Workflow Marketplace');
@@ -140,15 +140,15 @@ describe('Workflow Marketplace',  => {
     expect(res.body.categories.some((c: { id: string }) => c.id === 'approval')).toBe(true);
   });
 
-  it('exposes workflowMarketplaceEngine via GraphQL CQRS façade', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes workflowMarketplaceEngine via GraphQL CQRS façade', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query:
           '{ workflowMarketplaceEngine { product liveStepExecution sandboxRequired workflowPolicyHardGateRequired storesRawCardData stripeOrEquivalentRequired capabilities { id status } } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.workflowMarketplaceEngine.product).toContain('Workflow Marketplace');
     expect(res.body.data.workflowMarketplaceEngine.liveStepExecution).toBe(false);
     expect(res.body.data.workflowMarketplaceEngine.sandboxRequired).toBe(true);
@@ -156,9 +156,9 @@ describe('Workflow Marketplace',  => {
     expect(res.body.data.workflowMarketplaceEngine.storesRawCardData).toBe(false);
   });
 
-  it('publishes, installs, runs via sandbox Policy gate; denies live actions', async  => {
-    const publisher = await seedOrg(prisma, `wmpub_${Date.now}`);
-    const buyer = await seedOrg(prisma, `wmbuy_${Date.now}`);
+  it('publishes, installs, runs via sandbox Policy gate; denies live actions', async () => {
+    const publisher = await seedOrg(prisma, `wmpub_${Date.now()}`);
+    const buyer = await seedOrg(prisma, `wmbuy_${Date.now()}`);
     await billing.applyEntitlementForTests({ organizationId: publisher.id, plan: 'pro' });
     await billing.applyEntitlementForTests({ organizationId: buyer.id, plan: 'pro' });
 
@@ -239,7 +239,7 @@ describe('Workflow Marketplace',  => {
       userId: buyer.memberships[0]!.userId,
       name: 'wm-test',
     });
-    const httpRun = await request(app.getHttpServer)
+    const httpRun = await request(app.getHttpServer())
       .post(`/v1/workflow-marketplace/listings/${published.listing.id}/run`)
       .set('Authorization', `Bearer ${buyerKey.secret}`)
       .send({ actions: [{ action: 'workflow.execute_live' }] })
@@ -259,8 +259,8 @@ describe('Workflow Marketplace',  => {
     expect(reviews.reviews[0]?.rating).toBe(5);
   });
 
-  it('rejects free-plan publish', async  => {
-    const free = await seedOrg(prisma, `wmfree_${Date.now}`);
+  it('rejects free-plan publish', async () => {
+    const free = await seedOrg(prisma, `wmfree_${Date.now()}`);
     await expect(
       marketplace.publish({
         organizationId: free.id,

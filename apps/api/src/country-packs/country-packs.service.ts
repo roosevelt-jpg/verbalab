@@ -4,7 +4,7 @@ import { ApiException } from '../common/errors/api-exception';
 import { LocalesService } from '../locales/locales.service';
 import { COUNTRY_PACK_SEEDS } from './country-pack-seeds';
 
-@Injectable
+@Injectable()
 export class CountryPacksService implements OnModuleInit {
   private readonly logger = new Logger(CountryPacksService.name);
 
@@ -13,11 +13,11 @@ export class CountryPacksService implements OnModuleInit {
     private readonly locales: LocalesService,
   ) {}
 
-  async onModuleInit {
-    await this.seed;
+  async onModuleInit() {
+    await this.seed();
   }
 
-  async seed {
+  async seed() {
     for (const pack of COUNTRY_PACK_SEEDS) {
       await this.prisma.countryPack.upsert({
         where: { code: pack.code },
@@ -64,13 +64,13 @@ export class CountryPacksService implements OnModuleInit {
     });
     return {
       data: rows.map((r) => this.toDto(r)),
-      note: 'Curated African-priority country packs. Compose language locale packs — not CLDR/SKU catalog.',
+      note: 'Curated African-priority country packs (VL-135). Compose language locale packs — not CLDR/SKU catalog.',
     };
   }
 
   async get(code: string, opts?: { includeLocales?: boolean }) {
     const row = await this.prisma.countryPack.findUnique({
-      where: { code: code.trim.toUpperCase },
+      where: { code: code.trim().toUpperCase() },
     });
     if (!row) {
       throw new ApiException('not_found', 'Country pack not found', HttpStatus.NOT_FOUND);
@@ -84,13 +84,13 @@ export class CountryPacksService implements OnModuleInit {
       try {
         localePacks.push(await this.locales.get(lang));
       } catch {
-        // Language may lack a pack — skip honestly.
+        // Language may lack a VL-102 pack — skip honestly.
       }
     }
     return {
       ...dto,
       localePacks,
-      note: 'Includes linked language locale packs where seeded.',
+      note: 'Includes linked VL-102 language locale packs where seeded.',
     };
   }
 

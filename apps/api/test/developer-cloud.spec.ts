@@ -23,7 +23,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_dev_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_dev_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -37,31 +37,31 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Developer Cloud Foundation',  => {
+describe('Developer Cloud Foundation (VL-127)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let developer: DeveloperCloudService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
     developer = app.get(DeveloperCloudService);
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('documents Developer Cloud mapping (no OAuth AS / sandbox cluster)',  => {
+  it('documents Developer Cloud mapping (no OAuth AS / sandbox cluster)', () => {
     const doc = join(root, 'docs/DEVELOPER_CLOUD.md');
     const adr = join(root, 'docs/adr/0048-developer-cloud-foundation.md');
     expect(existsSync(doc)).toBe(true);
@@ -73,7 +73,7 @@ describe('Developer Cloud Foundation',  => {
     expect(text).toContain('@lugemi/cli');
   });
 
-  it('ships thin CLI package wrapping the SDK',  => {
+  it('ships thin CLI package wrapping the SDK', () => {
     expect(existsSync(join(root, 'packages/cli/package.json'))).toBe(true);
     expect(existsSync(join(root, 'packages/cli/src/cli.ts'))).toBe(true);
     const pkg = JSON.parse(readFileSync(join(root, 'packages/cli/package.json'), 'utf8')) as {
@@ -82,11 +82,11 @@ describe('Developer Cloud Foundation',  => {
       dependencies: Record<string, string>;
     };
     expect(pkg.name).toBe('@lugemi/cli');
-    expect(pkg.bin.lugemi).toBeTruthy;
+    expect(pkg.bin.lugemi).toBeTruthy();
     expect(pkg.dependencies['@lugemi/sdk']).toBe('workspace:*');
   });
 
-  it('creates live and test API keys with correct prefixes', async  => {
+  it('creates live and test API keys with correct prefixes', async () => {
     const live = generateApiKeySecret('live');
     const test = generateApiKeySecret('test');
     expect(live.secret.startsWith('lg_live_')).toBe(true);
@@ -95,7 +95,7 @@ describe('Developer Cloud Foundation',  => {
     expect(looksLikeApiKey(test.secret)).toBe(true);
     expect(looksLikeApiKey('sk_test')).toBe(false);
 
-    const org = await seedOrg(prisma, `dev_keys_${Date.now}`);
+    const org = await seedOrg(prisma, `dev_keys_${Date.now()}`);
     const created = await apiKeys.create({
       organizationId: org.id,
       workspaceId: org.workspaces[0].id,
@@ -111,13 +111,13 @@ describe('Developer Cloud Foundation',  => {
     expect(listed[0].kind).toBe('machine');
   });
 
-  it('exposes public SDK catalog and authenticated developer overview', async  => {
-    const sdkRes = await request(app.getHttpServer).get('/v1/developer/sdk').expect(200);
+  it('exposes public SDK catalog and authenticated developer overview', async () => {
+    const sdkRes = await request(app.getHttpServer()).get('/v1/developer/sdk').expect(200);
     expect(sdkRes.body.typescript.name).toBe('@lugemi/sdk');
     expect(sdkRes.body.cli.bin).toBe('lugemi');
     expect(sdkRes.body.auth.testPrefix).toBe('lg_test_');
 
-    const org = await seedOrg(prisma, `dev_ov_${Date.now}`);
+    const org = await seedOrg(prisma, `dev_ov_${Date.now()}`);
     await apiKeys.create({
       organizationId: org.id,
       workspaceId: org.workspaces[0].id,

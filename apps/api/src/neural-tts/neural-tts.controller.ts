@@ -22,14 +22,14 @@ export class NeuralTtsController {
   constructor(private readonly tts: NeuralTtsService) {}
 
   @Get('engine')
-  engine {
-    return this.tts.engine;
+  engine() {
+    return this.tts.engine();
   }
 
   @Get('engine/analytics')
   @UseGuards(TranslateAuthGuard)
   analytics(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
     },
@@ -64,7 +64,7 @@ export class NeuralTtsController {
   @Get('voices/workspace')
   @UseGuards(TranslateAuthGuard)
   workspaceVoices(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
     },
@@ -89,19 +89,19 @@ export class NeuralTtsController {
   @Post('synthesize')
   @UseGuards(TranslateAuthGuard)
   async synthesize(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body
+    @Body()
     body: {
       text?: string;
       voice?: string;
       language?: string;
       format?: 'mp3' | 'wav' | 'opus' | 'aac' | 'flac';
     },
-    @Res res: Response,
+    @Res() res: Response,
   ) {
     if (typeof body.text !== 'string') {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
@@ -138,13 +138,13 @@ export class NeuralTtsController {
   @Post('stream')
   @UseGuards(TranslateAuthGuard)
   async stream(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Res res: Response,
-    @Body
+    @Res() res: Response,
+    @Body()
     body: {
       text?: string;
       voice?: string;
@@ -164,7 +164,7 @@ export class NeuralTtsController {
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('Connection', 'keep-alive');
     res.setHeader('X-Lugemi-Mode', 'chunk_sse');
-    res.flushHeaders?.;
+    res.flushHeaders?.();
 
     const stream = this.tts.streamSynthesize({
       text: body.text,
@@ -182,6 +182,6 @@ export class NeuralTtsController {
       res.write(`event: ${chunk.event}\ndata: ${JSON.stringify(chunk)}\n\n`);
       if (chunk.event === 'error' || chunk.event === 'done') break;
     }
-    res.end;
+    res.end();
   }
 }

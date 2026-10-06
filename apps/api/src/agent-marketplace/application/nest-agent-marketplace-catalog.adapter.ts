@@ -5,11 +5,11 @@ import {
   AgentMarketplaceEngineBundle,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestAgentMarketplaceCatalogAdapter implements AgentMarketplaceCatalogPort {
   constructor(private readonly marketplace: AgentMarketplaceService) {}
 
-  engine: AgentMarketplaceEngineBundle {
-    return this.marketplace.engine;
+  engine(): AgentMarketplaceEngineBundle {
+    return this.marketplace.engine();
   }
 }

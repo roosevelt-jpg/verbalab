@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetResourceManagerEngineQuery } from '../resource-manager/application/messages';
 import { GqlResourceManagerEngine } from './gql.types';
 
-@Resolver
+@Resolver()
 export class ResourceManagerGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query( => GqlResourceManagerEngine, { name: 'resourceManagerEngine' })
-  async resourceManagerEngine: Promise<GqlResourceManagerEngine> {
-    const catalog = await this.queries.execute(new GetResourceManagerEngineQuery);
+  @Query(() => GqlResourceManagerEngine, { name: 'resourceManagerEngine' })
+  async resourceManagerEngine(): Promise<GqlResourceManagerEngine> {
+    const catalog = await this.queries.execute(new GetResourceManagerEngineQuery());
     return {
       product: catalog.product,
       note: catalog.note,

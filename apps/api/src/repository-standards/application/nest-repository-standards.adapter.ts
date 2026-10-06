@@ -6,16 +6,16 @@ import {
   RepositoryStandardsProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestRepositoryStandardsCatalogAdapter implements RepositoryStandardsCatalogPort {
   constructor(private readonly service: RepositoryStandardsService) {}
 
-  engine: RepositoryStandardsEngineBundle {
-    return this.service.engine;
+  engine(): RepositoryStandardsEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: RepositoryStandardsProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): RepositoryStandardsProductRow[] {
+    const bundle = this.engine() as {
       products?: RepositoryStandardsProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestRepositoryStandardsCatalogAdapter implements RepositoryStandard
         status: 'shipped',
         api: 'GET /v1/repository-standards/engine',
         console: '/repository-standards',
-        notes: ' shipped.',
+        notes: 'VL-347 shipped.',
       },
     ];
   }

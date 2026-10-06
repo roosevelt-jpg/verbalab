@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetRepositoryStandardsEngineQuery } from '../repository-standards/application/messages';
 import { GqlRepositoryStandardsEngine } from './gql.types';
 
-@Resolver
+@Resolver()
 export class RepositoryStandardsGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query( => GqlRepositoryStandardsEngine, { name: 'repositoryStandardsEngine' })
-  async repositoryStandardsEngine: Promise<GqlRepositoryStandardsEngine> {
-    const catalog = await this.queries.execute(new GetRepositoryStandardsEngineQuery);
+  @Query(() => GqlRepositoryStandardsEngine, { name: 'repositoryStandardsEngine' })
+  async repositoryStandardsEngine(): Promise<GqlRepositoryStandardsEngine> {
+    const catalog = await this.queries.execute(new GetRepositoryStandardsEngineQuery());
     return {
       product: catalog.product,
       note: catalog.note,

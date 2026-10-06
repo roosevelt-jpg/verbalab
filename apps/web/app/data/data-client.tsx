@@ -43,8 +43,8 @@ type Branding = {
   socialWebsite: string;
 };
 
-export function DataClient {
-  const { getToken, isLoaded } = useAuth;
+export function DataClient() {
+  const { getToken, isLoaded } = useAuth();
   const [settings, setSettings] = useState<DataSettings | null>(null);
   const [residency, setResidency] = useState<Residency | null>(null);
   const [catalog, setCatalog] = useState<RegionCatalog | null>(null);
@@ -56,8 +56,8 @@ export function DataClient {
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const load = useCallback(async  => {
-    const token = await getToken;
+  const load = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [data, res, regions, brand] = await Promise.all([
       apiFetch<DataSettings>('/v1/organization/data-settings', { token }),
@@ -73,17 +73,17 @@ export function DataClient {
     setRetentionInput(data.retentionDays != null ? String(data.retentionDays) : '');
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void load.catch((err: Error) => setError(err.message));
+    void load().catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
-  async function saveResidency {
+  async function saveResidency() {
     setError(null);
     setMessage(null);
     setBusy(true);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const data = await apiFetch<Residency>('/v1/organization/residency', {
         method: 'PATCH',
@@ -109,7 +109,7 @@ export function DataClient {
     setMessage(null);
     setBusy(true);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const data = await apiFetch<DataSettings>('/v1/organization/data-settings', {
         method: 'PATCH',
@@ -126,13 +126,13 @@ export function DataClient {
     }
   }
 
-  async function saveBranding {
+  async function saveBranding() {
     if (!branding) return;
     setError(null);
     setMessage(null);
     setBusy(true);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const data = await apiFetch<Branding>('/v1/organization/branding', {
         method: 'PATCH',
@@ -161,12 +161,12 @@ export function DataClient {
     }
   }
 
-  async function exportData {
+  async function exportData() {
     setError(null);
     setMessage(null);
     setBusy(true);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const data = await apiFetch<Record<string, unknown>>('/v1/organization/export', {
         method: 'POST',
@@ -177,7 +177,7 @@ export function DataClient {
       const a = document.createElement('a');
       a.href = url;
       a.download = `lugemi-export-${settings?.name ?? 'workspace'}.json`;
-      a.click;
+      a.click();
       URL.revokeObjectURL(url);
       setMessage('Export downloaded.');
     } catch (err) {
@@ -187,12 +187,12 @@ export function DataClient {
     }
   }
 
-  async function deleteOrg {
+  async function deleteOrg() {
     setError(null);
     setMessage(null);
     setBusy(true);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       await apiFetch('/v1/organization', {
         method: 'DELETE',
@@ -256,7 +256,7 @@ export function DataClient {
                     />
                   </label>
                 ))}
-                <button type="button" className="vl-btn vl-btn-primary" disabled={busy} onClick={ => void saveBranding}>
+                <button type="button" className="vl-btn vl-btn-primary" disabled={busy} onClick={() => void saveBranding()}>
                   Save email branding
                 </button>
               </div>
@@ -295,7 +295,7 @@ export function DataClient {
                     ))}
                   </select>
                 </label>
-                <button type="button" className="vl-btn" disabled={busy} onClick={ => void saveResidency}>
+                <button type="button" className="vl-btn" disabled={busy} onClick={() => void saveResidency()}>
                   Save residency
                 </button>
                 <p style={{ color: 'var(--muted)', fontSize: '0.8rem', margin: '0.75rem 0 0' }}>{residency.note}</p>
@@ -325,9 +325,9 @@ export function DataClient {
               type="button"
               className="vl-btn"
               disabled={busy}
-              onClick={ =>
+              onClick={() =>
                 void saveSettings({
-                  retentionDays: retentionInput.trim === '' ? null : Number(retentionInput),
+                  retentionDays: retentionInput.trim() === '' ? null : Number(retentionInput),
                 })
               }
             >
@@ -361,7 +361,7 @@ export function DataClient {
             <p style={{ color: 'var(--muted)', fontSize: '0.9rem', margin: '0.4rem 0 1rem' }}>
               Download workspace glossary, TM, reviews, knowledge metadata, keys (prefixes), and usage as JSON.
             </p>
-            <button type="button" className="vl-btn vl-btn-primary" disabled={busy} onClick={ => void exportData}>
+            <button type="button" className="vl-btn vl-btn-primary" disabled={busy} onClick={() => void exportData()}>
               Export workspace
             </button>
           </section>
@@ -383,7 +383,7 @@ export function DataClient {
               type="button"
               className="vl-btn"
               disabled={busy || confirmName !== settings.name}
-              onClick={ => void deleteOrg}
+              onClick={() => void deleteOrg()}
               style={{ background: 'var(--bad)', color: '#fff', border: 'none' }}
             >
               Delete organization

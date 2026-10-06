@@ -14,7 +14,7 @@ export type DialectScore = {
   matchedCues: string[];
 };
 
-@Injectable
+@Injectable()
 export class DialectsService implements OnModuleInit {
   private readonly logger = new Logger(DialectsService.name);
 
@@ -26,12 +26,12 @@ export class DialectsService implements OnModuleInit {
     private readonly languages: LanguagesService,
   ) {}
 
-  async onModuleInit {
-    await this.languages.seed;
-    await this.seed;
+  async onModuleInit() {
+    await this.languages.seed();
+    await this.seed();
   }
 
-  async seed {
+  async seed() {
     for (const d of DIALECT_SEEDS) {
       await this.prisma.dialect.upsert({
         where: { code: d.code },
@@ -66,7 +66,7 @@ export class DialectsService implements OnModuleInit {
     });
     return {
       data: rows.map((r) => this.toDto(r)),
-      note: 'Curated registry — not unlimited dialect coverage.',
+      note: 'Curated registry — not unlimited dialect coverage (VL-131 / ADR-0052).',
     };
   }
 
@@ -86,12 +86,12 @@ export class DialectsService implements OnModuleInit {
     apiKeyId?: string;
     ip?: string;
   }) {
-    const text = input.text.trim;
+    const text = input.text.trim();
     if (!text) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }
 
-    let language = input.language?.trim.toLowerCase || '';
+    let language = input.language?.trim().toLowerCase() || '';
     let languageConfidence = 1;
     let languageProvider = 'hint';
 
@@ -142,7 +142,7 @@ export class DialectsService implements OnModuleInit {
     }
 
     // Optional LLM assist when cues are weak but language has multiple dialects.
-    if (!dialect && scored.length > 1 && process.env.OPENAI_API_KEY?.trim) {
+    if (!dialect && scored.length > 1 && process.env.OPENAI_API_KEY?.trim()) {
       const assisted = await this.assistWithLlm(text, language, scored.slice(0, 5));
       if (assisted) {
         dialect = assisted.code;
@@ -216,11 +216,11 @@ export class DialectsService implements OnModuleInit {
 
   private normalize(value: string) {
     return value
-      .toLowerCase
+      .toLowerCase()
       .normalize('NFKD')
       .replace(/\p{M}/gu, '')
       .replace(/\s+/g, ' ')
-      .trim;
+      .trim();
   }
 
   private async assistWithLlm(
@@ -246,9 +246,9 @@ export class DialectsService implements OnModuleInit {
         ],
         model: process.env.OPENAI_CHAT_MODEL ?? 'gpt-4o-mini',
       });
-      const raw = out.message.content.trim.split(/\s+/)[0]?.replace(/[^a-z0-9-]/gi, '');
-      if (!raw || raw.toUpperCase === 'NONE') return null;
-      const hit = candidates.find((c) => c.code === raw.toLowerCase);
+      const raw = out.message.content.trim().split(/\s+/)[0]?.replace(/[^a-z0-9-]/gi, '');
+      if (!raw || raw.toUpperCase() === 'NONE') return null;
+      const hit = candidates.find((c) => c.code === raw.toLowerCase());
       return hit ?? null;
     } catch (error) {
       this.logger.warn(

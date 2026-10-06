@@ -1,4 +1,4 @@
-/** Application ports for Data Plane Cloud. */
+/** Application ports for Data Plane Cloud (VL-324). */
 
 export type DataPlaneCloudProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type DataPlaneCloudEngineBundle = ReturnType<
 >;
 
 export interface DataPlaneCloudCatalogPort {
-  engine: DataPlaneCloudEngineBundle;
-  listProducts: DataPlaneCloudProductRow[];
+  engine(): DataPlaneCloudEngineBundle;
+  listProducts(): DataPlaneCloudProductRow[];
 }
 
 export const DATA_PLANE_CLOUD_CATALOG_PORT = Symbol('DATA_PLANE_CLOUD_CATALOG_PORT');

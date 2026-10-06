@@ -1,18 +1,18 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { globalDeploymentControllerEngineCatalog } from './global-deployment-controller.catalog';
 
-@Injectable
+@Injectable()
 export class GlobalDeploymentControllerService {
-  engine {
-    return globalDeploymentControllerEngineCatalog;
+  engine() {
+    return globalDeploymentControllerEngineCatalog();
   }
 
   list(query?: string) {
-    const catalog = this.engine;
-    const q = (query ?? '').trim.toLowerCase;
+    const catalog = this.engine();
+    const q = (query ?? '').trim().toLowerCase();
     const deployments = catalog.deployments.filter((row) => {
       if (!q) return true;
-      return JSON.stringify(row).toLowerCase.includes(q);
+      return JSON.stringify(row).toLowerCase().includes(q);
     });
     return {
       deployments,
@@ -34,7 +34,7 @@ export class GlobalDeploymentControllerService {
     authorized?: boolean;
     authorizationToken?: string;
   }) {
-    const catalog = this.engine;
+    const catalog = this.engine();
     const deployment = catalog.deployments.find((d) => d.id === input.deploymentId);
     if (!deployment) {
       throw new BadRequestException({
@@ -47,7 +47,7 @@ export class GlobalDeploymentControllerService {
     const authorized =
       input.authorized === true ||
       (typeof input.authorizationToken === 'string' &&
-        input.authorizationToken.trim.length > 0);
+        input.authorizationToken.trim().length > 0);
     if (isProduction && !authorized) {
       return {
         allowed: false,
@@ -75,7 +75,7 @@ export class GlobalDeploymentControllerService {
   }
 
   rollback(deploymentId?: string) {
-    const catalog = this.engine;
+    const catalog = this.engine();
     const rows = deploymentId
       ? catalog.rollbackCatalog.filter((r) => r.deploymentId === deploymentId)
       : catalog.rollbackCatalog;
@@ -93,15 +93,15 @@ export class GlobalDeploymentControllerService {
     return this.list(query);
   }
 
-  monitoring {
-    const catalog = this.engine;
+  monitoring() {
+    const catalog = this.engine();
     return {
       mode: 'global-deployment-controller',
       count: catalog.deployments.length,
       rollbackCount: catalog.rollbackCatalog.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Global Deployment Controller monitoring snapshot.',
+      note: 'Global Deployment Controller monitoring snapshot (VL-318).',
     };
   }
 }

@@ -26,52 +26,52 @@ export class MemoryFabricController {
   constructor(private readonly fabric: MemoryFabricService) {}
 
   @Get('products')
-  products {
-    return this.fabric.products;
+  products() {
+    return this.fabric.products();
   }
 
   @Get('engine')
-  engine {
-    return this.fabric.products;
+  engine() {
+    return this.fabric.products();
   }
 
   @Get('routes')
-  routes {
-    return this.fabric.routes;
+  routes() {
+    return this.fabric.routes();
   }
 
   @Post('route')
   @HttpCode(HttpStatus.OK)
-  route(@Body body: { kinds?: string[] }) {
+  route(@Body() body: { kinds?: string[] }) {
     return this.fabric.route({ kinds: body.kinds });
   }
 
   @Post('pipeline')
   @HttpCode(HttpStatus.OK)
-  pipeline(@Body body: { pipelineId?: string; steps?: string[] }) {
+  pipeline(@Body() body: { pipelineId?: string; steps?: string[] }) {
     return this.fabric.pipeline(body);
   }
 
   @Get('versions')
-  versions {
-    return this.fabric.versions;
+  versions() {
+    return this.fabric.versions();
   }
 
   @Get('cache')
-  cache {
-    return this.fabric.cacheHandoff;
+  cache() {
+    return this.fabric.cacheHandoff();
   }
 
   @Post('federate')
   @HttpCode(HttpStatus.OK)
-  federate(@Body body: { kinds?: string[] }) {
+  federate(@Body() body: { kinds?: string[] }) {
     return this.fabric.federate({ kinds: body.kinds });
   }
 
   @Post('sync')
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
-  sync(@Req req: AuthedReq) {
+  sync(@Req() req: AuthedReq) {
     return this.fabric.sync({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -84,7 +84,7 @@ export class MemoryFabricController {
   @Get('memories')
   @UseGuards(TranslateAuthGuard)
   memories(
-    @Req req: AuthedReq,
+    @Req() req: AuthedReq,
     @Query('scope') scope?: string,
     @Query('kind') kind?: string,
     @Query('limit') limit?: string,
@@ -105,8 +105,8 @@ export class MemoryFabricController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   search(
-    @Req req: AuthedReq,
-    @Body body: { query?: string; scope?: string; kind?: string; limit?: number },
+    @Req() req: AuthedReq,
+    @Body() body: { query?: string; scope?: string; kind?: string; limit?: number },
   ) {
     return this.fabric.search({
       organizationId: req.translateAuth.organizationId,
@@ -122,8 +122,8 @@ export class MemoryFabricController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   replicate(
-    @Req req: AuthedReq,
-    @Body body: { targetWorkspaceIds?: string[] },
+    @Req() req: AuthedReq,
+    @Body() body: { targetWorkspaceIds?: string[] },
   ) {
     return this.fabric.replicate({
       organizationId: req.translateAuth.organizationId,
@@ -136,8 +136,8 @@ export class MemoryFabricController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   distribute(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       kinds?: string[];
       targetWorkspaceIds?: string[];
@@ -159,12 +159,12 @@ export class MemoryFabricController {
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession session: SessionContext) {
+  overview(@CurrentSession() session: SessionContext) {
     return this.fabric.overview(session);
   }
 
   @Get('monitoring')
-  monitoring {
-    return this.fabric.monitoring;
+  monitoring() {
+    return this.fabric.monitoring();
   }
 }

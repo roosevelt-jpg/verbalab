@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { signSlackRequest, verifySlackSignature } from '../src/connectors/slack-signature';
 
-describe('Slack signature',  => {
-  it('accepts a valid signature within the time window',  => {
+describe('Slack signature (VL-082)', () => {
+  it('accepts a valid signature within the time window', () => {
     const secret = 'test_signing_secret';
     const timestamp = '1710000000';
     const body = 'token=x&team_id=T1&text=sw+Hello';
@@ -18,7 +18,7 @@ describe('Slack signature',  => {
     ).toBe(true);
   });
 
-  it('rejects stale or wrong signatures',  => {
+  it('rejects stale or wrong signatures', () => {
     const secret = 'test_signing_secret';
     const timestamp = '1710000000';
     const body = 'text=hi';

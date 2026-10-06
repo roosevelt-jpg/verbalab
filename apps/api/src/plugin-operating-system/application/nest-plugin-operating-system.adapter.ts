@@ -6,16 +6,16 @@ import {
   PluginOperatingSystemProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestPluginOperatingSystemCatalogAdapter implements PluginOperatingSystemCatalogPort {
   constructor(private readonly service: PluginOperatingSystemService) {}
 
-  engine: PluginOperatingSystemEngineBundle {
-    return this.service.engine;
+  engine(): PluginOperatingSystemEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: PluginOperatingSystemProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): PluginOperatingSystemProductRow[] {
+    const bundle = this.engine() as {
       products?: PluginOperatingSystemProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestPluginOperatingSystemCatalogAdapter implements PluginOperatingS
         status: 'shipped',
         api: 'GET /v1/plugin-operating-system/engine',
         console: '/plugin-operating-system',
-        notes: ' shipped.',
+        notes: 'VL-342 shipped.',
       },
     ];
   }

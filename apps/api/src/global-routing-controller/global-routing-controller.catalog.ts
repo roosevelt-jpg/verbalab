@@ -1,19 +1,19 @@
 /**
- * Library Phase 186 → Global Routing Controller.
- * Global Routing Controller. Traffic/regional/geo/latency/cost/AI/model routing + failover catalog. Extends AI Fabric / gateway routing — istioOs=false.
+ * Library Phase 186 → Global Routing Controller (VL-319).
+ * Global Routing Controller (VL-319). Traffic/regional/geo/latency/cost/AI/model routing + failover catalog. Extends AI Fabric / gateway routing — istioOs=false.
  */
-export function globalRoutingControllerEngineCatalog {
+export function globalRoutingControllerEngineCatalog() {
   return {
     product: 'Lugemi Global Routing Controller',
     capabilities: [
-      { id: 'traffic', name: 'Traffic Routing', status: 'shipped', notes: ' capability.' },
-      { id: 'regional', name: 'Regional Routing', status: 'shipped', notes: ' capability.' },
-      { id: 'geo', name: 'Geo Routing', status: 'shipped', notes: ' capability.' },
-      { id: 'latency', name: 'Latency Routing', status: 'shipped', notes: ' capability.' },
-      { id: 'cost', name: 'Cost Routing', status: 'shipped', notes: ' capability.' },
-      { id: 'ai', name: 'AI Routing', status: 'shipped', notes: ' capability.' },
-      { id: 'model', name: 'Model Routing', status: 'shipped', notes: ' capability.' },
-      { id: 'failover', name: 'Failover', status: 'shipped', notes: ' capability.' }
+      { id: 'traffic', name: 'Traffic Routing', status: 'shipped', notes: 'VL-319 capability.' },
+      { id: 'regional', name: 'Regional Routing', status: 'shipped', notes: 'VL-319 capability.' },
+      { id: 'geo', name: 'Geo Routing', status: 'shipped', notes: 'VL-319 capability.' },
+      { id: 'latency', name: 'Latency Routing', status: 'shipped', notes: 'VL-319 capability.' },
+      { id: 'cost', name: 'Cost Routing', status: 'shipped', notes: 'VL-319 capability.' },
+      { id: 'ai', name: 'AI Routing', status: 'shipped', notes: 'VL-319 capability.' },
+      { id: 'model', name: 'Model Routing', status: 'shipped', notes: 'VL-319 capability.' },
+      { id: 'failover', name: 'Failover', status: 'shipped', notes: 'VL-319 capability.' }
     ],
     routes: [
       {
@@ -86,9 +86,9 @@ export function globalRoutingControllerEngineCatalog {
     safety: {
       istioOs: false,
       executesInference: false,
-      note: 'Global Routing Controller. Traffic/regional/geo/latency/cost/AI/model routing + failover catalog. Extends AI Fabric / gateway routing — istioOs=false.',
+      note: 'Global Routing Controller (VL-319). Traffic/regional/geo/latency/cost/AI/model routing + failover catalog. Extends AI Fabric / gateway routing — istioOs=false.',
     },
     docs: '/docs/GLOBAL_ROUTING_CONTROLLER.md',
-    note: 'Global Routing Controller. Traffic/regional/geo/latency/cost/AI/model routing + failover catalog. Extends AI Fabric / gateway routing — istioOs=false.',
+    note: 'Global Routing Controller (VL-319). Traffic/regional/geo/latency/cost/AI/model routing + failover catalog. Extends AI Fabric / gateway routing — istioOs=false.',
   };
 }

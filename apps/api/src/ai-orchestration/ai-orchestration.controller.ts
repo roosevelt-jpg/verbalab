@@ -15,18 +15,18 @@ export class AiOrchestrationController {
   constructor(private readonly orchestration: AiOrchestrationService) {}
 
   @Get('engine')
-  engine {
-    return this.orchestration.engine;
+  engine() {
+    return this.orchestration.engine();
   }
 
   @Get('pipelines')
-  pipelines {
-    return this.orchestration.pipelines;
+  pipelines() {
+    return this.orchestration.pipelines();
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req req: AuthedReq) {
+  analytics(@Req() req: AuthedReq) {
     return this.orchestration.analytics(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -35,7 +35,7 @@ export class AiOrchestrationController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req req: AuthedReq) {
+  monitoring(@Req() req: AuthedReq) {
     return this.orchestration.monitoring(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -46,8 +46,8 @@ export class AiOrchestrationController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   run(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       pipeline?: string;
       text?: string;

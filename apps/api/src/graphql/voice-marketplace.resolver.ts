@@ -5,13 +5,13 @@ import {
   GqlVoiceMarketplaceEngine,
 } from './gql.types';
 
-@Resolver
+@Resolver()
 export class VoiceMarketplaceGraphqlResolver {
   constructor(private readonly marketplace: VoiceMarketplaceService) {}
 
-  @Query( => GqlVoiceMarketplaceEngine, { name: 'voiceMarketplaceEngine' })
-  voiceMarketplaceEngine: GqlVoiceMarketplaceEngine {
-    const catalog = this.marketplace.engine;
+  @Query(() => GqlVoiceMarketplaceEngine, { name: 'voiceMarketplaceEngine' })
+  voiceMarketplaceEngine(): GqlVoiceMarketplaceEngine {
+    const catalog = this.marketplace.engine();
     return {
       product: catalog.product,
       note: catalog.note,

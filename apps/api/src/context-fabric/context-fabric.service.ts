@@ -18,7 +18,7 @@ type AuthCtx = {
   ip?: string;
 };
 
-@Injectable
+@Injectable()
 export class ContextFabricService {
   private routePlans = 0;
   private propagations = 0;
@@ -31,35 +31,35 @@ export class ContextFabricService {
   ) {}
 
   /** Test hook. */
-  resetCounters {
+  resetCounters() {
     this.routePlans = 0;
     this.propagations = 0;
     this.eventPublishes = 0;
   }
 
-  products {
+  products() {
     return {
       product: 'Lugemi Context Fabric',
-      products: contextFabricCapabilityCatalog,
-      routes: contextFabricRoutingTable,
-      architecture: contextFabricArchitectureNotes,
-      honesty: contextFabricHonesty,
+      products: contextFabricCapabilityCatalog(),
+      routes: contextFabricRoutingTable(),
+      architecture: contextFabricArchitectureNotes(),
+      honesty: contextFabricHonesty(),
       safety: {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric must hard-gate across fabric buses when shipped — not log-only.',
+          'Policy Fabric (VL-247) must hard-gate across fabric buses when shipped — not log-only.',
       },
       docs: '/docs/CONTEXT_FABRIC.md',
       note:
-        'Context Fabric. Cross-cloud context router over Context Runtime. Not infinite-context or WebSocket OS.',
+        'Context Fabric (VL-241). Cross-cloud context router over Context Runtime. Not infinite-context or WebSocket OS.',
     };
   }
 
-  routes {
+  routes() {
     return {
-      routes: contextFabricRoutingTable,
-      honesty: contextFabricHonesty,
+      routes: contextFabricRoutingTable(),
+      honesty: contextFabricHonesty(),
       docs: '/docs/CONTEXT_FABRIC.md',
       note: 'Static context-kind → cloud/runtime handoff catalog.',
     };
@@ -67,9 +67,9 @@ export class ContextFabricService {
 
   route(input: { kinds?: string[] }) {
     this.routePlans += 1;
-    const table = contextFabricRoutingTable;
+    const table = contextFabricRoutingTable();
     const kinds = input.kinds?.length
-      ? input.kinds.map((k) => k.toLowerCase)
+      ? input.kinds.map((k) => k.toLowerCase())
       : table.map((r) => r.kind);
     const selected = table.filter((r) => kinds.includes(r.kind));
     const missing = kinds.filter((k) => !table.some((r) => r.kind === k));
@@ -103,7 +103,7 @@ export class ContextFabricService {
       plan: selected,
       missing,
       include,
-      honesty: contextFabricHonesty,
+      honesty: contextFabricHonesty(),
       note: 'Context Router plan — does not assemble; call propagate or Context Runtime assemble.',
     };
   }
@@ -172,29 +172,29 @@ export class ContextFabricService {
       plan: plan.plan,
       assembled,
       event,
-      honesty: contextFabricHonesty,
+      honesty: contextFabricHonesty(),
       docs: '/docs/CONTEXT_FABRIC.md',
       note:
         'Propagated via Context Runtime assemble. Optional Event Fabric CloudEvent when publishEvent=true.',
     };
   }
 
-  streamSnapshot {
+  streamSnapshot() {
     return {
-      ts: new Date.toISOString,
+      ts: new Date().toISOString(),
       product: 'Lugemi Context Fabric',
       counters: {
         routePlans: this.routePlans,
         propagations: this.propagations,
         eventPublishes: this.eventPublishes,
       },
-      routes: contextFabricRoutingTable.length,
-      honesty: contextFabricHonesty,
+      routes: contextFabricRoutingTable().length,
+      honesty: contextFabricHonesty(),
       note: 'SSE realtime tick — not WebSocket OS.',
     };
   }
 
-  monitoring {
+  monitoring() {
     return {
       mode: 'context_fabric',
       counters: {
@@ -202,12 +202,12 @@ export class ContextFabricService {
         propagations: this.propagations,
         eventPublishes: this.eventPublishes,
       },
-      products: contextFabricCapabilityCatalog.map((p) => ({
+      products: contextFabricCapabilityCatalog().map((p) => ({
         id: p.id,
         status: p.status,
       })),
-      honesty: contextFabricHonesty,
-      note: 'Context Fabric monitoring. Router + propagate counters.',
+      honesty: contextFabricHonesty(),
+      note: 'Context Fabric monitoring (VL-241). Router + propagate counters.',
     };
   }
 
@@ -224,10 +224,10 @@ export class ContextFabricService {
         chat: usageSummary.chat,
         embeddings: usageSummary.embeddings,
       },
-      products: contextFabricCapabilityCatalog,
-      routes: contextFabricRoutingTable,
-      architecture: contextFabricArchitectureNotes,
-      honesty: contextFabricHonesty,
+      products: contextFabricCapabilityCatalog(),
+      routes: contextFabricRoutingTable(),
+      architecture: contextFabricArchitectureNotes(),
+      honesty: contextFabricHonesty(),
       counters: {
         routePlans: this.routePlans,
         propagations: this.propagations,
@@ -237,7 +237,7 @@ export class ContextFabricService {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
+          'Policy Fabric (VL-247) must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
       },
       deferred: {
         knowledgeFabric: false,
@@ -262,7 +262,7 @@ export class ContextFabricService {
       },
       docs: '/docs/CONTEXT_FABRIC.md',
       note:
-        'Context Fabric. Cross-cloud router over Context Runtime; optional Event Fabric propagation.',
+        'Context Fabric (VL-241). Cross-cloud router over Context Runtime; optional Event Fabric propagation.',
     };
   }
 }

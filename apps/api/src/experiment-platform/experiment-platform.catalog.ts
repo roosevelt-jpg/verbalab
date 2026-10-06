@@ -13,10 +13,10 @@ export type ExperimentRun = {
 };
 
 /**
- * Library Phase 139 → Experiment Platform.
+ * Library Phase 139 → Experiment Platform (VL-272).
  * Experiment tracking catalog — not Weights & Biases OS, not MLflow OS.
  */
-export function experimentPlatformEngineCatalog {
+export function experimentPlatformEngineCatalog() {
   const runs: ExperimentRun[] = [
     {
       id: 'exp-sw-asr-001',
@@ -55,7 +55,7 @@ export function experimentPlatformEngineCatalog {
   return {
     product: 'Lugemi Experiment Platform',
     note:
-      'Experiment Platform. Tracks runs with hyperparameters, lineage, artifacts, datasets, and comparison — not Weights & Biases OS or MLflow OS.',
+      'Experiment Platform (VL-272). Tracks runs with hyperparameters, lineage, artifacts, datasets, and comparison — not Weights & Biases OS or MLflow OS.',
     capabilities: [
       {
         id: 'tracking',

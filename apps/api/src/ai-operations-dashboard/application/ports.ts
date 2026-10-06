@@ -1,4 +1,4 @@
-/** Application ports for AI Operations Dashboard. */
+/** Application ports for AI Operations Dashboard (VL-290). */
 
 export type AiOperationsDashboardProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type AiOperationsDashboardEngineBundle = ReturnType<
 >;
 
 export interface AiOperationsDashboardCatalogPort {
-  engine: AiOperationsDashboardEngineBundle;
-  listProducts: AiOperationsDashboardProductRow[];
+  engine(): AiOperationsDashboardEngineBundle;
+  listProducts(): AiOperationsDashboardProductRow[];
 }
 
 export const AI_OPERATIONS_DASHBOARD_CATALOG_PORT = Symbol('AI_OPERATIONS_DASHBOARD_CATALOG_PORT');

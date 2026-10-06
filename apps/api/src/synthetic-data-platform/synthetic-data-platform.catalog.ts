@@ -18,11 +18,11 @@ export type SyntheticArtifact = {
 };
 
 /**
- * Library Phase 140 → Synthetic Data Platform.
+ * Library Phase 140 → Synthetic Data Platform (VL-273).
  * syntheticLabelRequired=true; every artifact isSynthetic=true.
  * If used with Volume 12 sensitive domains, remain labeled synthetic downstream.
  */
-export function syntheticDataPlatformEngineCatalog {
+export function syntheticDataPlatformEngineCatalog() {
   const modalities: SyntheticModality[] = [
     { id: 'text', name: 'Text generation', status: 'shipped', api: 'GET /v1/synthetic-data-platform/artifacts', notes: 'Synthetic text corpora.' },
     { id: 'speech', name: 'Speech generation', status: 'shipped', api: 'GET /v1/synthetic-data-platform/artifacts', notes: 'Synthetic speech samples.' },
@@ -63,7 +63,7 @@ export function syntheticDataPlatformEngineCatalog {
   return {
     product: 'Lugemi Synthetic Data Platform',
     note:
-      'Synthetic Data Platform. Modalities catalog with mandatory synthetic labeling. Not a generative-media OS.',
+      'Synthetic Data Platform (VL-273). Modalities catalog with mandatory synthetic labeling. Not a generative-media OS.',
     modalities,
     artifacts,
     capabilities: modalities,

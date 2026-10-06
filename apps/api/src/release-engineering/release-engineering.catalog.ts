@@ -1,18 +1,18 @@
 /**
- * Library Phase 174 → Release Engineering.
- * Release Engineering. Blue-green/canary/rolling/feature-flags/rollback/approval/progressive delivery catalog + seed releases. spinnakerOs=false.
+ * Library Phase 174 → Release Engineering (VL-307).
+ * Release Engineering (VL-307). Blue-green/canary/rolling/feature-flags/rollback/approval/progressive delivery catalog + seed releases. spinnakerOs=false.
  */
-export function releaseEngineeringEngineCatalog {
+export function releaseEngineeringEngineCatalog() {
   return {
     product: 'Lugemi Release Engineering',
     capabilities: [
-      { id: 'blue_green', name: 'Blue-Green', status: 'shipped', notes: ' capability.' },
-      { id: 'canary', name: 'Canary', status: 'shipped', notes: ' capability.' },
-      { id: 'rolling', name: 'Rolling', status: 'shipped', notes: ' capability.' },
-      { id: 'feature_flags', name: 'Feature Flags', status: 'shipped', notes: ' capability.' },
-      { id: 'rollback', name: 'Rollback', status: 'shipped', notes: ' capability.' },
-      { id: 'approval', name: 'Release Approval', status: 'shipped', notes: ' capability.' },
-      { id: 'progressive', name: 'Progressive Delivery', status: 'shipped', notes: ' capability.' }
+      { id: 'blue_green', name: 'Blue-Green', status: 'shipped', notes: 'VL-307 capability.' },
+      { id: 'canary', name: 'Canary', status: 'shipped', notes: 'VL-307 capability.' },
+      { id: 'rolling', name: 'Rolling', status: 'shipped', notes: 'VL-307 capability.' },
+      { id: 'feature_flags', name: 'Feature Flags', status: 'shipped', notes: 'VL-307 capability.' },
+      { id: 'rollback', name: 'Rollback', status: 'shipped', notes: 'VL-307 capability.' },
+      { id: 'approval', name: 'Release Approval', status: 'shipped', notes: 'VL-307 capability.' },
+      { id: 'progressive', name: 'Progressive Delivery', status: 'shipped', notes: 'VL-307 capability.' }
     ],
     releases: [
       {
@@ -66,9 +66,9 @@ export function releaseEngineeringEngineCatalog {
     },
     safety: {
       spinnakerOs: false,
-      note: 'Release Engineering. Blue-green/canary/rolling/feature-flags/rollback/approval/progressive delivery catalog + seed releases. spinnakerOs=false.',
+      note: 'Release Engineering (VL-307). Blue-green/canary/rolling/feature-flags/rollback/approval/progressive delivery catalog + seed releases. spinnakerOs=false.',
     },
     docs: '/docs/RELEASE_ENGINEERING.md',
-    note: 'Release Engineering. Blue-green/canary/rolling/feature-flags/rollback/approval/progressive delivery catalog + seed releases. spinnakerOs=false.',
+    note: 'Release Engineering (VL-307). Blue-green/canary/rolling/feature-flags/rollback/approval/progressive delivery catalog + seed releases. spinnakerOs=false.',
   };
 }

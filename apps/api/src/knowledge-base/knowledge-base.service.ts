@@ -8,7 +8,7 @@ import {
   knowledgeBaseCatalog,
 } from './knowledge-base.catalog';
 
-@Injectable
+@Injectable()
 export class KnowledgeBaseService {
   constructor(
     private readonly prisma: PrismaService,
@@ -16,15 +16,15 @@ export class KnowledgeBaseService {
     private readonly audit: AuditService,
   ) {}
 
-  engine {
-    return knowledgeBaseCatalog;
+  engine() {
+    return knowledgeBaseCatalog();
   }
 
-  contentKinds {
+  contentKinds() {
     return {
       kinds: KNOWLEDGE_CONTENT_KINDS.map((id) => ({ id })),
       deferred: ['image', 'video', 'audio', 'powerpoint', 'excel', 'web_crawl'],
-      note: 'Shipped text document kinds for . Media/Office decks deferred.',
+      note: 'Shipped text document kinds for VL-194. Media/Office decks deferred.',
     };
   }
 
@@ -61,12 +61,12 @@ export class KnowledgeBaseService {
       ready,
       failed,
       chunks,
-      note: 'Workspace-scoped Knowledge Base counts.',
+      note: 'Workspace-scoped Knowledge Base counts (VL-194).',
     };
   }
 
   async monitoring(organizationId: string, workspaceId: string) {
-    const engine = this.engine;
+    const engine = this.engine();
     const analytics = await this.analytics(organizationId, workspaceId);
     return {
       ...analytics,
@@ -117,7 +117,7 @@ export class KnowledgeBaseService {
         : [
             ...new Set(
               input.tags
-                .map((t) => t.trim.toLowerCase)
+                .map((t) => t.trim().toLowerCase())
                 .filter(Boolean)
                 .map((t) => t.slice(0, 48)),
             ),
@@ -139,7 +139,7 @@ export class KnowledgeBaseService {
       data: {
         version: { increment: 1 },
         ...(input.collection !== undefined
-          ? { collection: (input.collection.trim || 'default').slice(0, 64) }
+          ? { collection: (input.collection.trim() || 'default').slice(0, 64) }
           : {}),
         ...(tags !== undefined ? { tags } : {}),
         ...(input.contentKind !== undefined ? { contentKind: input.contentKind } : {}),

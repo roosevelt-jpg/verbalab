@@ -9,13 +9,13 @@ type GqlReq = Request & {
   translateAuth?: TranslateAuthContext;
 };
 
-@Resolver
+@Resolver()
 export class VoiceAnalyticsGraphqlResolver {
   constructor(private readonly analytics: VoiceAnalyticsService) {}
 
-  @Query( => GqlVoiceAnalyticsEngine, { name: 'voiceAnalyticsEngine' })
-  voiceAnalyticsEngine: GqlVoiceAnalyticsEngine {
-    const c = this.analytics.engine;
+  @Query(() => GqlVoiceAnalyticsEngine, { name: 'voiceAnalyticsEngine' })
+  voiceAnalyticsEngine(): GqlVoiceAnalyticsEngine {
+    const c = this.analytics.engine();
     return {
       product: c.product,
       note: c.note,
@@ -26,12 +26,12 @@ export class VoiceAnalyticsGraphqlResolver {
     };
   }
 
-  @Query( => GqlVoiceAnalyticsOverview, { name: 'voiceAnalyticsOverview' })
+  @Query(() => GqlVoiceAnalyticsOverview, { name: 'voiceAnalyticsOverview' })
   @UseGuards(TranslateAuthGuard)
   async voiceAnalyticsOverview(
     @Context('req') req: GqlReq,
-    @Args('from', { type:  => String, nullable: true }) from?: string,
-    @Args('to', { type:  => String, nullable: true }) to?: string,
+    @Args('from', { type: () => String, nullable: true }) from?: string,
+    @Args('to', { type: () => String, nullable: true }) to?: string,
   ): Promise<GqlVoiceAnalyticsOverview> {
     const auth = req.translateAuth!;
     const overview = await this.analytics.overview({

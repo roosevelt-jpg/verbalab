@@ -6,16 +6,16 @@ import {
   DeveloperExperiencePlatformProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestDeveloperExperiencePlatformCatalogAdapter implements DeveloperExperiencePlatformCatalogPort {
   constructor(private readonly service: DeveloperExperiencePlatformService) {}
 
-  engine: DeveloperExperiencePlatformEngineBundle {
-    return this.service.engine;
+  engine(): DeveloperExperiencePlatformEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: DeveloperExperiencePlatformProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): DeveloperExperiencePlatformProductRow[] {
+    const bundle = this.engine() as {
       products?: DeveloperExperiencePlatformProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestDeveloperExperiencePlatformCatalogAdapter implements DeveloperE
         status: 'shipped',
         api: 'GET /v1/developer-experience-platform/engine',
         console: '/developer-experience-platform',
-        notes: ' shipped.',
+        notes: 'VL-311 shipped.',
       },
     ];
   }

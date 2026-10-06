@@ -6,18 +6,18 @@ export class SupplyChainSecurityController {
   constructor(private readonly service: SupplyChainSecurityService) {}
 
   @Get('engine')
-  engine {
-    return this.service.engine;
+  engine() {
+    return this.service.engine();
   }
 
   @Get('products')
-  products {
-    return this.service.engine;
+  products() {
+    return this.service.engine();
   }
 
   @Get('monitoring')
-  monitoring {
-    return this.service.monitoring;
+  monitoring() {
+    return this.service.monitoring();
   }
 
   @Get('findings')
@@ -26,8 +26,8 @@ export class SupplyChainSecurityController {
   }
 
   @Get('scan')
-  scan {
-    return this.service.scan;
+  scan() {
+    return this.service.scan();
   }
 
   @Get('query')

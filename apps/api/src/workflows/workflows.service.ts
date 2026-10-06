@@ -18,7 +18,7 @@ import {
   WorkflowStepResult,
 } from './workflow.types';
 
-@Injectable
+@Injectable()
 export class WorkflowsService {
   constructor(
     private readonly prisma: PrismaService,
@@ -57,7 +57,7 @@ export class WorkflowsService {
     userId?: string;
     route?: string;
   }) {
-    const name = input.name.trim;
+    const name = input.name.trim();
     if (!name) {
       throw new ApiException('validation_error', 'name is required', HttpStatus.BAD_REQUEST);
     }
@@ -157,7 +157,7 @@ export class WorkflowsService {
       );
     }
 
-    const seen = new Set<string>;
+    const seen = new Set<string>();
     const steps: WorkflowStep[] = [];
 
     for (let i = 0; i < raw.length; i++) {
@@ -166,7 +166,7 @@ export class WorkflowsService {
         throw new ApiException('validation_error', `steps[${i}] invalid`, HttpStatus.BAD_REQUEST);
       }
       const step = item as Record<string, unknown>;
-      const id = typeof step.id === 'string' ? step.id.trim : '';
+      const id = typeof step.id === 'string' ? step.id.trim() : '';
       if (!id) {
         throw new ApiException('validation_error', `steps[${i}].id is required`, HttpStatus.BAD_REQUEST);
       }
@@ -185,7 +185,7 @@ export class WorkflowsService {
       }
 
       if (op === 'transcribe') {
-        const documentId = typeof step.documentId === 'string' ? step.documentId.trim : '';
+        const documentId = typeof step.documentId === 'string' ? step.documentId.trim() : '';
         if (!documentId) {
           throw new ApiException(
             'validation_error',
@@ -207,7 +207,7 @@ export class WorkflowsService {
             HttpStatus.BAD_REQUEST,
           );
         }
-        if (typeof step.text !== 'string' || !step.text.trim) {
+        if (typeof step.text !== 'string' || !step.text.trim()) {
           throw new ApiException(
             'validation_error',
             `steps[${i}].text is required`,
@@ -230,7 +230,7 @@ export class WorkflowsService {
             HttpStatus.BAD_REQUEST,
           );
         }
-        if (typeof step.message !== 'string' || !step.message.trim) {
+        if (typeof step.message !== 'string' || !step.message.trim()) {
           throw new ApiException(
             'validation_error',
             `steps[${i}].message is required`,
@@ -277,7 +277,7 @@ export class WorkflowsService {
     input: Prisma.JsonValue;
   }): Promise<WorkflowResult> {
     const input = this.parseWorkflowInput(job.input);
-    const context = new Map<string, Record<string, unknown>>;
+    const context = new Map<string, Record<string, unknown>>();
     const stepResults: WorkflowStepResult[] = [];
 
     for (const step of input.steps) {
@@ -342,7 +342,7 @@ export class WorkflowsService {
     }
 
     if (step.op === 'translate') {
-      const text = this.interpolate(step.text, ctx.context).trim;
+      const text = this.interpolate(step.text, ctx.context).trim();
       if (!text) {
         throw new Error(`Step ${step.id}: translated text resolved empty`);
       }

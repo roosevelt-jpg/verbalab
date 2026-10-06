@@ -1,6 +1,6 @@
 /**
- * Library Phase 151 → Continuous Evaluation.
- * Extends evaluation-platform / model-evaluation — does not regenerate.
+ * Library Phase 151 → Continuous Evaluation (VL-284).
+ * Extends evaluation-platform (VL-275) / model-evaluation — does not regenerate.
  * Gate status is a required check before Continuous Learning promote.
  */
 export type ContinuousEvalGate = {
@@ -12,7 +12,7 @@ export type ContinuousEvalGate = {
   notes: string;
 };
 
-export function continuousEvaluationGates: ContinuousEvalGate[] {
+export function continuousEvaluationGates(): ContinuousEvalGate[] {
   return [
     {
       id: 'gate-online-quality',
@@ -74,8 +74,8 @@ export function continuousEvaluationGates: ContinuousEvalGate[] {
 }
 
 /** Required Continuous Learning check — all blocking gates must pass. */
-export function continuousEvalGateStatus {
-  const gates = continuousEvaluationGates;
+export function continuousEvalGateStatus() {
+  const gates = continuousEvaluationGates();
   const blocking = gates.filter((g) => g.kind !== 'auto');
   const continuousEvalPass = blocking.every((g) => g.status === 'pass');
   return {
@@ -89,12 +89,12 @@ export function continuousEvalGateStatus {
       extendsEvaluationPlatform: true,
       usedAsContinuousLearningPromoteGate: true,
     },
-    note: 'Continuous Evaluation gate status for Continuous Learning promote.',
+    note: 'Continuous Evaluation gate status for Continuous Learning promote (VL-284).',
   };
 }
 
-export function continuousEvaluationEngineCatalog {
-  const gateStatus = continuousEvalGateStatus;
+export function continuousEvaluationEngineCatalog() {
+  const gateStatus = continuousEvalGateStatus();
   return {
     product: 'Lugemi Continuous Evaluation',
     capabilities: [
@@ -121,6 +121,6 @@ export function continuousEvaluationEngineCatalog {
       note: 'Gate status is a required Continuous Learning promote check.',
     },
     docs: '/docs/CONTINUOUS_EVALUATION.md',
-    note: 'Continuous Evaluation. Extends evaluation-platform / model-evaluation. Exposes gate status for Continuous Learning.',
+    note: 'Continuous Evaluation (VL-284). Extends evaluation-platform / model-evaluation. Exposes gate status for Continuous Learning.',
   };
 }

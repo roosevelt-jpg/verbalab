@@ -26,19 +26,19 @@ export class BatchRuntimeController {
   constructor(private readonly batch: BatchRuntimeService) {}
 
   @Get('engine')
-  engine {
-    return this.batch.engine;
+  engine() {
+    return this.batch.engine();
   }
 
   @Get('kinds')
-  kinds {
-    return this.batch.kinds;
+  kinds() {
+    return this.batch.kinds();
   }
 
   @Get('runs')
   @UseGuards(TranslateAuthGuard)
   list(
-    @Req req: AuthedReq,
+    @Req() req: AuthedReq,
     @Query('status') status?: string,
     @Query('kind') kind?: string,
   ) {
@@ -52,7 +52,7 @@ export class BatchRuntimeController {
 
   @Get('runs/:id')
   @UseGuards(TranslateAuthGuard)
-  get(@Req req: AuthedReq, @Param('id') id: string) {
+  get(@Req() req: AuthedReq, @Param('id') id: string) {
     return this.batch.getRun({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -64,8 +64,8 @@ export class BatchRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   create(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       kind?: string;
       priority?: string;
@@ -91,7 +91,7 @@ export class BatchRuntimeController {
   @Post('runs/:id/start')
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
-  start(@Req req: AuthedReq, @Param('id') id: string) {
+  start(@Req() req: AuthedReq, @Param('id') id: string) {
     return this.batch.startScheduled({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -106,9 +106,9 @@ export class BatchRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   checkpoint(
-    @Req req: AuthedReq,
+    @Req() req: AuthedReq,
     @Param('id') id: string,
-    @Body body: { index?: number },
+    @Body() body: { index?: number },
   ) {
     return this.batch.checkpoint({
       organizationId: req.translateAuth.organizationId,
@@ -123,7 +123,7 @@ export class BatchRuntimeController {
   @Post('runs/:id/retry')
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
-  retry(@Req req: AuthedReq, @Param('id') id: string) {
+  retry(@Req() req: AuthedReq, @Param('id') id: string) {
     return this.batch.retry({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -135,7 +135,7 @@ export class BatchRuntimeController {
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req req: AuthedReq) {
+  analytics(@Req() req: AuthedReq) {
     return this.batch.analytics({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -144,7 +144,7 @@ export class BatchRuntimeController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req req: AuthedReq) {
+  monitoring(@Req() req: AuthedReq) {
     return this.batch.monitoring({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,

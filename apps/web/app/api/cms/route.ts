@@ -6,13 +6,13 @@ import { isClerkConfigured } from '@/lib/clerk-config';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET {
-  const doc = await getCmsDocument;
+export async function GET() {
+  const doc = await getCmsDocument();
   return NextResponse.json(doc);
 }
 
-async function assertCmsAdmin: Promise<{ ok: true } | { ok: false; response: NextResponse }> {
-  if (!isClerkConfigured) {
+async function assertCmsAdmin(): Promise<{ ok: true } | { ok: false; response: NextResponse }> {
+  if (!isClerkConfigured()) {
     if (isCmsAdminAllowed({ email: null, userId: null })) return { ok: true };
     return {
       ok: false,
@@ -20,14 +20,14 @@ async function assertCmsAdmin: Promise<{ ok: true } | { ok: false; response: Nex
     };
   }
 
-  const session = await auth;
+  const session = await auth();
   if (!session.userId) {
     return {
       ok: false,
       response: NextResponse.json({ error: { message: 'Unauthorized' } }, { status: 401 }),
     };
   }
-  const user = await currentUser;
+  const user = await currentUser();
   const email =
     user?.primaryEmailAddress?.emailAddress ??
     user?.emailAddresses?.[0]?.emailAddress ??
@@ -45,12 +45,12 @@ async function assertCmsAdmin: Promise<{ ok: true } | { ok: false; response: Nex
 }
 
 export async function PUT(request: Request) {
-  const gate = await assertCmsAdmin;
+  const gate = await assertCmsAdmin();
   if (!gate.ok) return gate.response;
 
   let body: CmsDocument;
   try {
-    body = (await request.json) as CmsDocument;
+    body = (await request.json()) as CmsDocument;
   } catch {
     return NextResponse.json({ error: { message: 'Invalid JSON' } }, { status: 400 });
   }

@@ -14,29 +14,29 @@ import type { ChatProvider } from '../src/gateway/chat-provider';
 
 const root = join(__dirname, '../../..');
 
-describe('AI Gateway Cloud Foundation',  => {
+describe('AI Gateway Cloud Foundation (VL-129)', () => {
   let app: INestApplication<App>;
   let gateway: GatewayService;
   let gatewayCloud: GatewayCloudService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     gateway = app.get(GatewayService);
     gatewayCloud = app.get(GatewayCloudService);
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('documents AI Gateway Cloud mapping and closes Volume 1A',  => {
+  it('documents AI Gateway Cloud mapping and closes Volume 1A', () => {
     const doc = join(root, 'docs/AI_GATEWAY_CLOUD.md');
     const adr = join(root, 'docs/adr/0050-ai-gateway-cloud-foundation.md');
     expect(existsSync(doc)).toBe(true);
@@ -50,8 +50,8 @@ describe('AI Gateway Cloud Foundation',  => {
     expect(adrText).toContain('Volume 1 Part A');
   });
 
-  it('exposes public provider catalog with deferred vendors', async  => {
-    const res = await request(app.getHttpServer).get('/v1/gateway/providers').expect(200);
+  it('exposes public provider catalog with deferred vendors', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/gateway/providers').expect(200);
     expect(res.body.capabilities.streaming).toBe(false);
     expect(res.body.capabilities.caching.responseCache).toBe(false);
     const ids = res.body.providers.map((p: { id: string }) => p.id);
@@ -62,16 +62,16 @@ describe('AI Gateway Cloud Foundation',  => {
     expect(openrouter.status).toBe('optional');
   });
 
-  it('falls back from primary chat to OpenRouter-compatible provider', async  => {
+  it('falls back from primary chat to OpenRouter-compatible provider', async () => {
     const primary: ChatProvider = {
       name: 'fixture_primary',
-      async complete {
+      async complete() {
         throw new ApiException('provider_error', 'primary down', HttpStatus.BAD_GATEWAY);
       },
     };
     const fallback: ChatProvider = {
       name: 'fixture_fallback',
-      async complete {
+      async complete() {
         return {
           message: { role: 'assistant', content: 'fallback ok' },
           model: 'fixture',
@@ -93,11 +93,11 @@ describe('AI Gateway Cloud Foundation',  => {
     expect(out.message.content).toBe('fallback ok');
   });
 
-  it('returns gateway overview volume closeout', async  => {
-    const overview = await gatewayCloud.overview;
+  it('returns gateway overview volume closeout', async () => {
+    const overview = await gatewayCloud.overview();
     expect(overview.health.status).toBe('ok');
     expect(overview.volume.closes).toBe('Volume 1 Part A');
     expect(overview.providers.length).toBeGreaterThan(5);
-    expect(overview.liveModels).toBeTruthy;
+    expect(overview.liveModels).toBeTruthy();
   });
 });

@@ -17,8 +17,8 @@ export class GetContinuousLearningEngineHandler
     private readonly catalog: ContinuousLearningCatalogPort,
   ) {}
 
-  execute: Promise<ContinuousLearningEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<ContinuousLearningEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListContinuousLearningProductsHandler
     private readonly catalog: ContinuousLearningCatalogPort,
   ) {}
 
-  execute: Promise<ContinuousLearningProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<ContinuousLearningProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

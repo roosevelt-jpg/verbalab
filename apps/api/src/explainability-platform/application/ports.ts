@@ -1,4 +1,4 @@
-/** Application ports for Explainability Platform. */
+/** Application ports for Explainability Platform (VL-295). */
 
 export type ExplainabilityPlatformProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type ExplainabilityPlatformEngineBundle = ReturnType<
 >;
 
 export interface ExplainabilityPlatformCatalogPort {
-  engine: ExplainabilityPlatformEngineBundle;
-  listProducts: ExplainabilityPlatformProductRow[];
+  engine(): ExplainabilityPlatformEngineBundle;
+  listProducts(): ExplainabilityPlatformProductRow[];
 }
 
 export const EXPLAINABILITY_PLATFORM_CATALOG_PORT = Symbol('EXPLAINABILITY_PLATFORM_CATALOG_PORT');

@@ -20,7 +20,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory) out.push(...walkTsFiles(full));
+    if (statSync(full).isDirectory()) out.push(...walkTsFiles(full));
     else if (full.endsWith('.ts')) out.push(full);
   }
   return out;
@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_am_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_am_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -49,7 +49,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Agent Marketplace',  => {
+describe('Agent Marketplace (VL-254)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -58,14 +58,14 @@ describe('Agent Marketplace',  => {
   let marketplace: AgentMarketplaceService;
   const prevMode = process.env.LUGEMI_AGENT_RUNTIME_MODE;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     process.env.LUGEMI_AGENT_RUNTIME_MODE = 'sandbox';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    }).compile();
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
     billing = app.get(BillingService);
@@ -73,19 +73,19 @@ describe('Agent Marketplace',  => {
     marketplace = app.get(AgentMarketplaceService);
   });
 
-  afterAll(async  => {
+  afterAll(async () => {
     if (prevMode === undefined) delete process.env.LUGEMI_AGENT_RUNTIME_MODE;
     else process.env.LUGEMI_AGENT_RUNTIME_MODE = prevMode;
-    await app.close;
+    await app.close();
   });
 
-  it('documents Agent Marketplace honesty (sandbox + Policy; not LangGraph OS)',  => {
+  it('documents Agent Marketplace honesty (sandbox + Policy; not LangGraph OS)', () => {
     const doc = join(root, 'docs/AGENT_MARKETPLACE.md');
     const adr = join(root, 'docs/adr/0156-agent-marketplace.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
+    expect(text).toContain('VL-254');
     expect(text).toMatch(/sandbox/i);
     expect(text).toMatch(/Policy/i);
     expect(text).toMatch(/liveToolExecution/i);
@@ -93,7 +93,7 @@ describe('Agent Marketplace',  => {
     expect(text).toMatch(/Stripe|storesRawCardData/i);
   });
 
-  it('has no TODO/FIXME markers in Agent Marketplace source',  => {
+  it('has no TODO/FIXME markers in Agent Marketplace source', () => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const file of walkTsFiles(join(apiSrc, 'agent-marketplace'))) {
@@ -103,8 +103,8 @@ describe('Agent Marketplace',  => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes engine with sandbox + Policy hard-gate honesty', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes engine with sandbox + Policy hard-gate honesty', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/agent-marketplace/engine')
       .expect(200);
     expect(res.body.product).toBe('Lugemi Agent Marketplace');
@@ -120,15 +120,15 @@ describe('Agent Marketplace',  => {
     expect(res.body.categories.some((c: { id: string }) => c.id === 'support')).toBe(true);
   });
 
-  it('exposes agentMarketplaceEngine via GraphQL CQRS façade', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes agentMarketplaceEngine via GraphQL CQRS façade', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query:
           '{ agentMarketplaceEngine { product liveToolExecution sandboxRequired agentPolicyHardGateRequired storesRawCardData stripeOrEquivalentRequired capabilities { id status } } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.agentMarketplaceEngine.product).toContain('Agent Marketplace');
     expect(res.body.data.agentMarketplaceEngine.liveToolExecution).toBe(false);
     expect(res.body.data.agentMarketplaceEngine.sandboxRequired).toBe(true);
@@ -136,9 +136,9 @@ describe('Agent Marketplace',  => {
     expect(res.body.data.agentMarketplaceEngine.storesRawCardData).toBe(false);
   });
 
-  it('publishes, installs, runs via sandbox Policy gate; denies live actions', async  => {
-    const publisher = await seedOrg(prisma, `ampub_${Date.now}`);
-    const buyer = await seedOrg(prisma, `ambuy_${Date.now}`);
+  it('publishes, installs, runs via sandbox Policy gate; denies live actions', async () => {
+    const publisher = await seedOrg(prisma, `ampub_${Date.now()}`);
+    const buyer = await seedOrg(prisma, `ambuy_${Date.now()}`);
     await billing.applyEntitlementForTests({ organizationId: publisher.id, plan: 'pro' });
     await billing.applyEntitlementForTests({ organizationId: buyer.id, plan: 'pro' });
 
@@ -214,7 +214,7 @@ describe('Agent Marketplace',  => {
       userId: buyer.memberships[0]!.userId,
       name: 'am-test',
     });
-    const httpRun = await request(app.getHttpServer)
+    const httpRun = await request(app.getHttpServer())
       .post(`/v1/agent-marketplace/listings/${published.listing.id}/run`)
       .set('Authorization', `Bearer ${buyerKey.secret}`)
       .send({ actions: [{ action: 'external.execute' }] })
@@ -234,8 +234,8 @@ describe('Agent Marketplace',  => {
     expect(reviews.reviews[0]?.rating).toBe(5);
   });
 
-  it('rejects free-plan publish', async  => {
-    const free = await seedOrg(prisma, `amfree_${Date.now}`);
+  it('rejects free-plan publish', async () => {
+    const free = await seedOrg(prisma, `amfree_${Date.now()}`);
     await expect(
       marketplace.publish({
         organizationId: free.id,

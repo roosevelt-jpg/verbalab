@@ -11,19 +11,19 @@ import {
   PolicyFabricRouteRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestPolicyFabricCatalogAdapter implements PolicyFabricCatalogPort {
   constructor(private readonly fabric: PolicyFabricService) {}
 
-  products: PolicyFabricProductsBundle {
-    return this.fabric.products;
+  products(): PolicyFabricProductsBundle {
+    return this.fabric.products();
   }
 
-  listCapabilities: PolicyFabricCapabilityRow[] {
-    return policyFabricCapabilityCatalog;
+  listCapabilities(): PolicyFabricCapabilityRow[] {
+    return policyFabricCapabilityCatalog();
   }
 
-  listRoutes: PolicyFabricRouteRow[] {
-    return policyFabricRoutingTable;
+  listRoutes(): PolicyFabricRouteRow[] {
+    return policyFabricRoutingTable();
   }
 }

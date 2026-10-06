@@ -9,19 +9,19 @@ import { GOLDEN_PAIRS } from '../src/eval/goldens';
 import { charSimilarity, exactMatch, normalizeForEval } from '../src/eval/metrics';
 import { ApiExceptionFilter } from '../src/common/errors/api-exception.filter';
 
-describe('Coverage + eval harness',  => {
+describe('Coverage + eval harness (VL-100)', () => {
   let app: INestApplication<App>;
   let gateway: GatewayService;
   let evalService: EvalService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     gateway = app.get(GatewayService);
     evalService = app.get(EvalService);
@@ -41,18 +41,18 @@ describe('Coverage + eval harness',  => {
     });
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('scores exact match and character similarity',  => {
-    expect(normalizeForEval(' Habari! ')).toBe('habari');
+  it('scores exact match and character similarity', () => {
+    expect(normalizeForEval('  Habari! ')).toBe('habari');
     expect(exactMatch('Habari', 'habari')).toBe(true);
     expect(charSimilarity('Habari', 'Habari yako')).toBeGreaterThan(0.4);
     expect(charSimilarity('Habari', 'Habari')).toBe(1);
   });
 
-  it('ships golden sets for en→sw, en→yo, en→am',  => {
+  it('ships golden sets for en→sw, en→yo, en→am', () => {
     const keys = GOLDEN_PAIRS.map((p) => `${p.sourceLang}-${p.targetLang}`);
     expect(keys).toEqual(['en-sw', 'en-yo', 'en-am']);
     for (const pair of GOLDEN_PAIRS) {
@@ -60,7 +60,7 @@ describe('Coverage + eval harness',  => {
     }
   });
 
-  it('reference oracle reaches perfect scores', async  => {
+  it('reference oracle reaches perfect scores', async () => {
     const snapshot = await evalService.runAll('reference_oracle');
     expect(snapshot.mode).toBe('reference_oracle');
     expect(snapshot.pairs).toHaveLength(3);
@@ -70,7 +70,7 @@ describe('Coverage + eval harness',  => {
     }
   });
 
-  it('fixture gateway run writes imperfect but valid scores', async  => {
+  it('fixture gateway run writes imperfect but valid scores', async () => {
     const snapshot = await evalService.runAll('fixture');
     expect(snapshot.mode).toBe('fixture');
     for (const pair of snapshot.pairs) {
@@ -81,8 +81,8 @@ describe('Coverage + eval harness',  => {
     }
   });
 
-  it('GET /v1/coverage is public and includes focus pairs', async  => {
-    const res = await request(app.getHttpServer).get('/v1/coverage').expect(200);
+  it('GET /v1/coverage is public and includes focus pairs', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/coverage').expect(200);
     expect(res.body.disclaimer).toMatch(/not market leadership/i);
     expect(res.body.focusPairs).toHaveLength(3);
     expect(res.body.focusPairs.every((p: { hasGolden: boolean }) => p.hasGolden)).toBe(true);

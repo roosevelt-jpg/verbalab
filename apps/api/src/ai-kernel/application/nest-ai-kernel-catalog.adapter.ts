@@ -7,15 +7,15 @@ import {
   KernelRuntimeRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestAiKernelCatalogAdapter implements AiKernelCatalogPort {
   constructor(private readonly kernel: AiKernelService) {}
 
-  products: KernelProductsBundle {
-    return this.kernel.products;
+  products(): KernelProductsBundle {
+    return this.kernel.products();
   }
 
-  listProducts: KernelRuntimeRow[] {
-    return aiKernelRuntimeCatalog;
+  listProducts(): KernelRuntimeRow[] {
+    return aiKernelRuntimeCatalog();
   }
 }

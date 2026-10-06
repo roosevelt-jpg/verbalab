@@ -18,7 +18,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_emb_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_emb_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -32,19 +32,19 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Embeddings API',  => {
+describe('Embeddings API (VL-063)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -68,11 +68,11 @@ describe('Embeddings API',  => {
     });
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('embeds a single string and meters tokens', async  => {
+  it('embeds a single string and meters tokens', async () => {
     const org = await seedOrg(prisma, 'emb');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -81,7 +81,7 @@ describe('Embeddings API',  => {
       name: 'emb-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/embeddings')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ input: 'Habari' })
@@ -100,7 +100,7 @@ describe('Embeddings API',  => {
     expect(events[0]!.units).toBe(3);
   });
 
-  it('embeds a batch of strings', async  => {
+  it('embeds a batch of strings', async () => {
     const org = await seedOrg(prisma, 'embbatch');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -109,7 +109,7 @@ describe('Embeddings API',  => {
       name: 'batch-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/embeddings')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ input: ['one', 'two'] })
@@ -119,7 +119,7 @@ describe('Embeddings API',  => {
     expect(res.body.data[1].index).toBe(1);
   });
 
-  it('rejects empty input', async  => {
+  it('rejects empty input', async () => {
     const org = await seedOrg(prisma, 'embbad');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -128,10 +128,10 @@ describe('Embeddings API',  => {
       name: 'bad-key',
     });
 
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .post('/v1/embeddings')
       .set('Authorization', `Bearer ${key.secret}`)
-      .send({ input: ' ' })
+      .send({ input: '   ' })
       .expect(400);
   });
 });

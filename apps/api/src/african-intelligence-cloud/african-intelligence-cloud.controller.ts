@@ -8,28 +8,28 @@ export class AfricanIntelligenceCloudController {
   constructor(private readonly african: AfricanIntelligenceCloudService) {}
 
   @Get('products')
-  products {
-    return this.african.products;
+  products() {
+    return this.african.products();
   }
 
   @Get('engine')
-  engine {
-    return this.african.products;
+  engine() {
+    return this.african.products();
   }
 
   @Get('routing')
-  routing {
-    return this.african.routing;
+  routing() {
+    return this.african.routing();
   }
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession session: SessionContext) {
+  overview(@CurrentSession() session: SessionContext) {
     return this.african.overview(session);
   }
 
   @Get('monitoring')
-  monitoring {
-    return this.african.monitoring;
+  monitoring() {
+    return this.african.monitoring();
   }
 }

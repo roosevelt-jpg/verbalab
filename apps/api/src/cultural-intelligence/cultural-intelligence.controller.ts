@@ -6,18 +6,18 @@ export class CulturalIntelligenceController {
   constructor(private readonly cultural: CulturalIntelligenceService) {}
 
   @Get('engine')
-  engine {
-    return this.cultural.engine;
+  engine() {
+    return this.cultural.engine();
   }
 
   @Get('products')
-  products {
-    return this.cultural.engine;
+  products() {
+    return this.cultural.engine();
   }
 
   @Get('monitoring')
-  monitoring {
-    return this.cultural.monitoring;
+  monitoring() {
+    return this.cultural.monitoring();
   }
 
   @Get('entries')

@@ -10,8 +10,8 @@ import { ApiException } from '../common/errors/api-exception';
 export class AuditController {
   constructor(private readonly audit: AuditService) {}
 
-  @Get
-  list(@CurrentSession session: SessionContext, @Query('limit') limitRaw?: string) {
+  @Get()
+  list(@CurrentSession() session: SessionContext, @Query('limit') limitRaw?: string) {
     if (session.role !== 'owner' && session.role !== 'admin') {
       throw new ApiException(
         'forbidden',

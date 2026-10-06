@@ -35,8 +35,8 @@ type Analytics = {
   tts: { requests: number; characters: number };
 };
 
-export function NeuralTtsClient {
-  const { getToken, isLoaded } = useAuth;
+export function NeuralTtsClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [voices, setVoices] = useState<Voice[]>([]);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
@@ -47,8 +47,8 @@ export function NeuralTtsClient {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const load = useCallback(async  => {
-    const token = await getToken;
+  const load = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, voiceRes, stats] = await Promise.all([
       apiFetch<Engine>('/v1/tts/engine', { token }),
@@ -63,9 +63,9 @@ export function NeuralTtsClient {
     }
   }, [getToken, voice]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void load.catch((err: Error) => setError(err.message));
+    void load().catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
   async function synthesize(mode: 'batch' | 'stream') {
@@ -73,7 +73,7 @@ export function NeuralTtsClient {
     setError(null);
     setStreamNote(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       if (mode === 'batch') {
         const res = await fetch(`${API_URL}/v1/tts/synthesize`, {
@@ -84,8 +84,8 @@ export function NeuralTtsClient {
           },
           body: JSON.stringify({ text, voice, format: 'mp3' }),
         });
-        if (!res.ok) throw new Error(await res.text);
-        const blob = await res.blob;
+        if (!res.ok) throw new Error(await res.text());
+        const blob = await res.blob();
         if (audioUrl) URL.revokeObjectURL(audioUrl);
         setAudioUrl(URL.createObjectURL(blob));
       } else {
@@ -97,8 +97,8 @@ export function NeuralTtsClient {
           },
           body: JSON.stringify({ text, voice, format: 'mp3' }),
         });
-        if (!res.ok) throw new Error(await res.text);
-        const raw = await res.text;
+        if (!res.ok) throw new Error(await res.text());
+        const raw = await res.text();
         const chunks: Uint8Array[] = [];
         let note = 'chunk SSE';
         for (const block of raw.split('\n\n')) {
@@ -129,7 +129,7 @@ export function NeuralTtsClient {
         setAudioUrl(URL.createObjectURL(new Blob([merged], { type: 'audio/mpeg' })));
         setStreamNote(note);
       }
-      await load;
+      await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Synthesize failed');
     } finally {
@@ -184,10 +184,10 @@ export function NeuralTtsClient {
           </select>
         </label>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.65rem' }}>
-          <button type="button" disabled={busy} onClick={ => void synthesize('batch')} style={primaryBtn}>
+          <button type="button" disabled={busy} onClick={() => void synthesize('batch')} style={primaryBtn}>
             Synthesize
           </button>
-          <button type="button" disabled={busy} onClick={ => void synthesize('stream')} style={secondaryBtn}>
+          <button type="button" disabled={busy} onClick={() => void synthesize('stream')} style={secondaryBtn}>
             Stream (chunk SSE)
           </button>
           <Link href="/audio" style={secondaryBtn}>

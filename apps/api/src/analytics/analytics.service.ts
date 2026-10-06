@@ -40,17 +40,17 @@ export type AnalyticsOverview = {
 
 type PeriodInput = { organizationId: string; from?: string; to?: string };
 
-@Injectable
+@Injectable()
 export class AnalyticsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  catalog {
-    return languageAnalyticsCatalog;
+  catalog() {
+    return languageAnalyticsCatalog();
   }
 
   async overview(input: PeriodInput): Promise<AnalyticsOverview> {
     const { periodStart, periodEnd } = this.parsePeriod(input.from, input.to);
-    const rates = analyticsCostRates;
+    const rates = analyticsCostRates();
 
     const [featureRows, pairRows, jobSucceeded, jobFailed] = await Promise.all([
       this.prisma.$queryRaw<
@@ -127,8 +127,8 @@ export class AnalyticsService {
       jobTotal === 0 ? 0 : Math.round((jobFailed / jobTotal) * 10_000) / 10_000;
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       byFeature,
       byLanguagePair,
       cost: {
@@ -181,8 +181,8 @@ export class AnalyticsService {
 
     const total = totals[0];
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       requests: Number(total?.requests ?? 0),
       characters: Number(total?.characters ?? 0),
       tmHits,
@@ -192,7 +192,7 @@ export class AnalyticsService {
         characters: Number(r.characters),
         avgLatencyMs: r.avg_latency == null ? null : Math.round(r.avg_latency),
       })),
-      note: 'Translation usage from translation_requests.',
+      note: 'Translation usage from translation_requests (VL-146).',
     };
   }
 
@@ -222,8 +222,8 @@ export class AnalyticsService {
     ]);
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       asSource: asSource.map((r) => ({
         language: r.lang,
         requests: Number(r.requests),
@@ -234,7 +234,7 @@ export class AnalyticsService {
         requests: Number(r.requests),
         characters: Number(r.characters),
       })),
-      note: 'Language usage aggregates from translation_requests.',
+      note: 'Language usage aggregates from translation_requests (VL-146).',
     };
   }
 
@@ -244,7 +244,7 @@ export class AnalyticsService {
       select: { code: true, nameEn: true, region: true, primaryLanguages: true },
     });
 
-    const langChars = new Map<string, number>;
+    const langChars = new Map<string, number>();
     for (const row of [...languages.asSource, ...languages.asTarget]) {
       langChars.set(row.language, (langChars.get(row.language) ?? 0) + row.characters);
     }
@@ -279,7 +279,7 @@ export class AnalyticsService {
       periodStart: languages.periodStart,
       periodEnd: languages.periodEnd,
       byCountry,
-      note: 'Inferred country interest from language↔country-pack mapping — not geo-IP or visit analytics.',
+      note: 'Inferred country interest from language↔country-pack mapping (VL-146) — not geo-IP or visit analytics.',
     };
   }
 
@@ -295,8 +295,8 @@ export class AnalyticsService {
       take: 5_000,
     });
 
-    const dialectCounts = new Map<string, number>;
-    const accentCounts = new Map<string, number>;
+    const dialectCounts = new Map<string, number>();
+    const accentCounts = new Map<string, number>();
     let dialectDetects = 0;
     let accentDetects = 0;
 
@@ -314,19 +314,19 @@ export class AnalyticsService {
     }
 
     const toRows = (map: Map<string, number>) =>
-      [...map.entries]
+      [...map.entries()]
         .map(([code, count]) => ({ code, count }))
         .sort((a, b) => b.count - a.count)
         .slice(0, 40);
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       dialectDetects,
       accentDetects,
       byDialect: toRows(dialectCounts),
       byAccent: toRows(accentCounts),
-      note: 'Dialect/accent usage from audit events.',
+      note: 'Dialect/accent usage from audit events (VL-131/132/146).',
     };
   }
 
@@ -366,8 +366,8 @@ export class AnalyticsService {
     }
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       reviews: total,
       accepted,
       rejected,
@@ -376,7 +376,7 @@ export class AnalyticsService {
       averageQualityScore: avgScore,
       scoreBuckets: buckets,
       translationAccuracyProxy: accuracyProxy,
-      note: 'Heuristic quality scores + review outcomes. Accuracy proxy is accept/(accept+reject) — not BLEU or human evaluation.',
+      note: 'Heuristic quality scores + review outcomes (VL-146). Accuracy proxy is accept/(accept+reject) — not BLEU or human evaluation.',
     };
   }
 
@@ -411,8 +411,8 @@ export class AnalyticsService {
       v == null || !Number.isFinite(v) ? null : Math.round(v);
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       samples: Number(row?.samples ?? 0),
       avgMs: round(row?.avg_ms),
       p50Ms: round(row?.p50),
@@ -423,7 +423,7 @@ export class AnalyticsService {
         inProcess: 'GET /v1/metrics/translate',
         note: 'In-process percentiles are single-instance only.',
       },
-      note: 'Org translation latency from persisted translation_requests.',
+      note: 'Org translation latency from persisted translation_requests (VL-146).',
     };
   }
 
@@ -466,7 +466,7 @@ export class AnalyticsService {
         metricsTranslate: '/v1/metrics/translate',
         overview: '/v1/analytics/overview',
       },
-      note: 'Language Analytics monitoring snapshot — not a metrics SaaS.',
+      note: 'Language Analytics monitoring snapshot (VL-146) — not a metrics SaaS.',
     };
   }
 
@@ -493,7 +493,7 @@ export class AnalyticsService {
 
     return {
       product: 'Language Analytics Enterprise Report',
-      generatedAt: new Date.toISOString,
+      generatedAt: new Date().toISOString(),
       periodStart: overview.periodStart,
       periodEnd: overview.periodEnd,
       overview,
@@ -504,7 +504,7 @@ export class AnalyticsService {
       quality,
       latency,
       costs,
-      note: 'Bundled enterprise report JSON. Not a scheduled BI export product.',
+      note: 'Bundled enterprise report JSON (VL-146). Not a scheduled BI export product.',
     };
   }
 
@@ -512,26 +512,26 @@ export class AnalyticsService {
     periodStart: Date;
     periodEnd: Date;
   } {
-    const now = new Date;
+    const now = new Date();
     let periodStart: Date;
     let periodEnd: Date;
 
     if (fromRaw) {
       periodStart = new Date(fromRaw);
-      if (Number.isNaN(periodStart.getTime)) {
+      if (Number.isNaN(periodStart.getTime())) {
         throw new ApiException('validation_error', 'from must be an ISO date', HttpStatus.BAD_REQUEST);
       }
     } else {
-      periodStart = new Date(Date.UTC(now.getUTCFullYear, now.getUTCMonth, 1));
+      periodStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
     }
 
     if (toRaw) {
       periodEnd = new Date(toRaw);
-      if (Number.isNaN(periodEnd.getTime)) {
+      if (Number.isNaN(periodEnd.getTime())) {
         throw new ApiException('validation_error', 'to must be an ISO date', HttpStatus.BAD_REQUEST);
       }
     } else {
-      periodEnd = new Date(now.getTime + 1);
+      periodEnd = new Date(now.getTime() + 1);
     }
 
     if (periodEnd <= periodStart) {
@@ -543,7 +543,7 @@ export class AnalyticsService {
     }
 
     const maxDays = 366;
-    const spanMs = periodEnd.getTime - periodStart.getTime;
+    const spanMs = periodEnd.getTime() - periodStart.getTime();
     if (spanMs > maxDays * 24 * 60 * 60 * 1000) {
       throw new ApiException(
         'validation_error',

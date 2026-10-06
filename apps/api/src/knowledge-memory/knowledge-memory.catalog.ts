@@ -21,14 +21,14 @@ export type KmScope = (typeof KNOWLEDGE_MEMORY_SCOPES)[number];
 export const KNOWLEDGE_MEMORY_LAYER = 'knowledge';
 
 /**
- * Library Phase 66 → Knowledge Memory.
- * Knowledge-layer memory over existing Memory Cloud storage — not a second Mem0/Zep OS.
+ * Library Phase 66 → Knowledge Memory (VL-199).
+ * Knowledge-layer memory over VL-183 Memory Cloud storage — not a second Mem0/Zep OS.
  */
-export function knowledgeMemoryCatalog {
+export function knowledgeMemoryCatalog() {
   return {
     product: 'Lugemi Knowledge Memory',
     note:
-      'Persistent knowledge-layer memory for Knowledge Cloud. Org/workspace/user/conversation/AI scopes with document links, evolution, and versioning. Backed by MemoryRecord rows (metadata.layer=knowledge). Distinct from Intelligence Memory Cloud product surface; not Mem0/Zep/infinite personalization OS.',
+      'Persistent knowledge-layer memory for Knowledge Cloud (VL-199). Org/workspace/user/conversation/AI scopes with document links, evolution, and versioning. Backed by VL-183 MemoryRecord rows (metadata.layer=knowledge). Distinct from Intelligence Memory Cloud product surface; not Mem0/Zep/infinite personalization OS.',
     capabilities: [
       {
         id: 'persistent-memory',

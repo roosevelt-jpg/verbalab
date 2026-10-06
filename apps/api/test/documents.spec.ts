@@ -23,7 +23,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_doc_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_doc_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -38,8 +38,8 @@ async function seedOrg(prisma: PrismaService, name: string) {
 }
 
 async function waitForJob(jobs: JobsService, organizationId: string, jobId: string) {
-  const start = Date.now;
-  while (Date.now - start < 8000) {
+  const start = Date.now();
+  while (Date.now() - start < 8000) {
     const job = await jobs.get(organizationId, jobId);
     if (job.status === 'succeeded' || job.status === 'failed') return job;
     await new Promise((r) => setTimeout(r, 25));
@@ -47,24 +47,24 @@ async function waitForJob(jobs: JobsService, organizationId: string, jobId: stri
   throw new Error(`Job ${jobId} timed out`);
 }
 
-describe('Document translation',  => {
+describe('Document translation (VL-040)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let jobs: JobsService;
   let storageDir: string;
 
-  beforeAll(async  => {
-    storageDir = await mkdtemp(join(tmpdir, 'lugemi-docs-'));
+  beforeAll(async () => {
+    storageDir = await mkdtemp(join(tmpdir(), 'lugemi-docs-'));
     process.env.DOCUMENT_STORAGE_DIR = storageDir;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -85,12 +85,12 @@ describe('Document translation',  => {
     });
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
     await rm(storageDir, { recursive: true, force: true });
   });
 
-  it('translates a DOCX upload via job and serves download', async  => {
+  it('translates a DOCX upload via job and serves download', async () => {
     const org = await seedOrg(prisma, 'docx');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -112,7 +112,7 @@ describe('Document translation',  => {
       }),
     );
 
-    const created = await request(app.getHttpServer)
+    const created = await request(app.getHttpServer())
       .post('/v1/documents/translate')
       .set('Authorization', `Bearer ${key.secret}`)
       .field('source', 'en')
@@ -140,7 +140,7 @@ describe('Document translation',  => {
     expect(result.preview).toContain('[sw]');
     expect(result.downloadPath).toBe(`/v1/documents/${result.outputDocumentId}/content`);
 
-    const download = await request(app.getHttpServer)
+    const download = await request(app.getHttpServer())
       .get(result.downloadPath)
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -150,7 +150,7 @@ describe('Document translation',  => {
     expect(Buffer.isBuffer(download.body) ? download.body.length : download.text.length).toBeGreaterThan(0);
   });
 
-  it('rejects oversized uploads', async  => {
+  it('rejects oversized uploads', async () => {
     process.env.DOCUMENT_MAX_BYTES = '32';
     const org = await seedOrg(prisma, 'big');
     const key = await apiKeys.create({
@@ -160,7 +160,7 @@ describe('Document translation',  => {
       name: 'big-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/documents/translate')
       .set('Authorization', `Bearer ${key.secret}`)
       .field('source', 'en')

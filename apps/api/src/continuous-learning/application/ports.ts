@@ -1,4 +1,4 @@
-/** Application ports for Continuous Learning. */
+/** Application ports for Continuous Learning (VL-289). */
 
 export type ContinuousLearningProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type ContinuousLearningEngineBundle = ReturnType<
 >;
 
 export interface ContinuousLearningCatalogPort {
-  engine: ContinuousLearningEngineBundle;
-  listProducts: ContinuousLearningProductRow[];
+  engine(): ContinuousLearningEngineBundle;
+  listProducts(): ContinuousLearningProductRow[];
 }
 
 export const CONTINUOUS_LEARNING_CATALOG_PORT = Symbol('CONTINUOUS_LEARNING_CATALOG_PORT');

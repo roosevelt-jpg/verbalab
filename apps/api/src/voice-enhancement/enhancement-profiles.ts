@@ -31,7 +31,7 @@ export const ENHANCEMENT_PROFILES: EnhancementProfile[] = [
     id: 'noise_removal',
     name: 'Noise Removal',
     category: 'cleanup',
-    description: 'Noise gate + high-pass + normalize ( enhance path).',
+    description: 'Noise gate + high-pass + normalize (VL-155 enhance path).',
     steps: ['enhance'],
     spectralMl: false,
     echoCancellation: false,

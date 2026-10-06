@@ -15,18 +15,18 @@ export class RecommendationEngineController {
   constructor(private readonly recommendations: RecommendationEngineService) {}
 
   @Get('engine')
-  engine {
-    return this.recommendations.engine;
+  engine() {
+    return this.recommendations.engine();
   }
 
   @Get('kinds')
-  kinds {
-    return this.recommendations.kinds;
+  kinds() {
+    return this.recommendations.kinds();
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req req: AuthedReq) {
+  analytics(@Req() req: AuthedReq) {
     return this.recommendations.analytics(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -35,7 +35,7 @@ export class RecommendationEngineController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req req: AuthedReq) {
+  monitoring(@Req() req: AuthedReq) {
     return this.recommendations.monitoring(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -46,8 +46,8 @@ export class RecommendationEngineController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   recommend(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       kind?: string;
       query?: string;

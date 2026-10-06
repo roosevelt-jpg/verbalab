@@ -25,24 +25,24 @@ export class IntelligentCacheController {
   constructor(private readonly cache: IntelligentCacheService) {}
 
   @Get('engine')
-  engine {
-    return this.cache.engine;
+  engine() {
+    return this.cache.engine();
   }
 
   @Get('namespaces')
-  namespaces {
-    return this.cache.namespaces;
+  namespaces() {
+    return this.cache.namespaces();
   }
 
   @Get('ceilings')
-  ceilings {
-    return this.cache.ceilings;
+  ceilings() {
+    return this.cache.ceilings();
   }
 
   @Get('entries')
   @UseGuards(TranslateAuthGuard)
   list(
-    @Req req: AuthedReq,
+    @Req() req: AuthedReq,
     @Query('namespace') namespace?: string,
     @Query('limit') limit?: string,
   ) {
@@ -58,8 +58,8 @@ export class IntelligentCacheController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   put(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       namespace?: string;
       key?: string;
@@ -82,8 +82,8 @@ export class IntelligentCacheController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   lookup(
-    @Req req: AuthedReq,
-    @Body body: { namespace?: string; key?: string; text?: string },
+    @Req() req: AuthedReq,
+    @Body() body: { namespace?: string; key?: string; text?: string },
   ) {
     return this.cache.lookup({
       organizationId: req.translateAuth.organizationId,
@@ -98,8 +98,8 @@ export class IntelligentCacheController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   invalidate(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       id?: string;
       namespace?: string;
@@ -119,7 +119,7 @@ export class IntelligentCacheController {
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req req: AuthedReq) {
+  analytics(@Req() req: AuthedReq) {
     return this.cache.analytics({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -128,7 +128,7 @@ export class IntelligentCacheController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req req: AuthedReq) {
+  monitoring(@Req() req: AuthedReq) {
     return this.cache.monitoring({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,

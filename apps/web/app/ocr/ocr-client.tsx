@@ -14,7 +14,7 @@ type OcrResult = {
   translateProvider: string | null;
 };
 
-export function OcrClient {
+export function OcrClient() {
   const [apiKey, setApiKey] = useState('');
   const [languages, setLanguages] = useState<Language[]>([]);
   const [file, setFile] = useState<File | null>(null);
@@ -25,14 +25,14 @@ export function OcrClient {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect( => {
+  useEffect(() => {
     void apiFetch<{ data: Language[] }>('/v1/languages')
       .then((res) => setLanguages(res.data))
-      .catch( => undefined);
+      .catch(() => undefined);
   }, []);
 
   async function onSubmit(event: FormEvent) {
-    event.preventDefault;
+    event.preventDefault();
     setError(null);
     setResult(null);
     if (!file) {
@@ -45,7 +45,7 @@ export function OcrClient {
     }
     setLoading(true);
     try {
-      const form = new FormData;
+      const form = new FormData();
       form.append('file', file);
       if (languageHint) form.append('languageHint', languageHint);
       if (source) form.append('source', source);
@@ -55,7 +55,7 @@ export function OcrClient {
         headers: { Authorization: `Bearer ${apiKey}` },
         body: form,
       });
-      const body = (await res.json) as OcrResult & { error?: { message: string } };
+      const body = (await res.json()) as OcrResult & { error?: { message: string } };
       if (!res.ok) {
         throw new Error(body.error?.message ?? `OCR failed (${res.status})`);
       }

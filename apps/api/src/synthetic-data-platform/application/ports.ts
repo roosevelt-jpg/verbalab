@@ -1,4 +1,4 @@
-/** Application ports for Synthetic Data Platform. */
+/** Application ports for Synthetic Data Platform (VL-273). */
 
 export type SyntheticDataPlatformProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type SyntheticDataPlatformEngineBundle = ReturnType<
 >;
 
 export interface SyntheticDataPlatformCatalogPort {
-  engine: SyntheticDataPlatformEngineBundle;
-  listProducts: SyntheticDataPlatformProductRow[];
+  engine(): SyntheticDataPlatformEngineBundle;
+  listProducts(): SyntheticDataPlatformProductRow[];
 }
 
 export const SYNTHETIC_DATA_PLATFORM_CATALOG_PORT = Symbol('SYNTHETIC_DATA_PLATFORM_CATALOG_PORT');

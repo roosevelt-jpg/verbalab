@@ -17,8 +17,8 @@ export class GetContinuousEvaluationEngineHandler
     private readonly catalog: ContinuousEvaluationCatalogPort,
   ) {}
 
-  execute: Promise<ContinuousEvaluationEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<ContinuousEvaluationEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListContinuousEvaluationProductsHandler
     private readonly catalog: ContinuousEvaluationCatalogPort,
   ) {}
 
-  execute: Promise<ContinuousEvaluationProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<ContinuousEvaluationProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

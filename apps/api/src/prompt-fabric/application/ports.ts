@@ -1,4 +1,4 @@
-/** Application ports for Prompt Fabric. */
+/** Application ports for Prompt Fabric (VL-243). */
 
 export type PromptFabricCapabilityRow = {
   id: string;
@@ -22,9 +22,9 @@ export type PromptFabricProductsBundle = ReturnType<
 >;
 
 export interface PromptFabricCatalogPort {
-  products: PromptFabricProductsBundle;
-  listCapabilities: PromptFabricCapabilityRow[];
-  listRoutes: PromptFabricRouteRow[];
+  products(): PromptFabricProductsBundle;
+  listCapabilities(): PromptFabricCapabilityRow[];
+  listRoutes(): PromptFabricRouteRow[];
 }
 
 export const PROMPT_FABRIC_CATALOG_PORT = Symbol('PROMPT_FABRIC_CATALOG_PORT');

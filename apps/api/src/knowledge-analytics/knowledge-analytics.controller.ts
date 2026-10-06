@@ -8,14 +8,14 @@ export class KnowledgeAnalyticsController {
   constructor(private readonly analytics: KnowledgeAnalyticsService) {}
 
   @Get('engine')
-  engine {
-    return this.analytics.engine;
+  engine() {
+    return this.analytics.engine();
   }
 
   @Get('overview')
   @UseGuards(TranslateAuthGuard)
   overview(
-    @Req req: Request & { translateAuth: TranslateAuthContext },
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -30,7 +30,7 @@ export class KnowledgeAnalyticsController {
   @Get('growth')
   @UseGuards(TranslateAuthGuard)
   growth(
-    @Req req: Request & { translateAuth: TranslateAuthContext },
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -45,7 +45,7 @@ export class KnowledgeAnalyticsController {
   @Get('usage')
   @UseGuards(TranslateAuthGuard)
   usage(
-    @Req req: Request & { translateAuth: TranslateAuthContext },
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -60,7 +60,7 @@ export class KnowledgeAnalyticsController {
   @Get('quality')
   @UseGuards(TranslateAuthGuard)
   quality(
-    @Req req: Request & { translateAuth: TranslateAuthContext },
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -75,7 +75,7 @@ export class KnowledgeAnalyticsController {
   @Get('search')
   @UseGuards(TranslateAuthGuard)
   search(
-    @Req req: Request & { translateAuth: TranslateAuthContext },
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -90,7 +90,7 @@ export class KnowledgeAnalyticsController {
   @Get('gaps')
   @UseGuards(TranslateAuthGuard)
   gaps(
-    @Req req: Request & { translateAuth: TranslateAuthContext },
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -104,7 +104,7 @@ export class KnowledgeAnalyticsController {
 
   @Get('confidence')
   @UseGuards(TranslateAuthGuard)
-  confidence(@Req req: Request & { translateAuth: TranslateAuthContext }) {
+  confidence(@Req() req: Request & { translateAuth: TranslateAuthContext }) {
     return this.analytics.confidence({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -113,7 +113,7 @@ export class KnowledgeAnalyticsController {
 
   @Get('relationships')
   @UseGuards(TranslateAuthGuard)
-  relationships(@Req req: Request & { translateAuth: TranslateAuthContext }) {
+  relationships(@Req() req: Request & { translateAuth: TranslateAuthContext }) {
     return this.analytics.relationships({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -123,7 +123,7 @@ export class KnowledgeAnalyticsController {
   @Get('report')
   @UseGuards(TranslateAuthGuard)
   report(
-    @Req req: Request & { translateAuth: TranslateAuthContext },
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -138,7 +138,7 @@ export class KnowledgeAnalyticsController {
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
   monitoring(
-    @Req req: Request & { translateAuth: TranslateAuthContext },
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {

@@ -28,31 +28,31 @@ export class CreatorEconomyController {
   }
 
   @Get('engine')
-  engine {
-    return this.economy.engine;
+  engine() {
+    return this.economy.engine();
   }
 
   @Get('products')
-  products {
-    return this.economy.engine;
+  products() {
+    return this.economy.engine();
   }
 
   @Get('monitoring')
-  monitoring {
-    return this.economy.monitoring;
+  monitoring() {
+    return this.economy.monitoring();
   }
 
   @Get('royalty/scenarios')
-  royaltyScenarios {
-    return this.economy.royaltyScenarios;
+  royaltyScenarios() {
+    return this.economy.royaltyScenarios();
   }
 
   @Post('royalty/preview')
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   royaltyPreview(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       amountCents?: number;
       feeBps?: number;
@@ -71,37 +71,37 @@ export class CreatorEconomyController {
 
   @Get('sales')
   @UseGuards(TranslateAuthGuard)
-  sales(@Req req: AuthedReq) {
+  sales(@Req() req: AuthedReq) {
     return this.economy.listSales(req.translateAuth.organizationId);
   }
 
   @Get('invoices')
   @UseGuards(TranslateAuthGuard)
-  invoices(@Req req: AuthedReq) {
+  invoices(@Req() req: AuthedReq) {
     return this.economy.listInvoices(req.translateAuth.organizationId);
   }
 
   @Get('profiles/creator')
   @UseGuards(TranslateAuthGuard)
-  creatorProfile(@Req req: AuthedReq) {
+  creatorProfile(@Req() req: AuthedReq) {
     return this.economy.creatorProfile(req.translateAuth.organizationId);
   }
 
   @Get('profiles/organization')
   @UseGuards(TranslateAuthGuard)
-  organizationProfile(@Req req: AuthedReq) {
+  organizationProfile(@Req() req: AuthedReq) {
     return this.economy.organizationProfile(req.translateAuth.organizationId);
   }
 
   @Get('profiles/partner')
   @UseGuards(TranslateAuthGuard)
-  partnerProfile(@Req req: AuthedReq) {
+  partnerProfile(@Req() req: AuthedReq) {
     return this.economy.partnerProfile(req.translateAuth.organizationId);
   }
 
   @Get('licensing')
   @UseGuards(TranslateAuthGuard)
-  licensing(@Req req: AuthedReq) {
+  licensing(@Req() req: AuthedReq) {
     return this.economy.licensing(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -109,18 +109,18 @@ export class CreatorEconomyController {
   }
 
   @Get('tax')
-  tax {
-    return this.economy.taxReporting;
+  tax() {
+    return this.economy.taxReporting();
   }
 
   @Get('disputes')
-  disputes {
-    return this.economy.disputes;
+  disputes() {
+    return this.economy.disputes();
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req req: AuthedReq) {
+  analytics(@Req() req: AuthedReq) {
     return this.economy.analytics(req.translateAuth.organizationId);
   }
 }

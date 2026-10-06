@@ -8,12 +8,12 @@ export type VmCapability = {
   notes: string;
 };
 
-/** Library Phase 34 → Voice Marketplace. Distinct from localization marketplace. */
-export function voiceMarketplaceEngineCatalog {
+/** Library Phase 34 → Voice Marketplace (VL-177). Distinct from VL-090 localization marketplace. */
+export function voiceMarketplaceEngineCatalog() {
   return {
     product: 'Lugemi Voice Marketplace',
     note:
-      'Publish/license/sell voice SKUs with ratings — distinct from localization Marketplace. Consent/rights attestation required for clones. Celebrity SKUs without a rights chain are forbidden. Not third-party voice library / Soundraw parity.',
+      'Publish/license/sell voice SKUs with ratings — distinct from localization Marketplace (VL-090). Consent/rights attestation required for clones. Celebrity SKUs without a rights chain are forbidden. Not third-party voice library / Soundraw parity.',
     capabilities: [
       {
         id: 'marketplace',
@@ -41,7 +41,7 @@ export function voiceMarketplaceEngineCatalog {
         name: 'Voice Selling',
         status: 'partial',
         api: 'POST /v1/voice-marketplace/listings/:id/install',
-        notes: 'Paid listings record sales; Stripe Connect path shared with patterns when configured.',
+        notes: 'Paid listings record sales; Stripe Connect path shared with VL-092 patterns when configured.',
       },
       {
         id: 'subscriptions',

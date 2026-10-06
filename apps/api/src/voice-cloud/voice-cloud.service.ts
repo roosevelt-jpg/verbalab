@@ -7,17 +7,17 @@ import {
   voiceProductCatalog,
 } from './voice-products.catalog';
 
-@Injectable
+@Injectable()
 export class VoiceCloudService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly usage: UsageService,
   ) {}
 
-  products {
+  products() {
     return {
-      products: voiceProductCatalog,
-      architecture: voiceArchitectureNotes,
+      products: voiceProductCatalog(),
+      architecture: voiceArchitectureNotes(),
       docs: '/docs/VOICE_CLOUD.md',
     };
   }
@@ -47,8 +47,8 @@ export class VoiceCloudService {
         voiceClones: voiceCloneCount,
         speakerProfiles: speakerProfileCount,
       },
-      products: voiceProductCatalog,
-      architecture: voiceArchitectureNotes,
+      products: voiceProductCatalog(),
+      architecture: voiceArchitectureNotes(),
       deferred: {
         neuralTtsProductization: false,
         streamingTts: true,

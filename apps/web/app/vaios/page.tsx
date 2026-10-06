@@ -1,5 +1,5 @@
 import { VaiosClient } from './vaios-client';
 
-export default function VaiosPage {
+export default function VaiosPage() {
   return <VaiosClient />;
 }

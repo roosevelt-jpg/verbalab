@@ -17,8 +17,8 @@ export class GetFinopsPlatformEngineHandler
     private readonly catalog: FinopsPlatformCatalogPort,
   ) {}
 
-  execute: Promise<FinopsPlatformEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<FinopsPlatformEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListFinopsPlatformProductsHandler
     private readonly catalog: FinopsPlatformCatalogPort,
   ) {}
 
-  execute: Promise<FinopsPlatformProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<FinopsPlatformProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

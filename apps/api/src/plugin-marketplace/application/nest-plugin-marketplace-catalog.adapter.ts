@@ -5,11 +5,11 @@ import {
   PluginMarketplaceEngineBundle,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestPluginMarketplaceCatalogAdapter implements PluginMarketplaceCatalogPort {
   constructor(private readonly marketplace: PluginMarketplaceService) {}
 
-  engine: PluginMarketplaceEngineBundle {
-    return this.marketplace.engine;
+  engine(): PluginMarketplaceEngineBundle {
+    return this.marketplace.engine();
   }
 }

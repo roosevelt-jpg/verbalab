@@ -19,24 +19,24 @@ export class EventFabricController {
   constructor(private readonly fabric: EventFabricService) {}
 
   @Get('products')
-  products {
-    return this.fabric.products;
+  products() {
+    return this.fabric.products();
   }
 
   @Get('engine')
-  engine {
-    return this.fabric.products;
+  engine() {
+    return this.fabric.products();
   }
 
   @Get('brokers')
-  brokers {
-    return this.fabric.brokers;
+  brokers() {
+    return this.fabric.brokers();
   }
 
   @Post('events')
   @HttpCode(HttpStatus.CREATED)
   publish(
-    @Body
+    @Body()
     body: {
       topic?: string;
       type?: string;
@@ -75,7 +75,7 @@ export class EventFabricController {
   @HttpCode(HttpStatus.OK)
   fail(
     @Param('streamId') streamId: string,
-    @Body
+    @Body()
     body: {
       topic?: string;
       reason?: string;
@@ -99,7 +99,7 @@ export class EventFabricController {
 
   @Post('dlq/retry')
   @HttpCode(HttpStatus.OK)
-  retryDlq(@Body body: { topic?: string; streamId: string }) {
+  retryDlq(@Body() body: { topic?: string; streamId: string }) {
     return this.fabric.retryDlq({
       topic: body.topic ?? 'default',
       streamId: body.streamId,
@@ -109,7 +109,7 @@ export class EventFabricController {
   @Post('replay')
   @HttpCode(HttpStatus.OK)
   replay(
-    @Body
+    @Body()
     body: { topic?: string; afterId?: string; count?: number },
   ) {
     return this.fabric.replay({
@@ -120,23 +120,23 @@ export class EventFabricController {
   }
 
   @Get('snapshots')
-  snapshots {
-    return this.fabric.snapshots;
+  snapshots() {
+    return this.fabric.snapshots();
   }
 
   @Get('analytics')
-  analytics {
-    return this.fabric.analytics;
+  analytics() {
+    return this.fabric.analytics();
   }
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession session: SessionContext) {
+  overview(@CurrentSession() session: SessionContext) {
     return this.fabric.overview(session);
   }
 
   @Get('monitoring')
-  monitoring {
-    return this.fabric.monitoring;
+  monitoring() {
+    return this.fabric.monitoring();
   }
 }

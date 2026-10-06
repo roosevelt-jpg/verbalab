@@ -6,15 +6,15 @@ import { patentInnovationPlatformEngineCatalog } from '../patent-innovation-plat
 import { benchmarkPlatformEngineCatalog } from '../benchmark-platform/benchmark-platform.catalog';
 import { researchCloudProductCatalog } from '../research-cloud/research-cloud.catalog';
 
-@Injectable
+@Injectable()
 export class ResearchAnalyticsService {
-  engine {
-    const base = researchAnalyticsEngineCatalog;
-    const experiments = experimentPlatformEngineCatalog;
-    const publications = aiPublicationPlatformEngineCatalog;
-    const patents = patentInnovationPlatformEngineCatalog;
-    const benchmarks = benchmarkPlatformEngineCatalog;
-    const products = researchCloudProductCatalog;
+  engine() {
+    const base = researchAnalyticsEngineCatalog();
+    const experiments = experimentPlatformEngineCatalog();
+    const publications = aiPublicationPlatformEngineCatalog();
+    const patents = patentInnovationPlatformEngineCatalog();
+    const benchmarks = benchmarkPlatformEngineCatalog();
+    const products = researchCloudProductCatalog();
     return {
       ...base,
       snapshot: {
@@ -50,7 +50,7 @@ export class ResearchAnalyticsService {
   }
 
   snapshot(_query?: string) {
-    const engine = this.engine;
+    const engine = this.engine();
     return {
       snapshot: engine.snapshot,
       honesty: engine.honesty,
@@ -64,13 +64,13 @@ export class ResearchAnalyticsService {
     return this.snapshot(query);
   }
 
-  monitoring {
-    const catalog = this.engine;
+  monitoring() {
+    const catalog = this.engine();
     return {
       mode: 'analytics',
-      shippedProducts: researchCloudProductCatalog.filter((p) => p.status === 'shipped').length,
+      shippedProducts: researchCloudProductCatalog().filter((p) => p.status === 'shipped').length,
       honesty: catalog.honesty,
-      note: 'Research Analytics monitoring snapshot.',
+      note: 'Research Analytics monitoring snapshot (VL-279).',
     };
   }
 }

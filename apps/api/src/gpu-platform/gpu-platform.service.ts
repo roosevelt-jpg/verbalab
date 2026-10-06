@@ -17,17 +17,17 @@ type AuthCtx = {
   ip?: string;
 };
 
-@Injectable
+@Injectable()
 export class GpuPlatformService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
   ) {}
 
-  engine {
-    const ceilings = gpuCeilings;
+  engine() {
+    const ceilings = gpuCeilings();
     return {
-      ...gpuPlatformCatalog,
+      ...gpuPlatformCatalog(),
       ceilings,
       spendSafety: {
         hardSpendCeilingsRequired: true,
@@ -42,14 +42,14 @@ export class GpuPlatformService {
     };
   }
 
-  vendors {
-    return { vendors: gpuVendors, honesty: gpuPlatformCatalog.honesty };
+  vendors() {
+    return { vendors: gpuVendors(), honesty: gpuPlatformCatalog().honesty };
   }
 
   pools(vendor?: string) {
-    const all = gpuPools;
+    const all = gpuPools();
     const filtered = vendor
-      ? all.filter((p) => p.vendor === vendor.toLowerCase)
+      ? all.filter((p) => p.vendor === vendor.toLowerCase())
       : all;
     return {
       pools: filtered,
@@ -58,8 +58,8 @@ export class GpuPlatformService {
     };
   }
 
-  ceilings {
-    return gpuCeilings;
+  ceilings() {
+    return gpuCeilings();
   }
 
   private async activeInventory(organizationId: string, workspaceId: string) {
@@ -103,7 +103,7 @@ export class GpuPlatformService {
       reservationHours?: number;
     },
   ) {
-    const mode = gpuProvisionMode;
+    const mode = gpuProvisionMode();
     if (mode === 'disabled') {
       throw new ApiException(
         'gpu_provision_disabled',
@@ -112,8 +112,8 @@ export class GpuPlatformService {
       );
     }
 
-    const poolId = input.poolId?.trim ?? '';
-    const pool = gpuPools.find((p) => p.id === poolId);
+    const poolId = input.poolId?.trim() ?? '';
+    const pool = gpuPools().find((p) => p.id === poolId);
     if (!pool || pool.status !== 'sandbox_available') {
       throw new ApiException(
         'validation_error',
@@ -123,7 +123,7 @@ export class GpuPlatformService {
     }
 
     const want = Math.min(Math.max(input.instances ?? 1, 1), 8);
-    const ceilings = gpuCeilings;
+    const ceilings = gpuCeilings();
     const inv = await this.activeInventory(input.organizationId, input.workspaceId);
 
     if (inv.instances + want > ceilings.maxInstances) {
@@ -145,7 +145,7 @@ export class GpuPlatformService {
 
     const reservationUntil =
       input.reservationHours && input.reservationHours > 0
-        ? new Date(Date.now + Math.min(input.reservationHours, 72) * 3600_000)
+        ? new Date(Date.now() + Math.min(input.reservationHours, 72) * 3600_000)
         : null;
 
     const row = await this.prisma.gpuAllocation.create({
@@ -193,7 +193,7 @@ export class GpuPlatformService {
   async scale(
     input: AuthCtx & { id: string; targetInstances?: number },
   ) {
-    const mode = gpuProvisionMode;
+    const mode = gpuProvisionMode();
     if (mode === 'disabled') {
       throw new ApiException(
         'gpu_provision_disabled',
@@ -225,7 +225,7 @@ export class GpuPlatformService {
       return this.release({ ...input, id: row.id });
     }
 
-    const ceilings = gpuCeilings;
+    const ceilings = gpuCeilings();
     const inv = await this.activeInventory(input.organizationId, input.workspaceId);
     const others = inv.instances - row.instances;
     const clamped = Math.min(target, ceilings.maxInstances - others);
@@ -311,13 +311,13 @@ export class GpuPlatformService {
 
   async health(input: AuthCtx) {
     const inv = await this.activeInventory(input.organizationId, input.workspaceId);
-    const ceilings = gpuCeilings;
+    const ceilings = gpuCeilings();
     return {
-      status: gpuProvisionMode === 'disabled' ? 'disabled' : 'sandbox_ok',
+      status: gpuProvisionMode() === 'disabled' ? 'disabled' : 'sandbox_ok',
       activeInstances: inv.instances,
       estimatedHourlyUsd: Number(inv.hourlyUsd.toFixed(4)),
       ceilings,
-      poolsHealthy: gpuPools.filter((p) => p.status === 'sandbox_available').length,
+      poolsHealthy: gpuPools().filter((p) => p.status === 'sandbox_available').length,
       note: 'Sandbox health — not vendor GPU telemetry.',
       honesty: { callsCloudGpuApis: false },
     };
@@ -325,7 +325,7 @@ export class GpuPlatformService {
 
   async costs(input: AuthCtx) {
     const inv = await this.activeInventory(input.organizationId, input.workspaceId);
-    const ceilings = gpuCeilings;
+    const ceilings = gpuCeilings();
     return {
       estimatedHourlyUsd: Number(inv.hourlyUsd.toFixed(4)),
       estimatedDailyUsd: Number((inv.hourlyUsd * 24).toFixed(4)),
@@ -339,7 +339,7 @@ export class GpuPlatformService {
   }
 
   async analytics(input: AuthCtx) {
-    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const [total, active, released, audits] = await Promise.all([
       this.prisma.gpuAllocation.count({
         where: {
@@ -380,18 +380,18 @@ export class GpuPlatformService {
       released,
       auditsLast30d: audits,
       costs,
-      note: 'GPU Platform analytics. ≠ AI Runtime Analytics.',
+      note: 'GPU Platform analytics (VL-205). ≠ VL-212 AI Runtime Analytics.',
     };
   }
 
   async monitoring(input: AuthCtx) {
     const [engine, health, costs] = await Promise.all([
-      Promise.resolve(this.engine),
+      Promise.resolve(this.engine()),
       this.health(input),
       this.costs(input),
     ]);
     return {
-      generatedAt: new Date.toISOString,
+      generatedAt: new Date().toISOString(),
       health,
       costs,
       honesty: engine.honesty,
@@ -399,7 +399,7 @@ export class GpuPlatformService {
       deferred: engine.capabilities
         .filter((c) => c.status === 'deferred')
         .map((c) => c.id),
-      note: 'GPU Platform monitoring snapshot.',
+      note: 'GPU Platform monitoring snapshot (VL-205).',
     };
   }
 
@@ -429,10 +429,10 @@ export class GpuPlatformService {
       estimatedHourlyTotalUsd: Number((r.instances * r.estimatedHourlyUsd).toFixed(4)),
       status: r.status,
       purpose: r.purpose,
-      reservationUntil: r.reservationUntil?.toISOString ?? null,
+      reservationUntil: r.reservationUntil?.toISOString() ?? null,
       metadata: r.metadata,
-      createdAt: r.createdAt.toISOString,
-      updatedAt: r.updatedAt.toISOString,
+      createdAt: r.createdAt.toISOString(),
+      updatedAt: r.updatedAt.toISOString(),
     };
   }
 }

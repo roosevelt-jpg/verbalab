@@ -17,7 +17,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory) out.push(...walkTsFiles(full));
+    if (statSync(full).isDirectory()) out.push(...walkTsFiles(full));
     else if (full.endsWith('.ts')) out.push(full);
   }
   return out;
@@ -32,7 +32,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_fmc_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_fmc_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -46,29 +46,29 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Foundation Model Cloud Foundation',  => {
+describe('Foundation Model Cloud Foundation (VL-224)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let cloud: FoundationModelCloudService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     cloud = app.get(FoundationModelCloudService);
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('documents Foundation Model Cloud honesty (no trained weights)',  => {
+  it('documents Foundation Model Cloud honesty (no trained weights)', () => {
     const doc = join(root, 'docs/FOUNDATION_MODEL_CLOUD.md');
     const adr = join(root, 'docs/adr/0135-foundation-model-cloud-foundation.md');
     const readme = join(
@@ -82,14 +82,14 @@ describe('Foundation Model Cloud Foundation',  => {
     expect(text).toMatch(/not.*trained competitive|no trained competitive/i);
     expect(text).toContain('CQRS');
     expect(text).toContain('Terraform');
-    expect(text).toContain('');
+    expect(text).toContain('VL-224');
     expect(text).toMatch(/MLOps/i);
     const readmeText = readFileSync(readme, 'utf8');
     expect(readmeText).toMatch(/cannot actually \*train\*|cannot actually train/i);
     expect(readmeText).toMatch(/102–104|Training Platform|Model Registry/i);
   });
 
-  it('has no TODO/FIXME/implement-later markers in Foundation Model Cloud source',  => {
+  it('has no TODO/FIXME/implement-later markers in Foundation Model Cloud source', () => {
     const roots = [join(apiSrc, 'foundation-model-cloud')];
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
@@ -103,8 +103,8 @@ describe('Foundation Model Cloud Foundation',  => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes public product catalog with honest architecture', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes public product catalog with honest architecture', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/foundation-model-cloud/products')
       .expect(200);
     expect(res.body.product).toBe('Lugemi Foundation Model Cloud');
@@ -172,8 +172,8 @@ describe('Foundation Model Cloud Foundation',  => {
     expect(registry.console).toBe('/model-registry');
   });
 
-  it('returns org overview with deferred families', async  => {
-    const org = await seedOrg(prisma, `fmc_${Date.now}`);
+  it('returns org overview with deferred families', async () => {
+    const org = await seedOrg(prisma, `fmc_${Date.now()}`);
     const overview = await cloud.overview({
       userId: org.memberships[0].userId,
       organizationId: org.id,
@@ -181,7 +181,7 @@ describe('Foundation Model Cloud Foundation',  => {
       clerkUserId: 'clerk_fmc',
       role: 'owner',
     });
-    expect(overview.usage.chat).toBeDefined;
+    expect(overview.usage.chat).toBeDefined();
     expect(overview.deferred.atlas).toBe(false);
     expect(overview.deferred.baobab).toBe(true);
     expect(overview.deferred.modelTrainingPlatform).toBe(false);
@@ -195,15 +195,15 @@ describe('Foundation Model Cloud Foundation',  => {
     expect(overview.architecture.extendsInferenceCloud).toBe(true);
   });
 
-  it('exposes foundationModelCloudProducts via GraphQL CQRS façade', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes foundationModelCloudProducts via GraphQL CQRS façade', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query:
           '{ foundationModelCloudProducts { id name status api console modality notes } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.foundationModelCloudProducts.length).toBeGreaterThan(10);
     expect(
       res.body.data.foundationModelCloudProducts.some(
@@ -212,13 +212,13 @@ describe('Foundation Model Cloud Foundation',  => {
     ).toBe(true);
   });
 
-  it('serves engine and monitoring aliases', async  => {
-    const engine = await request(app.getHttpServer)
+  it('serves engine and monitoring aliases', async () => {
+    const engine = await request(app.getHttpServer())
       .get('/v1/foundation-model-cloud/engine')
       .expect(200);
     expect(engine.body.honesty.trainsCompetitiveFoundationWeights).toBe(false);
 
-    const monitoring = await request(app.getHttpServer)
+    const monitoring = await request(app.getHttpServer())
       .get('/v1/foundation-model-cloud/monitoring')
       .expect(200);
     expect(monitoring.body.mode).toBe('foundation');

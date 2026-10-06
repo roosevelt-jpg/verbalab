@@ -18,12 +18,12 @@ type PeriodInput = {
   to?: string;
 };
 
-@Injectable
+@Injectable()
 export class VoiceAnalyticsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  engine {
-    return voiceAnalyticsCatalog;
+  engine() {
+    return voiceAnalyticsCatalog();
   }
 
   async overview(input: PeriodInput) {
@@ -36,8 +36,8 @@ export class VoiceAnalyticsService {
       this.costs(input),
     ]);
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       usage: {
         tts: usage.tts,
         voiceAudits: usage.voiceAudits,
@@ -50,7 +50,7 @@ export class VoiceAnalyticsService {
         sales: marketplace.sales,
       },
       estimatedCostUsd: costs.estimatedUsd,
-      note: 'Voice Analytics overview — not a BI dashboard product. Distinct from Speech Analytics.',
+      note: 'Voice Analytics overview (VL-178) — not a BI dashboard product. Distinct from Speech Analytics.',
     };
   }
 
@@ -84,8 +84,8 @@ export class VoiceAnalyticsService {
     }
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       tts,
       voiceAudits: {
         total: audits.length,
@@ -94,7 +94,7 @@ export class VoiceAnalyticsService {
           .sort((a, b) => b.count - a.count)
           .slice(0, 40),
       },
-      note: 'From usage_events feature=tts + Voice Cloud audits. STT stays in Speech Analytics.',
+      note: 'From usage_events feature=tts + Voice Cloud audits (VL-178). STT stays in Speech Analytics.',
     };
   }
 
@@ -132,12 +132,12 @@ export class VoiceAnalyticsService {
     }
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       byLanguage: Object.entries(byLanguage)
         .map(([language, count]) => ({ language, count }))
         .sort((a, b) => b.count - a.count),
-      note: 'Voice synthesis language tags / voice id prefixes.',
+      note: 'Voice synthesis language tags / voice id prefixes (VL-178).',
     };
   }
 
@@ -181,8 +181,8 @@ export class VoiceAnalyticsService {
     }
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       byVoice: Object.entries(byVoice)
         .map(([voice, count]) => ({ voice, count }))
         .sort((a, b) => b.count - a.count)
@@ -191,7 +191,7 @@ export class VoiceAnalyticsService {
         status: c.status,
         count: c._count._all,
       })),
-      note: 'Voice id frequency from synthesis audits + clone inventory.',
+      note: 'Voice id frequency from synthesis audits + clone inventory (VL-178).',
     };
   }
 
@@ -207,14 +207,14 @@ export class VoiceAnalyticsService {
     }
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       activeKeyPrefixes: Object.keys(byKey).length,
       byKeyPrefix: Object.entries(byKey)
         .map(([apiKeyPrefix, events]) => ({ apiKeyPrefix, events }))
         .sort((a, b) => b.events - a.events)
         .slice(0, 50),
-      note: 'API key prefixes with Voice Cloud audits — not CRM customers.',
+      note: 'API key prefixes with Voice Cloud audits — not CRM customers (VL-178).',
     };
   }
 
@@ -237,15 +237,15 @@ export class VoiceAnalyticsService {
     }
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       saleCount: sales.length,
       totalAmountCents,
       byCurrency: Object.entries(byCurrency).map(([currency, amountCents]) => ({
         currency,
         amountCents,
       })),
-      note: 'Publisher-side Voice Marketplace sales — not Stripe invoices.',
+      note: 'Publisher-side Voice Marketplace sales — not Stripe invoices (VL-178).',
     };
   }
 
@@ -287,8 +287,8 @@ export class VoiceAnalyticsService {
     };
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       samples: samples.length,
       latencyMs: {
         p50: percentile(50),
@@ -298,7 +298,7 @@ export class VoiceAnalyticsService {
           ? Number((samples.reduce((s, v) => s + v, 0) / samples.length).toFixed(1))
           : null,
       },
-      note: 'Partial — only when audits carry latencyMs/durationMs. Not full HTTP request p95.',
+      note: 'Partial — only when audits carry latencyMs/durationMs. Not full HTTP request p95 (VL-178).',
     };
   }
 
@@ -375,8 +375,8 @@ export class VoiceAnalyticsService {
     }
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       watermark: {
         samples: watermarkSamples,
         applied: watermarked,
@@ -396,7 +396,7 @@ export class VoiceAnalyticsService {
         ? Number((ratingSum / ratingWeight).toFixed(2))
         : null,
       marketplaceRatingCount: ratingWeight,
-      note: 'Quality proxies only — not MOS lab or golden-set voice eval.',
+      note: 'Quality proxies only — not MOS lab or golden-set voice eval (VL-178).',
     };
   }
 
@@ -423,13 +423,13 @@ export class VoiceAnalyticsService {
     }
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       streamEvents: events.length,
       byAction,
       totalChunks,
       totalBytes,
-      note: 'Chunk SSE after full synthesis — not vendor token streaming.',
+      note: 'Chunk SSE after full synthesis — not vendor token streaming (VL-178 / VL-171).',
     };
   }
 
@@ -465,12 +465,12 @@ export class VoiceAnalyticsService {
     }
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       deliveries,
       totalBytes,
       byAction,
-      note: 'Audio delivery proxy from synthesis/enhancement audits — not a CDN download product.',
+      note: 'Audio delivery proxy from synthesis/enhancement audits — not a CDN download product (VL-178).',
     };
   }
 
@@ -533,21 +533,21 @@ export class VoiceAnalyticsService {
     }
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       publishedListings,
       installs,
       reviews,
       sales: salesAgg._count._all,
       salesAmountCents: salesAgg._sum.amountCents ?? 0,
       byAction,
-      note: 'Voice Marketplace aggregates via Voice Analytics. ≠ localization marketplace.',
+      note: 'Voice Marketplace aggregates (VL-177) via Voice Analytics (VL-178). ≠ localization marketplace.',
     };
   }
 
   async costs(input: PeriodInput) {
     const { periodStart, periodEnd } = this.parsePeriod(input.from, input.to);
-    const rates = analyticsCostRates;
+    const rates = analyticsCostRates();
     const events = await this.prisma.usageEvent.findMany({
       where: {
         organizationId: input.organizationId,
@@ -560,8 +560,8 @@ export class VoiceAnalyticsService {
     const ttsUsd = estimateFeatureCostUsd('tts', ttsUnits, rates);
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       estimatedUsd: roundUsd(ttsUsd),
       currency: 'USD' as const,
       breakdown: [
@@ -573,7 +573,7 @@ export class VoiceAnalyticsService {
         },
       ],
       rates: { ttsPer1kChars: rates.ttsPer1kChars },
-      note: 'Estimated TTS cost only — not Stripe invoices; STT cost stays in Speech Analytics.',
+      note: 'Estimated TTS cost only — not Stripe invoices; STT cost stays in Speech Analytics (VL-178).',
     };
   }
 
@@ -585,7 +585,7 @@ export class VoiceAnalyticsService {
       this.streaming(input),
     ]);
     return {
-      generatedAt: new Date.toISOString,
+      generatedAt: new Date().toISOString(),
       periodStart: overview.periodStart,
       periodEnd: overview.periodEnd,
       ttsRequests: overview.usage.tts.requests,
@@ -594,7 +594,7 @@ export class VoiceAnalyticsService {
       latencyMsP95: latency.latencyMs.p95,
       watermarkRate: quality.watermark.rate,
       streamEvents: streaming.streamEvents,
-      note: 'Voice Analytics monitoring snapshot + shared request IDs.',
+      note: 'Voice Analytics monitoring snapshot + shared request IDs (VL-178).',
     };
   }
 
@@ -629,7 +629,7 @@ export class VoiceAnalyticsService {
 
     return {
       product: 'Voice Analytics Enterprise Report',
-      generatedAt: new Date.toISOString,
+      generatedAt: new Date().toISOString(),
       periodStart: overview.periodStart,
       periodEnd: overview.periodEnd,
       overview,
@@ -644,7 +644,7 @@ export class VoiceAnalyticsService {
       downloads,
       marketplace,
       costs,
-      note: 'Bundled Voice Analytics report. Not a scheduled BI export. Distinct from Speech Analytics.',
+      note: 'Bundled Voice Analytics report (VL-178). Not a scheduled BI export. Distinct from Speech Analytics.',
     };
   }
 
@@ -664,26 +664,26 @@ export class VoiceAnalyticsService {
     periodStart: Date;
     periodEnd: Date;
   } {
-    const now = new Date;
+    const now = new Date();
     let periodStart: Date;
     let periodEnd: Date;
 
     if (fromRaw) {
       periodStart = new Date(fromRaw);
-      if (Number.isNaN(periodStart.getTime)) {
+      if (Number.isNaN(periodStart.getTime())) {
         throw new ApiException('validation_error', 'from must be an ISO date', HttpStatus.BAD_REQUEST);
       }
     } else {
-      periodStart = new Date(Date.UTC(now.getUTCFullYear, now.getUTCMonth, 1));
+      periodStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
     }
 
     if (toRaw) {
       periodEnd = new Date(toRaw);
-      if (Number.isNaN(periodEnd.getTime)) {
+      if (Number.isNaN(periodEnd.getTime())) {
         throw new ApiException('validation_error', 'to must be an ISO date', HttpStatus.BAD_REQUEST);
       }
     } else {
-      periodEnd = new Date(now.getTime + 1);
+      periodEnd = new Date(now.getTime() + 1);
     }
 
     if (periodEnd <= periodStart) {
@@ -691,7 +691,7 @@ export class VoiceAnalyticsService {
     }
 
     const maxDays = 366;
-    const spanMs = periodEnd.getTime - periodStart.getTime;
+    const spanMs = periodEnd.getTime() - periodStart.getTime();
     if (spanMs > maxDays * 24 * 60 * 60 * 1000) {
       throw new ApiException(
         'validation_error',
@@ -706,8 +706,8 @@ export class VoiceAnalyticsService {
 
 function languageFromVoiceId(voice: string): string | null {
   const own = /^own:([a-z]{2,3})-/i.exec(voice);
-  if (own?.[1]) return own[1].toLowerCase;
+  if (own?.[1]) return own[1].toLowerCase();
   const pack = /^language_pack:([a-z]{2,3})$/i.exec(voice);
-  if (pack?.[1]) return pack[1].toLowerCase;
+  if (pack?.[1]) return pack[1].toLowerCase();
   return null;
 }

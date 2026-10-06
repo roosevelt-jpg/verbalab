@@ -17,8 +17,8 @@ export class GetPluginOperatingSystemEngineHandler
     private readonly catalog: PluginOperatingSystemCatalogPort,
   ) {}
 
-  execute: Promise<PluginOperatingSystemEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<PluginOperatingSystemEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListPluginOperatingSystemProductsHandler
     private readonly catalog: PluginOperatingSystemCatalogPort,
   ) {}
 
-  execute: Promise<PluginOperatingSystemProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<PluginOperatingSystemProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

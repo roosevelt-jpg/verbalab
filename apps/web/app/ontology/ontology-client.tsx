@@ -28,16 +28,16 @@ type Analytics = {
   synonymEdges: number;
 };
 
-export function OntologyClient {
-  const { getToken, isLoaded } = useAuth;
+export function OntologyClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState('');
   const [created, setCreated] = useState<string | null>(null);
 
-  const load = useCallback(async  => {
-    const token = await getToken;
+  const load = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, ana] = await Promise.all([
       apiFetch<Engine>('/v1/ontology/engine', { token }),
@@ -47,15 +47,15 @@ export function OntologyClient {
     setAnalytics(ana);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void load.catch((err: Error) => setError(err.message));
+    void load().catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
-  const createConcept = useCallback(async  => {
+  const createConcept = useCallback(async () => {
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const res = await apiFetch<{ id: string; name: string }>('/v1/ontology/concepts', {
         token,
@@ -64,7 +64,7 @@ export function OntologyClient {
       });
       setCreated(res.name);
       setName('');
-      await load;
+      await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Create failed');
     }
@@ -97,7 +97,7 @@ export function OntologyClient {
           placeholder="New concept name"
           style={input}
         />
-        <button type="button" onClick={ => void createConcept} disabled={!name.trim} style={btn}>
+        <button type="button" onClick={() => void createConcept()} disabled={!name.trim()} style={btn}>
           Create concept
         </button>
       </div>
@@ -118,8 +118,8 @@ export function OntologyClient {
           <section>
             <h2 style={label}>Honesty</h2>
             <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.55 }}>
-              Org/workspace scoped {engine.honesty.orgWorkspaceScoped ? 'yes' : 'no'} · Extends prior
-               {engine.honesty.extendsVl184 ? 'yes' : 'no'} · OWL OS{' '}
+              Org/workspace scoped {engine.honesty.orgWorkspaceScoped ? 'yes' : 'no'} · Extends
+              VL-184 {engine.honesty.extendsVl184 ? 'yes' : 'no'} · OWL OS{' '}
               {engine.honesty.owlOs ? 'yes' : 'no'} · Protegé parity{' '}
               {engine.honesty.protegeParity ? 'yes' : 'no'} · Certified verticals{' '}
               {engine.honesty.certifiedVerticalOntologies ? 'yes' : 'no'}

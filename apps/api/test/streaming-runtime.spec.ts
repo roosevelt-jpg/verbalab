@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_sr_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_sr_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,38 +35,38 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Streaming Runtime',  => {
+describe('Streaming Runtime (VL-208)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   const prevMode = process.env.LUGEMI_STREAMING_RUNTIME_MODE;
   const prevChunks = process.env.LUGEMI_STREAMING_MAX_CHUNKS;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     process.env.LUGEMI_STREAMING_RUNTIME_MODE = 'sandbox';
     process.env.LUGEMI_STREAMING_MAX_CHUNKS = '32';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   });
 
-  afterAll(async  => {
+  afterAll(async () => {
     if (prevMode === undefined) delete process.env.LUGEMI_STREAMING_RUNTIME_MODE;
     else process.env.LUGEMI_STREAMING_RUNTIME_MODE = prevMode;
     if (prevChunks === undefined) delete process.env.LUGEMI_STREAMING_MAX_CHUNKS;
     else process.env.LUGEMI_STREAMING_MAX_CHUNKS = prevChunks;
-    await app.close;
+    await app.close();
   });
 
-  it('documents Streaming Runtime honesty',  => {
+  it('documents Streaming Runtime honesty', () => {
     const doc = join(root, 'docs/STREAMING_RUNTIME.md');
     const adr = join(root, 'docs/adr/0119-streaming-runtime.md');
     const readme = join(root, 'docs/roadmap/volume7-inference-cloud/README_VOLUME7.md');
@@ -77,12 +77,12 @@ describe('Streaming Runtime',  => {
     expect(text).toMatch(/WebSocket|gRPC|video/i);
     expect(text).toMatch(/does \*\*not\*\*|not regenerate/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
-    expect(text).toContain('');
+    expect(text).toContain('VL-208');
     expect(text).toMatch(/SSE/i);
   });
 
-  it('exposes engine with honesty + surfaces', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes engine with honesty + surfaces', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/streaming-runtime/engine')
       .expect(200);
     expect(res.body.product).toContain('Streaming Runtime');
@@ -97,7 +97,7 @@ describe('Streaming Runtime',  => {
     expect(res.body.ceilings.maxChunksPerStream).toBe(32);
     expect(res.body.mode).toBe('sandbox');
 
-    const surfaces = await request(app.getHttpServer)
+    const surfaces = await request(app.getHttpServer())
       .get('/v1/streaming-runtime/surfaces')
       .expect(200);
     expect(surfaces.body.surfaces.some((s: { kind: string }) => s.kind === 'speech')).toBe(true);
@@ -105,7 +105,7 @@ describe('Streaming Runtime',  => {
       'deferred',
     );
 
-    const transports = await request(app.getHttpServer)
+    const transports = await request(app.getHttpServer())
       .get('/v1/streaming-runtime/transports')
       .expect(200);
     expect(transports.body.transports.find((t: { id: string }) => t.id === 'sse').status).toBe(
@@ -116,8 +116,8 @@ describe('Streaming Runtime',  => {
     ).toBe('deferred');
   });
 
-  it('streams sandbox LLM chunks and redirects speech to existing SSE', async  => {
-    const org = await seedOrg(prisma, `sr_${Date.now}`);
+  it('streams sandbox LLM chunks and redirects speech to existing SSE', async () => {
+    const org = await seedOrg(prisma, `sr_${Date.now()}`);
     const key = await apiKeys.create({
       organizationId: org.id,
       workspaceId: org.workspaces[0].id,
@@ -125,14 +125,14 @@ describe('Streaming Runtime',  => {
       name: 'sr-test',
     });
 
-    const session = await request(app.getHttpServer)
+    const session = await request(app.getHttpServer())
       .post('/v1/streaming-runtime/sessions')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ kind: 'llm', label: 'demo' })
       .expect(201);
     expect(session.body.session.kind).toBe('llm');
 
-    const llm = await request(app.getHttpServer)
+    const llm = await request(app.getHttpServer())
       .post('/v1/streaming-runtime/stream')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -147,7 +147,7 @@ describe('Streaming Runtime',  => {
     expect(llm.text).toMatch(/event: done/);
     expect(llm.text).toMatch(/websocketOs":false|sandbox/);
 
-    const speech = await request(app.getHttpServer)
+    const speech = await request(app.getHttpServer())
       .post('/v1/streaming-runtime/stream')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ kind: 'speech' })
@@ -156,7 +156,7 @@ describe('Streaming Runtime',  => {
     expect(speech.text).toMatch(/\/v1\/speech\/stream/);
     expect(speech.text).toMatch(/regeneratesExistingStreams":false/);
 
-    const mon = await request(app.getHttpServer)
+    const mon = await request(app.getHttpServer())
       .get('/v1/streaming-runtime/monitoring')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -166,15 +166,15 @@ describe('Streaming Runtime',  => {
     );
   });
 
-  it('exposes streamingRuntimeEngine via GraphQL', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes streamingRuntimeEngine via GraphQL', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query:
           '{ streamingRuntimeEngine { product websocketOs grpcStreamingOs videoStreamingOs regeneratesExistingStreams extendsExistingSse sandboxChunkStream orgWorkspaceScoped primaryTransport mode maxChunksPerStream capabilities { id status } } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.streamingRuntimeEngine.websocketOs).toBe(false);
     expect(res.body.data.streamingRuntimeEngine.grpcStreamingOs).toBe(false);
     expect(res.body.data.streamingRuntimeEngine.videoStreamingOs).toBe(false);

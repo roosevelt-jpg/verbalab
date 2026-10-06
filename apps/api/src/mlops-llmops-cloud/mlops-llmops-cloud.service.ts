@@ -9,17 +9,17 @@ import {
   mlopsLlmopsCloudRoutingTable,
 } from './mlops-llmops-cloud.catalog';
 
-@Injectable
+@Injectable()
 export class MlopsLlmopsCloudService {
   constructor(private readonly usage: UsageService) {}
 
-  products {
+  products() {
     return {
       product: 'Lugemi MLOps & LLMOps Cloud',
-      products: mlopsLlmopsCloudProductCatalog,
-      assetTypes: mlopsAssetTypesCatalog,
-      architecture: mlopsLlmopsCloudArchitectureNotes,
-      honesty: mlopsLlmopsCloudHonesty,
+      products: mlopsLlmopsCloudProductCatalog(),
+      assetTypes: mlopsAssetTypesCatalog(),
+      architecture: mlopsLlmopsCloudArchitectureNotes(),
+      honesty: mlopsLlmopsCloudHonesty(),
       safety: {
         humanApprovalRequiredBeforePromote: true,
         poisonedInputGuard: true,
@@ -32,19 +32,19 @@ export class MlopsLlmopsCloudService {
       },
       docs: '/docs/MLOPS_LLMOPS_CLOUD.md',
       note:
-        'MLOps & LLMOps Cloud Foundation. Extends Inference/Kernel/Foundation/RAG/Agent/Prompt. Not Kubeflow/SageMaker/Vertex/W&B/MLflow/LangSmith/Ray OS. Trust Cloud deferred.',
+        'MLOps & LLMOps Cloud Foundation (VL-281). Extends Inference/Kernel/Foundation/RAG/Agent/Prompt. Not Kubeflow/SageMaker/Vertex/W&B/MLflow/LangSmith/Ray OS. Trust Cloud deferred.',
     };
   }
 
-  routing {
+  routing() {
     return {
-      routes: mlopsLlmopsCloudRoutingTable,
-      products: mlopsLlmopsCloudProductCatalog.map((p) => ({
+      routes: mlopsLlmopsCloudRoutingTable(),
+      products: mlopsLlmopsCloudProductCatalog().map((p) => ({
         id: p.id,
         status: p.status,
         api: p.api,
       })),
-      honesty: mlopsLlmopsCloudHonesty,
+      honesty: mlopsLlmopsCloudHonesty(),
       note: 'Static MLOps & LLMOps Cloud discovery catalog for Foundation.',
       docs: '/docs/MLOPS_LLMOPS_CLOUD.md',
     };
@@ -63,10 +63,10 @@ export class MlopsLlmopsCloudService {
         chat: usageSummary.chat,
         embeddings: usageSummary.embeddings,
       },
-      products: mlopsLlmopsCloudProductCatalog,
-      assetTypes: mlopsAssetTypesCatalog,
-      architecture: mlopsLlmopsCloudArchitectureNotes,
-      honesty: mlopsLlmopsCloudHonesty,
+      products: mlopsLlmopsCloudProductCatalog(),
+      assetTypes: mlopsAssetTypesCatalog(),
+      architecture: mlopsLlmopsCloudArchitectureNotes(),
+      honesty: mlopsLlmopsCloudHonesty(),
       safety: {
         humanApprovalRequiredBeforePromote: true,
         poisonedInputGuard: true,
@@ -105,19 +105,19 @@ export class MlopsLlmopsCloudService {
       },
       docs: '/docs/MLOPS_LLMOPS_CLOUD.md',
       note:
-        'MLOps & LLMOps Cloud (–291). Discovery hub over dataset/training/eval/prompt/rag/agent/drift/learning/dashboard; Production Audit closes the volume.',
+        'MLOps & LLMOps Cloud (VL-281–291). Discovery hub over dataset/training/eval/prompt/rag/agent/drift/learning/dashboard; Production Audit closes the volume.',
     };
   }
 
-  monitoring {
-    const products = mlopsLlmopsCloudProductCatalog;
+  monitoring() {
+    const products = mlopsLlmopsCloudProductCatalog();
     return {
       mode: 'foundation',
       products: products.map((p) => ({ id: p.id, status: p.status })),
-      assetTypes: mlopsAssetTypesCatalog.map((a) => ({ id: a.id, status: a.status })),
-      architecture: mlopsLlmopsCloudArchitectureNotes,
-      honesty: mlopsLlmopsCloudHonesty,
-      note: 'MLOps & LLMOps Cloud monitoring snapshot.',
+      assetTypes: mlopsAssetTypesCatalog().map((a) => ({ id: a.id, status: a.status })),
+      architecture: mlopsLlmopsCloudArchitectureNotes(),
+      honesty: mlopsLlmopsCloudHonesty(),
+      note: 'MLOps & LLMOps Cloud monitoring snapshot (VL-281).',
     };
   }
 }

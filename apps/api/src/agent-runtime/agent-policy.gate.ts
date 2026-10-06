@@ -8,9 +8,9 @@ import {
 } from './agent-runtime.catalog';
 
 /**
- * Local allowlist + Policy Runtime hard gate.
+ * Local allowlist + Policy Runtime hard gate (VL-219 / VL-222).
  */
-@Injectable
+@Injectable()
 export class AgentPolicyGate {
   constructor(private readonly policyRuntime: PolicyRuntimeService) {}
 
@@ -26,7 +26,7 @@ export class AgentPolicyGate {
     policy: 'policy-runtime';
     hardGate: true;
   }> {
-    const action = (input.action ?? '').trim;
+    const action = (input.action ?? '').trim();
     if (!action) {
       throw new ApiException(
         'agent_policy_denied',
@@ -59,7 +59,7 @@ export class AgentPolicyGate {
       );
     }
 
-    // Shared Policy Runtime hard gate — blocks, does not only log.
+    // Shared Policy Runtime hard gate (VL-222) — blocks, does not only log.
     await this.policyRuntime.assertHardGate({
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,
@@ -81,7 +81,7 @@ export class AgentPolicyGate {
     const list = Array.isArray(raw) ? raw : [];
     const out: AgentPermission[] = [];
     for (const p of list) {
-      const id = String(p).trim;
+      const id = String(p).trim();
       if ((AGENT_PERMISSIONS as readonly string[]).includes(id) && !out.includes(id as AgentPermission)) {
         out.push(id as AgentPermission);
       }

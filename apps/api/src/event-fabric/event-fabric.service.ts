@@ -9,45 +9,45 @@ import {
 } from './event-fabric.catalog';
 import { CloudEvent, EventFabricBus, PublishInput } from './event-fabric.bus';
 
-@Injectable
+@Injectable()
 export class EventFabricService {
   constructor(
     private readonly usage: UsageService,
     private readonly bus: EventFabricBus,
   ) {}
 
-  products {
+  products() {
     return {
       product: 'Lugemi Event Fabric',
-      products: eventFabricCapabilityCatalog,
-      brokers: eventFabricBrokerCatalog,
-      architecture: eventFabricArchitectureNotes,
-      honesty: eventFabricHonesty,
-      backend: this.bus.activeBackend,
+      products: eventFabricCapabilityCatalog(),
+      brokers: eventFabricBrokerCatalog(),
+      architecture: eventFabricArchitectureNotes(),
+      honesty: eventFabricHonesty(),
+      backend: this.bus.activeBackend(),
       safety: {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric must hard-gate across fabric buses when shipped — not log-only.',
+          'Policy Fabric (VL-247) must hard-gate across fabric buses when shipped — not log-only.',
       },
       docs: '/docs/EVENT_FABRIC.md',
       note:
-        'Event Fabric. Redis Streams + CloudEvents active; Kafka/NATS/RabbitMQ adapters deferred. Not a message-broker hyperscaler OS.',
+        'Event Fabric (VL-240). Redis Streams + CloudEvents active; Kafka/NATS/RabbitMQ adapters deferred. Not a message-broker hyperscaler OS.',
     };
   }
 
-  brokers {
+  brokers() {
     return {
-      brokers: eventFabricBrokerCatalog,
-      active: this.bus.activeBackend,
-      honesty: eventFabricHonesty,
+      brokers: eventFabricBrokerCatalog(),
+      active: this.bus.activeBackend(),
+      honesty: eventFabricHonesty(),
       docs: '/docs/EVENT_FABRIC.md',
     };
   }
 
   async publish(input: PublishInput) {
     const event = await this.bus.publish(input);
-    return { event, backend: this.bus.activeBackend };
+    return { event, backend: this.bus.activeBackend() };
   }
 
   async poll(params: { topic: string; count?: number; eventVersion?: string }) {
@@ -68,45 +68,45 @@ export class EventFabricService {
     return {
       topic,
       events: await this.bus.listDlq(topic),
-      backend: this.bus.activeBackend,
+      backend: this.bus.activeBackend(),
     };
   }
 
   async retryDlq(params: { topic: string; streamId: string }) {
     const event = await this.bus.retryFromDlq(params);
-    return { event, backend: this.bus.activeBackend };
+    return { event, backend: this.bus.activeBackend() };
   }
 
   async replay(params: { topic: string; afterId?: string; count?: number }) {
     return this.bus.replay(params);
   }
 
-  snapshots {
+  snapshots() {
     return {
-      snapshots: this.bus.listSnapshots,
-      backend: this.bus.activeBackend,
+      snapshots: this.bus.listSnapshots(),
+      backend: this.bus.activeBackend(),
       note: 'Consumer-group cursor snapshots — not full cluster backup OS.',
     };
   }
 
-  analytics {
+  analytics() {
     return {
-      ...this.bus.analytics,
-      honesty: eventFabricHonesty,
+      ...this.bus.analytics(),
+      honesty: eventFabricHonesty(),
       docs: '/docs/EVENT_FABRIC.md',
     };
   }
 
-  monitoring {
+  monitoring() {
     return {
-      ...this.bus.monitoring,
-      products: eventFabricCapabilityCatalog.map((p) => ({
+      ...this.bus.monitoring(),
+      products: eventFabricCapabilityCatalog().map((p) => ({
         id: p.id,
         status: p.status,
       })),
-      honesty: eventFabricHonesty,
+      honesty: eventFabricHonesty(),
       note:
-        'Event Fabric monitoring. Redis Streams path active when REDIS_URL reachable; memory fallback otherwise.',
+        'Event Fabric monitoring (VL-240). Redis Streams path active when REDIS_URL reachable; memory fallback otherwise.',
     };
   }
 
@@ -123,17 +123,17 @@ export class EventFabricService {
         chat: usageSummary.chat,
         embeddings: usageSummary.embeddings,
       },
-      products: eventFabricCapabilityCatalog,
-      brokers: eventFabricBrokerCatalog,
-      architecture: eventFabricArchitectureNotes,
-      honesty: eventFabricHonesty,
-      backend: this.bus.activeBackend,
-      analytics: this.bus.analytics.totals,
+      products: eventFabricCapabilityCatalog(),
+      brokers: eventFabricBrokerCatalog(),
+      architecture: eventFabricArchitectureNotes(),
+      honesty: eventFabricHonesty(),
+      backend: this.bus.activeBackend(),
+      analytics: this.bus.analytics().totals,
       safety: {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
+          'Policy Fabric (VL-247) must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
       },
       deferred: {
         kafkaAdapter: true,
@@ -160,7 +160,7 @@ export class EventFabricService {
       },
       docs: '/docs/EVENT_FABRIC.md',
       note:
-        'Event Fabric. CloudEvents over Redis Streams with DLQ/retries/replay/snapshots. Kafka/NATS/Rabbit deferred.',
+        'Event Fabric (VL-240). CloudEvents over Redis Streams with DLQ/retries/replay/snapshots. Kafka/NATS/Rabbit deferred.',
     };
   }
 }

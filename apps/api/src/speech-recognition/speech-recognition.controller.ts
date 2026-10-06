@@ -32,14 +32,14 @@ export class SpeechRecognitionController {
   constructor(private readonly speech: SpeechRecognitionService) {}
 
   @Get('engine')
-  engine {
-    return this.speech.engine;
+  engine() {
+    return this.speech.engine();
   }
 
   @Get('engine/analytics')
   @UseGuards(TranslateAuthGuard)
   analytics(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
     },
@@ -48,14 +48,14 @@ export class SpeechRecognitionController {
   }
 
   @Get('vocabulary/packs')
-  vocabularyPacks {
-    return this.speech.listIndustryPacks;
+  vocabularyPacks() {
+    return this.speech.listIndustryPacks();
   }
 
   @Get('vocabulary')
   @UseGuards(TranslateAuthGuard)
   listVocabulary(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
     },
@@ -70,12 +70,12 @@ export class SpeechRecognitionController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(TranslateAuthGuard)
   addVocabulary(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body body: { phrase?: string },
+    @Body() body: { phrase?: string },
   ) {
     if (typeof body.phrase !== 'string') {
       throw new ApiException('validation_error', 'phrase is required', HttpStatus.BAD_REQUEST);
@@ -92,7 +92,7 @@ export class SpeechRecognitionController {
   @Delete('vocabulary/:id')
   @UseGuards(TranslateAuthGuard)
   removeVocabulary(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
@@ -113,18 +113,18 @@ export class SpeechRecognitionController {
   @UseGuards(TranslateAuthGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage,
-      limits: { fileSize: audioMaxBytes },
+      storage: memoryStorage(),
+      limits: { fileSize: audioMaxBytes() },
     }),
   )
   recognize(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @UploadedFile file: Express.Multer.File | undefined,
-    @Body
+    @UploadedFile() file: Express.Multer.File | undefined,
+    @Body()
     body: {
       language?: string;
       industryPacks?: string;
@@ -157,19 +157,19 @@ export class SpeechRecognitionController {
   @UseGuards(TranslateAuthGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage,
-      limits: { fileSize: audioMaxBytes },
+      storage: memoryStorage(),
+      limits: { fileSize: audioMaxBytes() },
     }),
   )
   async stream(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Res res: Response,
-    @UploadedFile file: Express.Multer.File | undefined,
-    @Body
+    @Res() res: Response,
+    @UploadedFile() file: Express.Multer.File | undefined,
+    @Body()
     body: {
       language?: string;
       industryPacks?: string;
@@ -184,7 +184,7 @@ export class SpeechRecognitionController {
     res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders?.;
+    res.flushHeaders?.();
 
     const stream = this.speech.streamRecognize({
       file,
@@ -202,7 +202,7 @@ export class SpeechRecognitionController {
       res.write(`event: ${chunk.event}\ndata: ${JSON.stringify(chunk)}\n\n`);
       if (chunk.event === 'error' || chunk.event === 'done') break;
     }
-    res.end;
+    res.end();
   }
 
   @Post('subtitles')
@@ -210,18 +210,18 @@ export class SpeechRecognitionController {
   @UseGuards(TranslateAuthGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage,
-      limits: { fileSize: audioMaxBytes },
+      storage: memoryStorage(),
+      limits: { fileSize: audioMaxBytes() },
     }),
   )
   subtitles(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @UploadedFile file: Express.Multer.File | undefined,
-    @Body
+    @UploadedFile() file: Express.Multer.File | undefined,
+    @Body()
     body: {
       language?: string;
       format?: string;

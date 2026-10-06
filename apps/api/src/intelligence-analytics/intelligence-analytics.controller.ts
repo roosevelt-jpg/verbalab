@@ -8,14 +8,14 @@ export class IntelligenceAnalyticsController {
   constructor(private readonly analytics: IntelligenceAnalyticsService) {}
 
   @Get('engine')
-  engine {
-    return this.analytics.engine;
+  engine() {
+    return this.analytics.engine();
   }
 
   @Get('overview')
   @UseGuards(TranslateAuthGuard)
   overview(
-    @Req req: Request & { translateAuth: TranslateAuthContext },
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -30,7 +30,7 @@ export class IntelligenceAnalyticsController {
   @Get('usage')
   @UseGuards(TranslateAuthGuard)
   usage(
-    @Req req: Request & { translateAuth: TranslateAuthContext },
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -44,7 +44,7 @@ export class IntelligenceAnalyticsController {
   @Get('surfaces')
   @UseGuards(TranslateAuthGuard)
   surfaces(
-    @Req req: Request & { translateAuth: TranslateAuthContext },
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -58,7 +58,7 @@ export class IntelligenceAnalyticsController {
   @Get('latency')
   @UseGuards(TranslateAuthGuard)
   latency(
-    @Req req: Request & { translateAuth: TranslateAuthContext },
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -72,7 +72,7 @@ export class IntelligenceAnalyticsController {
   @Get('quality')
   @UseGuards(TranslateAuthGuard)
   quality(
-    @Req req: Request & { translateAuth: TranslateAuthContext },
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -86,7 +86,7 @@ export class IntelligenceAnalyticsController {
   @Get('routing')
   @UseGuards(TranslateAuthGuard)
   routing(
-    @Req req: Request & { translateAuth: TranslateAuthContext },
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -100,7 +100,7 @@ export class IntelligenceAnalyticsController {
   @Get('costs')
   @UseGuards(TranslateAuthGuard)
   costs(
-    @Req req: Request & { translateAuth: TranslateAuthContext },
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -114,7 +114,7 @@ export class IntelligenceAnalyticsController {
   @Get('report')
   @UseGuards(TranslateAuthGuard)
   report(
-    @Req req: Request & { translateAuth: TranslateAuthContext },
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -129,7 +129,7 @@ export class IntelligenceAnalyticsController {
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
   monitoring(
-    @Req req: Request & { translateAuth: TranslateAuthContext },
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {

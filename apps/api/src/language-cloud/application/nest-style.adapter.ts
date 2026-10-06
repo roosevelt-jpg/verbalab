@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { StyleService } from '../../style/style.service';
 import type { AuthContext, StylePort, StyleRewriteResult } from './ports';
 
-@Injectable
+@Injectable()
 export class NestStyleAdapter implements StylePort {
   constructor(private readonly style: StyleService) {}
 

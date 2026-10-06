@@ -49,48 +49,48 @@ export type RegistryDeployment = {
   updatedAt: string;
 };
 
-@Injectable
+@Injectable()
 export class ModelRegistryService {
-  private readonly versions = new Map<string, RegistryVersion>;
-  private readonly deployments = new Map<string, RegistryDeployment>;
+  private readonly versions = new Map<string, RegistryVersion>();
+  private readonly deployments = new Map<string, RegistryDeployment>();
 
   constructor(
     private readonly usage: UsageService,
     private readonly models: ModelsService,
   ) {}
 
-  async engine {
-    const live = await this.models.liveMatrix;
+  async engine() {
+    const live = await this.models.liveMatrix();
     return {
-      ...modelRegistryCatalog,
-      capabilities: modelRegistryCapabilities,
-      architecture: modelRegistryArchitectureNotes,
-      ceilings: modelRegistryCeilings,
+      ...modelRegistryCatalog(),
+      capabilities: modelRegistryCapabilities(),
+      architecture: modelRegistryArchitectureNotes(),
+      ceilings: modelRegistryCeilings(),
       liveSummary: {
         asOf: live.asOf,
         featureCount: live.features.length,
-        note: 'Live matrix from — not regenerated here.',
+        note: 'Live matrix from VL-110 — not regenerated here.',
       },
       safety: {
         noFakeConfiguredFlags: true,
         trafficMeshForbidden: true,
         note:
-          'Configured flags come from env/artifact checks. Canary/shadow/blue-green are plan metadata only.',
+          'Configured flags come from VL-110 env/artifact checks. Canary/shadow/blue-green are plan metadata only.',
       },
     };
   }
 
-  capabilities {
+  capabilities() {
     return {
-      capabilities: modelRegistryCapabilities,
-      honesty: modelRegistryHonesty,
+      capabilities: modelRegistryCapabilities(),
+      honesty: modelRegistryHonesty(),
       docs: '/docs/MODEL_REGISTRY.md',
     };
   }
 
   async overview(session: SessionContext) {
     const usageSummary = await this.usage.summary(session.organizationId);
-    const cards = await this.cards;
+    const cards = await this.cards();
     return {
       session: {
         organizationId: session.organizationId,
@@ -102,7 +102,7 @@ export class ModelRegistryService {
         chat: usageSummary.chat,
         embeddings: usageSummary.embeddings,
       },
-      engine: await this.engine,
+      engine: await this.engine(),
       cardCount: cards.cards.length,
       versions: this.listVersionsForOrg(session.organizationId).slice(0, 20),
       deployments: this.listDeploymentsForOrg(session.organizationId).slice(0, 20),
@@ -123,12 +123,12 @@ export class ModelRegistryService {
       },
       docs: '/docs/MODEL_REGISTRY.md',
       note:
-        'Model Registry. Cards/versions/approvals over existing — not MLflow or traffic-mesh canary OS.',
+        'Model Registry (VL-237). Cards/versions/approvals over VL-110 — not MLflow or traffic-mesh canary OS.',
     };
   }
 
-  async cards {
-    const entries = await this.models.list;
+  async cards() {
+    const entries = await this.models.list();
     const cards = entries.map((e) => ({
       id: e.id,
       slug: e.slug,
@@ -152,8 +152,8 @@ export class ModelRegistryService {
     }));
     return {
       cards,
-      honesty: modelRegistryHonesty,
-      note: 'Model cards from entries — lightweight metadata, not academic Model Cards OS.',
+      honesty: modelRegistryHonesty(),
+      note: 'Model cards from VL-110 entries — lightweight metadata, not academic Model Cards OS.',
       docs: '/docs/MODEL_REGISTRY.md',
     };
   }
@@ -161,8 +161,8 @@ export class ModelRegistryService {
   listVersions(session: SessionContext) {
     return {
       versions: this.listVersionsForOrg(session.organizationId),
-      ceilings: modelRegistryCeilings,
-      note: 'Org-scoped sandbox versions.',
+      ceilings: modelRegistryCeilings(),
+      note: 'Org-scoped sandbox versions (VL-237).',
     };
   }
 
@@ -170,7 +170,7 @@ export class ModelRegistryService {
     session: SessionContext,
     body: { modelSlug?: string; version?: string; notes?: string; submit?: boolean },
   ) {
-    const ceilings = modelRegistryCeilings;
+    const ceilings = modelRegistryCeilings();
     const existing = this.listVersionsForOrg(session.organizationId);
     if (existing.length >= ceilings.maxVersionsPerOrg) {
       throw new ApiException(
@@ -179,7 +179,7 @@ export class ModelRegistryService {
         HttpStatus.PAYMENT_REQUIRED,
       );
     }
-    const modelSlug = (body.modelSlug ?? '').trim;
+    const modelSlug = (body.modelSlug ?? '').trim();
     if (!modelSlug) {
       throw new ApiException(
         'validation_error',
@@ -187,9 +187,9 @@ export class ModelRegistryService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const now = new Date.toISOString;
+    const now = new Date().toISOString();
     const version: RegistryVersion = {
-      id: randomUUID,
+      id: randomUUID(),
       organizationId: session.organizationId,
       workspaceId: session.workspaceId,
       modelSlug: modelSlug.slice(0, 120),
@@ -206,7 +206,7 @@ export class ModelRegistryService {
     this.versions.set(version.id, version);
     return {
       version,
-      honesty: modelRegistryHonesty,
+      honesty: modelRegistryHonesty(),
       note: 'Sandbox version recorded. Approve before deploy plan.',
     };
   }
@@ -221,7 +221,7 @@ export class ModelRegistryService {
       );
     }
     version.status = 'approved';
-    version.updatedAt = new Date.toISOString;
+    version.updatedAt = new Date().toISOString();
     this.versions.set(version.id, version);
     return { version };
   }
@@ -230,7 +230,7 @@ export class ModelRegistryService {
     const version = this.requireVersion(session.organizationId, id);
     version.status = 'rejected';
     if (body.notes) version.notes = `${version.notes} | reject: ${body.notes}`.slice(0, 500);
-    version.updatedAt = new Date.toISOString;
+    version.updatedAt = new Date().toISOString();
     this.versions.set(version.id, version);
     return { version };
   }
@@ -249,23 +249,23 @@ export class ModelRegistryService {
       );
     }
     version.status = 'rolled_back';
-    version.updatedAt = new Date.toISOString;
+    version.updatedAt = new Date().toISOString();
     previous.status = 'active';
-    previous.updatedAt = new Date.toISOString;
+    previous.updatedAt = new Date().toISOString();
     this.versions.set(version.id, version);
     this.versions.set(previous.id, previous);
     return {
       rolledBack: version,
       active: previous,
-      note: 'Sandbox rollback only — does not mutate status or cluster traffic.',
+      note: 'Sandbox rollback only — does not mutate VL-110 status or cluster traffic.',
     };
   }
 
   listDeployments(session: SessionContext) {
     return {
       deployments: this.listDeploymentsForOrg(session.organizationId),
-      ceilings: modelRegistryCeilings,
-      note: 'Org-scoped sandbox deployment plans.',
+      ceilings: modelRegistryCeilings(),
+      note: 'Org-scoped sandbox deployment plans (VL-237).',
     };
   }
 
@@ -278,7 +278,7 @@ export class ModelRegistryService {
       notes?: string;
     },
   ) {
-    const ceilings = modelRegistryCeilings;
+    const ceilings = modelRegistryCeilings();
     const existing = this.listDeploymentsForOrg(session.organizationId);
     if (existing.length >= ceilings.maxDeploymentsPerOrg) {
       throw new ApiException(
@@ -315,9 +315,9 @@ export class ModelRegistryService {
       }
       canaryPercent = pct;
     }
-    const now = new Date.toISOString;
+    const now = new Date().toISOString();
     const deployment: RegistryDeployment = {
-      id: randomUUID,
+      id: randomUUID(),
       organizationId: session.organizationId,
       workspaceId: session.workspaceId,
       versionId: version.id,
@@ -341,7 +341,7 @@ export class ModelRegistryService {
         note:
           'Deploy plan metadata only. Real serving stays on Model Serving / Gateway — no traffic-mesh canary OS.',
       },
-      honesty: modelRegistryHonesty,
+      honesty: modelRegistryHonesty(),
     };
   }
 
@@ -362,20 +362,20 @@ export class ModelRegistryService {
       deploymentCount: deployments.length,
       byVersionStatus,
       byStrategy,
-      honesty: modelRegistryHonesty,
+      honesty: modelRegistryHonesty(),
       note:
-        'Model Registry monitoring. Sandbox governance over existing; mesh strategies deferred as metadata-only.',
+        'Model Registry monitoring (VL-237). Sandbox governance over VL-110; mesh strategies deferred as metadata-only.',
     };
   }
 
   private listVersionsForOrg(organizationId: string): RegistryVersion[] {
-    return [...this.versions.values]
+    return [...this.versions.values()]
       .filter((v) => v.organizationId === organizationId)
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   }
 
   private listDeploymentsForOrg(organizationId: string): RegistryDeployment[] {
-    return [...this.deployments.values]
+    return [...this.deployments.values()]
       .filter((d) => d.organizationId === organizationId)
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   }
@@ -389,7 +389,7 @@ export class ModelRegistryService {
   }
 
   private normalizeStrategy(raw: string): MrDeployStrategy {
-    const id = raw.trim.toLowerCase.replace(/-/g, '_') as MrDeployStrategy;
+    const id = raw.trim().toLowerCase().replace(/-/g, '_') as MrDeployStrategy;
     if (!DEPLOY_STRATEGIES.includes(id)) {
       throw new ApiException(
         'validation_error',

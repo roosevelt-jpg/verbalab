@@ -1,4 +1,4 @@
-/** Application ports for Translation Runtime. */
+/** Application ports for Translation Runtime (VL-325). */
 
 export type TranslationRuntimeProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type TranslationRuntimeEngineBundle = ReturnType<
 >;
 
 export interface TranslationRuntimeCatalogPort {
-  engine: TranslationRuntimeEngineBundle;
-  listProducts: TranslationRuntimeProductRow[];
+  engine(): TranslationRuntimeEngineBundle;
+  listProducts(): TranslationRuntimeProductRow[];
 }
 
 export const TRANSLATION_RUNTIME_CATALOG_PORT = Symbol('TRANSLATION_RUNTIME_CATALOG_PORT');

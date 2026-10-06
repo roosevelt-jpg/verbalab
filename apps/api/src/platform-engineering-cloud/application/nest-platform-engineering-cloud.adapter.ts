@@ -6,15 +6,15 @@ import {
   PlatformEngineeringCloudProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestPlatformEngineeringCloudCatalogAdapter implements PlatformEngineeringCloudCatalogPort {
   constructor(private readonly service: PlatformEngineeringCloudService) {}
 
-  engine: PlatformEngineeringCloudEngineBundle {
-    return this.service.products;
+  engine(): PlatformEngineeringCloudEngineBundle {
+    return this.service.products();
   }
 
-  listProducts: PlatformEngineeringCloudProductRow[] {
-    return this.service.products.products;
+  listProducts(): PlatformEngineeringCloudProductRow[] {
+    return this.service.products().products;
   }
 }

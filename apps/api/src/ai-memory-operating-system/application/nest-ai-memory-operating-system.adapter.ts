@@ -6,16 +6,16 @@ import {
   AiMemoryOperatingSystemProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestAiMemoryOperatingSystemCatalogAdapter implements AiMemoryOperatingSystemCatalogPort {
   constructor(private readonly service: AiMemoryOperatingSystemService) {}
 
-  engine: AiMemoryOperatingSystemEngineBundle {
-    return this.service.engine;
+  engine(): AiMemoryOperatingSystemEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: AiMemoryOperatingSystemProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): AiMemoryOperatingSystemProductRow[] {
+    const bundle = this.engine() as {
       products?: AiMemoryOperatingSystemProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestAiMemoryOperatingSystemCatalogAdapter implements AiMemoryOperat
         status: 'shipped',
         api: 'GET /v1/ai-memory-operating-system/engine',
         console: '/ai-memory-operating-system',
-        notes: ' shipped.',
+        notes: 'VL-340 shipped.',
       },
     ];
   }

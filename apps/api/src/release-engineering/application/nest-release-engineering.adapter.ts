@@ -6,16 +6,16 @@ import {
   ReleaseEngineeringProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestReleaseEngineeringCatalogAdapter implements ReleaseEngineeringCatalogPort {
   constructor(private readonly service: ReleaseEngineeringService) {}
 
-  engine: ReleaseEngineeringEngineBundle {
-    return this.service.engine;
+  engine(): ReleaseEngineeringEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: ReleaseEngineeringProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): ReleaseEngineeringProductRow[] {
+    const bundle = this.engine() as {
       products?: ReleaseEngineeringProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestReleaseEngineeringCatalogAdapter implements ReleaseEngineeringC
         status: 'shipped',
         api: 'GET /v1/release-engineering/engine',
         console: '/release-engineering',
-        notes: ' shipped.',
+        notes: 'VL-307 shipped.',
       },
     ];
   }

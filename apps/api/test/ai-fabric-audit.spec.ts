@@ -28,7 +28,7 @@ const FABRIC_DIRS = [
 function walkTsFiles(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory) {
+    if (name.isDirectory()) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       walkTsFiles(p, out);
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -47,7 +47,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_afa_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_afa_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -64,29 +64,29 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('AI Fabric Production Audit',  => {
+describe('AI Fabric Production Audit (VL-248)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     process.env.EVENT_FABRIC_MEMORY = '1';
     process.env.LUGEMI_POLICY_RUNTIME_MODE = 'enforce';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    }).compile();
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   }, 120_000);
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('ships audit ADR and report pack',  => {
+  it('ships audit ADR and report pack', () => {
     expect(existsSync(join(root, 'docs/adr/0150-ai-fabric-production-audit.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/CLOUD_BLUEPRINT.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/ai-fabric-audit/PRODUCTION_READINESS.md'))).toBe(true);
@@ -112,7 +112,7 @@ describe('AI Fabric Production Audit',  => {
     expect(adr).toMatch(/do not implement|Rejected|not implement/i);
   });
 
-  it('has no TODO/FIXME/implement-later markers in fabric source trees',  => {
+  it('has no TODO/FIXME/implement-later markers in fabric source trees', () => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const name of FABRIC_DIRS) {
@@ -129,7 +129,7 @@ describe('AI Fabric Production Audit',  => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes all fabric catalogs as shipped with monitoring', async  => {
+  it('exposes all fabric catalogs as shipped with monitoring', async () => {
     const paths = [
       '/v1/ai-fabric/products',
       '/v1/ai-fabric/monitoring',
@@ -151,11 +151,11 @@ describe('AI Fabric Production Audit',  => {
       '/v1/policy-fabric/monitoring',
     ];
     for (const path of paths) {
-      const res = await request(app.getHttpServer).get(path).expect(200);
-      expect(res.body).toBeTruthy;
+      const res = await request(app.getHttpServer()).get(path).expect(200);
+      expect(res.body).toBeTruthy();
     }
 
-    const hub = await request(app.getHttpServer).get('/v1/ai-fabric/products').expect(200);
+    const hub = await request(app.getHttpServer()).get('/v1/ai-fabric/products').expect(200);
     expect(hub.body.architecture.customerFacingProduct).toBe(false);
     const byId = Object.fromEntries(
       hub.body.products.map((p: { id: string; status: string }) => [p.id, p.status]),
@@ -174,14 +174,14 @@ describe('AI Fabric Production Audit',  => {
       expect(byId[id]).toBe('shipped');
     }
 
-    const policy = await request(app.getHttpServer)
+    const policy = await request(app.getHttpServer())
       .get('/v1/policy-fabric/products')
       .expect(200);
     expect(policy.body.architecture.hardGate).toBe(true);
     expect(policy.body.architecture.logOnlyMode).toBe(false);
   });
 
-  it('rejects unauthenticated sensitive fabric routes (security smoke)', async  => {
+  it('rejects unauthenticated sensitive fabric routes (security smoke)', async () => {
     const paths = [
       '/v1/ai-fabric/overview',
       '/v1/event-fabric/overview',
@@ -197,14 +197,14 @@ describe('AI Fabric Production Audit',  => {
     for (const path of paths) {
       const res =
         path.endsWith('/assert')
-          ? await request(app.getHttpServer).post(path).send({ action: 'fabric.distribute' })
-          : await request(app.getHttpServer).get(path);
+          ? await request(app.getHttpServer()).post(path).send({ action: 'fabric.distribute' })
+          : await request(app.getHttpServer()).get(path);
       expect([401, 403, 503]).toContain(res.status);
     }
   });
 
-  it('hard-gates policy fabric and connects same-org distribute (resilience smoke)', async  => {
-    const org = await seedOrg(prisma, `afa_${Date.now}`);
+  it('hard-gates policy fabric and connects same-org distribute (resilience smoke)', async () => {
+    const org = await seedOrg(prisma, `afa_${Date.now()}`);
     const primary = org.workspaces.find((w) => w.name === 'Default')!;
     const peer = org.workspaces.find((w) => w.name === 'Peer')!;
     const key = await apiKeys.create({
@@ -214,22 +214,22 @@ describe('AI Fabric Production Audit',  => {
       name: 'afa-key',
     });
 
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .post('/v1/policy-fabric/assert')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ bus: 'policy-fabric', action: 'fabric.bypass_policy' })
       .expect(403);
 
-    const started = Date.now;
-    const dist = await request(app.getHttpServer)
+    const started = Date.now();
+    const dist = await request(app.getHttpServer())
       .post('/v1/policy-fabric/distribute')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ publishEvent: true, topic: 'ai-fabric-audit' })
       .expect(200);
-    expect(Date.now - started).toBeLessThan(5_000);
+    expect(Date.now() - started).toBeLessThan(5_000);
     expect(dist.body.distribution.targets).toContain(peer.id);
 
-    const gql = await request(app.getHttpServer)
+    const gql = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query: `{
@@ -239,7 +239,7 @@ describe('AI Fabric Production Audit',  => {
         }`,
       })
       .expect(200);
-    expect(gql.body.errors).toBeUndefined;
+    expect(gql.body.errors).toBeUndefined();
     expect(gql.body.data.aiFabricBuses.length).toBeGreaterThan(5);
     expect(gql.body.data.policyFabricCapabilities.length).toBeGreaterThan(5);
   });

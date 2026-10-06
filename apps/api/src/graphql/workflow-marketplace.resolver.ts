@@ -6,13 +6,13 @@ import {
   GqlWorkflowMarketplaceEngine,
 } from './gql.types';
 
-@Resolver
+@Resolver()
 export class WorkflowMarketplaceGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query( => GqlWorkflowMarketplaceEngine, { name: 'workflowMarketplaceEngine' })
-  async workflowMarketplaceEngine: Promise<GqlWorkflowMarketplaceEngine> {
-    const catalog = await this.queries.execute(new GetWorkflowMarketplaceEngineQuery);
+  @Query(() => GqlWorkflowMarketplaceEngine, { name: 'workflowMarketplaceEngine' })
+  async workflowMarketplaceEngine(): Promise<GqlWorkflowMarketplaceEngine> {
+    const catalog = await this.queries.execute(new GetWorkflowMarketplaceEngineQuery());
     return {
       product: catalog.product,
       note: catalog.note,

@@ -17,8 +17,8 @@ export class GetTrustAnalyticsEngineHandler
     private readonly catalog: TrustAnalyticsCatalogPort,
   ) {}
 
-  execute: Promise<TrustAnalyticsEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<TrustAnalyticsEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListTrustAnalyticsProductsHandler
     private readonly catalog: TrustAnalyticsCatalogPort,
   ) {}
 
-  execute: Promise<TrustAnalyticsProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<TrustAnalyticsProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

@@ -6,16 +6,16 @@ import {
   GovernmentIntelligenceProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestGovernmentIntelligenceCatalogAdapter implements GovernmentIntelligenceCatalogPort {
   constructor(private readonly service: GovernmentIntelligenceService) {}
 
-  engine: GovernmentIntelligenceEngineBundle {
-    return this.service.engine;
+  engine(): GovernmentIntelligenceEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: GovernmentIntelligenceProductRow[] {
-    const bundle = this.engine as { products?: GovernmentIntelligenceProductRow[]; capabilities?: GovernmentIntelligenceProductRow[] };
+  listProducts(): GovernmentIntelligenceProductRow[] {
+    const bundle = this.engine() as { products?: GovernmentIntelligenceProductRow[]; capabilities?: GovernmentIntelligenceProductRow[] };
     if (Array.isArray(bundle.products)) return bundle.products;
     if (Array.isArray(bundle.capabilities)) {
       return bundle.capabilities.map((c) => ({
@@ -34,7 +34,7 @@ export class NestGovernmentIntelligenceCatalogAdapter implements GovernmentIntel
         status: 'shipped',
         api: 'GET /v1/government-intelligence/engine',
         console: '/government-intelligence',
-        notes: ' shipped.',
+        notes: 'VL-264 shipped.',
       },
     ];
   }

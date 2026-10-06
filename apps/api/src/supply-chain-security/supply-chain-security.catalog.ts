@@ -1,5 +1,5 @@
 /**
- * Library Phase 177 → Supply Chain Security.
+ * Library Phase 177 → Supply Chain Security (VL-310).
  * SBOM/dependency/container/secrets/license catalog + real workspace inventory posture.
  * Not a full vulnerability database / Snyk OS.
  */
@@ -21,7 +21,7 @@ export type SupplyChainFinding = {
   source: string;
 };
 
-export function supplyChainCapabilities: SupplyChainCapability[] {
+export function supplyChainCapabilities(): SupplyChainCapability[] {
   return [
     { id: 'sbom', name: 'SBOM', status: 'shipped', notes: 'Workspace package inventory SBOM seed.' },
     { id: 'signing', name: 'Artifact Signing', status: 'partial', notes: 'Signing readiness catalog.' },
@@ -35,7 +35,7 @@ export function supplyChainCapabilities: SupplyChainCapability[] {
 }
 
 /** Static catalog of known workspace dependency risk posture (not a live CVE DB). */
-export function seedSupplyChainFindings: SupplyChainFinding[] {
+export function seedSupplyChainFindings(): SupplyChainFinding[] {
   return [
     {
       id: 'find-npm-nest',
@@ -120,7 +120,7 @@ export function seedSupplyChainFindings: SupplyChainFinding[] {
   ];
 }
 
-export function inventoryWorkspacePackages: Array<{
+export function inventoryWorkspacePackages(): Array<{
   name: string;
   path: string;
   kind: string;
@@ -134,12 +134,12 @@ export function inventoryWorkspacePackages: Array<{
   ];
 }
 
-export function supplyChainSecurityEngineCatalog {
-  const findings = seedSupplyChainFindings;
-  const packages = inventoryWorkspacePackages;
+export function supplyChainSecurityEngineCatalog() {
+  const findings = seedSupplyChainFindings();
+  const packages = inventoryWorkspacePackages();
   return {
     product: 'Lugemi Supply Chain Security',
-    capabilities: supplyChainCapabilities,
+    capabilities: supplyChainCapabilities(),
     findings,
     packages,
     sbom: {
@@ -164,6 +164,6 @@ export function supplyChainSecurityEngineCatalog {
     },
     docs: '/docs/SUPPLY_CHAIN_SECURITY.md',
     note:
-      'Supply Chain Security. SBOM/signing/dependency/container/SAST/DAST/secrets/license catalog with scan/findings path. snykOs=false.',
+      'Supply Chain Security (VL-310). SBOM/signing/dependency/container/SAST/DAST/secrets/license catalog with scan/findings path. snykOs=false.',
   };
 }

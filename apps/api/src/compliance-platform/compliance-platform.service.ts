@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { compliancePlatformEngineCatalog } from './compliance-platform.catalog';
 
-@Injectable
+@Injectable()
 export class CompliancePlatformService {
-  engine {
-    return compliancePlatformEngineCatalog;
+  engine() {
+    return compliancePlatformEngineCatalog();
   }
 
   list(query?: string) {
-    const catalog = this.engine as {
+    const catalog = this.engine() as {
       controls: Array<Record<string, unknown> & { id: string; notes?: string }>;
       honesty: Record<string, unknown>;
       safety: Record<string, unknown>;
       note: string;
       docs: string;
     };
-    const q = (query ?? '').trim.toLowerCase;
+    const q = (query ?? '').trim().toLowerCase();
     const rows = catalog.controls.filter((row) => {
       if (!q) return true;
-      return JSON.stringify(row).toLowerCase.includes(q);
+      return JSON.stringify(row).toLowerCase().includes(q);
     });
     return {
       controls: rows,
@@ -34,14 +34,14 @@ export class CompliancePlatformService {
     return this.list(query);
   }
 
-  monitoring {
-    const catalog = this.engine;
+  monitoring() {
+    const catalog = this.engine();
     return {
       mode: 'compliance',
       count: (catalog as { controls: unknown[] }).controls.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'CompliancePlatform monitoring snapshot.',
+      note: 'CompliancePlatform monitoring snapshot (VL-297).',
     };
   }
 }

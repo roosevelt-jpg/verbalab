@@ -12,19 +12,19 @@ export class StyleController {
   constructor(private readonly style: StyleService) {}
 
   @Get('intelligence')
-  intelligence {
-    return this.style.intelligence;
+  intelligence() {
+    return this.style.intelligence();
   }
 
   @Get('profiles')
-  profiles {
-    return this.style.profiles;
+  profiles() {
+    return this.style.profiles();
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   analytics(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
     },
@@ -36,14 +36,14 @@ export class StyleController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   detect(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body body: { text?: string },
+    @Body() body: { text?: string },
   ) {
-    if (typeof body.text !== 'string' || body.text.trim.length === 0) {
+    if (typeof body.text !== 'string' || body.text.trim().length === 0) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }
     return this.style.detect({
@@ -59,22 +59,22 @@ export class StyleController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   transform(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body body: { text?: string; targetTone?: string; language?: string },
+    @Body() body: { text?: string; targetTone?: string; language?: string },
   ) {
-    if (typeof body.text !== 'string' || body.text.trim.length === 0) {
+    if (typeof body.text !== 'string' || body.text.trim().length === 0) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }
-    if (typeof body.targetTone !== 'string' || body.targetTone.trim.length === 0) {
+    if (typeof body.targetTone !== 'string' || body.targetTone.trim().length === 0) {
       throw new ApiException('validation_error', 'targetTone is required', HttpStatus.BAD_REQUEST);
     }
     return this.style.transform({
       text: body.text,
-      targetTone: body.targetTone.trim,
+      targetTone: body.targetTone.trim(),
       language: body.language,
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -88,22 +88,22 @@ export class StyleController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   transfer(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body body: { text?: string; targetProfile?: string; language?: string },
+    @Body() body: { text?: string; targetProfile?: string; language?: string },
   ) {
-    if (typeof body.text !== 'string' || body.text.trim.length === 0) {
+    if (typeof body.text !== 'string' || body.text.trim().length === 0) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }
-    if (typeof body.targetProfile !== 'string' || body.targetProfile.trim.length === 0) {
+    if (typeof body.targetProfile !== 'string' || body.targetProfile.trim().length === 0) {
       throw new ApiException('validation_error', 'targetProfile is required', HttpStatus.BAD_REQUEST);
     }
     return this.style.transfer({
       text: body.text,
-      targetProfile: body.targetProfile.trim,
+      targetProfile: body.targetProfile.trim(),
       language: body.language,
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -117,22 +117,22 @@ export class StyleController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   rewrite(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body body: { text?: string; profile?: string; language?: string },
+    @Body() body: { text?: string; profile?: string; language?: string },
   ) {
-    if (typeof body.text !== 'string' || body.text.trim.length === 0) {
+    if (typeof body.text !== 'string' || body.text.trim().length === 0) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }
-    if (typeof body.profile !== 'string' || body.profile.trim.length === 0) {
+    if (typeof body.profile !== 'string' || body.profile.trim().length === 0) {
       throw new ApiException('validation_error', 'profile is required', HttpStatus.BAD_REQUEST);
     }
     return this.style.rewrite({
       text: body.text,
-      profile: body.profile.trim,
+      profile: body.profile.trim(),
       language: body.language,
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,

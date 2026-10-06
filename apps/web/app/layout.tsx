@@ -39,7 +39,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${noto.variable} ${notoMono.variable}`}>
       <body>
         <SentryInit />
-        {isClerkConfigured ? <ClerkProvider>{children}</ClerkProvider> : children}
+        {isClerkConfigured() ? <ClerkProvider>{children}</ClerkProvider> : children}
         <SupportChatWidget />
       </body>
     </html>

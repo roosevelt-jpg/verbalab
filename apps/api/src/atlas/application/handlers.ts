@@ -16,8 +16,8 @@ export class ListAtlasCapabilitiesHandler
     @Inject(ATLAS_CATALOG_PORT) private readonly catalog: AtlasCatalogPort,
   ) {}
 
-  execute: Promise<AtlasCapabilityRow[]> {
-    return Promise.resolve(this.catalog.listCapabilities);
+  execute(): Promise<AtlasCapabilityRow[]> {
+    return Promise.resolve(this.catalog.listCapabilities());
   }
 }
 
@@ -27,8 +27,8 @@ export class GetAtlasEngineHandler implements IQueryHandler<GetAtlasEngineQuery>
     @Inject(ATLAS_CATALOG_PORT) private readonly catalog: AtlasCatalogPort,
   ) {}
 
-  execute: Promise<AtlasEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<AtlasEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 

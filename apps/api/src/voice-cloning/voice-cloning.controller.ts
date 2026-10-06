@@ -27,24 +27,24 @@ export class VoiceCloningController {
   constructor(private readonly cloning: VoiceCloningService) {}
 
   @Get('engine')
-  engine {
-    return this.cloning.engine;
+  engine() {
+    return this.cloning.engine();
   }
 
   @Get('consent/policy')
-  consentPolicy {
-    return this.cloning.consentPolicy;
+  consentPolicy() {
+    return this.cloning.consentPolicy();
   }
 
   @Get('engine/analytics')
   @UseGuards(ClerkAuthGuard)
-  analytics(@CurrentSession session: SessionContext) {
+  analytics(@CurrentSession() session: SessionContext) {
     return this.cloning.analytics(session.organizationId, session.workspaceId);
   }
 
   @Get('library')
   @UseGuards(ClerkAuthGuard)
-  library(@CurrentSession session: SessionContext) {
+  library(@CurrentSession() session: SessionContext) {
     return this.cloning.library(session.organizationId, session.workspaceId);
   }
 
@@ -52,14 +52,14 @@ export class VoiceCloningController {
   @UseGuards(ClerkAuthGuard)
   @UseInterceptors(
     FilesInterceptor('samples', 5, {
-      storage: memoryStorage,
-      limits: { fileSize: audioMaxBytes },
+      storage: memoryStorage(),
+      limits: { fileSize: audioMaxBytes() },
     }),
   )
   enroll(
-    @CurrentSession session: SessionContext,
-    @UploadedFiles files: Express.Multer.File[] | undefined,
-    @Body
+    @CurrentSession() session: SessionContext,
+    @UploadedFiles() files: Express.Multer.File[] | undefined,
+    @Body()
     body: {
       name?: string;
       consentAttested?: string | boolean;
@@ -70,7 +70,7 @@ export class VoiceCloningController {
       licenseType?: string;
       licenseNotes?: string;
     },
-    @Req req: Request,
+    @Req() req: Request,
   ) {
     return this.cloning.enroll({
       organizationId: session.organizationId,
@@ -94,14 +94,14 @@ export class VoiceCloningController {
   @UseGuards(ClerkAuthGuard)
   @UseInterceptors(
     FilesInterceptor('samples', 5, {
-      storage: memoryStorage,
-      limits: { fileSize: audioMaxBytes },
+      storage: memoryStorage(),
+      limits: { fileSize: audioMaxBytes() },
     }),
   )
   async enrollStream(
-    @CurrentSession session: SessionContext,
-    @UploadedFiles files: Express.Multer.File[] | undefined,
-    @Body
+    @CurrentSession() session: SessionContext,
+    @UploadedFiles() files: Express.Multer.File[] | undefined,
+    @Body()
     body: {
       name?: string;
       consentAttested?: string | boolean;
@@ -112,14 +112,14 @@ export class VoiceCloningController {
       licenseType?: string;
       licenseNotes?: string;
     },
-    @Req req: Request,
-    @Res res: Response,
+    @Req() req: Request,
+    @Res() res: Response,
   ) {
     res.status(HttpStatus.OK);
     res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders?.;
+    res.flushHeaders?.();
 
     const stream = this.cloning.enrollStream({
       organizationId: session.organizationId,
@@ -142,17 +142,17 @@ export class VoiceCloningController {
       res.write(`event: ${chunk.event}\ndata: ${JSON.stringify(chunk)}\n\n`);
       if (chunk.event === 'error' || chunk.event === 'done') break;
     }
-    res.end;
+    res.end();
   }
 
   @Patch('clones/:id/ownership')
   @UseGuards(ClerkAuthGuard)
   updateOwnership(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Param('id') id: string,
-    @Body
+    @Body()
     body: { ownershipAttested?: boolean; ownershipNotes?: string; ownerUserId?: string },
-    @Req req: Request,
+    @Req() req: Request,
   ) {
     if (typeof body.ownershipAttested !== 'boolean') {
       throw new ApiException(
@@ -177,10 +177,10 @@ export class VoiceCloningController {
   @Patch('clones/:id/license')
   @UseGuards(ClerkAuthGuard)
   updateLicense(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Param('id') id: string,
-    @Body body: { licenseType?: string; licenseNotes?: string },
-    @Req req: Request,
+    @Body() body: { licenseType?: string; licenseNotes?: string },
+    @Req() req: Request,
   ) {
     if (!body.licenseType) {
       throw new ApiException('validation_error', 'licenseType is required', HttpStatus.BAD_REQUEST);
@@ -200,16 +200,16 @@ export class VoiceCloningController {
   @Patch('clones/:id/permissions')
   @UseGuards(ClerkAuthGuard)
   updatePermissions(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Param('id') id: string,
-    @Body
+    @Body()
     body: {
       canSynthesize?: boolean;
       canShare?: boolean;
       canExport?: boolean;
       allowedRoles?: string[];
     },
-    @Req req: Request,
+    @Req() req: Request,
   ) {
     return this.cloning.updatePermissions({
       organizationId: session.organizationId,
@@ -225,10 +225,10 @@ export class VoiceCloningController {
   @Post('clones/:id/verify-enrollment')
   @UseGuards(ClerkAuthGuard)
   verifyEnrollment(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Param('id') id: string,
-    @Body body: { notes?: string },
-    @Req req: Request,
+    @Body() body: { notes?: string },
+    @Req() req: Request,
   ) {
     return this.cloning.verifyEnrollment({
       organizationId: session.organizationId,

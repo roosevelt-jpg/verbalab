@@ -36,7 +36,7 @@ export function AnamorphicPanel({
 
   return (
     <div
-      className={`lg-ana ${sizeClass} ${className}`.trim}
+      className={`lg-ana ${sizeClass} ${className}`.trim()}
       data-variant={variant}
       aria-hidden={label ? undefined : true}
       role={label ? 'img' : undefined}

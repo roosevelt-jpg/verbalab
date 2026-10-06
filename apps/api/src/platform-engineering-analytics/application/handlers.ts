@@ -17,8 +17,8 @@ export class GetPlatformEngineeringAnalyticsEngineHandler
     private readonly catalog: PlatformEngineeringAnalyticsCatalogPort,
   ) {}
 
-  execute: Promise<PlatformEngineeringAnalyticsEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<PlatformEngineeringAnalyticsEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListPlatformEngineeringAnalyticsProductsHandler
     private readonly catalog: PlatformEngineeringAnalyticsCatalogPort,
   ) {}
 
-  execute: Promise<PlatformEngineeringAnalyticsProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<PlatformEngineeringAnalyticsProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

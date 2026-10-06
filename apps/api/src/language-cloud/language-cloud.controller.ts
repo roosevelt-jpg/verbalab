@@ -8,13 +8,13 @@ export class LanguageCloudController {
   constructor(private readonly languageCloud: LanguageCloudService) {}
 
   @Get('products')
-  products {
-    return this.languageCloud.products;
+  products() {
+    return this.languageCloud.products();
   }
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession session: SessionContext) {
+  overview(@CurrentSession() session: SessionContext) {
     return this.languageCloud.overview(session);
   }
 }

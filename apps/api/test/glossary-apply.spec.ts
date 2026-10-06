@@ -5,8 +5,8 @@ import {
   restoreGlossaryPlaceholders,
 } from '../src/glossary/glossary-apply';
 
-describe('glossary-apply',  => {
-  it('protects longest terms first and restores targets',  => {
+describe('glossary-apply', () => {
+  it('protects longest terms first and restores targets', () => {
     const terms = [
       {
         sourceTerm: 'Central Bank',
@@ -27,7 +27,7 @@ describe('glossary-apply',  => {
     expect(restored).toBe('[sw] Visit the Benki Kuu today');
   });
 
-  it('enforces targets when source term remains',  => {
+  it('enforces targets when source term remains', () => {
     const out = enforceGlossaryTargets('Use M-Pesa now', [
       { sourceTerm: 'M-Pesa', targetTerm: 'M-Pesa', caseSensitive: false, wholeWord: true },
     ]);

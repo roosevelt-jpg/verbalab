@@ -7,17 +7,17 @@ import {
   FmcProductsBundle,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestFoundationModelCloudCatalogAdapter
   implements FoundationModelCloudCatalogPort
 {
   constructor(private readonly cloud: FoundationModelCloudService) {}
 
-  products: FmcProductsBundle {
-    return this.cloud.products;
+  products(): FmcProductsBundle {
+    return this.cloud.products();
   }
 
-  listProducts: FmcProductRow[] {
-    return foundationModelCloudCatalog;
+  listProducts(): FmcProductRow[] {
+    return foundationModelCloudCatalog();
   }
 }

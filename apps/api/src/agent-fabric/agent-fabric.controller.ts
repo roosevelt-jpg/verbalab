@@ -26,46 +26,46 @@ export class AgentFabricController {
   constructor(private readonly fabric: AgentFabricService) {}
 
   @Get('products')
-  products {
-    return this.fabric.products;
+  products() {
+    return this.fabric.products();
   }
 
   @Get('engine')
-  engine {
-    return this.fabric.products;
+  engine() {
+    return this.fabric.products();
   }
 
   @Get('routes')
-  routes {
-    return this.fabric.routes;
+  routes() {
+    return this.fabric.routes();
   }
 
   @Post('route')
   @HttpCode(HttpStatus.OK)
-  route(@Body body: { kinds?: string[] }) {
+  route(@Body() body: { kinds?: string[] }) {
     return this.fabric.route({ kinds: body.kinds });
   }
 
   @Post('pipeline')
   @HttpCode(HttpStatus.OK)
-  pipeline(@Body body: { pipelineId?: string; steps?: string[] }) {
+  pipeline(@Body() body: { pipelineId?: string; steps?: string[] }) {
     return this.fabric.pipeline(body);
   }
 
   @Get('versions')
-  versions {
-    return this.fabric.versions;
+  versions() {
+    return this.fabric.versions();
   }
 
   @Post('federate')
   @HttpCode(HttpStatus.OK)
-  federate(@Body body: { kinds?: string[] }) {
+  federate(@Body() body: { kinds?: string[] }) {
     return this.fabric.federate({ kinds: body.kinds });
   }
 
   @Get('discover')
   @UseGuards(TranslateAuthGuard)
-  discover(@Req req: AuthedReq) {
+  discover(@Req() req: AuthedReq) {
     return this.fabric.discover({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -79,8 +79,8 @@ export class AgentFabricController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   collaborate(
-    @Req req: AuthedReq,
-    @Body body: { agentIds?: string[]; topic?: string; message?: string },
+    @Req() req: AuthedReq,
+    @Body() body: { agentIds?: string[]; topic?: string; message?: string },
   ) {
     return this.fabric.collaborate({
       organizationId: req.translateAuth.organizationId,
@@ -96,8 +96,8 @@ export class AgentFabricController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   schedule(
-    @Req req: AuthedReq,
-    @Body body: { agentId?: string; goal?: string; runAt?: string },
+    @Req() req: AuthedReq,
+    @Body() body: { agentId?: string; goal?: string; runAt?: string },
   ) {
     return this.fabric.schedule({
       organizationId: req.translateAuth.organizationId,
@@ -111,7 +111,7 @@ export class AgentFabricController {
 
   @Get('marketplace')
   @UseGuards(TranslateAuthGuard)
-  marketplace(@Req req: AuthedReq) {
+  marketplace(@Req() req: AuthedReq) {
     return this.fabric.marketplace({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -125,8 +125,8 @@ export class AgentFabricController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   distribute(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       kinds?: string[];
       targetWorkspaceIds?: string[];
@@ -147,21 +147,21 @@ export class AgentFabricController {
   }
 
   @Get('stream')
-  stream(@Res res: Response) {
+  stream(@Res() res: Response) {
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders?.;
+    res.flushHeaders?.();
 
-    const write =  => {
-      const payload = JSON.stringify(this.fabric.streamSnapshot);
+    const write = () => {
+      const payload = JSON.stringify(this.fabric.streamSnapshot());
       res.write(`event: agent-fabric\ndata: ${payload}\n\n`);
     };
-    write;
+    write();
     const timer = setInterval(write, 500);
-    const done =  => {
+    const done = () => {
       clearInterval(timer);
-      res.end;
+      res.end();
     };
     res.on('close', done);
     setTimeout(done, 1100);
@@ -169,12 +169,12 @@ export class AgentFabricController {
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession session: SessionContext) {
+  overview(@CurrentSession() session: SessionContext) {
     return this.fabric.overview(session);
   }
 
   @Get('monitoring')
-  monitoring {
-    return this.fabric.monitoring;
+  monitoring() {
+    return this.fabric.monitoring();
   }
 }

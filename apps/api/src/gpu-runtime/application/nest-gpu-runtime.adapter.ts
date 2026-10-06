@@ -6,16 +6,16 @@ import {
   GpuRuntimeProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestGpuRuntimeCatalogAdapter implements GpuRuntimeCatalogPort {
   constructor(private readonly service: GpuRuntimeService) {}
 
-  engine: GpuRuntimeEngineBundle {
-    return this.service.engine;
+  engine(): GpuRuntimeEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: GpuRuntimeProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): GpuRuntimeProductRow[] {
+    const bundle = this.engine() as {
       products?: GpuRuntimeProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestGpuRuntimeCatalogAdapter implements GpuRuntimeCatalogPort {
         status: 'shipped',
         api: 'GET /v1/gpu-runtime/engine',
         console: '/gpu-runtime',
-        notes: ' shipped.',
+        notes: 'VL-332 shipped.',
       },
     ];
   }

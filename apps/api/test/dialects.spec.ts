@@ -18,7 +18,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_dial_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_dial_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -32,19 +32,19 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Dialect detection',  => {
+describe('Dialect detection (VL-131)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -52,28 +52,28 @@ describe('Dialect detection',  => {
     const gateway = app.get(GatewayService);
     gateway.setDetectProviderForTests({
       name: 'fixture_detect',
-      async detect {
+      async detect() {
         return { language: 'sw', confidence: 0.95, provider: 'fixture_detect' };
       },
     });
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('GET /v1/dialects lists curated registry', async  => {
-    const res = await request(app.getHttpServer).get('/v1/dialects').expect(200);
+  it('GET /v1/dialects lists curated registry', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/dialects').expect(200);
     expect(res.body.data.length).toBeGreaterThanOrEqual(8);
     expect(res.body.data.some((d: { code: string }) => d.code === 'sw-ke')).toBe(true);
   });
 
-  it('GET /v1/dialects?language=sw filters', async  => {
-    const res = await request(app.getHttpServer).get('/v1/dialects?language=sw').expect(200);
+  it('GET /v1/dialects?language=sw filters', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/dialects?language=sw').expect(200);
     expect(res.body.data.every((d: { languageCode: string }) => d.languageCode === 'sw')).toBe(true);
   });
 
-  it('POST /v1/dialects/detect scores Kenyan Swahili cues', async  => {
+  it('POST /v1/dialects/detect scores Kenyan Swahili cues', async () => {
     const org = await seedOrg(prisma, 'dial');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -82,7 +82,7 @@ describe('Dialect detection',  => {
       name: 'dial-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/dialects/detect')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'Sasa bro, uko aje? Poa sana.', language: 'sw' })
@@ -94,7 +94,7 @@ describe('Dialect detection',  => {
     expect(res.body.confidence).toBeGreaterThan(0.15);
   });
 
-  it('POST /v1/dialects/detect auto-detects language when hint omitted', async  => {
+  it('POST /v1/dialects/detect auto-detects language when hint omitted', async () => {
     const org = await seedOrg(prisma, 'dialauto');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -103,7 +103,7 @@ describe('Dialect detection',  => {
       name: 'dial-auto-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/dialects/detect')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'Habari yako, asante sana' })

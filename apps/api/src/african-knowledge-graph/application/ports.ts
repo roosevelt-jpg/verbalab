@@ -1,4 +1,4 @@
-/** Application ports for African Knowledge Graph. */
+/** Application ports for African Knowledge Graph (VL-263). */
 
 export type AfricanKnowledgeGraphProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type AfricanKnowledgeGraphEngineBundle = ReturnType<
 >;
 
 export interface AfricanKnowledgeGraphCatalogPort {
-  engine: AfricanKnowledgeGraphEngineBundle;
-  listProducts: AfricanKnowledgeGraphProductRow[];
+  engine(): AfricanKnowledgeGraphEngineBundle;
+  listProducts(): AfricanKnowledgeGraphProductRow[];
 }
 
 export const AFRICAN_KNOWLEDGE_GRAPH_CATALOG_PORT = Symbol('AFRICAN_KNOWLEDGE_GRAPH_CATALOG_PORT');

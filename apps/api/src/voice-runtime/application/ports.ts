@@ -1,4 +1,4 @@
-/** Application ports for Voice Runtime. */
+/** Application ports for Voice Runtime (VL-327). */
 
 export type VoiceRuntimeProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type VoiceRuntimeEngineBundle = ReturnType<
 >;
 
 export interface VoiceRuntimeCatalogPort {
-  engine: VoiceRuntimeEngineBundle;
-  listProducts: VoiceRuntimeProductRow[];
+  engine(): VoiceRuntimeEngineBundle;
+  listProducts(): VoiceRuntimeProductRow[];
 }
 
 export const VOICE_RUNTIME_CATALOG_PORT = Symbol('VOICE_RUNTIME_CATALOG_PORT');

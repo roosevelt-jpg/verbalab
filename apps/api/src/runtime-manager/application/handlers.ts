@@ -17,8 +17,8 @@ export class GetRuntimeManagerEngineHandler
     private readonly catalog: RuntimeManagerCatalogPort,
   ) {}
 
-  execute: Promise<RuntimeManagerEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<RuntimeManagerEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListRuntimeManagerProductsHandler
     private readonly catalog: RuntimeManagerCatalogPort,
   ) {}
 
-  execute: Promise<RuntimeManagerProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<RuntimeManagerProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

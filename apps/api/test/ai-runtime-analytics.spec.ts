@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_ara_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_ara_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,34 +35,34 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('AI Runtime Analytics',  => {
+describe('AI Runtime Analytics (VL-212)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   const prevMode = process.env.LUGEMI_AI_RUNTIME_ANALYTICS_MODE;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     process.env.LUGEMI_AI_RUNTIME_ANALYTICS_MODE = 'sandbox';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   });
 
-  afterAll(async  => {
+  afterAll(async () => {
     if (prevMode === undefined) delete process.env.LUGEMI_AI_RUNTIME_ANALYTICS_MODE;
     else process.env.LUGEMI_AI_RUNTIME_ANALYTICS_MODE = prevMode;
-    await app.close;
+    await app.close();
   });
 
-  it('documents AI Runtime Analytics honesty',  => {
+  it('documents AI Runtime Analytics honesty', () => {
     const doc = join(root, 'docs/AI_RUNTIME_ANALYTICS.md');
     const adr = join(root, 'docs/adr/0123-ai-runtime-analytics.md');
     const readme = join(root, 'docs/roadmap/volume7-inference-cloud/README_VOLUME7.md');
@@ -72,13 +72,13 @@ describe('AI Runtime Analytics',  => {
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/BI|APM/i);
     expect(text).toMatch(/does \*\*not\*\*|not invent/i);
-    expect(text).toMatch(/|Intelligence Analytics/i);
+    expect(text).toMatch(/VL-191|Intelligence Analytics/i);
     expect(text).toMatch(/org\/workspace|workspace/i);
-    expect(text).toContain('');
+    expect(text).toContain('VL-212');
   });
 
-  it('exposes engine with honesty flags', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes engine with honesty flags', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/ai-runtime-analytics/engine')
       .expect(200);
     expect(res.body.product).toContain('AI Runtime Analytics');
@@ -94,8 +94,8 @@ describe('AI Runtime Analytics',  => {
     expect(res.body.capabilities.some((c: { id: string }) => c.id === 'cache-hits')).toBe(true);
   });
 
-  it('aggregates overview/report from Inference Cloud ledgers', async  => {
-    const org = await seedOrg(prisma, `ara_${Date.now}`);
+  it('aggregates overview/report from Inference Cloud ledgers', async () => {
+    const org = await seedOrg(prisma, `ara_${Date.now()}`);
     const key = await apiKeys.create({
       organizationId: org.id,
       workspaceId: org.workspaces[0].id,
@@ -138,7 +138,7 @@ describe('AI Runtime Analytics',  => {
       },
     });
 
-    const overview = await request(app.getHttpServer)
+    const overview = await request(app.getHttpServer())
       .get('/v1/ai-runtime-analytics/overview')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -147,44 +147,44 @@ describe('AI Runtime Analytics',  => {
     expect(overview.body.cost.ledgerUsd).toBeGreaterThanOrEqual(0.12);
     expect(overview.body.honesty.biDashboardOs).toBe(false);
 
-    const cache = await request(app.getHttpServer)
+    const cache = await request(app.getHttpServer())
       .get('/v1/ai-runtime-analytics/cache')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(cache.body.hits).toBeGreaterThanOrEqual(3);
     expect(cache.body.misses).toBeGreaterThanOrEqual(1);
 
-    const cpu = await request(app.getHttpServer)
+    const cpu = await request(app.getHttpServer())
       .get('/v1/ai-runtime-analytics/cpu')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(cpu.body.host.cpuCount).toBeGreaterThan(0);
     expect(cpu.body.honesty.apmOs).toBe(false);
 
-    const report = await request(app.getHttpServer)
+    const report = await request(app.getHttpServer())
       .get('/v1/ai-runtime-analytics/report')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
-    expect(report.body.models).toBeDefined;
-    expect(report.body.streaming).toBeDefined;
+    expect(report.body.models).toBeDefined();
+    expect(report.body.streaming).toBeDefined();
     expect(report.body.honesty.aggregatesOnly).toBe(true);
 
-    const mon = await request(app.getHttpServer)
+    const mon = await request(app.getHttpServer())
       .get('/v1/ai-runtime-analytics/monitoring')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(mon.body.honesty.regeneratesIntelligenceAnalytics).toBe(false);
   });
 
-  it('exposes aiRuntimeAnalyticsEngine via GraphQL', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes aiRuntimeAnalyticsEngine via GraphQL', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query:
           '{ aiRuntimeAnalyticsEngine { product biDashboardOs apmOs cloudGpuTelemetryOs regeneratesIntelligenceAnalytics regeneratesKnowledgeAnalytics enterpriseReportingSuite aggregatesOnly orgWorkspaceScoped extendsInferenceCloud mode capabilities { id status } } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.aiRuntimeAnalyticsEngine.biDashboardOs).toBe(false);
     expect(res.body.data.aiRuntimeAnalyticsEngine.apmOs).toBe(false);
     expect(res.body.data.aiRuntimeAnalyticsEngine.aggregatesOnly).toBe(true);

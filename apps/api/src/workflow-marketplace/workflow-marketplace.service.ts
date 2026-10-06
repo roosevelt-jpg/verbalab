@@ -43,7 +43,7 @@ type WorkflowSnapshot = {
   installedWorkflowIds?: Record<string, string>;
 };
 
-@Injectable
+@Injectable()
 export class WorkflowMarketplaceService {
   constructor(
     private readonly prisma: PrismaService,
@@ -54,8 +54,8 @@ export class WorkflowMarketplaceService {
     private readonly fabricGate: FabricPolicyGate,
   ) {}
 
-  engine {
-    return workflowMarketplaceEngineCatalog;
+  engine() {
+    return workflowMarketplaceEngineCatalog();
   }
 
   private assertOwnerOrAdmin(role: string) {
@@ -93,7 +93,7 @@ export class WorkflowMarketplaceService {
   }
 
   private parseCategory(raw?: string): WorkflowMarketplaceCategory {
-    const value = (raw ?? 'templates').trim.toLowerCase;
+    const value = (raw ?? 'templates').trim().toLowerCase();
     if (!(WORKFLOW_MARKETPLACE_CATEGORIES as readonly string[]).includes(value)) {
       throw new ApiException(
         'validation_error',
@@ -127,7 +127,7 @@ export class WorkflowMarketplaceService {
 
   private verifySteps(steps: WorkflowStep[], permissions: string[]) {
     for (const step of steps) {
-      const action = (step.action ?? '').trim;
+      const action = (step.action ?? '').trim();
       if ((WORKFLOW_DENIED_ACTIONS as readonly string[]).includes(action)) {
         throw new ApiException(
           'workflow_marketplace_unverified',
@@ -151,7 +151,7 @@ export class WorkflowMarketplaceService {
       }
     }
     return steps.map((s) => ({
-      action: s.action.trim,
+      action: s.action.trim(),
       ...(s.input ? { input: s.input } : {}),
     }));
   }
@@ -197,8 +197,8 @@ export class WorkflowMarketplaceService {
       publisherOrgId: row.publisherOrgId,
       publisherWorkspaceId: row.publisherWorkspaceId,
       publisherName: row.publisherOrg?.name ?? null,
-      createdAt: row.createdAt.toISOString,
-      updatedAt: row.updatedAt.toISOString,
+      createdAt: row.createdAt.toISOString(),
+      updatedAt: row.updatedAt.toISOString(),
     };
   }
 
@@ -248,7 +248,7 @@ export class WorkflowMarketplaceService {
         .map((r) => ({
           id: r.id,
           listingId: r.listingId,
-          installedAt: r.installedAt.toISOString,
+          installedAt: r.installedAt.toISOString(),
           listing: this.serialize(r.listing),
         })),
     };
@@ -273,7 +273,7 @@ export class WorkflowMarketplaceService {
           applicationFeeCents: r.applicationFeeCents,
           currency: r.currency,
           status: r.status,
-          createdAt: r.createdAt.toISOString,
+          createdAt: r.createdAt.toISOString(),
         })),
       honesty: {
         platformFeeBps: PLATFORM_FEE_BPS,
@@ -281,7 +281,7 @@ export class WorkflowMarketplaceService {
         storesRawCardData: false,
         creatorPayoutMathVerifiedLive: false,
       },
-      note: 'Recorded receipts only. Creator Economy expands payout math.',
+      note: 'Recorded receipts only. Creator Economy (VL-258) expands payout math.',
     };
   }
 
@@ -329,13 +329,13 @@ export class WorkflowMarketplaceService {
     });
 
     const category = this.parseCategory(input.category);
-    const title = (input.title ?? workflow.name).trim.slice(0, 120);
+    const title = (input.title ?? workflow.name).trim().slice(0, 120);
     if (!title) {
       throw new ApiException('validation_error', 'title is required', HttpStatus.BAD_REQUEST);
     }
 
     const priceCents = Math.max(0, Math.floor(Number(input.priceCents ?? 0) || 0));
-    const currency = (input.currency ?? 'usd').trim.toLowerCase.slice(0, 8) || 'usd';
+    const currency = (input.currency ?? 'usd').trim().toLowerCase().slice(0, 8) || 'usd';
     const snapshot: WorkflowSnapshot = {
       hub: HUB,
       sourceWorkflowId: workflow.id,
@@ -345,7 +345,7 @@ export class WorkflowMarketplaceService {
       mode: workflow.mode === 'parallel' ? 'parallel' : 'sequential',
       steps,
       requiresApproval: Boolean(workflow.requiresApproval),
-      description: input.description?.trim.slice(0, 500) || undefined,
+      description: input.description?.trim().slice(0, 500) || undefined,
       workflowVersion: workflow.version,
       verified: true,
       sandboxOnly: true,
@@ -388,7 +388,7 @@ export class WorkflowMarketplaceService {
 
     return {
       listing: this.serialize(listing),
-      honesty: this.engine.honesty,
+      honesty: this.engine().honesty,
       note:
         'Workflow listing published. Buyers install into Workflow Runtime sandbox; run is Policy-gated. Not Zapier/Temporal OS.',
     };
@@ -444,7 +444,7 @@ export class WorkflowMarketplaceService {
       steps,
       requiresApproval: Boolean(bumped.workflow.requiresApproval),
       description:
-        input.description?.trim.slice(0, 500) || snap.description,
+        input.description?.trim().slice(0, 500) || snap.description,
       workflowVersion: bumped.workflow.version,
       verified: true,
       sandboxOnly: true,
@@ -629,11 +629,11 @@ export class WorkflowMarketplaceService {
         id: install.id,
         listingId: listing.id,
         workflowId: activated.workflow.id,
-        installedAt: install.installedAt.toISOString,
+        installedAt: install.installedAt.toISOString(),
       },
       workflow: activated.workflow,
       sale,
-      honesty: this.engine.honesty,
+      honesty: this.engine().honesty,
       note:
         'Installed into Workflow Runtime as active sandboxed workflow. Run via POST /v1/workflow-marketplace/listings/:id/run (Policy-gated).',
     };
@@ -721,7 +721,7 @@ export class WorkflowMarketplaceService {
         at: string;
       }> = [];
       for (const step of input.actions) {
-        const at = new Date.toISOString;
+        const at = new Date().toISOString();
         try {
           await this.workflowGate.assertAllowed({
             organizationId: input.organizationId,
@@ -761,16 +761,16 @@ export class WorkflowMarketplaceService {
         });
         return {
           run: {
-            id: `wprobe_${Date.now}`,
+            id: `wprobe_${Date.now()}`,
             workflowId,
             status: 'denied',
             sandbox: true,
             liveStepExecution: false,
             steps: probeSteps,
-            createdAt: new Date.toISOString,
+            createdAt: new Date().toISOString(),
           },
           listingId: input.listingId,
-          honesty: this.engine.honesty,
+          honesty: this.engine().honesty,
           note:
             'Marketplace probe denied by WorkflowPolicyGate. Not live step execution / Zapier OS.',
         };
@@ -805,7 +805,7 @@ export class WorkflowMarketplaceService {
       ...result,
       listingId: input.listingId,
       honesty: {
-        ...this.engine.honesty,
+        ...this.engine().honesty,
         ...result.honesty,
       },
       note:
@@ -894,8 +894,8 @@ export class WorkflowMarketplaceService {
       listingId: listing.id,
       organizationId: input.organizationId,
       rating,
-      body: input.body?.trim.slice(0, 1000) || undefined,
-      createdAt: new Date.toISOString,
+      body: input.body?.trim().slice(0, 1000) || undefined,
+      createdAt: new Date().toISOString(),
     };
 
     if (existing) {
@@ -1005,19 +1005,19 @@ export class WorkflowMarketplaceService {
       sales,
       reviews,
       runs,
-      honesty: this.engine.honesty,
-      note: 'Workflow marketplace aggregates. Payout depth deferred to Creator Economy.',
+      honesty: this.engine().honesty,
+      note: 'Workflow marketplace aggregates. Payout depth deferred to Creator Economy (VL-258).',
     };
   }
 
-  monitoring {
-    const engine = this.engine;
+  monitoring() {
+    const engine = this.engine();
     return {
       mode: 'workflow-marketplace',
       products: engine.capabilities.map((c) => ({ id: c.id, status: c.status })),
       honesty: engine.honesty,
       safety: engine.safety,
-      note: 'Workflow Marketplace monitoring snapshot.',
+      note: 'Workflow Marketplace monitoring snapshot (VL-255).',
     };
   }
 }

@@ -17,8 +17,8 @@ export class ListAiFabricBusesHandler implements IQueryHandler<ListAiFabricBuses
     @Inject(AI_FABRIC_CATALOG_PORT) private readonly catalog: AiFabricCatalogPort,
   ) {}
 
-  execute: Promise<FabricBusRow[]> {
-    return Promise.resolve(this.catalog.listBuses);
+  execute(): Promise<FabricBusRow[]> {
+    return Promise.resolve(this.catalog.listBuses());
   }
 }
 
@@ -30,8 +30,8 @@ export class GetAiFabricProductsBundleHandler
     @Inject(AI_FABRIC_CATALOG_PORT) private readonly catalog: AiFabricCatalogPort,
   ) {}
 
-  execute: Promise<FabricProductsBundle> {
-    return Promise.resolve(this.catalog.products);
+  execute(): Promise<FabricProductsBundle> {
+    return Promise.resolve(this.catalog.products());
   }
 }
 

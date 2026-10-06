@@ -3,13 +3,13 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { playDemoSpeech, stopDemoSpeech } from '@/lib/demo-speech';
 
-export function useDemoPlayer {
+export function useDemoPlayer() {
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const gen = useRef(0);
 
-  useEffect( =>  => stopDemoSpeech, []);
+  useEffect(() => () => stopDemoSpeech(), []);
 
   const play = useCallback(
     async (input: {
@@ -20,7 +20,7 @@ export function useDemoPlayer {
       label?: string;
     }) => {
       const token = ++gen.current;
-      stopDemoSpeech;
+      stopDemoSpeech();
       setError(null);
       setPlayingId(input.id);
       setStatus('Playing…');
@@ -48,9 +48,9 @@ export function useDemoPlayer {
     [],
   );
 
-  const stop = useCallback( => {
+  const stop = useCallback(() => {
     gen.current += 1;
-    stopDemoSpeech;
+    stopDemoSpeech();
     setPlayingId(null);
     setStatus('Stopped');
   }, []);
@@ -77,7 +77,7 @@ export function VoicePlayButton({
   children?: React.ReactNode;
   size?: 'sm' | 'md';
 }) {
-  const { play, stop, playingId, isPlaying } = useDemoPlayer;
+  const { play, stop, playingId, isPlaying } = useDemoPlayer();
   const btnId = id ?? `play-${voiceId ?? 'default'}-${text.slice(0, 12)}`;
   const active = playingId === btnId;
 
@@ -87,9 +87,9 @@ export function VoicePlayButton({
       className={className}
       style={size === 'sm' ? { padding: '0.35rem 0.75rem', fontSize: '0.85rem' } : undefined}
       aria-pressed={active}
-      onClick={ => {
+      onClick={() => {
         if (active || (isPlaying && playingId === btnId)) {
-          stop;
+          stop();
           return;
         }
         void play({ id: btnId, text, voiceId, lang, label });

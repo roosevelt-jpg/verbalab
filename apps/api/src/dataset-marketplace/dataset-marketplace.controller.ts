@@ -31,24 +31,24 @@ export class DatasetMarketplaceController {
   }
 
   @Get('engine')
-  engine {
-    return this.marketplace.engine;
+  engine() {
+    return this.marketplace.engine();
   }
 
   @Get('products')
-  products {
-    return this.marketplace.engine;
+  products() {
+    return this.marketplace.engine();
   }
 
   @Get('monitoring')
-  monitoring {
-    return this.marketplace.monitoring;
+  monitoring() {
+    return this.marketplace.monitoring();
   }
 
   @Get('listings')
   @UseGuards(TranslateAuthGuard)
   list(
-    @Req req: AuthedReq,
+    @Req() req: AuthedReq,
     @Query('mine') mine?: string,
     @Query('category') category?: string,
   ) {
@@ -60,7 +60,7 @@ export class DatasetMarketplaceController {
 
   @Get('installs')
   @UseGuards(TranslateAuthGuard)
-  installs(@Req req: AuthedReq) {
+  installs(@Req() req: AuthedReq) {
     return this.marketplace.listInstalls(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -69,13 +69,13 @@ export class DatasetMarketplaceController {
 
   @Get('sales')
   @UseGuards(TranslateAuthGuard)
-  sales(@Req req: AuthedReq) {
+  sales(@Req() req: AuthedReq) {
     return this.marketplace.listSales(req.translateAuth.organizationId);
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req req: AuthedReq) {
+  analytics(@Req() req: AuthedReq) {
     return this.marketplace.analytics(req.translateAuth.organizationId);
   }
 
@@ -83,8 +83,8 @@ export class DatasetMarketplaceController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(TranslateAuthGuard)
   publish(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       source?: string;
       assetId?: string;
@@ -111,9 +111,9 @@ export class DatasetMarketplaceController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   update(
-    @Req req: AuthedReq,
+    @Req() req: AuthedReq,
     @Param('id') id: string,
-    @Body body: { datasetVersion?: string; description?: string },
+    @Body() body: { datasetVersion?: string; description?: string },
   ) {
     return this.marketplace.updateListing({
       organizationId: req.translateAuth.organizationId,
@@ -130,7 +130,7 @@ export class DatasetMarketplaceController {
   @Post('listings/:id/install')
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
-  install(@Req req: AuthedReq, @Param('id') id: string) {
+  install(@Req() req: AuthedReq, @Param('id') id: string) {
     return this.marketplace.install({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -150,9 +150,9 @@ export class DatasetMarketplaceController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   review(
-    @Req req: AuthedReq,
+    @Req() req: AuthedReq,
     @Param('id') id: string,
-    @Body body: { rating?: number; body?: string },
+    @Body() body: { rating?: number; body?: string },
   ) {
     return this.marketplace.upsertReview({
       organizationId: req.translateAuth.organizationId,
@@ -167,7 +167,7 @@ export class DatasetMarketplaceController {
 
   @Delete('listings/:id')
   @UseGuards(TranslateAuthGuard)
-  unpublish(@Req req: AuthedReq, @Param('id') id: string) {
+  unpublish(@Req() req: AuthedReq, @Param('id') id: string) {
     return this.marketplace.unpublish({
       organizationId: req.translateAuth.organizationId,
       listingId: id,

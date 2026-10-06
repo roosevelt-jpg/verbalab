@@ -6,16 +6,16 @@ import {
   FinopsPlatformProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestFinopsPlatformCatalogAdapter implements FinopsPlatformCatalogPort {
   constructor(private readonly service: FinopsPlatformService) {}
 
-  engine: FinopsPlatformEngineBundle {
-    return this.service.engine;
+  engine(): FinopsPlatformEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: FinopsPlatformProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): FinopsPlatformProductRow[] {
+    const bundle = this.engine() as {
       products?: FinopsPlatformProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestFinopsPlatformCatalogAdapter implements FinopsPlatformCatalogPo
         status: 'shipped',
         api: 'GET /v1/finops-platform/engine',
         console: '/finops-platform',
-        notes: ' shipped.',
+        notes: 'VL-309 shipped.',
       },
     ];
   }

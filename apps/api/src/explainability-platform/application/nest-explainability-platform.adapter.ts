@@ -6,16 +6,16 @@ import {
   ExplainabilityPlatformProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestExplainabilityPlatformCatalogAdapter implements ExplainabilityPlatformCatalogPort {
   constructor(private readonly service: ExplainabilityPlatformService) {}
 
-  engine: ExplainabilityPlatformEngineBundle {
-    return this.service.engine;
+  engine(): ExplainabilityPlatformEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: ExplainabilityPlatformProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): ExplainabilityPlatformProductRow[] {
+    const bundle = this.engine() as {
       products?: ExplainabilityPlatformProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestExplainabilityPlatformCatalogAdapter implements ExplainabilityP
         status: 'shipped',
         api: 'GET /v1/explainability-platform/engine',
         console: '/explainability-platform',
-        notes: ' shipped.',
+        notes: 'VL-295 shipped.',
       },
     ];
   }

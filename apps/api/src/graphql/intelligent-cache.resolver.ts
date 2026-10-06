@@ -2,13 +2,13 @@ import { Query, Resolver } from '@nestjs/graphql';
 import { IntelligentCacheService } from '../intelligent-cache/intelligent-cache.service';
 import { GqlIntelligentCacheEngine } from './gql.types';
 
-@Resolver
+@Resolver()
 export class IntelligentCacheGraphqlResolver {
   constructor(private readonly cache: IntelligentCacheService) {}
 
-  @Query( => GqlIntelligentCacheEngine, { name: 'intelligentCacheEngine' })
-  intelligentCacheEngine: GqlIntelligentCacheEngine {
-    const c = this.cache.engine;
+  @Query(() => GqlIntelligentCacheEngine, { name: 'intelligentCacheEngine' })
+  intelligentCacheEngine(): GqlIntelligentCacheEngine {
+    const c = this.cache.engine();
     return {
       product: c.product,
       note: c.note,

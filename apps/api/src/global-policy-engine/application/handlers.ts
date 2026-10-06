@@ -17,8 +17,8 @@ export class GetGlobalPolicyEngineEngineHandler
     private readonly catalog: GlobalPolicyEngineCatalogPort,
   ) {}
 
-  execute: Promise<GlobalPolicyEngineEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<GlobalPolicyEngineEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListGlobalPolicyEngineProductsHandler
     private readonly catalog: GlobalPolicyEngineCatalogPort,
   ) {}
 
-  execute: Promise<GlobalPolicyEngineProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<GlobalPolicyEngineProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

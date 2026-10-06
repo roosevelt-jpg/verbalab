@@ -27,18 +27,18 @@ export class KnowledgeGraphController {
   constructor(private readonly knowledgeGraph: KnowledgeGraphService) {}
 
   @Get('engine')
-  engine {
-    return this.knowledgeGraph.engine;
+  engine() {
+    return this.knowledgeGraph.engine();
   }
 
   @Get('domains')
-  domains {
-    return this.knowledgeGraph.domains;
+  domains() {
+    return this.knowledgeGraph.domains();
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req req: AuthedReq) {
+  analytics(@Req() req: AuthedReq) {
     return this.knowledgeGraph.analytics(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -47,7 +47,7 @@ export class KnowledgeGraphController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req req: AuthedReq) {
+  monitoring(@Req() req: AuthedReq) {
     return this.knowledgeGraph.monitoring(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -57,7 +57,7 @@ export class KnowledgeGraphController {
   @Get('entities')
   @UseGuards(TranslateAuthGuard)
   listEntities(
-    @Req req: AuthedReq,
+    @Req() req: AuthedReq,
     @Query('type') type?: string,
     @Query('domain') domain?: string,
     @Query('q') q?: string,
@@ -75,7 +75,7 @@ export class KnowledgeGraphController {
 
   @Get('entities/:id')
   @UseGuards(TranslateAuthGuard)
-  getEntity(@Req req: AuthedReq, @Param('id') id: string) {
+  getEntity(@Req() req: AuthedReq, @Param('id') id: string) {
     return this.knowledgeGraph.getEntity({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -85,7 +85,7 @@ export class KnowledgeGraphController {
 
   @Get('entities/:id/neighborhood')
   @UseGuards(TranslateAuthGuard)
-  neighborhood(@Req req: AuthedReq, @Param('id') id: string) {
+  neighborhood(@Req() req: AuthedReq, @Param('id') id: string) {
     return this.knowledgeGraph.neighborhood({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -97,8 +97,8 @@ export class KnowledgeGraphController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(TranslateAuthGuard)
   createEntity(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       name?: string;
       type?: string;
@@ -127,7 +127,7 @@ export class KnowledgeGraphController {
 
   @Delete('entities/:id')
   @UseGuards(TranslateAuthGuard)
-  deleteEntity(@Req req: AuthedReq, @Param('id') id: string) {
+  deleteEntity(@Req() req: AuthedReq, @Param('id') id: string) {
     return this.knowledgeGraph.deleteEntity({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -140,7 +140,7 @@ export class KnowledgeGraphController {
   @Get('relationships')
   @UseGuards(TranslateAuthGuard)
   listRelationships(
-    @Req req: AuthedReq,
+    @Req() req: AuthedReq,
     @Query('entityId') entityId?: string,
     @Query('type') type?: string,
     @Query('limit') limit?: string,
@@ -158,8 +158,8 @@ export class KnowledgeGraphController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(TranslateAuthGuard)
   createRelationship(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       fromEntityId?: string;
       toEntityId?: string;

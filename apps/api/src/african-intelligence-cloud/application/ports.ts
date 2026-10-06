@@ -1,4 +1,4 @@
-/** Application ports for African Intelligence Cloud. */
+/** Application ports for African Intelligence Cloud (VL-260). */
 
 export type AfricanIntelligenceCloudProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type AfricanIntelligenceCloudEngineBundle = ReturnType<
 >;
 
 export interface AfricanIntelligenceCloudCatalogPort {
-  engine: AfricanIntelligenceCloudEngineBundle;
-  listProducts: AfricanIntelligenceCloudProductRow[];
+  engine(): AfricanIntelligenceCloudEngineBundle;
+  listProducts(): AfricanIntelligenceCloudProductRow[];
 }
 
 export const AFRICAN_INTELLIGENCE_CLOUD_CATALOG_PORT = Symbol('AFRICAN_INTELLIGENCE_CLOUD_CATALOG_PORT');

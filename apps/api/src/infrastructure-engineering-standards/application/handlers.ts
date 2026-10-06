@@ -17,8 +17,8 @@ export class GetInfrastructureEngineeringStandardsEngineHandler
     private readonly catalog: InfrastructureEngineeringStandardsCatalogPort,
   ) {}
 
-  execute: Promise<InfrastructureEngineeringStandardsEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<InfrastructureEngineeringStandardsEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListInfrastructureEngineeringStandardsProductsHandler
     private readonly catalog: InfrastructureEngineeringStandardsCatalogPort,
   ) {}
 
-  execute: Promise<InfrastructureEngineeringStandardsProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<InfrastructureEngineeringStandardsProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

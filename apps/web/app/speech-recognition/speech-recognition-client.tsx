@@ -22,8 +22,8 @@ type Recognition = {
 type VocabTerm = { id: string; phrase: string };
 type Pack = { id: string; name: string; description: string; phraseCount: number };
 
-export function SpeechRecognitionClient {
-  const { getToken, isLoaded } = useAuth;
+export function SpeechRecognitionClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [packs, setPacks] = useState<Pack[]>([]);
   const [terms, setTerms] = useState<VocabTerm[]>([]);
@@ -40,14 +40,14 @@ export function SpeechRecognitionClient {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const authHeaders = useCallback(async  => {
-    const token = await getToken;
+  const authHeaders = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     return { Authorization: `Bearer ${token}` };
   }, [getToken]);
 
-  const refresh = useCallback(async  => {
-    const token = await getToken;
+  const refresh = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, packRes, vocab, usage] = await Promise.all([
       apiFetch<Engine>('/v1/speech/engine', { token }),
@@ -63,28 +63,28 @@ export function SpeechRecognitionClient {
     setAnalytics(usage);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void refresh.catch((err: Error) => setError(err.message));
+    void refresh().catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
   async function onRecognize(e: FormEvent) {
-    e.preventDefault;
+    e.preventDefault();
     if (!file) return;
     setLoading(true);
     setError(null);
     setSubtitles(null);
     try {
-      const headers = await authHeaders;
-      const form = new FormData;
+      const headers = await authHeaders();
+      const form = new FormData();
       form.append('file', file);
       if (language) form.append('language', language);
       if (industry.length) form.append('industryPacks', industry.join(','));
       const res = await fetch(`${API_URL}/v1/speech/recognize`, { method: 'POST', headers, body: form });
-      const body = await res.json;
+      const body = await res.json();
       if (!res.ok) throw new Error(body?.error?.message ?? `HTTP ${res.status}`);
       setResult(body);
-      await refresh;
+      await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Recognize failed');
     } finally {
@@ -92,34 +92,34 @@ export function SpeechRecognitionClient {
     }
   }
 
-  async function onStream {
+  async function onStream() {
     if (!file) return;
     setLoading(true);
     setError(null);
     setStreamLog([]);
     try {
-      const headers = await authHeaders;
-      const form = new FormData;
+      const headers = await authHeaders();
+      const form = new FormData();
       form.append('file', file);
       if (language) form.append('language', language);
       if (industry.length) form.append('industryPacks', industry.join(','));
       const res = await fetch(`${API_URL}/v1/speech/stream`, { method: 'POST', headers, body: form });
       if (!res.ok || !res.body) throw new Error(`HTTP ${res.status}`);
-      const reader = res.body.getReader;
-      const decoder = new TextDecoder;
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
       let buffer = '';
       while (true) {
-        const { done, value } = await reader.read;
+        const { done, value } = await reader.read();
         if (done) break;
         buffer += decoder.decode(value, { stream: true });
         const parts = buffer.split('\n\n');
-        buffer = parts.pop ?? '';
+        buffer = parts.pop() ?? '';
         for (const part of parts) {
           const dataLine = part.split('\n').find((l) => l.startsWith('data: '));
           if (dataLine) setStreamLog((prev) => [...prev, dataLine.slice(6)]);
         }
       }
-      await refresh;
+      await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Stream failed');
     } finally {
@@ -127,18 +127,18 @@ export function SpeechRecognitionClient {
     }
   }
 
-  async function onSubtitles {
+  async function onSubtitles() {
     if (!file) return;
     setLoading(true);
     setError(null);
     try {
-      const headers = await authHeaders;
-      const form = new FormData;
+      const headers = await authHeaders();
+      const form = new FormData();
       form.append('file', file);
       form.append('format', 'srt');
       if (language) form.append('language', language);
       const res = await fetch(`${API_URL}/v1/speech/subtitles`, { method: 'POST', headers, body: form });
-      const body = await res.json;
+      const body = await res.json();
       if (!res.ok) throw new Error(body?.error?.message ?? `HTTP ${res.status}`);
       setSubtitles(body.content);
     } catch (err) {
@@ -149,16 +149,16 @@ export function SpeechRecognitionClient {
   }
 
   async function onAddPhrase(e: FormEvent) {
-    e.preventDefault;
-    const token = await getToken;
-    if (!token || !phrase.trim) return;
+    e.preventDefault();
+    const token = await getToken();
+    if (!token || !phrase.trim()) return;
     await apiFetch('/v1/speech/vocabulary', {
       token,
       method: 'POST',
-      body: JSON.stringify({ phrase: phrase.trim }),
+      body: JSON.stringify({ phrase: phrase.trim() }),
     });
     setPhrase('');
-    await refresh;
+    await refresh();
   }
 
   function togglePack(id: string) {
@@ -216,7 +216,7 @@ export function SpeechRecognitionClient {
                 <button
                   key={p.id}
                   type="button"
-                  onClick={ => togglePack(p.id)}
+                  onClick={() => togglePack(p.id)}
                   style={{
                     ...chip,
                     background: industry.includes(p.id) ? 'var(--ink)' : 'transparent',
@@ -231,13 +231,13 @@ export function SpeechRecognitionClient {
               <button type="submit" disabled={loading || !file} style={primary}>
                 Recognize
               </button>
-              <button type="button" disabled={loading || !file} onClick={ => void onStream} style={secondary}>
+              <button type="button" disabled={loading || !file} onClick={() => void onStream()} style={secondary}>
                 Stream SSE
               </button>
               <button
                 type="button"
                 disabled={loading || !file}
-                onClick={ => void onSubtitles}
+                onClick={() => void onSubtitles()}
                 style={secondary}
               >
                 Subtitles (SRT)

@@ -6,7 +6,7 @@ import { EvaluationPlatformService } from '../evaluation-platform/evaluation-pla
 import { PromptopsPlatformService } from '../promptops-platform/promptops-platform.service';
 import { SecretsCertificatePlatformService } from '../secrets-certificate-platform/secrets-certificate-platform.service';
 
-@Injectable
+@Injectable()
 export class AiEngineeringStandardsService {
   constructor(
     private readonly aiGovernance: AiGovernancePlatformService,
@@ -16,48 +16,48 @@ export class AiEngineeringStandardsService {
     private readonly secrets: SecretsCertificatePlatformService
   ) {}
 
-  engine {
-    return aiEngineeringStandardsEngineCatalog;
+  engine() {
+    return aiEngineeringStandardsEngineCatalog();
   }
 
   /** Catalog route: returns standards capability + live status from injected upstream services. */
   route(capability?: string) {
-    const catalog = this.engine;
-    const q = (capability ?? '').trim.toLowerCase;
+    const catalog = this.engine();
+    const q = (capability ?? '').trim().toLowerCase();
     const capabilities = catalog.capabilities.filter((c) => {
       if (!q) return true;
-      return c.id.includes(q) || c.name.toLowerCase.includes(q);
+      return c.id.includes(q) || c.name.toLowerCase().includes(q);
     });
     const upstreamStatus = [
       {
         module: 'ai-governance-platform',
         method: 'engine',
         status: 'reachable',
-        upstream: this.aiGovernance.engine,
+        upstream: this.aiGovernance.engine(),
       },
       {
         module: 'ai-safety-platform',
         method: 'engine',
         status: 'reachable',
-        upstream: this.aiSafety.engine,
+        upstream: this.aiSafety.engine(),
       },
       {
         module: 'evaluation-platform',
         method: 'engine',
         status: 'reachable',
-        upstream: this.evaluation.engine,
+        upstream: this.evaluation.engine(),
       },
       {
         module: 'promptops-platform',
         method: 'engine',
         status: 'reachable',
-        upstream: this.promptops.engine,
+        upstream: this.promptops.engine(),
       },
       {
         module: 'secrets-certificate-platform',
         method: 'engine',
         status: 'reachable',
-        upstream: this.secrets.engine,
+        upstream: this.secrets.engine(),
       }
     ];
     return {
@@ -81,11 +81,11 @@ export class AiEngineeringStandardsService {
   }
 
   list(query?: string) {
-    const catalog = this.engine;
-    const q = (query ?? '').trim.toLowerCase;
+    const catalog = this.engine();
+    const q = (query ?? '').trim().toLowerCase();
     const rows = catalog.routes.filter((row) => {
       if (!q) return true;
-      return JSON.stringify(row).toLowerCase.includes(q);
+      return JSON.stringify(row).toLowerCase().includes(q);
     });
     return {
       routes: rows,
@@ -102,8 +102,8 @@ export class AiEngineeringStandardsService {
     return this.list(query);
   }
 
-  checks {
-    const catalog = this.engine;
+  checks() {
+    const catalog = this.engine();
     return {
       product: catalog.product,
       retroactiveChecks: catalog.retroactiveChecks,
@@ -116,12 +116,12 @@ export class AiEngineeringStandardsService {
     };
   }
 
-  checkList {
-    return this.checks;
+  checkList() {
+    return this.checks();
   }
 
-  monitoring {
-    const catalog = this.engine;
+  monitoring() {
+    const catalog = this.engine();
     return {
       mode: 'ai-engineering-standards',
       count: catalog.routes.length,
@@ -132,7 +132,7 @@ export class AiEngineeringStandardsService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'AiEngineeringStandards monitoring snapshot.',
+      note: 'AiEngineeringStandards monitoring snapshot (VL-349).',
     };
   }
 }

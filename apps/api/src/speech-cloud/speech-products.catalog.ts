@@ -9,8 +9,8 @@ export type SpeechProductRow = {
   notes: string;
 };
 
-/** Library Phase 16 product map. Hub only — does not reimplement STT/TTS. */
-export function speechProductCatalog: SpeechProductRow[] {
+/** Library Phase 16 product map (VL-150). Hub only — does not reimplement STT/TTS. */
+export function speechProductCatalog(): SpeechProductRow[] {
   return [
     {
       id: 'speech',
@@ -18,7 +18,7 @@ export function speechProductCatalog: SpeechProductRow[] {
       status: 'shipped',
       api: 'GET /v1/speech/products',
       console: '/speech',
-      notes: 'Speech Cloud parent hub. Maps library products onto existing audio surfaces.',
+      notes: 'Speech Cloud parent hub (VL-150). Maps library products onto existing audio surfaces.',
     },
     {
       id: 'speech-engine',
@@ -26,7 +26,7 @@ export function speechProductCatalog: SpeechProductRow[] {
       status: 'shipped',
       api: 'GET /v1/speech/engine',
       console: '/speech-recognition',
-      notes: 'Batch + segment SSE STT, vocabulary, subtitles.',
+      notes: 'Batch + segment SSE STT, vocabulary, subtitles (VL-151).',
     },
     {
       id: 'batch-stt',
@@ -34,7 +34,7 @@ export function speechProductCatalog: SpeechProductRow[] {
       status: 'shipped',
       api: 'POST /v1/speech/recognize',
       console: '/speech-recognition',
-      notes: 'File STT + timestamps/confidence/vocab. Legacy: POST /v1/audio/transcriptions.',
+      notes: 'File STT + timestamps/confidence/vocab (VL-041/151). Legacy: POST /v1/audio/transcriptions.',
     },
     {
       id: 'streaming-stt',
@@ -42,7 +42,7 @@ export function speechProductCatalog: SpeechProductRow[] {
       status: 'partial',
       api: 'POST /v1/speech/stream',
       console: '/speech-recognition',
-      notes: 'SSE segment stream over Whisper verbose_json. Not live mic WebSocket.',
+      notes: 'SSE segment stream over Whisper verbose_json (VL-151). Not live mic WebSocket.',
     },
     {
       id: 'tts',
@@ -50,7 +50,7 @@ export function speechProductCatalog: SpeechProductRow[] {
       status: 'shipped',
       api: 'POST /v1/audio/speech',
       console: '/audio',
-      notes: 'Vendor + own TTS voices. Character metering.',
+      notes: 'Vendor + own TTS voices (VL-042/121). Character metering.',
     },
     {
       id: 'voices',
@@ -66,7 +66,7 @@ export function speechProductCatalog: SpeechProductRow[] {
       status: 'shipped',
       api: 'POST /v1/interpret',
       console: '/interpret',
-      notes: 'STT → MT → TTS compose. Not contact-center Call Intelligence.',
+      notes: 'STT → MT → TTS compose (VL-061). Not contact-center Call Intelligence.',
     },
     {
       id: 'voice-biometrics',
@@ -74,7 +74,7 @@ export function speechProductCatalog: SpeechProductRow[] {
       status: 'partial',
       api: '/v1/voice-clones',
       console: '/audio',
-      notes: 'Consent-gated voice cloning. Not speaker verification / anti-spoof biometrics OS.',
+      notes: 'Consent-gated voice cloning (VL-064). Not speaker verification / anti-spoof biometrics OS.',
     },
     {
       id: 'voice-faq',
@@ -82,7 +82,7 @@ export function speechProductCatalog: SpeechProductRow[] {
       status: 'partial',
       api: '/v1/voice',
       console: '/voice',
-      notes: 'Twilio FAQ voice agent ( area). Call Intelligence analytics deferred to Phase 24.',
+      notes: 'Twilio FAQ voice agent (VL-080 area). Call Intelligence analytics deferred to Phase 24.',
     },
     {
       id: 'speaker-intelligence',
@@ -91,7 +91,7 @@ export function speechProductCatalog: SpeechProductRow[] {
       api: 'GET /v1/speakers/engine',
       console: '/speaker-intelligence',
       notes:
-        'Profiles, local fingerprints, verify/identify, gap diarization. Not NIST biometrics / neural diarization.',
+        'Profiles, local fingerprints, verify/identify, gap diarization (VL-152). Not NIST biometrics / neural diarization.',
     },
     {
       id: 'accent-intelligence',
@@ -100,7 +100,7 @@ export function speechProductCatalog: SpeechProductRow[] {
       api: 'GET /v1/accents/engine',
       console: '/accent-intelligence',
       notes:
-        'Cue detection/classify + analytics. Dialect via Language Cloud. Acoustic regional models deferred.',
+        'Cue detection/classify + analytics (VL-132/153). Dialect via Language Cloud. Acoustic regional models deferred.',
     },
     {
       id: 'emotion-ai',
@@ -109,7 +109,7 @@ export function speechProductCatalog: SpeechProductRow[] {
       api: 'GET /v1/emotion/engine',
       console: '/emotion-intelligence',
       notes:
-        'Speech emotion detect + SSE. Text cues + soft audio proxies — not trained SER. Language Intel emotion remains separate.',
+        'Speech emotion detect + SSE (VL-154). Text cues + soft audio proxies — not trained SER. Language Intel emotion remains separate.',
     },
     {
       id: 'audio-intelligence',
@@ -118,7 +118,7 @@ export function speechProductCatalog: SpeechProductRow[] {
       api: 'GET /v1/audio-intelligence/engine',
       console: '/audio-intelligence',
       notes:
-        'Noise/silence analyze, gate enhance, linear upscale, VAD isolate. Echo AEC deferred. Not Krisp/Demucs.',
+        'Noise/silence analyze, gate enhance, linear upscale, VAD isolate (VL-155). Echo AEC deferred. Not Krisp/Demucs.',
     },
     {
       id: 'pronunciation-ai',
@@ -127,7 +127,7 @@ export function speechProductCatalog: SpeechProductRow[] {
       api: 'GET /v1/pronunciation/engine',
       console: '/pronunciation-intelligence',
       notes:
-        'Assess/score/coach + phoneme/fluency heuristics. Not ELSA/SpeechAce / forced alignment.',
+        'Assess/score/coach + phoneme/fluency heuristics (VL-156). Not ELSA/SpeechAce / forced alignment.',
     },
     {
       id: 'wake-word',
@@ -136,7 +136,7 @@ export function speechProductCatalog: SpeechProductRow[] {
       api: 'GET /v1/wake-word/engine',
       console: '/wake-word',
       notes:
-        'Wake/keyword/trigger spotting via text/STT. Not Porcupine on-device DNN.',
+        'Wake/keyword/trigger spotting via text/STT (VL-157). Not Porcupine on-device DNN.',
     },
     {
       id: 'call-intelligence',
@@ -145,7 +145,7 @@ export function speechProductCatalog: SpeechProductRow[] {
       api: 'GET /v1/call-intelligence/engine',
       console: '/call-intelligence',
       notes:
-        'Call ingest/transcribe/analyze/report. Heuristic coaching/QA/compliance. Not Gong. Voice FAQ ≠ this.',
+        'Call ingest/transcribe/analyze/report (VL-158). Heuristic coaching/QA/compliance. Not Gong. Voice FAQ ≠ this.',
     },
     {
       id: 'audio-enhancement',
@@ -154,7 +154,7 @@ export function speechProductCatalog: SpeechProductRow[] {
       api: 'POST /v1/audio-intelligence/enhance',
       console: '/audio-intelligence',
       notes:
-        'Noise-gate enhance under Audio Intelligence. Not spectral ML denoise / Adobe Enhance.',
+        'Noise-gate enhance under Audio Intelligence (VL-155). Not spectral ML denoise / Adobe Enhance.',
     },
     {
       id: 'speech-analytics',
@@ -163,12 +163,12 @@ export function speechProductCatalog: SpeechProductRow[] {
       api: 'GET /v1/speech-analytics/engine',
       console: '/speech-analytics',
       notes:
-        'Usage/languages/dialects/costs/accuracy proxies/report. Not BI cloud or WER lab. Language Analytics separate.',
+        'Usage/languages/dialects/costs/accuracy proxies/report (VL-159). Not BI cloud or WER lab. Language Analytics separate.',
     },
   ];
 }
 
-export function speechArchitectureNotes {
+export function speechArchitectureNotes() {
   return {
     style: 'nest_modular_monolith',
     ddd: 'bounded_speech_cloud_hub',

@@ -9,7 +9,7 @@ import { emotionEngineCatalog } from './emotion-engine.catalog';
 import { analyzeSpeechEmotion, SpeechEmotionLabel } from './emotion-signals';
 import { extractPcmMono } from '../speaker-intelligence/fingerprint';
 
-@Injectable
+@Injectable()
 export class EmotionIntelligenceService {
   constructor(
     private readonly prisma: PrismaService,
@@ -19,12 +19,12 @@ export class EmotionIntelligenceService {
     private readonly audio: AudioService,
   ) {}
 
-  engine {
-    return emotionEngineCatalog;
+  engine() {
+    return emotionEngineCatalog();
   }
 
   async analytics(organizationId: string) {
-    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const events = await this.prisma.auditEvent.findMany({
       where: {
         organizationId,
@@ -67,7 +67,7 @@ export class EmotionIntelligenceService {
     ip?: string;
     skipAudit?: boolean;
   }) {
-    let text = input.text?.trim ?? '';
+    let text = input.text?.trim() ?? '';
     let stt:
       | { provider: string; durationSeconds: number; language?: string }
       | undefined;
@@ -90,7 +90,7 @@ export class EmotionIntelligenceService {
         seconds: durationSeconds,
         provider: result.provider,
       });
-      text = result.text.trim;
+      text = result.text.trim();
       stt = {
         provider: result.provider,
         durationSeconds: result.durationSeconds,

@@ -4,21 +4,21 @@ import {
   evaluatePromote,
 } from './continuous-learning.catalog';
 
-@Injectable
+@Injectable()
 export class ContinuousLearningService {
-  engine {
-    return continuousLearningEngineCatalog;
+  engine() {
+    return continuousLearningEngineCatalog();
   }
 
   feedback(query?: string) {
-    const catalog = this.engine;
-    const q = (query ?? '').trim.toLowerCase;
+    const catalog = this.engine();
+    const q = (query ?? '').trim().toLowerCase();
     const feedback = catalog.feedback.filter((f) => {
       if (!q) return true;
       return (
-        f.id.toLowerCase.includes(q) ||
-        f.source.toLowerCase.includes(q) ||
-        f.notes.toLowerCase.includes(q)
+        f.id.toLowerCase().includes(q) ||
+        f.source.toLowerCase().includes(q) ||
+        f.notes.toLowerCase().includes(q)
       );
     });
     return {
@@ -54,15 +54,15 @@ export class ContinuousLearningService {
     return this.feedback(query);
   }
 
-  monitoring {
-    const catalog = this.engine;
+  monitoring() {
+    const catalog = this.engine();
     return {
       mode: 'learning',
       feedbackCount: catalog.feedback.length,
       candidateCount: catalog.candidates.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Continuous Learning monitoring snapshot — promote never automatic.',
+      note: 'Continuous Learning monitoring snapshot (VL-289) — promote never automatic.',
     };
   }
 }

@@ -28,7 +28,7 @@ type AuthCtx = {
 
 const VAR_RE = /\{\{\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*\}\}/g;
 
-@Injectable
+@Injectable()
 export class PromptRuntimeService {
   constructor(
     private readonly prisma: PrismaService,
@@ -38,35 +38,35 @@ export class PromptRuntimeService {
     private readonly cache: IntelligentCacheService,
   ) {}
 
-  engine {
+  engine() {
     return {
-      ...promptRuntimeCatalog,
-      ceilings: promptRuntimeCeilings,
-      mode: promptRuntimeMode,
+      ...promptRuntimeCatalog(),
+      ceilings: promptRuntimeCeilings(),
+      mode: promptRuntimeMode(),
       routes: PROMPT_RUNTIME_ROUTES,
     };
   }
 
-  keys {
+  keys() {
     return {
       keys: PROMPT_KEYS.map((id) => ({ id })),
       layer: 'kernel',
-      note: 'Prompt Runtime keys map onto managed prompts.',
-      honesty: promptRuntimeCatalog.honesty,
+      note: 'Prompt Runtime keys map onto VL-086 managed prompts.',
+      honesty: promptRuntimeCatalog().honesty,
     };
   }
 
   async registry(input: AuthCtx) {
-    this.assertEnabled;
+    this.assertEnabled();
     const reg = await this.promptIntel.registry(input.organizationId, input.workspaceId);
     return {
       ...reg,
-      note: 'Prompt Runtime registry façade over existing.',
+      note: 'Prompt Runtime registry façade over VL-188 / VL-086.',
     };
   }
 
   async templates(input: AuthCtx) {
-    this.assertEnabled;
+    this.assertEnabled();
     const listed = await this.prompts.list(input.organizationId, input.workspaceId);
     const templates = await Promise.all(
       listed.map(async (item) => {
@@ -92,8 +92,8 @@ export class PromptRuntimeService {
   }
 
   route(input: { feature?: string }) {
-    this.assertEnabled;
-    const feature = (input.feature ?? '').trim.toLowerCase;
+    this.assertEnabled();
+    const feature = (input.feature ?? '').trim().toLowerCase();
     if (!feature) {
       throw new ApiException('validation_error', 'feature is required', HttpStatus.BAD_REQUEST);
     }
@@ -119,7 +119,7 @@ export class PromptRuntimeService {
   }
 
   async versions(input: AuthCtx & { key?: string }) {
-    this.assertEnabled;
+    this.assertEnabled();
     const key = this.requireKey(input.key);
     return this.prompts.listVersions({
       organizationId: input.organizationId,
@@ -136,7 +136,7 @@ export class PromptRuntimeService {
       variables?: Record<string, string>;
     },
   ) {
-    this.assertEnabled;
+    this.assertEnabled();
     const resolved = await this.resolveBody(input);
     const variables = input.variables ?? {};
     const rendered = this.applyVariables(resolved.body, variables);
@@ -173,11 +173,11 @@ export class PromptRuntimeService {
       variables?: Record<string, string>;
     },
   ) {
-    this.assertEnabled;
-    const ceilings = promptRuntimeCeilings;
+    this.assertEnabled();
+    const ceilings = promptRuntimeCeilings();
     const rendered = await this.render(input);
     const findings: Array<{ id: string; severity: string; message: string }> = [];
-    if (!rendered.body.trim) {
+    if (!rendered.body.trim()) {
       findings.push({ id: 'empty', severity: 'error', message: 'Rendered prompt is empty' });
     }
     if (rendered.chars > ceilings.maxRenderedChars) {
@@ -216,7 +216,7 @@ export class PromptRuntimeService {
   async securityScan(
     input: AuthCtx & { key?: string; body?: string; version?: number },
   ) {
-    this.assertEnabled;
+    this.assertEnabled();
     const scan = await this.promptIntel.securityScan({
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,
@@ -240,16 +240,16 @@ export class PromptRuntimeService {
       maxChars?: number;
     },
   ) {
-    this.assertEnabled;
+    this.assertEnabled();
     const resolved = await this.resolveBody(input);
     const maxChars = Math.min(
-      promptRuntimeCeilings.maxRenderedChars,
+      promptRuntimeCeilings().maxRenderedChars,
       Math.max(40, Math.floor(input.maxChars ?? 4000)),
     );
     const tips: string[] = [];
-    let optimized = resolved.body.trim;
+    let optimized = resolved.body.trim();
     if (optimized.length > maxChars) {
-      optimized = `${optimized.slice(0, Math.max(0, maxChars - 16)).trim}…[trimmed]`;
+      optimized = `${optimized.slice(0, Math.max(0, maxChars - 16)).trim()}…[trimmed]`;
       tips.push(`Trimmed to maxChars=${maxChars}`);
     }
     if (/\s{2,}/.test(optimized)) {
@@ -295,7 +295,7 @@ export class PromptRuntimeService {
       skipSecurity?: boolean;
     },
   ) {
-    this.assertEnabled;
+    this.assertEnabled();
     let key = input.key;
     if (!key && input.feature) {
       const routed = this.route({ feature: input.feature });
@@ -347,7 +347,7 @@ export class PromptRuntimeService {
               chars: [...value.body].length,
               cache: 'hit' as const,
               security: null,
-              honesty: promptRuntimeCatalog.honesty,
+              honesty: promptRuntimeCatalog().honesty,
               note: 'Cache hit from Intelligent Cache namespace=prompt — execute does not call an LLM.',
             };
           }
@@ -414,7 +414,7 @@ export class PromptRuntimeService {
             version: rendered.version,
             runtime: 'prompt-runtime',
           },
-          ttlSec: promptRuntimeCeilings.cacheTtlSec,
+          ttlSec: promptRuntimeCeilings().cacheTtlSec,
           labels: ['prompt-runtime', resolvedKey],
         });
       } catch {
@@ -442,14 +442,14 @@ export class PromptRuntimeService {
       security: security
         ? { ok: security.ok, findingCount: security.findings.length }
         : null,
-      honesty: promptRuntimeCatalog.honesty,
+      honesty: promptRuntimeCatalog().honesty,
       note: 'Sandbox execute — resolve/render/validate only; does not call an LLM.',
     };
   }
 
   async analytics(input: AuthCtx) {
-    this.assertEnabled;
-    const start = new Date;
+    this.assertEnabled();
+    const start = new Date();
     start.setUTCDate(1);
     start.setUTCHours(0, 0, 0, 0);
     const actions = [
@@ -471,18 +471,18 @@ export class PromptRuntimeService {
       })),
     );
     return {
-      periodStart: start.toISOString,
+      periodStart: start.toISOString(),
       workspaceId: input.workspaceId,
       events: counts.reduce((s, c) => s + c.count, 0),
       byAction: Object.fromEntries(counts.map((c) => [c.action, c.count])),
-      honesty: promptRuntimeCatalog.honesty,
-      note: 'Prompt Runtime analytics.',
+      honesty: promptRuntimeCatalog().honesty,
+      note: 'Prompt Runtime analytics (VL-216).',
     };
   }
 
   async monitoring(input: AuthCtx) {
     const [engine, analytics, templates] = await Promise.all([
-      Promise.resolve(this.engine),
+      Promise.resolve(this.engine()),
       this.analytics(input),
       this.templates(input),
     ]);
@@ -494,13 +494,13 @@ export class PromptRuntimeService {
       honesty: engine.honesty,
       safety: {
         agentActionBoundariesRequired: true,
-        note: 'Prompt Runtime prepares text only; Agent/Workflow action gates remain –222.',
+        note: 'Prompt Runtime prepares text only; Agent/Workflow action gates remain VL-219–222.',
       },
     };
   }
 
-  private assertEnabled {
-    if (promptRuntimeMode === 'disabled') {
+  private assertEnabled() {
+    if (promptRuntimeMode() === 'disabled') {
       throw new ApiException(
         'prompt_runtime_disabled',
         'Prompt Runtime mode is disabled (LUGEMI_PROMPT_RUNTIME_MODE=disabled).',
@@ -523,17 +523,17 @@ export class PromptRuntimeService {
   private async resolveBody(
     input: AuthCtx & { key?: string; body?: string; version?: number },
   ): Promise<{ key: PromptKey; body: string; source: string; version: number | null }> {
-    if (input.body?.trim && !input.key) {
+    if (input.body?.trim() && !input.key) {
       return {
         key: 'chat',
-        body: input.body.trim,
+        body: input.body.trim(),
         source: 'draft',
         version: null,
       };
     }
     const key = this.requireKey(input.key ?? 'chat');
-    if (input.body?.trim) {
-      return { key, body: input.body.trim, source: 'draft', version: null };
+    if (input.body?.trim()) {
+      return { key, body: input.body.trim(), source: 'draft', version: null };
     }
     if (input.version != null) {
       const listed = await this.prompts.listVersions({
@@ -561,7 +561,7 @@ export class PromptRuntimeService {
   }
 
   private extractVariables(body: string): string[] {
-    const found = new Set<string>;
+    const found = new Set<string>();
     for (const m of body.matchAll(VAR_RE)) {
       found.add(m[1]!);
     }
@@ -586,7 +586,7 @@ export class PromptRuntimeService {
     const payload = JSON.stringify({
       key,
       version: version ?? null,
-      body: body?.trim ?? null,
+      body: body?.trim() ?? null,
       variables,
     });
     const hash = createHash('sha256').update(payload).digest('hex').slice(0, 24);

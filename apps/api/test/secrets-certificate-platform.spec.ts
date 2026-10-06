@@ -14,7 +14,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory) {
+    if (name.isDirectory()) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       out.push(...walkTsFiles(p));
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -24,28 +24,28 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Secrets & Certificate Platform',  => {
+describe('Secrets & Certificate Platform (VL-320)', () => {
   let app: INestApplication<App>;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    }).compile();
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
   }, 120_000);
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('ships ADR and product doc',  => {
+  it('ships ADR and product doc', () => {
     expect(existsSync(join(root, 'docs/adr/0222-secrets-certificate-platform.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/SECRETS_CERTIFICATE_PLATFORM.md'))).toBe(true);
   });
 
-  it('has no TODO/FIXME markers in hub source',  => {
+  it('has no TODO/FIXME markers in hub source', () => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     const dir = join(apiSrc, 'secrets-certificate-platform');
@@ -56,11 +56,11 @@ describe('Secrets & Certificate Platform',  => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes engine/products with honesty gates', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes engine/products with honesty gates', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/secrets-certificate-platform/engine')
       .expect(200);
-    expect(res.body.product).toBeTruthy;
+    expect(res.body.product).toBeTruthy();
     expect(res.body.honesty.encryptedAtRest).toBe(true);
     expect(res.body.honesty.executesInference).toBe(false);
 
@@ -75,7 +75,7 @@ describe('Secrets & Certificate Platform',  => {
     expect(blob).not.toMatch(/"ciphertext"\s*:/);
     expect(blob).not.toMatch(/"dekWrapped"\s*:/);
 
-    const meta = await request(app.getHttpServer)
+    const meta = await request(app.getHttpServer())
       .get('/v1/secrets-certificate-platform/metadata')
       .expect(200);
     expect(meta.body.secrets.length).toBeGreaterThan(0);
@@ -86,7 +86,7 @@ describe('Secrets & Certificate Platform',  => {
     expect(meta.body.secrets[0]).not.toHaveProperty('value');
     expect(meta.body.secrets[0]).not.toHaveProperty('plaintext');
 
-    const audit = await request(app.getHttpServer)
+    const audit = await request(app.getHttpServer())
       .get('/v1/secrets-certificate-platform/audit')
       .expect(200);
     expect(audit.body.accessAuditing).toBe(true);
@@ -94,10 +94,10 @@ describe('Secrets & Certificate Platform',  => {
 
   });
 
-  it('exposes monitoring', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes monitoring', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/secrets-certificate-platform/monitoring')
       .expect(200);
-    expect(res.body).toBeTruthy;
+    expect(res.body).toBeTruthy();
   });
 });

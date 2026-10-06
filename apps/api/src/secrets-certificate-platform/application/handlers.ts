@@ -17,8 +17,8 @@ export class GetSecretsCertificatePlatformEngineHandler
     private readonly catalog: SecretsCertificatePlatformCatalogPort,
   ) {}
 
-  execute: Promise<SecretsCertificatePlatformEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<SecretsCertificatePlatformEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListSecretsCertificatePlatformProductsHandler
     private readonly catalog: SecretsCertificatePlatformCatalogPort,
   ) {}
 
-  execute: Promise<SecretsCertificatePlatformProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<SecretsCertificatePlatformProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

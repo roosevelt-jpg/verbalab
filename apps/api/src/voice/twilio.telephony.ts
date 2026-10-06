@@ -22,7 +22,7 @@ class HttpTwilioClient implements TelephonyClient {
     private readonly authToken: string,
   ) {}
 
-  private authHeader {
+  private authHeader() {
     return `Basic ${Buffer.from(`${this.accountSid}:${this.authToken}`).toString('base64')}`;
   }
 
@@ -42,13 +42,13 @@ class HttpTwilioClient implements TelephonyClient {
       {
         method: 'POST',
         headers: {
-          Authorization: this.authHeader,
+          Authorization: this.authHeader(),
           'Content-Type': 'application/x-www-form-urlencoded',
         },
         body,
       },
     );
-    const json = (await res.json) as { sid?: string; status?: string; message?: string };
+    const json = (await res.json()) as { sid?: string; status?: string; message?: string };
     if (!res.ok || !json.sid) {
       throw new Error(json.message ?? `Twilio create call failed (${res.status})`);
     }
@@ -62,19 +62,19 @@ class HttpTwilioClient implements TelephonyClient {
   }> {
     const withExt = url.includes('.') ? url : `${url}.wav`;
     const res = await fetch(withExt, {
-      headers: { Authorization: this.authHeader },
+      headers: { Authorization: this.authHeader() },
     });
     if (!res.ok) {
       throw new Error(`Failed to download Twilio recording (${res.status})`);
     }
-    const buffer = Buffer.from(await res.arrayBuffer);
+    const buffer = Buffer.from(await res.arrayBuffer());
     const contentType = res.headers.get('content-type') || 'audio/wav';
-    const filename = withExt.toLowerCase.includes('.mp3') ? 'recording.mp3' : 'recording.wav';
+    const filename = withExt.toLowerCase().includes('.mp3') ? 'recording.mp3' : 'recording.wav';
     return { buffer, contentType, filename };
   }
 }
 
-@Injectable
+@Injectable()
 export class TwilioTelephonyService {
   private client: TelephonyClient | null = null;
 
@@ -83,53 +83,53 @@ export class TwilioTelephonyService {
     this.client = client;
   }
 
-  disabled {
+  disabled() {
     return process.env.VOICE_AGENT_DISABLED === '1';
   }
 
-  accountSid {
-    return process.env.TWILIO_ACCOUNT_SID?.trim || '';
+  accountSid() {
+    return process.env.TWILIO_ACCOUNT_SID?.trim() || '';
   }
 
-  authToken {
-    return process.env.TWILIO_AUTH_TOKEN?.trim || '';
+  authToken() {
+    return process.env.TWILIO_AUTH_TOKEN?.trim() || '';
   }
 
-  phoneNumber {
-    return process.env.TWILIO_PHONE_NUMBER?.trim || '';
+  phoneNumber() {
+    return process.env.TWILIO_PHONE_NUMBER?.trim() || '';
   }
 
-  webhookBaseUrl {
+  webhookBaseUrl() {
     return (process.env.TWILIO_WEBHOOK_BASE_URL ?? process.env.API_PUBLIC_URL ?? '')
-      .trim
+      .trim()
       .replace(/\/$/, '');
   }
 
-  isConfigured {
-    return Boolean(this.accountSid && this.authToken && this.phoneNumber);
+  isConfigured() {
+    return Boolean(this.accountSid() && this.authToken() && this.phoneNumber());
   }
 
-  private resolveClient: TelephonyClient {
+  private resolveClient(): TelephonyClient {
     if (this.client) return this.client;
-    if (!this.isConfigured) {
+    if (!this.isConfigured()) {
       throw new ApiException(
         'provider_not_configured',
         'Twilio is not configured. Set TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, and TWILIO_PHONE_NUMBER.',
         HttpStatus.SERVICE_UNAVAILABLE,
       );
     }
-    return new HttpTwilioClient(this.accountSid, this.authToken);
+    return new HttpTwilioClient(this.accountSid(), this.authToken());
   }
 
-  assertLiveReady {
-    if (this.disabled) {
+  assertLiveReady() {
+    if (this.disabled()) {
       throw new ApiException(
         'provider_disabled',
         'Voice agent is disabled (VOICE_AGENT_DISABLED=1).',
         HttpStatus.SERVICE_UNAVAILABLE,
       );
     }
-    if (!this.isConfigured && !this.client) {
+    if (!this.isConfigured() && !this.client) {
       throw new ApiException(
         'provider_not_configured',
         'Twilio is not configured. Set TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, and TWILIO_PHONE_NUMBER.',
@@ -139,8 +139,8 @@ export class TwilioTelephonyService {
   }
 
   createOutboundCall(input: { to: string; url: string }) {
-    this.assertLiveReady;
-    const from = this.phoneNumber;
+    this.assertLiveReady();
+    const from = this.phoneNumber();
     if (!from && !this.client) {
       throw new ApiException(
         'provider_not_configured',
@@ -148,7 +148,7 @@ export class TwilioTelephonyService {
         HttpStatus.SERVICE_UNAVAILABLE,
       );
     }
-    return this.resolveClient.createOutboundCall({
+    return this.resolveClient().createOutboundCall({
       to: input.to,
       from: from || '+15555550100',
       url: input.url,
@@ -156,6 +156,6 @@ export class TwilioTelephonyService {
   }
 
   downloadRecording(url: string) {
-    return this.resolveClient.downloadRecording(url);
+    return this.resolveClient().downloadRecording(url);
   }
 }

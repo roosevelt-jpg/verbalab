@@ -17,7 +17,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory) out.push(...walkTsFiles(full));
+    if (statSync(full).isDirectory()) out.push(...walkTsFiles(full));
     else if (full.endsWith('.ts')) out.push(full);
   }
   return out;
@@ -32,7 +32,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_mtp_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_mtp_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -46,29 +46,29 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Model Training Platform',  => {
+describe('Model Training Platform (VL-235)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let platform: ModelTrainingPlatformService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     platform = app.get(ModelTrainingPlatformService);
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('documents training platform honesty (no distributed/RLHF lab)',  => {
+  it('documents training platform honesty (no distributed/RLHF lab)', () => {
     const doc = join(root, 'docs/MODEL_TRAINING_PLATFORM.md');
     const adr = join(root, 'docs/adr/0136-model-training-platform.md');
     const readme = join(
@@ -79,14 +79,14 @@ describe('Model Training Platform',  => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(readme)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
-    expect(text).toMatch(/|training-jobs/i);
+    expect(text).toContain('VL-235');
+    expect(text).toMatch(/VL-111|training-jobs/i);
     expect(text).toMatch(/not.*distributed|Deferred/i);
     expect(text).toMatch(/RLHF/i);
     expect(text).toContain('CQRS');
   });
 
-  it('has no TODO/FIXME/implement-later markers in Model Training Platform source',  => {
+  it('has no TODO/FIXME/implement-later markers in Model Training Platform source', () => {
     const roots = [join(apiSrc, 'model-training-platform')];
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
@@ -99,8 +99,8 @@ describe('Model Training Platform',  => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes public engine with honest methods + launchers', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes public engine with honest methods + launchers', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/model-training-platform/engine')
       .expect(200);
     expect(res.body.product).toBe('Lugemi Model Training Platform');
@@ -125,8 +125,8 @@ describe('Model Training Platform',  => {
     );
   });
 
-  it('creates LoRA experiment, checkpoints, and launches handoff to ', async  => {
-    const org = await seedOrg(prisma, `mtp_${Date.now}`);
+  it('creates LoRA experiment, checkpoints, and launches handoff to VL-111', async () => {
+    const org = await seedOrg(prisma, `mtp_${Date.now()}`);
     const session = {
       userId: org.memberships[0].userId,
       organizationId: org.id,
@@ -156,29 +156,29 @@ describe('Model Training Platform',  => {
     expect(launched.handoff.api).toBe('POST /v1/training-jobs');
     expect(launched.handoff.body.launcher).toBe('manual');
 
-    expect( =>
+    expect(() =>
       platform.launchExperiment(session, platform.createExperiment(session, { method: 'rlhf' })
         .experiment.id),
     ).toThrow(/not launchable/i);
   });
 
-  it('exposes modelTrainingMethods via GraphQL CQRS façade', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes modelTrainingMethods via GraphQL CQRS façade', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query:
           '{ modelTrainingMethods { id name status launchable existingApi notes } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.modelTrainingMethods.length).toBeGreaterThan(5);
     expect(
       res.body.data.modelTrainingMethods.some((m: { id: string }) => m.id === 'lora'),
     ).toBe(true);
   });
 
-  it('rejects unknown methods and enforces deferred launch', async  => {
-    const org = await seedOrg(prisma, `mtp_bad_${Date.now}`);
+  it('rejects unknown methods and enforces deferred launch', async () => {
+    const org = await seedOrg(prisma, `mtp_bad_${Date.now()}`);
     const session = {
       userId: org.memberships[0].userId,
       organizationId: org.id,
@@ -186,7 +186,7 @@ describe('Model Training Platform',  => {
       clerkUserId: 'clerk_mtp',
       role: 'owner',
     };
-    expect( => platform.createExperiment(session, { method: 'warp_drive' })).toThrow(
+    expect(() => platform.createExperiment(session, { method: 'warp_drive' })).toThrow(
       /Unknown training method/i,
     );
   });

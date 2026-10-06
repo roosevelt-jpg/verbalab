@@ -17,8 +17,8 @@ export class GetTrainingPipelineEngineHandler
     private readonly catalog: TrainingPipelineCatalogPort,
   ) {}
 
-  execute: Promise<TrainingPipelineEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<TrainingPipelineEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListTrainingPipelineProductsHandler
     private readonly catalog: TrainingPipelineCatalogPort,
   ) {}
 
-  execute: Promise<TrainingPipelineProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<TrainingPipelineProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

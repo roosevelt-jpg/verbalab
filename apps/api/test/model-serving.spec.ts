@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_ms_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_ms_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,38 +35,38 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Model Serving',  => {
+describe('Model Serving (VL-206)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   const prevMode = process.env.LUGEMI_MODEL_SERVING_MODE;
   const prevMax = process.env.LUGEMI_MODEL_SERVING_MAX_ACTIVE;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     process.env.LUGEMI_MODEL_SERVING_MODE = 'sandbox';
     process.env.LUGEMI_MODEL_SERVING_MAX_ACTIVE = '2';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   });
 
-  afterAll(async  => {
+  afterAll(async () => {
     if (prevMode === undefined) delete process.env.LUGEMI_MODEL_SERVING_MODE;
     else process.env.LUGEMI_MODEL_SERVING_MODE = prevMode;
     if (prevMax === undefined) delete process.env.LUGEMI_MODEL_SERVING_MAX_ACTIVE;
     else process.env.LUGEMI_MODEL_SERVING_MAX_ACTIVE = prevMax;
-    await app.close;
+    await app.close();
   });
 
-  it('documents Model Serving honesty',  => {
+  it('documents Model Serving honesty', () => {
     const doc = join(root, 'docs/MODEL_SERVING.md');
     const adr = join(root, 'docs/adr/0117-model-serving.md');
     const readme = join(root, 'docs/roadmap/volume7-inference-cloud/README_VOLUME7.md');
@@ -77,12 +77,12 @@ describe('Model Serving',  => {
     expect(text).toMatch(/vLLM|KServe|Triton/i);
     expect(text).toMatch(/does \*\*not\*\*|not a vLLM/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
-    expect(text).toContain('');
+    expect(text).toContain('VL-206');
     expect(text).toMatch(/Gateway/i);
   });
 
-  it('exposes engine with honesty + kinds + endpoints', async  => {
-    const res = await request(app.getHttpServer).get('/v1/model-serving/engine').expect(200);
+  it('exposes engine with honesty + kinds + endpoints', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/model-serving/engine').expect(200);
     expect(res.body.product).toContain('Model Serving');
     expect(res.body.honesty.vllmOs).toBe(false);
     expect(res.body.honesty.kserveOs).toBe(false);
@@ -95,7 +95,7 @@ describe('Model Serving',  => {
     expect(res.body.ceilings.maxActiveDeployments).toBe(2);
     expect(res.body.ceilings.mode).toBe('sandbox');
 
-    const kinds = await request(app.getHttpServer).get('/v1/model-serving/kinds').expect(200);
+    const kinds = await request(app.getHttpServer()).get('/v1/model-serving/kinds').expect(200);
     const ids = kinds.body.kinds.map((k: { id: string }) => k.id);
     expect(ids).toEqual(
       expect.arrayContaining([
@@ -112,21 +112,21 @@ describe('Model Serving',  => {
       'deferred',
     );
 
-    const modes = await request(app.getHttpServer).get('/v1/model-serving/modes').expect(200);
+    const modes = await request(app.getHttpServer()).get('/v1/model-serving/modes').expect(200);
     expect(modes.body.modes.some((m: { id: string }) => m.id === 'canary')).toBe(true);
     expect(modes.body.modes.find((m: { id: string }) => m.id === 'autoscaling').status).toBe(
       'deferred',
     );
 
-    const endpoints = await request(app.getHttpServer)
+    const endpoints = await request(app.getHttpServer())
       .get('/v1/model-serving/endpoints?kind=llm')
       .expect(200);
     expect(endpoints.body.endpoints.length).toBeGreaterThan(0);
     expect(endpoints.body.honesty.extendsAiGateway).toBe(true);
   });
 
-  it('deploys canary, promotes, versions, rolls back, enforces ceiling', async  => {
-    const org = await seedOrg(prisma, `ms_${Date.now}`);
+  it('deploys canary, promotes, versions, rolls back, enforces ceiling', async () => {
+    const org = await seedOrg(prisma, `ms_${Date.now()}`);
     const key = await apiKeys.create({
       organizationId: org.id,
       workspaceId: org.workspaces[0].id,
@@ -134,7 +134,7 @@ describe('Model Serving',  => {
       name: 'ms-test',
     });
 
-    const a1 = await request(app.getHttpServer)
+    const a1 = await request(app.getHttpServer())
       .post('/v1/model-serving/deployments')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -149,7 +149,7 @@ describe('Model Serving',  => {
     expect(a1.body.deployment.trafficPercent).toBe(10);
     expect(a1.body.honesty.vllmOs).toBe(false);
 
-    const promoted = await request(app.getHttpServer)
+    const promoted = await request(app.getHttpServer())
       .post(`/v1/model-serving/deployments/${a1.body.deployment.id}/promote`)
       .set('Authorization', `Bearer ${key.secret}`)
       .send({})
@@ -157,7 +157,7 @@ describe('Model Serving',  => {
     expect(promoted.body.deployment.status).toBe('active');
     expect(promoted.body.deployment.trafficPercent).toBe(100);
 
-    const a2 = await request(app.getHttpServer)
+    const a2 = await request(app.getHttpServer())
       .post(`/v1/model-serving/deployments/${a1.body.deployment.id}/redeploy`)
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ version: 'v2', trafficPercent: 20 })
@@ -166,7 +166,7 @@ describe('Model Serving',  => {
     expect(a2.body.deployment.previousVersion).toBe('v1');
 
     // Ceiling = 2 active/canary (v1 active + v2 canary); third should 402
-    const over = await request(app.getHttpServer)
+    const over = await request(app.getHttpServer())
       .post('/v1/model-serving/deployments')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -178,7 +178,7 @@ describe('Model Serving',  => {
       .expect(402);
     expect(JSON.stringify(over.body)).toMatch(/ceiling|maxActive/i);
 
-    const rolled = await request(app.getHttpServer)
+    const rolled = await request(app.getHttpServer())
       .post(`/v1/model-serving/deployments/${a2.body.deployment.id}/rollback`)
       .set('Authorization', `Bearer ${key.secret}`)
       .send({})
@@ -186,15 +186,15 @@ describe('Model Serving',  => {
     expect(rolled.body.deployment.version).toBe('v1');
     expect(rolled.body.deployment.status).toBe('active');
 
-    const mon = await request(app.getHttpServer)
+    const mon = await request(app.getHttpServer())
       .get('/v1/model-serving/monitoring')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(mon.body.honesty.extendsAiGateway).toBe(true);
   });
 
-  it('exposes modelServingEngine via GraphQL', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes modelServingEngine via GraphQL', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query:

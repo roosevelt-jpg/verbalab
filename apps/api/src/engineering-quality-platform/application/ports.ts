@@ -1,4 +1,4 @@
-/** Application ports for Engineering Quality Platform. */
+/** Application ports for Engineering Quality Platform (VL-348). */
 
 export type EngineeringQualityPlatformProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type EngineeringQualityPlatformEngineBundle = ReturnType<
 >;
 
 export interface EngineeringQualityPlatformCatalogPort {
-  engine: EngineeringQualityPlatformEngineBundle;
-  listProducts: EngineeringQualityPlatformProductRow[];
+  engine(): EngineeringQualityPlatformEngineBundle;
+  listProducts(): EngineeringQualityPlatformProductRow[];
 }
 
 export const ENGINEERING_QUALITY_PLATFORM_CATALOG_PORT = Symbol('ENGINEERING_QUALITY_PLATFORM_CATALOG_PORT');

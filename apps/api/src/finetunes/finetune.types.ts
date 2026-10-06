@@ -1,4 +1,4 @@
-/** Coverage thresholds for failed-pair candidates (reference metrics only). */
+/** Coverage thresholds for VL-104 failed-pair candidates (reference metrics only). */
 export const FINETUNE_FAIL_EXACT_MATCH_MAX = 0.5;
 export const FINETUNE_FAIL_CHAR_SIM_MAX = 0.4;
 

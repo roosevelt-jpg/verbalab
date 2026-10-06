@@ -15,8 +15,8 @@ type Engine = {
 type Analytics = { entities: number; relationships: number; note: string };
 type Entity = { id: string; name: string; type: string; domain: string; description: string };
 
-export function KnowledgeGraphClient {
-  const { getToken, isLoaded } = useAuth;
+export function KnowledgeGraphClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [entities, setEntities] = useState<Entity[]>([]);
@@ -27,8 +27,8 @@ export function KnowledgeGraphClient {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(async  => {
-    const token = await getToken;
+  const refresh = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, an, list] = await Promise.all([
       apiFetch<Engine>('/v1/knowledge-graph/engine', { token }),
@@ -40,17 +40,17 @@ export function KnowledgeGraphClient {
     setEntities(list.data);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void refresh.catch((err: Error) => setError(err.message));
+    void refresh().catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
-  async function addLinkedPair {
+  async function addLinkedPair() {
     setLoading(true);
     setError(null);
     setResult(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const a = await apiFetch<Entity>('/v1/knowledge-graph/entities', {
         token,
@@ -72,7 +72,7 @@ export function KnowledgeGraphClient {
         { token },
       );
       setResult(JSON.stringify({ a, b, edge, neighborhood }, null, 2));
-      await refresh;
+      await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Graph write failed');
     } finally {
@@ -129,7 +129,7 @@ export function KnowledgeGraphClient {
               placeholder="To entity"
               style={input}
             />
-            <button type="button" disabled={loading} style={primary} onClick={ => void addLinkedPair}>
+            <button type="button" disabled={loading} style={primary} onClick={() => void addLinkedPair()}>
               Create edge
             </button>
           </div>

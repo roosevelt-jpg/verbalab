@@ -1,8 +1,8 @@
 /**
- * Library Phase 205 → Workflow Operating System.
- * Workflow Operating System. Façade over workflow-runtime + workflow-marketplace. HITL/approval/rollback as routed capabilities — duplicatesKernelOrFabric=false.
+ * Library Phase 205 → Workflow Operating System (VL-338).
+ * Workflow Operating System (VL-338). Façade over workflow-runtime + workflow-marketplace. HITL/approval/rollback as routed capabilities — duplicatesKernelOrFabric=false.
  */
-export function workflowOperatingSystemEngineCatalog {
+export function workflowOperatingSystemEngineCatalog() {
   return {
     product: 'Lugemi Workflow Operating System',
     unifyingOrchestrationLayer: true,
@@ -11,10 +11,10 @@ export function workflowOperatingSystemEngineCatalog {
     notKubernetes: true,
     literalOsKernel: false,
     capabilities: [
-      { id: 'distributed_workflows', name: 'Distributed Workflow Routing', status: 'shipped', notes: ' routed capability — not a new engine.' },
-      { id: 'hitl', name: 'Human-in-the-Loop Routing', status: 'shipped', notes: ' routed capability — not a new engine.' },
-      { id: 'approval', name: 'Approval Routing', status: 'shipped', notes: ' routed capability — not a new engine.' },
-      { id: 'rollback', name: 'Rollback Routing', status: 'shipped', notes: ' routed capability — not a new engine.' }
+      { id: 'distributed_workflows', name: 'Distributed Workflow Routing', status: 'shipped', notes: 'VL-338 routed capability — not a new engine.' },
+      { id: 'hitl', name: 'Human-in-the-Loop Routing', status: 'shipped', notes: 'VL-338 routed capability — not a new engine.' },
+      { id: 'approval', name: 'Approval Routing', status: 'shipped', notes: 'VL-338 routed capability — not a new engine.' },
+      { id: 'rollback', name: 'Rollback Routing', status: 'shipped', notes: 'VL-338 routed capability — not a new engine.' }
     ],
     routes: [
       {
@@ -64,9 +64,9 @@ export function workflowOperatingSystemEngineCatalog {
       notKubernetes: true,
       literalOsKernel: false,
       enterpriseEngineeringSystemOs: false,
-      note: 'Workflow Operating System. Façade over workflow-runtime + workflow-marketplace. HITL/approval/rollback as routed capabilities — duplicatesKernelOrFabric=false.',
+      note: 'Workflow Operating System (VL-338). Façade over workflow-runtime + workflow-marketplace. HITL/approval/rollback as routed capabilities — duplicatesKernelOrFabric=false.',
     },
     docs: '/docs/WORKFLOW_OPERATING_SYSTEM.md',
-    note: 'Workflow Operating System. Façade over workflow-runtime + workflow-marketplace. HITL/approval/rollback as routed capabilities — duplicatesKernelOrFabric=false.',
+    note: 'Workflow Operating System (VL-338). Façade over workflow-runtime + workflow-marketplace. HITL/approval/rollback as routed capabilities — duplicatesKernelOrFabric=false.',
   };
 }

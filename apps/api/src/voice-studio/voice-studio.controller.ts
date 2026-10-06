@@ -37,24 +37,24 @@ export class VoiceStudioController {
   }
 
   @Get('engine')
-  engine {
-    return this.studio.engine;
+  engine() {
+    return this.studio.engine();
   }
 
   @Get('engine/analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req req: AuthedReq) {
+  analytics(@Req() req: AuthedReq) {
     return this.studio.analytics(req.translateAuth.organizationId);
   }
 
   @Get('library')
   @UseGuards(TranslateAuthGuard)
-  library(@Req req: AuthedReq) {
+  library(@Req() req: AuthedReq) {
     return this.studio.library(this.auth(req));
   }
 
   @Post('ssml/compile')
-  compileSsml(@Body body: { ssml?: string }) {
+  compileSsml(@Body() body: { ssml?: string }) {
     if (typeof body.ssml !== 'string') {
       throw new ApiException('validation_error', 'ssml is required', HttpStatus.BAD_REQUEST);
     }
@@ -63,15 +63,15 @@ export class VoiceStudioController {
 
   @Get('pronunciation')
   @UseGuards(TranslateAuthGuard)
-  listPronunciation(@Req req: AuthedReq) {
+  listPronunciation(@Req() req: AuthedReq) {
     return this.studio.listPronunciation(this.auth(req));
   }
 
   @Post('pronunciation')
   @UseGuards(TranslateAuthGuard)
   upsertPronunciation(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: { id?: string; grapheme?: string; alias?: string; language?: string; notes?: string },
   ) {
     return this.studio.upsertPronunciation(this.auth(req), body);
@@ -79,42 +79,42 @@ export class VoiceStudioController {
 
   @Delete('pronunciation/:id')
   @UseGuards(TranslateAuthGuard)
-  deletePronunciation(@Req req: AuthedReq, @Param('id') id: string) {
+  deletePronunciation(@Req() req: AuthedReq, @Param('id') id: string) {
     return this.studio.deletePronunciation(this.auth(req), id);
   }
 
   @Get('profiles')
   @UseGuards(TranslateAuthGuard)
-  listProfiles(@Req req: AuthedReq) {
+  listProfiles(@Req() req: AuthedReq) {
     return this.studio.listProfiles(this.auth(req));
   }
 
   @Post('profiles')
   @UseGuards(TranslateAuthGuard)
   upsertProfile(
-    @Req req: AuthedReq,
-    @Body body: { id?: string; name?: string; voice?: string; language?: string; notes?: string },
+    @Req() req: AuthedReq,
+    @Body() body: { id?: string; name?: string; voice?: string; language?: string; notes?: string },
   ) {
     return this.studio.upsertProfile(this.auth(req), body);
   }
 
   @Delete('profiles/:id')
   @UseGuards(TranslateAuthGuard)
-  deleteProfile(@Req req: AuthedReq, @Param('id') id: string) {
+  deleteProfile(@Req() req: AuthedReq, @Param('id') id: string) {
     return this.studio.deleteProfile(this.auth(req), id);
   }
 
   @Get('projects')
   @UseGuards(TranslateAuthGuard)
-  listProjects(@Req req: AuthedReq) {
+  listProjects(@Req() req: AuthedReq) {
     return this.studio.listProjects(this.auth(req));
   }
 
   @Post('projects')
   @UseGuards(TranslateAuthGuard)
   upsertProject(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: { id?: string; name?: string; description?: string; timeline?: TimelineClip[] },
   ) {
     return this.studio.upsertProject(this.auth(req), body);
@@ -122,15 +122,15 @@ export class VoiceStudioController {
 
   @Delete('projects/:id')
   @UseGuards(TranslateAuthGuard)
-  deleteProject(@Req req: AuthedReq, @Param('id') id: string) {
+  deleteProject(@Req() req: AuthedReq, @Param('id') id: string) {
     return this.studio.deleteProject(this.auth(req), id);
   }
 
   @Post('preview')
   @UseGuards(TranslateAuthGuard)
   async preview(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       text?: string;
       ssml?: string;
@@ -138,7 +138,7 @@ export class VoiceStudioController {
       language?: string;
       format?: 'mp3' | 'wav' | 'opus' | 'aac' | 'flac';
     },
-    @Res res: Response,
+    @Res() res: Response,
   ) {
     const result = await this.studio.preview(this.auth(req), body);
     res.setHeader('Content-Type', result.mimeType);
@@ -155,8 +155,8 @@ export class VoiceStudioController {
   @Post('generate')
   @UseGuards(TranslateAuthGuard)
   async generate(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       text?: string;
       ssml?: string;
@@ -164,7 +164,7 @@ export class VoiceStudioController {
       language?: string;
       format?: 'mp3' | 'wav' | 'opus' | 'aac' | 'flac';
     },
-    @Res res: Response,
+    @Res() res: Response,
   ) {
     const result = await this.studio.generate(this.auth(req), body);
     res.setHeader('Content-Type', result.mimeType);
@@ -180,9 +180,9 @@ export class VoiceStudioController {
   @Post('test')
   @UseGuards(TranslateAuthGuard)
   async test(
-    @Req req: AuthedReq,
-    @Body body: { voice?: string; language?: string },
-    @Res res: Response,
+    @Req() req: AuthedReq,
+    @Body() body: { voice?: string; language?: string },
+    @Res() res: Response,
   ) {
     const result = await this.studio.testVoice(this.auth(req), body);
     res.setHeader('Content-Type', result.mimeType);
@@ -197,8 +197,8 @@ export class VoiceStudioController {
   @Post('compare')
   @UseGuards(TranslateAuthGuard)
   compare(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       text?: string;
       ssml?: string;
@@ -213,8 +213,8 @@ export class VoiceStudioController {
   @Post('timeline/render')
   @UseGuards(TranslateAuthGuard)
   renderTimeline(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       clips?: TimelineClip[];
       projectId?: string;

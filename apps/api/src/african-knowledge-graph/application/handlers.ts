@@ -17,8 +17,8 @@ export class GetAfricanKnowledgeGraphEngineHandler
     private readonly catalog: AfricanKnowledgeGraphCatalogPort,
   ) {}
 
-  execute: Promise<AfricanKnowledgeGraphEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<AfricanKnowledgeGraphEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListAfricanKnowledgeGraphProductsHandler
     private readonly catalog: AfricanKnowledgeGraphCatalogPort,
   ) {}
 
-  execute: Promise<AfricanKnowledgeGraphProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<AfricanKnowledgeGraphProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

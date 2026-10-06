@@ -20,8 +20,8 @@ export class ListModelTrainingMethodsHandler
     private readonly catalog: ModelTrainingPlatformCatalogPort,
   ) {}
 
-  execute: Promise<MtpMethodRow[]> {
-    return Promise.resolve(this.catalog.listMethods);
+  execute(): Promise<MtpMethodRow[]> {
+    return Promise.resolve(this.catalog.listMethods());
   }
 }
 
@@ -34,8 +34,8 @@ export class GetModelTrainingPlatformEngineHandler
     private readonly catalog: ModelTrainingPlatformCatalogPort,
   ) {}
 
-  execute: Promise<MtpEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<MtpEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 

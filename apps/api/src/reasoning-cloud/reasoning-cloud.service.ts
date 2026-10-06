@@ -22,7 +22,7 @@ type AuthCtx = {
   ip?: string;
 };
 
-@Injectable
+@Injectable()
 export class ReasoningCloudService {
   constructor(
     private readonly prisma: PrismaService,
@@ -33,11 +33,11 @@ export class ReasoningCloudService {
     private readonly knowledgeGraph: KnowledgeGraphService,
   ) {}
 
-  engine {
-    return reasoningCloudCatalog;
+  engine() {
+    return reasoningCloudCatalog();
   }
 
-  strategies {
+  strategies() {
     return {
       strategies: REASONING_STRATEGIES.map((id) => ({
         id,
@@ -50,12 +50,12 @@ export class ReasoningCloudService {
             : 'shipped',
       })),
       tools: REASONING_TOOL_CATALOG,
-      note: 'Prompt strategies over LLM gateway. Not a custom reasoner kernel.',
+      note: 'Prompt strategies over LLM gateway (VL-186). Not a custom reasoner kernel.',
     };
   }
 
   private assertStrategy(raw: string | undefined): ReasoningStrategy {
-    const strategy = (raw?.trim || 'chain_of_thought') as ReasoningStrategy;
+    const strategy = (raw?.trim() || 'chain_of_thought') as ReasoningStrategy;
     if (!(REASONING_STRATEGIES as readonly string[]).includes(strategy)) {
       throw new ApiException(
         'validation_error',
@@ -67,8 +67,8 @@ export class ReasoningCloudService {
   }
 
   private systemPrompt(strategy: ReasoningStrategy, language?: string): string {
-    const lang = language?.trim
-      ? ` Reason and answer in language code "${language.trim}" when possible.`
+    const lang = language?.trim()
+      ? ` Reason and answer in language code "${language.trim()}" when possible.`
       : '';
     const base =
       'You are Lugemi Reasoning Cloud. Use careful multi-step reasoning. Do not invent tools or APIs that do not exist.';
@@ -95,7 +95,7 @@ export class ReasoningCloudService {
   private parseSteps(content: string): string[] {
     const lines = content
       .split('\n')
-      .map((l) => l.trim)
+      .map((l) => l.trim())
       .filter(Boolean);
     const numbered = lines.filter((l) => /^\d+[\).\]]\s+/.test(l));
     if (numbered.length > 0) return numbered.map((l) => l.replace(/^\d+[\).\]]\s+/, ''));
@@ -134,12 +134,12 @@ export class ReasoningCloudService {
       maxChars?: number;
     },
   ) {
-    const problem = input.problem?.trim;
+    const problem = input.problem?.trim();
     if (!problem) {
       throw new ApiException('validation_error', 'problem is required', HttpStatus.BAD_REQUEST);
     }
     const strategy = this.assertStrategy(input.strategy);
-    const model = input.model?.trim || undefined;
+    const model = input.model?.trim() || undefined;
 
     let contextBlock: string | null = null;
     if (input.retrieve !== false) {
@@ -273,7 +273,7 @@ export class ReasoningCloudService {
         selectedTools = match
           ? match[1]
               .split(',')
-              .map((s) => s.trim.toLowerCase)
+              .map((s) => s.trim().toLowerCase())
               .filter((id) => REASONING_TOOL_CATALOG.some((t) => t.id === id))
           : [];
       }
@@ -299,10 +299,10 @@ export class ReasoningCloudService {
     });
 
     return {
-      id: `reason_${Date.now}`,
+      id: `reason_${Date.now()}`,
       strategy,
       problem,
-      language: input.language?.trim || null,
+      language: input.language?.trim() || null,
       steps,
       answer,
       branches,
@@ -316,12 +316,12 @@ export class ReasoningCloudService {
         toolExecution: false,
         fullTreeOfThought: strategy === 'tree_of_thought' ? false : undefined,
       },
-      note: 'LLM-gateway reasoning. Not a proprietary symbolic reasoner OS.',
+      note: 'LLM-gateway reasoning (VL-186). Not a proprietary symbolic reasoner OS.',
     };
   }
 
   async analytics(organizationId: string, workspaceId: string) {
-    const start = new Date;
+    const start = new Date();
     start.setUTCDate(1);
     start.setUTCHours(0, 0, 0, 0);
     const [reasons, chatUsage] = await Promise.all([
@@ -335,27 +335,27 @@ export class ReasoningCloudService {
       this.usage.summary(organizationId),
     ]);
     return {
-      periodStart: start.toISOString,
+      periodStart: start.toISOString(),
       reasonRequests: reasons,
       chatTokens: chatUsage.chat.tokens,
       workspaceId,
-      note: 'Reasoning Cloud analytics. Tokens shared with chat metering.',
+      note: 'Reasoning Cloud analytics (VL-186). Tokens shared with chat metering.',
     };
   }
 
   async monitoring(organizationId: string, workspaceId: string) {
     const [analytics, engine] = await Promise.all([
       this.analytics(organizationId, workspaceId),
-      Promise.resolve(this.engine),
+      Promise.resolve(this.engine()),
     ]);
     return {
-      generatedAt: new Date.toISOString,
+      generatedAt: new Date().toISOString(),
       periodStart: analytics.periodStart,
       reasonRequests: analytics.reasonRequests,
       customReasonerKernel: engine.honesty.customReasonerKernel,
       agentOs: engine.honesty.agentOs,
       deferred: engine.capabilities.filter((c) => c.status === 'deferred').map((c) => c.id),
-      note: 'Reasoning Cloud monitoring snapshot.',
+      note: 'Reasoning Cloud monitoring snapshot (VL-186).',
     };
   }
 }

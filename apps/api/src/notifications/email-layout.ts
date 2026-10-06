@@ -9,7 +9,7 @@ function escapeHtml(value: string): string {
 }
 
 function absoluteUrl(pathOrUrl: string, publicBase: string): string {
-  const raw = pathOrUrl.trim;
+  const raw = pathOrUrl.trim();
   if (!raw) return '';
   if (/^https?:\/\//i.test(raw) || raw.startsWith('data:')) return raw;
   const base = publicBase.replace(/\/$/, '');
@@ -24,7 +24,7 @@ function formatAddress(branding: PlatformBranding): string {
     [branding.city, branding.region, branding.postalCode].filter(Boolean).join(', '),
     branding.country,
   ]
-    .map((l) => l.trim)
+    .map((l) => l.trim())
     .filter(Boolean);
   return lines.join('<br />');
 }
@@ -35,7 +35,7 @@ function socialLinks(branding: PlatformBranding): Array<{ label: string; href: s
     { label: 'X', href: branding.socialX },
     { label: 'LinkedIn', href: branding.socialLinkedIn },
     { label: 'GitHub', href: branding.socialGitHub },
-  ].filter((l) => Boolean(l.href.trim));
+  ].filter((l) => Boolean(l.href.trim()));
 }
 
 /** Shared HTML wrapper for all Lugemi system emails (logo header + address/social footer). */
@@ -46,9 +46,9 @@ export function renderSystemEmailHtml(input: {
   publicBaseUrl?: string;
 }): string {
   const publicBase =
-    input.publicBaseUrl?.trim ||
-    process.env.APP_PUBLIC_URL?.trim ||
-    process.env.NEXT_PUBLIC_APP_URL?.trim ||
+    input.publicBaseUrl?.trim() ||
+    process.env.APP_PUBLIC_URL?.trim() ||
+    process.env.NEXT_PUBLIC_APP_URL?.trim() ||
     'http://127.0.0.1:43123';
   const company = escapeHtml(input.branding.companyName || 'Lugemi');
   const logo = absoluteUrl(input.branding.logoUrl || '/brand/lugemi-symbol-teal.svg', publicBase);

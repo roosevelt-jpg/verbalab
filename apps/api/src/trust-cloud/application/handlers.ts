@@ -15,8 +15,8 @@ export class GetTrustCloudEngineHandler implements IQueryHandler<GetTrustCloudEn
     private readonly catalog: TrustCloudCatalogPort,
   ) {}
 
-  execute: Promise<TrustCloudEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<TrustCloudEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -27,8 +27,8 @@ export class ListTrustCloudProductsHandler implements IQueryHandler<ListTrustClo
     private readonly catalog: TrustCloudCatalogPort,
   ) {}
 
-  execute: Promise<TrustCloudProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<TrustCloudProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

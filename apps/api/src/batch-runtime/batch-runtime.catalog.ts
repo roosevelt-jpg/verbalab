@@ -25,7 +25,7 @@ export type BatchKindRow = {
   notes: string;
 };
 
-export function batchKinds: BatchKindRow[] {
+export function batchKinds(): BatchKindRow[] {
   return [
     {
       id: 'translation',
@@ -79,14 +79,14 @@ export function batchKinds: BatchKindRow[] {
 }
 
 /**
- * Library Phase 76 → Batch Runtime.
+ * Library Phase 76 → Batch Runtime (VL-209).
  * Hub over BullMQ /v1/jobs + sandbox runs — not a distributed batch OS.
  */
-export function batchRuntimeCatalog {
+export function batchRuntimeCatalog() {
   return {
     product: 'Lugemi Batch Runtime',
     note:
-      'Batch Runtime. Catalogs translation/speech/OCR/embedding/training batch surfaces. Translation runs delegate to existing BullMQ jobs. Sandbox runs support priority, retry budget, and checkpoint cursors. Not a Spark/Airflow/Celery OS or video batch fabric.',
+      'Batch Runtime (VL-209). Catalogs translation/speech/OCR/embedding/training batch surfaces. Translation runs delegate to existing BullMQ jobs. Sandbox runs support priority, retry budget, and checkpoint cursors. Not a Spark/Airflow/Celery OS or video batch fabric.',
     capabilities: [
       {
         id: 'translation-jobs',
@@ -163,7 +163,7 @@ export function batchRuntimeCatalog {
         name: 'Analytics',
         status: 'shipped',
         api: 'GET /v1/batch-runtime/analytics',
-        notes: 'Run aggregates — ≠ .',
+        notes: 'Run aggregates — ≠ VL-212.',
       },
       {
         id: 'monitoring',
@@ -183,7 +183,7 @@ export function batchRuntimeCatalog {
         id: 'sdk',
         name: 'SDK',
         status: 'shipped',
-        api: 'batchRuntimeEngine',
+        api: 'batchRuntimeEngine()',
         notes: '@lugemi/sdk',
       },
       {
@@ -231,13 +231,13 @@ export function batchRuntimeCatalog {
   };
 }
 
-export function batchRuntimeMode: 'sandbox' | 'disabled' {
-  const raw = (process.env.LUGEMI_BATCH_RUNTIME_MODE ?? 'sandbox').toLowerCase;
+export function batchRuntimeMode(): 'sandbox' | 'disabled' {
+  const raw = (process.env.LUGEMI_BATCH_RUNTIME_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
 
-export function batchCeilings {
+export function batchCeilings() {
   const maxItems = Math.max(
     1,
     Number(process.env.LUGEMI_BATCH_MAX_ITEMS ?? '50') || 50,
@@ -249,7 +249,7 @@ export function batchCeilings {
   return {
     maxItemsPerRun: Math.min(maxItems, 100),
     maxRetries: Math.min(maxRetries, 5),
-    mode: batchRuntimeMode,
+    mode: batchRuntimeMode(),
     note: 'Hard ceilings on sandbox batch item count and retry budget.',
   };
 }

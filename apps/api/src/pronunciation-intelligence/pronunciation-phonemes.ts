@@ -1,4 +1,4 @@
-/** Small English dictionary + grapheme heuristics. Not ARPAbet ASR. */
+/** Small English dictionary + grapheme heuristics (VL-156). Not ARPAbet ASR. */
 
 const EN_DICT: Record<string, string[]> = {
   the: ['DH', 'AH'],
@@ -47,7 +47,7 @@ export type PhonemeWord = {
 };
 
 function splitSyllables(word: string): string[] {
-  const w = word.toLowerCase.replace(/[^a-z']/g, '');
+  const w = word.toLowerCase().replace(/[^a-z']/g, '');
   if (!w) return [];
   const parts: string[] = [];
   let buf = '';
@@ -68,14 +68,14 @@ function splitSyllables(word: string): string[] {
   // Merge tiny fragments
   if (parts.length > 1 && (parts[0]?.length ?? 0) === 1) {
     parts[1] = (parts[0] ?? '') + (parts[1] ?? '');
-    parts.shift;
+    parts.shift();
   }
   return parts;
 }
 
 function primaryStressIndex(syllables: string[], language: string): number {
   if (syllables.length <= 1) return 0;
-  const lang = language.toLowerCase.slice(0, 2);
+  const lang = language.toLowerCase().slice(0, 2);
   if (lang === 'sw') {
     // Penultimate stress (Kiswahili)
     return Math.max(0, syllables.length - 2);
@@ -89,13 +89,13 @@ function stressOf(word: string, language: string): SyllableStress {
   const syllables = splitSyllables(word);
   const primaryIndex = primaryStressIndex(syllables, language);
   const notation = syllables
-    .map((s, i) => (i === primaryIndex ? s.toUpperCase : s.toLowerCase))
+    .map((s, i) => (i === primaryIndex ? s.toUpperCase() : s.toLowerCase()))
     .join('-');
   return { syllables, primaryIndex, notation };
 }
 
 function graphemePhonemes(word: string): string[] {
-  const w = word.toLowerCase.replace(/[^a-z]/g, '');
+  const w = word.toLowerCase().replace(/[^a-z]/g, '');
   const out: string[] = [];
   for (let i = 0; i < w.length; i++) {
     const c = w[i] ?? '';
@@ -148,14 +148,14 @@ function graphemePhonemes(word: string): string[] {
       x: 'KS',
       z: 'Z',
     };
-    out.push(map[c] ?? c.toUpperCase);
+    out.push(map[c] ?? c.toUpperCase());
   }
   return out.length ? out : ['AH'];
 }
 
 export function analyzePhonemes(text: string, language = 'en'): PhonemeWord[] {
   const words = text
-    .toLowerCase
+    .toLowerCase()
     .replace(/[^a-z0-9'\s-]/gi, ' ')
     .split(/\s+/)
     .filter(Boolean);

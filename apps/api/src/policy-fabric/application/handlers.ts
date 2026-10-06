@@ -22,8 +22,8 @@ export class ListPolicyFabricCapabilitiesHandler
     private readonly catalog: PolicyFabricCatalogPort,
   ) {}
 
-  execute: Promise<PolicyFabricCapabilityRow[]> {
-    return Promise.resolve(this.catalog.listCapabilities);
+  execute(): Promise<PolicyFabricCapabilityRow[]> {
+    return Promise.resolve(this.catalog.listCapabilities());
   }
 }
 
@@ -36,8 +36,8 @@ export class ListPolicyFabricRoutesHandler
     private readonly catalog: PolicyFabricCatalogPort,
   ) {}
 
-  execute: Promise<PolicyFabricRouteRow[]> {
-    return Promise.resolve(this.catalog.listRoutes);
+  execute(): Promise<PolicyFabricRouteRow[]> {
+    return Promise.resolve(this.catalog.listRoutes());
   }
 }
 
@@ -50,8 +50,8 @@ export class GetPolicyFabricProductsBundleHandler
     private readonly catalog: PolicyFabricCatalogPort,
   ) {}
 
-  execute: Promise<PolicyFabricProductsBundle> {
-    return Promise.resolve(this.catalog.products);
+  execute(): Promise<PolicyFabricProductsBundle> {
+    return Promise.resolve(this.catalog.products());
   }
 }
 

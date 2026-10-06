@@ -7,13 +7,13 @@ export class GatewayCloudController {
   constructor(private readonly gatewayCloud: GatewayCloudService) {}
 
   @Get('providers')
-  providers {
-    return this.gatewayCloud.providers;
+  providers() {
+    return this.gatewayCloud.providers();
   }
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview {
-    return this.gatewayCloud.overview;
+  overview() {
+    return this.gatewayCloud.overview();
   }
 }

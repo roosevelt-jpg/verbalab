@@ -6,16 +6,16 @@ import {
   AiOperationsDashboardProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestAiOperationsDashboardCatalogAdapter implements AiOperationsDashboardCatalogPort {
   constructor(private readonly service: AiOperationsDashboardService) {}
 
-  engine: AiOperationsDashboardEngineBundle {
-    return this.service.engine;
+  engine(): AiOperationsDashboardEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: AiOperationsDashboardProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): AiOperationsDashboardProductRow[] {
+    const bundle = this.engine() as {
       products?: AiOperationsDashboardProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestAiOperationsDashboardCatalogAdapter implements AiOperationsDash
         status: 'shipped',
         api: 'GET /v1/ai-operations-dashboard/engine',
         console: '/ai-operations-dashboard',
-        notes: ' shipped.',
+        notes: 'VL-290 shipped.',
       },
     ];
   }

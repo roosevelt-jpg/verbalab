@@ -8,7 +8,7 @@ import { planFromId, planHasFeature, isProOrAbove, listPlans, type PlanId, type 
 import { UsageService } from '../usage/usage.service';
 import { AuditService } from '../audit/audit.service';
 
-@Injectable
+@Injectable()
 export class BillingService {
   private stripe: Stripe | null = null;
 
@@ -24,7 +24,7 @@ export class BillingService {
     }
   }
 
-  isConfigured: boolean {
+  isConfigured(): boolean {
     return Boolean(
       this.stripe &&
         (process.env.STRIPE_PRICE_ID_PRO ||
@@ -37,8 +37,8 @@ export class BillingService {
     );
   }
 
-  listPublicPlans {
-    return listPlans.map((p) => ({
+  listPublicPlans() {
+    return listPlans().map((p) => ({
       id: p.id,
       name: p.name,
       rank: p.rank,
@@ -50,13 +50,13 @@ export class BillingService {
       features: p.features,
       highlight: Boolean(p.highlight),
       checkoutAvailable: Boolean(
-        p.stripePriceEnv && process.env[p.stripePriceEnv]?.trim && this.stripe,
+        p.stripePriceEnv && process.env[p.stripePriceEnv]?.trim() && this.stripe,
       ),
     }));
   }
 
   /** Live marketplace Checkout (destination charge + application fee). */
-  isMarketplacePaymentsConfigured: boolean {
+  isMarketplacePaymentsConfigured(): boolean {
     return Boolean(
       this.stripe &&
         process.env.STRIPE_WEBHOOK_SECRET &&
@@ -65,7 +65,7 @@ export class BillingService {
     );
   }
 
-  isConnectOnboardingConfigured: boolean {
+  isConnectOnboardingConfigured(): boolean {
     return Boolean(
       this.stripe &&
         (process.env.STRIPE_CONNECT_RETURN_URL || process.env.BILLING_SUCCESS_URL) &&
@@ -73,17 +73,17 @@ export class BillingService {
     );
   }
 
-  platformFeeBps: number {
+  platformFeeBps(): number {
     const raw = Number(process.env.MARKETPLACE_PLATFORM_FEE_BPS ?? '2000');
     if (!Number.isFinite(raw) || raw < 0 || raw > 10_000) return 2000;
     return Math.floor(raw);
   }
 
   applicationFeeCents(amountCents: number): number {
-    return Math.min(amountCents, Math.floor((amountCents * this.platformFeeBps) / 10_000));
+    return Math.min(amountCents, Math.floor((amountCents * this.platformFeeBps()) / 10_000));
   }
 
-  private requireStripe: Stripe {
+  private requireStripe(): Stripe {
     if (!this.stripe) {
       throw new ApiException(
         'billing_not_configured',
@@ -113,12 +113,12 @@ export class BillingService {
       charactersRemaining: Math.max(org.characterQuota - usage.characters, 0),
       periodStart: usage.periodStart,
       requests: usage.requests,
-      stripeConfigured: this.isConfigured,
+      stripeConfigured: this.isConfigured(),
       hasCustomer: Boolean(org.stripeCustomerId),
       connectAccountId: org.stripeConnectAccountId,
       connectChargesEnabled: org.stripeConnectChargesEnabled,
-      marketplacePaymentsConfigured: this.isMarketplacePaymentsConfigured,
-      platformFeeBps: this.platformFeeBps,
+      marketplacePaymentsConfigured: this.isMarketplacePaymentsConfigured(),
+      platformFeeBps: this.platformFeeBps(),
     };
   }
 
@@ -165,7 +165,7 @@ export class BillingService {
   }
 
   async ensureCustomer(organizationId: string, email?: string) {
-    const stripe = this.requireStripe;
+    const stripe = this.requireStripe();
     const org = await this.prisma.organization.findUniqueOrThrow({
       where: { id: organizationId },
     });
@@ -209,9 +209,9 @@ export class BillingService {
           accountId: org.stripeConnectAccountId,
           chargesEnabled,
           detailsSubmitted: Boolean(account.details_submitted),
-          onboardingConfigured: this.isConnectOnboardingConfigured,
-          marketplacePaymentsConfigured: this.isMarketplacePaymentsConfigured,
-          platformFeeBps: this.platformFeeBps,
+          onboardingConfigured: this.isConnectOnboardingConfigured(),
+          marketplacePaymentsConfigured: this.isMarketplacePaymentsConfigured(),
+          platformFeeBps: this.platformFeeBps(),
         };
       } catch {
         // fall through to DB cache
@@ -223,9 +223,9 @@ export class BillingService {
       accountId: org.stripeConnectAccountId,
       chargesEnabled: org.stripeConnectChargesEnabled,
       detailsSubmitted: org.stripeConnectChargesEnabled,
-      onboardingConfigured: this.isConnectOnboardingConfigured,
-      marketplacePaymentsConfigured: this.isMarketplacePaymentsConfigured,
-      platformFeeBps: this.platformFeeBps,
+      onboardingConfigured: this.isConnectOnboardingConfigured(),
+      marketplacePaymentsConfigured: this.isMarketplacePaymentsConfigured(),
+      platformFeeBps: this.platformFeeBps(),
     };
   }
 
@@ -236,7 +236,7 @@ export class BillingService {
     ip?: string;
   }) {
     await this.assertPro(input.organizationId);
-    if (!this.isConnectOnboardingConfigured) {
+    if (!this.isConnectOnboardingConfigured()) {
       throw new ApiException(
         'billing_not_configured',
         'Stripe Connect onboarding is not configured (secret + return/refresh URLs).',
@@ -244,7 +244,7 @@ export class BillingService {
       );
     }
 
-    const stripe = this.requireStripe;
+    const stripe = this.requireStripe();
     const org = await this.prisma.organization.findUniqueOrThrow({
       where: { id: input.organizationId },
     });
@@ -302,7 +302,7 @@ export class BillingService {
     destinationAccountId: string;
     ip?: string;
   }) {
-    if (!this.isMarketplacePaymentsConfigured) {
+    if (!this.isMarketplacePaymentsConfigured()) {
       throw new ApiException(
         'billing_not_configured',
         'Marketplace payments are not configured.',
@@ -317,7 +317,7 @@ export class BillingService {
       );
     }
 
-    const stripe = this.requireStripe;
+    const stripe = this.requireStripe();
     const fee = this.applicationFeeCents(input.amountCents);
     const success =
       process.env.MARKETPLACE_CHECKOUT_SUCCESS_URL ??
@@ -393,7 +393,7 @@ export class BillingService {
     ip?: string;
     planId?: PlanId;
   }) {
-    if (!this.isConfigured) {
+    if (!this.isConfigured()) {
       throw new ApiException(
         'billing_not_configured',
         'Stripe billing is not fully configured (secret, price, webhook, success/cancel URLs).',
@@ -412,7 +412,7 @@ export class BillingService {
       );
     }
 
-    const priceId = process.env[targetPlan.stripePriceEnv]?.trim;
+    const priceId = process.env[targetPlan.stripePriceEnv]?.trim();
     if (!priceId) {
       throw new ApiException(
         'billing_not_configured',
@@ -421,7 +421,7 @@ export class BillingService {
       );
     }
 
-    const stripe = this.requireStripe;
+    const stripe = this.requireStripe();
     const customerId = await this.ensureCustomer(input.organizationId, input.email);
 
     const session = await stripe.checkout.sessions.create({
@@ -450,7 +450,7 @@ export class BillingService {
   }
 
   async createPortalSession(input: { organizationId: string; userId: string; ip?: string }) {
-    if (!this.isConfigured) {
+    if (!this.isConfigured()) {
       throw new ApiException(
         'billing_not_configured',
         'Stripe billing is not fully configured.',
@@ -458,7 +458,7 @@ export class BillingService {
       );
     }
 
-    const stripe = this.requireStripe;
+    const stripe = this.requireStripe();
     const org = await this.prisma.organization.findUniqueOrThrow({
       where: { id: input.organizationId },
     });
@@ -523,7 +523,7 @@ export class BillingService {
   }
 
   async handleWebhook(rawBody: Buffer, signature: string) {
-    const stripe = this.requireStripe;
+    const stripe = this.requireStripe();
     const secret = process.env.STRIPE_WEBHOOK_SECRET;
     if (!secret) {
       throw new ApiException(

@@ -21,16 +21,16 @@ type GqlReq = Request & {
   sessionAuth?: SessionContext;
 };
 
-@Resolver
+@Resolver()
 export class LocalizationGraphqlResolver {
   constructor(
     private readonly localize: LocalizeService,
     private readonly platform: LocalizationPlatformService,
   ) {}
 
-  @Query( => GqlLocalizationPlatform, { name: 'localizationPlatform' })
-  localizationPlatform: GqlLocalizationPlatform {
-    const c = this.platform.platform;
+  @Query(() => GqlLocalizationPlatform, { name: 'localizationPlatform' })
+  localizationPlatform(): GqlLocalizationPlatform {
+    const c = this.platform.platform();
     return {
       product: c.product,
       note: c.note,
@@ -39,10 +39,10 @@ export class LocalizationGraphqlResolver {
     };
   }
 
-  @Mutation( => GqlLocalizeResult, { name: 'localize' })
+  @Mutation(() => GqlLocalizeResult, { name: 'localize' })
   @UseGuards(TranslateAuthGuard)
   async localize(
-    @Args('input', { type:  => LocalizeInput }) input: LocalizeInput,
+    @Args('input', { type: () => LocalizeInput }) input: LocalizeInput,
     @Context('req') req: GqlReq,
   ): Promise<GqlLocalizeResult> {
     const auth = req.translateAuth!;
@@ -71,9 +71,9 @@ export class LocalizationGraphqlResolver {
     };
   }
 
-  @Mutation( => GqlIcuValidateResult, { name: 'validateIcu' })
+  @Mutation(() => GqlIcuValidateResult, { name: 'validateIcu' })
   validateIcu(
-    @Args('input', { type:  => ValidateIcuInput }) input: ValidateIcuInput,
+    @Args('input', { type: () => ValidateIcuInput }) input: ValidateIcuInput,
   ): GqlIcuValidateResult {
     const result = this.platform.validateIcu(input.message);
     return {
@@ -85,8 +85,8 @@ export class LocalizationGraphqlResolver {
     };
   }
 
-  @Mutation( => GqlIcuFormatResult, { name: 'formatIcu' })
-  formatIcu(@Args('input', { type:  => FormatIcuInput }) input: FormatIcuInput): GqlIcuFormatResult {
+  @Mutation(() => GqlIcuFormatResult, { name: 'formatIcu' })
+  formatIcu(@Args('input', { type: () => FormatIcuInput }) input: FormatIcuInput): GqlIcuFormatResult {
     let values: Record<string, string | number> = {};
     if (input.valuesJson) {
       values = JSON.parse(input.valuesJson) as Record<string, string | number>;

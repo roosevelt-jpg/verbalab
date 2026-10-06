@@ -57,7 +57,7 @@ function Field({
   );
 }
 
-export function CmsEditor {
+export function CmsEditor() {
   const [doc, setDoc] = useState<CmsDocument | null>(null);
   const [tab, setTab] = useState<Tab>('hero');
   const [pageSlug, setPageSlug] = useState<string>('');
@@ -67,21 +67,21 @@ export function CmsEditor {
   const [busy, setBusy] = useState(false);
   const [uploadLabel, setUploadLabel] = useState('Homepage media');
 
-  const load = useCallback(async  => {
+  const load = useCallback(async () => {
     setError(null);
     const res = await fetch('/api/cms', { cache: 'no-store' });
     if (!res.ok) throw new Error(`Failed to load CMS (${res.status})`);
-    const data = (await res.json) as CmsDocument;
+    const data = (await res.json()) as CmsDocument;
     setDoc(data);
     setRaw(JSON.stringify(data, null, 2));
     setPageSlug(data.pages[0]?.slug ?? '');
   }, []);
 
-  useEffect( => {
-    void load.catch((err: Error) => setError(err.message));
+  useEffect(() => {
+    void load().catch((err: Error) => setError(err.message));
   }, [load]);
 
-  const selectedPage: CmsPage | null = useMemo( => {
+  const selectedPage: CmsPage | null = useMemo(() => {
     if (!doc) return null;
     return doc.pages.find((p) => p.slug === pageSlug) ?? doc.pages[0] ?? null;
   }, [doc, pageSlug]);
@@ -96,14 +96,14 @@ export function CmsEditor {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(next),
       });
-      const body = await res.json.catch( => ({}));
+      const body = await res.json().catch(() => ({}));
       if (!res.ok) {
         throw new Error(body?.error?.message ?? `Save failed (${res.status})`);
       }
       const saved = body as CmsDocument;
       setDoc(saved);
       setRaw(JSON.stringify(saved, null, 2));
-      setStatus(`Saved ${new Date(saved.updatedAt).toLocaleString}`);
+      setStatus(`Saved ${new Date(saved.updatedAt).toLocaleString()}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Save failed');
     } finally {
@@ -115,13 +115,13 @@ export function CmsEditor {
     setBusy(true);
     setError(null);
     try {
-      const form = new FormData;
+      const form = new FormData();
       form.set('file', file);
       form.set('label', uploadLabel);
       const res = await fetch('/api/cms/media', { method: 'POST', body: form });
-      const body = await res.json.catch( => ({}));
+      const body = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(body?.error?.message ?? `Upload failed (${res.status})`);
-      await load;
+      await load();
       setStatus(`Uploaded ${body.url}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload failed');
@@ -148,7 +148,7 @@ export function CmsEditor {
             key={t.id}
             type="button"
             className="vl-btn"
-            onClick={ => setTab(t.id)}
+            onClick={() => setTab(t.id)}
             style={{
               background: tab === t.id ? 'var(--ink)' : undefined,
               color: tab === t.id ? '#fff' : undefined,
@@ -279,12 +279,12 @@ export function CmsEditor {
                       ...doc.hero.demo,
                       voices: v
                         .split('\n')
-                        .map((line) => line.trim)
+                        .map((line) => line.trim())
                         .filter(Boolean)
                         .map((line) => {
                           const parts = line.split('|');
-                          const id = (parts[0] ?? 'voice').trim;
-                          const label = parts.slice(1).join('|').trim || id;
+                          const id = (parts[0] ?? 'voice').trim();
+                          const label = parts.slice(1).join('|').trim() || id;
                           return { id, label };
                         }),
                     },
@@ -303,7 +303,7 @@ export function CmsEditor {
                   languageBar: {
                     languages: v
                       .split('\n')
-                      .map((line) => line.trim)
+                      .map((line) => line.trim())
                       .filter(Boolean),
                   },
                 })
@@ -326,12 +326,12 @@ export function CmsEditor {
                     ...doc.nav,
                     centerLinks: v
                       .split('\n')
-                      .map((line) => line.trim)
+                      .map((line) => line.trim())
                       .filter(Boolean)
                       .map((line) => {
                         const parts = line.split('|');
-                        const label = (parts[0] ?? 'Link').trim;
-                        const href = (parts[1] ?? '/').trim;
+                        const label = (parts[0] ?? 'Link').trim();
+                        const href = (parts[1] ?? '/').trim();
                         return { label, href };
                       }),
                   },
@@ -596,12 +596,12 @@ export function CmsEditor {
                       ...col,
                       links: v
                         .split('\n')
-                        .map((line) => line.trim)
+                        .map((line) => line.trim())
                         .filter(Boolean)
                         .map((line) => {
                           const parts = line.split('|');
-                          const label = (parts[0] ?? 'Link').trim;
-                          const href = (parts[1] ?? '/').trim;
+                          const label = (parts[0] ?? 'Link').trim();
+                          const href = (parts[1] ?? '/').trim();
                           return { label, href };
                         }),
                     };
@@ -712,12 +712,12 @@ export function CmsEditor {
                   ...p,
                   sections: v
                     .split(/\n\s*\n/)
-                    .map((block) => block.trim)
+                    .map((block) => block.trim())
                     .filter(Boolean)
                     .map((block, i) => {
                       const parts = block.split('||');
-                      const title = (parts[0] ?? 'Section').trim;
-                      const body = parts.slice(1).join('||').trim;
+                      const title = (parts[0] ?? 'Section').trim();
+                      const body = parts.slice(1).join('||').trim();
                       return {
                         id: p.sections?.[i]?.id ?? `section-${i + 1}`,
                         title,
@@ -731,8 +731,8 @@ export function CmsEditor {
             <button
               type="button"
               className="vl-btn"
-              onClick={ => {
-                const slug = `page-${Date.now.toString(36)}`;
+              onClick={() => {
+                const slug = `page-${Date.now().toString(36)}`;
                 const nextPage: CmsPage = {
                   slug,
                   title: 'New page',
@@ -875,7 +875,7 @@ export function CmsEditor {
           type="button"
           className="vl-btn vl-btn-primary"
           disabled={busy}
-          onClick={ => {
+          onClick={() => {
             if (tab === 'raw') {
               try {
                 const parsed = JSON.parse(raw) as CmsDocument;
@@ -894,7 +894,7 @@ export function CmsEditor {
           type="button"
           className="vl-btn"
           disabled={busy}
-          onClick={ => void load.catch((err: Error) => setError(err.message))}
+          onClick={() => void load().catch((err: Error) => setError(err.message))}
         >
           Reload
         </button>

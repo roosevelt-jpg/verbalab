@@ -9,16 +9,16 @@ export type SpotHit = {
 /** Normalize for spotting (lowercase, collapse whitespace). */
 export function normalizeSpotText(text: string): string {
   return text
-    .toLowerCase
+    .toLowerCase()
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^\p{L}\p{N}'\s-]/gu, ' ')
     .replace(/\s+/g, ' ')
-    .trim;
+    .trim();
 }
 
 function escapeRegExp(s: string): string {
-  return s.replace(/[.*+?^${}|[\]\\]/g, '\\$&');
+  return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 /**
@@ -33,7 +33,7 @@ export function spotPhrases(
   if (!normalized || !phrases.length) return [];
 
   const hits: SpotHit[] = [];
-  const seen = new Set<string>;
+  const seen = new Set<string>();
 
   for (const item of phrases) {
     const phrase = normalizeSpotText(item.phrase);
@@ -41,7 +41,7 @@ export function spotPhrases(
     const pattern = new RegExp(`(?:^|\\s)${escapeRegExp(phrase)}(?=\\s|$)`, 'gi');
     let match: RegExpExecArray | null;
     while ((match = pattern.exec(normalized)) !== null) {
-      const matched = match[0].trim;
+      const matched = match[0].trim();
       const start = match.index + (match[0].startsWith(' ') ? 1 : 0);
       const end = start + matched.length;
       const key = `${item.kind}:${phrase}:${start}`;

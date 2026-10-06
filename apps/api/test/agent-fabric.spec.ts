@@ -19,7 +19,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory) out.push(...walkTsFiles(full));
+    if (statSync(full).isDirectory()) out.push(...walkTsFiles(full));
     else if (full.endsWith('.ts')) out.push(full);
   }
   return out;
@@ -34,7 +34,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_af_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_af_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -51,7 +51,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Agent Fabric',  => {
+describe('Agent Fabric (VL-246)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -59,30 +59,30 @@ describe('Agent Fabric',  => {
   let bus: EventFabricBus;
   const prevMode = process.env.LUGEMI_AGENT_RUNTIME_MODE;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     process.env.EVENT_FABRIC_MEMORY = '1';
     process.env.LUGEMI_AGENT_RUNTIME_MODE = 'sandbox';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    }).compile();
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
     fabric = app.get(AgentFabricService);
     bus = app.get(EventFabricBus);
-    bus.resetForTests;
-    fabric.resetCounters;
+    bus.resetForTests();
+    fabric.resetCounters();
   });
 
-  afterAll(async  => {
+  afterAll(async () => {
     if (prevMode === undefined) delete process.env.LUGEMI_AGENT_RUNTIME_MODE;
     else process.env.LUGEMI_AGENT_RUNTIME_MODE = prevMode;
-    await app.close;
+    await app.close();
   });
 
-  it('documents Agent Fabric honesty (sandboxed + Policy-gated; not LangGraph/AutoGPT OS)',  => {
+  it('documents Agent Fabric honesty (sandboxed + Policy-gated; not LangGraph/AutoGPT OS)', () => {
     const doc = join(root, 'docs/AGENT_FABRIC.md');
     const adr = join(root, 'docs/adr/0148-agent-fabric.md');
     const phase = join(
@@ -93,14 +93,14 @@ describe('Agent Fabric',  => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(phase)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
+    expect(text).toContain('VL-246');
     expect(text).toMatch(/Agent Runtime/i);
     expect(text).toMatch(/sandbox/i);
     expect(text).toMatch(/hard gate|hard-gate|Policy/i);
     expect(text).toMatch(/LangGraph|AutoGPT/i);
   });
 
-  it('has no TODO/FIXME/implement-later markers in Agent Fabric source',  => {
+  it('has no TODO/FIXME/implement-later markers in Agent Fabric source', () => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const file of walkTsFiles(join(apiSrc, 'agent-fabric'))) {
@@ -110,8 +110,8 @@ describe('Agent Fabric',  => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes catalog, routes, pipelines, federation with sandbox honesty', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes catalog, routes, pipelines, federation with sandbox honesty', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/agent-fabric/products')
       .expect(200);
     expect(res.body.product).toBe('Lugemi Agent Fabric');
@@ -131,12 +131,12 @@ describe('Agent Fabric',  => {
     const hub = res.body.products.find((p: { id: string }) => p.id === 'agent-fabric');
     expect(hub.status).toBe('shipped');
 
-    const routes = await request(app.getHttpServer)
+    const routes = await request(app.getHttpServer())
       .get('/v1/agent-fabric/routes')
       .expect(200);
     expect(routes.body.routes.some((r: { kind: string }) => r.kind === 'discover')).toBe(true);
 
-    const plan = await request(app.getHttpServer)
+    const plan = await request(app.getHttpServer())
       .post('/v1/agent-fabric/route')
       .send({ kinds: ['discover', 'collaborate', 'nope'] })
       .expect(200);
@@ -145,24 +145,24 @@ describe('Agent Fabric',  => {
     );
     expect(plan.body.missing).toContain('nope');
 
-    const pipeline = await request(app.getHttpServer)
+    const pipeline = await request(app.getHttpServer())
       .post('/v1/agent-fabric/pipeline')
       .send({ pipelineId: 'discover-collaborate' })
       .expect(200);
     expect(pipeline.body.pipeline.steps).toEqual(['discover', 'collaborate']);
     expect(pipeline.body.plan.length).toBe(2);
 
-    const fed = await request(app.getHttpServer)
+    const fed = await request(app.getHttpServer())
       .post('/v1/agent-fabric/federate')
       .send({ kinds: ['policy', 'marketplace'] })
       .expect(200);
     expect(fed.body.federation.length).toBe(2);
   });
 
-  it('discovers agents, distributes same-org peers, and streams SSE ticks', async  => {
-    bus.resetForTests;
-    fabric.resetCounters;
-    const org = await seedOrg(prisma, `af_${Date.now}`);
+  it('discovers agents, distributes same-org peers, and streams SSE ticks', async () => {
+    bus.resetForTests();
+    fabric.resetCounters();
+    const org = await seedOrg(prisma, `af_${Date.now()}`);
     const primary = org.workspaces.find((w) => w.name === 'Default')!;
     const peer = org.workspaces.find((w) => w.name === 'Peer')!;
     const key = await apiKeys.create({
@@ -172,14 +172,14 @@ describe('Agent Fabric',  => {
       name: 'af-key',
     });
 
-    const discover = await request(app.getHttpServer)
+    const discover = await request(app.getHttpServer())
       .get('/v1/agent-fabric/discover')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(Array.isArray(discover.body.agents)).toBe(true);
     expect(discover.body.honesty.sandboxed).toBe(true);
 
-    const dist = await request(app.getHttpServer)
+    const dist = await request(app.getHttpServer())
       .post('/v1/agent-fabric/distribute')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -191,27 +191,27 @@ describe('Agent Fabric',  => {
     expect(dist.body.distribution.targets).toContain(peer.id);
     expect(dist.body.event.type).toBe('com.lugemi.agent.distributed');
 
-    const stream = await request(app.getHttpServer)
+    const stream = await request(app.getHttpServer())
       .get('/v1/agent-fabric/stream')
       .expect(200);
     expect(stream.headers['content-type']).toMatch(/text\/event-stream/);
     expect(stream.text).toContain('agent-fabric');
 
-    const marketplace = await request(app.getHttpServer)
+    const marketplace = await request(app.getHttpServer())
       .get('/v1/agent-fabric/marketplace')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(marketplace.body.kind).toBe('agent');
 
-    const monitoring = await request(app.getHttpServer)
+    const monitoring = await request(app.getHttpServer())
       .get('/v1/agent-fabric/monitoring')
       .expect(200);
     expect(monitoring.body.counters.distributions).toBeGreaterThan(0);
     expect(monitoring.body.counters.discoveries).toBeGreaterThan(0);
   });
 
-  it('exposes overview and GraphQL CQRS façades', async  => {
-    const org = await seedOrg(prisma, `af_ov_${Date.now}`);
+  it('exposes overview and GraphQL CQRS façades', async () => {
+    const org = await seedOrg(prisma, `af_ov_${Date.now()}`);
     const overview = await fabric.overview({
       userId: org.memberships[0].userId,
       organizationId: org.id,
@@ -224,22 +224,22 @@ describe('Agent Fabric',  => {
     expect(overview.honesty.extendsAgentRuntime).toBe(true);
     expect(overview.safety.sandboxed).toBe(true);
 
-    const caps = await request(app.getHttpServer)
+    const caps = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query: '{ agentFabricCapabilities { id name status api notes } }',
       })
       .expect(200);
-    expect(caps.body.errors).toBeUndefined;
+    expect(caps.body.errors).toBeUndefined();
     expect(caps.body.data.agentFabricCapabilities.length).toBeGreaterThan(5);
 
-    const routes = await request(app.getHttpServer)
+    const routes = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query: '{ agentFabricRoutes { kind name target api cloud notes } }',
       })
       .expect(200);
-    expect(routes.body.errors).toBeUndefined;
+    expect(routes.body.errors).toBeUndefined();
     expect(
       routes.body.data.agentFabricRoutes.some((r: { kind: string }) => r.kind === 'discover'),
     ).toBe(true);

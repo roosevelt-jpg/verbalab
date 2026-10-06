@@ -22,8 +22,8 @@ export class ListReasoningFabricCapabilitiesHandler
     private readonly catalog: ReasoningFabricCatalogPort,
   ) {}
 
-  execute: Promise<ReasoningFabricCapabilityRow[]> {
-    return Promise.resolve(this.catalog.listCapabilities);
+  execute(): Promise<ReasoningFabricCapabilityRow[]> {
+    return Promise.resolve(this.catalog.listCapabilities());
   }
 }
 
@@ -36,8 +36,8 @@ export class ListReasoningFabricRoutesHandler
     private readonly catalog: ReasoningFabricCatalogPort,
   ) {}
 
-  execute: Promise<ReasoningFabricRouteRow[]> {
-    return Promise.resolve(this.catalog.listRoutes);
+  execute(): Promise<ReasoningFabricRouteRow[]> {
+    return Promise.resolve(this.catalog.listRoutes());
   }
 }
 
@@ -50,8 +50,8 @@ export class GetReasoningFabricProductsBundleHandler
     private readonly catalog: ReasoningFabricCatalogPort,
   ) {}
 
-  execute: Promise<ReasoningFabricProductsBundle> {
-    return Promise.resolve(this.catalog.products);
+  execute(): Promise<ReasoningFabricProductsBundle> {
+    return Promise.resolve(this.catalog.products());
   }
 }
 

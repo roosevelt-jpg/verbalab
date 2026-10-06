@@ -11,23 +11,23 @@ import { SessionContext } from '../common/guards/clerk-auth.guard';
 export class DialectsController {
   constructor(private readonly dialects: DialectsService) {}
 
-  @Get
+  @Get()
   list(@Query('language') language?: string) {
-    return this.dialects.list(language?.trim || undefined);
+    return this.dialects.list(language?.trim() || undefined);
   }
 
   @Post('detect')
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   detect(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body body: { text?: string; language?: string },
+    @Body() body: { text?: string; language?: string },
   ) {
-    if (typeof body.text !== 'string' || body.text.trim.length === 0) {
+    if (typeof body.text !== 'string' || body.text.trim().length === 0) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }
     return this.dialects.detect({

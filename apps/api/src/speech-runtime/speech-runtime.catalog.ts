@@ -1,18 +1,18 @@
 /**
- * Library Phase 193 → Speech Runtime.
- * Speech Runtime. Thin layer over speech-cloud / speech-recognition — routes realtime STT/streaming/speaker/emotion; does not reimplement STT.
+ * Library Phase 193 → Speech Runtime (VL-326).
+ * Speech Runtime (VL-326). Thin layer over speech-cloud / speech-recognition — routes realtime STT/streaming/speaker/emotion; does not reimplement STT.
  */
-export function speechRuntimeEngineCatalog {
+export function speechRuntimeEngineCatalog() {
   return {
     product: 'Lugemi Speech Runtime',
     thinExecutionLayer: true,
     duplicatesProductLogic: false,
     capabilities: [
-      { id: 'realtime_stt', name: 'Realtime STT Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
-      { id: 'streaming', name: 'Streaming Speech Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
-      { id: 'speaker', name: 'Speaker Diarization Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
-      { id: 'emotion', name: 'Emotion Recognition Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
-      { id: 'batch', name: 'Batch Speech Routing', status: 'shipped', notes: ' routing capability — not a new engine.' }
+      { id: 'realtime_stt', name: 'Realtime STT Routing', status: 'shipped', notes: 'VL-326 routing capability — not a new engine.' },
+      { id: 'streaming', name: 'Streaming Speech Routing', status: 'shipped', notes: 'VL-326 routing capability — not a new engine.' },
+      { id: 'speaker', name: 'Speaker Diarization Routing', status: 'shipped', notes: 'VL-326 routing capability — not a new engine.' },
+      { id: 'emotion', name: 'Emotion Recognition Routing', status: 'shipped', notes: 'VL-326 routing capability — not a new engine.' },
+      { id: 'batch', name: 'Batch Speech Routing', status: 'shipped', notes: 'VL-326 routing capability — not a new engine.' }
     ],
     routes: [
       {
@@ -51,9 +51,9 @@ export function speechRuntimeEngineCatalog {
       duplicatesProductLogic: false,
       managesOrgsPoliciesBilling: false,
       serviceMeshOs: false,
-      note: 'Speech Runtime. Thin layer over speech-cloud / speech-recognition — routes realtime STT/streaming/speaker/emotion; does not reimplement STT.',
+      note: 'Speech Runtime (VL-326). Thin layer over speech-cloud / speech-recognition — routes realtime STT/streaming/speaker/emotion; does not reimplement STT.',
     },
     docs: '/docs/SPEECH_RUNTIME.md',
-    note: 'Speech Runtime. Thin layer over speech-cloud / speech-recognition — routes realtime STT/streaming/speaker/emotion; does not reimplement STT.',
+    note: 'Speech Runtime (VL-326). Thin layer over speech-cloud / speech-recognition — routes realtime STT/streaming/speaker/emotion; does not reimplement STT.',
   };
 }

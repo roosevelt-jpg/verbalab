@@ -2,13 +2,13 @@ import { Args, Query, Resolver } from '@nestjs/graphql';
 import { NeuralTtsService } from '../neural-tts/neural-tts.service';
 import { GqlNeuralTtsCapability, GqlNeuralTtsEngine, GqlNeuralTtsVoice } from './gql.types';
 
-@Resolver
+@Resolver()
 export class NeuralTtsGraphqlResolver {
   constructor(private readonly tts: NeuralTtsService) {}
 
-  @Query( => GqlNeuralTtsEngine, { name: 'neuralTtsEngine' })
-  neuralTtsEngine: GqlNeuralTtsEngine {
-    const catalog = this.tts.engine;
+  @Query(() => GqlNeuralTtsEngine, { name: 'neuralTtsEngine' })
+  neuralTtsEngine(): GqlNeuralTtsEngine {
+    const catalog = this.tts.engine();
     return {
       product: catalog.product,
       note: catalog.note,
@@ -16,10 +16,10 @@ export class NeuralTtsGraphqlResolver {
     };
   }
 
-  @Query( => [GqlNeuralTtsVoice], { name: 'neuralTtsVoices' })
+  @Query(() => [GqlNeuralTtsVoice], { name: 'neuralTtsVoices' })
   async neuralTtsVoices(
-    @Args('gender', { type:  => String, nullable: true }) gender?: string,
-    @Args('language', { type:  => String, nullable: true }) language?: string,
+    @Args('gender', { type: () => String, nullable: true }) gender?: string,
+    @Args('language', { type: () => String, nullable: true }) language?: string,
   ): Promise<GqlNeuralTtsVoice[]> {
     const result = await this.tts.listVoices({ gender, language });
     return result.data.map((v) => ({

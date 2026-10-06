@@ -25,8 +25,8 @@ export class GoogleVisionOcrAdapter implements OcrProvider {
       );
     }
 
-    const mime = input.mimeType.toLowerCase;
-    const lower = input.filename.toLowerCase;
+    const mime = input.mimeType.toLowerCase();
+    const lower = input.filename.toLowerCase();
     const isImage =
       mime.startsWith('image/') ||
       lower.endsWith('.png') ||
@@ -43,7 +43,7 @@ export class GoogleVisionOcrAdapter implements OcrProvider {
       );
     }
 
-    const started = Date.now;
+    const started = Date.now();
     const url = new URL('https://vision.googleapis.com/v1/images:annotate');
     url.searchParams.set('key', this.apiKey);
 
@@ -61,7 +61,7 @@ export class GoogleVisionOcrAdapter implements OcrProvider {
 
     let response: Response;
     try {
-      response = await fetch(url.toString, {
+      response = await fetch(url.toString(), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
@@ -75,7 +75,7 @@ export class GoogleVisionOcrAdapter implements OcrProvider {
       );
     }
 
-    const json = (await response.json) as VisionResponse;
+    const json = (await response.json()) as VisionResponse;
     if (!response.ok) {
       const message = json.error?.message ?? `Google Vision HTTP ${response.status}`;
       throw new ApiException('provider_error', message, HttpStatus.BAD_GATEWAY);
@@ -87,8 +87,8 @@ export class GoogleVisionOcrAdapter implements OcrProvider {
     }
 
     const text =
-      first?.fullTextAnnotation?.text?.trim ||
-      first?.textAnnotations?.[0]?.description?.trim ||
+      first?.fullTextAnnotation?.text?.trim() ||
+      first?.textAnnotations?.[0]?.description?.trim() ||
       '';
 
     const pages = Math.max(1, first?.fullTextAnnotation?.pages?.length ?? 1);
@@ -97,7 +97,7 @@ export class GoogleVisionOcrAdapter implements OcrProvider {
       text,
       pages,
       provider: this.name,
-      latencyMs: Date.now - started,
+      latencyMs: Date.now() - started,
     };
   }
 }

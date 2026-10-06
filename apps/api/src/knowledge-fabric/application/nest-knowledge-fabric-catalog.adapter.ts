@@ -11,19 +11,19 @@ import {
   KnowledgeFabricRouteRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestKnowledgeFabricCatalogAdapter implements KnowledgeFabricCatalogPort {
   constructor(private readonly fabric: KnowledgeFabricService) {}
 
-  products: KnowledgeFabricProductsBundle {
-    return this.fabric.products;
+  products(): KnowledgeFabricProductsBundle {
+    return this.fabric.products();
   }
 
-  listCapabilities: KnowledgeFabricCapabilityRow[] {
-    return knowledgeFabricCapabilityCatalog;
+  listCapabilities(): KnowledgeFabricCapabilityRow[] {
+    return knowledgeFabricCapabilityCatalog();
   }
 
-  listRoutes: KnowledgeFabricRouteRow[] {
-    return knowledgeFabricRoutingTable;
+  listRoutes(): KnowledgeFabricRouteRow[] {
+    return knowledgeFabricRoutingTable();
   }
 }

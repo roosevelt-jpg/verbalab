@@ -25,7 +25,7 @@ import {
   RewriteStyleCommand,
 } from './messages';
 
-@Injectable
+@Injectable()
 @CommandHandler(DetectDialectCommand)
 export class DetectDialectHandler implements ICommandHandler<DetectDialectCommand> {
   constructor(@Inject(DIALECT_PORT) private readonly dialects: DialectPort) {}
@@ -39,7 +39,7 @@ export class DetectDialectHandler implements ICommandHandler<DetectDialectComman
   }
 }
 
-@Injectable
+@Injectable()
 @CommandHandler(CheckGrammarCommand)
 export class CheckGrammarHandler implements ICommandHandler<CheckGrammarCommand> {
   constructor(@Inject(GRAMMAR_PORT) private readonly grammar: GrammarPort) {}
@@ -53,7 +53,7 @@ export class CheckGrammarHandler implements ICommandHandler<CheckGrammarCommand>
   }
 }
 
-@Injectable
+@Injectable()
 @CommandHandler(RewriteStyleCommand)
 export class RewriteStyleHandler implements ICommandHandler<RewriteStyleCommand> {
   constructor(@Inject(STYLE_PORT) private readonly style: StylePort) {}
@@ -68,17 +68,17 @@ export class RewriteStyleHandler implements ICommandHandler<RewriteStyleCommand>
   }
 }
 
-@Injectable
+@Injectable()
 @QueryHandler(ListLanguagesQuery)
 export class ListLanguagesHandler implements IQueryHandler<ListLanguagesQuery> {
   constructor(@Inject(LANGUAGE_REGISTRY_PORT) private readonly registry: LanguageRegistryPort) {}
 
-  execute {
-    return this.registry.listLanguages;
+  execute() {
+    return this.registry.listLanguages();
   }
 }
 
-@Injectable
+@Injectable()
 @QueryHandler(ListDialectsQuery)
 export class ListDialectsHandler implements IQueryHandler<ListDialectsQuery> {
   constructor(@Inject(DIALECT_PORT) private readonly dialects: DialectPort) {}
@@ -88,7 +88,7 @@ export class ListDialectsHandler implements IQueryHandler<ListDialectsQuery> {
   }
 }
 
-@Injectable
+@Injectable()
 @QueryHandler(ListAccentsQuery)
 export class ListAccentsHandler implements IQueryHandler<ListAccentsQuery> {
   constructor(@Inject(ACCENT_PORT) private readonly accents: AccentPort) {}
@@ -98,17 +98,17 @@ export class ListAccentsHandler implements IQueryHandler<ListAccentsQuery> {
   }
 }
 
-@Injectable
+@Injectable()
 @QueryHandler(ListLocalePacksQuery)
 export class ListLocalePacksHandler implements IQueryHandler<ListLocalePacksQuery> {
   constructor(@Inject(LANGUAGE_REGISTRY_PORT) private readonly registry: LanguageRegistryPort) {}
 
-  execute {
-    return this.registry.listLocalePacks;
+  execute() {
+    return this.registry.listLocalePacks();
   }
 }
 
-@Injectable
+@Injectable()
 @QueryHandler(ListCountryPacksQuery)
 export class ListCountryPacksHandler implements IQueryHandler<ListCountryPacksQuery> {
   constructor(@Inject(LANGUAGE_REGISTRY_PORT) private readonly registry: LanguageRegistryPort) {}
@@ -118,23 +118,23 @@ export class ListCountryPacksHandler implements IQueryHandler<ListCountryPacksQu
   }
 }
 
-@Injectable
+@Injectable()
 @QueryHandler(ListStyleProfilesQuery)
 export class ListStyleProfilesHandler implements IQueryHandler<ListStyleProfilesQuery> {
   constructor(@Inject(LANGUAGE_REGISTRY_PORT) private readonly registry: LanguageRegistryPort) {}
 
-  execute {
-    return this.registry.listStyleProfiles;
+  execute() {
+    return this.registry.listStyleProfiles();
   }
 }
 
-@Injectable
+@Injectable()
 @QueryHandler(ListLanguageProductsQuery)
 export class ListLanguageProductsHandler implements IQueryHandler<ListLanguageProductsQuery> {
   constructor(@Inject(LANGUAGE_REGISTRY_PORT) private readonly registry: LanguageRegistryPort) {}
 
-  execute {
-    return this.registry.listLanguageProducts;
+  execute() {
+    return this.registry.listLanguageProducts();
   }
 }
 

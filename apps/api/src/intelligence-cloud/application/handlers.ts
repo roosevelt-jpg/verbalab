@@ -19,8 +19,8 @@ export class ListIntelligenceProductsHandler
     @Inject(INTELLIGENCE_CATALOG_PORT) private readonly catalog: IntelligenceCatalogPort,
   ) {}
 
-  execute: Promise<IntelligenceProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<IntelligenceProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 
@@ -32,8 +32,8 @@ export class GetIntelligenceProductsBundleHandler
     @Inject(INTELLIGENCE_CATALOG_PORT) private readonly catalog: IntelligenceCatalogPort,
   ) {}
 
-  execute: Promise<IntelligenceProductsBundle> {
-    return Promise.resolve(this.catalog.products);
+  execute(): Promise<IntelligenceProductsBundle> {
+    return Promise.resolve(this.catalog.products());
   }
 }
 

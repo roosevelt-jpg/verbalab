@@ -6,16 +6,16 @@ import {
   EngineeringGovernanceProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestEngineeringGovernanceCatalogAdapter implements EngineeringGovernanceCatalogPort {
   constructor(private readonly service: EngineeringGovernanceService) {}
 
-  engine: EngineeringGovernanceEngineBundle {
-    return this.service.engine;
+  engine(): EngineeringGovernanceEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: EngineeringGovernanceProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): EngineeringGovernanceProductRow[] {
+    const bundle = this.engine() as {
       products?: EngineeringGovernanceProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestEngineeringGovernanceCatalogAdapter implements EngineeringGover
         status: 'shipped',
         api: 'GET /v1/engineering-governance/engine',
         console: '/engineering-governance',
-        notes: ' shipped.',
+        notes: 'VL-345 shipped.',
       },
     ];
   }

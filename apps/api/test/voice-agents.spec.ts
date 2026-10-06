@@ -20,7 +20,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_voice_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_voice_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -34,13 +34,13 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Voice agents',  => {
+describe('Voice agents (VL-084)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let twilio: TwilioTelephonyService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     delete process.env.VOICE_AGENT_DISABLED;
     process.env.TWILIO_AUTH_TOKEN = 'test_twilio_token';
     process.env.TWILIO_WEBHOOK_BASE_URL = 'https://api.example.com';
@@ -49,11 +49,11 @@ describe('Voice agents',  => {
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
     app = moduleFixture.createNestApplication({ rawBody: true });
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -62,7 +62,7 @@ describe('Voice agents',  => {
     const gateway = app.get(GatewayService);
     gateway.setSttProviderForTests({
       name: 'fixture_stt',
-      async transcribe {
+      async transcribe() {
         return {
           text: 'What is Lugemi?',
           language: 'en',
@@ -74,7 +74,7 @@ describe('Voice agents',  => {
     });
     gateway.setChatProviderForTests({
       name: 'fixture_chat',
-      async complete {
+      async complete() {
         return {
           message: {
             role: 'assistant',
@@ -91,7 +91,7 @@ describe('Voice agents',  => {
     });
     gateway.setTtsProviderForTests({
       name: 'fixture_tts',
-      listVoices {
+      listVoices() {
         return [{ id: 'alloy', name: 'Alloy', gender: 'neutral', languages: ['en'], provider: 'fixture_tts' }];
       },
       async synthesize(input) {
@@ -108,12 +108,12 @@ describe('Voice agents',  => {
     });
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('simulates a text FAQ turn with STT/LLM/TTS fixtures', async  => {
-    const org = await seedOrg(prisma, `voice_sim_${Date.now}`);
+  it('simulates a text FAQ turn with STT/LLM/TTS fixtures', async () => {
+    const org = await seedOrg(prisma, `voice_sim_${Date.now()}`);
     const key = await apiKeys.create({
       organizationId: org.id,
       workspaceId: org.workspaces[0].id,
@@ -121,7 +121,7 @@ describe('Voice agents',  => {
       name: 'voice',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/voice/simulate')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'How do I get an API key?' })
@@ -129,15 +129,15 @@ describe('Voice agents',  => {
 
     expect(res.body.userText).toBe('How do I get an API key?');
     expect(res.body.replyText).toContain('Lugemi');
-    expect(res.body.audioBase64).toBeTruthy;
+    expect(res.body.audioBase64).toBeTruthy();
     expect(res.body.providers.chat).toBe('fixture_chat');
     expect(res.body.providers.tts).toBe('fixture_tts');
-    expect(res.body.providers.stt).toBeNull;
+    expect(res.body.providers.stt).toBeNull();
 
-    await request(app.getHttpServer).get(`/v1/voice/audio/${res.body.audioId}`).expect(200);
+    await request(app.getHttpServer()).get(`/v1/voice/audio/${res.body.audioId}`).expect(200);
   });
 
-  it('rejects invalid Twilio signatures and serves signed inbound TwiML', async  => {
+  it('rejects invalid Twilio signatures and serves signed inbound TwiML', async () => {
     const url = 'https://api.example.com/v1/voice/twilio/inbound';
     const body = 'CallSid=CA1&From=%2B15551234567&To=%2B15557654321';
     const params = {
@@ -146,7 +146,7 @@ describe('Voice agents',  => {
       To: '+15557654321',
     };
 
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .post('/v1/voice/twilio/inbound')
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .set('X-Twilio-Signature', 'invalid')
@@ -154,7 +154,7 @@ describe('Voice agents',  => {
       .expect(401);
 
     const signature = signTwilioRequest('test_twilio_token', url, params);
-    const ok = await request(app.getHttpServer)
+    const ok = await request(app.getHttpServer())
       .post('/v1/voice/twilio/inbound')
       .set('Content-Type', 'application/x-www-form-urlencoded')
       .set('X-Twilio-Signature', signature)
@@ -166,9 +166,9 @@ describe('Voice agents',  => {
     expect(ok.text).toContain('/v1/voice/twilio/turn');
   });
 
-  it('returns 503 for outbound when Twilio account is not configured',  => {
+  it('returns 503 for outbound when Twilio account is not configured', () => {
     twilio.setClientForTests(null);
-    expect( =>
+    expect(() =>
       twilio.createOutboundCall({
         to: '+15551234567',
         url: 'https://api.example.com/v1/voice/twilio/inbound',

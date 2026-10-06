@@ -23,11 +23,11 @@ export type CulturalEntry = {
 };
 
 /**
- * Library Phase 129 → Cultural Intelligence.
+ * Library Phase 129 → Cultural Intelligence (VL-262).
  * Traditional knowledge requires provenance/sourceCommunity/consentStatus.
  * traditionalKnowledgeConsentRequired=true — not an extractive scrape.
  */
-export function culturalIntelligenceSeed: CulturalEntry[] {
+export function culturalIntelligenceSeed(): CulturalEntry[] {
   return [
     {
       id: 'greet-sw-habari',
@@ -109,12 +109,12 @@ export function culturalIntelligenceSeed: CulturalEntry[] {
   ];
 }
 
-export function culturalIntelligenceEngineCatalog {
-  const entries = culturalIntelligenceSeed;
+export function culturalIntelligenceEngineCatalog() {
+  const entries = culturalIntelligenceSeed();
   return {
     product: 'Lugemi Cultural Intelligence',
     note:
-      'Cultural Intelligence. Greetings/etiquette/festivals/proverbs/idioms with provenance, sourceCommunity, and consentStatus. traditionalKnowledgeConsentRequired=true — not an extractive scrape of traditional knowledge.',
+      'Cultural Intelligence (VL-262). Greetings/etiquette/festivals/proverbs/idioms with provenance, sourceCommunity, and consentStatus. traditionalKnowledgeConsentRequired=true — not an extractive scrape of traditional knowledge.',
     capabilities: [
       {
         id: 'cultural-entries',

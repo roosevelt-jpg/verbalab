@@ -17,7 +17,7 @@ export class AdminController {
 
   @Get('status')
   @UseGuards(ClerkAuthGuard)
-  async status(@CurrentSession session: SessionContext) {
+  async status(@CurrentSession() session: SessionContext) {
     const user = await this.prisma.user.findUnique({
       where: { id: session.userId },
       select: { email: true, clerkUserId: true },
@@ -46,8 +46,8 @@ export class AdminController {
   @UseGuards(PlatformAdminGuard)
   revokeKeys(
     @Param('id') id: string,
-    @CurrentSession session: SessionContext,
-    @Req req: Request,
+    @CurrentSession() session: SessionContext,
+    @Req() req: Request,
   ) {
     return this.admin.revokeAllKeys({
       organizationId: id,
@@ -60,9 +60,9 @@ export class AdminController {
   @UseGuards(PlatformAdminGuard)
   disable(
     @Param('id') id: string,
-    @CurrentSession session: SessionContext,
-    @Req req: Request,
-    @Body body: { disabled?: boolean; reason?: string },
+    @CurrentSession() session: SessionContext,
+    @Req() req: Request,
+    @Body() body: { disabled?: boolean; reason?: string },
   ) {
     return this.admin.setDisabled({
       organizationId: id,

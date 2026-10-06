@@ -10,31 +10,31 @@ export class FineTunesController {
   constructor(private readonly finetunes: FineTunesService) {}
 
   @Get('candidates')
-  candidates {
-    return this.finetunes.listCandidates;
+  candidates() {
+    return this.finetunes.listCandidates();
   }
 
   @Get('jobs')
-  jobs(@CurrentSession session: SessionContext) {
+  jobs(@CurrentSession() session: SessionContext) {
     return this.finetunes.listJobs(session.organizationId);
   }
 
   @Get('models')
-  models {
-    return this.finetunes.listModels;
+  models() {
+    return this.finetunes.listModels();
   }
 
   @Post('jobs')
   createJob(
-    @CurrentSession session: SessionContext,
-    @Body
+    @CurrentSession() session: SessionContext,
+    @Body()
     body: {
       sourceLang?: string;
       targetLang?: string;
       launcher?: string;
       baseModel?: string;
     },
-    @Req req: Request,
+    @Req() req: Request,
   ) {
     return this.finetunes.createJob({
       organizationId: session.organizationId,
@@ -50,9 +50,9 @@ export class FineTunesController {
 
   @Post('jobs/:id/launch')
   launch(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Param('id') id: string,
-    @Req req: Request,
+    @Req() req: Request,
   ) {
     return this.finetunes.launchJob({
       organizationId: session.organizationId,
@@ -65,9 +65,9 @@ export class FineTunesController {
 
   @Post('jobs/:id/complete')
   complete(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Param('id') id: string,
-    @Body
+    @Body()
     body: {
       artifactKind?: string;
       artifactUri?: string;
@@ -75,7 +75,7 @@ export class FineTunesController {
       promote?: boolean;
       displayName?: string;
     },
-    @Req req: Request,
+    @Req() req: Request,
   ) {
     return this.finetunes.completeJob({
       organizationId: session.organizationId,
@@ -93,9 +93,9 @@ export class FineTunesController {
 
   @Post('models/:id/retire')
   retire(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Param('id') id: string,
-    @Req req: Request,
+    @Req() req: Request,
   ) {
     return this.finetunes.retireModel({
       organizationId: session.organizationId,

@@ -31,19 +31,19 @@ export class VoiceMarketplaceController {
   }
 
   @Get('engine')
-  engine {
-    return this.marketplace.engine;
+  engine() {
+    return this.marketplace.engine();
   }
 
   @Get('language-packs')
-  languagePacks {
-    return this.marketplace.languagePacks;
+  languagePacks() {
+    return this.marketplace.languagePacks();
   }
 
   @Get('listings')
   @UseGuards(TranslateAuthGuard)
   list(
-    @Req req: AuthedReq,
+    @Req() req: AuthedReq,
     @Query('mine') mine?: string,
     @Query('kind') kind?: string,
   ) {
@@ -55,7 +55,7 @@ export class VoiceMarketplaceController {
 
   @Get('installs')
   @UseGuards(TranslateAuthGuard)
-  installs(@Req req: AuthedReq) {
+  installs(@Req() req: AuthedReq) {
     return this.marketplace.listInstalls(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -64,13 +64,13 @@ export class VoiceMarketplaceController {
 
   @Get('sales')
   @UseGuards(TranslateAuthGuard)
-  sales(@Req req: AuthedReq) {
+  sales(@Req() req: AuthedReq) {
     return this.marketplace.listSales(req.translateAuth.organizationId);
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req req: AuthedReq) {
+  analytics(@Req() req: AuthedReq) {
     return this.marketplace.analytics(req.translateAuth.organizationId);
   }
 
@@ -78,8 +78,8 @@ export class VoiceMarketplaceController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(TranslateAuthGuard)
   publish(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       title?: string;
       description?: string;
@@ -112,7 +112,7 @@ export class VoiceMarketplaceController {
 
   @Post('listings/:id/install')
   @UseGuards(TranslateAuthGuard)
-  install(@Req req: AuthedReq, @Param('id') id: string) {
+  install(@Req() req: AuthedReq, @Param('id') id: string) {
     return this.marketplace.install({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -131,9 +131,9 @@ export class VoiceMarketplaceController {
   @Post('listings/:id/reviews')
   @UseGuards(TranslateAuthGuard)
   review(
-    @Req req: AuthedReq,
+    @Req() req: AuthedReq,
     @Param('id') id: string,
-    @Body body: { rating?: number; body?: string },
+    @Body() body: { rating?: number; body?: string },
   ) {
     return this.marketplace.upsertReview({
       organizationId: req.translateAuth.organizationId,
@@ -147,7 +147,7 @@ export class VoiceMarketplaceController {
 
   @Delete('listings/:id')
   @UseGuards(TranslateAuthGuard)
-  unpublish(@Req req: AuthedReq, @Param('id') id: string) {
+  unpublish(@Req() req: AuthedReq, @Param('id') id: string) {
     return this.marketplace.unpublish({
       organizationId: req.translateAuth.organizationId,
       listingId: id,

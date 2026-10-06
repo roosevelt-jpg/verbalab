@@ -33,8 +33,8 @@ type SearchHit = {
   version: number;
 };
 
-export function TmClient {
-  const { getToken, isLoaded } = useAuth;
+export function TmClient() {
+  const { getToken, isLoaded } = useAuth();
   const [languages, setLanguages] = useState<Language[]>([]);
   const [entries, setEntries] = useState<Entry[]>([]);
   const [overview, setOverview] = useState<Overview | null>(null);
@@ -54,36 +54,36 @@ export function TmClient {
     setEntries(data);
   }
 
-  const loadCatalog = useCallback(async  => {
+  const loadCatalog = useCallback(async () => {
     setOverview(await apiFetch<Overview>('/v1/tm'));
   }, []);
 
-  useEffect( => {
+  useEffect(() => {
     void apiFetch<{ data: Language[] }>('/v1/languages')
       .then((res) => setLanguages(res.data))
-      .catch( => undefined);
-    void loadCatalog.catch( => undefined);
+      .catch(() => undefined);
+    void loadCatalog().catch(() => undefined);
   }, [loadCatalog]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void (async  => {
+    void (async () => {
       try {
-        const token = await getToken;
+        const token = await getToken();
         if (!token) throw new Error('Not signed in');
         await load(token);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load TM');
       }
-    });
+    })();
   }, [getToken, isLoaded]);
 
   async function onSave(event: FormEvent) {
-    event.preventDefault;
+    event.preventDefault();
     setError(null);
     setLoading(true);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       await apiFetch('/v1/tm/entries', {
         method: 'POST',
@@ -110,7 +110,7 @@ export function TmClient {
   async function onDelete(id: string) {
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       await apiFetch(`/v1/tm/entries/${id}`, { method: 'DELETE', token });
       await load(token);
@@ -120,10 +120,10 @@ export function TmClient {
   }
 
   async function onSearch(event: FormEvent) {
-    event.preventDefault;
+    event.preventDefault();
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const res = await apiFetch<{ results: SearchHit[] }>('/v1/tm/search', {
         method: 'POST',
@@ -302,7 +302,7 @@ export function TmClient {
                   {entry.version ?? 1} · hits {entry.hitCount}
                 </div>
               </div>
-              <button type="button" className="vl-btn vl-btn-secondary" onClick={ => void onDelete(entry.id)}>
+              <button type="button" className="vl-btn vl-btn-secondary" onClick={() => void onDelete(entry.id)}>
                 Delete
               </button>
             </div>

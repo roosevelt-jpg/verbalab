@@ -29,7 +29,7 @@ type CallRow = {
   updatedAt: Date;
 };
 
-@Injectable
+@Injectable()
 export class CallIntelligenceService {
   constructor(
     private readonly prisma: PrismaService,
@@ -40,12 +40,12 @@ export class CallIntelligenceService {
     private readonly storage: LocalStorageService,
   ) {}
 
-  engine {
-    return callIntelligenceEngineCatalog;
+  engine() {
+    return callIntelligenceEngineCatalog();
   }
 
   async analytics(organizationId: string) {
-    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const [events, calls] = await Promise.all([
       this.prisma.auditEvent.findMany({
         where: {
@@ -74,7 +74,7 @@ export class CallIntelligenceService {
   }
 
   async report(organizationId: string, workspaceId: string) {
-    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const rows = await this.prisma.callRecord.findMany({
       where: { organizationId, workspaceId, createdAt: { gte: since } },
       orderBy: { createdAt: 'desc' },
@@ -113,7 +113,7 @@ export class CallIntelligenceService {
       complianceFlagCount: complianceFlags,
       averageQaScore: qaCount ? Number((qaSum / qaCount).toFixed(1)) : null,
       recent: rows.slice(0, 10).map((r) => this.serialize(r)),
-      note: 'Workspace Call Intelligence report — heuristic aggregates.',
+      note: 'Workspace Call Intelligence report (VL-158) — heuristic aggregates.',
     };
   }
 
@@ -144,7 +144,7 @@ export class CallIntelligenceService {
     file?: Express.Multer.File;
     analyze?: boolean;
   }) {
-    let transcript = input.transcript?.trim ?? '';
+    let transcript = input.transcript?.trim() ?? '';
     let durationSeconds: number | undefined;
     let language = input.language;
     let recordingKey: string | undefined;
@@ -156,7 +156,7 @@ export class CallIntelligenceService {
       this.audio.assertAllowedAudio(input.file);
       recordingFilename = input.file.originalname;
       mimeType = input.file.mimetype || 'application/octet-stream';
-      const idForKey = `tmp_${Date.now}`;
+      const idForKey = `tmp_${Date.now()}`;
       recordingKey = `calls/${input.organizationId}/${input.workspaceId}/${idForKey}-${sanitizeName(recordingFilename)}`;
       await this.storage.writeBuffer(recordingKey, input.file.buffer);
       status = 'recorded';
@@ -176,7 +176,7 @@ export class CallIntelligenceService {
           seconds,
           provider: result.provider,
         });
-        transcript = result.text.trim;
+        transcript = result.text.trim();
         durationSeconds = result.durationSeconds;
         language = result.language ?? language;
         status = 'transcribed';
@@ -206,7 +206,7 @@ export class CallIntelligenceService {
       data: {
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
-        externalRef: input.externalRef?.trim || null,
+        externalRef: input.externalRef?.trim() || null,
         direction,
         status,
         durationSeconds: durationSeconds ?? null,
@@ -255,7 +255,7 @@ export class CallIntelligenceService {
     ip?: string;
   }) {
     const row = await this.requireCall(input.organizationId, input.workspaceId, input.id);
-    let transcript = row.transcript?.trim ?? '';
+    let transcript = row.transcript?.trim() ?? '';
 
     if (!transcript && row.recordingKey) {
       const buffer = await this.storage.readBuffer(row.recordingKey);
@@ -273,7 +273,7 @@ export class CallIntelligenceService {
         seconds,
         provider: result.provider,
       });
-      transcript = result.text.trim;
+      transcript = result.text.trim();
       row.transcript = transcript;
       row.durationSeconds = result.durationSeconds;
       row.language = result.language ?? row.language;
@@ -338,7 +338,7 @@ export class CallIntelligenceService {
       if (sentiment) yield { event: 'sentiment', label: sentiment };
       yield {
         event: 'done',
-        note: 'Call Intelligence stream complete.',
+        note: 'Call Intelligence stream complete (VL-158).',
       };
     } catch (err) {
       yield {
@@ -380,8 +380,8 @@ export class CallIntelligenceService {
             compliance: { riskScore: analysis.compliance.riskScore },
           }
         : null,
-      createdAt: row.createdAt.toISOString,
-      updatedAt: row.updatedAt.toISOString,
+      createdAt: row.createdAt.toISOString(),
+      updatedAt: row.updatedAt.toISOString(),
     };
   }
 
@@ -414,7 +414,7 @@ export class CallIntelligenceService {
 }
 
 function normalizeDirection(value?: string): string {
-  const v = (value ?? 'unknown').toLowerCase;
+  const v = (value ?? 'unknown').toLowerCase();
   if (v === 'inbound' || v === 'outbound' || v === 'unknown') return v;
   return 'unknown';
 }

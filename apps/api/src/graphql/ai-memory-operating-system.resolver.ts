@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetAiMemoryOperatingSystemEngineQuery } from '../ai-memory-operating-system/application/messages';
 import { GqlAiMemoryOperatingSystemEngine } from './gql.types';
 
-@Resolver
+@Resolver()
 export class AiMemoryOperatingSystemGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query( => GqlAiMemoryOperatingSystemEngine, { name: 'aiMemoryOperatingSystemEngine' })
-  async aiMemoryOperatingSystemEngine: Promise<GqlAiMemoryOperatingSystemEngine> {
-    const catalog = await this.queries.execute(new GetAiMemoryOperatingSystemEngineQuery);
+  @Query(() => GqlAiMemoryOperatingSystemEngine, { name: 'aiMemoryOperatingSystemEngine' })
+  async aiMemoryOperatingSystemEngine(): Promise<GqlAiMemoryOperatingSystemEngine> {
+    const catalog = await this.queries.execute(new GetAiMemoryOperatingSystemEngineQuery());
     return {
       product: catalog.product,
       note: catalog.note,

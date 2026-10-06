@@ -28,7 +28,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_ki_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_ki_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -42,23 +42,23 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Knowledge Intelligence',  => {
+describe('Knowledge Intelligence (VL-200)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let storageDir: string;
 
-  beforeAll(async  => {
-    storageDir = await mkdtemp(join(tmpdir, 'lugemi-ki-'));
+  beforeAll(async () => {
+    storageDir = await mkdtemp(join(tmpdir(), 'lugemi-ki-'));
     process.env.DOCUMENT_STORAGE_DIR = storageDir;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -82,12 +82,12 @@ describe('Knowledge Intelligence',  => {
     });
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
     await rm(storageDir, { recursive: true, force: true });
   });
 
-  it('documents Knowledge Intelligence honesty (not BI/Palantir OS)',  => {
+  it('documents Knowledge Intelligence honesty (not BI/Palantir OS)', () => {
     const doc = join(root, 'docs/KNOWLEDGE_INTELLIGENCE.md');
     const adr = join(root, 'docs/adr/0111-knowledge-intelligence.md');
     expect(existsSync(doc)).toBe(true);
@@ -98,8 +98,8 @@ describe('Knowledge Intelligence',  => {
     expect(text).toMatch(/Intelligence Analytics/i);
   });
 
-  it('exposes engine with honest flags', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes engine with honest flags', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/knowledge-intelligence/engine')
       .expect(200);
     expect(res.body.product).toContain('Knowledge Intelligence');
@@ -110,7 +110,7 @@ describe('Knowledge Intelligence',  => {
     expect(res.body.honesty.extendsKnowledgeCloud).toBe(true);
   });
 
-  it('discovers, links, validates, recommends, and scores confidence on real docs', async  => {
+  it('discovers, links, validates, recommends, and scores confidence on real docs', async () => {
     const org = await seedOrg(prisma, 'ki');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -119,7 +119,7 @@ describe('Knowledge Intelligence',  => {
       name: 'ki-key',
     });
 
-    const leave = await request(app.getHttpServer)
+    const leave = await request(app.getHttpServer())
       .post('/v1/knowledge/documents')
       .set('Authorization', `Bearer ${key.secret}`)
       .field('collection', 'policies')
@@ -131,7 +131,7 @@ describe('Knowledge Intelligence',  => {
       )
       .expect(201);
 
-    const leave2 = await request(app.getHttpServer)
+    const leave2 = await request(app.getHttpServer())
       .post('/v1/knowledge/documents')
       .set('Authorization', `Bearer ${key.secret}`)
       .field('collection', 'policies')
@@ -143,20 +143,20 @@ describe('Knowledge Intelligence',  => {
       )
       .expect(201);
 
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .post('/v1/taxonomy/terms')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ name: 'Leave Policies', kind: 'category', slug: 'leave-policies' })
       .expect(201);
 
-    const insight = await request(app.getHttpServer)
+    const insight = await request(app.getHttpServer())
       .get('/v1/knowledge-intelligence/insight')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(insight.body.documents).toBeGreaterThanOrEqual(2);
     expect(insight.body.ready).toBeGreaterThanOrEqual(2);
 
-    const discovered = await request(app.getHttpServer)
+    const discovered = await request(app.getHttpServer())
       .post('/v1/knowledge-intelligence/discover')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ query: 'leave' })
@@ -164,21 +164,21 @@ describe('Knowledge Intelligence',  => {
     expect(discovered.body.documents.length).toBeGreaterThanOrEqual(1);
     expect(discovered.body.taxonomyTerms.length).toBeGreaterThanOrEqual(1);
 
-    const linked = await request(app.getHttpServer)
+    const linked = await request(app.getHttpServer())
       .post('/v1/knowledge-intelligence/link')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ documentId: leave.body.id })
       .expect(200);
     expect(linked.body.links.some((l: { id: string }) => l.id === leave2.body.id)).toBe(true);
 
-    const validated = await request(app.getHttpServer)
+    const validated = await request(app.getHttpServer())
       .post('/v1/knowledge-intelligence/validate')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ documentId: leave.body.id })
       .expect(200);
     expect(validated.body.results[0].ok).toBe(true);
 
-    const recommended = await request(app.getHttpServer)
+    const recommended = await request(app.getHttpServer())
       .post('/v1/knowledge-intelligence/recommend')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ query: 'leave' })
@@ -186,7 +186,7 @@ describe('Knowledge Intelligence',  => {
     expect(recommended.body.recommendations.length).toBeGreaterThanOrEqual(1);
     expect(recommended.body.honesty.retailRecommenderOs).toBe(false);
 
-    const dupes = await request(app.getHttpServer)
+    const dupes = await request(app.getHttpServer())
       .post('/v1/knowledge-intelligence/duplicates')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({})
@@ -194,7 +194,7 @@ describe('Knowledge Intelligence',  => {
     expect(dupes.body.pairs.length).toBeGreaterThanOrEqual(1);
     expect(dupes.body.honesty.mlNearDuplicate).toBe(false);
 
-    const confidence = await request(app.getHttpServer)
+    const confidence = await request(app.getHttpServer())
       .post('/v1/knowledge-intelligence/confidence')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ documentId: leave.body.id })
@@ -202,15 +202,15 @@ describe('Knowledge Intelligence',  => {
     expect(confidence.body.scores[0].score).toBeGreaterThan(0.4);
     expect(confidence.body.honesty.calibratedConfidence).toBe(false);
 
-    const analytics = await request(app.getHttpServer)
+    const analytics = await request(app.getHttpServer())
       .get('/v1/knowledge-intelligence/analytics')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(analytics.body.documents).toBeGreaterThanOrEqual(2);
   });
 
-  it('exposes knowledgeIntelligenceEngine via GraphQL', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes knowledgeIntelligenceEngine via GraphQL', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query:
@@ -218,7 +218,7 @@ describe('Knowledge Intelligence',  => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.knowledgeIntelligenceEngine.biOs).toBe(false);
     expect(res.body.data.knowledgeIntelligenceEngine.regeneratesIntelligenceAnalytics).toBe(false);
     expect(res.body.data.knowledgeIntelligenceEngine.orgWorkspaceScoped).toBe(true);

@@ -1,4 +1,4 @@
-/** Application ports for MLOps & LLMOps Cloud. */
+/** Application ports for MLOps & LLMOps Cloud (VL-281). */
 
 export type MlopsLlmopsCloudProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type MlopsLlmopsCloudEngineBundle = ReturnType<
 >;
 
 export interface MlopsLlmopsCloudCatalogPort {
-  engine: MlopsLlmopsCloudEngineBundle;
-  listProducts: MlopsLlmopsCloudProductRow[];
+  engine(): MlopsLlmopsCloudEngineBundle;
+  listProducts(): MlopsLlmopsCloudProductRow[];
 }
 
 export const MLOPS_LLMOPS_CLOUD_CATALOG_PORT = Symbol('MLOPS_LLMOPS_CLOUD_CATALOG_PORT');

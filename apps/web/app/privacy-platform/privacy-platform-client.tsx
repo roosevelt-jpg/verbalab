@@ -11,11 +11,11 @@ type Engine = {
   safety?: { note?: string } & Record<string, unknown>;
 };
 
-export function PrivacyPlatformClient {
+export function PrivacyPlatformClient() {
   const [data, setData] = useState<Engine | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect( => {
+  useEffect(() => {
     void apiFetch<Engine>('/v1/privacy-platform/engine')
       .then(setData)
       .catch((err: Error) => setError(err.message));

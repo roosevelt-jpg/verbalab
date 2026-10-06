@@ -53,18 +53,18 @@ const DEFAULT_MAX_ATTEMPTS = 3;
 const STREAM_PREFIX = 'vl:ef:';
 const GROUP = 'event-fabric';
 
-@Injectable
+@Injectable()
 export class EventFabricBus implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(EventFabricBus.name);
   private redis: IORedis | null = null;
   private backend: 'redis_streams' | 'memory' = 'memory';
-  private readonly memory = new Map<string, MemoryEntry[]>;
-  private readonly dlq = new Map<string, CloudEvent[]>;
-  private readonly snapshots = new Map<string, { topic: string; lastId: string; at: string }>;
-  private readonly stats = new Map<string, TopicStats>;
+  private readonly memory = new Map<string, MemoryEntry[]>();
+  private readonly dlq = new Map<string, CloudEvent[]>();
+  private readonly snapshots = new Map<string, { topic: string; lastId: string; at: string }>();
+  private readonly stats = new Map<string, TopicStats>();
   private streamSeq = 0;
 
-  private preferMemory: boolean {
+  private preferMemory(): boolean {
     return (
       process.env.EVENT_FABRIC_MEMORY === '1' ||
       process.env.JOBS_INLINE === '1' ||
@@ -72,8 +72,8 @@ export class EventFabricBus implements OnModuleInit, OnModuleDestroy {
     );
   }
 
-  async onModuleInit {
-    if (this.preferMemory) {
+  async onModuleInit() {
+    if (this.preferMemory()) {
       this.backend = 'memory';
       this.logger.warn('Event Fabric using in-memory streams (EVENT_FABRIC_MEMORY / JOBS_INLINE)');
       return;
@@ -87,36 +87,36 @@ export class EventFabricBus implements OnModuleInit, OnModuleDestroy {
         lazyConnect: true,
         connectTimeout: 2_000,
       });
-      await this.redis.connect;
+      await this.redis.connect();
       this.backend = 'redis_streams';
       this.logger.log('Event Fabric Redis Streams connected');
     } catch (error) {
       this.logger.warn(
         `Event Fabric Redis unavailable (${error instanceof Error ? error.message : 'unknown'}); using memory`,
       );
-      await this.redis?.quit.catch( => undefined);
+      await this.redis?.quit().catch(() => undefined);
       this.redis = null;
       this.backend = 'memory';
     }
   }
 
-  async onModuleDestroy {
-    await this.redis?.quit.catch( => undefined);
+  async onModuleDestroy() {
+    await this.redis?.quit().catch(() => undefined);
     this.redis = null;
   }
 
   /** Test hook — force memory backend and clear state. */
-  resetForTests {
-    this.memory.clear;
-    this.dlq.clear;
-    this.snapshots.clear;
-    this.stats.clear;
+  resetForTests() {
+    this.memory.clear();
+    this.dlq.clear();
+    this.snapshots.clear();
+    this.stats.clear();
     this.streamSeq = 0;
     this.backend = 'memory';
     this.redis = null;
   }
 
-  activeBackend {
+  activeBackend() {
     return this.backend;
   }
 
@@ -137,18 +137,18 @@ export class EventFabricBus implements OnModuleInit, OnModuleDestroy {
     return `${STREAM_PREFIX}${topic}:dlq`;
   }
 
-  private nextStreamId {
+  private nextStreamId() {
     this.streamSeq += 1;
-    return `${Date.now}-${this.streamSeq}`;
+    return `${Date.now()}-${this.streamSeq}`;
   }
 
   private toCloudEvent(input: PublishInput, streamId: string, attempt = 0): CloudEvent {
     return {
       specversion: '1.0',
-      id: randomUUID,
+      id: randomUUID(),
       source: input.source ?? '/lugemi/event-fabric',
       type: input.type,
-      time: new Date.toISOString,
+      time: new Date().toISOString(),
       datacontenttype: 'application/json',
       dataschema: input.dataschema ?? null,
       eventVersion: input.eventVersion ?? '1',
@@ -161,14 +161,14 @@ export class EventFabricBus implements OnModuleInit, OnModuleDestroy {
   }
 
   async publish(input: PublishInput): Promise<CloudEvent> {
-    const topic = input.topic.trim || 'default';
-    const streamId = this.nextStreamId;
+    const topic = input.topic.trim() || 'default';
+    const streamId = this.nextStreamId();
     const event = this.toCloudEvent({ ...input, topic }, streamId);
 
     if (this.redis && this.backend === 'redis_streams') {
       const key = this.streamKey(topic);
       try {
-        await this.redis.xgroup('CREATE', key, GROUP, '0', 'MKSTREAM').catch( => undefined);
+        await this.redis.xgroup('CREATE', key, GROUP, '0', 'MKSTREAM').catch(() => undefined);
         const id = await this.redis.xadd(
           key,
           '*',
@@ -203,14 +203,14 @@ export class EventFabricBus implements OnModuleInit, OnModuleDestroy {
     count?: number;
     eventVersion?: string;
   }): Promise<PollResult> {
-    const topic = params.topic.trim || 'default';
+    const topic = params.topic.trim() || 'default';
     const count = Math.min(Math.max(params.count ?? 10, 1), 100);
     let events: CloudEvent[] = [];
 
     if (this.redis && this.backend === 'redis_streams') {
       const key = this.streamKey(topic);
       try {
-        await this.redis.xgroup('CREATE', key, GROUP, '0', 'MKSTREAM').catch( => undefined);
+        await this.redis.xgroup('CREATE', key, GROUP, '0', 'MKSTREAM').catch(() => undefined);
         const rows = (await this.redis.xreadgroup(
           'GROUP',
           GROUP,
@@ -255,7 +255,7 @@ export class EventFabricBus implements OnModuleInit, OnModuleDestroy {
     this.snapshots.set(`${topic}:${GROUP}`, {
       topic,
       lastId: events[events.length - 1]?.streamId ?? '0-0',
-      at: new Date.toISOString,
+      at: new Date().toISOString(),
     });
 
     return { events, backend: this.backend, group: GROUP, topic };
@@ -285,7 +285,7 @@ export class EventFabricBus implements OnModuleInit, OnModuleDestroy {
     maxAttempts?: number;
     event?: Partial<CloudEvent>;
   }): Promise<{ action: 'retry' | 'dlq'; event: CloudEvent }> {
-    const topic = params.topic.trim || 'default';
+    const topic = params.topic.trim() || 'default';
     const maxAttempts = params.maxAttempts ?? DEFAULT_MAX_ATTEMPTS;
     const stats = this.ensureStats(topic);
     stats.failed += 1;
@@ -295,10 +295,10 @@ export class EventFabricBus implements OnModuleInit, OnModuleDestroy {
 
     const base: CloudEvent = {
       specversion: '1.0',
-      id: params.event?.id ?? fromHistory?.id ?? randomUUID,
+      id: params.event?.id ?? fromHistory?.id ?? randomUUID(),
       source: params.event?.source ?? fromHistory?.source ?? '/lugemi/event-fabric',
       type: params.event?.type ?? fromHistory?.type ?? 'com.lugemi.event.fail',
-      time: params.event?.time ?? fromHistory?.time ?? new Date.toISOString,
+      time: params.event?.time ?? fromHistory?.time ?? new Date().toISOString(),
       datacontenttype: 'application/json',
       dataschema: params.event?.dataschema ?? fromHistory?.dataschema ?? null,
       eventVersion: params.event?.eventVersion ?? fromHistory?.eventVersion ?? '1',
@@ -350,7 +350,7 @@ export class EventFabricBus implements OnModuleInit, OnModuleDestroy {
   }
 
   async listDlq(topic: string, limit = 50): Promise<CloudEvent[]> {
-    const t = topic.trim || 'default';
+    const t = topic.trim() || 'default';
     if (this.redis && this.backend === 'redis_streams') {
       try {
         const rows = await this.redis.xrevrange(this.dlqKey(t), '+', '-', 'COUNT', limit);
@@ -365,14 +365,14 @@ export class EventFabricBus implements OnModuleInit, OnModuleDestroy {
         /* fall through */
       }
     }
-    return (this.dlq.get(t) ?? []).slice(-limit).reverse;
+    return (this.dlq.get(t) ?? []).slice(-limit).reverse();
   }
 
   async retryFromDlq(params: {
     topic: string;
     streamId: string;
   }): Promise<CloudEvent | null> {
-    const topic = params.topic.trim || 'default';
+    const topic = params.topic.trim() || 'default';
     let event: CloudEvent | null = null;
 
     if (this.redis && this.backend === 'redis_streams') {
@@ -420,7 +420,7 @@ export class EventFabricBus implements OnModuleInit, OnModuleDestroy {
     afterId?: string;
     count?: number;
   }): Promise<{ events: CloudEvent[]; backend: 'redis_streams' | 'memory'; afterId: string }> {
-    const topic = params.topic.trim || 'default';
+    const topic = params.topic.trim() || 'default';
     const count = Math.min(Math.max(params.count ?? 20, 1), 100);
     const afterId = params.afterId ?? '0-0';
 
@@ -473,12 +473,12 @@ export class EventFabricBus implements OnModuleInit, OnModuleDestroy {
     this.memory.set(key, hist.slice(-500));
   }
 
-  listSnapshots {
-    return Array.from(this.snapshots.values);
+  listSnapshots() {
+    return Array.from(this.snapshots.values());
   }
 
-  analytics {
-    const topics = Array.from(this.stats.entries).map(([topic, s]) => ({
+  analytics() {
+    const topics = Array.from(this.stats.entries()).map(([topic, s]) => ({
       topic,
       ...s,
     }));
@@ -498,13 +498,13 @@ export class EventFabricBus implements OnModuleInit, OnModuleDestroy {
     };
   }
 
-  monitoring {
+  monitoring() {
     return {
       mode: 'event_fabric',
       backend: this.backend,
       redisConnected: Boolean(this.redis && this.backend === 'redis_streams'),
-      snapshots: this.listSnapshots.length,
-      analytics: this.analytics.totals,
+      snapshots: this.listSnapshots().length,
+      analytics: this.analytics().totals,
     };
   }
 }

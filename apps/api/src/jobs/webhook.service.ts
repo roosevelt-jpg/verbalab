@@ -2,7 +2,7 @@ import { createHmac, randomBytes, timingSafeEqual } from 'crypto';
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
-@Injectable
+@Injectable()
 export class WebhookService {
   constructor(private readonly prisma: PrismaService) {}
 
@@ -43,7 +43,7 @@ export class WebhookService {
     data: unknown;
   }): Promise<{ ok: boolean; status?: number; error?: string }> {
     const secret = await this.ensureSigningSecret(input.organizationId);
-    const timestamp = Math.floor(Date.now / 1000).toString;
+    const timestamp = Math.floor(Date.now() / 1000).toString();
     const payload = JSON.stringify({
       id: randomBytes(8).toString('hex'),
       event: input.event,

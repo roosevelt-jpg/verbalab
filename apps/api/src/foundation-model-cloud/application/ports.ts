@@ -1,4 +1,4 @@
-/** Application ports for Foundation Model Cloud. Implemented by Nest adapters. */
+/** Application ports for Foundation Model Cloud (VL-224). Implemented by Nest adapters. */
 
 export type FmcProductRow = {
   id: string;
@@ -31,8 +31,8 @@ export type FmcProductsBundle = {
 };
 
 export interface FoundationModelCloudCatalogPort {
-  products: FmcProductsBundle;
-  listProducts: FmcProductRow[];
+  products(): FmcProductsBundle;
+  listProducts(): FmcProductRow[];
 }
 
 export const FOUNDATION_MODEL_CLOUD_CATALOG_PORT = Symbol(

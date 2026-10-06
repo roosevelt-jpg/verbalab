@@ -1,4 +1,4 @@
-/** Application ports for Global Routing Controller. */
+/** Application ports for Global Routing Controller (VL-319). */
 
 export type GlobalRoutingControllerProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type GlobalRoutingControllerEngineBundle = ReturnType<
 >;
 
 export interface GlobalRoutingControllerCatalogPort {
-  engine: GlobalRoutingControllerEngineBundle;
-  listProducts: GlobalRoutingControllerProductRow[];
+  engine(): GlobalRoutingControllerEngineBundle;
+  listProducts(): GlobalRoutingControllerProductRow[];
 }
 
 export const GLOBAL_ROUTING_CONTROLLER_CATALOG_PORT = Symbol('GLOBAL_ROUTING_CONTROLLER_CATALOG_PORT');

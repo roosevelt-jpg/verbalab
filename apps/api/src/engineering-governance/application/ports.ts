@@ -1,4 +1,4 @@
-/** Application ports for Engineering Governance. */
+/** Application ports for Engineering Governance (VL-345). */
 
 export type EngineeringGovernanceProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type EngineeringGovernanceEngineBundle = ReturnType<
 >;
 
 export interface EngineeringGovernanceCatalogPort {
-  engine: EngineeringGovernanceEngineBundle;
-  listProducts: EngineeringGovernanceProductRow[];
+  engine(): EngineeringGovernanceEngineBundle;
+  listProducts(): EngineeringGovernanceProductRow[];
 }
 
 export const ENGINEERING_GOVERNANCE_CATALOG_PORT = Symbol('ENGINEERING_GOVERNANCE_CATALOG_PORT');

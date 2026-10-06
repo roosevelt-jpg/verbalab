@@ -6,7 +6,7 @@ export function formatLocaleDate(
   options?: Intl.DateTimeFormatOptions,
 ): string {
   const date = typeof isoOrDate === 'string' ? new Date(isoOrDate) : isoOrDate;
-  if (Number.isNaN(date.getTime)) {
+  if (Number.isNaN(date.getTime())) {
     throw new Error('Invalid date');
   }
   return new Intl.DateTimeFormat(bcp47, options ?? { dateStyle: 'long' }).format(date);
@@ -40,7 +40,7 @@ export function formatLocaleDateTime(
   options?: Intl.DateTimeFormatOptions,
 ): string {
   const date = typeof isoOrDate === 'string' ? new Date(isoOrDate) : isoOrDate;
-  if (Number.isNaN(date.getTime)) {
+  if (Number.isNaN(date.getTime())) {
     throw new Error('Invalid date');
   }
   return new Intl.DateTimeFormat(bcp47, {

@@ -5,22 +5,22 @@ import {
   OpenReleaseCandidate,
 } from './open-science-platform.catalog';
 
-@Injectable
+@Injectable()
 export class OpenSciencePlatformService {
-  engine {
-    return openSciencePlatformEngineCatalog;
+  engine() {
+    return openSciencePlatformEngineCatalog();
   }
 
   releases(query?: string) {
-    const catalog = this.engine;
-    const q = (query ?? '').trim.toLowerCase;
+    const catalog = this.engine();
+    const q = (query ?? '').trim().toLowerCase();
     const candidates = catalog.candidates.filter((c) => {
       if (!q) return true;
       return (
-        c.id.toLowerCase.includes(q) ||
-        c.title.toLowerCase.includes(q) ||
-        c.kind.toLowerCase.includes(q) ||
-        c.notes.toLowerCase.includes(q)
+        c.id.toLowerCase().includes(q) ||
+        c.title.toLowerCase().includes(q) ||
+        c.kind.toLowerCase().includes(q) ||
+        c.notes.toLowerCase().includes(q)
       );
     });
     const withGate = candidates.map((c) => ({
@@ -38,7 +38,7 @@ export class OpenSciencePlatformService {
   }
 
   checkRelease(id: string) {
-    const catalog = this.engine;
+    const catalog = this.engine();
     const candidate = catalog.candidates.find((c) => c.id === id);
     if (!candidate) {
       throw new BadRequestException(`Unknown open-science candidate: ${id}`);
@@ -73,8 +73,8 @@ export class OpenSciencePlatformService {
     return this.releases(query);
   }
 
-  monitoring {
-    const catalog = this.engine;
+  monitoring() {
+    const catalog = this.engine();
     const gated = catalog.candidates.map((c: OpenReleaseCandidate) => evaluateOpenRelease(c));
     return {
       mode: 'openscience',
@@ -83,7 +83,7 @@ export class OpenSciencePlatformService {
       blockedCount: gated.filter((g) => !g.allowed).length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Open Science Platform monitoring snapshot.',
+      note: 'Open Science Platform monitoring snapshot (VL-278).',
     };
   }
 }

@@ -1,20 +1,20 @@
 /**
- * Library Phase 173 → GitOps Platform.
- * GitOps Platform. GitHub/GitLab/Argo/Flux/Terraform/Helm/Kustomize readiness over Fly/shared platform. argoCdOs=false; fluxOs=false.
+ * Library Phase 173 → GitOps Platform (VL-306).
+ * GitOps Platform (VL-306). GitHub/GitLab/Argo/Flux/Terraform/Helm/Kustomize readiness over Fly/shared platform. argoCdOs=false; fluxOs=false.
  */
-export function gitopsPlatformEngineCatalog {
+export function gitopsPlatformEngineCatalog() {
   return {
     product: 'Lugemi GitOps Platform',
     capabilities: [
-      { id: 'github', name: 'GitHub', status: 'shipped', notes: ' capability.' },
-      { id: 'gitlab', name: 'GitLab', status: 'shipped', notes: ' capability.' },
-      { id: 'argo', name: 'Argo readiness', status: 'shipped', notes: ' capability.' },
-      { id: 'flux', name: 'Flux readiness', status: 'shipped', notes: ' capability.' },
-      { id: 'terraform', name: 'Terraform', status: 'shipped', notes: ' capability.' },
-      { id: 'helm', name: 'Helm', status: 'shipped', notes: ' capability.' },
-      { id: 'kustomize', name: 'Kustomize', status: 'shipped', notes: ' capability.' },
-      { id: 'policy', name: 'Deploy Policy', status: 'shipped', notes: ' capability.' },
-      { id: 'promotion', name: 'Promotion', status: 'shipped', notes: ' capability.' }
+      { id: 'github', name: 'GitHub', status: 'shipped', notes: 'VL-306 capability.' },
+      { id: 'gitlab', name: 'GitLab', status: 'shipped', notes: 'VL-306 capability.' },
+      { id: 'argo', name: 'Argo readiness', status: 'shipped', notes: 'VL-306 capability.' },
+      { id: 'flux', name: 'Flux readiness', status: 'shipped', notes: 'VL-306 capability.' },
+      { id: 'terraform', name: 'Terraform', status: 'shipped', notes: 'VL-306 capability.' },
+      { id: 'helm', name: 'Helm', status: 'shipped', notes: 'VL-306 capability.' },
+      { id: 'kustomize', name: 'Kustomize', status: 'shipped', notes: 'VL-306 capability.' },
+      { id: 'policy', name: 'Deploy Policy', status: 'shipped', notes: 'VL-306 capability.' },
+      { id: 'promotion', name: 'Promotion', status: 'shipped', notes: 'VL-306 capability.' }
     ],
     readiness: [
       {
@@ -92,9 +92,9 @@ export function gitopsPlatformEngineCatalog {
     },
     safety: {
       argoCdOs: false,
-      note: 'GitOps Platform. GitHub/GitLab/Argo/Flux/Terraform/Helm/Kustomize readiness over Fly/shared platform. argoCdOs=false; fluxOs=false.',
+      note: 'GitOps Platform (VL-306). GitHub/GitLab/Argo/Flux/Terraform/Helm/Kustomize readiness over Fly/shared platform. argoCdOs=false; fluxOs=false.',
     },
     docs: '/docs/GITOPS_PLATFORM.md',
-    note: 'GitOps Platform. GitHub/GitLab/Argo/Flux/Terraform/Helm/Kustomize readiness over Fly/shared platform. argoCdOs=false; fluxOs=false.',
+    note: 'GitOps Platform (VL-306). GitHub/GitLab/Argo/Flux/Terraform/Helm/Kustomize readiness over Fly/shared platform. argoCdOs=false; fluxOs=false.',
   };
 }

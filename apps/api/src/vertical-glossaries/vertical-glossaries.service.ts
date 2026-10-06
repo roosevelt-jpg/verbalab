@@ -10,7 +10,7 @@ import {
   findVerticalPack,
 } from './vertical-glossary-seeds';
 
-@Injectable
+@Injectable()
 export class VerticalGlossariesService {
   constructor(
     private readonly prisma: PrismaService,
@@ -130,7 +130,7 @@ export class VerticalGlossariesService {
       if (existing) {
         await tx.verticalGlossaryInstall.update({
           where: { id: existing.id },
-          data: { termsInstalled: count, installedAt: new Date },
+          data: { termsInstalled: count, installedAt: new Date() },
         });
       } else {
         await tx.verticalGlossaryInstall.create({

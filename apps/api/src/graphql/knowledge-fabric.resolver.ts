@@ -6,17 +6,17 @@ import {
 } from '../knowledge-fabric/application/messages';
 import { GqlKnowledgeFabricCapability, GqlKnowledgeFabricRoute } from './gql.types';
 
-@Resolver
+@Resolver()
 export class KnowledgeFabricGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query( => [GqlKnowledgeFabricCapability], { name: 'knowledgeFabricCapabilities' })
-  knowledgeFabricCapabilities: Promise<GqlKnowledgeFabricCapability[]> {
-    return this.queries.execute(new ListKnowledgeFabricCapabilitiesQuery);
+  @Query(() => [GqlKnowledgeFabricCapability], { name: 'knowledgeFabricCapabilities' })
+  knowledgeFabricCapabilities(): Promise<GqlKnowledgeFabricCapability[]> {
+    return this.queries.execute(new ListKnowledgeFabricCapabilitiesQuery());
   }
 
-  @Query( => [GqlKnowledgeFabricRoute], { name: 'knowledgeFabricRoutes' })
-  knowledgeFabricRoutes: Promise<GqlKnowledgeFabricRoute[]> {
-    return this.queries.execute(new ListKnowledgeFabricRoutesQuery);
+  @Query(() => [GqlKnowledgeFabricRoute], { name: 'knowledgeFabricRoutes' })
+  knowledgeFabricRoutes(): Promise<GqlKnowledgeFabricRoute[]> {
+    return this.queries.execute(new ListKnowledgeFabricRoutesQuery());
   }
 }

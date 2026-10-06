@@ -17,8 +17,8 @@ export class GetExplainabilityPlatformEngineHandler
     private readonly catalog: ExplainabilityPlatformCatalogPort,
   ) {}
 
-  execute: Promise<ExplainabilityPlatformEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<ExplainabilityPlatformEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListExplainabilityPlatformProductsHandler
     private readonly catalog: ExplainabilityPlatformCatalogPort,
   ) {}
 
-  execute: Promise<ExplainabilityPlatformProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<ExplainabilityPlatformProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

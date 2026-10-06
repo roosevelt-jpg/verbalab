@@ -6,13 +6,13 @@ import {
   GqlVoiceLanguageMarketplaceEngine,
 } from './gql.types';
 
-@Resolver
+@Resolver()
 export class VoiceLanguageMarketplaceGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query( => GqlVoiceLanguageMarketplaceEngine, { name: 'voiceLanguageMarketplaceEngine' })
-  async voiceLanguageMarketplaceEngine: Promise<GqlVoiceLanguageMarketplaceEngine> {
-    const catalog = await this.queries.execute(new GetVoiceLanguageMarketplaceEngineQuery);
+  @Query(() => GqlVoiceLanguageMarketplaceEngine, { name: 'voiceLanguageMarketplaceEngine' })
+  async voiceLanguageMarketplaceEngine(): Promise<GqlVoiceLanguageMarketplaceEngine> {
+    const catalog = await this.queries.execute(new GetVoiceLanguageMarketplaceEngineQuery());
     return {
       product: catalog.product,
       note: catalog.note,

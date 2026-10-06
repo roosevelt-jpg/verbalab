@@ -17,8 +17,8 @@ export class GetGoldenPathPlatformEngineHandler
     private readonly catalog: GoldenPathPlatformCatalogPort,
   ) {}
 
-  execute: Promise<GoldenPathPlatformEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<GoldenPathPlatformEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListGoldenPathPlatformProductsHandler
     private readonly catalog: GoldenPathPlatformCatalogPort,
   ) {}
 
-  execute: Promise<GoldenPathPlatformProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<GoldenPathPlatformProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

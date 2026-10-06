@@ -1,5 +1,5 @@
 /**
- * Library Phase 165 → Risk Intelligence.
+ * Library Phase 165 → Risk Intelligence (VL-298).
  * Scoring seed + analytics — not GRC suite OS.
  */
 export type RiskScore = {
@@ -17,7 +17,7 @@ export type RiskScore = {
   notes: string;
 };
 
-export function riskScoresCatalog: RiskScore[] {
+export function riskScoresCatalog(): RiskScore[] {
   return [
     { id: 'risk-ops-1', category: 'operational', score: 42, trend: 'flat', notes: 'Ops load stable.' },
     { id: 'risk-model-1', category: 'model', score: 58, trend: 'up', notes: 'Drift signals elevated.' },
@@ -29,8 +29,8 @@ export function riskScoresCatalog: RiskScore[] {
   ];
 }
 
-export function riskIntelligenceEngineCatalog {
-  const scores = riskScoresCatalog;
+export function riskIntelligenceEngineCatalog() {
+  const scores = riskScoresCatalog();
   const avg = Math.round(scores.reduce((s, r) => s + r.score, 0) / scores.length);
   return {
     product: 'Lugemi Risk Intelligence',
@@ -60,6 +60,6 @@ export function riskIntelligenceEngineCatalog {
       note: 'Risk scoring seed and analytics over Trust Cloud signals — not a full GRC suite OS.',
     },
     docs: '/docs/RISK_INTELLIGENCE.md',
-    note: 'Risk Intelligence. Operational/model/security/compliance/data/supply-chain/third-party scoring.',
+    note: 'Risk Intelligence (VL-298). Operational/model/security/compliance/data/supply-chain/third-party scoring.',
   };
 }

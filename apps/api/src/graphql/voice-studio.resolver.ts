@@ -5,13 +5,13 @@ import {
   GqlVoiceStudioEngine,
 } from './gql.types';
 
-@Resolver
+@Resolver()
 export class VoiceStudioGraphqlResolver {
   constructor(private readonly studio: VoiceStudioService) {}
 
-  @Query( => GqlVoiceStudioEngine, { name: 'voiceStudioEngine' })
-  voiceStudioEngine: GqlVoiceStudioEngine {
-    const catalog = this.studio.engine;
+  @Query(() => GqlVoiceStudioEngine, { name: 'voiceStudioEngine' })
+  voiceStudioEngine(): GqlVoiceStudioEngine {
+    const catalog = this.studio.engine();
     return {
       product: catalog.product,
       note: catalog.note,

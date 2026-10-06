@@ -1,5 +1,5 @@
 /** Public SDK/CLI/MCP/mobile catalog for docs and developer hub. */
-export function sdkCatalog {
+export function sdkCatalog() {
   return {
     typescript: {
       name: '@lugemi/sdk',

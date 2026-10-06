@@ -22,7 +22,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_wake_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_wake_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -36,29 +36,29 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Wake Word Engine',  => {
+describe('Wake Word Engine (VL-157)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('documents Wake Word honesty',  => {
+  it('documents Wake Word honesty', () => {
     const doc = join(root, 'docs/WAKE_WORD.md');
     const adr = join(root, 'docs/adr/0076-wake-word.md');
     expect(existsSync(doc)).toBe(true);
@@ -69,8 +69,8 @@ describe('Wake Word Engine',  => {
     expect(text).not.toMatch(/Porcupine.*shipped/i);
   });
 
-  it('exposes wake engine with on-device DNN deferred', async  => {
-    const res = await request(app.getHttpServer).get('/v1/wake-word/engine').expect(200);
+  it('exposes wake engine with on-device DNN deferred', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/wake-word/engine').expect(200);
     expect(res.body.product).toContain('Wake');
     expect(res.body.defaultWakePhrases).toEqual(
       expect.arrayContaining(['hey lugemi', 'ok lugemi', 'lugemi']),
@@ -79,7 +79,7 @@ describe('Wake Word Engine',  => {
     expect(dnn.status).toBe('deferred');
   });
 
-  it('detects default wake phrases and manages custom keywords', async  => {
+  it('detects default wake phrases and manages custom keywords', async () => {
     const org = await seedOrg(prisma, 'wake');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -88,7 +88,7 @@ describe('Wake Word Engine',  => {
       name: 'wake-key',
     });
 
-    const detect = await request(app.getHttpServer)
+    const detect = await request(app.getHttpServer())
       .post('/v1/wake-word/detect')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'Hey Lugemi please help me' })
@@ -96,40 +96,40 @@ describe('Wake Word Engine',  => {
     expect(detect.body.wakeDetected).toBe(true);
     expect(detect.body.hits.length).toBeGreaterThan(0);
 
-    const created = await request(app.getHttpServer)
+    const created = await request(app.getHttpServer())
       .post('/v1/wake-word/keywords')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ phrase: 'escalate to human', kind: 'trigger' })
       .expect(201);
     expect(created.body.kind).toBe('trigger');
 
-    const triggers = await request(app.getHttpServer)
+    const triggers = await request(app.getHttpServer())
       .post('/v1/wake-word/triggers')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'Please escalate to human immediately' })
       .expect(200);
     expect(triggers.body.fired.length).toBeGreaterThanOrEqual(1);
 
-    const spot = await request(app.getHttpServer)
+    const spot = await request(app.getHttpServer())
       .post('/v1/wake-word/spot')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'refund policy please', keywords: ['refund', 'billing'] })
       .expect(200);
     expect(spot.body.hitCount).toBeGreaterThanOrEqual(1);
 
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .delete(`/v1/wake-word/keywords/${created.body.id}`)
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
 
-    const analytics = await request(app.getHttpServer)
+    const analytics = await request(app.getHttpServer())
       .get('/v1/wake-word/analytics')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(analytics.body.total).toBeGreaterThanOrEqual(3);
   });
 
-  it('streams SSE detect events', async  => {
+  it('streams SSE detect events', async () => {
     const org = await seedOrg(prisma, 'stream');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -138,7 +138,7 @@ describe('Wake Word Engine',  => {
       name: 'stream-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/wake-word/detect/stream')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'ok lugemi start listening' })
@@ -149,18 +149,18 @@ describe('Wake Word Engine',  => {
     expect(res.text).toContain('event: done');
   });
 
-  it('exposes wakeWordEngine via GraphQL', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes wakeWordEngine via GraphQL', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query: '{ wakeWordEngine { product defaultWakePhrases capabilities { id status } } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.wakeWordEngine.defaultWakePhrases).toContain('hey lugemi');
   });
 
-  it('spots phrases with word boundaries',  => {
+  it('spots phrases with word boundaries', () => {
     const hits = spotPhrases('please hey lugemi now', [
       { phrase: 'hey lugemi', kind: 'wake_word' },
     ]);

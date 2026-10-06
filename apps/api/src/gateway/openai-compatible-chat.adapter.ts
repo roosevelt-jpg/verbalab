@@ -36,7 +36,7 @@ export class OpenAiCompatibleChatAdapter implements ChatProvider {
     }
 
     const model = input.model ?? this.defaultModel;
-    const started = Date.now;
+    const started = Date.now();
 
     let response: Response;
     try {
@@ -67,7 +67,7 @@ export class OpenAiCompatibleChatAdapter implements ChatProvider {
       );
     }
 
-    const json = (await response.json.catch( => ({}))) as OpenAiCompatibleChatResponse;
+    const json = (await response.json().catch(() => ({}))) as OpenAiCompatibleChatResponse;
     if (!response.ok) {
       throw new ApiException(
         'provider_error',
@@ -95,7 +95,7 @@ export class OpenAiCompatibleChatAdapter implements ChatProvider {
       promptTokens,
       completionTokens,
       totalTokens: json.usage?.total_tokens ?? promptTokens + completionTokens,
-      latencyMs: Date.now - started,
+      latencyMs: Date.now() - started,
     };
   }
 }
@@ -115,11 +115,11 @@ export function createOpenRouterChatAdapter(
   apiKey: string,
   fetchImpl?: typeof fetch,
 ): ChatProvider | null {
-  if (!apiKey.trim) return null;
+  if (!apiKey.trim()) return null;
   const base = (process.env.OPENROUTER_BASE_URL ?? 'https://openrouter.ai/api/v1').replace(/\/$/, '');
   return new OpenAiCompatibleChatAdapter(
     'openrouter_chat',
-    apiKey.trim,
+    apiKey.trim(),
     `${base}/chat/completions`,
     process.env.OPENROUTER_CHAT_MODEL ?? 'openai/gpt-4o-mini',
     fetchImpl,

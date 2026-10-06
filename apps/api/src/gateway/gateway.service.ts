@@ -31,14 +31,14 @@ type FineTuneRouting = {
   adapter: FineTuneTranslateAdapter;
 };
 
-@Injectable
+@Injectable()
 export class GatewayService {
   private readonly logger = new Logger(GatewayService.name);
   private provider: TranslationProvider;
   private sttProvider: SttProvider;
   /** Default / stock TTS (OpenAI). Overridable in tests via setTtsProviderForTests. */
   private ttsProvider: TtsProvider;
-  /** Rented open-weight TTS. */
+  /** Rented open-weight TTS (VL-121). */
   private ownTtsProvider: TtsProvider;
   private ocrProvider: OcrProvider;
   private detectPrimary: LanguageDetectProvider;
@@ -51,7 +51,7 @@ export class GatewayService {
   /** When true (after setProviderForTests), skip pair fine-tunes so fixtures are not shadowed. */
   private skipFineTuneForTests = false;
 
-  constructor {
+  constructor() {
     const googleKey =
       process.env.GOOGLE_VISION_API_KEY || process.env.GOOGLE_TRANSLATE_API_KEY || '';
     const translateKey = process.env.GOOGLE_TRANSLATE_API_KEY ?? '';
@@ -59,10 +59,10 @@ export class GatewayService {
     this.provider = new GoogleTranslateAdapter(translateKey);
     this.sttProvider = new OpenAiWhisperAdapter(openaiKey);
     this.ttsProvider = new OpenAiTtsAdapter(openaiKey);
-    this.ownTtsProvider = createOwnTtsAdapter;
+    this.ownTtsProvider = createOwnTtsAdapter();
     this.ocrProvider = new GoogleVisionOcrAdapter(googleKey);
     this.detectPrimary = new GoogleDetectAdapter(translateKey);
-    this.detectFallback = new FrancDetectAdapter;
+    this.detectFallback = new FrancDetectAdapter();
     this.chatProvider = new OpenAiChatAdapter(openaiKey);
     this.chatFallback = createOpenRouterChatAdapter(process.env.OPENROUTER_API_KEY ?? '');
     this.embeddingProvider = new OpenAiEmbeddingsAdapter(openaiKey);
@@ -80,7 +80,7 @@ export class GatewayService {
   }
 
   /** Test hook — re-enable pair fine-tune routing after setProviderForTests. */
-  allowFineTuneRoutingForTests {
+  allowFineTuneRoutingForTests() {
     this.skipFineTuneForTests = false;
   }
 
@@ -286,8 +286,8 @@ export class GatewayService {
     return result;
   }
 
-  listVoices: TtsVoice[] {
-    return [...this.ttsProvider.listVoices, ...this.ownTtsProvider.listVoices];
+  listVoices(): TtsVoice[] {
+    return [...this.ttsProvider.listVoices(), ...this.ownTtsProvider.listVoices()];
   }
 
   async synthesize(input: TtsInput): Promise<TtsOutput> {

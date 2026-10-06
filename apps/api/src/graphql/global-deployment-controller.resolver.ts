@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetGlobalDeploymentControllerEngineQuery } from '../global-deployment-controller/application/messages';
 import { GqlGlobalDeploymentControllerEngine } from './gql.types';
 
-@Resolver
+@Resolver()
 export class GlobalDeploymentControllerGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query( => GqlGlobalDeploymentControllerEngine, { name: 'globalDeploymentControllerEngine' })
-  async globalDeploymentControllerEngine: Promise<GqlGlobalDeploymentControllerEngine> {
-    const catalog = await this.queries.execute(new GetGlobalDeploymentControllerEngineQuery);
+  @Query(() => GqlGlobalDeploymentControllerEngine, { name: 'globalDeploymentControllerEngine' })
+  async globalDeploymentControllerEngine(): Promise<GqlGlobalDeploymentControllerEngine> {
+    const catalog = await this.queries.execute(new GetGlobalDeploymentControllerEngineQuery());
     return {
       product: catalog.product,
       note: catalog.note,

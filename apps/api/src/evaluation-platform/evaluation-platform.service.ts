@@ -1,21 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { evaluationPlatformEngineCatalog } from './evaluation-platform.catalog';
 
-@Injectable
+@Injectable()
 export class EvaluationPlatformService {
-  engine {
-    return evaluationPlatformEngineCatalog;
+  engine() {
+    return evaluationPlatformEngineCatalog();
   }
 
   capabilities(query?: string) {
-    const catalog = this.engine;
-    const q = (query ?? '').trim.toLowerCase;
+    const catalog = this.engine();
+    const q = (query ?? '').trim().toLowerCase();
     const capabilities = catalog.capabilities.filter((c) => {
       if (!q) return true;
       return (
-        c.id.toLowerCase.includes(q) ||
-        c.name.toLowerCase.includes(q) ||
-        c.notes.toLowerCase.includes(q)
+        c.id.toLowerCase().includes(q) ||
+        c.name.toLowerCase().includes(q) ||
+        c.notes.toLowerCase().includes(q)
       );
     });
     return {
@@ -32,13 +32,13 @@ export class EvaluationPlatformService {
     return this.capabilities(query);
   }
 
-  monitoring {
-    const catalog = this.engine;
+  monitoring() {
+    const catalog = this.engine();
     return {
       mode: 'evaluation',
       capabilityCount: catalog.capabilities.length,
       honesty: catalog.honesty,
-      note: 'Evaluation Platform monitoring snapshot.',
+      note: 'Evaluation Platform monitoring snapshot (VL-275).',
     };
   }
 }

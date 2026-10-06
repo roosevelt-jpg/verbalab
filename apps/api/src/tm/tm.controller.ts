@@ -24,15 +24,15 @@ import { ApiException } from '../common/errors/api-exception';
 export class TmHubController {
   constructor(private readonly tm: TmService) {}
 
-  @Get
-  intelligence {
-    return this.tm.intelligence;
+  @Get()
+  intelligence() {
+    return this.tm.intelligence();
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   analytics(
-    @Req
+    @Req()
     req: Request & { translateAuth: TranslateAuthContext },
   ) {
     return this.tm.analytics(req.translateAuth.organizationId);
@@ -40,14 +40,14 @@ export class TmHubController {
 
   @Get('terminology')
   @UseGuards(ClerkAuthGuard)
-  terminology(@CurrentSession session: SessionContext) {
+  terminology(@CurrentSession() session: SessionContext) {
     return this.tm.terminology(session.organizationId, session.workspaceId);
   }
 
   @Get('history')
   @UseGuards(ClerkAuthGuard)
   history(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Query('entryId') entryId?: string,
     @Query('limit') limit?: string,
   ) {
@@ -61,12 +61,12 @@ export class TmHubController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   search(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body
+    @Body()
     body: {
       text?: string;
       sourceLang?: string;
@@ -77,10 +77,10 @@ export class TmHubController {
       minScore?: number;
     },
   ) {
-    if (typeof body.text !== 'string' || !body.text.trim) {
+    if (typeof body.text !== 'string' || !body.text.trim()) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }
-    if (!body.sourceLang?.trim || !body.targetLang?.trim) {
+    if (!body.sourceLang?.trim() || !body.targetLang?.trim()) {
       throw new ApiException(
         'validation_error',
         'sourceLang and targetLang are required',
@@ -90,8 +90,8 @@ export class TmHubController {
     return this.tm.search({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
-      sourceLang: body.sourceLang.trim,
-      targetLang: body.targetLang.trim,
+      sourceLang: body.sourceLang.trim(),
+      targetLang: body.targetLang.trim(),
       text: body.text,
       projectKey: body.projectKey,
       mode: body.mode,
@@ -109,9 +109,9 @@ export class TmHubController {
 export class TmController {
   constructor(private readonly tm: TmService) {}
 
-  @Get
+  @Get()
   list(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Query('source') source?: string,
     @Query('target') target?: string,
     @Query('scope') scope?: string,
@@ -125,12 +125,12 @@ export class TmController {
     });
   }
 
-  @Post
+  @Post()
   @HttpCode(HttpStatus.CREATED)
   create(
-    @CurrentSession session: SessionContext,
-    @Req req: Request,
-    @Body
+    @CurrentSession() session: SessionContext,
+    @Req() req: Request,
+    @Body()
     body: {
       sourceLang?: string;
       targetLang?: string;
@@ -155,14 +155,14 @@ export class TmController {
   }
 
   @Get(':id/versions')
-  versions(@CurrentSession session: SessionContext, @Param('id') id: string) {
+  versions(@CurrentSession() session: SessionContext, @Param('id') id: string) {
     return this.tm.versions(session.organizationId, id);
   }
 
   @Delete(':id')
   remove(
-    @CurrentSession session: SessionContext,
-    @Req req: Request,
+    @CurrentSession() session: SessionContext,
+    @Req() req: Request,
     @Param('id') id: string,
   ) {
     return this.tm.remove(session.organizationId, id, {

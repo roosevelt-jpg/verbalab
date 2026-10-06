@@ -11,11 +11,11 @@ type Engine = {
   safety?: { note?: string } & Record<string, unknown>;
 };
 
-export function CompliancePlatformClient {
+export function CompliancePlatformClient() {
   const [data, setData] = useState<Engine | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect( => {
+  useEffect(() => {
     void apiFetch<Engine>('/v1/compliance-platform/engine')
       .then(setData)
       .catch((err: Error) => setError(err.message));

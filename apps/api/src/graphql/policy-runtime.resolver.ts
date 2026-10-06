@@ -2,13 +2,13 @@ import { Query, Resolver } from '@nestjs/graphql';
 import { PolicyRuntimeService } from '../policy-runtime/policy-runtime.service';
 import { GqlPolicyRuntimeEngine } from './gql.types';
 
-@Resolver
+@Resolver()
 export class PolicyRuntimeGraphqlResolver {
   constructor(private readonly runtime: PolicyRuntimeService) {}
 
-  @Query( => GqlPolicyRuntimeEngine, { name: 'policyRuntimeEngine' })
-  policyRuntimeEngine: GqlPolicyRuntimeEngine {
-    const c = this.runtime.engine;
+  @Query(() => GqlPolicyRuntimeEngine, { name: 'policyRuntimeEngine' })
+  policyRuntimeEngine(): GqlPolicyRuntimeEngine {
+    const c = this.runtime.engine();
     return {
       product: c.product,
       note: c.note,

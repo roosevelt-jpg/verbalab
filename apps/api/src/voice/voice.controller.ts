@@ -40,20 +40,20 @@ export class VoiceController {
 
   @Get('status')
   @UseGuards(ClerkAuthGuard)
-  status {
-    const base = this.twilio.webhookBaseUrl;
+  status() {
+    const base = this.twilio.webhookBaseUrl();
     return {
       provider: 'twilio',
-      disabled: this.twilio.disabled,
-      twilioConfigured: this.twilio.isConfigured,
-      authTokenConfigured: Boolean(this.twilio.authToken),
-      phoneNumberConfigured: Boolean(this.twilio.phoneNumber),
+      disabled: this.twilio.disabled(),
+      twilioConfigured: this.twilio.isConfigured(),
+      authTokenConfigured: Boolean(this.twilio.authToken()),
+      phoneNumberConfigured: Boolean(this.twilio.phoneNumber()),
       webhookBaseConfigured: Boolean(base),
-      defaultVoice: defaultFaqVoice,
+      defaultVoice: defaultFaqVoice(),
       inboundUrl: base ? `${base}/v1/voice/twilio/inbound` : null,
       turnUrl: base ? `${base}/v1/voice/twilio/turn` : null,
-      demoOrgConfigured: Boolean(process.env.VOICE_DEMO_ORG_ID?.trim),
-      demoWorkspaceConfigured: Boolean(process.env.VOICE_DEMO_WORKSPACE_ID?.trim),
+      demoOrgConfigured: Boolean(process.env.VOICE_DEMO_ORG_ID?.trim()),
+      demoWorkspaceConfigured: Boolean(process.env.VOICE_DEMO_WORKSPACE_ID?.trim()),
     };
   }
 
@@ -63,25 +63,25 @@ export class VoiceController {
   @UseGuards(TranslateAuthGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage,
-      limits: { fileSize: audioMaxBytes },
+      storage: memoryStorage(),
+      limits: { fileSize: audioMaxBytes() },
     }),
   )
   async simulate(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @UploadedFile file: Express.Multer.File | undefined,
-    @Body
+    @UploadedFile() file: Express.Multer.File | undefined,
+    @Body()
     body: {
       text?: string;
       voice?: string;
       format?: 'mp3' | 'wav' | 'opus' | 'aac' | 'flac';
     },
   ) {
-    if (this.twilio.disabled) {
+    if (this.twilio.disabled()) {
       throw new ApiException(
         'provider_disabled',
         'Voice agent is disabled (VOICE_AGENT_DISABLED=1).',
@@ -105,8 +105,8 @@ export class VoiceController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(ClerkAuthGuard)
   async outbound(
-    @CurrentSession session: SessionContext,
-    @Body body: { to?: string },
+    @CurrentSession() session: SessionContext,
+    @Body() body: { to?: string },
   ) {
     if (session.role !== 'owner' && session.role !== 'admin') {
       throw new ApiException(
@@ -115,7 +115,7 @@ export class VoiceController {
         HttpStatus.FORBIDDEN,
       );
     }
-    const to = body.to?.trim ?? '';
+    const to = body.to?.trim() ?? '';
     if (!/^\+[1-9]\d{6,14}$/.test(to)) {
       throw new ApiException(
         'validation_error',
@@ -123,7 +123,7 @@ export class VoiceController {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const base = this.twilio.webhookBaseUrl;
+    const base = this.twilio.webhookBaseUrl();
     if (!base) {
       throw new ApiException(
         'provider_not_configured',
@@ -139,15 +139,15 @@ export class VoiceController {
       sid: call.sid,
       status: call.status,
       to,
-      from: this.twilio.phoneNumber || null,
+      from: this.twilio.phoneNumber() || null,
     };
   }
 
   @Post('twilio/inbound')
   @HttpCode(HttpStatus.OK)
   async inbound(
-    @Req req: Request,
-    @Res res: Response,
+    @Req() req: Request,
+    @Res() res: Response,
     @Headers('x-twilio-signature') signature: string | undefined,
   ) {
     this.assertTwilioRequest(req, signature);
@@ -163,14 +163,14 @@ export class VoiceController {
   @Post('twilio/turn')
   @HttpCode(HttpStatus.OK)
   async turn(
-    @Req req: Request,
-    @Res res: Response,
+    @Req() req: Request,
+    @Res() res: Response,
     @Headers('x-twilio-signature') signature: string | undefined,
   ) {
     const params = this.assertTwilioRequest(req, signature);
-    const { organizationId, workspaceId } = await this.resolveDemoTenant;
-    const recordingUrl = params.RecordingUrl?.trim;
-    const base = this.twilio.webhookBaseUrl;
+    const { organizationId, workspaceId } = await this.resolveDemoTenant();
+    const recordingUrl = params.RecordingUrl?.trim();
+    const base = this.twilio.webhookBaseUrl();
     const turnUrl = this.absoluteWebhookPath('/v1/voice/twilio/turn');
 
     if (!recordingUrl) {
@@ -227,7 +227,7 @@ export class VoiceController {
   }
 
   @Get('audio/:id')
-  audio(@Param('id') id: string, @Res res: Response) {
+  audio(@Param('id') id: string, @Res() res: Response) {
     const clip = this.clips.get(id);
     if (!clip) {
       throw new ApiException('not_found', 'Audio clip expired or missing', HttpStatus.NOT_FOUND);
@@ -238,14 +238,14 @@ export class VoiceController {
   }
 
   private assertTwilioRequest(req: Request, signature: string | undefined): Record<string, string> {
-    if (this.twilio.disabled) {
+    if (this.twilio.disabled()) {
       throw new ApiException(
         'provider_disabled',
         'Voice agent is disabled (VOICE_AGENT_DISABLED=1).',
         HttpStatus.SERVICE_UNAVAILABLE,
       );
     }
-    const authToken = this.twilio.authToken;
+    const authToken = this.twilio.authToken();
     if (!authToken) {
       throw new ApiException(
         'provider_not_configured',
@@ -288,7 +288,7 @@ export class VoiceController {
   }
 
   private requestUrl(req: Request): string {
-    const base = this.twilio.webhookBaseUrl;
+    const base = this.twilio.webhookBaseUrl();
     if (base) {
       const path = req.path.startsWith('/') ? req.path : `/${req.path}`;
       return `${base}${path}`;
@@ -299,7 +299,7 @@ export class VoiceController {
   }
 
   private absoluteWebhookPath(path: string): string {
-    const base = this.twilio.webhookBaseUrl;
+    const base = this.twilio.webhookBaseUrl();
     if (!base) {
       throw new ApiException(
         'provider_not_configured',
@@ -310,9 +310,9 @@ export class VoiceController {
     return `${base}${path}`;
   }
 
-  private async resolveDemoTenant: Promise<{ organizationId: string; workspaceId: string }> {
-    const organizationId = process.env.VOICE_DEMO_ORG_ID?.trim ?? '';
-    const workspaceId = process.env.VOICE_DEMO_WORKSPACE_ID?.trim ?? '';
+  private async resolveDemoTenant(): Promise<{ organizationId: string; workspaceId: string }> {
+    const organizationId = process.env.VOICE_DEMO_ORG_ID?.trim() ?? '';
+    const workspaceId = process.env.VOICE_DEMO_WORKSPACE_ID?.trim() ?? '';
     if (!organizationId || !workspaceId) {
       throw new ApiException(
         'provider_not_configured',

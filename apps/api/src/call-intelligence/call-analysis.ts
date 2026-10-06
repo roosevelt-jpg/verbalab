@@ -69,11 +69,11 @@ function countMatches(text: string, re: RegExp): number {
 }
 
 function extractiveSummary(text: string): string {
-  const cleaned = text.replace(/\s+/g, ' ').trim;
+  const cleaned = text.replace(/\s+/g, ' ').trim();
   if (!cleaned) return 'Empty transcript.';
   const sentences = cleaned
     .split(/(?<=[.!?])\s+/)
-    .map((s) => s.trim)
+    .map((s) => s.trim())
     .filter(Boolean);
   if (sentences.length <= 2) return cleaned.slice(0, 400);
   const first = sentences[0] ?? '';
@@ -82,9 +82,9 @@ function extractiveSummary(text: string): string {
   return [first, mid, last].filter(Boolean).join(' ').slice(0, 600);
 }
 
-/** Heuristic call analysis. */
+/** Heuristic call analysis (VL-158). */
 export function analyzeCallTranscript(transcript: string): CallAnalysis {
-  const text = transcript.trim;
+  const text = transcript.trim();
   const sentiment = analyzeSentiment(text);
   const intent = analyzeIntent(text);
   const emotion = analyzeSpeechEmotion(text);
@@ -198,6 +198,6 @@ export function analyzeCallTranscript(transcript: string): CallAnalysis {
         },
       ],
     },
-    note: 'Heuristic Call Intelligence analysis — not Gong/Chorus or certified compliance.',
+    note: 'Heuristic Call Intelligence analysis (VL-158) — not Gong/Chorus or certified compliance.',
   };
 }

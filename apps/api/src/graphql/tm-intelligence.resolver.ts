@@ -13,13 +13,13 @@ type GqlReq = Request & {
   sessionAuth?: SessionContext;
 };
 
-@Resolver
+@Resolver()
 export class TmIntelligenceGraphqlResolver {
   constructor(private readonly tm: TmService) {}
 
-  @Query( => GqlTmIntelligence, { name: 'tmIntelligence' })
-  tmIntelligence: GqlTmIntelligence {
-    const c = this.tm.intelligence;
+  @Query(() => GqlTmIntelligence, { name: 'tmIntelligence' })
+  tmIntelligence(): GqlTmIntelligence {
+    const c = this.tm.intelligence();
     return {
       product: c.product,
       note: c.note,
@@ -28,10 +28,10 @@ export class TmIntelligenceGraphqlResolver {
     };
   }
 
-  @Mutation( => GqlTmSearchResult, { name: 'searchTm' })
+  @Mutation(() => GqlTmSearchResult, { name: 'searchTm' })
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   async searchTm(
-    @Args('input', { type:  => SearchTmInput }) input: SearchTmInput,
+    @Args('input', { type: () => SearchTmInput }) input: SearchTmInput,
     @Context('req') req: GqlReq,
   ): Promise<GqlTmSearchResult> {
     const auth = req.translateAuth!;

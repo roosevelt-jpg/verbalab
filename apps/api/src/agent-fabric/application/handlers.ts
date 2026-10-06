@@ -22,8 +22,8 @@ export class ListAgentFabricCapabilitiesHandler
     private readonly catalog: AgentFabricCatalogPort,
   ) {}
 
-  execute: Promise<AgentFabricCapabilityRow[]> {
-    return Promise.resolve(this.catalog.listCapabilities);
+  execute(): Promise<AgentFabricCapabilityRow[]> {
+    return Promise.resolve(this.catalog.listCapabilities());
   }
 }
 
@@ -36,8 +36,8 @@ export class ListAgentFabricRoutesHandler
     private readonly catalog: AgentFabricCatalogPort,
   ) {}
 
-  execute: Promise<AgentFabricRouteRow[]> {
-    return Promise.resolve(this.catalog.listRoutes);
+  execute(): Promise<AgentFabricRouteRow[]> {
+    return Promise.resolve(this.catalog.listRoutes());
   }
 }
 
@@ -50,8 +50,8 @@ export class GetAgentFabricProductsBundleHandler
     private readonly catalog: AgentFabricCatalogPort,
   ) {}
 
-  execute: Promise<AgentFabricProductsBundle> {
-    return Promise.resolve(this.catalog.products);
+  execute(): Promise<AgentFabricProductsBundle> {
+    return Promise.resolve(this.catalog.products());
   }
 }
 

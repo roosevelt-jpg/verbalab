@@ -1,5 +1,5 @@
 /**
- * Library Phase 161 → AI Governance Platform.
+ * Library Phase 161 → AI Governance Platform (VL-294).
  * Real human approval workflow — not post-facto log only.
  */
 export type ApprovalStatus = 'pending' | 'approved' | 'rejected';
@@ -24,7 +24,7 @@ export type ApprovalRequest = {
   continuousLearningPromoteGateRef?: string;
 };
 
-export function seedApprovalRequests: ApprovalRequest[] {
+export function seedApprovalRequests(): ApprovalRequest[] {
   return [
     {
       id: 'gov-model-001',
@@ -121,6 +121,6 @@ export function aiGovernancePlatformEngineCatalog(approvals: ApprovalRequest[]) 
         'Consequential decisions (model promotion, policy change, marketplace listing) require human approve/reject — not post-facto logging.',
     },
     docs: '/docs/AI_GOVERNANCE_PLATFORM.md',
-    note: 'AI Governance Platform. Human approval workflow with pending|approved|rejected statuses.',
+    note: 'AI Governance Platform (VL-294). Human approval workflow with pending|approved|rejected statuses.',
   };
 }

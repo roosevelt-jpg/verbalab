@@ -17,8 +17,8 @@ export class GetEngineeringQualityPlatformEngineHandler
     private readonly catalog: EngineeringQualityPlatformCatalogPort,
   ) {}
 
-  execute: Promise<EngineeringQualityPlatformEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<EngineeringQualityPlatformEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListEngineeringQualityPlatformProductsHandler
     private readonly catalog: EngineeringQualityPlatformCatalogPort,
   ) {}
 
-  execute: Promise<EngineeringQualityPlatformProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<EngineeringQualityPlatformProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetAiOperationsDashboardEngineQuery } from '../ai-operations-dashboard/application/messages';
 import { GqlAiOperationsDashboardEngine } from './gql.types';
 
-@Resolver
+@Resolver()
 export class AiOperationsDashboardGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query( => GqlAiOperationsDashboardEngine, { name: 'aiOperationsDashboardEngine' })
-  async aiOperationsDashboardEngine: Promise<GqlAiOperationsDashboardEngine> {
-    const catalog = await this.queries.execute(new GetAiOperationsDashboardEngineQuery);
+  @Query(() => GqlAiOperationsDashboardEngine, { name: 'aiOperationsDashboardEngine' })
+  async aiOperationsDashboardEngine(): Promise<GqlAiOperationsDashboardEngine> {
+    const catalog = await this.queries.execute(new GetAiOperationsDashboardEngineQuery());
     return {
       product: catalog.product,
       note: catalog.note,

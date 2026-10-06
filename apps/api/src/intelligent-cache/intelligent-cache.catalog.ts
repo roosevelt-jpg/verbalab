@@ -25,7 +25,7 @@ export type CacheNamespaceRow = {
   notes: string;
 };
 
-export function cacheNamespaces: CacheNamespaceRow[] {
+export function cacheNamespaces(): CacheNamespaceRow[] {
   return [
     {
       id: 'semantic',
@@ -79,14 +79,14 @@ export function cacheNamespaces: CacheNamespaceRow[] {
 }
 
 /**
- * Library Phase 77 → Intelligent Cache.
+ * Library Phase 77 → Intelligent Cache (VL-210).
  * Org/workspace sandbox entry store — not Redis Cluster / vector / CDN OS.
  */
-export function intelligentCacheCatalog {
+export function intelligentCacheCatalog() {
   return {
     product: 'Lugemi Intelligent Cache',
     note:
-      'Intelligent Cache. Org/workspace-scoped inference result cache with namespaces for semantic/translation/embedding/speech/voice/document/prompt/context. Lookup is exact-key (or normalized-text hash for semantic). Not a Redis Cluster, vector similarity OS, or CDN. Does not auto-wire Gateway responses — opt-in put/lookup APIs.',
+      'Intelligent Cache (VL-210). Org/workspace-scoped inference result cache with namespaces for semantic/translation/embedding/speech/voice/document/prompt/context. Lookup is exact-key (or normalized-text hash for semantic). Not a Redis Cluster, vector similarity OS, or CDN. Does not auto-wire Gateway responses — opt-in put/lookup APIs.',
     capabilities: [
       {
         id: 'semantic-cache',
@@ -156,7 +156,7 @@ export function intelligentCacheCatalog {
         name: 'Analytics',
         status: 'shipped',
         api: 'GET /v1/intelligent-cache/analytics',
-        notes: 'Hit/miss + entry counts — ≠ .',
+        notes: 'Hit/miss + entry counts — ≠ VL-212.',
       },
       {
         id: 'monitoring',
@@ -215,13 +215,13 @@ export function intelligentCacheCatalog {
   };
 }
 
-export function intelligentCacheMode: 'sandbox' | 'disabled' {
-  const raw = (process.env.LUGEMI_INTELLIGENT_CACHE_MODE ?? 'sandbox').toLowerCase;
+export function intelligentCacheMode(): 'sandbox' | 'disabled' {
+  const raw = (process.env.LUGEMI_INTELLIGENT_CACHE_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
 
-export function cacheCeilings {
+export function cacheCeilings() {
   const maxEntries = Math.max(
     1,
     Number(process.env.LUGEMI_CACHE_MAX_ENTRIES ?? '200') || 200,
@@ -233,7 +233,7 @@ export function cacheCeilings {
   return {
     maxEntriesPerWorkspace: Math.min(maxEntries, 2000),
     defaultTtlSec: Math.min(defaultTtlSec, 7 * 24 * 3600),
-    mode: intelligentCacheMode,
+    mode: intelligentCacheMode(),
     note: 'Hard ceiling on active (non-expired) entries per org/workspace. TTL required.',
   };
 }

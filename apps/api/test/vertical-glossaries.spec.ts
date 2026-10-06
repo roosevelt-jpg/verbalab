@@ -18,7 +18,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_vg_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_vg_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -32,31 +32,31 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Vertical glossaries',  => {
+describe('Vertical glossaries (VL-103)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;
   let verticals: VerticalGlossariesService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     billing = app.get(BillingService);
     verticals = app.get(VerticalGlossariesService);
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('ships public-sector, healthcare, and banking EN→sw packs',  => {
+  it('ships public-sector, healthcare, and banking EN→sw packs', () => {
     const ids = VERTICAL_GLOSSARY_PACKS.map((p) => p.id);
     expect(ids).toEqual(
       expect.arrayContaining([
@@ -70,12 +70,12 @@ describe('Vertical glossaries',  => {
     }
   });
 
-  it('lists packs with preview for free orgs and blocks install', async  => {
-    const org = await seedOrg(prisma, `vgfree_${Date.now}`);
+  it('lists packs with preview for free orgs and blocks install', async () => {
+    const org = await seedOrg(prisma, `vgfree_${Date.now()}`);
     const catalog = await verticals.list(org.id, org.workspaces[0].id);
     expect(catalog).toHaveLength(3);
     expect(catalog[0].preview.length).toBeGreaterThan(0);
-    expect(catalog[0].terms).toBeUndefined;
+    expect(catalog[0].terms).toBeUndefined();
 
     await expect(
       verticals.install({
@@ -88,8 +88,8 @@ describe('Vertical glossaries',  => {
     ).rejects.toMatchObject({ code: 'plan_required' });
   });
 
-  it('installs a pack into the workspace glossary on Pro', async  => {
-    const org = await seedOrg(prisma, `vgpro_${Date.now}`);
+  it('installs a pack into the workspace glossary on Pro', async () => {
+    const org = await seedOrg(prisma, `vgpro_${Date.now()}`);
     await billing.applyEntitlementForTests({ organizationId: org.id, plan: 'pro' });
     const workspaceId = org.workspaces[0].id;
 

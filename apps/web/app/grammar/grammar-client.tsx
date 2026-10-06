@@ -25,24 +25,24 @@ type CheckResult = {
   note: string;
 };
 
-export function GrammarClient {
-  const { getToken, isLoaded } = useAuth;
-  const [text, setText] = useState('i has went to teh store store');
+export function GrammarClient() {
+  const { getToken, isLoaded } = useAuth();
+  const [text, setText] = useState('i has went to teh store  store');
   const [language, setLanguage] = useState('en');
   const [result, setResult] = useState<CheckResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   async function onCheck(event: FormEvent) {
-    event.preventDefault;
+    event.preventDefault();
     setError(null);
     setBusy(true);
     setResult(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const body: { text: string; language?: string } = { text };
-      if (language.trim) body.language = language.trim;
+      if (language.trim()) body.language = language.trim();
       setResult(
         await apiFetch<CheckResult>('/v1/grammar/check', {
           method: 'POST',

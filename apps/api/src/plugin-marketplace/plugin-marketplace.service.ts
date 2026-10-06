@@ -31,7 +31,7 @@ type PluginSnapshot = {
   installedPluginIds?: Record<string, string>;
 };
 
-@Injectable
+@Injectable()
 export class PluginMarketplaceService {
   constructor(
     private readonly prisma: PrismaService,
@@ -42,8 +42,8 @@ export class PluginMarketplaceService {
     private readonly fabricGate: FabricPolicyGate,
   ) {}
 
-  engine {
-    return pluginMarketplaceEngineCatalog;
+  engine() {
+    return pluginMarketplaceEngineCatalog();
   }
 
   private assertOwnerOrAdmin(role: string) {
@@ -118,8 +118,8 @@ export class PluginMarketplaceService {
       publisherOrgId: row.publisherOrgId,
       publisherWorkspaceId: row.publisherWorkspaceId,
       publisherName: row.publisherOrg?.name ?? null,
-      createdAt: row.createdAt.toISOString,
-      updatedAt: row.updatedAt.toISOString,
+      createdAt: row.createdAt.toISOString(),
+      updatedAt: row.updatedAt.toISOString(),
     };
   }
 
@@ -160,7 +160,7 @@ export class PluginMarketplaceService {
       installs: rows.map((r) => ({
         id: r.id,
         listingId: r.listingId,
-        installedAt: r.installedAt.toISOString,
+        installedAt: r.installedAt.toISOString(),
         listing: this.serialize(r.listing),
       })),
     };
@@ -183,7 +183,7 @@ export class PluginMarketplaceService {
         applicationFeeCents: r.applicationFeeCents,
         currency: r.currency,
         status: r.status,
-        createdAt: r.createdAt.toISOString,
+        createdAt: r.createdAt.toISOString(),
       })),
     };
   }
@@ -229,20 +229,20 @@ export class PluginMarketplaceService {
       permissions,
     });
 
-    const title = (input.title ?? plugin.name).trim.slice(0, 120);
+    const title = (input.title ?? plugin.name).trim().slice(0, 120);
     if (!title) {
       throw new ApiException('validation_error', 'title is required', HttpStatus.BAD_REQUEST);
     }
 
     const priceCents = Math.max(0, Math.floor(Number(input.priceCents ?? 0) || 0));
-    const currency = (input.currency ?? 'usd').trim.toLowerCase.slice(0, 8) || 'usd';
+    const currency = (input.currency ?? 'usd').trim().toLowerCase().slice(0, 8) || 'usd';
     const snapshot: PluginSnapshot = {
       sourcePluginId: plugin.id,
       name: plugin.name,
       version: plugin.version,
       permissions,
       dependencies: plugin.dependencies ?? [],
-      description: input.description?.trim.slice(0, 500) || plugin.description,
+      description: input.description?.trim().slice(0, 500) || plugin.description,
       verified: true,
       sandboxOnly: true,
       liveCodeExecution: false,
@@ -282,7 +282,7 @@ export class PluginMarketplaceService {
 
     return {
       listing: this.serialize(listing),
-      honesty: this.engine.honesty,
+      honesty: this.engine().honesty,
       note: 'Plugin listing published. Buyers install into Plugin Runtime sandbox; invoke is Policy-gated.',
     };
   }
@@ -493,11 +493,11 @@ export class PluginMarketplaceService {
         id: install.id,
         listingId: listing.id,
         pluginId: activated.plugin.id,
-        installedAt: install.installedAt.toISOString,
+        installedAt: install.installedAt.toISOString(),
       },
       plugin: activated.plugin,
       sale,
-      honesty: this.engine.honesty,
+      honesty: this.engine().honesty,
       note:
         'Installed into Plugin Runtime as active sandboxed plugin. Run via POST /v1/plugin-marketplace/listings/:id/run (Policy-gated).',
     };
@@ -596,7 +596,7 @@ export class PluginMarketplaceService {
       ...result,
       listingId: input.listingId,
       honesty: {
-        ...this.engine.honesty,
+        ...this.engine().honesty,
         ...result.honesty,
       },
       note:
@@ -686,8 +686,8 @@ export class PluginMarketplaceService {
       listingId: listing.id,
       organizationId: input.organizationId,
       rating,
-      body: input.body?.trim.slice(0, 1000) || undefined,
-      createdAt: new Date.toISOString,
+      body: input.body?.trim().slice(0, 1000) || undefined,
+      createdAt: new Date().toISOString(),
     };
 
     if (existing) {
@@ -799,19 +799,19 @@ export class PluginMarketplaceService {
       installs,
       sales,
       runs,
-      honesty: this.engine.honesty,
-      note: 'Plugin marketplace aggregates. Commerce depth deferred to Creator Economy.',
+      honesty: this.engine().honesty,
+      note: 'Plugin marketplace aggregates. Commerce depth deferred to Creator Economy (VL-258).',
     };
   }
 
-  monitoring {
-    const engine = this.engine;
+  monitoring() {
+    const engine = this.engine();
     return {
       mode: 'plugin-marketplace',
       products: engine.capabilities.map((c) => ({ id: c.id, status: c.status })),
       honesty: engine.honesty,
       safety: engine.safety,
-      note: 'Plugin Marketplace monitoring snapshot.',
+      note: 'Plugin Marketplace monitoring snapshot (VL-250).',
     };
   }
 }

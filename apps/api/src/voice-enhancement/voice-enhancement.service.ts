@@ -19,7 +19,7 @@ export type EnhanceAuth = {
   ip?: string;
 };
 
-@Injectable
+@Injectable()
 export class VoiceEnhancementService {
   constructor(
     private readonly prisma: PrismaService,
@@ -27,11 +27,11 @@ export class VoiceEnhancementService {
     private readonly audio: AudioService,
   ) {}
 
-  engine {
-    return voiceEnhancementEngineCatalog;
+  engine() {
+    return voiceEnhancementEngineCatalog();
   }
 
-  profiles {
+  profiles() {
     return {
       profiles: ENHANCEMENT_PROFILES.map((p) => ({
         id: p.id,
@@ -43,24 +43,24 @@ export class VoiceEnhancementService {
         echoCancellation: p.echoCancellation,
       })),
       note:
-        'Profiles chain PCM heuristics. Not Krisp / Adobe Enhance / Demucs / live AEC.',
+        'Profiles chain VL-155 PCM heuristics. Not Krisp / Adobe Enhance / Demucs / live AEC.',
       docs: '/docs/VOICE_ENHANCEMENT.md',
     };
   }
 
-  echoStatus {
+  echoStatus() {
     return {
       available: false,
       status: 'deferred',
       capability: 'echo-cancellation',
       note:
-        'Echo cancellation requires an AEC reference path or vendor SDK — deferred in (same honesty as ). See ADR-0086.',
+        'Echo cancellation requires an AEC reference path or vendor SDK — deferred in VL-175 (same honesty as VL-155). See ADR-0086.',
       docs: '/docs/VOICE_ENHANCEMENT.md',
     };
   }
 
   async analytics(organizationId: string) {
-    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
     const events = await this.prisma.auditEvent.findMany({
       where: {
         organizationId,
@@ -95,7 +95,7 @@ export class VoiceEnhancementService {
     input: { file: Express.Multer.File; profile?: string; targetRate?: number },
   ) {
     this.audio.assertAllowedAudio(input.file);
-    const profileId = (input.profile?.trim || 'noise_removal') as string;
+    const profileId = (input.profile?.trim() || 'noise_removal') as string;
     if (!getEnhancementProfile(profileId)) {
       throw new ApiException(
         'validation_error',
@@ -184,7 +184,7 @@ export class VoiceEnhancementService {
     input: { file: Express.Multer.File; profile?: string; targetRate?: number },
   ): AsyncGenerator<{ event: 'meta' | 'progress' | 'done' | 'error'; [key: string]: unknown }> {
     try {
-      const profileId = input.profile?.trim || 'noise_removal';
+      const profileId = input.profile?.trim() || 'noise_removal';
       const profile = getEnhancementProfile(profileId);
       if (!profile) {
         yield {

@@ -14,7 +14,7 @@ export type VoiceCloneCreateResult = {
 };
 
 /**
- * Instant Voice Cloning + TTS.
+ * Instant Voice Cloning + TTS (VL-064).
  * Without VENDOR_VOICE_CLONE_API_KEY (or legacy alias) → provider_not_configured.
  */
 export class VendorVoiceCloneAdapter implements TtsProvider {
@@ -23,15 +23,15 @@ export class VendorVoiceCloneAdapter implements TtsProvider {
   constructor(
     private readonly apiKey: string,
     private readonly fetchImpl: typeof fetch = fetch,
-    private readonly apiBase = process.env.VENDOR_VOICE_CLONE_API_BASE?.trim ||
+    private readonly apiBase = process.env.VENDOR_VOICE_CLONE_API_BASE?.trim() ||
       'https://api.elevenlabs.io',
   ) {}
 
-  isConfigured: boolean {
+  isConfigured(): boolean {
     return Boolean(this.apiKey);
   }
 
-  listVoices: TtsVoice[] {
+  listVoices(): TtsVoice[] {
     return [];
   }
 
@@ -55,7 +55,7 @@ export class VendorVoiceCloneAdapter implements TtsProvider {
       );
     }
 
-    const form = new FormData;
+    const form = new FormData();
     form.append('name', input.name);
     form.append('description', input.description);
     for (const sample of input.samples) {
@@ -72,7 +72,7 @@ export class VendorVoiceCloneAdapter implements TtsProvider {
       signal: AbortSignal.timeout(60_000),
     });
 
-    const json = (await response.json.catch( => ({}))) as {
+    const json = (await response.json().catch(() => ({}))) as {
       voice_id?: string;
       detail?: { message?: string } | string;
     };
@@ -120,7 +120,7 @@ export class VendorVoiceCloneAdapter implements TtsProvider {
       );
     }
 
-    const started = Date.now;
+    const started = Date.now();
     const format = input.format ?? 'mp3';
     const body: Record<string, unknown> = {
       text: input.text,
@@ -149,7 +149,7 @@ export class VendorVoiceCloneAdapter implements TtsProvider {
     );
 
     if (!response.ok) {
-      const message = await response.text;
+      const message = await response.text();
       throw new ApiException(
         'provider_unavailable',
         message || `vendor TTS HTTP ${response.status}`,
@@ -157,7 +157,7 @@ export class VendorVoiceCloneAdapter implements TtsProvider {
       );
     }
 
-    const audio = Buffer.from(await response.arrayBuffer);
+    const audio = Buffer.from(await response.arrayBuffer());
     return {
       audio,
       mimeType: format === 'mp3' ? 'audio/mpeg' : 'audio/wav',
@@ -165,7 +165,7 @@ export class VendorVoiceCloneAdapter implements TtsProvider {
       voice: input.voice,
       characters: [...input.text].length,
       provider: this.name,
-      latencyMs: Date.now - started,
+      latencyMs: Date.now() - started,
     };
   }
 }
@@ -174,7 +174,7 @@ export class VendorVoiceCloneAdapter implements TtsProvider {
 export class FixtureVoiceCloneAdapter {
   readonly name = 'fixture_vendor_clone';
 
-  isConfigured: boolean {
+  isConfigured(): boolean {
     return true;
   }
 

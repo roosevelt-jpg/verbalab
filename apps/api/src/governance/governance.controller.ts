@@ -11,16 +11,16 @@ export class GovernanceController {
   constructor(private readonly governance: GovernanceService) {}
 
   @Get('members')
-  listMembers(@CurrentSession session: SessionContext) {
+  listMembers(@CurrentSession() session: SessionContext) {
     return this.governance.listMembers(session.organizationId);
   }
 
   @Patch('members/:id')
   updateMember(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Param('id') id: string,
-    @Body body: { role?: string },
-    @Req req: Request,
+    @Body() body: { role?: string },
+    @Req() req: Request,
   ) {
     return this.governance.updateMemberRole({
       organizationId: session.organizationId,
@@ -34,9 +34,9 @@ export class GovernanceController {
 
   @Delete('members/:id')
   removeMember(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Param('id') id: string,
-    @Req req: Request,
+    @Req() req: Request,
   ) {
     return this.governance.removeMember({
       organizationId: session.organizationId,
@@ -48,15 +48,15 @@ export class GovernanceController {
   }
 
   @Get('invites')
-  listInvites(@CurrentSession session: SessionContext) {
+  listInvites(@CurrentSession() session: SessionContext) {
     return this.governance.listInvites(session.organizationId);
   }
 
   @Post('invites')
   createInvite(
-    @CurrentSession session: SessionContext,
-    @Body body: { email?: string; role?: string },
-    @Req req: Request,
+    @CurrentSession() session: SessionContext,
+    @Body() body: { email?: string; role?: string },
+    @Req() req: Request,
   ) {
     return this.governance.createInvite({
       organizationId: session.organizationId,
@@ -70,9 +70,9 @@ export class GovernanceController {
 
   @Delete('invites/:id')
   revokeInvite(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Param('id') id: string,
-    @Req req: Request,
+    @Req() req: Request,
   ) {
     return this.governance.revokeInvite({
       organizationId: session.organizationId,
@@ -84,15 +84,15 @@ export class GovernanceController {
   }
 
   @Get('branding')
-  getBranding {
-    return this.governance.getBranding;
+  getBranding() {
+    return this.governance.getBranding();
   }
 
   @Patch('branding')
   updateBranding(
-    @CurrentSession session: SessionContext,
-    @Req req: Request,
-    @Body
+    @CurrentSession() session: SessionContext,
+    @Req() req: Request,
+    @Body()
     body: {
       companyName?: string;
       logoUrl?: string;
@@ -118,15 +118,15 @@ export class GovernanceController {
   }
 
   @Get('data-settings')
-  getSettings(@CurrentSession session: SessionContext) {
+  getSettings(@CurrentSession() session: SessionContext) {
     return this.governance.getSettings(session.organizationId);
   }
 
   @Patch('data-settings')
   updateSettings(
-    @CurrentSession session: SessionContext,
-    @Req req: Request,
-    @Body
+    @CurrentSession() session: SessionContext,
+    @Req() req: Request,
+    @Body()
     body: {
       retentionDays?: number | null;
       persistSourceText?: boolean;
@@ -145,7 +145,7 @@ export class GovernanceController {
   }
 
   @Post('export')
-  exportWorkspace(@CurrentSession session: SessionContext, @Req req: Request) {
+  exportWorkspace(@CurrentSession() session: SessionContext, @Req() req: Request) {
     return this.governance.exportWorkspace({
       organizationId: session.organizationId,
       workspaceId: session.workspaceId,
@@ -155,11 +155,11 @@ export class GovernanceController {
     });
   }
 
-  @Delete
+  @Delete()
   deleteOrganization(
-    @CurrentSession session: SessionContext,
-    @Req req: Request,
-    @Body body: { confirmName?: string },
+    @CurrentSession() session: SessionContext,
+    @Req() req: Request,
+    @Body() body: { confirmName?: string },
   ) {
     return this.governance.deleteOrganization({
       organizationId: session.organizationId,

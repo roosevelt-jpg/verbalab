@@ -14,8 +14,8 @@ type Engine = {
 };
 type Analytics = { assemblies: number; note: string };
 
-export function ContextEngineClient {
-  const { getToken, isLoaded } = useAuth;
+export function ContextEngineClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [query, setQuery] = useState('Where is Lugemi HQ?');
@@ -24,8 +24,8 @@ export function ContextEngineClient {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(async  => {
-    const token = await getToken;
+  const refresh = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, an] = await Promise.all([
       apiFetch<Engine>('/v1/context-engine/engine', { token }),
@@ -35,17 +35,17 @@ export function ContextEngineClient {
     setAnalytics(an);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void refresh.catch((err: Error) => setError(err.message));
+    void refresh().catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
-  async function assemble {
+  async function assemble() {
     setLoading(true);
     setError(null);
     setResult(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const body = await apiFetch<{
         included: string[];
@@ -74,7 +74,7 @@ export function ContextEngineClient {
           2,
         ),
       );
-      await refresh;
+      await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Assemble failed');
     } finally {
@@ -141,7 +141,7 @@ export function ContextEngineClient {
                 }}
               />
             </label>
-            <button type="button" disabled={loading} style={primary} onClick={ => void assemble}>
+            <button type="button" disabled={loading} style={primary} onClick={() => void assemble()}>
               Assemble context
             </button>
           </div>

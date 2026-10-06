@@ -6,16 +6,16 @@ import {
   DatasetPipelineProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestDatasetPipelineCatalogAdapter implements DatasetPipelineCatalogPort {
   constructor(private readonly service: DatasetPipelineService) {}
 
-  engine: DatasetPipelineEngineBundle {
-    return this.service.engine;
+  engine(): DatasetPipelineEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: DatasetPipelineProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): DatasetPipelineProductRow[] {
+    const bundle = this.engine() as {
       products?: DatasetPipelineProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestDatasetPipelineCatalogAdapter implements DatasetPipelineCatalog
         status: 'shipped',
         api: 'GET /v1/dataset-pipeline/engine',
         console: '/dataset-pipeline',
-        notes: ' shipped.',
+        notes: 'VL-282 shipped.',
       },
     ];
   }

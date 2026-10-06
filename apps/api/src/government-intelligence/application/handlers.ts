@@ -17,8 +17,8 @@ export class GetGovernmentIntelligenceEngineHandler
     private readonly catalog: GovernmentIntelligenceCatalogPort,
   ) {}
 
-  execute: Promise<GovernmentIntelligenceEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<GovernmentIntelligenceEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListGovernmentIntelligenceProductsHandler
     private readonly catalog: GovernmentIntelligenceCatalogPort,
   ) {}
 
-  execute: Promise<GovernmentIntelligenceProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<GovernmentIntelligenceProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

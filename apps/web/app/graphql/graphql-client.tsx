@@ -12,7 +12,7 @@ const EXAMPLE = `query {
   languageProducts { id name status }
 }`;
 
-export function GraphqlClient {
+export function GraphqlClient() {
   return (
     <AppShell>
       <h1

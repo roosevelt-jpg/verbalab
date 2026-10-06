@@ -1,4 +1,4 @@
-/** Application ports for Experiment Platform. */
+/** Application ports for Experiment Platform (VL-272). */
 
 export type ExperimentPlatformProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type ExperimentPlatformEngineBundle = ReturnType<
 >;
 
 export interface ExperimentPlatformCatalogPort {
-  engine: ExperimentPlatformEngineBundle;
-  listProducts: ExperimentPlatformProductRow[];
+  engine(): ExperimentPlatformEngineBundle;
+  listProducts(): ExperimentPlatformProductRow[];
 }
 
 export const EXPERIMENT_PLATFORM_CATALOG_PORT = Symbol('EXPERIMENT_PLATFORM_CATALOG_PORT');

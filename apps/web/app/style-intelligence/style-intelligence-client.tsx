@@ -43,8 +43,8 @@ const PROFILES = [
   'casual',
 ];
 
-export function StyleIntelligenceClient {
-  const { getToken, isLoaded } = useAuth;
+export function StyleIntelligenceClient() {
+  const { getToken, isLoaded } = useAuth();
   const [overview, setOverview] = useState<Overview | null>(null);
   const [text, setText] = useState("I'm gonna ship this ASAP — unlock conversion now!");
   const [target, setTarget] = useState('professional');
@@ -52,17 +52,17 @@ export function StyleIntelligenceClient {
   const [transfer, setTransfer] = useState<TransferResult | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async  => {
+  const load = useCallback(async () => {
     setOverview(await apiFetch<Overview>('/v1/style/intelligence'));
   }, []);
 
-  useEffect( => {
-    void load.catch((err: Error) => setError(err.message));
+  useEffect(() => {
+    void load().catch((err: Error) => setError(err.message));
   }, [load]);
 
-  async function runDetect {
+  async function runDetect() {
     setError(null);
-    const token = await getToken;
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     setDetect(
       await apiFetch<DetectResult>('/v1/style/detect', {
@@ -73,9 +73,9 @@ export function StyleIntelligenceClient {
     );
   }
 
-  async function runTransfer {
+  async function runTransfer() {
     setError(null);
-    const token = await getToken;
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     setTransfer(
       await apiFetch<TransferResult>('/v1/style/transfer', {
@@ -126,7 +126,7 @@ export function StyleIntelligenceClient {
           type="button"
           className="vl-button"
           disabled={!isLoaded}
-          onClick={ => void runDetect.catch((e: Error) => setError(e.message))}
+          onClick={() => void runDetect().catch((e: Error) => setError(e.message))}
         >
           Detect tone
         </button>
@@ -134,7 +134,7 @@ export function StyleIntelligenceClient {
           type="button"
           className="vl-button"
           disabled={!isLoaded}
-          onClick={ => void runTransfer.catch((e: Error) => setError(e.message))}
+          onClick={() => void runTransfer().catch((e: Error) => setError(e.message))}
         >
           Transfer style
         </button>

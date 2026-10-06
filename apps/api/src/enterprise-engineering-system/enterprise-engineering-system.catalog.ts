@@ -10,11 +10,11 @@ export type EnterpriseEngineeringSystemProductRow = {
 };
 
 /**
- * Library Phase 211 → Enterprise Engineering System Foundation.
+ * Library Phase 211 → Enterprise Engineering System Foundation (VL-344).
  * Engineering OS for humans + Cursor — standards/governance catalogs.
  * Not customer-facing product cloud; not ADR factory / Architecture Knowledge Base OS.
  */
-export function enterpriseEngineeringSystemProductCatalog: EnterpriseEngineeringSystemProductRow[] {
+export function enterpriseEngineeringSystemProductCatalog(): EnterpriseEngineeringSystemProductRow[] {
   return [
     {
       id: 'enterprise-engineering-system',
@@ -23,7 +23,7 @@ export function enterpriseEngineeringSystemProductCatalog: EnterpriseEngineering
       api: 'GET /v1/enterprise-engineering-system/products',
       console: '/enterprise-engineering-system',
       notes:
-        '. Engineering OS for humans+Cursor; architectureKnowledgeBaseOs=false; adrFactoryOs=false.',
+        'VL-344. Engineering OS for humans+Cursor; architectureKnowledgeBaseOs=false; adrFactoryOs=false.',
     },
     {
       id: 'engineering-governance',
@@ -32,7 +32,7 @@ export function enterpriseEngineeringSystemProductCatalog: EnterpriseEngineering
       api: 'GET /v1/engineering-governance/engine',
       console: '/engineering-governance',
       notes:
-        '. Councils + CAB/TSC; humanSignOffRequired; extends AI Governance.',
+        'VL-345. Councils + CAB/TSC; humanSignOffRequired; extends AI Governance.',
     },
     {
       id: 'architecture-governance',
@@ -41,7 +41,7 @@ export function enterpriseEngineeringSystemProductCatalog: EnterpriseEngineering
       api: 'GET /v1/architecture-governance/engine',
       console: '/architecture-governance',
       notes:
-        '. ADR/RFC workflows pointing at docs/adr; adrFactoryOs=false.',
+        'VL-346. ADR/RFC workflows pointing at docs/adr; adrFactoryOs=false.',
     },
     {
       id: 'repository-standards',
@@ -50,7 +50,7 @@ export function enterpriseEngineeringSystemProductCatalog: EnterpriseEngineering
       api: 'GET /v1/repository-standards/engine',
       console: '/repository-standards',
       notes:
-        '. Monorepo/polyrepo/naming/branch/git standards matching reality.',
+        'VL-347. Monorepo/polyrepo/naming/branch/git standards matching reality.',
     },
     {
       id: 'engineering-quality-platform',
@@ -59,7 +59,7 @@ export function enterpriseEngineeringSystemProductCatalog: EnterpriseEngineering
       api: 'GET /v1/engineering-quality-platform/engine',
       console: '/engineering-quality-platform',
       notes:
-        '. Quality catalog + dashboard snapshot; sonarqubeOs=false.',
+        'VL-348. Quality catalog + dashboard snapshot; sonarqubeOs=false.',
     },
     {
       id: 'ai-engineering-standards',
@@ -68,7 +68,7 @@ export function enterpriseEngineeringSystemProductCatalog: EnterpriseEngineering
       api: 'GET /v1/ai-engineering-standards/engine',
       console: '/ai-engineering-standards',
       notes:
-        '. AI standards + retroactiveChecks (Vol 11/12/17).',
+        'VL-349. AI standards + retroactiveChecks (Vol 11/12/17).',
     },
     {
       id: 'api-engineering-standards',
@@ -77,7 +77,7 @@ export function enterpriseEngineeringSystemProductCatalog: EnterpriseEngineering
       api: 'GET /v1/api-engineering-standards/engine',
       console: '/api-engineering-standards',
       notes:
-        '. REST/GraphQL/gRPC/SDK standards reflecting OpenAPI/SDK.',
+        'VL-350. REST/GraphQL/gRPC/SDK standards reflecting OpenAPI/SDK.',
     },
     {
       id: 'database-engineering-standards',
@@ -86,7 +86,7 @@ export function enterpriseEngineeringSystemProductCatalog: EnterpriseEngineering
       api: 'GET /v1/database-engineering-standards/engine',
       console: '/database-engineering-standards',
       notes:
-        '. Postgres/Redis/ES/vector/KG standards; databaseOs=false.',
+        'VL-351. Postgres/Redis/ES/vector/KG standards; databaseOs=false.',
     },
     {
       id: 'infrastructure-engineering-standards',
@@ -95,7 +95,7 @@ export function enterpriseEngineeringSystemProductCatalog: EnterpriseEngineering
       api: 'GET /v1/infrastructure-engineering-standards/engine',
       console: '/infrastructure-engineering-standards',
       notes:
-        '. IaC/deploy/GPU standards; kubernetesOs=false; FinOps+secrets honesty.',
+        'VL-352. IaC/deploy/GPU standards; kubernetesOs=false; FinOps+secrets honesty.',
     },
     {
       id: 'platform-engineering-cloud',
@@ -136,7 +136,7 @@ export function enterpriseEngineeringSystemProductCatalog: EnterpriseEngineering
   ];
 }
 
-export function enterpriseEngineeringSystemRoutingTable: Array<{
+export function enterpriseEngineeringSystemRoutingTable(): Array<{
   id: string;
   path: string;
   purpose: string;
@@ -150,7 +150,7 @@ export function enterpriseEngineeringSystemRoutingTable: Array<{
   ];
 }
 
-export function enterpriseEngineeringSystemHubInventory: Array<{
+export function enterpriseEngineeringSystemHubInventory(): Array<{
   id: string;
   title: string;
   engineeringOsForHumansAndCursor: boolean;
@@ -235,7 +235,7 @@ export function enterpriseEngineeringSystemHubInventory: Array<{
   ];
 }
 
-export function enterpriseEngineeringSystemExtends: Array<{
+export function enterpriseEngineeringSystemExtends(): Array<{
   id: string;
   volume: number;
   path: string;
@@ -287,7 +287,7 @@ export function enterpriseEngineeringSystemExtends: Array<{
   ];
 }
 
-export function enterpriseEngineeringSystemArchitectureNotes: Record<string, unknown> {
+export function enterpriseEngineeringSystemArchitectureNotes(): Record<string, unknown> {
   return {
     role: 'enterprise-engineering-system-standards',
     extends: [
@@ -311,7 +311,7 @@ export function enterpriseEngineeringSystemArchitectureNotes: Record<string, unk
   };
 }
 
-export function enterpriseEngineeringSystemHonesty: Record<string, boolean | string | number> {
+export function enterpriseEngineeringSystemHonesty(): Record<string, boolean | string | number> {
   return {
     engineeringOsForHumansAndCursor: true,
     customerFacingProductCloud: false,

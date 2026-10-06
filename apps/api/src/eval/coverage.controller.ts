@@ -11,8 +11,8 @@ export class CoverageController {
 
   /** Public coverage matrix — honest status, no leadership claims. */
   @Get('coverage')
-  coverage {
-    return this.evalService.coverageMatrix;
+  coverage() {
+    return this.evalService.coverageMatrix();
   }
 
   /**
@@ -22,7 +22,7 @@ export class CoverageController {
   @Post('eval/run')
   @UseGuards(ClerkAuthGuard)
   async run(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Query('mode') modeRaw?: string,
   ) {
     if (session.role !== 'owner' && session.role !== 'admin') {

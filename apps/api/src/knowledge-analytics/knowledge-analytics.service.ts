@@ -14,12 +14,12 @@ type PeriodInput = {
   to?: string;
 };
 
-@Injectable
+@Injectable()
 export class KnowledgeAnalyticsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  engine {
-    return knowledgeAnalyticsCatalog;
+  engine() {
+    return knowledgeAnalyticsCatalog();
   }
 
   async overview(input: PeriodInput) {
@@ -35,8 +35,8 @@ export class KnowledgeAnalyticsService {
         this.relationships(input),
       ]);
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       growth: {
         documents: growth.documents,
         chunks: growth.chunks,
@@ -71,7 +71,7 @@ export class KnowledgeAnalyticsService {
         kgRelationships: relationships.kgRelationships,
         taxonomyAssignments: relationships.taxonomyAssignments,
       },
-      note: 'Knowledge Analytics overview — not Language/Speech/Voice/Intelligence analytics.',
+      note: 'Knowledge Analytics overview (VL-202) — not Language/Speech/Voice/Intelligence analytics.',
     };
   }
 
@@ -114,21 +114,21 @@ export class KnowledgeAnalyticsService {
     ]);
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       workspace: { organizationId: input.organizationId, workspaceId: input.workspaceId },
       documents,
       chunks,
       ready,
       failed,
       documentsCreatedInPeriod: createdInPeriod,
-      note: 'Knowledge growth from knowledge_documents/chunks.',
+      note: 'Knowledge growth from knowledge_documents/chunks (VL-202).',
     };
   }
 
   async usage(input: PeriodInput) {
     const { periodStart, periodEnd } = this.parsePeriod(input.from, input.to);
-    const allActions = Object.values(KNOWLEDGE_SURFACE_ACTIONS).flat;
+    const allActions = Object.values(KNOWLEDGE_SURFACE_ACTIONS).flat();
     const events = await this.prisma.auditEvent.findMany({
       where: {
         organizationId: input.organizationId,
@@ -152,15 +152,15 @@ export class KnowledgeAnalyticsService {
       .sort((a, b) => b.count - a.count);
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       totalEvents: events.length,
       bySurface,
       byAction: Object.entries(byAction)
         .map(([action, count]) => ({ action, count }))
         .sort((a, b) => b.count - a.count)
         .slice(0, 40),
-      note: 'Knowledge Cloud surface audit aggregates.',
+      note: 'Knowledge Cloud surface audit aggregates (VL-202).',
     };
   }
 
@@ -191,8 +191,8 @@ export class KnowledgeAnalyticsService {
     });
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       documents: total,
       ready,
       failed,
@@ -203,7 +203,7 @@ export class KnowledgeAnalyticsService {
       chunkCoverage: total ? Number((withChunks / total).toFixed(3)) : null,
       avgChunksPerDoc: total ? Number((chunkSum / total).toFixed(2)) : null,
       validationsInPeriod: validates,
-      note: 'Heuristic quality proxies — not a human knowledge eval lab.',
+      note: 'Heuristic quality proxies — not a human knowledge eval lab (VL-202).',
     };
   }
 
@@ -233,8 +233,8 @@ export class KnowledgeAnalyticsService {
 
     const searches = events.length;
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       searches,
       zeroHitSearches: zeroHits,
       zeroHitRate: searches ? Number((zeroHits / searches).toFixed(3)) : null,
@@ -242,7 +242,7 @@ export class KnowledgeAnalyticsService {
       byMode: Object.entries(byMode)
         .map(([mode, count]) => ({ mode, count }))
         .sort((a, b) => b.count - a.count),
-      note: 'Search success from enterprise_search.searched audit metadata.',
+      note: 'Search success from enterprise_search.searched audit metadata (VL-202).',
     };
   }
 
@@ -299,15 +299,15 @@ export class KnowledgeAnalyticsService {
     const unassignedDocs = Math.max(0, totalDocs - assigned);
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       unchunkedReady,
       failedDocs,
       zeroHitSearches,
       unassignedDocs,
       assignedDocs: assigned,
       totalDocs,
-      note: 'Gap heuristics — not a knowledge coverage OS.',
+      note: 'Gap heuristics — not a knowledge coverage OS (VL-202).',
     };
   }
 
@@ -342,7 +342,7 @@ export class KnowledgeAnalyticsService {
       samples: scores.length,
       avgScore: avg,
       bands,
-      note: 'Heuristic confidence — not a calibrated probabilistic model.',
+      note: 'Heuristic confidence — not a calibrated probabilistic model (VL-202).',
       honesty: { calibratedConfidence: false },
     };
   }
@@ -390,7 +390,7 @@ export class KnowledgeAnalyticsService {
       taxonomyTerms,
       taxonomyAssignments,
       ontologyConcepts,
-      note: 'Relationship counts from KG/taxonomy tables; ontologyConcepts = concept|category entities.',
+      note: 'Relationship counts from KG/taxonomy tables; ontologyConcepts = concept|category entities (VL-202).',
     };
   }
 
@@ -407,7 +407,7 @@ export class KnowledgeAnalyticsService {
         this.relationships(input),
       ]);
     return {
-      generatedAt: new Date.toISOString,
+      generatedAt: new Date().toISOString(),
       overview,
       growth,
       usage,
@@ -416,25 +416,25 @@ export class KnowledgeAnalyticsService {
       gaps,
       confidence,
       relationships,
-      honesty: knowledgeAnalyticsCatalog.honesty,
-      note: 'Bundled Knowledge Analytics report.',
+      honesty: knowledgeAnalyticsCatalog().honesty,
+      note: 'Bundled Knowledge Analytics report (VL-202).',
     };
   }
 
   async monitoring(input: PeriodInput) {
     const [overview, engine] = await Promise.all([
       this.overview(input),
-      Promise.resolve(this.engine),
+      Promise.resolve(this.engine()),
     ]);
     const recent = await this.prisma.auditEvent.count({
       where: {
         organizationId: input.organizationId,
-        createdAt: { gte: new Date(Date.now - 24 * 60 * 60 * 1000) },
+        createdAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
         OR: KNOWLEDGE_AUDIT_PREFIXES.map((p) => ({ action: { startsWith: p } })),
       },
     });
     return {
-      generatedAt: new Date.toISOString,
+      generatedAt: new Date().toISOString(),
       periodStart: overview.periodStart,
       periodEnd: overview.periodEnd,
       documents: overview.growth.documents,
@@ -443,7 +443,7 @@ export class KnowledgeAnalyticsService {
       regeneratesIntelligenceAnalytics: engine.honesty.regeneratesIntelligenceAnalytics,
       biDashboardOs: engine.honesty.biDashboardOs,
       deferred: engine.capabilities.filter((c) => c.status === 'deferred').map((c) => c.id),
-      note: 'Knowledge Analytics monitoring snapshot.',
+      note: 'Knowledge Analytics monitoring snapshot (VL-202).',
     };
   }
 
@@ -470,26 +470,26 @@ export class KnowledgeAnalyticsService {
     periodStart: Date;
     periodEnd: Date;
   } {
-    const now = new Date;
+    const now = new Date();
     let periodStart: Date;
     let periodEnd: Date;
 
     if (fromRaw) {
       periodStart = new Date(fromRaw);
-      if (Number.isNaN(periodStart.getTime)) {
+      if (Number.isNaN(periodStart.getTime())) {
         throw new ApiException('validation_error', 'from must be an ISO date', HttpStatus.BAD_REQUEST);
       }
     } else {
-      periodStart = new Date(Date.UTC(now.getUTCFullYear, now.getUTCMonth, 1));
+      periodStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
     }
 
     if (toRaw) {
       periodEnd = new Date(toRaw);
-      if (Number.isNaN(periodEnd.getTime)) {
+      if (Number.isNaN(periodEnd.getTime())) {
         throw new ApiException('validation_error', 'to must be an ISO date', HttpStatus.BAD_REQUEST);
       }
     } else {
-      periodEnd = new Date(now.getTime + 1);
+      periodEnd = new Date(now.getTime() + 1);
     }
 
     if (periodEnd <= periodStart) {

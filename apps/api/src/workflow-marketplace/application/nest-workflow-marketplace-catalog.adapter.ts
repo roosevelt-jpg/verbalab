@@ -5,11 +5,11 @@ import {
   WorkflowMarketplaceEngineBundle,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestWorkflowMarketplaceCatalogAdapter implements WorkflowMarketplaceCatalogPort {
   constructor(private readonly marketplace: WorkflowMarketplaceService) {}
 
-  engine: WorkflowMarketplaceEngineBundle {
-    return this.marketplace.engine;
+  engine(): WorkflowMarketplaceEngineBundle {
+    return this.marketplace.engine();
   }
 }

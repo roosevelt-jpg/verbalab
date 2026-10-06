@@ -2,14 +2,14 @@ import { mkdir, readFile, unlink, writeFile } from 'fs/promises';
 import { dirname, join } from 'path';
 import { Injectable } from '@nestjs/common';
 
-@Injectable
+@Injectable()
 export class LocalStorageService {
-  rootDir: string {
-    return process.env.DOCUMENT_STORAGE_DIR ?? join(process.cwd, 'storage');
+  rootDir(): string {
+    return process.env.DOCUMENT_STORAGE_DIR ?? join(process.cwd(), 'storage');
   }
 
   absolutePath(storageKey: string): string {
-    return join(this.rootDir, storageKey);
+    return join(this.rootDir(), storageKey);
   }
 
   async writeBuffer(storageKey: string, data: Buffer): Promise<void> {

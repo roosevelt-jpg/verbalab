@@ -5,7 +5,7 @@ import { AuditService } from '../audit/audit.service';
 import { TmService } from '../tm/tm.service';
 import { estimateTranslationQuality } from './quality-estimate';
 
-@Injectable
+@Injectable()
 export class QualityService {
   constructor(
     private readonly prisma: PrismaService,
@@ -94,7 +94,7 @@ export class QualityService {
         status: 'accepted',
         reviewNote: input.note,
         reviewedById: input.userId,
-        reviewedAt: new Date,
+        reviewedAt: new Date(),
         needsReview: false,
       },
     });
@@ -150,7 +150,7 @@ export class QualityService {
         status: 'rejected',
         reviewNote: input.note,
         reviewedById: input.userId,
-        reviewedAt: new Date,
+        reviewedAt: new Date(),
         needsReview: false,
       },
     });

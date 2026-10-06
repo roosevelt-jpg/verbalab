@@ -2,13 +2,13 @@ import { Query, Resolver } from '@nestjs/graphql';
 import { MemoryRuntimeService } from '../memory-runtime/memory-runtime.service';
 import { GqlMemoryRuntimeEngine } from './gql.types';
 
-@Resolver
+@Resolver()
 export class MemoryRuntimeGraphqlResolver {
   constructor(private readonly runtime: MemoryRuntimeService) {}
 
-  @Query( => GqlMemoryRuntimeEngine, { name: 'memoryRuntimeEngine' })
-  memoryRuntimeEngine: GqlMemoryRuntimeEngine {
-    const c = this.runtime.engine;
+  @Query(() => GqlMemoryRuntimeEngine, { name: 'memoryRuntimeEngine' })
+  memoryRuntimeEngine(): GqlMemoryRuntimeEngine {
+    const c = this.runtime.engine();
     return {
       product: c.product,
       note: c.note,

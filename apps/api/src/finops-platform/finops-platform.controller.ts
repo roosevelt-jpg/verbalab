@@ -6,18 +6,18 @@ export class FinopsPlatformController {
   constructor(private readonly service: FinopsPlatformService) {}
 
   @Get('engine')
-  engine {
-    return this.service.engine;
+  engine() {
+    return this.service.engine();
   }
 
   @Get('products')
-  products {
-    return this.service.engine;
+  products() {
+    return this.service.engine();
   }
 
   @Get('monitoring')
-  monitoring {
-    return this.service.monitoring;
+  monitoring() {
+    return this.service.monitoring();
   }
 
   @Get('costs')
@@ -26,13 +26,13 @@ export class FinopsPlatformController {
   }
 
   @Get('budgets')
-  budgets {
-    return this.service.budgets;
+  budgets() {
+    return this.service.budgets();
   }
 
   @Get('alerts')
-  alerts {
-    return this.service.alerts;
+  alerts() {
+    return this.service.alerts();
   }
 
   @Get('query')

@@ -1,4 +1,4 @@
-/** Application ports for AI Fabric Foundation. */
+/** Application ports for AI Fabric Foundation (VL-239). */
 
 export type FabricBusRow = {
   id: string;
@@ -14,8 +14,8 @@ export type FabricProductsBundle = ReturnType<
 >;
 
 export interface AiFabricCatalogPort {
-  products: FabricProductsBundle;
-  listBuses: FabricBusRow[];
+  products(): FabricProductsBundle;
+  listBuses(): FabricBusRow[];
 }
 
 export const AI_FABRIC_CATALOG_PORT = Symbol('AI_FABRIC_CATALOG_PORT');

@@ -9,8 +9,8 @@ export type KernelRuntimeRow = {
   notes: string;
 };
 
-/** Library Phase 81 runtime map. Internal OS hub — not a customer product. */
-export function aiKernelRuntimeCatalog: KernelRuntimeRow[] {
+/** Library Phase 81 runtime map (VL-214). Internal OS hub — not a customer product. */
+export function aiKernelRuntimeCatalog(): KernelRuntimeRow[] {
   return [
     {
       id: 'ai-kernel',
@@ -19,7 +19,7 @@ export function aiKernelRuntimeCatalog: KernelRuntimeRow[] {
       api: 'GET /v1/ai-kernel/products',
       console: '/ai-kernel',
       notes:
-        'Internal runtime hub. Not a customer-facing product. Routes future Agent/Workflow/Plugin execution through Nest kernel modules — not a Linux/VAIOS rewrite.',
+        'Internal runtime hub (VL-214). Not a customer-facing product. Routes future Agent/Workflow/Plugin execution through Nest kernel modules — not a Linux/VAIOS rewrite.',
     },
     {
       id: 'memory-runtime',
@@ -28,7 +28,7 @@ export function aiKernelRuntimeCatalog: KernelRuntimeRow[] {
       api: 'GET /v1/memory-runtime/engine',
       console: '/memory-runtime',
       notes:
-        'Kernel memory over existing MemoryRecord. Extends Memory Cloud — not Mem0/replication OS.',
+        'Kernel memory over VL-183 MemoryRecord (VL-215). Extends Memory Cloud — not Mem0/replication OS.',
     },
     {
       id: 'prompt-runtime',
@@ -37,7 +37,7 @@ export function aiKernelRuntimeCatalog: KernelRuntimeRow[] {
       api: 'GET /v1/prompt-runtime/engine',
       console: '/prompt-runtime',
       notes:
-        'Kernel prompt execution over existing. Variables/validate/cache — not research lab/mesh OS.',
+        'Kernel prompt execution over VL-086/VL-188 (VL-216). Variables/validate/cache — not research lab/mesh OS.',
     },
     {
       id: 'context-runtime',
@@ -46,7 +46,7 @@ export function aiKernelRuntimeCatalog: KernelRuntimeRow[] {
       api: 'GET /v1/context-runtime/engine',
       console: '/context-runtime',
       notes:
-        'Kernel assembly over existing Context Engine. Prioritize/compress/retrieve — not infinite-context OS.',
+        'Kernel assembly over VL-185 Context Engine (VL-217). Prioritize/compress/retrieve — not infinite-context OS.',
     },
     {
       id: 'reasoning-runtime',
@@ -55,7 +55,7 @@ export function aiKernelRuntimeCatalog: KernelRuntimeRow[] {
       api: 'GET /v1/reasoning-runtime/engine',
       console: '/reasoning-runtime',
       notes:
-        'Kernel reasoning over existing. Plan/reflect/eval/history — not custom reasoner/tool-exec OS.',
+        'Kernel reasoning over VL-186 (VL-218). Plan/reflect/eval/history — not custom reasoner/tool-exec OS.',
     },
     {
       id: 'agent-runtime',
@@ -64,7 +64,7 @@ export function aiKernelRuntimeCatalog: KernelRuntimeRow[] {
       api: 'GET /v1/agent-runtime/engine',
       console: '/agent-runtime',
       notes:
-        'Sandbox agents with hard permission allowlists. Not open tool execution; Policy Runtime hardens further.',
+        'Sandbox agents with hard permission allowlists (VL-219). Not open tool execution; Policy Runtime VL-222 hardens further.',
     },
     {
       id: 'workflow-runtime',
@@ -73,7 +73,7 @@ export function aiKernelRuntimeCatalog: KernelRuntimeRow[] {
       api: 'GET /v1/workflow-runtime/engine',
       console: '/workflow-runtime',
       notes:
-        'Sandbox multi-step workflows with hard permission allowlists. Extends /v1/workflows; not Temporal/Airflow OS.',
+        'Sandbox multi-step workflows with hard permission allowlists (VL-220). Extends /v1/workflows; not Temporal/Airflow OS.',
     },
     {
       id: 'plugin-runtime',
@@ -82,7 +82,7 @@ export function aiKernelRuntimeCatalog: KernelRuntimeRow[] {
       api: 'GET /v1/plugin-runtime/engine',
       console: '/plugin-runtime',
       notes:
-        'Sandbox plugin registry with hard permission allowlists. Not live code/network plugins; Policy Runtime hardens further.',
+        'Sandbox plugin registry with hard permission allowlists (VL-221). Not live code/network plugins; Policy Runtime VL-222 hardens further.',
     },
     {
       id: 'policy-runtime',
@@ -91,7 +91,7 @@ export function aiKernelRuntimeCatalog: KernelRuntimeRow[] {
       api: 'GET /v1/policy-runtime/engine',
       console: '/policy-runtime',
       notes:
-        'Hard-gate enforcement for Agent/Workflow/Plugin. Blocks with 403 — not log-only.',
+        'Hard-gate enforcement for Agent/Workflow/Plugin (VL-222). Blocks with 403 — not log-only.',
     },
     {
       id: 'kernel-telemetry',
@@ -104,7 +104,7 @@ export function aiKernelRuntimeCatalog: KernelRuntimeRow[] {
   ];
 }
 
-export function aiKernelArchitectureNotes {
+export function aiKernelArchitectureNotes() {
   return {
     style: 'nest_modular_monolith',
     ddd: 'bounded_ai_kernel_hub',
@@ -137,13 +137,13 @@ export function aiKernelArchitectureNotes {
   };
 }
 
-export function aiKernelSafetyNotes {
+export function aiKernelSafetyNotes() {
   return {
     agentWorkflowPluginMustSandbox: true,
     scopedPermissionsRequired: true,
     policyMustHardGate: true,
     policyLogOnlyRejected: true,
     note:
-      'Volume 8 README: Agent/Workflow/Plugin Runtimes must have scoped permissions and sandboxing — not open function calls. Policy Runtime must be a hard gate wired into those runtimes, not decoration that only logs.',
+      'Volume 8 README: Agent/Workflow/Plugin Runtimes must have scoped permissions and sandboxing — not open function calls. Policy Runtime (VL-222) must be a hard gate wired into those runtimes, not decoration that only logs.',
   };
 }

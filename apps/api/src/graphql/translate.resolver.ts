@@ -20,16 +20,16 @@ type GqlReq = Request & {
   sessionAuth?: SessionContext;
 };
 
-@Resolver
+@Resolver()
 export class TranslateGraphqlResolver {
   constructor(
     private readonly translate: TranslateService,
     private readonly formats: TranslateFormatsService,
   ) {}
 
-  @Query( => GqlTranslateEngine, { name: 'translateEngine' })
-  translateEngine: GqlTranslateEngine {
-    const catalog = this.formats.engine;
+  @Query(() => GqlTranslateEngine, { name: 'translateEngine' })
+  translateEngine(): GqlTranslateEngine {
+    const catalog = this.formats.engine();
     return {
       product: catalog.product,
       note: catalog.note,
@@ -38,10 +38,10 @@ export class TranslateGraphqlResolver {
     };
   }
 
-  @Mutation( => GqlTranslateResult, { name: 'translate' })
+  @Mutation(() => GqlTranslateResult, { name: 'translate' })
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   async translate(
-    @Args('input', { type:  => TranslateInput }) input: TranslateInput,
+    @Args('input', { type: () => TranslateInput }) input: TranslateInput,
     @Context('req') req: GqlReq,
   ): Promise<GqlTranslateResult> {
     const auth = req.translateAuth!;
@@ -66,10 +66,10 @@ export class TranslateGraphqlResolver {
     };
   }
 
-  @Mutation( => GqlTranslateFormatResult, { name: 'translateFormat' })
+  @Mutation(() => GqlTranslateFormatResult, { name: 'translateFormat' })
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   async translateFormat(
-    @Args('input', { type:  => TranslateFormatInput }) input: TranslateFormatInput,
+    @Args('input', { type: () => TranslateFormatInput }) input: TranslateFormatInput,
     @Context('req') req: GqlReq,
   ): Promise<GqlTranslateFormatResult> {
     const auth = req.translateAuth!;

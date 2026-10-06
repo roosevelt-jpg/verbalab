@@ -134,20 +134,20 @@ export const CONNECTOR_CATALOG: ConnectorCatalogEntry[] = [
 ];
 
 export function findConnectorCatalogEntry(key: string): ConnectorCatalogEntry | undefined {
-  const normalized = key.trim.toLowerCase;
+  const normalized = key.trim().toLowerCase();
   return CONNECTOR_CATALOG.find((c) => c.key === normalized);
 }
 
 /**
- * Library Phase 123 → Connector Marketplace.
+ * Library Phase 123 → Connector Marketplace (VL-256).
  * Buy/sell/publish connector entitlements — not Zapier/iPaaS OS.
  * Extends Slack connector (ADR-0026). Volume 11: Stripe-only; never store raw cards.
  */
-export function connectorMarketplaceEngineCatalog {
+export function connectorMarketplaceEngineCatalog() {
   return {
     product: 'Lugemi Connector Marketplace',
     note:
-      'Connector Marketplace. Publish/license connector SKUs over the built-in connector catalog + existing Slack connector. Install grants workspace entitlements — not live arbitrary outbound, Zapier, or iPaaS OS. Monetization records MarketplaceSale receipts; Stripe Connect via existing.',
+      'Connector Marketplace (VL-256). Publish/license connector SKUs over the built-in connector catalog + existing Slack connector. Install grants workspace entitlements — not live arbitrary outbound, Zapier, or iPaaS OS. Monetization records MarketplaceSale receipts; Stripe Connect via VL-092.',
     capabilities: [
       {
         id: 'crm-connectors',

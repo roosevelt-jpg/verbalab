@@ -6,15 +6,15 @@ import {
   VaiosProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestVaiosCatalogAdapter implements VaiosCatalogPort {
   constructor(private readonly service: VaiosService) {}
 
-  engine: VaiosEngineBundle {
-    return this.service.products;
+  engine(): VaiosEngineBundle {
+    return this.service.products();
   }
 
-  listProducts: VaiosProductRow[] {
-    return this.service.products.products;
+  listProducts(): VaiosProductRow[] {
+    return this.service.products().products;
   }
 }

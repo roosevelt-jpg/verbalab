@@ -6,16 +6,16 @@ import {
   HealthcareIntelligenceProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestHealthcareIntelligenceCatalogAdapter implements HealthcareIntelligenceCatalogPort {
   constructor(private readonly service: HealthcareIntelligenceService) {}
 
-  engine: HealthcareIntelligenceEngineBundle {
-    return this.service.engine;
+  engine(): HealthcareIntelligenceEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: HealthcareIntelligenceProductRow[] {
-    const bundle = this.engine as { products?: HealthcareIntelligenceProductRow[]; capabilities?: HealthcareIntelligenceProductRow[] };
+  listProducts(): HealthcareIntelligenceProductRow[] {
+    const bundle = this.engine() as { products?: HealthcareIntelligenceProductRow[]; capabilities?: HealthcareIntelligenceProductRow[] };
     if (Array.isArray(bundle.products)) return bundle.products;
     if (Array.isArray(bundle.capabilities)) {
       return bundle.capabilities.map((c) => ({
@@ -34,7 +34,7 @@ export class NestHealthcareIntelligenceCatalogAdapter implements HealthcareIntel
         status: 'shipped',
         api: 'GET /v1/healthcare-intelligence/engine',
         console: '/healthcare-intelligence',
-        notes: ' shipped.',
+        notes: 'VL-265 shipped.',
       },
     ];
   }

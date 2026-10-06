@@ -8,8 +8,8 @@ export type TmCapability = {
   notes: string;
 };
 
-/** Library Phase 13 → Lugemi Enterprise Translation Memory. */
-export function tmIntelligenceCatalog {
+/** Library Phase 13 → Lugemi Enterprise Translation Memory (VL-145). */
+export function tmIntelligenceCatalog() {
   return {
     product: 'Enterprise Translation Memory',
     note:
@@ -20,14 +20,14 @@ export function tmIntelligenceCatalog {
         name: 'Enterprise memory',
         status: 'shipped',
         api: 'POST /v1/tm/entries scope=enterprise',
-        notes: 'Org-wide readable exact matches.',
+        notes: 'Org-wide readable exact matches (VL-145).',
       },
       {
         id: 'workspace_memory',
         name: 'Workspace memory',
         status: 'shipped',
         api: 'POST /v1/tm/entries',
-        notes: 'Default workspace-scoped exact TM.',
+        notes: 'Default workspace-scoped exact TM (VL-051).',
       },
       {
         id: 'project_memory',
@@ -48,7 +48,7 @@ export function tmIntelligenceCatalog {
         name: 'Glossaries',
         status: 'shipped',
         api: '/v1/glossary/terms',
-        notes: 'Existing workspace glossary + vertical packs.',
+        notes: 'Existing workspace glossary (VL-050) + vertical packs (VL-103).',
       },
       {
         id: 'terminology',

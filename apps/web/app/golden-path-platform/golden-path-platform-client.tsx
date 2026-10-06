@@ -11,11 +11,11 @@ type Engine = {
   safety?: { note?: string } & Record<string, unknown>;
 };
 
-export function GoldenPathPlatformClient {
+export function GoldenPathPlatformClient() {
   const [data, setData] = useState<Engine | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect( => {
+  useEffect(() => {
     void apiFetch<Engine>('/v1/golden-path-platform/engine')
       .then(setData)
       .catch((err: Error) => setError(err.message));

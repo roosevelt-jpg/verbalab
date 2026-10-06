@@ -17,8 +17,8 @@ export class GetEmbeddingRuntimeEngineHandler
     private readonly catalog: EmbeddingRuntimeCatalogPort,
   ) {}
 
-  execute: Promise<EmbeddingRuntimeEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<EmbeddingRuntimeEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListEmbeddingRuntimeProductsHandler
     private readonly catalog: EmbeddingRuntimeCatalogPort,
   ) {}
 
-  execute: Promise<EmbeddingRuntimeProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<EmbeddingRuntimeProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

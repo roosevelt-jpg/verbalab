@@ -29,16 +29,16 @@ type BudgetRes = {
   };
 };
 
-export function CostOptimizationClient {
-  const { getToken, isLoaded } = useAuth;
+export function CostOptimizationClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [budget, setBudget] = useState<BudgetRes['budget'] | null>(null);
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const refresh = useCallback(async  => {
-    const token = await getToken;
+  const refresh = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, bud] = await Promise.all([
       apiFetch<Engine>('/v1/cost-optimization/engine', { token }),
@@ -48,16 +48,16 @@ export function CostOptimizationClient {
     setBudget(bud.budget);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void refresh.catch((err: Error) => setError(err.message));
+    void refresh().catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
-  const demo = async  => {
+  const demo = async () => {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       await apiFetch('/v1/cost-optimization/budgets', {
         token,
@@ -93,7 +93,7 @@ export function CostOptimizationClient {
       setResult(
         `recorded $${rec.event.amountUsd}; optimize→${opt.selected?.providerId ?? 'n/a'} gate=${opt.spendGate.allowed}`,
       );
-      await refresh;
+      await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Cost demo failed');
     } finally {
@@ -139,7 +139,7 @@ export function CostOptimizationClient {
         <button
           type="button"
           disabled={busy}
-          onClick={ => void demo}
+          onClick={() => void demo()}
           style={{
             marginTop: '1.25rem',
             padding: '0.65rem 1rem',

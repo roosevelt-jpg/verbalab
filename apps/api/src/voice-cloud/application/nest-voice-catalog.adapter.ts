@@ -7,15 +7,15 @@ import {
   VoiceProductsBundle,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestVoiceCatalogAdapter implements VoiceCatalogPort {
   constructor(private readonly voiceCloud: VoiceCloudService) {}
 
-  products: VoiceProductsBundle {
-    return this.voiceCloud.products;
+  products(): VoiceProductsBundle {
+    return this.voiceCloud.products();
   }
 
-  listProducts: VoiceProductRow[] {
-    return voiceProductCatalog;
+  listProducts(): VoiceProductRow[] {
+    return voiceProductCatalog();
   }
 }

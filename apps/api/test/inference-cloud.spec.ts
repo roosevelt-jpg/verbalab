@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_inf_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_inf_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,29 +35,29 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Inference Cloud Foundation',  => {
+describe('Inference Cloud Foundation (VL-204)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let inferenceCloud: InferenceCloudService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     inferenceCloud = app.get(InferenceCloudService);
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('documents Inference Cloud mapping (no GPU hyperscaler OS)',  => {
+  it('documents Inference Cloud mapping (no GPU hyperscaler OS)', () => {
     const doc = join(root, 'docs/INFERENCE_CLOUD.md');
     const adr = join(root, 'docs/adr/0115-inference-cloud-foundation.md');
     const readme = join(root, 'docs/roadmap/volume7-inference-cloud/README_VOLUME7.md');
@@ -70,14 +70,14 @@ describe('Inference Cloud Foundation',  => {
     expect(text).toContain('Terraform');
     expect(text).toContain('af-south-1');
     expect(text).toMatch(/is \*\*not\*\* a GPU hyperscaler/i);
-    expect(text).toContain('');
+    expect(text).toContain('VL-021');
     expect(text).toMatch(/hard ceiling|spend/i);
     const readmeText = readFileSync(readme, 'utf8');
     expect(readmeText).toMatch(/GPU|spend|bill/i);
   });
 
-  it('exposes public product catalog with honest statuses', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes public product catalog with honest statuses', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/inference-cloud/products')
       .expect(200);
     expect(res.body.architecture.graphql).toBe(true);
@@ -158,8 +158,8 @@ describe('Inference Cloud Foundation',  => {
     expect(runtime.console).toBe('/ai-runtime-analytics');
   });
 
-  it('returns org inference overview with usage + deferred + spend safety', async  => {
-    const org = await seedOrg(prisma, `inf_${Date.now}`);
+  it('returns org inference overview with usage + deferred + spend safety', async () => {
+    const org = await seedOrg(prisma, `inf_${Date.now()}`);
 
     const overview = await inferenceCloud.overview({
       userId: org.memberships[0].userId,
@@ -169,8 +169,8 @@ describe('Inference Cloud Foundation',  => {
       role: 'owner',
     });
 
-    expect(overview.usage.chat).toBeDefined;
-    expect(overview.usage.embeddings).toBeDefined;
+    expect(overview.usage.chat).toBeDefined();
+    expect(overview.usage.embeddings).toBeDefined();
     expect(overview.deferred.gpuPlatform).toBe(false);
     expect(overview.links.gpuPlatform).toBe('/gpu-platform');
     expect(overview.deferred.modelServing).toBe(false);
@@ -198,15 +198,15 @@ describe('Inference Cloud Foundation',  => {
     expect(overview.architecture.extendsAiGateway).toBe(true);
   });
 
-  it('exposes inferenceProducts via GraphQL CQRS façade', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes inferenceProducts via GraphQL CQRS façade', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query: '{ inferenceProducts { id name status } }',
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.inferenceProducts.length).toBeGreaterThan(8);
     expect(
       res.body.data.inferenceProducts.some((p: { id: string }) => p.id === 'inference-cloud'),

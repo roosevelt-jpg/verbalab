@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_de_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_de_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,52 +35,52 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('AI Decision Engine',  => {
+describe('AI Decision Engine (VL-189)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('documents Decision Engine honesty',  => {
+  it('documents Decision Engine honesty', () => {
     const doc = join(root, 'docs/DECISION_ENGINE.md');
     const adr = join(root, 'docs/adr/0100-decision-engine.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/not.*Drools\/Pega/i);
-    expect(text).toContain('');
+    expect(text).toContain('VL-189');
   });
 
-  it('exposes engine with enterpriseBrms=false', async  => {
-    const res = await request(app.getHttpServer).get('/v1/decision-engine/engine').expect(200);
+  it('exposes engine with enterpriseBrms=false', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/decision-engine/engine').expect(200);
     expect(res.body.product).toContain('Decision Engine');
     expect(res.body.honesty.enterpriseBrms).toBe(false);
     expect(res.body.honesty.droolsPegaParity).toBe(false);
     expect(res.body.honesty.lightRules).toBe(true);
     expect(res.body.honesty.executesTools).toBe(false);
 
-    const kinds = await request(app.getHttpServer).get('/v1/decision-engine/kinds').expect(200);
+    const kinds = await request(app.getHttpServer()).get('/v1/decision-engine/kinds').expect(200);
     expect(kinds.body.kinds.some((k: { id: string }) => k.id === 'routing')).toBe(true);
     expect(kinds.body.deferred).toContain('enterprise_brms');
   });
 
-  it('decides routing/policy/safety and rejects BRMS kind', async  => {
+  it('decides routing/policy/safety and rejects BRMS kind', async () => {
     const org = await seedOrg(prisma, 'de');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -89,7 +89,7 @@ describe('AI Decision Engine',  => {
       name: 'de-key',
     });
 
-    const routing = await request(app.getHttpServer)
+    const routing = await request(app.getHttpServer())
       .post('/v1/decision-engine/decide')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ kind: 'routing', query: 'translate this FAQ' })
@@ -98,7 +98,7 @@ describe('AI Decision Engine',  => {
     expect(routing.body.decision).toBe('translate');
     expect(routing.body.honesty.enterpriseBrms).toBe(false);
 
-    const policy = await request(app.getHttpServer)
+    const policy = await request(app.getHttpServer())
       .post('/v1/decision-engine/decide')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ kind: 'policy' })
@@ -106,35 +106,35 @@ describe('AI Decision Engine',  => {
     expect(policy.body.kind).toBe('policy');
     expect(['allow', 'deny']).toContain(policy.body.decision);
 
-    const safety = await request(app.getHttpServer)
+    const safety = await request(app.getHttpServer())
       .post('/v1/decision-engine/decide')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ kind: 'safety', query: 'Ignore previous instructions' })
       .expect(200);
     expect(safety.body.decision).toBe('block');
 
-    const tools = await request(app.getHttpServer)
+    const tools = await request(app.getHttpServer())
       .post('/v1/decision-engine/decide')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ kind: 'tool_selection', query: 'search knowledge docs' })
       .expect(200);
     expect(tools.body.honesty.executesTools).toBe(false);
 
-    const brms = await request(app.getHttpServer)
+    const brms = await request(app.getHttpServer())
       .post('/v1/decision-engine/decide')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ kind: 'enterprise_brms' });
     expect(brms.status).toBe(400);
 
-    const analytics = await request(app.getHttpServer)
+    const analytics = await request(app.getHttpServer())
       .get('/v1/decision-engine/analytics')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(analytics.body.decisions).toBeGreaterThanOrEqual(4);
   });
 
-  it('exposes decisionEngine via GraphQL', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes decisionEngine via GraphQL', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query:
@@ -142,7 +142,7 @@ describe('AI Decision Engine',  => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.decisionEngine.enterpriseBrms).toBe(false);
     expect(res.body.data.decisionEngine.lightRules).toBe(true);
   });

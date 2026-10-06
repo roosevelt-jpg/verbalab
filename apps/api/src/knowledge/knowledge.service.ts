@@ -30,7 +30,7 @@ type RetrievedChunk = {
   score: number;
 };
 
-@Injectable
+@Injectable()
 export class KnowledgeService {
   constructor(
     private readonly prisma: PrismaService,
@@ -43,7 +43,7 @@ export class KnowledgeService {
   ) {}
 
   private assertAllowedUpload(file: { size: number; mimetype: string; originalname: string }) {
-    const max = documentMaxBytes;
+    const max = documentMaxBytes();
     if (file.size <= 0) {
       throw new ApiException('validation_error', 'Empty file', HttpStatus.BAD_REQUEST);
     }
@@ -54,7 +54,7 @@ export class KnowledgeService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const name = file.originalname.toLowerCase;
+    const name = file.originalname.toLowerCase();
     const ok =
       file.mimetype === DOCX_MIME ||
       file.mimetype === PDF_MIME ||
@@ -80,7 +80,7 @@ export class KnowledgeService {
   }
 
   private guessMime(filename: string): string {
-    const lower = filename.toLowerCase;
+    const lower = filename.toLowerCase();
     if (lower.endsWith('.docx')) return DOCX_MIME;
     if (lower.endsWith('.pdf')) return PDF_MIME;
     if (lower.endsWith('.md') || lower.endsWith('.markdown')) return 'text/markdown';
@@ -89,8 +89,8 @@ export class KnowledgeService {
   }
 
   private guessContentKind(filename: string, mimeType: string, explicit?: string): string {
-    if (explicit?.trim) return explicit.trim.slice(0, 64);
-    const lower = filename.toLowerCase;
+    if (explicit?.trim()) return explicit.trim().slice(0, 64);
+    const lower = filename.toLowerCase();
     if (lower.endsWith('.md') || lower.endsWith('.markdown') || mimeType.includes('markdown')) {
       return 'markdown';
     }
@@ -108,7 +108,7 @@ export class KnowledgeService {
     return [
       ...new Set(
         parts
-          .map((t) => t.trim.toLowerCase)
+          .map((t) => t.trim().toLowerCase())
           .filter(Boolean)
           .map((t) => t.slice(0, 48)),
       ),
@@ -146,8 +146,8 @@ export class KnowledgeService {
       tags: doc.tags,
       contentKind: doc.contentKind,
       version: doc.version,
-      createdAt: doc.createdAt.toISOString,
-      updatedAt: doc.updatedAt.toISOString,
+      createdAt: doc.createdAt.toISOString(),
+      updatedAt: doc.updatedAt.toISOString(),
     };
   }
 
@@ -162,7 +162,7 @@ export class KnowledgeService {
         workspaceId,
         ...(filters?.collection ? { collection: filters.collection } : {}),
         ...(filters?.contentKind ? { contentKind: filters.contentKind } : {}),
-        ...(filters?.tag ? { tags: { has: filters.tag.trim.toLowerCase } } : {}),
+        ...(filters?.tag ? { tags: { has: filters.tag.trim().toLowerCase() } } : {}),
       },
       orderBy: { createdAt: 'desc' },
       take: 100,
@@ -188,7 +188,7 @@ export class KnowledgeService {
       throw new ApiException('not_found', 'Knowledge document not found', HttpStatus.NOT_FOUND);
     }
     await this.prisma.knowledgeDocument.delete({ where: { id: doc.id } });
-    await unlink(this.storage.absolutePath(doc.storageKey)).catch( => undefined);
+    await unlink(this.storage.absolutePath(doc.storageKey)).catch(() => undefined);
     return { deleted: true, id: doc.id };
   }
 
@@ -208,19 +208,19 @@ export class KnowledgeService {
     const existing = await this.prisma.knowledgeDocument.count({
       where: { workspaceId: input.workspaceId },
     });
-    if (existing >= knowledgeMaxDocs) {
+    if (existing >= knowledgeMaxDocs()) {
       throw new ApiException(
         'validation_error',
-        `Workspace knowledge document limit is ${knowledgeMaxDocs}`,
+        `Workspace knowledge document limit is ${knowledgeMaxDocs()}`,
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const storageKey = `knowledge/${input.organizationId}/${randomUUID}-${this.sanitizeFilename(input.file.originalname)}`;
+    const storageKey = `knowledge/${input.organizationId}/${randomUUID()}-${this.sanitizeFilename(input.file.originalname)}`;
     await this.storage.writeBuffer(storageKey, input.file.buffer);
 
     const mimeType = input.file.mimetype || this.guessMime(input.file.originalname);
-    const collection = (input.collection?.trim || 'default').slice(0, 64) || 'default';
+    const collection = (input.collection?.trim() || 'default').slice(0, 64) || 'default';
     const tags = this.parseTags(input.tags);
     const contentKind = this.guessContentKind(input.file.originalname, mimeType, input.contentKind);
 
@@ -297,7 +297,7 @@ export class KnowledgeService {
     const buffer = await this.storage.readBuffer(doc.storageKey);
     const extracted = await this.codec.extract(buffer, doc.mimeType, doc.filename);
     const fullText = extracted.paragraphs.join('\n\n');
-    const chunks = chunkText(fullText).slice(0, knowledgeMaxChunks);
+    const chunks = chunkText(fullText).slice(0, knowledgeMaxChunks());
     if (chunks.length === 0) {
       throw new ApiException(
         'validation_error',
@@ -330,7 +330,7 @@ export class KnowledgeService {
           );
         }
         const dims = Array.from({ length: 1536 }, (_, k) => vector[k] ?? 0);
-        const id = randomUUID;
+        const id = randomUUID();
 
         await this.prisma.$executeRawUnsafe(
           `INSERT INTO knowledge_chunks
@@ -412,8 +412,8 @@ export class KnowledgeService {
   }
 
   /**
-   * Nearest-neighbor / similarity search over workspace knowledge vectors.
-   * Does not call chat — RAG answer path remains `query`.
+   * Nearest-neighbor / similarity search over workspace knowledge vectors (VL-182).
+   * Does not call chat — RAG answer path remains `query()`.
    */
   async searchVectors(input: {
     query: string;
@@ -426,7 +426,7 @@ export class KnowledgeService {
     userId?: string;
     ip?: string;
   }) {
-    const query = input.query?.trim;
+    const query = input.query?.trim();
     if (!query) {
       throw new ApiException('validation_error', 'query is required', HttpStatus.BAD_REQUEST);
     }
@@ -444,7 +444,7 @@ export class KnowledgeService {
       }
     }
 
-    const k = Math.min(Math.max(input.k ?? ragTopK, 1), 20);
+    const k = Math.min(Math.max(input.k ?? ragTopK(), 1), 20);
     const embedded = await this.gateway.embed({ input: query });
     await this.usage.recordEmbeddings({
       organizationId: input.organizationId,
@@ -500,7 +500,7 @@ export class KnowledgeService {
         score: hit.score,
         content: hit.content,
       })),
-      note: 'Nearest-neighbor cosine search over knowledge_chunks. Not hybrid BM25.',
+      note: 'Nearest-neighbor cosine search over knowledge_chunks (VL-182 / VL-062). Not hybrid BM25.',
     };
   }
 
@@ -513,7 +513,7 @@ export class KnowledgeService {
     userId?: string;
     ip?: string;
   }) {
-    const question = input.question?.trim;
+    const question = input.question?.trim();
     if (!question) {
       throw new ApiException('validation_error', 'question is required', HttpStatus.BAD_REQUEST);
     }
@@ -529,7 +529,7 @@ export class KnowledgeService {
       );
     }
 
-    const k = Math.min(Math.max(input.k ?? ragTopK, 1), 10);
+    const k = Math.min(Math.max(input.k ?? ragTopK(), 1), 10);
     const embedded = await this.gateway.embed({ input: question });
     await this.usage.recordEmbeddings({
       organizationId: input.organizationId,

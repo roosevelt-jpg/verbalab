@@ -13,21 +13,21 @@ type AuthCtx = {
   ip?: string;
 };
 
-@Injectable
+@Injectable()
 export class KnowledgeGraphService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
   ) {}
 
-  engine {
-    return knowledgeGraphCatalog;
+  engine() {
+    return knowledgeGraphCatalog();
   }
 
-  domains {
+  domains() {
     return {
       domains: KG_DOMAINS,
-      note: 'Vertical domain packs deferred except general workspace graph.',
+      note: 'Vertical domain packs deferred except general workspace graph (VL-184).',
     };
   }
 
@@ -56,8 +56,8 @@ export class KnowledgeGraphService {
       domain: row.domain,
       aliases: row.aliases,
       metadata: row.metadata,
-      createdAt: row.createdAt.toISOString,
-      updatedAt: row.updatedAt.toISOString,
+      createdAt: row.createdAt.toISOString(),
+      updatedAt: row.updatedAt.toISOString(),
     };
   }
 
@@ -84,8 +84,8 @@ export class KnowledgeGraphService {
       label: row.label,
       weight: row.weight,
       metadata: row.metadata,
-      createdAt: row.createdAt.toISOString,
-      updatedAt: row.updatedAt.toISOString,
+      createdAt: row.createdAt.toISOString(),
+      updatedAt: row.updatedAt.toISOString(),
     };
   }
 
@@ -101,7 +101,7 @@ export class KnowledgeGraphService {
     if (known.status === 'deferred') {
       throw new ApiException(
         'validation_error',
-        `domain "${domain}" pack is deferred — use domain=general`,
+        `domain "${domain}" pack is deferred — use domain=general (VL-184)`,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -129,7 +129,7 @@ export class KnowledgeGraphService {
       metadata?: Record<string, unknown>;
     },
   ) {
-    const name = input.name?.trim;
+    const name = input.name?.trim();
     if (!name) {
       throw new ApiException('validation_error', 'name is required', HttpStatus.BAD_REQUEST);
     }
@@ -153,11 +153,11 @@ export class KnowledgeGraphService {
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
         name,
-        type: (input.type?.trim || 'concept').slice(0, 64),
-        description: input.description?.trim ?? '',
+        type: (input.type?.trim() || 'concept').slice(0, 64),
+        description: input.description?.trim() ?? '',
         documentId: input.documentId ?? null,
         domain,
-        aliases: (input.aliases ?? []).map((a) => a.trim).filter(Boolean).slice(0, 20),
+        aliases: (input.aliases ?? []).map((a) => a.trim()).filter(Boolean).slice(0, 20),
         metadata: (input.metadata ?? {}) as Prisma.InputJsonValue,
       },
     });
@@ -251,8 +251,8 @@ export class KnowledgeGraphService {
         workspaceId: input.workspaceId,
         fromEntityId: input.fromEntityId,
         toEntityId: input.toEntityId,
-        type: (input.type?.trim || 'related_to').slice(0, 64),
-        label: input.label?.trim ?? '',
+        type: (input.type?.trim() || 'related_to').slice(0, 64),
+        label: input.label?.trim() ?? '',
         weight:
           typeof input.weight === 'number' && Number.isFinite(input.weight) ? input.weight : 1,
         metadata: (input.metadata ?? {}) as Prisma.InputJsonValue,
@@ -326,12 +326,12 @@ export class KnowledgeGraphService {
       entity: this.serializeEntity(entity),
       relationships: edges.map((e) => this.serializeRel(e)),
       neighbors: neighbors.map((n) => this.serializeEntity(n)),
-      note: '1-hop neighborhood. Multi-hop / Cypher deferred.',
+      note: '1-hop neighborhood (VL-184). Multi-hop / Cypher deferred.',
     };
   }
 
   async analytics(organizationId: string, workspaceId: string) {
-    const start = new Date;
+    const start = new Date();
     start.setUTCDate(1);
     start.setUTCHours(0, 0, 0, 0);
 
@@ -355,29 +355,29 @@ export class KnowledgeGraphService {
     ]);
 
     return {
-      periodStart: start.toISOString,
+      periodStart: start.toISOString(),
       entities,
       relationships,
       entityWrites,
       relationshipWrites: relWrites,
-      note: 'Knowledge Graph analytics. Prefer RAG for retrieval quality.',
+      note: 'Knowledge Graph analytics (VL-184). Prefer RAG for retrieval quality.',
     };
   }
 
   async monitoring(organizationId: string, workspaceId: string) {
     const [analytics, engine] = await Promise.all([
       this.analytics(organizationId, workspaceId),
-      Promise.resolve(this.engine),
+      Promise.resolve(this.engine()),
     ]);
     return {
-      generatedAt: new Date.toISOString,
+      generatedAt: new Date().toISOString(),
       periodStart: analytics.periodStart,
       entities: analytics.entities,
       relationships: analytics.relationships,
       neo4jParity: engine.honesty.neo4jParity,
       ontologyPlatform: engine.honesty.ontologyPlatform,
       deferred: engine.capabilities.filter((c) => c.status === 'deferred').map((c) => c.id),
-      note: 'Knowledge Graph monitoring snapshot.',
+      note: 'Knowledge Graph monitoring snapshot (VL-184).',
     };
   }
 }

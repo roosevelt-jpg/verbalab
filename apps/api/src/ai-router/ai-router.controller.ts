@@ -26,23 +26,23 @@ export class AiRouterController {
   constructor(private readonly router: AiRouterService) {}
 
   @Get('engine')
-  engine {
-    return this.router.engine;
+  engine() {
+    return this.router.engine();
   }
 
   @Get('features')
-  features {
-    return this.router.features;
+  features() {
+    return this.router.features();
   }
 
   @Get('providers')
-  providers {
-    return this.router.providers;
+  providers() {
+    return this.router.providers();
   }
 
   @Get('policies')
   @UseGuards(TranslateAuthGuard)
-  getPolicy(@Req req: AuthedReq) {
+  getPolicy(@Req() req: AuthedReq) {
     return this.router.getPolicy({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -52,8 +52,8 @@ export class AiRouterController {
   @Put('policies')
   @UseGuards(TranslateAuthGuard)
   upsertPolicy(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       optimize?: string;
       maxRetries?: number;
@@ -77,8 +77,8 @@ export class AiRouterController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   resolve(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       feature?: string;
       optimize?: string;
@@ -100,7 +100,7 @@ export class AiRouterController {
 
   @Get('decisions')
   @UseGuards(TranslateAuthGuard)
-  decisions(@Req req: AuthedReq, @Query('feature') feature?: string) {
+  decisions(@Req() req: AuthedReq, @Query('feature') feature?: string) {
     return this.router.listDecisions({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -110,7 +110,7 @@ export class AiRouterController {
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req req: AuthedReq) {
+  analytics(@Req() req: AuthedReq) {
     return this.router.analytics({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -119,7 +119,7 @@ export class AiRouterController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req req: AuthedReq) {
+  monitoring(@Req() req: AuthedReq) {
     return this.router.monitoring({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,

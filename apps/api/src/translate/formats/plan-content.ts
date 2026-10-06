@@ -30,7 +30,7 @@ export function planContent(format: ContentFormat, content: string): FormatPlan 
 }
 
 export function splitForStreaming(text: string, maxChars = 400): string[] {
-  const normalized = text.replace(/\r\n/g, '\n').trim;
+  const normalized = text.replace(/\r\n/g, '\n').trim();
   if (!normalized) return [];
   if ([...normalized].length <= maxChars) return [normalized];
 
@@ -38,8 +38,8 @@ export function splitForStreaming(text: string, maxChars = 400): string[] {
   const chunks: string[] = [];
   let buf = '';
 
-  const flush =  => {
-    if (buf.trim) chunks.push(buf.trim);
+  const flush = () => {
+    if (buf.trim()) chunks.push(buf.trim());
     buf = '';
   };
 
@@ -48,7 +48,7 @@ export function splitForStreaming(text: string, maxChars = 400): string[] {
       buf = buf ? `${buf}\n\n${para}` : para;
       continue;
     }
-    flush;
+    flush();
     if ([...para].length <= maxChars) {
       buf = para;
       continue;
@@ -58,7 +58,7 @@ export function splitForStreaming(text: string, maxChars = 400): string[] {
       if ([...(buf ? `${buf} ${sentence}` : sentence)].length <= maxChars) {
         buf = buf ? `${buf} ${sentence}` : sentence;
       } else {
-        flush;
+        flush();
         if ([...sentence].length <= maxChars) {
           buf = sentence;
         } else {
@@ -71,6 +71,6 @@ export function splitForStreaming(text: string, maxChars = 400): string[] {
       }
     }
   }
-  flush;
+  flush();
   return chunks.length ? chunks : [normalized];
 }

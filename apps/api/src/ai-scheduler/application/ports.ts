@@ -1,4 +1,4 @@
-/** Application ports for AI Scheduler. */
+/** Application ports for AI Scheduler (VL-335). */
 
 export type AiSchedulerProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type AiSchedulerEngineBundle = ReturnType<
 >;
 
 export interface AiSchedulerCatalogPort {
-  engine: AiSchedulerEngineBundle;
-  listProducts: AiSchedulerProductRow[];
+  engine(): AiSchedulerEngineBundle;
+  listProducts(): AiSchedulerProductRow[];
 }
 
 export const AI_SCHEDULER_CATALOG_PORT = Symbol('AI_SCHEDULER_CATALOG_PORT');

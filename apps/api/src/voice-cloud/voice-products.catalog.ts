@@ -9,8 +9,8 @@ export type VoiceProductRow = {
   notes: string;
 };
 
-/** Library Phase 27 product map. Hub only — does not reimplement TTS/clones. */
-export function voiceProductCatalog: VoiceProductRow[] {
+/** Library Phase 27 product map (VL-170). Hub only — does not reimplement TTS/clones. */
+export function voiceProductCatalog(): VoiceProductRow[] {
   return [
     {
       id: 'voice',
@@ -19,7 +19,7 @@ export function voiceProductCatalog: VoiceProductRow[] {
       api: 'GET /v1/voice-cloud/products',
       console: '/voice-cloud',
       notes:
-        'Voice Cloud parent hub. Maps library Voice Cloud products onto existing TTS, clones, and studio surfaces.',
+        'Voice Cloud parent hub (VL-170). Maps library Voice Cloud products onto existing TTS, clones, and studio surfaces.',
     },
     {
       id: 'neural-tts',
@@ -28,7 +28,7 @@ export function voiceProductCatalog: VoiceProductRow[] {
       api: 'GET /v1/tts/engine',
       console: '/neural-tts',
       notes:
-        'Neural TTS engine: batch synthesize + chunk SSE stream over OpenAI/own/clone voices. Legacy: POST /v1/audio/speech.',
+        'Neural TTS engine (VL-171): batch synthesize + chunk SSE stream over OpenAI/own/clone voices. Legacy: POST /v1/audio/speech.',
     },
     {
       id: 'natural-voices',
@@ -37,7 +37,7 @@ export function voiceProductCatalog: VoiceProductRow[] {
       api: 'GET /v1/tts/voices',
       console: '/neural-tts',
       notes:
-        'Enriched catalog with gender/personality/dialect tags. Children voices deferred. Legacy: GET /v1/audio/voices.',
+        'Enriched catalog with gender/personality/dialect tags (VL-171). Children voices deferred. Legacy: GET /v1/audio/voices.',
     },
     {
       id: 'voice-cloning',
@@ -46,7 +46,7 @@ export function voiceProductCatalog: VoiceProductRow[] {
       api: 'GET /v1/voice-cloning/engine',
       console: '/voice-cloning',
       notes:
-        'Enterprise cloning hub: consent, ownership, licensing, permissions, enrollment verify + watermark (extends existing).',
+        'Enterprise cloning hub (VL-172): consent, ownership, licensing, permissions, enrollment verify + watermark (extends VL-064).',
     },
     {
       id: 'instant-voice-cloning',
@@ -54,7 +54,7 @@ export function voiceProductCatalog: VoiceProductRow[] {
       status: 'shipped',
       api: 'POST /v1/voice-cloning/enroll',
       console: '/voice-cloning',
-      notes: 'Consent-gated instant enrollment. Speak via clone:{id}.',
+      notes: 'Consent-gated instant enrollment (VL-064/172). Speak via clone:{id}.',
     },
     {
       id: 'voice-studio',
@@ -63,7 +63,7 @@ export function voiceProductCatalog: VoiceProductRow[] {
       api: 'GET /v1/voice-studio/engine',
       console: '/voice-studio',
       notes:
-        'Voice Studio hub: library, SSML lite, pronunciation lexicon, linear timeline, compare/test + `/audio` African UX. Not a nonlinear DAW.',
+        'Voice Studio hub (VL-174): library, SSML lite, pronunciation lexicon, linear timeline, compare/test + VL-120 `/audio` African UX. Not a nonlinear DAW.',
     },
     {
       id: 'emotion-voice',
@@ -72,7 +72,7 @@ export function voiceProductCatalog: VoiceProductRow[] {
       api: 'GET /v1/emotion-voice/engine',
       console: '/emotion-voice',
       notes:
-        'Emotion/domain synthesis profiles: soft prosody + voice pick; clone style settings partial. Not trained expressive TTS. Distinct from detection.',
+        'Emotion/domain synthesis profiles (VL-173): soft prosody + voice pick; clone style settings partial. Not trained expressive TTS. Distinct from VL-154 detection.',
     },
     {
       id: 'voice-conversion',
@@ -89,7 +89,7 @@ export function voiceProductCatalog: VoiceProductRow[] {
       api: 'GET /v1/voice-enhancement/engine',
       console: '/voice-enhancement',
       notes:
-        'Voice Enhancement Platform: profile pipelines over existing PCM heuristics (mic/podcast/meeting/broadcast/restore). Not Krisp/Adobe Enhance.',
+        'Voice Enhancement Platform (VL-175): profile pipelines over VL-155 PCM heuristics (mic/podcast/meeting/broadcast/restore). Not Krisp/Adobe Enhance.',
     },
     {
       id: 'voice-restoration',
@@ -97,7 +97,7 @@ export function voiceProductCatalog: VoiceProductRow[] {
       status: 'partial',
       api: 'POST /v1/voice-enhancement/enhance',
       console: '/voice-enhancement',
-      notes: 'Heuristic voice_restoration profile. Archival ML bandwidth extension still deferred.',
+      notes: 'Heuristic voice_restoration profile (VL-175). Archival ML bandwidth extension still deferred.',
     },
     {
       id: 'audio-mastering',
@@ -105,7 +105,7 @@ export function voiceProductCatalog: VoiceProductRow[] {
       status: 'partial',
       api: 'POST /v1/voice-enhancement/enhance',
       console: '/voice-enhancement',
-      notes: 'Broadcast soft-limit profile only. LUFS broadcast mastering suite deferred.',
+      notes: 'Broadcast soft-limit profile only (VL-175). LUFS broadcast mastering suite deferred.',
     },
     {
       id: 'voice-biometrics',
@@ -114,7 +114,7 @@ export function voiceProductCatalog: VoiceProductRow[] {
       api: 'GET /v1/voice-biometrics/engine',
       console: '/voice-biometrics',
       notes:
-        'Voice Biometrics: encrypted templates, deletion, heuristic anti-spoof/liveness/risk over existing. Not NIST/PAD certified.',
+        'Voice Biometrics (VL-176): encrypted templates, deletion, heuristic anti-spoof/liveness/risk over VL-152. Not NIST/PAD certified.',
     },
     {
       id: 'voice-authentication',
@@ -130,7 +130,7 @@ export function voiceProductCatalog: VoiceProductRow[] {
       status: 'partial',
       api: 'GET /v1/speakers/profiles',
       console: '/speaker-intelligence',
-      notes: 'Speaker profiles used as biometric subjects. Marketable voice SKU profiles ≠ this.',
+      notes: 'Speaker profiles (VL-152) used as biometric subjects. Marketable voice SKU profiles ≠ this.',
     },
     {
       id: 'voice-marketplace',
@@ -139,7 +139,7 @@ export function voiceProductCatalog: VoiceProductRow[] {
       api: 'GET /v1/voice-marketplace/engine',
       console: '/voice-marketplace',
       notes:
-        'Voice SKU publish/license/ratings. Distinct from localization /marketplace. Celebrity without rights forbidden; cross-tenant clone synthesis deferred.',
+        'Voice SKU publish/license/ratings (VL-177). Distinct from localization /marketplace. Celebrity without rights forbidden; cross-tenant clone synthesis deferred.',
     },
     {
       id: 'voice-analytics',
@@ -148,7 +148,7 @@ export function voiceProductCatalog: VoiceProductRow[] {
       api: 'GET /v1/voice-analytics/engine',
       console: '/voice-analytics',
       notes:
-        'Usage/voices/revenue/latency/quality aggregates. Distinct from Speech Analytics; BI dashboard deferred.',
+        'Usage/voices/revenue/latency/quality aggregates (VL-178). Distinct from Speech Analytics; BI dashboard deferred.',
     },
     {
       id: 'voice-faq',
@@ -156,12 +156,12 @@ export function voiceProductCatalog: VoiceProductRow[] {
       status: 'partial',
       api: '/v1/voice',
       console: '/voice',
-      notes: 'Twilio FAQ voice agent. Not Voice Cloud core synthesis — listed for navigation honesty.',
+      notes: 'Twilio FAQ voice agent (VL-084). Not Voice Cloud core synthesis — listed for navigation honesty.',
     },
   ];
 }
 
-export function voiceArchitectureNotes {
+export function voiceArchitectureNotes() {
   return {
     style: 'nest_modular_monolith',
     ddd: 'bounded_voice_cloud_hub',

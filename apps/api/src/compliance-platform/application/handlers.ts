@@ -17,8 +17,8 @@ export class GetCompliancePlatformEngineHandler
     private readonly catalog: CompliancePlatformCatalogPort,
   ) {}
 
-  execute: Promise<CompliancePlatformEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<CompliancePlatformEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListCompliancePlatformProductsHandler
     private readonly catalog: CompliancePlatformCatalogPort,
   ) {}
 
-  execute: Promise<CompliancePlatformProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<CompliancePlatformProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

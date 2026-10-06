@@ -54,7 +54,7 @@ const SHIPPED_PRODUCT_IDS = [
 function walkTsFiles(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory) {
+    if (name.isDirectory()) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       walkTsFiles(p, out);
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -66,23 +66,23 @@ function walkTsFiles(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-describe('MLOps & LLMOps Cloud Production Audit',  => {
+describe('MLOps & LLMOps Cloud Production Audit (VL-291)', () => {
   let app: INestApplication<App>;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    }).compile();
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
   }, 120_000);
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('ships audit ADR and report pack',  => {
+  it('ships audit ADR and report pack', () => {
     expect(existsSync(join(root, 'docs/adr/0193-mlops-llmops-cloud-production-audit.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/CLOUD_BLUEPRINT.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/MLOPS_LLMOPS_CLOUD.md'))).toBe(true);
@@ -103,7 +103,7 @@ describe('MLOps & LLMOps Cloud Production Audit',  => {
     expect(readiness).toMatch(/poisonedInputGuard/i);
     expect(readiness).toMatch(/policyViolationsVisible/i);
     expect(readiness).toMatch(/Trust Cloud|Rejected/i);
-    expect(readiness).toMatch(/|Volume 14/i);
+    expect(readiness).toMatch(/VL-281|Volume 14/i);
 
     const adr = readFileSync(
       join(root, 'docs/adr/0193-mlops-llmops-cloud-production-audit.md'),
@@ -111,10 +111,10 @@ describe('MLOps & LLMOps Cloud Production Audit',  => {
     );
     expect(adr).toMatch(/review gate|checklist/i);
     expect(adr).toMatch(/Trust Cloud|do not invent|Rejected/i);
-    expect(adr).toMatch(/Volume 14 closed|–291|closes/i);
+    expect(adr).toMatch(/Volume 14 closed|VL-281–291|closes/i);
   });
 
-  it('has no TODO/FIXME/implement-later markers in Volume 14 source trees',  => {
+  it('has no TODO/FIXME/implement-later markers in Volume 14 source trees', () => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const name of VOLUME14_DIRS) {
@@ -138,13 +138,13 @@ describe('MLOps & LLMOps Cloud Production Audit',  => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes all Volume 14 catalogs as shipped with monitoring', async  => {
+  it('exposes all Volume 14 catalogs as shipped with monitoring', async () => {
     for (const path of ENGINE_PATHS) {
-      const res = await request(app.getHttpServer).get(path).expect(200);
-      expect(res.body).toBeTruthy;
+      const res = await request(app.getHttpServer()).get(path).expect(200);
+      expect(res.body).toBeTruthy();
     }
 
-    const hub = await request(app.getHttpServer)
+    const hub = await request(app.getHttpServer())
       .get('/v1/mlops-llmops-cloud/products')
       .expect(200);
     expect(hub.body.honesty.kubeflowOs).toBe(false);
@@ -170,18 +170,18 @@ describe('MLOps & LLMOps Cloud Production Audit',  => {
     }
   });
 
-  it('enforces Continuous Learning promote gates and AgentOps policy visibility', async  => {
-    const drift = await request(app.getHttpServer)
+  it('enforces Continuous Learning promote gates and AgentOps policy visibility', async () => {
+    const drift = await request(app.getHttpServer())
       .get('/v1/ai-drift-detection/check')
       .expect(200);
     expect(typeof drift.body.driftClear).toBe('boolean');
 
-    const gates = await request(app.getHttpServer)
+    const gates = await request(app.getHttpServer())
       .get('/v1/continuous-evaluation/gate-status')
       .expect(200);
     expect(typeof gates.body.continuousEvalPass).toBe('boolean');
 
-    const ready = await request(app.getHttpServer)
+    const ready = await request(app.getHttpServer())
       .get('/v1/continuous-learning/promote-check')
       .query({ id: 'promo-ready-001' })
       .expect(200);
@@ -192,49 +192,49 @@ describe('MLOps & LLMOps Cloud Production Audit',  => {
     expect(ready.body.requiresDriftClear).toBe(true);
     expect(ready.body.requiresContinuousEvalPass).toBe(true);
 
-    const blockedHuman = await request(app.getHttpServer)
+    const blockedHuman = await request(app.getHttpServer())
       .get('/v1/continuous-learning/promote-check')
       .query({ id: 'promo-blocked-human-001' })
       .expect(200);
     expect(blockedHuman.body.allowed).toBe(false);
 
-    const blockedPoison = await request(app.getHttpServer)
+    const blockedPoison = await request(app.getHttpServer())
       .get('/v1/continuous-learning/promote-check')
       .query({ id: 'promo-blocked-poison-001' })
       .expect(200);
     expect(blockedPoison.body.allowed).toBe(false);
 
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .get('/v1/continuous-learning/promote')
       .query({ id: 'promo-blocked-poison-001' })
       .expect(400);
 
-    const agentops = await request(app.getHttpServer)
+    const agentops = await request(app.getHttpServer())
       .get('/v1/agentops-platform/engine')
       .expect(200);
     expect(agentops.body.honesty.policyViolationsVisible).toBe(true);
     expect(agentops.body.policyViolations.length).toBeGreaterThan(0);
 
-    const agentMon = await request(app.getHttpServer)
+    const agentMon = await request(app.getHttpServer())
       .get('/v1/agentops-platform/monitoring')
       .expect(200);
     expect(agentMon.body.policyViolationsVisible).toBe(true);
     expect(agentMon.body.policyViolations.length).toBeGreaterThan(0);
 
-    const training = await request(app.getHttpServer)
+    const training = await request(app.getHttpServer())
       .get('/v1/training-pipeline/engine')
       .expect(200);
     expect(training.body.honesty.distributedTrainingOs).toBe(false);
   });
 
-  it('rejects unauthenticated MLOps overview (auth smoke)', async  => {
-    const res = await request(app.getHttpServer).get('/v1/mlops-llmops-cloud/overview');
+  it('rejects unauthenticated MLOps overview (auth smoke)', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/mlops-llmops-cloud/overview');
     expect([401, 403, 503]).toContain(res.status);
   });
 
-  it('exposes GraphQL façades for MLOps & LLMOps Cloud hubs', async  => {
-    const started = Date.now;
-    const gql = await request(app.getHttpServer)
+  it('exposes GraphQL façades for MLOps & LLMOps Cloud hubs', async () => {
+    const started = Date.now();
+    const gql = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query: `{
@@ -251,8 +251,8 @@ describe('MLOps & LLMOps Cloud Production Audit',  => {
         }`,
       })
       .expect(200);
-    expect(Date.now - started).toBeLessThan(5_000);
-    expect(gql.body.errors).toBeUndefined;
+    expect(Date.now() - started).toBeLessThan(5_000);
+    expect(gql.body.errors).toBeUndefined();
     expect(gql.body.data.mlopsLlmopsCloudProducts.length).toBeGreaterThan(8);
     expect(gql.body.data.datasetPipelineEngine.regeneratesDatasetMarketplace).toBe(false);
     expect(gql.body.data.trainingPipelineEngine.distributedTrainingOs).toBe(false);

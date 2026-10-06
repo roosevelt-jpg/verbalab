@@ -10,12 +10,12 @@ export type EcosystemProductRow = {
 };
 
 /**
- * Library Phase 116 → Ecosystem Foundation.
- * Marketplace + monetization hub over existing + / voice marketplace —
+ * Library Phase 116 → Ecosystem Foundation (VL-249).
+ * Marketplace + monetization hub over existing VL-090+ / voice marketplace —
  * not a payment-processor OS or regenerate of Volumes 1–10.
  * Volume 11 README: real-money risk; Stripe (or equivalent) only; no raw cards.
  */
-export function ecosystemProductCatalog: EcosystemProductRow[] {
+export function ecosystemProductCatalog(): EcosystemProductRow[] {
   return [
     {
       id: 'ecosystem-cloud',
@@ -24,7 +24,7 @@ export function ecosystemProductCatalog: EcosystemProductRow[] {
       api: 'GET /v1/ecosystem-cloud/products',
       console: '/ecosystem-cloud',
       notes:
-        'Ecosystem hub. Discovery + honesty for marketplaces/monetization. Extends existing+/voice marketplace — does not regenerate Volumes 1–10.',
+        'Ecosystem hub (VL-249). Discovery + honesty for marketplaces/monetization. Extends VL-090+/voice marketplace — does not regenerate Volumes 1–10.',
     },
     {
       id: 'content-marketplace',
@@ -33,7 +33,7 @@ export function ecosystemProductCatalog: EcosystemProductRow[] {
       api: 'GET /v1/marketplace/listings',
       console: '/marketplace',
       notes:
-        'Existing –092 glossary/prompt/dataset listings + Stripe Connect (ADR-0031–0033). Foundation links here; dedicated kind marketplaces extend later.',
+        'Existing VL-090–092 glossary/prompt/dataset listings + Stripe Connect (ADR-0031–0033). Foundation links here; dedicated kind marketplaces extend later.',
     },
     {
       id: 'voice-marketplace',
@@ -42,7 +42,7 @@ export function ecosystemProductCatalog: EcosystemProductRow[] {
       api: 'GET /v1/voice-marketplace/engine',
       console: '/voice-marketplace',
       notes:
-        'Existing voice/pack/language_pack/enterprise marketplace. Voice & Language Marketplace extends — does not replace.',
+        'Existing voice/pack/language_pack/enterprise marketplace (VL-177 / ADR-0088). Voice & Language Marketplace (VL-257) extends — does not replace.',
     },
     {
       id: 'plugin-marketplace',
@@ -51,7 +51,7 @@ export function ecosystemProductCatalog: EcosystemProductRow[] {
       api: 'GET /v1/plugin-marketplace/engine',
       console: '/plugin-marketplace',
       notes:
-        'Phase 117. Publish/install/run via Plugin Runtime sandbox + PluginPolicyGate + FabricPolicyGate. liveCodeExecution=false.',
+        'VL-250 / Phase 117. Publish/install/run via Plugin Runtime sandbox + PluginPolicyGate + FabricPolicyGate. liveCodeExecution=false.',
     },
     {
       id: 'model-marketplace',
@@ -60,7 +60,7 @@ export function ecosystemProductCatalog: EcosystemProductRow[] {
       api: 'GET /v1/model-marketplace/engine',
       console: '/model-marketplace',
       notes:
-        'Phase 118. License SKUs over Model Registry; FabricPolicyGate + Stripe honesty. Not Hugging Face / weight CDN OS.',
+        'VL-251 / Phase 118. License SKUs over Model Registry; FabricPolicyGate + Stripe honesty. Not Hugging Face / weight CDN OS.',
     },
     {
       id: 'dataset-marketplace',
@@ -69,7 +69,7 @@ export function ecosystemProductCatalog: EcosystemProductRow[] {
       api: 'GET /v1/dataset-marketplace/engine',
       console: '/dataset-marketplace',
       notes:
-        'Phase 119. Extends dataset kind + assets; FabricPolicyGate + Stripe honesty. Not Label Studio / Dataset Cloud OS.',
+        'VL-252 / Phase 119. Extends dataset kind + VL-101 assets; FabricPolicyGate + Stripe honesty. Not Label Studio / Dataset Cloud OS.',
     },
     {
       id: 'prompt-marketplace',
@@ -78,7 +78,7 @@ export function ecosystemProductCatalog: EcosystemProductRow[] {
       api: 'GET /v1/prompt-marketplace/engine',
       console: '/prompt-marketplace',
       notes:
-        'Phase 120. Extends prompt kind + Prompt Fabric; FabricPolicyGate + Stripe honesty. Not a prompt mesh OS.',
+        'VL-253 / Phase 120. Extends prompt kind + Prompt Fabric; FabricPolicyGate + Stripe honesty. Not a prompt mesh OS.',
     },
     {
       id: 'agent-marketplace',
@@ -87,7 +87,7 @@ export function ecosystemProductCatalog: EcosystemProductRow[] {
       api: 'GET /v1/agent-marketplace/engine',
       console: '/agent-marketplace',
       notes:
-        'Phase 121. Agent Runtime sandbox + AgentPolicyGate + FabricPolicyGate; Stripe honesty. Not LangGraph/AutoGPT OS.',
+        'VL-254 / Phase 121. Agent Runtime sandbox + AgentPolicyGate + FabricPolicyGate; Stripe honesty. Not LangGraph/AutoGPT OS.',
     },
     {
       id: 'workflow-marketplace',
@@ -96,7 +96,7 @@ export function ecosystemProductCatalog: EcosystemProductRow[] {
       api: 'GET /v1/workflow-marketplace/engine',
       console: '/workflow-marketplace',
       notes:
-        'Phase 122. Workflow Runtime sandbox + WorkflowPolicyGate + FabricPolicyGate; Stripe honesty. Not Zapier/Temporal OS.',
+        'VL-255 / Phase 122. Workflow Runtime sandbox + WorkflowPolicyGate + FabricPolicyGate; Stripe honesty. Not Zapier/Temporal OS.',
     },
     {
       id: 'connector-marketplace',
@@ -105,7 +105,7 @@ export function ecosystemProductCatalog: EcosystemProductRow[] {
       api: 'GET /v1/connector-marketplace/engine',
       console: '/connector-marketplace',
       notes:
-        'Phase 123. Entitlement SKUs over connector catalog + Slack (ADR-0026); FabricPolicyGate + Stripe honesty. Not Zapier/iPaaS OS.',
+        'VL-256 / Phase 123. Entitlement SKUs over connector catalog + Slack (ADR-0026); FabricPolicyGate + Stripe honesty. Not Zapier/iPaaS OS.',
     },
     {
       id: 'voice-language-marketplace',
@@ -114,7 +114,7 @@ export function ecosystemProductCatalog: EcosystemProductRow[] {
       api: 'GET /v1/voice-language-marketplace/engine',
       console: '/voice-language-marketplace',
       notes:
-        'Phase 124. Entitlement SKUs over existing voice marketplace + Volume 1 packs; FabricPolicyGate + Stripe honesty. Not a third-party voice CDN OS.',
+        'VL-257 / Phase 124. Entitlement SKUs over VL-177 voice marketplace + Volume 1 packs; FabricPolicyGate + Stripe honesty. Not a third-party voice CDN OS.',
     },
     {
       id: 'creator-economy',
@@ -123,7 +123,7 @@ export function ecosystemProductCatalog: EcosystemProductRow[] {
       api: 'GET /v1/creator-economy/engine',
       console: '/creator-economy',
       notes:
-        'Phase 125. Extends existing Connect + MarketplaceSale; hand-checked royalty math; tax/dispute gaps explicit. Stripe-only — not a payment-processor OS.',
+        'VL-258 / Phase 125. Extends VL-092 Connect + MarketplaceSale; hand-checked royalty math; tax/dispute gaps explicit. Stripe-only — not a payment-processor OS.',
     },
     {
       id: 'sdk-marketplace',
@@ -161,7 +161,7 @@ export function ecosystemProductCatalog: EcosystemProductRow[] {
   ];
 }
 
-export function ecosystemArchitectureNotes {
+export function ecosystemArchitectureNotes() {
   return {
     style: 'nest_modular_monolith',
     ddd: 'bounded_ecosystem_cloud_hub',
@@ -190,7 +190,7 @@ export function ecosystemArchitectureNotes {
   };
 }
 
-export function ecosystemHonesty {
+export function ecosystemHonesty() {
   return {
     paymentProcessorOs: false,
     storesRawCardData: false,
@@ -208,7 +208,7 @@ export function ecosystemHonesty {
   };
 }
 
-export function ecosystemRoutingTable {
+export function ecosystemRoutingTable() {
   return [
     { surface: 'content-marketplace', path: '/marketplace', api: '/v1/marketplace/listings' },
     { surface: 'voice-marketplace', path: '/voice-marketplace', api: '/v1/voice-marketplace/engine' },

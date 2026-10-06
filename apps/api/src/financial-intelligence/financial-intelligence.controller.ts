@@ -6,18 +6,18 @@ export class FinancialIntelligenceController {
   constructor(private readonly service: FinancialIntelligenceService) {}
 
   @Get('engine')
-  engine {
-    return this.service.engine;
+  engine() {
+    return this.service.engine();
   }
 
   @Get('products')
-  products {
-    return this.service.engine;
+  products() {
+    return this.service.engine();
   }
 
   @Get('monitoring')
-  monitoring {
-    return this.service.monitoring;
+  monitoring() {
+    return this.service.monitoring();
   }
 
   @Get('terms')

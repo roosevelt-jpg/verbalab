@@ -28,7 +28,7 @@ export class GoogleDetectAdapter implements LanguageDetectProvider {
 
     let response: Response;
     try {
-      response = await fetch(url.toString, {
+      response = await fetch(url.toString(), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ q: input.text }),
@@ -42,7 +42,7 @@ export class GoogleDetectAdapter implements LanguageDetectProvider {
       );
     }
 
-    const json = (await response.json) as GoogleDetectResponse;
+    const json = (await response.json()) as GoogleDetectResponse;
     if (!response.ok) {
       throw new ApiException(
         'provider_error',

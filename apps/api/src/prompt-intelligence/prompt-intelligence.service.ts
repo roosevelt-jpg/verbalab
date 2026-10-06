@@ -61,7 +61,7 @@ const SECRET_PATTERNS: Array<{ id: string; re: RegExp; message: string }> = [
   },
 ];
 
-@Injectable
+@Injectable()
 export class PromptIntelligenceService {
   constructor(
     private readonly prisma: PrismaService,
@@ -69,14 +69,14 @@ export class PromptIntelligenceService {
     private readonly prompts: PromptsService,
   ) {}
 
-  engine {
-    return promptIntelligenceCatalog;
+  engine() {
+    return promptIntelligenceCatalog();
   }
 
-  keys {
+  keys() {
     return {
       keys: PROMPT_KEYS.map((id) => ({ id })),
-      note: 'Managed prompt keys for (extends existing).',
+      note: 'Managed prompt keys for VL-188 (extends VL-086).',
     };
   }
 
@@ -84,7 +84,7 @@ export class PromptIntelligenceService {
     const items = await this.prompts.list(organizationId, workspaceId);
     return {
       items,
-      note: 'Prompt registry over workspace versioned prompts.',
+      note: 'Prompt registry over workspace versioned prompts (VL-188).',
     };
   }
 
@@ -102,8 +102,8 @@ export class PromptIntelligenceService {
   private async resolveBody(
     input: AuthCtx & { key: PromptKey; body?: string; version?: number },
   ): Promise<{ body: string; source: string; version: number | null }> {
-    if (input.body?.trim) {
-      return { body: input.body.trim, source: 'draft', version: null };
+    if (input.body?.trim()) {
+      return { body: input.body.trim(), source: 'draft', version: null };
     }
     if (input.version != null) {
       const listed = await this.prompts.listVersions({
@@ -152,14 +152,14 @@ export class PromptIntelligenceService {
         callsLlm: false,
         autoPromptResearchLab: false,
       },
-      note: 'Preview only — does not call an LLM.',
+      note: 'Preview only — does not call an LLM (VL-188).',
     };
   }
 
   private scanFindings(body: string): Finding[] {
     const findings: Finding[] = [];
     const chars = [...body].length;
-    if (!body.trim) {
+    if (!body.trim()) {
       findings.push({ id: 'empty', severity: 'error', message: 'Prompt body is empty' });
     }
     if (chars < 20) {
@@ -176,7 +176,7 @@ export class PromptIntelligenceService {
         message: 'Prompt is very long (>12000 chars); consider trimming',
       });
     }
-    if (body !== body.trim) {
+    if (body !== body.trim()) {
       findings.push({
         id: 'whitespace',
         severity: 'info',
@@ -233,7 +233,7 @@ export class PromptIntelligenceService {
         autoPromptResearchLab: false,
         heuristicOnly: true,
       },
-      note: 'Heuristic evaluation only — not an LLM-as-judge lab.',
+      note: 'Heuristic evaluation only — not an LLM-as-judge lab (VL-188).',
     };
   }
 
@@ -265,7 +265,7 @@ export class PromptIntelligenceService {
         redTeamHarnessOs: false,
         patternScanOnly: true,
       },
-      note: 'Pattern security scan only — not a red-team harness OS.',
+      note: 'Pattern security scan only — not a red-team harness OS (VL-188).',
     };
   }
 
@@ -282,12 +282,12 @@ export class PromptIntelligenceService {
       published,
       api: 'GET /v1/marketplace?kind=prompt',
       console: '/marketplace',
-      note: 'Prompt marketplace via existing listings.',
+      note: 'Prompt marketplace via existing listings (VL-091 / VL-188).',
     };
   }
 
   async analytics(organizationId: string, workspaceId: string) {
-    const start = new Date;
+    const start = new Date();
     start.setUTCDate(1);
     start.setUTCHours(0, 0, 0, 0);
     const actions = [
@@ -309,11 +309,11 @@ export class PromptIntelligenceService {
     const byAction = Object.fromEntries(counts.map((c) => [c.action, c.count]));
     const events = counts.reduce((sum, c) => sum + c.count, 0);
     return {
-      periodStart: start.toISOString,
+      periodStart: start.toISOString(),
       workspaceId,
       events,
       byAction,
-      note: 'Prompt Intelligence analytics.',
+      note: 'Prompt Intelligence analytics (VL-188).',
     };
   }
 
@@ -321,10 +321,10 @@ export class PromptIntelligenceService {
     const [analytics, registry, engine] = await Promise.all([
       this.analytics(organizationId, workspaceId),
       this.registry(organizationId, workspaceId),
-      Promise.resolve(this.engine),
+      Promise.resolve(this.engine()),
     ]);
     return {
-      generatedAt: new Date.toISOString,
+      generatedAt: new Date().toISOString(),
       periodStart: analytics.periodStart,
       events: analytics.events,
       registryKeys: registry.items.length,
@@ -335,7 +335,7 @@ export class PromptIntelligenceService {
         key,
         preview: defaultPromptBody(key).slice(0, 80),
       })),
-      note: 'Prompt Intelligence monitoring snapshot.',
+      note: 'Prompt Intelligence monitoring snapshot (VL-188).',
     };
   }
 }

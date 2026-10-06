@@ -8,12 +8,12 @@ export type TaxonomyCapability = {
   notes: string;
 };
 
-/** Library Phase 64 → Taxonomy Platform. Classification trees — not enterprise taxonomy OS. */
-export function taxonomyPlatformCatalog {
+/** Library Phase 64 → Taxonomy Platform (VL-197). Classification trees — not enterprise taxonomy OS. */
+export function taxonomyPlatformCatalog() {
   return {
     product: 'Lugemi Taxonomy Platform',
     note:
-      'Workspace-scoped categories, tags, content-type terms, and knowledge trees. Assigns to Knowledge Base documents. Not an enterprise taxonomy OS; automatic classification is keyword-heuristic only.',
+      'Workspace-scoped categories, tags, content-type terms, and knowledge trees (VL-197). Assigns to Knowledge Base documents. Not an enterprise taxonomy OS; automatic classification is keyword-heuristic only.',
     capabilities: [
       {
         id: 'categories',

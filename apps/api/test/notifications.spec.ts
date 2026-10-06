@@ -33,7 +33,7 @@ async function seedOrg(prisma: PrismaService, name: string, quota = 50000) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_notif_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_notif_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -48,8 +48,8 @@ async function seedOrg(prisma: PrismaService, name: string, quota = 50000) {
 }
 
 async function waitForJob(jobs: JobsService, organizationId: string, jobId: string) {
-  const start = Date.now;
-  while (Date.now - start < 5000) {
+  const start = Date.now();
+  while (Date.now() - start < 5000) {
     const job = await jobs.get(organizationId, jobId);
     if (job.status === 'succeeded' || job.status === 'failed') return job;
     await new Promise((r) => setTimeout(r, 25));
@@ -57,7 +57,7 @@ async function waitForJob(jobs: JobsService, organizationId: string, jobId: stri
   throw new Error(`Job ${jobId} timed out`);
 }
 
-describe('Notifications',  => {
+describe('Notifications (VL-080)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -66,7 +66,7 @@ describe('Notifications',  => {
   let audit: AuditService;
   let mailbox: MemoryEmailProvider;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     process.env.JOBS_INLINE = '1';
     process.env.RESEND_API_KEY = 're_test_fixture';
     process.env.EMAIL_FROM = 'Lugemi <noreply@example.com>';
@@ -74,11 +74,11 @@ describe('Notifications',  => {
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -86,7 +86,7 @@ describe('Notifications',  => {
     notifications = app.get(NotificationsService);
     audit = app.get(AuditService);
 
-    mailbox = new MemoryEmailProvider;
+    mailbox = new MemoryEmailProvider();
     notifications.setProviderForTests(mailbox);
 
     app.get(GatewayService).setProviderForTests({
@@ -104,11 +104,11 @@ describe('Notifications',  => {
     });
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('emails owners when a job succeeds', async  => {
+  it('emails owners when a job succeeds', async () => {
     mailbox.sent.length = 0;
     const org = await seedOrg(prisma, 'notifJob');
     const key = await apiKeys.create({
@@ -118,7 +118,7 @@ describe('Notifications',  => {
       name: 'notif-job-key',
     });
 
-    const created = await request(app.getHttpServer)
+    const created = await request(app.getHttpServer())
       .post('/v1/jobs')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -135,7 +135,7 @@ describe('Notifications',  => {
     expect(mailbox.sent.some((m) => String(m.to).includes('notifJob@example.com') || (Array.isArray(m.to) && m.to.includes('notifJob@example.com')))).toBe(true);
   });
 
-  it('sends a one-time 80% usage threshold email', async  => {
+  it('sends a one-time 80% usage threshold email', async () => {
     mailbox.sent.length = 0;
     const org = await seedOrg(prisma, 'notifQuota', 100);
     const key = await apiKeys.create({
@@ -146,7 +146,7 @@ describe('Notifications',  => {
     });
 
     // 80 chars → 80% of 100
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .post('/v1/translate')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'x'.repeat(80), source: 'en', target: 'sw' })
@@ -158,7 +158,7 @@ describe('Notifications',  => {
     expect(thresholdMails).toHaveLength(1);
 
     // second translate should not re-send 80%
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .post('/v1/translate')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'y'.repeat(5), source: 'en', target: 'sw' })
@@ -171,7 +171,7 @@ describe('Notifications',  => {
     expect(events.some((e) => e.action === 'usage.threshold_80')).toBe(true);
   });
 
-  it('sends member-added email on new membership', async  => {
+  it('sends member-added email on new membership', async () => {
     mailbox.sent.length = 0;
     const org = await seedOrg(prisma, 'notifMember');
     await notifications.notifyMemberAdded({

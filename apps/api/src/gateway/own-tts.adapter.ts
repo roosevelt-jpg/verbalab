@@ -46,8 +46,8 @@ export function isOwnTtsVoice(voice: string): boolean {
   return voice.startsWith('own:');
 }
 
-export function ownTtsConfigured: boolean {
-  return Boolean(process.env.OWN_TTS_URL?.trim) || process.env.OWN_TTS_FIXTURE === '1';
+export function ownTtsConfigured(): boolean {
+  return Boolean(process.env.OWN_TTS_URL?.trim()) || process.env.OWN_TTS_FIXTURE === '1';
 }
 
 /** Minimal RIFF/WAV for fixture playback without claiming a real GPU run. */
@@ -76,7 +76,7 @@ function tinyWav(seed: string): Buffer {
 export class FixtureOwnTtsAdapter implements TtsProvider {
   readonly name = 'own_tts_fixture';
 
-  listVoices: TtsVoice[] {
+  listVoices(): TtsVoice[] {
     return OWN_TTS_VOICES.map((v) => ({ ...v, provider: this.name }));
   }
 
@@ -90,7 +90,7 @@ export class FixtureOwnTtsAdapter implements TtsProvider {
       );
     }
     const format = input.format === 'wav' ? 'wav' : 'wav';
-    const started = Date.now;
+    const started = Date.now();
     return {
       audio: tinyWav(`${input.voice}:${input.text}`),
       mimeType: 'audio/wav',
@@ -98,7 +98,7 @@ export class FixtureOwnTtsAdapter implements TtsProvider {
       voice: input.voice,
       characters: [...input.text].length,
       provider: this.name,
-      latencyMs: Date.now - started,
+      latencyMs: Date.now() - started,
     };
   }
 }
@@ -115,7 +115,7 @@ export class HttpOwnTtsAdapter implements TtsProvider {
     private readonly apiKey?: string,
   ) {}
 
-  listVoices: TtsVoice[] {
+  listVoices(): TtsVoice[] {
     return OWN_TTS_VOICES;
   }
 
@@ -142,7 +142,7 @@ export class HttpOwnTtsAdapter implements TtsProvider {
       throw new ApiException('validation_error', `Unsupported format: ${format}`, HttpStatus.BAD_REQUEST);
     }
 
-    const started = Date.now;
+    const started = Date.now();
     const headers: Record<string, string> = {
       'Content-Type': 'application/json',
       Accept: 'audio/*, application/json',
@@ -171,7 +171,7 @@ export class HttpOwnTtsAdapter implements TtsProvider {
     }
 
     if (!response.ok) {
-      const detail = await response.text.catch( => '');
+      const detail = await response.text().catch(() => '');
       throw new ApiException(
         'provider_error',
         `Own TTS HTTP ${response.status}${detail ? `: ${detail.slice(0, 200)}` : ''}`,
@@ -181,7 +181,7 @@ export class HttpOwnTtsAdapter implements TtsProvider {
 
     const contentType = response.headers.get('content-type') ?? '';
     if (contentType.includes('application/json')) {
-      const body = (await response.json) as { audioBase64?: string; mimeType?: string };
+      const body = (await response.json()) as { audioBase64?: string; mimeType?: string };
       if (!body.audioBase64) {
         throw new ApiException(
           'provider_error',
@@ -196,19 +196,19 @@ export class HttpOwnTtsAdapter implements TtsProvider {
         voice: input.voice,
         characters: [...input.text].length,
         provider: this.name,
-        latencyMs: Date.now - started,
+        latencyMs: Date.now() - started,
       };
     }
 
-    const arrayBuffer = await response.arrayBuffer;
+    const arrayBuffer = await response.arrayBuffer();
     return {
       audio: Buffer.from(arrayBuffer),
-      mimeType: contentType.split(';')[0]?.trim || MIME[format]!,
+      mimeType: contentType.split(';')[0]?.trim() || MIME[format]!,
       format,
       voice: input.voice,
       characters: [...input.text].length,
       provider: this.name,
-      latencyMs: Date.now - started,
+      latencyMs: Date.now() - started,
     };
   }
 }
@@ -217,7 +217,7 @@ export class HttpOwnTtsAdapter implements TtsProvider {
 export class UnconfiguredOwnTtsAdapter implements TtsProvider {
   readonly name = 'own_tts';
 
-  listVoices: TtsVoice[] {
+  listVoices(): TtsVoice[] {
     return OWN_TTS_VOICES;
   }
 
@@ -230,13 +230,13 @@ export class UnconfiguredOwnTtsAdapter implements TtsProvider {
   }
 }
 
-export function createOwnTtsAdapter: TtsProvider {
+export function createOwnTtsAdapter(): TtsProvider {
   if (process.env.OWN_TTS_FIXTURE === '1') {
-    return new FixtureOwnTtsAdapter;
+    return new FixtureOwnTtsAdapter();
   }
-  const url = process.env.OWN_TTS_URL?.trim ?? '';
+  const url = process.env.OWN_TTS_URL?.trim() ?? '';
   if (url) {
-    return new HttpOwnTtsAdapter(url, process.env.OWN_TTS_API_KEY?.trim || undefined);
+    return new HttpOwnTtsAdapter(url, process.env.OWN_TTS_API_KEY?.trim() || undefined);
   }
-  return new UnconfiguredOwnTtsAdapter;
+  return new UnconfiguredOwnTtsAdapter();
 }

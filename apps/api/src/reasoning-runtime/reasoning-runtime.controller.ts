@@ -26,13 +26,13 @@ export class ReasoningRuntimeController {
   constructor(private readonly runtime: ReasoningRuntimeService) {}
 
   @Get('engine')
-  engine {
-    return this.runtime.engine;
+  engine() {
+    return this.runtime.engine();
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req req: AuthedReq) {
+  analytics(@Req() req: AuthedReq) {
     return this.runtime.analytics({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -41,7 +41,7 @@ export class ReasoningRuntimeController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req req: AuthedReq) {
+  monitoring(@Req() req: AuthedReq) {
     return this.runtime.monitoring({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -50,7 +50,7 @@ export class ReasoningRuntimeController {
 
   @Get('history')
   @UseGuards(TranslateAuthGuard)
-  history(@Req req: AuthedReq, @Query('limit') limit?: string) {
+  history(@Req() req: AuthedReq, @Query('limit') limit?: string) {
     return this.runtime.history({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -60,7 +60,7 @@ export class ReasoningRuntimeController {
 
   @Get('history/:id')
   @UseGuards(TranslateAuthGuard)
-  replay(@Req req: AuthedReq, @Param('id') id: string) {
+  replay(@Req() req: AuthedReq, @Param('id') id: string) {
     return this.runtime.replay({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -72,8 +72,8 @@ export class ReasoningRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   reason(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       problem?: string;
       strategy?: string;
@@ -99,8 +99,8 @@ export class ReasoningRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   plan(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       problem?: string;
       language?: string;
@@ -123,8 +123,8 @@ export class ReasoningRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   reflect(
-    @Req req: AuthedReq,
-    @Body body: { problem?: string; answer?: string; historyId?: string },
+    @Req() req: AuthedReq,
+    @Body() body: { problem?: string; answer?: string; historyId?: string },
   ) {
     return this.runtime.reflect({
       organizationId: req.translateAuth.organizationId,
@@ -139,8 +139,8 @@ export class ReasoningRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   selectTools(
-    @Req req: AuthedReq,
-    @Body body: { problem?: string; model?: string },
+    @Req() req: AuthedReq,
+    @Body() body: { problem?: string; model?: string },
   ) {
     return this.runtime.selectTools({
       organizationId: req.translateAuth.organizationId,
@@ -156,8 +156,8 @@ export class ReasoningRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   selectModel(
-    @Req req: AuthedReq,
-    @Body body: { problem?: string; feature?: string; optimize?: string },
+    @Req() req: AuthedReq,
+    @Body() body: { problem?: string; feature?: string; optimize?: string },
   ) {
     return this.runtime.selectModel({
       organizationId: req.translateAuth.organizationId,
@@ -172,8 +172,8 @@ export class ReasoningRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   decisionTree(
-    @Req req: AuthedReq,
-    @Body body: { problem?: string; kind?: string },
+    @Req() req: AuthedReq,
+    @Body() body: { problem?: string; kind?: string },
   ) {
     return this.runtime.decisionTree({
       organizationId: req.translateAuth.organizationId,
@@ -188,8 +188,8 @@ export class ReasoningRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   evaluate(
-    @Req req: AuthedReq,
-    @Body body: { problem?: string; answer?: string; historyId?: string },
+    @Req() req: AuthedReq,
+    @Body() body: { problem?: string; answer?: string; historyId?: string },
   ) {
     return this.runtime.evaluate({
       organizationId: req.translateAuth.organizationId,
@@ -204,8 +204,8 @@ export class ReasoningRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   confidence(
-    @Req req: AuthedReq,
-    @Body body: { problem?: string; answer?: string; historyId?: string },
+    @Req() req: AuthedReq,
+    @Body() body: { problem?: string; answer?: string; historyId?: string },
   ) {
     return this.runtime.confidence({
       organizationId: req.translateAuth.organizationId,

@@ -26,7 +26,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_aud_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_aud_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -53,29 +53,29 @@ function toneWav(freq = 440, seconds = 0.5): Buffer {
   return encodeWavPcm16(samples, sampleRate);
 }
 
-describe('Audio Intelligence',  => {
+describe('Audio Intelligence (VL-155)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('documents Audio Intelligence honesty',  => {
+  it('documents Audio Intelligence honesty', () => {
     const doc = join(root, 'docs/AUDIO_INTELLIGENCE.md');
     const adr = join(root, 'docs/adr/0074-audio-intelligence.md');
     expect(existsSync(doc)).toBe(true);
@@ -86,21 +86,21 @@ describe('Audio Intelligence',  => {
     expect(text).not.toMatch(/Krisp.*shipped/i);
   });
 
-  it('exposes audio engine with echo deferred', async  => {
-    const res = await request(app.getHttpServer).get('/v1/audio-intelligence/engine').expect(200);
+  it('exposes audio engine with echo deferred', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/audio-intelligence/engine').expect(200);
     expect(res.body.product).toContain('Audio');
     const echo = res.body.capabilities.find((c: { id: string }) => c.id === 'echo-cancellation');
     expect(echo.status).toBe('deferred');
     expect(res.body.capabilities.some((c: { id: string }) => c.id === 'noise-detection')).toBe(true);
   });
 
-  it('returns deferred echo status', async  => {
-    const res = await request(app.getHttpServer).get('/v1/audio-intelligence/echo').expect(200);
+  it('returns deferred echo status', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/audio-intelligence/echo').expect(200);
     expect(res.body.available).toBe(false);
     expect(res.body.status).toBe('deferred');
   });
 
-  it('analyzes and enhances audio', async  => {
+  it('analyzes and enhances audio', async () => {
     const org = await seedOrg(prisma, 'aud');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -108,9 +108,9 @@ describe('Audio Intelligence',  => {
       userId: org.memberships[0]!.userId,
       name: 'aud-key',
     });
-    const wav = toneWav;
+    const wav = toneWav();
 
-    const analyze = await request(app.getHttpServer)
+    const analyze = await request(app.getHttpServer())
       .post('/v1/audio-intelligence/analyze')
       .set('Authorization', `Bearer ${key.secret}`)
       .attach('file', wav, 'tone.wav')
@@ -120,7 +120,7 @@ describe('Audio Intelligence',  => {
     expect(analyze.body.silence.regions.length).toBeGreaterThanOrEqual(0);
     expect(typeof analyze.body.noise.estimatedSnrDb).toBe('number');
 
-    const enhance = await request(app.getHttpServer)
+    const enhance = await request(app.getHttpServer())
       .post('/v1/audio-intelligence/enhance')
       .set('Authorization', `Bearer ${key.secret}`)
       .attach('file', wav, 'tone.wav')
@@ -129,21 +129,21 @@ describe('Audio Intelligence',  => {
     expect(enhance.body.format).toBe('wav');
     expect(enhance.body.audioBase64.length).toBeGreaterThan(40);
 
-    const silence = await request(app.getHttpServer)
+    const silence = await request(app.getHttpServer())
       .post('/v1/audio-intelligence/silence')
       .set('Authorization', `Bearer ${key.secret}`)
       .attach('file', wav, 'tone.wav')
       .expect(200);
     expect(silence.body.silenceRatio).toBeGreaterThanOrEqual(0);
 
-    const analytics = await request(app.getHttpServer)
+    const analytics = await request(app.getHttpServer())
       .get('/v1/audio-intelligence/analytics')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(analytics.body.total).toBeGreaterThanOrEqual(3);
   });
 
-  it('streams SSE analyze events', async  => {
+  it('streams SSE analyze events', async () => {
     const org = await seedOrg(prisma, 'stream');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -152,10 +152,10 @@ describe('Audio Intelligence',  => {
       name: 'stream-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/audio-intelligence/analyze/stream')
       .set('Authorization', `Bearer ${key.secret}`)
-      .attach('file', toneWav, 'tone.wav')
+      .attach('file', toneWav(), 'tone.wav')
       .expect(200);
 
     expect(res.headers['content-type']).toMatch(/text\/event-stream/);
@@ -163,16 +163,16 @@ describe('Audio Intelligence',  => {
     expect(res.text).toContain('event: done');
   });
 
-  it('exposes audioEngine via GraphQL', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes audioEngine via GraphQL', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({ query: '{ audioEngine { product capabilities { id status } } }' })
       .expect(200);
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.audioEngine.product).toContain('Audio');
   });
 
-  it('runs DSP helpers on PCM',  => {
+  it('runs DSP helpers on PCM', () => {
     const wav = toneWav(880, 0.3);
     const analysis = analyzeAudioBuffer(wav);
     expect(analysis.sampleCount).toBeGreaterThan(100);

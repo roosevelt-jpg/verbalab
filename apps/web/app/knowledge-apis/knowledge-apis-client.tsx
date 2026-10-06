@@ -28,14 +28,14 @@ type Surface = {
   console: string | null;
 };
 
-export function KnowledgeApisClient {
-  const { getToken, isLoaded } = useAuth;
+export function KnowledgeApisClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [surfaces, setSurfaces] = useState<Surface[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async  => {
-    const token = await getToken;
+  const load = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, surf] = await Promise.all([
       apiFetch<Engine>('/v1/knowledge-apis/engine', { token }),
@@ -45,9 +45,9 @@ export function KnowledgeApisClient {
     setSurfaces(surf.surfaces);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void load.catch((err: Error) => setError(err.message));
+    void load().catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
   return (

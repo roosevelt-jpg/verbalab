@@ -30,7 +30,7 @@ type DecisionResult = {
   metadata: Record<string, unknown>;
 };
 
-@Injectable
+@Injectable()
 export class DecisionEngineService {
   constructor(
     private readonly prisma: PrismaService,
@@ -38,25 +38,25 @@ export class DecisionEngineService {
     private readonly billing: BillingService,
   ) {}
 
-  engine {
-    return decisionEngineCatalog;
+  engine() {
+    return decisionEngineCatalog();
   }
 
-  kinds {
+  kinds() {
     return {
       kinds: DECISION_KINDS.map((id) => ({ id })),
       deferred: ['enterprise_brms'],
-      note: 'Decision kinds for light rules helpers.',
+      note: 'Decision kinds for VL-189 light rules helpers.',
     };
   }
 
   private assertKind(raw: string | undefined): DecisionKind {
-    const kind = (raw?.trim || 'routing') as DecisionKind;
+    const kind = (raw?.trim() || 'routing') as DecisionKind;
     if (!(DECISION_KINDS as readonly string[]).includes(kind)) {
       if (kind === ('enterprise_brms' as DecisionKind)) {
         throw new ApiException(
           'validation_error',
-          'kind=enterprise_brms is deferred — not Drools/Pega BRMS',
+          'kind=enterprise_brms is deferred — not Drools/Pega BRMS (VL-189)',
           HttpStatus.BAD_REQUEST,
         );
       }
@@ -70,9 +70,9 @@ export class DecisionEngineService {
   }
 
   private textScore(query: string, ...parts: Array<string | null | undefined>): number {
-    const q = query.trim.toLowerCase;
+    const q = query.trim().toLowerCase();
     if (!q) return 0.35;
-    const hay = parts.filter(Boolean).join(' ').toLowerCase;
+    const hay = parts.filter(Boolean).join(' ').toLowerCase();
     if (!hay) return 0;
     let score = 0;
     if (hay.includes(q)) score += 0.55;
@@ -119,8 +119,8 @@ export class DecisionEngineService {
     quality?: string;
     isPro: boolean;
   }): DecisionResult {
-    const family = (input.family?.trim || 'chat').toLowerCase;
-    const quality = (input.quality?.trim || 'good').toLowerCase;
+    const family = (input.family?.trim() || 'chat').toLowerCase();
+    const quality = (input.quality?.trim() || 'good').toLowerCase();
     const preferEconomy = quality === 'economy' || quality === 'low';
     const scored = DECISION_MODELS.filter((m) => m.family === family || !input.family)
       .map((m) => {
@@ -167,7 +167,7 @@ export class DecisionEngineService {
   }
 
   private decideRouting(query?: string): DecisionResult {
-    const q = query?.trim || 'chat';
+    const q = query?.trim() || 'chat';
     const scored = DECISION_ROUTES.map((r) => ({
       r,
       score: this.textScore(q, r.id, ...r.intentTags),
@@ -359,7 +359,7 @@ export class DecisionEngineService {
   }
 
   private decideCost(input: { query?: string; family?: string; isPro: boolean }): DecisionResult {
-    const family = (input.family?.trim || 'chat').toLowerCase;
+    const family = (input.family?.trim() || 'chat').toLowerCase();
     const economy = DECISION_MODELS.find((m) => m.family === family && m.costTier === 'economy');
     const premium = DECISION_MODELS.find((m) => m.family === family && m.costTier === 'standard');
     const pick =
@@ -467,12 +467,12 @@ export class DecisionEngineService {
         trainsDecisionModels: false,
         executesTools: false,
       },
-      note: 'Light rules decision helper. Not an enterprise BRMS.',
+      note: 'Light rules decision helper (VL-189). Not an enterprise BRMS.',
     };
   }
 
   async analytics(organizationId: string, workspaceId: string) {
-    const start = new Date;
+    const start = new Date();
     start.setUTCDate(1);
     start.setUTCHours(0, 0, 0, 0);
     const decisions = await this.prisma.auditEvent.count({
@@ -483,25 +483,25 @@ export class DecisionEngineService {
       },
     });
     return {
-      periodStart: start.toISOString,
+      periodStart: start.toISOString(),
       decisions,
       workspaceId,
-      note: 'Decision Engine analytics.',
+      note: 'Decision Engine analytics (VL-189).',
     };
   }
 
   async monitoring(organizationId: string, workspaceId: string) {
     const [analytics, engine] = await Promise.all([
       this.analytics(organizationId, workspaceId),
-      Promise.resolve(this.engine),
+      Promise.resolve(this.engine()),
     ]);
     return {
-      generatedAt: new Date.toISOString,
+      generatedAt: new Date().toISOString(),
       periodStart: analytics.periodStart,
       decisions: analytics.decisions,
       enterpriseBrms: engine.honesty.enterpriseBrms,
       deferred: engine.capabilities.filter((c) => c.status === 'deferred').map((c) => c.id),
-      note: 'Decision Engine monitoring snapshot.',
+      note: 'Decision Engine monitoring snapshot (VL-189).',
     };
   }
 }

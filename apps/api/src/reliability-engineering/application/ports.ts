@@ -1,4 +1,4 @@
-/** Application ports for Reliability Engineering. */
+/** Application ports for Reliability Engineering (VL-308). */
 
 export type ReliabilityEngineeringProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type ReliabilityEngineeringEngineBundle = ReturnType<
 >;
 
 export interface ReliabilityEngineeringCatalogPort {
-  engine: ReliabilityEngineeringEngineBundle;
-  listProducts: ReliabilityEngineeringProductRow[];
+  engine(): ReliabilityEngineeringEngineBundle;
+  listProducts(): ReliabilityEngineeringProductRow[];
 }
 
 export const RELIABILITY_ENGINEERING_CATALOG_PORT = Symbol('RELIABILITY_ENGINEERING_CATALOG_PORT');

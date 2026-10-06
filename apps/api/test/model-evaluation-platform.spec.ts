@@ -17,7 +17,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory) out.push(...walkTsFiles(full));
+    if (statSync(full).isDirectory()) out.push(...walkTsFiles(full));
     else if (full.endsWith('.ts')) out.push(full);
   }
   return out;
@@ -32,7 +32,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_mep_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_mep_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -46,42 +46,42 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Model Evaluation Platform',  => {
+describe('Model Evaluation Platform (VL-236)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let platform: ModelEvaluationPlatformService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     platform = app.get(ModelEvaluationPlatformService);
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('documents evaluation platform honesty (no SOTA / MMLU OS)',  => {
+  it('documents evaluation platform honesty (no SOTA / MMLU OS)', () => {
     const doc = join(root, 'docs/MODEL_EVALUATION_PLATFORM.md');
     const adr = join(root, 'docs/adr/0137-model-evaluation-platform.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
-    expect(text).toMatch(/|eval\/run|coverage/i);
+    expect(text).toContain('VL-236');
+    expect(text).toMatch(/VL-100|eval\/run|coverage/i);
     expect(text).toMatch(/SOTA|leaderboard/i);
     expect(text).toContain('CQRS');
     expect(text).toMatch(/MMLU/i);
   });
 
-  it('has no TODO/FIXME/implement-later markers in Model Evaluation Platform source',  => {
+  it('has no TODO/FIXME/implement-later markers in Model Evaluation Platform source', () => {
     const roots = [join(apiSrc, 'model-evaluation-platform')];
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
@@ -94,8 +94,8 @@ describe('Model Evaluation Platform',  => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes public engine with honest suites', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes public engine with honest suites', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/model-evaluation-platform/engine')
       .expect(200);
     expect(res.body.product).toBe('Lugemi Model Evaluation Platform');
@@ -116,8 +116,8 @@ describe('Model Evaluation Platform',  => {
     expect(mmlu.status).toBe('deferred');
   });
 
-  it('runs sandbox safety and hands off translation to ', async  => {
-    const org = await seedOrg(prisma, `mep_${Date.now}`);
+  it('runs sandbox safety and hands off translation to VL-100', async () => {
+    const org = await seedOrg(prisma, `mep_${Date.now()}`);
     const session = {
       userId: org.memberships[0].userId,
       organizationId: org.id,
@@ -145,7 +145,7 @@ describe('Model Evaluation Platform',  => {
     const reports = platform.reports(session);
     expect(reports.disclaimer).toMatch(/not claim market leadership|SOTA/i);
 
-    expect( =>
+    expect(() =>
       platform.executeRun(
         session,
         platform.createRun(session, { suite: 'mmlu', execute: false }).run.id,
@@ -153,15 +153,15 @@ describe('Model Evaluation Platform',  => {
     ).toThrow(/not runnable/i);
   });
 
-  it('exposes modelEvaluationSuites via GraphQL CQRS façade', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes modelEvaluationSuites via GraphQL CQRS façade', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query:
           '{ modelEvaluationSuites { id name status runnable existingApi notes } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.modelEvaluationSuites.length).toBeGreaterThan(5);
     expect(
       res.body.data.modelEvaluationSuites.some((s: { id: string }) => s.id === 'translation'),

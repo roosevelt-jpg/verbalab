@@ -10,11 +10,11 @@ export type DataPlaneCloudProductRow = {
 };
 
 /**
- * Library Phase 191 → Data Plane Cloud Foundation.
+ * Library Phase 191 → Data Plane Cloud Foundation (VL-324).
  * Execution layer — never manages orgs/policies/billing.
  * Not Service Mesh / VAIOS / architecture-freeze OS.
  */
-export function dataPlaneCloudProductCatalog: DataPlaneCloudProductRow[] {
+export function dataPlaneCloudProductCatalog(): DataPlaneCloudProductRow[] {
   return [
     {
       id: 'data-plane-cloud',
@@ -23,7 +23,7 @@ export function dataPlaneCloudProductCatalog: DataPlaneCloudProductRow[] {
       api: 'GET /v1/data-plane-cloud/products',
       console: '/data-plane-cloud',
       notes:
-        'Foundation hub. managesOrgsPoliciesBilling=false; serviceMeshOs=false.',
+        'Foundation hub (VL-324). managesOrgsPoliciesBilling=false; serviceMeshOs=false.',
     },
     {
       id: 'translation-runtime',
@@ -32,7 +32,7 @@ export function dataPlaneCloudProductCatalog: DataPlaneCloudProductRow[] {
       api: 'GET /v1/translation-runtime/engine',
       console: '/translation-runtime',
       notes:
-        '. Thin over translate; thinExecutionLayer=true.',
+        'VL-325. Thin over translate; thinExecutionLayer=true.',
     },
     {
       id: 'speech-runtime',
@@ -41,7 +41,7 @@ export function dataPlaneCloudProductCatalog: DataPlaneCloudProductRow[] {
       api: 'GET /v1/speech-runtime/engine',
       console: '/speech-runtime',
       notes:
-        '. Thin over speech-cloud / speech-recognition.',
+        'VL-326. Thin over speech-cloud / speech-recognition.',
     },
     {
       id: 'voice-runtime',
@@ -50,7 +50,7 @@ export function dataPlaneCloudProductCatalog: DataPlaneCloudProductRow[] {
       api: 'GET /v1/voice-runtime/engine',
       console: '/voice-runtime',
       notes:
-        '. Thin over voice-cloud / voice.',
+        'VL-327. Thin over voice-cloud / voice.',
     },
     {
       id: 'vision-runtime',
@@ -59,7 +59,7 @@ export function dataPlaneCloudProductCatalog: DataPlaneCloudProductRow[] {
       api: 'GET /v1/vision-runtime/engine',
       console: '/vision-runtime',
       notes:
-        '. Thin over ocr / documents.',
+        'VL-328. Thin over ocr / documents.',
     },
     {
       id: 'knowledge-runtime',
@@ -68,7 +68,7 @@ export function dataPlaneCloudProductCatalog: DataPlaneCloudProductRow[] {
       api: 'GET /v1/knowledge-runtime/engine',
       console: '/knowledge-runtime',
       notes:
-        '. Thin over knowledge-cloud / knowledge / knowledge-fabric.',
+        'VL-329. Thin over knowledge-cloud / knowledge / knowledge-fabric.',
     },
     {
       id: 'embedding-runtime',
@@ -77,7 +77,7 @@ export function dataPlaneCloudProductCatalog: DataPlaneCloudProductRow[] {
       api: 'GET /v1/embedding-runtime/engine',
       console: '/embedding-runtime',
       notes:
-        '. Thin over embeddings / embedding-cloud.',
+        'VL-330. Thin over embeddings / embedding-cloud.',
     },
     {
       id: 'data-plane-streaming',
@@ -86,7 +86,7 @@ export function dataPlaneCloudProductCatalog: DataPlaneCloudProductRow[] {
       api: 'GET /v1/data-plane-streaming/engine',
       console: '/data-plane-streaming',
       notes:
-        '. Façade over streaming-runtime; extendsStreamingRuntime=true.',
+        'VL-331. Façade over streaming-runtime; extendsStreamingRuntime=true.',
     },
     {
       id: 'gpu-runtime',
@@ -95,7 +95,7 @@ export function dataPlaneCloudProductCatalog: DataPlaneCloudProductRow[] {
       api: 'GET /v1/gpu-runtime/engine',
       console: '/gpu-runtime',
       notes:
-        '. Thin over gpu-platform; gpuBudgetLimitsRequired=true.',
+        'VL-332. Thin over gpu-platform; gpuBudgetLimitsRequired=true.',
     },
     {
       id: 'api-runtime',
@@ -118,7 +118,7 @@ export function dataPlaneCloudProductCatalog: DataPlaneCloudProductRow[] {
   ];
 }
 
-export function dataPlaneCloudRoutingTable: Array<{
+export function dataPlaneCloudRoutingTable(): Array<{
   id: string;
   path: string;
   purpose: string;
@@ -132,7 +132,7 @@ export function dataPlaneCloudRoutingTable: Array<{
   ];
 }
 
-export function dataPlaneCloudRuntimeInventory: Array<{
+export function dataPlaneCloudRuntimeInventory(): Array<{
   id: string;
   title: string;
   thinExecutionLayer: boolean;
@@ -190,7 +190,7 @@ export function dataPlaneCloudRuntimeInventory: Array<{
   ];
 }
 
-export function dataPlaneCloudArchitectureNotes: Record<string, unknown> {
+export function dataPlaneCloudArchitectureNotes(): Record<string, unknown> {
   return {
     role: 'data-plane-execution',
     extends: [
@@ -215,7 +215,7 @@ export function dataPlaneCloudArchitectureNotes: Record<string, unknown> {
   };
 }
 
-export function dataPlaneCloudHonesty: Record<string, boolean | string> {
+export function dataPlaneCloudHonesty(): Record<string, boolean | string> {
   return {
     managesOrgsPoliciesBilling: false,
     serviceMeshOs: false,

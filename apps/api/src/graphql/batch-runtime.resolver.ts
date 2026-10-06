@@ -2,13 +2,13 @@ import { Query, Resolver } from '@nestjs/graphql';
 import { BatchRuntimeService } from '../batch-runtime/batch-runtime.service';
 import { GqlBatchRuntimeEngine } from './gql.types';
 
-@Resolver
+@Resolver()
 export class BatchRuntimeGraphqlResolver {
   constructor(private readonly batch: BatchRuntimeService) {}
 
-  @Query( => GqlBatchRuntimeEngine, { name: 'batchRuntimeEngine' })
-  batchRuntimeEngine: GqlBatchRuntimeEngine {
-    const c = this.batch.engine;
+  @Query(() => GqlBatchRuntimeEngine, { name: 'batchRuntimeEngine' })
+  batchRuntimeEngine(): GqlBatchRuntimeEngine {
+    const c = this.batch.engine();
     return {
       product: c.product,
       note: c.note,

@@ -17,8 +17,8 @@ export class GetIdentityFederationEngineHandler
     private readonly catalog: IdentityFederationCatalogPort,
   ) {}
 
-  execute: Promise<IdentityFederationEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<IdentityFederationEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListIdentityFederationProductsHandler
     private readonly catalog: IdentityFederationCatalogPort,
   ) {}
 
-  execute: Promise<IdentityFederationProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<IdentityFederationProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

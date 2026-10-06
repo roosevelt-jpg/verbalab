@@ -16,10 +16,10 @@ export type GraphEdge = {
 };
 
 /**
- * Library Phase 130 → African Knowledge Graph.
+ * Library Phase 130 → African Knowledge Graph (VL-263).
  * In-process entity/relationship graph. neo4jOs=false.
  */
-export function africanKnowledgeGraphSeed: { nodes: GraphNode[]; edges: GraphEdge[] } {
+export function africanKnowledgeGraphSeed(): { nodes: GraphNode[]; edges: GraphEdge[] } {
   const nodes: GraphNode[] = [
     { id: 'country:ke', kind: 'country', label: 'Kenya', props: { iso2: 'KE' } },
     { id: 'country:ng', kind: 'country', label: 'Nigeria', props: { iso2: 'NG' } },
@@ -67,12 +67,12 @@ export function africanKnowledgeGraphSeed: { nodes: GraphNode[]; edges: GraphEdg
   return { nodes, edges };
 }
 
-export function africanKnowledgeGraphEngineCatalog {
-  const { nodes, edges } = africanKnowledgeGraphSeed;
+export function africanKnowledgeGraphEngineCatalog() {
+  const { nodes, edges } = africanKnowledgeGraphSeed();
   return {
     product: 'Lugemi African Knowledge Graph',
     note:
-      'African Knowledge Graph. In-process entity/relationship graph for countries/regions/languages/institutions. neo4jOs=false — not a Neo4j / graph-database OS.',
+      'African Knowledge Graph (VL-263). In-process entity/relationship graph for countries/regions/languages/institutions. neo4jOs=false — not a Neo4j / graph-database OS.',
     capabilities: [
       {
         id: 'nodes',

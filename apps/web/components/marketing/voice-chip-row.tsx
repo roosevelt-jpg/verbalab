@@ -7,7 +7,7 @@ export function VoiceChipRow({
 }: {
   voices: Array<{ id: string; label: string; sample?: string; lang?: string }>;
 }) {
-  const { play, stop, playingId } = useDemoPlayer;
+  const { play, stop, playingId } = useDemoPlayer();
 
   return (
     <div className="mkt-voice-play-row">
@@ -22,9 +22,9 @@ export function VoiceChipRow({
             type="button"
             className={active ? 'mkt-voice-chip is-active' : 'mkt-voice-chip'}
             aria-pressed={active}
-            onClick={ => {
+            onClick={() => {
               if (active) {
-                stop;
+                stop();
                 return;
               }
               void play({

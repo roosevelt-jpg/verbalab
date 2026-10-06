@@ -24,7 +24,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_ce_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_ce_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -42,23 +42,23 @@ function fakeEmbedding(seed: number): number[] {
   return Array.from({ length: 1536 }, (_, i) => Math.sin((seed + 1) * (i + 1) * 0.01) * 0.1);
 }
 
-describe('Context Engine',  => {
+describe('Context Engine (VL-185)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let storageDir: string;
 
-  beforeAll(async  => {
-    storageDir = await mkdtemp(join(tmpdir, 'lugemi-ce-'));
+  beforeAll(async () => {
+    storageDir = await mkdtemp(join(tmpdir(), 'lugemi-ce-'));
     process.env.DOCUMENT_STORAGE_DIR = storageDir;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -82,12 +82,12 @@ describe('Context Engine',  => {
     });
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
     await rm(storageDir, { recursive: true, force: true });
   });
 
-  it('documents Context Engine honesty',  => {
+  it('documents Context Engine honesty', () => {
     const doc = join(root, 'docs/CONTEXT_ENGINE.md');
     const adr = join(root, 'docs/adr/0096-context-engine.md');
     expect(existsSync(doc)).toBe(true);
@@ -97,8 +97,8 @@ describe('Context Engine',  => {
     expect(text).not.toMatch(/infinite context window shipped/i);
   });
 
-  it('exposes engine with infiniteContextWindow=false and realtime deferred', async  => {
-    const res = await request(app.getHttpServer).get('/v1/context-engine/engine').expect(200);
+  it('exposes engine with infiniteContextWindow=false and realtime deferred', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/context-engine/engine').expect(200);
     expect(res.body.product).toContain('Context Engine');
     expect(res.body.honesty.infiniteContextWindow).toBe(false);
     expect(res.body.honesty.llmSummarization).toBe(false);
@@ -106,11 +106,11 @@ describe('Context Engine',  => {
     const realtime = res.body.capabilities.find((c: { id: string }) => c.id === 'realtime');
     expect(realtime.status).toBe('deferred');
 
-    const sources = await request(app.getHttpServer).get('/v1/context-engine/sources').expect(200);
+    const sources = await request(app.getHttpServer()).get('/v1/context-engine/sources').expect(200);
     expect(sources.body.sources.some((s: { id: string }) => s.id === 'documents')).toBe(true);
   });
 
-  it('assembles language/workspace/memory/document context with compression', async  => {
+  it('assembles language/workspace/memory/document context with compression', async () => {
     const org = await seedOrg(prisma, 'ce');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -119,7 +119,7 @@ describe('Context Engine',  => {
       name: 'ce-key',
     });
 
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .post('/v1/memory-cloud/memories')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -129,7 +129,7 @@ describe('Context Engine',  => {
       })
       .expect(201);
 
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .post('/v1/knowledge/documents')
       .set('Authorization', `Bearer ${key.secret}`)
       .attach(
@@ -142,7 +142,7 @@ describe('Context Engine',  => {
       )
       .expect(201);
 
-    const assembled = await request(app.getHttpServer)
+    const assembled = await request(app.getHttpServer())
       .post('/v1/context-engine/assemble')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -173,22 +173,22 @@ describe('Context Engine',  => {
     expect(assembled.body.compression.afterChars).toBeLessThanOrEqual(2500);
     expect(assembled.body.compression.method).toBe('priority_char_budget');
 
-    const tiny = await request(app.getHttpServer)
+    const tiny = await request(app.getHttpServer())
       .post('/v1/context-engine/assemble')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ query: 'HQ', maxChars: 500 })
       .expect(200);
     expect(tiny.body.compression.truncated).toBe(true);
 
-    const analytics = await request(app.getHttpServer)
+    const analytics = await request(app.getHttpServer())
       .get('/v1/context-engine/analytics')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(analytics.body.assemblies).toBeGreaterThanOrEqual(2);
   });
 
-  it('exposes contextEngine via GraphQL', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes contextEngine via GraphQL', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query:
@@ -196,7 +196,7 @@ describe('Context Engine',  => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.contextEngine.infiniteContextWindow).toBe(false);
     expect(res.body.data.contextEngine.realtimePush).toBe(false);
   });

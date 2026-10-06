@@ -14,8 +14,8 @@ type Engine = {
 };
 type Profile = { id: string; displayName: string; enrolled: boolean; fingerprintEncrypted?: boolean };
 
-export function VoiceBiometricsClient {
-  const { getToken, isLoaded } = useAuth;
+export function VoiceBiometricsClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [profileId, setProfileId] = useState('');
@@ -25,8 +25,8 @@ export function VoiceBiometricsClient {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const load = useCallback(async  => {
-    const token = await getToken;
+  const load = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, prof, ch] = await Promise.all([
       apiFetch<Engine>('/v1/voice-biometrics/engine', { token }),
@@ -41,9 +41,9 @@ export function VoiceBiometricsClient {
     setChallenge(`${ch.phrase} — ${ch.note}`);
   }, [getToken, profileId]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void load.catch((err: Error) => setError(err.message));
+    void load().catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
   async function post(path: string, extra: Record<string, string> = {}) {
@@ -52,9 +52,9 @@ export function VoiceBiometricsClient {
     setError(null);
     setResult(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
-      const form = new FormData;
+      const form = new FormData();
       form.append('file', file);
       for (const [k, v] of Object.entries(extra)) form.append(k, v);
       const res = await fetch(`${API_URL}${path}`, {
@@ -62,10 +62,10 @@ export function VoiceBiometricsClient {
         headers: { Authorization: `Bearer ${token}` },
         body: form,
       });
-      const body = await res.json;
+      const body = await res.json();
       if (!res.ok) throw new Error(body?.error?.message ?? `HTTP ${res.status}`);
       setResult(JSON.stringify(body, null, 2));
-      await load;
+      await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Request failed');
     } finally {
@@ -115,7 +115,7 @@ export function VoiceBiometricsClient {
           <button
             type="button"
             disabled={busy || !profileId}
-            onClick={ => void post('/v1/voice-biometrics/enroll', { profileId, enableAuthFactor: 'true' })}
+            onClick={() => void post('/v1/voice-biometrics/enroll', { profileId, enableAuthFactor: 'true' })}
             style={primary}
           >
             Secure enroll
@@ -123,7 +123,7 @@ export function VoiceBiometricsClient {
           <button
             type="button"
             disabled={busy || !profileId}
-            onClick={ => void post('/v1/voice-biometrics/authenticate', { profileId })}
+            onClick={() => void post('/v1/voice-biometrics/authenticate', { profileId })}
             style={secondary}
           >
             Authenticate
@@ -131,7 +131,7 @@ export function VoiceBiometricsClient {
           <button
             type="button"
             disabled={busy}
-            onClick={ => void post('/v1/voice-biometrics/anti-spoof')}
+            onClick={() => void post('/v1/voice-biometrics/anti-spoof')}
             style={secondary}
           >
             Anti-spoof
@@ -139,7 +139,7 @@ export function VoiceBiometricsClient {
           <button
             type="button"
             disabled={busy}
-            onClick={ => void post('/v1/voice-biometrics/liveness')}
+            onClick={() => void post('/v1/voice-biometrics/liveness')}
             style={secondary}
           >
             Liveness

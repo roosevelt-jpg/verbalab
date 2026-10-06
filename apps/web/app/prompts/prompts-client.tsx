@@ -21,8 +21,8 @@ type VersionRow = {
   createdAt: string;
 };
 
-export function PromptsClient {
-  const { getToken, isLoaded } = useAuth;
+export function PromptsClient() {
+  const { getToken, isLoaded } = useAuth();
   const [rows, setRows] = useState<PromptSummary[]>([]);
   const [selected, setSelected] = useState('chat');
   const [versions, setVersions] = useState<VersionRow[]>([]);
@@ -32,14 +32,14 @@ export function PromptsClient {
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const loadList = useCallback(async  => {
-    const token = await getToken;
+  const loadList = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     setRows(await apiFetch<PromptSummary[]>('/v1/prompts', { token }));
   }, [getToken]);
 
   const loadVersions = useCallback(async (key: string) => {
-    const token = await getToken;
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const data = await apiFetch<{ versions: VersionRow[]; activeVersion: number | null }>(
       `/v1/prompts/${key}/versions`,
@@ -51,24 +51,24 @@ export function PromptsClient {
     else if (data.versions[0]) setBody(data.versions[0].body);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void (async  => {
+    void (async () => {
       try {
-        await loadList;
+        await loadList();
         await loadVersions(selected);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load prompts');
       }
-    });
+    })();
   }, [isLoaded, loadList, loadVersions, selected]);
 
-  async function saveVersion {
+  async function saveVersion() {
     setBusy(true);
     setError(null);
     setMessage(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       await apiFetch(`/v1/prompts/${selected}/versions`, {
         method: 'POST',
@@ -77,7 +77,7 @@ export function PromptsClient {
       });
       setMessage(`Saved and activated a new ${selected} version.`);
       setNote('');
-      await loadList;
+      await loadList();
       await loadVersions(selected);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Save failed');
@@ -91,7 +91,7 @@ export function PromptsClient {
     setError(null);
     setMessage(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       await apiFetch(`/v1/prompts/${selected}/activate`, {
         method: 'POST',
@@ -99,7 +99,7 @@ export function PromptsClient {
         body: JSON.stringify({ version }),
       });
       setMessage(`Activated ${selected} v${version}.`);
-      await loadList;
+      await loadList();
       await loadVersions(selected);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Activate failed');
@@ -108,16 +108,16 @@ export function PromptsClient {
     }
   }
 
-  async function restoreFallback {
+  async function restoreFallback() {
     setBusy(true);
     setError(null);
     setMessage(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       await apiFetch(`/v1/prompts/${selected}/fallback`, { method: 'POST', token, body: '{}' });
       setMessage(`Restored code fallback for ${selected}.`);
-      await loadList;
+      await loadList();
       await loadVersions(selected);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Fallback restore failed');
@@ -144,7 +144,7 @@ export function PromptsClient {
             key={row.key}
             type="button"
             disabled={busy}
-            onClick={ => setSelected(row.key)}
+            onClick={() => setSelected(row.key)}
             style={{
               opacity: selected === row.key ? 1 : 0.7,
               fontWeight: selected === row.key ? 700 : 400,
@@ -173,10 +173,10 @@ export function PromptsClient {
           style={{ width: '100%', marginTop: '0.5rem' }}
         />
         <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.75rem', flexWrap: 'wrap' }}>
-          <button type="button" onClick={ => void saveVersion} disabled={busy || !body.trim}>
+          <button type="button" onClick={() => void saveVersion()} disabled={busy || !body.trim()}>
             Save & activate
           </button>
-          <button type="button" onClick={ => void restoreFallback} disabled={busy}>
+          <button type="button" onClick={() => void restoreFallback()} disabled={busy}>
             Use code fallback
           </button>
         </div>
@@ -199,7 +199,7 @@ export function PromptsClient {
                     {v.note ? <div style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>{v.note}</div> : null}
                   </div>
                   {!v.active ? (
-                    <button type="button" disabled={busy} onClick={ => void activate(v.version)}>
+                    <button type="button" disabled={busy} onClick={() => void activate(v.version)}>
                       Activate
                     </button>
                   ) : null}

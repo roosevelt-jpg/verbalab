@@ -13,22 +13,22 @@ export class BillingController {
   constructor(private readonly billing: BillingService) {}
 
   @Get('plans')
-  plans {
-    return { plans: this.billing.listPublicPlans, stripeConfigured: this.billing.isConfigured };
+  plans() {
+    return { plans: this.billing.listPublicPlans(), stripeConfigured: this.billing.isConfigured() };
   }
 
   @Get('summary')
   @UseGuards(ClerkAuthGuard)
-  summary(@CurrentSession session: SessionContext) {
+  summary(@CurrentSession() session: SessionContext) {
     return this.billing.getSummary(session.organizationId);
   }
 
   @Post('checkout')
   @UseGuards(ClerkAuthGuard)
   checkout(
-    @CurrentSession session: SessionContext,
-    @Req req: Request,
-    @Body body: { planId?: PlanId },
+    @CurrentSession() session: SessionContext,
+    @Req() req: Request,
+    @Body() body: { planId?: PlanId },
   ) {
     if (session.role !== 'owner' && session.role !== 'admin') {
       throw new ApiException(
@@ -47,7 +47,7 @@ export class BillingController {
 
   @Post('portal')
   @UseGuards(ClerkAuthGuard)
-  portal(@CurrentSession session: SessionContext, @Req req: Request) {
+  portal(@CurrentSession() session: SessionContext, @Req() req: Request) {
     if (session.role !== 'owner' && session.role !== 'admin') {
       throw new ApiException(
         'forbidden',
@@ -64,7 +64,7 @@ export class BillingController {
 
   @Post('webhook')
   async webhook(
-    @Req req: Request & { rawBody?: Buffer },
+    @Req() req: Request & { rawBody?: Buffer },
     @Headers('stripe-signature') signature: string | undefined,
   ) {
     if (!signature) {

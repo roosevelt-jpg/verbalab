@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetAiSchedulerEngineQuery } from '../ai-scheduler/application/messages';
 import { GqlAiSchedulerEngine } from './gql.types';
 
-@Resolver
+@Resolver()
 export class AiSchedulerGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query( => GqlAiSchedulerEngine, { name: 'aiSchedulerEngine' })
-  async aiSchedulerEngine: Promise<GqlAiSchedulerEngine> {
-    const catalog = await this.queries.execute(new GetAiSchedulerEngineQuery);
+  @Query(() => GqlAiSchedulerEngine, { name: 'aiSchedulerEngine' })
+  async aiSchedulerEngine(): Promise<GqlAiSchedulerEngine> {
+    const catalog = await this.queries.execute(new GetAiSchedulerEngineQuery());
     return {
       product: catalog.product,
       note: catalog.note,

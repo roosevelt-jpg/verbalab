@@ -13,18 +13,18 @@ import { clientIp } from '../common/http/client-ip';
 export class ApiKeysController {
   constructor(private readonly apiKeys: ApiKeysService) {}
 
-  @Get
-  list(@CurrentSession session: SessionContext) {
+  @Get()
+  list(@CurrentSession() session: SessionContext) {
     return this.apiKeys.list(session.organizationId);
   }
 
-  @Post
+  @Post()
   create(
-    @CurrentSession session: SessionContext,
-    @Req req: Request,
-    @Body body: { name?: string; environment?: string },
+    @CurrentSession() session: SessionContext,
+    @Req() req: Request,
+    @Body() body: { name?: string; environment?: string },
   ) {
-    const name = body.name?.trim;
+    const name = body.name?.trim();
     if (!name) {
       throw new ApiException('validation_error', 'name is required', HttpStatus.BAD_REQUEST);
     }
@@ -40,8 +40,8 @@ export class ApiKeysController {
 
   @Delete(':id')
   revoke(
-    @CurrentSession session: SessionContext,
-    @Req req: Request,
+    @CurrentSession() session: SessionContext,
+    @Req() req: Request,
     @Param('id') id: string,
   ) {
     return this.apiKeys.revoke(session.organizationId, id, {

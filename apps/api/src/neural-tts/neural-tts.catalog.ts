@@ -8,8 +8,8 @@ export type TtsCapability = {
   notes: string;
 };
 
-/** Library Phase 28 → Lugemi Neural Text-to-Speech. */
-export function neuralTtsEngineCatalog {
+/** Library Phase 28 → Lugemi Neural Text-to-Speech (VL-171). */
+export function neuralTtsEngineCatalog() {
   return {
     product: 'Lugemi Neural TTS',
     note:
@@ -97,7 +97,7 @@ export function neuralTtsEngineCatalog {
         name: 'Enterprise Voices',
         status: 'partial',
         api: '/v1/voice-clones',
-        notes: 'Consent-gated clone:{id} voices. Enterprise library productization continues in Phase 29.',
+        notes: 'Consent-gated clone:{id} voices (VL-064). Enterprise library productization continues in Phase 29.',
       },
       {
         id: 'monitoring',

@@ -10,7 +10,7 @@ import { getHttpPair } from '../common/http/execution-request';
 /**
  * Runs after TranslateAuthGuard. Enforces per-key and per-org request limits.
  */
-@Injectable
+@Injectable()
 export class RateLimitGuard implements CanActivate {
   constructor(
     private readonly rateLimits: RateLimitService,

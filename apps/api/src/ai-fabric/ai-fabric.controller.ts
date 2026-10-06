@@ -8,28 +8,28 @@ export class AiFabricController {
   constructor(private readonly fabric: AiFabricService) {}
 
   @Get('products')
-  products {
-    return this.fabric.products;
+  products() {
+    return this.fabric.products();
   }
 
   @Get('engine')
-  engine {
-    return this.fabric.products;
+  engine() {
+    return this.fabric.products();
   }
 
   @Get('routing')
-  routing {
-    return this.fabric.routing;
+  routing() {
+    return this.fabric.routing();
   }
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession session: SessionContext) {
+  overview(@CurrentSession() session: SessionContext) {
     return this.fabric.overview(session);
   }
 
   @Get('monitoring')
-  monitoring {
-    return this.fabric.monitoring;
+  monitoring() {
+    return this.fabric.monitoring();
   }
 }

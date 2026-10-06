@@ -8,8 +8,8 @@ export type CloningCapability = {
   notes: string;
 };
 
-/** Library Phase 29 → Enterprise Voice Cloning Platform. */
-export function voiceCloningEngineCatalog {
+/** Library Phase 29 → Enterprise Voice Cloning Platform (VL-172). */
+export function voiceCloningEngineCatalog() {
   return {
     product: 'Lugemi Voice Cloning',
     note:
@@ -42,7 +42,7 @@ export function voiceCloningEngineCatalog {
         name: 'Voice Verification',
         status: 'partial',
         api: 'POST /v1/speakers/verify',
-        notes: 'Speaker verify/identify via existing. Clone enrollment verify is sample/consent gate, not PAD.',
+        notes: 'Speaker verify/identify via VL-152. Clone enrollment verify is sample/consent gate, not PAD.',
       },
       {
         id: 'voice-ownership',
@@ -146,7 +146,7 @@ export function voiceCloningEngineCatalog {
   };
 }
 
-export function voiceCloningConsentPolicy {
+export function voiceCloningConsentPolicy() {
   return {
     product: 'Lugemi Voice Cloning',
     required: {
@@ -170,7 +170,7 @@ export function voiceCloningConsentPolicy {
       'Disabling watermark on clone speech',
       'Treating ToS checkbox alone as consent',
     ],
-    audit: voiceCloningEngineCatalog.trust.auditActions,
+    audit: voiceCloningEngineCatalog().trust.auditActions,
     docs: '/docs/VOICE_CLONING.md',
   };
 }

@@ -9,10 +9,10 @@ export type DomainTerm = {
 };
 
 /**
- * Library Phase 134 → Education Intelligence.
+ * Library Phase 134 → Education Intelligence (VL-267).
  * Domain vocabulary + safety flags for African Intelligence Cloud.
  */
-export function educationIntelligenceEngineCatalog {
+export function educationIntelligenceEngineCatalog() {
   const terms: DomainTerm[] = [
       {
         id: 'edu-curriculum',
@@ -46,7 +46,7 @@ export function educationIntelligenceEngineCatalog {
   return {
     product: 'Lugemi Education Intelligence',
     note:
-      'Education Intelligence. Domain terms/services catalog for African Intelligence Cloud with domain-specific safety flags. Extends Knowledge/Intelligence clouds — not a vertical operations OS.',
+      'Education Intelligence (VL-267). Domain terms/services catalog for African Intelligence Cloud with domain-specific safety flags. Extends Knowledge/Intelligence clouds — not a vertical operations OS.',
     capabilities: terms,
     terms,
     architecture: {

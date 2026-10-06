@@ -18,7 +18,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory) out.push(...walkTsFiles(full));
+    if (statSync(full).isDirectory()) out.push(...walkTsFiles(full));
     else if (full.endsWith('.ts')) out.push(full);
   }
   return out;
@@ -33,7 +33,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_vlm_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_vlm_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -47,41 +47,41 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Voice & Language Marketplace',  => {
+describe('Voice & Language Marketplace (VL-257)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;
   let marketplace: VoiceLanguageMarketplaceService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    }).compile();
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
     prisma = app.get(PrismaService);
     billing = app.get(BillingService);
     marketplace = app.get(VoiceLanguageMarketplaceService);
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('documents Voice & Language Marketplace honesty (not a third-party voice OS; Stripe-only)',  => {
+  it('documents Voice & Language Marketplace honesty (not a third-party voice OS; Stripe-only)', () => {
     const doc = join(root, 'docs/VOICE_LANGUAGE_MARKETPLACE.md');
     const adr = join(root, 'docs/adr/0159-voice-language-marketplace.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
+    expect(text).toContain('VL-257');
     expect(text).toMatch(/third-party TTS|thirdPartyVoiceOs/i);
     expect(text).toMatch(/Stripe|storesRawCardData/i);
     expect(text).toMatch(/celebrityWithoutRights/i);
   });
 
-  it('has no TODO/FIXME markers in Voice & Language Marketplace source',  => {
+  it('has no TODO/FIXME markers in Voice & Language Marketplace source', () => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const file of walkTsFiles(join(apiSrc, 'voice-language-marketplace'))) {
@@ -91,8 +91,8 @@ describe('Voice & Language Marketplace',  => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes engine with real-money + anti-CDN honesty', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes engine with real-money + anti-CDN honesty', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/voice-language-marketplace/engine')
       .expect(200);
     expect(res.body.product).toBe('Lugemi Voice & Language Marketplace');
@@ -109,15 +109,15 @@ describe('Voice & Language Marketplace',  => {
     expect(res.body.packs.some((c: { key: string }) => c.key === 'language.sw')).toBe(true);
   });
 
-  it('exposes voiceLanguageMarketplaceEngine via GraphQL CQRS façade', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes voiceLanguageMarketplaceEngine via GraphQL CQRS façade', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query:
           '{ voiceLanguageMarketplaceEngine { product thirdPartyVoiceOs voiceCdnOs celebrityWithoutRights crossTenantCloneSynthesis storesRawCardData stripeOrEquivalentRequired capabilities { id status } } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.voiceLanguageMarketplaceEngine.product).toContain(
       'Voice & Language Marketplace',
     );
@@ -129,9 +129,9 @@ describe('Voice & Language Marketplace',  => {
     expect(res.body.data.voiceLanguageMarketplaceEngine.stripeOrEquivalentRequired).toBe(true);
   });
 
-  it('publishes, installs with revenue share, rejects celebrity + free plan', async  => {
-    const publisher = await seedOrg(prisma, `vlmpub_${Date.now}`);
-    const buyer = await seedOrg(prisma, `vlmbuy_${Date.now}`);
+  it('publishes, installs with revenue share, rejects celebrity + free plan', async () => {
+    const publisher = await seedOrg(prisma, `vlmpub_${Date.now()}`);
+    const buyer = await seedOrg(prisma, `vlmbuy_${Date.now()}`);
     await billing.applyEntitlementForTests({ organizationId: publisher.id, plan: 'pro' });
     await billing.applyEntitlementForTests({ organizationId: buyer.id, plan: 'pro' });
 
@@ -202,7 +202,7 @@ describe('Voice & Language Marketplace',  => {
     expect(sales.honesty.storesRawCardData).toBe(false);
     expect(sales.honesty.stripeOrEquivalentRequired).toBe(true);
 
-    const free = await seedOrg(prisma, `vlmfree_${Date.now}`);
+    const free = await seedOrg(prisma, `vlmfree_${Date.now()}`);
     await expect(
       marketplace.publish({
         organizationId: free.id,

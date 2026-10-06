@@ -8,13 +8,13 @@ export type ContextRuntimeCapability = {
   notes: string;
 };
 
-export function contextRuntimeMode: 'disabled' | 'sandbox' {
-  const raw = (process.env.LUGEMI_CONTEXT_RUNTIME_MODE ?? 'sandbox').toLowerCase;
+export function contextRuntimeMode(): 'disabled' | 'sandbox' {
+  const raw = (process.env.LUGEMI_CONTEXT_RUNTIME_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
 
-export function contextRuntimeCeilings {
+export function contextRuntimeCeilings() {
   return {
     maxChars: Math.min(
       64_000,
@@ -24,7 +24,7 @@ export function contextRuntimeCeilings {
       86_400,
       Math.max(30, Number(process.env.LUGEMI_CONTEXT_RUNTIME_CACHE_TTL_SEC ?? '300') || 300),
     ),
-    mode: contextRuntimeMode,
+    mode: contextRuntimeMode(),
     note: 'Hard assemble char ceiling. Opt-in Intelligent Cache namespace=context.',
   };
 }
@@ -46,14 +46,14 @@ export const CONTEXT_RUNTIME_PRIORITIES: Array<{ kind: string; priority: number 
 ];
 
 /**
- * Library Phase 84 → Context Runtime.
- * Kernel assembly over existing Context Engine — not infinite-context OS.
+ * Library Phase 84 → Context Runtime (VL-217).
+ * Kernel assembly over VL-185 Context Engine — not infinite-context OS.
  */
-export function contextRuntimeCatalog {
+export function contextRuntimeCatalog() {
   return {
     product: 'Lugemi Context Runtime',
     note:
-      'Context Runtime. Kernel assembly over existing Context Engine (conversation/workspace/org/project/language/user/knowledge/model blocks, prioritization, char-budget compression, retrieval). Optional Intelligent Cache namespace=context. Not an infinite context window, not LLM summarization OS, not realtime push. Does not regenerate Context Engine.',
+      'Context Runtime (VL-217). Kernel assembly over VL-185 Context Engine (conversation/workspace/org/project/language/user/knowledge/model blocks, prioritization, char-budget compression, retrieval). Optional Intelligent Cache namespace=context. Not an infinite context window, not LLM summarization OS, not realtime push. Does not regenerate Context Engine.',
     capabilities: [
       {
         id: 'conversation-context',
@@ -157,7 +157,7 @@ export function contextRuntimeCatalog {
         id: 'sdk',
         name: 'SDK',
         status: 'shipped',
-        api: 'contextRuntimeEngine',
+        api: 'contextRuntimeEngine()',
         notes: '@lugemi/sdk',
       },
       {

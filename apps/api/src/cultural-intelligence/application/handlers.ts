@@ -17,8 +17,8 @@ export class GetCulturalIntelligenceEngineHandler
     private readonly catalog: CulturalIntelligenceCatalogPort,
   ) {}
 
-  execute: Promise<CulturalIntelligenceEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<CulturalIntelligenceEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListCulturalIntelligenceProductsHandler
     private readonly catalog: CulturalIntelligenceCatalogPort,
   ) {}
 
-  execute: Promise<CulturalIntelligenceProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<CulturalIntelligenceProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

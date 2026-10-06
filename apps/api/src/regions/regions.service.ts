@@ -10,15 +10,15 @@ import {
   type RegionCode,
 } from './regions.catalog';
 
-@Injectable
+@Injectable()
 export class RegionsService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
   ) {}
 
-  current {
-    const code = currentRegionCode;
+  current() {
+    const code = currentRegionCode();
     const def = findRegion(code)!;
     return {
       code: def.code,
@@ -32,13 +32,13 @@ export class RegionsService {
     };
   }
 
-  list {
-    const current = currentRegionCode;
+  list() {
+    const current = currentRegionCode();
     return {
       currentRegion: current,
       disclaimer:
         'Pick a residency region for sales/compliance. Data does not replicate across regions.',
-      regions: regionCatalog.map((r) => ({
+      regions: regionCatalog().map((r) => ({
         ...r,
         isCurrentDeploy: r.code === current,
       })),
@@ -50,7 +50,7 @@ export class RegionsService {
       where: { id: organizationId },
       select: { id: true, name: true, dataRegion: true },
     });
-    const current = this.current;
+    const current = this.current();
     const pinned = org.dataRegion && isRegionCode(org.dataRegion) ? findRegion(org.dataRegion) : null;
     return {
       organizationId: org.id,
@@ -124,7 +124,7 @@ export class RegionsService {
     });
     if (!org?.dataRegion) return;
 
-    const current = currentRegionCode;
+    const current = currentRegionCode();
     if (org.dataRegion === current) return;
 
     const target = findRegion(org.dataRegion);

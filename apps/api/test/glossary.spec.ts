@@ -19,7 +19,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_gloss_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_gloss_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -33,20 +33,20 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Glossary',  => {
+describe('Glossary (VL-050)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let glossary: GlossaryService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -67,11 +67,11 @@ describe('Glossary',  => {
     });
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('creates terms and applies them on translate', async  => {
+  it('creates terms and applies them on translate', async () => {
     const org = await seedOrg(prisma, 'gloss');
     const workspaceId = org.workspaces[0]!.id;
 
@@ -96,7 +96,7 @@ describe('Glossary',  => {
       name: 'gloss-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/translate')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'Pay with M-Pesa today', source: 'en', target: 'sw' })
@@ -107,7 +107,7 @@ describe('Glossary',  => {
     expect(res.body.text).not.toContain('⟦VL');
   });
 
-  it('rejects duplicate source terms for a pair', async  => {
+  it('rejects duplicate source terms for a pair', async () => {
     const org = await seedOrg(prisma, 'dup');
     await glossary.create({
       organizationId: org.id,

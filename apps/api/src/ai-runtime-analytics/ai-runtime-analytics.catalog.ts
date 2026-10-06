@@ -8,21 +8,21 @@ export type RuntimeAnalyticsCapability = {
   notes: string;
 };
 
-export function aiRuntimeAnalyticsMode: 'disabled' | 'sandbox' {
-  const raw = (process.env.LUGEMI_AI_RUNTIME_ANALYTICS_MODE ?? 'sandbox').toLowerCase;
+export function aiRuntimeAnalyticsMode(): 'disabled' | 'sandbox' {
+  const raw = (process.env.LUGEMI_AI_RUNTIME_ANALYTICS_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
 
 /**
- * Library Phase 79 → AI Runtime Analytics.
+ * Library Phase 79 → AI Runtime Analytics (VL-212).
  * Inference Cloud aggregates — ≠ Intelligence/Knowledge/Language analytics; not BI OS.
  */
-export function aiRuntimeAnalyticsCatalog {
+export function aiRuntimeAnalyticsCatalog() {
   return {
     product: 'Lugemi AI Runtime Analytics',
     note:
-      'AI Runtime Analytics. Org/workspace aggregates for Inference Cloud latency/throughput/GPU/CPU/cache/requests/errors/cost/customers/models/streaming. Reads GPU Platform, AI Router, Streaming, Batch, Cache, Cost Optimization, Model Serving, and usage_events. Not a BI dashboard OS, APM suite, or regenerate of Intelligence Analytics / Knowledge Analytics.',
+      'AI Runtime Analytics (VL-212). Org/workspace aggregates for Inference Cloud latency/throughput/GPU/CPU/cache/requests/errors/cost/customers/models/streaming. Reads GPU Platform, AI Router, Streaming, Batch, Cache, Cost Optimization, Model Serving, and usage_events. Not a BI dashboard OS, APM suite, or regenerate of Intelligence Analytics (VL-191) / Knowledge Analytics (VL-202).',
     capabilities: [
       {
         id: 'latency',
@@ -78,7 +78,7 @@ export function aiRuntimeAnalyticsCatalog {
         name: 'Cost',
         status: 'shipped',
         api: 'GET /v1/ai-runtime-analytics/cost',
-        notes: 'CostSpendEvent ledger + GPU hourly estimates — ≠ Stripe invoices; enforce remains .',
+        notes: 'CostSpendEvent ledger + GPU hourly estimates — ≠ Stripe invoices; enforce remains VL-211.',
       },
       {
         id: 'customers',
@@ -126,7 +126,7 @@ export function aiRuntimeAnalyticsCatalog {
         id: 'sdk',
         name: 'SDK',
         status: 'shipped',
-        api: 'aiRuntimeAnalyticsEngine',
+        api: 'aiRuntimeAnalyticsEngine()',
         notes: '@lugemi/sdk',
       },
       {

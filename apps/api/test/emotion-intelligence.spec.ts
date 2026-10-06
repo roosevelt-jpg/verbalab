@@ -22,7 +22,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_emo_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_emo_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -36,29 +36,29 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Emotion Intelligence',  => {
+describe('Emotion Intelligence (VL-154)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('documents Emotion Intelligence honesty',  => {
+  it('documents Emotion Intelligence honesty', () => {
     const doc = join(root, 'docs/EMOTION_INTELLIGENCE.md');
     const adr = join(root, 'docs/adr/0073-emotion-intelligence.md');
     expect(existsSync(doc)).toBe(true);
@@ -69,8 +69,8 @@ describe('Emotion Intelligence',  => {
     expect(text).not.toMatch(/trained SER.*shipped/i);
   });
 
-  it('exposes emotion engine with required labels', async  => {
-    const res = await request(app.getHttpServer).get('/v1/emotion/engine').expect(200);
+  it('exposes emotion engine with required labels', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/emotion/engine').expect(200);
     expect(res.body.product).toContain('Emotion');
     expect(res.body.labels).toEqual(
       expect.arrayContaining([
@@ -89,7 +89,7 @@ describe('Emotion Intelligence',  => {
     expect(acoustic.status).toBe('deferred');
   });
 
-  it('detects emotion from text and records analytics', async  => {
+  it('detects emotion from text and records analytics', async () => {
     const org = await seedOrg(prisma, 'emo');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -98,7 +98,7 @@ describe('Emotion Intelligence',  => {
       name: 'emo-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/emotion/detect')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: "I'm so excited and this is urgent ASAP!" })
@@ -108,14 +108,14 @@ describe('Emotion Intelligence',  => {
     expect(res.body.confidence).toBeGreaterThan(0.4);
     expect(res.body.scores.length).toBeGreaterThan(3);
 
-    const analytics = await request(app.getHttpServer)
+    const analytics = await request(app.getHttpServer())
       .get('/v1/emotion/analytics')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(analytics.body.detects).toBeGreaterThanOrEqual(1);
   });
 
-  it('streams SSE emotion events', async  => {
+  it('streams SSE emotion events', async () => {
     const org = await seedOrg(prisma, 'stream');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -124,7 +124,7 @@ describe('Emotion Intelligence',  => {
       name: 'stream-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/emotion/stream')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'I am furious and angry about this.' })
@@ -135,16 +135,16 @@ describe('Emotion Intelligence',  => {
     expect(res.text).toContain('event: done');
   });
 
-  it('exposes emotionEngine via GraphQL', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes emotionEngine via GraphQL', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({ query: '{ emotionEngine { product labels capabilities { id status } } }' })
       .expect(200);
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.emotionEngine.labels).toContain('stress');
   });
 
-  it('scores cue lexicon helpers',  => {
+  it('scores cue lexicon helpers', () => {
     const sad = analyzeSpeechEmotion('I feel so sad and miserable today');
     expect(sad.label).toBe('sad');
     const fear = analyzeSpeechEmotion('I am terrified and afraid');

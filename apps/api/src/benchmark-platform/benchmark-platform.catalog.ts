@@ -19,10 +19,10 @@ export type LeaderboardRow = {
 };
 
 /**
- * Library Phase 141 → Benchmark Platform.
+ * Library Phase 141 → Benchmark Platform (VL-274).
  * Suites + leaderboard seed — not a public leaderboard OS.
  */
-export function benchmarkPlatformEngineCatalog {
+export function benchmarkPlatformEngineCatalog() {
   const suites: BenchmarkSuite[] = [
     { id: 'translation', name: 'Translation benchmarks', status: 'shipped', kind: 'task', api: 'GET /v1/benchmark-platform/leaderboard', notes: 'MT quality suites.' },
     { id: 'speech', name: 'Speech benchmarks', status: 'shipped', kind: 'task', api: 'GET /v1/benchmark-platform/leaderboard', notes: 'WER/CER suites.' },
@@ -44,7 +44,7 @@ export function benchmarkPlatformEngineCatalog {
   return {
     product: 'Lugemi Benchmark Platform',
     note:
-      'Benchmark Platform. Internal suites and leaderboard seed — not a public leaderboard OS and never claims market leadership or SOTA.',
+      'Benchmark Platform (VL-274). Internal suites and leaderboard seed — not a public leaderboard OS and never claims market leadership or SOTA.',
     suites,
     leaderboard,
     capabilities: suites,

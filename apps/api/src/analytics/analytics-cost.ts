@@ -14,7 +14,7 @@ export type AnalyticsCostRates = {
   embeddingsPer1kTokens: number;
 };
 
-export function analyticsCostRates: AnalyticsCostRates {
+export function analyticsCostRates(): AnalyticsCostRates {
   return {
     translatePer1kChars: num('ANALYTICS_COST_TRANSLATE_PER_1K_CHARS', 0.02),
     sttPerMinute: num('ANALYTICS_COST_STT_PER_MINUTE', 0.006),
@@ -28,7 +28,7 @@ export function analyticsCostRates: AnalyticsCostRates {
 export function estimateFeatureCostUsd(
   feature: string,
   units: number,
-  rates: AnalyticsCostRates = analyticsCostRates,
+  rates: AnalyticsCostRates = analyticsCostRates(),
 ): number {
   switch (feature) {
     case 'translate':

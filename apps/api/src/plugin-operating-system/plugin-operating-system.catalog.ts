@@ -1,8 +1,8 @@
 /**
- * Library Phase 209 → Plugin Operating System.
- * Plugin Operating System. Façade over plugin-runtime + plugin-marketplace. Isolation/sandbox/security honesty from existing policy gates — do not invent new sandbox OS.
+ * Library Phase 209 → Plugin Operating System (VL-342).
+ * Plugin Operating System (VL-342). Façade over plugin-runtime + plugin-marketplace. Isolation/sandbox/security honesty from existing policy gates — do not invent new sandbox OS.
  */
-export function pluginOperatingSystemEngineCatalog {
+export function pluginOperatingSystemEngineCatalog() {
   return {
     product: 'Lugemi Plugin Operating System',
     unifyingOrchestrationLayer: true,
@@ -11,10 +11,10 @@ export function pluginOperatingSystemEngineCatalog {
     notKubernetes: true,
     literalOsKernel: false,
     capabilities: [
-      { id: 'execution', name: 'Plugin Execution Routing', status: 'shipped', notes: ' routed capability — not a new engine.' },
-      { id: 'isolation', name: 'Plugin Isolation Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' },
-      { id: 'sandbox', name: 'Sandbox Honesty via existing policy gates', status: 'shipped', notes: ' routed capability — not a new engine.' },
-      { id: 'security', name: 'Plugin Security Routing', status: 'shipped', notes: ' routed capability — not a new engine.' }
+      { id: 'execution', name: 'Plugin Execution Routing', status: 'shipped', notes: 'VL-342 routed capability — not a new engine.' },
+      { id: 'isolation', name: 'Plugin Isolation Catalog', status: 'shipped', notes: 'VL-342 routed capability — not a new engine.' },
+      { id: 'sandbox', name: 'Sandbox Honesty via existing policy gates', status: 'shipped', notes: 'VL-342 routed capability — not a new engine.' },
+      { id: 'security', name: 'Plugin Security Routing', status: 'shipped', notes: 'VL-342 routed capability — not a new engine.' }
     ],
     routes: [
       {
@@ -74,9 +74,9 @@ export function pluginOperatingSystemEngineCatalog {
       notKubernetes: true,
       literalOsKernel: false,
       enterpriseEngineeringSystemOs: false,
-      note: 'Plugin Operating System. Façade over plugin-runtime + plugin-marketplace. Isolation/sandbox/security honesty from existing policy gates — do not invent new sandbox OS.',
+      note: 'Plugin Operating System (VL-342). Façade over plugin-runtime + plugin-marketplace. Isolation/sandbox/security honesty from existing policy gates — do not invent new sandbox OS.',
     },
     docs: '/docs/PLUGIN_OPERATING_SYSTEM.md',
-    note: 'Plugin Operating System. Façade over plugin-runtime + plugin-marketplace. Isolation/sandbox/security honesty from existing policy gates — do not invent new sandbox OS.',
+    note: 'Plugin Operating System (VL-342). Façade over plugin-runtime + plugin-marketplace. Isolation/sandbox/security honesty from existing policy gates — do not invent new sandbox OS.',
   };
 }

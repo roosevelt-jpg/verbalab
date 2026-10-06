@@ -21,16 +21,16 @@ type Engine = {
 
 type Ns = { id: string; name: string; status: string; notes: string };
 
-export function IntelligentCacheClient {
-  const { getToken, isLoaded } = useAuth;
+export function IntelligentCacheClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [namespaces, setNamespaces] = useState<Ns[]>([]);
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const refresh = useCallback(async  => {
-    const token = await getToken;
+  const refresh = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, ns] = await Promise.all([
       apiFetch<Engine>('/v1/intelligent-cache/engine', { token }),
@@ -40,16 +40,16 @@ export function IntelligentCacheClient {
     setNamespaces(ns.namespaces);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void refresh.catch((err: Error) => setError(err.message));
+    void refresh().catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
-  const demo = async  => {
+  const demo = async () => {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       await apiFetch('/v1/intelligent-cache/put', {
         token,
@@ -69,7 +69,7 @@ export function IntelligentCacheClient {
         },
       );
       setResult(hit.hit ? JSON.stringify(hit.entry?.value) : 'miss');
-      await refresh;
+      await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Cache demo failed');
     } finally {
@@ -130,7 +130,7 @@ export function IntelligentCacheClient {
         <button
           type="button"
           disabled={busy}
-          onClick={ => void demo}
+          onClick={() => void demo()}
           style={{
             marginTop: '0.85rem',
             border: '1px solid var(--border)',

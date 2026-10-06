@@ -29,20 +29,20 @@ type Overview = {
   links: Record<string, string>;
 };
 
-export function GatewayClient {
-  const { getToken, isLoaded } = useAuth;
+export function GatewayClient() {
+  const { getToken, isLoaded } = useAuth();
   const [data, setData] = useState<Overview | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async  => {
-    const token = await getToken;
+  const load = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     setData(await apiFetch<Overview>('/v1/gateway/overview', { token }));
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void load.catch((err: Error) => setError(err.message));
+    void load().catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
   return (

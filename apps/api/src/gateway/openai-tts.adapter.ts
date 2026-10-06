@@ -26,7 +26,7 @@ export class OpenAiTtsAdapter implements TtsProvider {
 
   constructor(private readonly apiKey: string) {}
 
-  listVoices: TtsVoice[] {
+  listVoices(): TtsVoice[] {
     return OPENAI_VOICES;
   }
 
@@ -53,7 +53,7 @@ export class OpenAiTtsAdapter implements TtsProvider {
       throw new ApiException('validation_error', `Unsupported format: ${format}`, HttpStatus.BAD_REQUEST);
     }
 
-    const started = Date.now;
+    const started = Date.now();
     let response: Response;
     try {
       response = await fetch(OPENAI_SPEECH_URL, {
@@ -79,7 +79,7 @@ export class OpenAiTtsAdapter implements TtsProvider {
     }
 
     if (!response.ok) {
-      const detail = await response.text.catch( => '');
+      const detail = await response.text().catch(() => '');
       throw new ApiException(
         'provider_error',
         `OpenAI TTS HTTP ${response.status}${detail ? `: ${detail.slice(0, 200)}` : ''}`,
@@ -87,7 +87,7 @@ export class OpenAiTtsAdapter implements TtsProvider {
       );
     }
 
-    const arrayBuffer = await response.arrayBuffer;
+    const arrayBuffer = await response.arrayBuffer();
     return {
       audio: Buffer.from(arrayBuffer),
       mimeType: MIME[format]!,
@@ -95,7 +95,7 @@ export class OpenAiTtsAdapter implements TtsProvider {
       voice: input.voice,
       characters: [...input.text].length,
       provider: this.name,
-      latencyMs: Date.now - started,
+      latencyMs: Date.now() - started,
     };
   }
 }

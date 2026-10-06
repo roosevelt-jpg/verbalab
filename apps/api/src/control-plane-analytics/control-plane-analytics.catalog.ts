@@ -1,8 +1,8 @@
 /**
- * Library Phase 189 → Control Plane Analytics.
+ * Library Phase 189 → Control Plane Analytics (VL-322).
  * Aggregates orgs/deployments/policies/regions/traffic/costs/config/health from siblings.
  */
-export function controlPlaneAnalyticsEngineCatalog {
+export function controlPlaneAnalyticsEngineCatalog() {
   return {
     product: 'Lugemi Control Plane Analytics',
     capabilities: [
@@ -32,6 +32,6 @@ export function controlPlaneAnalyticsEngineCatalog {
     },
     docs: '/docs/CONTROL_PLANE_ANALYTICS.md',
     note:
-      'Control Plane Analytics. Aggregates orgs/deployments/policies/regions/traffic/costs/config/health from siblings.',
+      'Control Plane Analytics (VL-322). Aggregates orgs/deployments/policies/regions/traffic/costs/config/health from siblings.',
   };
 }

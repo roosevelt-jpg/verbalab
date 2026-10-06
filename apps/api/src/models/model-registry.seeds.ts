@@ -1,4 +1,4 @@
-/** Gateway features tracked in the model registry ( + Language Intelligence). */
+/** Gateway features tracked in the model registry (VL-110 + Language Intelligence). */
 export const MODEL_FEATURES = [
   'translate',
   'stt',
@@ -109,7 +109,7 @@ export const VENDOR_MODEL_SEEDS: VendorDefaultSeed[] = [
     provider: 'vendor_clone',
     displayName: 'Legacy voice cloning adapter',
     baseModel: 'multilingual_v2',
-    notes: 'Optional cloned voices. Consent + abuse review required; watermark always on.',
+    notes: 'Optional cloned voices (VL-064). Consent + abuse review required; watermark always on.',
     envKey: 'VENDOR_VOICE_CLONE_API_KEY',
     role: 'fallback',
   },
@@ -194,7 +194,7 @@ export const VENDOR_MODEL_SEEDS: VendorDefaultSeed[] = [
     provider: 'openrouter_chat',
     displayName: 'OpenRouter (OpenAI-compatible fallback)',
     baseModel: 'openai/gpt-4o-mini',
-    notes: ' optional chat fallback when OPENROUTER_API_KEY is set.',
+    notes: 'VL-129 optional chat fallback when OPENROUTER_API_KEY is set.',
     envKey: 'OPENROUTER_API_KEY',
     role: 'fallback',
   },
@@ -293,15 +293,15 @@ export function envConfigured(envKey: string | null): boolean {
     return Boolean(process.env.GOOGLE_VISION_API_KEY || process.env.GOOGLE_TRANSLATE_API_KEY);
   }
   if (envKey === 'GOOGLE_TRANSLATE_API_KEY') {
-    return Boolean(process.env.LUGEMI_MT_URL?.trim || process.env.GOOGLE_TRANSLATE_API_KEY?.trim);
+    return Boolean(process.env.LUGEMI_MT_URL?.trim() || process.env.GOOGLE_TRANSLATE_API_KEY?.trim());
   }
   if (envKey === 'OPENAI_API_KEY') {
     return Boolean(
-      process.env.LUGEMI_CHAT_URL?.trim ||
-        process.env.LUGEMI_ASR_URL?.trim ||
-        process.env.LUGEMI_EMBED_URL?.trim ||
-        process.env.OPENAI_API_KEY?.trim ||
-        process.env.OPENROUTER_API_KEY?.trim,
+      process.env.LUGEMI_CHAT_URL?.trim() ||
+        process.env.LUGEMI_ASR_URL?.trim() ||
+        process.env.LUGEMI_EMBED_URL?.trim() ||
+        process.env.OPENAI_API_KEY?.trim() ||
+        process.env.OPENROUTER_API_KEY?.trim(),
     );
   }
   return Boolean(process.env[envKey]);

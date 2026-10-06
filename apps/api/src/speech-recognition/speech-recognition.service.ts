@@ -50,7 +50,7 @@ export type RecognitionResult = {
   detectedLanguage: boolean;
 };
 
-@Injectable
+@Injectable()
 export class SpeechRecognitionService {
   constructor(
     private readonly gateway: GatewayService,
@@ -60,8 +60,8 @@ export class SpeechRecognitionService {
     private readonly audio: AudioService,
   ) {}
 
-  engine {
-    return speechEngineCatalog;
+  engine() {
+    return speechEngineCatalog();
   }
 
   async analytics(organizationId: string) {
@@ -70,14 +70,14 @@ export class SpeechRecognitionService {
       periodStart: summary.periodStart,
       stt: summary.stt,
       product: 'Lugemi Speech',
-      note: 'Usage metering for STT. Full Speech Analytics: GET /v1/speech-analytics/*.',
+      note: 'Usage metering for STT. Full Speech Analytics: GET /v1/speech-analytics/* (VL-159).',
       docs: '/docs/SPEECH_ANALYTICS.md',
     };
   }
 
-  listIndustryPacks {
+  listIndustryPacks() {
     return {
-      packs: speechIndustryVocabularyPacks.map((p) => ({
+      packs: speechIndustryVocabularyPacks().map((p) => ({
         id: p.id,
         name: p.name,
         description: p.description,
@@ -96,7 +96,7 @@ export class SpeechRecognitionService {
       terms: terms.map((t) => ({
         id: t.id,
         phrase: t.phrase,
-        createdAt: t.createdAt.toISOString,
+        createdAt: t.createdAt.toISOString(),
       })),
     };
   }
@@ -108,7 +108,7 @@ export class SpeechRecognitionService {
     userId?: string;
     ip?: string;
   }) {
-    const phrase = input.phrase.trim;
+    const phrase = input.phrase.trim();
     if (!phrase || phrase.length > 120) {
       throw new ApiException(
         'validation_error',
@@ -142,7 +142,7 @@ export class SpeechRecognitionService {
         ip: input.ip,
         metadata: { phrase },
       });
-      return { id: row.id, phrase: row.phrase, createdAt: row.createdAt.toISOString };
+      return { id: row.id, phrase: row.phrase, createdAt: row.createdAt.toISOString() };
     } catch {
       throw new ApiException(
         'conflict',
@@ -207,7 +207,7 @@ export class SpeechRecognitionService {
     const languageHint =
       input.detectLanguage === false && !input.language
         ? undefined
-        : input.language?.trim || undefined;
+        : input.language?.trim() || undefined;
 
     const result = await this.gateway.transcribe({
       buffer: input.file.buffer,
@@ -224,7 +224,7 @@ export class SpeechRecognitionService {
 
     const segments = (result.segments ?? []).map((s) => ({
       ...s,
-      text: s.text.trim,
+      text: s.text.trim(),
     }));
 
     const durationSeconds = Math.max(1, Math.ceil(result.durationSeconds));
@@ -347,7 +347,7 @@ export class SpeechRecognitionService {
       durationSeconds: result.durationSeconds,
       provider: result.provider,
       confidence: result.confidence,
-      cueCount: segments.filter((s) => s.text.trim).length,
+      cueCount: segments.filter((s) => s.text.trim()).length,
     };
   }
 }
@@ -367,7 +367,7 @@ export function parseIndustryPacks(raw: unknown): IndustryPackId[] {
     ? raw.map(String)
     : String(raw)
         .split(',')
-        .map((s) => s.trim)
+        .map((s) => s.trim())
         .filter(Boolean);
   const out: IndustryPackId[] = [];
   for (const p of parts) {
@@ -378,17 +378,17 @@ export function parseIndustryPacks(raw: unknown): IndustryPackId[] {
 
 export function parseStringList(raw: unknown): string[] {
   if (raw == null || raw === '') return [];
-  if (Array.isArray(raw)) return raw.map(String).map((s) => s.trim).filter(Boolean);
+  if (Array.isArray(raw)) return raw.map(String).map((s) => s.trim()).filter(Boolean);
   try {
     const parsed = JSON.parse(String(raw));
     if (Array.isArray(parsed)) {
-      return parsed.map(String).map((s) => s.trim).filter(Boolean);
+      return parsed.map(String).map((s) => s.trim()).filter(Boolean);
     }
   } catch {
     /* comma-separated */
   }
   return String(raw)
     .split(',')
-    .map((s) => s.trim)
+    .map((s) => s.trim())
     .filter(Boolean);
 }

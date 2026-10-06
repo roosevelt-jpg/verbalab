@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_br_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_br_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Batch Runtime',  => {
+describe('Batch Runtime (VL-209)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -44,7 +44,7 @@ describe('Batch Runtime',  => {
   const prevRetries = process.env.LUGEMI_BATCH_MAX_RETRIES;
   const prevInline = process.env.JOBS_INLINE;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     process.env.LUGEMI_BATCH_RUNTIME_MODE = 'sandbox';
     process.env.LUGEMI_BATCH_MAX_ITEMS = '5';
     process.env.LUGEMI_BATCH_MAX_RETRIES = '1';
@@ -52,17 +52,17 @@ describe('Batch Runtime',  => {
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   });
 
-  afterAll(async  => {
+  afterAll(async () => {
     if (prevMode === undefined) delete process.env.LUGEMI_BATCH_RUNTIME_MODE;
     else process.env.LUGEMI_BATCH_RUNTIME_MODE = prevMode;
     if (prevItems === undefined) delete process.env.LUGEMI_BATCH_MAX_ITEMS;
@@ -71,10 +71,10 @@ describe('Batch Runtime',  => {
     else process.env.LUGEMI_BATCH_MAX_RETRIES = prevRetries;
     if (prevInline === undefined) delete process.env.JOBS_INLINE;
     else process.env.JOBS_INLINE = prevInline;
-    await app.close;
+    await app.close();
   });
 
-  it('documents Batch Runtime honesty',  => {
+  it('documents Batch Runtime honesty', () => {
     const doc = join(root, 'docs/BATCH_RUNTIME.md');
     const adr = join(root, 'docs/adr/0120-batch-runtime.md');
     const readme = join(root, 'docs/roadmap/volume7-inference-cloud/README_VOLUME7.md');
@@ -85,12 +85,12 @@ describe('Batch Runtime',  => {
     expect(text).toMatch(/Spark|Airflow|Celery/i);
     expect(text).toMatch(/does \*\*not\*\*|not regenerate/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
-    expect(text).toContain('');
+    expect(text).toContain('VL-209');
     expect(text).toMatch(/BullMQ/i);
   });
 
-  it('exposes engine with honesty + kinds', async  => {
-    const res = await request(app.getHttpServer).get('/v1/batch-runtime/engine').expect(200);
+  it('exposes engine with honesty + kinds', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/batch-runtime/engine').expect(200);
     expect(res.body.product).toContain('Batch Runtime');
     expect(res.body.honesty.sparkOs).toBe(false);
     expect(res.body.honesty.airflowOs).toBe(false);
@@ -101,7 +101,7 @@ describe('Batch Runtime',  => {
     expect(res.body.ceilings.maxItemsPerRun).toBe(5);
     expect(res.body.ceilings.maxRetries).toBe(1);
 
-    const kinds = await request(app.getHttpServer).get('/v1/batch-runtime/kinds').expect(200);
+    const kinds = await request(app.getHttpServer()).get('/v1/batch-runtime/kinds').expect(200);
     expect(kinds.body.kinds.find((k: { id: string }) => k.id === 'video').status).toBe(
       'deferred',
     );
@@ -110,8 +110,8 @@ describe('Batch Runtime',  => {
     );
   });
 
-  it('creates sandbox runs, checkpoints, retries, enforces ceilings', async  => {
-    const org = await seedOrg(prisma, `br_${Date.now}`);
+  it('creates sandbox runs, checkpoints, retries, enforces ceilings', async () => {
+    const org = await seedOrg(prisma, `br_${Date.now()}`);
     const key = await apiKeys.create({
       organizationId: org.id,
       workspaceId: org.workspaces[0].id,
@@ -119,7 +119,7 @@ describe('Batch Runtime',  => {
       name: 'br-test',
     });
 
-    const emb = await request(app.getHttpServer)
+    const emb = await request(app.getHttpServer())
       .post('/v1/batch-runtime/runs')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -132,28 +132,28 @@ describe('Batch Runtime',  => {
     expect(emb.body.run.priorityWeight).toBe(30);
     expect(emb.body.honesty.extendsBullMqJobs).toBe(true);
 
-    const ck = await request(app.getHttpServer)
+    const ck = await request(app.getHttpServer())
       .post(`/v1/batch-runtime/runs/${emb.body.run.id}/checkpoint`)
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ index: 2 })
       .expect(200);
     expect(ck.body.run.checkpointIndex).toBe(2);
 
-    const retried = await request(app.getHttpServer)
+    const retried = await request(app.getHttpServer())
       .post(`/v1/batch-runtime/runs/${emb.body.run.id}/retry`)
       .set('Authorization', `Bearer ${key.secret}`)
       .send({})
       .expect(200);
     expect(retried.body.run.attempts).toBe(1);
 
-    const overRetry = await request(app.getHttpServer)
+    const overRetry = await request(app.getHttpServer())
       .post(`/v1/batch-runtime/runs/${emb.body.run.id}/retry`)
       .set('Authorization', `Bearer ${key.secret}`)
       .send({})
       .expect(402);
     expect(JSON.stringify(overRetry.body)).toMatch(/retry|budget|ceiling/i);
 
-    const overItems = await request(app.getHttpServer)
+    const overItems = await request(app.getHttpServer())
       .post('/v1/batch-runtime/runs')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -164,7 +164,7 @@ describe('Batch Runtime',  => {
     expect(JSON.stringify(overItems.body)).toMatch(/ceiling|maxItems/i);
 
     // Translation delegates to jobs when Google key may be missing — still creates hub row
-    const tr = await request(app.getHttpServer)
+    const tr = await request(app.getHttpServer())
       .post('/v1/batch-runtime/runs')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -176,23 +176,23 @@ describe('Batch Runtime',  => {
     // May be 201 (job created) or error if translate hard-fails during inline process
     expect([201, 500, 502, 400]).toContain(tr.status);
     if (tr.status === 201) {
-      expect(tr.body.run.jobId).toBeTruthy;
+      expect(tr.body.run.jobId).toBeTruthy();
       expect(tr.body.note).toMatch(/BullMQ|batch_translate/i);
     }
 
-    const scheduled = await request(app.getHttpServer)
+    const scheduled = await request(app.getHttpServer())
       .post('/v1/batch-runtime/runs')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
         kind: 'speech',
         items: ['clip-a'],
-        runAt: new Date(Date.now + 60_000).toISOString,
+        runAt: new Date(Date.now() + 60_000).toISOString(),
       })
       .expect(201);
     expect(scheduled.body.run.status).toBe('scheduled');
 
     // Not due yet
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .post(`/v1/batch-runtime/runs/${scheduled.body.run.id}/start`)
       .set('Authorization', `Bearer ${key.secret}`)
       .send({})
@@ -200,17 +200,17 @@ describe('Batch Runtime',  => {
 
     await prisma.batchRun.update({
       where: { id: scheduled.body.run.id },
-      data: { runAt: new Date(Date.now - 1000) },
+      data: { runAt: new Date(Date.now() - 1000) },
     });
 
-    const started = await request(app.getHttpServer)
+    const started = await request(app.getHttpServer())
       .post(`/v1/batch-runtime/runs/${scheduled.body.run.id}/start`)
       .set('Authorization', `Bearer ${key.secret}`)
       .send({})
       .expect(200);
     expect(started.body.run.status).toBe('completed');
 
-    const mon = await request(app.getHttpServer)
+    const mon = await request(app.getHttpServer())
       .get('/v1/batch-runtime/monitoring')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -218,15 +218,15 @@ describe('Batch Runtime',  => {
     expect(mon.body.deferred).toContain('video-jobs');
   });
 
-  it('exposes batchRuntimeEngine via GraphQL', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes batchRuntimeEngine via GraphQL', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query:
           '{ batchRuntimeEngine { product sparkOs airflowOs regeneratesJobsApi extendsBullMqJobs distributedBatchOs orgWorkspaceScoped sandboxRunsForNonTranslate mode maxItemsPerRun maxRetries capabilities { id status } } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.batchRuntimeEngine.sparkOs).toBe(false);
     expect(res.body.data.batchRuntimeEngine.airflowOs).toBe(false);
     expect(res.body.data.batchRuntimeEngine.regeneratesJobsApi).toBe(false);

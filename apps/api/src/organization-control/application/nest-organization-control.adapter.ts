@@ -6,16 +6,16 @@ import {
   OrganizationControlProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestOrganizationControlCatalogAdapter implements OrganizationControlCatalogPort {
   constructor(private readonly service: OrganizationControlService) {}
 
-  engine: OrganizationControlEngineBundle {
-    return this.service.engine;
+  engine(): OrganizationControlEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: OrganizationControlProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): OrganizationControlProductRow[] {
+    const bundle = this.engine() as {
       products?: OrganizationControlProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestOrganizationControlCatalogAdapter implements OrganizationContro
         status: 'shipped',
         api: 'GET /v1/organization-control/engine',
         console: '/organization-control',
-        notes: ' shipped.',
+        notes: 'VL-315 shipped.',
       },
     ];
   }

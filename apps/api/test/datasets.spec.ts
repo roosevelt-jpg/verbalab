@@ -17,7 +17,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_ds_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_ds_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -47,30 +47,30 @@ function fakeFile(name: string, text: string): Express.Multer.File {
   };
 }
 
-describe('Dataset program',  => {
+describe('Dataset program (VL-101)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let datasets: DatasetsService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     datasets = app.get(DatasetsService);
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('requires license tag and consent notes', async  => {
-    const org = await seedOrg(prisma, `dsreq_${Date.now}`);
+  it('requires license tag and consent notes', async () => {
+    const org = await seedOrg(prisma, `dsreq_${Date.now()}`);
     await expect(
       datasets.create({
         organizationId: org.id,
@@ -92,14 +92,14 @@ describe('Dataset program',  => {
         role: 'owner',
         title: 'Pack',
         licenseTag: 'cc-by-4.0',
-        consentNotes: ' ',
+        consentNotes: '   ',
         file: fakeFile('a.txt', 'hello'),
       }),
     ).rejects.toMatchObject({ code: 'validation_error' });
   });
 
-  it('stores a versioned asset and reads content back', async  => {
-    const org = await seedOrg(prisma, `dsok_${Date.now}`);
+  it('stores a versioned asset and reads content back', async () => {
+    const org = await seedOrg(prisma, `dsok_${Date.now()}`);
     const created = await datasets.create({
       organizationId: org.id,
       workspaceId: org.workspaces[0].id,
@@ -140,9 +140,9 @@ describe('Dataset program',  => {
     expect(listed.some((r) => r.id === created.id)).toBe(true);
   });
 
-  it('isolates assets across organizations', async  => {
-    const a = await seedOrg(prisma, `dsa_${Date.now}`);
-    const b = await seedOrg(prisma, `dsb_${Date.now}`);
+  it('isolates assets across organizations', async () => {
+    const a = await seedOrg(prisma, `dsa_${Date.now()}`);
+    const b = await seedOrg(prisma, `dsb_${Date.now()}`);
     const created = await datasets.create({
       organizationId: a.id,
       workspaceId: a.workspaces[0].id,

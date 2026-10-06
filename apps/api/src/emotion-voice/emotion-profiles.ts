@@ -159,7 +159,7 @@ export function getEmotionProfile(id: string): EmotionVoiceProfile | undefined {
  * like "say happily:" which would be audible.
  */
 export function applySoftProsody(text: string, prosody: EmotionVoiceProfile['prosody']): string {
-  const trimmed = text.trim;
+  const trimmed = text.trim();
   if (!trimmed) return trimmed;
 
   switch (prosody) {

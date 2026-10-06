@@ -35,7 +35,7 @@ type PromptSnapshot = {
   ratingCount: number;
 };
 
-@Injectable
+@Injectable()
 export class PromptMarketplaceService {
   constructor(
     private readonly prisma: PrismaService,
@@ -44,8 +44,8 @@ export class PromptMarketplaceService {
     private readonly fabricGate: FabricPolicyGate,
   ) {}
 
-  engine {
-    return promptMarketplaceEngineCatalog;
+  engine() {
+    return promptMarketplaceEngineCatalog();
   }
 
   private assertOwnerOrAdmin(role: string) {
@@ -83,7 +83,7 @@ export class PromptMarketplaceService {
   }
 
   private parseCategory(raw?: string): PromptMarketplaceCategory {
-    const value = (raw ?? 'packs').trim.toLowerCase;
+    const value = (raw ?? 'packs').trim().toLowerCase();
     if (!(PROMPT_MARKETPLACE_CATEGORIES as readonly string[]).includes(value)) {
       throw new ApiException(
         'validation_error',
@@ -95,7 +95,7 @@ export class PromptMarketplaceService {
   }
 
   private parseLicense(raw?: string): string {
-    const value = (raw ?? 'commercial').trim.toLowerCase;
+    const value = (raw ?? 'commercial').trim().toLowerCase();
     if (!(PROMPT_MARKETPLACE_LICENSE_TYPES as readonly string[]).includes(value)) {
       throw new ApiException(
         'validation_error',
@@ -145,8 +145,8 @@ export class PromptMarketplaceService {
       publisherOrgId: row.publisherOrgId,
       publisherWorkspaceId: row.publisherWorkspaceId,
       publisherName: row.publisherOrg?.name ?? null,
-      createdAt: row.createdAt.toISOString,
-      updatedAt: row.updatedAt.toISOString,
+      createdAt: row.createdAt.toISOString(),
+      updatedAt: row.updatedAt.toISOString(),
     };
   }
 
@@ -196,7 +196,7 @@ export class PromptMarketplaceService {
         .map((r) => ({
           id: r.id,
           listingId: r.listingId,
-          installedAt: r.installedAt.toISOString,
+          installedAt: r.installedAt.toISOString(),
           listing: this.serialize(r.listing),
         })),
     };
@@ -221,7 +221,7 @@ export class PromptMarketplaceService {
           applicationFeeCents: r.applicationFeeCents,
           currency: r.currency,
           status: r.status,
-          createdAt: r.createdAt.toISOString,
+          createdAt: r.createdAt.toISOString(),
         })),
       honesty: {
         platformFeeBps: PLATFORM_FEE_BPS,
@@ -229,7 +229,7 @@ export class PromptMarketplaceService {
         storesRawCardData: false,
         creatorPayoutMathVerifiedLive: false,
       },
-      note: 'Recorded receipts only. Creator Economy expands payout math.',
+      note: 'Recorded receipts only. Creator Economy (VL-258) expands payout math.',
     };
   }
 
@@ -262,13 +262,13 @@ export class PromptMarketplaceService {
 
     const category = this.parseCategory(input.category);
     const licenseType = this.parseLicense(input.licenseType);
-    const promptVersion = (input.promptVersion ?? 'v1').trim.slice(0, 64) || 'v1';
+    const promptVersion = (input.promptVersion ?? 'v1').trim().slice(0, 64) || 'v1';
     const priceCents = Math.max(0, Math.floor(Number(input.priceCents ?? 0) || 0));
-    const currency = (input.currency ?? 'usd').trim.toLowerCase.slice(0, 8) || 'usd';
+    const currency = (input.currency ?? 'usd').trim().toLowerCase().slice(0, 8) || 'usd';
 
     const filterKeys =
       Array.isArray(input.keys) && input.keys.length > 0
-        ? input.keys.map((k) => k.trim).filter((k) => isPromptKey(k))
+        ? input.keys.map((k) => k.trim()).filter((k) => isPromptKey(k))
         : null;
 
     const prompts = await this.prisma.prompt.findMany({
@@ -285,7 +285,7 @@ export class PromptMarketplaceService {
     for (const prompt of prompts) {
       if (!isPromptKey(prompt.key) || prompt.activeVersion == null) continue;
       const version = prompt.versions.find((v) => v.version === prompt.activeVersion);
-      if (!version?.body?.trim) continue;
+      if (!version?.body?.trim()) continue;
       snapshotPrompts.push({ key: prompt.key, body: version.body });
     }
     if (snapshotPrompts.length === 0) {
@@ -296,12 +296,12 @@ export class PromptMarketplaceService {
       );
     }
 
-    const title = (input.title ?? 'Prompt pack').trim.slice(0, 120);
+    const title = (input.title ?? 'Prompt pack').trim().slice(0, 120);
     if (!title) {
       throw new ApiException('validation_error', 'title is required', HttpStatus.BAD_REQUEST);
     }
     const description =
-      input.description?.trim.slice(0, 500) ||
+      input.description?.trim().slice(0, 500) ||
       `${snapshotPrompts.length} managed prompts (${snapshotPrompts.map((p) => p.key).join(', ')})`;
 
     const snapshot: PromptSnapshot = {
@@ -351,7 +351,7 @@ export class PromptMarketplaceService {
 
     return {
       listing: this.serialize(listing),
-      honesty: this.engine.honesty,
+      honesty: this.engine().honesty,
       note:
         'Prompt listing published under content-marketplace prompt kind with Prompt Marketplace hub marker. Not a prompt mesh OS.',
     };
@@ -394,7 +394,7 @@ export class PromptMarketplaceService {
     const next: PromptSnapshot = {
       ...snap,
       promptVersion:
-        (input.promptVersion ?? snap.promptVersion).trim.slice(0, 64) || snap.promptVersion,
+        (input.promptVersion ?? snap.promptVersion).trim().slice(0, 64) || snap.promptVersion,
       verified: true,
       promptMeshOs: false,
       autoPromptResearchOs: false,
@@ -404,7 +404,7 @@ export class PromptMarketplaceService {
       where: { id: listing.id },
       data: {
         snapshot: next as unknown as Prisma.InputJsonValue,
-        description: input.description?.trim.slice(0, 500) ?? listing.description,
+        description: input.description?.trim().slice(0, 500) ?? listing.description,
         status: 'published',
       },
       include: { publisherOrg: { select: { name: true } } },
@@ -623,7 +623,7 @@ export class PromptMarketplaceService {
         id: install.id,
         listingId: listing.id,
         promptsInstalled,
-        installedAt: install.installedAt.toISOString,
+        installedAt: install.installedAt.toISOString(),
       },
       entitlement: {
         workspaceId: input.workspaceId,
@@ -635,7 +635,7 @@ export class PromptMarketplaceService {
         note: 'Managed prompt versions installed into buyer workspace for Prompt Runtime / Prompt Fabric.',
       },
       sale,
-      honesty: this.engine.honesty,
+      honesty: this.engine().honesty,
       note: 'Prompt marketplace install completed. Not a prompt mesh OS.',
     };
   }
@@ -721,8 +721,8 @@ export class PromptMarketplaceService {
       listingId: listing.id,
       organizationId: input.organizationId,
       rating,
-      body: input.body?.trim.slice(0, 1000) || undefined,
-      createdAt: new Date.toISOString,
+      body: input.body?.trim().slice(0, 1000) || undefined,
+      createdAt: new Date().toISOString(),
     };
 
     if (existing) {
@@ -828,19 +828,19 @@ export class PromptMarketplaceService {
       installs,
       sales,
       reviews,
-      honesty: this.engine.honesty,
-      note: 'Prompt marketplace aggregates. Payout depth deferred to Creator Economy.',
+      honesty: this.engine().honesty,
+      note: 'Prompt marketplace aggregates. Payout depth deferred to Creator Economy (VL-258).',
     };
   }
 
-  monitoring {
-    const engine = this.engine;
+  monitoring() {
+    const engine = this.engine();
     return {
       mode: 'prompt-marketplace',
       products: engine.capabilities.map((c) => ({ id: c.id, status: c.status })),
       honesty: engine.honesty,
       safety: engine.safety,
-      note: 'Prompt Marketplace monitoring snapshot.',
+      note: 'Prompt Marketplace monitoring snapshot (VL-253).',
     };
   }
 }

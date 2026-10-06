@@ -10,18 +10,18 @@ import {
   vaiosUnifiedSurfaces,
 } from './vaios.catalog';
 
-@Injectable
+@Injectable()
 export class VaiosService {
   constructor(private readonly usage: UsageService) {}
 
-  products {
+  products() {
     return {
       product: 'Lugemi AI Operating System (VAIOS)',
-      products: vaiosProductCatalog,
-      hubInventory: vaiosHubInventory,
-      unifiedSurfaces: vaiosUnifiedSurfaces,
-      architecture: vaiosArchitectureNotes,
-      honesty: vaiosHonesty,
+      products: vaiosProductCatalog(),
+      hubInventory: vaiosHubInventory(),
+      unifiedSurfaces: vaiosUnifiedSurfaces(),
+      architecture: vaiosArchitectureNotes(),
+      honesty: vaiosHonesty(),
       safety: {
         unifyingOrchestrationLayer: true,
         duplicatesKernelOrFabric: false,
@@ -34,21 +34,21 @@ export class VaiosService {
       },
       docs: '/docs/VAIOS.md',
       note:
-        'VAIOS Foundation. Unifying orchestration over Kernel + Fabric + Data Plane. notLinux/notKubernetes; enterpriseEngineeringSystemOs=false.',
+        'VAIOS Foundation (VL-334). Unifying orchestration over Kernel + Fabric + Data Plane. notLinux/notKubernetes; enterpriseEngineeringSystemOs=false.',
     };
   }
 
-  routing {
+  routing() {
     return {
-      routes: vaiosRoutingTable,
-      products: vaiosProductCatalog.map((p) => ({
+      routes: vaiosRoutingTable(),
+      products: vaiosProductCatalog().map((p) => ({
         id: p.id,
         status: p.status,
         api: p.api,
       })),
-      hubInventory: vaiosHubInventory,
-      unifiedSurfaces: vaiosUnifiedSurfaces,
-      honesty: vaiosHonesty,
+      hubInventory: vaiosHubInventory(),
+      unifiedSurfaces: vaiosUnifiedSurfaces(),
+      honesty: vaiosHonesty(),
       note: 'Static VAIOS discovery catalog for Foundation.',
       docs: '/docs/VAIOS.md',
     };
@@ -67,11 +67,11 @@ export class VaiosService {
         chat: usageSummary.chat,
         embeddings: usageSummary.embeddings,
       },
-      products: vaiosProductCatalog,
-      hubInventory: vaiosHubInventory,
-      unifiedSurfaces: vaiosUnifiedSurfaces,
-      architecture: vaiosArchitectureNotes,
-      honesty: vaiosHonesty,
+      products: vaiosProductCatalog(),
+      hubInventory: vaiosHubInventory(),
+      unifiedSurfaces: vaiosUnifiedSurfaces(),
+      architecture: vaiosArchitectureNotes(),
+      honesty: vaiosHonesty(),
       safety: {
         unifyingOrchestrationLayer: true,
         duplicatesKernelOrFabric: false,
@@ -101,20 +101,20 @@ export class VaiosService {
       },
       docs: '/docs/VAIOS.md',
       note:
-        'VAIOS (–343). Discovery hub over unifying orchestration façades; Production Audit closes the volume.',
+        'VAIOS (VL-334–343). Discovery hub over unifying orchestration façades; Production Audit closes the volume.',
     };
   }
 
-  monitoring {
-    const products = vaiosProductCatalog;
+  monitoring() {
+    const products = vaiosProductCatalog();
     return {
       mode: 'foundation',
       products: products.map((p) => ({ id: p.id, status: p.status })),
-      hubInventory: vaiosHubInventory,
-      unifiedSurfaces: vaiosUnifiedSurfaces,
-      architecture: vaiosArchitectureNotes,
-      honesty: vaiosHonesty,
-      note: 'VAIOS monitoring snapshot.',
+      hubInventory: vaiosHubInventory(),
+      unifiedSurfaces: vaiosUnifiedSurfaces(),
+      architecture: vaiosArchitectureNotes(),
+      honesty: vaiosHonesty(),
+      note: 'VAIOS monitoring snapshot (VL-334).',
     };
   }
 }

@@ -5,11 +5,11 @@ import {
   DatasetMarketplaceEngineBundle,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestDatasetMarketplaceCatalogAdapter implements DatasetMarketplaceCatalogPort {
   constructor(private readonly marketplace: DatasetMarketplaceService) {}
 
-  engine: DatasetMarketplaceEngineBundle {
-    return this.marketplace.engine;
+  engine(): DatasetMarketplaceEngineBundle {
+    return this.marketplace.engine();
   }
 }

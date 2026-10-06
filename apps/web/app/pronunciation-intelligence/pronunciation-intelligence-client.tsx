@@ -29,8 +29,8 @@ type AssessResult = {
   note: string;
 };
 
-export function PronunciationIntelligenceClient {
-  const { getToken, isLoaded } = useAuth;
+export function PronunciationIntelligenceClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [reference, setReference] = useState('Hello world, thank you for learning languages.');
@@ -42,8 +42,8 @@ export function PronunciationIntelligenceClient {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(async  => {
-    const token = await getToken;
+  const refresh = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, stats] = await Promise.all([
       apiFetch<Engine>('/v1/pronunciation/engine', { token }),
@@ -53,21 +53,21 @@ export function PronunciationIntelligenceClient {
     setAnalytics(stats);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void refresh.catch((err: Error) => setError(err.message));
+    void refresh().catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
   async function onAssess(e: FormEvent) {
-    e.preventDefault;
+    e.preventDefault();
     setLoading(true);
     setError(null);
     setResult(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       if (file) {
-        const form = new FormData;
+        const form = new FormData();
         form.append('file', file);
         form.append('reference', reference);
         form.append('language', language);
@@ -76,7 +76,7 @@ export function PronunciationIntelligenceClient {
           headers: { Authorization: `Bearer ${token}` },
           body: form,
         });
-        const body = await res.json;
+        const body = await res.json();
         if (!res.ok) throw new Error(body?.error?.message ?? `HTTP ${res.status}`);
         setResult(body);
       } else {
@@ -87,7 +87,7 @@ export function PronunciationIntelligenceClient {
         });
         setResult(body);
       }
-      await refresh;
+      await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Assess failed');
     } finally {
@@ -95,11 +95,11 @@ export function PronunciationIntelligenceClient {
     }
   }
 
-  async function onPhonemes {
+  async function onPhonemes() {
     setLoading(true);
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const body = await apiFetch<{ words: Array<{ word: string; phonemes: string[]; stress: { notation: string } }> }>(
         '/v1/pronunciation/phonemes',
@@ -183,10 +183,10 @@ export function PronunciationIntelligenceClient {
               onChange={(e) => setFile(e.target.files?.[0] ?? null)}
             />
             <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-              <button type="submit" disabled={loading || !reference.trim} style={primary}>
+              <button type="submit" disabled={loading || !reference.trim()} style={primary}>
                 Assess pronunciation
               </button>
-              <button type="button" disabled={loading || !reference.trim} style={secondary} onClick={ => void onPhonemes}>
+              <button type="button" disabled={loading || !reference.trim()} style={secondary} onClick={() => void onPhonemes()}>
                 Phonemes / stress
               </button>
             </div>

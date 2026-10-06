@@ -31,15 +31,15 @@ export const DATASET_MARKETPLACE_LICENSE_TYPES = [
 ] as const;
 
 /**
- * Library Phase 119 → Dataset Marketplace.
- * Extends existing dataset listings + DatasetAsset — not Label Studio / Dataset Cloud OS.
+ * Library Phase 119 → Dataset Marketplace (VL-252).
+ * Extends VL-091 dataset listings + VL-101 DatasetAsset — not Label Studio / Dataset Cloud OS.
  * Volume 11 README: real-money honesty — Stripe (or equivalent); never store raw cards.
  */
-export function datasetMarketplaceEngineCatalog {
+export function datasetMarketplaceEngineCatalog() {
   return {
     product: 'Lugemi Dataset Marketplace',
     note:
-      'Dataset Marketplace. Publish/license dataset SKUs over content-marketplace dataset kind + Dataset Asset program. TM corpora install copy pairs; DatasetAsset listings grant license entitlements — not Label Studio, annotation OS, or Dataset Cloud.',
+      'Dataset Marketplace (VL-252). Publish/license dataset SKUs over content-marketplace dataset kind + Dataset Asset program (VL-101). TM corpora install copy pairs; DatasetAsset listings grant license entitlements — not Label Studio, annotation OS, or Dataset Cloud.',
     capabilities: [
       {
         id: 'public-datasets',
@@ -117,7 +117,7 @@ export function datasetMarketplaceEngineCatalog {
         status: 'partial',
         api: 'GET /v1/dataset-marketplace/sales',
         notes:
-          '15% platform fee on paid installs. Creator Economy deepens payout math — hand-check before live creators.',
+          '15% platform fee on paid installs. Creator Economy (VL-258) deepens payout math — hand-check before live creators.',
       },
     ] satisfies DatasetMarketplaceCapability[],
     categories: DATASET_MARKETPLACE_CATEGORIES.map((id) => ({ id })),

@@ -2,13 +2,13 @@ import { Query, Resolver } from '@nestjs/graphql';
 import { IntelligenceAnalyticsService } from '../intelligence-analytics/intelligence-analytics.service';
 import { GqlIntelligenceAnalytics } from './gql.types';
 
-@Resolver
+@Resolver()
 export class IntelligenceAnalyticsGraphqlResolver {
   constructor(private readonly analytics: IntelligenceAnalyticsService) {}
 
-  @Query( => GqlIntelligenceAnalytics, { name: 'intelligenceAnalytics' })
-  intelligenceAnalytics: GqlIntelligenceAnalytics {
-    const c = this.analytics.engine;
+  @Query(() => GqlIntelligenceAnalytics, { name: 'intelligenceAnalytics' })
+  intelligenceAnalytics(): GqlIntelligenceAnalytics {
+    const c = this.analytics.engine();
     return {
       product: c.product,
       note: c.note,

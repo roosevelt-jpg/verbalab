@@ -7,17 +7,17 @@ import {
   MepSuiteRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestModelEvaluationPlatformCatalogAdapter
   implements ModelEvaluationPlatformCatalogPort
 {
   constructor(private readonly platform: ModelEvaluationPlatformService) {}
 
-  engine: MepEngineBundle {
-    return this.platform.engine;
+  engine(): MepEngineBundle {
+    return this.platform.engine();
   }
 
-  listSuites: MepSuiteRow[] {
-    return modelEvaluationSuites;
+  listSuites(): MepSuiteRow[] {
+    return modelEvaluationSuites();
   }
 }

@@ -18,7 +18,7 @@ export function verifySlackSignature(input: {
   if (!input.signingSecret || !input.timestamp || !input.signature) return false;
   const ts = Number(input.timestamp);
   if (!Number.isFinite(ts)) return false;
-  const now = input.nowSec ?? Math.floor(Date.now / 1000);
+  const now = input.nowSec ?? Math.floor(Date.now() / 1000);
   const maxAge = input.maxAgeSec ?? 60 * 5;
   if (Math.abs(now - ts) > maxAge) return false;
 

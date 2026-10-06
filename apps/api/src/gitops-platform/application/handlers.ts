@@ -17,8 +17,8 @@ export class GetGitopsPlatformEngineHandler
     private readonly catalog: GitopsPlatformCatalogPort,
   ) {}
 
-  execute: Promise<GitopsPlatformEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<GitopsPlatformEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListGitopsPlatformProductsHandler
     private readonly catalog: GitopsPlatformCatalogPort,
   ) {}
 
-  execute: Promise<GitopsPlatformProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<GitopsPlatformProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

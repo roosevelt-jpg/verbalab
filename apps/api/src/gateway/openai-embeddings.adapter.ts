@@ -29,7 +29,7 @@ export class OpenAiEmbeddingsAdapter implements EmbeddingProvider {
     }
 
     const model = input.model ?? process.env.OPENAI_EMBEDDINGS_MODEL ?? 'text-embedding-3-small';
-    const started = Date.now;
+    const started = Date.now();
 
     let response: Response;
     try {
@@ -53,7 +53,7 @@ export class OpenAiEmbeddingsAdapter implements EmbeddingProvider {
       );
     }
 
-    const json = (await response.json.catch( => ({}))) as OpenAiEmbeddingsResponse;
+    const json = (await response.json().catch(() => ({}))) as OpenAiEmbeddingsResponse;
     if (!response.ok) {
       throw new ApiException(
         'provider_error',
@@ -84,7 +84,7 @@ export class OpenAiEmbeddingsAdapter implements EmbeddingProvider {
       provider: this.name,
       promptTokens: json.usage?.prompt_tokens ?? 0,
       totalTokens: json.usage?.total_tokens ?? json.usage?.prompt_tokens ?? 0,
-      latencyMs: Date.now - started,
+      latencyMs: Date.now() - started,
     };
   }
 }

@@ -15,18 +15,18 @@ export class ContextEngineController {
   constructor(private readonly contextEngine: ContextEngineService) {}
 
   @Get('engine')
-  engine {
-    return this.contextEngine.engine;
+  engine() {
+    return this.contextEngine.engine();
   }
 
   @Get('sources')
-  sources {
-    return this.contextEngine.sources;
+  sources() {
+    return this.contextEngine.sources();
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req req: AuthedReq) {
+  analytics(@Req() req: AuthedReq) {
     return this.contextEngine.analytics(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -35,7 +35,7 @@ export class ContextEngineController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req req: AuthedReq) {
+  monitoring(@Req() req: AuthedReq) {
     return this.contextEngine.monitoring(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -46,8 +46,8 @@ export class ContextEngineController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   assemble(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       query?: string;
       conversationId?: string;

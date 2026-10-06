@@ -14,36 +14,36 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory) out.push(...walkTsFiles(full));
+    if (statSync(full).isDirectory()) out.push(...walkTsFiles(full));
     else if (full.endsWith('.ts')) out.push(full);
   }
   return out;
 }
 
-describe('African Intelligence Cloud',  => {
+describe('African Intelligence Cloud (VL-260)', () => {
   let app: INestApplication<App>;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    }).compile();
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
   }, 120_000);
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('documents African Intelligence Cloud + ADR',  => {
+  it('documents African Intelligence Cloud + ADR', () => {
     expect(existsSync(join(root, 'docs/AFRICAN_INTELLIGENCE_CLOUD.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0162-african-intelligence-cloud.md'))).toBe(true);
     const text = readFileSync(join(root, 'docs/AFRICAN_INTELLIGENCE_CLOUD.md'), 'utf8');
-    expect(text).toContain('');
+    expect(text).toContain('VL-260');
   });
 
-  it('has no TODO/FIXME/implement-later markers',  => {
+  it('has no TODO/FIXME/implement-later markers', () => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const file of walkTsFiles(join(apiSrc, 'african-intelligence-cloud'))) {
@@ -53,8 +53,8 @@ describe('African Intelligence Cloud',  => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes engine honesty', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes engine honesty', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/african-intelligence-cloud/products')
       .expect(200);
     expect(res.body.product).toBe('Lugemi African Intelligence Cloud');

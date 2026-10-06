@@ -135,11 +135,11 @@ const SUGGESTIONS = [
   'Draft a polite Yorùbá support reply about shipping delays',
 ];
 
-function uid {
-  return `${Date.now.toString(36)}-${Math.random.toString(36).slice(2, 8)}`;
+function uid() {
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-function loadConversations: Conversation[] {
+function loadConversations(): Conversation[] {
   if (typeof window === 'undefined') return [];
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
@@ -156,7 +156,7 @@ function saveConversations(rows: Conversation[]) {
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(rows.slice(0, 40)));
 }
 
-function loadConnected: Record<string, boolean> {
+function loadConnected(): Record<string, boolean> {
   if (typeof window === 'undefined') return {};
   try {
     const raw = window.localStorage.getItem(CONNECTOR_KEY);
@@ -172,7 +172,7 @@ function saveConnected(map: Record<string, boolean>) {
 }
 
 function isTextLike(file: File) {
-  const n = file.name.toLowerCase;
+  const n = file.name.toLowerCase();
   return (
     file.type.startsWith('text/') ||
     n.endsWith('.txt') ||
@@ -185,7 +185,7 @@ function isTextLike(file: File) {
 }
 
 function isAudioLike(file: File) {
-  const n = file.name.toLowerCase;
+  const n = file.name.toLowerCase();
   return (
     file.type.startsWith('audio/') ||
     n.endsWith('.mp3') ||
@@ -198,7 +198,7 @@ function isAudioLike(file: File) {
 }
 
 function isVideoLike(file: File) {
-  const n = file.name.toLowerCase;
+  const n = file.name.toLowerCase();
   return (
     file.type.startsWith('video/') ||
     n.endsWith('.mp4') ||
@@ -209,7 +209,7 @@ function isVideoLike(file: File) {
 }
 
 function isDocumentLike(file: File) {
-  const n = file.name.toLowerCase;
+  const n = file.name.toLowerCase();
   return (
     n.endsWith('.pdf') ||
     n.endsWith('.docx') ||
@@ -219,13 +219,13 @@ function isDocumentLike(file: File) {
 }
 
 function titleFromText(text: string) {
-  const t = text.trim.replace(/\s+/g, ' ');
+  const t = text.trim().replace(/\s+/g, ' ');
   return t.length > 42 ? `${t.slice(0, 42)}…` : t || 'New chat';
 }
 
-export function ChatClient {
-  const { getToken, isLoaded } = useAuth;
-  const fileInputId = useId;
+export function ChatClient() {
+  const { getToken, isLoaded } = useAuth();
+  const fileInputId = useId();
   const fileRef = useRef<HTMLInputElement | null>(null);
   const bottomRef = useRef<HTMLDivElement | null>(null);
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
@@ -252,52 +252,52 @@ export function ChatClient {
   const liveTargetRef = useRef(liveTarget);
   const translatingSegmentRef = useRef(false);
 
-  useEffect( => {
+  useEffect(() => {
     liveTargetRef.current = liveTarget;
   }, [liveTarget]);
 
   const active = conversations.find((c) => c.id === activeId) ?? null;
   const messages = active?.messages ?? [];
 
-  useEffect( => {
+  useEffect(() => {
     activeIdRef.current = activeId;
   }, [activeId]);
 
-  useEffect( => {
-    const rows = loadConversations;
+  useEffect(() => {
+    const rows = loadConversations();
     setConversations(rows);
     setActiveId(rows[0]?.id ?? null);
     activeIdRef.current = rows[0]?.id ?? null;
-    setConnected(loadConnected);
+    setConnected(loadConnected());
     setHydrated(true);
     void apiFetch<{ data: Language[] }>('/v1/languages')
       .then((res) => setLanguages(res.data))
-      .catch( => undefined);
+      .catch(() => undefined);
   }, []);
 
-  useEffect( => {
+  useEffect(() => {
     if (!hydrated) return;
     saveConversations(conversations);
   }, [conversations, hydrated]);
 
-  useEffect( => {
+  useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [activeId, conversations, loading, interim, recording]);
 
-  useEffect( => {
-    return  => {
-      recognitionRef.current?.abort;
-      stopDemoSpeech;
+  useEffect(() => {
+    return () => {
+      recognitionRef.current?.abort();
+      stopDemoSpeech();
     };
   }, []);
 
-  const ensureConversation = useCallback(: string => {
+  const ensureConversation = useCallback((): string => {
     if (activeIdRef.current) return activeIdRef.current;
-    const id = uid;
+    const id = uid();
     const fresh: Conversation = {
       id,
       title: 'New chat',
-      updatedAt: Date.now,
+      updatedAt: Date.now(),
       messages: [],
     };
     activeIdRef.current = id;
@@ -316,11 +316,11 @@ export function ChatClient {
     });
   }, []);
 
-  function startNewChat {
+  function startNewChat() {
     const fresh: Conversation = {
-      id: uid,
+      id: uid(),
       title: 'New chat',
-      updatedAt: Date.now,
+      updatedAt: Date.now(),
       messages: [],
     };
     activeIdRef.current = fresh.id;
@@ -331,8 +331,8 @@ export function ChatClient {
     setInterim('');
   }
 
-  async function ensureToken {
-    const token = await getToken;
+  async function ensureToken() {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     return token;
   }
@@ -360,20 +360,20 @@ export function ChatClient {
   async function sendChat(text: string) {
     setError(null);
     setLoading(true);
-    const convId = ensureConversation;
-    const userTurn: ChatTurn = { id: uid, role: 'user', content: text, kind: 'chat' };
+    const convId = ensureConversation();
+    const userTurn: ChatTurn = { id: uid(), role: 'user', content: text, kind: 'chat' };
     const prior = conversations.find((c) => c.id === convId)?.messages ?? [];
 
     updateConversation(convId, (conv) => ({
       ...conv,
       title: conv.messages.length === 0 ? titleFromText(text) : conv.title,
-      updatedAt: Date.now,
+      updatedAt: Date.now(),
       messages: [...conv.messages, userTurn],
     }));
     setInput('');
 
     try {
-      const token = await ensureToken;
+      const token = await ensureToken();
       const history = [...prior, userTurn].map((m) => ({
         role: m.role,
         content: m.content,
@@ -389,11 +389,11 @@ export function ChatClient {
       const reply = res.choices?.[0]?.message?.content ?? '';
       updateConversation(convId, (conv) => ({
         ...conv,
-        updatedAt: Date.now,
+        updatedAt: Date.now(),
         messages: [
           ...conv.messages,
           {
-            id: uid,
+            id: uid(),
             role: 'assistant',
             content: reply,
             kind: 'chat',
@@ -417,8 +417,8 @@ export function ChatClient {
   }
 
   async function onSubmit(event: FormEvent) {
-    event.preventDefault;
-    const text = input.trim;
+    event.preventDefault();
+    const text = input.trim();
     if (!text || loading || recording) return;
     if (mode === 'live') {
       await runLiveTranslate(text);
@@ -428,16 +428,16 @@ export function ChatClient {
   }
 
   async function runLiveTranslate(spoken: string) {
-    const text = spoken.trim;
+    const text = spoken.trim();
     if (!text) return;
     setLoading(true);
     setError(null);
     setInput('');
     setInterim('');
 
-    const convId = ensureConversation;
+    const convId = ensureConversation();
     const userTurn: ChatTurn = {
-      id: uid,
+      id: uid(),
       role: 'user',
       content: text,
       kind: 'live',
@@ -447,15 +447,15 @@ export function ChatClient {
     updateConversation(convId, (conv) => ({
       ...conv,
       title: conv.messages.length === 0 ? titleFromText(text) : conv.title,
-      updatedAt: Date.now,
+      updatedAt: Date.now(),
       messages: [...conv.messages, userTurn],
     }));
 
     try {
-      const token = await ensureToken;
+      const token = await ensureToken();
       const res = await translateText(token, text, 'auto', liveTarget);
       const assistant: ChatTurn = {
-        id: uid,
+        id: uid(),
         role: 'assistant',
         content: res.text,
         kind: 'live',
@@ -464,7 +464,7 @@ export function ChatClient {
       };
       updateConversation(convId, (conv) => ({
         ...conv,
-        updatedAt: Date.now,
+        updatedAt: Date.now(),
         messages: [...conv.messages, assistant],
       }));
       await playTranslation(res.text, recognitionLangFor(liveTarget));
@@ -475,20 +475,20 @@ export function ChatClient {
     }
   }
 
-  function stopRecording {
-    recognitionRef.current?.stop;
+  function stopRecording() {
+    recognitionRef.current?.stop();
     setRecording(false);
     setLivePreview('');
   }
 
   async function translateFinalSegment(spoken: string) {
-    const text = spoken.trim;
+    const text = spoken.trim();
     if (!text || translatingSegmentRef.current) return;
     translatingSegmentRef.current = true;
     const target = liveTargetRef.current;
-    const convId = ensureConversation;
+    const convId = ensureConversation();
     const userTurn: ChatTurn = {
-      id: uid,
+      id: uid(),
       role: 'user',
       content: text,
       kind: 'live',
@@ -498,20 +498,20 @@ export function ChatClient {
     updateConversation(convId, (conv) => ({
       ...conv,
       title: conv.messages.length === 0 ? titleFromText(text) : conv.title,
-      updatedAt: Date.now,
+      updatedAt: Date.now(),
       messages: [...conv.messages, userTurn],
     }));
     try {
-      const token = await ensureToken;
+      const token = await ensureToken();
       const res = await translateText(token, text, 'auto', target);
       setLivePreview(res.text);
       updateConversation(convId, (conv) => ({
         ...conv,
-        updatedAt: Date.now,
+        updatedAt: Date.now(),
         messages: [
           ...conv.messages,
           {
-            id: uid,
+            id: uid(),
             role: 'assistant',
             content: res.text,
             kind: 'live',
@@ -528,17 +528,17 @@ export function ChatClient {
     }
   }
 
-  function toggleRecord {
+  function toggleRecord() {
     if (recording) {
-      stopRecording;
-      const leftover = (liveFinalRef.current || interim).trim;
+      stopRecording();
+      const leftover = (liveFinalRef.current || interim).trim();
       liveFinalRef.current = '';
       setInterim('');
       if (leftover) void translateFinalSegment(leftover);
       return;
     }
 
-    const Ctor = getSpeechRecognitionCtor;
+    const Ctor = getSpeechRecognitionCtor();
     if (!Ctor) {
       setError('Speech recognition is not supported in this browser. Type instead, or upload audio.');
       return;
@@ -550,9 +550,9 @@ export function ChatClient {
     liveFinalRef.current = '';
     setInterim('');
     setLivePreview('');
-    ensureConversation;
+    ensureConversation();
 
-    const recognition = new Ctor;
+    const recognition = new Ctor();
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.lang = recognitionLangFor('en');
@@ -564,13 +564,13 @@ export function ChatClient {
         if (event.results[i]!.isFinal) newlyFinal += `${piece} `;
         else interimBuf += piece;
       }
-      if (newlyFinal.trim) {
+      if (newlyFinal.trim()) {
         liveFinalRef.current = '';
         setInput('');
         void translateFinalSegment(newlyFinal);
       } else {
         setInterim(interimBuf);
-        setInput(interimBuf.trim);
+        setInput(interimBuf.trim());
       }
     };
     recognition.onerror = (event) => {
@@ -579,13 +579,13 @@ export function ChatClient {
       }
       setRecording(false);
     };
-    recognition.onend =  => {
+    recognition.onend = () => {
       setRecording(false);
     };
 
     recognitionRef.current = recognition;
     try {
-      recognition.start;
+      recognition.start();
       setRecording(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not start microphone');
@@ -594,20 +594,20 @@ export function ChatClient {
   }
 
   async function transcribeFile(token: string, file: File) {
-    const form = new FormData;
+    const form = new FormData();
     form.append('file', file);
     const res = await fetch(`${API_URL}/v1/speech/recognize`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
       body: form,
     });
-    const body = (await res.json) as { text?: string; error?: { message: string } };
+    const body = (await res.json()) as { text?: string; error?: { message: string } };
     if (!res.ok) throw new Error(body.error?.message ?? `STT failed (${res.status})`);
-    return (body.text ?? '').trim;
+    return (body.text ?? '').trim();
   }
 
   async function translateDocumentJob(token: string, file: File, source: string, target: string) {
-    const form = new FormData;
+    const form = new FormData();
     form.append('file', file);
     form.append('source', source === 'auto' ? 'en' : source);
     form.append('target', target);
@@ -616,7 +616,7 @@ export function ChatClient {
       headers: { Authorization: `Bearer ${token}` },
       body: form,
     });
-    const created = (await createRes.json) as {
+    const created = (await createRes.json()) as {
       id?: string;
       status?: string;
       error?: { message: string };
@@ -643,9 +643,9 @@ export function ChatClient {
     setLoading(true);
     setError(null);
 
-    const convId = ensureConversation;
+    const convId = ensureConversation();
     const userTurn: ChatTurn = {
-      id: uid,
+      id: uid(),
       role: 'user',
       content: `Translate uploaded file: ${file.name}`,
       kind: 'upload',
@@ -656,17 +656,17 @@ export function ChatClient {
     updateConversation(convId, (conv) => ({
       ...conv,
       title: conv.messages.length === 0 ? `Upload · ${file.name}` : conv.title,
-      updatedAt: Date.now,
+      updatedAt: Date.now(),
       messages: [...conv.messages, userTurn],
     }));
 
     try {
-      const token = await ensureToken;
+      const token = await ensureToken();
       let sourceText = '';
       let note = '';
 
       if (isTextLike(file)) {
-        sourceText = (await file.text).slice(0, 12000);
+        sourceText = (await file.text()).slice(0, 12000);
         note = 'Text file';
       } else if (isAudioLike(file) || isVideoLike(file)) {
         sourceText = await transcribeFile(token, file);
@@ -674,17 +674,17 @@ export function ChatClient {
         if (!sourceText) throw new Error('No speech detected in the upload');
       } else if (isDocumentLike(file)) {
         const job = await translateDocumentJob(token, file, uploadSource, uploadTarget);
-        const preview = job.result?.preview?.trim || 'Document translated.';
+        const preview = job.result?.preview?.trim() || 'Document translated.';
         const download = job.result?.downloadPath
           ? `\n\nDownload: ${API_URL}${job.result.downloadPath}`
           : '';
         updateConversation(convId, (conv) => ({
           ...conv,
-          updatedAt: Date.now,
+          updatedAt: Date.now(),
           messages: [
             ...conv.messages,
             {
-              id: uid,
+              id: uid(),
               role: 'assistant',
               content: `${preview}${download}`,
               kind: 'upload',
@@ -711,11 +711,11 @@ export function ChatClient {
 
       updateConversation(convId, (conv) => ({
         ...conv,
-        updatedAt: Date.now,
+        updatedAt: Date.now(),
         messages: [
           ...conv.messages,
           {
-            id: uid,
+            id: uid(),
             role: 'assistant',
             content: `${note}\n\nSource (${translated.source}):\n${sourceText.slice(0, 1500)}${
               sourceText.length > 1500 ? '…' : ''
@@ -735,7 +735,7 @@ export function ChatClient {
         messages: [
           ...conv.messages,
           {
-            id: uid,
+            id: uid(),
             role: 'assistant',
             content: err instanceof Error ? err.message : 'Upload translate failed',
             kind: 'system',
@@ -779,7 +779,7 @@ export function ChatClient {
             <button
               type="button"
               className={`lg-chat-side-link${pluginsOpen ? ' is-active' : ''}`}
-              onClick={ => setPluginsOpen(true)}
+              onClick={() => setPluginsOpen(true)}
             >
               Plugins
             </button>
@@ -797,14 +797,14 @@ export function ChatClient {
                   <button
                     type="button"
                     className={`lg-chat-history-item${c.id === activeId ? ' is-active' : ''}`}
-                    onClick={ => {
+                    onClick={() => {
                       activeIdRef.current = c.id;
                       setActiveId(c.id);
                     }}
                   >
                     <span>{c.title}</span>
-                    <time dateTime={new Date(c.updatedAt).toISOString}>
-                      {new Date(c.updatedAt).toLocaleDateString}
+                    <time dateTime={new Date(c.updatedAt).toISOString()}>
+                      {new Date(c.updatedAt).toLocaleDateString()}
                     </time>
                   </button>
                 </li>
@@ -826,14 +826,14 @@ export function ChatClient {
                 <button
                   type="button"
                   className={mode === 'chat' ? 'is-active' : ''}
-                  onClick={ => setMode('chat')}
+                  onClick={() => setMode('chat')}
                 >
                   Chat
                 </button>
                 <button
                   type="button"
                   className={mode === 'live' ? 'is-active' : ''}
-                  onClick={ => setMode('live')}
+                  onClick={() => setMode('live')}
                 >
                   Live translate
                 </button>
@@ -842,7 +842,7 @@ export function ChatClient {
                 type="button"
                 className={`vl-btn vl-btn-secondary${pluginsOpen ? ' is-pressed' : ''}`}
                 aria-expanded={pluginsOpen}
-                onClick={ => setPluginsOpen((v) => !v)}
+                onClick={() => setPluginsOpen((v) => !v)}
               >
                 Plugins
               </button>
@@ -864,7 +864,7 @@ export function ChatClient {
                       key={s}
                       type="button"
                       className="lg-chat-suggestion"
-                      onClick={ => {
+                      onClick={() => {
                         setMode('chat');
                         setInput(s);
                       }}
@@ -894,7 +894,7 @@ export function ChatClient {
                     <button
                       type="button"
                       className="lg-chat-replay"
-                      onClick={ =>
+                      onClick={() =>
                         void playTranslation(msg.content, recognitionLangFor(msg.targetLang ?? 'en'))
                       }
                     >
@@ -1007,7 +1007,7 @@ export function ChatClient {
                 aria-label="Upload document, video, or voice"
                 title="Upload document, video, or voice"
                 disabled={loading}
-                onClick={ => fileRef.current?.click}
+                onClick={() => fileRef.current?.click()}
               >
                 Attach
               </button>
@@ -1024,7 +1024,7 @@ export function ChatClient {
                 disabled={loading}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault;
+                    e.preventDefault();
                     void onSubmit(e as unknown as FormEvent);
                   }
                 }}
@@ -1035,7 +1035,7 @@ export function ChatClient {
                 aria-pressed={recording}
                 aria-label={recording ? 'Stop recording and translate' : 'Click to record'}
                 title={
-                  speechRecognitionSupported
+                  speechRecognitionSupported()
                     ? recording
                       ? 'Stop & translate'
                       : 'Click to record'
@@ -1049,7 +1049,7 @@ export function ChatClient {
               <button
                 type="submit"
                 className="vl-btn vl-btn-primary lg-chat-send"
-                disabled={loading || !input.trim}
+                disabled={loading || !input.trim()}
               >
                 {mode === 'live' ? 'Translate' : 'Send'}
               </button>
@@ -1070,7 +1070,7 @@ export function ChatClient {
               type="button"
               className="lg-chat-plugins-close"
               aria-label="Close plugins"
-              onClick={ => setPluginsOpen(false)}
+              onClick={() => setPluginsOpen(false)}
             >
               ×
             </button>
@@ -1096,7 +1096,7 @@ export function ChatClient {
                         <button
                           type="button"
                           className={`vl-btn ${on ? 'vl-btn-secondary' : 'vl-btn-primary'}`}
-                          onClick={ => toggleConnector(c.id)}
+                          onClick={() => toggleConnector(c.id)}
                         >
                           {on ? 'Connected' : 'Connect'}
                         </button>

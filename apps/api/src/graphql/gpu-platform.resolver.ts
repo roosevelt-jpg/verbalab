@@ -2,13 +2,13 @@ import { Query, Resolver } from '@nestjs/graphql';
 import { GpuPlatformService } from '../gpu-platform/gpu-platform.service';
 import { GqlGpuPlatformEngine } from './gql.types';
 
-@Resolver
+@Resolver()
 export class GpuPlatformGraphqlResolver {
   constructor(private readonly gpu: GpuPlatformService) {}
 
-  @Query( => GqlGpuPlatformEngine, { name: 'gpuPlatformEngine' })
-  gpuPlatformEngine: GqlGpuPlatformEngine {
-    const c = this.gpu.engine;
+  @Query(() => GqlGpuPlatformEngine, { name: 'gpuPlatformEngine' })
+  gpuPlatformEngine(): GqlGpuPlatformEngine {
+    const c = this.gpu.engine();
     return {
       product: c.product,
       note: c.note,

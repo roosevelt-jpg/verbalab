@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetSupplyChainSecurityEngineQuery } from '../supply-chain-security/application/messages';
 import { GqlSupplyChainSecurityEngine } from './gql.types';
 
-@Resolver
+@Resolver()
 export class SupplyChainSecurityGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query( => GqlSupplyChainSecurityEngine, { name: 'supplyChainSecurityEngine' })
-  async supplyChainSecurityEngine: Promise<GqlSupplyChainSecurityEngine> {
-    const catalog = await this.queries.execute(new GetSupplyChainSecurityEngineQuery);
+  @Query(() => GqlSupplyChainSecurityEngine, { name: 'supplyChainSecurityEngine' })
+  async supplyChainSecurityEngine(): Promise<GqlSupplyChainSecurityEngine> {
+    const catalog = await this.queries.execute(new GetSupplyChainSecurityEngineQuery());
     return {
       product: catalog.product,
       note: catalog.note,

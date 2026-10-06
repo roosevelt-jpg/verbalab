@@ -1,4 +1,4 @@
-/** Application ports for AI Publication Platform. */
+/** Application ports for AI Publication Platform (VL-276). */
 
 export type AiPublicationPlatformProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type AiPublicationPlatformEngineBundle = ReturnType<
 >;
 
 export interface AiPublicationPlatformCatalogPort {
-  engine: AiPublicationPlatformEngineBundle;
-  listProducts: AiPublicationPlatformProductRow[];
+  engine(): AiPublicationPlatformEngineBundle;
+  listProducts(): AiPublicationPlatformProductRow[];
 }
 
 export const AI_PUBLICATION_PLATFORM_CATALOG_PORT = Symbol('AI_PUBLICATION_PLATFORM_CATALOG_PORT');

@@ -5,11 +5,11 @@ import { initApiSentry } from './observability/sentry';
 import { structuredLog } from './common/logging/structured-logger';
 import { applyHttpSecurity } from './common/security/http-security';
 
-async function bootstrap {
-  const sentryOn = initApiSentry;
+async function bootstrap() {
+  const sentryOn = initApiSentry();
   const app = await NestFactory.create(AppModule, { rawBody: true });
   applyHttpSecurity(app);
-  app.useGlobalFilters(new ApiExceptionFilter);
+  app.useGlobalFilters(new ApiExceptionFilter());
 
   const corsOrigin = process.env.CORS_ORIGIN ?? 'http://localhost:3000';
   app.enableCors({ origin: corsOrigin });
@@ -23,4 +23,4 @@ async function bootstrap {
   });
 }
 
-void bootstrap;
+void bootstrap();

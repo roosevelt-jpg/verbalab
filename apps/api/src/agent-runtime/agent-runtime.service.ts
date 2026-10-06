@@ -45,7 +45,7 @@ type RunStep = {
 const RUNTIME = 'agent-runtime';
 const KERNEL_LAYER = 'kernel';
 
-@Injectable
+@Injectable()
 export class AgentRuntimeService {
   constructor(
     private readonly prisma: PrismaService,
@@ -56,26 +56,26 @@ export class AgentRuntimeService {
     private readonly contextRuntime: ContextRuntimeService,
   ) {}
 
-  engine {
+  engine() {
     return {
-      ...agentRuntimeCatalog,
-      ceilings: agentRuntimeCeilings,
-      mode: agentRuntimeMode,
+      ...agentRuntimeCatalog(),
+      ceilings: agentRuntimeCeilings(),
+      mode: agentRuntimeMode(),
       safety: {
         scopedPermissionsRequired: true,
         sandboxRequired: true,
         openToolExecutionForbidden: true,
         policyMustHardGate: true,
         note:
-          'Every agent action passes AgentPolicyGate (local hard allowlist). Policy Runtime will harden further — Agent already blocks missing permissions and denied actions.',
+          'Every agent action passes AgentPolicyGate (local hard allowlist). Policy Runtime (VL-222) will harden further — Agent already blocks missing permissions and denied actions.',
       },
     };
   }
 
-  permissions {
+  permissions() {
     return {
       grantable: AGENT_PERMISSIONS.map((id) => ({ id })),
-      denied: agentRuntimeCatalog.deniedActions,
+      denied: agentRuntimeCatalog().deniedActions,
       note: 'Only grantable permissions may be attached to an agent. Denied actions cannot be granted.',
     };
   }
@@ -83,12 +83,12 @@ export class AgentRuntimeService {
   async createAgent(
     input: AuthCtx & { name?: string; permissions?: string[]; goal?: string },
   ) {
-    this.assertEnabled;
-    const name = (input.name ?? '').trim;
+    this.assertEnabled();
+    const name = (input.name ?? '').trim();
     if (!name) {
       throw new ApiException('validation_error', 'name is required', HttpStatus.BAD_REQUEST);
     }
-    const ceilings = agentRuntimeCeilings;
+    const ceilings = agentRuntimeCeilings();
     const existing = await this.listAgents(input);
     if (existing.agents.length >= ceilings.maxAgentsPerWorkspace) {
       throw new ApiException(
@@ -98,13 +98,13 @@ export class AgentRuntimeService {
       );
     }
 
-    const now = new Date.toISOString;
+    const now = new Date().toISOString();
     const agent: AgentRecord = {
-      id: `agt_${randomUUID.replace(/-/g, '').slice(0, 16)}`,
+      id: `agt_${randomUUID().replace(/-/g, '').slice(0, 16)}`,
       name: name.slice(0, 80),
       status: 'draft',
       permissions: this.policy.normalizePermissions(input.permissions),
-      goal: input.goal?.trim.slice(0, 500) || undefined,
+      goal: input.goal?.trim().slice(0, 500) || undefined,
       createdAt: now,
       updatedAt: now,
     };
@@ -126,13 +126,13 @@ export class AgentRuntimeService {
 
     return {
       agent,
-      honesty: agentRuntimeCatalog.honesty,
+      honesty: agentRuntimeCatalog().honesty,
       note: 'Agent created in draft. Activate before run. Permissions are a hard allowlist.',
     };
   }
 
   async listAgents(input: AuthCtx) {
-    this.assertEnabled;
+    this.assertEnabled();
     const rows = await this.findByType(input, 'agent', 100);
     const agents = rows
       .map((r) => this.parseJson<AgentRecord>(r.content))
@@ -148,9 +148,9 @@ export class AgentRuntimeService {
   async lifecycle(
     input: AuthCtx & { id?: string; status?: string },
   ) {
-    this.assertEnabled;
+    this.assertEnabled();
     const agent = await this.requireAgent(input, input.id);
-    const status = (input.status ?? '').trim as AgentRecord['status'];
+    const status = (input.status ?? '').trim() as AgentRecord['status'];
     if (!['draft', 'active', 'paused', 'archived'].includes(status)) {
       throw new ApiException(
         'validation_error',
@@ -159,7 +159,7 @@ export class AgentRuntimeService {
       );
     }
     agent.status = status;
-    agent.updatedAt = new Date.toISOString;
+    agent.updatedAt = new Date().toISOString();
     await this.writeRecord(input, {
       key: `agent:${agent.id}`,
       content: agent,
@@ -184,7 +184,7 @@ export class AgentRuntimeService {
       actions?: Array<{ action: string; input?: Record<string, unknown> }>;
     },
   ) {
-    this.assertEnabled;
+    this.assertEnabled();
     const agent = await this.requireAgent(input, input.agentId);
     if (agent.status !== 'active') {
       throw new ApiException(
@@ -194,8 +194,8 @@ export class AgentRuntimeService {
       );
     }
 
-    const ceilings = agentRuntimeCeilings;
-    const goal = (input.goal ?? agent.goal ?? 'sandbox agent goal').trim;
+    const ceilings = agentRuntimeCeilings();
+    const goal = (input.goal ?? agent.goal ?? 'sandbox agent goal').trim();
     const requested =
       input.actions?.length
         ? input.actions
@@ -209,11 +209,11 @@ export class AgentRuntimeService {
       );
     }
 
-    const runId = `run_${randomUUID.replace(/-/g, '').slice(0, 16)}`;
+    const runId = `run_${randomUUID().replace(/-/g, '').slice(0, 16)}`;
     const steps: RunStep[] = [];
 
     for (const step of requested) {
-      const at = new Date.toISOString;
+      const at = new Date().toISOString();
       try {
         const gate = await this.policy.assertAllowed({
           organizationId: input.organizationId,
@@ -233,7 +233,7 @@ export class AgentRuntimeService {
       } catch (err) {
         const message = err instanceof ApiException ? err.message : 'Action failed';
         const status =
-          err instanceof ApiException ? err.getStatus : HttpStatus.INTERNAL_SERVER_ERROR;
+          err instanceof ApiException ? err.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
         steps.push({
           action: step.action,
           allowed: false,
@@ -257,7 +257,7 @@ export class AgentRuntimeService {
       sandbox: true,
       liveToolExecution: false,
       steps,
-      createdAt: new Date.toISOString,
+      createdAt: new Date().toISOString(),
     };
 
     await this.writeRecord(input, {
@@ -283,7 +283,7 @@ export class AgentRuntimeService {
     return {
       run,
       honesty: {
-        ...agentRuntimeCatalog.honesty,
+        ...agentRuntimeCatalog().honesty,
         openToolExecution: false,
         simulatedSteps: true,
       },
@@ -300,7 +300,7 @@ export class AgentRuntimeService {
       message?: string;
     },
   ) {
-    this.assertEnabled;
+    this.assertEnabled();
     const ids = (input.agentIds ?? []).filter(Boolean);
     if (ids.length < 2) {
       throw new ApiException(
@@ -323,14 +323,14 @@ export class AgentRuntimeService {
       });
     }
 
-    const sessionId = `collab_${randomUUID.replace(/-/g, '').slice(0, 12)}`;
-    const topic = (input.topic ?? 'sandbox collaboration').trim.slice(0, 200);
-    const message = (input.message ?? 'hello from sandbox').trim.slice(0, 500);
+    const sessionId = `collab_${randomUUID().replace(/-/g, '').slice(0, 12)}`;
+    const topic = (input.topic ?? 'sandbox collaboration').trim().slice(0, 200);
+    const message = (input.message ?? 'hello from sandbox').trim().slice(0, 500);
     const transcript = agents.map((a, i) => ({
       from: a.id,
       to: agents[(i + 1) % agents.length]!.id,
       body: `[sandbox] ${a.name}: ${message}`,
-      at: new Date.toISOString,
+      at: new Date().toISOString(),
     }));
 
     const session = {
@@ -339,7 +339,7 @@ export class AgentRuntimeService {
       agentIds: agents.map((a) => a.id),
       transcript,
       sandbox: true,
-      createdAt: new Date.toISOString,
+      createdAt: new Date().toISOString(),
     };
 
     await this.writeRecord(input, {
@@ -358,7 +358,7 @@ export class AgentRuntimeService {
   async schedule(
     input: AuthCtx & { agentId?: string; goal?: string; runAt?: string },
   ) {
-    this.assertEnabled;
+    this.assertEnabled();
     const agent = await this.requireAgent(input, input.agentId);
     await this.policy.assertAllowed({
       organizationId: input.organizationId,
@@ -367,19 +367,19 @@ export class AgentRuntimeService {
       action: 'agent.schedule',
       permissions: agent.permissions,
     });
-    const runAt = input.runAt ? new Date(input.runAt) : new Date(Date.now + 3600_000);
-    if (Number.isNaN(runAt.getTime)) {
+    const runAt = input.runAt ? new Date(input.runAt) : new Date(Date.now() + 3600_000);
+    if (Number.isNaN(runAt.getTime())) {
       throw new ApiException('validation_error', 'runAt must be ISO datetime', HttpStatus.BAD_REQUEST);
     }
-    const scheduleId = `sched_${randomUUID.replace(/-/g, '').slice(0, 12)}`;
+    const scheduleId = `sched_${randomUUID().replace(/-/g, '').slice(0, 12)}`;
     const row = {
       id: scheduleId,
       agentId: agent.id,
-      goal: (input.goal ?? agent.goal ?? 'scheduled sandbox goal').trim,
-      runAt: runAt.toISOString,
+      goal: (input.goal ?? agent.goal ?? 'scheduled sandbox goal').trim(),
+      runAt: runAt.toISOString(),
       status: 'scheduled',
       sandbox: true,
-      createdAt: new Date.toISOString,
+      createdAt: new Date().toISOString(),
     };
     await this.writeRecord(input, {
       key: `agent-sched:${scheduleId}`,
@@ -396,7 +396,7 @@ export class AgentRuntimeService {
   async putMemory(
     input: AuthCtx & { agentId?: string; content?: string; kind?: string },
   ) {
-    this.assertEnabled;
+    this.assertEnabled();
     const agent = await this.requireAgent(input, input.agentId);
     await this.policy.assertAllowed({
       organizationId: input.organizationId,
@@ -405,7 +405,7 @@ export class AgentRuntimeService {
       action: 'memory.put',
       permissions: agent.permissions,
     });
-    const content = (input.content ?? '').trim;
+    const content = (input.content ?? '').trim();
     if (!content) {
       throw new ApiException('validation_error', 'content is required', HttpStatus.BAD_REQUEST);
     }
@@ -422,7 +422,7 @@ export class AgentRuntimeService {
   }
 
   async marketplace(input: AuthCtx) {
-    this.assertEnabled;
+    this.assertEnabled();
     const listings = await this.prisma.marketplaceListing.count({
       where: { publisherOrgId: input.organizationId, kind: 'agent' },
     });
@@ -439,13 +439,13 @@ export class AgentRuntimeService {
       published,
       api: 'GET /v1/marketplace?kind=agent',
       console: '/marketplace',
-      note: 'Agent marketplace via existing listings when present.',
+      note: 'Agent marketplace via existing listings when present (VL-219).',
     };
   }
 
   async analytics(input: AuthCtx) {
-    this.assertEnabled;
-    const start = new Date;
+    this.assertEnabled();
+    const start = new Date();
     start.setUTCDate(1);
     start.setUTCHours(0, 0, 0, 0);
     const actions = [
@@ -467,18 +467,18 @@ export class AgentRuntimeService {
     );
     const agents = await this.listAgents(input);
     return {
-      periodStart: start.toISOString,
+      periodStart: start.toISOString(),
       workspaceId: input.workspaceId,
       agentCount: agents.agents.length,
       events: counts.reduce((s, c) => s + c.count, 0),
       byAction: Object.fromEntries(counts.map((c) => [c.action, c.count])),
-      honesty: agentRuntimeCatalog.honesty,
+      honesty: agentRuntimeCatalog().honesty,
     };
   }
 
   async monitoring(input: AuthCtx) {
     const [engine, analytics] = await Promise.all([
-      Promise.resolve(this.engine),
+      Promise.resolve(this.engine()),
       this.analytics(input),
     ]);
     return {
@@ -580,8 +580,8 @@ export class AgentRuntimeService {
     }
   }
 
-  private assertEnabled {
-    if (agentRuntimeMode === 'disabled') {
+  private assertEnabled() {
+    if (agentRuntimeMode() === 'disabled') {
       throw new ApiException(
         'agent_runtime_disabled',
         'Agent Runtime mode is disabled (LUGEMI_AGENT_RUNTIME_MODE=disabled).',
@@ -591,7 +591,7 @@ export class AgentRuntimeService {
   }
 
   private async requireAgent(input: AuthCtx, id?: string) {
-    const agentId = (id ?? '').trim;
+    const agentId = (id ?? '').trim();
     if (!agentId) {
       throw new ApiException('validation_error', 'agent id is required', HttpStatus.BAD_REQUEST);
     }
@@ -642,7 +642,7 @@ export class AgentRuntimeService {
           key: opts.replaceKey,
           deletedAt: null,
         },
-        data: { deletedAt: new Date },
+        data: { deletedAt: new Date() },
       });
     }
     return this.prisma.memoryRecord.create({

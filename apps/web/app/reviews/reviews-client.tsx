@@ -17,8 +17,8 @@ type Review = {
   status: string;
 };
 
-export function ReviewsClient {
-  const { getToken, isLoaded } = useAuth;
+export function ReviewsClient() {
+  const { getToken, isLoaded } = useAuth();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<'pending' | 'all'>('pending');
@@ -29,23 +29,23 @@ export function ReviewsClient {
     setReviews(data);
   }
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void (async  => {
+    void (async () => {
       try {
-        const token = await getToken;
+        const token = await getToken();
         if (!token) throw new Error('Not signed in');
         await load(token);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load reviews');
       }
-    });
+    })();
   }, [getToken, isLoaded, filter]);
 
   async function decide(id: string, action: 'accept' | 'reject') {
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       await apiFetch(`/v1/reviews/${id}/${action}`, {
         method: 'POST',
@@ -77,14 +77,14 @@ export function ReviewsClient {
         <button
           type="button"
           className={filter === 'pending' ? 'vl-btn' : 'vl-btn vl-btn-secondary'}
-          onClick={ => setFilter('pending')}
+          onClick={() => setFilter('pending')}
         >
           Pending
         </button>
         <button
           type="button"
           className={filter === 'all' ? 'vl-btn' : 'vl-btn vl-btn-secondary'}
-          onClick={ => setFilter('all')}
+          onClick={() => setFilter('all')}
         >
           All
         </button>
@@ -105,13 +105,13 @@ export function ReviewsClient {
                 </div>
                 {review.status === 'pending' ? (
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
-                    <button type="button" className="vl-btn" onClick={ => void decide(review.id, 'accept')}>
+                    <button type="button" className="vl-btn" onClick={() => void decide(review.id, 'accept')}>
                       Accept → TM
                     </button>
                     <button
                       type="button"
                       className="vl-btn vl-btn-secondary"
-                      onClick={ => void decide(review.id, 'reject')}
+                      onClick={() => void decide(review.id, 'reject')}
                     >
                       Reject
                     </button>

@@ -29,32 +29,32 @@ export class DatasetsController {
   constructor(private readonly datasets: DatasetsService) {}
 
   @Get('licenses')
-  licenses {
+  licenses() {
     return { data: DATASET_LICENSE_TAGS };
   }
 
-  @Get
-  list(@CurrentSession session: SessionContext) {
+  @Get()
+  list(@CurrentSession() session: SessionContext) {
     return this.datasets.list(session.organizationId, session.workspaceId);
   }
 
   @Get(':id')
-  get(@CurrentSession session: SessionContext, @Param('id') id: string) {
+  get(@CurrentSession() session: SessionContext, @Param('id') id: string) {
     return this.datasets.get(session.organizationId, id);
   }
 
-  @Post
+  @Post()
   @HttpCode(HttpStatus.CREATED)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage,
-      limits: { fileSize: datasetMaxBytes },
+      storage: memoryStorage(),
+      limits: { fileSize: datasetMaxBytes() },
     }),
   )
   create(
-    @CurrentSession session: SessionContext,
-    @UploadedFile file: Express.Multer.File | undefined,
-    @Body
+    @CurrentSession() session: SessionContext,
+    @UploadedFile() file: Express.Multer.File | undefined,
+    @Body()
     body: {
       title?: string;
       licenseTag?: string;
@@ -65,7 +65,7 @@ export class DatasetsController {
       partnerOrgName?: string;
       note?: string;
     },
-    @Req req: Request,
+    @Req() req: Request,
   ) {
     return this.datasets.create({
       organizationId: session.organizationId,
@@ -87,9 +87,9 @@ export class DatasetsController {
 
   @Patch(':id')
   update(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Param('id') id: string,
-    @Body
+    @Body()
     body: {
       title?: string;
       licenseTag?: string;
@@ -100,7 +100,7 @@ export class DatasetsController {
       partnerOrgName?: string | null;
       status?: string;
     },
-    @Req req: Request,
+    @Req() req: Request,
   ) {
     return this.datasets.updateMetadata({
       organizationId: session.organizationId,
@@ -116,16 +116,16 @@ export class DatasetsController {
   @HttpCode(HttpStatus.CREATED)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage,
-      limits: { fileSize: datasetMaxBytes },
+      storage: memoryStorage(),
+      limits: { fileSize: datasetMaxBytes() },
     }),
   )
   addVersion(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Param('id') id: string,
-    @UploadedFile file: Express.Multer.File | undefined,
-    @Body body: { note?: string },
-    @Req req: Request,
+    @UploadedFile() file: Express.Multer.File | undefined,
+    @Body() body: { note?: string },
+    @Req() req: Request,
   ) {
     return this.datasets.addVersion({
       organizationId: session.organizationId,
@@ -141,10 +141,10 @@ export class DatasetsController {
   @Get(':id/versions/:version/content')
   @Header('Cache-Control', 'no-store')
   async content(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Param('id') id: string,
     @Param('version') version: string,
-    @Res res: Response,
+    @Res() res: Response,
   ) {
     const file = await this.datasets.readContent({
       organizationId: session.organizationId,
@@ -161,9 +161,9 @@ export class DatasetsController {
 
   @Delete(':id')
   archive(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Param('id') id: string,
-    @Req req: Request,
+    @Req() req: Request,
   ) {
     return this.datasets.archive({
       organizationId: session.organizationId,

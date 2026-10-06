@@ -1,12 +1,12 @@
-/** Normalize tokens for pronunciation alignment. */
+/** Normalize tokens for pronunciation alignment (VL-156). */
 export function tokenize(text: string): string[] {
   return text
-    .toLowerCase
+    .toLowerCase()
     .normalize('NFKD')
     .replace(/[\u0300-\u036f]/g, '')
     .replace(/[^a-z0-9'\s-]/gi, ' ')
     .split(/\s+/)
-    .map((t) => t.trim)
+    .map((t) => t.trim())
     .filter(Boolean);
 }
 
@@ -20,7 +20,7 @@ export type WordAlignment = {
 export function alignWords(reference: string[], hypothesis: string[]): WordAlignment[] {
   const n = reference.length;
   const m = hypothesis.length;
-  const dp: number[][] = Array.from({ length: n + 1 },  => Array(m + 1).fill(0));
+  const dp: number[][] = Array.from({ length: n + 1 }, () => Array(m + 1).fill(0));
   for (let i = 0; i <= n; i++) dp[i]![0] = i;
   for (let j = 0; j <= m; j++) dp[0]![j] = j;
   for (let i = 1; i <= n; i++) {
@@ -62,7 +62,7 @@ export function alignWords(reference: string[], hypothesis: string[]): WordAlign
       i -= 1;
     }
   }
-  return out.reverse;
+  return out.reverse();
 }
 
 export type PronunciationScores = {

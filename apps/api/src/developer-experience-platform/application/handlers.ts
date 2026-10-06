@@ -17,8 +17,8 @@ export class GetDeveloperExperiencePlatformEngineHandler
     private readonly catalog: DeveloperExperiencePlatformCatalogPort,
   ) {}
 
-  execute: Promise<DeveloperExperiencePlatformEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<DeveloperExperiencePlatformEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListDeveloperExperiencePlatformProductsHandler
     private readonly catalog: DeveloperExperiencePlatformCatalogPort,
   ) {}
 
-  execute: Promise<DeveloperExperiencePlatformProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<DeveloperExperiencePlatformProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

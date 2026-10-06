@@ -16,8 +16,8 @@ export class GetPromptMarketplaceEngineHandler
     private readonly catalog: PromptMarketplaceCatalogPort,
   ) {}
 
-  execute: Promise<PromptMarketplaceEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<PromptMarketplaceEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 

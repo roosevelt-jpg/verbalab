@@ -67,10 +67,10 @@ export const FABRIC_BUSES = [
 ] as const;
 
 /**
- * Library Phase 114 → Policy Fabric.
+ * Library Phase 114 → Policy Fabric (VL-247).
  * Fabric-wide hard gate over Policy Runtime — not log-only, not OPA/Cedar enterprise OS.
  */
-export function policyFabricCapabilityCatalog: PolicyFabricCapability[] {
+export function policyFabricCapabilityCatalog(): PolicyFabricCapability[] {
   return [
     {
       id: 'policy-fabric',
@@ -78,7 +78,7 @@ export function policyFabricCapabilityCatalog: PolicyFabricCapability[] {
       status: 'shipped',
       api: 'GET /v1/policy-fabric/products',
       notes:
-        'Policy router + fabric-wide hard gate. Extends Policy Runtime — does not regenerate .',
+        'Policy router + fabric-wide hard gate (VL-247). Extends Policy Runtime — does not regenerate VL-222.',
     },
     {
       id: 'policy-engine',
@@ -146,7 +146,7 @@ export function policyFabricCapabilityCatalog: PolicyFabricCapability[] {
   ];
 }
 
-export function policyFabricRoutingTable: PolicyFabricRoute[] {
+export function policyFabricRoutingTable(): PolicyFabricRoute[] {
   return [
     {
       kind: 'security',
@@ -207,7 +207,7 @@ export function policyFabricRoutingTable: PolicyFabricRoute[] {
   ];
 }
 
-export function policyFabricPipelines: PolicyPipeline[] {
+export function policyFabricPipelines(): PolicyPipeline[] {
   return [
     {
       id: 'evaluate-assert',
@@ -230,14 +230,14 @@ export function policyFabricPipelines: PolicyPipeline[] {
   ];
 }
 
-export function policyFabricVersions {
+export function policyFabricVersions() {
   return [
     {
       id: 'hard-gate-v1',
       kind: 'engine',
       version: 1,
       status: 'shipped',
-      notes: 'Fabric-wide hard gate — log-only forbidden.',
+      notes: 'Fabric-wide hard gate (VL-247) — log-only forbidden.',
     },
     {
       id: 'router-v1',
@@ -256,7 +256,7 @@ export function policyFabricVersions {
   ];
 }
 
-export function policyFabricArchitectureNotes {
+export function policyFabricArchitectureNotes() {
   return {
     style: 'nest_modular_monolith',
     ddd: 'bounded_policy_fabric',
@@ -282,11 +282,11 @@ export function policyFabricArchitectureNotes {
     fabricWidePolicyHardGateRequired: true,
     policyLogOnlyForbidden: true,
     note:
-      'Policy Fabric. Fabric-wide hard gate over Policy Runtime. Denies return 403 — never log-only. Not OPA/Cedar/GRC OS.',
+      'Policy Fabric (VL-247). Fabric-wide hard gate over Policy Runtime. Denies return 403 — never log-only. Not OPA/Cedar/GRC OS.',
   };
 }
 
-export function policyFabricHonesty {
+export function policyFabricHonesty() {
   return {
     customerFacingProduct: false,
     opaCedarOs: false,

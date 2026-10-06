@@ -13,8 +13,8 @@ type Engine = {
 };
 type Analytics = { total: number; byAction: Record<string, number>; windowDays: number };
 
-export function AudioIntelligenceClient {
-  const { getToken, isLoaded } = useAuth;
+export function AudioIntelligenceClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -22,8 +22,8 @@ export function AudioIntelligenceClient {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(async  => {
-    const token = await getToken;
+  const refresh = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, stats] = await Promise.all([
       apiFetch<Engine>('/v1/audio-intelligence/engine', { token }),
@@ -33,13 +33,13 @@ export function AudioIntelligenceClient {
     setAnalytics(stats);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void refresh.catch((err: Error) => setError(err.message));
+    void refresh().catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
-  async function authHeaders {
-    const token = await getToken;
+  async function authHeaders() {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     return { Authorization: `Bearer ${token}` };
   }
@@ -50,15 +50,15 @@ export function AudioIntelligenceClient {
     setError(null);
     setResult(null);
     try {
-      const headers = await authHeaders;
-      const form = new FormData;
+      const headers = await authHeaders();
+      const form = new FormData();
       form.append('file', file);
       for (const [k, v] of Object.entries(extra)) form.append(k, v);
       const res = await fetch(`${API_URL}${path}`, { method: 'POST', headers, body: form });
-      const body = await res.json;
+      const body = await res.json();
       if (!res.ok) throw new Error(body?.error?.message ?? `HTTP ${res.status}`);
       setResult(JSON.stringify(body, null, 2));
-      await refresh;
+      await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Request failed');
     } finally {
@@ -106,7 +106,7 @@ export function AudioIntelligenceClient {
               type="button"
               disabled={loading || !file}
               style={primary}
-              onClick={ => void postMultipart('/v1/audio-intelligence/analyze')}
+              onClick={() => void postMultipart('/v1/audio-intelligence/analyze')}
             >
               Analyze
             </button>
@@ -114,7 +114,7 @@ export function AudioIntelligenceClient {
               type="button"
               disabled={loading || !file}
               style={secondary}
-              onClick={ => void postMultipart('/v1/audio-intelligence/silence')}
+              onClick={() => void postMultipart('/v1/audio-intelligence/silence')}
             >
               Silence
             </button>
@@ -122,7 +122,7 @@ export function AudioIntelligenceClient {
               type="button"
               disabled={loading || !file}
               style={secondary}
-              onClick={ => void postMultipart('/v1/audio-intelligence/enhance')}
+              onClick={() => void postMultipart('/v1/audio-intelligence/enhance')}
             >
               Enhance
             </button>
@@ -130,7 +130,7 @@ export function AudioIntelligenceClient {
               type="button"
               disabled={loading || !file}
               style={secondary}
-              onClick={ => void postMultipart('/v1/audio-intelligence/upscale', { targetRate: '32000' })}
+              onClick={() => void postMultipart('/v1/audio-intelligence/upscale', { targetRate: '32000' })}
             >
               Upscale
             </button>
@@ -138,7 +138,7 @@ export function AudioIntelligenceClient {
               type="button"
               disabled={loading || !file}
               style={secondary}
-              onClick={ => void postMultipart('/v1/audio-intelligence/isolate')}
+              onClick={() => void postMultipart('/v1/audio-intelligence/isolate')}
             >
               Isolate
             </button>

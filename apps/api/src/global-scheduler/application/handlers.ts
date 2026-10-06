@@ -17,8 +17,8 @@ export class GetGlobalSchedulerEngineHandler
     private readonly catalog: GlobalSchedulerCatalogPort,
   ) {}
 
-  execute: Promise<GlobalSchedulerEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<GlobalSchedulerEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListGlobalSchedulerProductsHandler
     private readonly catalog: GlobalSchedulerCatalogPort,
   ) {}
 
-  execute: Promise<GlobalSchedulerProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<GlobalSchedulerProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

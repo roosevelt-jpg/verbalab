@@ -23,8 +23,8 @@ type Engine = {
   capabilities: Array<{ id: string; name: string; status: string; notes: string }>;
 };
 
-export function VoiceMarketplaceClient {
-  const { getToken, isLoaded } = useAuth;
+export function VoiceMarketplaceClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [listings, setListings] = useState<Listing[]>([]);
   const [title, setTitle] = useState('Nova Studio Stock');
@@ -34,8 +34,8 @@ export function VoiceMarketplaceClient {
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const load = useCallback(async  => {
-    const token = await getToken;
+  const load = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, list] = await Promise.all([
       apiFetch<Engine>('/v1/voice-marketplace/engine', { token }),
@@ -45,17 +45,17 @@ export function VoiceMarketplaceClient {
     setListings(list.listings);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void load.catch((err: Error) => setError(err.message));
+    void load().catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
-  async function publish {
+  async function publish() {
     setBusy(true);
     setError(null);
     setMessage(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       await apiFetch('/v1/voice-marketplace/listings', {
         token,
@@ -70,7 +70,7 @@ export function VoiceMarketplaceClient {
         }),
       });
       setMessage('Published');
-      await load;
+      await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Publish failed');
     } finally {
@@ -82,7 +82,7 @@ export function VoiceMarketplaceClient {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const res = await apiFetch<{ note: string }>(`/v1/voice-marketplace/listings/${id}/install`, {
         token,
@@ -90,7 +90,7 @@ export function VoiceMarketplaceClient {
         body: JSON.stringify({}),
       });
       setMessage(res.note);
-      await load;
+      await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Install failed');
     } finally {
@@ -102,7 +102,7 @@ export function VoiceMarketplaceClient {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       await apiFetch(`/v1/voice-marketplace/listings/${id}/reviews`, {
         token,
@@ -110,7 +110,7 @@ export function VoiceMarketplaceClient {
         body: JSON.stringify({ rating: 5, body: 'Clear and usable.' }),
       });
       setMessage('Review saved');
-      await load;
+      await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Review failed');
     } finally {
@@ -155,7 +155,7 @@ export function VoiceMarketplaceClient {
           style={input}
           placeholder="Price cents (0 = free)"
         />
-        <button type="button" disabled={busy} onClick={ => void publish} style={primary}>
+        <button type="button" disabled={busy} onClick={() => void publish()} style={primary}>
           Publish
         </button>
       </section>
@@ -180,10 +180,10 @@ export function VoiceMarketplaceClient {
                 {l.publisherName ? ` · ${l.publisherName}` : ''}
               </div>
               <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
-                <button type="button" disabled={busy} onClick={ => void install(l.id)} style={secondary}>
+                <button type="button" disabled={busy} onClick={() => void install(l.id)} style={secondary}>
                   License / install
                 </button>
-                <button type="button" disabled={busy} onClick={ => void rate(l.id)} style={secondary}>
+                <button type="button" disabled={busy} onClick={() => void rate(l.id)} style={secondary}>
                   Rate 5★
                 </button>
               </div>

@@ -1,8 +1,8 @@
 /**
- * Library Phase 216 → AI Engineering Standards.
- * AI Engineering Standards. Prompt/model/dataset/eval/safety/reasoning/agent/inference standards + retroactiveChecks for Vol 11 payments, Vol 12 healthcare/financial/consent, Vol 17 secrets. Not fake compliance certification.
+ * Library Phase 216 → AI Engineering Standards (VL-349).
+ * AI Engineering Standards (VL-349). Prompt/model/dataset/eval/safety/reasoning/agent/inference standards + retroactiveChecks for Vol 11 payments, Vol 12 healthcare/financial/consent, Vol 17 secrets. Not fake compliance certification.
  */
-export function aiEngineeringStandardsEngineCatalog {
+export function aiEngineeringStandardsEngineCatalog() {
   return {
     product: 'Lugemi AI Engineering Standards',
     engineeringOsForHumansAndCursor: true,
@@ -10,14 +10,14 @@ export function aiEngineeringStandardsEngineCatalog {
     architectureKnowledgeBaseOs: false,
     adrFactoryOs: false,
     capabilities: [
-      { id: 'prompt', name: 'Prompt Engineering Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
-      { id: 'model', name: 'Model Engineering Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
-      { id: 'dataset', name: 'Dataset Engineering Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
-      { id: 'evaluation', name: 'Evaluation Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
-      { id: 'safety', name: 'Safety Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
-      { id: 'reasoning', name: 'Reasoning Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
-      { id: 'agent', name: 'Agent Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
-      { id: 'inference', name: 'Inference Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' }
+      { id: 'prompt', name: 'Prompt Engineering Standards', status: 'shipped', notes: 'VL-349 standards capability — catalog, not a new OS.' },
+      { id: 'model', name: 'Model Engineering Standards', status: 'shipped', notes: 'VL-349 standards capability — catalog, not a new OS.' },
+      { id: 'dataset', name: 'Dataset Engineering Standards', status: 'shipped', notes: 'VL-349 standards capability — catalog, not a new OS.' },
+      { id: 'evaluation', name: 'Evaluation Standards', status: 'shipped', notes: 'VL-349 standards capability — catalog, not a new OS.' },
+      { id: 'safety', name: 'Safety Standards', status: 'shipped', notes: 'VL-349 standards capability — catalog, not a new OS.' },
+      { id: 'reasoning', name: 'Reasoning Standards', status: 'shipped', notes: 'VL-349 standards capability — catalog, not a new OS.' },
+      { id: 'agent', name: 'Agent Standards', status: 'shipped', notes: 'VL-349 standards capability — catalog, not a new OS.' },
+      { id: 'inference', name: 'Inference Standards', status: 'shipped', notes: 'VL-349 standards capability — catalog, not a new OS.' }
     ],
     routes: [
       {
@@ -139,9 +139,9 @@ export function aiEngineeringStandardsEngineCatalog {
       customerFacingProductCloud: false,
       architectureKnowledgeBaseOs: false,
       adrFactoryOs: false,
-      note: 'AI Engineering Standards. Prompt/model/dataset/eval/safety/reasoning/agent/inference standards + retroactiveChecks for Vol 11 payments, Vol 12 healthcare/financial/consent, Vol 17 secrets. Not fake compliance certification.',
+      note: 'AI Engineering Standards (VL-349). Prompt/model/dataset/eval/safety/reasoning/agent/inference standards + retroactiveChecks for Vol 11 payments, Vol 12 healthcare/financial/consent, Vol 17 secrets. Not fake compliance certification.',
     },
     docs: '/docs/AI_ENGINEERING_STANDARDS.md',
-    note: 'AI Engineering Standards. Prompt/model/dataset/eval/safety/reasoning/agent/inference standards + retroactiveChecks for Vol 11 payments, Vol 12 healthcare/financial/consent, Vol 17 secrets. Not fake compliance certification.',
+    note: 'AI Engineering Standards (VL-349). Prompt/model/dataset/eval/safety/reasoning/agent/inference standards + retroactiveChecks for Vol 11 payments, Vol 12 healthcare/financial/consent, Vol 17 secrets. Not fake compliance certification.',
   };
 }

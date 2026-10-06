@@ -1,4 +1,4 @@
-/** Application ports for AI Safety Platform. */
+/** Application ports for AI Safety Platform (VL-293). */
 
 export type AiSafetyPlatformProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type AiSafetyPlatformEngineBundle = ReturnType<
 >;
 
 export interface AiSafetyPlatformCatalogPort {
-  engine: AiSafetyPlatformEngineBundle;
-  listProducts: AiSafetyPlatformProductRow[];
+  engine(): AiSafetyPlatformEngineBundle;
+  listProducts(): AiSafetyPlatformProductRow[];
 }
 
 export const AI_SAFETY_PLATFORM_CATALOG_PORT = Symbol('AI_SAFETY_PLATFORM_CATALOG_PORT');

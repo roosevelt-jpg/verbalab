@@ -11,6 +11,6 @@ export const VOICE_FAQ_SYSTEM = [
   'Do not invent credentials, pricing numbers, or unsupported features.',
 ].join(' ');
 
-export function defaultFaqVoice: string {
-  return process.env.VOICE_FAQ_VOICE?.trim || 'alloy';
+export function defaultFaqVoice(): string {
+  return process.env.VOICE_FAQ_VOICE?.trim() || 'alloy';
 }

@@ -6,16 +6,16 @@ import {
   SyntheticDataPlatformProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestSyntheticDataPlatformCatalogAdapter implements SyntheticDataPlatformCatalogPort {
   constructor(private readonly service: SyntheticDataPlatformService) {}
 
-  engine: SyntheticDataPlatformEngineBundle {
-    return this.service.engine;
+  engine(): SyntheticDataPlatformEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: SyntheticDataPlatformProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): SyntheticDataPlatformProductRow[] {
+    const bundle = this.engine() as {
       products?: SyntheticDataPlatformProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestSyntheticDataPlatformCatalogAdapter implements SyntheticDataPla
         status: 'shipped',
         api: 'GET /v1/synthetic-data-platform/engine',
         console: '/synthetic-data-platform',
-        notes: ' shipped.',
+        notes: 'VL-273 shipped.',
       },
     ];
   }

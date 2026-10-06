@@ -6,16 +6,16 @@ import {
   GlobalSchedulerProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestGlobalSchedulerCatalogAdapter implements GlobalSchedulerCatalogPort {
   constructor(private readonly service: GlobalSchedulerService) {}
 
-  engine: GlobalSchedulerEngineBundle {
-    return this.service.engine;
+  engine(): GlobalSchedulerEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: GlobalSchedulerProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): GlobalSchedulerProductRow[] {
+    const bundle = this.engine() as {
       products?: GlobalSchedulerProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestGlobalSchedulerCatalogAdapter implements GlobalSchedulerCatalog
         status: 'shipped',
         api: 'GET /v1/global-scheduler/engine',
         console: '/global-scheduler',
-        notes: ' shipped.',
+        notes: 'VL-321 shipped.',
       },
     ];
   }

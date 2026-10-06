@@ -6,7 +6,7 @@ import { AuditService } from '../audit/audit.service';
 import { ApiKeysService } from '../api-keys/api-keys.service';
 import { UsageService } from '../usage/usage.service';
 
-@Injectable
+@Injectable()
 export class AdminService {
   constructor(
     private readonly prisma: PrismaService,
@@ -17,7 +17,7 @@ export class AdminService {
 
   async searchOrganizations(q?: string, limitRaw?: number) {
     const take = Math.min(Math.max(limitRaw ?? 50, 1), 100);
-    const query = q?.trim;
+    const query = q?.trim();
     const where: Prisma.OrganizationWhereInput = query
       ? {
           OR: [
@@ -153,8 +153,8 @@ export class AdminService {
       where: { id: input.organizationId },
       data: input.disabled
         ? {
-            disabledAt: new Date,
-            disabledReason: input.reason?.trim || 'Suspended by platform admin',
+            disabledAt: new Date(),
+            disabledReason: input.reason?.trim() || 'Suspended by platform admin',
           }
         : { disabledAt: null, disabledReason: null },
       select: {

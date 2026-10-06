@@ -20,7 +20,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_mkt_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_mkt_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -34,21 +34,21 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Marketplace',  => {
+describe('Marketplace (VL-090 / VL-091)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;
   let marketplace: MarketplaceService;
   let prompts: PromptsService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     billing = app.get(BillingService);
@@ -56,12 +56,12 @@ describe('Marketplace',  => {
     prompts = app.get(PromptsService);
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('rejects free plan publish and install', async  => {
-    const org = await seedOrg(prisma, `mfree_${Date.now}`);
+  it('rejects free plan publish and install', async () => {
+    const org = await seedOrg(prisma, `mfree_${Date.now()}`);
     const workspaceId = org.workspaces[0].id;
     const userId = org.memberships[0].userId;
 
@@ -87,9 +87,9 @@ describe('Marketplace',  => {
     ).rejects.toMatchObject({ code: 'plan_required' });
   });
 
-  it('publishes a glossary snapshot and installs into another Pro workspace', async  => {
-    const publisher = await seedOrg(prisma, `mpub_${Date.now}`);
-    const buyer = await seedOrg(prisma, `mbuy_${Date.now}`);
+  it('publishes a glossary snapshot and installs into another Pro workspace', async () => {
+    const publisher = await seedOrg(prisma, `mpub_${Date.now()}`);
+    const buyer = await seedOrg(prisma, `mbuy_${Date.now()}`);
     await billing.applyEntitlementForTests({ organizationId: publisher.id, plan: 'pro' });
     await billing.applyEntitlementForTests({ organizationId: buyer.id, plan: 'pro' });
 
@@ -174,9 +174,9 @@ describe('Marketplace',  => {
     expect(installs.some((i) => i.listingId === listing.id)).toBe(true);
   });
 
-  it('overwrites conflicting buyer terms from the snapshot', async  => {
-    const publisher = await seedOrg(prisma, `mover_${Date.now}`);
-    const buyer = await seedOrg(prisma, `mbovr_${Date.now}`);
+  it('overwrites conflicting buyer terms from the snapshot', async () => {
+    const publisher = await seedOrg(prisma, `mover_${Date.now()}`);
+    const buyer = await seedOrg(prisma, `mbovr_${Date.now()}`);
     await billing.applyEntitlementForTests({ organizationId: publisher.id, plan: 'pro' });
     await billing.applyEntitlementForTests({ organizationId: buyer.id, plan: 'pro' });
 
@@ -231,9 +231,9 @@ describe('Marketplace',  => {
     expect(term?.targetTerm).toBe('bonjour');
   });
 
-  it('publishes and installs prompt listings', async  => {
-    const publisher = await seedOrg(prisma, `mprom_${Date.now}`);
-    const buyer = await seedOrg(prisma, `mbprm_${Date.now}`);
+  it('publishes and installs prompt listings (VL-091)', async () => {
+    const publisher = await seedOrg(prisma, `mprom_${Date.now()}`);
+    const buyer = await seedOrg(prisma, `mbprm_${Date.now()}`);
     await billing.applyEntitlementForTests({ organizationId: publisher.id, plan: 'pro' });
     await billing.applyEntitlementForTests({ organizationId: buyer.id, plan: 'pro' });
 
@@ -298,9 +298,9 @@ describe('Marketplace',  => {
     expect(rag.body).toBe('MARKETPLACE_RAG_SYSTEM_UNIQUE');
   });
 
-  it('publishes and installs dataset listings from TM', async  => {
-    const publisher = await seedOrg(prisma, `mdat_${Date.now}`);
-    const buyer = await seedOrg(prisma, `mbdat_${Date.now}`);
+  it('publishes and installs dataset listings from TM (VL-091)', async () => {
+    const publisher = await seedOrg(prisma, `mdat_${Date.now()}`);
+    const buyer = await seedOrg(prisma, `mbdat_${Date.now()}`);
     await billing.applyEntitlementForTests({ organizationId: publisher.id, plan: 'pro' });
     await billing.applyEntitlementForTests({ organizationId: buyer.id, plan: 'pro' });
 
@@ -348,9 +348,9 @@ describe('Marketplace',  => {
     expect(entries[0].targetText).toBe('Kliniki iko wazi');
   });
 
-  it('records a paid install with platform fee when Stripe is offline', async  => {
-    const publisher = await seedOrg(prisma, `mpaid_${Date.now}`);
-    const buyer = await seedOrg(prisma, `mbpaid_${Date.now}`);
+  it('records a paid install with platform fee when Stripe is offline (VL-092)', async () => {
+    const publisher = await seedOrg(prisma, `mpaid_${Date.now()}`);
+    const buyer = await seedOrg(prisma, `mbpaid_${Date.now()}`);
     await billing.applyEntitlementForTests({ organizationId: publisher.id, plan: 'pro' });
     await billing.applyEntitlementForTests({ organizationId: buyer.id, plan: 'pro' });
     await billing.setConnectForTests({ organizationId: publisher.id });
@@ -380,7 +380,7 @@ describe('Marketplace',  => {
     });
     expect(listing.priceCents).toBe(500);
 
-    expect(billing.isMarketplacePaymentsConfigured).toBe(false);
+    expect(billing.isMarketplacePaymentsConfigured()).toBe(false);
 
     const result = await marketplace.install({
       organizationId: buyer.id,

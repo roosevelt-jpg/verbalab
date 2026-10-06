@@ -1,8 +1,8 @@
 /**
- * Library Phase 206 → Agent Operating System.
- * Agent Operating System. Façade over agent-runtime + agent-fabric + agent-marketplace. Registry/lifecycle/security/collaboration/memory as routed — not a third agent executor.
+ * Library Phase 206 → Agent Operating System (VL-339).
+ * Agent Operating System (VL-339). Façade over agent-runtime + agent-fabric + agent-marketplace. Registry/lifecycle/security/collaboration/memory as routed — not a third agent executor.
  */
-export function agentOperatingSystemEngineCatalog {
+export function agentOperatingSystemEngineCatalog() {
   return {
     product: 'Lugemi Agent Operating System',
     unifyingOrchestrationLayer: true,
@@ -11,11 +11,11 @@ export function agentOperatingSystemEngineCatalog {
     notKubernetes: true,
     literalOsKernel: false,
     capabilities: [
-      { id: 'registry', name: 'Agent Registry Routing', status: 'shipped', notes: ' routed capability — not a new engine.' },
-      { id: 'lifecycle', name: 'Agent Lifecycle Routing', status: 'shipped', notes: ' routed capability — not a new engine.' },
-      { id: 'security', name: 'Agent Security Routing', status: 'shipped', notes: ' routed capability — not a new engine.' },
-      { id: 'collaboration', name: 'Agent Collaboration Routing', status: 'shipped', notes: ' routed capability — not a new engine.' },
-      { id: 'memory', name: 'Agent Memory Routing', status: 'shipped', notes: ' routed capability — not a new engine.' }
+      { id: 'registry', name: 'Agent Registry Routing', status: 'shipped', notes: 'VL-339 routed capability — not a new engine.' },
+      { id: 'lifecycle', name: 'Agent Lifecycle Routing', status: 'shipped', notes: 'VL-339 routed capability — not a new engine.' },
+      { id: 'security', name: 'Agent Security Routing', status: 'shipped', notes: 'VL-339 routed capability — not a new engine.' },
+      { id: 'collaboration', name: 'Agent Collaboration Routing', status: 'shipped', notes: 'VL-339 routed capability — not a new engine.' },
+      { id: 'memory', name: 'Agent Memory Routing', status: 'shipped', notes: 'VL-339 routed capability — not a new engine.' }
     ],
     routes: [
       {
@@ -83,9 +83,9 @@ export function agentOperatingSystemEngineCatalog {
       notKubernetes: true,
       literalOsKernel: false,
       enterpriseEngineeringSystemOs: false,
-      note: 'Agent Operating System. Façade over agent-runtime + agent-fabric + agent-marketplace. Registry/lifecycle/security/collaboration/memory as routed — not a third agent executor.',
+      note: 'Agent Operating System (VL-339). Façade over agent-runtime + agent-fabric + agent-marketplace. Registry/lifecycle/security/collaboration/memory as routed — not a third agent executor.',
     },
     docs: '/docs/AGENT_OPERATING_SYSTEM.md',
-    note: 'Agent Operating System. Façade over agent-runtime + agent-fabric + agent-marketplace. Registry/lifecycle/security/collaboration/memory as routed — not a third agent executor.',
+    note: 'Agent Operating System (VL-339). Façade over agent-runtime + agent-fabric + agent-marketplace. Registry/lifecycle/security/collaboration/memory as routed — not a third agent executor.',
   };
 }

@@ -2,30 +2,30 @@ import { Injectable } from '@nestjs/common';
 import { dataPlaneStreamingEngineCatalog } from './data-plane-streaming.catalog';
 import { StreamingRuntimeService } from '../streaming-runtime/streaming-runtime.service';
 
-@Injectable
+@Injectable()
 export class DataPlaneStreamingService {
   constructor(
     private readonly streamingRuntime: StreamingRuntimeService
   ) {}
 
-  engine {
-    return dataPlaneStreamingEngineCatalog;
+  engine() {
+    return dataPlaneStreamingEngineCatalog();
   }
 
   /** Route/execute façade: returns upstream endpoint + live status from injected product services. */
   route(capability?: string) {
-    const catalog = this.engine;
-    const q = (capability ?? '').trim.toLowerCase;
+    const catalog = this.engine();
+    const q = (capability ?? '').trim().toLowerCase();
     const capabilities = catalog.capabilities.filter((c) => {
       if (!q) return true;
-      return c.id.includes(q) || c.name.toLowerCase.includes(q);
+      return c.id.includes(q) || c.name.toLowerCase().includes(q);
     });
     const upstreamStatus = [
       {
         module: 'streaming-runtime',
         method: 'engine',
         status: 'reachable',
-        upstream: this.streamingRuntime.engine,
+        upstream: this.streamingRuntime.engine(),
       }
     ];
     return {
@@ -47,11 +47,11 @@ export class DataPlaneStreamingService {
   }
 
   list(query?: string) {
-    const catalog = this.engine;
-    const q = (query ?? '').trim.toLowerCase;
+    const catalog = this.engine();
+    const q = (query ?? '').trim().toLowerCase();
     const rows = catalog.routes.filter((row) => {
       if (!q) return true;
-      return JSON.stringify(row).toLowerCase.includes(q);
+      return JSON.stringify(row).toLowerCase().includes(q);
     });
     return {
       routes: rows,
@@ -68,8 +68,8 @@ export class DataPlaneStreamingService {
     return this.list(query);
   }
 
-  monitoring {
-    const catalog = this.engine;
+  monitoring() {
+    const catalog = this.engine();
     return {
       mode: 'data-plane-streaming',
       count: catalog.routes.length,
@@ -77,7 +77,7 @@ export class DataPlaneStreamingService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'DataPlaneStreaming monitoring snapshot.',
+      note: 'DataPlaneStreaming monitoring snapshot (VL-331).',
     };
   }
 }

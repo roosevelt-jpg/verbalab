@@ -11,11 +11,11 @@ type CodePanelProps = {
 export function CodePanel({ code, label = 'JSON', className }: CodePanelProps) {
   const [copied, setCopied] = useState(false);
 
-  async function onCopy {
+  async function onCopy() {
     try {
       await navigator.clipboard.writeText(code);
       setCopied(true);
-      window.setTimeout( => setCopied(false), 1600);
+      window.setTimeout(() => setCopied(false), 1600);
     } catch {
       setCopied(false);
     }
@@ -25,7 +25,7 @@ export function CodePanel({ code, label = 'JSON', className }: CodePanelProps) {
     <div className={`vl-code-panel${className ? ` ${className}` : ''}`}>
       <div className="vl-code-panel-header">
         <span className="vl-code-panel-label">{label}</span>
-        <button type="button" className="vl-code-copy" onClick={ => void onCopy}>
+        <button type="button" className="vl-code-copy" onClick={() => void onCopy()}>
           {copied ? 'Copied' : 'Copy'}
         </button>
       </div>

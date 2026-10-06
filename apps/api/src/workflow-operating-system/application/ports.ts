@@ -1,4 +1,4 @@
-/** Application ports for Workflow Operating System. */
+/** Application ports for Workflow Operating System (VL-338). */
 
 export type WorkflowOperatingSystemProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type WorkflowOperatingSystemEngineBundle = ReturnType<
 >;
 
 export interface WorkflowOperatingSystemCatalogPort {
-  engine: WorkflowOperatingSystemEngineBundle;
-  listProducts: WorkflowOperatingSystemProductRow[];
+  engine(): WorkflowOperatingSystemEngineBundle;
+  listProducts(): WorkflowOperatingSystemProductRow[];
 }
 
 export const WORKFLOW_OPERATING_SYSTEM_CATALOG_PORT = Symbol('WORKFLOW_OPERATING_SYSTEM_CATALOG_PORT');

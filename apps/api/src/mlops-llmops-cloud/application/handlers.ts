@@ -17,8 +17,8 @@ export class GetMlopsLlmopsCloudEngineHandler
     private readonly catalog: MlopsLlmopsCloudCatalogPort,
   ) {}
 
-  execute: Promise<MlopsLlmopsCloudEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<MlopsLlmopsCloudEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListMlopsLlmopsCloudProductsHandler
     private readonly catalog: MlopsLlmopsCloudCatalogPort,
   ) {}
 
-  execute: Promise<MlopsLlmopsCloudProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<MlopsLlmopsCloudProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

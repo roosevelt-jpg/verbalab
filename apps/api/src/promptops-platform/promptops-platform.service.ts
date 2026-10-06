@@ -1,22 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { promptopsPlatformEngineCatalog } from './promptops-platform.catalog';
 
-@Injectable
+@Injectable()
 export class PromptopsPlatformService {
-  engine {
-    return promptopsPlatformEngineCatalog;
+  engine() {
+    return promptopsPlatformEngineCatalog();
   }
 
   prompts(query?: string) {
-    const catalog = this.engine;
-    const q = (query ?? '').trim.toLowerCase;
+    const catalog = this.engine();
+    const q = (query ?? '').trim().toLowerCase();
     const prompts = catalog.prompts.filter((p) => {
       if (!q) return true;
       return (
-        p.id.toLowerCase.includes(q) ||
-        p.name.toLowerCase.includes(q) ||
-        p.status.toLowerCase.includes(q) ||
-        p.notes.toLowerCase.includes(q)
+        p.id.toLowerCase().includes(q) ||
+        p.name.toLowerCase().includes(q) ||
+        p.status.toLowerCase().includes(q) ||
+        p.notes.toLowerCase().includes(q)
       );
     });
     return {
@@ -33,15 +33,15 @@ export class PromptopsPlatformService {
     return this.prompts(query);
   }
 
-  monitoring {
-    const catalog = this.engine;
+  monitoring() {
+    const catalog = this.engine();
     return {
       mode: 'promptops',
       capabilityCount: catalog.capabilities.length,
       promptCount: catalog.prompts.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'PromptOps Platform monitoring snapshot.',
+      note: 'PromptOps Platform monitoring snapshot (VL-285).',
     };
   }
 }

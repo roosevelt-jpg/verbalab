@@ -1,4 +1,4 @@
-/** Application ports for Memory Fabric. */
+/** Application ports for Memory Fabric (VL-245). */
 
 export type MemoryFabricCapabilityRow = {
   id: string;
@@ -22,9 +22,9 @@ export type MemoryFabricProductsBundle = ReturnType<
 >;
 
 export interface MemoryFabricCatalogPort {
-  products: MemoryFabricProductsBundle;
-  listCapabilities: MemoryFabricCapabilityRow[];
-  listRoutes: MemoryFabricRouteRow[];
+  products(): MemoryFabricProductsBundle;
+  listCapabilities(): MemoryFabricCapabilityRow[];
+  listRoutes(): MemoryFabricRouteRow[];
 }
 
 export const MEMORY_FABRIC_CATALOG_PORT = Symbol('MEMORY_FABRIC_CATALOG_PORT');

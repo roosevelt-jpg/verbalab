@@ -10,11 +10,11 @@ export type VaiosProductRow = {
 };
 
 /**
- * Library Phase 201 → VAIOS Foundation.
+ * Library Phase 201 → VAIOS Foundation (VL-334).
  * Unifying orchestration layer over Kernel + Fabric + Data Plane.
  * Not Linux / not Kubernetes / not a third parallel OS.
  */
-export function vaiosProductCatalog: VaiosProductRow[] {
+export function vaiosProductCatalog(): VaiosProductRow[] {
   return [
     {
       id: 'vaios',
@@ -23,7 +23,7 @@ export function vaiosProductCatalog: VaiosProductRow[] {
       api: 'GET /v1/vaios/products',
       console: '/vaios',
       notes:
-        '. Unifying orchestration layer; notLinux/notKubernetes.',
+        'VL-334. Unifying orchestration layer; notLinux/notKubernetes.',
     },
     {
       id: 'ai-scheduler',
@@ -32,7 +32,7 @@ export function vaiosProductCatalog: VaiosProductRow[] {
       api: 'GET /v1/ai-scheduler/engine',
       console: '/ai-scheduler',
       notes:
-        '. Unifies scheduling over global-scheduler/GPU/workflow/agent queues.',
+        'VL-335. Unifies scheduling over global-scheduler/GPU/workflow/agent queues.',
     },
     {
       id: 'runtime-manager',
@@ -41,7 +41,7 @@ export function vaiosProductCatalog: VaiosProductRow[] {
       api: 'GET /v1/runtime-manager/engine',
       console: '/runtime-manager',
       notes:
-        '. Lifecycle catalog over Kernel + Data Plane runtimes.',
+        'VL-336. Lifecycle catalog over Kernel + Data Plane runtimes.',
     },
     {
       id: 'resource-manager',
@@ -50,7 +50,7 @@ export function vaiosProductCatalog: VaiosProductRow[] {
       api: 'GET /v1/resource-manager/engine',
       console: '/resource-manager',
       notes:
-        '. Resource allocation catalog; gpuBudgetLimitsRequired=true.',
+        'VL-337. Resource allocation catalog; gpuBudgetLimitsRequired=true.',
     },
     {
       id: 'workflow-operating-system',
@@ -59,7 +59,7 @@ export function vaiosProductCatalog: VaiosProductRow[] {
       api: 'GET /v1/workflow-operating-system/engine',
       console: '/workflow-operating-system',
       notes:
-        '. Façade over workflow-runtime + marketplace.',
+        'VL-338. Façade over workflow-runtime + marketplace.',
     },
     {
       id: 'agent-operating-system',
@@ -68,7 +68,7 @@ export function vaiosProductCatalog: VaiosProductRow[] {
       api: 'GET /v1/agent-operating-system/engine',
       console: '/agent-operating-system',
       notes:
-        '. Façade over agent-runtime + fabric + marketplace.',
+        'VL-339. Façade over agent-runtime + fabric + marketplace.',
     },
     {
       id: 'ai-memory-operating-system',
@@ -77,7 +77,7 @@ export function vaiosProductCatalog: VaiosProductRow[] {
       api: 'GET /v1/ai-memory-operating-system/engine',
       console: '/ai-memory-operating-system',
       notes:
-        '. Façade over memory-runtime + fabric + knowledge-memory.',
+        'VL-340. Façade over memory-runtime + fabric + knowledge-memory.',
     },
     {
       id: 'knowledge-operating-system',
@@ -86,7 +86,7 @@ export function vaiosProductCatalog: VaiosProductRow[] {
       api: 'GET /v1/knowledge-operating-system/engine',
       console: '/knowledge-operating-system',
       notes:
-        '. Façade over knowledge-runtime/fabric/cloud + AKG.',
+        'VL-341. Façade over knowledge-runtime/fabric/cloud + AKG.',
     },
     {
       id: 'plugin-operating-system',
@@ -95,7 +95,7 @@ export function vaiosProductCatalog: VaiosProductRow[] {
       api: 'GET /v1/plugin-operating-system/engine',
       console: '/plugin-operating-system',
       notes:
-        '. Façade over plugin-runtime + marketplace; existing policy gates.',
+        'VL-342. Façade over plugin-runtime + marketplace; existing policy gates.',
     },
     {
       id: 'ai-kernel',
@@ -136,7 +136,7 @@ export function vaiosProductCatalog: VaiosProductRow[] {
   ];
 }
 
-export function vaiosRoutingTable: Array<{
+export function vaiosRoutingTable(): Array<{
   id: string;
   path: string;
   purpose: string;
@@ -150,7 +150,7 @@ export function vaiosRoutingTable: Array<{
   ];
 }
 
-export function vaiosHubInventory: Array<{
+export function vaiosHubInventory(): Array<{
   id: string;
   title: string;
   unifyingOrchestrationLayer: boolean;
@@ -217,7 +217,7 @@ export function vaiosHubInventory: Array<{
   ];
 }
 
-export function vaiosUnifiedSurfaces: Array<{
+export function vaiosUnifiedSurfaces(): Array<{
   id: string;
   volume: number;
   path: string;
@@ -281,7 +281,7 @@ export function vaiosUnifiedSurfaces: Array<{
   ];
 }
 
-export function vaiosArchitectureNotes: Record<string, unknown> {
+export function vaiosArchitectureNotes(): Record<string, unknown> {
   return {
     role: 'vaios-unifying-orchestration',
     extends: [
@@ -310,7 +310,7 @@ export function vaiosArchitectureNotes: Record<string, unknown> {
   };
 }
 
-export function vaiosHonesty: Record<string, boolean | string> {
+export function vaiosHonesty(): Record<string, boolean | string> {
   return {
     unifyingOrchestrationLayer: true,
     duplicatesKernelOrFabric: false,

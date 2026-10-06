@@ -6,18 +6,18 @@ export class ContinuousEvaluationController {
   constructor(private readonly service: ContinuousEvaluationService) {}
 
   @Get('engine')
-  engine {
-    return this.service.engine;
+  engine() {
+    return this.service.engine();
   }
 
   @Get('products')
-  products {
-    return this.service.engine;
+  products() {
+    return this.service.engine();
   }
 
   @Get('monitoring')
-  monitoring {
-    return this.service.monitoring;
+  monitoring() {
+    return this.service.monitoring();
   }
 
   @Get('gates')
@@ -31,7 +31,7 @@ export class ContinuousEvaluationController {
   }
 
   @Get('gate-status')
-  gateStatus {
-    return this.service.gateStatus;
+  gateStatus() {
+    return this.service.gateStatus();
   }
 }

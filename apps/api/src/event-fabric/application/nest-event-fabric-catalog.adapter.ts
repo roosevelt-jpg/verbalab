@@ -11,19 +11,19 @@ import {
   EventFabricProductsBundle,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestEventFabricCatalogAdapter implements EventFabricCatalogPort {
   constructor(private readonly fabric: EventFabricService) {}
 
-  products: EventFabricProductsBundle {
-    return this.fabric.products;
+  products(): EventFabricProductsBundle {
+    return this.fabric.products();
   }
 
-  listCapabilities: EventFabricCapabilityRow[] {
-    return eventFabricCapabilityCatalog;
+  listCapabilities(): EventFabricCapabilityRow[] {
+    return eventFabricCapabilityCatalog();
   }
 
-  listBrokers: EventFabricBrokerRow[] {
-    return eventFabricBrokerCatalog;
+  listBrokers(): EventFabricBrokerRow[] {
+    return eventFabricBrokerCatalog();
   }
 }

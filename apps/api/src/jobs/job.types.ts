@@ -43,7 +43,7 @@ export type DocumentTranslateResult = {
 export const JOB_QUEUE_NAME = 'lugemi-jobs';
 
 /** Default 5 MiB upload cap. */
-export function documentMaxBytes: number {
+export function documentMaxBytes(): number {
   const raw = Number(process.env.DOCUMENT_MAX_BYTES ?? 5 * 1024 * 1024);
   return Number.isFinite(raw) && raw > 0 ? raw : 5 * 1024 * 1024;
 }

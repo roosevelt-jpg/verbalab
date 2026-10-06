@@ -6,16 +6,16 @@ import {
   TrustAnalyticsProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestTrustAnalyticsCatalogAdapter implements TrustAnalyticsCatalogPort {
   constructor(private readonly service: TrustAnalyticsService) {}
 
-  engine: TrustAnalyticsEngineBundle {
-    return this.service.engine;
+  engine(): TrustAnalyticsEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: TrustAnalyticsProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): TrustAnalyticsProductRow[] {
+    const bundle = this.engine() as {
       products?: TrustAnalyticsProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestTrustAnalyticsCatalogAdapter implements TrustAnalyticsCatalogPo
         status: 'shipped',
         api: 'GET /v1/trust-analytics/engine',
         console: '/trust-analytics',
-        notes: ' shipped.',
+        notes: 'VL-300 shipped.',
       },
     ];
   }

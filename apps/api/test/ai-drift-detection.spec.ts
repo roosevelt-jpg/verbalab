@@ -14,7 +14,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory) {
+    if (name.isDirectory()) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       out.push(...walkTsFiles(p));
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -24,28 +24,28 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('AI Drift Detection',  => {
+describe('AI Drift Detection (VL-288)', () => {
   let app: INestApplication<App>;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    }).compile();
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
   }, 120_000);
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('ships ADR and product doc',  => {
+  it('ships ADR and product doc', () => {
     expect(existsSync(join(root, 'docs/adr/0190-ai-drift-detection.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/AI_DRIFT_DETECTION.md'))).toBe(true);
   });
 
-  it('has no TODO/FIXME markers in hub source',  => {
+  it('has no TODO/FIXME markers in hub source', () => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     const dir = join(apiSrc, 'ai-drift-detection');
@@ -56,25 +56,25 @@ describe('AI Drift Detection',  => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes engine/products with honesty gates', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes engine/products with honesty gates', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/ai-drift-detection/engine')
       .expect(200);
-    expect(res.body.product).toBeTruthy;
+    expect(res.body.product).toBeTruthy();
 
     expect(res.body.honesty.usedAsContinuousLearningPromoteGate).toBe(true);
     expect(typeof res.body.driftClear).toBe('boolean');
   });
 
-  it('exposes monitoring', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes monitoring', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/ai-drift-detection/monitoring')
       .expect(200);
-    expect(res.body).toBeTruthy;
+    expect(res.body).toBeTruthy();
   });
 
-  it('exposes drift check API for Continuous Learning promote', async  => {
-    const res = await request(app.getHttpServer).get('/v1/ai-drift-detection/check').expect(200);
+  it('exposes drift check API for Continuous Learning promote', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/ai-drift-detection/check').expect(200);
     expect(typeof res.body.driftClear).toBe('boolean');
     expect(res.body.honesty.usedAsContinuousLearningPromoteGate).toBe(true);
   });

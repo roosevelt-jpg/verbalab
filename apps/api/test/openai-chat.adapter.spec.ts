@@ -2,12 +2,12 @@ import { describe, expect, it, vi } from 'vitest';
 import { OpenAiChatAdapter } from '../src/gateway/openai-chat.adapter';
 import { ApiException } from '../src/common/errors/api-exception';
 
-describe('OpenAiChatAdapter',  => {
-  it('parses OpenAI chat completion response', async  => {
-    const fetchImpl = vi.fn.mockResolvedValue({
+describe('OpenAiChatAdapter', () => {
+  it('parses OpenAI chat completion response', async () => {
+    const fetchImpl = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
-      json: async  => ({
+      json: async () => ({
         model: 'gpt-4o-mini',
         choices: [{ message: { role: 'assistant', content: 'Habari means hello.' } }],
         usage: { prompt_tokens: 10, completion_tokens: 5, total_tokens: 15 },
@@ -25,10 +25,10 @@ describe('OpenAiChatAdapter',  => {
     expect(result.message.content).toBe('Habari means hello.');
     expect(result.provider).toBe('openai_chat');
     expect(result.totalTokens).toBe(15);
-    expect(fetchImpl).toHaveBeenCalledOnce;
+    expect(fetchImpl).toHaveBeenCalledOnce();
   });
 
-  it('throws when API key is missing', async  => {
+  it('throws when API key is missing', async () => {
     const adapter = new OpenAiChatAdapter('');
     await expect(
       adapter.complete({ messages: [{ role: 'user', content: 'Hi' }] }),

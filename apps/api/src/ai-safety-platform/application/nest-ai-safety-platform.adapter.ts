@@ -6,16 +6,16 @@ import {
   AiSafetyPlatformProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestAiSafetyPlatformCatalogAdapter implements AiSafetyPlatformCatalogPort {
   constructor(private readonly service: AiSafetyPlatformService) {}
 
-  engine: AiSafetyPlatformEngineBundle {
-    return this.service.engine;
+  engine(): AiSafetyPlatformEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: AiSafetyPlatformProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): AiSafetyPlatformProductRow[] {
+    const bundle = this.engine() as {
       products?: AiSafetyPlatformProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestAiSafetyPlatformCatalogAdapter implements AiSafetyPlatformCatal
         status: 'shipped',
         api: 'GET /v1/ai-safety-platform/engine',
         console: '/ai-safety-platform',
-        notes: ' shipped.',
+        notes: 'VL-293 shipped.',
       },
     ];
   }

@@ -38,16 +38,16 @@ type Allocation = {
   status: string;
 };
 
-export function GpuPlatformClient {
-  const { getToken, isLoaded } = useAuth;
+export function GpuPlatformClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [pools, setPools] = useState<Pool[]>([]);
   const [allocations, setAllocations] = useState<Allocation[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const refresh = useCallback(async  => {
-    const token = await getToken;
+  const refresh = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, poolRes, allocRes] = await Promise.all([
       apiFetch<Engine>('/v1/gpu-platform/engine', { token }),
@@ -59,23 +59,23 @@ export function GpuPlatformClient {
     setAllocations(allocRes.allocations);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void refresh.catch((err: Error) => setError(err.message));
+    void refresh().catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
   const allocate = async (poolId: string) => {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       await apiFetch('/v1/gpu-platform/allocations', {
         token,
         method: 'POST',
         body: JSON.stringify({ poolId, instances: 1, purpose: 'console' }),
       });
-      await refresh;
+      await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Allocate failed');
     } finally {
@@ -132,7 +132,7 @@ export function GpuPlatformClient {
               <button
                 type="button"
                 disabled={busy}
-                onClick={ => void allocate(p.id)}
+                onClick={() => void allocate(p.id)}
                 style={{
                   marginLeft: '0.5rem',
                   border: '1px solid var(--border)',

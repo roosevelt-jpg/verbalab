@@ -17,30 +17,30 @@ export class ModelTrainingPlatformController {
   constructor(private readonly platform: ModelTrainingPlatformService) {}
 
   @Get('engine')
-  engine {
-    return this.platform.engine;
+  engine() {
+    return this.platform.engine();
   }
 
   @Get('methods')
-  methods {
-    return this.platform.methods;
+  methods() {
+    return this.platform.methods();
   }
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession session: SessionContext) {
+  overview(@CurrentSession() session: SessionContext) {
     return this.platform.overview(session);
   }
 
   @Get('experiments')
   @UseGuards(ClerkAuthGuard)
-  list(@CurrentSession session: SessionContext) {
+  list(@CurrentSession() session: SessionContext) {
     return this.platform.listExperiments(session);
   }
 
   @Get('experiments/:id')
   @UseGuards(ClerkAuthGuard)
-  get(@CurrentSession session: SessionContext, @Param('id') id: string) {
+  get(@CurrentSession() session: SessionContext, @Param('id') id: string) {
     return this.platform.getExperiment(session, id);
   }
 
@@ -48,8 +48,8 @@ export class ModelTrainingPlatformController {
   @UseGuards(ClerkAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   create(
-    @CurrentSession session: SessionContext,
-    @Body
+    @CurrentSession() session: SessionContext,
+    @Body()
     body: {
       method?: string;
       name?: string;
@@ -67,7 +67,7 @@ export class ModelTrainingPlatformController {
   @Post('experiments/:id/launch')
   @UseGuards(ClerkAuthGuard)
   @HttpCode(HttpStatus.OK)
-  launch(@CurrentSession session: SessionContext, @Param('id') id: string) {
+  launch(@CurrentSession() session: SessionContext, @Param('id') id: string) {
     return this.platform.launchExperiment(session, id);
   }
 
@@ -75,9 +75,9 @@ export class ModelTrainingPlatformController {
   @UseGuards(ClerkAuthGuard)
   @HttpCode(HttpStatus.OK)
   checkpoint(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Param('id') id: string,
-    @Body body: { index?: number; note?: string },
+    @Body() body: { index?: number; note?: string },
   ) {
     return this.platform.checkpointExperiment(session, id, body);
   }
@@ -85,13 +85,13 @@ export class ModelTrainingPlatformController {
   @Post('experiments/:id/cancel')
   @UseGuards(ClerkAuthGuard)
   @HttpCode(HttpStatus.OK)
-  cancel(@CurrentSession session: SessionContext, @Param('id') id: string) {
+  cancel(@CurrentSession() session: SessionContext, @Param('id') id: string) {
     return this.platform.cancelExperiment(session, id);
   }
 
   @Get('monitoring')
   @UseGuards(ClerkAuthGuard)
-  monitoring(@CurrentSession session: SessionContext) {
+  monitoring(@CurrentSession() session: SessionContext) {
     return this.platform.monitoring(session);
   }
 }

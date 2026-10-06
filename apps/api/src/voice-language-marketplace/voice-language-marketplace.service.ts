@@ -34,7 +34,7 @@ type VoiceLanguageSnapshot = {
   ratingCount: number;
 };
 
-@Injectable
+@Injectable()
 export class VoiceLanguageMarketplaceService {
   constructor(
     private readonly prisma: PrismaService,
@@ -43,8 +43,8 @@ export class VoiceLanguageMarketplaceService {
     private readonly fabricGate: FabricPolicyGate,
   ) {}
 
-  engine {
-    return voiceLanguageMarketplaceEngineCatalog;
+  engine() {
+    return voiceLanguageMarketplaceEngineCatalog();
   }
 
   private assertOwnerOrAdmin(role: string) {
@@ -82,7 +82,7 @@ export class VoiceLanguageMarketplaceService {
   }
 
   private parsePackType(raw?: string): VoiceLanguagePackType {
-    const value = (raw ?? '').trim.toLowerCase;
+    const value = (raw ?? '').trim().toLowerCase();
     if (!(VOICE_LANGUAGE_PACK_TYPES as readonly string[]).includes(value)) {
       throw new ApiException(
         'validation_error',
@@ -135,8 +135,8 @@ export class VoiceLanguageMarketplaceService {
       publisherOrgId: row.publisherOrgId,
       publisherWorkspaceId: row.publisherWorkspaceId,
       publisherName: row.publisherOrg?.name ?? null,
-      createdAt: row.createdAt.toISOString,
-      updatedAt: row.updatedAt.toISOString,
+      createdAt: row.createdAt.toISOString(),
+      updatedAt: row.updatedAt.toISOString(),
     };
   }
 
@@ -186,7 +186,7 @@ export class VoiceLanguageMarketplaceService {
         .map((r) => ({
           id: r.id,
           listingId: r.listingId,
-          installedAt: r.installedAt.toISOString,
+          installedAt: r.installedAt.toISOString(),
           listing: this.serialize(r.listing),
         })),
     };
@@ -211,7 +211,7 @@ export class VoiceLanguageMarketplaceService {
           applicationFeeCents: r.applicationFeeCents,
           currency: r.currency,
           status: r.status,
-          createdAt: r.createdAt.toISOString,
+          createdAt: r.createdAt.toISOString(),
         })),
       honesty: {
         platformFeeBps: PLATFORM_FEE_BPS,
@@ -221,7 +221,7 @@ export class VoiceLanguageMarketplaceService {
         celebrityWithoutRights: false,
         voiceCdnHosted: false,
       },
-      note: 'Recorded receipts only. Creator Economy expands payout math — hand-check before live creators.',
+      note: 'Recorded receipts only. Creator Economy (VL-258) expands payout math — hand-check before live creators.',
     };
   }
 
@@ -260,7 +260,7 @@ export class VoiceLanguageMarketplaceService {
       permissions: ['marketplace.publish'],
     });
 
-    const key = (input.packKey ?? '').trim.toLowerCase;
+    const key = (input.packKey ?? '').trim().toLowerCase();
     if (!key) {
       throw new ApiException('validation_error', 'packKey is required', HttpStatus.BAD_REQUEST);
     }
@@ -285,14 +285,14 @@ export class VoiceLanguageMarketplaceService {
       );
     }
 
-    const title = (input.title ?? catalogEntry.name).trim.slice(0, 120);
+    const title = (input.title ?? catalogEntry.name).trim().slice(0, 120);
     if (!title) {
       throw new ApiException('validation_error', 'title is required', HttpStatus.BAD_REQUEST);
     }
 
     const priceCents = Math.max(0, Math.floor(Number(input.priceCents ?? 0) || 0));
-    const currency = (input.currency ?? 'usd').trim.toLowerCase.slice(0, 8) || 'usd';
-    const packVersion = (input.packVersion ?? 'v1').trim.slice(0, 64) || 'v1';
+    const currency = (input.currency ?? 'usd').trim().toLowerCase().slice(0, 8) || 'usd';
+    const packVersion = (input.packVersion ?? 'v1').trim().slice(0, 64) || 'v1';
 
     const snapshot: VoiceLanguageSnapshot = {
       hub: HUB,
@@ -318,7 +318,7 @@ export class VoiceLanguageMarketplaceService {
         kind: LISTING_KIND,
         title,
         description:
-          input.description?.trim.slice(0, 500) ||
+          input.description?.trim().slice(0, 500) ||
           catalogEntry.notes ||
           `${catalogEntry.name} marketplace listing`,
         status: 'published',
@@ -349,9 +349,9 @@ export class VoiceLanguageMarketplaceService {
 
     return {
       listing: this.serialize(listing),
-      honesty: this.engine.honesty,
+      honesty: this.engine().honesty,
       note:
-        'Voice/language pack listing published as an entitlement SKU over Volume 1 surfaces. Install grants entitlement — not voice CDN hosting.',
+        'Voice/language pack listing published as an entitlement SKU over VL-177 + Volume 1 surfaces. Install grants entitlement — not voice CDN hosting.',
     };
   }
 
@@ -392,7 +392,7 @@ export class VoiceLanguageMarketplaceService {
     const next: VoiceLanguageSnapshot = {
       ...snap,
       packVersion:
-        (input.packVersion ?? snap.packVersion).trim.slice(0, 64) || snap.packVersion,
+        (input.packVersion ?? snap.packVersion).trim().slice(0, 64) || snap.packVersion,
       verified: true,
       voiceCdnHosted: false,
       celebrityWithoutRights: false,
@@ -404,7 +404,7 @@ export class VoiceLanguageMarketplaceService {
       where: { id: listing.id },
       data: {
         snapshot: next as unknown as Prisma.InputJsonValue,
-        description: input.description?.trim.slice(0, 500) ?? listing.description,
+        description: input.description?.trim().slice(0, 500) ?? listing.description,
         status: 'published',
       },
       include: { publisherOrg: { select: { name: true } } },
@@ -540,7 +540,7 @@ export class VoiceLanguageMarketplaceService {
         listingId: listing.id,
         packKey: snap.packKey,
         packVersion: snap.packVersion,
-        installedAt: install.installedAt.toISOString,
+        installedAt: install.installedAt.toISOString(),
       },
       entitlement: {
         workspaceId: input.workspaceId,
@@ -552,10 +552,10 @@ export class VoiceLanguageMarketplaceService {
         crossTenantCloneSynthesis: false,
         storesRawCardData: false,
         note:
-          'Pack entitlement only — voice synthesis stays on Voice Cloud paths; language packs extend Volume 1 surfaces.',
+          'Pack entitlement only — voice synthesis stays on VL-177 / Voice Cloud paths; language packs extend Volume 1 surfaces.',
       },
       sale,
-      honesty: this.engine.honesty,
+      honesty: this.engine().honesty,
       note: 'Installed voice/language pack entitlement. Not a third-party voice OS or voice CDN hosting.',
     };
   }
@@ -641,8 +641,8 @@ export class VoiceLanguageMarketplaceService {
       listingId: listing.id,
       organizationId: input.organizationId,
       rating,
-      body: input.body?.trim.slice(0, 1000) || undefined,
-      createdAt: new Date.toISOString,
+      body: input.body?.trim().slice(0, 1000) || undefined,
+      createdAt: new Date().toISOString(),
     };
 
     if (existing) {
@@ -750,19 +750,19 @@ export class VoiceLanguageMarketplaceService {
       installs,
       sales,
       reviews,
-      honesty: this.engine.honesty,
-      note: 'Voice & language marketplace aggregates. Payout depth deferred to Creator Economy.',
+      honesty: this.engine().honesty,
+      note: 'Voice & language marketplace aggregates. Payout depth deferred to Creator Economy (VL-258).',
     };
   }
 
-  monitoring {
-    const engine = this.engine;
+  monitoring() {
+    const engine = this.engine();
     return {
       mode: 'voice-language-marketplace',
       products: engine.capabilities.map((c) => ({ id: c.id, status: c.status })),
       honesty: engine.honesty,
       safety: engine.safety,
-      note: 'Voice & Language Marketplace monitoring snapshot.',
+      note: 'Voice & Language Marketplace monitoring snapshot (VL-257).',
     };
   }
 }

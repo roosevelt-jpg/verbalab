@@ -14,7 +14,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory) {
+    if (name.isDirectory()) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       out.push(...walkTsFiles(p));
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -24,28 +24,28 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('API Engineering Standards',  => {
+describe('API Engineering Standards (VL-350)', () => {
   let app: INestApplication<App>;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    }).compile();
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
   }, 120_000);
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('ships ADR and product doc',  => {
+  it('ships ADR and product doc', () => {
     expect(existsSync(join(root, 'docs/adr/0252-api-engineering-standards.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/API_ENGINEERING_STANDARDS.md'))).toBe(true);
   });
 
-  it('has no TODO/FIXME markers in hub source',  => {
+  it('has no TODO/FIXME markers in hub source', () => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     const dir = join(apiSrc, 'api-engineering-standards');
@@ -56,11 +56,11 @@ describe('API Engineering Standards',  => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes engine/products with honesty gates', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes engine/products with honesty gates', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/api-engineering-standards/engine')
       .expect(200);
-    expect(res.body.product).toBeTruthy;
+    expect(res.body.product).toBeTruthy();
     expect(res.body.honesty.reflectsExistingOpenApiSdk).toBe(true);
 
     expect(res.body.honesty.engineeringOsForHumansAndCursor).toBe(true);
@@ -75,7 +75,7 @@ describe('API Engineering Standards',  => {
     expect(JSON.stringify(res.body.routesTo)).toContain('developer-cloud');
     expect(JSON.stringify(res.body.routesTo)).toContain('developer-experience-platform');
 
-    const route = await request(app.getHttpServer)
+    const route = await request(app.getHttpServer())
       .get('/v1/api-engineering-standards/route')
       .expect(200);
     expect(route.body.engineeringOsForHumansAndCursor).toBe(true);
@@ -85,10 +85,10 @@ describe('API Engineering Standards',  => {
 
   });
 
-  it('exposes monitoring', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes monitoring', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/api-engineering-standards/monitoring')
       .expect(200);
-    expect(res.body).toBeTruthy;
+    expect(res.body).toBeTruthy();
   });
 });

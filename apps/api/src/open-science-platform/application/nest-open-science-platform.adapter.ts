@@ -6,16 +6,16 @@ import {
   OpenSciencePlatformProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestOpenSciencePlatformCatalogAdapter implements OpenSciencePlatformCatalogPort {
   constructor(private readonly service: OpenSciencePlatformService) {}
 
-  engine: OpenSciencePlatformEngineBundle {
-    return this.service.engine;
+  engine(): OpenSciencePlatformEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: OpenSciencePlatformProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): OpenSciencePlatformProductRow[] {
+    const bundle = this.engine() as {
       products?: OpenSciencePlatformProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestOpenSciencePlatformCatalogAdapter implements OpenSciencePlatfor
         status: 'shipped',
         api: 'GET /v1/open-science-platform/engine',
         console: '/open-science-platform',
-        notes: ' shipped.',
+        notes: 'VL-278 shipped.',
       },
     ];
   }

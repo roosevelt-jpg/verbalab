@@ -21,8 +21,8 @@ type RewriteResult = {
   note: string;
 };
 
-export function StyleClient {
-  const { getToken, isLoaded } = useAuth;
+export function StyleClient() {
+  const { getToken, isLoaded } = useAuth();
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [text, setText] = useState("I'm gonna really just finish this ASAP, yeah?");
   const [profile, setProfile] = useState('professional');
@@ -31,7 +31,7 @@ export function StyleClient {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const load = useCallback(async  => {
+  const load = useCallback(async () => {
     const res = await apiFetch<{ data: Profile[] }>('/v1/style/profiles');
     setProfiles(res.data);
     if (res.data[0] && !res.data.some((p) => p.id === profile)) {
@@ -39,20 +39,20 @@ export function StyleClient {
     }
   }, [profile]);
 
-  useEffect( => {
-    void load.catch((err: Error) => setError(err.message));
+  useEffect(() => {
+    void load().catch((err: Error) => setError(err.message));
   }, [load]);
 
   async function onRewrite(event: FormEvent) {
-    event.preventDefault;
+    event.preventDefault();
     setError(null);
     setBusy(true);
     setResult(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const body: { text: string; profile: string; language?: string } = { text, profile };
-      if (language.trim) body.language = language.trim;
+      if (language.trim()) body.language = language.trim();
       setResult(
         await apiFetch<RewriteResult>('/v1/style/rewrite', {
           method: 'POST',

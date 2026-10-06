@@ -6,18 +6,18 @@ export class OrganizationControlController {
   constructor(private readonly service: OrganizationControlService) {}
 
   @Get('engine')
-  engine {
-    return this.service.engine;
+  engine() {
+    return this.service.engine();
   }
 
   @Get('products')
-  products {
-    return this.service.engine;
+  products() {
+    return this.service.engine();
   }
 
   @Get('monitoring')
-  monitoring {
-    return this.service.monitoring;
+  monitoring() {
+    return this.service.monitoring();
   }
 
   @Get('organizations')
@@ -26,8 +26,8 @@ export class OrganizationControlController {
   }
 
   @Get('roles')
-  roles {
-    return this.service.roles;
+  roles() {
+    return this.service.roles();
   }
 
   @Get('query')

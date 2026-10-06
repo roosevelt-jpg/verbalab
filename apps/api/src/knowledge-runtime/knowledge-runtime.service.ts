@@ -2,30 +2,30 @@ import { Injectable } from '@nestjs/common';
 import { knowledgeRuntimeEngineCatalog } from './knowledge-runtime.catalog';
 import { KnowledgeCloudService } from '../knowledge-cloud/knowledge-cloud.service';
 
-@Injectable
+@Injectable()
 export class KnowledgeRuntimeService {
   constructor(
     private readonly knowledgeCloud: KnowledgeCloudService
   ) {}
 
-  engine {
-    return knowledgeRuntimeEngineCatalog;
+  engine() {
+    return knowledgeRuntimeEngineCatalog();
   }
 
   /** Route/execute façade: returns upstream endpoint + live status from injected product services. */
   route(capability?: string) {
-    const catalog = this.engine;
-    const q = (capability ?? '').trim.toLowerCase;
+    const catalog = this.engine();
+    const q = (capability ?? '').trim().toLowerCase();
     const capabilities = catalog.capabilities.filter((c) => {
       if (!q) return true;
-      return c.id.includes(q) || c.name.toLowerCase.includes(q);
+      return c.id.includes(q) || c.name.toLowerCase().includes(q);
     });
     const upstreamStatus = [
       {
         module: 'knowledge-cloud',
         method: 'products',
         status: 'reachable',
-        upstream: this.knowledgeCloud.products,
+        upstream: this.knowledgeCloud.products(),
       }
     ];
     return {
@@ -47,11 +47,11 @@ export class KnowledgeRuntimeService {
   }
 
   list(query?: string) {
-    const catalog = this.engine;
-    const q = (query ?? '').trim.toLowerCase;
+    const catalog = this.engine();
+    const q = (query ?? '').trim().toLowerCase();
     const rows = catalog.routes.filter((row) => {
       if (!q) return true;
-      return JSON.stringify(row).toLowerCase.includes(q);
+      return JSON.stringify(row).toLowerCase().includes(q);
     });
     return {
       routes: rows,
@@ -68,8 +68,8 @@ export class KnowledgeRuntimeService {
     return this.list(query);
   }
 
-  monitoring {
-    const catalog = this.engine;
+  monitoring() {
+    const catalog = this.engine();
     return {
       mode: 'knowledge-runtime',
       count: catalog.routes.length,
@@ -77,7 +77,7 @@ export class KnowledgeRuntimeService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'KnowledgeRuntime monitoring snapshot.',
+      note: 'KnowledgeRuntime monitoring snapshot (VL-329).',
     };
   }
 }

@@ -27,20 +27,20 @@ type Overview = {
   links: Record<string, string>;
 };
 
-export function DevelopersClient {
-  const { getToken, isLoaded } = useAuth;
+export function DevelopersClient() {
+  const { getToken, isLoaded } = useAuth();
   const [data, setData] = useState<Overview | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async  => {
-    const token = await getToken;
+  const load = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     setData(await apiFetch<Overview>('/v1/developer/overview', { token }));
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void load.catch((err: Error) => setError(err.message));
+    void load().catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
   return (
@@ -78,8 +78,8 @@ export function DevelopersClient {
               {data.organization.name}
             </p>
             <p style={{ margin: '0.25rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
-              Plan {data.billing.planName} · {data.billing.charactersUsed.toLocaleString} /{' '}
-              {data.billing.characterQuota.toLocaleString} characters · {data.usage.requests} translate requests
+              Plan {data.billing.planName} · {data.billing.charactersUsed.toLocaleString()} /{' '}
+              {data.billing.characterQuota.toLocaleString()} characters · {data.usage.requests} translate requests
             </p>
           </section>
 

@@ -28,14 +28,14 @@ export class AccentsController {
   constructor(private readonly accents: AccentsService) {}
 
   @Get('engine')
-  engine {
-    return this.accents.engine;
+  engine() {
+    return this.accents.engine();
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
   analytics(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
     },
@@ -43,9 +43,9 @@ export class AccentsController {
     return this.accents.analytics(req.translateAuth.organizationId);
   }
 
-  @Get
+  @Get()
   list(@Query('language') language?: string) {
-    return this.accents.list(language?.trim || undefined);
+    return this.accents.list(language?.trim() || undefined);
   }
 
   @Post('detect')
@@ -53,21 +53,21 @@ export class AccentsController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage,
-      limits: { fileSize: audioMaxBytes },
+      storage: memoryStorage(),
+      limits: { fileSize: audioMaxBytes() },
     }),
   )
   detect(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @UploadedFile file: Express.Multer.File | undefined,
-    @Body body: { text?: string; language?: string },
+    @UploadedFile() file: Express.Multer.File | undefined,
+    @Body() body: { text?: string; language?: string },
   ) {
     const text = typeof body.text === 'string' ? body.text : undefined;
-    if ((!text || text.trim.length === 0) && !file) {
+    if ((!text || text.trim().length === 0) && !file) {
       throw new ApiException(
         'validation_error',
         'text or file is required',
@@ -91,21 +91,21 @@ export class AccentsController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage,
-      limits: { fileSize: audioMaxBytes },
+      storage: memoryStorage(),
+      limits: { fileSize: audioMaxBytes() },
     }),
   )
   classify(
-    @Req
+    @Req()
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @UploadedFile file: Express.Multer.File | undefined,
-    @Body body: { text?: string; language?: string },
+    @UploadedFile() file: Express.Multer.File | undefined,
+    @Body() body: { text?: string; language?: string },
   ) {
     const text = typeof body.text === 'string' ? body.text : undefined;
-    if ((!text || text.trim.length === 0) && !file) {
+    if ((!text || text.trim().length === 0) && !file) {
       throw new ApiException(
         'validation_error',
         'text or file is required',

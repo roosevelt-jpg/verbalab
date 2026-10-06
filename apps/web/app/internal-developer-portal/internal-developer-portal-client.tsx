@@ -11,11 +11,11 @@ type Engine = {
   safety?: { note?: string } & Record<string, unknown>;
 };
 
-export function InternalDeveloperPortalClient {
+export function InternalDeveloperPortalClient() {
   const [data, setData] = useState<Engine | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect( => {
+  useEffect(() => {
     void apiFetch<Engine>('/v1/internal-developer-portal/engine')
       .then(setData)
       .catch((err: Error) => setError(err.message));

@@ -6,13 +6,13 @@ import {
   GqlEmotionVoiceProfile,
 } from './gql.types';
 
-@Resolver
+@Resolver()
 export class EmotionVoiceGraphqlResolver {
   constructor(private readonly emotionVoice: EmotionVoiceService) {}
 
-  @Query( => GqlEmotionVoiceEngine, { name: 'emotionVoiceEngine' })
-  emotionVoiceEngine: GqlEmotionVoiceEngine {
-    const catalog = this.emotionVoice.engine;
+  @Query(() => GqlEmotionVoiceEngine, { name: 'emotionVoiceEngine' })
+  emotionVoiceEngine(): GqlEmotionVoiceEngine {
+    const catalog = this.emotionVoice.engine();
     return {
       product: catalog.product,
       note: catalog.note,
@@ -21,9 +21,9 @@ export class EmotionVoiceGraphqlResolver {
     };
   }
 
-  @Query( => [GqlEmotionVoiceProfile], { name: 'emotionVoiceProfiles' })
-  emotionVoiceProfiles: GqlEmotionVoiceProfile[] {
-    return this.emotionVoice.profiles.profiles.map((p) => ({
+  @Query(() => [GqlEmotionVoiceProfile], { name: 'emotionVoiceProfiles' })
+  emotionVoiceProfiles(): GqlEmotionVoiceProfile[] {
+    return this.emotionVoice.profiles().profiles.map((p) => ({
       id: p.id,
       name: p.name,
       category: p.category,

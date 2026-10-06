@@ -24,7 +24,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_ent_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_ent_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -38,29 +38,29 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Enterprise Cloud Foundation',  => {
+describe('Enterprise Cloud Foundation (VL-128)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let enterprise: EnterpriseCloudService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     enterprise = app.get(EnterpriseCloudService);
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('documents Enterprise Cloud mapping (no policy engine / cert product)',  => {
+  it('documents Enterprise Cloud mapping (no policy engine / cert product)', () => {
     const doc = join(root, 'docs/ENTERPRISE_CLOUD.md');
     const adr = join(root, 'docs/adr/0049-enterprise-cloud-foundation.md');
     expect(existsSync(doc)).toBe(true);
@@ -72,8 +72,8 @@ describe('Enterprise Cloud Foundation',  => {
     expect(text).toContain('Tenant Isolation');
   });
 
-  it('returns derived policies and overview', async  => {
-    const org = await seedOrg(prisma, `ent_${Date.now}`);
+  it('returns derived policies and overview', async () => {
+    const org = await seedOrg(prisma, `ent_${Date.now()}`);
     const policies = await enterprise.policies(org.id);
     expect(policies.organization.security.tenantIsolation).toBe(true);
     expect(policies.organization.security.abac).toBe(false);
@@ -98,8 +98,8 @@ describe('Enterprise Cloud Foundation',  => {
     expect(overview.links.data).toBe('/data');
   });
 
-  it('surfaces vendor policy for audit from org settings', async  => {
-    const org = await seedOrg(prisma, `ent_vp_${Date.now}`);
+  it('surfaces vendor policy for audit from org settings', async () => {
+    const org = await seedOrg(prisma, `ent_vp_${Date.now()}`);
     await prisma.organization.update({
       where: { id: org.id },
       data: { allowVendorTraining: true, persistSourceText: false },

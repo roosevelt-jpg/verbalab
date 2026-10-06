@@ -3,7 +3,7 @@ import { MembershipRole } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { SessionContext } from '../common/guards/clerk-auth.guard';
 
-@Injectable
+@Injectable()
 export class IdentityCloudService {
   constructor(private readonly prisma: PrismaService) {}
 
@@ -81,7 +81,7 @@ export class IdentityCloudService {
       teams: {
         supported: false,
         useInstead: 'workspaces',
-        note: 'No Team entity — project isolation is workspaces.',
+        note: 'No Team entity — project isolation is workspaces (VL-012/125).',
       },
       provider: {
         humanIdp: 'clerk',

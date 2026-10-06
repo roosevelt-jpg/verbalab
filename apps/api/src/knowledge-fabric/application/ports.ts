@@ -1,4 +1,4 @@
-/** Application ports for Knowledge Fabric. */
+/** Application ports for Knowledge Fabric (VL-242). */
 
 export type KnowledgeFabricCapabilityRow = {
   id: string;
@@ -22,9 +22,9 @@ export type KnowledgeFabricProductsBundle = ReturnType<
 >;
 
 export interface KnowledgeFabricCatalogPort {
-  products: KnowledgeFabricProductsBundle;
-  listCapabilities: KnowledgeFabricCapabilityRow[];
-  listRoutes: KnowledgeFabricRouteRow[];
+  products(): KnowledgeFabricProductsBundle;
+  listCapabilities(): KnowledgeFabricCapabilityRow[];
+  listRoutes(): KnowledgeFabricRouteRow[];
 }
 
 export const KNOWLEDGE_FABRIC_CATALOG_PORT = Symbol('KNOWLEDGE_FABRIC_CATALOG_PORT');

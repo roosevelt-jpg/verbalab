@@ -8,7 +8,7 @@ export type LanguageSeed = {
   tier: 'vendor' | 'strategic_african';
 };
 
-/** ISO 639-1 / BCP-47 subset + curated African set. */
+/** ISO 639-1 / BCP-47 subset + curated African set (VL-020 / VL-139). */
 export const LANGUAGE_SEEDS: LanguageSeed[] = [
   { code: 'en', nameEn: 'English', nameNative: 'English', script: 'Latn', familyCode: 'indo_european', tier: 'vendor' },
   { code: 'fr', nameEn: 'French', nameNative: 'Français', script: 'Latn', familyCode: 'indo_european', tier: 'vendor' },

@@ -8,28 +8,28 @@ export class TrustCloudController {
   constructor(private readonly trust: TrustCloudService) {}
 
   @Get('products')
-  products {
-    return this.trust.products;
+  products() {
+    return this.trust.products();
   }
 
   @Get('engine')
-  engine {
-    return this.trust.products;
+  engine() {
+    return this.trust.products();
   }
 
   @Get('routing')
-  routing {
-    return this.trust.routing;
+  routing() {
+    return this.trust.routing();
   }
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession session: SessionContext) {
+  overview(@CurrentSession() session: SessionContext) {
     return this.trust.overview(session);
   }
 
   @Get('monitoring')
-  monitoring {
-    return this.trust.monitoring;
+  monitoring() {
+    return this.trust.monitoring();
   }
 }

@@ -1,5 +1,5 @@
 /**
- * Library Phase 163 → Privacy Platform.
+ * Library Phase 163 → Privacy Platform (VL-296).
  * Enforces Volume 12 traditional knowledge consent fields.
  */
 export type ConsentStatus = 'attested' | 'restricted' | 'unverified';
@@ -14,7 +14,7 @@ export type PrivacyAsset = {
   notes: string;
 };
 
-export function seedPrivacyAssets: PrivacyAsset[] {
+export function seedPrivacyAssets(): PrivacyAsset[] {
   return [
     {
       id: 'priv-tk-ok',
@@ -102,8 +102,8 @@ export function evaluatePrivacyRelease(asset: PrivacyAsset): {
   };
 }
 
-export function privacyPlatformEngineCatalog {
-  const assets = seedPrivacyAssets;
+export function privacyPlatformEngineCatalog() {
+  const assets = seedPrivacyAssets();
   return {
     product: 'Lugemi Privacy Platform',
     capabilities: [
@@ -139,6 +139,6 @@ export function privacyPlatformEngineCatalog {
         'Before release of traditional knowledge, require Volume 12 consent fields. Block when consentStatus is restricted or unverified. Integrates with cultural consent concepts.',
     },
     docs: '/docs/PRIVACY_PLATFORM.md',
-    note: 'Privacy Platform. Detection/redaction + Volume 12 TK consent enforcement.',
+    note: 'Privacy Platform (VL-296). Detection/redaction + Volume 12 TK consent enforcement.',
   };
 }

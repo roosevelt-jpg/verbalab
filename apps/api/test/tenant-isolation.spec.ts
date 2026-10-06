@@ -24,7 +24,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_sec_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_sec_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -39,8 +39,8 @@ async function seedOrg(prisma: PrismaService, name: string) {
 }
 
 async function waitForJob(jobs: JobsService, organizationId: string, jobId: string) {
-  const start = Date.now;
-  while (Date.now - start < 5000) {
+  const start = Date.now();
+  while (Date.now() - start < 5000) {
     const job = await jobs.get(organizationId, jobId);
     if (job.status === 'succeeded' || job.status === 'failed') return job;
     await new Promise((r) => setTimeout(r, 25));
@@ -48,25 +48,25 @@ async function waitForJob(jobs: JobsService, organizationId: string, jobId: stri
   throw new Error(`Job ${jobId} timed out`);
 }
 
-describe('Security baseline',  => {
+describe('Security baseline (VL-072)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let jobs: JobsService;
   let storageDir: string;
 
-  beforeAll(async  => {
-    storageDir = await mkdtemp(join(tmpdir, 'lugemi-sec-'));
+  beforeAll(async () => {
+    storageDir = await mkdtemp(join(tmpdir(), 'lugemi-sec-'));
     process.env.DOCUMENT_STORAGE_DIR = storageDir;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
+    app = moduleFixture.createNestApplication();
     applyHttpSecurity(app);
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -104,26 +104,26 @@ describe('Security baseline',  => {
     });
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
     await rm(storageDir, { recursive: true, force: true });
   });
 
-  it('sets security headers on responses', async  => {
-    const res = await request(app.getHttpServer).get('/health').expect(200);
+  it('sets security headers on responses', async () => {
+    const res = await request(app.getHttpServer()).get('/health').expect(200);
     expect(res.headers['x-content-type-options']).toBe('nosniff');
-    expect(res.headers['x-frame-options']?.toLowerCase).toMatch(/deny|sameorigin/);
+    expect(res.headers['x-frame-options']?.toLowerCase()).toMatch(/deny|sameorigin/);
   });
 
-  it('hashes API keys (SHA-256) and never stores the secret',  => {
-    const generated = generateApiKeySecret;
+  it('hashes API keys (SHA-256) and never stores the secret', () => {
+    const generated = generateApiKeySecret();
     expect(looksLikeApiKey(generated.secret)).toBe(true);
     expect(generated.hash).toBe(hashApiKey(generated.secret));
     expect(generated.hash).toHaveLength(64);
     expect(generated.hash).not.toContain(generated.secret);
   });
 
-  it('org B cannot read org A jobs by id', async  => {
+  it('org B cannot read org A jobs by id', async () => {
     const orgA = await seedOrg(prisma, 'isoA');
     const orgB = await seedOrg(prisma, 'isoB');
     const keyA = await apiKeys.create({
@@ -139,7 +139,7 @@ describe('Security baseline',  => {
       name: 'b-key',
     });
 
-    const created = await request(app.getHttpServer)
+    const created = await request(app.getHttpServer())
       .post('/v1/jobs')
       .set('Authorization', `Bearer ${keyA.secret}`)
       .send({
@@ -150,18 +150,18 @@ describe('Security baseline',  => {
 
     await waitForJob(jobs, orgA.id, created.body.id);
 
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .get(`/v1/jobs/${created.body.id}`)
       .set('Authorization', `Bearer ${keyB.secret}`)
       .expect(404);
 
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .get(`/v1/jobs/${created.body.id}`)
       .set('Authorization', `Bearer ${keyA.secret}`)
       .expect(200);
   });
 
-  it('org B cannot read or delete org A knowledge documents', async  => {
+  it('org B cannot read or delete org A knowledge documents', async () => {
     const orgA = await seedOrg(prisma, 'knowA');
     const orgB = await seedOrg(prisma, 'knowB');
     const keyA = await apiKeys.create({
@@ -177,30 +177,30 @@ describe('Security baseline',  => {
       name: 'know-b',
     });
 
-    const upload = await request(app.getHttpServer)
+    const upload = await request(app.getHttpServer())
       .post('/v1/knowledge/documents')
       .set('Authorization', `Bearer ${keyA.secret}`)
       .attach('file', Buffer.from('Confidential tenant A document.'), 'a.txt')
       .expect(201);
 
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .get(`/v1/knowledge/documents/${upload.body.id}`)
       .set('Authorization', `Bearer ${keyB.secret}`)
       .expect(404);
 
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .delete(`/v1/knowledge/documents/${upload.body.id}`)
       .set('Authorization', `Bearer ${keyB.secret}`)
       .expect(404);
 
-    const listB = await request(app.getHttpServer)
+    const listB = await request(app.getHttpServer())
       .get('/v1/knowledge/documents')
       .set('Authorization', `Bearer ${keyB.secret}`)
       .expect(200);
     expect(listB.body.data.some((d: { id: string }) => d.id === upload.body.id)).toBe(false);
   });
 
-  it('org B cannot revoke org A API keys', async  => {
+  it('org B cannot revoke org A API keys', async () => {
     const orgA = await seedOrg(prisma, 'keyA');
     const orgB = await seedOrg(prisma, 'keyB');
     const keyA = await apiKeys.create({

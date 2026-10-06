@@ -23,8 +23,8 @@ type DetectResult = {
   note: string;
 };
 
-export function DialectsClient {
-  const { getToken, isLoaded } = useAuth;
+export function DialectsClient() {
+  const { getToken, isLoaded } = useAuth();
   const [dialects, setDialects] = useState<DialectRow[]>([]);
   const [text, setText] = useState('Sasa bro, uko aje? Poa sana.');
   const [language, setLanguage] = useState('');
@@ -32,25 +32,25 @@ export function DialectsClient {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const load = useCallback(async  => {
+  const load = useCallback(async () => {
     const res = await apiFetch<{ data: DialectRow[] }>('/v1/dialects');
     setDialects(res.data);
   }, []);
 
-  useEffect( => {
-    void load.catch((err: Error) => setError(err.message));
+  useEffect(() => {
+    void load().catch((err: Error) => setError(err.message));
   }, [load]);
 
   async function onDetect(event: FormEvent) {
-    event.preventDefault;
+    event.preventDefault();
     setError(null);
     setBusy(true);
     setResult(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const body: { text: string; language?: string } = { text };
-      if (language.trim) body.language = language.trim;
+      if (language.trim()) body.language = language.trim();
       const res = await apiFetch<DetectResult>('/v1/dialects/detect', {
         method: 'POST',
         token,

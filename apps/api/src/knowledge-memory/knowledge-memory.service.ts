@@ -26,7 +26,7 @@ type EvolutionEntry = {
   at: string;
 };
 
-@Injectable
+@Injectable()
 export class KnowledgeMemoryService {
   constructor(
     private readonly prisma: PrismaService,
@@ -34,11 +34,11 @@ export class KnowledgeMemoryService {
     private readonly audit: AuditService,
   ) {}
 
-  engine {
-    return knowledgeMemoryCatalog;
+  engine() {
+    return knowledgeMemoryCatalog();
   }
 
-  scopes {
+  scopes() {
     return {
       scopes: KNOWLEDGE_MEMORY_SCOPES.map((id) => ({
         id,
@@ -50,7 +50,7 @@ export class KnowledgeMemoryService {
               : `memory-cloud scope=${id}`,
       })),
       layer: KNOWLEDGE_MEMORY_LAYER,
-      note: 'Knowledge Memory scopes map onto Memory Cloud storage.',
+      note: 'Knowledge Memory scopes (VL-199) map onto VL-183 Memory Cloud storage.',
     };
   }
 
@@ -156,9 +156,9 @@ export class KnowledgeMemoryService {
       version: row.version,
       evolutionCount: Array.isArray(meta.evolution) ? meta.evolution.length : 0,
       metadata: meta,
-      expiresAt: row.expiresAt?.toISOString ?? null,
-      createdAt: row.createdAt.toISOString,
-      updatedAt: row.updatedAt.toISOString,
+      expiresAt: row.expiresAt?.toISOString() ?? null,
+      createdAt: row.createdAt.toISOString(),
+      updatedAt: row.updatedAt.toISOString(),
       layer: KNOWLEDGE_MEMORY_LAYER,
     };
   }
@@ -195,12 +195,12 @@ export class KnowledgeMemoryService {
   ) {
     const kmScope = this.assertScope(input.scope ?? 'workspace');
     const mapped = this.mapScope(kmScope);
-    const content = input.content?.trim;
+    const content = input.content?.trim();
     if (!content) {
       throw new ApiException('validation_error', 'content is required', HttpStatus.BAD_REQUEST);
     }
 
-    const subjectUserId = input.subjectUserId?.trim || input.userId;
+    const subjectUserId = input.subjectUserId?.trim() || input.userId;
     if (mapped.requireSubject && !subjectUserId) {
       throw new ApiException(
         'validation_error',
@@ -208,7 +208,7 @@ export class KnowledgeMemoryService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    if (mapped.requireConversation && !input.conversationId?.trim) {
+    if (mapped.requireConversation && !input.conversationId?.trim()) {
       throw new ApiException(
         'validation_error',
         'conversationId is required for scope=conversation',
@@ -217,10 +217,10 @@ export class KnowledgeMemoryService {
     }
 
     let documentId: string | undefined;
-    if (input.documentId?.trim) {
+    if (input.documentId?.trim()) {
       const doc = await this.prisma.knowledgeDocument.findFirst({
         where: {
-          id: input.documentId.trim,
+          id: input.documentId.trim(),
           organizationId: input.organizationId,
           workspaceId: input.workspaceId,
         },
@@ -236,7 +236,7 @@ export class KnowledgeMemoryService {
     }
 
     const memoryScope =
-      mapped.preferAgent && input.agentId?.trim ? 'agent' : mapped.memoryScope;
+      mapped.preferAgent && input.agentId?.trim() ? 'agent' : mapped.memoryScope;
 
     const metadata: Record<string, unknown> = {
       ...(input.metadata ?? {}),
@@ -253,9 +253,9 @@ export class KnowledgeMemoryService {
       userId: input.userId,
       ip: input.ip,
       scope: memoryScope,
-      kind: input.kind?.trim || 'long_term',
+      kind: input.kind?.trim() || 'long_term',
       content,
-      key: input.key?.trim || undefined,
+      key: input.key?.trim() || undefined,
       subjectUserId,
       agentId: input.agentId,
       conversationId: input.conversationId,
@@ -296,7 +296,7 @@ export class KnowledgeMemoryService {
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
         deletedAt: null,
-        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date } }],
+        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
         ...(input.subjectUserId ? { subjectUserId: input.subjectUserId } : {}),
         ...(input.conversationId ? { conversationId: input.conversationId } : {}),
       },
@@ -327,7 +327,7 @@ export class KnowledgeMemoryService {
   async evolve(
     input: AuthCtx & { id: string; content?: string; reason?: string },
   ) {
-    const content = input.content?.trim;
+    const content = input.content?.trim();
     if (!content) {
       throw new ApiException('validation_error', 'content is required', HttpStatus.BAD_REQUEST);
     }
@@ -339,8 +339,8 @@ export class KnowledgeMemoryService {
     const entry: EvolutionEntry = {
       version: existing.version,
       content: existing.content,
-      reason: input.reason?.trim || 'evolve',
-      at: new Date.toISOString,
+      reason: input.reason?.trim() || 'evolve',
+      at: new Date().toISOString(),
     };
     const nextMeta = {
       ...meta,
@@ -393,7 +393,7 @@ export class KnowledgeMemoryService {
   async search(
     input: AuthCtx & { query?: string; scope?: string; documentId?: string; limit?: number },
   ) {
-    const query = input.query?.trim;
+    const query = input.query?.trim();
     if (!query) {
       throw new ApiException('validation_error', 'query is required', HttpStatus.BAD_REQUEST);
     }
@@ -403,7 +403,7 @@ export class KnowledgeMemoryService {
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
         deletedAt: null,
-        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date } }],
+        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
         content: { contains: query, mode: 'insensitive' },
       },
       orderBy: { updatedAt: 'desc' },
@@ -432,7 +432,7 @@ export class KnowledgeMemoryService {
       query,
       hits: hits.slice(0, take).map((r) => this.present(r)),
       note: 'Text contains search over knowledge-layer memories. Vector NN deferred.',
-      honesty: this.engine.honesty,
+      honesty: this.engine().honesty,
     };
   }
 
@@ -442,13 +442,13 @@ export class KnowledgeMemoryService {
         organizationId,
         workspaceId,
         deletedAt: null,
-        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date } }],
+        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
       },
       select: { metadata: true, version: true },
       take: 500,
     });
     const knowledge = rows.filter((r) => this.isKnowledgeLayer(r));
-    const byScope = new Map<string, number>;
+    const byScope = new Map<string, number>();
     let withDocument = 0;
     let evolved = 0;
     for (const r of knowledge) {
@@ -463,13 +463,13 @@ export class KnowledgeMemoryService {
       active: knowledge.length,
       withDocument,
       evolved,
-      byScope: [...byScope.entries].map(([scope, count]) => ({ scope, count })),
-      note: 'Workspace-scoped Knowledge Memory analytics.',
+      byScope: [...byScope.entries()].map(([scope, count]) => ({ scope, count })),
+      note: 'Workspace-scoped Knowledge Memory analytics (VL-199).',
     };
   }
 
   async monitoring(organizationId: string, workspaceId: string) {
-    const engine = this.engine;
+    const engine = this.engine();
     const analytics = await this.analytics(organizationId, workspaceId);
     return {
       ...analytics,

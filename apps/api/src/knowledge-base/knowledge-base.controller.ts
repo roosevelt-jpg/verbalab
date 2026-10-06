@@ -26,18 +26,18 @@ export class KnowledgeBaseController {
   constructor(private readonly knowledgeBase: KnowledgeBaseService) {}
 
   @Get('engine')
-  engine {
-    return this.knowledgeBase.engine;
+  engine() {
+    return this.knowledgeBase.engine();
   }
 
   @Get('content-kinds')
-  contentKinds {
-    return this.knowledgeBase.contentKinds;
+  contentKinds() {
+    return this.knowledgeBase.contentKinds();
   }
 
   @Get('collections')
   @UseGuards(TranslateAuthGuard)
-  collections(@Req req: AuthedReq) {
+  collections(@Req() req: AuthedReq) {
     return this.knowledgeBase.collections(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -46,7 +46,7 @@ export class KnowledgeBaseController {
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req req: AuthedReq) {
+  analytics(@Req() req: AuthedReq) {
     return this.knowledgeBase.analytics(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -55,7 +55,7 @@ export class KnowledgeBaseController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req req: AuthedReq) {
+  monitoring(@Req() req: AuthedReq) {
     return this.knowledgeBase.monitoring(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -65,7 +65,7 @@ export class KnowledgeBaseController {
   @Get('documents')
   @UseGuards(TranslateAuthGuard)
   list(
-    @Req req: AuthedReq,
+    @Req() req: AuthedReq,
     @Query('collection') collection?: string,
     @Query('tag') tag?: string,
     @Query('contentKind') contentKind?: string,
@@ -79,7 +79,7 @@ export class KnowledgeBaseController {
 
   @Get('documents/:id')
   @UseGuards(TranslateAuthGuard)
-  get(@Req req: AuthedReq, @Param('id') id: string) {
+  get(@Req() req: AuthedReq, @Param('id') id: string) {
     return this.knowledgeBase.getDocument(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -91,9 +91,9 @@ export class KnowledgeBaseController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   reviseMeta(
-    @Req req: AuthedReq,
+    @Req() req: AuthedReq,
     @Param('id') id: string,
-    @Body
+    @Body()
     body: { collection?: string; tags?: string[]; contentKind?: string },
   ) {
     return this.knowledgeBase.reviseMeta({

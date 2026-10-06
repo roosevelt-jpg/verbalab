@@ -10,7 +10,7 @@ import {
   type ModelFeature,
 } from './model-registry.seeds';
 
-@Injectable
+@Injectable()
 export class ModelsService implements OnModuleInit {
   private readonly logger = new Logger(ModelsService.name);
   private seeded = false;
@@ -20,11 +20,11 @@ export class ModelsService implements OnModuleInit {
     private readonly audit: AuditService,
   ) {}
 
-  async onModuleInit {
-    await this.ensureVendorDefaults;
+  async onModuleInit() {
+    await this.ensureVendorDefaults();
   }
 
-  async ensureVendorDefaults {
+  async ensureVendorDefaults() {
     for (const seed of VENDOR_MODEL_SEEDS) {
       const kind = seed.kind ?? 'vendor';
       await this.prisma.modelRegistryEntry.upsert({
@@ -77,8 +77,8 @@ export class ModelsService implements OnModuleInit {
   }
 
   /** Live matrix: ready models per feature + credential configured flags. */
-  async liveMatrix {
-    if (!this.seeded) await this.ensureVendorDefaults;
+  async liveMatrix() {
+    if (!this.seeded) await this.ensureVendorDefaults();
 
     const ready = await this.prisma.modelRegistryEntry.findMany({
       where: { status: 'ready' },
@@ -119,7 +119,7 @@ export class ModelsService implements OnModuleInit {
     });
 
     return {
-      asOf: new Date.toISOString,
+      asOf: new Date().toISOString(),
       disclaimer:
         'Lugemi Language Intelligence models are first-party. Vendor adapters remain as optional fallbacks. This registry is not MLflow.',
       features: byFeature,
@@ -135,7 +135,7 @@ export class ModelsService implements OnModuleInit {
     ip?: string;
   }) {
     const row = await this.get(input.idOrSlug);
-    const url = input.externalUrl?.trim || null;
+    const url = input.externalUrl?.trim() || null;
     if (url && !/^https?:\/\//i.test(url)) {
       throw new ApiException(
         'validation_error',

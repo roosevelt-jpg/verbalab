@@ -14,12 +14,12 @@ export type OpenReleaseCandidate = {
 };
 
 /**
- * Library Phase 145 → Open Science Platform.
+ * Library Phase 145 → Open Science Platform (VL-278).
  * traditionalKnowledgeConsentRequired=true.
  * Before open release of traditional knowledge, require Volume 12 consent fields
  * (provenance, sourceCommunity, consentStatus). Block restricted/unverified.
  */
-export function openSciencePlatformEngineCatalog {
+export function openSciencePlatformEngineCatalog() {
   const candidates: OpenReleaseCandidate[] = [
     {
       id: 'os-model-001',
@@ -85,7 +85,7 @@ export function openSciencePlatformEngineCatalog {
   return {
     product: 'Lugemi Open Science Platform',
     note:
-      'Open Science Platform. Open models/datasets/benchmarks/APIs/collaborations with traditional-knowledge consent gate. traditionalKnowledgeConsentRequired=true.',
+      'Open Science Platform (VL-278). Open models/datasets/benchmarks/APIs/collaborations with traditional-knowledge consent gate. traditionalKnowledgeConsentRequired=true.',
     candidates,
     capabilities: [
       { id: 'open-models', name: 'Open models', status: 'shipped' as OpenScienceStatus, api: 'GET /v1/open-science-platform/releases', notes: 'Model release candidates.' },

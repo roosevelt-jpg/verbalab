@@ -17,30 +17,30 @@ export class ModelEvaluationPlatformController {
   constructor(private readonly platform: ModelEvaluationPlatformService) {}
 
   @Get('engine')
-  engine {
-    return this.platform.engine;
+  engine() {
+    return this.platform.engine();
   }
 
   @Get('suites')
-  suites {
-    return this.platform.suites;
+  suites() {
+    return this.platform.suites();
   }
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession session: SessionContext) {
+  overview(@CurrentSession() session: SessionContext) {
     return this.platform.overview(session);
   }
 
   @Get('runs')
   @UseGuards(ClerkAuthGuard)
-  list(@CurrentSession session: SessionContext) {
+  list(@CurrentSession() session: SessionContext) {
     return this.platform.listRuns(session);
   }
 
   @Get('runs/:id')
   @UseGuards(ClerkAuthGuard)
-  get(@CurrentSession session: SessionContext, @Param('id') id: string) {
+  get(@CurrentSession() session: SessionContext, @Param('id') id: string) {
     return this.platform.getRun(session, id);
   }
 
@@ -48,8 +48,8 @@ export class ModelEvaluationPlatformController {
   @UseGuards(ClerkAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   create(
-    @CurrentSession session: SessionContext,
-    @Body
+    @CurrentSession() session: SessionContext,
+    @Body()
     body: {
       suite?: string;
       label?: string;
@@ -64,9 +64,9 @@ export class ModelEvaluationPlatformController {
   @UseGuards(ClerkAuthGuard)
   @HttpCode(HttpStatus.OK)
   execute(
-    @CurrentSession session: SessionContext,
+    @CurrentSession() session: SessionContext,
     @Param('id') id: string,
-    @Body body: { targetLatencyMs?: number },
+    @Body() body: { targetLatencyMs?: number },
   ) {
     return this.platform.executeRun(session, id, body);
   }
@@ -74,25 +74,25 @@ export class ModelEvaluationPlatformController {
   @Post('runs/:id/cancel')
   @UseGuards(ClerkAuthGuard)
   @HttpCode(HttpStatus.OK)
-  cancel(@CurrentSession session: SessionContext, @Param('id') id: string) {
+  cancel(@CurrentSession() session: SessionContext, @Param('id') id: string) {
     return this.platform.cancelRun(session, id);
   }
 
   @Get('leaderboard')
   @UseGuards(ClerkAuthGuard)
-  leaderboard(@CurrentSession session: SessionContext) {
+  leaderboard(@CurrentSession() session: SessionContext) {
     return this.platform.leaderboard(session);
   }
 
   @Get('reports')
   @UseGuards(ClerkAuthGuard)
-  reports(@CurrentSession session: SessionContext) {
+  reports(@CurrentSession() session: SessionContext) {
     return this.platform.reports(session);
   }
 
   @Get('monitoring')
   @UseGuards(ClerkAuthGuard)
-  monitoring(@CurrentSession session: SessionContext) {
+  monitoring(@CurrentSession() session: SessionContext) {
     return this.platform.monitoring(session);
   }
 }

@@ -17,8 +17,8 @@ export class GetInternalDeveloperPortalEngineHandler
     private readonly catalog: InternalDeveloperPortalCatalogPort,
   ) {}
 
-  execute: Promise<InternalDeveloperPortalEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<InternalDeveloperPortalEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListInternalDeveloperPortalProductsHandler
     private readonly catalog: InternalDeveloperPortalCatalogPort,
   ) {}
 
-  execute: Promise<InternalDeveloperPortalProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<InternalDeveloperPortalProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

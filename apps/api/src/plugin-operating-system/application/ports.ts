@@ -1,4 +1,4 @@
-/** Application ports for Plugin Operating System. */
+/** Application ports for Plugin Operating System (VL-342). */
 
 export type PluginOperatingSystemProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type PluginOperatingSystemEngineBundle = ReturnType<
 >;
 
 export interface PluginOperatingSystemCatalogPort {
-  engine: PluginOperatingSystemEngineBundle;
-  listProducts: PluginOperatingSystemProductRow[];
+  engine(): PluginOperatingSystemEngineBundle;
+  listProducts(): PluginOperatingSystemProductRow[];
 }
 
 export const PLUGIN_OPERATING_SYSTEM_CATALOG_PORT = Symbol('PLUGIN_OPERATING_SYSTEM_CATALOG_PORT');

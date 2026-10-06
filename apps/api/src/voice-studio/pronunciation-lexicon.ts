@@ -1,5 +1,5 @@
 /**
- * Workspace pronunciation lexicon for Voice Studio.
+ * Workspace pronunciation lexicon for Voice Studio (VL-174).
  * Grapheme → spoken alias applied before TTS. Not forced alignment / IPA engines.
  */
 
@@ -13,10 +13,10 @@ export function applyPronunciationLexicon(text: string, lexemes: Lexeme[]): stri
   let out = text;
   const sorted = [...lexemes].sort((a, b) => b.grapheme.length - a.grapheme.length);
   for (const lex of sorted) {
-    const g = lex.grapheme?.trim;
-    const alias = lex.alias?.trim;
+    const g = lex.grapheme?.trim();
+    const alias = lex.alias?.trim();
     if (!g || !alias) continue;
-    const escaped = g.replace(/[.*+?^${}|[\]\\]/g, '\\$&');
+    const escaped = g.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const re = new RegExp(`\\b${escaped}\\b`, 'gi');
     out = out.replace(re, alias);
   }

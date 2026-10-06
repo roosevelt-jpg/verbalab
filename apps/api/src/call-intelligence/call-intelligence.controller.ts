@@ -33,19 +33,19 @@ export class CallIntelligenceController {
   constructor(private readonly calls: CallIntelligenceService) {}
 
   @Get('engine')
-  engine {
-    return this.calls.engine;
+  engine() {
+    return this.calls.engine();
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req req: Request & { translateAuth: TranslateAuthContext }) {
+  analytics(@Req() req: Request & { translateAuth: TranslateAuthContext }) {
     return this.calls.analytics(req.translateAuth.organizationId);
   }
 
   @Get('report')
   @UseGuards(TranslateAuthGuard)
-  report(@Req req: Request & { translateAuth: TranslateAuthContext }) {
+  report(@Req() req: Request & { translateAuth: TranslateAuthContext }) {
     return this.calls.report(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -55,7 +55,7 @@ export class CallIntelligenceController {
   @Get('calls')
   @UseGuards(TranslateAuthGuard)
   list(
-    @Req req: Request & { translateAuth: TranslateAuthContext },
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
     @Query('limit') limit?: string,
   ) {
     return this.calls.listCalls(
@@ -67,7 +67,7 @@ export class CallIntelligenceController {
 
   @Get('calls/:id')
   @UseGuards(TranslateAuthGuard)
-  get(@Req req: Request & { translateAuth: TranslateAuthContext }, @Param('id') id: string) {
+  get(@Req() req: Request & { translateAuth: TranslateAuthContext }, @Param('id') id: string) {
     return this.calls.getCall(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -80,14 +80,14 @@ export class CallIntelligenceController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage,
-      limits: { fileSize: audioMaxBytes },
+      storage: memoryStorage(),
+      limits: { fileSize: audioMaxBytes() },
     }),
   )
   create(
-    @Req req: AuthReq,
-    @UploadedFile file: Express.Multer.File | undefined,
-    @Body
+    @Req() req: AuthReq,
+    @UploadedFile() file: Express.Multer.File | undefined,
+    @Body()
     body: {
       transcript?: string;
       language?: string;
@@ -118,7 +118,7 @@ export class CallIntelligenceController {
   @Post('calls/:id/analyze')
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
-  analyze(@Req req: AuthReq, @Param('id') id: string) {
+  analyze(@Req() req: AuthReq, @Param('id') id: string) {
     return this.calls.analyzeCall({
       id,
       organizationId: req.translateAuth.organizationId,
@@ -133,21 +133,21 @@ export class CallIntelligenceController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage,
-      limits: { fileSize: audioMaxBytes },
+      storage: memoryStorage(),
+      limits: { fileSize: audioMaxBytes() },
     }),
   )
   async analyzeStream(
-    @Req req: AuthReq,
-    @Res res: Response,
-    @UploadedFile file: Express.Multer.File | undefined,
-    @Body body: { transcript?: string; language?: string },
+    @Req() req: AuthReq,
+    @Res() res: Response,
+    @UploadedFile() file: Express.Multer.File | undefined,
+    @Body() body: { transcript?: string; language?: string },
   ) {
     res.status(HttpStatus.OK);
     res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders?.;
+    res.flushHeaders?.();
 
     const stream = this.calls.streamAnalyze({
       transcript: body.transcript,
@@ -164,6 +164,6 @@ export class CallIntelligenceController {
       res.write(`event: ${chunk.event}\ndata: ${JSON.stringify(chunk)}\n\n`);
       if (chunk.event === 'error' || chunk.event === 'done') break;
     }
-    res.end;
+    res.end();
   }
 }

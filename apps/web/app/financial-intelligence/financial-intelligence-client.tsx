@@ -12,11 +12,11 @@ type Engine = {
   safety?: { note?: string } & Record<string, unknown>;
 };
 
-export function FinancialIntelligenceClient {
+export function FinancialIntelligenceClient() {
   const [data, setData] = useState<Engine | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect( => {
+  useEffect(() => {
     void apiFetch<Engine>('/v1/financial-intelligence/engine')
       .then(setData)
       .catch((err: Error) => setError(err.message));

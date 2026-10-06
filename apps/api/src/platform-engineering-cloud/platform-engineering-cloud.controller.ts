@@ -8,28 +8,28 @@ export class PlatformEngineeringCloudController {
   constructor(private readonly pe: PlatformEngineeringCloudService) {}
 
   @Get('products')
-  products {
-    return this.pe.products;
+  products() {
+    return this.pe.products();
   }
 
   @Get('engine')
-  engine {
-    return this.pe.products;
+  engine() {
+    return this.pe.products();
   }
 
   @Get('routing')
-  routing {
-    return this.pe.routing;
+  routing() {
+    return this.pe.routing();
   }
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession session: SessionContext) {
+  overview(@CurrentSession() session: SessionContext) {
     return this.pe.overview(session);
   }
 
   @Get('monitoring')
-  monitoring {
-    return this.pe.monitoring;
+  monitoring() {
+    return this.pe.monitoring();
   }
 }

@@ -23,7 +23,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_vm_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_vm_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -37,21 +37,21 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Voice Marketplace',  => {
+describe('Voice Marketplace (VL-177)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let billing: BillingService;
   let marketplace: VoiceMarketplaceService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -59,11 +59,11 @@ describe('Voice Marketplace',  => {
     marketplace = app.get(VoiceMarketplaceService);
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('documents Voice Marketplace distinct from localization marketplace',  => {
+  it('documents Voice Marketplace distinct from localization marketplace', () => {
     const doc = join(root, 'docs/VOICE_MARKETPLACE.md');
     const adr = join(root, 'docs/adr/0088-voice-marketplace.md');
     expect(existsSync(doc)).toBe(true);
@@ -71,24 +71,24 @@ describe('Voice Marketplace',  => {
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/distinct/i);
     expect(text).toMatch(/Celebrity/i);
-    expect(text).toContain('');
+    expect(text).toContain('VL-090');
   });
 
-  it('exposes engine with celebrityWithoutRights=false', async  => {
-    const engine = await request(app.getHttpServer).get('/v1/voice-marketplace/engine').expect(200);
+  it('exposes engine with celebrityWithoutRights=false', async () => {
+    const engine = await request(app.getHttpServer()).get('/v1/voice-marketplace/engine').expect(200);
     expect(engine.body.product).toBe('Lugemi Voice Marketplace');
     expect(engine.body.honesty.celebrityWithoutRights).toBe(false);
     expect(engine.body.honesty.crossTenantCloneSynthesis).toBe(false);
     const celeb = engine.body.capabilities.find((c: { id: string }) => c.id === 'celebrity-voices');
     expect(celeb.status).toBe('deferred');
 
-    const packs = await request(app.getHttpServer)
+    const packs = await request(app.getHttpServer())
       .get('/v1/voice-marketplace/language-packs')
       .expect(200);
     expect(packs.body.packs.some((p: { id: string }) => p.id === 'sw')).toBe(true);
   });
 
-  it('rejects celebrity claims and free-plan publish', async  => {
+  it('rejects celebrity claims and free-plan publish', async () => {
     const free = await seedOrg(prisma, 'vmfree');
     await expect(
       marketplace.publish({
@@ -117,7 +117,7 @@ describe('Voice Marketplace',  => {
     ).rejects.toMatchObject({ message: expect.stringMatching(/Celebrity/i) });
   });
 
-  it('publishes, installs, rates language pack via HTTP', async  => {
+  it('publishes, installs, rates language pack via HTTP', async () => {
     const publisher = await seedOrg(prisma, 'vmpub');
     const buyer = await seedOrg(prisma, 'vmbuy');
     await billing.applyEntitlementForTests({ organizationId: publisher.id, plan: 'pro' });
@@ -136,7 +136,7 @@ describe('Voice Marketplace',  => {
       name: 'vm-buy',
     });
 
-    const listing = await request(app.getHttpServer)
+    const listing = await request(app.getHttpServer())
       .post('/v1/voice-marketplace/listings')
       .set('Authorization', `Bearer ${pubKey.secret}`)
       .send({
@@ -152,13 +152,13 @@ describe('Voice Marketplace',  => {
     expect(listing.body.sourceVoiceId).toBe('language_pack:sw');
     expect(listing.body.priceCents).toBe(500);
 
-    const install = await request(app.getHttpServer)
+    const install = await request(app.getHttpServer())
       .post(`/v1/voice-marketplace/listings/${listing.body.id}/install`)
       .set('Authorization', `Bearer ${buyKey.secret}`)
       .send({})
       .expect(201)
-      .catch(async  =>
-        request(app.getHttpServer)
+      .catch(async () =>
+        request(app.getHttpServer())
           .post(`/v1/voice-marketplace/listings/${listing.body.id}/install`)
           .set('Authorization', `Bearer ${buyKey.secret}`)
           .send({}),
@@ -167,7 +167,7 @@ describe('Voice Marketplace',  => {
     const installRes =
       'status' in install
         ? install
-        : await request(app.getHttpServer)
+        : await request(app.getHttpServer())
             .post(`/v1/voice-marketplace/listings/${listing.body.id}/install`)
             .set('Authorization', `Bearer ${buyKey.secret}`)
             .send({});
@@ -175,13 +175,13 @@ describe('Voice Marketplace',  => {
     expect(installRes.body.sale?.amountCents).toBe(500);
     expect(installRes.body.note).toMatch(/not enabled/i);
 
-    const review = await request(app.getHttpServer)
+    const review = await request(app.getHttpServer())
       .post(`/v1/voice-marketplace/listings/${listing.body.id}/reviews`)
       .set('Authorization', `Bearer ${buyKey.secret}`)
       .send({ rating: 5, body: 'Useful pack' });
     expect([200, 201]).toContain(review.status);
 
-    const catalog = await request(app.getHttpServer)
+    const catalog = await request(app.getHttpServer())
       .get('/v1/voice-marketplace/listings')
       .set('Authorization', `Bearer ${buyKey.secret}`)
       .expect(200);
@@ -190,8 +190,8 @@ describe('Voice Marketplace',  => {
     expect(found.ratingAverage).toBe(5);
   });
 
-  it('exposes voiceMarketplaceEngine via GraphQL', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes voiceMarketplaceEngine via GraphQL', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query:
@@ -199,7 +199,7 @@ describe('Voice Marketplace',  => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.voiceMarketplaceEngine.celebrityWithoutRights).toBe(false);
     expect(res.body.data.voiceMarketplaceEngine.crossTenantCloneSynthesis).toBe(false);
   });

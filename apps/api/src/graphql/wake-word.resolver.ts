@@ -18,13 +18,13 @@ type GqlReq = Request & {
   sessionAuth?: SessionContext;
 };
 
-@Resolver
+@Resolver()
 export class WakeWordGraphqlResolver {
   constructor(private readonly wake: WakeWordService) {}
 
-  @Query( => GqlWakeWordEngine, { name: 'wakeWordEngine' })
-  wakeWordEngine: GqlWakeWordEngine {
-    const catalog = this.wake.engine;
+  @Query(() => GqlWakeWordEngine, { name: 'wakeWordEngine' })
+  wakeWordEngine(): GqlWakeWordEngine {
+    const catalog = this.wake.engine();
     return {
       product: catalog.product,
       note: catalog.note,
@@ -33,10 +33,10 @@ export class WakeWordGraphqlResolver {
     };
   }
 
-  @Mutation( => GqlWakeDetectResult, { name: 'detectWakeWord' })
+  @Mutation(() => GqlWakeDetectResult, { name: 'detectWakeWord' })
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   async detectWakeWord(
-    @Args('input', { type:  => DetectWakeWordInput }) input: DetectWakeWordInput,
+    @Args('input', { type: () => DetectWakeWordInput }) input: DetectWakeWordInput,
     @Context('req') req: GqlReq,
   ): Promise<GqlWakeDetectResult> {
     const auth = req.translateAuth!;

@@ -1,4 +1,4 @@
-/** Application ports for Vision Runtime. */
+/** Application ports for Vision Runtime (VL-328). */
 
 export type VisionRuntimeProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type VisionRuntimeEngineBundle = ReturnType<
 >;
 
 export interface VisionRuntimeCatalogPort {
-  engine: VisionRuntimeEngineBundle;
-  listProducts: VisionRuntimeProductRow[];
+  engine(): VisionRuntimeEngineBundle;
+  listProducts(): VisionRuntimeProductRow[];
 }
 
 export const VISION_RUNTIME_CATALOG_PORT = Symbol('VISION_RUNTIME_CATALOG_PORT');

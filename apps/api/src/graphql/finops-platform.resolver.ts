@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetFinopsPlatformEngineQuery } from '../finops-platform/application/messages';
 import { GqlFinopsPlatformEngine } from './gql.types';
 
-@Resolver
+@Resolver()
 export class FinopsPlatformGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query( => GqlFinopsPlatformEngine, { name: 'finopsPlatformEngine' })
-  async finopsPlatformEngine: Promise<GqlFinopsPlatformEngine> {
-    const catalog = await this.queries.execute(new GetFinopsPlatformEngineQuery);
+  @Query(() => GqlFinopsPlatformEngine, { name: 'finopsPlatformEngine' })
+  async finopsPlatformEngine(): Promise<GqlFinopsPlatformEngine> {
+    const catalog = await this.queries.execute(new GetFinopsPlatformEngineQuery());
     return {
       product: catalog.product,
       note: catalog.note,

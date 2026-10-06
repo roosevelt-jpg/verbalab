@@ -9,17 +9,17 @@ import {
   researchCloudRoutingTable,
 } from './research-cloud.catalog';
 
-@Injectable
+@Injectable()
 export class ResearchCloudService {
   constructor(private readonly usage: UsageService) {}
 
-  products {
+  products() {
     return {
       product: 'Lugemi Research Cloud',
-      products: researchCloudProductCatalog,
-      researchAreas: researchAreasCatalog,
-      architecture: researchCloudArchitectureNotes,
-      honesty: researchCloudHonesty,
+      products: researchCloudProductCatalog(),
+      researchAreas: researchAreasCatalog(),
+      architecture: researchCloudArchitectureNotes(),
+      honesty: researchCloudHonesty(),
       safety: {
         syntheticLabelRequired: true,
         traditionalKnowledgeConsentRequired: true,
@@ -29,19 +29,19 @@ export class ResearchCloudService {
       },
       docs: '/docs/RESEARCH_CLOUD.md',
       note:
-        'Research Cloud Foundation. Extends Intelligence/Knowledge/Foundation Model clouds. Not W&B, Hugging Face hub, DOI registry, USPTO, or MLflow OS. AI Sovereignty OS deferred.',
+        'Research Cloud Foundation (VL-271). Extends Intelligence/Knowledge/Foundation Model clouds. Not W&B, Hugging Face hub, DOI registry, USPTO, or MLflow OS. AI Sovereignty OS deferred.',
     };
   }
 
-  routing {
+  routing() {
     return {
-      routes: researchCloudRoutingTable,
-      products: researchCloudProductCatalog.map((p) => ({
+      routes: researchCloudRoutingTable(),
+      products: researchCloudProductCatalog().map((p) => ({
         id: p.id,
         status: p.status,
         api: p.api,
       })),
-      honesty: researchCloudHonesty,
+      honesty: researchCloudHonesty(),
       note: 'Static Research Cloud discovery catalog for Foundation.',
       docs: '/docs/RESEARCH_CLOUD.md',
     };
@@ -60,10 +60,10 @@ export class ResearchCloudService {
         chat: usageSummary.chat,
         embeddings: usageSummary.embeddings,
       },
-      products: researchCloudProductCatalog,
-      researchAreas: researchAreasCatalog,
-      architecture: researchCloudArchitectureNotes,
-      honesty: researchCloudHonesty,
+      products: researchCloudProductCatalog(),
+      researchAreas: researchAreasCatalog(),
+      architecture: researchCloudArchitectureNotes(),
+      honesty: researchCloudHonesty(),
       safety: {
         syntheticLabelRequired: true,
         traditionalKnowledgeConsentRequired: true,
@@ -97,19 +97,19 @@ export class ResearchCloudService {
       },
       docs: '/docs/RESEARCH_CLOUD.md',
       note:
-        'Research Cloud (–280). Discovery hub over experiment/synthetic/benchmark/evaluation/publication/patent/open-science/analytics; Production Audit closes the volume.',
+        'Research Cloud (VL-271–280). Discovery hub over experiment/synthetic/benchmark/evaluation/publication/patent/open-science/analytics; Production Audit closes the volume.',
     };
   }
 
-  monitoring {
-    const products = researchCloudProductCatalog;
+  monitoring() {
+    const products = researchCloudProductCatalog();
     return {
       mode: 'foundation',
       products: products.map((p) => ({ id: p.id, status: p.status })),
-      researchAreas: researchAreasCatalog.map((a) => ({ id: a.id, status: a.status })),
-      architecture: researchCloudArchitectureNotes,
-      honesty: researchCloudHonesty,
-      note: 'Research Cloud monitoring snapshot.',
+      researchAreas: researchAreasCatalog().map((a) => ({ id: a.id, status: a.status })),
+      architecture: researchCloudArchitectureNotes(),
+      honesty: researchCloudHonesty(),
+      note: 'Research Cloud monitoring snapshot (VL-271).',
     };
   }
 }

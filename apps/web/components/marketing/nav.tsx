@@ -36,7 +36,7 @@ export function MarketingNav({ nav }: { nav: CmsDocument['nav'] }) {
             className="mkt-menu-btn"
             aria-expanded={open}
             aria-controls="mkt-mobile-nav"
-            onClick={ => setOpen((v) => !v)}
+            onClick={() => setOpen((v) => !v)}
           >
             {open ? 'Close' : 'Menu'}
           </button>
@@ -46,23 +46,23 @@ export function MarketingNav({ nav }: { nav: CmsDocument['nav'] }) {
         <ul className="mkt-nav-links">
           {nav.centerLinks.map((item) => (
             <li key={`m-${item.href}-${item.label}`}>
-              <Link href={item.href} onClick={ => setOpen(false)}>
+              <Link href={item.href} onClick={() => setOpen(false)}>
                 {item.label}
               </Link>
             </li>
           ))}
           <li>
-            <Link href={nav.actions.console.href} onClick={ => setOpen(false)}>
+            <Link href={nav.actions.console.href} onClick={() => setOpen(false)}>
               {nav.actions.console.label}
             </Link>
           </li>
           <li>
-            <Link href={nav.actions.login.href} onClick={ => setOpen(false)}>
+            <Link href={nav.actions.login.href} onClick={() => setOpen(false)}>
               {nav.actions.login.label}
             </Link>
           </li>
           <li>
-            <Link href={nav.actions.signup.href} onClick={ => setOpen(false)}>
+            <Link href={nav.actions.signup.href} onClick={() => setOpen(false)}>
               {nav.actions.signup.label}
             </Link>
           </li>

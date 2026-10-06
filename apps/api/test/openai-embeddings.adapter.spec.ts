@@ -2,12 +2,12 @@ import { describe, expect, it, vi } from 'vitest';
 import { OpenAiEmbeddingsAdapter } from '../src/gateway/openai-embeddings.adapter';
 import { ApiException } from '../src/common/errors/api-exception';
 
-describe('OpenAiEmbeddingsAdapter',  => {
-  it('parses OpenAI embeddings response', async  => {
-    const fetchImpl = vi.fn.mockResolvedValue({
+describe('OpenAiEmbeddingsAdapter', () => {
+  it('parses OpenAI embeddings response', async () => {
+    const fetchImpl = vi.fn().mockResolvedValue({
       ok: true,
       status: 200,
-      json: async  => ({
+      json: async () => ({
         model: 'text-embedding-3-small',
         data: [{ index: 0, embedding: [0.1, 0.2, 0.3] }],
         usage: { prompt_tokens: 4, total_tokens: 4 },
@@ -21,7 +21,7 @@ describe('OpenAiEmbeddingsAdapter',  => {
     expect(result.totalTokens).toBe(4);
   });
 
-  it('throws when API key is missing', async  => {
+  it('throws when API key is missing', async () => {
     const adapter = new OpenAiEmbeddingsAdapter('');
     await expect(adapter.embed({ input: 'Hi' })).rejects.toMatchObject({
       code: 'provider_not_configured',

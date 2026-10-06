@@ -1,22 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { experimentPlatformEngineCatalog } from './experiment-platform.catalog';
 
-@Injectable
+@Injectable()
 export class ExperimentPlatformService {
-  engine {
-    return experimentPlatformEngineCatalog;
+  engine() {
+    return experimentPlatformEngineCatalog();
   }
 
   runs(query?: string) {
-    const catalog = this.engine;
-    const q = (query ?? '').trim.toLowerCase;
+    const catalog = this.engine();
+    const q = (query ?? '').trim().toLowerCase();
     const runs = catalog.runs.filter((r) => {
       if (!q) return true;
       return (
-        r.id.toLowerCase.includes(q) ||
-        r.name.toLowerCase.includes(q) ||
-        r.datasetId.toLowerCase.includes(q) ||
-        r.notes.toLowerCase.includes(q)
+        r.id.toLowerCase().includes(q) ||
+        r.name.toLowerCase().includes(q) ||
+        r.datasetId.toLowerCase().includes(q) ||
+        r.notes.toLowerCase().includes(q)
       );
     });
     return {
@@ -32,13 +32,13 @@ export class ExperimentPlatformService {
     return this.runs(query);
   }
 
-  monitoring {
-    const catalog = this.engine;
+  monitoring() {
+    const catalog = this.engine();
     return {
       mode: 'experiment',
       runCount: catalog.runs.length,
       honesty: catalog.honesty,
-      note: 'Experiment Platform monitoring snapshot.',
+      note: 'Experiment Platform monitoring snapshot (VL-272).',
     };
   }
 }

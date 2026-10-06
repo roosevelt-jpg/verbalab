@@ -19,7 +19,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_vc_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_vc_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -33,36 +33,36 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Voice cloning',  => {
+describe('Voice cloning (VL-064)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;
   let clones: VoiceClonesService;
   let audio: AudioService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     billing = app.get(BillingService);
     clones = app.get(VoiceClonesService);
     audio = app.get(AudioService);
-    clones.setFixtureForTests(new FixtureVoiceCloneAdapter);
+    clones.setFixtureForTests(new FixtureVoiceCloneAdapter());
   });
 
-  afterAll(async  => {
+  afterAll(async () => {
     clones.setFixtureForTests(null);
-    await app.close;
+    await app.close();
   });
 
-  it('rejects create without consent attestation', async  => {
-    const org = await seedOrg(prisma, `vcnoconsent_${Date.now}`);
+  it('rejects create without consent attestation', async () => {
+    const org = await seedOrg(prisma, `vcnoconsent_${Date.now()}`);
     await billing.applyEntitlementForTests({ organizationId: org.id, plan: 'pro' });
     await expect(
       clones.create({
@@ -85,8 +85,8 @@ describe('Voice cloning',  => {
     ).rejects.toMatchObject({ code: 'validation_error' });
   });
 
-  it('rejects free plan', async  => {
-    const org = await seedOrg(prisma, `vcfree_${Date.now}`);
+  it('rejects free plan', async () => {
+    const org = await seedOrg(prisma, `vcfree_${Date.now()}`);
     await expect(
       clones.create({
         organizationId: org.id,
@@ -108,8 +108,8 @@ describe('Voice cloning',  => {
     ).rejects.toMatchObject({ code: 'plan_required' });
   });
 
-  it('creates pending clone, abuse-reviews to approved, synthesizes with watermark', async  => {
-    const org = await seedOrg(prisma, `vcpro_${Date.now}`);
+  it('creates pending clone, abuse-reviews to approved, synthesizes with watermark', async () => {
+    const org = await seedOrg(prisma, `vcpro_${Date.now()}`);
     await billing.applyEntitlementForTests({ organizationId: org.id, plan: 'pro' });
     const workspaceId = org.workspaces[0].id;
     const userId = org.memberships[0].userId;

@@ -6,16 +6,16 @@ import {
   InfrastructureEngineeringStandardsProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestInfrastructureEngineeringStandardsCatalogAdapter implements InfrastructureEngineeringStandardsCatalogPort {
   constructor(private readonly service: InfrastructureEngineeringStandardsService) {}
 
-  engine: InfrastructureEngineeringStandardsEngineBundle {
-    return this.service.engine;
+  engine(): InfrastructureEngineeringStandardsEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: InfrastructureEngineeringStandardsProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): InfrastructureEngineeringStandardsProductRow[] {
+    const bundle = this.engine() as {
       products?: InfrastructureEngineeringStandardsProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestInfrastructureEngineeringStandardsCatalogAdapter implements Inf
         status: 'shipped',
         api: 'GET /v1/infrastructure-engineering-standards/engine',
         console: '/infrastructure-engineering-standards',
-        notes: ' shipped.',
+        notes: 'VL-352 shipped.',
       },
     ];
   }

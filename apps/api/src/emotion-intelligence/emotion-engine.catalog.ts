@@ -8,8 +8,8 @@ export type EmotionCapability = {
   notes: string;
 };
 
-/** Library Phase 20 → Emotion Intelligence. */
-export function emotionEngineCatalog {
+/** Library Phase 20 → Emotion Intelligence (VL-154). */
+export function emotionEngineCatalog() {
   return {
     product: 'Lugemi Emotion Intelligence',
     note:
@@ -64,7 +64,7 @@ export function emotionEngineCatalog {
     ] satisfies EmotionCapability[],
     related: {
       languageIntelligenceEmotion: 'POST /v1/language-intelligence/emotion',
-      note: 'Language Cloud text emotion remains separate; Speech Emotion Intelligence uses Speech Cloud labels.',
+      note: 'Language Cloud text emotion (VL-144) remains separate; Speech Emotion Intelligence uses Speech Cloud labels.',
     },
     links: {
       console: '/emotion-intelligence',

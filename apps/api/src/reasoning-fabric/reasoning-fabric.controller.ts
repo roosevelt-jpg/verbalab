@@ -27,51 +27,51 @@ export class ReasoningFabricController {
   constructor(private readonly fabric: ReasoningFabricService) {}
 
   @Get('products')
-  products {
-    return this.fabric.products;
+  products() {
+    return this.fabric.products();
   }
 
   @Get('engine')
-  engine {
-    return this.fabric.products;
+  engine() {
+    return this.fabric.products();
   }
 
   @Get('routes')
-  routes {
-    return this.fabric.routes;
+  routes() {
+    return this.fabric.routes();
   }
 
   @Post('route')
   @HttpCode(HttpStatus.OK)
-  route(@Body body: { kinds?: string[] }) {
+  route(@Body() body: { kinds?: string[] }) {
     return this.fabric.route({ kinds: body.kinds });
   }
 
   @Post('pipeline')
   @HttpCode(HttpStatus.OK)
-  pipeline(@Body body: { pipelineId?: string; steps?: string[] }) {
+  pipeline(@Body() body: { pipelineId?: string; steps?: string[] }) {
     return this.fabric.pipeline(body);
   }
 
   @Get('versions')
-  versions {
-    return this.fabric.versions;
+  versions() {
+    return this.fabric.versions();
   }
 
   @Get('cache')
-  cache {
-    return this.fabric.cacheHandoff;
+  cache() {
+    return this.fabric.cacheHandoff();
   }
 
   @Post('federate')
   @HttpCode(HttpStatus.OK)
-  federate(@Body body: { kinds?: string[] }) {
+  federate(@Body() body: { kinds?: string[] }) {
     return this.fabric.federate({ kinds: body.kinds });
   }
 
   @Get('history')
   @UseGuards(TranslateAuthGuard)
-  history(@Req req: AuthedReq, @Query('limit') limit?: string) {
+  history(@Req() req: AuthedReq, @Query('limit') limit?: string) {
     return this.fabric.history(
       {
         organizationId: req.translateAuth.organizationId,
@@ -86,7 +86,7 @@ export class ReasoningFabricController {
 
   @Get('replay/:id')
   @UseGuards(TranslateAuthGuard)
-  replay(@Req req: AuthedReq, @Param('id') id: string) {
+  replay(@Req() req: AuthedReq, @Param('id') id: string) {
     return this.fabric.replay(
       {
         organizationId: req.translateAuth.organizationId,
@@ -103,8 +103,8 @@ export class ReasoningFabricController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   distribute(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       kinds?: string[];
       targetWorkspaceIds?: string[];
@@ -124,12 +124,12 @@ export class ReasoningFabricController {
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession session: SessionContext) {
+  overview(@CurrentSession() session: SessionContext) {
     return this.fabric.overview(session);
   }
 
   @Get('monitoring')
-  monitoring {
-    return this.fabric.monitoring;
+  monitoring() {
+    return this.fabric.monitoring();
   }
 }

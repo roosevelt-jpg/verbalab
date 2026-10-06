@@ -19,12 +19,12 @@ type PeriodInput = {
   to?: string;
 };
 
-@Injectable
+@Injectable()
 export class IntelligenceAnalyticsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  engine {
-    return intelligenceAnalyticsCatalog;
+  engine() {
+    return intelligenceAnalyticsCatalog();
   }
 
   async overview(input: PeriodInput) {
@@ -36,8 +36,8 @@ export class IntelligenceAnalyticsService {
       this.quality(input),
     ]);
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       usage: {
         chat: usage.chat,
         embeddings: usage.embeddings,
@@ -49,7 +49,7 @@ export class IntelligenceAnalyticsService {
         avgPromptEvalScore: quality.avgPromptEvalScore,
         samples: quality.samples,
       },
-      note: 'Intelligence Analytics overview — not Language/Speech/Voice analytics.',
+      note: 'Intelligence Analytics overview (VL-191) — not Language/Speech/Voice analytics.',
     };
   }
 
@@ -79,17 +79,17 @@ export class IntelligenceAnalyticsService {
     }
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       chat,
       embeddings,
-      note: 'From usage_events feature=chat|embeddings.',
+      note: 'From usage_events feature=chat|embeddings (VL-191).',
     };
   }
 
   async surfaces(input: PeriodInput) {
     const { periodStart, periodEnd } = this.parsePeriod(input.from, input.to);
-    const allActions = Object.values(INTEL_SURFACE_ACTIONS).flat;
+    const allActions = Object.values(INTEL_SURFACE_ACTIONS).flat();
     const events = await this.prisma.auditEvent.findMany({
       where: {
         organizationId: input.organizationId,
@@ -111,15 +111,15 @@ export class IntelligenceAnalyticsService {
     }).sort((a, b) => b.count - a.count);
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       totalEvents: events.length,
       bySurface,
       byAction: Object.entries(byAction)
         .map(([action, count]) => ({ action, count }))
         .sort((a, b) => b.count - a.count)
         .slice(0, 40),
-      note: 'Intelligence Cloud surface audit aggregates.',
+      note: 'Intelligence Cloud surface audit aggregates (VL-191).',
     };
   }
 
@@ -159,8 +159,8 @@ export class IntelligenceAnalyticsService {
     };
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       samples: samples.length,
       p50Ms: percentile(samples, 50),
       p95Ms: percentile(samples, 95),
@@ -174,7 +174,7 @@ export class IntelligenceAnalyticsService {
           ];
         }),
       ),
-      note: 'Partial latency from audit metadata latencyMs — not full distributed tracing.',
+      note: 'Partial latency from audit metadata latencyMs — not full distributed tracing (VL-191).',
     };
   }
 
@@ -216,8 +216,8 @@ export class IntelligenceAnalyticsService {
       arr.length ? Number((arr.reduce((s, n) => s + n, 0) / arr.length).toFixed(3)) : null;
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       samples: events.length,
       avgPromptEvalScore: avg(promptScores),
       promptEvalSamples: promptScores.length,
@@ -225,7 +225,7 @@ export class IntelligenceAnalyticsService {
       decisionSamples: decisionConfidence.length,
       avgRecommendItemCount: avg(recommendCounts),
       recommendSamples: recommendCounts.length,
-      note: 'Heuristic quality/confidence proxies — not a human eval lab.',
+      note: 'Heuristic quality/confidence proxies — not a human eval lab (VL-191).',
     };
   }
 
@@ -252,8 +252,8 @@ export class IntelligenceAnalyticsService {
     }
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       decisions: events.length,
       byKind: Object.entries(byKind)
         .map(([kind, count]) => ({ kind, count }))
@@ -262,13 +262,13 @@ export class IntelligenceAnalyticsService {
         .map(([key, count]) => ({ key, count }))
         .sort((a, b) => b.count - a.count)
         .slice(0, 20),
-      note: 'Model/routing decisions from Decision Engine audits.',
+      note: 'Model/routing decisions from Decision Engine audits (VL-191).',
     };
   }
 
   async costs(input: PeriodInput) {
     const { periodStart, periodEnd } = this.parsePeriod(input.from, input.to);
-    const rates = analyticsCostRates;
+    const rates = analyticsCostRates();
     const events = await this.prisma.usageEvent.findMany({
       where: {
         organizationId: input.organizationId,
@@ -288,8 +288,8 @@ export class IntelligenceAnalyticsService {
     const embedUsd = estimateFeatureCostUsd('embeddings', embedUnits, rates);
 
     return {
-      periodStart: periodStart.toISOString,
-      periodEnd: periodEnd.toISOString,
+      periodStart: periodStart.toISOString(),
+      periodEnd: periodEnd.toISOString(),
       estimatedUsd: roundUsd(chatUsd + embedUsd),
       currency: 'USD' as const,
       breakdown: [
@@ -300,7 +300,7 @@ export class IntelligenceAnalyticsService {
         chatPer1kTokens: rates.chatPer1kTokens,
         embeddingsPer1kTokens: rates.embeddingsPer1kTokens,
       },
-      note: 'Estimated USD from usage_events — not Stripe invoices.',
+      note: 'Estimated USD from usage_events — not Stripe invoices (VL-191).',
     };
   }
 
@@ -315,7 +315,7 @@ export class IntelligenceAnalyticsService {
       this.costs(input),
     ]);
     return {
-      generatedAt: new Date.toISOString,
+      generatedAt: new Date().toISOString(),
       overview,
       usage,
       surfaces,
@@ -323,32 +323,32 @@ export class IntelligenceAnalyticsService {
       quality,
       routing,
       costs,
-      honesty: intelligenceAnalyticsCatalog.honesty,
-      note: 'Bundled Intelligence Analytics report.',
+      honesty: intelligenceAnalyticsCatalog().honesty,
+      note: 'Bundled Intelligence Analytics report (VL-191).',
     };
   }
 
   async monitoring(input: PeriodInput) {
     const [overview, engine] = await Promise.all([
       this.overview(input),
-      Promise.resolve(this.engine),
+      Promise.resolve(this.engine()),
     ]);
     const recent = await this.prisma.auditEvent.count({
       where: {
         organizationId: input.organizationId,
-        createdAt: { gte: new Date(Date.now - 24 * 60 * 60 * 1000) },
+        createdAt: { gte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
         OR: INTEL_AUDIT_PREFIXES.map((p) => ({ action: { startsWith: p } })),
       },
     });
     return {
-      generatedAt: new Date.toISOString,
+      generatedAt: new Date().toISOString(),
       periodStart: overview.periodStart,
       periodEnd: overview.periodEnd,
       estimatedCostUsd: overview.estimatedCostUsd,
       eventsLast24h: recent,
       regeneratesSpeechAnalytics: engine.honesty.regeneratesSpeechAnalytics,
       deferred: engine.capabilities.filter((c) => c.status === 'deferred').map((c) => c.id),
-      note: 'Intelligence Analytics monitoring snapshot.',
+      note: 'Intelligence Analytics monitoring snapshot (VL-191).',
     };
   }
 
@@ -356,26 +356,26 @@ export class IntelligenceAnalyticsService {
     periodStart: Date;
     periodEnd: Date;
   } {
-    const now = new Date;
+    const now = new Date();
     let periodStart: Date;
     let periodEnd: Date;
 
     if (fromRaw) {
       periodStart = new Date(fromRaw);
-      if (Number.isNaN(periodStart.getTime)) {
+      if (Number.isNaN(periodStart.getTime())) {
         throw new ApiException('validation_error', 'from must be an ISO date', HttpStatus.BAD_REQUEST);
       }
     } else {
-      periodStart = new Date(Date.UTC(now.getUTCFullYear, now.getUTCMonth, 1));
+      periodStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
     }
 
     if (toRaw) {
       periodEnd = new Date(toRaw);
-      if (Number.isNaN(periodEnd.getTime)) {
+      if (Number.isNaN(periodEnd.getTime())) {
         throw new ApiException('validation_error', 'to must be an ISO date', HttpStatus.BAD_REQUEST);
       }
     } else {
-      periodEnd = new Date(now.getTime + 1);
+      periodEnd = new Date(now.getTime() + 1);
     }
 
     if (periodEnd <= periodStart) {

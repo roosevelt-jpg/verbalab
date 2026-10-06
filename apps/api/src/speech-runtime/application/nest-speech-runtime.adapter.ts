@@ -6,16 +6,16 @@ import {
   SpeechRuntimeProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestSpeechRuntimeCatalogAdapter implements SpeechRuntimeCatalogPort {
   constructor(private readonly service: SpeechRuntimeService) {}
 
-  engine: SpeechRuntimeEngineBundle {
-    return this.service.engine;
+  engine(): SpeechRuntimeEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: SpeechRuntimeProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): SpeechRuntimeProductRow[] {
+    const bundle = this.engine() as {
       products?: SpeechRuntimeProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestSpeechRuntimeCatalogAdapter implements SpeechRuntimeCatalogPort
         status: 'shipped',
         api: 'GET /v1/speech-runtime/engine',
         console: '/speech-runtime',
-        notes: ' shipped.',
+        notes: 'VL-326 shipped.',
       },
     ];
   }

@@ -8,28 +8,28 @@ export class DataPlaneCloudController {
   constructor(private readonly dp: DataPlaneCloudService) {}
 
   @Get('products')
-  products {
-    return this.dp.products;
+  products() {
+    return this.dp.products();
   }
 
   @Get('engine')
-  engine {
-    return this.dp.products;
+  engine() {
+    return this.dp.products();
   }
 
   @Get('routing')
-  routing {
-    return this.dp.routing;
+  routing() {
+    return this.dp.routing();
   }
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession session: SessionContext) {
+  overview(@CurrentSession() session: SessionContext) {
     return this.dp.overview(session);
   }
 
   @Get('monitoring')
-  monitoring {
-    return this.dp.monitoring;
+  monitoring() {
+    return this.dp.monitoring();
   }
 }

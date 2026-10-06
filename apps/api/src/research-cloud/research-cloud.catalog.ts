@@ -27,11 +27,11 @@ export type ResearchAreaId =
   | 'responsibleAi';
 
 /**
- * Library Phase 138 → Research Cloud Foundation.
+ * Library Phase 138 → Research Cloud Foundation (VL-271).
  * Incubates R&D that graduates into production — not Weights & Biases OS, not Hugging Face hub OS,
  * not DOI registry OS, not USPTO patent OS, not MLflow OS. AI Sovereignty Cloud deferred to Volume 14+.
  */
-export function researchCloudProductCatalog: ResearchCloudProductRow[] {
+export function researchCloudProductCatalog(): ResearchCloudProductRow[] {
   return [
     {
       id: 'research-cloud',
@@ -40,7 +40,7 @@ export function researchCloudProductCatalog: ResearchCloudProductRow[] {
       api: 'GET /v1/research-cloud/products',
       console: '/research-cloud',
       notes:
-        'Foundation hub. Extends Intelligence/Knowledge/Foundation Model clouds — does not regenerate Volumes 1–12.',
+        'Foundation hub (VL-271). Extends Intelligence/Knowledge/Foundation Model clouds — does not regenerate Volumes 1–12.',
     },
     {
       id: 'experiment-platform',
@@ -48,7 +48,7 @@ export function researchCloudProductCatalog: ResearchCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/experiment-platform/engine',
       console: '/experiment-platform',
-      notes: '. Experiment tracking catalog — not W&B/MLflow OS.',
+      notes: 'VL-272. Experiment tracking catalog — not W&B/MLflow OS.',
     },
     {
       id: 'synthetic-data-platform',
@@ -56,7 +56,7 @@ export function researchCloudProductCatalog: ResearchCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/synthetic-data-platform/engine',
       console: '/synthetic-data-platform',
-      notes: '. syntheticLabelRequired=true; artifacts marked isSynthetic=true.',
+      notes: 'VL-273. syntheticLabelRequired=true; artifacts marked isSynthetic=true.',
     },
     {
       id: 'benchmark-platform',
@@ -64,7 +64,7 @@ export function researchCloudProductCatalog: ResearchCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/benchmark-platform/engine',
       console: '/benchmark-platform',
-      notes: '. Suites + leaderboard seed — not public leaderboard OS.',
+      notes: 'VL-274. Suites + leaderboard seed — not public leaderboard OS.',
     },
     {
       id: 'evaluation-platform',
@@ -72,7 +72,7 @@ export function researchCloudProductCatalog: ResearchCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/evaluation-platform/engine',
       console: '/evaluation-platform',
-      notes: '. Extends model-evaluation-platform / eval surfaces — does not regenerate them.',
+      notes: 'VL-275. Extends model-evaluation-platform / eval surfaces — does not regenerate them.',
     },
     {
       id: 'ai-publication-platform',
@@ -80,7 +80,7 @@ export function researchCloudProductCatalog: ResearchCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/ai-publication-platform/engine',
       console: '/ai-publication-platform',
-      notes: '. Papers/reports/datasets with versioning. doiRegistryOs=false.',
+      notes: 'VL-276. Papers/reports/datasets with versioning. doiRegistryOs=false.',
     },
     {
       id: 'patent-innovation-platform',
@@ -88,7 +88,7 @@ export function researchCloudProductCatalog: ResearchCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/patent-innovation-platform/engine',
       console: '/patent-innovation-platform',
-      notes: '. Disclosure workflow + IP portfolio seed. usptoOs=false.',
+      notes: 'VL-277. Disclosure workflow + IP portfolio seed. usptoOs=false.',
     },
     {
       id: 'open-science-platform',
@@ -97,7 +97,7 @@ export function researchCloudProductCatalog: ResearchCloudProductRow[] {
       api: 'GET /v1/open-science-platform/engine',
       console: '/open-science-platform',
       notes:
-        '. traditionalKnowledgeConsentRequired=true; blocks restricted/unverified cultural open releases.',
+        'VL-278. traditionalKnowledgeConsentRequired=true; blocks restricted/unverified cultural open releases.',
     },
     {
       id: 'research-analytics',
@@ -105,12 +105,12 @@ export function researchCloudProductCatalog: ResearchCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/research-analytics/engine',
       console: '/research-analytics',
-      notes: '. Aggregates sibling Research Cloud catalogs into TRL/ROI snapshot.',
+      notes: 'VL-279. Aggregates sibling Research Cloud catalogs into TRL/ROI snapshot.',
     },
   ];
 }
 
-export function researchAreasCatalog: Array<{
+export function researchAreasCatalog(): Array<{
   id: ResearchAreaId;
   name: string;
   status: ResearchCloudProductStatus;
@@ -138,14 +138,14 @@ export function researchAreasCatalog: Array<{
       status: 'deferred',
       notes: 'Readiness notes only — not a quantum computing OS.',
     },
-    { id: 'syntheticData', name: 'Synthetic Data', status: 'shipped', notes: ' modality catalog.' },
-    { id: 'evaluation', name: 'Evaluation', status: 'shipped', notes: ' evaluation catalog.' },
-    { id: 'benchmarking', name: 'Benchmarking', status: 'shipped', notes: ' benchmark suites.' },
+    { id: 'syntheticData', name: 'Synthetic Data', status: 'shipped', notes: 'VL-273 modality catalog.' },
+    { id: 'evaluation', name: 'Evaluation', status: 'shipped', notes: 'VL-275 evaluation catalog.' },
+    { id: 'benchmarking', name: 'Benchmarking', status: 'shipped', notes: 'VL-274 benchmark suites.' },
     { id: 'responsibleAi', name: 'Responsible AI', status: 'shipped', notes: 'Bias/fairness/safety research posture.' },
   ];
 }
 
-export function researchCloudArchitectureNotes {
+export function researchCloudArchitectureNotes() {
   return {
     style: 'nest_modular_monolith',
     ddd: 'bounded_research_cloud_hub',
@@ -173,7 +173,7 @@ export function researchCloudArchitectureNotes {
   };
 }
 
-export function researchCloudHonesty {
+export function researchCloudHonesty() {
   return {
     regeneratesVolumes1to12: false,
     weightsAndBiasesOs: false,
@@ -189,7 +189,7 @@ export function researchCloudHonesty {
   };
 }
 
-export function researchCloudRoutingTable {
+export function researchCloudRoutingTable() {
   return [
     { surface: 'experiment-platform', path: '/experiment-platform', api: '/v1/experiment-platform/engine' },
     {

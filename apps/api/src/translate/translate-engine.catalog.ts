@@ -8,8 +8,8 @@ export type TranslateCapability = {
   notes: string;
 };
 
-/** Library Phase 8 → Lugemi Translate. */
-export function translateEngineCatalog {
+/** Library Phase 8 → Lugemi Translate (VL-140). */
+export function translateEngineCatalog() {
   return {
     product: 'Lugemi Translate',
     note:
@@ -34,7 +34,7 @@ export function translateEngineCatalog {
         name: 'Streaming translation',
         status: 'shipped',
         api: 'POST /v1/translate/stream',
-        notes: 'SSE chunked paragraph/sentence stream.',
+        notes: 'SSE chunked paragraph/sentence stream (VL-140).',
       },
       {
         id: 'document',
@@ -62,35 +62,35 @@ export function translateEngineCatalog {
         name: 'HTML translation',
         status: 'shipped',
         api: 'POST /v1/translate/formats',
-        notes: 'Tag-preserving text-node MT.',
+        notes: 'Tag-preserving text-node MT (VL-140).',
       },
       {
         id: 'markdown',
         name: 'Markdown translation',
         status: 'shipped',
         api: 'POST /v1/translate/formats',
-        notes: 'Code fences preserved.',
+        notes: 'Code fences preserved (VL-140).',
       },
       {
         id: 'xml',
         name: 'XML translation',
         status: 'shipped',
         api: 'POST /v1/translate/formats',
-        notes: 'Markup-preserving text MT.',
+        notes: 'Markup-preserving text MT (VL-140).',
       },
       {
         id: 'csv',
         name: 'CSV translation',
         status: 'shipped',
         api: 'POST /v1/translate/formats',
-        notes: 'Cell MT. Not Excel/XLSX.',
+        notes: 'Cell MT. Not Excel/XLSX (VL-140).',
       },
       {
         id: 'srt',
         name: 'Subtitle translation (SRT)',
         status: 'shipped',
         api: 'POST /v1/translate/formats',
-        notes: 'Cue text MT; timestamps preserved.',
+        notes: 'Cue text MT; timestamps preserved (VL-140).',
       },
       {
         id: 'word',
@@ -111,7 +111,7 @@ export function translateEngineCatalog {
         name: 'Chat translation',
         status: 'partial',
         api: 'POST /v1/translate/chat',
-        notes: 'Translates message content array. Full LLM chat is /v1/chat/completions.',
+        notes: 'Translates message content array (VL-140). Full LLM chat is /v1/chat/completions.',
       },
       {
         id: 'slack',
@@ -176,7 +176,7 @@ export function translateEngineCatalog {
       terminologyGlossary: { status: 'shipped', api: '/v1/glossary' },
       quality: { status: 'partial', api: '/v1/reviews', notes: 'Heuristic QE' },
       rest: { status: 'shipped' },
-      graphql: { status: 'shipped', api: 'mutation translate', notes: '' },
+      graphql: { status: 'shipped', api: 'mutation translate', notes: 'VL-140' },
       sdk: { status: 'shipped', package: '@lugemi/sdk' },
       cli: { status: 'shipped', package: '@lugemi/cli' },
       monitoring: { status: 'shipped', api: 'GET /v1/metrics/translate' },

@@ -23,8 +23,8 @@ type Analytics = {
   note: string;
 };
 
-export function EmbeddingCloudClient {
-  const { getToken, isLoaded } = useAuth;
+export function EmbeddingCloudClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [models, setModels] = useState<Models | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
@@ -34,8 +34,8 @@ export function EmbeddingCloudClient {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(async  => {
-    const token = await getToken;
+  const refresh = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, mods, an] = await Promise.all([
       apiFetch<Engine>('/v1/embedding-cloud/engine', { token }),
@@ -47,17 +47,17 @@ export function EmbeddingCloudClient {
     setAnalytics(an);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void refresh.catch((err: Error) => setError(err.message));
+    void refresh().catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
-  async function embed {
+  async function embed() {
     setLoading(true);
     setError(null);
     setResult(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const body = await apiFetch<{
         modality: string;
@@ -82,7 +82,7 @@ export function EmbeddingCloudClient {
           2,
         ),
       );
-      await refresh;
+      await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Embed failed');
     } finally {
@@ -142,7 +142,7 @@ export function EmbeddingCloudClient {
               <option value="document">document</option>
               <option value="code">code</option>
             </select>
-            <button type="button" disabled={loading} style={primary} onClick={ => void embed}>
+            <button type="button" disabled={loading} style={primary} onClick={() => void embed()}>
               Embed
             </button>
           </div>

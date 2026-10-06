@@ -6,15 +6,15 @@ import {
   ControlPlaneCloudProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestControlPlaneCloudCatalogAdapter implements ControlPlaneCloudCatalogPort {
   constructor(private readonly service: ControlPlaneCloudService) {}
 
-  engine: ControlPlaneCloudEngineBundle {
-    return this.service.products;
+  engine(): ControlPlaneCloudEngineBundle {
+    return this.service.products();
   }
 
-  listProducts: ControlPlaneCloudProductRow[] {
-    return this.service.products.products;
+  listProducts(): ControlPlaneCloudProductRow[] {
+    return this.service.products().products;
   }
 }

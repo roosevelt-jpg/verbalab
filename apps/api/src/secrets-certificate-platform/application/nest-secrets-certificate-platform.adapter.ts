@@ -6,16 +6,16 @@ import {
   SecretsCertificatePlatformProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestSecretsCertificatePlatformCatalogAdapter implements SecretsCertificatePlatformCatalogPort {
   constructor(private readonly service: SecretsCertificatePlatformService) {}
 
-  engine: SecretsCertificatePlatformEngineBundle {
-    return this.service.engine;
+  engine(): SecretsCertificatePlatformEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: SecretsCertificatePlatformProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): SecretsCertificatePlatformProductRow[] {
+    const bundle = this.engine() as {
       products?: SecretsCertificatePlatformProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestSecretsCertificatePlatformCatalogAdapter implements SecretsCert
         status: 'shipped',
         api: 'GET /v1/secrets-certificate-platform/engine',
         console: '/secrets-certificate-platform',
-        notes: ' shipped.',
+        notes: 'VL-320 shipped.',
       },
     ];
   }

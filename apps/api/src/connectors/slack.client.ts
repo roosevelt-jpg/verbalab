@@ -50,7 +50,7 @@ export class HttpSlackClient implements SlackClient {
       }),
       signal: AbortSignal.timeout(15_000),
     });
-    const json = (await response.json.catch( => ({}))) as {
+    const json = (await response.json().catch(() => ({}))) as {
       ok?: boolean;
       ts?: string;
       error?: string;

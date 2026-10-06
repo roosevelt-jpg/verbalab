@@ -19,7 +19,7 @@ async function seedOrg(prisma: PrismaService, name: string, role: MembershipRole
           role,
           user: {
             create: {
-              clerkUserId: `clerk_audit_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_audit_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -33,20 +33,20 @@ async function seedOrg(prisma: PrismaService, name: string, role: MembershipRole
   });
 }
 
-describe('Audit log',  => {
+describe('Audit log (VL-032)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let audit: AuditService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -67,11 +67,11 @@ describe('Audit log',  => {
     });
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('records api_key.created, translate.completed, api_key.revoked', async  => {
+  it('records api_key.created, translate.completed, api_key.revoked', async () => {
     const org = await seedOrg(prisma, 'auditA');
     const created = await apiKeys.create({
       organizationId: org.id,
@@ -81,7 +81,7 @@ describe('Audit log',  => {
       ip: '203.0.113.10',
     });
 
-    await request(app.getHttpServer)
+    await request(app.getHttpServer())
       .post('/v1/translate')
       .set('Authorization', `Bearer ${created.secret}`)
       .set('X-Forwarded-For', '198.51.100.7')
@@ -105,7 +105,7 @@ describe('Audit log',  => {
     expect(translateEvent?.route).toBe('POST /v1/translate');
   });
 
-  it('isolates audit events by organization', async  => {
+  it('isolates audit events by organization', async () => {
     const orgA = await seedOrg(prisma, 'isoA');
     const orgB = await seedOrg(prisma, 'isoB');
 
@@ -122,7 +122,7 @@ describe('Audit log',  => {
     expect(bEvents.length).toBe(0);
   });
 
-  it('records at most one session.sign_in per user per day', async  => {
+  it('records at most one session.sign_in per user per day', async () => {
     const org = await seedOrg(prisma, 'signin');
     const userId = org.memberships[0]!.userId;
 

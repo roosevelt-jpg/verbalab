@@ -1,4 +1,4 @@
-/** Application ports for Agent Operating System. */
+/** Application ports for Agent Operating System (VL-339). */
 
 export type AgentOperatingSystemProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type AgentOperatingSystemEngineBundle = ReturnType<
 >;
 
 export interface AgentOperatingSystemCatalogPort {
-  engine: AgentOperatingSystemEngineBundle;
-  listProducts: AgentOperatingSystemProductRow[];
+  engine(): AgentOperatingSystemEngineBundle;
+  listProducts(): AgentOperatingSystemProductRow[];
 }
 
 export const AGENT_OPERATING_SYSTEM_CATALOG_PORT = Symbol('AGENT_OPERATING_SYSTEM_CATALOG_PORT');

@@ -30,31 +30,31 @@ type Examples = {
   currency: string | null;
 };
 
-export function LocalesClient {
+export function LocalesClient() {
   const [rows, setRows] = useState<LocalePack[]>([]);
   const [selected, setSelected] = useState<string | null>(null);
   const [examples, setExamples] = useState<Examples | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect( => {
+  useEffect(() => {
     void fetch(`${API_URL}/v1/locales`)
       .then(async (res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const body = (await res.json) as { data: LocalePack[] };
+        const body = (await res.json()) as { data: LocalePack[] };
         setRows(body.data);
         if (body.data[0]) setSelected(body.data[0].languageCode);
       })
       .catch((err: Error) => setError(err.message));
   }, []);
 
-  useEffect( => {
+  useEffect(() => {
     if (!selected) return;
     void fetch(`${API_URL}/v1/locales/${selected}/examples`)
       .then(async (res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        setExamples((await res.json) as Examples);
+        setExamples((await res.json()) as Examples);
       })
-      .catch( => setExamples(null));
+      .catch(() => setExamples(null));
   }, [selected]);
 
   const pack = rows.find((r) => r.languageCode === selected) ?? null;
@@ -83,7 +83,7 @@ export function LocalesClient {
             <button
               key={row.languageCode}
               type="button"
-              onClick={ => setSelected(row.languageCode)}
+              onClick={() => setSelected(row.languageCode)}
               style={{
                 padding: '0.4rem 0.75rem',
                 border: '1px solid #111',

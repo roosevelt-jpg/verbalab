@@ -20,8 +20,8 @@ export class ListModelRegistryCapabilitiesHandler
     private readonly catalog: ModelRegistryCatalogPort,
   ) {}
 
-  execute: Promise<MrCapabilityRow[]> {
-    return Promise.resolve(this.catalog.listCapabilities);
+  execute(): Promise<MrCapabilityRow[]> {
+    return Promise.resolve(this.catalog.listCapabilities());
   }
 }
 
@@ -34,8 +34,8 @@ export class GetModelRegistryEngineHandler
     private readonly catalog: ModelRegistryCatalogPort,
   ) {}
 
-  execute: Promise<MrEngineBundle> {
-    return this.catalog.engine;
+  execute(): Promise<MrEngineBundle> {
+    return this.catalog.engine();
   }
 }
 

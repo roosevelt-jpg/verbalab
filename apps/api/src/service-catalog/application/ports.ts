@@ -1,4 +1,4 @@
-/** Application ports for Service Catalog. */
+/** Application ports for Service Catalog (VL-304). */
 
 export type ServiceCatalogProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type ServiceCatalogEngineBundle = ReturnType<
 >;
 
 export interface ServiceCatalogCatalogPort {
-  engine: ServiceCatalogEngineBundle;
-  listProducts: ServiceCatalogProductRow[];
+  engine(): ServiceCatalogEngineBundle;
+  listProducts(): ServiceCatalogProductRow[];
 }
 
 export const SERVICE_CATALOG_CATALOG_PORT = Symbol('SERVICE_CATALOG_CATALOG_PORT');

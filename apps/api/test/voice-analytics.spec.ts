@@ -22,7 +22,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_va_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_va_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -36,31 +36,31 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Voice Analytics',  => {
+describe('Voice Analytics (VL-178)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let usage: UsageService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
     usage = app.get(UsageService);
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('documents Voice Analytics distinct from Speech Analytics',  => {
+  it('documents Voice Analytics distinct from Speech Analytics', () => {
     const doc = join(root, 'docs/VOICE_ANALYTICS.md');
     const adr = join(root, 'docs/adr/0089-voice-analytics.md');
     expect(existsSync(doc)).toBe(true);
@@ -71,8 +71,8 @@ describe('Voice Analytics',  => {
     expect(text).not.toMatch(/BI dashboard.*shipped/i);
   });
 
-  it('exposes engine with regeneratesSpeechAnalytics=false and BI deferred', async  => {
-    const res = await request(app.getHttpServer).get('/v1/voice-analytics/engine').expect(200);
+  it('exposes engine with regeneratesSpeechAnalytics=false and BI deferred', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/voice-analytics/engine').expect(200);
     expect(res.body.product).toContain('Voice Analytics');
     expect(res.body.honesty.regeneratesSpeechAnalytics).toBe(false);
     expect(res.body.honesty.biDashboardProduct).toBe(false);
@@ -80,7 +80,7 @@ describe('Voice Analytics',  => {
     expect(bi.status).toBe('deferred');
   });
 
-  it('returns usage overview revenue and report', async  => {
+  it('returns usage overview revenue and report', async () => {
     const org = await seedOrg(prisma, 'va');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -158,7 +158,7 @@ describe('Voice Analytics',  => {
       },
     });
 
-    const overview = await request(app.getHttpServer)
+    const overview = await request(app.getHttpServer())
       .get('/v1/voice-analytics/overview')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -168,7 +168,7 @@ describe('Voice Analytics',  => {
     expect(overview.body.revenueCents).toBeGreaterThanOrEqual(500);
     expect(overview.body.estimatedCostUsd).toBeGreaterThan(0);
 
-    const voices = await request(app.getHttpServer)
+    const voices = await request(app.getHttpServer())
       .get('/v1/voice-analytics/voices')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -176,7 +176,7 @@ describe('Voice Analytics',  => {
       true,
     );
 
-    const languages = await request(app.getHttpServer)
+    const languages = await request(app.getHttpServer())
       .get('/v1/voice-analytics/languages')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -184,23 +184,23 @@ describe('Voice Analytics',  => {
       true,
     );
 
-    const streaming = await request(app.getHttpServer)
+    const streaming = await request(app.getHttpServer())
       .get('/v1/voice-analytics/streaming')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(streaming.body.streamEvents).toBeGreaterThanOrEqual(1);
 
-    const report = await request(app.getHttpServer)
+    const report = await request(app.getHttpServer())
       .get('/v1/voice-analytics/report')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(report.body.product).toContain('Voice Analytics');
-    expect(report.body.marketplace).toBeDefined;
+    expect(report.body.marketplace).toBeDefined();
     expect(report.body.note).toMatch(/Speech Analytics/i);
   });
 
-  it('exposes voiceAnalyticsEngine via GraphQL', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes voiceAnalyticsEngine via GraphQL', async () => {
+    const res = await request(app.getHttpServer())
       .post('/graphql')
       .send({
         query:
@@ -208,7 +208,7 @@ describe('Voice Analytics',  => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined;
+    expect(res.body.errors).toBeUndefined();
     expect(res.body.data.voiceAnalyticsEngine.regeneratesSpeechAnalytics).toBe(false);
     expect(res.body.data.voiceAnalyticsEngine.biDashboardProduct).toBe(false);
     expect(res.body.data.voiceAnalyticsEngine.shippedCount).toBeGreaterThan(0);

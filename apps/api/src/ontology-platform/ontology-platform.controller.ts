@@ -27,18 +27,18 @@ export class OntologyPlatformController {
   constructor(private readonly ontology: OntologyPlatformService) {}
 
   @Get('engine')
-  engine {
-    return this.ontology.engine;
+  engine() {
+    return this.ontology.engine();
   }
 
   @Get('domains')
-  domains {
-    return this.ontology.domains;
+  domains() {
+    return this.ontology.domains();
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req req: AuthedReq) {
+  analytics(@Req() req: AuthedReq) {
     return this.ontology.analytics(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -47,7 +47,7 @@ export class OntologyPlatformController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req req: AuthedReq) {
+  monitoring(@Req() req: AuthedReq) {
     return this.ontology.monitoring(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -57,7 +57,7 @@ export class OntologyPlatformController {
   @Get('concepts')
   @UseGuards(TranslateAuthGuard)
   list(
-    @Req req: AuthedReq,
+    @Req() req: AuthedReq,
     @Query('domain') domain?: string,
     @Query('type') type?: string,
     @Query('q') q?: string,
@@ -75,7 +75,7 @@ export class OntologyPlatformController {
 
   @Get('concepts/:id')
   @UseGuards(TranslateAuthGuard)
-  get(@Req req: AuthedReq, @Param('id') id: string) {
+  get(@Req() req: AuthedReq, @Param('id') id: string) {
     return this.ontology.getConcept({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -86,7 +86,7 @@ export class OntologyPlatformController {
   @Get('concepts/:id/children')
   @UseGuards(TranslateAuthGuard)
   children(
-    @Req req: AuthedReq,
+    @Req() req: AuthedReq,
     @Param('id') id: string,
     @Query('limit') limit?: string,
   ) {
@@ -102,8 +102,8 @@ export class OntologyPlatformController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(TranslateAuthGuard)
   create(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       name?: string;
       description?: string;
@@ -127,9 +127,9 @@ export class OntologyPlatformController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   labels(
-    @Req req: AuthedReq,
+    @Req() req: AuthedReq,
     @Param('id') id: string,
-    @Body body: { labels?: Record<string, string> },
+    @Body() body: { labels?: Record<string, string> },
   ) {
     return this.ontology.setLabels({
       organizationId: req.translateAuth.organizationId,
@@ -143,7 +143,7 @@ export class OntologyPlatformController {
 
   @Delete('concepts/:id')
   @UseGuards(TranslateAuthGuard)
-  remove(@Req req: AuthedReq, @Param('id') id: string) {
+  remove(@Req() req: AuthedReq, @Param('id') id: string) {
     return this.ontology.deleteConcept({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -157,8 +157,8 @@ export class OntologyPlatformController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(TranslateAuthGuard)
   hierarchy(
-    @Req req: AuthedReq,
-    @Body body: { parentId?: string; childId?: string; label?: string },
+    @Req() req: AuthedReq,
+    @Body() body: { parentId?: string; childId?: string; label?: string },
   ) {
     return this.ontology.addHierarchy({
       organizationId: req.translateAuth.organizationId,
@@ -173,8 +173,8 @@ export class OntologyPlatformController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(TranslateAuthGuard)
   synonym(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: { conceptId?: string; synonym?: string; synonymConceptId?: string },
   ) {
     return this.ontology.addSynonym({

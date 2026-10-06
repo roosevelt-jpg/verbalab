@@ -10,7 +10,7 @@ export function planSrt(srt: string): FormatPlan {
     if (lines.length < 2) return block;
     const idxLine = lines[0] ?? '';
     const timeLine = lines[1] ?? '';
-    if (!/^\d+$/.test(idxLine.trim) || !timeLine.includes('-->')) {
+    if (!/^\d+$/.test(idxLine.trim()) || !timeLine.includes('-->')) {
       return block;
     }
     const textLines = lines.slice(2);

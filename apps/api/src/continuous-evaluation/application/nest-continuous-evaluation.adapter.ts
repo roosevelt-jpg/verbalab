@@ -6,16 +6,16 @@ import {
   ContinuousEvaluationProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestContinuousEvaluationCatalogAdapter implements ContinuousEvaluationCatalogPort {
   constructor(private readonly service: ContinuousEvaluationService) {}
 
-  engine: ContinuousEvaluationEngineBundle {
-    return this.service.engine;
+  engine(): ContinuousEvaluationEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: ContinuousEvaluationProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): ContinuousEvaluationProductRow[] {
+    const bundle = this.engine() as {
       products?: ContinuousEvaluationProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestContinuousEvaluationCatalogAdapter implements ContinuousEvaluat
         status: 'shipped',
         api: 'GET /v1/continuous-evaluation/engine',
         console: '/continuous-evaluation',
-        notes: ' shipped.',
+        notes: 'VL-284 shipped.',
       },
     ];
   }

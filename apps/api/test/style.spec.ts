@@ -18,7 +18,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_style_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_style_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -32,50 +32,50 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Writing Style AI',  => {
+describe('Writing Style AI (VL-134)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let prevOpenAi: string | undefined;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     prevOpenAi = process.env.OPENAI_API_KEY;
     delete process.env.OPENAI_API_KEY;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
 
     app.get(GatewayService).setDetectProviderForTests({
       name: 'fixture_detect',
-      async detect {
+      async detect() {
         return { language: 'en', confidence: 0.95, provider: 'fixture_detect' };
       },
     });
   });
 
-  afterAll(async  => {
+  afterAll(async () => {
     if (prevOpenAi === undefined) delete process.env.OPENAI_API_KEY;
     else process.env.OPENAI_API_KEY = prevOpenAi;
-    await app.close;
+    await app.close();
   });
 
-  it('GET /v1/style/profiles lists bounded profiles', async  => {
-    const res = await request(app.getHttpServer).get('/v1/style/profiles').expect(200);
+  it('GET /v1/style/profiles lists bounded profiles', async () => {
+    const res = await request(app.getHttpServer()).get('/v1/style/profiles').expect(200);
     const ids = res.body.data.map((p: { id: string }) => p.id);
     expect(ids).toEqual(
       expect.arrayContaining(['professional', 'casual', 'concise', 'academic', 'plain']),
     );
   });
 
-  it('POST /v1/style/rewrite applies professional rules', async  => {
+  it('POST /v1/style/rewrite applies professional rules', async () => {
     const org = await seedOrg(prisma, 'style');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -84,7 +84,7 @@ describe('Writing Style AI',  => {
       name: 'style-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/style/rewrite')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: "I'm gonna finish this, yeah?", profile: 'professional', language: 'en' })

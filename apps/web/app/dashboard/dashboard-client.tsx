@@ -56,22 +56,22 @@ const QUICK_LINKS = [
   { href: '/keys', label: 'API keys', primary: false },
 ];
 
-export function DashboardClient {
-  const { getToken, isLoaded } = useAuth;
+export function DashboardClient() {
+  const { getToken, isLoaded } = useAuth();
   const [data, setData] = useState<Overview | null>(null);
   const [error, setError] = useState<string | null>(null);
   const welcome = SITE_CONTENT.dashboardWelcome;
 
-  const load = useCallback(async  => {
-    const token = await getToken;
+  const load = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const overview = await apiFetch<Overview>('/v1/cloud/overview', { token });
     setData(overview);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void load.catch((err: Error) => setError(err.message));
+    void load().catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
   return (
@@ -175,11 +175,11 @@ export function DashboardClient {
             <section className="vl-endpoint-card">
               <h2 style={sectionLabel}>Usage this period</h2>
               <p style={{ margin: 0, fontWeight: 600, color: 'var(--brand-navy)' }}>
-                {data.billing.charactersUsed.toLocaleString} / {data.billing.characterQuota.toLocaleString}{' '}
+                {data.billing.charactersUsed.toLocaleString()} / {data.billing.characterQuota.toLocaleString()}{' '}
                 characters
               </p>
               <p style={{ margin: '0.25rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
-                {data.billing.charactersRemaining.toLocaleString} remaining · {data.billing.requests} requests
+                {data.billing.charactersRemaining.toLocaleString()} remaining · {data.billing.requests} requests
               </p>
               <p style={{ margin: '0.65rem 0 0' }}>
                 <Link href="/billing" style={{ color: 'var(--action-primary)', fontWeight: 550 }}>
@@ -214,13 +214,13 @@ export function DashboardClient {
                 value={data.billing.charactersUsed}
                 max={data.billing.characterQuota}
                 label="Character balance"
-                sublabel={`${data.billing.charactersRemaining.toLocaleString} left this period`}
+                sublabel={`${data.billing.charactersRemaining.toLocaleString()} left this period`}
               />
               <ProgressRing
                 value={Math.min(data.billing.requests, 500)}
                 max={500}
                 label="Request pace"
-                sublabel={`${data.billing.requests.toLocaleString} translate/speech calls`}
+                sublabel={`${data.billing.requests.toLocaleString()} translate/speech calls`}
               />
               <LineChart
                 title="Usage timeline"

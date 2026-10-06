@@ -8,13 +8,13 @@ export class DeveloperCloudController {
   constructor(private readonly developer: DeveloperCloudService) {}
 
   @Get('sdk')
-  sdk {
-    return this.developer.sdk;
+  sdk() {
+    return this.developer.sdk();
   }
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession session: SessionContext) {
+  overview(@CurrentSession() session: SessionContext) {
     return this.developer.overview(session);
   }
 }

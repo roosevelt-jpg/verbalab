@@ -6,16 +6,16 @@ import {
   TourismHeritageIntelligenceProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestTourismHeritageIntelligenceCatalogAdapter implements TourismHeritageIntelligenceCatalogPort {
   constructor(private readonly service: TourismHeritageIntelligenceService) {}
 
-  engine: TourismHeritageIntelligenceEngineBundle {
-    return this.service.engine;
+  engine(): TourismHeritageIntelligenceEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: TourismHeritageIntelligenceProductRow[] {
-    const bundle = this.engine as { products?: TourismHeritageIntelligenceProductRow[]; capabilities?: TourismHeritageIntelligenceProductRow[] };
+  listProducts(): TourismHeritageIntelligenceProductRow[] {
+    const bundle = this.engine() as { products?: TourismHeritageIntelligenceProductRow[]; capabilities?: TourismHeritageIntelligenceProductRow[] };
     if (Array.isArray(bundle.products)) return bundle.products;
     if (Array.isArray(bundle.capabilities)) {
       return bundle.capabilities.map((c) => ({
@@ -34,7 +34,7 @@ export class NestTourismHeritageIntelligenceCatalogAdapter implements TourismHer
         status: 'shipped',
         api: 'GET /v1/tourism-heritage-intelligence/engine',
         console: '/tourism-heritage-intelligence',
-        notes: ' shipped.',
+        notes: 'VL-269 shipped.',
       },
     ];
   }

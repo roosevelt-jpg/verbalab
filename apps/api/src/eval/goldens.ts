@@ -1,7 +1,7 @@
 /**
- * Hand-authored EN→African golden segments for .
+ * Hand-authored EN→African golden segments for VL-100.
  * Short everyday / public-sector phrases — not a licensed FLORES dump.
- * Expand with licensed datasets under .
+ * Expand with licensed datasets under VL-101.
  */
 export type GoldenSegment = {
   id: string;

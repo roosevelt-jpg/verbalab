@@ -1,4 +1,4 @@
-/** Application ports for Knowledge Runtime. */
+/** Application ports for Knowledge Runtime (VL-329). */
 
 export type KnowledgeRuntimeProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type KnowledgeRuntimeEngineBundle = ReturnType<
 >;
 
 export interface KnowledgeRuntimeCatalogPort {
-  engine: KnowledgeRuntimeEngineBundle;
-  listProducts: KnowledgeRuntimeProductRow[];
+  engine(): KnowledgeRuntimeEngineBundle;
+  listProducts(): KnowledgeRuntimeProductRow[];
 }
 
 export const KNOWLEDGE_RUNTIME_CATALOG_PORT = Symbol('KNOWLEDGE_RUNTIME_CATALOG_PORT');

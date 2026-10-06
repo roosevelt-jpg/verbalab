@@ -1,19 +1,19 @@
 /**
- * Library Phase 175 → Reliability Engineering.
- * Reliability Engineering. SLO/SLI/error budgets/incident/capacity/autoscaling/DR/chaos catalog. Extends observability — datadogOs=false.
+ * Library Phase 175 → Reliability Engineering (VL-308).
+ * Reliability Engineering (VL-308). SLO/SLI/error budgets/incident/capacity/autoscaling/DR/chaos catalog. Extends observability — datadogOs=false.
  */
-export function reliabilityEngineeringEngineCatalog {
+export function reliabilityEngineeringEngineCatalog() {
   return {
     product: 'Lugemi Reliability Engineering',
     capabilities: [
-      { id: 'slo', name: 'SLOs', status: 'shipped', notes: ' capability.' },
-      { id: 'sli', name: 'SLIs', status: 'shipped', notes: ' capability.' },
-      { id: 'error_budget', name: 'Error Budgets', status: 'shipped', notes: ' capability.' },
-      { id: 'incident', name: 'Incident Management', status: 'shipped', notes: ' capability.' },
-      { id: 'capacity', name: 'Capacity', status: 'shipped', notes: ' capability.' },
-      { id: 'autoscaling', name: 'Autoscaling', status: 'shipped', notes: ' capability.' },
-      { id: 'dr', name: 'Disaster Recovery', status: 'shipped', notes: ' capability.' },
-      { id: 'chaos', name: 'Chaos Engineering', status: 'shipped', notes: ' capability.' }
+      { id: 'slo', name: 'SLOs', status: 'shipped', notes: 'VL-308 capability.' },
+      { id: 'sli', name: 'SLIs', status: 'shipped', notes: 'VL-308 capability.' },
+      { id: 'error_budget', name: 'Error Budgets', status: 'shipped', notes: 'VL-308 capability.' },
+      { id: 'incident', name: 'Incident Management', status: 'shipped', notes: 'VL-308 capability.' },
+      { id: 'capacity', name: 'Capacity', status: 'shipped', notes: 'VL-308 capability.' },
+      { id: 'autoscaling', name: 'Autoscaling', status: 'shipped', notes: 'VL-308 capability.' },
+      { id: 'dr', name: 'Disaster Recovery', status: 'shipped', notes: 'VL-308 capability.' },
+      { id: 'chaos', name: 'Chaos Engineering', status: 'shipped', notes: 'VL-308 capability.' }
     ],
     reliability: [
       {
@@ -83,9 +83,9 @@ export function reliabilityEngineeringEngineCatalog {
     },
     safety: {
       datadogOs: false,
-      note: 'Reliability Engineering. SLO/SLI/error budgets/incident/capacity/autoscaling/DR/chaos catalog. Extends observability — datadogOs=false.',
+      note: 'Reliability Engineering (VL-308). SLO/SLI/error budgets/incident/capacity/autoscaling/DR/chaos catalog. Extends observability — datadogOs=false.',
     },
     docs: '/docs/RELIABILITY_ENGINEERING.md',
-    note: 'Reliability Engineering. SLO/SLI/error budgets/incident/capacity/autoscaling/DR/chaos catalog. Extends observability — datadogOs=false.',
+    note: 'Reliability Engineering (VL-308). SLO/SLI/error budgets/incident/capacity/autoscaling/DR/chaos catalog. Extends observability — datadogOs=false.',
   };
 }

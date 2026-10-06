@@ -5,11 +5,11 @@ import {
   VoiceLanguageMarketplaceEngineBundle,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestVoiceLanguageMarketplaceCatalogAdapter implements VoiceLanguageMarketplaceCatalogPort {
   constructor(private readonly marketplace: VoiceLanguageMarketplaceService) {}
 
-  engine: VoiceLanguageMarketplaceEngineBundle {
-    return this.marketplace.engine;
+  engine(): VoiceLanguageMarketplaceEngineBundle {
+    return this.marketplace.engine();
   }
 }

@@ -14,36 +14,36 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory) out.push(...walkTsFiles(full));
+    if (statSync(full).isDirectory()) out.push(...walkTsFiles(full));
     else if (full.endsWith('.ts')) out.push(full);
   }
   return out;
 }
 
-describe('Synthetic Data Platform',  => {
+describe('Synthetic Data Platform (VL-273)', () => {
   let app: INestApplication<App>;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    }).compile();
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
   }, 120_000);
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('documents Synthetic Data Platform + ADR',  => {
+  it('documents Synthetic Data Platform + ADR', () => {
     expect(existsSync(join(root, 'docs/SYNTHETIC_DATA_PLATFORM.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0175-synthetic-data-platform.md'))).toBe(true);
     const text = readFileSync(join(root, 'docs/SYNTHETIC_DATA_PLATFORM.md'), 'utf8');
-    expect(text).toContain('');
+    expect(text).toContain('VL-273');
   });
 
-  it('has no TODO/FIXME/implement-later markers',  => {
+  it('has no TODO/FIXME/implement-later markers', () => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const file of walkTsFiles(join(apiSrc, 'synthetic-data-platform'))) {
@@ -53,8 +53,8 @@ describe('Synthetic Data Platform',  => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes engine honesty', async  => {
-    const res = await request(app.getHttpServer)
+  it('exposes engine honesty', async () => {
+    const res = await request(app.getHttpServer())
       .get('/v1/synthetic-data-platform/engine')
       .expect(200);
     expect(res.body.product).toBe('Lugemi Synthetic Data Platform');
@@ -65,8 +65,8 @@ describe('Synthetic Data Platform',  => {
 
   });
 
-  it('marks all artifacts isSynthetic and requires synthetic labels', async  => {
-    const arts = await request(app.getHttpServer)
+  it('marks all artifacts isSynthetic and requires synthetic labels', async () => {
+    const arts = await request(app.getHttpServer())
       .get('/v1/synthetic-data-platform/artifacts')
       .expect(200);
     expect(arts.body.syntheticLabelRequired).toBe(true);

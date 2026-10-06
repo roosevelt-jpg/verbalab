@@ -1,4 +1,4 @@
-/** Application ports for Research Analytics. */
+/** Application ports for Research Analytics (VL-279). */
 
 export type ResearchAnalyticsProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type ResearchAnalyticsEngineBundle = ReturnType<
 >;
 
 export interface ResearchAnalyticsCatalogPort {
-  engine: ResearchAnalyticsEngineBundle;
-  listProducts: ResearchAnalyticsProductRow[];
+  engine(): ResearchAnalyticsEngineBundle;
+  listProducts(): ResearchAnalyticsProductRow[];
 }
 
 export const RESEARCH_ANALYTICS_CATALOG_PORT = Symbol('RESEARCH_ANALYTICS_CATALOG_PORT');

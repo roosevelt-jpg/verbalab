@@ -17,8 +17,8 @@ export class GetAiDriftDetectionEngineHandler
     private readonly catalog: AiDriftDetectionCatalogPort,
   ) {}
 
-  execute: Promise<AiDriftDetectionEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<AiDriftDetectionEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListAiDriftDetectionProductsHandler
     private readonly catalog: AiDriftDetectionCatalogPort,
   ) {}
 
-  execute: Promise<AiDriftDetectionProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<AiDriftDetectionProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

@@ -21,7 +21,7 @@ import {
   isPromptSnapshotItem,
 } from './marketplace.types';
 
-@Injectable
+@Injectable()
 export class MarketplaceService {
   constructor(
     private readonly prisma: PrismaService,
@@ -40,7 +40,7 @@ export class MarketplaceService {
   }
 
   private requireKind(raw?: string): MarketplaceKind {
-    const kind = (raw ?? MARKETPLACE_KIND_GLOSSARY).trim.toLowerCase;
+    const kind = (raw ?? MARKETPLACE_KIND_GLOSSARY).trim().toLowerCase();
     if (!isMarketplaceKind(kind)) {
       throw new ApiException(
         'validation_error',
@@ -149,7 +149,7 @@ export class MarketplaceService {
     this.assertOwnerOrAdmin(input.role);
     await this.billing.assertPro(input.organizationId);
 
-    const title = input.title.trim;
+    const title = input.title.trim();
     if (!title) {
       throw new ApiException(
         'validation_error',
@@ -173,7 +173,7 @@ export class MarketplaceService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const currency = (input.currency ?? 'usd').trim.toLowerCase || 'usd';
+    const currency = (input.currency ?? 'usd').trim().toLowerCase() || 'usd';
     if (!/^[a-z]{3}$/.test(currency)) {
       throw new ApiException(
         'validation_error',
@@ -186,7 +186,7 @@ export class MarketplaceService {
       const publisher = await this.prisma.organization.findUniqueOrThrow({
         where: { id: input.organizationId },
       });
-      if (this.billing.isMarketplacePaymentsConfigured && !publisher.stripeConnectChargesEnabled) {
+      if (this.billing.isMarketplacePaymentsConfigured() && !publisher.stripeConnectChargesEnabled) {
         throw new ApiException(
           'connect_required',
           'Connect payouts must be enabled before publishing paid listings',
@@ -208,7 +208,7 @@ export class MarketplaceService {
         publisherWorkspaceId: input.workspaceId,
         kind,
         title,
-        description: input.description?.trim || null,
+        description: input.description?.trim() || null,
         status: MARKETPLACE_STATUS_PUBLISHED,
         snapshot: built.snapshot,
         termCount: built.itemCount,
@@ -308,7 +308,7 @@ export class MarketplaceService {
       for (const prompt of prompts) {
         if (!isPromptKey(prompt.key) || prompt.activeVersion == null) continue;
         const version = prompt.versions.find((v) => v.version === prompt.activeVersion);
-        if (!version?.body?.trim) continue;
+        if (!version?.body?.trim()) continue;
         snapshot.push({ key: prompt.key, body: version.body });
       }
       if (snapshot.length === 0) {
@@ -428,7 +428,7 @@ export class MarketplaceService {
     }
 
     if (listing.priceCents > 0) {
-      if (this.billing.isMarketplacePaymentsConfigured) {
+      if (this.billing.isMarketplacePaymentsConfigured()) {
         const publisher = await this.prisma.organization.findUniqueOrThrow({
           where: { id: listing.publisherOrgId },
         });
@@ -736,7 +736,7 @@ export class MarketplaceService {
         }
         for (const pair of snapshot) {
           const sourceText = normalizeTmSegment(pair.sourceText ?? '');
-          const targetText = (pair.targetText ?? '').trim;
+          const targetText = (pair.targetText ?? '').trim();
           if (!sourceText || !targetText || !pair.sourceLang || !pair.targetLang) continue;
           const sourceHash = hashTmSegment(sourceText);
           await tx.translationMemoryEntry.upsert({

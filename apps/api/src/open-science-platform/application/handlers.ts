@@ -17,8 +17,8 @@ export class GetOpenSciencePlatformEngineHandler
     private readonly catalog: OpenSciencePlatformCatalogPort,
   ) {}
 
-  execute: Promise<OpenSciencePlatformEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<OpenSciencePlatformEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListOpenSciencePlatformProductsHandler
     private readonly catalog: OpenSciencePlatformCatalogPort,
   ) {}
 
-  execute: Promise<OpenSciencePlatformProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<OpenSciencePlatformProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

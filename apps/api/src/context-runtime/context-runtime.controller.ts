@@ -24,18 +24,18 @@ export class ContextRuntimeController {
   constructor(private readonly runtime: ContextRuntimeService) {}
 
   @Get('engine')
-  engine {
-    return this.runtime.engine;
+  engine() {
+    return this.runtime.engine();
   }
 
   @Get('scopes')
-  scopes {
-    return this.runtime.scopes;
+  scopes() {
+    return this.runtime.scopes();
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req req: AuthedReq) {
+  analytics(@Req() req: AuthedReq) {
     return this.runtime.analytics({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -44,7 +44,7 @@ export class ContextRuntimeController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req req: AuthedReq) {
+  monitoring(@Req() req: AuthedReq) {
     return this.runtime.monitoring({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -55,8 +55,8 @@ export class ContextRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   assemble(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       query?: string;
       conversationId?: string;
@@ -87,8 +87,8 @@ export class ContextRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   retrieve(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       query?: string;
       conversationId?: string;
@@ -117,8 +117,8 @@ export class ContextRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   prioritize(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       blocks?: Array<{
         id: string;
@@ -145,8 +145,8 @@ export class ContextRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   compress(
-    @Req req: AuthedReq,
-    @Body
+    @Req() req: AuthedReq,
+    @Body()
     body: {
       blocks?: Array<{
         id: string;

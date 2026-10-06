@@ -1,4 +1,4 @@
-/** Application ports for RAGOps Platform. */
+/** Application ports for RAGOps Platform (VL-286). */
 
 export type RagopsPlatformProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type RagopsPlatformEngineBundle = ReturnType<
 >;
 
 export interface RagopsPlatformCatalogPort {
-  engine: RagopsPlatformEngineBundle;
-  listProducts: RagopsPlatformProductRow[];
+  engine(): RagopsPlatformEngineBundle;
+  listProducts(): RagopsPlatformProductRow[];
 }
 
 export const RAGOPS_PLATFORM_CATALOG_PORT = Symbol('RAGOPS_PLATFORM_CATALOG_PORT');

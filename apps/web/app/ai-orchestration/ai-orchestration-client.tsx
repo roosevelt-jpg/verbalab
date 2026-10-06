@@ -19,8 +19,8 @@ type RunResult = {
   steps: Array<{ id: string; op: string; ok: boolean; durationMs: number }>;
 };
 
-export function AiOrchestrationClient {
-  const { getToken, isLoaded } = useAuth;
+export function AiOrchestrationClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [pipeline, setPipeline] = useState('detect_translate');
@@ -30,8 +30,8 @@ export function AiOrchestrationClient {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(async  => {
-    const token = await getToken;
+  const refresh = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, an] = await Promise.all([
       apiFetch<Engine>('/v1/ai-orchestration/engine', { token }),
@@ -41,16 +41,16 @@ export function AiOrchestrationClient {
     setAnalytics(an);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void refresh.catch((err: Error) => setError(err.message));
+    void refresh().catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
-  async function run {
+  async function run() {
     setLoading(true);
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const body = await apiFetch<RunResult>('/v1/ai-orchestration/run', {
         token,
@@ -58,7 +58,7 @@ export function AiOrchestrationClient {
         body: { pipeline, text, target },
       });
       setResult(body);
-      await refresh;
+      await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Run failed');
     } finally {
@@ -120,7 +120,7 @@ export function AiOrchestrationClient {
                 border: '1px solid var(--line)',
               }}
             />
-            <button type="button" onClick={ => void run} disabled={loading} style={btn}>
+            <button type="button" onClick={() => void run()} disabled={loading} style={btn}>
               Run
             </button>
           </div>

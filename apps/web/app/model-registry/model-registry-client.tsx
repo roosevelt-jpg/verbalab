@@ -29,16 +29,16 @@ type Engine = {
   liveSummary: { featureCount: number };
 };
 
-export function ModelRegistryClient {
-  const { getToken, isLoaded } = useAuth;
+export function ModelRegistryClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [versions, setVersions] = useState<Version[]>([]);
   const [deployments, setDeployments] = useState<Deployment[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const refresh = useCallback(async  => {
-    const token = await getToken;
+  const refresh = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, vers, deps] = await Promise.all([
       apiFetch<Engine>('/v1/model-registry/engine', { token }),
@@ -50,16 +50,16 @@ export function ModelRegistryClient {
     setDeployments(deps.deployments);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void refresh.catch((err: Error) => setError(err.message));
+    void refresh().catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
-  const createCanaryPlan = async  => {
+  const createCanaryPlan = async () => {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const created = await apiFetch<{ version: Version }>('/v1/model-registry/versions', {
         token,
@@ -80,7 +80,7 @@ export function ModelRegistryClient {
           canaryPercent: 10,
         }),
       });
-      await refresh;
+      await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Plan failed');
     } finally {
@@ -102,7 +102,7 @@ export function ModelRegistryClient {
         Model Registry
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.5rem', maxWidth: '44rem' }}>
-        Cards, versions, approvals, and deploy plans over existing — not MLflow or a traffic-mesh
+        Cards, versions, approvals, and deploy plans over VL-110 — not MLflow or a traffic-mesh
         canary OS. <Link href="/models">Live models</Link> ·{' '}
         <Link href="/foundation-model-cloud">Foundation Model Cloud</Link>.
       </p>
@@ -126,13 +126,13 @@ export function ModelRegistryClient {
               <li>trafficMeshOs: {String(engine.honesty.trafficMeshOs)}</li>
               <li>automaticWeightDeploy: {String(engine.honesty.automaticWeightDeploy)}</li>
               <li>regeneratesVl110: {String(engine.honesty.regeneratesVl110)}</li>
-              <li> features in live matrix: {engine.liveSummary.featureCount}</li>
+              <li>VL-110 features in live matrix: {engine.liveSummary.featureCount}</li>
             </ul>
           </section>
 
           <section>
             <h2 style={label}>Actions</h2>
-            <button type="button" onClick={ => void createCanaryPlan} disabled={busy} style={btn}>
+            <button type="button" onClick={() => void createCanaryPlan()} disabled={busy} style={btn}>
               {busy ? 'Planning…' : 'Create canary deploy plan'}
             </button>
           </section>

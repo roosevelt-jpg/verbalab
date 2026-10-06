@@ -7,15 +7,15 @@ import {
   MrEngineBundle,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestModelRegistryCatalogAdapter implements ModelRegistryCatalogPort {
   constructor(private readonly registry: ModelRegistryService) {}
 
-  engine: Promise<MrEngineBundle> {
-    return this.registry.engine;
+  engine(): Promise<MrEngineBundle> {
+    return this.registry.engine();
   }
 
-  listCapabilities: MrCapabilityRow[] {
-    return modelRegistryCapabilities;
+  listCapabilities(): MrCapabilityRow[] {
+    return modelRegistryCapabilities();
   }
 }

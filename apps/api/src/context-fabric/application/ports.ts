@@ -1,4 +1,4 @@
-/** Application ports for Context Fabric. */
+/** Application ports for Context Fabric (VL-241). */
 
 export type ContextFabricCapabilityRow = {
   id: string;
@@ -22,9 +22,9 @@ export type ContextFabricProductsBundle = ReturnType<
 >;
 
 export interface ContextFabricCatalogPort {
-  products: ContextFabricProductsBundle;
-  listCapabilities: ContextFabricCapabilityRow[];
-  listRoutes: ContextFabricRouteRow[];
+  products(): ContextFabricProductsBundle;
+  listCapabilities(): ContextFabricCapabilityRow[];
+  listRoutes(): ContextFabricRouteRow[];
 }
 
 export const CONTEXT_FABRIC_CATALOG_PORT = Symbol('CONTEXT_FABRIC_CATALOG_PORT');

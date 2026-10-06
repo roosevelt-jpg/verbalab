@@ -27,8 +27,8 @@ type Classification = {
   note: string;
 };
 
-export function AccentIntelligenceClient {
-  const { getToken, isLoaded } = useAuth;
+export function AccentIntelligenceClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [text, setText] = useState('How far na, I dey go market for Lagos.');
@@ -37,8 +37,8 @@ export function AccentIntelligenceClient {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(async  => {
-    const token = await getToken;
+  const refresh = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, stats] = await Promise.all([
       apiFetch<Engine>('/v1/accents/engine', { token }),
@@ -48,17 +48,17 @@ export function AccentIntelligenceClient {
     setAnalytics(stats);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void refresh.catch((err: Error) => setError(err.message));
+    void refresh().catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
   async function onClassify(e: FormEvent) {
-    e.preventDefault;
+    e.preventDefault();
     setLoading(true);
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const body = await apiFetch<Classification>('/v1/accents/classify', {
         token,
@@ -66,7 +66,7 @@ export function AccentIntelligenceClient {
         body: JSON.stringify({ text, language: language || undefined }),
       });
       setResult(body);
-      await refresh;
+      await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Classify failed');
     } finally {
@@ -118,7 +118,7 @@ export function AccentIntelligenceClient {
               placeholder="Language hint (en)"
               style={input}
             />
-            <button type="submit" disabled={loading || !text.trim} style={primary}>
+            <button type="submit" disabled={loading || !text.trim()} style={primary}>
               Classify accent
             </button>
           </form>

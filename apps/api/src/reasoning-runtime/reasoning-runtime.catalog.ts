@@ -8,32 +8,32 @@ export type ReasoningRuntimeCapability = {
   notes: string;
 };
 
-export function reasoningRuntimeMode: 'disabled' | 'sandbox' {
-  const raw = (process.env.LUGEMI_REASONING_RUNTIME_MODE ?? 'sandbox').toLowerCase;
+export function reasoningRuntimeMode(): 'disabled' | 'sandbox' {
+  const raw = (process.env.LUGEMI_REASONING_RUNTIME_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
 
-export function reasoningRuntimeCeilings {
+export function reasoningRuntimeCeilings() {
   return {
     maxHistoryPerWorkspace: Math.min(
       500,
       Math.max(10, Number(process.env.LUGEMI_REASONING_RUNTIME_MAX_HISTORY ?? '100') || 100),
     ),
-    mode: reasoningRuntimeMode,
+    mode: reasoningRuntimeMode(),
     note: 'Hard ceiling for stored reasoning runs (kernel MemoryRecords).',
   };
 }
 
 /**
- * Library Phase 85 → Reasoning Runtime.
- * Kernel execution over existing Reasoning Cloud — not a custom reasoner OS.
+ * Library Phase 85 → Reasoning Runtime (VL-218).
+ * Kernel execution over VL-186 Reasoning Cloud — not a custom reasoner OS.
  */
-export function reasoningRuntimeCatalog {
+export function reasoningRuntimeCatalog() {
   return {
     product: 'Lugemi Reasoning Runtime',
     note:
-      'Reasoning Runtime. Kernel execution over existing Reasoning Cloud (graphs/ToT/planning/tool+model selection) plus reflection, self-eval, confidence, decision-tree façade, history/replay via kernel MemoryRecords. Not a custom reasoner kernel, not symbolic reasoner OS, not tool-execution agent OS. Does not regenerate Reasoning Cloud.',
+      'Reasoning Runtime (VL-218). Kernel execution over VL-186 Reasoning Cloud (graphs/ToT/planning/tool+model selection) plus reflection, self-eval, confidence, decision-tree façade, history/replay via kernel MemoryRecords. Not a custom reasoner kernel, not symbolic reasoner OS, not tool-execution agent OS. Does not regenerate Reasoning Cloud.',
     capabilities: [
       {
         id: 'reasoning-graphs',
@@ -130,7 +130,7 @@ export function reasoningRuntimeCatalog {
         id: 'sdk',
         name: 'SDK',
         status: 'shipped',
-        api: 'reasoningRuntimeEngine',
+        api: 'reasoningRuntimeEngine()',
         notes: '@lugemi/sdk',
       },
       {

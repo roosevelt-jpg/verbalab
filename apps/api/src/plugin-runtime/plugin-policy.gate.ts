@@ -8,9 +8,9 @@ import {
 } from './plugin-runtime.catalog';
 
 /**
- * Local allowlist + Policy Runtime hard gate.
+ * Local allowlist + Policy Runtime hard gate (VL-221 / VL-222).
  */
-@Injectable
+@Injectable()
 export class PluginPolicyGate {
   constructor(private readonly policyRuntime: PolicyRuntimeService) {}
 
@@ -26,7 +26,7 @@ export class PluginPolicyGate {
     policy: 'policy-runtime';
     hardGate: true;
   }> {
-    const action = (input.action ?? '').trim;
+    const action = (input.action ?? '').trim();
     if (!action) {
       throw new ApiException(
         'plugin_policy_denied',
@@ -80,7 +80,7 @@ export class PluginPolicyGate {
     const list = Array.isArray(raw) ? raw : [];
     const out: PluginPermission[] = [];
     for (const p of list) {
-      const id = String(p).trim;
+      const id = String(p).trim();
       if (
         (PLUGIN_PERMISSIONS as readonly string[]).includes(id) &&
         !out.includes(id as PluginPermission)

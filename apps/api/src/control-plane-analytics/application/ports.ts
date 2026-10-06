@@ -1,4 +1,4 @@
-/** Application ports for Control Plane Analytics. */
+/** Application ports for Control Plane Analytics (VL-322). */
 
 export type ControlPlaneAnalyticsProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type ControlPlaneAnalyticsEngineBundle = ReturnType<
 >;
 
 export interface ControlPlaneAnalyticsCatalogPort {
-  engine: ControlPlaneAnalyticsEngineBundle;
-  listProducts: ControlPlaneAnalyticsProductRow[];
+  engine(): ControlPlaneAnalyticsEngineBundle;
+  listProducts(): ControlPlaneAnalyticsProductRow[];
 }
 
 export const CONTROL_PLANE_ANALYTICS_CATALOG_PORT = Symbol('CONTROL_PLANE_ANALYTICS_CATALOG_PORT');

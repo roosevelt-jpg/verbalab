@@ -16,8 +16,8 @@ export class GetConnectorMarketplaceEngineHandler
     private readonly catalog: ConnectorMarketplaceCatalogPort,
   ) {}
 
-  execute: Promise<ConnectorMarketplaceEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<ConnectorMarketplaceEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 

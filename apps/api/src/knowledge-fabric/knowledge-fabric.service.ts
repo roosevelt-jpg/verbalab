@@ -34,7 +34,7 @@ type DistRecord = {
   at: string;
 };
 
-@Injectable
+@Injectable()
 export class KnowledgeFabricService {
   private routePlans = 0;
   private distributions = 0;
@@ -53,7 +53,7 @@ export class KnowledgeFabricService {
   ) {}
 
   /** Test hook. */
-  resetCounters {
+  resetCounters() {
     this.routePlans = 0;
     this.distributions = 0;
     this.syncs = 0;
@@ -63,36 +63,36 @@ export class KnowledgeFabricService {
     this.distLog.length = 0;
   }
 
-  products {
-    const search = this.enterpriseSearch.engine;
+  products() {
+    const search = this.enterpriseSearch.engine();
     return {
       product: 'Lugemi Knowledge Fabric',
-      products: knowledgeFabricCapabilityCatalog,
-      routes: knowledgeFabricRoutingTable,
-      knowledgeCloud: this.knowledgeCloud.products,
+      products: knowledgeFabricCapabilityCatalog(),
+      routes: knowledgeFabricRoutingTable(),
+      knowledgeCloud: this.knowledgeCloud.products(),
       enterpriseSearch: {
         product: search.product,
         honesty: search.honesty,
         console: '/enterprise-search',
       },
-      architecture: knowledgeFabricArchitectureNotes,
-      honesty: knowledgeFabricHonesty,
+      architecture: knowledgeFabricArchitectureNotes(),
+      honesty: knowledgeFabricHonesty(),
       safety: {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric must hard-gate across fabric buses when shipped — not log-only.',
+          'Policy Fabric (VL-247) must hard-gate across fabric buses when shipped — not log-only.',
       },
       docs: '/docs/KNOWLEDGE_FABRIC.md',
       note:
-        'Knowledge Fabric. Cross-cloud knowledge router over Knowledge Cloud. Not Confluence/Neo4j federation OS.',
+        'Knowledge Fabric (VL-242). Cross-cloud knowledge router over Knowledge Cloud. Not Confluence/Neo4j federation OS.',
     };
   }
 
-  routes {
+  routes() {
     return {
-      routes: knowledgeFabricRoutingTable,
-      honesty: knowledgeFabricHonesty,
+      routes: knowledgeFabricRoutingTable(),
+      honesty: knowledgeFabricHonesty(),
       docs: '/docs/KNOWLEDGE_FABRIC.md',
       note: 'Static knowledge-intent → Knowledge Cloud/Search/RAG handoff catalog.',
     };
@@ -100,16 +100,16 @@ export class KnowledgeFabricService {
 
   route(input: { kinds?: string[] }) {
     this.routePlans += 1;
-    const table = knowledgeFabricRoutingTable;
+    const table = knowledgeFabricRoutingTable();
     const kinds = input.kinds?.length
-      ? input.kinds.map((k) => k.toLowerCase)
+      ? input.kinds.map((k) => k.toLowerCase())
       : table.map((r) => r.kind);
     const selected = table.filter((r) => kinds.includes(r.kind));
     const missing = kinds.filter((k) => !table.some((r) => r.kind === k));
     return {
       plan: selected,
       missing,
-      honesty: knowledgeFabricHonesty,
+      honesty: knowledgeFabricHonesty(),
       note: 'Knowledge Router plan — discovery handoffs only; does not move document bytes.',
     };
   }
@@ -131,13 +131,13 @@ export class KnowledgeFabricService {
         : peers;
 
     const record: DistRecord = {
-      id: randomUUID,
+      id: randomUUID(),
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,
       targets: targets.map((t) => t.id),
       kinds: plan.plan.map((p) => p.kind),
       status: 'planned',
-      at: new Date.toISOString,
+      at: new Date().toISOString(),
     };
 
     let event: Awaited<ReturnType<EventFabricBus['publish']>> | null = null;
@@ -165,7 +165,7 @@ export class KnowledgeFabricService {
       plan: plan.plan,
       peers: targets,
       event,
-      honesty: knowledgeFabricHonesty,
+      honesty: knowledgeFabricHonesty(),
       note:
         'Distribution plan for same-org workspaces. Does not replicate embeddings or claim multi-region OS.',
     };
@@ -187,21 +187,21 @@ export class KnowledgeFabricService {
         sync: null,
         error: 'target_workspace_not_in_org_peers',
         peers,
-        honesty: knowledgeFabricHonesty,
+        honesty: knowledgeFabricHonesty(),
         note: 'Cross-workspace sync is same-organization only.',
       };
     }
 
     const plan = this.route({ kinds: input.kinds ?? ['knowledge-base', 'documents', 'search'] });
     const record: SyncRecord = {
-      id: randomUUID,
+      id: randomUUID(),
       organizationId: input.organizationId,
       sourceWorkspaceId: input.workspaceId,
       targetWorkspaceId: target.id,
       kinds: plan.plan.map((p) => p.kind),
-      cursor: `kf:${Date.now}`,
+      cursor: `kf:${Date.now()}`,
       status: 'planned',
-      at: new Date.toISOString,
+      at: new Date().toISOString(),
     };
 
     let event: Awaited<ReturnType<EventFabricBus['publish']>> | null = null;
@@ -230,7 +230,7 @@ export class KnowledgeFabricService {
       plan: plan.plan,
       target,
       event,
-      honesty: knowledgeFabricHonesty,
+      honesty: knowledgeFabricHonesty(),
       note: 'Sync cursor/plan only — not CRDT/bidirectional replication OS.',
     };
   }
@@ -247,7 +247,7 @@ export class KnowledgeFabricService {
     return {
       federation,
       missing: plan.missing,
-      honesty: knowledgeFabricHonesty,
+      honesty: knowledgeFabricHonesty(),
       note:
         'Federation is a product-handoff catalog inside Knowledge Cloud — not cross-tenant federation OS.',
     };
@@ -263,7 +263,7 @@ export class KnowledgeFabricService {
     return rows;
   }
 
-  monitoring {
+  monitoring() {
     return {
       mode: 'knowledge_fabric',
       counters: {
@@ -277,12 +277,12 @@ export class KnowledgeFabricService {
         distributions: this.distLog.slice(-10),
         syncs: this.syncLog.slice(-10),
       },
-      products: knowledgeFabricCapabilityCatalog.map((p) => ({
+      products: knowledgeFabricCapabilityCatalog().map((p) => ({
         id: p.id,
         status: p.status,
       })),
-      honesty: knowledgeFabricHonesty,
-      note: 'Knowledge Fabric monitoring.',
+      honesty: knowledgeFabricHonesty(),
+      note: 'Knowledge Fabric monitoring (VL-242).',
     };
   }
 
@@ -310,10 +310,10 @@ export class KnowledgeFabricService {
         knowledgeDocuments: knowledgeDocs,
         peerWorkspaces: peers.length,
       },
-      products: knowledgeFabricCapabilityCatalog,
-      routes: knowledgeFabricRoutingTable,
-      architecture: knowledgeFabricArchitectureNotes,
-      honesty: knowledgeFabricHonesty,
+      products: knowledgeFabricCapabilityCatalog(),
+      routes: knowledgeFabricRoutingTable(),
+      architecture: knowledgeFabricArchitectureNotes(),
+      honesty: knowledgeFabricHonesty(),
       counters: {
         routePlans: this.routePlans,
         distributions: this.distributions,
@@ -325,7 +325,7 @@ export class KnowledgeFabricService {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
+          'Policy Fabric (VL-247) must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
       },
       deferred: {
         promptFabric: false,
@@ -352,7 +352,7 @@ export class KnowledgeFabricService {
       },
       docs: '/docs/KNOWLEDGE_FABRIC.md',
       note:
-        'Knowledge Fabric. Router + same-org distribute/sync plans over Knowledge Cloud.',
+        'Knowledge Fabric (VL-242). Router + same-org distribute/sync plans over Knowledge Cloud.',
     };
   }
 }

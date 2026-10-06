@@ -17,8 +17,8 @@ export class GetAgriculturalIntelligenceEngineHandler
     private readonly catalog: AgriculturalIntelligenceCatalogPort,
   ) {}
 
-  execute: Promise<AgriculturalIntelligenceEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<AgriculturalIntelligenceEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListAgriculturalIntelligenceProductsHandler
     private readonly catalog: AgriculturalIntelligenceCatalogPort,
   ) {}
 
-  execute: Promise<AgriculturalIntelligenceProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<AgriculturalIntelligenceProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 

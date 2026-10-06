@@ -22,7 +22,7 @@ import {
 const DEFAULT_VERIFY_THRESHOLD = 0.82;
 const DEFAULT_IDENTIFY_THRESHOLD = 0.78;
 
-@Injectable
+@Injectable()
 export class SpeakerIntelligenceService {
   constructor(
     private readonly prisma: PrismaService,
@@ -32,8 +32,8 @@ export class SpeakerIntelligenceService {
     private readonly audio: AudioService,
   ) {}
 
-  engine {
-    return speakerEngineCatalog;
+  engine() {
+    return speakerEngineCatalog();
   }
 
   async listProfiles(organizationId: string, workspaceId: string) {
@@ -43,7 +43,7 @@ export class SpeakerIntelligenceService {
     });
     return {
       data: rows.map((r) => this.profileDto(r)),
-      note: 'Workspace speaker profiles — local fingerprints only.',
+      note: 'Workspace speaker profiles — local fingerprints only (VL-152).',
     };
   }
 
@@ -60,7 +60,7 @@ export class SpeakerIntelligenceService {
     userId?: string;
     ip?: string;
   }) {
-    const displayName = input.displayName.trim;
+    const displayName = input.displayName.trim();
     if (!displayName || displayName.length > 120) {
       throw new ApiException(
         'validation_error',
@@ -83,7 +83,7 @@ export class SpeakerIntelligenceService {
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
         displayName,
-        externalRef: input.externalRef?.trim || null,
+        externalRef: input.externalRef?.trim() || null,
       },
     });
     await this.recordEvent({
@@ -111,7 +111,7 @@ export class SpeakerIntelligenceService {
     file: Express.Multer.File;
     userId?: string;
     ip?: string;
-    /** : store fingerprint AES-GCM encrypted at rest. */
+    /** VL-176: store fingerprint AES-GCM encrypted at rest. */
     encryptAtRest?: boolean;
   }) {
     this.audio.assertAllowedAudio(input.file);
@@ -133,7 +133,7 @@ export class SpeakerIntelligenceService {
       where: { id: profile.id },
       data: {
         fingerprintJson: stored as unknown as Prisma.InputJsonValue,
-        enrolledAt: new Date,
+        enrolledAt: new Date(),
         enrollmentCount: { increment: 1 },
         status: 'enrolled',
         ...(storeEncrypted ? { fingerprintEncrypted: true } : {}),
@@ -447,7 +447,7 @@ export class SpeakerIntelligenceService {
         score: r.score,
         decision: r.decision,
         metadata: r.metadata,
-        createdAt: r.createdAt.toISOString,
+        createdAt: r.createdAt.toISOString(),
       })),
     };
   }
@@ -471,7 +471,7 @@ export class SpeakerIntelligenceService {
         fingerprintEncrypted: false,
         authFactorEnabled: false,
         status: 'deleted',
-        deletedAt: new Date,
+        deletedAt: new Date(),
         enrollmentCount: 0,
         enrolledAt: null,
       },
@@ -559,13 +559,13 @@ export class SpeakerIntelligenceService {
       status: row.status,
       enrolled: Boolean(fp?.vector?.length),
       enrollmentCount: row.enrollmentCount,
-      enrolledAt: row.enrolledAt?.toISOString ?? null,
+      enrolledAt: row.enrolledAt?.toISOString() ?? null,
       fingerprintDims: fp?.dims ?? (isEncryptedFingerprint(row.fingerprintJson) ? row.fingerprintJson.dims : null),
       fingerprintEncrypted: encrypted,
       authFactorEnabled: Boolean(row.authFactorEnabled),
-      deletedAt: row.deletedAt?.toISOString ?? null,
-      createdAt: row.createdAt.toISOString,
-      updatedAt: row.updatedAt.toISOString,
+      deletedAt: row.deletedAt?.toISOString() ?? null,
+      createdAt: row.createdAt.toISOString(),
+      updatedAt: row.updatedAt.toISOString(),
     };
   }
 

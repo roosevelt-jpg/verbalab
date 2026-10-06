@@ -1,4 +1,4 @@
-/** Application ports for Global Configuration Platform. */
+/** Application ports for Global Configuration Platform (VL-316). */
 
 export type GlobalConfigurationPlatformProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type GlobalConfigurationPlatformEngineBundle = ReturnType<
 >;
 
 export interface GlobalConfigurationPlatformCatalogPort {
-  engine: GlobalConfigurationPlatformEngineBundle;
-  listProducts: GlobalConfigurationPlatformProductRow[];
+  engine(): GlobalConfigurationPlatformEngineBundle;
+  listProducts(): GlobalConfigurationPlatformProductRow[];
 }
 
 export const GLOBAL_CONFIGURATION_PLATFORM_CATALOG_PORT = Symbol('GLOBAL_CONFIGURATION_PLATFORM_CATALOG_PORT');

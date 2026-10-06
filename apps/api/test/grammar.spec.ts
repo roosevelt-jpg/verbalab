@@ -18,7 +18,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_gram_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_gram_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -32,42 +32,42 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Grammar AI',  => {
+describe('Grammar AI (VL-133)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let prevOpenAi: string | undefined;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     prevOpenAi = process.env.OPENAI_API_KEY;
     delete process.env.OPENAI_API_KEY;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
 
     app.get(GatewayService).setDetectProviderForTests({
       name: 'fixture_detect',
-      async detect {
+      async detect() {
         return { language: 'en', confidence: 0.95, provider: 'fixture_detect' };
       },
     });
   });
 
-  afterAll(async  => {
+  afterAll(async () => {
     if (prevOpenAi === undefined) delete process.env.OPENAI_API_KEY;
     else process.env.OPENAI_API_KEY = prevOpenAi;
-    await app.close;
+    await app.close();
   });
 
-  it('POST /v1/grammar/check applies deterministic rules', async  => {
+  it('POST /v1/grammar/check applies deterministic rules', async () => {
     const org = await seedOrg(prisma, 'gram');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -76,10 +76,10 @@ describe('Grammar AI',  => {
       name: 'gram-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/grammar/check')
       .set('Authorization', `Bearer ${key.secret}`)
-      .send({ text: 'i has went to teh store store', language: 'en' })
+      .send({ text: 'i has went to teh store  store', language: 'en' })
       .expect(200);
 
     expect(res.body.provider).toBe('rules');

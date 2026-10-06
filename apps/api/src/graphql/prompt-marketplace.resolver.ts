@@ -6,13 +6,13 @@ import {
   GqlPromptMarketplaceEngine,
 } from './gql.types';
 
-@Resolver
+@Resolver()
 export class PromptMarketplaceGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query( => GqlPromptMarketplaceEngine, { name: 'promptMarketplaceEngine' })
-  async promptMarketplaceEngine: Promise<GqlPromptMarketplaceEngine> {
-    const catalog = await this.queries.execute(new GetPromptMarketplaceEngineQuery);
+  @Query(() => GqlPromptMarketplaceEngine, { name: 'promptMarketplaceEngine' })
+  async promptMarketplaceEngine(): Promise<GqlPromptMarketplaceEngine> {
+    const catalog = await this.queries.execute(new GetPromptMarketplaceEngineQuery());
     return {
       product: catalog.product,
       note: catalog.note,

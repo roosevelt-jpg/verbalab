@@ -1,4 +1,4 @@
-/** Application ports for Dataset Pipeline. */
+/** Application ports for Dataset Pipeline (VL-282). */
 
 export type DatasetPipelineProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type DatasetPipelineEngineBundle = ReturnType<
 >;
 
 export interface DatasetPipelineCatalogPort {
-  engine: DatasetPipelineEngineBundle;
-  listProducts: DatasetPipelineProductRow[];
+  engine(): DatasetPipelineEngineBundle;
+  listProducts(): DatasetPipelineProductRow[];
 }
 
 export const DATASET_PIPELINE_CATALOG_PORT = Symbol('DATASET_PIPELINE_CATALOG_PORT');

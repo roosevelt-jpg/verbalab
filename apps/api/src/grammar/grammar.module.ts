@@ -18,7 +18,7 @@ import { TranslateAuthGuard } from '../common/guards/translate-auth.guard';
     IdentityModule,
     RateLimitModule,
     UsageModule,
-    forwardRef( => StyleModule),
+    forwardRef(() => StyleModule),
   ],
   controllers: [GrammarController],
   providers: [GrammarService, TranslateAuthGuard],

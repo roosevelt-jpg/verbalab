@@ -1,6 +1,6 @@
 /**
  * Protect ICU placeholders / plural blocks so MT does not corrupt them.
- * Restores after translation. Also validates/formats for Localization Platform.
+ * Restores after translation. Also validates/formats for Localization Platform (VL-141).
  */
 
 const ICU_BLOCK =
@@ -31,7 +31,7 @@ export function restoreIcu(text: string, slots: string[]): string {
 }
 
 export function extractIcuPlaceholders(message: string): string[] {
-  const names = new Set<string>;
+  const names = new Set<string>();
   for (const m of message.matchAll(ICU_BLOCK)) {
     const head = m[0].match(/^\{([a-zA-Z_][a-zA-Z0-9_]*)\s*,/);
     if (head?.[1]) names.add(head[1]);
@@ -39,7 +39,7 @@ export function extractIcuPlaceholders(message: string): string[] {
   for (const m of message.matchAll(ICU_VAR)) {
     names.add(m[0].slice(1, -1));
   }
-  return [...names].sort;
+  return [...names].sort();
 }
 
 export type IcuIssue = {
@@ -144,7 +144,7 @@ function pickPluralArm(body: string, category: string): string | null {
 }
 
 function pickSelectArm(body: string, key: string): string | null {
-  const safe = key.replace(/[.*+?^${}|[\]\\]/g, '\\$&');
+  const safe = key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const re = new RegExp(`${safe}\\s*\\{([^{}]*)\\}`);
   const m = body.match(re);
   return m?.[1] ?? null;

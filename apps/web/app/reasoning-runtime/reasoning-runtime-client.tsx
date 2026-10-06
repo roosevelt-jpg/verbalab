@@ -24,16 +24,16 @@ type Engine = {
 
 type Analytics = { events: number; historyCount: number };
 
-export function ReasoningRuntimeClient {
-  const { getToken, isLoaded } = useAuth;
+export function ReasoningRuntimeClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [problem, setProblem] = useState('Plan a short translation QA checklist');
   const [result, setResult] = useState<string | null>(null);
 
-  const load = useCallback(async  => {
-    const token = await getToken;
+  const load = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, ana] = await Promise.all([
       apiFetch<Engine>('/v1/reasoning-runtime/engine', { token }),
@@ -43,15 +43,15 @@ export function ReasoningRuntimeClient {
     setAnalytics(ana);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void load.catch((err: Error) => setError(err.message));
+    void load().catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
-  const plan = useCallback(async  => {
+  const plan = useCallback(async () => {
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const res = await apiFetch<{
         strategy: string;
@@ -66,7 +66,7 @@ export function ReasoningRuntimeClient {
       setResult(
         `${res.strategy} · history=${res.historyId?.slice(0, 8) ?? 'n/a'}…\n${res.steps.map((s, i) => `${i + 1}. ${s}`).join('\n')}`,
       );
-      await load;
+      await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Plan failed');
     }
@@ -99,7 +99,7 @@ export function ReasoningRuntimeClient {
           placeholder="Problem to plan"
           style={{ ...input, minWidth: '16rem', flex: 1 }}
         />
-        <button type="button" onClick={ => void plan} disabled={!problem.trim} style={btn}>
+        <button type="button" onClick={() => void plan()} disabled={!problem.trim()} style={btn}>
           Sandbox plan
         </button>
       </div>

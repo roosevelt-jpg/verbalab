@@ -6,16 +6,16 @@ import {
   ReliabilityEngineeringProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestReliabilityEngineeringCatalogAdapter implements ReliabilityEngineeringCatalogPort {
   constructor(private readonly service: ReliabilityEngineeringService) {}
 
-  engine: ReliabilityEngineeringEngineBundle {
-    return this.service.engine;
+  engine(): ReliabilityEngineeringEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: ReliabilityEngineeringProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): ReliabilityEngineeringProductRow[] {
+    const bundle = this.engine() as {
       products?: ReliabilityEngineeringProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestReliabilityEngineeringCatalogAdapter implements ReliabilityEngi
         status: 'shipped',
         api: 'GET /v1/reliability-engineering/engine',
         console: '/reliability-engineering',
-        notes: ' shipped.',
+        notes: 'VL-308 shipped.',
       },
     ];
   }

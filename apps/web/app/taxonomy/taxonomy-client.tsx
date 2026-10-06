@@ -27,8 +27,8 @@ type Analytics = {
   assignments: number;
 };
 
-export function TaxonomyClient {
-  const { getToken, isLoaded } = useAuth;
+export function TaxonomyClient() {
+  const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -36,8 +36,8 @@ export function TaxonomyClient {
   const [kind, setKind] = useState('category');
   const [created, setCreated] = useState<string | null>(null);
 
-  const load = useCallback(async  => {
-    const token = await getToken;
+  const load = useCallback(async () => {
+    const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const [eng, ana] = await Promise.all([
       apiFetch<Engine>('/v1/taxonomy/engine', { token }),
@@ -47,15 +47,15 @@ export function TaxonomyClient {
     setAnalytics(ana);
   }, [getToken]);
 
-  useEffect( => {
+  useEffect(() => {
     if (!isLoaded) return;
-    void load.catch((err: Error) => setError(err.message));
+    void load().catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
-  const createTerm = useCallback(async  => {
+  const createTerm = useCallback(async () => {
     setError(null);
     try {
-      const token = await getToken;
+      const token = await getToken();
       if (!token) throw new Error('Not signed in');
       const res = await apiFetch<{ name: string; slug: string }>('/v1/taxonomy/terms', {
         token,
@@ -64,7 +64,7 @@ export function TaxonomyClient {
       });
       setCreated(`${res.name} (${res.slug})`);
       setName('');
-      await load;
+      await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Create failed');
     }
@@ -102,7 +102,7 @@ export function TaxonomyClient {
           <option value="tag">tag</option>
           <option value="content_type">content_type</option>
         </select>
-        <button type="button" onClick={ => void createTerm} disabled={!name.trim} style={btn}>
+        <button type="button" onClick={() => void createTerm()} disabled={!name.trim()} style={btn}>
           Create term
         </button>
       </div>

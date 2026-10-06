@@ -10,18 +10,18 @@ import {
   enterpriseEngineeringSystemRoutingTable,
 } from './enterprise-engineering-system.catalog';
 
-@Injectable
+@Injectable()
 export class EnterpriseEngineeringSystemService {
   constructor(private readonly usage: UsageService) {}
 
-  products {
+  products() {
     return {
       product: 'Lugemi Enterprise Engineering System',
-      products: enterpriseEngineeringSystemProductCatalog,
-      hubInventory: enterpriseEngineeringSystemHubInventory,
-      extendsSurfaces: enterpriseEngineeringSystemExtends,
-      architecture: enterpriseEngineeringSystemArchitectureNotes,
-      honesty: enterpriseEngineeringSystemHonesty,
+      products: enterpriseEngineeringSystemProductCatalog(),
+      hubInventory: enterpriseEngineeringSystemHubInventory(),
+      extendsSurfaces: enterpriseEngineeringSystemExtends(),
+      architecture: enterpriseEngineeringSystemArchitectureNotes(),
+      honesty: enterpriseEngineeringSystemHonesty(),
       safety: {
         engineeringOsForHumansAndCursor: true,
         customerFacingProductCloud: false,
@@ -35,21 +35,21 @@ export class EnterpriseEngineeringSystemService {
       },
       docs: '/docs/ENTERPRISE_ENGINEERING_SYSTEM.md',
       note:
-        'Enterprise Engineering System Foundation. Engineering OS for humans+Cursor. architectureKnowledgeBaseOs=false; adrFactoryOs=false.',
+        'Enterprise Engineering System Foundation (VL-344). Engineering OS for humans+Cursor. architectureKnowledgeBaseOs=false; adrFactoryOs=false.',
     };
   }
 
-  routing {
+  routing() {
     return {
-      routes: enterpriseEngineeringSystemRoutingTable,
-      products: enterpriseEngineeringSystemProductCatalog.map((p) => ({
+      routes: enterpriseEngineeringSystemRoutingTable(),
+      products: enterpriseEngineeringSystemProductCatalog().map((p) => ({
         id: p.id,
         status: p.status,
         api: p.api,
       })),
-      hubInventory: enterpriseEngineeringSystemHubInventory,
-      extendsSurfaces: enterpriseEngineeringSystemExtends,
-      honesty: enterpriseEngineeringSystemHonesty,
+      hubInventory: enterpriseEngineeringSystemHubInventory(),
+      extendsSurfaces: enterpriseEngineeringSystemExtends(),
+      honesty: enterpriseEngineeringSystemHonesty(),
       note: 'Static EES discovery catalog for Foundation.',
       docs: '/docs/ENTERPRISE_ENGINEERING_SYSTEM.md',
     };
@@ -68,11 +68,11 @@ export class EnterpriseEngineeringSystemService {
         chat: usageSummary.chat,
         embeddings: usageSummary.embeddings,
       },
-      products: enterpriseEngineeringSystemProductCatalog,
-      hubInventory: enterpriseEngineeringSystemHubInventory,
-      extendsSurfaces: enterpriseEngineeringSystemExtends,
-      architecture: enterpriseEngineeringSystemArchitectureNotes,
-      honesty: enterpriseEngineeringSystemHonesty,
+      products: enterpriseEngineeringSystemProductCatalog(),
+      hubInventory: enterpriseEngineeringSystemHubInventory(),
+      extendsSurfaces: enterpriseEngineeringSystemExtends(),
+      architecture: enterpriseEngineeringSystemArchitectureNotes(),
+      honesty: enterpriseEngineeringSystemHonesty(),
       safety: {
         engineeringOsForHumansAndCursor: true,
         customerFacingProductCloud: false,
@@ -102,20 +102,20 @@ export class EnterpriseEngineeringSystemService {
       },
       docs: '/docs/ENTERPRISE_ENGINEERING_SYSTEM.md',
       note:
-        'Enterprise Engineering System (–353). Discovery hub for standards/governance catalogs; Production Audit closes the volume.',
+        'Enterprise Engineering System (VL-344–353). Discovery hub for standards/governance catalogs; Production Audit closes the volume.',
     };
   }
 
-  monitoring {
-    const products = enterpriseEngineeringSystemProductCatalog;
+  monitoring() {
+    const products = enterpriseEngineeringSystemProductCatalog();
     return {
       mode: 'foundation',
       products: products.map((p) => ({ id: p.id, status: p.status })),
-      hubInventory: enterpriseEngineeringSystemHubInventory,
-      extendsSurfaces: enterpriseEngineeringSystemExtends,
-      architecture: enterpriseEngineeringSystemArchitectureNotes,
-      honesty: enterpriseEngineeringSystemHonesty,
-      note: 'EES monitoring snapshot.',
+      hubInventory: enterpriseEngineeringSystemHubInventory(),
+      extendsSurfaces: enterpriseEngineeringSystemExtends(),
+      architecture: enterpriseEngineeringSystemArchitectureNotes(),
+      honesty: enterpriseEngineeringSystemHonesty(),
+      note: 'EES monitoring snapshot (VL-344).',
     };
   }
 }

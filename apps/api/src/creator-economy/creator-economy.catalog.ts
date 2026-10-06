@@ -49,15 +49,15 @@ export const ROYALTY_HAND_CHECK_SCENARIOS = [
 ] as const;
 
 /**
- * Library Phase 125 → Creator Economy.
- * Extends existing Stripe Connect Express + MarketplaceSale — not a payment-processor OS.
+ * Library Phase 125 → Creator Economy (VL-258).
+ * Extends VL-092 Stripe Connect Express + MarketplaceSale — not a payment-processor OS.
  * Volume 11: Stripe-only; never store raw cards; hand-check payout math.
  */
-export function creatorEconomyEngineCatalog {
+export function creatorEconomyEngineCatalog() {
   return {
     product: 'Lugemi Creator Economy',
     note:
-      'Creator Economy. Extends existing Stripe Connect Express + MarketplaceSale receipts with royalty math, creator/org profiles, invoice-style sale receipts, and honest tax/dispute gaps. Not a payment-processor OS, tax engine, or card vault. Hand-check royalty scenarios before live creators.',
+      'Creator Economy (VL-258). Extends VL-092 Stripe Connect Express + MarketplaceSale receipts with royalty math, creator/org profiles, invoice-style sale receipts, and honest tax/dispute gaps. Not a payment-processor OS, tax engine, or card vault. Hand-check royalty scenarios before live creators.',
     capabilities: [
       {
         id: 'revenue-sharing',
@@ -115,7 +115,7 @@ export function creatorEconomyEngineCatalog {
         status: 'partial',
         api: 'GET /v1/marketplace/connect/status',
         notes:
-          'Stripe Connect Express via existing. Live payouts blocked until Stripe env configured. Hub surfaces status + preview.',
+          'Stripe Connect Express via VL-092. Live payouts blocked until Stripe env configured. Hub surfaces status + preview.',
       },
       {
         id: 'invoices',
@@ -150,7 +150,7 @@ export function creatorEconomyEngineCatalog {
         name: 'Billing',
         status: 'partial',
         api: 'GET /v1/billing/summary',
-        notes: 'Shared Stripe billing + Connect — extends 092.',
+        notes: 'Shared Stripe billing + Connect — extends VL-031/092.',
       },
       {
         id: 'analytics',
@@ -188,7 +188,7 @@ export function creatorEconomyEngineCatalog {
         expectedPublisherNetCents: s.net,
       })),
       note:
-        'Volume 11 hubs (model→voice-language) record 15%. Content marketplace Checkout uses billing.platformFeeBps (default 20%). Voice marketplace still uses 10% — not regenerated here.',
+        'Volume 11 hubs (model→voice-language) record 15%. Content marketplace Checkout uses billing.platformFeeBps() (default 20%). Voice marketplace VL-177 still uses 10% — not regenerated here.',
     },
     architecture: {
       style: 'nest_modular_monolith',

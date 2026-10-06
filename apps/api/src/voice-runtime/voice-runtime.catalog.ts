@@ -1,18 +1,18 @@
 /**
- * Library Phase 194 → Voice Runtime.
- * Voice Runtime. Thin layer over voice-cloud / voice — routes streaming/neural/cloning/rendering; does not reimplement TTS.
+ * Library Phase 194 → Voice Runtime (VL-327).
+ * Voice Runtime (VL-327). Thin layer over voice-cloud / voice — routes streaming/neural/cloning/rendering; does not reimplement TTS.
  */
-export function voiceRuntimeEngineCatalog {
+export function voiceRuntimeEngineCatalog() {
   return {
     product: 'Lugemi Voice Runtime',
     thinExecutionLayer: true,
     duplicatesProductLogic: false,
     capabilities: [
-      { id: 'streaming', name: 'Streaming Voice Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
-      { id: 'neural', name: 'Neural TTS Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
-      { id: 'cloning', name: 'Voice Cloning Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
-      { id: 'rendering', name: 'Voice Rendering Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
-      { id: 'realtime', name: 'Realtime Voice Routing', status: 'shipped', notes: ' routing capability — not a new engine.' }
+      { id: 'streaming', name: 'Streaming Voice Routing', status: 'shipped', notes: 'VL-327 routing capability — not a new engine.' },
+      { id: 'neural', name: 'Neural TTS Routing', status: 'shipped', notes: 'VL-327 routing capability — not a new engine.' },
+      { id: 'cloning', name: 'Voice Cloning Routing', status: 'shipped', notes: 'VL-327 routing capability — not a new engine.' },
+      { id: 'rendering', name: 'Voice Rendering Routing', status: 'shipped', notes: 'VL-327 routing capability — not a new engine.' },
+      { id: 'realtime', name: 'Realtime Voice Routing', status: 'shipped', notes: 'VL-327 routing capability — not a new engine.' }
     ],
     routes: [
       {
@@ -51,9 +51,9 @@ export function voiceRuntimeEngineCatalog {
       duplicatesProductLogic: false,
       managesOrgsPoliciesBilling: false,
       serviceMeshOs: false,
-      note: 'Voice Runtime. Thin layer over voice-cloud / voice — routes streaming/neural/cloning/rendering; does not reimplement TTS.',
+      note: 'Voice Runtime (VL-327). Thin layer over voice-cloud / voice — routes streaming/neural/cloning/rendering; does not reimplement TTS.',
     },
     docs: '/docs/VOICE_RUNTIME.md',
-    note: 'Voice Runtime. Thin layer over voice-cloud / voice — routes streaming/neural/cloning/rendering; does not reimplement TTS.',
+    note: 'Voice Runtime (VL-327). Thin layer over voice-cloud / voice — routes streaming/neural/cloning/rendering; does not reimplement TTS.',
   };
 }

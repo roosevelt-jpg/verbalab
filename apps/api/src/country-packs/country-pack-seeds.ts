@@ -14,7 +14,7 @@ export type CountryPackSeed = {
 };
 
 /**
- * Curated African-priority country packs.
+ * Curated African-priority country packs (VL-135).
  * Guidance bundles — not a CLDR dump or billing SKU catalog.
  */
 export const COUNTRY_PACK_SEEDS: CountryPackSeed[] = [

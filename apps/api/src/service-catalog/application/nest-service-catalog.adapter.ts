@@ -6,16 +6,16 @@ import {
   ServiceCatalogProductRow,
 } from './ports';
 
-@Injectable
+@Injectable()
 export class NestServiceCatalogCatalogAdapter implements ServiceCatalogCatalogPort {
   constructor(private readonly service: ServiceCatalogService) {}
 
-  engine: ServiceCatalogEngineBundle {
-    return this.service.engine;
+  engine(): ServiceCatalogEngineBundle {
+    return this.service.engine();
   }
 
-  listProducts: ServiceCatalogProductRow[] {
-    const bundle = this.engine as {
+  listProducts(): ServiceCatalogProductRow[] {
+    const bundle = this.engine() as {
       products?: ServiceCatalogProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestServiceCatalogCatalogAdapter implements ServiceCatalogCatalogPo
         status: 'shipped',
         api: 'GET /v1/service-catalog/engine',
         console: '/service-catalog',
-        notes: ' shipped.',
+        notes: 'VL-304 shipped.',
       },
     ];
   }

@@ -1,4 +1,4 @@
-/** Application ports for Open Science Platform. */
+/** Application ports for Open Science Platform (VL-278). */
 
 export type OpenSciencePlatformProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type OpenSciencePlatformEngineBundle = ReturnType<
 >;
 
 export interface OpenSciencePlatformCatalogPort {
-  engine: OpenSciencePlatformEngineBundle;
-  listProducts: OpenSciencePlatformProductRow[];
+  engine(): OpenSciencePlatformEngineBundle;
+  listProducts(): OpenSciencePlatformProductRow[];
 }
 
 export const OPEN_SCIENCE_PLATFORM_CATALOG_PORT = Symbol('OPEN_SCIENCE_PLATFORM_CATALOG_PORT');

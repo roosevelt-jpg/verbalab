@@ -18,7 +18,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_loc_${name}_${Date.now}_${Math.random}`,
+              clerkUserId: `clerk_loc_${name}_${Date.now()}_${Math.random()}`,
               email: `${name}@example.com`,
             },
           },
@@ -32,19 +32,19 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Localize files',  => {
+describe('Localize files (VL-053)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async  => {
+  beforeAll(async () => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile;
+    }).compile();
 
-    app = moduleFixture.createNestApplication;
-    app.useGlobalFilters(new ApiExceptionFilter);
-    await app.init;
+    app = moduleFixture.createNestApplication();
+    app.useGlobalFilters(new ApiExceptionFilter());
+    await app.init();
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -64,11 +64,11 @@ describe('Localize files',  => {
     });
   });
 
-  afterAll(async  => {
-    await app.close;
+  afterAll(async () => {
+    await app.close();
   });
 
-  it('translates JSON preserving keys and ICU', async  => {
+  it('translates JSON preserving keys and ICU', async () => {
     const org = await seedOrg(prisma, 'loc');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -77,7 +77,7 @@ describe('Localize files',  => {
       name: 'loc-key',
     });
 
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/localize')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -101,7 +101,7 @@ describe('Localize files',  => {
     expect(res.body.serialized).toContain('"title"');
   });
 
-  it('translates YAML via file upload', async  => {
+  it('translates YAML via file upload', async () => {
     const org = await seedOrg(prisma, 'locyml');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -111,7 +111,7 @@ describe('Localize files',  => {
     });
 
     const yaml = 'greeting: Hello\nfarewell: Goodbye\n';
-    const res = await request(app.getHttpServer)
+    const res = await request(app.getHttpServer())
       .post('/v1/localize/file')
       .set('Authorization', `Bearer ${key.secret}`)
       .field('source', 'en')

@@ -17,8 +17,8 @@ export class GetDatabaseEngineeringStandardsEngineHandler
     private readonly catalog: DatabaseEngineeringStandardsCatalogPort,
   ) {}
 
-  execute: Promise<DatabaseEngineeringStandardsEngineBundle> {
-    return Promise.resolve(this.catalog.engine);
+  execute(): Promise<DatabaseEngineeringStandardsEngineBundle> {
+    return Promise.resolve(this.catalog.engine());
   }
 }
 
@@ -31,8 +31,8 @@ export class ListDatabaseEngineeringStandardsProductsHandler
     private readonly catalog: DatabaseEngineeringStandardsCatalogPort,
   ) {}
 
-  execute: Promise<DatabaseEngineeringStandardsProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts);
+  execute(): Promise<DatabaseEngineeringStandardsProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts());
   }
 }
 
