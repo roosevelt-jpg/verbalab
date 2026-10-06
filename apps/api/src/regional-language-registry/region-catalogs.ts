@@ -1138,6 +1138,98 @@ export function naLanguageSeed(): RegionalLanguageEntry[] {
   ];
 }
 
+
+/** High-traffic global vendor languages not owned by a single regional tab. */
+export function globalVendorLanguageSeed(): RegionalLanguageEntry[] {
+  return [
+    entry({
+      code: 'zh',
+      name: 'Chinese (Simplified)',
+      nativeName: '中文',
+      family: 'Sino-Tibetan',
+      writingSystems: ['Hans'],
+      dialects: ['Mandarin', 'Cantonese bridge'],
+      accents: ['Beijing Mandarin (spoken)', 'Shanghai Mandarin (spoken)'],
+      regions: ['China', 'Global'],
+      worldRegions: ['global', 'sea'],
+      lifestyle: {
+        habits: ['Spring Festival family travel'],
+        routines: ['WeChat-centric daily messaging'],
+        culturalNotes: 'Prefer zh-CN locale packs for Simplified Chinese product UI.',
+      },
+      quality: 'production',
+    }),
+    entry({
+      code: 'ja',
+      name: 'Japanese',
+      nativeName: '日本語',
+      family: 'Japonic',
+      writingSystems: ['Jpan'],
+      dialects: ['Standard Japanese', 'Kansai'],
+      accents: ['Tokyo Japanese (spoken)'],
+      regions: ['Japan', 'Global'],
+      worldRegions: ['global'],
+      lifestyle: {
+        habits: ['seasonal gift-giving', 'train commuting'],
+        routines: ['convenience-store meals', 'golden week travel'],
+        culturalNotes: 'Keigo politeness levels matter in customer copy.',
+      },
+      quality: 'production',
+    }),
+    entry({
+      code: 'ko',
+      name: 'Korean',
+      nativeName: '한국어',
+      family: 'Koreanic',
+      writingSystems: ['Kore'],
+      dialects: ['Seoul', 'Gyeongsang bridge'],
+      accents: ['Seoul Korean (spoken)'],
+      regions: ['Korea', 'Global'],
+      worldRegions: ['global'],
+      lifestyle: {
+        habits: ['cafe culture', 'holiday family travel (Chuseok)'],
+        routines: ['late dinners', 'delivery food'],
+        culturalNotes: 'Honorific speech levels shape UX tone.',
+      },
+      quality: 'production',
+    }),
+    entry({
+      code: 'hi',
+      name: 'Hindi',
+      nativeName: 'हिन्दी',
+      family: 'Indo-European',
+      writingSystems: ['Deva'],
+      dialects: ['Standard Hindi', 'Bombay Hindi'],
+      accents: ['Delhi Hindi (spoken)', 'Mumbai Hindi (spoken)'],
+      regions: ['India', 'Global'],
+      worldRegions: ['global'],
+      lifestyle: {
+        habits: ['festival calendars (Diwali, Holi)'],
+        routines: ['extended-family gatherings'],
+        culturalNotes: 'Shared continuum with Urdu; Devanagari for Hindi UI.',
+      },
+      quality: 'production',
+    }),
+    entry({
+      code: 'ru',
+      name: 'Russian',
+      nativeName: 'Русский',
+      family: 'Indo-European',
+      writingSystems: ['Cyrl'],
+      dialects: ['Standard Russian'],
+      accents: ['Moscow Russian (spoken)'],
+      regions: ['Russia', 'Global'],
+      worldRegions: ['global', 'eu'],
+      lifestyle: {
+        habits: ['dacha weekends', 'New Year family focus'],
+        routines: ['tea hospitality'],
+        culturalNotes: 'Formal vy vs informal ty in service copy.',
+      },
+      quality: 'production',
+    }),
+  ];
+}
+
 /** Map African registry rows into regional entries (Africa + Global). */
 export function africaAsRegionalEntries(): RegionalLanguageEntry[] {
   return africanLanguageSeed().map((l) =>
@@ -1212,6 +1304,7 @@ export function allRegionalLanguageEntries(): RegionalLanguageEntry[] {
   for (const row of ukLanguageSeed()) merge(row);
   for (const row of latamLanguageSeed()) merge(row);
   for (const row of naLanguageSeed()) merge(row);
+  for (const row of globalVendorLanguageSeed()) merge(row);
 
   return Array.from(byCode.values()).sort((a, b) => {
     const aAfrica = a.worldRegions.includes('africa') ? 0 : 1;
