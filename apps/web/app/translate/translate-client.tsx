@@ -6,10 +6,9 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
-import { LanguageLocaleSelect } from '@/components/language-locale-select';
+import { LocaleSelect } from '@/components/language-locale-select';
+import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
-type Language = { code: string; name: string; nativeName?: string | null; tier: string };
-type LocalePack = { languageCode: string; bcp47: string | null };
 type Engine = {
   product: string;
   note: string;
@@ -23,10 +22,8 @@ const DEFAULT_TARGET = 'ak';
 export function TranslateClient() {
   const { getToken, isLoaded } = useAuth();
   const searchParams = useSearchParams();
-  const [languages, setLanguages] = useState<Language[]>([]);
-  const [locales, setLocales] = useState<LocalePack[]>([]);
+  const catalog = useLocaleCatalog();
   const [engine, setEngine] = useState<Engine | null>(null);
-  const [catalogLoading, setCatalogLoading] = useState(true);
   const [source, setSource] = useState(() => searchParams.get('source') || DEFAULT_SOURCE);
   const [target, setTarget] = useState(() => searchParams.get('target') || DEFAULT_TARGET);
   const [text, setText] = useState('');
@@ -37,32 +34,27 @@ export function TranslateClient() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    setCatalogLoading(true);
-    void Promise.all([
-      apiFetch<{ data: Language[] }>('/v1/languages'),
-      apiFetch<{ data: LocalePack[] }>('/v1/locales').catch(() => ({ data: [] as LocalePack[] })),
-      apiFetch<Engine>('/v1/translate/engine').catch(() => null),
-    ])
-      .then(([langRes, locRes, eng]) => {
-        setLanguages(langRes.data);
-        setLocales(locRes.data);
-        if (eng) setEngine(eng);
-        const hasAk = langRes.data.some((l) => l.code === 'ak');
-        if (hasAk) setTarget('ak');
-        if (!langRes.data.length) {
-          setError('No languages in the registry yet. Check /v1/languages.');
-        }
-      })
-      .catch((err: Error) => setError(err.message))
-      .finally(() => setCatalogLoading(false));
+    void apiFetch<Engine>('/v1/translate/engine')
+      .then((eng) => setEngine(eng))
+      .catch(() => undefined);
   }, []);
+
+  useEffect(() => {
+    if (catalog.loading) return;
+    if (catalog.languages.some((l) => l.code === 'ak')) {
+      setTarget((prev) => (prev === DEFAULT_TARGET || prev === 'ak' ? 'ak' : prev));
+    }
+    if (!catalog.languages.length) {
+      setError('No languages in the registry yet. Check /v1/languages.');
+    }
+  }, [catalog.loading, catalog.languages]);
 
   const targetHint = useMemo(() => {
     if (target.includes('-') || target.includes('_')) return `Locale ${target}`;
-    const pack = locales.find((l) => l.languageCode === target);
+    const pack = catalog.locales.find((l) => l.languageCode === target);
     if (pack?.bcp47) return `Locale ${pack.bcp47}`;
     return null;
-  }, [locales, target]);
+  }, [catalog.locales, target]);
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -103,8 +95,7 @@ export function TranslateClient() {
     <AppShell>
       <h1 style={titleStyle}>Translate</h1>
       <p style={ledeStyle}>
-        Default pair is English → Twi (Akan, Ghana / <code className="vl-code">ak</code> ·{' '}
-        <code className="vl-code">ak-GH</code>). Pick any language or BCP-47 locale from the dropdowns —
+        Default pair is English → Twi (Akan, Ghana / <code className="vl-code">ak</code> ·{' '}\n        <code className="vl-code">ak-GH</code>). Pick any language or BCP-47 locale from the dropdowns —
         Lugemi Language Intelligence infrastructure, not a generic vendor panel.
       </p>
       <p style={{ margin: '0.65rem 0 0', fontSize: '0.9rem' }}>
@@ -133,19 +124,16 @@ export function TranslateClient() {
               gap: '0.4rem',
             }}
           >
-            {engine.capabilities
-              .filter((c) => c.status !== 'deferred' && c.id !== 'html')
-              .slice(0, 8)
-              .map((c) => (
-                <li key={c.id} className="vl-tag">
-                  {c.name}
-                </li>
-              ))}
+            {engine.capabilities.slice(0, 8).map((c) => (
+              <li key={c.id} className="vl-tag" style={{ opacity: c.status === 'deferred' ? 0.55 : 1 }}>
+                {c.name}
+              </li>
+            ))}
           </ul>
         </div>
       ) : null}
 
-      {catalogLoading ? (
+      {catalog.loading ? (
         <p style={{ color: 'var(--muted)', marginTop: '1.25rem' }}>Loading languages and locales…</p>
       ) : null}
 
@@ -157,11 +145,13 @@ export function TranslateClient() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <label className="vl-label">
             Source
-            <LanguageLocaleSelect
+            <LocaleSelect
               value={source}
               onChange={setSource}
-              languages={languages}
-              locales={locales}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
               allowAuto
               className="vl-field"
             />
@@ -171,58 +161,38 @@ export function TranslateClient() {
             {targetHint ? (
               <span style={{ color: 'var(--muted)', fontWeight: 500 }}> · {targetHint}</span>
             ) : null}
-            <LanguageLocaleSelect
+            <LocaleSelect
               value={target}
               onChange={setTarget}
-              languages={languages}
-              locales={locales}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
               className="vl-field"
             />
           </label>
         </div>
-        {!catalogLoading && languages.length === 0 ? (
-          <p style={{ color: 'var(--muted)', margin: 0 }}>
-            No languages available. Retry after the API finishes seeding.
-          </p>
+        {!catalog.loading && catalog.languages.length === 0 ? (
+          <p style={{ color: 'var(--bad)', margin: 0 }}>Language registry is empty.</p>
         ) : null}
-        <textarea
-          data-testid="translate-input"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          rows={7}
-          placeholder="Enter text to translate"
-          className="vl-field"
-          style={{ resize: 'vertical' }}
-          required
-        />
-        <button
-          type="submit"
-          data-testid="translate-submit"
-          disabled={loading || catalogLoading || languages.length === 0}
-          className="vl-btn vl-btn-primary"
-          style={{ justifySelf: 'start' }}
-        >
+        <label className="vl-label">
+          Text
+          <textarea className="vl-field" rows={6} value={text} onChange={(e) => setText(e.target.value)} required />
+        </label>
+        <button type="submit" className="vl-btn" disabled={loading || catalog.loading || catalog.languages.length === 0}>
           {loading ? 'Translating…' : 'Translate'}
         </button>
       </form>
 
-      {error ? (
-        <p data-testid="translate-error" style={{ color: 'var(--bad)' }}>
-          {error}
-        </p>
-      ) : null}
+      {error ? <p style={{ color: 'var(--bad)', marginTop: '1rem' }}>{error}</p> : null}
       {result ? (
-        <div
-          data-testid="translate-result"
-          className="vl-panel"
-          style={{ marginTop: '1.25rem', padding: '1.1rem 1.25rem' }}
-        >
-          <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '0.4rem' }}>
-            Result
-            {characters != null ? ` · ${characters} characters` : ''}
-            {detectedSource ? ` · detected ${detectedSource}` : ''}
-          </div>
-          <p style={{ margin: 0, whiteSpace: 'pre-wrap', lineHeight: 1.55 }}>{result}</p>
+        <div className="vl-panel" style={{ marginTop: '1.25rem', padding: '1.2rem' }}>
+          <div style={{ fontWeight: 650, marginBottom: '0.5rem' }}>Result</div>
+          <p style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{result}</p>
+          <p style={{ margin: '0.5rem 0 0', color: 'var(--muted)', fontSize: '0.85rem' }}>
+            {characters != null ? `${characters} characters` : null}
+            {detectedSource ? ` · detected ${detectedSource}` : null}
+          </p>
         </div>
       ) : null}
     </AppShell>
@@ -232,15 +202,12 @@ export function TranslateClient() {
 const titleStyle: CSSProperties = {
   margin: 0,
   fontFamily: 'var(--font-display)',
-  fontSize: '1.85rem',
-  fontWeight: 720,
   letterSpacing: '-0.03em',
-  color: 'var(--brand-navy)',
+  fontSize: '2rem',
 };
 
 const ledeStyle: CSSProperties = {
   color: 'var(--muted)',
-  margin: '0.45rem 0 0',
-  maxWidth: '42rem',
+  margin: '0.5rem 0 0',
   lineHeight: 1.55,
 };
