@@ -116,17 +116,13 @@ type JsonRequestInit = Omit<RequestInit, 'body'> & {
 
 function serializeJsonBody(body: JsonRequestInit['body']): FetchBody | undefined {
   if (body == null) return undefined;
-  if (
-    typeof body === 'string' ||
-    body instanceof Blob ||
-    body instanceof FormData ||
-    body instanceof ArrayBuffer ||
-    ArrayBuffer.isView(body) ||
-    body instanceof URLSearchParams ||
-    (typeof ReadableStream !== 'undefined' && body instanceof ReadableStream)
-  ) {
-    return body;
-  }
+  if (typeof body === 'string') return body;
+  if (body instanceof Blob) return body;
+  if (body instanceof FormData) return body;
+  if (body instanceof ArrayBuffer) return body;
+  if (ArrayBuffer.isView(body)) return body as unknown as FetchBody;
+  if (body instanceof URLSearchParams) return body;
+  if (typeof ReadableStream !== 'undefined' && body instanceof ReadableStream) return body;
   return JSON.stringify(body);
 }
 
