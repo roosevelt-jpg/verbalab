@@ -13,7 +13,7 @@ const ANSWERS = [
   },
   {
     q: 'Can they extract voice from uploaded files?',
-    a: 'Yes for audio-track extract (browser) and Lugemi isolate (energy VAD). Neural stem separation is deferred and labeled in product.',
+    a: 'Yes for audio-track extract (browser) and Lugemi isolate (energy VAD). Entertainment-grade neural stem separation is not offered on this surface.',
   },
 ] as const;
 

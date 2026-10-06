@@ -39,7 +39,7 @@ export function MlopsLlmopsCloudClient() {
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
         Ops layer over Inference, Kernel, Foundation Models, RAG, Agent Runtime, and Prompt Runtime — not
-        Kubeflow/SageMaker/Vertex/W&amp;B/MLflow/LangSmith/Ray OS. Trust Cloud deferred.
+        Kubeflow/SageMaker/Vertex/W&amp;B/MLflow/LangSmith/Ray OS. Trust Cloud is a separate surface.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p>: null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p>: null}

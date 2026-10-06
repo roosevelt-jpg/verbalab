@@ -522,9 +522,9 @@ export function AudioClient() {
           <div>
             <dt style={qStyle}>Extract voice from uploaded files?</dt>
             <dd style={aStyle}>
-              <strong>Shipped:</strong> client-side audio-track extract from video/audio the browser can decode,
-              plus Lugemi <code className="vl-code">POST /v1/audio-intelligence/isolate</code> (energy VAD).{' '}
-              <strong>Deferred:</strong> neural stem-separation / entertainment isolator OS.
+              Available today: client-side audio-track extract from video/audio the browser can decode,
+              plus Lugemi <code className="vl-code">POST /v1/audio-intelligence/isolate</code> (energy VAD).
+              Neural stem-separation / entertainment isolator OS is not on this surface.
             </dd>
           </div>
         </dl>
@@ -697,7 +697,7 @@ export function AudioClient() {
         <div className="vl-panel" style={{ display: 'grid', gap: '1rem', padding: '1.35rem', marginTop: '1rem' }}>
           <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.9rem' }}>
             Pull a voice track from an uploaded video/audio file, then optionally run Lugemi isolate (energy VAD)
-            before cloning. Neural stem separation is deferred — status is honest in product.
+            before cloning. Entertainment-grade neural stem separation is not on this surface.
           </p>
           <label className="vl-label">
             Video or audio file
@@ -727,9 +727,8 @@ export function AudioClient() {
             ) : null}
           </div>
           <div style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>
-            Isolation status:{' '}
-            energy VAD isolate + multi-band stems ·{' '}
-            <strong style={{ color: 'var(--ink)' }}>deferred</strong> neural stem separation
+            Isolation path: energy VAD isolate + multi-band stems. Neural stem-separation removers are not
+            offered here.
           </div>
           {extractNote ? <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--muted)' }}>{extractNote}</p> : null}
           {speechRatio != null ? (

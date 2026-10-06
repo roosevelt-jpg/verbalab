@@ -146,7 +146,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     demoHref: '/translate?source=en&target=ak',
     demoLabel: 'Translate en→Twi for captions',
     fields: ['projectId', 'apiKey'],
-    envHint: 'GOOGLE_VIDEO_PROJECT_ID, GOOGLE_VIDEO_API_KEY — deferred until credentials exist.',
+    envHint: 'GOOGLE_VIDEO_PROJECT_ID, GOOGLE_VIDEO_API_KEY — requires credentials before use.',
     href: '/connectors#google-video',
   },
   {

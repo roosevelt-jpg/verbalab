@@ -78,8 +78,8 @@ export function EventFabricClient() {
         Event Fabric
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        Internal CloudEvents bus over Redis Streams — Kafka/NATS/RabbitMQ adapters deferred. Not a
-        broker hyperscaler OS.
+        Internal CloudEvents bus over Redis Streams — Kafka/NATS/RabbitMQ adapters are not on this
+        surface. Not a broker hyperscaler OS.
       </p>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}

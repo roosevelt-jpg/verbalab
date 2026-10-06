@@ -861,7 +861,7 @@ export const CMS_DEFAULTS: CmsDocument = {
         {
           id: 'cloning',
           title: 'Voice cloning answers',
-          body: 'Upload recorded voice: yes. Extract from files: yes (track extract + energy VAD isolate; neural stems deferred). Realtime: instant clone after consent, then watermarked speak — not live model training.',
+          body: 'Upload recorded voice: yes. Extract from files: yes (track extract + energy VAD isolate; neural stems not on this surface). Realtime: instant clone after consent, then watermarked speak — not live model training.',
         },
         {
           id: 'guide-voice',
@@ -1481,7 +1481,7 @@ export const CMS_DEFAULTS: CmsDocument = {
         {
           id: 'guide-updates',
           kind: 'guide',
-          title: 'Try what just shipped',
+          title: 'Try what is available',
           body: 'Validate coverage and demos before you plan a rollout.',
           steps: [
             'Skim this page, then open Coverage for language × task status.',

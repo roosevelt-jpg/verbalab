@@ -96,8 +96,8 @@ export function AudioIntelligenceClient() {
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.5rem', maxWidth: '44rem' }}>
         Noise/silence analysis, noise-gate enhancement, linear upscaling, and energy VAD voice
-        isolation. Echo cancellation is deferred. Not neural stem-separation OS. For Instant Voice
-        Cloning samples, open <Link href="/audio?tab=extract">Voice Studio → Extract</Link>.{' '}
+        isolation. Echo cancellation and neural stem-separation OS are not on this surface. For Instant
+        Voice Cloning samples, open <Link href="/audio?tab=extract">Voice Studio → Extract</Link>.{' '}
         <Link href="/speech">Speech Cloud</Link>.
       </p>
 

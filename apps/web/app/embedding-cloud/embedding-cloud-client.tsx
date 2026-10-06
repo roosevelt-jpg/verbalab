@@ -104,7 +104,7 @@ export function EmbeddingCloudClient() {
         Embedding Cloud
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.5rem', maxWidth: '44rem' }}>
-        Text/document/code embeddings over the AI Gateway. Speech/image/video deferred.{' '}
+        Text/document/code embeddings over the AI Gateway. Speech/image/video modalities are not on this surface.{' '}
         <Link href="/intelligence-cloud">Intelligence Cloud</Link> ·{' '}
         <Link href="/knowledge">Knowledge / RAG</Link>.
       </p>
@@ -172,8 +172,7 @@ export function EmbeddingCloudClient() {
             <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
               {engine.modalities.map((m) => (
                 <li key={m.id} style={{ borderTop: '1px solid var(--line)', padding: '0.4rem 0' }}>
-                  <strong>{m.name}</strong>{' '}
-                  <span style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>· {m.status}</span>
+                  <strong>{m.name}</strong>
                   <div style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>{m.notes}</div>
                 </li>
               ))}

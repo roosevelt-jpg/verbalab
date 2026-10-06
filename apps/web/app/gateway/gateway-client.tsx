@@ -99,16 +99,14 @@ export function GatewayClient() {
           <section>
             <h2 style={label}>Providers</h2>
             <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: '0.65rem' }}>
-              {data.providers.map((p) => (
+              {data.providers
+                .filter((p) => p.status !== 'deferred')
+                .map((p) => (
                 <li key={p.id} style={{ borderTop: '1px solid var(--line)', paddingTop: '0.65rem' }}>
                   <div style={{ fontWeight: 600 }}>
                     {p.libraryName}{' '}
                     <span style={{ fontWeight: 500, color: 'var(--muted)', fontSize: '0.85rem' }}>
-                      {p.status !== 'deferred'
-                        ? p.configured
-                          ? ' · configured'
-                          : ' · not configured'
-                        : ''}
+                      {p.configured ? ' · configured' : ' · not configured'}
                     </span>
                   </div>
                   <div style={{ color: 'var(--muted)', fontSize: '0.85rem', marginTop: '0.2rem' }}>

@@ -11,9 +11,9 @@ export type TranslateCapability = {
 /** Lugemi Translate. */
 export function translateEngineCatalog() {
   return {
-    product: 'Lugemi Translate',
+    product: 'Lugemi Baobab Translate',
     note:
-      'Curated translation engine over Google MT + TM/glossary/quality. Not a website/WhatsApp localization platform.',
+      'Proprietary Lugemi Baobab MT for complex multilingual and dialect-aware translation, with TM/glossary/quality. Africa-first pairs (default English → Twi). Not a website/WhatsApp localization platform.',
     capabilities: [
       {
         id: 'realtime',
@@ -59,10 +59,10 @@ export function translateEngineCatalog() {
       },
       {
         id: 'html',
-        name: 'HTML translation',
+        name: 'HTML format (API)',
         status: 'shipped',
         api: 'POST /v1/translate/formats',
-        notes: 'Tag-preserving text-node MT.',
+        notes: 'API format option: tag-preserving text-node MT. Studio Translate I/O stays plain text.',
       },
       {
         id: 'markdown',

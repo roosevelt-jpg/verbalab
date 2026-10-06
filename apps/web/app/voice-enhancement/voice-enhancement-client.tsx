@@ -36,7 +36,7 @@ export function VoiceEnhancementClient() {
     ]);
     setEngine(eng);
     setProfiles(prof.profiles);
-    setEchoNote(`${echo.status}: ${echo.note}`);
+    setEchoNote(echo.note);
   }, [getToken]);
 
   useEffect(() => {

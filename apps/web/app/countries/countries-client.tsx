@@ -62,8 +62,6 @@ export function CountriesClient() {
     }
   }
 
-  const deferred = engine?.capabilities.filter((c) => c.status === 'deferred') ?? [];
-
   return (
     <AppShell>
       <h1
@@ -80,9 +78,6 @@ export function CountriesClient() {
       <p style={{ color: 'var(--muted)', margin: '0 0 1.5rem', maxWidth: '42rem' }}>
         {engine?.note ??
           'ISO country guidance that composes language locale packs. Curated African-priority set — not a CLDR dump or billing SKU catalog.'}
-        {deferred.length > 0
-          ? ` Deferred: ${deferred.map((d) => d.name).join(', ')}.`
-          : ''}
       </p>
 
       <label className="vl-label" style={{ marginBottom: '1rem', display: 'grid', maxWidth: '20rem' }}>

@@ -29,7 +29,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
     title: 'Text to Speech',
     eyebrow: 'LugemiCreative',
     lead: 'Turn scripts into resonant, region-aware speech with first-party own:* voices.',
-    body: 'Lugemi Text to Speech is the shipped voice path for narration, ads, and speaking agents. Africa-first accents and dialects are first-class; availability is published per language and task — never assumed. Generate in the Voice console or call the same /v1 synthesize surface from your app.',
+    body: 'Lugemi Text to Speech is the voice path for narration, ads, and speaking agents. Africa-first accents and dialects are first-class; availability is published per language and task — never assumed. Generate in the Voice console or call the same /v1 synthesize surface from your app.',
     sections: [
       content(
         'usecases',
@@ -108,8 +108,8 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
     body: 'Lugemi positions voice change as enhancement and delivery control on top of first-party speech, not as a deepfake toy. The Voice Enhancement console ships profiles for clarity and presence. Full “transform into any celebrity voice” entertainment tools are not a Lugemi promise; consent-gated cloning covers authorized identity work.',
     sections: [
       content(
-        'shipped',
-        'What ships today',
+        'available',
+        'What is available today',
         'Voice Enhancement profiles in the console for clarity, loudness, and delivery shaping on workspace audio paths.',
       ),
       content(
@@ -142,7 +142,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
     title: 'Text to Sound Effects',
     eyebrow: 'LugemiCreative',
     lead: 'Sound design for stories that already speak African and global languages.',
-    body: 'Lugemi’s primary shipped surface is speech and language intelligence — not a general Foley generator. Text to Sound Effects is positioned as a creative companion roadmap: pair Studio narration with your existing audio stack today, and treat generative SFX as planned capability rather than a live, metered product.',
+    body: 'Lugemi’s primary surface is speech and language intelligence — not a general Foley generator. Text to Sound Effects is positioned as a creative companion roadmap: pair Studio narration with your existing audio stack today, and treat generative SFX as planned capability rather than a live, metered product.',
     sections: [
       content(
         'today',
@@ -157,7 +157,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
       guide(
         'guide-sfx',
         'Creative audio path',
-        'Use shipped speech tools now; watch Updates for SFX availability.',
+        'Use speech tools now; watch Updates for SFX availability.',
         [
           'Generate narration in Voice / Studio.',
           'Localize scripts with Translate before final mix.',
@@ -184,7 +184,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
       content(
         'realtime',
         'Realtime cloning — honest answer',
-        'Closest shipped product: instant clone from a short sample after consent (seconds to enroll, then review). SSE enrollment progress exists. Live streaming model training is not claimed.',
+        'Closest product today: instant clone from a short sample after consent (seconds to enroll, then review). SSE enrollment progress exists. Live streaming model training is not claimed.',
       ),
       content(
         'upload',
@@ -194,7 +194,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
       content(
         'extract',
         'Extract voice from uploaded files',
-        'Yes for audio-track extract (browser decode) and Lugemi energy-VAD isolate. Neural stem-separation entertainment tools are deferred — labeled clearly in console.',
+        'Yes for audio-track extract (browser decode) and Lugemi energy-VAD isolate. Neural stem-separation entertainment tools are not on this surface.',
       ),
       content(
         'projects',
@@ -228,17 +228,17 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
     title: 'Voice Isolator',
     eyebrow: 'LugemiCreative',
     lead: 'Extract and isolate speech from uploads before cloning, captions, or agents.',
-    body: 'Lugemi Voice Isolator is the honest isolation path: client-side audio-track extract from video/audio the browser can decode, plus POST /v1/audio-intelligence/isolate (energy VAD). Use the cleaned WAV as a clone sample or feed Speech / Enhancement. Neural stem-separation OS is deferred — not implied by this page.',
+    body: 'Lugemi Voice Isolator is the honest isolation path: client-side audio-track extract from video/audio the browser can decode, plus POST /v1/audio-intelligence/isolate (energy VAD). Use the cleaned WAV as a clone sample or feed Speech / Enhancement. Neural stem-separation OS is not implied by this page.',
     sections: [
       content(
-        'shipped',
-        'What ships',
+        'available',
+        'What is available',
         'Voice Studio Extract tab, Audio Intelligence isolate, and Voice Enhancement profiles that include an isolate step.',
       ),
       content(
-        'deferred',
-        'What is deferred',
-        'Entertainment-grade neural stem separation and karaoke-style vocal removers. Status stays labeled in product.',
+        'roadmap',
+        'What is not on this surface',
+        'Entertainment-grade neural stem separation and karaoke-style vocal removers are not offered here.',
       ),
       content(
         'usecases',
@@ -276,7 +276,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
       content(
         'position',
         'Brand position',
-        'Africa-first speech and translation are the investment priority. Generative music is roadmap-adjacent, not a substitute for shipped Voice and Studio.',
+        'Africa-first speech and translation are the investment priority. Generative music is roadmap-adjacent, not a substitute for Voice and Studio.',
       ),
       content(
         'today',
@@ -382,7 +382,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
     title: 'AI Image Generator',
     eyebrow: 'LugemiCreative',
     lead: 'Imagery is adjacent — Lugemi leads with language, speech, and speaking agents.',
-    body: 'Lugemi does not claim a production AI image studio as a core shipped product. Brand and console surfaces may show illustrative media; generative image APIs are not the Africa-first investment priority. Use your existing design tools for stills, and Lugemi for the voice and translation layer of campaigns.',
+    body: 'Lugemi does not claim a production AI image studio as a core product. Brand and console surfaces may show illustrative media; generative image APIs are not the Africa-first investment priority. Use your existing design tools for stills, and Lugemi for the voice and translation layer of campaigns.',
     sections: [
       content(
         'honest',
@@ -424,7 +424,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
       content(
         'voice-on-video',
         'Voice on video',
-        'Synthesize narration, clone with consent, and localize scripts before mix — the shipped Lugemi contribution to video.',
+        'Synthesize narration, clone with consent, and localize scripts before mix — Lugemi’s contribution to video.',
       ),
       content(
         'roadmap',
@@ -514,7 +514,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
       guide(
         'guide-dubbing',
         'Dubbing guide',
-        'Use shipped consoles end to end.',
+        'Use consoles end to end.',
         [
           'Optional: Extract / isolate source audio in Voice Studio, then Instant clone with consent.',
           'Transcribe with Speech; localize with Translate.',
@@ -1233,7 +1233,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
     title: 'Music API',
     eyebrow: 'LugemiAPI',
     lead: 'Music generation is not a live Lugemi /v1 product claim.',
-    body: 'The Music API page exists so footer navigation stays complete and honest. Lugemi’s shipped developer surface is speech, translation, detect, and agent simulate. Compose music elsewhere; use Lugemi for vocals and localized messaging.',
+    body: 'The Music API page exists so footer navigation stays complete and honest. Lugemi’s developer surface is speech, translation, detect, and agent simulate. Compose music elsewhere; use Lugemi for vocals and localized messaging.',
     sections: [
       content(
         'scope',
@@ -1606,7 +1606,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
       guide(
         'guide-builders',
         'Builder launch path',
-        'From demo to shipped product voice.',
+        'From demo to product voice.',
         [
           'Hear region voices on this page, then open the Builders console hub.',
           'Path A: Agents (/voice) with native accent + tone picker.',

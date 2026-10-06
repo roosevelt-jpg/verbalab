@@ -5,10 +5,8 @@ import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
-import { LanguageLocaleSelect } from '@/components/language-locale-select';
-
-type Language = { code: string; name: string; nativeName?: string | null };
-type LocalePack = { languageCode: string; bcp47: string | null };
+import { LocaleSelect } from '@/components/language-locale-select';
+import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
 type Engine = {
   product: string;
@@ -28,9 +26,8 @@ const FORMATS = ['html', 'markdown', 'xml', 'csv', 'srt'] as const;
 
 export function TranslateFormatsClient() {
   const { getToken, isLoaded } = useAuth();
+  const catalog = useLocaleCatalog();
   const [engine, setEngine] = useState<Engine | null>(null);
-  const [languages, setLanguages] = useState<Language[]>([]);
-  const [locales, setLocales] = useState<LocalePack[]>([]);
   const [format, setFormat] = useState<(typeof FORMATS)[number]>('html');
   const [source, setSource] = useState('en');
   const [target, setTarget] = useState('ak');
@@ -45,15 +42,6 @@ export function TranslateFormatsClient() {
 
   useEffect(() => {
     void loadEngine().catch((err: Error) => setError(err.message));
-    void Promise.all([
-      apiFetch<{ data: Language[] }>('/v1/languages'),
-      apiFetch<{ data: LocalePack[] }>('/v1/locales').catch(() => ({ data: [] as LocalePack[] })),
-    ])
-      .then(([langRes, locRes]) => {
-        setLanguages(langRes.data);
-        setLocales(locRes.data);
-      })
-      .catch((err: Error) => setError(err.message));
   }, [loadEngine]);
 
   async function runFormat() {
@@ -111,8 +99,9 @@ export function TranslateFormatsClient() {
     <AppShell>
       <h1 style={h1}>Translate formats</h1>
       <p style={{ color: 'var(--muted)', maxWidth: '44rem', margin: '0 0 1.25rem' }}>
-        {engine?.note ?? 'HTML, Markdown, XML, CSV, and SRT over the translation engine.'}{' '}
-        <Link href="/translate">Plain text</Link> · <Link href="/documents">Documents</Link> ·{' '}
+        {engine?.note ??
+          'API format options (markup, Markdown, CSV, SRT) over the translation engine. Studio I/O stays plain text.'}{' '}
+        <Link href="/translate">Plain text Translate</Link> · <Link href="/documents">Documents</Link> ·{' '}
         <Link href="/localize">JSON/YAML</Link>
       </p>
 
@@ -146,11 +135,27 @@ export function TranslateFormatsClient() {
         <div style={{ display: 'flex', gap: '0.75rem' }}>
           <label className="vl-label" style={{ flex: 1 }}>
             Source
-            <LanguageLocaleSelect value={source} onChange={setSource} languages={languages} locales={locales} className="vl-field" />
+            <LocaleSelect
+              className="vl-field"
+              value={source}
+              onChange={setSource}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+            />
           </label>
           <label className="vl-label" style={{ flex: 1 }}>
             Target
-            <LanguageLocaleSelect value={target} onChange={setTarget} languages={languages} locales={locales} className="vl-field" />
+            <LocaleSelect
+              className="vl-field"
+              value={target}
+              onChange={setTarget}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+            />
           </label>
         </div>
         <label className="vl-label">
