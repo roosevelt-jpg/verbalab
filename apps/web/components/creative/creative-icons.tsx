@@ -232,6 +232,20 @@ export function CreativeIcon({ name, ...rest }: IconProps) {
           <path d="M6 6l12 12M18 6L6 18" />
         </svg>
       );
+    case 'subscription':
+    case 'billing':
+      return (
+        <svg {...p}>
+          <rect x="3" y="6" width="18" height="12" rx="2" />
+          <path d="M3 10h18M8 14h3" />
+        </svg>
+      );
+    case 'download':
+      return (
+        <svg {...p}>
+          <path d="M12 4v10M8 10l4 4 4-4M5 19h14" />
+        </svg>
+      );
     default:
       return (
         <svg {...p}>

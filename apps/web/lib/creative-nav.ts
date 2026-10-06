@@ -28,6 +28,7 @@ export const CREATIVE_PINNED: CreativeNavItem[] = [
   { href: '/creative/speech-to-text', label: 'Speech to Text', icon: 'stt' },
   { href: '/creative/dubbing', label: 'Dubbing', icon: 'dub' },
   { href: '/creative/audiobooks', label: 'Audiobooks', icon: 'book' },
+  { href: '/creative/subscription', label: 'Subscription', icon: 'subscription' },
   { href: '/creative/more', label: 'More tools', icon: 'more' },
 ];
 
@@ -55,6 +56,7 @@ export const CREATIVE_SEARCH_INDEX: { href: string; label: string; hint: string 
   { href: '/audio-intelligence', label: 'Audio intelligence', hint: 'Platform' },
   { href: '/chat', label: 'Chat Studio immersive', hint: 'Agents' },
   { href: '/dashboard', label: 'Platform ops dashboard', hint: 'Ops' },
+  { href: '/creative/subscription', label: 'Subscription', hint: 'Plans & credits' },
   { href: '/billing', label: 'Billing', hint: 'Account' },
 ];
 
@@ -66,6 +68,7 @@ export function creativeTitleForPath(pathname: string): string {
   if (pathname.startsWith('/creative/studio')) return 'Studio';
   if (pathname.startsWith('/creative/flows')) return 'Flows';
   if (pathname.startsWith('/creative/assets')) return 'Assets';
+  if (pathname.startsWith('/creative/subscription')) return 'Subscription';
   if (pathname.startsWith('/creative')) return 'Home';
   return 'LugemiCreative';
 }
