@@ -2,8 +2,10 @@
 
 import { AgentChatDemo } from '@/components/marketing/agent-chat-demo';
 import { HeroTtsCard } from '@/components/marketing/hero-tts-card';
+import { StudioSampleDemo } from '@/components/marketing/studio-sample-demo';
 import { TranslatePlayDemo } from '@/components/marketing/translate-play-demo';
 import { VoiceChipRow } from '@/components/marketing/voice-chip-row';
+import { CodePanel } from '@/components/code-panel';
 import { CMS_DEFAULTS } from '@/data/cms-defaults';
 
 const SAMPLE_VOICES = CMS_DEFAULTS.console.sampleVoices.map((v) => ({
@@ -28,7 +30,22 @@ const SAMPLE_VOICES = CMS_DEFAULTS.console.sampleVoices.map((v) => ({
 
 /** Interactive demos injected on CMS marketing pages by slug. */
 export function CmsPageDemos({ slug }: { slug: string }) {
-  if (slug === 'lugemi-voice' || slug === 'lugemi-studio' || slug === 'creative') {
+  if (slug === 'lugemi-studio') {
+    return (
+      <div className="mkt-page-demos">
+        <StudioSampleDemo
+          sample={CMS_DEFAULTS.creative.studioSample}
+          chips={CMS_DEFAULTS.creative.languageChips}
+        />
+        <div style={{ marginTop: '1.25rem' }}>
+          <p className="mkt-tts-label">Region voices for review</p>
+          <VoiceChipRow voices={SAMPLE_VOICES.slice(0, 4)} />
+        </div>
+      </div>
+    );
+  }
+
+  if (slug === 'lugemi-voice' || slug === 'creative') {
     return (
       <div className="mkt-page-demos">
         <HeroTtsCard demo={CMS_DEFAULTS.hero.demo} />
@@ -81,6 +98,9 @@ export function CmsPageDemos({ slug }: { slug: string }) {
     return (
       <div className="mkt-page-demos">
         <TranslatePlayDemo compact />
+        <div style={{ marginTop: '1.25rem' }}>
+          <CodePanel code={CMS_DEFAULTS.api.snippet} label="TypeScript · @lugemi/sdk" />
+        </div>
       </div>
     );
   }
@@ -107,6 +127,14 @@ export function CmsPageDemos({ slug }: { slug: string }) {
           userVoiceId="user"
           agentVoiceId="abe"
         />
+      </div>
+    );
+  }
+
+  if (slug === 'socials') {
+    return (
+      <div className="mkt-page-demos">
+        <HeroTtsCard demo={CMS_DEFAULTS.hero.demo} />
       </div>
     );
   }

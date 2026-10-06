@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { CmsDocument, CmsPage } from '@/data/cms-types';
+import { parseCmsSections, serializeCmsSections } from '@/lib/cms-section-text';
 
 type Tab =
   | 'hero'
@@ -701,33 +702,22 @@ export function CmsEditor() {
               }
             />
             <Field
-              label="Sections (title||body per block, blank line between)"
-              value={(selectedPage.sections ?? [])
-                .map((s) => `${s.title}||${s.body}`)
-                .join('\n\n')}
+              label="Sections — [kind] Title||Body, then > steps and @ label|href (blank line between blocks)"
+              value={serializeCmsSections(selectedPage.sections ?? [])}
               multiline
-              rows={12}
+              rows={16}
               onChange={(v) =>
                 updatePage((p) => ({
                   ...p,
-                  sections: v
-                    .split(/\n\s*\n/)
-                    .map((block) => block.trim())
-                    .filter(Boolean)
-                    .map((block, i) => {
-                      const parts = block.split('||');
-                      const title = (parts[0] ?? 'Section').trim();
-                      const body = parts.slice(1).join('||').trim();
-                      return {
-                        id: p.sections?.[i]?.id ?? `section-${i + 1}`,
-                        title,
-                        body,
-                        media: p.sections?.[i]?.media,
-                      };
-                    }),
+                  sections: parseCmsSections(v, p.sections ?? []),
                 }))
               }
             />
+            <p style={{ color: 'var(--muted)', margin: 0, fontSize: '0.85rem', lineHeight: 1.45 }}>
+              Use <code className="vl-code">[guide]</code> or <code className="vl-code">[api]</code> for
+              ProductGuideKit blocks. Content sections omit the tag. Steps start with{' '}
+              <code className="vl-code">&gt;</code>; links with <code className="vl-code">@</code>.
+            </p>
             <button
               type="button"
               className="vl-btn"
