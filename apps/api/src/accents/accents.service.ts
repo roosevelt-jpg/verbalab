@@ -38,6 +38,7 @@ export class AccentsService implements OnModuleInit {
   async seed() {
     let seeded = 0;
     for (const a of ACCENT_SEEDS) {
+      if (!a?.languageCode) continue;
       const language = await this.prisma.language.findUnique({ where: { code: a.languageCode } });
       if (!language) continue;
       seeded += 1;

@@ -101,7 +101,6 @@ export const ACCENT_SEEDS: AccentSeed[] = [
     cueTerms: ['sawubona', 'ngiyabonga', 'unjani', 'yebo', 'cha'],
     notes: 'Spoken greeting/lexical cues.',
   },
-,
 { code: 'ak-gh', languageCode: 'ak', nameEn: 'Ghanaian Twi (spoken)', region: 'GH', relatedDialectCode: 'ak-gh-asante', cueTerms: ['medaase', 'akwaaba', 'ɛte sɛn'], notes: 'Asante Twi spoken cues — default Lugemi demo accent.' },
   { code: 'ig-ng', languageCode: 'ig', nameEn: 'Nigerian Igbo (spoken)', region: 'NG', cueTerms: ['ndewo', 'daalụ', 'kedu', 'biko'], notes: 'Spoken Igbo greeting cues.' },
   { code: 'wo-sn', languageCode: 'wo', nameEn: 'Senegalese Wolof (spoken)', region: 'SN', cueTerms: ['nanga def', 'jërëjëf', 'waaw'], notes: 'Spoken Wolof cues.' },
