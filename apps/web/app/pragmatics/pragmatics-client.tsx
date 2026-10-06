@@ -71,10 +71,10 @@ export function PragmaticsClient() {
           </p>
           <p>{result.translation}</p>
           <DemoPlayStopButton
-            id="prag-out"
-            playingId={playingId}
-            loadingId={loadingId}
-            onPlay={() => void play('prag-out', { text: result.translation, language: target })}
+            active={playingId === 'prag-out'}
+            loading={loadingId === 'prag-out'}
+            variant="secondary"
+            onPlay={() => void play({ id: 'prag-out', text: result.translation, lang: target })}
             onStop={() => stop()}
             label="Play"
           />

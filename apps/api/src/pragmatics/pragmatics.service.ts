@@ -10,7 +10,7 @@ export type PragmaticsMode = 'faithful' | 'literal' | 'localized';
 @Injectable()
 export class PragmaticsService {
   constructor(
-    private readonly translate: TranslateService,
+    private readonly mt: TranslateService,
     private readonly audit: AuditService,
   ) {}
 
@@ -52,7 +52,7 @@ export class PragmaticsService {
     }
 
     const speechAct = this.classifySpeechAct(text);
-    const mt = await this.translate.translate({
+    const translated = await this.mt.translate({
       text,
       source: input.source ?? 'auto',
       target,
@@ -64,7 +64,7 @@ export class PragmaticsService {
       skipReview: true,
     });
 
-    const candidates = this.buildCandidates(mt.text, speechAct, mode, input.register);
+    const candidates = this.buildCandidates(translated.text, speechAct, mode, input.register);
     const primary = candidates.find((c) => c.mode === mode) ?? candidates[0]!;
     const preserved = this.preservationChecks(speechAct, primary.text, mode);
     const disclosed_changes =
@@ -95,7 +95,7 @@ export class PragmaticsService {
 
     const meta = portfolioMeta({
       modelId: 'lugemi-pragmatics',
-      sourceLanguageTags: [mt.source || input.source || 'auto'],
+      sourceLanguageTags: [translated.source || input.source || 'auto'],
       targetLanguageTag: target,
       varietyId: input.locale ?? null,
       warnings: preserved.ok

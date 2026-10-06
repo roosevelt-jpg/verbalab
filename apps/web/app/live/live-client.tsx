@@ -168,10 +168,10 @@ export function LiveClient() {
       {lastSpoken?.text ? (
         <div style={{ marginTop: '1rem' }}>
           <DemoPlayStopButton
-            id="live-spoken"
-            playingId={playingId}
-            loadingId={loadingId}
-            onPlay={() => void play('live-spoken', { text: lastSpoken.text!, language: 'en' })}
+            active={playingId === 'live-spoken'}
+            loading={loadingId === 'live-spoken'}
+            variant="secondary"
+            onPlay={() => void play({ id: 'live-spoken', text: lastSpoken.text!, lang: 'en' })}
             onStop={() => stop()}
             label="Play last spoken / repair"
           />

@@ -114,10 +114,12 @@ export function MixClient() {
               <p style={{ margin: '0.5rem 0 0', whiteSpace: 'pre-wrap' }}>{result.translation}</p>
               <div style={{ marginTop: '0.75rem' }}>
                 <DemoPlayStopButton
-                  id="mix-translation"
-                  playingId={playingId}
-                  loadingId={loadingId}
-                  onPlay={() => void play('mix-translation', { text: result.translation, language: target })}
+                  active={playingId === 'mix-translation'}
+                  loading={loadingId === 'mix-translation'}
+                  variant="secondary"
+                  onPlay={() =>
+                    void play({ id: 'mix-translation', text: result.translation, lang: target })
+                  }
                   onStop={() => stop()}
                   label="Play translation"
                 />
