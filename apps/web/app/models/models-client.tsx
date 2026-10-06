@@ -40,54 +40,16 @@ type Engine = {
 };
 
 const VERTICALS = [
-  {
-    id: 'voice',
-    title: 'Voice',
-    body: 'Lugemi TTS and ASR for African accents — own:* production voices.',
-    href: '/audio',
-  },
-  {
-    id: 'video',
-    title: 'Video',
-    body: 'MCP/CLI voice generation for dubbing and content pipelines.',
-    href: '/developers',
-  },
-  {
-    id: 'chat',
-    title: 'Chat',
-    body: 'Chat Intelligence for culture, lifestyle, and routines — not a generic chatbot skin.',
-    href: '/chat',
-  },
-  {
-    id: 'law',
-    title: 'Law',
-    body: 'Legal language packs, jurisdiction glossaries, and provenance for synthetic speech in filings.',
-    href: '/p/legal-integrity',
-  },
-  {
-    id: 'government',
-    title: 'Government',
-    body: 'Citizen-service bilingual notices, public-sector forms, and Language Integrity for attested speech.',
-    href: '/p/legal-integrity',
-  },
-  {
-    id: 'insurance',
-    title: 'Insurance',
-    body: 'Claims and policy language across African markets.',
-    href: '/models',
-  },
-  {
-    id: 'compliance',
-    title: 'Compliance',
-    body: 'KYC, AML, and disclosure localization with audit-friendly wording.',
-    href: '/models',
-  },
-  {
-    id: 'security',
-    title: 'Security',
-    body: 'Threat and policy language understanding across locales.',
-    href: '/models',
-  },
+  { id: 'voice', title: 'Lugemi Pulse', body: 'Neural TTS family for African accents — own:* production voices.', href: '/audio' },
+  { id: 'stt', title: 'Lugemi Echo', body: 'Speech recognition family for African locales and multilingual ASR.', href: '/audio' },
+  { id: 'translate', title: 'Lugemi Weave', body: 'Africa-first translation family. Default demo pair: English → Twi.', href: '/translate' },
+  { id: 'video', title: 'Lugemi Reel', body: 'Video dubbing and content-production voice via MCP/CLI/SDK.', href: '/developers' },
+  { id: 'chat', title: 'Lugemi Atlas', body: 'Multilingual chat for culture, lifestyle, and routines — not a generic chatbot skin.', href: '/chat' },
+  { id: 'law', title: 'Lugemi Lex', body: 'Legal language packs, jurisdiction glossaries, and provenance for synthetic speech in filings.', href: '/p/legal-integrity' },
+  { id: 'government', title: 'Lugemi Civic', body: 'Citizen-service bilingual notices, public-sector forms, and Language Integrity for attested speech.', href: '/p/legal-integrity' },
+  { id: 'insurance', title: 'Lugemi Cover', body: 'Claims and policy language across African markets.', href: '/models' },
+  { id: 'compliance', title: 'Lugemi Mandate', body: 'KYC, AML, and disclosure localization with audit-friendly wording.', href: '/models' },
+  { id: 'security', title: 'Lugemi Shield', body: 'Threat and policy language understanding across locales.', href: '/models' },
 ];
 
 export function ModelsClient() {

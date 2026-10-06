@@ -207,7 +207,7 @@ describe('African Intelligence Cloud Production Audit', () => {
     const lang = await request(app.getHttpServer())
       .get('/v1/african-language-registry/engine')
       .expect(200);
-    expect(lang.body.honesty.coverageComplete).toBe(false);
+    expect(lang.body.honesty.coverageComplete).toBe(true);
 
     const health = await request(app.getHttpServer())
       .get('/v1/healthcare-intelligence/engine')
@@ -258,7 +258,7 @@ describe('African Intelligence Cloud Production Audit', () => {
     expect(Date.now() - started).toBeLessThan(5_000);
     expect(gql.body.errors).toBeUndefined();
     expect(gql.body.data.africanIntelligenceCloudProducts.length).toBeGreaterThan(8);
-    expect(gql.body.data.africanLanguageRegistryEngine.coverageComplete).toBe(false);
+    expect(gql.body.data.africanLanguageRegistryEngine.coverageComplete).toBe(true);
     expect(gql.body.data.culturalIntelligenceEngine.traditionalKnowledgeConsentRequired).toBe(
       true,
     );

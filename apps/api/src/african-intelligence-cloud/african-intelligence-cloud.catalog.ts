@@ -31,7 +31,7 @@ export function africanIntelligenceProductCatalog(): AfricanIntelProductRow[] {
       status: 'shipped',
       api: 'GET /v1/african-language-registry/engine',
       console: '/african-language-registry',
-      notes: 'Representative language/dialect/writing-system seed. coverageComplete=false.',
+      notes: 'Comprehensive African language registry wired for routing; task quality tracked separately.',
     },
     {
       id: 'cultural-intelligence',

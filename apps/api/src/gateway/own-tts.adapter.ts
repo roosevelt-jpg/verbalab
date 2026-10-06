@@ -3,9 +3,9 @@ import { ApiException } from '../common/errors/api-exception';
 import { TtsInput, TtsOutput, TtsProvider, TtsVoice } from './tts-provider';
 
 /**
- * Intended production Lugemi speech catalog (`own:*`) via OWN_TTS_URL.
+ * Intended production Lugemi Pulse catalog (`own:*`) via OWN_TTS_URL.
  * Region / ethnic labels are cultural metadata for pickers — not a claim of
- * perfect native-speaker acoustic cloning for every tribe.
+ * perfect native-speaker acoustic cloning for every community.
  */
 export const OWN_TTS_VOICES: TtsVoice[] = [
   { id: 'own:sw-aisha', name: 'Aisha (Swahili)', gender: 'female', languages: ['sw', 'en'], provider: 'own_tts' },
@@ -20,6 +20,24 @@ export const OWN_TTS_VOICES: TtsVoice[] = [
   { id: 'own:fr-sn-female', name: 'Awa · Dakar', gender: 'female', languages: ['fr', 'wo', 'en'], provider: 'own_tts' },
   { id: 'own:ha-ng-male', name: 'Sani · Kano', gender: 'male', languages: ['ha', 'en'], provider: 'own_tts' },
   { id: 'own:ak-gh-female', name: 'Akosua · Accra', gender: 'female', languages: ['ak', 'en'], provider: 'own_tts' },
+  { id: 'own:ig-ng-female', name: 'Ada · Enugu', gender: 'female', languages: ['ig', 'en'], provider: 'own_tts' },
+  { id: 'own:so-so-male', name: 'Abdi · Mogadishu', gender: 'male', languages: ['so', 'en'], provider: 'own_tts' },
+  { id: 'own:wo-sn-male', name: 'Moussa · Dakar', gender: 'male', languages: ['wo', 'fr', 'en'], provider: 'own_tts' },
+  { id: 'own:lg-ug-female', name: 'Nakato · Kampala', gender: 'female', languages: ['lg', 'en'], provider: 'own_tts' },
+  { id: 'own:ln-cd-male', name: 'Jean · Kinshasa', gender: 'male', languages: ['ln', 'fr', 'en'], provider: 'own_tts' },
+  { id: 'own:om-et-female', name: 'Chaltu · Adama', gender: 'female', languages: ['om', 'en'], provider: 'own_tts' },
+  { id: 'own:rw-rw-female', name: 'Uwase · Kigali', gender: 'female', languages: ['rw', 'en'], provider: 'own_tts' },
+  { id: 'own:xh-za-male', name: 'Lunga · Cape Town', gender: 'male', languages: ['xh', 'en'], provider: 'own_tts' },
+  { id: 'own:pcm-ng-female', name: 'Blessing · Lagos', gender: 'female', languages: ['pcm', 'en'], provider: 'own_tts' },
+  { id: 'own:bm-ml-male', name: 'Sékou · Bamako', gender: 'male', languages: ['bm', 'fr', 'en'], provider: 'own_tts' },
+  { id: 'own:ee-gh-female', name: 'Ama · Ho', gender: 'female', languages: ['ee', 'en'], provider: 'own_tts' },
+  { id: 'own:ti-et-male', name: 'Yonas · Mekelle', gender: 'male', languages: ['ti', 'en'], provider: 'own_tts' },
+  { id: 'own:sn-zw-female', name: 'Rudo · Harare', gender: 'female', languages: ['sn', 'en'], provider: 'own_tts' },
+  { id: 'own:ny-mw-male', name: 'Chisomo · Lilongwe', gender: 'male', languages: ['ny', 'en'], provider: 'own_tts' },
+  { id: 'own:ff-sn-female', name: 'Aissatou · Saint-Louis', gender: 'female', languages: ['ff', 'fr', 'en'], provider: 'own_tts' },
+  { id: 'own:pt-ao-male', name: 'Nzinga · Luanda', gender: 'male', languages: ['pt', 'en'], provider: 'own_tts' },
+  { id: 'own:af-za-female', name: 'Annelie · Cape Town', gender: 'female', languages: ['af', 'en'], provider: 'own_tts' },
+  { id: 'own:tn-bw-male', name: 'Kagiso · Gaborone', gender: 'male', languages: ['tn', 'en'], provider: 'own_tts' },
 ];
 
 /** Map region-aware CMS ids to synthesis keys sent to OWN_TTS_URL backends. */
@@ -36,6 +54,12 @@ const OWN_TTS_SYNTH_KEY: Record<string, string> = {
   'own:fr-sn-female': 'fr-sn-female',
   'own:ha-ng-male': 'ha-ng-male',
   'own:ak-gh-female': 'ak-gh-female',
+  'own:ig-ng-female': 'ig-ng-female', 'own:so-so-male': 'so-so-male', 'own:wo-sn-male': 'wo-sn-male',
+  'own:lg-ug-female': 'lg-ug-female', 'own:ln-cd-male': 'ln-cd-male', 'own:om-et-female': 'om-et-female',
+  'own:rw-rw-female': 'rw-rw-female', 'own:xh-za-male': 'xh-za-male', 'own:pcm-ng-female': 'pcm-ng-female',
+  'own:bm-ml-male': 'bm-ml-male', 'own:ee-gh-female': 'ee-gh-female', 'own:ti-et-male': 'ti-et-male',
+  'own:sn-zw-female': 'sn-zw-female', 'own:ny-mw-male': 'ny-mw-male', 'own:ff-sn-female': 'ff-sn-female',
+  'own:pt-ao-male': 'pt-ao-male', 'own:af-za-female': 'af-za-female', 'own:tn-bw-male': 'tn-bw-male',
 };
 
 const MIME: Record<string, string> = {

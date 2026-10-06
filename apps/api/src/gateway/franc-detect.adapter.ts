@@ -1,6 +1,6 @@
 import { DetectInput, DetectOutput, LanguageDetectProvider } from './detect-provider';
 
-/** ISO 639-3 → 639-1 for languages we care about in the registry. */
+/** ISO 639-3 → registry codes for languages we care about. */
 const ISO3_TO_1: Record<string, string> = {
   eng: 'en',
   fra: 'fr',
@@ -26,6 +26,8 @@ const ISO3_TO_1: Record<string, string> = {
   lug: 'lg',
   orm: 'om',
   tir: 'ti',
+  aka: 'ak', ewe: 'ee', bam: 'bm', ful: 'ff', run: 'rn', sag: 'sg', tso: 'ts',
+  ven: 've', nbl: 'nr', nde: 'nd', ssw: 'ss', bem: 'bem', kik: 'ki', luo: 'luo', mlg: 'mg', nso: 'nso',
 };
 
 /**
