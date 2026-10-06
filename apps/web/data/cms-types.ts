@@ -8,7 +8,11 @@ export type CmsMedia = {
   alt?: string;
 };
 
-export type CmsNavLink = CmsLink & { external?: boolean };
+export type CmsNavLink = CmsLink & {
+  external?: boolean;
+  /** Optional mega-menu / dropdown children deep-linking to detail pages. */
+  children?: CmsNavLink[];
+};
 
 export type CmsProductCard = {
   id: string;

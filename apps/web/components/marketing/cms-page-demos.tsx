@@ -27,9 +27,11 @@ const SAMPLE_VOICES = CMS_DEFAULTS.console.sampleVoices.map((v) => ({
 }));
 
 const VOICE_DEMO_SLUGS = new Set([
+  'products',
   'lugemi-voice',
   'lugemi-studio',
   'creative',
+  'public-speech',
   'text-to-speech',
   'voice-changer',
   'voice-cloning',
@@ -45,6 +47,8 @@ const VOICE_DEMO_SLUGS = new Set([
 ]);
 
 const AGENT_DEMO_SLUGS = new Set([
+  'hubs',
+  'use-cases',
   'lugemi-agents',
   'trade',
   'customer-experience',
@@ -65,6 +69,7 @@ const AGENT_DEMO_SLUGS = new Set([
 const TRANSLATE_DEMO_SLUGS = new Set([
   'lugemi-translate',
   'education',
+  'sales-marketing',
   'translate-api',
   'dubbing-api',
   'openapi-explorer',

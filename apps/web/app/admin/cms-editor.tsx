@@ -316,10 +316,17 @@ export function CmsEditor() {
         {tab === 'nav' ? (
           <>
             <Field
-              label="Center links (label|href per line)"
-              value={doc.nav.centerLinks.map((l) => `${l.label}|${l.href}`).join('\n')}
+              label="Center links (label|href or label|href|Child>url;Child>url per line)"
+              value={doc.nav.centerLinks
+                .map((l) => {
+                  const kids = (l.children ?? [])
+                    .map((c) => `${c.label}>${c.href}`)
+                    .join(';');
+                  return kids ? `${l.label}|${l.href}|${kids}` : `${l.label}|${l.href}`;
+                })
+                .join('\n')}
               multiline
-              rows={8}
+              rows={12}
               onChange={(v) =>
                 setDoc({
                   ...doc,
@@ -332,8 +339,22 @@ export function CmsEditor() {
                       .map((line) => {
                         const parts = line.split('|');
                         const label = (parts[0] ?? 'Link').trim();
-                        const href = (parts[1] ?? '/').trim();
-                        return { label, href };
+                        const href = (parts[1] ?? '/').trim() || '/';
+                        const childRaw = (parts[2] ?? '').trim();
+                        const children = childRaw
+                          ? childRaw
+                              .split(';')
+                              .map((chunk) => chunk.trim())
+                              .filter(Boolean)
+                              .map((chunk) => {
+                                const [cLabel, ...rest] = chunk.split('>');
+                                return {
+                                  label: (cLabel ?? 'Link').trim(),
+                                  href: (rest.join('>') || '/').trim() || '/',
+                                };
+                              })
+                          : undefined;
+                        return children?.length ? { label, href, children } : { label, href };
                       }),
                   },
                 })

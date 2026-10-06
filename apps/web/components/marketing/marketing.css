@@ -38,12 +38,36 @@
   display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
   gap: 2px 14px; list-style: none; margin: 0; padding: 0;
 }
+.mkt-nav-item { position: relative; }
 .mkt-nav-links a, .mkt-nav-text {
   color: var(--text-secondary); text-decoration: none; font-size: 0.84rem; font-weight: 500;
   min-height: 44px; display: inline-flex; align-items: center;
 }
+.mkt-nav-trigger { gap: 0.3rem; }
+.mkt-nav-chevron {
+  font-size: 0.65rem; opacity: 0.7; transform: translateY(1px);
+  transition: transform 160ms ease;
+}
+.mkt-nav-item.is-open .mkt-nav-chevron { transform: translateY(1px) rotate(180deg); }
 .mkt-nav-links a:hover, .mkt-nav-links a:focus-visible,
 .mkt-nav-text:hover, .mkt-nav-text:focus-visible { color: var(--action-primary); }
+.mkt-mega {
+  position: absolute; top: calc(100% - 4px); left: 50%; transform: translateX(-50%);
+  min-width: 15.5rem; padding: 0.55rem 0;
+  background: var(--surface-canvas);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-control);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+  z-index: 50;
+}
+.mkt-mega[hidden] { display: none; }
+.mkt-mega-list { list-style: none; margin: 0; padding: 0; }
+.mkt-mega-list a {
+  display: flex; align-items: center; min-height: 40px;
+  padding: 0.35rem 1rem; font-size: 0.82rem; white-space: nowrap;
+}
+.mkt-mega-overview a { font-weight: 650; color: var(--brand-navy); }
+.mkt-mega-overview { border-bottom: 1px solid var(--border-subtle); margin-bottom: 0.25rem; padding-bottom: 0.15rem; }
 .mkt-nav-actions { display: flex; flex-wrap: nowrap; align-items: center; gap: 8px; flex-shrink: 0; }
 .mkt-nav-signup { text-decoration: none; padding: 0.5rem 0.9rem; min-height: 40px; white-space: nowrap; }
 .mkt-menu-btn {
@@ -51,6 +75,11 @@
   border-radius: var(--radius-control); border: 1px solid var(--border-subtle);
   background: var(--surface-canvas); color: var(--brand-navy); font-weight: 600; cursor: pointer;
 }
+.mkt-mobile-children {
+  list-style: none; margin: 0.15rem 0 0.55rem 0.85rem; padding: 0;
+  display: grid; gap: 0.1rem;
+}
+.mkt-mobile-children a { min-height: 38px; font-size: 0.8rem; font-weight: 450; }
 
 .mkt-hero { padding: 56px 0 28px; position: relative; }
 .mkt-hero-media {
