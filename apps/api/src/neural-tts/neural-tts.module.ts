@@ -7,6 +7,7 @@ import { AuditCoreModule } from '../audit/audit-core.module';
 import { ApiKeysModule } from '../api-keys/api-keys.module';
 import { IdentityModule } from '../identity/identity.module';
 import { AudioModule } from '../audio/audio.module';
+import { AccentsModule } from '../accents/accents.module';
 import { TranslateAuthGuard } from '../common/guards/translate-auth.guard';
 
 @Module({
@@ -17,6 +18,7 @@ import { TranslateAuthGuard } from '../common/guards/translate-auth.guard';
     ApiKeysModule,
     IdentityModule,
     AudioModule,
+    AccentsModule,
   ],
   controllers: [NeuralTtsController],
   providers: [NeuralTtsService, TranslateAuthGuard],

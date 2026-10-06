@@ -7,6 +7,7 @@ import { ApiKeysModule } from '../api-keys/api-keys.module';
 import { IdentityModule } from '../identity/identity.module';
 import { RateLimitModule } from '../rate-limit/rate-limit.module';
 import { LanguagesModule } from '../languages/languages.module';
+import { AccentsModule } from '../accents/accents.module';
 import { TranslateAuthGuard } from '../common/guards/translate-auth.guard';
 
 @Module({
@@ -17,6 +18,7 @@ import { TranslateAuthGuard } from '../common/guards/translate-auth.guard';
     ApiKeysModule,
     IdentityModule,
     RateLimitModule,
+    AccentsModule,
   ],
   controllers: [DialectsController],
   providers: [DialectsService, TranslateAuthGuard],

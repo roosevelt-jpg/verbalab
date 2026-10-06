@@ -1,4 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { ApiException } from '../common/errors/api-exception';
+import { AccentIdentityService } from '../accents/accent-identity.service';
 import { GatewayService } from '../gateway/gateway.service';
 import { UsageService } from '../usage/usage.service';
 import { AuditService } from '../audit/audit.service';
@@ -15,9 +17,11 @@ import {
 const STREAM_CHUNK_BYTES = 8 * 1024;
 
 export type SynthesizeInput = {
-  text: string;
-  voice: string;
+  text?: string;
+  voice?: string;
   language?: string;
+  accentId?: string;
+  dialectId?: string;
   format?: 'mp3' | 'wav' | 'opus' | 'aac' | 'flac';
   organizationId: string;
   workspaceId: string;
@@ -34,6 +38,7 @@ export class NeuralTtsService {
     private readonly audit: AuditService,
     private readonly prisma: PrismaService,
     private readonly audio: AudioService,
+    private readonly accentIdentity: AccentIdentityService,
   ) {}
 
   engine() {
@@ -106,11 +111,49 @@ export class NeuralTtsService {
     };
   }
 
+  resolveIdentityPlayback(input: {
+    text?: string;
+    voice?: string;
+    language?: string;
+    accentId?: string;
+    dialectId?: string;
+  }) {
+    if (!input.accentId?.trim() && !input.dialectId?.trim()) {
+      return {
+        text: input.text ?? '',
+        voice: input.voice ?? '',
+        language: input.language,
+        accentIdentityId: null as string | null,
+      };
+    }
+
+    const pack = this.accentIdentity.resolveForPlayback({
+      accentId: input.accentId,
+      dialectId: input.dialectId,
+    });
+
+    return {
+      text: input.text?.trim() || pack.samplePhrase,
+      voice: input.voice?.trim() || pack.echoVoiceId || 'own:en-kofi',
+      language: input.language?.trim() || pack.languageCode,
+      accentIdentityId: pack.id,
+      accentIdentityName: pack.nameEn,
+    };
+  }
+
   async synthesize(input: SynthesizeInput) {
+    const resolved = this.resolveIdentityPlayback(input);
+    if (!resolved.text?.trim()) {
+      throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
+    }
+    if (!resolved.voice?.trim()) {
+      throw new ApiException('validation_error', 'voice is required', HttpStatus.BAD_REQUEST);
+    }
+
     const result = await this.audio.speak({
-      text: input.text,
-      voice: input.voice,
-      language: input.language,
+      text: resolved.text,
+      voice: resolved.voice,
+      language: resolved.language,
       format: input.format,
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,
@@ -133,10 +176,16 @@ export class NeuralTtsService {
         bytes: result.audio.length,
         mode: 'batch',
         watermarkApplied: result.watermarkApplied,
+        accentIdentityId: resolved.accentIdentityId,
       },
     });
 
-    return result;
+    return {
+      ...result,
+      accentIdentityId: resolved.accentIdentityId,
+      accentIdentityName:
+        'accentIdentityName' in resolved ? resolved.accentIdentityName : undefined,
+    };
   }
 
   async *streamSynthesize(input: SynthesizeInput): AsyncGenerator<{
@@ -144,10 +193,16 @@ export class NeuralTtsService {
     [key: string]: unknown;
   }> {
     try {
+      const resolved = this.resolveIdentityPlayback(input);
+      if (!resolved.text?.trim() || !resolved.voice?.trim()) {
+        yield { event: 'error', message: 'text and voice are required' };
+        return;
+      }
+
       const result = await this.audio.speak({
-        text: input.text,
-        voice: input.voice,
-        language: input.language,
+        text: resolved.text,
+        voice: resolved.voice,
+        language: resolved.language,
         format: input.format,
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,

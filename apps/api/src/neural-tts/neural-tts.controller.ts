@@ -120,14 +120,17 @@ export class NeuralTtsController {
       text?: string;
       voice?: string;
       language?: string;
+      accentId?: string;
+      dialectId?: string;
       format?: 'mp3' | 'wav' | 'opus' | 'aac' | 'flac';
     },
     @Res() res: Response,
   ) {
-    if (typeof body.text !== 'string') {
+    const hasIdentity = Boolean(body.accentId?.trim() || body.dialectId?.trim());
+    if (!hasIdentity && typeof body.text !== 'string') {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }
-    if (typeof body.voice !== 'string') {
+    if (!hasIdentity && typeof body.voice !== 'string') {
       throw new ApiException('validation_error', 'voice is required', HttpStatus.BAD_REQUEST);
     }
 
@@ -135,6 +138,8 @@ export class NeuralTtsController {
       text: body.text,
       voice: body.voice,
       language: body.language,
+      accentId: body.accentId,
+      dialectId: body.dialectId,
       format: body.format,
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -153,6 +158,9 @@ export class NeuralTtsController {
     if (result.watermarkApplied) {
       res.setHeader('X-Lugemi-Watermark', 'required');
     }
+    if (result.accentIdentityId) {
+      res.setHeader('X-Lugemi-Accent-Identity', result.accentIdentityId);
+    }
     res.status(HttpStatus.OK).send(result.audio);
   }
 
@@ -170,13 +178,16 @@ export class NeuralTtsController {
       text?: string;
       voice?: string;
       language?: string;
+      accentId?: string;
+      dialectId?: string;
       format?: 'mp3' | 'wav' | 'opus' | 'aac' | 'flac';
     },
   ) {
-    if (typeof body.text !== 'string') {
+    const hasIdentity = Boolean(body.accentId?.trim() || body.dialectId?.trim());
+    if (!hasIdentity && typeof body.text !== 'string') {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }
-    if (typeof body.voice !== 'string') {
+    if (!hasIdentity && typeof body.voice !== 'string') {
       throw new ApiException('validation_error', 'voice is required', HttpStatus.BAD_REQUEST);
     }
 
@@ -191,6 +202,8 @@ export class NeuralTtsController {
       text: body.text,
       voice: body.voice,
       language: body.language,
+      accentId: body.accentId,
+      dialectId: body.dialectId,
       format: body.format,
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,

@@ -68,6 +68,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/countries', label: 'Country packs' },
       { href: '/dialects', label: 'Dialects' },
       { href: '/accents', label: 'Accents' },
+      { href: '/accent-identity', label: 'Accent Identity' },
       { href: '/accent-intelligence', label: 'Accent Intelligence' },
       { href: '/african-language-registry', label: 'Language registry' },
       { href: '/coverage', label: 'Coverage' },

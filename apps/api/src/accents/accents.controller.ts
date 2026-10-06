@@ -16,6 +16,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
 import type { Request } from 'express';
 import { AccentsService } from './accents.service';
+import { AccentIdentityService } from './accent-identity.service';
 import { TranslateAuthGuard, TranslateAuthContext } from '../common/guards/translate-auth.guard';
 import { RateLimitGuard } from '../rate-limit/rate-limit.guard';
 import { ApiException } from '../common/errors/api-exception';
@@ -25,7 +26,10 @@ import { audioMaxBytes } from '../audio/audio-limits';
 
 @Controller('v1/accents')
 export class AccentsController {
-  constructor(private readonly accents: AccentsService) {}
+  constructor(
+    private readonly accents: AccentsService,
+    private readonly identity: AccentIdentityService,
+  ) {}
 
   @Get('engine')
   engine() {
@@ -44,8 +48,41 @@ export class AccentsController {
   }
 
   @Get()
-  list(@Query('language') language?: string) {
-    return this.accents.list(language?.trim() || undefined);
+  list(
+    @Query('language') language?: string,
+    @Query('includeIdentity') includeIdentity?: string,
+  ) {
+    const base = this.accents.list(language?.trim() || undefined);
+    if (includeIdentity === 'true' || includeIdentity === '1') {
+      const identity = this.identity.list({ language: language?.trim() });
+      return { ...base, identityPacks: identity.data, identityCount: identity.count };
+    }
+    return base;
+  }
+
+  @Get('identity')
+  listIdentity(
+    @Query('country') country?: string,
+    @Query('region') region?: string,
+    @Query('language') language?: string,
+    @Query('q') q?: string,
+  ) {
+    return this.identity.list({
+      country: country?.trim(),
+      region: region?.trim(),
+      language: language?.trim(),
+      q: q?.trim(),
+    });
+  }
+
+  @Get('identity/:id/demo')
+  identityDemo(@Param('id') id: string) {
+    return this.identity.demoMeta(id);
+  }
+
+  @Get('identity/:id')
+  getIdentity(@Param('id') id: string) {
+    return this.identity.get(id);
   }
 
   @Post('detect')

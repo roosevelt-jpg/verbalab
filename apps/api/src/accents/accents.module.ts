@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AccentsController } from './accents.controller';
 import { AccentsService } from './accents.service';
+import { AccentIdentityService } from './accent-identity.service';
 import { GatewayModule } from '../gateway/gateway.module';
 import { AuditCoreModule } from '../audit/audit-core.module';
 import { ApiKeysModule } from '../api-keys/api-keys.module';
@@ -23,7 +24,7 @@ import { TranslateAuthGuard } from '../common/guards/translate-auth.guard';
     AudioModule,
   ],
   controllers: [AccentsController],
-  providers: [AccentsService, TranslateAuthGuard],
-  exports: [AccentsService],
+  providers: [AccentsService, AccentIdentityService, TranslateAuthGuard],
+  exports: [AccentsService, AccentIdentityService],
 })
 export class AccentsModule {}

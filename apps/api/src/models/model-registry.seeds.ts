@@ -1,3 +1,5 @@
+import { echoVoiceIdentityVariantSeeds } from './echo-voice-identity-variants.seeds';
+
 /** Gateway features tracked in the model registry (+ Language Intelligence). */
 export const MODEL_FEATURES = [
   'translate',
@@ -292,6 +294,7 @@ export const VENDOR_MODEL_SEEDS: VendorDefaultSeed[] = [
     role: 'primary',
     kind: 'lugemi',
   },
+  ...echoVoiceIdentityVariantSeeds(),
 ];
 
 export const MODEL_SLUG_ALIASES: Record<string, string> = {
