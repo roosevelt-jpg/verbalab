@@ -1,8 +1,9 @@
 import Link from 'next/link';
-import { LanguagePlayers } from './language-players';
-import { LanguageTicker } from './language-ticker';
+import { BrandMark } from '@/components/brand-mark';
+import { HeroTtsCard } from './hero-tts-card';
+import { LanguageBar } from './language-bar';
 import { MarketingNav } from './nav';
-import { TtsHeroCard } from './tts-hero-card';
+import './marketing.css';
 
 const SDK_SAMPLE = `import { Lugemi } from '@lugemi/sdk';
 
@@ -12,7 +13,7 @@ const client = new Lugemi({
 
 const speech = await client.speech({
   text: 'Habari, dunia.',
-  voice: 'alloy',
+  voice: 'own:sw-ke-female',
 });
 
 const translated = await client.translate({
@@ -20,6 +21,68 @@ const translated = await client.translate({
   source: 'sw',
   target: 'en',
 });`;
+
+const PRODUCTS = [
+  {
+    name: 'Lugemi Voice',
+    body: 'Text to speech and cloning. Resonant, real-time African voices for content, brand, and personal presence.',
+    href: '/speech',
+    art: 'voice',
+  },
+  {
+    name: 'Lugemi Speech',
+    body: 'Speech to text. Transcribe accents, dialects, and code-switching with research intelligence built for Africa.',
+    href: '/audio',
+    art: 'speech',
+  },
+  {
+    name: 'Lugemi Translate',
+    body: 'Translate every tongue. Move meaning across African languages with global context — without context loss.',
+    href: '/translate',
+    art: 'translate',
+  },
+] as const;
+
+const USE_CASES = [
+  { title: 'Trade & negotiations', body: 'Close deals in the languages partners actually speak — with tone that holds trust.', tone: 'gold' },
+  { title: 'Education', body: 'Teach and tutor across mother tongues so literacy and STEM travel further.', tone: 'blue' },
+  { title: 'Sales & marketing', body: 'Localize campaigns and product voice without flattening cultural nuance.', tone: 'rose' },
+  { title: 'Public speech', body: 'Civic address, broadcast, and advocacy that sound native, not dubbed.', tone: 'teal' },
+  { title: 'Customer experience', body: 'Support and IVR that understand accents, switches, and regional phrasing.', tone: 'green' },
+  { title: 'Creative voice', body: 'Agencies and creators ship narration, ads, and character voices at production pace.', tone: 'violet' },
+] as const;
+
+const SHIP_WAYS = [
+  { title: 'Creative', items: ['Text to speech', 'Speech to text', 'Voice clone (consent-gated)', 'Studio review'] },
+  { title: 'Agents', items: ['Voice FAQ agents', 'Conversational turns', 'STT → model → TTS', 'Twilio inbound hooks'] },
+  { title: 'API', items: ['@lugemi/sdk', 'Bearer lg_live_ keys', 'Speech, translate, detect', 'Usage metering'] },
+] as const;
+
+const IMPACT = [
+  { title: 'Language sovereignty', body: 'First-party models and a public coverage matrix — African languages and ethnic varieties across every country are the investment priority, not an afterthought locale pack.' },
+  { title: 'Freedom of priority', body: 'Ship for Africa first, then expand into LATAM, Southeast Asia, the Middle East, and the EU with the same API surface.' },
+  { title: 'Digital infrastructure', body: 'Registry, metering, workspaces, and review controls so speech and translation can run as production infrastructure.' },
+] as const;
+
+const TIMELINE = [
+  { year: '2023', title: 'African Language Registry', body: 'Seed languages, scripts, and task metadata for honest coverage claims.' },
+  { year: '2024', title: 'Cultural intelligence graph', body: 'Dialect and accent metadata wired into speech and translation review paths.' },
+  { year: '2025', title: 'First-party voice path', body: 'own:* voices and API keys as the intended production route — not a wrapper stack.' },
+  { year: 'Now', title: 'Lugemi platform', body: 'Studio, Agents, and API on one foundation with published per-task availability.' },
+] as const;
+
+const SAFETY = [
+  { title: 'Moderation', body: 'Policy checks on generative speech paths so misuse surfaces before scale.' },
+  { title: 'Accountability', body: 'Workspace keys, usage logs, and review states for clones and translations.' },
+  { title: 'Provenance', body: 'Synthetic-speech disclosure and watermarking on clone voices where required.' },
+  { title: 'Biometrics', body: 'Consent gates for voice cloning — authorization is required, not assumed.' },
+] as const;
+
+const UPDATES = [
+  { title: 'Public language coverage', body: 'A coverage page lands so homepage CTAs point at real availability, not slogans.' },
+  { title: 'First-party positioning', body: 'Product copy states Lugemi owns the API and models — not Google, OpenAI, or ElevenLabs wrappers.' },
+  { title: 'Lugemi identity', body: 'Brand, domain lugemi.com, and symbol mark applied across the marketing surface.' },
+] as const;
 
 export function MarketingHome() {
   return (
@@ -29,219 +92,226 @@ export function MarketingHome() {
       </a>
       <MarketingNav />
       <main id="main">
-        <section className="mkt-hero">
+        <section className="mkt-hero" aria-labelledby="mkt-hero-title">
           <div className="mkt-wrap mkt-hero-grid">
             <div className="mkt-hero-copy">
-              <p className="mkt-brand-hero">Lugemi</p>
-              <h1 className="mkt-tagline">Own every African voice.</h1>
+              <p className="mkt-eyebrow">Voice · Speech · Translate · API</p>
+              <h1 id="mkt-hero-title">
+                <span className="mkt-brand-hero">Lugemi</span>
+                <span className="mkt-tagline">Own every African voice.</span>
+              </h1>
               <p className="mkt-hero-lead">
-                Fully built Africa-first language intelligence — speech, translation, and language tools for every
-                language and dialect across African countries and ethnic communities. First-party API and models, with
-                LATAM, Southeast Asia, the Middle East, and the EU also in product scope.
+                Fully built Africa-first language intelligence — speak, translate, clone, and reason across languages,
+                dialects, and ethnic communities for trade, education, sales, and public speech. First-party API and
+                models; LATAM, Southeast Asia, the Middle East, and the EU also in product scope.
               </p>
               <div className="mkt-cta-row">
                 <Link href="/sign-up" className="vl-btn vl-btn-primary">
                   Start free
                 </Link>
-                <Link href="/sign-in" className="vl-btn vl-btn-secondary">
+                <Link href="/dashboard" className="vl-btn vl-btn-secondary">
                   Open console
                 </Link>
-              </div>
-            </div>
-            <TtsHeroCard />
-          </div>
-        </section>
-
-        <LanguageTicker />
-        <LanguagePlayers />
-
-        <section className="mkt-section mkt-section-mist" id="products" aria-labelledby="mkt-platforms-title">
-          <div className="mkt-wrap">
-            <p className="mkt-kicker">Platform</p>
-            <h2 className="mkt-h2" id="mkt-platforms-title">
-              One platform for African voice, speech, and language
-            </h2>
-            <p className="mkt-lede">
-              Work in Lugemi Studio when you need a friendly console, or call the Lugemi API when you are shipping
-              product. Both sit on the same first-party models — not a wrapper around another vendor.
-            </p>
-            <div className="mkt-card-grid-3">
-              <article className="mkt-card">
-                <h3>Speech and sensing</h3>
-                <p>Text-to-speech, transcription, and voice tools tuned for African languages, accents, and scripts.</p>
-                <Link href="/speech" className="vl-btn vl-btn-primary">
-                  Open Speech
-                </Link>
-              </article>
-              <article className="mkt-card">
-                <h3>Translate every tongue</h3>
-                <p>Translate and localize across the Africa language directory, with glossaries and review in Studio.</p>
-                <Link href="/translate" className="vl-btn vl-btn-primary">
-                  Open Translate
-                </Link>
-              </article>
-              <article className="mkt-card">
-                <h3>Developer APIs</h3>
-                <p>
-                  Copy-paste SDKs and REST endpoints. Install <code className="vl-code">@lugemi/sdk</code> and call the first-party API.
-                </p>
-                <Link href="/docs" className="vl-btn vl-btn-primary">
-                  Read the docs
-                </Link>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        <section className="mkt-section" id="create" aria-labelledby="mkt-create-title">
-          <div className="mkt-wrap">
-            <p className="mkt-kicker">Studio tools</p>
-            <h2 className="mkt-h2" id="mkt-create-title">
-              Create, edit, and localize
-            </h2>
-            <p className="mkt-lede">
-              Clear console entry points. Start with translate or speech, then add keys when you are ready to ship.
-            </p>
-            <div className="mkt-card-grid-3">
-              <article className="mkt-card">
-                <h3>Translate</h3>
-                <p>Text translation with language checks, glossaries, and review.</p>
-                <Link href="/translate" className="vl-btn vl-btn-primary">
-                  Open Translate
-                </Link>
-              </article>
-              <article className="mkt-card">
-                <h3>Speech</h3>
-                <p>Generate speech through the Lugemi API — African-priority voices on the production path.</p>
-                <Link href="/speech" className="vl-btn vl-btn-primary">
-                  Open Speech
-                </Link>
-              </article>
-              <article className="mkt-card">
-                <h3>Voice studio</h3>
-                <p>Presets, consent-gated clones, and review controls in one place.</p>
-                <Link href="/audio" className="vl-btn vl-btn-primary">
-                  Open Voice studio
-                </Link>
-              </article>
-              <article className="mkt-card">
-                <h3>Transcribe</h3>
-                <p>Speech-to-text for recordings and workflows, with usage metering.</p>
-                <Link href="/audio" className="vl-btn vl-btn-primary">
-                  Open audio tools
-                </Link>
-              </article>
-              <article className="mkt-card">
-                <h3>Localize</h3>
-                <p>Catalog and i18n tree localization (JSON/YAML) with ICU passthrough.</p>
-                <Link href="/localize" className="vl-btn vl-btn-primary">
-                  Open Localize
-                </Link>
-              </article>
-              <article className="mkt-card">
-                <h3>Coverage</h3>
-                <p>Searchable Africa language directory — countries, languages, and ethnic varieties.</p>
-                <Link href="/coverage" className="vl-btn vl-btn-primary">
+                <Link href="/coverage" className="vl-btn vl-btn-secondary">
                   Browse coverage
                 </Link>
-              </article>
+              </div>
+            </div>
+            <HeroTtsCard />
+          </div>
+        </section>
+
+        <LanguageBar />
+
+        <section className="mkt-section" id="products" aria-labelledby="mkt-products-title">
+          <div className="mkt-wrap">
+            <p className="mkt-kicker">Products</p>
+            <h2 className="mkt-h2" id="mkt-products-title">
+              One platform for African voice, speech, and translation
+            </h2>
+            <p className="mkt-lede">
+              Three product surfaces on the same first-party foundation. Availability follows the published coverage
+              matrix — not a claim that every dialect is live everywhere.
+            </p>
+            <div className="mkt-card-grid-3">
+              {PRODUCTS.map((product) => (
+                <article key={product.name} className="mkt-product-card">
+                  <div className={`mkt-product-art mkt-product-art-${product.art}`} aria-hidden="true" />
+                  <h3>{product.name}</h3>
+                  <p>{product.body}</p>
+                  <Link href={product.href} className="mkt-text-link">
+                    Explore →
+                  </Link>
+                </article>
+              ))}
             </div>
           </div>
         </section>
 
-        <section className="mkt-section mkt-section-mist" id="agents" aria-labelledby="mkt-agents-title">
-          <div className="mkt-wrap mkt-split">
-            <div>
-              <p className="mkt-kicker">Agents</p>
-              <h2 className="mkt-h2" id="mkt-agents-title">
-                Agents that talk
-              </h2>
-              <p className="mkt-lede">
-                Voice FAQ is the shipped conversational surface: inbound or simulated turns in English and Kiswahili,
-                with speech-to-text, a FAQ model, and text-to-speech.
-              </p>
-              <div className="mkt-inline-links">
+        <section className="mkt-section mkt-section-mist" id="use-cases" aria-labelledby="mkt-usecases-title">
+          <div className="mkt-wrap">
+            <p className="mkt-kicker">Use cases</p>
+            <h2 className="mkt-h2" id="mkt-usecases-title">
+              Why teams choose Lugemi
+            </h2>
+            <p className="mkt-lede">
+              Built for the conversations that move African markets — and the global corridors that connect them.
+            </p>
+            <div className="mkt-usecase-grid">
+              {USE_CASES.map((item) => (
+                <article key={item.title} className={`mkt-usecase mkt-usecase-${item.tone}`}>
+                  <h3>{item.title}</h3>
+                  <p>{item.body}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="mkt-section" id="hubs" aria-labelledby="mkt-ship-title">
+          <div className="mkt-wrap">
+            <p className="mkt-kicker">Hubs</p>
+            <h2 className="mkt-h2" id="mkt-ship-title">
+              Three ways to ship
+            </h2>
+            <p className="mkt-lede">Creative studio, conversational agents, or raw API — pick the surface that matches your stack.</p>
+            <div className="mkt-card-grid-3">
+              {SHIP_WAYS.map((way) => (
+                <article key={way.title} className="mkt-ship-card">
+                  <h3>{way.title}</h3>
+                  <ul>
+                    {way.items.map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="mkt-section mkt-section-mist" id="studio" aria-labelledby="mkt-modules-title">
+          <div className="mkt-wrap">
+            <p className="mkt-kicker">Deep modules</p>
+            <h2 className="mkt-h2" id="mkt-modules-title">
+              Studio, Agents, and API
+            </h2>
+            <p className="mkt-lede">
+              Illustrative product surfaces — not live sessions. Sign up to open the console; docs cover the SDK.
+            </p>
+
+            <div className="mkt-module">
+              <div className="mkt-module-copy">
+                <h3>Lugemi Studio</h3>
+                <p>
+                  Create and localize scripts, pick languages, and review output before it ships. Studio is the
+                  authenticated console path after sign-up.
+                </p>
+                <Link href="/sign-up" className="vl-btn vl-btn-primary">
+                  Open Studio
+                </Link>
+              </div>
+              <div className="mkt-module-panel" aria-hidden="true">
+                <div className="mkt-fake-ui">
+                  <div className="mkt-fake-ui-bar">Studio editor</div>
+                  <p className="mkt-fake-ui-script">
+                    Hello! Your brand can speak to customers in Swahili, Yoruba, and French from one draft.
+                  </p>
+                  <div className="mkt-fake-chips">
+                    <span>English</span>
+                    <span className="is-on">Swahili</span>
+                    <span>French</span>
+                    <span>Yoruba</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mkt-module mkt-module-reverse">
+              <div className="mkt-module-copy">
+                <h3>Lugemi Agents</h3>
+                <p>
+                  Conversational voice FAQ turns: STT, a FAQ model, and TTS. Simulate from the console or call{' '}
+                  <code className="vl-code">POST /v1/voice/simulate</code>.
+                </p>
                 <Link href="/voice" className="vl-btn vl-btn-primary">
-                  Open Voice FAQ
-                </Link>
-                <Link href="/docs" className="vl-btn vl-btn-secondary">
-                  API notes
+                  Open Agents
                 </Link>
               </div>
+              <div className="mkt-module-panel" aria-hidden="true">
+                <div className="mkt-fake-chat">
+                  <div className="mkt-fake-ui-bar">Agent: Mandisa</div>
+                  <div className="mkt-chat-bubble mkt-chat-user">I would like to place an order for chips, please.</div>
+                  <div className="mkt-chat-bubble mkt-chat-agent">
+                    Of course — I can take that order. How many portions would you like?
+                  </div>
+                </div>
+              </div>
             </div>
-            <article className="mkt-card">
-              <h3>What you can do today</h3>
-              <p>
-                Simulate a FAQ turn from the console or call <code className="vl-code">POST /v1/voice/simulate</code>.
-                Twilio webhooks exist for inbound calls.
-              </p>
-            </article>
+
+            <div className="mkt-module">
+              <div className="mkt-module-copy">
+                <h3>Lugemi API</h3>
+                <p>
+                  Install <code className="vl-code">@lugemi/sdk</code> and authenticate with{' '}
+                  <code className="vl-code">Authorization: Bearer lg_live_...</code>.
+                </p>
+                <div className="mkt-inline-links">
+                  <Link href="/docs" className="vl-btn vl-btn-primary">
+                    API docs
+                  </Link>
+                  <Link href="/playground" className="vl-btn vl-btn-secondary">
+                    Playground
+                  </Link>
+                </div>
+              </div>
+              <pre className="mkt-code" tabIndex={0}>
+                {SDK_SAMPLE}
+              </pre>
+            </div>
           </div>
         </section>
 
-        <section className="mkt-section" id="api" aria-labelledby="mkt-api-title">
-          <div className="mkt-wrap mkt-split">
-            <div>
-              <p className="mkt-kicker">Developers</p>
-              <h2 className="mkt-h2" id="mkt-api-title">
-                Or build anything with Lugemi APIs
-              </h2>
-              <p className="mkt-lede">
-                Install the SDK, paste a key, and call speech or translate. Plain-language docs and a playground — less
-                jargon on the first screen.
-              </p>
-              <div className="mkt-inline-links">
-                <Link href="/docs" className="vl-btn vl-btn-primary">
-                  API docs
-                </Link>
-                <Link href="/playground" className="vl-btn vl-btn-secondary">
-                  Playground
-                </Link>
-                <Link href="/developers" className="vl-btn vl-btn-secondary">
-                  Developer hub
-                </Link>
-              </div>
+        <section className="mkt-section" id="impact" aria-labelledby="mkt-impact-title">
+          <div className="mkt-wrap">
+            <p className="mkt-kicker">Impact</p>
+            <h2 className="mkt-h2" id="mkt-impact-title">
+              Infrastructure with a mission
+            </h2>
+            <div className="mkt-card-grid-3">
+              {IMPACT.map((item) => (
+                <article key={item.title} className="mkt-plain-card">
+                  <h3>{item.title}</h3>
+                  <p>{item.body}</p>
+                </article>
+              ))}
             </div>
-            <pre className="mkt-code" tabIndex={0}>
-              {SDK_SAMPLE}
-            </pre>
           </div>
         </section>
 
         <section className="mkt-section mkt-section-mist" id="research" aria-labelledby="mkt-research-title">
           <div className="mkt-wrap">
-            <p className="mkt-kicker">Coverage</p>
+            <p className="mkt-kicker">Research</p>
             <h2 className="mkt-h2" id="mkt-research-title">
-              Africa first — every country, every community
+              Research timeline
             </h2>
             <p className="mkt-lede">
-              Lugemi&apos;s product scope spans languages and ethnic varieties across all African countries. Latin
-              America, Southeast Asia, the Middle East, and the EU stay in scope for the same first-party stack.
+              Milestones that shaped the platform. Coverage remains per language and task — see the public matrix.
             </p>
-            <div className="mkt-card-grid-4">
-              <article className="mkt-card">
-                <h3>Africa</h3>
-                <p>
-                  Full directory of countries and ethnic language varieties — searchable on the coverage page. API seed
-                  marks which codes are live in the gateway today.
-                </p>
-              </article>
-              <article className="mkt-card">
-                <h3>Latin America</h3>
-                <p>Spanish and Portuguese in the seed set, with locale-specific work continuing.</p>
-              </article>
-              <article className="mkt-card">
-                <h3>Southeast Asia</h3>
-                <p>Indonesian and Hindi in the seed registry. Script shaping and review remain active work.</p>
-              </article>
-              <article className="mkt-card">
-                <h3>Middle East and EU</h3>
-                <p>Arabic (RTL) plus French, German, Dutch, Italian, and others on the same API.</p>
-              </article>
-            </div>
+            <ol className="mkt-timeline">
+              {TIMELINE.map((item) => (
+                <li key={item.year}>
+                  <span className="mkt-timeline-year">{item.year}</span>
+                  <div>
+                    <h3>{item.title}</h3>
+                    <p>{item.body}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
             <div className="mkt-inline-links">
               <Link href="/coverage" className="vl-btn vl-btn-primary">
-                Browse Africa coverage
+                View language coverage
               </Link>
             </div>
           </div>
@@ -251,117 +321,110 @@ export function MarketingHome() {
           <div className="mkt-wrap">
             <p className="mkt-kicker">Safety</p>
             <h2 className="mkt-h2" id="mkt-safety-title">
-              Safety built in
+              Safety by design
             </h2>
             <p className="mkt-lede">
-              Controls that exist in the product today. We do not display SOC 2 or similar badges without published
+              Controls that exist in product paths today. We do not display SOC 2 or similar badges without published
               evidence.
             </p>
-            <div className="mkt-card-grid-3">
-              <article className="mkt-card">
-                <h3>Consent</h3>
-                <p>Voice cloning is consent-gated. Marketing does not imply speaker authorization for every use.</p>
-              </article>
-              <article className="mkt-card">
-                <h3>Review</h3>
-                <p>Clone profiles can be reviewed, approved, rejected, or disabled. Translation review feeds memory.</p>
-              </article>
-              <article className="mkt-card">
-                <h3>Disclosure</h3>
-                <p>Generated speech should be identifiable where it could be mistaken for a person.</p>
-              </article>
+            <div className="mkt-card-grid-4">
+              {SAFETY.map((item) => (
+                <article key={item.title} className="mkt-plain-card">
+                  <h3>{item.title}</h3>
+                  <p>{item.body}</p>
+                </article>
+              ))}
             </div>
           </div>
         </section>
 
-        <section className="mkt-section mkt-section-mist" id="enterprise" aria-labelledby="mkt-enterprise-title">
-          <div className="mkt-wrap mkt-split">
-            <div>
-              <p className="mkt-kicker">Get started</p>
-              <h2 className="mkt-h2" id="mkt-enterprise-title">
-                Africa&apos;s language intelligence platform
-              </h2>
-              <p className="mkt-lede">
-                Create a workspace, open the console, and start with translate or speech. Add an API key when you are
-                ready to ship.
-              </p>
-              <div className="mkt-inline-links">
-                <Link href="/sign-up" className="vl-btn vl-btn-primary">
-                  Start free
-                </Link>
-                <Link href="/sign-in" className="vl-btn vl-btn-secondary">
-                  Open console
-                </Link>
-              </div>
-            </div>
-            <article className="mkt-card">
-              <h3>In the console</h3>
-              <p>
-                Keys, billing usage, organization members, and data settings live behind authentication. Public docs
-                describe the API in plain language.
-              </p>
-            </article>
-          </div>
-        </section>
-
-        <section className="mkt-section" id="updates" aria-labelledby="mkt-updates-title">
+        <section className="mkt-section mkt-section-mist" id="updates" aria-labelledby="mkt-updates-title">
           <div className="mkt-wrap">
             <p className="mkt-kicker">Latest updates</p>
             <h2 className="mkt-h2" id="mkt-updates-title">
-              On the platform
+              Product in build
             </h2>
-            <div className="mkt-note">
-              <h3>What recently landed</h3>
-              <p className="mkt-lede" style={{ marginTop: 0 }}>
-                Notes from product work in this repository — not invented press.
-              </p>
-              <ul>
-                <li>Africa language directory across all countries and ethnic communities on /coverage.</li>
-                <li>Long-form Lugemi homepage with TTS card, Start free / Open console, and language ticker.</li>
-                <li>Friendlier docs, playground, and dashboard what-to-do-next guidance.</li>
-              </ul>
+            <div className="mkt-card-grid-3">
+              {UPDATES.map((item) => (
+                <article key={item.title} className="mkt-plain-card">
+                  <h3>{item.title}</h3>
+                  <p>{item.body}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="mkt-banner" aria-labelledby="mkt-banner-title">
+          <div className="mkt-wrap mkt-banner-inner">
+            <h2 id="mkt-banner-title">Africa&apos;s AI communication platform</h2>
+            <p>Start creating with Lugemi Voice, Speech, and Translate — or talk to us about your workspace.</p>
+            <div className="mkt-cta-row">
+              <Link href="/sign-up" className="vl-btn mkt-btn-banner">
+                Start creating
+              </Link>
+              <Link href="/sign-up" className="vl-btn mkt-btn-banner-ghost">
+                Talk to sales
+              </Link>
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="mkt-footer" id="contact">
+      <footer className="mkt-footer">
         <div className="mkt-wrap">
+          <div className="mkt-footer-top">
+            <BrandMark />
+          </div>
           <div className="mkt-footer-grid">
             <div>
-              <div className="mkt-footer-brand">Lugemi</div>
-              <p style={{ color: '#b6c3d5', lineHeight: 1.65, maxWidth: '22rem' }}>
-                Fully built Africa-first language intelligence for global markets. lugemi.com
-              </p>
-            </div>
-            <div>
-              <h2>Products</h2>
+              <h2>Creation</h2>
               <ul>
                 <li>
-                  <Link href="#products">Studio</Link>
+                  <Link href="/speech">Lugemi Studio</Link>
                 </li>
                 <li>
-                  <Link href="/translate">Translate</Link>
+                  <Link href="/speech">Lugemi Voice</Link>
                 </li>
                 <li>
-                  <Link href="/speech">Speech</Link>
+                  <Link href="/audio">Lugemi Speech</Link>
+                </li>
+                <li>
+                  <Link href="/translate">Lugemi Translate</Link>
                 </li>
                 <li>
                   <Link href="/localize">Localize</Link>
                 </li>
+              </ul>
+            </div>
+            <div>
+              <h2>Agents</h2>
+              <ul>
                 <li>
-                  <Link href="/voice">Voice FAQ</Link>
+                  <Link href="/voice">Voice agents</Link>
                 </li>
                 <li>
-                  <Link href="/audio">Voice studio</Link>
+                  <Link href="/voice">Conversational FAQ</Link>
+                </li>
+                <li>
+                  <Link href="/chat">Chat</Link>
+                </li>
+                <li>
+                  <Link href="#hubs">Agent hub</Link>
                 </li>
               </ul>
             </div>
             <div>
-              <h2>Developers</h2>
+              <h2>Capability</h2>
               <ul>
                 <li>
-                  <Link href="/docs">Docs</Link>
+                  <Link href="/docs">API reference</Link>
+                </li>
+                <li>
+                  <Link href="/models">Models</Link>
+                </li>
+                <li>
+                  <Link href="/coverage">Coverage</Link>
                 </li>
                 <li>
                   <Link href="/playground">Playground</Link>
@@ -369,11 +432,38 @@ export function MarketingHome() {
                 <li>
                   <Link href="/developers">Developer hub</Link>
                 </li>
+              </ul>
+            </div>
+            <div>
+              <h2>Resources</h2>
+              <ul>
                 <li>
-                  <Link href="/coverage">Coverage</Link>
+                  <Link href="/docs">Docs</Link>
                 </li>
                 <li>
-                  <Link href="#api">SDK sample</Link>
+                  <Link href="#research">Research</Link>
+                </li>
+                <li>
+                  <Link href="#safety">Safety</Link>
+                </li>
+                <li>
+                  <Link href="#updates">Latest updates</Link>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h2>Socials</h2>
+              <ul>
+                <li>
+                  <a href="https://lugemi.com" rel="noreferrer">
+                    lugemi.com
+                  </a>
+                </li>
+                <li>
+                  <span className="mkt-footer-muted">X — coming soon</span>
+                </li>
+                <li>
+                  <span className="mkt-footer-muted">LinkedIn — coming soon</span>
                 </li>
               </ul>
             </div>
@@ -381,13 +471,7 @@ export function MarketingHome() {
               <h2>Company</h2>
               <ul>
                 <li>
-                  <Link href="#research">Coverage</Link>
-                </li>
-                <li>
-                  <Link href="#safety">Safety</Link>
-                </li>
-                <li>
-                  <Link href="#enterprise">Get started</Link>
+                  <Link href="#impact">About</Link>
                 </li>
                 <li>
                   <Link href="/sign-in">Log in</Link>
@@ -395,10 +479,17 @@ export function MarketingHome() {
                 <li>
                   <Link href="/sign-up">Sign up</Link>
                 </li>
+                <li>
+                  <Link href="#safety">Safety</Link>
+                </li>
+                <li>
+                  <Link href="/dashboard">Open console</Link>
+                </li>
               </ul>
             </div>
           </div>
           <div className="mkt-footer-meta">
+            <span>© Lugemi. All rights reserved.</span>
             <a href="https://lugemi.com">lugemi.com</a>
             <span> · Africa-first language intelligence · every country, every community</span>
           </div>
