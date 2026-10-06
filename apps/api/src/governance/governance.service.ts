@@ -716,7 +716,7 @@ export class GovernanceService {
     if (role !== 'owner' && role !== 'admin') {
       throw new ApiException(
         'forbidden',
-        'Only owners and admins can manage data governance',
+        'Only owners and admins can manage organization settings, members, and invites',
         HttpStatus.FORBIDDEN,
       );
     }

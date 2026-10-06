@@ -253,11 +253,19 @@ export function BillingClient() {
 
           <div className="vl-endpoint-card">
             <h2 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--brand-navy)' }}>Workspace members</h2>
-            <p style={{ color: 'var(--muted)', fontSize: '0.9rem', margin: '0.4rem 0 1rem' }}>
-              Each org workspace inherits the subscribed plan features. Invite teammates in Clerk Organizations.
+            <p style={{ color: 'var(--muted)', fontSize: '0.9rem', margin: '0.4rem 0 0.75rem' }}>
+              Every workspace under this org inherits the subscribed plan. Invite teammates with owner / admin /
+              member roles from Identity — they share this workspace after signing in.
+            </p>
+            <p style={{ margin: '0 0 1rem' }}>
+              <a href="/identity" style={{ color: 'var(--action-primary)', fontWeight: 600, textDecoration: 'none' }}>
+                Invite teammates →
+              </a>
             </p>
             {members.length === 0 ? (
-              <p style={{ color: 'var(--muted)', margin: 0 }}>No members loaded.</p>
+              <p style={{ color: 'var(--muted)', margin: 0 }}>
+                No members yet. Open Identity to send an invite.
+              </p>
             ) : (
               <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.5rem' }}>
                 {members.map((m) => (

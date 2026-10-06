@@ -54,6 +54,7 @@ const QUICK_LINKS = [
   { href: '/playground', label: 'API playground', primary: false },
   { href: '/docs', label: 'API docs', primary: false },
   { href: '/keys', label: 'API keys', primary: false },
+  { href: '/identity', label: 'Invite teammates', primary: false },
 ];
 
 export function DashboardClient() {

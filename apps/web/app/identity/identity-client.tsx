@@ -46,18 +46,23 @@ export function IdentityClient() {
   const [inviteEmail, setInviteEmail] = useState('');
   const [inviteRole, setInviteRole] = useState('member');
   const [error, setError] = useState<string | null>(null);
+  const [inviteError, setInviteError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     const token = await getToken();
     if (!token) throw new Error('Not signed in');
-    const [overview, inviteRows] = await Promise.all([
-      apiFetch<Overview>('/v1/identity/overview', { token }),
-      apiFetch<InviteRow[]>('/v1/organization/invites', { token }).catch(() => [] as InviteRow[]),
-    ]);
+    const overview = await apiFetch<Overview>('/v1/identity/overview', { token });
     setData(overview);
-    setInvites(inviteRows);
+    try {
+      const inviteRows = await apiFetch<InviteRow[]>('/v1/organization/invites', { token });
+      setInvites(inviteRows);
+      setInviteError(null);
+    } catch (err) {
+      setInvites([]);
+      setInviteError(err instanceof Error ? err.message : 'Could not load invites');
+    }
   }, [getToken]);
 
   useEffect(() => {
@@ -141,6 +146,7 @@ export function IdentityClient() {
   }
 
   const canManage = data?.session.role === 'owner' || data?.session.role === 'admin';
+  const pendingInvites = invites.filter((i) => i.status === 'pending');
 
   return (
     <AppShell>
@@ -163,6 +169,19 @@ export function IdentityClient() {
       {error ? <p style={{ color: '#b42318', marginBottom: '1rem' }}>{error}</p> : null}
       {message ? <p style={{ color: 'var(--muted)', marginBottom: '1rem' }}>{message}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}
+      {!data && error ? (
+        <p style={{ color: 'var(--muted)', marginTop: '0.5rem' }}>
+          Could not load Identity. Confirm you are signed in, then refresh. Billing and API keys stay available under{' '}
+          <Link href="/billing" style={{ color: 'var(--accent)' }}>
+            Billing
+          </Link>{' '}
+          and{' '}
+          <Link href="/keys" style={{ color: 'var(--accent)' }}>
+            API keys
+          </Link>
+          .
+        </p>
+      ) : null}
 
       {data ? (
         <div style={{ display: 'grid', gap: '1.75rem' }}>
@@ -248,111 +267,134 @@ export function IdentityClient() {
                   Send invite
                 </button>
               </form>
+            ) : (
+              <p style={{ color: 'var(--muted)', fontSize: '0.9rem', margin: '0 0 1rem' }}>
+                Only owners and admins can invite or change roles. Ask an owner if you need a teammate added.
+              </p>
+            )}
+            {inviteError ? (
+              <p style={{ color: '#b42318', fontSize: '0.9rem', margin: '0 0 0.75rem' }}>
+                Invites unavailable: {inviteError}
+              </p>
             ) : null}
-            {invites.filter((i) => i.status === 'pending').length > 0 ? (
+            {pendingInvites.length === 0 ? (
+              canManage && !inviteError ? (
+                <p style={{ color: 'var(--muted)', fontSize: '0.85rem', margin: '0 0 1rem' }}>
+                  No pending invites. Send an email above — they accept by signing in with that address.
+                </p>
+              ) : null
+            ) : (
               <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1rem', display: 'grid', gap: '0.45rem' }}>
-                {invites
-                  .filter((i) => i.status === 'pending')
-                  .map((inv) => (
-                    <li
-                      key={inv.id}
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        gap: '0.75rem',
-                        flexWrap: 'wrap',
-                        alignItems: 'center',
-                        padding: '0.55rem 0',
-                        borderTop: '1px solid var(--line)',
-                        fontSize: '0.9rem',
-                      }}
-                    >
-                      <span>
-                        <strong>{inv.email}</strong> · {inv.role} · pending
-                      </span>
-                      {canManage ? (
-                        <button
-                          type="button"
-                          className="vl-btn vl-btn-secondary"
-                          disabled={busyId === inv.id}
-                          onClick={() => void revokeInvite(inv.id)}
-                          style={{ minHeight: 32, fontSize: '0.78rem' }}
-                        >
-                          Revoke
-                        </button>
-                      ) : null}
-                    </li>
-                  ))}
-              </ul>
-            ) : null}
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.65rem' }}>
-              {data.members.data.map((m) => {
-                const isSelf = m.user.id === data.session.userId;
-                return (
+                {pendingInvites.map((inv) => (
                   <li
-                    key={m.id}
+                    key={inv.id}
                     style={{
                       display: 'flex',
                       justifyContent: 'space-between',
-                      gap: '1rem',
+                      gap: '0.75rem',
                       flexWrap: 'wrap',
                       alignItems: 'center',
-                      padding: '0.75rem 0',
+                      padding: '0.55rem 0',
                       borderTop: '1px solid var(--line)',
+                      fontSize: '0.9rem',
                     }}
                   >
-                    <div>
-                      <div style={{ fontWeight: 600 }}>
-                        {m.user.name ?? m.user.email ?? m.user.id}
-                        {isSelf ? ' (you)' : ''}
-                      </div>
-                      <div style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>{m.user.email}</div>
-                    </div>
-                    <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                      {canManage && !isSelf ? (
-                        <select
-                          value={m.role}
-                          disabled={busyId === m.id}
-                          onChange={(e) => void setRole(m.id, e.target.value)}
-                          style={{
-                            fontSize: '0.85rem',
-                            padding: '0.35rem 0.5rem',
-                            borderRadius: '0.35rem',
-                            border: '1px solid var(--line)',
-                          }}
-                        >
-                          {data.rbac.roles.map((r) => (
-                            <option key={r} value={r}>
-                              {r}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>{m.role}</span>
-                      )}
-                      {canManage && !isSelf ? (
-                        <button
-                          type="button"
-                          disabled={busyId === m.id}
-                          onClick={() => void removeMember(m.id)}
-                          style={{
-                            fontSize: '0.8rem',
-                            padding: '0.35rem 0.55rem',
-                            borderRadius: '0.35rem',
-                            border: '1px solid var(--line)',
-                            background: 'transparent',
-                            color: 'var(--muted)',
-                            cursor: 'pointer',
-                          }}
-                        >
-                          Remove
-                        </button>
+                    <span>
+                      <strong>{inv.email}</strong> · {inv.role} · pending
+                      {inv.expiresAt ? (
+                        <span style={{ color: 'var(--muted)' }}>
+                          {' '}
+                          · expires {new Date(inv.expiresAt).toLocaleDateString()}
+                        </span>
                       ) : null}
-                    </div>
+                    </span>
+                    {canManage ? (
+                      <button
+                        type="button"
+                        className="vl-btn vl-btn-secondary"
+                        disabled={busyId === inv.id}
+                        onClick={() => void revokeInvite(inv.id)}
+                        style={{ minHeight: 32, fontSize: '0.78rem' }}
+                      >
+                        Revoke
+                      </button>
+                    ) : null}
                   </li>
-                );
-              })}
-            </ul>
+                ))}
+              </ul>
+            )}
+            {data.members.data.length === 0 ? (
+              <p style={{ color: 'var(--muted)', margin: 0 }}>No members in this organization yet.</p>
+            ) : (
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.65rem' }}>
+                {data.members.data.map((m) => {
+                  const isSelf = m.user.id === data.session.userId;
+                  return (
+                    <li
+                      key={m.id}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        gap: '1rem',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                        padding: '0.75rem 0',
+                        borderTop: '1px solid var(--line)',
+                      }}
+                    >
+                      <div>
+                        <div style={{ fontWeight: 600 }}>
+                          {m.user.name ?? m.user.email ?? m.user.id}
+                          {isSelf ? ' (you)' : ''}
+                        </div>
+                        <div style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>{m.user.email}</div>
+                      </div>
+                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                        {canManage && !isSelf ? (
+                          <select
+                            value={m.role}
+                            disabled={busyId === m.id}
+                            onChange={(e) => void setRole(m.id, e.target.value)}
+                            style={{
+                              fontSize: '0.85rem',
+                              padding: '0.35rem 0.5rem',
+                              borderRadius: '0.35rem',
+                              border: '1px solid var(--line)',
+                            }}
+                          >
+                            {data.rbac.roles.map((r) => (
+                              <option key={r} value={r}>
+                                {r}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>{m.role}</span>
+                        )}
+                        {canManage && !isSelf ? (
+                          <button
+                            type="button"
+                            disabled={busyId === m.id}
+                            onClick={() => void removeMember(m.id)}
+                            style={{
+                              fontSize: '0.8rem',
+                              padding: '0.35rem 0.55rem',
+                              borderRadius: '0.35rem',
+                              border: '1px solid var(--line)',
+                              background: 'transparent',
+                              color: 'var(--muted)',
+                              cursor: 'pointer',
+                            }}
+                          >
+                            Remove
+                          </button>
+                        ) : null}
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
           </section>
 
           <section>

@@ -365,6 +365,15 @@ export const openApiDocument = {
         responses: { '200': { description: 'ok or degraded with issues' } },
       },
     },
+    '/v1/locales/engine': {
+      get: {
+        summary: 'Locale Engine catalog',
+        operationId: 'getLocaleEngine',
+        responses: {
+          '200': { description: 'Locale pack capabilities and honesty notes' },
+        },
+      },
+    },
     '/v1/locales': {
       get: {
         summary: 'List locale / cultural packs',
@@ -490,6 +499,17 @@ export const openApiDocument = {
         security: [{ ClerkAuth: [] }],
         parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
         responses: { '200': { description: 'Retired' }, '402': { description: 'Pro plan required' } },
+      },
+    },
+    '/v1/models/engine': {
+      get: {
+        summary: 'Models Engine catalog',
+        operationId: 'getModelsEngine',
+        responses: {
+          '200': {
+            description: 'Models Engine capabilities and honesty notes (not MLflow)',
+          },
+        },
       },
     },
     '/v1/models/live': {
@@ -2274,6 +2294,15 @@ export const openApiDocument = {
         responses: { '200': { description: 'Org accent detect/classify usage' } },
       },
     },
+    '/v1/country-packs/engine': {
+      get: {
+        summary: 'Country Engine catalog',
+        operationId: 'getCountryEngine',
+        responses: {
+          '200': { description: 'Country pack capabilities and honesty notes' },
+        },
+      },
+    },
     '/v1/country-packs': {
       get: {
         summary: 'List country packs',
@@ -2303,6 +2332,15 @@ export const openApiDocument = {
           },
         ],
         responses: { '200': { description: 'Country pack detail' } },
+      },
+    },
+    '/v1/dialects/engine': {
+      get: {
+        summary: 'Dialect Engine catalog',
+        operationId: 'getDialectEngine',
+        responses: {
+          '200': { description: 'Dialect capabilities and honesty notes' },
+        },
       },
     },
     '/v1/dialects': {

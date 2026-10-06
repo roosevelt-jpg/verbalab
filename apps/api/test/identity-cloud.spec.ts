@@ -122,6 +122,73 @@ describe('Identity Cloud', () => {
     expect(synced.role).toBe('admin');
   });
 
+  it('creates, lists, and revokes org invites; rejects members', async () => {
+    const org = await seedOrg(prisma, `id_invite_${Date.now()}`);
+    const ownerId = org.memberships[0].userId;
+    process.env.NOTIFICATIONS_DISABLED = '1';
+
+    const created = await governance.createInvite({
+      organizationId: org.id,
+      actorUserId: ownerId,
+      actorRole: 'owner',
+      email: 'teammate@example.com',
+      role: 'admin',
+    });
+    expect(created.status).toBe('pending');
+    expect(created.role).toBe('admin');
+    expect(created.email).toBe('teammate@example.com');
+
+    const listed = await governance.listInvites(org.id);
+    expect(listed.some((i) => i.id === created.id && i.status === 'pending')).toBe(true);
+
+    await expect(
+      governance.createInvite({
+        organizationId: org.id,
+        actorUserId: ownerId,
+        actorRole: 'member',
+        email: 'other@example.com',
+        role: 'member',
+      }),
+    ).rejects.toMatchObject({ code: 'forbidden' });
+
+    const revoked = await governance.revokeInvite({
+      organizationId: org.id,
+      actorUserId: ownerId,
+      actorRole: 'owner',
+      inviteId: created.id,
+    });
+    expect(revoked.status).toBe('revoked');
+  });
+
+  it('auto-accepts pending invites on sign-in by email', async () => {
+    const org = await seedOrg(prisma, `id_accept_${Date.now()}`);
+    const ownerId = org.memberships[0].userId;
+    process.env.NOTIFICATIONS_DISABLED = '1';
+
+    await governance.createInvite({
+      organizationId: org.id,
+      actorUserId: ownerId,
+      actorRole: 'owner',
+      email: 'invitee.accept@example.com',
+      role: 'member',
+    });
+
+    const session = await identity.ensureSessionIdentity({
+      clerkUserId: `clerk_invitee_${Date.now()}`,
+      email: 'invitee.accept@example.com',
+      name: 'Invitee',
+    });
+
+    expect(session.organizationId).toBe(org.id);
+    expect(session.role).toBe('member');
+
+    const invite = await prisma.organizationInvite.findFirst({
+      where: { organizationId: org.id, email: 'invitee.accept@example.com' },
+    });
+    expect(invite?.status).toBe('accepted');
+    expect(invite?.acceptedAt).toBeTruthy();
+  });
+
   it('promotes, demotes, and removes members with last-owner guard', async () => {
     const org = await seedOrg(prisma, `id_rbac_${Date.now()}`);
     const ownerId = org.memberships[0].userId;
@@ -179,10 +246,12 @@ describe('Identity Cloud', () => {
     expect(listed[0].lastUsedAt).toBeNull();
 
     const ctx = {
+      getType: () => 'http',
       switchToHttp: () => ({
         getRequest: () => ({
           headers: { authorization: `Bearer ${created.secret}` },
         }),
+        getResponse: () => ({}),
       }),
     } as unknown as ExecutionContext;
 

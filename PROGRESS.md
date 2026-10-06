@@ -32,7 +32,7 @@ Last updated: 2026-10-03 (VL-353 Done — Enterprise Engineering System Producti
 | Phase | Name | Status | Notes |
 | --- | --- | --- | --- |
 | VL-010 | Authentication | Blocked | Clerk integrated; needs `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` + `CLERK_SECRET_KEY`. `/setup` until then. OIDC/JWT via Clerk (VL-126). |
-| VL-011 | Organizations, members, basic RBAC | Done | Memberships + role PATCH/DELETE + Clerk `o.rol` sync (VL-126). Invites stay in Clerk. Live UI needs Clerk keys. |
+| VL-011 | Organizations, members, basic RBAC | Done | Memberships + role PATCH/DELETE + Clerk `o.rol` sync (VL-126). Lugemi org invites (`/v1/organization/invites`) + Identity UI; auto-accept on sign-in. Live UI needs Clerk keys. |
 | VL-012 | Workspaces | Done | Multi-workspace CRUD `/v1/workspaces` + `X-Lugemi-Workspace-Id`; default still created with org. Console switcher needs Clerk. |
 | VL-013 | API keys | Done | Hashed `lg_live_` / `lg_test_` keys; create/list/revoke; `lastUsedAt` + env (VL-126/127). |
 
@@ -114,7 +114,7 @@ Last updated: 2026-10-03 (VL-353 Done — Enterprise Engineering System Producti
 
 | Phase | Name | Status | Notes |
 | --- | --- | --- | --- |
-| VL-080 | Notifications | Done | Resend: job complete, usage 80/100%, member-added; Clerk invites (ADR-0024). |
+| VL-080 | Notifications | Done | Resend: job complete, usage 80/100%, member-added, org invite email (ADR-0024). |
 | VL-081 | Admin + customer portal | Done | Members on billing; allowlisted `/admin`; org disable + revoke-all (ADR-0025). |
 | VL-082 | Connectors (one tool) | Done | Slack slash → translate; console `/connectors` (ADR-0026). |
 | VL-083 | Workflows | Done | JSON steps via job runner; console `/workflows` (ADR-0027). |
