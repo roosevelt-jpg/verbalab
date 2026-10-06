@@ -36,16 +36,16 @@
 .mkt-nav-desktop { flex: 1; display: flex; justify-content: center; }
 .mkt-nav-links {
   display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
-  gap: 4px 18px; list-style: none; margin: 0; padding: 0;
+  gap: 2px 14px; list-style: none; margin: 0; padding: 0;
 }
 .mkt-nav-links a, .mkt-nav-text {
-  color: var(--text-secondary); text-decoration: none; font-size: 0.875rem; font-weight: 500;
+  color: var(--text-secondary); text-decoration: none; font-size: 0.84rem; font-weight: 500;
   min-height: 44px; display: inline-flex; align-items: center;
 }
 .mkt-nav-links a:hover, .mkt-nav-links a:focus-visible,
 .mkt-nav-text:hover, .mkt-nav-text:focus-visible { color: var(--action-primary); }
-.mkt-nav-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
-.mkt-nav-signup { text-decoration: none; padding: 0.55rem 1rem; min-height: 40px; }
+.mkt-nav-actions { display: flex; flex-wrap: nowrap; align-items: center; gap: 8px; flex-shrink: 0; }
+.mkt-nav-signup { text-decoration: none; padding: 0.5rem 0.9rem; min-height: 40px; white-space: nowrap; }
 .mkt-menu-btn {
   display: none; min-height: 44px; min-width: 44px; padding: 8px 12px;
   border-radius: var(--radius-control); border: 1px solid var(--border-subtle);
