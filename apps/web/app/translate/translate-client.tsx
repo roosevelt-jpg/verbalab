@@ -133,11 +133,14 @@ export function TranslateClient() {
               gap: '0.4rem',
             }}
           >
-            {engine.capabilities.slice(0, 8).map((c) => (
-              <li key={c.id} className="vl-tag" style={{ opacity: c.status === 'deferred' ? 0.55 : 1 }}>
-                {c.name}
-              </li>
-            ))}
+            {engine.capabilities
+              .filter((c) => c.status !== 'deferred' && c.id !== 'html')
+              .slice(0, 8)
+              .map((c) => (
+                <li key={c.id} className="vl-tag">
+                  {c.name}
+                </li>
+              ))}
           </ul>
         </div>
       ) : null}
