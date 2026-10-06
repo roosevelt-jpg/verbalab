@@ -75,7 +75,6 @@ describe('Voice & Language Marketplace', () => {
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
     expect(text).toMatch(/third-party TTS|thirdPartyVoiceOs/i);
     expect(text).toMatch(/Stripe|storesRawCardData/i);
     expect(text).toMatch(/celebrityWithoutRights/i);

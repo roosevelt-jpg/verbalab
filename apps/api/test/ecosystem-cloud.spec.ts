@@ -74,7 +74,6 @@ describe('Ecosystem Cloud Foundation', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(readme)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
     expect(text).toContain('CQRS');
     expect(text).toMatch(/real-money|real money/i);
     expect(text).toMatch(/Stripe|payment/i);
@@ -165,12 +164,12 @@ describe('Ecosystem Cloud Foundation', () => {
     );
     expect(voiceLang.status).toBe('shipped');
     expect(voiceLang.console).toBe('/voice-language-marketplace');
-    expect(voiceLang.notes).toMatch(/third-party TTS|voice CDN||Stripe/i);
+    expect(voiceLang.notes).toMatch(/third-party TTS|voice CDN|Stripe/i);
 
     const creator = res.body.products.find((p: { id: string }) => p.id === 'creator-economy');
     expect(creator.status).toBe('shipped');
     expect(creator.console).toBe('/creator-economy');
-    expect(creator.notes).toMatch(/|royalty|tax|Stripe/i);
+    expect(creator.notes).toMatch(/royalty|tax|Stripe/i);
   });
 
   it('exposes routing table and org overview', async () => {

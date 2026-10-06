@@ -93,7 +93,6 @@ describe('Policy Fabric', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(phase)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
     expect(text).toMatch(/hard gate|hard-gate/i);
     expect(text).toMatch(/log-only|log only/i);
     expect(text).toMatch(/Policy Runtime/i);

@@ -64,7 +64,6 @@ describe('AI Decision Engine', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/not.*Drools\/Pega/i);
-    expect(text).toContain('');
   });
 
   it('exposes engine with enterpriseBrms=false', async () => {

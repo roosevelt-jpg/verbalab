@@ -77,7 +77,6 @@ describe('Streaming Runtime', () => {
     expect(text).toMatch(/WebSocket|gRPC|video/i);
     expect(text).toMatch(/does \*\*not\*\*|not regenerate/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
-    expect(text).toContain('');
     expect(text).toMatch(/SSE/i);
   });
 

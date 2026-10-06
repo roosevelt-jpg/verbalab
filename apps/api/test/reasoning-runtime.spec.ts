@@ -92,7 +92,7 @@ describe('Reasoning Runtime', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/custom reasoner/i);
-    expect(text).toMatch(/Reasoning Cloud|i);
+    expect(text).toMatch(/Reasoning Cloud/i);
     expect(text).toMatch(/tool.?execut/i);
   });
 

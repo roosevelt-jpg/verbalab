@@ -77,7 +77,6 @@ describe('Intelligent Cache', () => {
     expect(text).toMatch(/Redis|vector|CDN/i);
     expect(text).toMatch(/does \*\*not\*\*|not auto-wire/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
-    expect(text).toContain('');
   });
 
   it('exposes engine with honesty + namespaces', async () => {

@@ -122,7 +122,7 @@ describe('African Intelligence Cloud Production Audit', () => {
     expect(readiness).toMatch(/traditionalKnowledgeConsentRequired|consent/i);
     expect(readiness).toMatch(/notMedicalAdvice|consult/i);
     expect(readiness).toMatch(/Global Intelligence|Rejected/i);
-    expect(readiness).toMatch(/|Volume 12/i);
+    expect(readiness).toMatch(/Volume 12/i);
 
     const adr = readFileSync(
       join(root, 'docs/adr/0172-african-intelligence-cloud-production-audit.md'),

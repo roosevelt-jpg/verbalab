@@ -89,7 +89,6 @@ describe('Knowledge Fabric', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(phase)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
     expect(text).toMatch(/Knowledge Cloud/i);
     expect(text).toMatch(/Confluence|SharePoint/i);
     expect(text).toMatch(/Neo4j/i);

@@ -69,7 +69,7 @@ describe('Context Runtime', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/infinite context/i);
-    expect(text).toMatch(/Context Engine|i);
+    expect(text).toMatch(/Context Engine/i);
     expect(text).toMatch(/summarization/i);
   });
 

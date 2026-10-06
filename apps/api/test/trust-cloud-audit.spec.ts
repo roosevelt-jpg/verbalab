@@ -102,7 +102,7 @@ describe('Trust Cloud Production Audit', () => {
     expect(readiness).toMatch(/humanSignOffRequired/i);
     expect(readiness).toMatch(/complianceToolingNotCertification/i);
     expect(readiness).toMatch(/Platform Engineering|Rejected/i);
-    expect(readiness).toMatch(/|Volume 15/i);
+    expect(readiness).toMatch(/Volume 15/i);
 
     const adr = readFileSync(join(root, 'docs/adr/0203-trust-cloud-production-audit.md'), 'utf8');
     expect(adr).toMatch(/review gate|checklist|Vitest audit gates/i);

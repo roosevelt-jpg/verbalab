@@ -40,7 +40,6 @@ describe('Financial Intelligence', () => {
     expect(existsSync(join(root, 'docs/FINANCIAL_INTELLIGENCE.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0168-financial-intelligence.md'))).toBe(true);
     const text = readFileSync(join(root, 'docs/FINANCIAL_INTELLIGENCE.md'), 'utf8');
-    expect(text).toContain('');
   });
 
   it('has no TODO/FIXME/implement-later markers', () => {

@@ -86,7 +86,6 @@ describe('Reasoning Cloud', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/not a custom reasoner/i);
-    expect(text).toContain('');
   });
 
   it('exposes engine with customReasonerKernel=false', async () => {

@@ -99,7 +99,7 @@ describe('Research Cloud Production Audit', () => {
     expect(readiness).toMatch(/syntheticLabelRequired|isSynthetic/i);
     expect(readiness).toMatch(/traditionalKnowledgeConsentRequired|consent/i);
     expect(readiness).toMatch(/AI Sovereignty|Rejected/i);
-    expect(readiness).toMatch(/|Volume 13/i);
+    expect(readiness).toMatch(/Volume 13/i);
 
     const adr = readFileSync(
       join(root, 'docs/adr/0182-research-cloud-production-audit.md'),

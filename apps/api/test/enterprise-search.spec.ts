@@ -94,7 +94,6 @@ describe('Enterprise Search', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/Elastic/i);
-    expect(text).toContain('');
     expect(text).toMatch(/hybrid/i);
   });
 

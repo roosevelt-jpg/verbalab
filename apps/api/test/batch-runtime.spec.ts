@@ -85,7 +85,6 @@ describe('Batch Runtime', () => {
     expect(text).toMatch(/distributed batch|queue OS|BullMQ/i);
     expect(text).toMatch(/does \*\*not\*\*|not regenerate/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
-    expect(text).toContain('');
     expect(text).toMatch(/BullMQ/i);
   });
 
@@ -106,7 +105,7 @@ describe('Batch Runtime', () => {
       'deferred',
     );
     expect(kinds.body.kinds.find((k: { id: string }) => k.id === 'translation').status).toBe(
-      'partial',
+      'shipped',
     );
   });
 

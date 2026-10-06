@@ -64,7 +64,6 @@ describe('Ontology Platform', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/OWL/i);
-    expect(text).toContain('');
     expect(text).toMatch(/org\/workspace/i);
   });
 

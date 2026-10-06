@@ -182,9 +182,7 @@ describe('Enterprise Engineering System Production Audit', () => {
   it('documents EES in CLOUD_BLUEPRINT and PROGRESS', () => {
     const blueprint = readFileSync(join(root, 'docs/CLOUD_BLUEPRINT.md'), 'utf8');
     expect(blueprint).toMatch(/Enterprise Engineering System/);
-    expect(blueprint).toMatch(/);
     const progress = readFileSync(join(root, 'PROGRESS.md'), 'utf8');
-    expect(progress).toMatch(/);
     expect(progress).toMatch(/Volume 20 closed/);
   });
 });

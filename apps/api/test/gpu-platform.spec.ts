@@ -81,7 +81,6 @@ describe('GPU Platform', () => {
     expect(text).toMatch(/hard.*(ceiling|instance|spend)/i);
     expect(text).toMatch(/does \*\*not\*\* call|not.*cloud GPU API/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
-    expect(text).toContain('');
   });
 
   it('exposes engine with hard ceilings and no cloud GPU APIs', async () => {

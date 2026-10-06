@@ -95,7 +95,6 @@ describe('Knowledge Memory', () => {
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/Mem0|Zep/i);
     expect(text).toMatch(/Memory Cloud/i);
-    expect(text).toMatch(/);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
   });
 

@@ -64,7 +64,6 @@ describe('Prompt Intelligence', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/not.*auto-prompt research/i);
-    expect(text).toContain('');
   });
 
   it('exposes engine with autoPromptResearchLab=false', async () => {

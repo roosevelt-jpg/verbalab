@@ -105,7 +105,6 @@ describe('Plugin Marketplace', () => {
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
     expect(text).toMatch(/sandbox/i);
     expect(text).toMatch(/Policy/i);
     expect(text).toMatch(/liveCodeExecution/i);

@@ -90,7 +90,6 @@ describe('Context Fabric', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(phase)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
     expect(text).toMatch(/Context Runtime/i);
     expect(text).toMatch(/infinite context/i);
     expect(text).toMatch(/WebSocket|websocket/i);

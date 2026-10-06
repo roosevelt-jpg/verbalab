@@ -79,7 +79,6 @@ describe('Creator Economy', () => {
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
     expect(text).toMatch(/Stripe|storesRawCardData/i);
     expect(text).toMatch(/taxHandlingComplete/i);
     expect(text).toMatch(/hand-check|splitRevenue/i);

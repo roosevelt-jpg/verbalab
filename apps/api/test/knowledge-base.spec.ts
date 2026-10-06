@@ -99,7 +99,6 @@ describe('Enterprise Knowledge Base', () => {
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/org\/workspace/i);
     expect(text).toMatch(/Confluence/i);
-    expect(text).toContain('');
   });
 
   it('exposes engine with honest flags', async () => {

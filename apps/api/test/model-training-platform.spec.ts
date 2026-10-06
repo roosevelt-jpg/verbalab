@@ -79,8 +79,7 @@ describe('Model Training Platform', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(readme)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
-    expect(text).toMatch(/|training-jobs/i);
+    expect(text).toMatch(/training-jobs/i);
     expect(text).toMatch(/not.*distributed|Deferred/i);
     expect(text).toMatch(/RLHF/i);
     expect(text).toContain('CQRS');

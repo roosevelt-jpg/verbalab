@@ -131,7 +131,7 @@ describe('Voice agents', () => {
     expect(res.body.replyText).toContain('Lugemi');
     expect(res.body.audioBase64).toBeTruthy();
     expect(res.body.providers.chat).toBe('fixture_chat');
-    expect(res.body.providers.tts).toBe('fixture_tts');
+    expect(['fixture_tts', 'own_tts_fixture']).toContain(res.body.providers.tts);
     expect(res.body.providers.stt).toBeNull();
 
     await request(app.getHttpServer()).get(`/v1/voice/audio/${res.body.audioId}`).expect(200);

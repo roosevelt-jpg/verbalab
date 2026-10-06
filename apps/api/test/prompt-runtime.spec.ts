@@ -69,8 +69,7 @@ describe('Prompt Runtime', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/research lab/i);
-    expect(text).toMatch(/Prompt Intelligence|i);
-    expect(text).toMatch(/);
+    expect(text).toMatch(/Prompt Intelligence/i);
     expect(text).toMatch(/does \*\*not\*\* call an LLM|does not call an LLM/i);
   });
 

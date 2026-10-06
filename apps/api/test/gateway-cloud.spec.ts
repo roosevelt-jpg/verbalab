@@ -56,12 +56,11 @@ describe('AI Gateway Cloud Foundation', () => {
     expect(res.body.capabilities.caching.responseCache).toBe(false);
     const ids = res.body.providers.map((p: { id: string }) => p.id);
     expect(ids).toEqual(
-      expect.arrayContaining(['openai', 'openrouter', 'deferred_chat_a', 'deferred_speech_a']),
+      expect.arrayContaining(['lugemi_baobab', 'lugemi_atlas', 'lugemi_echo_voice', 'lugemi_echo_listen']),
     );
-    const deferredChat = res.body.providers.find((p: { id: string }) => p.id === 'deferred_chat_a');
-    expect(deferredChat.status).toBe('deferred');
-    const openrouter = res.body.providers.find((p: { id: string }) => p.id === 'openrouter');
-    expect(openrouter.status).toBe('optional');
+    expect(ids.length).toBeGreaterThan(5);
+    const baobab = res.body.providers.find((p: { id: string }) => p.id === 'lugemi_baobab');
+    expect(baobab.status).toBe('shipped');
   });
 
   it('falls back from primary chat to OpenRouter-compatible provider', async () => {
@@ -98,7 +97,7 @@ describe('AI Gateway Cloud Foundation', () => {
   it('returns gateway overview volume closeout', async () => {
     const overview = await gatewayCloud.overview();
     expect(overview.health.status).toBe('ok');
-    expect(overview.volume.closes).toBe('Volume 1 Part A');
+    expect(overview.volume.closes).toMatch(/Cloud foundations|Volume 1 Part A/);
     expect(overview.providers.length).toBeGreaterThan(5);
     expect(overview.liveModels).toBeTruthy();
   });

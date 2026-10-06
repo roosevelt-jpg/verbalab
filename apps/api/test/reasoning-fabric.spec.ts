@@ -93,7 +93,6 @@ describe('Reasoning Fabric', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(phase)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
     expect(text).toMatch(/Reasoning Runtime/i);
     expect(text).toMatch(/custom reasoner/i);
     expect(text).toMatch(/hard gate|hard-gate/i);

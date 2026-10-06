@@ -89,7 +89,7 @@ describe('Locale packs', () => {
     const ak = res.body.data.find((p: { languageCode: string; bcp47: string }) => p.languageCode === 'ak');
     expect(ak.bcp47).toBe('ak-GH');
     expect(ak.currencyCode).toBe('GHS');
-    const sw = res.body.data.find((p: { languageCode: string }) => p.languageCode === 'sw');
+    const sw = res.body.data.find((p: { bcp47: string }) => p.bcp47 === 'sw-TZ');
     expect(sw.currencyCode).toBe('TZS');
     expect(sw.doNotTranslate).toContain('Nairobi');
   });

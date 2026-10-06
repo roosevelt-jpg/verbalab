@@ -109,7 +109,7 @@ describe('Platform Engineering Cloud Production Audit', () => {
     expect(readiness).toMatch(/snykOs=false/i);
     expect(readiness).toMatch(/argoCdOs=false/i);
     expect(readiness).toMatch(/controlPlaneOs=false/i);
-    expect(readiness).toMatch(/|Volume 16/i);
+    expect(readiness).toMatch(/Volume 16/i);
 
     const adr = readFileSync(
       join(root, 'docs/adr/0215-platform-engineering-cloud-production-audit.md'),

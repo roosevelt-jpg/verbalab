@@ -262,8 +262,7 @@ describe('Inference Cloud Production Audit', () => {
     expect(blueprint).toContain('Cloud Foundation');
     expect(blueprint).toContain('Production Audit');
     expect(blueprint).toContain('Inference');
-    expect(blueprint).toContain('');
     const living = readFileSync(join(root, 'docs/CLOUD_BLUEPRINT.md'), 'utf8');
-    expect(living).toMatch(/\s*→\s*);
+    expect(living).toMatch(/→/);
   });
 });

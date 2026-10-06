@@ -64,7 +64,6 @@ describe('Intelligence Analytics', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/not.*Language.*Speech.*Voice/i);
-    expect(text).toContain('');
   });
 
   it('exposes engine with regeneratesSpeechAnalytics=false', async () => {

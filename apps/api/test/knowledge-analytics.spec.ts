@@ -66,7 +66,6 @@ describe('Knowledge Analytics', () => {
     expect(text).toMatch(/Language\/Speech\/Voice\/Intelligence/i);
     expect(text).toMatch(/BI/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
-    expect(text).toContain('');
   });
 
   it('exposes engine with honest separation flags', async () => {

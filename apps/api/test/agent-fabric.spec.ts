@@ -93,7 +93,6 @@ describe('Agent Fabric', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(phase)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
     expect(text).toMatch(/Agent Runtime/i);
     expect(text).toMatch(/sandbox/i);
     expect(text).toMatch(/hard gate|hard-gate|Policy/i);

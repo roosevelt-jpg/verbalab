@@ -40,7 +40,6 @@ describe('AI Publication Platform', () => {
     expect(existsSync(join(root, 'docs/AI_PUBLICATION_PLATFORM.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0178-ai-publication-platform.md'))).toBe(true);
     const text = readFileSync(join(root, 'docs/AI_PUBLICATION_PLATFORM.md'), 'utf8');
-    expect(text).toContain('');
   });
 
   it('has no TODO/FIXME/implement-later markers', () => {

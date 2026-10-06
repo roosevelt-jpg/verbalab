@@ -71,7 +71,6 @@ describe('AI Kernel Foundation', () => {
     expect(text).toContain('Terraform');
     expect(text).toMatch(/scoped permissions|sandbox/i);
     expect(text).toMatch(/hard gate|Policy Runtime/i);
-    expect(text).toContain('');
     const readmeText = readFileSync(readme, 'utf8');
     expect(readmeText).toMatch(/Policy Runtime|sandbox|permissions/i);
   });

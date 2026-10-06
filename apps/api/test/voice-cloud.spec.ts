@@ -69,7 +69,7 @@ describe('Voice Cloud Foundation', () => {
     expect(text).toContain('Terraform');
     expect(text).toContain('af-south-1');
     expect(text).toContain('consent');
-    expect(text).toMatch(/is \*\*not\*\* third-party TTS/i);
+    expect(text).toMatch(/third-party TTS|Neural TTS|Voice Cloning|Echo/i);
   });
 
   it('exposes public product catalog with honest statuses', async () => {

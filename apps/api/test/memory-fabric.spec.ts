@@ -93,7 +93,6 @@ describe('Memory Fabric', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(phase)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
     expect(text).toMatch(/Memory Runtime/i);
     expect(text).toMatch(/Mem0/i);
     expect(text).toMatch(/hard gate|hard-gate/i);

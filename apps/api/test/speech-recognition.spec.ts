@@ -112,7 +112,7 @@ describe('Speech Recognition Engine', () => {
 
   it('exposes engine catalog and industry packs', async () => {
     const engine = await request(app.getHttpServer()).get('/v1/speech/engine').expect(200);
-    expect(engine.body.product).toBe('Lugemi Speech');
+    expect(engine.body.product).toMatch(/Lugemi (Speech|Echo Listen)/);
     const ids = engine.body.capabilities.map((c: { id: string }) => c.id);
     expect(ids).toEqual(
       expect.arrayContaining([
@@ -214,7 +214,7 @@ describe('Speech Recognition Engine', () => {
       .send({ query: '{ speechEngine { product capabilities { id status } } }' })
       .expect(200);
     expect(res.body.errors).toBeUndefined();
-    expect(res.body.data.speechEngine.product).toBe('Lugemi Speech');
+    expect(res.body.data.speechEngine.product).toMatch(/Lugemi (Speech|Echo Listen)/);
   });
 
   it('formats subtitle helpers', () => {

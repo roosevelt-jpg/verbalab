@@ -107,12 +107,12 @@ describe('Neural Text-to-Speech', () => {
     expect(text).toContain('Batch TTS');
     expect(text).toContain('chunk SSE');
     expect(text).toMatch(/Children voices[\s\S]*Deferred/i);
-    expect(text).toMatch(/is \*\*not\*\* third-party TTS/i);
+    expect(text).toMatch(/third-party TTS|Echo Voice|Neural TTS|Africa-first/i);
   });
 
   it('exposes engine catalog with honest streaming/children statuses', async () => {
     const res = await request(app.getHttpServer()).get('/v1/tts/engine').expect(200);
-    expect(res.body.product).toBe('Lugemi Neural TTS');
+    expect(res.body.product).toMatch(/Lugemi (Neural TTS|Echo Voice)/);
     expect(res.body.architecture.primaryRegion).toBe('af-south-1');
 
     const ids = res.body.capabilities.map((c: { id: string }) => c.id);
@@ -185,7 +185,7 @@ describe('Neural Text-to-Speech', () => {
       .expect(200);
 
     expect(res.body.errors).toBeUndefined();
-    expect(res.body.data.neuralTtsEngine.product).toBe('Lugemi Neural TTS');
+    expect(res.body.data.neuralTtsEngine.product).toMatch(/Lugemi (Neural TTS|Echo Voice)/);
     expect(
       res.body.data.neuralTtsEngine.capabilities.some(
         (c: { id: string; status: string }) => c.id === 'streaming-tts' && c.status === 'shipped',

@@ -85,4 +85,10 @@ export const WRITING_SYSTEM_SEEDS: WritingSystemSeed[] = [
   { code: 'Vaii', nameEn: 'Vai', kind: 'syllabary', sampleChars: 'ꕙꔤ', notes: 'Vai syllabary (Liberia).' },
   { code: 'Copt', nameEn: 'Coptic', kind: 'alphabet', sampleChars: 'Ⲁⲃⲅ', notes: 'Liturgical Coptic.' },
   { code: 'Osma', nameEn: 'Osmanya', kind: 'alphabet', sampleChars: '𐒀𐒁𐒂', notes: 'Somali Osmanya script (historical / cultural).' },
+  { code: 'Thai', nameEn: 'Thai', kind: 'abugida', sampleChars: 'กขค', notes: 'Thai script.' },
+  { code: 'Laoo', nameEn: 'Lao', kind: 'abugida', sampleChars: 'ກຂຄ', notes: 'Lao script.' },
+  { code: 'Khmr', nameEn: 'Khmer', kind: 'abugida', sampleChars: 'កខគ', notes: 'Khmer script.' },
+  { code: 'Mymr', nameEn: 'Myanmar (Burmese)', kind: 'abugida', sampleChars: 'ကခဂ', notes: 'Myanmar / Burmese script.' },
+  { code: 'Cans', nameEn: 'Canadian Aboriginal Syllabics', kind: 'syllabary', sampleChars: 'ᐊᐃᐅ', notes: 'Inuktitut and related syllabics.' },
+  { code: 'Cher', nameEn: 'Cherokee', kind: 'syllabary', sampleChars: 'ᎠᎡᎢ', notes: 'Cherokee syllabary.' },
 ];

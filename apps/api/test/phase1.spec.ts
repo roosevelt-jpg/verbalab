@@ -180,7 +180,7 @@ describe('Phase 1 API', () => {
   });
 
   it('live Google translate is skipped unless TRANSLATE_LIVE=1 and key present', async () => {
-    if (process.env.TRANSLATE_LIVE !== '1' || !process.env.GOOGLE_TRANSLATE_API_KEY) {
+    if (process.env.TRANSLATE_LIVE !== '1' | !process.env.GOOGLE_TRANSLATE_API_KEY) {
       return;
     }
 

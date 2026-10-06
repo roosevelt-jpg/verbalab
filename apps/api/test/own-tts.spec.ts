@@ -94,7 +94,7 @@ describe('Own TTS path', () => {
     expect(existsSync(join(root, 'apps/api/src/gateway/own-tts.adapter.ts'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0045-own-tts-rented.md'))).toBe(true);
     const client = readFileSync(join(root, 'apps/web/app/audio/audio-client.tsx'), 'utf8');
-    expect(client).toContain('Own TTS (rented / African)');
+    expect(client).toContain('Own TTS (Africa-first)');
     expect(client).toContain('OWN_TTS_URL');
   });
 });

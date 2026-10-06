@@ -132,7 +132,7 @@ describe('Notifications', () => {
     await new Promise((r) => setTimeout(r, 50));
 
     expect(mailbox.sent.some((m) => String(m.subject).includes('succeeded'))).toBe(true);
-    expect(mailbox.sent.some((m) => String(m.to).includes('notifJob@example.com') || (Array.isArray(m.to) && m.to.includes('notifJob@example.com')))).toBe(true);
+    expect(mailbox.sent.some((m) => String(m.to).includes('notifJob@example.com') | (Array.isArray(m.to) && m.to.includes('notifJob@example.com')))).toBe(true);
   });
 
   it('sends a one-time 80% usage threshold email', async () => {

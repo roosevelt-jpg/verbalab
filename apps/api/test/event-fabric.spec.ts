@@ -82,7 +82,6 @@ describe('Event Fabric', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(phase)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
     expect(text).toMatch(/Redis Streams/i);
     expect(text).toMatch(/CloudEvents/i);
     expect(text).toMatch(/not\*\* a Kafka|NOT a Kafka|not a Kafka/i);

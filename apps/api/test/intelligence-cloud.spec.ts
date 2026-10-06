@@ -68,9 +68,6 @@ describe('Intelligence Cloud Foundation', () => {
     expect(text).toContain('Terraform');
     expect(text).toContain('af-south-1');
     expect(text).toMatch(/is \*\*not\*\* a custom AI kernel/i);
-    expect(text).toContain('');
-    expect(text).toContain('');
-    expect(text).toContain('');
   });
 
   it('exposes public product catalog with honest statuses', async () => {

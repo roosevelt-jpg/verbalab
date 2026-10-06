@@ -93,7 +93,6 @@ describe('Prompt Fabric', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(phase)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
     expect(text).toMatch(/Prompt Runtime/i);
     expect(text).toMatch(/prompt mesh/i);
     expect(text).toMatch(/research lab/i);

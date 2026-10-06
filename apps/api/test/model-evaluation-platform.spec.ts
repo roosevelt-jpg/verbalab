@@ -74,8 +74,7 @@ describe('Model Evaluation Platform', () => {
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
-    expect(text).toMatch(/|eval\/run|coverage/i);
+    expect(text).toMatch(/eval\/run|coverage/i);
     expect(text).toMatch(/SOTA|leaderboard/i);
     expect(text).toContain('CQRS');
     expect(text).toMatch(/MMLU/i);

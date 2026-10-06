@@ -122,7 +122,7 @@ describe('Ecosystem Cloud Production Audit', () => {
     expect(readiness).toMatch(/sandbox|Policy/i);
     expect(readiness).toMatch(/Rejected|not a payment-processor/i);
     expect(readiness).toMatch(/Digital Twin|Volume 12/i);
-    expect(readiness).toMatch(/|Volume 11/i);
+    expect(readiness).toMatch(/Volume 11/i);
 
     const adr = readFileSync(
       join(root, 'docs/adr/0161-ecosystem-cloud-production-audit.md'),

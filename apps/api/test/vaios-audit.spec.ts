@@ -174,6 +174,5 @@ describe('VAIOS Production Audit', () => {
   it('documents VAIOS in CLOUD_BLUEPRINT', () => {
     const blueprint = readFileSync(join(root, 'docs/CLOUD_BLUEPRINT.md'), 'utf8');
     expect(blueprint).toMatch(/VAIOS/);
-    expect(blueprint).toMatch(/);
   });
 });

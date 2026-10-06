@@ -75,7 +75,6 @@ describe('Connector Marketplace', () => {
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
     expect(text).toMatch(/iPaaS|ipaasOs|automation OS/i);
     expect(text).toMatch(/Stripe|storesRawCardData/i);
     expect(text).toMatch(/liveConnectorExecution/i);

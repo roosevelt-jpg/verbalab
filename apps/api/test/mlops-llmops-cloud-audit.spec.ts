@@ -103,7 +103,7 @@ describe('MLOps & LLMOps Cloud Production Audit', () => {
     expect(readiness).toMatch(/poisonedInputGuard/i);
     expect(readiness).toMatch(/policyViolationsVisible/i);
     expect(readiness).toMatch(/Trust Cloud|Rejected/i);
-    expect(readiness).toMatch(/|Volume 14/i);
+    expect(readiness).toMatch(/Volume 14/i);
 
     const adr = readFileSync(
       join(root, 'docs/adr/0193-mlops-llmops-cloud-production-audit.md'),

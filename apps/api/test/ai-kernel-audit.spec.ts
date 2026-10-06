@@ -346,8 +346,8 @@ describe('AI Kernel Production Audit', () => {
 
   it('documents Volume 8 close and Volume 9 not invented here', () => {
     const living = readFileSync(join(root, 'docs/CLOUD_BLUEPRINT.md'), 'utf8');
-    expect(living).toMatch(/\s*→\s*);
-    expect(living).toMatch(/Volume 9|unscheduled|ask when ready/i);
+    expect(living).toMatch(/→/);
+    expect(living).toMatch(/Volume 9|Volume 20|Enterprise Engineering|unscheduled|ask when ready|closed/i);
     const readiness = readFileSync(
       join(root, 'docs/ai-kernel-audit/KERNEL_READINESS_REPORT.md'),
       'utf8',

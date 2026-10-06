@@ -72,9 +72,8 @@ describe('AI Runtime Analytics', () => {
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/BI|APM/i);
     expect(text).toMatch(/does \*\*not\*\*|not invent/i);
-    expect(text).toMatch(/|Intelligence Analytics/i);
+    expect(text).toMatch(/Intelligence Analytics/i);
     expect(text).toMatch(/org\/workspace|workspace/i);
-    expect(text).toContain('');
   });
 
   it('exposes engine with honesty flags', async () => {

@@ -74,8 +74,7 @@ describe('Model Registry hub', () => {
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('');
-    expect(text).toMatch(/|models\/live/i);
+    expect(text).toMatch(/models\/live/i);
     expect(text).toMatch(/MLflow|trafficMesh/i);
     expect(text).toContain('CQRS');
   });

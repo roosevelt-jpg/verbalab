@@ -73,9 +73,8 @@ describe('AI Router', () => {
     expect(text).toMatch(/service mesh|mesh/i);
     expect(text).toMatch(/does \*\*not\*\*|not a service mesh/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
-    expect(text).toContain('');
     expect(text).toMatch(/Gateway/i);
-    expect(text).toMatch(/spend||Cost Optimization/i);
+    expect(text).toMatch(/spend|Cost Optimization/i);
   });
 
   it('exposes engine with honesty + features', async () => {

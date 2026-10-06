@@ -27,7 +27,7 @@ function fakeEmbedding(text: string): number[] {
     }
     vec[Math.abs(h) % 1536] += 1;
   }
-  const norm = Math.sqrt(vec.reduce((s, v) => s + v * v, 0)) || 1;
+  const norm = Math.sqrt(vec.reduce((s, v) => s + v * v, 0)) | 1;
   return vec.map((v) => v / norm);
 }
 
@@ -138,7 +138,6 @@ describe('Enterprise RAG Platform', () => {
     expect(text).toMatch(/LangChain/i);
     expect(text).toMatch(/hand-?verif/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
-    expect(text).toMatch(/);
   });
 
   it('exposes engine with honest flags + chunk preview', async () => {

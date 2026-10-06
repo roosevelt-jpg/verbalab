@@ -64,7 +64,6 @@ describe('Recommendation Engine', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/not.*retail recommender/i);
-    expect(text).toContain('');
   });
 
   it('exposes engine with retailRecommenderOs=false', async () => {

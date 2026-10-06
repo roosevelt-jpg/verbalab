@@ -104,7 +104,7 @@ describe('Control Plane Cloud Production Audit', () => {
     expect(readiness).toMatch(/productionDeployRequiresAuthorization=true/i);
     expect(readiness).toMatch(/leastPrivilegeRequired=true/i);
     expect(readiness).toMatch(/dataPlaneOs=false/i);
-    expect(readiness).toMatch(/|Volume 17/i);
+    expect(readiness).toMatch(/Volume 17/i);
 
     const adr = readFileSync(
       join(root, 'docs/adr/0225-control-plane-cloud-production-audit.md'),

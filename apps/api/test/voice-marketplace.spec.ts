@@ -71,7 +71,6 @@ describe('Voice Marketplace', () => {
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/distinct/i);
     expect(text).toMatch(/Celebrity/i);
-    expect(text).toContain('');
   });
 
   it('exposes engine with celebrityWithoutRights=false', async () => {

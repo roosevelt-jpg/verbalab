@@ -40,7 +40,6 @@ describe('African Language Registry', () => {
     expect(existsSync(join(root, 'docs/AFRICAN_LANGUAGE_REGISTRY.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0163-african-language-registry.md'))).toBe(true);
     const text = readFileSync(join(root, 'docs/AFRICAN_LANGUAGE_REGISTRY.md'), 'utf8');
-    expect(text).toContain('');
   });
 
   it('has no TODO/FIXME/implement-later markers', () => {

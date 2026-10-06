@@ -78,7 +78,6 @@ describe('Cost Optimization', () => {
     expect(text).toMatch(/does \*\*not\*\*|not invent/i);
     expect(text).toMatch(/enforce|402/i);
     expect(text).toMatch(/org\/workspace|workspace/i);
-    expect(text).toContain('');
     expect(readFileSync(readme, 'utf8')).toMatch(/enforce/i);
   });
 

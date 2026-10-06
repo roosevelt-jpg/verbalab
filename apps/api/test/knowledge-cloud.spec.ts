@@ -70,8 +70,6 @@ describe('Knowledge Cloud Foundation', () => {
     expect(text).toContain('Terraform');
     expect(text).toContain('af-south-1');
     expect(text).toMatch(/is \*\*not\*\* an enterprise knowledge OS/i);
-    expect(text).toContain('');
-    expect(text).toContain('');
   });
 
   it('exposes public product catalog with honest statuses', async () => {

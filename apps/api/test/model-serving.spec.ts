@@ -77,7 +77,6 @@ describe('Model Serving', () => {
     expect(text).toMatch(/vLLM|KServe|Triton/i);
     expect(text).toMatch(/does \*\*not\*\*|not a vLLM/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
-    expect(text).toContain('');
     expect(text).toMatch(/Gateway/i);
   });
 

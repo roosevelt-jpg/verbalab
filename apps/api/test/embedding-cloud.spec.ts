@@ -83,7 +83,6 @@ describe('Embedding Cloud', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/deferred/i);
-    expect(text).toContain('');
     expect(text).not.toMatch(/trains embedding models/i);
   });
 

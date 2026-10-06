@@ -104,7 +104,6 @@ describe('AI Orchestration', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/not.*multi-cloud agent/i);
-    expect(text).toContain('');
   });
 
   it('exposes engine with multiCloudAgentOs=false', async () => {

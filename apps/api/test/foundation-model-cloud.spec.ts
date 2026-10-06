@@ -82,7 +82,6 @@ describe('Foundation Model Cloud Foundation', () => {
     expect(text).toMatch(/not.*trained competitive|no trained competitive/i);
     expect(text).toContain('CQRS');
     expect(text).toContain('Terraform');
-    expect(text).toContain('');
     expect(text).toMatch(/MLOps/i);
     const readmeText = readFileSync(readme, 'utf8');
     expect(readmeText).toMatch(/cannot actually \*train\*|cannot actually train/i);

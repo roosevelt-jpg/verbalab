@@ -70,7 +70,6 @@ describe('Inference Cloud Foundation', () => {
     expect(text).toContain('Terraform');
     expect(text).toContain('af-south-1');
     expect(text).toMatch(/is \*\*not\*\* a GPU hyperscaler/i);
-    expect(text).toContain('');
     expect(text).toMatch(/hard ceiling|spend/i);
     const readmeText = readFileSync(readme, 'utf8');
     expect(readmeText).toMatch(/GPU|spend|bill/i);

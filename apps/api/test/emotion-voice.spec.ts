@@ -99,7 +99,6 @@ describe('Emotion Voice Engine', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toContain('synthesis');
-    expect(text).toContain('');
     expect(text).toMatch(/is \*\*not\*\* a trained expressive TTS/i);
   });
 
