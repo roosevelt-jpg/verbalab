@@ -128,7 +128,7 @@ export function CreativeStudioClient() {
         <div className="lg-creative-tabs" style={{ border: 0, margin: 0, gap: '0.75rem' }}>
           {(['all', 'video', 'audio'] as const).map((t) => (
             <button key={t} type="button" className={tab === t ? 'is-active' : undefined} onClick={() => setTab(t)}>
-              {t[0].toUpperCase() + t.slice(1)}
+              {t.charAt(0).toUpperCase() + t.slice(1)}
             </button>
           ))}
         </div>
