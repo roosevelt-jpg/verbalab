@@ -9,6 +9,7 @@ import { apiFetch } from '@/lib/api';
 import { BrandMark } from '@/components/brand-mark';
 import { LocaleSelect } from '@/components/language-locale-select';
 import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
+import { isClerkConfigured } from '@/lib/clerk-config';
 import {
   FEATURE_LABELS,
   WEB_BILLING_PLANS,
@@ -136,8 +137,32 @@ function FeatureIcon({ name }: { name: string }) {
   );
 }
 
+type AuthBag = {
+  getToken: () => Promise<string | null>;
+  isLoaded: boolean;
+  isSignedIn: boolean;
+};
+
+/** Public entry — avoids useAuth crash when ClerkProvider is not mounted. */
 export function OnboardingClient() {
+  if (!isClerkConfigured()) {
+    return <OnboardingFlow getToken={async () => null} isLoaded isSignedIn={false} />;
+  }
+  return <OnboardingClientAuthed />;
+}
+
+function OnboardingClientAuthed() {
   const { getToken, isLoaded, isSignedIn } = useAuth();
+  return (
+    <OnboardingFlow
+      getToken={async () => (await getToken()) ?? null}
+      isLoaded={isLoaded}
+      isSignedIn={Boolean(isSignedIn)}
+    />
+  );
+}
+
+function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
   const router = useRouter();
   const catalog = useLocaleCatalog();
   const [state, setState] = useState<OnboardingState>(EMPTY_ONBOARDING_STATE);
