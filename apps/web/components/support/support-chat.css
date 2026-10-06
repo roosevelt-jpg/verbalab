@@ -1,0 +1,120 @@
+.lg-support {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 80;
+  display: grid;
+  justify-items: end;
+  gap: 10px;
+}
+.lg-support-fab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 16px;
+  background: var(--action-primary, #00b8ae);
+  color: #fff;
+  font-weight: 650;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(16, 38, 77, 0.2);
+  font-family: inherit;
+}
+.lg-support-panel {
+  width: min(360px, calc(100vw - 28px));
+  max-height: min(520px, calc(100vh - 100px));
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid rgba(16, 38, 77, 0.1);
+  box-shadow: 0 20px 50px rgba(16, 38, 77, 0.18);
+  overflow: hidden;
+}
+.lg-support-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 12px 14px;
+  background: #10264d;
+  color: #fff;
+}
+.lg-support-head p {
+  margin: 2px 0 0;
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+.lg-support-close {
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-size: 1.4rem;
+  cursor: pointer;
+  line-height: 1;
+}
+.lg-support-messages {
+  overflow: auto;
+  padding: 12px;
+  display: grid;
+  gap: 8px;
+  background: #f4f8fa;
+}
+.lg-support-bubble {
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+.lg-support-user {
+  background: #10264d;
+  color: #fff;
+  justify-self: end;
+  max-width: 90%;
+}
+.lg-support-bot {
+  background: #fff;
+  color: #10264d;
+  border: 1px solid rgba(16, 38, 77, 0.08);
+  justify-self: start;
+  max-width: 92%;
+}
+.lg-support-escalated {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #007c78;
+}
+.lg-support-form {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  padding: 10px;
+  border-top: 1px solid rgba(16, 38, 77, 0.08);
+  background: #fff;
+}
+.lg-support-form input {
+  border: 1px solid rgba(16, 38, 77, 0.15);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font: inherit;
+}
+.lg-support-form button {
+  border: none;
+  border-radius: 10px;
+  padding: 0 14px;
+  background: #00b8ae;
+  color: #fff;
+  font-weight: 650;
+  cursor: pointer;
+  font: inherit;
+}
+.lg-support-form button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}

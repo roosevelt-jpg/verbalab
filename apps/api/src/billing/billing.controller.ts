@@ -1,4 +1,4 @@
-import { Controller, Get, Headers, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Post, Req, UseGuards } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common';
 import { Request } from 'express';
 import { BillingService } from './billing.service';
@@ -6,10 +6,16 @@ import { ClerkAuthGuard, SessionContext } from '../common/guards/clerk-auth.guar
 import { CurrentSession } from '../common/decorators/auth.decorators';
 import { clientIp } from '../common/http/client-ip';
 import { ApiException } from '../common/errors/api-exception';
+import type { PlanId } from './plans';
 
 @Controller('v1/billing')
 export class BillingController {
   constructor(private readonly billing: BillingService) {}
+
+  @Get('plans')
+  plans() {
+    return { plans: this.billing.listPublicPlans(), stripeConfigured: this.billing.isConfigured() };
+  }
 
   @Get('summary')
   @UseGuards(ClerkAuthGuard)
@@ -19,7 +25,11 @@ export class BillingController {
 
   @Post('checkout')
   @UseGuards(ClerkAuthGuard)
-  checkout(@CurrentSession() session: SessionContext, @Req() req: Request) {
+  checkout(
+    @CurrentSession() session: SessionContext,
+    @Req() req: Request,
+    @Body() body: { planId?: PlanId },
+  ) {
     if (session.role !== 'owner' && session.role !== 'admin') {
       throw new ApiException(
         'forbidden',
@@ -31,6 +41,7 @@ export class BillingController {
       organizationId: session.organizationId,
       userId: session.userId,
       ip: clientIp(req),
+      planId: body?.planId,
     });
   }
 

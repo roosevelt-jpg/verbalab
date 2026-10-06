@@ -13,4 +13,13 @@ lugemi whoami
 lugemi translate --text "Hello" --target sw --source en
 ```
 
+For video platforms and agent IDEs, use the MCP server:
+
+```bash
+pnpm --filter @lugemi/mcp build
+LUGEMI_API_KEY=lg_live_... node packages/mcp/dist/index.js
+```
+
+Mobile: see `packages/sdk-android` (Kotlin) and `packages/sdk-ios` (Swift) stubs for the same REST surface.
+
 Not a full developer platform CLI. See `docs/DEVELOPER_CLOUD.md`.

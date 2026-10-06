@@ -1,0 +1,59 @@
+.lg-stats-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+}
+.lg-stat-card {
+  display: flex;
+  gap: 0.85rem;
+  align-items: center;
+  padding: 0.85rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(16, 38, 77, 0.08);
+  background: var(--surface-muted, #f4f8fa);
+}
+.lg-stat-card-wide {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.55rem;
+}
+.lg-stat-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--brand-navy, #10264d);
+}
+.lg-stat-sub {
+  font-size: 0.8rem;
+  color: var(--muted, #5b6b7c);
+  margin-top: 0.15rem;
+}
+.lg-bar-chart {
+  display: grid;
+  gap: 0.45rem;
+}
+.lg-bar-row {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr 3rem;
+  gap: 0.5rem;
+  align-items: center;
+  font-size: 0.8rem;
+}
+.lg-bar-label { color: var(--muted, #5b6b7c); }
+.lg-bar-track {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(16, 38, 77, 0.08);
+  overflow: hidden;
+}
+.lg-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #007c78, #00b8ae);
+}
+.lg-bar-value {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: var(--brand-navy, #10264d);
+  font-weight: 600;
+}

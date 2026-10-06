@@ -1,0 +1,30 @@
+{
+  "name": "@lugemi/mcp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Model Context Protocol server for Lugemi speech/translate — for video and agent platforms",
+  "type": "module",
+  "bin": {
+    "lugemi-mcp": "./dist/index.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": ["dist", "README.md"],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "tsc -p tsconfig.json --watch",
+    "start": "node dist/index.js",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "dependencies": {
+    "@lugemi/sdk": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@lugemi/typescript-config": "workspace:*",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

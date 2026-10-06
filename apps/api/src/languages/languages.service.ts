@@ -11,10 +11,27 @@ export class LanguagesService implements OnModuleInit {
   constructor(private readonly prisma: PrismaService) {}
 
   async onModuleInit() {
-    await this.seed();
+    await this.seedSafe();
   }
 
+  /** Public entry used by dialects/accents — never throws on FK races. */
   async seed() {
+    await this.seedSafe();
+  }
+
+  private async seedSafe() {
+    try {
+      await this.seedUnsafe();
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        '[languages] seed skipped:',
+        err instanceof Error ? err.message : err,
+      );
+    }
+  }
+
+  private async seedUnsafe() {
     // Families must exist before language.family_code FK writes.
     await seedFamiliesAndScripts(this.prisma);
 

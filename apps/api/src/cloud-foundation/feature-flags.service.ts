@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ownTtsConfigured } from '../gateway/own-tts.adapter';
-import { planFromId } from '../billing/plans';
+import { isProOrAbove, planFromId, planHasFeature } from '../billing/plans';
 
 @Injectable()
 export class FeatureFlagsService {
@@ -13,18 +13,26 @@ export class FeatureFlagsService {
       select: { plan: true, disabledAt: true },
     });
     const plan = planFromId(org.plan);
-    const isPro = org.plan === 'pro';
     const orgEnabled = !org.disabledAt;
+    const proPlus = isProOrAbove(org.plan);
 
     return {
       organizationId,
       plan: org.plan,
       flags: {
         orgEnabled,
-        pro: isPro,
-        marketplace: isPro && process.env.MARKETPLACE_DISABLED !== '1',
-        voiceClones: isPro && process.env.VOICE_CLONE_DISABLED !== '1',
-        fineTunes: isPro && process.env.FINE_TUNES_DISABLED !== '1',
+        pro: proPlus,
+        starter: plan.rank >= 1,
+        creator: plan.rank >= 2,
+        scale: plan.rank >= 4,
+        enterprise: plan.rank >= 5,
+        commercial: planHasFeature(org.plan, 'commercial'),
+        marketplace: planHasFeature(org.plan, 'marketplace') && process.env.MARKETPLACE_DISABLED !== '1',
+        voiceClones: planHasFeature(org.plan, 'voiceClones') && process.env.VOICE_CLONE_DISABLED !== '1',
+        fineTunes: planHasFeature(org.plan, 'fineTunes') && process.env.FINE_TUNES_DISABLED !== '1',
+        prioritySupport: planHasFeature(org.plan, 'prioritySupport'),
+        sso: planHasFeature(org.plan, 'sso'),
+        workspacesExtra: planHasFeature(org.plan, 'workspacesExtra'),
         ownTts: ownTtsConfigured(),
         notifications: process.env.NOTIFICATIONS_DISABLED !== '1',
         slackConnector: process.env.SLACK_CONNECTOR_DISABLED !== '1',
@@ -34,6 +42,8 @@ export class FeatureFlagsService {
       entitlements: {
         characterQuotaDefault: plan.characterQuota,
         name: plan.name,
+        rank: plan.rank,
+        features: plan.features,
       },
     };
   }

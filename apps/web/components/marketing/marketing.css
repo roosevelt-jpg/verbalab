@@ -270,8 +270,6 @@
   gap: 32px; align-items: start;
 }
 .mkt-page-demos { margin-top: 2rem; max-width: 40rem; }
-.mkt-tts-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 16px; }
-.mkt-tts-actions .mkt-tts-hint { flex: 1 1 12rem; margin: 0; }
 
 .mkt-api-split {
   display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);

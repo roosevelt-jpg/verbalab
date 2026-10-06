@@ -74,7 +74,7 @@ export class VerticalGlossariesService {
         packId_workspaceId: { packId, workspaceId },
       },
     });
-    const includeFull = org.plan === 'pro' || Boolean(install);
+    const includeFull = org.plan === 'pro' || org.plan === 'scale' || org.plan === 'enterprise' || Boolean(install);
     return this.serializePack(pack, Boolean(install), includeFull);
   }
 

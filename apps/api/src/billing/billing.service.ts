@@ -4,7 +4,7 @@ import { ModuleRef } from '@nestjs/core';
 import Stripe from 'stripe';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiException } from '../common/errors/api-exception';
-import { planFromId, type PlanId } from './plans';
+import { planFromId, planHasFeature, isProOrAbove, listPlans, type PlanId, type PlanFeature } from './plans';
 import { UsageService } from '../usage/usage.service';
 import { AuditService } from '../audit/audit.service';
 
@@ -27,11 +27,31 @@ export class BillingService {
   isConfigured(): boolean {
     return Boolean(
       this.stripe &&
-        process.env.STRIPE_PRICE_ID_PRO &&
+        (process.env.STRIPE_PRICE_ID_PRO ||
+          process.env.STRIPE_PRICE_ID_STARTER ||
+          process.env.STRIPE_PRICE_ID_CREATOR ||
+          process.env.STRIPE_PRICE_ID_SCALE) &&
         process.env.STRIPE_WEBHOOK_SECRET &&
         process.env.BILLING_SUCCESS_URL &&
         process.env.BILLING_CANCEL_URL,
     );
+  }
+
+  listPublicPlans() {
+    return listPlans().map((p) => ({
+      id: p.id,
+      name: p.name,
+      rank: p.rank,
+      characterQuota: p.characterQuota,
+      priceLabel: p.priceLabel,
+      priceMonthlyUsd: p.priceMonthlyUsd,
+      blurb: p.blurb,
+      features: p.features,
+      highlight: Boolean(p.highlight),
+      checkoutAvailable: Boolean(
+        p.stripePriceEnv && process.env[p.stripePriceEnv]?.trim() && this.stripe,
+      ),
+    }));
   }
 
   /** Live marketplace Checkout (destination charge + application fee). */
@@ -112,15 +132,29 @@ export class BillingService {
     }
   }
 
-  /** Feature gate for Pro-only surfaces (marketplace publish/install). */
+  /** Feature gate for Pro-and-above surfaces (marketplace publish/install). */
   async assertPro(organizationId: string) {
     const org = await this.prisma.organization.findUniqueOrThrow({
       where: { id: organizationId },
     });
-    if (org.plan !== 'pro') {
+    if (!isProOrAbove(org.plan)) {
       throw new ApiException(
         'plan_required',
-        'Marketplace requires a Pro plan. Upgrade under Billing.',
+        'This feature requires a Pro plan or higher. Upgrade under Billing.',
+        HttpStatus.PAYMENT_REQUIRED,
+      );
+    }
+  }
+
+  /** Gate by named entitlement feature on the org plan. */
+  async assertFeature(organizationId: string, feature: PlanFeature, message?: string) {
+    const org = await this.prisma.organization.findUniqueOrThrow({
+      where: { id: organizationId },
+    });
+    if (!planHasFeature(org.plan, feature)) {
+      throw new ApiException(
+        'plan_required',
+        message ?? `Plan does not include "${feature}". Upgrade under Billing.`,
         HttpStatus.PAYMENT_REQUIRED,
       );
     }
@@ -353,6 +387,7 @@ export class BillingService {
     userId: string;
     email?: string;
     ip?: string;
+    planId?: PlanId;
   }) {
     if (!this.isConfigured()) {
       throw new ApiException(
@@ -362,8 +397,27 @@ export class BillingService {
       );
     }
 
+    const targetPlan = planFromId(input.planId ?? 'pro');
+    if (targetPlan.id === 'free' || targetPlan.id === 'enterprise' || !targetPlan.stripePriceEnv) {
+      throw new ApiException(
+        'validation_error',
+        targetPlan.id === 'enterprise'
+          ? 'Enterprise is sold via sales — talk to us.'
+          : 'Select a paid plan to checkout.',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    const priceId = process.env[targetPlan.stripePriceEnv]?.trim();
+    if (!priceId) {
+      throw new ApiException(
+        'billing_not_configured',
+        `${targetPlan.stripePriceEnv} is not set for ${targetPlan.name}.`,
+        HttpStatus.SERVICE_UNAVAILABLE,
+      );
+    }
+
     const stripe = this.requireStripe();
-    const priceId = process.env.STRIPE_PRICE_ID_PRO!;
     const customerId = await this.ensureCustomer(input.organizationId, input.email);
 
     const session = await stripe.checkout.sessions.create({
@@ -373,9 +427,9 @@ export class BillingService {
       success_url: process.env.BILLING_SUCCESS_URL!,
       cancel_url: process.env.BILLING_CANCEL_URL!,
       client_reference_id: input.organizationId,
-      metadata: { organizationId: input.organizationId },
+      metadata: { organizationId: input.organizationId, planId: targetPlan.id },
       subscription_data: {
-        metadata: { organizationId: input.organizationId },
+        metadata: { organizationId: input.organizationId, planId: targetPlan.id },
       },
     });
 
@@ -385,10 +439,10 @@ export class BillingService {
       action: 'billing.checkout_started',
       route: 'POST /v1/billing/checkout',
       ip: input.ip,
-      metadata: { sessionId: session.id },
+      metadata: { sessionId: session.id, planId: targetPlan.id },
     });
 
-    return { url: session.url };
+    return { url: session.url, planId: targetPlan.id };
   }
 
   async createPortalSession(input: { organizationId: string; userId: string; ip?: string }) {
@@ -503,9 +557,10 @@ export class BillingService {
         const organizationId =
           session.metadata?.organizationId ?? session.client_reference_id ?? undefined;
         if (organizationId && session.mode === 'subscription') {
+          const planId = (session.metadata?.planId as PlanId | undefined) ?? 'pro';
           await this.applyEntitlement({
             organizationId,
-            plan: 'pro',
+            plan: planFromId(planId).id,
             stripeCustomerId:
               typeof session.customer === 'string' ? session.customer : session.customer?.id,
             stripeSubscriptionId:

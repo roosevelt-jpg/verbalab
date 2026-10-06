@@ -7,7 +7,9 @@ import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
 import { AnamorphicPanel } from '@/components/media/anamorphic-panel';
 import { SITE_CONTENT } from '@/data/site-content';
+import { BarChart, LineChart, ProgressRing, seedUsageSeries } from '@/components/stats/stat-charts';
 import '@/components/media/anamorphic.css';
+import '@/components/stats/stat-charts.css';
 
 type Overview = {
   organization: { id: string; name: string; plan: string; billingStatus: string };
@@ -184,6 +186,39 @@ export function DashboardClient() {
               </p>
             </section>
           </div>
+
+          <section className="vl-endpoint-card" aria-labelledby="dash-stats">
+            <h2 id="dash-stats" style={sectionLabel}>
+              Workspace health
+            </h2>
+            <div className="lg-stats-grid">
+              <ProgressRing
+                value={data.billing.charactersUsed}
+                max={data.billing.characterQuota}
+                label="Character balance"
+                sublabel={`${data.billing.charactersRemaining.toLocaleString()} left this period`}
+              />
+              <ProgressRing
+                value={Math.min(data.billing.requests, 500)}
+                max={500}
+                label="Request pace"
+                sublabel={`${data.billing.requests.toLocaleString()} translate/speech calls`}
+              />
+              <LineChart
+                title="Usage timeline"
+                series={seedUsageSeries(data.billing.charactersUsed, data.billing.requests)}
+              />
+              <BarChart
+                title="Feature mix (illustrative)"
+                bars={[
+                  { label: 'Speech', value: Math.max(12, Math.round(data.billing.requests * 0.4)) },
+                  { label: 'Translate', value: Math.max(8, Math.round(data.billing.requests * 0.35)) },
+                  { label: 'Agents', value: Math.max(4, Math.round(data.billing.requests * 0.15)) },
+                  { label: 'Studio', value: Math.max(3, Math.round(data.billing.requests * 0.1)) },
+                ]}
+              />
+            </div>
+          </section>
 
           <section className="vl-endpoint-card">
             <h2 style={sectionLabel}>Feature flags</h2>
