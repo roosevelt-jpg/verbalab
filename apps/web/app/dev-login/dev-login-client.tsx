@@ -16,7 +16,7 @@ export function DevLoginClient() {
   async function completeSession(sessionId: string | null | undefined) {
     if (!sessionId || !setActive) throw new Error('No session created');
     await setActive({ session: sessionId });
-    router.replace('/dashboard');
+    router.replace('/onboarding');
   }
 
   async function signInWithTicket() {

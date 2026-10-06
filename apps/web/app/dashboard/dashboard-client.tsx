@@ -30,6 +30,8 @@ import {
   saveInstalls,
   type ConnectorInstall,
 } from '@/lib/connectors-catalog';
+import { loadOnboardingLocal, ONBOARDING_STORAGE_KEY } from '@/lib/onboarding';
+import { useRouter } from 'next/navigation';
 import '@/components/media/anamorphic.css';
 import '@/components/stats/stat-charts.css';
 
@@ -175,6 +177,7 @@ function featureOnPlan(data: Overview, feature: string): boolean {
 
 export function DashboardClient() {
   const { getToken, isLoaded } = useAuth();
+  const router = useRouter();
   const [data, setData] = useState<Overview | null>(null);
   const [identity, setIdentity] = useState<IdentityOverview | null>(null);
   const [usage, setUsage] = useState<UsageSummary | null>(null);
@@ -202,8 +205,21 @@ export function DashboardClient() {
 
   useEffect(() => {
     if (!isLoaded) return;
+    // Resume incomplete onboarding when a local draft exists; don't force legacy users.
+    try {
+      const raw = window.localStorage.getItem(ONBOARDING_STORAGE_KEY);
+      if (raw) {
+        const local = loadOnboardingLocal();
+        if (!local.completed) {
+          router.replace('/onboarding');
+          return;
+        }
+      }
+    } catch {
+      /* ignore */
+    }
     void load().catch((err: Error) => setError(err.message));
-  }, [isLoaded, load]);
+  }, [isLoaded, load, router]);
 
   useEffect(() => {
     setInstalls(loadInstalls());

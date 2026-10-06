@@ -33,6 +33,8 @@ const isPublicRoute = createRouteMatcher([
   '/health(.*)',
   '/p(.*)',
   '/enterprise',
+  '/pricing(.*)',
+  '/onboarding(.*)',
 ]);
 
 const clerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);

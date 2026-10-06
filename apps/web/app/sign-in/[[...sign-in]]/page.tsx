@@ -8,7 +8,7 @@ export default function SignInPage() {
 
   return (
     <main style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', gap: '1rem' }}>
-      <SignIn />
+      <SignIn forceRedirectUrl="/onboarding" fallbackRedirectUrl="/onboarding" />
       <p style={{ color: 'var(--muted)', fontSize: '0.9rem' }}>
         Stuck on email OTP?{' '}
         <Link href="/dev-login" style={{ color: 'var(--action-primary)', fontWeight: 650 }}>
