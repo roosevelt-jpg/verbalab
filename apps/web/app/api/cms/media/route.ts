@@ -7,6 +7,9 @@ import { isClerkConfigured } from '@/lib/clerk-config';
 
 export const dynamic = 'force-dynamic';
 
+const MAX_BYTES = 40 * 1024 * 1024;
+const ALLOWED_PREFIXES = ['image/', 'video/'] as const;
+
 async function assertCmsAdmin(): Promise<{ ok: true } | { ok: false; response: NextResponse }> {
   if (!isClerkConfigured()) {
     if (isCmsAdminAllowed({ email: null, userId: null })) return { ok: true };
@@ -43,17 +46,40 @@ export async function POST(request: Request) {
   const gate = await assertCmsAdmin();
   if (!gate.ok) return gate.response;
 
-  const form = await request.formData();
+  let form: FormData;
+  try {
+    form = await request.formData();
+  } catch {
+    return NextResponse.json({ error: { message: 'Invalid multipart form' } }, { status: 400 });
+  }
+
   const file = form.get('file');
-  const label = String(form.get('label') ?? 'Upload');
-  const alt = String(form.get('alt') ?? '');
+  const label = String(form.get('label') ?? 'Upload').slice(0, 120);
+  const alt = String(form.get('alt') ?? '').slice(0, 240);
 
   if (!(file instanceof File)) {
     return NextResponse.json({ error: { message: 'file required' } }, { status: 400 });
   }
+  if (!file.size) {
+    return NextResponse.json({ error: { message: 'Empty file' } }, { status: 400 });
+  }
+  if (file.size > MAX_BYTES) {
+    return NextResponse.json(
+      { error: { message: `File must be under ${MAX_BYTES / (1024 * 1024)} MB` } },
+      { status: 413 },
+    );
+  }
+
+  const mime = file.type || '';
+  if (!ALLOWED_PREFIXES.some((p) => mime.startsWith(p))) {
+    return NextResponse.json(
+      { error: { message: 'Only image/* and video/* uploads are allowed' } },
+      { status: 415 },
+    );
+  }
 
   const bytes = Buffer.from(await file.arrayBuffer());
-  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 120);
+  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_').slice(0, 120) || 'upload.bin';
   const stamp = Date.now();
   const filename = `${stamp}-${safeName}`;
   const dir = path.join(process.cwd(), 'public', 'cms-media');
@@ -61,11 +87,11 @@ export async function POST(request: Request) {
   await fs.writeFile(path.join(dir, filename), bytes);
 
   const url = `/cms-media/${filename}`;
-  const kind = file.type.startsWith('video/') ? 'video' : 'image';
+  const kind = mime.startsWith('video/') ? 'video' : 'image';
   const doc = await getCmsDocument();
   doc.mediaLibrary = [
     { id: `media-${stamp}`, label, kind, url, alt: alt || undefined },
-    ...doc.mediaLibrary,
+    ...(doc.mediaLibrary ?? []),
   ];
   await saveCmsDocument(doc);
 

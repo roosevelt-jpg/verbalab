@@ -19,6 +19,14 @@ import {
 } from '@/lib/connectors-catalog';
 import { LocaleSelect } from '@/components/language-locale-select';
 import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
+import {
+  ActivityBoard,
+  HeatList,
+  PipelineStrip,
+  StatusRing,
+  UsageMeter,
+} from '@/components/stats/activity-visuals';
+import '@/components/stats/stat-charts.css';
 
 type SlackStatus = {
   provider: string;
@@ -191,6 +199,70 @@ export function ConnectorsClient() {
           <Link href="/chat">Chat Studio demo →</Link>
         </aside>
       </header>
+
+      <ActivityBoard kicker="Connector health" title="Installer status">
+        <PipelineStrip
+          title="Connect path"
+          stages={[
+            { id: 'pick', label: 'Select', state: 'ready' },
+            { id: 'cred', label: 'Credentials', state: connectedCount > 0 ? 'ready' : 'idle' },
+            {
+              id: 'hook',
+              label: 'Webhook',
+              state: status?.signingSecretConfigured ? 'active' : 'idle',
+            },
+            { id: 'live', label: 'Live', state: connectedCount > 0 ? 'ready' : 'idle' },
+          ]}
+        />
+        <div className="lg-studio-overview">
+          <UsageMeter
+            label="Plugins connected"
+            value={connectedCount}
+            max={PLATFORM_CONNECTORS.length}
+            unit="of catalog"
+          />
+          <StatusRing
+            status={status?.signingSecretConfigured ? 'ok' : status ? 'warn' : 'idle'}
+            label="Slack bridge"
+            detail={
+              status
+                ? status.disabled
+                  ? 'Disabled'
+                  : status.signingSecretConfigured
+                    ? 'Signing secret ready'
+                    : 'Needs signing secret'
+                : 'Loading…'
+            }
+          />
+          <StatusRing
+            status={
+              PLATFORM_CONNECTORS.some(
+                (c) =>
+                  (c.category === 'voice' || c.category === 'video') && installs[c.id]?.connected,
+              )
+                ? 'ok'
+                : 'idle'
+            }
+            label="Voice / video"
+            detail={`${
+              PLATFORM_CONNECTORS.filter(
+                (c) =>
+                  (c.category === 'voice' || c.category === 'video') && installs[c.id]?.connected,
+              ).length
+            } connected`}
+          />
+        </div>
+        <HeatList
+          title="Category fill"
+          items={CONNECTOR_CATEGORIES.map((cat) => {
+            const total = PLATFORM_CONNECTORS.filter((c) => c.category === cat.id).length;
+            const on = PLATFORM_CONNECTORS.filter(
+              (c) => c.category === cat.id && installs[c.id]?.connected,
+            ).length;
+            return { id: cat.id, label: cat.label, value: on, hint: `${on}/${total}` };
+          })}
+        />
+      </ActivityBoard>
 
       {error ? <p style={{ color: 'var(--bad)' }}>{error}</p> : null}
       {message ? <p style={{ color: 'var(--muted)' }}>{message}</p> : null}

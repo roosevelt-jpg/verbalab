@@ -13,6 +13,14 @@ import {
   seedRequestSeries,
   seedUsageSeries,
 } from '@/components/stats/stat-charts';
+import {
+  ActivityBoard,
+  HeatList,
+  LivePulse,
+  PipelineStrip,
+  StatusRing,
+  UsageMeter,
+} from '@/components/stats/activity-visuals';
 import '@/components/stats/stat-charts.css';
 
 type Catalog = {
@@ -122,27 +130,32 @@ export function AnalyticsClient() {
     }
   }
 
+  const totalRequests = data?.byFeature.reduce((s, r) => s + r.requests, 0) ?? 0;
+
   return (
     <AppShell>
-      <h1 style={{ margin: 0, fontFamily: 'var(--font-display)', letterSpacing: '-0.03em', fontSize: '2rem' }}>
-        Language Analytics
-      </h1>
-      <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0' }}>
-        {catalog?.note ??
-          'Volume, quality, latency, and estimated cost from your database — not an analytics cloud.'}
-      </p>
+      <header style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
+        <div>
+          <p className="lg-workspace-kicker">Translate analytics hub</p>
+          <h1
+            style={{
+              margin: 0,
+              fontFamily: 'var(--font-display)',
+              letterSpacing: '-0.03em',
+              fontSize: '2rem',
+              color: 'var(--brand-navy)',
+            }}
+          >
+            Language Analytics
+          </h1>
+          <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0', maxWidth: '42rem' }}>
+            {catalog?.note ??
+              'Volume, quality, latency, and estimated cost from your database — not an analytics cloud.'}
+          </p>
+        </div>
+        <LivePulse label={data ? 'Streaming metrics' : 'Connecting'} />
+      </header>
       {error ? <p style={{ color: 'var(--bad)' }}>{error}</p> : null}
-
-      {catalog ? (
-        <ul style={{ listStyle: 'none', padding: 0, margin: '1rem 0 0', display: 'grid', gap: '0.25rem' }}>
-          {catalog.capabilities.map((c) => (
-            <li key={c.id} style={{ fontSize: '0.9rem', color: 'var(--muted)' }}>
-              {c.name}
-              {c.api ? ` · ${c.api}` : ''}
-            </li>
-          ))}
-        </ul>
-      ) : null}
 
       <div style={{ marginTop: '1rem' }}>
         <button type="button" className="vl-btn" onClick={() => void loadEnterpriseReport()}>
@@ -155,12 +168,54 @@ export function AnalyticsClient() {
 
       {data ? (
         <div style={{ marginTop: '1.5rem', display: 'grid', gap: '1.5rem', maxWidth: '56rem' }}>
+          <ActivityBoard kicker="Job pipeline" title="Translate & speech activity">
+            <PipelineStrip
+              title="Request path"
+              stages={[
+                { id: 'accept', label: 'Accept', state: totalRequests > 0 ? 'ready' : 'idle' },
+                { id: 'mt', label: 'Baobab MT', state: totalRequests > 0 ? 'active' : 'ready' },
+                {
+                  id: 'quality',
+                  label: 'Quality',
+                  state: (quality?.reviews ?? 0) > 0 ? 'ready' : 'idle',
+                },
+                {
+                  id: 'bill',
+                  label: 'Meter',
+                  state: data.cost.estimatedUsd > 0 ? 'ready' : 'idle',
+                },
+              ]}
+            />
+            <div className="lg-studio-overview">
+              <StatusRing
+                status={data.errors.errorRate < 0.05 ? 'ok' : data.errors.errorRate < 0.2 ? 'warn' : 'bad'}
+                label="Job health"
+                detail={`${((1 - data.errors.errorRate) * 100).toFixed(1)}% success`}
+              />
+              <UsageMeter
+                label="Period volume"
+                value={totalRequests}
+                max={Math.max(totalRequests, 100)}
+                unit="requests"
+              />
+              <HeatList
+                title="Locale pair heat"
+                empty="No translation pairs in this period"
+                items={data.byLanguagePair.slice(0, 8).map((r) => ({
+                  id: `${r.source}-${r.target}`,
+                  label: `${r.source} → ${r.target}`,
+                  value: r.characters || r.requests,
+                  hint: `${r.requests} req`,
+                }))}
+              />
+            </div>
+          </ActivityBoard>
           <div className="lg-stats-grid">
             <ProgressRing
-              value={Math.round(data.errors.errorRate * 1000)}
-              max={1000}
-              label="Job health"
-              sublabel={`${((1 - data.errors.errorRate) * 100).toFixed(1)}% success · ${data.errors.jobFailed} failed`}
+              value={Math.round((1 - data.errors.errorRate) * 100)}
+              max={100}
+              label="Success rate"
+              sublabel={`${data.errors.jobFailed} failed · ${data.errors.jobTotal} jobs`}
             />
             <ProgressRing
               value={quality?.translationAccuracyProxy != null ? Math.round(quality.translationAccuracyProxy * 100) : 0}

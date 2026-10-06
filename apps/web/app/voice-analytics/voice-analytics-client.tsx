@@ -5,6 +5,21 @@ import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import {
+  BarChart,
+  LineChart,
+  ProgressRing,
+  seedUsageSeries,
+} from '@/components/stats/stat-charts';
+import {
+  ActivityBoard,
+  HeatList,
+  PipelineStrip,
+  StatusRing,
+  UsageMeter,
+  LivePulse,
+} from '@/components/stats/activity-visuals';
+import '@/components/stats/stat-charts.css';
 
 type Engine = {
   product: string;
@@ -96,47 +111,98 @@ export function VoiceAnalyticsClient() {
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
 
+      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.75rem' }}>
+        <LivePulse label={overview ? 'Voice metrics' : 'Connecting'} />
+      </div>
+
       {overview ? (
-        <p style={{ margin: '0 0 1.25rem', fontWeight: 600 }}>
-          TTS {overview.usage.tts.requests} req / {overview.usage.tts.characters} chars · revenue $
-          {(overview.revenueCents / 100).toFixed(2)} · est. $
-          {overview.estimatedCostUsd.toFixed(4)}
-        </p>
+        <ActivityBoard kicker="Voice analytics hub" title="Speech activity">
+          <PipelineStrip
+            title="Voice path"
+            stages={[
+              {
+                id: 'tts',
+                label: 'TTS',
+                state: overview.usage.tts.requests > 0 ? 'active' : 'idle',
+              },
+              {
+                id: 'wm',
+                label: 'Watermark',
+                state: monitoring?.watermarkRate != null ? 'ready' : 'idle',
+              },
+              {
+                id: 'stream',
+                label: 'Stream',
+                state: (monitoring?.streamEvents ?? 0) > 0 ? 'ready' : 'idle',
+              },
+              {
+                id: 'bill',
+                label: 'Meter',
+                state: overview.estimatedCostUsd > 0 ? 'ready' : 'idle',
+              },
+            ]}
+          />
+          <div className="lg-studio-overview">
+            <UsageMeter
+              label="TTS characters"
+              value={overview.usage.tts.characters}
+              max={Math.max(overview.usage.tts.characters, 1000)}
+              unit="chars"
+            />
+            <UsageMeter
+              label="TTS requests"
+              value={overview.usage.tts.requests}
+              max={Math.max(overview.usage.tts.requests, 50)}
+              unit="req"
+            />
+            <StatusRing
+              status={(monitoring?.latencyMsP95 ?? 9999) < 800 ? 'ok' : monitoring ? 'warn' : 'idle'}
+              label="Latency p95"
+              detail={
+                monitoring?.latencyMsP95 != null ? `${monitoring.latencyMsP95} ms` : 'No samples'
+              }
+            />
+            <ProgressRing
+              value={Math.round((monitoring?.watermarkRate ?? 0) * 100)}
+              max={100}
+              label="Watermark rate"
+              sublabel={`Revenue $${(overview.revenueCents / 100).toFixed(2)}`}
+            />
+          </div>
+          <div className="lg-stats-grid">
+            <LineChart
+              title="TTS volume trend"
+              series={seedUsageSeries(overview.usage.tts.characters, overview.usage.tts.requests)}
+            />
+            <BarChart
+              title="Top voices"
+              bars={
+                overview.topVoices.length
+                  ? overview.topVoices.slice(0, 6).map((v) => ({
+                      label: v.voice.slice(0, 12),
+                      value: v.count,
+                    }))
+                  : [{ label: 'idle', value: 0 }]
+              }
+            />
+            <HeatList
+              title="Voice heat"
+              empty="No voice usage yet"
+              items={overview.topVoices.slice(0, 8).map((v) => ({
+                id: v.voice,
+                label: v.voice,
+                value: v.count,
+                hint: 'plays',
+              }))}
+            />
+          </div>
+          {monitoring?.note ? (
+            <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.85rem' }}>{monitoring.note}</p>
+          ) : null}
+        </ActivityBoard>
       ) : null}
 
-      <div style={{ display: 'grid', gap: '1.75rem', maxWidth: '48rem' }}>
-        {monitoring ? (
-          <section>
-            <h2 style={label}>Monitoring</h2>
-            <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
-              <li style={{ borderTop: '1px solid var(--line)', padding: '0.35rem 0' }}>
-                Stream events: {monitoring.streamEvents}
-              </li>
-              <li style={{ borderTop: '1px solid var(--line)', padding: '0.35rem 0' }}>
-                Latency p95: {monitoring.latencyMsP95 ?? '—'} ms
-              </li>
-              <li style={{ borderTop: '1px solid var(--line)', padding: '0.35rem 0' }}>
-                Watermark rate: {monitoring.watermarkRate ?? '—'}
-              </li>
-            </ul>
-            <p style={{ margin: '0.5rem 0 0', color: 'var(--muted)', fontSize: '0.85rem' }}>
-              {monitoring.note}
-            </p>
-          </section>
-        ) : null}
-
-        {overview?.topVoices?.length ? (
-          <section>
-            <h2 style={label}>Top voices</h2>
-            <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
-              {overview.topVoices.slice(0, 8).map((v) => (
-                <li key={v.voice} style={{ borderTop: '1px solid var(--line)', padding: '0.35rem 0' }}>
-                  {v.voice} · {v.count}
-                </li>
-              ))}
-            </ul>
-          </section>
-        ) : null}
+      <div style={{ display: 'grid', gap: '1.75rem', maxWidth: '48rem', marginTop: '1.25rem' }}>
 
         <section>
           <button type="button" disabled={loading} style={primary} onClick={() => void loadReport()}>
