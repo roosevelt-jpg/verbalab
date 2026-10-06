@@ -1,8 +1,17 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { PortfolioShell } from '@/components/portfolio/portfolio-shell';
+import { SearchableCombobox, type ComboboxOption } from '@/components/searchable-combobox';
+
+type KitLang = {
+  languageTag: string;
+  displayName: string;
+  nameNative: string | null;
+  varietyId: string;
+  script: string | null;
+};
 
 type Kit = {
   id: string;
@@ -19,12 +28,46 @@ type Kit = {
 
 export function LanguageKitsClient() {
   const [apiKey, setApiKey] = useState('');
-  const [displayName, setDisplayName] = useState('Ewe (pilot draft)');
+  const [languages, setLanguages] = useState<KitLang[]>([]);
   const [languageTag, setLanguageTag] = useState('ee');
   const [varietyId, setVarietyId] = useState('ee-GH');
+  const [displayName, setDisplayName] = useState('Ewe');
   const [kit, setKit] = useState<Kit | null>(null);
   const [coverage, setCoverage] = useState<unknown>(null);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    void apiFetch<{ languages: KitLang[]; total?: number }>('/v1/language-kits/languages')
+      .then((res) => {
+        setLanguages(res.languages);
+        const ee = res.languages.find((l) => l.languageTag === 'ee') ?? res.languages[0];
+        if (ee) {
+          setLanguageTag(ee.languageTag);
+          setVarietyId(ee.varietyId);
+          setDisplayName(ee.displayName);
+        }
+      })
+      .catch(() => undefined);
+  }, []);
+
+  const langOptions: ComboboxOption[] = useMemo(
+    () =>
+      languages.map((l) => ({
+        value: l.languageTag,
+        label: `${l.displayName}${l.nameNative ? ` (${l.nameNative})` : ''} · ${l.varietyId}`,
+        keywords: `${l.languageTag} ${l.displayName} ${l.nameNative ?? ''} ${l.varietyId}`,
+      })),
+    [languages],
+  );
+
+  function selectLanguage(tag: string) {
+    setLanguageTag(tag);
+    const hit = languages.find((l) => l.languageTag === tag);
+    if (hit) {
+      setVarietyId(hit.varietyId);
+      setDisplayName(hit.displayName);
+    }
+  }
 
   async function onCreate(event: FormEvent) {
     event.preventDefault();
@@ -37,7 +80,12 @@ export function LanguageKitsClient() {
       const res = await apiFetch<Kit>('/v1/language-kits', {
         method: 'POST',
         token: apiKey,
-        body: JSON.stringify({ displayName, languageTag, varietyId, script: 'Latn' }),
+        body: JSON.stringify({
+          displayName,
+          languageTag,
+          varietyId,
+          script: languages.find((l) => l.languageTag === languageTag)?.script ?? 'Latn',
+        }),
       });
       setKit(res);
       setCoverage(null);
@@ -46,16 +94,14 @@ export function LanguageKitsClient() {
     }
   }
 
-  async function advance(toStage?: string) {
+  async function advance() {
     if (!kit || !apiKey) return;
     try {
-      const body: Record<string, string> = {};
-      if (toStage) body.toStage = toStage;
-      if ((toStage ?? 'data_ready') === 'data_ready' || kit.stage === 'draft') {
-        body.toStage = 'data_ready';
-        body.datasetManifestRef = 'manifest_ewe_pilot_1';
-        body.licensePolicyRef = 'policy_ewe_pilot_1';
-      }
+      const body: Record<string, string> = {
+        toStage: 'data_ready',
+        datasetManifestRef: `manifest_${languageTag}_local_demo_1`,
+        licensePolicyRef: `policy_${languageTag}_local_demo_1`,
+      };
       const res = await apiFetch<Kit>(`/v1/language-kits/${kit.id}/advance`, {
         method: 'POST',
         token: apiKey,
@@ -72,10 +118,21 @@ export function LanguageKitsClient() {
   return (
     <PortfolioShell
       title="Lugemi Language Kit"
-      lede="Evidence-gated onboarding. A registry entry is not a model release. Coverage is separate for ASR, translation directions, and synthesis."
+      lede={`Evidence-gated onboarding. A registry entry is not a model release. Coverage is separate for ASR, translation directions, and synthesis. Full language registry (${languages.length || '…'} languages) available for kit drafting.`}
     >
       <form onSubmit={onCreate} className="vl-panel" style={{ padding: '1rem', display: 'grid', gap: '0.65rem' }}>
         <input className="vl-field" value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder="API key" />
+        <label style={{ display: 'grid', gap: '0.25rem' }}>
+          <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Language</span>
+          <SearchableCombobox
+            value={languageTag}
+            onChange={selectLanguage}
+            options={langOptions}
+            placeholder="Search language…"
+            emptyLabel="Select language…"
+            aria-label="Language kit language"
+          />
+        </label>
         <input className="vl-field" value={displayName} onChange={(e) => setDisplayName(e.target.value)} />
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <input className="vl-field" value={languageTag} onChange={(e) => setLanguageTag(e.target.value)} />

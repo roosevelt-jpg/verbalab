@@ -141,6 +141,9 @@ export class CorridorBenchmarksService {
       note:
         'Run component-isolation and end-to-end comparisons. Holding MT constant isolates ASR/TTS gains; changing all components tests a product workflow but does not identify which model caused the change.',
       pilot_corridors: PORTFOLIO_PILOT_CORRIDORS,
+      corridor_count: PORTFOLIO_PILOT_CORRIDORS.length,
+      note_corridors:
+        'Full registry language↔English corridors. Strategic evaluated varieties are marked; catalog membership enables selection.',
     };
   }
 

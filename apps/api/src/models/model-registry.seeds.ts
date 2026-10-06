@@ -373,7 +373,7 @@ export const VENDOR_MODEL_SEEDS: VendorDefaultSeed[] = [
     displayName: 'Lugemi Edge',
     baseModel: 'lugemi-edge-v1',
     notes:
-      'Verified offline corridor packs (local | cloud_allowed | cloud_forbidden). Signed manifests, hash verify, no silent cloud fallback when forbidden. Android 4GB pilot class.',
+      'Verified offline corridor packs (local | cloud_allowed | cloud_forbidden). Signed local/demo manifests for full registry language↔English catalog; hash verify; no silent cloud fallback when forbidden. Device classes: android-4gb, android-6gb, ios-4gb.',
     envKey: null,
     role: 'primary',
     kind: 'lugemi',

@@ -1,6 +1,9 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { portfolioCatalog } from './portfolio.catalog';
-import { PORTFOLIO_PILOT_CORRIDORS } from './portfolio.meta';
+import {
+  PORTFOLIO_CORRIDORS,
+  PORTFOLIO_CORRIDOR_COUNT,
+} from './portfolio.meta';
 
 @Controller('v1/portfolio')
 export class PortfolioController {
@@ -10,10 +13,23 @@ export class PortfolioController {
   }
 
   @Get('corridors')
-  corridors() {
+  corridors(@Query('q') q?: string) {
+    const needle = q?.trim().toLowerCase();
+    const corridors = needle
+      ? PORTFOLIO_CORRIDORS.filter(
+          (c) =>
+            c.id.includes(needle) ||
+            c.label.toLowerCase().includes(needle) ||
+            c.languageCode.includes(needle) ||
+            c.varietyId.toLowerCase().includes(needle) ||
+            (c.nameNative?.toLowerCase().includes(needle) ?? false),
+        )
+      : PORTFOLIO_CORRIDORS;
     return {
-      corridors: PORTFOLIO_PILOT_CORRIDORS,
-      note: 'Pilot corridors for Verified Interpreter. Evaluated varieties are listed explicitly; unknown variety is valid.',
+      corridors,
+      count: corridors.length,
+      total: PORTFOLIO_CORRIDOR_COUNT,
+      note: `Full registry corridors (${PORTFOLIO_CORRIDOR_COUNT} language↔English). Strategic varieties are marked evaluated; catalog membership enables selection — not a claim of production on-device quality.`,
     };
   }
 }

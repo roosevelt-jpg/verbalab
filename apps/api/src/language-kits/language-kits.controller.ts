@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -29,6 +30,11 @@ export class LanguageKitsController {
   @Get('engine')
   engine() {
     return this.kits.engine();
+  }
+
+  @Get('languages')
+  languages(@Query('q') q?: string) {
+    return this.kits.languages(q);
   }
 
   @Post()

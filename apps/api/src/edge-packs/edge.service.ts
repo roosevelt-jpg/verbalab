@@ -1,102 +1,50 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { createHash } from 'crypto';
 import { AuditService } from '../audit/audit.service';
 import { ApiException } from '../common/errors/api-exception';
 import { edgeCatalog } from './edge.catalog';
 import { portfolioMeta } from '../portfolio/portfolio.meta';
+import {
+  EDGE_PACK_CATALOG,
+  EDGE_PACK_COUNT,
+  type EdgePack,
+} from './edge.packs';
 
 export type EdgeMode = 'local' | 'cloud_allowed' | 'cloud_forbidden';
 
-type EdgePack = {
-  pack_id: string;
-  version: string;
-  corridor: string;
-  variety: string;
-  directions: string[];
-  hashes: { weights: string; lexicon: string; manifest: string };
-  license_ref: string;
-  min_runtime: string;
-  device_class: string;
-  disk_mb: number;
-  peak_ram_mb: number;
-  measured_rtf: number | null;
-  calibration_scope: string;
-  rollback_compatible_with: string[];
-  signature: string;
-  revoked: boolean;
-};
-
 @Injectable()
 export class EdgeService {
-  private readonly packs: EdgePack[];
+  private readonly packs: EdgePack[] = EDGE_PACK_CATALOG;
 
-  constructor(private readonly audit: AuditService) {
-    this.packs = [
-      this.buildPack({
-        packId: 'lugemi-edge-twi-en',
-        corridor: 'twi-english',
-        variety: 'ak-GH-twi',
-        directions: ['ak->en', 'en->ak'],
-        calibrationScope: 'twi-english-customer-service-pilot',
-        diskMb: 420,
-        peakRamMb: 1800,
-      }),
-      this.buildPack({
-        packId: 'lugemi-edge-yoruba-en',
-        corridor: 'yoruba-english',
-        variety: 'yo-NG',
-        directions: ['yo->en', 'en->yo'],
-        calibrationScope: 'yoruba-english-customer-service-pilot',
-        diskMb: 440,
-        peakRamMb: 1850,
-      }),
-    ];
-  }
+  constructor(private readonly audit: AuditService) {}
 
-  private buildPack(input: {
-    packId: string;
-    corridor: string;
-    variety: string;
-    directions: string[];
-    calibrationScope: string;
-    diskMb: number;
-    peakRamMb: number;
-  }): EdgePack {
-    const weights = this.hash(`${input.packId}-weights-pilot-1`);
-    const lexicon = this.hash(`${input.packId}-lexicon-pilot-1`);
-    const version = '1.0.0-pilot';
-    const manifest = this.hash(
-      JSON.stringify({ pack: input.packId, version, weights, lexicon }),
-    );
+  engine() {
     return {
-      pack_id: input.packId,
-      version,
-      corridor: input.corridor,
-      variety: input.variety,
-      directions: input.directions,
-      hashes: { weights, lexicon, manifest },
-      license_ref: `license_${input.packId}_pilot_1`,
-      min_runtime: 'lugemi-edge-runtime/0.1',
-      device_class: 'android-4gb',
-      disk_mb: input.diskMb,
-      peak_ram_mb: input.peakRamMb,
-      measured_rtf: null,
-      calibration_scope: input.calibrationScope,
-      rollback_compatible_with: [],
-      signature: this.hash(`sig:${manifest}`),
-      revoked: false,
+      ...edgeCatalog(),
+      pack_count: EDGE_PACK_COUNT,
     };
   }
 
-  engine() {
-    return edgeCatalog();
-  }
-
-  listPacks() {
+  listPacks(query?: string) {
+    const q = query?.trim().toLowerCase();
+    let packs = this.packs;
+    if (q) {
+      packs = packs.filter(
+        (p) =>
+          p.pack_id.includes(q) ||
+          p.corridor.includes(q) ||
+          p.variety.toLowerCase().includes(q) ||
+          p.language_code.includes(q) ||
+          p.name_en.toLowerCase().includes(q) ||
+          p.device_class.includes(q),
+      );
+    }
     return {
-      packs: this.packs.map((p) => this.publicPack(p)),
+      packs: packs.map((p) => this.publicPack(p)),
+      count: packs.length,
+      total: EDGE_PACK_COUNT,
+      device_classes: ['android-4gb', 'android-6gb', 'ios-4gb'],
       device_scope: edgeCatalog().device_scope,
-      note: 'Release on a limited device list. Peak RAM budget is a measured target subject to quality review.',
+      note: edgeCatalog().catalog_note,
     };
   }
 
@@ -121,7 +69,8 @@ export class EdgeService {
       signature_valid: true,
       hashes_match: ok,
       hashes: pack.hashes,
-      note: 'Verify signatures and hashes before loading. Interrupted downloads may resume; switch pack versions atomically.',
+      pack_kind: pack.pack_kind,
+      note: 'Verify signatures and hashes before loading. Local/demo signed manifests until real on-device weights ship. Interrupted downloads may resume; switch pack versions atomically.',
     };
   }
 
@@ -154,7 +103,7 @@ export class EdgeService {
     }
 
     const inScope =
-      /kwame|mensah|adebayo|transfer|amount|tomorrow|fifty|twi|yoruba|please/i.test(text) ||
+      /kwame|mensah|adebayo|transfer|amount|tomorrow|fifty|please|send|name|charge/i.test(text) ||
       text.length < 280;
     const uncertainQuantity = /\b(five hundred|500|5,?000)\b/i.test(text);
 
@@ -162,11 +111,7 @@ export class EdgeService {
       return {
         ...portfolioMeta({
           modelId: 'lugemi-edge',
-          sourceLanguageTags: pack.variety.startsWith('yo')
-            ? ['yo', 'en']
-            : pack.variety.startsWith('ak')
-              ? ['ak', 'en']
-              : ['ak', 'en'],
+          sourceLanguageTags: [pack.language_code, 'en'],
           targetLanguageTag: input.target ?? 'en',
           varietyId: pack.variety,
           status: 'unsupported',
@@ -181,7 +126,6 @@ export class EdgeService {
       };
     }
 
-    // Never silent-fallback to cloud in cloud_forbidden.
     let usedCloud = false;
     let cloudDisclosure: string | null = null;
     if (mode === 'cloud_allowed' && input.cloudAuthorized) {
@@ -199,9 +143,9 @@ export class EdgeService {
     }
 
     const translation =
-      input.target === 'ak'
+      input.target === pack.language_code
         ? text
-        : `Local edge rendering: ${text}`;
+        : `Local edge rendering (${pack.name_en}↔English): ${text}`;
 
     await this.audit.record({
       organizationId: input.organizationId,
@@ -215,11 +159,7 @@ export class EdgeService {
     return {
       ...portfolioMeta({
         modelId: 'lugemi-edge',
-        sourceLanguageTags: pack.variety.startsWith('yo')
-          ? ['yo', 'en']
-          : pack.variety.startsWith('ak')
-            ? ['ak', 'en']
-            : ['ak', 'en'],
+        sourceLanguageTags: [pack.language_code, 'en'],
         targetLanguageTag: input.target ?? 'en',
         varietyId: pack.variety,
         status: 'preview',
@@ -229,6 +169,7 @@ export class EdgeService {
       }),
       pack_id: pack.pack_id,
       pack_version: pack.version,
+      pack_kind: pack.pack_kind,
       mode,
       used_cloud: usedCloud,
       cloud_disclosure: cloudDisclosure,
@@ -237,7 +178,7 @@ export class EdgeService {
       confirm_quantity: uncertainQuantity,
       peak_ram_budget_mb: pack.peak_ram_mb,
       device_class: pack.device_class,
-      note: 'Local distilled adapter for declared corridor. Cloud quality does not automatically transfer to device.',
+      note: 'Local/demo signed manifest adapter for declared corridor. Real on-device weights are not shipped yet; cloud quality does not automatically transfer to device.',
     };
   }
 
@@ -255,6 +196,8 @@ export class EdgeService {
       version: pack.version,
       corridor: pack.corridor,
       variety: pack.variety,
+      language_code: pack.language_code,
+      name_en: pack.name_en,
       directions: pack.directions,
       hashes: pack.hashes,
       license_ref: pack.license_ref,
@@ -267,10 +210,7 @@ export class EdgeService {
       rollback_compatible_with: pack.rollback_compatible_with,
       signature: pack.signature,
       revoked: pack.revoked,
+      pack_kind: pack.pack_kind,
     };
-  }
-
-  private hash(value: string) {
-    return createHash('sha256').update(value).digest('hex');
   }
 }
