@@ -1,8 +1,9 @@
+import { describe, expect, it, vi } from 'vitest';
 import { LanguageIntegrityService } from '../src/language-integrity/language-integrity.service';
 
 describe('LanguageIntegrityService', () => {
   const clones = {
-    get: jest.fn(),
+    get: vi.fn(),
   };
   const service = new LanguageIntegrityService(clones as never);
 
