@@ -46,11 +46,11 @@ From `infra/DEPLOY.md`:
 
 | Surface | Today | Cloudflare role |
 | --- | --- | --- |
-| `apps/web` | Fly and/or Vercel | DNS + orange cloud (or CNAME to Vercel); Analytics; Turnstile |
-| `apps/api` | Fly (`lugemi-api`) | Proxied custom domain (e.g. `api.lugemi.com`); WAF/DDoS; optional edge rate-limit |
+| `apps/web` | Fly (`verbalab-web`) and/or Vercel | DNS + orange cloud (or CNAME to Vercel); Analytics; Turnstile. Public: **lugemi.com** |
+| `apps/api` | Fly (`verbalab-api` / `verbalab`) | Custom domain **api.lugemi.com**; WAF/DDoS; optional edge rate-limit |
 | Object files | Local disk / Fly volume | **R2** for multi-machine durability |
 | Email send | Resend | Keep Resend; use Email Routing for inbound only |
-| Auth | Clerk | Turnstile ahead of public endpoints; Access for internal admin if desired |
+| Auth | Clerk | Turnstile ahead of public endpoints; Access for internal admin if desired; allow `lugemi.com` / `www` |
 
 ## Env placeholders (optional)
 
@@ -84,15 +84,84 @@ Unset = feature off. Never commit real secrets.
 
 Same names are mirrored in root `.env.example`.
 
-## Suggested DNS layout
+## Production DNS for Fly custom domains (do this)
+
+**Goal:** browsers use brand hosts, not `*.fly.dev`.
+
+| Public hostname | Serves | Fly app name (internal) |
+| --- | --- | --- |
+| `https://lugemi.com` | Next console | `verbalab-web` |
+| `https://www.lugemi.com` | Same web app (redirect → apex preferred) | `verbalab-web` |
+| `https://api.lugemi.com` | Nest API | `verbalab-api` (or single-app `verbalab`) |
+
+Fly app names (`verbalab*`) are **not** the public domain. Until DNS + `fly certs` complete, only `*.fly.dev` answers — a successful Fly deploy alone does **not** make lugemi.com live.
+
+### Exact steps
+
+1. **Fly certificates** (from a machine with `flyctl` logged in):
+
+```bash
+fly certs add lugemi.com -a verbalab-web
+fly certs add www.lugemi.com -a verbalab-web
+fly certs add api.lugemi.com -a verbalab-api
+
+fly certs setup lugemi.com -a verbalab-web
+fly certs setup www.lugemi.com -a verbalab-web
+fly certs setup api.lugemi.com -a verbalab-api
+```
+
+2. **Cloudflare → DNS → Records** — create (IPs from `fly ips list -a <app>`):
+
+| Type | Name | Content | Proxy status |
+| --- | --- | --- | --- |
+| `A` | `@` | IPv4 of `verbalab-web` | Orange **or** DNS-only (see below) |
+| `AAAA` | `@` | IPv6 of `verbalab-web` | Same as A |
+| `CNAME` | `www` | `lugemi.com` | Same; optional Redirect Rule www → `https://lugemi.com` |
+| `A` / `AAAA` **or** `CNAME` | `api` | IPs of `verbalab-api` **or** `verbalab-api.fly.dev` | Orange **or** DNS-only |
+| `TXT` | names from `fly certs setup` (e.g. `_fly-ownership…`) | values Fly prints | **DNS-only** (grey) |
+
+3. **Proxy choice** ([Fly docs: Understanding Cloudflare](https://fly.io/docs/networking/understanding-cloudflare/)):
+
+| Mode | When | Cloudflare SSL |
+| --- | --- | --- |
+| **DNS-only (grey)** | Simplest cert issuance/renewal by Fly | N/A for edge; Fly terminates TLS |
+| **Proxied (orange)** | Want CF CDN/WAF/DDoS in front | **Full (strict)** + Always Use HTTPS; keep ownership TXT DNS-only |
+
+4. **App secrets / Clerk** (after hosts resolve):
+
+```bash
+# API
+fly secrets set -a verbalab-api \
+  CORS_ORIGIN='https://lugemi.com,https://www.lugemi.com' \
+  APP_URL='https://lugemi.com' \
+  APP_PUBLIC_URL='https://lugemi.com'
+
+# Web rebuild with brand API URL
+fly deploy -c infra/fly/web.jnb.toml --dockerfile apps/web/Dockerfile \
+  --build-arg NEXT_PUBLIC_API_URL=https://api.lugemi.com \
+  --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_...
+```
+
+Clerk: allow origins `https://lugemi.com` and `https://www.lugemi.com`. Nest CORS also hard-allows those plus `https://api.lugemi.com` (`apps/api/src/main.ts`).
+
+5. **Verify** (only claim live after these succeed):
+
+```bash
+fly certs check lugemi.com -a verbalab-web
+fly certs check api.lugemi.com -a verbalab-api
+curl -fsS https://lugemi.com/health
+curl -fsS https://api.lugemi.com/health
+```
+
+### Suggested DNS layout (summary)
 
 | Hostname | Target | Proxy |
 | --- | --- | --- |
-| `lugemi.com` / `www` | Vercel or Fly web | Proxied (orange) if CF terminates TLS; or DNS-only if Vercel owns certs — pick one TLS owner |
-| `api.lugemi.com` | Fly `lugemi-api` | Proxied; SSL Full (strict) |
+| `lugemi.com` / `www` | Fly `verbalab-web` (or Vercel if web stays there) | Orange if CF terminates TLS; DNS-only if Fly/Vercel owns certs alone — pick one TLS owner |
+| `api.lugemi.com` | Fly `verbalab-api` / `verbalab` | Orange (Full strict) **or** DNS-only |
 | `media.lugemi.com` (optional) | R2 custom domain | Proxied or R2 public bucket |
 
-Avoid double-CDN surprises: if Vercel already fronts the web app, either DNS-only at Cloudflare **or** carefully configure caching so API/auth cookies are not over-cached.
+Avoid double-CDN surprises: if Vercel already fronts the web app, either DNS-only at Cloudflare **or** carefully configure caching so API/auth cookies are not over-cached. Prefer **one** origin for `lugemi.com` (Fly **or** Vercel), not both.
 
 ## Explicit non-goals (free tier)
 

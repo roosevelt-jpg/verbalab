@@ -1,8 +1,10 @@
 # verbalab-web (Next.js) — Africa-first primary region Johannesburg.
+# Fly app name ≠ public hostname. Public web: https://lugemi.com
 # Deploy from repo root (build context = monorepo root):
 #   fly deploy -c apps/web/fly.toml --dockerfile apps/web/Dockerfile \
-#     --build-arg NEXT_PUBLIC_API_URL=https://verbalab-api.fly.dev \
+#     --build-arg NEXT_PUBLIC_API_URL=https://api.lugemi.com \
 #     --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_...
+# Custom domain: fly certs add lugemi.com -a verbalab-web && fly certs add www.lugemi.com -a verbalab-web
 app = 'verbalab-web'
 primary_region = 'jnb'
 
@@ -14,6 +16,8 @@ primary_region = 'jnb'
   NODE_ENV = 'production'
   PORT = '3000'
   LUGEMI_REGION = 'af'
+  APP_URL = 'https://lugemi.com'
+  NEXT_PUBLIC_APP_URL = 'https://lugemi.com'
 
 [http_service]
   internal_port = 3000

@@ -12,12 +12,18 @@ async function bootstrap() {
   app.useGlobalFilters(new ApiExceptionFilter());
 
   // Accept comma-separated origins; always allow localhost↔127.0.0.1 twins for local consoles.
+  // Production brand hosts are always allowed (Fly app names like verbalab-web ≠ public domain).
+  const productionCorsOrigins = [
+    'https://lugemi.com',
+    'https://www.lugemi.com',
+    'https://api.lugemi.com',
+  ];
   const corsRaw = process.env.CORS_ORIGIN ?? 'http://localhost:3000';
   const corsOrigins = new Set(
-    corsRaw
-      .split(',')
-      .map((s) => s.trim())
-      .filter(Boolean),
+    [
+      ...corsRaw.split(',').map((s) => s.trim()).filter(Boolean),
+      ...productionCorsOrigins,
+    ],
   );
   for (const origin of [...corsOrigins]) {
     try {

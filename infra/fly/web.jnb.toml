@@ -1,8 +1,11 @@
 # Fly.io — Web Africa residency island (Johannesburg).
-# Point NEXT_PUBLIC_API_URL at https://verbalab-api.fly.dev
+# Fly app name verbalab-web ≠ public hostname https://lugemi.com
+# Point NEXT_PUBLIC_API_URL at https://api.lugemi.com
 # fly apps create verbalab-web
 # fly deploy -c infra/fly/web.jnb.toml --dockerfile apps/web/Dockerfile \
-#   --build-arg NEXT_PUBLIC_API_URL=https://verbalab-api.fly.dev
+#   --build-arg NEXT_PUBLIC_API_URL=https://api.lugemi.com
+# fly certs add lugemi.com -a verbalab-web
+# fly certs add www.lugemi.com -a verbalab-web
 app = 'verbalab-web'
 primary_region = 'jnb'
 
@@ -13,6 +16,8 @@ primary_region = 'jnb'
   NODE_ENV = 'production'
   PORT = '3000'
   LUGEMI_REGION = 'af'
+  APP_URL = 'https://lugemi.com'
+  NEXT_PUBLIC_APP_URL = 'https://lugemi.com'
 
 [http_service]
   internal_port = 3000

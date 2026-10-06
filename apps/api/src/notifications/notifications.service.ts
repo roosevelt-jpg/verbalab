@@ -254,6 +254,7 @@ export class NotificationsService {
     if (this.disabled() || !input.email) return;
 
     const publicBase =
+      process.env.APP_URL?.trim() ||
       process.env.APP_PUBLIC_URL?.trim() ||
       process.env.NEXT_PUBLIC_APP_URL?.trim() ||
       'http://127.0.0.1:43123';

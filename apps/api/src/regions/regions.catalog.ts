@@ -47,7 +47,8 @@ function defaultApiUrl(code: RegionCode): string {
     return (
       process.env.LUGEMI_API_URL_AF ??
       process.env.LUGEMI_API_URL ??
-      'https://verbalab-api.fly.dev'
+      // Public brand domain (Fly app name verbalab-api ≠ hostname)
+      'https://api.lugemi.com'
     );
   }
   if (code === 'eu') {
@@ -61,7 +62,9 @@ function defaultWebUrl(code: RegionCode): string {
     return (
       process.env.LUGEMI_WEB_URL_AF ??
       process.env.LUGEMI_WEB_URL ??
-      'https://verbalab-web.fly.dev'
+      process.env.APP_URL ??
+      // Public brand domain (Fly app name verbalab-web ≠ hostname)
+      'https://lugemi.com'
     );
   }
   if (code === 'eu') {

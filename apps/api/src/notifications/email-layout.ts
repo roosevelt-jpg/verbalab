@@ -51,6 +51,7 @@ export function renderSystemEmailHtml(input: {
 }): string {
   const publicBase =
     input.publicBaseUrl?.trim() ||
+    process.env.APP_URL?.trim() ||
     process.env.APP_PUBLIC_URL?.trim() ||
     process.env.NEXT_PUBLIC_APP_URL?.trim() ||
     'http://127.0.0.1:43123';

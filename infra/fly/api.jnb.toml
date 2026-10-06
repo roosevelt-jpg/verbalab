@@ -1,6 +1,8 @@
 # Fly.io — API Africa residency island (Johannesburg).
+# Fly app name verbalab-api ≠ public hostname https://api.lugemi.com
 # fly apps create verbalab-api
 # fly deploy -c infra/fly/api.jnb.toml --dockerfile apps/api/Dockerfile
+# fly certs add api.lugemi.com -a verbalab-api
 app = 'verbalab-api'
 primary_region = 'jnb'
 
@@ -16,6 +18,10 @@ primary_region = 'jnb'
   API_PORT = '3001'
   PORT = '3001'
   LUGEMI_REGION = 'af'
+  APP_URL = 'https://lugemi.com'
+  APP_PUBLIC_URL = 'https://lugemi.com'
+  LUGEMI_API_URL_AF = 'https://api.lugemi.com'
+  LUGEMI_WEB_URL_AF = 'https://lugemi.com'
 
 [http_service]
   internal_port = 3001

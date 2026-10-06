@@ -14,50 +14,63 @@ Enterprise Language Registry (VL-139), Localization Platform (VL-141), and Langu
 
 | Piece | What |
 | --- | --- |
-| `verbalab` / `verbalab-api` | Nest API (`Dockerfile` at repo root + `apps/api/Dockerfile`) — Africa default `jnb` |
-| `verbalab-web` | Next console (`apps/web/Dockerfile`, standalone) — `jnb` |
+| `verbalab` / `verbalab-api` | Nest API (`Dockerfile` at repo root + `apps/api/Dockerfile`) — Africa default `jnb`. **Public:** `https://api.lugemi.com` |
+| `verbalab-web` | Next console (`apps/web/Dockerfile`, standalone) — `jnb`. **Public:** `https://lugemi.com` |
 | `lugemi-api` / `lugemi-web` | Legacy US/EU island names in `infra/fly/*.toml` / `*.eu.toml` |
 | Postgres | Managed DB with **pgvector** (Neon / Supabase / Fly Postgres + `CREATE EXTENSION vector`) via `DATABASE_URL` |
 | Redis | Required for BullMQ + rate limits (`REDIS_URL`). Fly Redis or Upstash. Do **not** set `JOBS_INLINE=1` in production. |
 | Region | Africa-first: `jnb` (`infra/fly/*.jnb.toml`, root `fly.toml`). US `iad` / EU `ams` remain for residency islands. |
 
-Short verbalab / Fly UI guide: [`docs/fly.md`](../docs/fly.md).
+**App name ≠ domain.** Fly apps can stay named `verbalab*`; users hit **lugemi.com** / **api.lugemi.com** after Cloudflare DNS + `fly certs`. Until then only `*.fly.dev` works. Short guide: [`docs/fly.md`](../docs/fly.md). Cloudflare DNS: [`docs/cloudflare.md`](../docs/cloudflare.md).
 
 ## First-time setup (manual; needs Fly account)
 
 ```bash
 # Install flyctl, then:
 fly auth login
-fly apps create lugemi-api
-fly apps create lugemi-web
+fly apps create verbalab-api   # Africa primary; or lugemi-api for US island
+fly apps create verbalab-web
 
-# Attach or set secrets (examples — use your real values)
-fly secrets set -a lugemi-api \
+# Attach or set secrets (examples — use your real values; brand URLs)
+fly secrets set -a verbalab-api \
   DATABASE_URL='postgresql://...' \
   REDIS_URL='redis://...' \
-  CORS_ORIGIN='https://lugemi-web.fly.dev' \
+  CORS_ORIGIN='https://lugemi.com,https://www.lugemi.com' \
+  APP_URL='https://lugemi.com' \
+  APP_PUBLIC_URL='https://lugemi.com' \
   CLERK_SECRET_KEY='...' \
   GOOGLE_TRANSLATE_API_KEY='...' \
   OPENAI_API_KEY='...' \
   STRIPE_SECRET_KEY='...' \
   STRIPE_WEBHOOK_SECRET='...' \
   STRIPE_PRICE_ID_PRO='...' \
-  BILLING_SUCCESS_URL='https://lugemi-web.fly.dev/billing?checkout=success' \
-  BILLING_CANCEL_URL='https://lugemi-web.fly.dev/billing?checkout=cancel' \
-  BILLING_PORTAL_RETURN_URL='https://lugemi-web.fly.dev/billing'
+  BILLING_SUCCESS_URL='https://lugemi.com/billing?checkout=success' \
+  BILLING_CANCEL_URL='https://lugemi.com/billing?checkout=cancel' \
+  BILLING_PORTAL_RETURN_URL='https://lugemi.com/billing'
 
 # Web build args are set at deploy time; also set runtime Clerk secret if used server-side:
-fly secrets set -a lugemi-web CLERK_SECRET_KEY='...'
+fly secrets set -a verbalab-web CLERK_SECRET_KEY='...' APP_URL='https://lugemi.com'
 ```
 
-Deploy (from repo root):
+Deploy (from repo root) — Africa preferred:
 
 ```bash
-fly deploy -c infra/fly/api.toml --dockerfile apps/api/Dockerfile
-fly deploy -c infra/fly/web.toml --dockerfile apps/web/Dockerfile \
-  --build-arg NEXT_PUBLIC_API_URL=https://lugemi-api.fly.dev \
+fly deploy -c infra/fly/api.jnb.toml --dockerfile apps/api/Dockerfile
+fly deploy -c infra/fly/web.jnb.toml --dockerfile apps/web/Dockerfile \
+  --build-arg NEXT_PUBLIC_API_URL=https://api.lugemi.com \
   --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_...
 ```
+
+Custom domains (after deploy):
+
+```bash
+fly certs add lugemi.com -a verbalab-web
+fly certs add www.lugemi.com -a verbalab-web
+fly certs add api.lugemi.com -a verbalab-api
+# Then Cloudflare DNS — see docs/cloudflare.md / docs/fly.md
+```
+
+US island (legacy `infra/fly/api.toml` / `web.toml`) still uses `lugemi-api` / `lugemi-web` app names and `*.fly.dev` until those hosts get their own custom domains.
 
 API **release_command** runs `/bin/sh /app/apps/api/scripts/fly-migrate.sh` (`prisma migrate deploy` when `DATABASE_URL` is set; soft-skips when unset). See `docs/fly.md`.
 
@@ -72,7 +85,7 @@ API **release_command** runs `/bin/sh /app/apps/api/scripts/fly-migrate.sh` (`pr
 
 `.github/workflows/deploy.yml` runs on push to `main`/`master` when `FLY_API_TOKEN` is set as a repository secret. Without the token the job **skips** (no failure) so forks and local CI stay green.
 
-Optional secrets: `FLY_API_TOKEN`, `NEXT_PUBLIC_API_URL`, `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`.
+Optional secrets: `FLY_API_TOKEN`, `NEXT_PUBLIC_API_URL` (set to `https://api.lugemi.com` for production), `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`.
 
 Optional EU island (VL-075): set repository **variable** `FLY_DEPLOY_EU=true` and secret `NEXT_PUBLIC_API_URL_EU` to also deploy `infra/fly/*.eu.toml`.
 
