@@ -21,7 +21,7 @@ Enterprise Language Registry (VL-139), Localization Platform (VL-141), and Langu
 | Redis | Required for BullMQ + rate limits (`REDIS_URL`). Fly Redis or Upstash. Do **not** set `JOBS_INLINE=1` in production. |
 | Region | Africa-first: `jnb` (`infra/fly/*.jnb.toml`, root `fly.toml`). US `iad` / EU `ams` remain for residency islands. |
 
-**App name ≠ domain.** Fly apps can stay named `lugemi*`; users hit **lugemi.com** / **api.lugemi.com** after Cloudflare DNS + `fly certs`. Until then only `*.fly.dev` works. Short guide: [`docs/fly.md`](../docs/fly.md). Cloudflare DNS: [`docs/cloudflare.md`](../docs/cloudflare.md).
+**App name ≠ domain.** Fly apps can stay named `lugemi*`; users hit **lugemi.com** / **api.lugemi.com** after Cloudflare DNS + `fly certs`. Until then only `*.fly.dev` works. Operator walkthrough: [`docs/domain-setup.md`](../docs/domain-setup.md). Also [`docs/fly.md`](../docs/fly.md), [`docs/cloudflare.md`](../docs/cloudflare.md).
 
 ## First-time setup (manual; needs Fly account)
 

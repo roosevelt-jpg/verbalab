@@ -64,7 +64,7 @@ Until `DATABASE_URL` is set, migrate logs show `[fly-migrate] DATABASE_URL unset
 
 ## Custom domains (Fly certs + Cloudflare DNS)
 
-Domain is on **Cloudflare Registrar** (`lugemi.com`). Full DNS table: [`docs/cloudflare.md`](./cloudflare.md).
+Domain is on **Cloudflare Registrar** (`lugemi.com`). **Operator walkthrough (deploy → DNS → Clerk → admin):** [`docs/domain-setup.md`](./domain-setup.md). Full DNS / CF product table: [`docs/cloudflare.md`](./cloudflare.md).
 
 ### 1. Allocate addresses + add certificates
 
@@ -253,6 +253,7 @@ pnpm workspaces need the root `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.
 
 ## More
 
+- End-to-end domain guide: [`docs/domain-setup.md`](./domain-setup.md)
 - Cloudflare DNS detail: [`docs/cloudflare.md`](./cloudflare.md)
 - Canonical longer runbook: [`infra/DEPLOY.md`](../infra/DEPLOY.md)
 - CI: `.github/workflows/deploy.yml` (skips without `FLY_API_TOKEN`)

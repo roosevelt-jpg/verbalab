@@ -88,6 +88,8 @@ Same names are mirrored in root `.env.example`.
 
 ## Production DNS for Fly custom domains (do this)
 
+**Step-by-step operator guide** (deploy both apps, certs, orange vs grey, secrets, Clerk, admin URLs, common failures): [`docs/domain-setup.md`](./domain-setup.md).
+
 **Goal:** browsers use brand hosts, not `*.fly.dev`.
 
 | Public hostname | Serves | Fly app name (internal) |

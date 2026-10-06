@@ -137,7 +137,7 @@ Playwright signed-in translate (optional): set `E2E_CLERK_USER_EMAIL` + `E2E_CLE
 | Web | `https://lugemi.com` (`www` → apex) |
 | API | `https://api.lugemi.com` |
 
-Preferred Fly **app names** are `lugemi` / `lugemi-api` / `lugemi-web` (legacy `verbalab*` may need `fly apps rename` or new apps). That is an internal Fly identifier, **not** the public domain. Default `*.fly.dev` URLs appear until Cloudflare DNS + `fly certs add` are completed. See `docs/fly.md` and `docs/cloudflare.md`.
+Preferred Fly **app names** are `lugemi` / `lugemi-api` / `lugemi-web` (legacy `verbalab*` may need `fly apps rename` or new apps). That is an internal Fly identifier, **not** the public domain. Default `*.fly.dev` URLs appear until Cloudflare DNS + `fly certs add` are completed. See `docs/domain-setup.md`, `docs/fly.md`, and `docs/cloudflare.md`.
 
 ## Vercel (web console)
 
