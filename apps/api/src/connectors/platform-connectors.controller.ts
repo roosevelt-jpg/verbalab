@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post, Query } from '@nestjs/common';
 import { PlatformConnectorsService } from './platform-connectors.service';
 
 @Controller('v1/connectors/platform')
@@ -21,6 +21,7 @@ export class PlatformConnectorsController {
   }
 
   @Post(':id/demo')
+  @HttpCode(200)
   demo(
     @Param('id') id: string,
     @Body() body?: { text?: string; source?: string; target?: string },
