@@ -256,12 +256,14 @@ export class JobsService implements OnModuleInit, OnModuleDestroy {
         metadata: { jobId },
       });
 
-      void this.notifications.notifyJobComplete({
-        organizationId: job.organizationId,
-        jobId,
-        type: job.type,
-        status: 'succeeded',
-      });
+      void this.notifications
+        .notifyJobComplete({
+          organizationId: job.organizationId,
+          jobId,
+          type: job.type,
+          status: 'succeeded',
+        })
+        .catch(() => undefined);
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Job failed';
       const updated = await this.prisma.job.update({
@@ -293,13 +295,15 @@ export class JobsService implements OnModuleInit, OnModuleDestroy {
         metadata: { jobId, error: message },
       });
 
-      void this.notifications.notifyJobComplete({
-        organizationId: job.organizationId,
-        jobId,
-        type: job.type,
-        status: 'failed',
-        error: message,
-      });
+      void this.notifications
+        .notifyJobComplete({
+          organizationId: job.organizationId,
+          jobId,
+          type: job.type,
+          status: 'failed',
+          error: message,
+        })
+        .catch(() => undefined);
     }
   }
 

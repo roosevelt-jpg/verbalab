@@ -18,6 +18,7 @@ const isPublicRoute = createRouteMatcher([
   '/developers(.*)',
   '/builders(.*)',
   '/language-integrity(.*)',
+  '/african-language-registry(.*)',
   '/health(.*)',
   '/p(.*)',
 ]);
@@ -27,7 +28,12 @@ const clerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 export default clerkConfigured
   ? clerkMiddleware(async (auth, request) => {
       if (!isPublicRoute(request)) {
-        await auth.protect();
+        const { userId } = await auth();
+        if (!userId) {
+          const signIn = new URL('/sign-in', request.url);
+          signIn.searchParams.set('redirect_url', request.nextUrl.pathname + request.nextUrl.search);
+          return NextResponse.redirect(signIn);
+        }
       }
     })
   : function middleware() {

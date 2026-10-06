@@ -167,7 +167,7 @@ export class ContextRuntimeService {
       memoryLimit: input.memoryLimit,
     });
 
-    let blocks: ContextBlock[] = (base.blocks as ContextBlock[]).map((b) => ({
+    const blocks: ContextBlock[] = (base.blocks as ContextBlock[]).map((b) => ({
       ...b,
       priority: this.priorityFor(b.kind, input.priorityOverrides),
     }));

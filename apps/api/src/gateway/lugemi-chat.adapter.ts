@@ -1,4 +1,3 @@
-import { HttpStatus } from '@nestjs/common';
 import { ApiException } from '../common/errors/api-exception';
 import { ChatInput, ChatOutput, ChatProvider } from './chat-provider';
 import { OpenAiCompatibleChatAdapter } from './openai-compatible-chat.adapter';

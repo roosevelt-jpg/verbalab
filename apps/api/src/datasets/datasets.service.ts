@@ -365,7 +365,7 @@ export class DatasetsService {
       select: { version: true },
     });
     const version = (latest?.version ?? 0) + 1;
-    const safeName = input.file.originalname.replace(/[^\w.\-]+/g, '_').slice(0, 180);
+    const safeName = input.file.originalname.replace(/[^\w.-]+/g, '_').slice(0, 180);
     const storageKey = `datasets/${input.asset.organizationId}/${input.asset.id}/v${version}-${randomUUID()}-${safeName}`;
     const checksum = createHash('sha256').update(input.file.buffer).digest('hex');
 

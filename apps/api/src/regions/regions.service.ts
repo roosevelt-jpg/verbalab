@@ -6,8 +6,7 @@ import {
   currentRegionCode,
   findRegion,
   isRegionCode,
-  regionCatalog,
-  type RegionCode,
+  regionCatalog
 } from './regions.catalog';
 
 @Injectable()
@@ -28,8 +27,7 @@ export class RegionsService {
       apiBaseUrl: def.apiBaseUrl,
       webBaseUrl: def.webBaseUrl,
       disclaimer:
-        'Each region is a separate deploy + database (residency island). Not a global mesh or automatic failover.',
-    };
+        'Each region is a separate deploy + database (residency island). Not a global mesh or automatic failover.' };
   }
 
   list() {
@@ -40,16 +38,13 @@ export class RegionsService {
         'Pick a residency region for sales/compliance. Data does not replicate across regions.',
       regions: regionCatalog().map((r) => ({
         ...r,
-        isCurrentDeploy: r.code === current,
-      })),
-    };
+        isCurrentDeploy: r.code === current })) };
   }
 
   async getOrgResidency(organizationId: string) {
     const org = await this.prisma.organization.findUniqueOrThrow({
       where: { id: organizationId },
-      select: { id: true, name: true, dataRegion: true },
-    });
+      select: { id: true, name: true, dataRegion: true } });
     const current = this.current();
     const pinned = org.dataRegion && isRegionCode(org.dataRegion) ? findRegion(org.dataRegion) : null;
     return {
@@ -60,13 +55,11 @@ export class RegionsService {
             code: pinned.code,
             name: pinned.name,
             apiBaseUrl: pinned.apiBaseUrl,
-            webBaseUrl: pinned.webBaseUrl,
-          }
+            webBaseUrl: pinned.webBaseUrl }
         : null,
       currentDeploy: current,
       matchesCurrentDeploy: !org.dataRegion || org.dataRegion === current.code,
-      note: 'Changing dataRegion does not migrate existing rows — provision the target island and import separately.',
-    };
+      note: 'Changing dataRegion does not migrate existing rows — provision the target island and import separately.' };
   }
 
   async setOrgResidency(input: {
@@ -99,8 +92,7 @@ export class RegionsService {
     const updated = await this.prisma.organization.update({
       where: { id: input.organizationId },
       data: { dataRegion: next },
-      select: { id: true, dataRegion: true },
-    });
+      select: { id: true, dataRegion: true } });
 
     await this.audit.record({
       organizationId: input.organizationId,
@@ -108,8 +100,7 @@ export class RegionsService {
       action: 'organization.residency_set',
       route: 'PATCH /v1/organization/residency',
       ip: input.ip,
-      metadata: { dataRegion: next },
-    });
+      metadata: { dataRegion: next } });
 
     return this.getOrgResidency(updated.id);
   }
@@ -120,8 +111,7 @@ export class RegionsService {
   async assertOrgMatchesDeploy(organizationId: string) {
     const org = await this.prisma.organization.findUnique({
       where: { id: organizationId },
-      select: { dataRegion: true, name: true },
-    });
+      select: { dataRegion: true, name: true } });
     if (!org?.dataRegion) return;
 
     const current = currentRegionCode();

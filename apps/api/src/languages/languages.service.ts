@@ -28,7 +28,7 @@ export class LanguagesService implements OnModuleInit {
     try {
       await this.seedUnsafe();
     } catch (err) {
-      // eslint-disable-next-line no-console
+       
       console.warn(
         '[languages] seed skipped:',
         err instanceof Error ? err.message : err,

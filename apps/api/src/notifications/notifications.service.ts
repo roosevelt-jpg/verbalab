@@ -80,19 +80,20 @@ export class NotificationsService {
     error?: string;
   }) {
     if (this.disabled()) return;
-    const recipients = await this.ownerAdminEmails(input.organizationId);
-    if (recipients.length === 0) return;
-
-    const subject =
-      input.status === 'succeeded'
-        ? `Lugemi job succeeded (${input.type})`
-        : `Lugemi job failed (${input.type})`;
-    const text =
-      input.status === 'succeeded'
-        ? `Job ${input.jobId} (${input.type}) completed successfully.`
-        : `Job ${input.jobId} (${input.type}) failed: ${input.error ?? 'unknown error'}`;
 
     try {
+      const recipients = await this.ownerAdminEmails(input.organizationId);
+      if (recipients.length === 0) return;
+
+      const subject =
+        input.status === 'succeeded'
+          ? `Lugemi job succeeded (${input.type})`
+          : `Lugemi job failed (${input.type})`;
+      const text =
+        input.status === 'succeeded'
+          ? `Job ${input.jobId} (${input.type}) completed successfully.`
+          : `Job ${input.jobId} (${input.type}) failed: ${input.error ?? 'unknown error'}`;
+
       const result = await this.sendBranded({
         to: recipients,
         subject,

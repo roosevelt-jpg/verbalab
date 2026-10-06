@@ -56,7 +56,7 @@ const SECRET_PATTERNS: Array<{ id: string; re: RegExp; message: string }> = [
   },
   {
     id: 'bearer-token',
-    re: /Bearer\s+[A-Za-z0-9._\-]{20,}/,
+    re: /Bearer\s+[A-Za-z0-9._-]{20,}/,
     message: 'Looks like a bearer token',
   },
 ];

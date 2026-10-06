@@ -40,6 +40,8 @@ describe('Open Science Platform', () => {
     expect(existsSync(join(root, 'docs/OPEN_SCIENCE_PLATFORM.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0180-open-science-platform.md'))).toBe(true);
     const text = readFileSync(join(root, 'docs/OPEN_SCIENCE_PLATFORM.md'), 'utf8');
+    expect(text.length).toBeGreaterThan(40);
+    expect(text).toMatch(/Lugemi|honesty|cloud|platform|intelligence/i);
   });
 
   it('has no TODO/FIXME/implement-later markers', () => {

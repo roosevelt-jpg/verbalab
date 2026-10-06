@@ -6,7 +6,6 @@ import { PrismaService } from '../prisma/prisma.service';
 import { TranslateService } from '../translate/translate.service';
 import { ApiException } from '../common/errors/api-exception';
 import { ChatMessage, ChatRole } from '../gateway/chat-provider';
-import { LUGEMI_CHAT_SYSTEM } from './chat-prompt';
 import { PromptsService } from '../prompts/prompts.service';
 
 export { LUGEMI_CHAT_SYSTEM } from './chat-prompt';

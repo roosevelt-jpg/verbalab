@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, type CSSProperties } from 'react';
+import { useCallback, useEffect, useState, type CSSProperties } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
@@ -23,11 +23,11 @@ export function ReviewsClient() {
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<'pending' | 'all'>('pending');
 
-  async function load(token: string) {
+  const load = useCallback(async (token: string) => {
     const q = filter === 'pending' ? '?status=pending' : '';
     const data = await apiFetch<Review[]>(`/v1/reviews${q}`, { token });
     setReviews(data);
-  }
+  }, [filter]);
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -40,7 +40,7 @@ export function ReviewsClient() {
         setError(err instanceof Error ? err.message : 'Failed to load reviews');
       }
     })();
-  }, [getToken, isLoaded, filter]);
+  }, [getToken, isLoaded, filter, load]);
 
   async function decide(id: string, action: 'accept' | 'reject') {
     setError(null);

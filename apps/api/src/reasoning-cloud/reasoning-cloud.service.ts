@@ -97,8 +97,8 @@ export class ReasoningCloudService {
       .split('\n')
       .map((l) => l.trim())
       .filter(Boolean);
-    const numbered = lines.filter((l) => /^\d+[\).\]]\s+/.test(l));
-    if (numbered.length > 0) return numbered.map((l) => l.replace(/^\d+[\).\]]\s+/, ''));
+    const numbered = lines.filter((l) => /^\d+[).]\s+/.test(l));
+    if (numbered.length > 0) return numbered.map((l) => l.replace(/^\d+[).]\s+/, ''));
     return lines.slice(0, 8);
   }
 

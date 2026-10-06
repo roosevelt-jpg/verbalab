@@ -88,7 +88,7 @@ export function compileSsmlLite(input: string): SsmlCompileResult {
 
   const unsupported = new Set<string>();
   const segments: SpeakSegment[] = [];
-  let plainParts: string[] = [];
+  const plainParts: string[] = [];
 
   // Self-closing and paired tags — lightweight tokenizer
   const tokenRe =

@@ -9,7 +9,6 @@ import { upsertGlossarySnapshot } from '../glossary/glossary-snapshot-install';
 import {
   DatasetSnapshotPair,
   GlossarySnapshotTerm,
-  MARKETPLACE_KIND_DATASET,
   MARKETPLACE_KIND_GLOSSARY,
   MARKETPLACE_KIND_PROMPT,
   MARKETPLACE_KINDS,

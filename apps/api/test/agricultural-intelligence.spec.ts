@@ -40,6 +40,8 @@ describe('Agricultural Intelligence', () => {
     expect(existsSync(join(root, 'docs/AGRICULTURAL_INTELLIGENCE.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0170-agricultural-intelligence.md'))).toBe(true);
     const text = readFileSync(join(root, 'docs/AGRICULTURAL_INTELLIGENCE.md'), 'utf8');
+    expect(text.length).toBeGreaterThan(40);
+    expect(text).toMatch(/Lugemi|honesty|cloud|platform|intelligence/i);
   });
 
   it('has no TODO/FIXME/implement-later markers', () => {

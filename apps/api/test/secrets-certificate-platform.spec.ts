@@ -71,7 +71,7 @@ describe('Secrets & Certificate Platform', () => {
     expect(res.body.honesty.hashicorpVaultOs).toBe(false);
 
     const blob = JSON.stringify(res.body);
-    expect(blob).not.toMatch(/sk_live_|sk_test_|whsec_|BEGIN (RSA |EC )?PRIVATE KEY|password\s*[:=]\s*['\"][^'\"]+['\"]/i);
+    expect(blob).not.toMatch(/sk_live_|sk_test_|whsec_|BEGIN (RSA |EC )?PRIVATE KEY|password\s*[:=]\s*['"][^'"]+['"]/i);
     expect(blob).not.toMatch(/"ciphertext"\s*:/);
     expect(blob).not.toMatch(/"dekWrapped"\s*:/);
 
