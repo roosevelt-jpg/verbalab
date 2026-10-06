@@ -64,8 +64,9 @@ export function EdgeClient() {
         const preferred =
           res.packs.find((p) => p.pack_id === 'lugemi-edge-ak-en') ?? res.packs[0];
         if (preferred) setPackId(preferred.pack_id);
+        setError(null);
       })
-      .catch(() => undefined);
+      .catch((err: Error) => setError(err.message));
   }, []);
 
   const packOptions: ComboboxOption[] = useMemo(

@@ -20,9 +20,9 @@ export class NestLanguageRegistryAdapter implements LanguageRegistryPort {
     return rows.map((r) => ({
       code: r.code,
       nameEn: r.nameEn,
-      nameNative: r.nameNative,
-      script: r.script,
-      familyCode: r.familyCode,
+      nameNative: r.nameNative ?? null,
+      script: r.script ?? null,
+      familyCode: r.familyCode ?? null,
       rtl: r.rtl,
       tier: r.tier,
     }));

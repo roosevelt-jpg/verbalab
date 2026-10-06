@@ -50,6 +50,7 @@ export function VerifiedInterpreterClient() {
         const preferred =
           cor.corridors.find((c) => c.varietyId === 'ak-GH-twi') ?? cor.corridors[0];
         if (preferred) setSelected(preferred.id);
+        setError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load portfolio');
       }
@@ -70,7 +71,34 @@ export function VerifiedInterpreterClient() {
       }
       docsHref="/docs"
     >
-      {error ? <p style={{ color: 'var(--bad)' }}>{error}</p> : null}
+      {error ? (
+        <p style={{ color: 'var(--bad)' }}>
+          {error}{' '}
+          <button
+            type="button"
+            className="vl-btn vl-btn-secondary"
+            style={{ marginLeft: '0.5rem', minHeight: 32, padding: '0.25rem 0.65rem' }}
+            onClick={() => {
+              setError(null);
+              void (async () => {
+                try {
+                  const [eng, cor] = await Promise.all([
+                    apiFetch<Engine>('/v1/portfolio/engine'),
+                    apiFetch<{ corridors: Corridor[]; total?: number }>('/v1/portfolio/corridors'),
+                  ]);
+                  setEngine(eng);
+                  setCorridors(cor.corridors);
+                  setTotal(cor.total ?? cor.corridors.length);
+                } catch (err) {
+                  setError(err instanceof Error ? err.message : 'Failed to load portfolio');
+                }
+              })();
+            }}
+          >
+            Retry
+          </button>
+        </p>
+      ) : null}
 
       <section aria-labelledby="vi-corridors">
         <h2 id="vi-corridors" style={{ fontSize: '1.05rem', color: 'var(--brand-navy)' }}>
