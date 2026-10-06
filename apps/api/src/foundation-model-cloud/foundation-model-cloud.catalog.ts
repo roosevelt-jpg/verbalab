@@ -35,7 +35,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
       console: '/atlas',
       modality: 'multilingual_reasoning',
       notes:
-        'Large multilingual reasoning family scaffold ( / ). Interface + MLOps handoffs — not trained Atlas weights.',
+        'Large multilingual reasoning family scaffold. Interface + MLOps handoffs — not trained Atlas weights.',
     },
     {
       id: 'baobab',
@@ -44,7 +44,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
       api: null,
       console: null,
       modality: 'african_languages',
-      notes: 'African language foundation family scaffold ( / ).',
+      notes: 'African language foundation family scaffold.',
     },
     {
       id: 'echo',
@@ -53,7 +53,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
       api: null,
       console: null,
       modality: 'speech_audio',
-      notes: 'Speech/audio family scaffold ( / ). Extends Speech Cloud — not a new STT OS.',
+      notes: 'Speech/audio family scaffold. Extends Speech Cloud — not a new STT OS.',
     },
     {
       id: 'voice',
@@ -62,7 +62,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
       api: null,
       console: null,
       modality: 'voice_synthesis',
-      notes: 'Voice synthesis/cloning family scaffold ( / ). Extends Voice Cloud.',
+      notes: 'Voice synthesis/cloning family scaffold. Extends Voice Cloud.',
     },
     {
       id: 'vision',
@@ -71,7 +71,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
       api: null,
       console: null,
       modality: 'vision_documents',
-      notes: 'Vision/document understanding family scaffold ( / ).',
+      notes: 'Vision/document understanding family scaffold.',
     },
     {
       id: 'vector',
@@ -80,7 +80,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
       api: null,
       console: null,
       modality: 'embeddings',
-      notes: 'Embedding family scaffold ( / ). Extends Embedding Cloud.',
+      notes: 'Embedding family scaffold. Extends Embedding Cloud.',
     },
     {
       id: 'reason',
@@ -89,7 +89,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
       api: null,
       console: null,
       modality: 'reasoning_planning',
-      notes: 'Reasoning/planning family scaffold ( / ). Extends Reasoning Cloud/Runtime.',
+      notes: 'Reasoning/planning family scaffold. Extends Reasoning Cloud/Runtime.',
     },
     {
       id: 'edge',
@@ -98,7 +98,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
       api: null,
       console: null,
       modality: 'on_device_slm',
-      notes: 'On-device SLM family scaffold ( / ).',
+      notes: 'On-device SLM family scaffold.',
     },
     {
       id: 'fusion',
@@ -107,7 +107,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
       api: null,
       console: null,
       modality: 'multimodal',
-      notes: 'Multimodal fusion family scaffold ( / ).',
+      notes: 'Multimodal fusion family scaffold.',
     },
     {
       id: 'translate',
@@ -116,7 +116,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
       api: null,
       console: null,
       modality: 'translation',
-      notes: 'Translation family scaffold ( / ). Extends Language Cloud — not a new MT OS.',
+      notes: 'Translation family scaffold. Extends Language Cloud — not a new MT OS.',
     },
     {
       id: 'model-training-platform',
@@ -126,7 +126,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
       console: '/model-training-platform',
       modality: 'mlops',
       notes:
-        'Training orchestration over existing ( / ). Experiment plans + LoRA/instruction handoff — not distributed/RLHF lab.',
+        'Training orchestration over existing. Experiment plans + LoRA/instruction handoff — not distributed/RLHF lab.',
     },
     {
       id: 'model-evaluation-platform',
@@ -136,7 +136,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
       console: '/model-evaluation-platform',
       modality: 'mlops',
       notes:
-        'Eval hub over sandbox bias/safety/latency ( / ). MMLU/HumanEval deferred; no SOTA claims.',
+        'Eval hub over sandbox bias/safety/latency. MMLU/HumanEval deferred; no SOTA claims.',
     },
     {
       id: 'model-registry',
@@ -146,7 +146,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
       console: '/model-registry',
       modality: 'mlops',
       notes:
-        'Registry governance over existing ( / ). Cards/versions/approvals/deploy plans — not MLflow/traffic-mesh OS.',
+        'Registry governance over existing. Cards/versions/approvals/deploy plans — not MLflow/traffic-mesh OS.',
     },
   ];
 }
