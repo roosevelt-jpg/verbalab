@@ -1472,6 +1472,123 @@ export const openApiDocument = {
         responses: { '200': { description: '{ admin: boolean }' } },
       },
     },
+    '/v1/admin/workspaces': {
+      get: {
+        summary: 'List all workspaces (platform admin)',
+        operationId: 'adminListWorkspaces',
+        security: [{ ClerkAuth: [] }],
+        responses: { '200': { description: 'Paginated workspace directory' } },
+      },
+      post: {
+        summary: 'Create a customer workspace (platform admin)',
+        operationId: 'adminCreateWorkspace',
+        security: [{ ClerkAuth: [] }],
+        responses: { '201': { description: 'Created workspace' } },
+      },
+    },
+    '/v1/admin/workspaces/analytics': {
+      get: {
+        summary: 'Cross-workspace usage analytics',
+        operationId: 'adminWorkspaceAnalytics',
+        security: [{ ClerkAuth: [] }],
+        responses: { '200': { description: 'Aggregated usage' } },
+      },
+    },
+    '/v1/admin/workspaces/audit': {
+      get: {
+        summary: 'Platform admin audit log',
+        operationId: 'adminPlatformAudit',
+        security: [{ ClerkAuth: [] }],
+        responses: { '200': { description: 'AdminAuditEvent rows' } },
+      },
+    },
+    '/v1/admin/workspaces/bulk': {
+      post: {
+        summary: 'Bulk suspend, resume, or CSV export',
+        operationId: 'adminBulkWorkspaces',
+        security: [{ ClerkAuth: [] }],
+        responses: { '201': { description: 'Bulk result or CSV' } },
+      },
+    },
+    '/v1/admin/workspaces/{id}': {
+      get: {
+        summary: 'Workspace detail for platform admin',
+        operationId: 'adminGetWorkspace',
+        security: [{ ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: { '200': { description: 'Workspace detail' } },
+      },
+      patch: {
+        summary: 'Update workspace plan, quotas, region, or feature overrides',
+        operationId: 'adminUpdateWorkspace',
+        security: [{ ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: { '200': { description: 'Updated workspace' } },
+      },
+    },
+    '/v1/admin/workspaces/{id}/suspend': {
+      post: {
+        summary: 'Suspend a workspace',
+        operationId: 'adminSuspendWorkspace',
+        security: [{ ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: { '201': { description: 'Suspended' } },
+      },
+    },
+    '/v1/admin/workspaces/{id}/resume': {
+      post: {
+        summary: 'Resume a suspended workspace',
+        operationId: 'adminResumeWorkspace',
+        security: [{ ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: { '201': { description: 'Resumed' } },
+      },
+    },
+    '/v1/admin/workspaces/{id}/members': {
+      get: {
+        summary: 'List workspace members',
+        operationId: 'adminWorkspaceMembers',
+        security: [{ ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: { '200': { description: 'Members' } },
+      },
+    },
+    '/v1/admin/workspaces/{id}/usage': {
+      get: {
+        summary: 'Workspace usage summary',
+        operationId: 'adminWorkspaceUsage',
+        security: [{ ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: { '200': { description: 'Usage + quota' } },
+      },
+    },
+    '/v1/admin/workspaces/{id}/audit': {
+      get: {
+        summary: 'Workspace audit snippet',
+        operationId: 'adminWorkspaceAudit',
+        security: [{ ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: { '200': { description: 'Audit events' } },
+      },
+    },
+    '/v1/admin/workspaces/{id}/open-as': {
+      post: {
+        summary: 'Open as workspace (admin session org context)',
+        operationId: 'adminOpenAsWorkspace',
+        security: [{ ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: { '201': { description: 'organizationId + workspaceId' } },
+      },
+    },
+    '/v1/admin/workspaces/{id}/invites': {
+      post: {
+        summary: 'Invite a user to a workspace',
+        operationId: 'adminInviteWorkspace',
+        security: [{ ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: { '201': { description: 'Invite created' } },
+      },
+    },
     '/v1/admin/organizations': {
       get: {
         summary: 'Search organizations (platform admin)',

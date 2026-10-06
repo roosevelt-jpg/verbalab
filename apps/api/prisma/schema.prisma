@@ -41,6 +41,8 @@ model Organization {
   allowVendorTraining  Boolean  @default(false) @map("allow_vendor_training")
   disabledAt           DateTime? @map("disabled_at")
   disabledReason       String?  @map("disabled_reason")
+  /// Per-workspace feature flag overrides (boolean map). Null keys fall back to plan defaults.
+  featureOverrides     Json?    @map("feature_overrides")
   createdAt            DateTime @default(now()) @map("created_at")
   updatedAt            DateTime @updatedAt @map("updated_at")
 
@@ -97,7 +99,28 @@ model Organization {
   costBudgets                  CostBudget[]
   costSpendEvents              CostSpendEvent[]
 
+  @@index([plan])
+  @@index([billingStatus])
+  @@index([dataRegion])
+  @@index([disabledAt])
   @@map("organizations")
+}
+
+/// Platform-admin actions across workspaces (suspend, impersonate, bulk export, etc.).
+model AdminAuditEvent {
+  id                   String   @id @default(cuid())
+  actorUserId          String?  @map("actor_user_id")
+  action               String
+  targetOrganizationId String?  @map("target_organization_id")
+  route                String?
+  ip                   String?
+  metadata             Json?
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@index([targetOrganizationId, createdAt])
+  @@index([actorUserId, createdAt])
+  @@map("admin_audit_events")
 }
 
 model User {

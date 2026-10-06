@@ -5,10 +5,11 @@ import { IdentityModule } from '../identity/identity.module';
 import { AuditCoreModule } from '../audit/audit-core.module';
 import { ApiKeysModule } from '../api-keys/api-keys.module';
 import { UsageModule } from '../usage/usage.module';
+import { CloudFoundationModule } from '../cloud-foundation/cloud-foundation.module';
 import { PlatformAdminGuard } from '../common/guards/platform-admin.guard';
 
 @Module({
-  imports: [IdentityModule, AuditCoreModule, ApiKeysModule, UsageModule],
+  imports: [IdentityModule, AuditCoreModule, ApiKeysModule, UsageModule, CloudFoundationModule],
   controllers: [AdminController],
   providers: [AdminService, PlatformAdminGuard],
   exports: [AdminService],

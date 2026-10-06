@@ -63,14 +63,18 @@ export function isCmsAdminAllowed(input: {
   userId?: string | null;
 }): boolean {
   const emails = new Set(
-    (process.env.ADMIN_EMAILS ?? '')
-      .split(',')
+    [
+      ...(process.env.ADMIN_EMAILS ?? '').split(','),
+      ...(process.env.LUGEMI_PLATFORM_ADMIN_EMAILS ?? '').split(','),
+    ]
       .map((s) => s.trim().toLowerCase())
       .filter(Boolean),
   );
   const ids = new Set(
-    (process.env.ADMIN_USER_IDS ?? '')
-      .split(',')
+    [
+      ...(process.env.ADMIN_USER_IDS ?? '').split(','),
+      ...(process.env.LUGEMI_PLATFORM_ADMIN_USER_IDS ?? '').split(','),
+    ]
       .map((s) => s.trim())
       .filter(Boolean),
   );

@@ -7,6 +7,7 @@ import { IdentityService } from '../../identity/identity.service';
 import { AuditService } from '../../audit/audit.service';
 import { clientIp } from '../http/client-ip';
 import { getHttpPair } from '../http/execution-request';
+import { isPlatformAdmin } from '../admin/platform-admin';
 
 export type SessionContext = {
   userId: string;
@@ -68,6 +69,13 @@ export class ClerkAuthGuard implements CanActivate {
       ? preferredWorkspaceRaw[0]
       : preferredWorkspaceRaw;
 
+    const preferredOrgRaw = request.headers['x-lugemi-organization-id'];
+    const preferredOrganizationId = Array.isArray(preferredOrgRaw)
+      ? preferredOrgRaw[0]
+      : preferredOrgRaw;
+
+    const platformAdmin = isPlatformAdmin({ email, clerkUserId });
+
     const session = await this.identity.ensureSessionIdentity({
       clerkUserId,
       email,
@@ -76,6 +84,8 @@ export class ClerkAuthGuard implements CanActivate {
       clerkOrgRole,
       orgName: clerkOrgId ? undefined : 'Personal',
       preferredWorkspaceId: preferredWorkspaceId?.trim() || undefined,
+      preferredOrganizationId: preferredOrganizationId?.trim() || undefined,
+      platformAdmin,
     });
 
     request.sessionAuth = session;

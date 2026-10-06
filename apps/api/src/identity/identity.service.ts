@@ -22,6 +22,12 @@ export class IdentityService {
     clerkOrgRole?: string;
     /** Optional workspace override (must belong to the resolved org). */
     preferredWorkspaceId?: string;
+    /**
+     * Platform-admin org context switch (`X-Lugemi-Organization-Id`).
+     * Only honored when the caller is on the platform admin allowlist.
+     */
+    preferredOrganizationId?: string;
+    platformAdmin?: boolean;
   }): Promise<SessionContext> {
     const clerkMappedRole = mapClerkOrgRole(input.clerkOrgRole);
     const user = await this.prisma.user.upsert({
@@ -39,6 +45,68 @@ export class IdentityService {
 
     // Apply pending Lugemi invites before creating a personal org.
     await this.acceptPendingInvitesForUser(user.id, input.email);
+
+    if (input.platformAdmin && input.preferredOrganizationId?.trim()) {
+      const preferredOrg = await this.prisma.organization.findUnique({
+        where: { id: input.preferredOrganizationId.trim() },
+      });
+      if (preferredOrg) {
+        await this.prisma.membership.upsert({
+          where: {
+            organizationId_userId: {
+              organizationId: preferredOrg.id,
+              userId: user.id,
+            },
+          },
+          create: {
+            organizationId: preferredOrg.id,
+            userId: user.id,
+            role: MembershipRole.admin,
+          },
+          update: {},
+        });
+
+        let workspace =
+          input.preferredWorkspaceId != null && input.preferredWorkspaceId !== ''
+            ? await this.prisma.workspace.findFirst({
+                where: { id: input.preferredWorkspaceId, organizationId: preferredOrg.id },
+              })
+            : null;
+        if (!workspace) {
+          workspace = await this.prisma.workspace.findFirst({
+            where: { organizationId: preferredOrg.id },
+            orderBy: { createdAt: 'asc' },
+          });
+        }
+        if (!workspace) {
+          workspace = await this.prisma.workspace.create({
+            data: {
+              organizationId: preferredOrg.id,
+              name: 'Default',
+              defaultSourceLang: 'en',
+              defaultTargetLang: 'ak',
+            },
+          });
+        }
+
+        const membership = await this.prisma.membership.findUniqueOrThrow({
+          where: {
+            organizationId_userId: {
+              organizationId: preferredOrg.id,
+              userId: user.id,
+            },
+          },
+        });
+
+        return {
+          userId: user.id,
+          organizationId: preferredOrg.id,
+          workspaceId: workspace.id,
+          clerkUserId: user.clerkUserId,
+          role: membership.role,
+        };
+      }
+    }
 
     let organization =
       input.clerkOrgId != null

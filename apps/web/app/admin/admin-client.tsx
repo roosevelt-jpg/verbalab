@@ -160,6 +160,9 @@ export function AdminClient() {
         >
           CMS content
         </button>
+        <a href="/admin/workspaces" className="vl-btn vl-btn-primary">
+          Workspace console
+        </a>
         <button
           type="button"
           className="vl-btn"

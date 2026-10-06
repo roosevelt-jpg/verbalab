@@ -134,6 +134,8 @@ LUGEMI_BASE_URL=${API_URL}`;
         <Endpoint method="POST" title="/v1/connectors/slack/commands" body="Slack slash command (signed)." />
         <Endpoint method="POST" title="/v1/connectors/slack/events" body="Slack Events url_verification." />
         <Endpoint method="GET" title="/v1/organization/members" body="List org members (Clerk session)." />
+        <Endpoint method="GET" title="/v1/admin/workspaces" body="Paginated workspace directory (platform admin)." />
+        <Endpoint method="GET" title="/v1/admin/workspaces/analytics" body="Cross-workspace usage analytics." />
         <Endpoint method="GET" title="/v1/admin/organizations" body="Search orgs (platform admin allowlist)." />
         <Endpoint
           method="GET/PATCH"

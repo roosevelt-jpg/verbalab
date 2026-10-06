@@ -47,6 +47,32 @@ pnpm dev
 | `pnpm smoke` | Hit API + web `/health` (services must be up) |
 | `pnpm test:e2e` | Playwright public pages + optional signed-in translate |
 
+## Platform admin console
+
+Super-admin console for **all customer workspaces** (not just your own org).
+
+| Surface | Path |
+| --- | --- |
+| Workspace admin UI | `/admin/workspaces` (local web often on :43125 or :3000) |
+| CMS + quick org search | `/admin` |
+| API | `/v1/admin/workspaces…` on port **3001** |
+
+**Access (local / dev)**
+
+1. Add your Clerk user email to the API allowlist in `apps/api/.env` (or root `.env`):
+
+```bash
+ADMIN_EMAILS=you@company.com
+# aliases also accepted:
+# LUGEMI_PLATFORM_ADMIN_EMAILS=you@company.com
+# ADMIN_USER_IDS=user_clerk_xxx
+```
+
+2. Sign in via Clerk, or open **`/dev-login`** for the local ticket/password helper.
+3. Open `/admin/workspaces`. Empty allowlist means no platform admins (safe default).
+
+**Capabilities:** cross-workspace search/filters/pagination, detail (members, invites, masked API keys, connectors, model defaults, branding snapshot, quotas, activity), suspend/resume, bulk suspend/resume/CSV export, usage analytics, feature entitlement overrides, platform audit log, create workspace + invite, and “Open as workspace” (switches admin session org context via `X-Lugemi-Organization-Id`).
+
 ## Stripe billing
 
 Plans: **Free → Pro → Business → Enterprise**.

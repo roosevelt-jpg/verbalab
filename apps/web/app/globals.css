@@ -1941,3 +1941,63 @@ textarea {
     animation: none;
   }
 }
+
+
+/* Platform workspace admin console */
+.lg-admin-console { display: grid; gap: 1.25rem; }
+.lg-admin-hero {
+  display: flex; justify-content: space-between; gap: 1.25rem; flex-wrap: wrap;
+  padding: 1.35rem 1.4rem; border-radius: 1rem;
+  border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+  background:
+    radial-gradient(120% 80% at 0% 0%, color-mix(in srgb, #00b8ae 18%, transparent), transparent 55%),
+    linear-gradient(145deg, color-mix(in srgb, var(--bg) 92%, #0a3d4a), var(--bg));
+}
+.lg-admin-hero h1 { margin: 0.35rem 0 0.4rem; font-family: var(--font-display); font-size: clamp(1.7rem, 3vw, 2.35rem); letter-spacing: -0.03em; }
+.lg-admin-hero p { margin: 0; color: var(--muted); max-width: 40rem; }
+.lg-admin-kicker { display: flex; align-items: center; gap: 0.55rem; font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+.lg-admin-hero-links { display: flex; gap: 0.5rem; align-items: flex-start; }
+.lg-admin-banner { margin: 0; padding: 0.7rem 0.9rem; border-radius: 0.55rem; font-size: 0.92rem; }
+.lg-admin-banner--bad { background: color-mix(in srgb, var(--bad) 14%, transparent); color: var(--bad); }
+.lg-admin-banner--ok { background: color-mix(in srgb, #00b8ae 14%, transparent); color: #0a5c57; }
+.lg-admin-tabs { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.lg-admin-tab { border: 1px solid var(--line); background: transparent; color: var(--ink); border-radius: 999px; padding: 0.45rem 0.9rem; font-size: 0.88rem; cursor: pointer; }
+.lg-admin-tab--active { background: var(--ink); color: #fff; border-color: var(--ink); }
+.lg-admin-grid { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); gap: 1rem; align-items: start; }
+.lg-admin-list-pane, .lg-admin-detail-pane { border: 1px solid var(--line); border-radius: 0.85rem; background: color-mix(in srgb, var(--bg) 96%, #fff); padding: 0.9rem; min-height: 24rem; }
+.lg-admin-filters { display: grid; grid-template-columns: 1.4fr repeat(3, minmax(0, 0.7fr)) auto; gap: 0.45rem; margin-bottom: 0.75rem; }
+.lg-admin-bulk { display: flex; flex-wrap: wrap; gap: 0.45rem; align-items: center; margin-bottom: 0.75rem; font-size: 0.85rem; color: var(--muted); }
+.lg-admin-rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.4rem; }
+.lg-admin-row { display: grid; grid-template-columns: auto 1fr; gap: 0.55rem; align-items: start; padding: 0.55rem 0.65rem; border-radius: 0.55rem; border: 1px solid transparent; background: color-mix(in srgb, var(--surface-muted, #f4f7f8) 80%, transparent); }
+.lg-admin-row--active { border-color: color-mix(in srgb, #00b8ae 55%, var(--line)); background: color-mix(in srgb, #00b8ae 8%, transparent); }
+.lg-admin-row button { appearance: none; border: 0; background: transparent; text-align: left; cursor: pointer; color: inherit; display: grid; gap: 0.15rem; width: 100%; padding: 0; }
+.lg-admin-row strong { font-size: 0.95rem; }
+.lg-admin-row span, .lg-admin-row code { color: var(--muted); font-size: 0.8rem; }
+.lg-admin-row code { font-size: 0.7rem; }
+.lg-admin-pager { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-top: 0.85rem; font-size: 0.85rem; color: var(--muted); }
+.lg-admin-empty { padding: 1.5rem 1rem; }
+.lg-admin-empty h2, .lg-admin-empty h3 { margin: 0 0 0.4rem; font-family: var(--font-display); }
+.lg-admin-empty p { margin: 0; color: var(--muted); }
+.lg-admin-detail { display: grid; gap: 1rem; }
+.lg-admin-detail-head { display: flex; justify-content: space-between; gap: 0.75rem; align-items: flex-start; }
+.lg-admin-detail-head h2 { margin: 0; font-size: 1.2rem; font-family: var(--font-display); }
+.lg-admin-detail-head p { margin: 0.25rem 0 0; color: var(--muted); font-size: 0.88rem; }
+.lg-admin-actions { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.lg-admin-section h3, .lg-admin-columns h3 { margin: 0 0 0.45rem; font-size: 0.92rem; }
+.lg-admin-section ul, .lg-admin-columns ul, .lg-admin-activity { margin: 0; padding-left: 1.05rem; color: var(--muted); font-size: 0.88rem; display: grid; gap: 0.25rem; }
+.lg-admin-inline-form { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.5rem; }
+.lg-admin-flags { display: grid; gap: 0.35rem; }
+.lg-admin-flag { display: flex; align-items: center; gap: 0.45rem; font-size: 0.88rem; }
+.lg-admin-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.lg-admin-activity li { display: flex; justify-content: space-between; gap: 0.75rem; }
+.lg-admin-stat-row { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.75rem; }
+.lg-admin-stat { padding: 1rem; }
+.lg-admin-stat-value { font-family: var(--font-display); font-size: 1.8rem; letter-spacing: -0.03em; margin-top: 0.2rem; }
+.lg-admin-audit ul, .lg-admin-create-form { list-style: none; margin: 0.75rem 0 0; padding: 0; display: grid; gap: 0.55rem; }
+.lg-admin-audit li { padding: 0.65rem 0.75rem; border-radius: 0.5rem; background: color-mix(in srgb, var(--surface-muted, #f4f7f8) 85%, transparent); display: grid; gap: 0.15rem; }
+.lg-admin-audit span, .lg-admin-audit code { color: var(--muted); font-size: 0.8rem; }
+.lg-admin-create-form label { display: grid; gap: 0.3rem; font-size: 0.85rem; color: var(--muted); }
+.lg-admin-linkish { appearance: none; border: 0; background: none; color: var(--action-primary, #0a7a73); font-weight: 600; cursor: pointer; padding: 0; text-decoration: underline; }
+@media (max-width: 980px) {
+  .lg-admin-grid, .lg-admin-columns, .lg-admin-stat-row, .lg-admin-filters { grid-template-columns: 1fr; }
+}

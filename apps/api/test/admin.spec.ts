@@ -175,4 +175,69 @@ describe('Admin + customer portal', () => {
     const enabled = await prisma.organization.findUniqueOrThrow({ where: { id: org.id } });
     expect(enabled.disabledAt).toBeNull();
   });
+
+  it('lists workspaces with filters, updates entitlements, and supports open-as', async () => {
+    const org = await seedOrg(prisma, 'adminWorkspaceSlice');
+    await prisma.organization.update({
+      where: { id: org.id },
+      data: { plan: 'pro', dataRegion: 'eu' },
+    });
+
+    const listed = await admin.listWorkspaces({ q: 'adminWorkspaceSlice', plan: 'pro', region: 'eu' });
+    expect(listed.total).toBeGreaterThanOrEqual(1);
+    expect(listed.items.some((o) => o.id === org.id)).toBe(true);
+
+    const updated = await admin.updateWorkspace(org.id, org.memberships[0]!.userId, {
+      featureOverrides: { marketplace: true, sso: true },
+      characterQuota: 9_000_000,
+    });
+    expect(updated.featureOverrides.marketplace).toBe(true);
+    expect(updated.characterQuota).toBe(9_000_000);
+
+    const detail = await admin.getWorkspace(org.id);
+    expect(detail.featureFlags.marketplace).toBe(true);
+    expect(detail.members).toHaveLength(1);
+
+    const opened = await admin.openAsWorkspace({
+      organizationId: org.id,
+      actorUserId: org.memberships[0]!.userId,
+    });
+    expect(opened.organizationId).toBe(org.id);
+    expect(opened.workspaceId).toBeTruthy();
+
+    const created = await admin.createWorkspace({
+      actorUserId: org.memberships[0]!.userId,
+      name: 'Admin Created Co',
+      plan: 'business',
+      ownerEmail: 'customer-admin-created@example.com',
+      dataRegion: 'us',
+    });
+    expect(created.name).toBe('Admin Created Co');
+    expect(created.plan).toBe('business');
+
+    const analytics = await admin.crossWorkspaceAnalytics();
+    expect(analytics.totals.workspaces).toBeGreaterThanOrEqual(2);
+
+    const bulk = await admin.bulkAction({
+      actorUserId: org.memberships[0]!.userId,
+      action: 'export',
+      organizationIds: [org.id, created.id],
+    });
+    expect(bulk.action).toBe('export');
+    expect(bulk.csv).toContain(org.id);
+
+    const audit = await admin.listPlatformAudit({ limit: 20 });
+    expect(audit.some((e) => e.action === 'admin.workspace_created')).toBe(true);
+  });
+
+  it('isPlatformAdmin respects LUGEMI_PLATFORM_ADMIN_EMAILS alias', () => {
+    const prevEmails = process.env.ADMIN_EMAILS;
+    const prevLugemi = process.env.LUGEMI_PLATFORM_ADMIN_EMAILS;
+    process.env.ADMIN_EMAILS = '';
+    process.env.LUGEMI_PLATFORM_ADMIN_EMAILS = 'platform@lugemi.test';
+    expect(isPlatformAdmin({ email: 'platform@lugemi.test', clerkUserId: 'x' })).toBe(true);
+    process.env.ADMIN_EMAILS = prevEmails;
+    process.env.LUGEMI_PLATFORM_ADMIN_EMAILS = prevLugemi;
+  });
+
 });
