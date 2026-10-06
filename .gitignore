@@ -5,7 +5,10 @@ agent-tools
 .turbo
 dist
 .next
+# Test coverage reports. Keep the Next.js public /coverage route commitable.
 coverage
+!apps/web/app/coverage
+!apps/web/app/coverage/**
 .env
 .env.local
 apps/*/.env
