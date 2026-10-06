@@ -1,4 +1,9 @@
 import { randomUUID } from 'crypto';
+import {
+  PORTFOLIO_CORRIDORS,
+  PORTFOLIO_CORRIDOR_COUNT,
+  type PortfolioCorridor,
+} from './portfolio.corridors';
 
 /** Shared result contract for next-model portfolio APIs (see docs/next-model-portfolio/). */
 export type CoverageStatus = 'supported' | 'preview' | 'unsupported' | 'unavailable';
@@ -31,8 +36,8 @@ export function portfolioMeta(input: {
   return {
     request_id: input.requestId ?? randomUUID(),
     model_id: input.modelId,
-    model_version: input.modelVersion ?? 'pilot-1',
-    language_pack_version: input.languagePackVersion ?? 'pack-pilot-1',
+    model_version: input.modelVersion ?? 'local-demo-1',
+    language_pack_version: input.languagePackVersion ?? 'pack-local-demo-1',
     source_language_tags: input.sourceLanguageTags,
     target_language_tag: input.targetLanguageTag,
     variety_id: input.varietyId ?? null,
@@ -42,26 +47,11 @@ export function portfolioMeta(input: {
   };
 }
 
-export const PORTFOLIO_PILOT_CORRIDORS = [
-  {
-    id: 'twi-english',
-    sourceTags: ['ak', 'en'],
-    varietyId: 'ak-GH-twi',
-    label: 'Twi–English (Ghana)',
-    evaluated: true,
-  },
-  {
-    id: 'yoruba-english',
-    sourceTags: ['yo', 'en'],
-    varietyId: 'yo-NG',
-    label: 'Yoruba–English (Nigeria)',
-    evaluated: true,
-  },
-  {
-    id: 'hausa-english',
-    sourceTags: ['ha', 'en'],
-    varietyId: 'ha-NG',
-    label: 'Hausa–English',
-    evaluated: false,
-  },
-] as const;
+/**
+ * Full registry corridors (language ↔ English). Prefer PORTFOLIO_CORRIDORS.
+ * Alias kept for existing imports.
+ */
+export const PORTFOLIO_PILOT_CORRIDORS: readonly PortfolioCorridor[] = PORTFOLIO_CORRIDORS;
+
+export { PORTFOLIO_CORRIDORS, PORTFOLIO_CORRIDOR_COUNT };
+export type { PortfolioCorridor };

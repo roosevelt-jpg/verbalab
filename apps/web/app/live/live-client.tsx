@@ -18,6 +18,8 @@ type LiveEvent = {
 
 export function LiveClient() {
   const [apiKey, setApiKey] = useState('');
+  const [sourceLanguage, setSourceLanguage] = useState('ak');
+  const [targetLanguage, setTargetLanguage] = useState('en');
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [events, setEvents] = useState<LiveEvent[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -38,8 +40,8 @@ export function LiveClient() {
         body: JSON.stringify({
           sampleRate: 16000,
           channels: 1,
-          sourceLanguage: 'en',
-          targetLanguage: 'en',
+          sourceLanguage,
+          targetLanguage,
           transport: 'sse',
         }),
       });
@@ -97,13 +99,23 @@ export function LiveClient() {
   return (
     <PortfolioShell
       title="Lugemi Live"
-      lede="Incremental interpretation with commitment and repair. Captions distinguish provisional and committed text. Already-spoken audio is immutable — repairs create new audible content."
+      lede="Incremental interpretation with commitment and repair. Captions distinguish provisional and committed text. Already-spoken audio is immutable — repairs create new audible content. Source/target languages cover the full registry."
     >
       <div className="vl-panel" style={{ padding: '1rem', display: 'grid', gap: '0.75rem' }}>
         <label style={{ display: 'grid', gap: '0.25rem' }}>
           <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>API key</span>
           <input className="vl-field" value={apiKey} onChange={(e) => setApiKey(e.target.value)} />
         </label>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+          <label style={{ display: 'grid', gap: '0.25rem' }}>
+            <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Source language</span>
+            <input className="vl-field" value={sourceLanguage} onChange={(e) => setSourceLanguage(e.target.value)} />
+          </label>
+          <label style={{ display: 'grid', gap: '0.25rem' }}>
+            <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Target language</span>
+            <input className="vl-field" value={targetLanguage} onChange={(e) => setTargetLanguage(e.target.value)} />
+          </label>
+        </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
           <button type="button" className="vl-btn" disabled={loading} onClick={() => void createSession()}>
             {loading ? 'Creating…' : 'Start session'}

@@ -135,14 +135,16 @@ export class MixService {
 
     const evaluated = PORTFOLIO_PILOT_CORRIDORS.filter((c) => c.evaluated).map((c) => c.varietyId);
     const warnings: string[] = [];
-    if (variety && !evaluated.includes(variety as (typeof evaluated)[number])) {
-      warnings.push(`Variety ${variety} is not on the evaluated pilot list.`);
+    if (variety && !evaluated.includes(variety)) {
+      warnings.push(
+        `Variety ${variety} is in the full registry catalog but not on the strategic evaluated list.`,
+      );
     }
     if (spans.some((s) => s.uncertain)) {
       warnings.push('One or more spans are uncertain; review highlighted regions before acting.');
     }
     warnings.push(
-      `Evaluated varieties: ${evaluated.join(', ')}. Not a claim of every dialect.`,
+      `Catalog: ${PORTFOLIO_PILOT_CORRIDORS.length} language↔English corridors. Strategic evaluated varieties: ${evaluated.join(', ')}.`,
     );
 
     const meta = portfolioMeta({
@@ -150,7 +152,7 @@ export class MixService {
       sourceLanguageTags: sourceTags,
       targetLanguageTag: target,
       varietyId: variety,
-      status: variety && evaluated.includes(variety as (typeof evaluated)[number]) ? 'preview' : 'preview',
+      status: 'preview',
       warnings,
     });
 

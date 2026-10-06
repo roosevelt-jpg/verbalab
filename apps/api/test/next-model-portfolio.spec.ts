@@ -307,7 +307,8 @@ describe('Next model portfolio (00–07 contracts)', () => {
     });
     const auth = { Authorization: `Bearer ${key.secret}` };
     const packs = await request(app.getHttpServer()).get('/v1/edge/packs').expect(200);
-    expect(packs.body.packs.length).toBeGreaterThanOrEqual(2);
+    expect(packs.body.packs.length).toBeGreaterThanOrEqual(200);
+    expect(packs.body.total).toBeGreaterThanOrEqual(200);
     const packId = packs.body.packs[0].pack_id;
 
     const verify = await request(app.getHttpServer())

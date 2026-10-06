@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -32,8 +33,8 @@ export class EdgeController {
   }
 
   @Get('packs')
-  packs() {
-    return this.edge.listPacks();
+  packs(@Query('q') q?: string) {
+    return this.edge.listPacks(q);
   }
 
   @Get('packs/:packId')

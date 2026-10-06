@@ -1,6 +1,6 @@
 'use client';
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { API_URL, apiFetch } from '@/lib/api';
 import { PortfolioShell } from '@/components/portfolio/portfolio-shell';
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
@@ -29,11 +29,26 @@ export function MixClient() {
     'Caller provided name Kwame Mensah, amount five hundred, then corrected to fifty for tomorrow.',
   );
   const [sourceHints, setSourceHints] = useState('ak,en');
+  const [varietyId, setVarietyId] = useState('ak-GH-twi');
+  const [corridorOptions, setCorridorOptions] = useState<Array<{ value: string; label: string }>>([]);
   const [file, setFile] = useState<File | null>(null);
   const [result, setResult] = useState<MixResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const { play, stop, playingId, loadingId } = useDemoPlayer();
+
+  useEffect(() => {
+    void apiFetch<{ corridors: Array<{ varietyId: string; label: string; evaluated: boolean }> }>('/v1/portfolio/corridors')
+      .then((res) =>
+        setCorridorOptions(
+          res.corridors.map((c) => ({
+            value: c.varietyId,
+            label: `${c.label}${c.evaluated ? ' · strategic' : ''}`,
+          })),
+        ),
+      )
+      .catch(() => undefined);
+  }, []);
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -49,7 +64,7 @@ export function MixClient() {
       form.append('target', target);
       form.append('sourceHints', sourceHints);
       form.append('textHint', textHint);
-      form.append('varietyId', 'ak-GH-twi');
+      form.append('varietyId', varietyId);
       if (file) form.append('file', file);
       const res = await fetch(`${API_URL}/v1/mix/transcribe-translate`, {
         method: 'POST',
@@ -69,7 +84,7 @@ export function MixClient() {
   return (
     <PortfolioShell
       title="Lugemi Mix"
-      lede="Meaning-preserving mixed-language speech. Shows original and translated text side by side, highlights uncertain spans, and keeps names stable. Evaluated varieties: Twi (ak-GH-twi) and Yoruba (yo-NG)."
+      lede="Meaning-preserving mixed-language speech. Shows original and translated text side by side, highlights uncertain spans, and keeps names stable. Full registry catalog of language↔English corridors available via GET /v1/portfolio/corridors."
       docsHref="/docs"
     >
       <form onSubmit={onSubmit} className="vl-panel" style={{ padding: '1rem', display: 'grid', gap: '0.75rem' }}>
@@ -91,6 +106,23 @@ export function MixClient() {
             <input className="vl-field" value={sourceHints} onChange={(e) => setSourceHints(e.target.value)} />
           </label>
         </div>
+        <label style={{ display: 'grid', gap: '0.25rem' }}>
+          <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Corridor variety</span>
+          <input
+            className="vl-field"
+            value={varietyId}
+            onChange={(e) => setVarietyId(e.target.value)}
+            list="mix-corridor-varieties"
+            placeholder="ak-GH-twi (search / type any registry variety)"
+          />
+          <datalist id="mix-corridor-varieties">
+            {corridorOptions.map((c) => (
+              <option key={c.value} value={c.value}>
+                {c.label}
+              </option>
+            ))}
+          </datalist>
+        </label>
         <label style={{ display: 'grid', gap: '0.25rem' }}>
           <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Optional audio file</span>
           <input type="file" accept="audio/*" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />

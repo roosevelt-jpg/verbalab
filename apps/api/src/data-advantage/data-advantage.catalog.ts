@@ -9,7 +9,7 @@ export function dataAdvantageCatalog() {
     model_version: 'pilot-1',
     family: 'Dataset Cloud + MLOps',
     note:
-      'Permissioned corpus workflow for authentic switches, meaning contrasts, timed repairs, register cases, language acquisition, device conditions, and grounded regions. Ordinary transcripts alone do not teach which mistakes matter. No silent online gradient updates from live customer conversations.',
+      'Permissioned corpus workflow for authentic switches, meaning contrasts, timed repairs, register cases, language acquisition, device conditions, and grounded regions. Ordinary transcripts alone do not teach which mistakes matter. Language tags validate against the full registry. No silent online gradient updates from live customer conversations.',
     streams: [
       { id: 'mixed_conversation', capture: 'Real switching, borrowing, self-correction, acoustic conditions', main_use: 'Mix' },
       { id: 'meaning_contrasts', capture: 'Changed negations, amounts, units, obligations, entity identity', main_use: 'Fidelity' },
