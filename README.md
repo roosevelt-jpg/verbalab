@@ -147,6 +147,7 @@ Without Clerk keys the production site serves `/setup`, same as local.
 
 ## Docs
 
+- `docs/cloudflare.md` — free Cloudflare products useful with this monorepo (DNS/SSL/CDN, R2, Turnstile, …)
 - `docs/brand/LUGEMI_BRAND_GUIDELINES.md` — identity, voice, and visual standards
 - `docs/brand/PUBLIC_POSITIONING.md` — public category (first-party API + models; Africa first; global regions)
 - `docs/ENGINEERING.md` — thin daily standards
