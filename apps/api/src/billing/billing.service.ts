@@ -4,7 +4,15 @@ import { ModuleRef } from '@nestjs/core';
 import Stripe from 'stripe';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiException } from '../common/errors/api-exception';
-import { planFromId, planHasFeature, isProOrAbove, listPlans, type PlanId, type PlanFeature } from './plans';
+import {
+  planFromId,
+  planHasFeature,
+  isProOrAbove,
+  listPlans,
+  normalizePlanId,
+  type PlanId,
+  type PlanFeature,
+} from './plans';
 import { UsageService } from '../usage/usage.service';
 import { AuditService } from '../audit/audit.service';
 
@@ -91,10 +99,31 @@ export class BillingService {
     return this.stripe;
   }
 
-  async getSummary(organizationId: string) {
+  /**
+   * Persist legacy starter/creator/scale (and other unknown) plan ids onto the
+   * four-plan catalog so UI current-plan matching and admin filters stay consistent.
+   */
+  async ensureCanonicalPlan(organizationId: string) {
     const org = await this.prisma.organization.findUniqueOrThrow({
       where: { id: organizationId },
     });
+    const canonical = normalizePlanId(org.plan);
+    if (org.plan === canonical) {
+      return org;
+    }
+    const plan = planFromId(canonical);
+    return this.prisma.organization.update({
+      where: { id: organizationId },
+      data: {
+        plan: canonical,
+        // Keep existing quota if already raised; otherwise adopt catalog default.
+        characterQuota: Math.max(org.characterQuota, plan.characterQuota),
+      },
+    });
+  }
+
+  async getSummary(organizationId: string) {
+    const org = await this.ensureCanonicalPlan(organizationId);
     const usage = await this.usage.summary(organizationId);
     const plan = planFromId(org.plan);
 

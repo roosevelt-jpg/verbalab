@@ -95,6 +95,24 @@ describe('Billing', () => {
     const summary = await billing.getSummary(org.id);
     expect(summary.plan).toBe('pro');
     expect(summary.planName).toBe('Pro');
+    const persisted = await prisma.organization.findUniqueOrThrow({ where: { id: org.id } });
+    expect(persisted.plan).toBe('pro');
+  });
+
+  it('maps creator → pro and scale → business when summarizing', async () => {
+    const creatorOrg = await seedOrg(prisma, 'legacyCreator');
+    await prisma.organization.update({
+      where: { id: creatorOrg.id },
+      data: { plan: 'creator' },
+    });
+    expect((await billing.getSummary(creatorOrg.id)).plan).toBe('pro');
+
+    const scaleOrg = await seedOrg(prisma, 'legacyScale');
+    await prisma.organization.update({
+      where: { id: scaleOrg.id },
+      data: { plan: 'scale' },
+    });
+    expect((await billing.getSummary(scaleOrg.id)).plan).toBe('business');
   });
 
   it('defaults new orgs to free plan quota', async () => {

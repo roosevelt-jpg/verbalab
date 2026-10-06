@@ -39,19 +39,28 @@ export class WorkspacesService {
   async entitlements(organizationId: string) {
     const org = await this.prisma.organization.findUniqueOrThrow({
       where: { id: organizationId },
-      select: { plan: true },
+      select: { id: true, plan: true, characterQuota: true },
     });
     const plan = planFromId(org.plan);
+    if (org.plan !== plan.id) {
+      await this.prisma.organization.update({
+        where: { id: org.id },
+        data: {
+          plan: plan.id,
+          characterQuota: Math.max(org.characterQuota, plan.characterQuota),
+        },
+      });
+    }
     const used = await this.prisma.workspace.count({ where: { organizationId } });
     const limit = plan.workspaceLimit;
     return {
-      plan: org.plan,
+      plan: plan.id,
       planName: plan.name,
       features: plan.features,
       workspaceLimit: limit,
       workspaceUsed: used,
       workspaceRemaining: limit < 0 ? null : Math.max(0, limit - used),
-      canCreate: planAllowsAnotherWorkspace(org.plan, used),
+      canCreate: planAllowsAnotherWorkspace(plan.id, used),
       unlimited: limit < 0,
     };
   }

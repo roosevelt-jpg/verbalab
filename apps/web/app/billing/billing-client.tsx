@@ -11,7 +11,12 @@ import {
   StatusRing,
   PipelineStrip,
 } from '@/components/stats/activity-visuals';
-import { FEATURE_LABELS, WEB_BILLING_PLANS, formatWorkspaceLimit, planById } from '@/data/billing-plans';
+import {
+  FEATURE_LABELS,
+  WEB_BILLING_PLANS,
+  formatWorkspaceLimit,
+  planById,
+} from '@/data/billing-plans';
 import '@/components/stats/stat-charts.css';
 
 type BillingSummary = {
@@ -50,47 +55,114 @@ type MemberRow = {
   user: { id: string; email: string | null; name: string | null };
 };
 
+const CANONICAL_PLAN_IDS = new Set(WEB_BILLING_PLANS.map((p) => p.id));
+
+function localMockSummary(): BillingSummary {
+  const free = WEB_BILLING_PLANS[0]!;
+  return {
+    plan: free.id,
+    planName: free.name,
+    billingStatus: 'active',
+    characterQuota: free.characterQuota,
+    charactersUsed: 0,
+    charactersRemaining: free.characterQuota,
+    periodStart: new Date().toISOString(),
+    requests: 0,
+    stripeConfigured: false,
+    hasCustomer: false,
+    features: free.features,
+    workspaceLimit: free.workspaceLimit,
+  };
+}
+
+function isNetworkLoadError(err: unknown): boolean {
+  if (!(err instanceof Error)) return false;
+  const msg = err.message.toLowerCase();
+  return (
+    msg === 'load failed' ||
+    msg === 'failed to fetch' ||
+    msg.includes('cannot reach api') ||
+    msg.includes('networkerror') ||
+    msg.includes('network request failed') ||
+    msg.includes('fetch failed')
+  );
+}
+
+/** Keep only Free / Pro / Business / Enterprise cards (drop stale API SKUs). */
+function onlyFourPlans(plans: PlanCard[]): PlanCard[] {
+  const filtered = plans.filter((p) => CANONICAL_PLAN_IDS.has(p.id as (typeof WEB_BILLING_PLANS)[number]['id']));
+  if (filtered.length === 4) return filtered;
+  return WEB_BILLING_PLANS;
+}
+
+function normalizeSummary(summary: BillingSummary): BillingSummary {
+  const plan = planById(summary.plan);
+  return {
+    ...summary,
+    plan: plan.id,
+    planName: plan.name,
+    features: summary.features ?? plan.features,
+    workspaceLimit: summary.workspaceLimit ?? plan.workspaceLimit,
+  };
+}
+
 export function BillingClient() {
   const { getToken, isLoaded } = useAuth();
   const [summary, setSummary] = useState<BillingSummary | null>(null);
-  const [plans, setPlans] = useState<PlanCard[]>([]);
+  const [plans, setPlans] = useState<PlanCard[]>(WEB_BILLING_PLANS);
   const [members, setMembers] = useState<MemberRow[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [usingLocalBilling, setUsingLocalBilling] = useState(false);
 
   const load = useCallback(async () => {
     const token = await getToken();
     if (!token) throw new Error('Not signed in');
 
-    // Always seed the 4-plan catalog first so a summary failure never blanks the page.
+    // Seed catalog immediately so Stripe-off / API blips never blank the page.
     setPlans(WEB_BILLING_PLANS);
 
-    const planPromise = apiFetch<{ plans: PlanCard[] }>('/v1/billing/plans', { token })
-      .then((planRes) => {
-        if (Array.isArray(planRes.plans) && planRes.plans.length > 0) {
-          setPlans(planRes.plans);
-        }
-      })
-      .catch(() => {
-        /* keep WEB_BILLING_PLANS */
-      });
+    try {
+      const [billing, memberRows] = await Promise.all([
+        apiFetch<BillingSummary>('/v1/billing/summary', { token }),
+        apiFetch<MemberRow[]>('/v1/organization/members', { token }).catch(() => [] as MemberRow[]),
+      ]);
+      setSummary(normalizeSummary(billing));
+      setMembers(memberRows);
+      setUsingLocalBilling(false);
+      setError(null);
+    } catch (err) {
+      if (isNetworkLoadError(err)) {
+        // Cross-origin / CORP / offline: stay usable with local mock state.
+        setSummary(localMockSummary());
+        setMembers([]);
+        setUsingLocalBilling(true);
+        setError(null);
+      } else {
+        throw err;
+      }
+    }
 
-    const memberPromise = apiFetch<MemberRow[]>('/v1/organization/members', { token })
-      .then((memberRows) => setMembers(memberRows))
-      .catch(() => setMembers([]));
-
-    const billing = await apiFetch<BillingSummary>('/v1/billing/summary', { token });
-    setSummary({
-      ...billing,
-      plan: planById(billing.plan).id,
-      planName: planById(billing.plan).name,
-    });
-    await Promise.all([planPromise, memberPromise]);
+    try {
+      const planRes = await apiFetch<{ plans: PlanCard[] }>('/v1/billing/plans', { token });
+      setPlans(onlyFourPlans(planRes.plans));
+    } catch {
+      setPlans(WEB_BILLING_PLANS);
+    }
   }, [getToken]);
 
   useEffect(() => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message || 'Billing load failed'));
+    void load().catch((err: unknown) => {
+      const message = err instanceof Error ? err.message : 'Billing failed to load';
+      // Never leave the page empty — show Free mock catalog when auth/API is soft-failing.
+      setSummary((prev) => prev ?? localMockSummary());
+      setPlans(WEB_BILLING_PLANS);
+      setUsingLocalBilling(true);
+      if (!isNetworkLoadError(err)) {
+        setError(message);
+      }
+    });
   }, [isLoaded, load]);
 
   async function startCheckout(planId: string) {
@@ -133,8 +205,7 @@ export function BillingClient() {
     }
   }
 
-  const currentPlanId = summary ? planById(summary.plan).id : 'free';
-  const currentRank = plans.find((p) => p.id === currentPlanId)?.rank ?? 0;
+  const currentRank = plans.find((p) => p.id === summary?.plan)?.rank ?? 0;
 
   return (
     <AppShell>
@@ -154,28 +225,13 @@ export function BillingClient() {
         Free → Pro → Business → Enterprise. Features and workspace seats unlock with your plan.
       </p>
 
-      {error ? <p style={{ color: 'var(--bad)' }}>{error}</p> : null}
-
-      {plans.length > 0 && !summary && error ? (
-        <div
-          style={{
-            marginTop: '1.5rem',
-            display: 'grid',
-            gap: '1rem',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(15rem, 1fr))',
-          }}
-        >
-          {plans.map((plan) => (
-            <article key={plan.id} className="vl-endpoint-card" style={{ display: 'grid', gap: '0.5rem' }}>
-              <h2 style={{ margin: 0, fontSize: '1.15rem', color: 'var(--brand-navy)' }}>{plan.name}</h2>
-              <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: 720 }}>
-                {plan.priceLabel}
-              </div>
-              <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.9rem' }}>{plan.blurb}</p>
-            </article>
-          ))}
-        </div>
+      {usingLocalBilling ? (
+        <p style={{ color: 'var(--muted)', margin: '0.75rem 0 0', fontSize: '0.9rem' }}>
+          Showing local billing catalog (API unreachable or Stripe not required for browsing plans).
+        </p>
       ) : null}
+
+      {error ? <p style={{ color: 'var(--bad)' }}>{error}</p> : null}
 
       {summary ? (
         <div style={{ marginTop: '1.5rem', display: 'grid', gap: '1.25rem' }}>
@@ -241,7 +297,7 @@ export function BillingClient() {
             }}
           >
             {plans.map((plan) => {
-              const isCurrent = plan.id === currentPlanId;
+              const isCurrent = plan.id === summary.plan;
               const isUpgrade = plan.rank > currentRank;
               return (
                 <article
@@ -294,7 +350,7 @@ export function BillingClient() {
                     <button
                       type="button"
                       className={isUpgrade ? 'vl-btn vl-btn-primary' : 'vl-btn vl-btn-secondary'}
-                      disabled={busy || !plan.checkoutAvailable}
+                      disabled={busy || !plan.checkoutAvailable || usingLocalBilling}
                       onClick={() => void startCheckout(plan.id)}
                     >
                       {isUpgrade ? `Upgrade to ${plan.name}` : `Switch to ${plan.name}`}
@@ -310,7 +366,7 @@ export function BillingClient() {
               <button
                 type="button"
                 className="vl-btn vl-btn-secondary"
-                disabled={busy || !summary.stripeConfigured || !summary.hasCustomer}
+                disabled={busy || !summary.stripeConfigured || !summary.hasCustomer || usingLocalBilling}
                 onClick={() => void openPortal()}
               >
                 Manage payment method
@@ -373,4 +429,3 @@ export function BillingClient() {
     </AppShell>
   );
 }
-
