@@ -14,7 +14,7 @@ export type AfricanLanguageEntry = {
 
 /**
  * Library Phase 128 → African Language Registry (VL-261).
- * Representative seed — coverageComplete=false. Extends dialects/locales — not every African language.
+ * Representative seed — Expanded seed aligned with marketing catalog; full country directory lives in the web Africa catalog.
  */
 export function africanLanguageSeed(): AfricanLanguageEntry[] {
   return [
@@ -118,6 +118,56 @@ export function africanLanguageSeed(): AfricanLanguageEntry[] {
       status: 'partial',
       notes: 'Contact variety placeholder extending locales — not exhaustive.',
     },
+    {
+      code: 'om',
+      name: 'Oromo',
+      family: 'Afro-Asiatic / Cushitic',
+      writingSystems: ['Latin'],
+      dialects: ['Mecha', 'Tulama', 'Borana'],
+      regions: ['Horn of Africa'],
+      status: 'shipped',
+      notes: 'Expanded seed — catalog scope is broader on /coverage.',
+    },
+    {
+      code: 'wo',
+      name: 'Wolof',
+      family: 'Niger-Congo / Atlantic',
+      writingSystems: ['Latin', 'Ajami'],
+      dialects: ['Dakar'],
+      regions: ['West Africa'],
+      status: 'shipped',
+      notes: 'Expanded seed.',
+    },
+    {
+      code: 'lg',
+      name: 'Luganda',
+      family: 'Niger-Congo / Bantu',
+      writingSystems: ['Latin'],
+      dialects: ['Central'],
+      regions: ['East Africa'],
+      status: 'shipped',
+      notes: 'Expanded seed.',
+    },
+    {
+      code: 'ak',
+      name: 'Akan',
+      family: 'Niger-Congo / Kwa',
+      writingSystems: ['Latin'],
+      dialects: ['Asante Twi', 'Akuapem Twi', 'Fante'],
+      regions: ['West Africa'],
+      status: 'shipped',
+      notes: 'Expanded seed.',
+    },
+    {
+      code: 'ln',
+      name: 'Lingala',
+      family: 'Niger-Congo / Bantu',
+      writingSystems: ['Latin'],
+      dialects: ['Kinshasa', 'Brazzaville'],
+      regions: ['Central Africa'],
+      status: 'shipped',
+      notes: 'Expanded seed.',
+    },
   ];
 }
 
@@ -134,7 +184,7 @@ export function africanLanguageRegistryEngineCatalog() {
   return {
     product: 'Lugemi African Language Registry',
     note:
-      'African Language Registry (VL-261). Representative language/dialect/writing-system seed extending dialects/locales. coverageComplete=false — not every African language.',
+      'African Language Registry (VL-261). Representative language/dialect/writing-system seed extending dialects/locales. Expanded seed; web Africa catalog documents full country/community directory.',
     capabilities: [
       {
         id: 'language-catalog',
