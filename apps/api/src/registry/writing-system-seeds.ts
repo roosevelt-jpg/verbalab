@@ -79,5 +79,10 @@ export const WRITING_SYSTEM_SEEDS: WritingSystemSeed[] = [
     kind: 'abjad',
     rtl: true,
     sampleChars: 'אבג',
-  },
+  },,
+  { code: 'Tfng', nameEn: 'Tifinagh', kind: 'alphabet', sampleChars: 'ⵜⴰⵎ', notes: 'Berber / Tamazight orthographies.' },
+  { code: 'Nkoo', nameEn: 'N’Ko', kind: 'alphabet', rtl: true, sampleChars: 'ߒߞߏ', notes: 'Manding N’Ko script.' },
+  { code: 'Vaii', nameEn: 'Vai', kind: 'syllabary', sampleChars: 'ꕙꔤ', notes: 'Vai syllabary (Liberia).' },
+  { code: 'Copt', nameEn: 'Coptic', kind: 'alphabet', sampleChars: 'Ⲁⲃⲅ', notes: 'Liturgical Coptic.' },
+  { code: 'Osma', nameEn: 'Osmanya', kind: 'alphabet', sampleChars: '𐒀𐒁𐒂', notes: 'Somali Osmanya script (historical / cultural).' },
 ];

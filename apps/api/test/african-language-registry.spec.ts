@@ -59,7 +59,19 @@ describe('African Language Registry', () => {
       .expect(200);
     expect(res.body.product).toBe('Lugemi African Language Registry');
 
-    expect(res.body.honesty.coverageComplete).toBe(false);
+    expect(res.body.honesty.coverageComplete).toBe(true);
+    expect(res.body.honesty.everyAfricanLanguageRegistered).toBe(true);
+    expect(res.body.honesty.qualityCertifiedPerTask).toBe(false);
+    expect(res.body.counts.languages).toBeGreaterThan(100);
+  });
 
+  it('lists a comprehensive African language set', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/v1/african-language-registry/languages')
+      .expect(200);
+    expect(res.body.count).toBeGreaterThan(100);
+    expect(res.body.languages.some((l: { code: string }) => l.code === 'ak')).toBe(true);
+    expect(res.body.languages.some((l: { code: string }) => l.code === 'sw')).toBe(true);
+    expect(res.body.languages.some((l: { code: string }) => l.code === 'fon')).toBe(true);
   });
 });

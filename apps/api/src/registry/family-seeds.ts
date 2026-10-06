@@ -42,5 +42,8 @@ export const FAMILY_SEEDS: FamilySeed[] = [
   {
     code: 'austronesian',
     nameEn: 'Austronesian',
-  },
+  },,
+  { code: 'creole', nameEn: 'Creole / Contact', notes: 'Naijá, Krio, Kriolu, Seselwa, Forro, Angolar, and related contact languages.' },
+  { code: 'nilo_saharan', nameEn: 'Nilo-Saharan', notes: 'Nilotic and Saharan languages (Dinka, Nuer, Kanuri, Lugbara, …).' },
+  { code: 'khoisan', nameEn: 'Khoe-Kwadi / Kxʼa', notes: 'Click-language families represented by Khoekhoegowab and related entries.' },
 ];

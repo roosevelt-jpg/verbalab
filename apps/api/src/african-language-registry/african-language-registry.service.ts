@@ -21,20 +21,22 @@ export class AfricanLanguageRegistryService {
         l.family.toLowerCase().includes(q)
       );
     });
+    const honesty = this.engine().honesty;
     return {
       languages,
       count: languages.length,
-      coverageComplete: false,
-      honesty: this.engine().honesty,
+      coverageComplete: honesty.coverageComplete,
+      honesty,
       docs: '/docs/AFRICAN_LANGUAGE_REGISTRY.md',
     };
   }
 
   families() {
+    const honesty = this.engine().honesty;
     return {
       families: africanLanguageFamilies(),
-      coverageComplete: false,
-      honesty: this.engine().honesty,
+      coverageComplete: honesty.coverageComplete,
+      honesty,
     };
   }
 

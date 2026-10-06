@@ -3,7 +3,11 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiException } from '../common/errors/api-exception';
 import { GlossaryTermLike } from '../glossary/glossary-apply';
-import { LOCALE_PACK_SEEDS, type HonorificEntry } from './locale-pack-seeds';
+import {
+  LOCALE_PACK_SEEDS,
+  LOCALE_VARIANT_SEEDS,
+  type HonorificEntry,
+} from './locale-pack-seeds';
 import {
   formatLocaleCurrency,
   formatLocaleDate,
@@ -104,7 +108,22 @@ export class LocalesService implements OnModuleInit {
       },
       orderBy: { languageCode: 'asc' },
     });
-    return rows.map((r) => this.serialize(r));
+    const primary = rows.map((r) => this.serialize(r));
+    const byLang = new Map(primary.map((row) => [row.languageCode, row]));
+    const seen = new Set(primary.map((row) => row.bcp47).filter(Boolean) as string[]);
+    const variants = LOCALE_VARIANT_SEEDS.filter((v) => !seen.has(v.bcp47) && byLang.has(v.languageCode)).map((v) => {
+      const base = byLang.get(v.languageCode)!;
+      return {
+        ...base,
+        bcp47: v.bcp47,
+        currencyCode: v.currencyCode,
+        currencyNotes: `${v.currencyCode} — locale variant ${v.bcp47}`,
+        culturalNotes: v.culturalNotes,
+      };
+    });
+    return [...primary, ...variants].sort((a, b) =>
+      (a.bcp47 ?? a.languageCode).localeCompare(b.bcp47 ?? b.languageCode),
+    );
   }
 
   async get(code: string) {
