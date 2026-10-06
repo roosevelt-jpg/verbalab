@@ -107,7 +107,7 @@ export class GpuPlatformService {
     if (mode === 'disabled') {
       throw new ApiException(
         'gpu_provision_disabled',
-        'GPU provision mode is disabled (VERBALAB_GPU_PROVISION_MODE=disabled). Sandbox logical allocate requires mode=sandbox.',
+        'GPU provision mode is disabled (LUGEMI_GPU_PROVISION_MODE=disabled). Sandbox logical allocate requires mode=sandbox.',
         HttpStatus.FORBIDDEN,
       );
     }

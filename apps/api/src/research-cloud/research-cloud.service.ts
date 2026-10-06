@@ -15,7 +15,7 @@ export class ResearchCloudService {
 
   products() {
     return {
-      product: 'VerbaLab Research Cloud',
+      product: 'Lugemi Research Cloud',
       products: researchCloudProductCatalog(),
       researchAreas: researchAreasCatalog(),
       architecture: researchCloudArchitectureNotes(),

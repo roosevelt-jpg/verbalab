@@ -4,7 +4,7 @@
  */
 export function platformEngineeringAnalyticsEngineCatalog() {
   return {
-    product: 'VerbaLab Platform Engineering Analytics',
+    product: 'Lugemi Platform Engineering Analytics',
     capabilities: [
       { id: 'deploy_frequency', name: 'Deploy Frequency', status: 'shipped', notes: 'DORA.' },
       { id: 'lead_time', name: 'Lead Time for Changes', status: 'shipped', notes: 'DORA.' },

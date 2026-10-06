@@ -7,7 +7,7 @@ variable "aws_region" {
 variable "cluster_name" {
   type        = string
   description = "EKS cluster name."
-  default     = "verbalab"
+  default     = "lugemi"
 }
 
 variable "kubernetes_version" {

@@ -1,23 +1,23 @@
-# VerbaLab Developer Cloud Foundation
+# Lugemi Developer Cloud Foundation
 
 **Status:** Accepted (VL-127)  
 **Rule:** Extend the existing developer portal (VL-030/033). Do not regenerate Clerk, Stripe, or invent OAuth clients / sandbox clusters.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Developer Accounts | Clerk users |
 | Organizations | `organizations` |
 | Projects / Applications | **Workspaces** (no separate Application tier) |
 | OAuth Clients | **Not built** — Clerk for humans; API keys for machines |
-| API Keys | `vl_live_` / `vl_test_` hashed secrets |
+| API Keys | `lg_live_` / `lg_test_` hashed secrets |
 | Developer Dashboard | `/developers` + `GET /v1/developer/overview` |
 | API Explorer | `/playground` + `GET /v1/openapi.json` |
-| CLI | `@verbalab/cli` (thin SDK wrapper) |
-| SDK Management | `@verbalab/sdk` + `GET /v1/developer/sdk` |
+| CLI | `@lugemi/cli` (thin SDK wrapper) |
+| SDK Management | `@lugemi/sdk` + `GET /v1/developer/sdk` |
 | Sandbox / Production | Soft key `environment` on **same** cluster (not a second plane) |
 | Developer Billing | Org Stripe billing (`/billing`) |
 | Documentation | `/docs` + OpenAPI |
@@ -37,7 +37,7 @@
 
 ## Soft sandbox
 
-- `vl_test_…` keys authenticate like live keys against the **same** API and database.
+- `lg_test_…` keys authenticate like live keys against the **same** API and database.
 - Usage still counts toward the org quota.
 - Purpose: label non-prod clients in the console — **not** residency/isolation.
 

@@ -2,5 +2,5 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
   "rootDirectory": "apps/web",
-  "installCommand": "cd ../.. && pnpm install --filter @verbalab/web..."
+  "installCommand": "cd ../.. && pnpm install --filter @lugemi/web..."
 }

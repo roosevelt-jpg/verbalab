@@ -5,7 +5,7 @@
 
 ## Executive verdict
 
-**Inference Cloud is production-ready as a bounded VerbaLab product volume** (deploy via Fly or optional EKS), with known honesty limits documented in ADR-0115–0124.
+**Inference Cloud is production-ready as a bounded Lugemi product volume** (deploy via Fly or optional EKS), with known honesty limits documented in ADR-0115–0124.
 
 It is a **shared model-runtime hub** over AI Gateway + vendor APIs, with sandbox GPU/serving/router/stream/batch/cache/cost/analytics surfaces **within those limits**.
 
@@ -50,7 +50,7 @@ Cloud GPU APIs · MIG/distributed · vLLM/KServe · service mesh · WS/gRPC/vide
 ## Remaining ops dependencies
 
 - `DATABASE_URL`, `REDIS_URL`, Clerk, vendor keys (`OPENAI_API_KEY`, etc.), Stripe as applicable
-- GPU/Cost env ceilings: `VERBALAB_GPU_MAX_INSTANCES`, `VERBALAB_GPU_MAX_SPEND_USD`, `VERBALAB_COST_DAILY_CAP_USD`, `VERBALAB_COST_MONTHLY_CAP_USD`
+- GPU/Cost env ceilings: `LUGEMI_GPU_MAX_INSTANCES`, `LUGEMI_GPU_MAX_SPEND_USD`, `LUGEMI_COST_DAILY_CAP_USD`, `LUGEMI_COST_MONTHLY_CAP_USD`
 - Fly token or EKS cluster for production traffic
 - **Never** connect GPU Platform to a production cloud billing account without sandbox spend limits
 

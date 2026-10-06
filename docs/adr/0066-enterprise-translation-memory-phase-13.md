@@ -8,7 +8,7 @@
 
 Library Phase 13 asks for Enterprise Translation Memory covering enterprise/workspace/project/shared memory, glossaries, terminology, translation history, similarity search, versioning — plus memory engine, vector search, REST, GraphQL, SDK, dashboard, monitoring, docs, tests, and production deploy.
 
-VL-051 already ships workspace exact TM with translate bypass. Claiming Phrase/MemoQ/Trados parity or a full CAT tool would violate VerbaLab honesty rules.
+VL-051 already ships workspace exact TM with translate bypass. Claiming Phrase/MemoQ/Trados parity or a full CAT tool would violate Lugemi honesty rules.
 
 ## Decision
 

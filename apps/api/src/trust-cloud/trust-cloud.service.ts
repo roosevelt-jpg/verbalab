@@ -14,7 +14,7 @@ export class TrustCloudService {
 
   products() {
     return {
-      product: 'VerbaLab Trust Cloud',
+      product: 'Lugemi Trust Cloud',
       products: trustCloudProductCatalog(),
       architecture: trustCloudArchitectureNotes(),
       honesty: trustCloudHonesty(),

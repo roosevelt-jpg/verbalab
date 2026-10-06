@@ -12,7 +12,7 @@ Async jobs and billing need email: job complete, usage thresholds, and membershi
 
 1. **Provider:** Resend via thin `ResendAdapter` (`fetch`); no-op when `RESEND_API_KEY` / `EMAIL_FROM` unset. `NOTIFICATIONS_DISABLED=1` kills sends.
 2. **Triggers:** `job.succeeded` / `job.failed` → owners/admins; translate usage at **80%** and **100%** of monthly character quota (deduped per billing period via audit actions); new Clerk-synced membership → welcome email to the member.
-3. **Invites:** Clerk Organizations remain the invite IdP; VerbaLab does not ship invite CRUD.
+3. **Invites:** Clerk Organizations remain the invite IdP; Lugemi does not ship invite CRUD.
 4. **Tests:** `setProviderForTests` memory mailbox; never call live Resend in CI.
 
 ## Consequences

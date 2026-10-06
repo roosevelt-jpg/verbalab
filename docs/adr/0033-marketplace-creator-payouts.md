@@ -6,7 +6,7 @@
 
 ## Context
 
-VL-090/091 shipped free copy-on-install marketplace listings. Creators need revenue share without VerbaLab holding cards. VL-031 already uses Stripe Checkout for Pro subscriptions.
+VL-090/091 shipped free copy-on-install marketplace listings. Creators need revenue share without Lugemi holding cards. VL-031 already uses Stripe Checkout for Pro subscriptions.
 
 ## Decision
 

@@ -24,7 +24,7 @@ export function evaluationPlatformEngineCatalog() {
     { id: 'model-cards', name: 'Model cards', status: 'shipped', api: 'GET /v1/evaluation-platform/capabilities', notes: 'Model card templates.' },
   ];
   return {
-    product: 'VerbaLab Evaluation Platform',
+    product: 'Lugemi Evaluation Platform',
     note:
       'Evaluation Platform (VL-275). Enterprise evaluation catalog extending VL-236 model-evaluation-platform and VL-100 eval — does not regenerate those surfaces.',
     capabilities,

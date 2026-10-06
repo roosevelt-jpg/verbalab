@@ -1,15 +1,15 @@
-# VerbaLab AI Fabric
+# Lugemi AI Fabric
 
 **Status:** Volume closed (VL-239–248 / library Phases 106–115) — audit pack under [`docs/ai-fabric-audit/`](./ai-fabric-audit/)  
-**Rule:** AI Fabric is the **internal** communication layer connecting VerbaLab clouds — **not** a customer-facing product, Kafka hyperscaler, or service-mesh OS. Extends AI Kernel + Inference Cloud. Do **not** regenerate Volumes 1–9. Roadmap: [`docs/roadmap/volume10-ai-fabric/`](./roadmap/volume10-ai-fabric/).
+**Rule:** AI Fabric is the **internal** communication layer connecting Lugemi clouds — **not** a customer-facing product, Kafka hyperscaler, or service-mesh OS. Extends AI Kernel + Inference Cloud. Do **not** regenerate Volumes 1–9. Roadmap: [`docs/roadmap/volume10-ai-fabric/`](./roadmap/volume10-ai-fabric/).
 
 Volume 10 README: this volume is buildable bus/messaging infrastructure (Kafka/NATS/RabbitMQ/Redis Streams/CloudEvents named for Event Fabric). Policy Fabric is a **hard gate**, not log-only (VL-247 verified).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | AI Fabric Foundation | **VL-239** — `/ai-fabric` + bus catalog / routing |
 | Event Fabric | **Shipped** — VL-240 — Redis Streams + CloudEvents; Kafka/NATS/Rabbit adapters deferred |
@@ -41,7 +41,7 @@ Volume 10 README: this volume is buildable bus/messaging infrastructure (Kafka/N
 | Monitoring | `GET /v1/ai-fabric/monitoring` |
 | GraphQL | `aiFabricBuses` |
 | SDK | `aiFabricProducts()` |
-| CLI | `verbalab ai-fabric-products` |
+| CLI | `lugemi ai-fabric-products` |
 
 ## Action safety (README)
 

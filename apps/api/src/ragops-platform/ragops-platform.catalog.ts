@@ -4,7 +4,7 @@
  */
 export function ragopsPlatformEngineCatalog() {
   return {
-    product: 'VerbaLab RAGOps Platform',
+    product: 'Lugemi RAGOps Platform',
     capabilities: [
       { id: 'chunking', name: 'Chunking', status: 'shipped', notes: 'Chunk strategy catalog.' },
       { id: 'indexing', name: 'Indexing', status: 'shipped', notes: 'Index job catalog.' },

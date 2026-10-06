@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-ROOT = Path("/workspace/verbalab")
+ROOT = Path("/workspace/lugemi")
 
 
 def to_pascal(slug: str) -> str:

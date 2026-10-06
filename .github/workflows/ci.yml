@@ -40,13 +40,13 @@ jobs:
       postgres:
         image: pgvector/pgvector:pg16
         env:
-          POSTGRES_USER: verbalab
-          POSTGRES_PASSWORD: verbalab
-          POSTGRES_DB: verbalab
+          POSTGRES_USER: lugemi
+          POSTGRES_PASSWORD: lugemi
+          POSTGRES_DB: lugemi
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U verbalab -d verbalab"
+          --health-cmd "pg_isready -U lugemi -d lugemi"
           --health-interval 5s
           --health-timeout 5s
           --health-retries 10
@@ -62,7 +62,7 @@ jobs:
           --health-retries 10
 
     env:
-      DATABASE_URL: postgresql://verbalab:verbalab@localhost:5432/verbalab?schema=public
+      DATABASE_URL: postgresql://lugemi:lugemi@localhost:5432/lugemi?schema=public
       REDIS_URL: redis://127.0.0.1:6379
       CI: true
       JOBS_INLINE: "1"
@@ -98,7 +98,7 @@ jobs:
         run: pnpm test
 
       - name: Install Playwright Chromium
-        run: pnpm --filter @verbalab/web exec playwright install --with-deps chromium
+        run: pnpm --filter @lugemi/web exec playwright install --with-deps chromium
 
       - name: E2E (public surfaces; signed-in translate skips without Clerk creds)
         run: pnpm test:e2e

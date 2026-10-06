@@ -1,9 +1,9 @@
 <!-- PASTE THIS ENTIRE FILE'S CONTENT BELOW THE LINE INTO CURSOR AGENT AS ONE MESSAGE -->
 <!-- ================================================================= -->
 
-VOLUME 19 — VERBALAB AI OPERATING SYSTEM (VAIOS)
+VOLUME 19 — LUGEMI AI OPERATING SYSTEM (VAIOS)
 
-Mission: transform VerbaLab from a collection of AI services into a complete
+Mission: transform Lugemi from a collection of AI services into a complete
 AI-native operating environment that orchestrates AI, knowledge, agents,
 workflows, runtime, memory, policies, and intelligence above the cloud
 infrastructure layer (not a literal replacement for Linux or Kubernetes).
@@ -21,11 +21,11 @@ Volume 8 or 10 first.
 Phase 201
 VAIOS Foundation
 Cursor Master Prompt
-Build the VerbaLab AI Operating System.
+Build the Lugemi AI Operating System.
 
 Mission
 
-Create an AI-native operating environment for all VerbaLab services.
+Create an AI-native operating environment for all Lugemi services.
 
 This becomes the highest-level orchestration layer.
 

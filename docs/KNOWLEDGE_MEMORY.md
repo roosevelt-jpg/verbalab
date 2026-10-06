@@ -1,4 +1,4 @@
-# VerbaLab Knowledge Memory
+# Lugemi Knowledge Memory
 
 **Status:** Partial (VL-199 / library Phase 66)  
 **Parent:** [Knowledge Cloud](./KNOWLEDGE_CLOUD.md)  
@@ -19,7 +19,7 @@
 | Search | `POST /v1/knowledge-memory/search` |
 | Analytics / monitoring | `GET /v1/knowledge-memory/analytics` · `/monitoring` |
 | GraphQL | `knowledgeMemoryEngine` |
-| SDK / CLI | `knowledgeMemoryEngine()` · `verbalab knowledge-memory-engine` |
+| SDK / CLI | `knowledgeMemoryEngine()` · `lugemi knowledge-memory-engine` |
 | GDPR | Via Memory Cloud `export` / `erase` (same rows) |
 
 ## Scopes → Memory Cloud

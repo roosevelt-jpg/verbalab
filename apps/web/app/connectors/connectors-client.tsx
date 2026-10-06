@@ -113,7 +113,7 @@ export function ConnectorsClient() {
                 </code>
               </div>
               <div style={{ color: 'var(--muted)' }}>
-                Command example: <code className="vl-code">/verbalab sw Habari dunia</code>
+                Command example: <code className="vl-code">/lugemi sw Habari dunia</code>
               </div>
             </div>
           </section>

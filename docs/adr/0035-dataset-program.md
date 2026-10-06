@@ -14,7 +14,7 @@ Fine-tunes (VL-104) need licensed corpora with consent and PII handling. Marketp
 2. **Storage:** Local disk via `LocalStorageService` under `datasets/{orgId}/{assetId}/…` (same root as documents). S3 deferred.
 3. **API / console:** Clerk owner/admin — create/list/patch/archive, add version, download. Console `/datasets`.
 4. **Governance:** Export includes metadata (not bytes); org delete unlinks dataset files.
-5. **Annotation:** Use Label Studio (or peers) externally; VerbaLab stores finished artifacts + legal metadata only.
+5. **Annotation:** Use Label Studio (or peers) externally; Lugemi stores finished artifacts + legal metadata only.
 6. **Boundary:** Do not auto-publish DatasetAsset to marketplace.
 
 ## Consequences

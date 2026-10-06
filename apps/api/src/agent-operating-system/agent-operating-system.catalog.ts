@@ -4,7 +4,7 @@
  */
 export function agentOperatingSystemEngineCatalog() {
   return {
-    product: 'VerbaLab Agent Operating System',
+    product: 'Lugemi Agent Operating System',
     unifyingOrchestrationLayer: true,
     duplicatesKernelOrFabric: false,
     notLinux: true,

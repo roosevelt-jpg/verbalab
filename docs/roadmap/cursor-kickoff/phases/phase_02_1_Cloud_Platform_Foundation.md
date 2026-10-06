@@ -6,7 +6,7 @@ Cloud Platform Foundation
 
 Cursor Prompt
 
-Build the VerbaLab Cloud Foundation.
+Build the Lugemi Cloud Foundation.
 
 This becomes the foundation for every cloud product.
 

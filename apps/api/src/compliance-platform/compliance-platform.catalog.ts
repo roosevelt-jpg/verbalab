@@ -75,7 +75,7 @@ export function complianceControlsCatalog(): FrameworkControl[] {
 export function compliancePlatformEngineCatalog() {
   const controls = complianceControlsCatalog();
   return {
-    product: 'VerbaLab Compliance Platform',
+    product: 'Lugemi Compliance Platform',
     capabilities: [
       { id: 'soc2', name: 'SOC 2', status: 'shipped', notes: 'Control mapping — not certification.' },
       { id: 'iso27001', name: 'ISO 27001', status: 'shipped', notes: 'Control mapping — not certification.' },
@@ -103,7 +103,7 @@ export function compliancePlatformEngineCatalog() {
       complianceToolingNotCertification: true,
       notCertifiedCompliant: true,
       note:
-        'Dashboards and control mappings support compliance work. They do NOT make VerbaLab GDPR/HIPAA/SOC2/PCI certified. Lawyers and external auditors are still required.',
+        'Dashboards and control mappings support compliance work. They do NOT make Lugemi GDPR/HIPAA/SOC2/PCI certified. Lawyers and external auditors are still required.',
     },
     docs: '/docs/COMPLIANCE_PLATFORM.md',
     note: 'Compliance Platform (VL-297). Tooling not certification — lawyers/auditors still required.',

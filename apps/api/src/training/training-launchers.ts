@@ -44,7 +44,7 @@ export class ManualTrainingLauncher implements TrainingGpuLauncher {
       externalJobId: `manual:${_input.jobId}`,
       status: 'awaiting_gpu',
       message:
-        'Manual launcher: train on rented GPUs outside VerbaLab, then POST …/complete or the signed callback with an artifact.',
+        'Manual launcher: train on rented GPUs outside Lugemi, then POST …/complete or the signed callback with an artifact.',
       providerMeta: { launcher: 'manual' },
     };
   }

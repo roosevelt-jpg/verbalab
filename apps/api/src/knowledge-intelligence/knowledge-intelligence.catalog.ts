@@ -14,7 +14,7 @@ export type KnowledgeIntelCapability = {
  */
 export function knowledgeIntelligenceCatalog() {
   return {
-    product: 'VerbaLab Knowledge Intelligence',
+    product: 'Lugemi Knowledge Intelligence',
     note:
       'Combined knowledge analysis and insight for Knowledge Cloud (VL-200): discovery, linking, recommendations, validation, duplicates, evolution, confidence. Heuristic over EKB / Search / Ontology / Taxonomy / Knowledge Memory / VL-062. Not a BI dashboard OS, Palantir-style knowledge OS, or Intelligence Analytics (VL-191) regenerate.',
     capabilities: [

@@ -40,7 +40,7 @@ export function KnowledgeClient() {
   }
 
   useEffect(() => {
-    if (!apiKey.startsWith('vl_live_')) return;
+    if (!apiKey.startsWith('lg_live_')) return;
     void refreshDocs(apiKey).catch(() => undefined);
   }, [apiKey]);
 
@@ -51,8 +51,8 @@ export function KnowledgeClient() {
       setError('Choose a DOCX, PDF, or TXT file');
       return;
     }
-    if (!apiKey.startsWith('vl_live_')) {
-      setError('Paste a vl_live_ API key');
+    if (!apiKey.startsWith('lg_live_')) {
+      setError('Paste a lg_live_ API key');
       return;
     }
     setLoading(true);
@@ -79,8 +79,8 @@ export function KnowledgeClient() {
     event.preventDefault();
     setError(null);
     setResult(null);
-    if (!apiKey.startsWith('vl_live_')) {
-      setError('Paste a vl_live_ API key');
+    if (!apiKey.startsWith('lg_live_')) {
+      setError('Paste a lg_live_ API key');
       return;
     }
     setLoading(true);
@@ -99,7 +99,7 @@ export function KnowledgeClient() {
   }
 
   async function onDelete(id: string) {
-    if (!apiKey.startsWith('vl_live_')) return;
+    if (!apiKey.startsWith('lg_live_')) return;
     setError(null);
     try {
       await apiFetch(`/v1/knowledge/documents/${id}`, { method: 'DELETE', token: apiKey });
@@ -120,7 +120,7 @@ export function KnowledgeClient() {
           className="vl-field vl-code"
           value={apiKey}
           onChange={(e) => setApiKey(e.target.value)}
-          placeholder="vl_live_..."
+          placeholder="lg_live_..."
         />
       </label>
 
@@ -173,7 +173,7 @@ export function KnowledgeClient() {
             className="vl-field"
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
-            placeholder="Where is VerbaLab HQ?"
+            placeholder="Where is Lugemi HQ?"
             required
           />
         </label>

@@ -14,7 +14,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
   return [
     {
       id: 'intelligence',
-      name: 'VerbaLab Intelligence Cloud',
+      name: 'Lugemi Intelligence Cloud',
       status: 'shipped',
       api: 'GET /v1/intelligence-cloud/products',
       console: '/intelligence-cloud',
@@ -153,8 +153,8 @@ export function intelligenceArchitectureNotes() {
     streaming: true,
     batch: true,
     enterpriseApis: true,
-    sdk: '@verbalab/sdk',
-    cli: '@verbalab/cli',
+    sdk: '@lugemi/sdk',
+    cli: '@lugemi/cli',
     docker: true,
     terraform: true,
     kubernetes: true,

@@ -6,7 +6,7 @@ Translation Engine
 
 Cursor Prompt
 
-Build VerbaLab Translate.
+Build Lugemi Translate.
 
 Support
 

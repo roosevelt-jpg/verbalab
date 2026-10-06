@@ -4,7 +4,7 @@
  */
 export function resourceManagerEngineCatalog() {
   return {
-    product: 'VerbaLab Resource Manager',
+    product: 'Lugemi Resource Manager',
     unifyingOrchestrationLayer: true,
     duplicatesKernelOrFabric: false,
     notLinux: true,

@@ -233,7 +233,7 @@ export class SpeakerIntelligenceService {
       threshold,
       match,
       decision,
-      provider: 'verbalab_fingerprint_v1',
+      provider: 'lugemi_fingerprint_v1',
       note: 'Cosine similarity on local fingerprints — not anti-spoof speaker verification.',
     };
   }
@@ -303,7 +303,7 @@ export class SpeakerIntelligenceService {
       threshold,
       best,
       candidates,
-      provider: 'verbalab_fingerprint_v1',
+      provider: 'lugemi_fingerprint_v1',
       note: '1:N local fingerprint match — not a speaker recognition research system.',
     };
   }

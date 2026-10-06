@@ -4,7 +4,7 @@ Library Phase 156 — part of Volume 14 MLOps & LLMOps Cloud.
 
 ## Mission
 
-VerbaLab Continuous Learning provides the Continuous Learning surface inside VerbaLab.
+Lugemi Continuous Learning provides the Continuous Learning surface inside Lugemi.
 
 ## Honesty
 

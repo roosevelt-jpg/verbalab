@@ -70,7 +70,7 @@ export function africanKnowledgeGraphSeed(): { nodes: GraphNode[]; edges: GraphE
 export function africanKnowledgeGraphEngineCatalog() {
   const { nodes, edges } = africanKnowledgeGraphSeed();
   return {
-    product: 'VerbaLab African Knowledge Graph',
+    product: 'Lugemi African Knowledge Graph',
     note:
       'African Knowledge Graph (VL-263). In-process entity/relationship graph for countries/regions/languages/institutions. neo4jOs=false — not a Neo4j / graph-database OS.',
     capabilities: [

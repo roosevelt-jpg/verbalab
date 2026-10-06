@@ -584,7 +584,7 @@ export class AgentRuntimeService {
     if (agentRuntimeMode() === 'disabled') {
       throw new ApiException(
         'agent_runtime_disabled',
-        'Agent Runtime mode is disabled (VERBALAB_AGENT_RUNTIME_MODE=disabled).',
+        'Agent Runtime mode is disabled (LUGEMI_AGENT_RUNTIME_MODE=disabled).',
         HttpStatus.FORBIDDEN,
       );
     }

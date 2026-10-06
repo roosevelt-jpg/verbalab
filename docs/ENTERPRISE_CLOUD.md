@@ -1,13 +1,13 @@
-# VerbaLab Enterprise Cloud Foundation
+# Lugemi Enterprise Cloud Foundation
 
 **Status:** Accepted (VL-128)  
 **Rule:** Compose existing governance, admin, residency, RBAC, and billing controls. Do not invent a policy engine or Trust Center SaaS.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Workspace Management | `/v1/workspaces` + console switcher (VL-012/125) |
 | Enterprise Settings | Org data settings + residency pin (`/data`) |

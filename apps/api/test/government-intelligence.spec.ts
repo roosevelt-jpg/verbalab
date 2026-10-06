@@ -57,7 +57,7 @@ describe('Government Intelligence (VL-264)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/government-intelligence/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Government Intelligence');
+    expect(res.body.product).toBe('Lugemi Government Intelligence');
 
     expect(res.body.honesty.officialGuidanceMustBeSourced).toBe(true);
     expect(res.body.honesty.staleGuidanceRiskNoted).toBe(true);

@@ -1,13 +1,13 @@
-# VerbaLab Creator Economy
+# Lugemi Creator Economy
 
 **Status:** Shipped (VL-258 / library Phase 125) — tax/dispute remain **documented gaps**  
 **Rule:** Extends VL-092 Stripe Connect Express + `MarketplaceSale` — **not** a payment-processor OS, tax engine, or card vault. Hand-check royalty math before live creators. Roadmap: [`docs/roadmap/volume11-ecosystem-cloud/`](./roadmap/volume11-ecosystem-cloud/).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Revenue Sharing | **Shipped** — `splitRevenue` + hub 15% / content marketplace Connect fee (env, default 20%) |
 | Subscriptions | **Partial** — Pro plan + listing `subscriptionInterval`; recurring Connect deferred |
@@ -55,7 +55,7 @@ publisherNetCents   = amount - applicationFeeCents
 | Tax / disputes (honesty) | `GET …/tax` · `/disputes` |
 | Connect (prior) | `GET /v1/marketplace/connect/status` |
 | GraphQL | `creatorEconomyEngine` |
-| SDK / CLI | `creatorEconomyEngine()` · `verbalab creator-economy-engine` |
+| SDK / CLI | `creatorEconomyEngine()` · `lugemi creator-economy-engine` |
 
 ## Honesty
 

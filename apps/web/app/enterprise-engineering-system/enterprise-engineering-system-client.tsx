@@ -29,7 +29,7 @@ export function EnterpriseEngineeringSystemClient() {
         Enterprise Engineering System
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-344 — VerbaLab Enterprise Engineering System console in Enterprise Engineering System (standards for humans + Cursor).
+        VL-344 — Lugemi Enterprise Engineering System console in Enterprise Engineering System (standards for humans + Cursor).
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

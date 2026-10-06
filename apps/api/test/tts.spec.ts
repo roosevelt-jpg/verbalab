@@ -105,9 +105,9 @@ describe('Text-to-speech (VL-042)', () => {
       .expect(200);
 
     expect(res.headers['content-type']).toContain('audio/mpeg');
-    expect(res.headers['x-verbalab-provider']).toBe('fixture');
-    expect(res.headers['x-verbalab-voice']).toBe('alloy');
-    expect(res.headers['x-verbalab-characters']).toBe('5');
+    expect(res.headers['x-lugemi-provider']).toBe('fixture');
+    expect(res.headers['x-lugemi-voice']).toBe('alloy');
+    expect(res.headers['x-lugemi-characters']).toBe('5');
     expect(Buffer.from(res.body).toString('utf8')).toBe('AUDIO:Hello');
 
     const summary = await usage.summary(org.id);

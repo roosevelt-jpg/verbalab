@@ -1,13 +1,13 @@
-# VerbaLab Wake Word Engine
+# Lugemi Wake Word Engine
 
 **Status:** Partial shipped (VL-157 / library Phase 23)  
 **Rule:** Transcript/text spotting for wake words, keywords, and triggers. Do not claim Picovoice Porcupine, Snowboy, or on-device always-on DNN.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Wake Word Platform / Engine | **VL-157** — `GET /v1/wake-word/engine` + `/wake-word` |
 | Wake Word Detection | **Shipped** — `POST /v1/wake-word/detect` (text or audio→STT) |
@@ -17,7 +17,7 @@
 | Streaming Detection | **Partial** — `POST /v1/wake-word/detect/stream` SSE |
 | Offline Detection | **Partial** — batch file/text buffer spotting — not embedded DNN |
 | On-device wake DNN | **Deferred** |
-| GraphQL / SDK / CLI | `wakeWordEngine`, `detectWakeWord`, `spotKeywords`, `verbalab wake-word-engine` |
+| GraphQL / SDK / CLI | `wakeWordEngine`, `detectWakeWord`, `spotKeywords`, `lugemi wake-word-engine` |
 | Monitoring | Audit `wake_word.*` + shared observability |
 | Production | Shared Fly/Docker/K8s + Prisma `wake_keywords` |
 
@@ -25,7 +25,7 @@
 
 ## Default wake phrases
 
-`hey verbalab` · `ok verbalab` · `verbalab`
+`hey lugemi` · `ok lugemi` · `lugemi`
 
 ---
 

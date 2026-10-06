@@ -12,7 +12,7 @@ describe('ResendAdapter', () => {
 
     const adapter = new ResendAdapter(
       're_test',
-      'VerbaLab <noreply@example.com>',
+      'Lugemi <noreply@example.com>',
       fetchImpl as unknown as typeof fetch,
     );
     const result = await adapter.send({
@@ -25,11 +25,11 @@ describe('ResendAdapter', () => {
     expect(fetchImpl).toHaveBeenCalledOnce();
     const [, init] = fetchImpl.mock.calls[0]!;
     expect(init.headers.Authorization).toBe('Bearer re_test');
-    expect(JSON.parse(init.body as string).from).toBe('VerbaLab <noreply@example.com>');
+    expect(JSON.parse(init.body as string).from).toBe('Lugemi <noreply@example.com>');
   });
 
   it('throws provider_not_configured when API key is missing', async () => {
-    const adapter = new ResendAdapter('', 'VerbaLab <noreply@example.com>');
+    const adapter = new ResendAdapter('', 'Lugemi <noreply@example.com>');
     await expect(
       adapter.send({ to: 'a@b.com', subject: 'x', text: 'y' }),
     ).rejects.toMatchObject({ code: 'provider_not_configured' } satisfies Partial<ApiException>);

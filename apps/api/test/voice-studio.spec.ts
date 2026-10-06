@@ -105,7 +105,7 @@ describe('Voice Studio (VL-174)', () => {
 
   it('compiles SSML lite without spoken stage directions', () => {
     const plan = compileSsmlLite(
-      '<speak>Hello <prosody rate="slow">world</prosody>. <break time="200ms"/><phoneme alphabet="ipa" ph="vɝbəlæb">VerbaLab</phoneme></speak>',
+      '<speak>Hello <prosody rate="slow">world</prosody>. <break time="200ms"/><phoneme alphabet="ipa" ph="vɝbəlæb">Lugemi</phoneme></speak>',
     );
     expect(plan.plainText.toLowerCase()).toContain('hello');
     expect(plan.plainText.toLowerCase()).toContain('vɝbəlæb');
@@ -114,15 +114,15 @@ describe('Voice Studio (VL-174)', () => {
   });
 
   it('applies pronunciation lexicon as word aliases', () => {
-    const out = applyPronunciationLexicon('Welcome to VerbaLab studio', [
-      { grapheme: 'VerbaLab', alias: 'Verba Lab' },
+    const out = applyPronunciationLexicon('Welcome to Lugemi studio', [
+      { grapheme: 'Lugemi', alias: 'Verba Lab' },
     ]);
     expect(out).toBe('Welcome to Verba Lab studio');
   });
 
   it('exposes engine with nonlinearDaw=false', async () => {
     const engine = await request(app.getHttpServer()).get('/v1/voice-studio/engine').expect(200);
-    expect(engine.body.product).toBe('VerbaLab Voice Studio');
+    expect(engine.body.product).toBe('Lugemi Voice Studio');
     expect(engine.body.architecture.nonlinearDaw).toBe(false);
     expect(engine.body.honesty.vendorSsmlPassthrough).toBe(false);
     const timeline = engine.body.capabilities.find((c: { id: string }) => c.id === 'timeline-editing');
@@ -141,17 +141,17 @@ describe('Voice Studio (VL-174)', () => {
     const lex = await request(app.getHttpServer())
       .post('/v1/voice-studio/pronunciation')
       .set('Authorization', `Bearer ${key.secret}`)
-      .send({ grapheme: 'VerbaLab', alias: 'Verba Lab' });
+      .send({ grapheme: 'Lugemi', alias: 'Verba Lab' });
     expect([200, 201]).toContain(lex.status);
     expect(lex.body.alias).toBe('Verba Lab');
 
     const preview = await request(app.getHttpServer())
       .post('/v1/voice-studio/preview')
       .set('Authorization', `Bearer ${key.secret}`)
-      .send({ text: 'Hello VerbaLab', voice: 'alloy' })
+      .send({ text: 'Hello Lugemi', voice: 'alloy' })
       .expect(200);
 
-    expect(preview.headers['x-verbalab-voice']).toBe('alloy');
+    expect(preview.headers['x-lugemi-voice']).toBe('alloy');
     expect(Buffer.from(preview.body).toString('utf8')).toContain('AUDIO:alloy:Hello Verba Lab');
 
     const compare = await request(app.getHttpServer())

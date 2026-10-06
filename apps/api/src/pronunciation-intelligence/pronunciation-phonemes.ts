@@ -28,7 +28,7 @@ const EN_DICT: Record<string, string[]> = {
   pronunciation: ['P', 'R', 'AH', 'N', 'AH', 'N', 'S', 'IY', 'EY', 'SH', 'AH', 'N'],
   language: ['L', 'AE', 'NG', 'G', 'W', 'AH', 'JH'],
   learning: ['L', 'ER', 'N', 'IH', 'NG'],
-  verbalab: ['V', 'ER', 'B', 'AH', 'L', 'AE', 'B'],
+  lugemi: ['V', 'ER', 'B', 'AH', 'L', 'AE', 'B'],
 };
 
 const VOWELS = /[aeiouy]+/gi;

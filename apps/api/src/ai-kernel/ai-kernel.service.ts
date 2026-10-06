@@ -13,13 +13,13 @@ export class AiKernelService {
 
   products() {
     return {
-      product: 'VerbaLab AI Kernel',
+      product: 'Lugemi AI Kernel',
       products: aiKernelRuntimeCatalog(),
       architecture: aiKernelArchitectureNotes(),
       safety: aiKernelSafetyNotes(),
       docs: '/docs/AI_KERNEL.md',
       note:
-        'Internal operating-system hub for VerbaLab runtimes (VL-214). Not a customer-facing product. Does not regenerate Volumes 1–7 or invent a Linux/VAIOS rewrite.',
+        'Internal operating-system hub for Lugemi runtimes (VL-214). Not a customer-facing product. Does not regenerate Volumes 1–7 or invent a Linux/VAIOS rewrite.',
     };
   }
 
@@ -84,7 +84,7 @@ export class AiKernelService {
   monitoring() {
     const products = aiKernelRuntimeCatalog();
     return {
-      product: 'VerbaLab AI Kernel',
+      product: 'Lugemi AI Kernel',
       mode: 'foundation',
       runtimes: products.map((p) => ({ id: p.id, status: p.status })),
       architecture: aiKernelArchitectureNotes(),

@@ -14,7 +14,7 @@ export function speechProductCatalog(): SpeechProductRow[] {
   return [
     {
       id: 'speech',
-      name: 'VerbaLab Speech',
+      name: 'Lugemi Speech',
       status: 'shipped',
       api: 'GET /v1/speech/products',
       console: '/speech',
@@ -182,8 +182,8 @@ export function speechArchitectureNotes() {
     streaming: true,
     batch: true,
     enterpriseApis: true,
-    sdk: '@verbalab/sdk',
-    cli: '@verbalab/cli',
+    sdk: '@lugemi/sdk',
+    cli: '@lugemi/cli',
     openapi: '/v1/openapi.json',
     monitoring: true,
     billing: true,

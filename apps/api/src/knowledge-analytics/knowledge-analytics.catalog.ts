@@ -67,7 +67,7 @@ export const KNOWLEDGE_AUDIT_PREFIXES = [
  */
 export function knowledgeAnalyticsCatalog() {
   return {
-    product: 'VerbaLab Knowledge Analytics',
+    product: 'Lugemi Knowledge Analytics',
     note:
       'Usage/quality aggregates for Knowledge Cloud (VL-202): growth, usage, quality, search success, gaps, confidence, relationships. Distinct from Language/Speech/Voice/Intelligence analytics. Not a BI dashboard OS or enterprise reporting suite.',
     capabilities: [

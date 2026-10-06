@@ -8,7 +8,7 @@ export type TmCapability = {
   notes: string;
 };
 
-/** Library Phase 13 → VerbaLab Enterprise Translation Memory (VL-145). */
+/** Library Phase 13 → Lugemi Enterprise Translation Memory (VL-145). */
 export function tmIntelligenceCatalog() {
   return {
     product: 'Enterprise Translation Memory',
@@ -91,7 +91,7 @@ export function tmIntelligenceCatalog() {
       vector: { status: 'partial', notes: 'Optional OpenAI embeddings + pgvector' },
       rest: { status: 'shipped' },
       graphql: { status: 'shipped', notes: 'tmIntelligence + searchTm' },
-      sdk: { status: 'shipped', package: '@verbalab/sdk' },
+      sdk: { status: 'shipped', package: '@lugemi/sdk' },
       analytics: { status: 'shipped', api: 'GET /v1/tm/analytics' },
       monitoring: { status: 'partial', api: 'GET /v1/metrics/translate', notes: 'Shared observability stack' },
     },

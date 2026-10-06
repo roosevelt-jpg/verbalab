@@ -1,4 +1,4 @@
-# VerbaLab AI Kernel
+# Lugemi AI Kernel
 
 **Status:** Volume complete through Production Audit (VL-214–223 / library Phases 81–90)  
 **Rule:** The AI Kernel is the **internal** execution layer — **not** a customer-facing product. Extends Inference Cloud + existing Memory/Prompt/Context/Reasoning/Orchestration modules. Do **not** regenerate Volumes 1–7 or invent a Linux/VAIOS rewrite. Roadmap: [`docs/roadmap/volume8-ai-kernel/`](./roadmap/volume8-ai-kernel/). Audit pack: [`docs/ai-kernel-audit/`](./ai-kernel-audit/).
@@ -7,9 +7,9 @@ Volumes 1–7 already ship Identity, Gateway, product clouds, Intelligence, Know
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | AI Kernel Foundation | **VL-214** — `/ai-kernel` + runtime catalog / overview |
 | Memory Runtime | **Partial** — Phase 82 / VL-215 ([`MEMORY_RUNTIME.md`](./MEMORY_RUNTIME.md); extends Memory Cloud) |
@@ -45,8 +45,8 @@ Volumes 1–7 already ship Identity, Gateway, product clouds, Intelligence, Know
 | Monitoring | `GET /v1/ai-kernel/monitoring` |
 | GraphQL | `aiKernelRuntimes` |
 | OpenAPI | `/v1/openapi.json` |
-| SDK | `aiKernelProducts()` on `@verbalab/sdk` |
-| CLI | `verbalab ai-kernel-products` |
+| SDK | `aiKernelProducts()` on `@lugemi/sdk` |
+| CLI | `lugemi ai-kernel-products` |
 
 ## Action safety (README)
 

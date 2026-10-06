@@ -1,4 +1,4 @@
-# VerbaLab Enterprise Search
+# Lugemi Enterprise Search
 
 **Status:** Partial (VL-195 / library Phase 62)  
 **Parent:** [Knowledge Cloud](./KNOWLEDGE_CLOUD.md)  
@@ -17,7 +17,7 @@
 | Suggest | `GET /v1/enterprise-search/suggest?q=` |
 | Analytics / monitoring | `GET /v1/enterprise-search/analytics` · `/monitoring` |
 | GraphQL | `enterpriseSearchEngine` |
-| SDK / CLI | `enterpriseSearchEngine()` · `enterpriseSearch()` · `verbalab enterprise-search` |
+| SDK / CLI | `enterpriseSearchEngine()` · `enterpriseSearch()` · `lugemi enterprise-search` |
 
 ## Modes
 

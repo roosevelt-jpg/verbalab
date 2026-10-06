@@ -4,7 +4,7 @@
  */
 export function runtimeManagerEngineCatalog() {
   return {
-    product: 'VerbaLab Runtime Manager',
+    product: 'Lugemi Runtime Manager',
     unifyingOrchestrationLayer: true,
     duplicatesKernelOrFabric: false,
     notLinux: true,

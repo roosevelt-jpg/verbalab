@@ -35,7 +35,7 @@ export type MepSuite = {
  */
 export function modelEvaluationPlatformCatalog() {
   return {
-    product: 'VerbaLab Model Evaluation Platform',
+    product: 'Lugemi Model Evaluation Platform',
     note:
       'Model Evaluation Platform (VL-236). Extends VL-100 coverage/eval for translation goldens. Sandbox suites for bias/safety/latency. MMLU/HumanEval/MT-Bench and speech/vision/reasoning corpora stay deferred. Never claims market leadership or SOTA.',
     capabilities: [

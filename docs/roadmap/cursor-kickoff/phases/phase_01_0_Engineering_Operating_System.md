@@ -6,7 +6,7 @@ Engineering Operating System
 
 Cursor Prompt
 
-Create the VerbaLab Engineering Operating System.
+Create the Lugemi Engineering Operating System.
 
 Generate:
 

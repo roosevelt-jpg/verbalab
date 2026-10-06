@@ -78,7 +78,7 @@ export function driftClearStatus() {
 export function aiDriftDetectionEngineCatalog() {
   const status = driftClearStatus();
   return {
-    product: 'VerbaLab AI Drift Detection',
+    product: 'Lugemi AI Drift Detection',
     capabilities: [
       { id: 'model-drift', name: 'Model drift', status: 'shipped', notes: 'Output distribution monitors.' },
       { id: 'data-drift', name: 'Data drift', status: 'shipped', notes: 'Input distribution monitors.' },

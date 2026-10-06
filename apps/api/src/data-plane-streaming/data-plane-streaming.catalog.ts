@@ -4,7 +4,7 @@
  */
 export function dataPlaneStreamingEngineCatalog() {
   return {
-    product: 'VerbaLab Data Plane Streaming',
+    product: 'Lugemi Data Plane Streaming',
     thinExecutionLayer: true,
     duplicatesProductLogic: false,
     capabilities: [

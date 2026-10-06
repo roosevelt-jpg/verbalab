@@ -2,7 +2,7 @@
 
 ## Verdict
 
-Volume 17 Control Plane Cloud is closed and ready as VerbaLab's highest-privilege management layer.
+Volume 17 Control Plane Cloud is closed and ready as Lugemi's highest-privilege management layer.
 
 ## Honesty checklist
 

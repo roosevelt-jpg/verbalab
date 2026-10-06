@@ -89,7 +89,7 @@ describe('Workflows (VL-083)', () => {
   beforeAll(async () => {
     process.env.JOBS_INLINE = '1';
     process.env.RESEND_API_KEY = 're_test_fixture';
-    process.env.EMAIL_FROM = 'VerbaLab <noreply@example.com>';
+    process.env.EMAIL_FROM = 'Lugemi <noreply@example.com>';
     delete process.env.NOTIFICATIONS_DISABLED;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({

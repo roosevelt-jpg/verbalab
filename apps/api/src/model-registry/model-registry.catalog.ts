@@ -16,7 +16,7 @@ export type MrDeployStrategy = 'direct' | 'canary' | 'shadow' | 'blue_green';
  */
 export function modelRegistryCatalog() {
   return {
-    product: 'VerbaLab Model Registry',
+    product: 'Lugemi Model Registry',
     note:
       'Model Registry (VL-237). Extends VL-110 live matrix with model cards, sandbox versions/approvals/rollbacks, and deployment strategy plans. Does not invent MLflow, automatic weight deploy, or traffic-mesh canary OS. Links Model Serving for real deployments.',
     capabilities: [

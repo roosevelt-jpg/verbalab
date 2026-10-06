@@ -7,7 +7,7 @@
 
 ## Context
 
-Library Phase 5 asks for OpenAI, Claude, Gemini, DeepSeek, Qwen, Llama, Mistral, Whisper, NeMo, OpenRouter, custom models, routing, fallback, caching, cost/latency optimization, streaming, and health. VerbaLab already has a thin `GatewayService` (VL-021) with Google MT/detect/OCR, OpenAI chat/STT/TTS/embeddings, own TTS, fine-tune routing, and a model registry (VL-110). Rebuilding an OpenRouter/Inference mesh would violate VL-021 out-of-scope and regenerate prior work.
+Library Phase 5 asks for OpenAI, Claude, Gemini, DeepSeek, Qwen, Llama, Mistral, Whisper, NeMo, OpenRouter, custom models, routing, fallback, caching, cost/latency optimization, streaming, and health. Lugemi already has a thin `GatewayService` (VL-021) with Google MT/detect/OCR, OpenAI chat/STT/TTS/embeddings, own TTS, fine-tune routing, and a model registry (VL-110). Rebuilding an OpenRouter/Inference mesh would violate VL-021 out-of-scope and regenerate prior work.
 
 ## Decision
 

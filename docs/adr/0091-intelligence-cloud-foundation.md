@@ -6,7 +6,7 @@
 
 ## Context
 
-Library Phase 47 asks for VerbaLab Intelligence Cloud as “the brain of the entire platform” with Embeddings, Vector Search, Knowledge Graph, Memory, Context Engine, Reasoning, Recommendations, Orchestration, Agent Intelligence, Prompt/Decision Intelligence, AI Observability — plus DDD/CQRS/hexagonal, REST/GraphQL/realtime, SDKs, CLI, Terraform, Docker, Kubernetes — “everything production ready.”
+Library Phase 47 asks for Lugemi Intelligence Cloud as “the brain of the entire platform” with Embeddings, Vector Search, Knowledge Graph, Memory, Context Engine, Reasoning, Recommendations, Orchestration, Agent Intelligence, Prompt/Decision Intelligence, AI Observability — plus DDD/CQRS/hexagonal, REST/GraphQL/realtime, SDKs, CLI, Terraform, Docker, Kubernetes — “everything production ready.”
 
 ROADMAP previously listed v2 47–59 as vision backlog (“Custom AI kernel → LLM + gateway”). Volumes 1–3 already ship Chat (VL-060), Embeddings (VL-063), Knowledge/RAG (VL-062), and the AI Gateway. Regenerating those or inventing a custom reasoner kernel would violate “extend, don’t regenerate.”
 

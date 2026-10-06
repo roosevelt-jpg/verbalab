@@ -76,7 +76,7 @@ export class SlackConnectorService {
     if (!trimmed) {
       throw new ApiException(
         'validation_error',
-        'Usage: /verbalab <targetLang> <text>  e.g. /verbalab sw Hello',
+        'Usage: /lugemi <targetLang> <text>  e.g. /lugemi sw Hello',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -100,7 +100,7 @@ export class SlackConnectorService {
     if (!installation) {
       throw new ApiException(
         'not_found',
-        'Slack workspace is not linked. Add an installation in the VerbaLab console.',
+        'Slack workspace is not linked. Add an installation in the Lugemi console.',
         HttpStatus.NOT_FOUND,
       );
     }

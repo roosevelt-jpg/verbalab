@@ -1,13 +1,13 @@
-# VerbaLab Neural Text-to-Speech
+# Lugemi Neural Text-to-Speech
 
 **Status:** Shipped (VL-171 / library Phase 28)  
 **Rule:** Extend OpenAI TTS + own rented voices + clone speech. Do not regenerate AudioModule consumers or claim ElevenLabs/Polly/Azure Speech parity.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Neural Voice Engine | **VL-171** — `GET /v1/tts/engine` + `/neural-tts` |
 | Batch TTS | **Shipped** — `POST /v1/tts/synthesize` (+ legacy `/v1/audio/speech`) |
@@ -18,7 +18,7 @@
 | Dialects / regional accents | **Partial** — catalog tags; not acoustic control |
 | Voice personalities | **Partial** — catalog labels; emotion synthesis = Phase 30 |
 | Enterprise voices | **Partial** — `clone:{id}` + workspace voices endpoint |
-| GraphQL / SDK / CLI | `neuralTtsEngine`, `neuralTtsVoices`, `verbalab neural-tts-engine` |
+| GraphQL / SDK / CLI | `neuralTtsEngine`, `neuralTtsVoices`, `lugemi neural-tts-engine` |
 | Monitoring | Shared observability + `tts.synthesized` / `tts.streamed` audit |
 | Analytics | `GET /v1/tts/engine/analytics` (TTS usage). Voice Analytics = Phase 35 |
 | Production deployment | Shared Fly / Docker / optional EKS `af-south-1` |

@@ -27,7 +27,7 @@ export function GlobalDeploymentControllerClient() {
         Global Deployment Controller
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-318 — VerbaLab Global Deployment Controller console in the Control Plane Cloud.
+        VL-318 — Lugemi Global Deployment Controller console in the Control Plane Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

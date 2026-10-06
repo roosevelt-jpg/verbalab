@@ -63,7 +63,7 @@ export function DevelopersClient() {
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '40rem', lineHeight: 1.6 }}>
         Lugemi API: generate speech, transcribe, and translate with first-party models. Africa-first coverage, with
         LATAM, Southeast Asia, the Middle East, and the EU in strategic scope. Use API keys, the TypeScript SDK, CLI,
-        OpenAPI, and the playground. Soft <code className="vl-code">vl_test_</code> keys share this cluster and quota —
+        OpenAPI, and the playground. Soft <code className="vl-code">lg_test_</code> keys share this cluster and quota —
         not a separate sandbox plane.
       </p>
 
@@ -118,8 +118,8 @@ export function DevelopersClient() {
 ${data.sdk.cli.install}
 
 # ${data.sdk.cli.bin} ${data.sdk.cli.commands.join(' | ')}
-export VERBALAB_API_KEY=vl_live_...
-export VERBALAB_API_URL=${API_URL}`}
+export LUGEMI_API_KEY=lg_live_...
+export LUGEMI_API_URL=${API_URL}`}
             />
             <p style={{ margin: '0.65rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
               {data.sdk.typescript.name}@{data.sdk.typescript.version} · {data.sdk.cli.name}

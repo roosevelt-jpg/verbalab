@@ -57,11 +57,11 @@ describe('Reasoning Fabric (VL-244)', () => {
   let apiKeys: ApiKeysService;
   let fabric: ReasoningFabricService;
   let bus: EventFabricBus;
-  const prevMode = process.env.VERBALAB_REASONING_RUNTIME_MODE;
+  const prevMode = process.env.LUGEMI_REASONING_RUNTIME_MODE;
 
   beforeAll(async () => {
     process.env.EVENT_FABRIC_MEMORY = '1';
-    process.env.VERBALAB_REASONING_RUNTIME_MODE = 'sandbox';
+    process.env.LUGEMI_REASONING_RUNTIME_MODE = 'sandbox';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -77,8 +77,8 @@ describe('Reasoning Fabric (VL-244)', () => {
   });
 
   afterAll(async () => {
-    if (prevMode === undefined) delete process.env.VERBALAB_REASONING_RUNTIME_MODE;
-    else process.env.VERBALAB_REASONING_RUNTIME_MODE = prevMode;
+    if (prevMode === undefined) delete process.env.LUGEMI_REASONING_RUNTIME_MODE;
+    else process.env.LUGEMI_REASONING_RUNTIME_MODE = prevMode;
     await app.close();
   });
 
@@ -113,7 +113,7 @@ describe('Reasoning Fabric (VL-244)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/reasoning-fabric/products')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Reasoning Fabric');
+    expect(res.body.product).toBe('Lugemi Reasoning Fabric');
     expect(res.body.architecture.customerFacingProduct).toBe(false);
     expect(res.body.architecture.customReasonerOs).toBe(false);
     expect(res.body.architecture.regeneratesReasoningRuntime).toBe(false);
@@ -182,7 +182,7 @@ describe('Reasoning Fabric (VL-244)', () => {
       })
       .expect(200);
     expect(dist.body.distribution.targets).toContain(peer.id);
-    expect(dist.body.event.type).toBe('com.verbalab.reasoning.distributed');
+    expect(dist.body.event.type).toBe('com.lugemi.reasoning.distributed');
 
     const history = await request(app.getHttpServer())
       .get('/v1/reasoning-fabric/history')

@@ -1,4 +1,4 @@
-# VerbaLab — Volume 3: Voice Cloud (Phases 27–36)
+# Lugemi — Volume 3: Voice Cloud (Phases 27–36)
 
 Same workflow as Volumes 1 and 2. `.cursorrules` at the repo root still applies.
 This builds Voice Cloud on top of everything from Volumes 1–2 — remind Cursor

@@ -122,7 +122,7 @@ export function DataClient() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `verbalab-export-${settings?.name ?? 'workspace'}.json`;
+      a.download = `lugemi-export-${settings?.name ?? 'workspace'}.json`;
       a.click();
       URL.revokeObjectURL(url);
       setMessage('Export downloaded.');

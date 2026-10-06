@@ -389,7 +389,7 @@ export class PolicyRuntimeService {
     if (policyRuntimeMode() === 'disabled') {
       throw new ApiException(
         'policy_runtime_disabled',
-        'Policy Runtime mutations disabled (VERBALAB_POLICY_RUNTIME_MODE=disabled). Global hard denies still apply to runtime gates.',
+        'Policy Runtime mutations disabled (LUGEMI_POLICY_RUNTIME_MODE=disabled). Global hard denies still apply to runtime gates.',
         HttpStatus.FORBIDDEN,
       );
     }

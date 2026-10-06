@@ -8,7 +8,7 @@ import { PrismaService } from '../src/prisma/prisma.service';
 import { ApiKeysService } from '../src/api-keys/api-keys.service';
 import { GatewayService } from '../src/gateway/gateway.service';
 import { PromptsService } from '../src/prompts/prompts.service';
-import { VERBALAB_CHAT_SYSTEM } from '../src/chat/chat-prompt';
+import { LUGEMI_CHAT_SYSTEM } from '../src/chat/chat-prompt';
 import { ApiExceptionFilter } from '../src/common/errors/api-exception.filter';
 
 async function seedOrg(prisma: PrismaService, name: string) {
@@ -84,7 +84,7 @@ describe('Prompt management (VL-086)', () => {
       key: 'chat',
     });
     expect(resolved.source).toBe('fallback');
-    expect(resolved.body).toBe(VERBALAB_CHAT_SYSTEM);
+    expect(resolved.body).toBe(LUGEMI_CHAT_SYSTEM);
   });
 
   it('activates a version and rolls back; chat uses the active body', async () => {

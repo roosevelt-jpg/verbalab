@@ -14,7 +14,7 @@ export class AfricanIntelligenceCloudService {
 
   products() {
     return {
-      product: 'VerbaLab African Intelligence Cloud',
+      product: 'Lugemi African Intelligence Cloud',
       products: africanIntelligenceProductCatalog(),
       architecture: africanIntelligenceArchitectureNotes(),
       honesty: africanIntelligenceHonesty(),

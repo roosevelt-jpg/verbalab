@@ -1,20 +1,20 @@
-# VerbaLab Context Engine
+# Lugemi Context Engine
 
 **Status:** Partial shipped (VL-185 / library Phase 52)  
 **Rule:** Assemble retrieval + memory + prompt context for AI requests. Do not claim infinite context windows. Compression is char-budget truncation, not LLM summarization.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Conversation / Document / Org / Project / Language / User / Workspace / Historical Context | **Shipped** — `POST /v1/context-engine/assemble` sources |
 | Context Retrieval | **Shipped** — multi-source → `promptContext` |
 | Context Compression | **Partial** — priority char budget; LLM summarization deferred |
 | Realtime APIs | **Deferred** |
 | Engine / Dashboard | **VL-185** — `GET /v1/context-engine/engine` + `/context-engine` |
-| GraphQL / SDK / CLI | `contextEngine`, `verbalab context-engine` / `context-assemble` |
+| GraphQL / SDK / CLI | `contextEngine`, `lugemi context-engine` / `context-assemble` |
 | Related | Vector Cloud, Memory Cloud, Knowledge Graph, Prompts |
 
 ---

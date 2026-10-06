@@ -11,7 +11,7 @@ export type ReasoningCapability = {
 /** Library Phase 53 → Reasoning Cloud (VL-186). LLM gateway multi-step prompts — not a custom reasoner kernel. */
 export function reasoningCloudCatalog() {
   return {
-    product: 'VerbaLab Reasoning Cloud',
+    product: 'Lugemi Reasoning Cloud',
     note:
       'Multi-step reasoning via AI Gateway chat prompts (VL-186). Chain/plan/decision/problem-solving shipped as prompt strategies. Tree-of-thought is shallow branching. Not a proprietary symbolic reasoner or agent OS.',
     capabilities: [
@@ -121,8 +121,8 @@ export function reasoningCloudCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

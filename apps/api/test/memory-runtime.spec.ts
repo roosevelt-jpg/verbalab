@@ -39,12 +39,12 @@ describe('Memory Runtime (VL-215)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
-  const prevMax = process.env.VERBALAB_KERNEL_MEMORY_MAX_ENTRIES;
-  const prevMode = process.env.VERBALAB_MEMORY_RUNTIME_MODE;
+  const prevMax = process.env.LUGEMI_KERNEL_MEMORY_MAX_ENTRIES;
+  const prevMode = process.env.LUGEMI_MEMORY_RUNTIME_MODE;
 
   beforeAll(async () => {
-    process.env.VERBALAB_MEMORY_RUNTIME_MODE = 'sandbox';
-    process.env.VERBALAB_KERNEL_MEMORY_MAX_ENTRIES = '5';
+    process.env.LUGEMI_MEMORY_RUNTIME_MODE = 'sandbox';
+    process.env.LUGEMI_KERNEL_MEMORY_MAX_ENTRIES = '5';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -59,10 +59,10 @@ describe('Memory Runtime (VL-215)', () => {
   });
 
   afterAll(async () => {
-    if (prevMax === undefined) delete process.env.VERBALAB_KERNEL_MEMORY_MAX_ENTRIES;
-    else process.env.VERBALAB_KERNEL_MEMORY_MAX_ENTRIES = prevMax;
-    if (prevMode === undefined) delete process.env.VERBALAB_MEMORY_RUNTIME_MODE;
-    else process.env.VERBALAB_MEMORY_RUNTIME_MODE = prevMode;
+    if (prevMax === undefined) delete process.env.LUGEMI_KERNEL_MEMORY_MAX_ENTRIES;
+    else process.env.LUGEMI_KERNEL_MEMORY_MAX_ENTRIES = prevMax;
+    if (prevMode === undefined) delete process.env.LUGEMI_MEMORY_RUNTIME_MODE;
+    else process.env.LUGEMI_MEMORY_RUNTIME_MODE = prevMode;
     await app.close();
   });
 

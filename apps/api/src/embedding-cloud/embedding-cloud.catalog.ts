@@ -18,7 +18,7 @@ export type EmbeddingModality = {
 /** Library Phase 48 → Embedding Cloud (VL-181). Extends VL-063 — not a multimodal embedding OS. */
 export function embeddingCloudCatalog() {
   return {
-    product: 'VerbaLab Embedding Cloud',
+    product: 'Lugemi Embedding Cloud',
     note:
       'Text embeddings via AI Gateway (OpenAI text-embedding-3-small by default). Document/code use the same text path. Speech/image/video/cross-modal deferred. Not Voyage/Cohere multimodal parity.',
     capabilities: [
@@ -134,8 +134,8 @@ export function embeddingCloudCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,
@@ -172,6 +172,6 @@ export function embeddingModelsCatalog() {
         notes: 'Optional via model= on POST /v1/embeddings.',
       },
     ],
-    note: 'Buy embeddings — VerbaLab does not train embedding models (VL-181).',
+    note: 'Buy embeddings — Lugemi does not train embedding models (VL-181).',
   };
 }

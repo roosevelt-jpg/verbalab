@@ -27,7 +27,7 @@ export function AiGovernancePlatformClient() {
         AI Governance Platform
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-294 — VerbaLab AI Governance Platform console in the Trust Cloud.
+        VL-294 — Lugemi AI Governance Platform console in the Trust Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

@@ -6,7 +6,7 @@ export type AnalyticsStatus = 'shipped' | 'partial' | 'deferred';
  */
 export function researchAnalyticsEngineCatalog() {
   return {
-    product: 'VerbaLab Research Analytics',
+    product: 'Lugemi Research Analytics',
     note:
       'Research Analytics (VL-279). Aggregates experiments/publications/patents/model progress/ROI/benchmark improvements/TRL from sibling catalogs — honest static/computed summary, not a BI OS.',
     snapshot: {

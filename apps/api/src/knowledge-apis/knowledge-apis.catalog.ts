@@ -128,7 +128,7 @@ export const KNOWLEDGE_WEBHOOK_EVENTS = [
  */
 export function knowledgeApisCatalog() {
   return {
-    product: 'VerbaLab Enterprise Knowledge APIs',
+    product: 'Lugemi Enterprise Knowledge APIs',
     note:
       'Public-facing API pack for Knowledge Cloud (VL-201): REST catalog, GraphQL façades, OpenAPI, SDK/CLI, developer portal links, signed webhooks, and light SSE event tails. Extends VL-062 + Volume 6 hubs. Not a gRPC mesh, Kafka event-streaming OS, or multi-language SDK generator factory.',
     capabilities: [
@@ -165,14 +165,14 @@ export function knowledgeApisCatalog() {
         name: 'SDK',
         status: 'shipped',
         api: 'GET /v1/knowledge-apis/sdk',
-        notes: '@verbalab/sdk knowledge* helpers. Hand-maintained — not generated.',
+        notes: '@lugemi/sdk knowledge* helpers. Hand-maintained — not generated.',
       },
       {
         id: 'cli',
         name: 'CLI',
         status: 'shipped',
         api: 'GET /v1/knowledge-apis/cli',
-        notes: '@verbalab/cli knowledge-* commands.',
+        notes: '@lugemi/cli knowledge-* commands.',
       },
       {
         id: 'webhooks',

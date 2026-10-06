@@ -1,10 +1,10 @@
 /**
  * Library Phase 214 → Repository Standards (VL-347).
- * Repository Standards (VL-347). Monorepo/polyrepo/templates/naming/folder/branch/git/commit/versioning catalog matching VerbaLab monorepo reality (pnpm/turbo apps/* packages/*).
+ * Repository Standards (VL-347). Monorepo/polyrepo/templates/naming/folder/branch/git/commit/versioning catalog matching Lugemi monorepo reality (pnpm/turbo apps/* packages/*).
  */
 export function repositoryStandardsEngineCatalog() {
   return {
-    product: 'VerbaLab Repository Standards',
+    product: 'Lugemi Repository Standards',
     engineeringOsForHumansAndCursor: true,
     customerFacingProductCloud: false,
     architectureKnowledgeBaseOs: false,
@@ -27,7 +27,7 @@ export function repositoryStandardsEngineCatalog() {
         path: '/v1/developer-experience-platform/engine',
         role: 'Developer Experience',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       },
       {
         id: 'route-2',
@@ -35,7 +35,7 @@ export function repositoryStandardsEngineCatalog() {
         path: '/v1/golden-path-platform/engine',
         role: 'Golden Paths',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       },
       {
         id: 'route-3',
@@ -43,7 +43,7 @@ export function repositoryStandardsEngineCatalog() {
         path: '/v1/gitops-platform/engine',
         role: 'GitOps',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       }
     ],
     routesTo: [
@@ -79,9 +79,9 @@ export function repositoryStandardsEngineCatalog() {
       customerFacingProductCloud: false,
       architectureKnowledgeBaseOs: false,
       adrFactoryOs: false,
-      note: 'Repository Standards (VL-347). Monorepo/polyrepo/templates/naming/folder/branch/git/commit/versioning catalog matching VerbaLab monorepo reality (pnpm/turbo apps/* packages/*).',
+      note: 'Repository Standards (VL-347). Monorepo/polyrepo/templates/naming/folder/branch/git/commit/versioning catalog matching Lugemi monorepo reality (pnpm/turbo apps/* packages/*).',
     },
     docs: '/docs/REPOSITORY_STANDARDS.md',
-    note: 'Repository Standards (VL-347). Monorepo/polyrepo/templates/naming/folder/branch/git/commit/versioning catalog matching VerbaLab monorepo reality (pnpm/turbo apps/* packages/*).',
+    note: 'Repository Standards (VL-347). Monorepo/polyrepo/templates/naming/folder/branch/git/commit/versioning catalog matching Lugemi monorepo reality (pnpm/turbo apps/* packages/*).',
   };
 }

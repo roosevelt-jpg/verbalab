@@ -112,7 +112,7 @@ describe('Speech Recognition Engine (VL-151)', () => {
 
   it('exposes engine catalog and industry packs', async () => {
     const engine = await request(app.getHttpServer()).get('/v1/speech/engine').expect(200);
-    expect(engine.body.product).toBe('VerbaLab Speech');
+    expect(engine.body.product).toBe('Lugemi Speech');
     const ids = engine.body.capabilities.map((c: { id: string }) => c.id);
     expect(ids).toEqual(
       expect.arrayContaining([
@@ -145,7 +145,7 @@ describe('Speech Recognition Engine (VL-151)', () => {
     await request(app.getHttpServer())
       .post('/v1/speech/vocabulary')
       .set('Authorization', `Bearer ${key.secret}`)
-      .send({ phrase: 'VerbaLab' })
+      .send({ phrase: 'Lugemi' })
       .expect(201);
 
     lastPrompt = undefined;
@@ -162,7 +162,7 @@ describe('Speech Recognition Engine (VL-151)', () => {
     expect(res.body.vocabularyApplied).toBe(true);
     expect(res.body.industryPacks).toContain('medical');
     expect(res.body.text).toMatch(/Hello/);
-    expect(lastPrompt).toContain('VerbaLab');
+    expect(lastPrompt).toContain('Lugemi');
     expect(lastPrompt).toContain('hypertension');
   });
 
@@ -214,7 +214,7 @@ describe('Speech Recognition Engine (VL-151)', () => {
       .send({ query: '{ speechEngine { product capabilities { id status } } }' })
       .expect(200);
     expect(res.body.errors).toBeUndefined();
-    expect(res.body.data.speechEngine.product).toBe('VerbaLab Speech');
+    expect(res.body.data.speechEngine.product).toBe('Lugemi Speech');
   });
 
   it('formats subtitle helpers', () => {

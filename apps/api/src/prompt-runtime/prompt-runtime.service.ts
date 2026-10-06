@@ -503,7 +503,7 @@ export class PromptRuntimeService {
     if (promptRuntimeMode() === 'disabled') {
       throw new ApiException(
         'prompt_runtime_disabled',
-        'Prompt Runtime mode is disabled (VERBALAB_PROMPT_RUNTIME_MODE=disabled).',
+        'Prompt Runtime mode is disabled (LUGEMI_PROMPT_RUNTIME_MODE=disabled).',
         HttpStatus.FORBIDDEN,
       );
     }

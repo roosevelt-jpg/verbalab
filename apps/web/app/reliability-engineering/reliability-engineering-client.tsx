@@ -27,7 +27,7 @@ export function ReliabilityEngineeringClient() {
         Reliability Engineering
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-308 — VerbaLab Reliability Engineering console in the Platform Engineering Cloud.
+        VL-308 — Lugemi Reliability Engineering console in the Platform Engineering Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

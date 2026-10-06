@@ -45,7 +45,7 @@ export class NeuralTtsService {
     return {
       periodStart: summary.periodStart,
       tts: summary.tts,
-      product: 'VerbaLab Neural TTS',
+      product: 'Lugemi Neural TTS',
       note: 'Usage metering for TTS characters. Full Voice Analytics = VL-178 /voice-analytics.',
       docs: '/docs/NEURAL_TTS.md',
     };

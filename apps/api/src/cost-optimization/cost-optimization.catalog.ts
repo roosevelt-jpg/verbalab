@@ -26,7 +26,7 @@ export const COST_SPEND_CATEGORIES: CostSpendCategory[] = [
 ];
 
 export function costOptimizationMode(): 'disabled' | 'sandbox' {
-  const raw = (process.env.VERBALAB_COST_OPTIMIZATION_MODE ?? 'sandbox').toLowerCase();
+  const raw = (process.env.LUGEMI_COST_OPTIMIZATION_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
@@ -35,11 +35,11 @@ export function costOptimizationMode(): 'disabled' | 'sandbox' {
 export function costCeilings() {
   const daily = Math.max(
     0.01,
-    Number(process.env.VERBALAB_COST_DAILY_CAP_USD ?? '10') || 10,
+    Number(process.env.LUGEMI_COST_DAILY_CAP_USD ?? '10') || 10,
   );
   const monthly = Math.max(
     0.01,
-    Number(process.env.VERBALAB_COST_MONTHLY_CAP_USD ?? '100') || 100,
+    Number(process.env.LUGEMI_COST_MONTHLY_CAP_USD ?? '100') || 100,
   );
   return {
     defaultDailyCapUsd: Math.min(daily, 10_000),
@@ -59,7 +59,7 @@ export function costCeilings() {
  */
 export function costOptimizationCatalog() {
   return {
-    product: 'VerbaLab Cost Optimization Engine',
+    product: 'Lugemi Cost Optimization Engine',
     note:
       'Cost Optimization (VL-211). Org/workspace daily/monthly spend caps with hard enforce on record/check and AI Router resolve. Dynamic routing prefers cheaper Gateway candidates; GPU cost views reuse VL-205 ceilings; spot/reserved are sandbox planning only. Not a cloud FinOps OS, Spot marketplace, or reserved-instance broker.',
     capabilities: [
@@ -173,7 +173,7 @@ export function costOptimizationCatalog() {
         name: 'SDK',
         status: 'shipped',
         api: 'costOptimizationEngine()',
-        notes: '@verbalab/sdk',
+        notes: '@lugemi/sdk',
       },
       {
         id: 'spend-enforcement',

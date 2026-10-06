@@ -112,7 +112,7 @@ describe('Emotion Voice Engine (VL-173)', () => {
 
   it('exposes engine + profiles with honest trainedExpressiveModel=false', async () => {
     const engine = await request(app.getHttpServer()).get('/v1/emotion-voice/engine').expect(200);
-    expect(engine.body.product).toBe('VerbaLab Emotion Voice');
+    expect(engine.body.product).toBe('Lugemi Emotion Voice');
     expect(engine.body.architecture.trainedExpressiveModel).toBe(false);
     expect(engine.body.related.speechEmotionDetection).toContain('EMOTION_INTELLIGENCE');
 
@@ -155,9 +155,9 @@ describe('Emotion Voice Engine (VL-173)', () => {
       .send({ text: 'Hello there.', emotion: 'happy' })
       .expect(200);
 
-    expect(res.headers['x-verbalab-emotion']).toBe('happy');
-    expect(res.headers['x-verbalab-voice']).toBe('nova');
-    expect(res.headers['x-verbalab-emotion-mode']).toBe('soft_prosody_voice_pick');
+    expect(res.headers['x-lugemi-emotion']).toBe('happy');
+    expect(res.headers['x-lugemi-voice']).toBe('nova');
+    expect(res.headers['x-lugemi-emotion-mode']).toBe('soft_prosody_voice_pick');
     expect(Buffer.from(res.body).toString('utf8')).toContain('AUDIO:nova:');
   });
 

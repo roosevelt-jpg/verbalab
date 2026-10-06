@@ -6,7 +6,7 @@
 
 ## Context
 
-Library Grammar Intelligence asks for a full grammar OS (engines, vertical writing packs, analytics). ROADMAP maps this to “LLM prompts + glossary until proven.” VerbaLab already has chat (VL-060). We need a first-class `POST /v1/grammar/check` without claiming Grammarly parity or a morphology engine.
+Library Grammar Intelligence asks for a full grammar OS (engines, vertical writing packs, analytics). ROADMAP maps this to “LLM prompts + glossary until proven.” Lugemi already has chat (VL-060). We need a first-class `POST /v1/grammar/check` without claiming Grammarly parity or a morphology engine.
 
 ## Decision
 

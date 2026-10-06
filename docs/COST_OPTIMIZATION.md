@@ -1,4 +1,4 @@
-# VerbaLab Cost Optimization Engine
+# Lugemi Cost Optimization Engine
 
 **Status:** Partial (VL-211 / library Phase 78)  
 **Parent:** [Inference Cloud](./INFERENCE_CLOUD.md)  
@@ -18,7 +18,7 @@
 | Predictions / reports | `GET …/predictions` · `/reports` |
 | Analytics / monitoring | `GET …/analytics` · `/monitoring` |
 | GraphQL | `costOptimizationEngine` |
-| SDK / CLI | `costOptimizationEngine()` · `verbalab cost-optimization-engine` |
+| SDK / CLI | `costOptimizationEngine()` · `lugemi cost-optimization-engine` |
 
 ## Enforcement (required)
 
@@ -30,9 +30,9 @@
 
 | Control | Default | Env |
 | --- | --- | --- |
-| Mode | `sandbox` | `VERBALAB_COST_OPTIMIZATION_MODE=disabled\|sandbox` |
-| Default daily cap | $10 | `VERBALAB_COST_DAILY_CAP_USD` |
-| Default monthly cap | $100 | `VERBALAB_COST_MONTHLY_CAP_USD` |
+| Mode | `sandbox` | `LUGEMI_COST_OPTIMIZATION_MODE=disabled\|sandbox` |
+| Default daily cap | $10 | `LUGEMI_COST_DAILY_CAP_USD` |
+| Default monthly cap | $100 | `LUGEMI_COST_MONTHLY_CAP_USD` |
 
 ## Honesty
 

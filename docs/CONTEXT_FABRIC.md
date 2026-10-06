@@ -1,13 +1,13 @@
-# VerbaLab Context Fabric
+# Lugemi Context Fabric
 
 **Status:** Shipped (VL-241 / library Phase 108)  
 **Rule:** Context Fabric is the **internal** cross-cloud context router over Context Runtime — **not** an infinite context window, WebSocket OS, or customer-facing product. Extends AI Fabric + Context Runtime. Do **not** regenerate Volumes 1–9 or VL-217/VL-185. Roadmap: [`docs/roadmap/volume10-ai-fabric/`](./roadmap/volume10-ai-fabric/).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Context Fabric | **VL-241** — `/context-fabric` |
 | User / Workspace / Conversation / Language / Project / Knowledge / Model Context | **Shipped** via Context Runtime assemble include map |
@@ -31,7 +31,7 @@
 | Monitoring / overview | `GET /v1/context-fabric/monitoring`, `/overview` |
 | GraphQL | `contextFabricCapabilities`, `contextFabricRoutes` |
 | SDK | `contextFabricProducts()`, `contextFabricRoute()`, `contextFabricPropagate()` |
-| CLI | `verbalab context-fabric-products` |
+| CLI | `lugemi context-fabric-products` |
 
 ## Action safety
 

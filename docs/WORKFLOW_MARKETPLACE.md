@@ -1,13 +1,13 @@
-# VerbaLab Workflow Marketplace
+# Lugemi Workflow Marketplace
 
 **Status:** Shipped (VL-255 / library Phase 122)  
 **Rule:** Extends Workflow Runtime (VL-220) + listings `kind=workflow` — **not** Zapier / Temporal / Airflow OS. Third-party workflows run only through Workflow Runtime sandbox + WorkflowPolicyGate + Policy Fabric hard gate. Real-money honesty: Stripe (or equivalent); `storesRawCardData: false`. Roadmap: [`docs/roadmap/volume11-ecosystem-cloud/`](./roadmap/volume11-ecosystem-cloud/).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Automation / Workflow Templates | **Shipped** — `category` |
 | Industry / Business Packs | **Shipped** |
@@ -30,7 +30,7 @@
 | Reviews / sales / analytics | under `/v1/workflow-marketplace/*` |
 | GraphQL | `workflowMarketplaceEngine` |
 | SDK | `workflowMarketplaceEngine()` |
-| CLI | `verbalab workflow-marketplace-engine` |
+| CLI | `lugemi workflow-marketplace-engine` |
 
 ## Run path (must stay enforced)
 

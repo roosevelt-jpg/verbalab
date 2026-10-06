@@ -124,7 +124,7 @@ export function assessAntiSpoof(buffer: Buffer): AntiSpoofResult {
 
 const CHALLENGE_WORDS = [
   'karibu',
-  'verbalab',
+  'lugemi',
   'safari',
   'ubuntu',
   'nairobi',

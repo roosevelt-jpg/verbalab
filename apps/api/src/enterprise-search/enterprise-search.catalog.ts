@@ -11,7 +11,7 @@ export type EnterpriseSearchCapability = {
 /** Library Phase 62 → Enterprise Search (VL-195). Search over EKB/VL-062 — not Elastic/OpenSearch OS. */
 export function enterpriseSearchCatalog() {
   return {
-    product: 'VerbaLab Enterprise Search',
+    product: 'Lugemi Enterprise Search',
     note:
       'Workspace-scoped search over Knowledge Base chunks (VL-195). Keyword + semantic (pgvector) + light hybrid RRF. Extends VL-062 / Vector Cloud. Not Elastic/OpenSearch OS; image/voice/BM25-parity deferred.',
     capabilities: [

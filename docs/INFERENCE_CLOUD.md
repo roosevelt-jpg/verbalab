@@ -1,4 +1,4 @@
-# VerbaLab Inference Cloud
+# Lugemi Inference Cloud
 
 **Status:** Volume complete through Production Audit (VL-204–213 / library Phases 71–80)  
 **Rule:** Shared model runtime layer underneath AI Orchestration and every product cloud that calls a model. Extends **AI Gateway (VL-021)** + chat/embeddings. Do **not** regenerate Gateway, Intelligence, Knowledge, or invent a GPU hyperscaler / multi-region Inference OS. Follow the [12-layer Cloud Blueprint](./CLOUD_BLUEPRINT.md) (ADR-0080). Roadmap: [`docs/roadmap/volume7-inference-cloud/`](./roadmap/volume7-inference-cloud/). Evidence: [`docs/inference-cloud-audit/`](./inference-cloud-audit/).
@@ -7,9 +7,9 @@ Volumes 1–6 already ship Language, Speech, Voice, Intelligence, and Knowledge 
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Inference Cloud Foundation | **VL-204** — `/inference-cloud` + product catalog / overview |
 | GPU Platform | **Partial** — **VL-205** `/gpu-platform` sandbox + hard ceilings; no cloud GPU APIs |
@@ -38,8 +38,8 @@ Volumes 1–6 already ship Language, Speech, Voice, Intelligence, and Knowledge 
 | REST overview | `GET /v1/inference-cloud/overview` (Clerk session) |
 | GraphQL | `inferenceProducts` |
 | OpenAPI | `/v1/openapi.json` |
-| SDK | `inferenceProducts()` on `@verbalab/sdk` |
-| CLI | `verbalab inference-products` |
+| SDK | `inferenceProducts()` on `@lugemi/sdk` |
+| CLI | `lugemi inference-products` |
 | GPU Platform | `/gpu-platform` · `GET /v1/gpu-platform/engine` (VL-205) |
 | Model Serving | `/model-serving` · `GET /v1/model-serving/engine` (VL-206) |
 | AI Router | `/ai-router` · `GET /v1/ai-router/engine` · `POST …/resolve` (VL-207) |

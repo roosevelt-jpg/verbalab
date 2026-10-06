@@ -4,11 +4,11 @@
 Phase 27
 Voice Cloud Foundation
 Cursor Master Prompt
-You are the Principal AI Voice Architect for VerbaLab AI.
+You are the Principal AI Voice Architect for Lugemi AI.
 
 Build the complete Voice Cloud Foundation.
 
-This extends the existing VerbaLab architecture.
+This extends the existing Lugemi architecture.
 
 Do NOT regenerate previous phases.
 
@@ -16,7 +16,7 @@ Voice Cloud becomes a first-class cloud product.
 
 Products
 
-• VerbaLab Voice
+• Lugemi Voice
 • Neural TTS
 • Voice Cloning
 • Instant Voice Cloning

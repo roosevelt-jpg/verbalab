@@ -97,7 +97,7 @@ describe('Prompt Marketplace (VL-253)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/prompt-marketplace/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Prompt Marketplace');
+    expect(res.body.product).toBe('Lugemi Prompt Marketplace');
     expect(res.body.honesty.promptMeshOs).toBe(false);
     expect(res.body.honesty.autoPromptResearchOs).toBe(false);
     expect(res.body.honesty.storesRawCardData).toBe(false);

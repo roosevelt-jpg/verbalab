@@ -21,6 +21,6 @@ test.describe('Public console surfaces', () => {
   test('web health endpoint is ok', async ({ request }) => {
     const res = await request.get('/health');
     expect(res.ok()).toBeTruthy();
-    expect(await res.json()).toMatchObject({ status: 'ok', service: 'verbalab-web' });
+    expect(await res.json()).toMatchObject({ status: 'ok', service: 'lugemi-web' });
   });
 });

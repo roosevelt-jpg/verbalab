@@ -40,7 +40,7 @@ export type DocumentTranslateResult = {
   preview: string;
 };
 
-export const JOB_QUEUE_NAME = 'verbalab-jobs';
+export const JOB_QUEUE_NAME = 'lugemi-jobs';
 
 /** Default 5 MiB upload cap. */
 export function documentMaxBytes(): number {

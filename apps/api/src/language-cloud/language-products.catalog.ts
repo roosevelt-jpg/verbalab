@@ -14,7 +14,7 @@ export function languageProductCatalog(): LanguageProductRow[] {
   return [
     {
       id: 'translate',
-      name: 'VerbaLab Translate',
+      name: 'Lugemi Translate',
       status: 'shipped',
       api: 'POST /v1/translate',
       console: '/translate',
@@ -156,8 +156,8 @@ export function languageArchitectureNotes() {
     cqrs: true,
     hexagonalRewrite: false,
     eventDriven: 'audit_and_jobs_only',
-    sdk: '@verbalab/sdk',
-    cli: '@verbalab/cli',
+    sdk: '@lugemi/sdk',
+    cli: '@lugemi/cli',
     openapi: '/v1/openapi.json',
     infra: ['docker', 'fly', 'github_actions', 'terraform', 'eks'],
     terraform: true,

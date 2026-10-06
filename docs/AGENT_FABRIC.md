@@ -1,13 +1,13 @@
-# VerbaLab Agent Fabric
+# Lugemi Agent Fabric
 
 **Status:** Shipped (VL-246 / library Phase 113)  
 **Rule:** Agent Fabric is the **internal** agent router over Agent Runtime — **sandboxed + Policy-gated**. Not LangGraph/AutoGPT OS, open tool execution, or a customer-facing product. Extends AI Fabric + Agent Runtime. Do **not** regenerate Volumes 1–9 or VL-219. Roadmap: [`docs/roadmap/volume10-ai-fabric/`](./roadmap/volume10-ai-fabric/).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Agent Fabric | **VL-246** — `/agent-fabric` |
 | Agent Router | **Shipped** — `POST /route` |
@@ -32,7 +32,7 @@
 | Distribute | `POST /distribute` (same-org + optional Event Fabric) |
 | Realtime | `GET /stream` (SSE) |
 | GraphQL | `agentFabricCapabilities`, `agentFabricRoutes` |
-| SDK / CLI | `agentFabricProducts()`, `verbalab agent-fabric-products` |
+| SDK / CLI | `agentFabricProducts()`, `lugemi agent-fabric-products` |
 
 ## Action safety
 

@@ -4,12 +4,12 @@ Library Phase 187 — part of Volume 17 Control Plane Cloud.
 
 ## Mission
 
-VerbaLab Secrets & Certificate Platform provides the Secrets & Certificate Platform surface inside the Control Plane Cloud —
+Lugemi Secrets & Certificate Platform provides the Secrets & Certificate Platform surface inside the Control Plane Cloud —
 the highest-privilege management layer. The control plane never executes AI inference.
 
 ## Honesty
 
-- Extends existing VerbaLab systems — does not regenerate Volumes 1–16.
+- Extends existing Lugemi systems — does not regenerate Volumes 1–16.
 - `encryptedAtRest=true`.
 - `executesInference=false`.
 - Not Kubernetes control-plane OS, Istio OS, HashiCorp Vault OS, or Data Plane OS.

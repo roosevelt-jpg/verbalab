@@ -4,7 +4,7 @@ Library Phase 155 — part of Volume 14 MLOps & LLMOps Cloud.
 
 ## Mission
 
-VerbaLab AI Drift Detection provides the AI Drift Detection surface inside VerbaLab.
+Lugemi AI Drift Detection provides the AI Drift Detection surface inside Lugemi.
 
 ## Honesty
 

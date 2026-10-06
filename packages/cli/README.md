@@ -1,16 +1,16 @@
-# @verbalab/cli
+# @lugemi/cli
 
-Thin command-line client for the Lugemi API (`@verbalab/sdk`). Historical package name; public product is Lugemi.
+Thin command-line client for the Lugemi API (`@lugemi/sdk`).
 
 ```bash
-pnpm --filter @verbalab/cli build
-export VERBALAB_API_KEY=vl_live_...
+pnpm --filter @lugemi/cli build
+export LUGEMI_API_KEY=lg_live_...
 # or soft sandbox:
-export VERBALAB_API_KEY=vl_test_...
+export LUGEMI_API_KEY=lg_test_...
 
-verbalab languages
-verbalab whoami
-verbalab translate --text "Hello" --target sw --source en
+lugemi languages
+lugemi whoami
+lugemi translate --text "Hello" --target sw --source en
 ```
 
 Not a full developer platform CLI. See `docs/DEVELOPER_CLOUD.md`.

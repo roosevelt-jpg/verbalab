@@ -9,7 +9,7 @@ export type ContextRuntimeCapability = {
 };
 
 export function contextRuntimeMode(): 'disabled' | 'sandbox' {
-  const raw = (process.env.VERBALAB_CONTEXT_RUNTIME_MODE ?? 'sandbox').toLowerCase();
+  const raw = (process.env.LUGEMI_CONTEXT_RUNTIME_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
@@ -18,11 +18,11 @@ export function contextRuntimeCeilings() {
   return {
     maxChars: Math.min(
       64_000,
-      Math.max(500, Number(process.env.VERBALAB_CONTEXT_RUNTIME_MAX_CHARS ?? '8000') || 8000),
+      Math.max(500, Number(process.env.LUGEMI_CONTEXT_RUNTIME_MAX_CHARS ?? '8000') || 8000),
     ),
     cacheTtlSec: Math.min(
       86_400,
-      Math.max(30, Number(process.env.VERBALAB_CONTEXT_RUNTIME_CACHE_TTL_SEC ?? '300') || 300),
+      Math.max(30, Number(process.env.LUGEMI_CONTEXT_RUNTIME_CACHE_TTL_SEC ?? '300') || 300),
     ),
     mode: contextRuntimeMode(),
     note: 'Hard assemble char ceiling. Opt-in Intelligent Cache namespace=context.',
@@ -51,7 +51,7 @@ export const CONTEXT_RUNTIME_PRIORITIES: Array<{ kind: string; priority: number 
  */
 export function contextRuntimeCatalog() {
   return {
-    product: 'VerbaLab Context Runtime',
+    product: 'Lugemi Context Runtime',
     note:
       'Context Runtime (VL-217). Kernel assembly over VL-185 Context Engine (conversation/workspace/org/project/language/user/knowledge/model blocks, prioritization, char-budget compression, retrieval). Optional Intelligent Cache namespace=context. Not an infinite context window, not LLM summarization OS, not realtime push. Does not regenerate Context Engine.',
     capabilities: [
@@ -158,7 +158,7 @@ export function contextRuntimeCatalog() {
         name: 'SDK',
         status: 'shipped',
         api: 'contextRuntimeEngine()',
-        notes: '@verbalab/sdk',
+        notes: '@lugemi/sdk',
       },
       {
         id: 'monitoring',

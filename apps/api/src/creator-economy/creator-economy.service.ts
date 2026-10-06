@@ -342,7 +342,7 @@ export class CreatorEconomyService {
         stripeOrEquivalentRequired: true,
       },
       note:
-        'Dispute/chargeback flows are an explicit gap. Stripe may surface disputes in Dashboard when Connect is live — VerbaLab UI/workflow not complete.',
+        'Dispute/chargeback flows are an explicit gap. Stripe may surface disputes in Dashboard when Connect is live — Lugemi UI/workflow not complete.',
     };
   }
 

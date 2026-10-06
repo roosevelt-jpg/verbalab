@@ -64,7 +64,7 @@ describe('Voice agents (VL-084)', () => {
       name: 'fixture_stt',
       async transcribe() {
         return {
-          text: 'What is VerbaLab?',
+          text: 'What is Lugemi?',
           language: 'en',
           durationSeconds: 1.5,
           provider: 'fixture_stt',
@@ -78,7 +78,7 @@ describe('Voice agents (VL-084)', () => {
         return {
           message: {
             role: 'assistant',
-            content: 'VerbaLab is an enterprise language API for translate, speech, and chat.',
+            content: 'Lugemi is an enterprise language API for translate, speech, and chat.',
           },
           model: 'fixture',
           provider: 'fixture_chat',
@@ -128,7 +128,7 @@ describe('Voice agents (VL-084)', () => {
       .expect(200);
 
     expect(res.body.userText).toBe('How do I get an API key?');
-    expect(res.body.replyText).toContain('VerbaLab');
+    expect(res.body.replyText).toContain('Lugemi');
     expect(res.body.audioBase64).toBeTruthy();
     expect(res.body.providers.chat).toBe('fixture_chat');
     expect(res.body.providers.tts).toBe('fixture_tts');

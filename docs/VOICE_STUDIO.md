@@ -1,13 +1,13 @@
-# VerbaLab Voice Studio
+# Lugemi Voice Studio
 
 **Status:** Shipped hub (VL-174 / library Phase 31)  
 **Rule:** Professional studio over Neural TTS + VL-120 `/audio`. Linear timeline + SSML lite — **not** a nonlinear DAW / Descript / Premiere product. Vendors do **not** receive SSML markup.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Voice Studio / Professional Dashboard | **VL-174** — `/voice-studio` + legacy `/audio` (VL-120) |
 | Voice Library | `GET /v1/voice-studio/library` |

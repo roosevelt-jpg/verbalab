@@ -6,7 +6,7 @@
 
 ## Context
 
-Library Phase 6 asks for Translate, Detection, Dialect/Accent Detection, Grammar/Style AI, Localization, TM, Glossary, Terminology, Analytics, Quality — plus CQRS, hexagonal, GraphQL, unlimited dialects, country packs, Terraform/K8s regen. VerbaLab already ships M5 language depth (VL-050–054), locales (VL-102), coverage (VL-100), and language-pair analytics (VL-085). Regenerating those modules or inventing a linguistics OS would violate “extend, don’t regenerate.”
+Library Phase 6 asks for Translate, Detection, Dialect/Accent Detection, Grammar/Style AI, Localization, TM, Glossary, Terminology, Analytics, Quality — plus CQRS, hexagonal, GraphQL, unlimited dialects, country packs, Terraform/K8s regen. Lugemi already ships M5 language depth (VL-050–054), locales (VL-102), coverage (VL-100), and language-pair analytics (VL-085). Regenerating those modules or inventing a linguistics OS would violate “extend, don’t regenerate.”
 
 ## Decision
 

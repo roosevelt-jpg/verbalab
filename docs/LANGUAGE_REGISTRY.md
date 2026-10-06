@@ -7,7 +7,7 @@
 
 ## Honest scope
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Every language / dialect / script / … | **Every registered** entity in the curated enterprise catalog |
 | Morphology / phonetics / grammar engines | **Rule catalog** only (metadata) — not runtime linguistics engines |
@@ -46,7 +46,7 @@ Plus existing dialects, accents, locales, country-packs.
 
 ## Surfaces
 
-- **SDK:** `@verbalab/sdk` — `registry()`, `languageFamilies()`, `writingSystems()`, `linguisticRules()`, `validateRegistry()`, …
+- **SDK:** `@lugemi/sdk` — `registry()`, `languageFamilies()`, `writingSystems()`, `linguisticRules()`, `validateRegistry()`, …
 - **Admin dashboard:** `/registry`
 - **Docs:** this file + ADR-0060
 - **Production:** ships with API DB migrations + boot seed; Fly / EKS unchanged (`infra/DEPLOY.md`, `infra/AWS_EKS.md`)

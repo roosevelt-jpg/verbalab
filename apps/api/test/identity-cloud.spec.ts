@@ -172,7 +172,7 @@ describe('Identity Cloud (VL-126)', () => {
       userId: org.memberships[0].userId,
       name: 'machine-bot',
     });
-    expect(created.secret).toMatch(/^vl_live_/);
+    expect(created.secret).toMatch(/^lg_live_/);
 
     const listed = await apiKeys.list(org.id);
     expect(listed[0].kind).toBe('machine');

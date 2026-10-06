@@ -4,7 +4,7 @@ Library Phase 169 — part of Volume 16 Platform Engineering Cloud.
 
 ## Mission
 
-VerbaLab Platform Engineering Cloud is the internal Developer Platform (IDP) that lets
+Lugemi Platform Engineering Cloud is the internal Developer Platform (IDP) that lets
 engineering teams build, deploy, secure, observe, and operate services consistently —
 for engineers, not end users. Integrates Volume 7 GPU/Inference cost surfaces and
 Volume 10 Fabric where relevant.

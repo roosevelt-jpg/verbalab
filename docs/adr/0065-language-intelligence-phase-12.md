@@ -8,7 +8,7 @@
 
 Library Phase 12 asks for a Language Intelligence Platform covering language/dialect/accent detection, intent, sentiment, emotion, readability, complexity, translation/speech confidence — plus realtime APIs, REST, GraphQL, SDK, dashboard, monitoring, docs, tests, and production deploy.
 
-VerbaLab already ships detect (VL-054), dialects (VL-131), accents (VL-132), and heuristic translation quality. Claiming a full NLP research OS, voice-emotion product, or trained NLU suite would violate honesty rules and the vision-backlog stance (ROADMAP: Grammar/Style/Language Intelligence → LLM prompts until proven).
+Lugemi already ships detect (VL-054), dialects (VL-131), accents (VL-132), and heuristic translation quality. Claiming a full NLP research OS, voice-emotion product, or trained NLU suite would violate honesty rules and the vision-backlog stance (ROADMAP: Grammar/Style/Language Intelligence → LLM prompts until proven).
 
 ## Decision
 

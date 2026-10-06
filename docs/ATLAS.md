@@ -1,13 +1,13 @@
-# VerbaLab Atlas
+# Lugemi Atlas
 
 **Status:** Partial scaffold (VL-225 / library Phase 92)  
 **Rule:** Atlas is a **family interface scaffold** — not trained competitive foundation weights. Inference stays on Gateway vendors; training/eval/registry hand off to Volume 9 MLOps hubs. See Volume 9 README and ADR-0140.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Atlas LRM product | **Scaffold** — `/atlas` + capability catalog |
 | Reasoning / Planning | **Partial** — Reasoning Runtime handoff |
@@ -33,7 +33,7 @@
 | Monitoring | `GET /v1/atlas/monitoring` |
 | GraphQL | `atlasCapabilities` |
 | SDK | `atlasEngine()` |
-| CLI | `verbalab atlas-engine` |
+| CLI | `lugemi atlas-engine` |
 
 ## Honesty
 

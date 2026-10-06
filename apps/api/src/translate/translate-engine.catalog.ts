@@ -8,10 +8,10 @@ export type TranslateCapability = {
   notes: string;
 };
 
-/** Library Phase 8 → VerbaLab Translate (VL-140). */
+/** Library Phase 8 → Lugemi Translate (VL-140). */
 export function translateEngineCatalog() {
   return {
-    product: 'VerbaLab Translate',
+    product: 'Lugemi Translate',
     note:
       'Curated translation engine over Google MT + TM/glossary/quality. Not a website/WhatsApp localization platform.',
     capabilities: [
@@ -177,8 +177,8 @@ export function translateEngineCatalog() {
       quality: { status: 'partial', api: '/v1/reviews', notes: 'Heuristic QE' },
       rest: { status: 'shipped' },
       graphql: { status: 'shipped', api: 'mutation translate', notes: 'VL-140' },
-      sdk: { status: 'shipped', package: '@verbalab/sdk' },
-      cli: { status: 'shipped', package: '@verbalab/cli' },
+      sdk: { status: 'shipped', package: '@lugemi/sdk' },
+      cli: { status: 'shipped', package: '@lugemi/cli' },
       monitoring: { status: 'shipped', api: 'GET /v1/metrics/translate' },
       analytics: { status: 'shipped', api: 'GET /v1/analytics/overview' },
     },

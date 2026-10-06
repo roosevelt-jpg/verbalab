@@ -8,10 +8,10 @@ export type SpeechCapability = {
   notes: string;
 };
 
-/** Library Phase 17 → VerbaLab Speech Recognition Engine (VL-151). */
+/** Library Phase 17 → Lugemi Speech Recognition Engine (VL-151). */
 export function speechEngineCatalog() {
   return {
-    product: 'VerbaLab Speech',
+    product: 'Lugemi Speech',
     note:
       'Recognition engine over OpenAI Whisper (batch + segment SSE). Not Deepgram/AssemblyAI parity. True low-latency vendor WebSocket streaming remains buy/VL-122 depth.',
     capabilities: [
@@ -132,8 +132,8 @@ export function speechEngineCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

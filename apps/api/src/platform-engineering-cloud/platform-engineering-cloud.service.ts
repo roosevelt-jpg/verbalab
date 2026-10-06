@@ -14,7 +14,7 @@ export class PlatformEngineeringCloudService {
 
   products() {
     return {
-      product: 'VerbaLab Platform Engineering Cloud',
+      product: 'Lugemi Platform Engineering Cloud',
       products: platformEngineeringCloudProductCatalog(),
       architecture: platformEngineeringCloudArchitectureNotes(),
       honesty: platformEngineeringCloudHonesty(),

@@ -11,7 +11,7 @@ export type SpeakerCapability = {
 /** Library Phase 18 → Speaker Intelligence (VL-152). */
 export function speakerEngineCatalog() {
   return {
-    product: 'VerbaLab Speaker Intelligence',
+    product: 'Lugemi Speaker Intelligence',
     note:
       'Bounded speaker profiles, local voice fingerprints, 1:1 verification, 1:N identification, and gap-based diarization over Whisper segments. Not a NIST biometrics / pyannote OS.',
     capabilities: [
@@ -74,8 +74,8 @@ export function speakerEngineCatalog() {
     ] satisfies SpeakerCapability[],
     engines: [
       {
-        id: 'verbalab_fingerprint_v1',
-        name: 'VerbaLab local fingerprint v1',
+        id: 'lugemi_fingerprint_v1',
+        name: 'Lugemi local fingerprint v1',
         role: 'primary',
         modes: ['enroll', 'verify', 'identify'],
       },
@@ -95,7 +95,7 @@ export function speakerEngineCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
+      sdk: '@lugemi/sdk',
       docker: true,
       terraform: true,
       kubernetes: true,

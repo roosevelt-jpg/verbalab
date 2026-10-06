@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Generate VerbaLab Volume 15 Trust Cloud (VL-292–301) from Volume 14 patterns."""
+"""Generate Lugemi Volume 15 Trust Cloud (VL-292–301) from Volume 14 patterns."""
 
 from __future__ import annotations
 
 import re
 from pathlib import Path
 
-ROOT = Path("/workspace/verbalab")
+ROOT = Path("/workspace/lugemi")
 
 
 def to_pascal(slug: str) -> str:
@@ -339,7 +339,7 @@ export class TrustCloudService {
 
   products() {
     return {
-      product: 'VerbaLab Trust Cloud',
+      product: 'Lugemi Trust Cloud',
       products: trustCloudProductCatalog(),
       architecture: trustCloudArchitectureNotes(),
       honesty: trustCloudHonesty(),
@@ -784,7 +784,7 @@ export function aiSafetyDetectionsCatalog(): SafetyDetection[] {
 export function aiSafetyPlatformEngineCatalog() {
   const detections = aiSafetyDetectionsCatalog();
   return {
-    product: 'VerbaLab AI Safety Platform',
+    product: 'Lugemi AI Safety Platform',
     capabilities: [
       { id: 'prompt_injection', name: 'Prompt Injection Detection', status: 'shipped', notes: 'Direct + indirect.' },
       { id: 'jailbreak', name: 'Jailbreak Detection', status: 'shipped', notes: 'Block posture.' },
@@ -1102,7 +1102,7 @@ export function seedApprovalRequests(): ApprovalRequest[] {
 
 export function aiGovernancePlatformEngineCatalog(approvals: ApprovalRequest[]) {
   return {
-    product: 'VerbaLab AI Governance Platform',
+    product: 'Lugemi AI Governance Platform',
     capabilities: [
       { id: 'model_approval', name: 'Model Approval', status: 'shipped', notes: 'Human sign-off.' },
       { id: 'prompt_approval', name: 'Prompt Approval', status: 'shipped', notes: 'Human sign-off.' },
@@ -1353,7 +1353,7 @@ export function seedExplanations(): ExplanationRecord[] {
 export function explainabilityPlatformEngineCatalog() {
   const explanations = seedExplanations();
   return {
-    product: 'VerbaLab Explainability Platform',
+    product: 'Lugemi Explainability Platform',
     capabilities: [
       { id: 'confidence', name: 'Confidence Scores', status: 'shipped', notes: 'Per-decision confidence.' },
       { id: 'evidence', name: 'Evidence', status: 'shipped', notes: 'Evidence bundles.' },
@@ -1490,7 +1490,7 @@ export function evaluatePrivacyRelease(asset: PrivacyAsset): {
 export function privacyPlatformEngineCatalog() {
   const assets = seedPrivacyAssets();
   return {
-    product: 'VerbaLab Privacy Platform',
+    product: 'Lugemi Privacy Platform',
     capabilities: [
       { id: 'pii', name: 'PII Detection', status: 'shipped', notes: 'PII detectors.' },
       { id: 'phi', name: 'PHI Detection', status: 'shipped', notes: 'PHI detectors.' },
@@ -1754,7 +1754,7 @@ export function complianceControlsCatalog(): FrameworkControl[] {
 export function compliancePlatformEngineCatalog() {
   const controls = complianceControlsCatalog();
   return {
-    product: 'VerbaLab Compliance Platform',
+    product: 'Lugemi Compliance Platform',
     capabilities: [
       { id: 'soc2', name: 'SOC 2', status: 'shipped', notes: 'Control mapping — not certification.' },
       { id: 'iso27001', name: 'ISO 27001', status: 'shipped', notes: 'Control mapping — not certification.' },
@@ -1782,7 +1782,7 @@ export function compliancePlatformEngineCatalog() {
       complianceToolingNotCertification: true,
       notCertifiedCompliant: true,
       note:
-        'Dashboards and control mappings support compliance work. They do NOT make VerbaLab GDPR/HIPAA/SOC2/PCI certified. Lawyers and external auditors are still required.',
+        'Dashboards and control mappings support compliance work. They do NOT make Lugemi GDPR/HIPAA/SOC2/PCI certified. Lawyers and external auditors are still required.',
     },
     docs: '/docs/COMPLIANCE_PLATFORM.md',
     note: 'Compliance Platform (VL-297). Tooling not certification — lawyers/auditors still required.',
@@ -1827,7 +1827,7 @@ export function riskIntelligenceEngineCatalog() {
   const scores = riskScoresCatalog();
   const avg = Math.round(scores.reduce((s, r) => s + r.score, 0) / scores.length);
   return {
-    product: 'VerbaLab Risk Intelligence',
+    product: 'Lugemi Risk Intelligence',
     capabilities: [
       { id: 'operational', name: 'Operational Risk', status: 'shipped', notes: 'Ops risk scoring.' },
       { id: 'model', name: 'Model Risk', status: 'shipped', notes: 'Model risk scoring.' },
@@ -1867,7 +1867,7 @@ def identity_catalog() -> str:
  */
 export function identityFederationEngineCatalog() {
   return {
-    product: 'VerbaLab Identity Federation',
+    product: 'Lugemi Identity Federation',
     capabilities: [
       { id: 'oauth2', name: 'OAuth2', status: 'shipped', notes: 'OAuth2 federation readiness via Clerk.' },
       { id: 'oidc', name: 'OIDC', status: 'shipped', notes: 'OIDC via Clerk.' },
@@ -1892,7 +1892,7 @@ export function identityFederationEngineCatalog() {
         provider: 'Enterprise SAML (discovery)',
         protocols: ['saml'],
         status: 'discovery',
-        notes: 'Federation readiness only — VerbaLab is not a SAML IdP OS.',
+        notes: 'Federation readiness only — Lugemi is not a SAML IdP OS.',
       },
       {
         id: 'fed-scim-ready',
@@ -1903,7 +1903,7 @@ export function identityFederationEngineCatalog() {
       },
       {
         id: 'fed-machine',
-        provider: 'VerbaLab API keys',
+        provider: 'Lugemi API keys',
         protocols: ['api_key'],
         status: 'ready',
         notes: 'Machine/service identity via existing API keys.',
@@ -2022,7 +2022,7 @@ def analytics_catalog() -> str:
  */
 export function trustAnalyticsEngineCatalog() {
   return {
-    product: 'VerbaLab Trust Analytics',
+    product: 'Lugemi Trust Analytics',
     capabilities: [
       { id: 'safety_incidents', name: 'Safety Incidents', status: 'shipped', notes: 'From AI Safety.' },
       { id: 'compliance_status', name: 'Compliance Status', status: 'shipped', notes: 'From Compliance.' },
@@ -2186,7 +2186,7 @@ export function {to_pascal(slug)}Client() {{
         {title}
       </h1>
       <p style={{{{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}}}>
-        VL-{vl} — VerbaLab {title} console in the Trust Cloud.
+        VL-{vl} — Lugemi {title} console in the Trust Cloud.
       </p>
       {{error ? <p style={{{{ color: '#b42318' }}}}>{{error}}</p> : null}}
       {{!data && !error ? <p style={{{{ color: 'var(--muted)' }}}}>Loading…</p> : null}}
@@ -2216,11 +2216,11 @@ Library Phase {hub["phase"]} — part of Volume 15 Trust Cloud.
 
 ## Mission
 
-VerbaLab {hub["title"]} provides the {hub["title"]} surface inside the Trust Cloud.
+Lugemi {hub["title"]} provides the {hub["title"]} surface inside the Trust Cloud.
 
 ## Honesty
 
-- Extends existing VerbaLab systems — does not regenerate Volumes 1–14.
+- Extends existing Lugemi systems — does not regenerate Volumes 1–14.
 - `{hub["honesty_key"]}={str(hub["honesty_val"]).lower()}`.
 - Platform Engineering Cloud deferred to Volume 16+ (`platformEngineeringOs=false`).
 

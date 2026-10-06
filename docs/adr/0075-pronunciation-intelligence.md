@@ -8,7 +8,7 @@
 
 Library Phase 22 asks for language learning, pronunciation assessment/scoring, accent coaching, phoneme detection, word stress, sentence fluency, plus engine/REST/SDK/dashboard/analytics/monitoring/production.
 
-True phoneme forced alignment and commercial pronunciation tutors (ELSA, SpeechAce, Azure Pronunciation Assessment) require specialized ASR models. VerbaLab already has Whisper STT, Accent Intelligence cues, Audio Intelligence PCM metrics, and a linguistic rule registry.
+True phoneme forced alignment and commercial pronunciation tutors (ELSA, SpeechAce, Azure Pronunciation Assessment) require specialized ASR models. Lugemi already has Whisper STT, Accent Intelligence cues, Audio Intelligence PCM metrics, and a linguistic rule registry.
 
 ## Decision
 

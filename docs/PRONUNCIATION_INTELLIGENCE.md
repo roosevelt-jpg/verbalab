@@ -1,13 +1,13 @@
-# VerbaLab Pronunciation Intelligence
+# Lugemi Pronunciation Intelligence
 
 **Status:** Partial shipped (VL-156 / library Phase 22)  
 **Rule:** Reference vs transcript assessment + fluency/phoneme/stress heuristics. Do not claim ELSA, SpeechAce, or forced-alignment phoneme ASR.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Pronunciation Intelligence / Engine | **VL-156** — `GET /v1/pronunciation/engine` + `/pronunciation-intelligence` |
 | Pronunciation Assessment | **Shipped** — `POST /v1/pronunciation/assess` (text hypothesis or audio→STT) |
@@ -18,7 +18,7 @@
 | Sentence Fluency | **Partial** — `POST /v1/pronunciation/fluency` speaking-rate + silence proxies |
 | Language Learning | **Partial** — practice loop via assess/coach — not a full LMS |
 | Forced alignment | **Deferred** |
-| GraphQL / SDK / CLI | `pronunciationEngine`, `assessPronunciation`, `verbalab pronunciation-engine` |
+| GraphQL / SDK / CLI | `pronunciationEngine`, `assessPronunciation`, `lugemi pronunciation-engine` |
 | Analytics / Monitoring | Audit `pronunciation.*` + shared observability |
 | Production | Shared Fly/Docker/K8s platform |
 

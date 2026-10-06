@@ -28,7 +28,7 @@ export function ResourceManagerClient() {
         Resource Manager
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-337 — VerbaLab Resource Manager console in VAIOS (unifying orchestration layer).
+        VL-337 — Lugemi Resource Manager console in VAIOS (unifying orchestration layer).
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

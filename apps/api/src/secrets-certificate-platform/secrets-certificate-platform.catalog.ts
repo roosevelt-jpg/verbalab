@@ -132,7 +132,7 @@ export function listAccessAudit() {
 export function secretsCertificatePlatformEngineCatalog() {
   const secrets = SECRET_STORE.map(toSecretMetadata);
   return {
-    product: 'VerbaLab Secrets & Certificate Platform',
+    product: 'Lugemi Secrets & Certificate Platform',
     capabilities: [
       { id: 'secrets', name: 'Secrets', status: 'shipped', notes: 'Metadata only.' },
       { id: 'certificates', name: 'Certificates', status: 'shipped', notes: 'VL-320.' },

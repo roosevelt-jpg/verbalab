@@ -3,7 +3,7 @@
 
 VOLUME 10 — AI FABRIC CLOUD
 
-Mission: build the unified AI execution fabric that connects every VerbaLab
+Mission: build the unified AI execution fabric that connects every Lugemi
 cloud into a single intelligent platform. This is not another product cloud —
 it is the internal communication layer every other cloud sits on top of.
 
@@ -20,13 +20,13 @@ diagram to reproduce):
 Phase 106
 AI Fabric Foundation
 Cursor Master Prompt
-You are the Chief Platform Architect of VerbaLab AI.
+You are the Chief Platform Architect of Lugemi AI.
 
 Build AI Fabric.
 
 Mission
 
-Create the internal operating fabric connecting every VerbaLab Cloud.
+Create the internal operating fabric connecting every Lugemi Cloud.
 
 AI Fabric must become the central communication layer.
 

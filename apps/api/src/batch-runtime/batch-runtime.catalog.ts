@@ -84,7 +84,7 @@ export function batchKinds(): BatchKindRow[] {
  */
 export function batchRuntimeCatalog() {
   return {
-    product: 'VerbaLab Batch Runtime',
+    product: 'Lugemi Batch Runtime',
     note:
       'Batch Runtime (VL-209). Catalogs translation/speech/OCR/embedding/training batch surfaces. Translation runs delegate to existing BullMQ jobs. Sandbox runs support priority, retry budget, and checkpoint cursors. Not a Spark/Airflow/Celery OS or video batch fabric.',
     capabilities: [
@@ -184,7 +184,7 @@ export function batchRuntimeCatalog() {
         name: 'SDK',
         status: 'shipped',
         api: 'batchRuntimeEngine()',
-        notes: '@verbalab/sdk',
+        notes: '@lugemi/sdk',
       },
       {
         id: 'dashboard',
@@ -232,7 +232,7 @@ export function batchRuntimeCatalog() {
 }
 
 export function batchRuntimeMode(): 'sandbox' | 'disabled' {
-  const raw = (process.env.VERBALAB_BATCH_RUNTIME_MODE ?? 'sandbox').toLowerCase();
+  const raw = (process.env.LUGEMI_BATCH_RUNTIME_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
@@ -240,11 +240,11 @@ export function batchRuntimeMode(): 'sandbox' | 'disabled' {
 export function batchCeilings() {
   const maxItems = Math.max(
     1,
-    Number(process.env.VERBALAB_BATCH_MAX_ITEMS ?? '50') || 50,
+    Number(process.env.LUGEMI_BATCH_MAX_ITEMS ?? '50') || 50,
   );
   const maxRetries = Math.max(
     0,
-    Number(process.env.VERBALAB_BATCH_MAX_RETRIES ?? '2') || 2,
+    Number(process.env.LUGEMI_BATCH_MAX_RETRIES ?? '2') || 2,
   );
   return {
     maxItemsPerRun: Math.min(maxItems, 100),

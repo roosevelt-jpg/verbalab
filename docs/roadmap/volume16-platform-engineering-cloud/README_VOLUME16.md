@@ -1,4 +1,4 @@
-# VerbaLab — Volume 16: Platform Engineering Cloud (Phases 169–180)
+# Lugemi — Volume 16: Platform Engineering Cloud (Phases 169–180)
 
 Same workflow as Volumes 1–15. `.cursorrules` at the repo root still applies.
 This is internal tooling for your own engineering team, not another product

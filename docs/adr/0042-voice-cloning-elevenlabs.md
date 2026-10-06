@@ -13,7 +13,7 @@ Roadmap wants optional vendor voice cloning. Training cloning models in-house is
 1. **Buy ElevenLabs** Instant Voice Cloning (`ELEVENLABS_API_KEY`). No in-house clone training.
 2. **Consent gate:** create requires `consentAttested=true` + non-empty `consentNotes`; samples stored under `voices/{org}/…`.
 3. **Abuse review:** new clones start `pending_review`; owner/admin must approve (calls ElevenLabs / fixture) or reject before use.
-4. **Watermark:** approved clones always `watermarkRequired`; speech returns `X-VerbaLab-Watermark: required`.
+4. **Watermark:** approved clones always `watermarkRequired`; speech returns `X-Lugemi-Watermark: required`.
 5. **API:** Clerk ` /v1/voice-clones`; speak with `voice=clone:{id}` on `POST /v1/audio/speech` (TranslateAuth). Pro + owner/admin for create/review.
 6. **CI:** `VOICE_CLONE_FIXTURE=1` or test fixture adapter — no fake live ElevenLabs success without a key.
 

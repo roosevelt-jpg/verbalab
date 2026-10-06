@@ -1,4 +1,4 @@
-# Starting VerbaLab in Cursor — do this in order
+# Starting Lugemi in Cursor — do this in order
 
 This package is pre-cut from the master roadmap so you can hand it to Cursor
 Agent one phase at a time. **Do not paste the 16k-line master doc into Cursor
@@ -7,7 +7,7 @@ phase here is already a self-contained, focused prompt, exactly as authored.
 
 Scope covered: **Phase ‑1 → Phase 15**, i.e. Enterprise Product Blueprint
 through a fully built, audited **Language/Translation Cloud** — the smallest
-real product VerbaLab can ship. That's your actual MVP.
+real product Lugemi can ship. That's your actual MVP.
 
 ## Setup (once)
 

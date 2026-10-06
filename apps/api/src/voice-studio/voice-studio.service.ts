@@ -61,7 +61,7 @@ export class VoiceStudioService {
       tts: summary.tts,
       studioActions: events.length,
       byAction,
-      product: 'VerbaLab Voice Studio',
+      product: 'Lugemi Voice Studio',
       note: 'Studio action counts from audit. Full Voice Analytics = Phase 35.',
       docs: '/docs/VOICE_STUDIO.md',
     };
@@ -463,7 +463,7 @@ export class VoiceStudioService {
     if (!voice) {
       throw new ApiException('validation_error', 'voice is required', HttpStatus.BAD_REQUEST);
     }
-    const text = 'Voice Studio test. Karibu VerbaLab.';
+    const text = 'Voice Studio test. Karibu Lugemi.';
     const result = await this.audio.speak({
       text,
       voice,

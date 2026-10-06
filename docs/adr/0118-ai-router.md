@@ -8,7 +8,7 @@
 
 Library Phase 74 asks for an AI Router covering model/provider/inference selection, latency/cost optimization, regional routing, fallback, retries, caching, streaming, and load balancing, plus REST/GraphQL/SDK/monitoring/docs and production deployment.
 
-VerbaLab already routes via AI Gateway adapters (primary + fallback providers) and Decision Engine helpers. Inventing a service mesh or multi-cloud router OS would violate extend-don’t-regenerate (ADR-0115). Caching belongs to Intelligent Cache (VL-210); spend enforcement to Cost Optimization (VL-211).
+Lugemi already routes via AI Gateway adapters (primary + fallback providers) and Decision Engine helpers. Inventing a service mesh or multi-cloud router OS would violate extend-don’t-regenerate (ADR-0115). Caching belongs to Intelligent Cache (VL-210); spend enforcement to Cost Optimization (VL-211).
 
 ## Decision
 

@@ -39,12 +39,12 @@ describe('Model Serving (VL-206)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
-  const prevMode = process.env.VERBALAB_MODEL_SERVING_MODE;
-  const prevMax = process.env.VERBALAB_MODEL_SERVING_MAX_ACTIVE;
+  const prevMode = process.env.LUGEMI_MODEL_SERVING_MODE;
+  const prevMax = process.env.LUGEMI_MODEL_SERVING_MAX_ACTIVE;
 
   beforeAll(async () => {
-    process.env.VERBALAB_MODEL_SERVING_MODE = 'sandbox';
-    process.env.VERBALAB_MODEL_SERVING_MAX_ACTIVE = '2';
+    process.env.LUGEMI_MODEL_SERVING_MODE = 'sandbox';
+    process.env.LUGEMI_MODEL_SERVING_MAX_ACTIVE = '2';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -59,10 +59,10 @@ describe('Model Serving (VL-206)', () => {
   });
 
   afterAll(async () => {
-    if (prevMode === undefined) delete process.env.VERBALAB_MODEL_SERVING_MODE;
-    else process.env.VERBALAB_MODEL_SERVING_MODE = prevMode;
-    if (prevMax === undefined) delete process.env.VERBALAB_MODEL_SERVING_MAX_ACTIVE;
-    else process.env.VERBALAB_MODEL_SERVING_MAX_ACTIVE = prevMax;
+    if (prevMode === undefined) delete process.env.LUGEMI_MODEL_SERVING_MODE;
+    else process.env.LUGEMI_MODEL_SERVING_MODE = prevMode;
+    if (prevMax === undefined) delete process.env.LUGEMI_MODEL_SERVING_MAX_ACTIVE;
+    else process.env.LUGEMI_MODEL_SERVING_MAX_ACTIVE = prevMax;
     await app.close();
   });
 

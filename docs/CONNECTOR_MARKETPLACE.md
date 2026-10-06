@@ -1,13 +1,13 @@
-# VerbaLab Connector Marketplace
+# Lugemi Connector Marketplace
 
 **Status:** Shipped (VL-256 / library Phase 123)  
 **Rule:** Entitlement SKUs over the built-in connector catalog + Slack (ADR-0026) — **not** Zapier, MuleSoft, or iPaaS OS. Real-money honesty: Stripe (or equivalent); `storesRawCardData: false`. Install never opens live arbitrary outbound. Roadmap: [`docs/roadmap/volume11-ecosystem-cloud/`](./roadmap/volume11-ecosystem-cloud/).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | CRM / ERP / HR / Finance / Healthcare / Government / Cloud / Identity / Email / Telephony / Payments | **Shipped** — `category` + catalog keys |
 | Connector Security | **Shipped** — FabricPolicyGate on publish/install; `liveConnectorExecution: false` |
@@ -30,7 +30,7 @@
 | Sales / analytics | `GET /v1/connector-marketplace/sales`, `/analytics` |
 | GraphQL | `connectorMarketplaceEngine` |
 | SDK | `connectorMarketplaceEngine()` |
-| CLI | `verbalab connector-marketplace-engine` |
+| CLI | `lugemi connector-marketplace-engine` |
 
 ## Honesty
 

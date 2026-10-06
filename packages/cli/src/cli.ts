@@ -1,258 +1,258 @@
 #!/usr/bin/env node
 import { readFileSync } from 'node:fs';
-import { VerbaLab } from '@verbalab/sdk';
+import { Lugemi } from '@lugemi/sdk';
 
 function usage(): never {
   console.error(`Usage:
-  verbalab translate --text <text> --target <lang> [--source <lang>]
-  verbalab translate-format --format <html|markdown|xml|csv|srt> --file <path> --target <lang> [--source <lang>]
-  verbalab translate-engine
-  verbalab localize --format <json|yaml> --file <path> --target <lang> [--source <lang>]
-  verbalab localize-qa --source-file <path> --target-file <path> [--format json|yaml]
-  verbalab locales
-  verbalab localization
-  verbalab icu-validate --message <icu>
-  verbalab languages
-  verbalab speech-products
-  verbalab voice-products
-  verbalab intelligence-products
-  verbalab knowledge-products
-  verbalab inference-products
-  verbalab ai-kernel-products
-  verbalab foundation-model-cloud-products
-  verbalab model-training-platform-engine
-  verbalab model-evaluation-platform-engine
-  verbalab model-registry-engine
-  verbalab atlas-engine
-  verbalab ai-fabric-products
-  verbalab event-fabric-products
-  verbalab event-fabric-publish --topic <topic> --type <type> [--data <json>]
-  verbalab event-fabric-poll [--topic <topic>] [--count <n>]
-  verbalab context-fabric-products
-  verbalab context-fabric-route [--kind <kind>]...
-  verbalab knowledge-fabric-products
-  verbalab knowledge-fabric-route [--kind <kind>]...
-  verbalab knowledge-fabric-federate [--kind <kind>]...
-  verbalab prompt-fabric-products
-  verbalab prompt-fabric-route [--feature <feature>] [--kind <kind>]...
-  verbalab reasoning-fabric-products
-  verbalab reasoning-fabric-route [--kind <kind>]...
-  verbalab reasoning-fabric-pipeline [--id <pipelineId>]
-  verbalab memory-fabric-products
-  verbalab memory-fabric-route [--kind <kind>]...
-  verbalab memory-fabric-pipeline [--id <pipelineId>]
-  verbalab agent-fabric-products
-  verbalab agent-fabric-route [--kind <kind>]...
-  verbalab agent-fabric-pipeline [--id <pipelineId>]
-  verbalab policy-fabric-products
-  verbalab policy-fabric-route [--kind <kind>]...
-  verbalab policy-fabric-pipeline [--id <pipelineId>]
-  verbalab ecosystem-cloud-products
-  verbalab plugin-marketplace-engine
-  verbalab model-marketplace-engine
-  verbalab dataset-marketplace-engine
-  verbalab prompt-marketplace-engine
-  verbalab agent-marketplace-engine
-  verbalab workflow-marketplace-engine
-  verbalab connector-marketplace-engine
-  verbalab voice-language-marketplace-engine
-  verbalab creator-economy-engine
-  verbalab african-intelligence-cloud-products
-  verbalab african-language-registry-engine
-  verbalab cultural-intelligence-engine
-  verbalab african-knowledge-graph-engine
-  verbalab government-intelligence-engine
-  verbalab healthcare-intelligence-engine
-  verbalab financial-intelligence-engine
-  verbalab education-intelligence-engine
-  verbalab agricultural-intelligence-engine
-  verbalab tourism-heritage-intelligence-engine
-  verbalab research-cloud-products
-  verbalab mlops-llmops-cloud-products
-  verbalab dataset-pipeline-engine
-  verbalab training-pipeline-engine
-  verbalab continuous-evaluation-engine
-  verbalab promptops-platform-engine
-  verbalab ragops-platform-engine
-  verbalab agentops-platform-engine
-  verbalab ai-drift-detection-engine
-  verbalab continuous-learning-engine
-  verbalab ai-operations-dashboard-engine
-  verbalab trust-cloud-products
-  verbalab ai-safety-platform-engine
-  verbalab ai-governance-platform-engine
-  verbalab explainability-platform-engine
-  verbalab privacy-platform-engine
-  verbalab compliance-platform-engine
-  verbalab risk-intelligence-engine
-  verbalab identity-federation-engine
-  verbalab trust-analytics-engine
-  verbalab platform-engineering-cloud-products
-  verbalab internal-developer-portal-engine
-  verbalab service-catalog-engine
-  verbalab golden-path-platform-engine
-  verbalab gitops-platform-engine
-  verbalab release-engineering-engine
-  verbalab reliability-engineering-engine
-  verbalab finops-platform-engine
-  verbalab supply-chain-security-engine
-  verbalab developer-experience-platform-engine
-  verbalab platform-engineering-analytics-engine
-  verbalab control-plane-cloud-products
-  verbalab organization-control-engine
-  verbalab global-configuration-platform-engine
-  verbalab global-policy-engine-engine
-  verbalab global-deployment-controller-engine
-  verbalab global-routing-controller-engine
-  verbalab secrets-certificate-platform-engine
-  verbalab global-scheduler-engine
-  verbalab control-plane-analytics-engine
-  verbalab data-plane-cloud-products
-  verbalab translation-runtime-engine
-  verbalab speech-runtime-engine
-  verbalab voice-runtime-engine
-  verbalab vision-runtime-engine
-  verbalab knowledge-runtime-engine
-  verbalab embedding-runtime-engine
-  verbalab data-plane-streaming-engine
-  verbalab gpu-runtime-engine
-  verbalab vaios-products
-  verbalab ai-scheduler-engine
-  verbalab runtime-manager-engine
-  verbalab resource-manager-engine
-  verbalab workflow-operating-system-engine
-  verbalab agent-operating-system-engine
-  verbalab ai-memory-operating-system-engine
-  verbalab knowledge-operating-system-engine
-  verbalab plugin-operating-system-engine
-  verbalab enterprise-engineering-system-products
-  verbalab engineering-governance-engine
-  verbalab architecture-governance-engine
-  verbalab repository-standards-engine
-  verbalab engineering-quality-platform-engine
-  verbalab ai-engineering-standards-engine
-  verbalab api-engineering-standards-engine
-  verbalab database-engineering-standards-engine
-  verbalab infrastructure-engineering-standards-engine
-  verbalab ai-engineering-standards-checks
-  verbalab experiment-platform-engine
-  verbalab synthetic-data-platform-engine
-  verbalab benchmark-platform-engine
-  verbalab evaluation-platform-engine
-  verbalab ai-publication-platform-engine
-  verbalab patent-innovation-platform-engine
-  verbalab open-science-platform-engine
-  verbalab research-analytics-engine
-  verbalab memory-runtime-engine
-  verbalab memory-runtime-put --content <text> [--scope workspace] [--kind short_term]
-  verbalab prompt-runtime-engine
-  verbalab prompt-runtime-execute [--key chat|rag|voice_faq] [--feature <name>] [--var k=v]
-  verbalab context-runtime-engine
-  verbalab context-runtime-assemble [--query <text>] [--model <hint>] [--max-chars <n>]
-  verbalab reasoning-runtime-engine
-  verbalab reasoning-runtime-plan --problem <text> [--sandbox]
-  verbalab agent-runtime-engine
-  verbalab agent-runtime-create --name <name> [--permission <id>]... [--goal <text>]
-  verbalab agent-runtime-run --agent <id> [--goal <text>] [--action <permission>]
-  verbalab workflow-runtime-engine
-  verbalab workflow-runtime-create --name <name> [--permission <id>]... [--mode sequential|parallel]
-  verbalab workflow-runtime-run --workflow <id> [--approved]
-  verbalab plugin-runtime-engine
-  verbalab plugin-runtime-register --name <name> [--permission <id>]...
-  verbalab plugin-runtime-invoke --plugin <id> [--action <permission>]
-  verbalab policy-runtime-engine
-  verbalab policy-runtime-evaluate --action <action> [--runtime agent-runtime|workflow-runtime|plugin-runtime]
-  verbalab policy-runtime-create --name <name> --action <action> [--kind security] [--effect deny]
-  verbalab gpu-platform-engine
-  verbalab gpu-platform-pools [--vendor nvidia|amd|intel]
-  verbalab gpu-platform-allocate --pool <id> [--instances <n>]
-  verbalab model-serving-engine
-  verbalab model-serving-kinds
-  verbalab model-serving-endpoints [--kind llm|speech|voice|ocr|embedding|reasoning]
-  verbalab model-serving-deploy --kind <kind> --model <slug> [--version <v>] [--strategy rolling|canary|blue_green]
-  verbalab ai-router-engine
-  verbalab ai-router-resolve [--feature chat|translate|stt|tts|ocr|embeddings|detect] [--optimize latency|cost|balanced|quality]
-  verbalab streaming-runtime-engine
-  verbalab streaming-runtime-surfaces [--kind speech|voice|translation|llm|video|realtime]
-  verbalab batch-runtime-engine
-  verbalab batch-runtime-run --kind <kind> --item <text> [--priority low|normal|high]
-  verbalab intelligent-cache-engine
-  verbalab intelligent-cache-put --namespace <ns> --key <key> [--value <json>]
-  verbalab intelligent-cache-lookup --namespace <ns> --key <key>
-  verbalab cost-optimization-engine
-  verbalab cost-optimization-record --category <cat> --amount <usd>
-  verbalab cost-optimization-optimize [--feature chat|translate|stt|tts|ocr|embeddings|detect]
-  verbalab ai-runtime-analytics-engine
-  verbalab ai-runtime-analytics-overview
-  verbalab ai-runtime-analytics-report
-  verbalab knowledge-base-engine
-  verbalab enterprise-search-engine
-  verbalab enterprise-search --query <text> [--mode keyword|semantic|hybrid]
-  verbalab ontology-engine
-  verbalab taxonomy-engine
-  verbalab enterprise-rag-engine
-  verbalab enterprise-rag-retrieve --query <text> [--mode keyword|semantic|hybrid]
-  verbalab enterprise-rag-query --question <text> [--mode keyword|semantic|hybrid]
-  verbalab knowledge-memory-engine
-  verbalab knowledge-intelligence-engine
-  verbalab knowledge-intelligence-discover --query <text>
-  verbalab knowledge-apis-engine
-  verbalab knowledge-apis-surfaces
-  verbalab embedding-cloud-engine
-  verbalab embedding-cloud-models
-  verbalab vector-cloud-engine
-  verbalab vector-cloud-search --query <text> [--k <n>]
-  verbalab memory-cloud-engine
-  verbalab memory-cloud-export [--subject <userId>]
-  verbalab knowledge-graph-engine
-  verbalab context-engine
-  verbalab context-assemble [--query <text>] [--max-chars <n>]
-  verbalab reasoning-cloud-engine
-  verbalab reasoning-cloud-reason --problem <text> [--strategy <id>]
-  verbalab recommendation-engine
-  verbalab recommend --kind <language|voice|content|...> [--query <text>]
-  verbalab prompt-intelligence
-  verbalab prompt-intelligence-preview --key <chat|rag|voice_faq> [--body <text>]
-  verbalab prompt-intelligence-evaluate --key <chat|rag|voice_faq> [--body <text>]
-  verbalab decision-engine
-  verbalab decide --kind <routing|policy|model_selection|...> [--query <text>]
-  verbalab ai-orchestration
-  verbalab ai-orchestration-run --pipeline <detect_translate|...> --text <text> [--target <lang>]
-  verbalab intelligence-analytics
-  verbalab intelligence-analytics-overview
-  verbalab intelligence-analytics-report
-  verbalab knowledge-analytics
-  verbalab knowledge-analytics-overview
-  verbalab knowledge-analytics-report
-  verbalab neural-tts-engine
-  verbalab neural-tts-voices
-  verbalab voice-cloning-engine
-  verbalab voice-cloning-consent
-  verbalab emotion-voice-engine
-  verbalab emotion-voice-profiles
-  verbalab voice-studio-engine
-  verbalab voice-studio-library
-  verbalab voice-enhancement-engine
-  verbalab voice-enhancement-profiles
-  verbalab voice-biometrics-engine
-  verbalab voice-biometrics-encryption
-  verbalab voice-marketplace-engine
-  verbalab voice-marketplace-language-packs
-  verbalab voice-analytics
-  verbalab speech-engine
-  verbalab speaker-engine
-  verbalab accent-engine
-  verbalab emotion-engine
-  verbalab audio-engine
-  verbalab pronunciation-engine
-  verbalab wake-word-engine
-  verbalab call-engine
-  verbalab speech-analytics
-  verbalab whoami
+  lugemi translate --text <text> --target <lang> [--source <lang>]
+  lugemi translate-format --format <html|markdown|xml|csv|srt> --file <path> --target <lang> [--source <lang>]
+  lugemi translate-engine
+  lugemi localize --format <json|yaml> --file <path> --target <lang> [--source <lang>]
+  lugemi localize-qa --source-file <path> --target-file <path> [--format json|yaml]
+  lugemi locales
+  lugemi localization
+  lugemi icu-validate --message <icu>
+  lugemi languages
+  lugemi speech-products
+  lugemi voice-products
+  lugemi intelligence-products
+  lugemi knowledge-products
+  lugemi inference-products
+  lugemi ai-kernel-products
+  lugemi foundation-model-cloud-products
+  lugemi model-training-platform-engine
+  lugemi model-evaluation-platform-engine
+  lugemi model-registry-engine
+  lugemi atlas-engine
+  lugemi ai-fabric-products
+  lugemi event-fabric-products
+  lugemi event-fabric-publish --topic <topic> --type <type> [--data <json>]
+  lugemi event-fabric-poll [--topic <topic>] [--count <n>]
+  lugemi context-fabric-products
+  lugemi context-fabric-route [--kind <kind>]...
+  lugemi knowledge-fabric-products
+  lugemi knowledge-fabric-route [--kind <kind>]...
+  lugemi knowledge-fabric-federate [--kind <kind>]...
+  lugemi prompt-fabric-products
+  lugemi prompt-fabric-route [--feature <feature>] [--kind <kind>]...
+  lugemi reasoning-fabric-products
+  lugemi reasoning-fabric-route [--kind <kind>]...
+  lugemi reasoning-fabric-pipeline [--id <pipelineId>]
+  lugemi memory-fabric-products
+  lugemi memory-fabric-route [--kind <kind>]...
+  lugemi memory-fabric-pipeline [--id <pipelineId>]
+  lugemi agent-fabric-products
+  lugemi agent-fabric-route [--kind <kind>]...
+  lugemi agent-fabric-pipeline [--id <pipelineId>]
+  lugemi policy-fabric-products
+  lugemi policy-fabric-route [--kind <kind>]...
+  lugemi policy-fabric-pipeline [--id <pipelineId>]
+  lugemi ecosystem-cloud-products
+  lugemi plugin-marketplace-engine
+  lugemi model-marketplace-engine
+  lugemi dataset-marketplace-engine
+  lugemi prompt-marketplace-engine
+  lugemi agent-marketplace-engine
+  lugemi workflow-marketplace-engine
+  lugemi connector-marketplace-engine
+  lugemi voice-language-marketplace-engine
+  lugemi creator-economy-engine
+  lugemi african-intelligence-cloud-products
+  lugemi african-language-registry-engine
+  lugemi cultural-intelligence-engine
+  lugemi african-knowledge-graph-engine
+  lugemi government-intelligence-engine
+  lugemi healthcare-intelligence-engine
+  lugemi financial-intelligence-engine
+  lugemi education-intelligence-engine
+  lugemi agricultural-intelligence-engine
+  lugemi tourism-heritage-intelligence-engine
+  lugemi research-cloud-products
+  lugemi mlops-llmops-cloud-products
+  lugemi dataset-pipeline-engine
+  lugemi training-pipeline-engine
+  lugemi continuous-evaluation-engine
+  lugemi promptops-platform-engine
+  lugemi ragops-platform-engine
+  lugemi agentops-platform-engine
+  lugemi ai-drift-detection-engine
+  lugemi continuous-learning-engine
+  lugemi ai-operations-dashboard-engine
+  lugemi trust-cloud-products
+  lugemi ai-safety-platform-engine
+  lugemi ai-governance-platform-engine
+  lugemi explainability-platform-engine
+  lugemi privacy-platform-engine
+  lugemi compliance-platform-engine
+  lugemi risk-intelligence-engine
+  lugemi identity-federation-engine
+  lugemi trust-analytics-engine
+  lugemi platform-engineering-cloud-products
+  lugemi internal-developer-portal-engine
+  lugemi service-catalog-engine
+  lugemi golden-path-platform-engine
+  lugemi gitops-platform-engine
+  lugemi release-engineering-engine
+  lugemi reliability-engineering-engine
+  lugemi finops-platform-engine
+  lugemi supply-chain-security-engine
+  lugemi developer-experience-platform-engine
+  lugemi platform-engineering-analytics-engine
+  lugemi control-plane-cloud-products
+  lugemi organization-control-engine
+  lugemi global-configuration-platform-engine
+  lugemi global-policy-engine-engine
+  lugemi global-deployment-controller-engine
+  lugemi global-routing-controller-engine
+  lugemi secrets-certificate-platform-engine
+  lugemi global-scheduler-engine
+  lugemi control-plane-analytics-engine
+  lugemi data-plane-cloud-products
+  lugemi translation-runtime-engine
+  lugemi speech-runtime-engine
+  lugemi voice-runtime-engine
+  lugemi vision-runtime-engine
+  lugemi knowledge-runtime-engine
+  lugemi embedding-runtime-engine
+  lugemi data-plane-streaming-engine
+  lugemi gpu-runtime-engine
+  lugemi vaios-products
+  lugemi ai-scheduler-engine
+  lugemi runtime-manager-engine
+  lugemi resource-manager-engine
+  lugemi workflow-operating-system-engine
+  lugemi agent-operating-system-engine
+  lugemi ai-memory-operating-system-engine
+  lugemi knowledge-operating-system-engine
+  lugemi plugin-operating-system-engine
+  lugemi enterprise-engineering-system-products
+  lugemi engineering-governance-engine
+  lugemi architecture-governance-engine
+  lugemi repository-standards-engine
+  lugemi engineering-quality-platform-engine
+  lugemi ai-engineering-standards-engine
+  lugemi api-engineering-standards-engine
+  lugemi database-engineering-standards-engine
+  lugemi infrastructure-engineering-standards-engine
+  lugemi ai-engineering-standards-checks
+  lugemi experiment-platform-engine
+  lugemi synthetic-data-platform-engine
+  lugemi benchmark-platform-engine
+  lugemi evaluation-platform-engine
+  lugemi ai-publication-platform-engine
+  lugemi patent-innovation-platform-engine
+  lugemi open-science-platform-engine
+  lugemi research-analytics-engine
+  lugemi memory-runtime-engine
+  lugemi memory-runtime-put --content <text> [--scope workspace] [--kind short_term]
+  lugemi prompt-runtime-engine
+  lugemi prompt-runtime-execute [--key chat|rag|voice_faq] [--feature <name>] [--var k=v]
+  lugemi context-runtime-engine
+  lugemi context-runtime-assemble [--query <text>] [--model <hint>] [--max-chars <n>]
+  lugemi reasoning-runtime-engine
+  lugemi reasoning-runtime-plan --problem <text> [--sandbox]
+  lugemi agent-runtime-engine
+  lugemi agent-runtime-create --name <name> [--permission <id>]... [--goal <text>]
+  lugemi agent-runtime-run --agent <id> [--goal <text>] [--action <permission>]
+  lugemi workflow-runtime-engine
+  lugemi workflow-runtime-create --name <name> [--permission <id>]... [--mode sequential|parallel]
+  lugemi workflow-runtime-run --workflow <id> [--approved]
+  lugemi plugin-runtime-engine
+  lugemi plugin-runtime-register --name <name> [--permission <id>]...
+  lugemi plugin-runtime-invoke --plugin <id> [--action <permission>]
+  lugemi policy-runtime-engine
+  lugemi policy-runtime-evaluate --action <action> [--runtime agent-runtime|workflow-runtime|plugin-runtime]
+  lugemi policy-runtime-create --name <name> --action <action> [--kind security] [--effect deny]
+  lugemi gpu-platform-engine
+  lugemi gpu-platform-pools [--vendor nvidia|amd|intel]
+  lugemi gpu-platform-allocate --pool <id> [--instances <n>]
+  lugemi model-serving-engine
+  lugemi model-serving-kinds
+  lugemi model-serving-endpoints [--kind llm|speech|voice|ocr|embedding|reasoning]
+  lugemi model-serving-deploy --kind <kind> --model <slug> [--version <v>] [--strategy rolling|canary|blue_green]
+  lugemi ai-router-engine
+  lugemi ai-router-resolve [--feature chat|translate|stt|tts|ocr|embeddings|detect] [--optimize latency|cost|balanced|quality]
+  lugemi streaming-runtime-engine
+  lugemi streaming-runtime-surfaces [--kind speech|voice|translation|llm|video|realtime]
+  lugemi batch-runtime-engine
+  lugemi batch-runtime-run --kind <kind> --item <text> [--priority low|normal|high]
+  lugemi intelligent-cache-engine
+  lugemi intelligent-cache-put --namespace <ns> --key <key> [--value <json>]
+  lugemi intelligent-cache-lookup --namespace <ns> --key <key>
+  lugemi cost-optimization-engine
+  lugemi cost-optimization-record --category <cat> --amount <usd>
+  lugemi cost-optimization-optimize [--feature chat|translate|stt|tts|ocr|embeddings|detect]
+  lugemi ai-runtime-analytics-engine
+  lugemi ai-runtime-analytics-overview
+  lugemi ai-runtime-analytics-report
+  lugemi knowledge-base-engine
+  lugemi enterprise-search-engine
+  lugemi enterprise-search --query <text> [--mode keyword|semantic|hybrid]
+  lugemi ontology-engine
+  lugemi taxonomy-engine
+  lugemi enterprise-rag-engine
+  lugemi enterprise-rag-retrieve --query <text> [--mode keyword|semantic|hybrid]
+  lugemi enterprise-rag-query --question <text> [--mode keyword|semantic|hybrid]
+  lugemi knowledge-memory-engine
+  lugemi knowledge-intelligence-engine
+  lugemi knowledge-intelligence-discover --query <text>
+  lugemi knowledge-apis-engine
+  lugemi knowledge-apis-surfaces
+  lugemi embedding-cloud-engine
+  lugemi embedding-cloud-models
+  lugemi vector-cloud-engine
+  lugemi vector-cloud-search --query <text> [--k <n>]
+  lugemi memory-cloud-engine
+  lugemi memory-cloud-export [--subject <userId>]
+  lugemi knowledge-graph-engine
+  lugemi context-engine
+  lugemi context-assemble [--query <text>] [--max-chars <n>]
+  lugemi reasoning-cloud-engine
+  lugemi reasoning-cloud-reason --problem <text> [--strategy <id>]
+  lugemi recommendation-engine
+  lugemi recommend --kind <language|voice|content|...> [--query <text>]
+  lugemi prompt-intelligence
+  lugemi prompt-intelligence-preview --key <chat|rag|voice_faq> [--body <text>]
+  lugemi prompt-intelligence-evaluate --key <chat|rag|voice_faq> [--body <text>]
+  lugemi decision-engine
+  lugemi decide --kind <routing|policy|model_selection|...> [--query <text>]
+  lugemi ai-orchestration
+  lugemi ai-orchestration-run --pipeline <detect_translate|...> --text <text> [--target <lang>]
+  lugemi intelligence-analytics
+  lugemi intelligence-analytics-overview
+  lugemi intelligence-analytics-report
+  lugemi knowledge-analytics
+  lugemi knowledge-analytics-overview
+  lugemi knowledge-analytics-report
+  lugemi neural-tts-engine
+  lugemi neural-tts-voices
+  lugemi voice-cloning-engine
+  lugemi voice-cloning-consent
+  lugemi emotion-voice-engine
+  lugemi emotion-voice-profiles
+  lugemi voice-studio-engine
+  lugemi voice-studio-library
+  lugemi voice-enhancement-engine
+  lugemi voice-enhancement-profiles
+  lugemi voice-biometrics-engine
+  lugemi voice-biometrics-encryption
+  lugemi voice-marketplace-engine
+  lugemi voice-marketplace-language-packs
+  lugemi voice-analytics
+  lugemi speech-engine
+  lugemi speaker-engine
+  lugemi accent-engine
+  lugemi emotion-engine
+  lugemi audio-engine
+  lugemi pronunciation-engine
+  lugemi wake-word-engine
+  lugemi call-engine
+  lugemi speech-analytics
+  lugemi whoami
 
 Env:
-  VERBALAB_API_KEY   vl_live_… or vl_test_… (required)
-  VERBALAB_API_URL   API base (default https://api.verbalab.ai)
+  LUGEMI_API_KEY   lg_live_… or lg_test_… (required)
+  LUGEMI_API_URL   API base (default https://api.lugemi.com)
 `);
   process.exit(1);
 }
@@ -264,14 +264,14 @@ function argValue(argv: string[], name: string): string | undefined {
 }
 
 function client() {
-  const apiKey = process.env.VERBALAB_API_KEY?.trim();
+  const apiKey = process.env.LUGEMI_API_KEY?.trim();
   if (!apiKey) {
-    console.error('Set VERBALAB_API_KEY to a vl_live_ or vl_test_ key');
+    console.error('Set LUGEMI_API_KEY to a lg_live_ or lg_test_ key');
     process.exit(1);
   }
-  return new VerbaLab({
+  return new Lugemi({
     apiKey,
-    baseUrl: process.env.VERBALAB_API_URL?.trim() || undefined,
+    baseUrl: process.env.LUGEMI_API_URL?.trim() || undefined,
   });
 }
 
@@ -353,7 +353,7 @@ async function main() {
 
   if (command === 'event-fabric-publish') {
     const topic = argValue(rest, '--topic') ?? 'default';
-    const type = argValue(rest, '--type') ?? 'com.verbalab.event';
+    const type = argValue(rest, '--type') ?? 'com.lugemi.event';
     const dataRaw = argValue(rest, '--data');
     const data = dataRaw ? JSON.parse(dataRaw) : { ok: true };
     console.log(
@@ -2050,12 +2050,12 @@ async function main() {
   }
 
   if (command === 'whoami') {
-    const key = process.env.VERBALAB_API_KEY!;
+    const key = process.env.LUGEMI_API_KEY!;
     console.log(
       JSON.stringify(
         {
-          environment: key.startsWith('vl_test_') ? 'test' : 'live',
-          baseUrl: process.env.VERBALAB_API_URL ?? 'https://api.verbalab.ai',
+          environment: key.startsWith('lg_test_') ? 'test' : 'live',
+          baseUrl: process.env.LUGEMI_API_URL ?? 'https://api.lugemi.com',
           keyPrefix: key.slice(0, 12) + '…',
         },
         null,

@@ -4,7 +4,7 @@
  */
 export function globalConfigurationPlatformEngineCatalog() {
   return {
-    product: 'VerbaLab Global Configuration Platform',
+    product: 'Lugemi Global Configuration Platform',
     capabilities: [
       { id: 'versioning', name: 'Configuration Versioning', status: 'shipped', notes: 'VL-316 capability.' },
       { id: 'environment', name: 'Environment Configuration', status: 'shipped', notes: 'VL-316 capability.' },

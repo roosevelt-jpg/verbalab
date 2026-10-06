@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate VerbaLab Volume 19 VAIOS (VL-334–343).
+"""Generate Lugemi Volume 19 VAIOS (VL-334–343).
 
 Unifying orchestration façades over AI Kernel + AI Fabric + Data Plane —
 never a third parallel OS, not Linux/Kubernetes, not Enterprise Engineering System.
@@ -11,7 +11,7 @@ import json
 import re
 from pathlib import Path
 
-ROOT = Path("/workspace/verbalab")
+ROOT = Path("/workspace/lugemi")
 
 
 def to_pascal(slug: str) -> str:
@@ -599,7 +599,7 @@ export function {to_pascal(slug)}Client() {{
         {title}
       </h1>
       <p style={{{{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}}}>
-        VL-{vl} — VerbaLab {title} console in VAIOS (unifying orchestration layer).
+        VL-{vl} — Lugemi {title} console in VAIOS (unifying orchestration layer).
       </p>
       {{error ? <p style={{{{ color: '#b42318' }}}}>{{error}}</p> : null}}
       {{!data && !error ? <p style={{{{ color: 'var(--muted)' }}}}>Loading…</p> : null}}
@@ -630,11 +630,11 @@ def product_doc(hub: dict) -> str:
     )
     return f"""# {hub["title"]} (VL-{hub["vl"]})
 
-Library Phase {hub["phase"]} — part of Volume 19 VAIOS (VerbaLab AI Operating System).
+Library Phase {hub["phase"]} — part of Volume 19 VAIOS (Lugemi AI Operating System).
 
 ## Mission
 
-VerbaLab {hub["title"]} is a **unifying orchestration façade** above AI Kernel (Volume 8),
+Lugemi {hub["title"]} is a **unifying orchestration façade** above AI Kernel (Volume 8),
 AI Fabric (Volume 10), and Data Plane (Volume 18). It is not Linux, not Kubernetes,
 and not a third parallel agent/workflow/memory implementation.
 
@@ -899,7 +899,7 @@ export class VaiosService {
 
   products() {
     return {
-      product: 'VerbaLab AI Operating System (VAIOS)',
+      product: 'Lugemi AI Operating System (VAIOS)',
       products: vaiosProductCatalog(),
       hubInventory: vaiosHubInventory(),
       unifiedSurfaces: vaiosUnifiedSurfaces(),
@@ -1103,7 +1103,7 @@ def orchestration_catalog(hub: dict) -> str:
  */
 export function {camel}EngineCatalog() {{
   return {{
-    product: 'VerbaLab {hub['title']}',
+    product: 'Lugemi {hub['title']}',
     unifyingOrchestrationLayer: true,
     duplicatesKernelOrFabric: false,
     notLinux: true,
@@ -2185,13 +2185,13 @@ def patch_wiring() -> None:
     help_lines = []
     for hub in HUBS:
         cmd = f"{hub['slug']}-products" if hub["kind"] == "foundation" else f"{hub['slug']}-engine"
-        line = f"  verbalab {cmd}"
+        line = f"  lugemi {cmd}"
         if line not in ct:
             help_lines.append(line)
     if help_lines:
         ct = ct.replace(
-            "  verbalab gpu-runtime-engine\n",
-            "  verbalab gpu-runtime-engine\n" + "\n".join(help_lines) + "\n",
+            "  lugemi gpu-runtime-engine\n",
+            "  lugemi gpu-runtime-engine\n" + "\n".join(help_lines) + "\n",
         )
     handlers = []
     for hub in HUBS:
@@ -2267,13 +2267,13 @@ def update_progress_and_blueprint() -> None:
 
     write(
         ROOT / "docs/VAIOS.md",
-        """# VAIOS — VerbaLab AI Operating System (VL-334)
+        """# VAIOS — Lugemi AI Operating System (VL-334)
 
 Library Phase 201 — part of Volume 19 VAIOS.
 
 ## Mission
 
-VAIOS is the highest-level **unifying orchestration layer** for VerbaLab. It catalogs and
+VAIOS is the highest-level **unifying orchestration layer** for Lugemi. It catalogs and
 routes across AI Kernel (Volume 8), AI Fabric (Volume 10), and Data Plane Cloud (Volume 18).
 It is **not** Linux, **not** Kubernetes, and **not** a third parallel agent/workflow/memory OS.
 

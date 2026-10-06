@@ -243,7 +243,7 @@ export class StreamingRuntimeService {
       (input.text ?? '').trim() ||
       (kind === 'translation'
         ? 'Habari dunia — sandbox translation stream.'
-        : 'Hello from VerbaLab Streaming Runtime sandbox.');
+        : 'Hello from Lugemi Streaming Runtime sandbox.');
 
     const tokens = this.tokenize(text, ceilings.maxChunksPerStream);
     const delay = Math.min(50, Math.max(0, input.chunkDelayMs ?? 0));
@@ -356,7 +356,7 @@ export class StreamingRuntimeService {
     if (streamingRuntimeMode() === 'disabled') {
       throw new ApiException(
         'streaming_runtime_disabled',
-        'Streaming Runtime mode is disabled (VERBALAB_STREAMING_RUNTIME_MODE=disabled).',
+        'Streaming Runtime mode is disabled (LUGEMI_STREAMING_RUNTIME_MODE=disabled).',
         HttpStatus.FORBIDDEN,
       );
     }

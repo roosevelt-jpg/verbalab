@@ -1,19 +1,19 @@
-# Fly.io — API (Nest). Create with: fly apps create verbalab-api
+# Fly.io — API (Nest). Create with: fly apps create lugemi-api
 # Deploy from repo root: fly deploy -c infra/fly/api.toml --dockerfile apps/api/Dockerfile
-app = 'verbalab-api'
+app = 'lugemi-api'
 primary_region = 'iad'
 
 [build]
   dockerfile = 'apps/api/Dockerfile'
 
 [deploy]
-  release_command = 'pnpm --filter @verbalab/api exec prisma migrate deploy'
+  release_command = 'pnpm --filter @lugemi/api exec prisma migrate deploy'
 
 [env]
   NODE_ENV = 'production'
   API_PORT = '3001'
   PORT = '3001'
-  VERBALAB_REGION = 'us'
+  LUGEMI_REGION = 'us'
 
 [http_service]
   internal_port = 3001

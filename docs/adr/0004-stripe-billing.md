@@ -6,7 +6,7 @@
 
 ## Context
 
-VerbaLab needs a free tier plus one paid plan with character quotas. Storing cards ourselves is out of scope.
+Lugemi needs a free tier plus one paid plan with character quotas. Storing cards ourselves is out of scope.
 
 ## Decision
 

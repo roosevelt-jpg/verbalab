@@ -1,13 +1,13 @@
-# VerbaLab Identity Cloud
+# Lugemi Identity Cloud
 
 **Status:** Accepted (VL-126)  
-**Rule:** Clerk is the human IdP. VerbaLab owns tenant RBAC, API keys (machine identity), and audit. Do not regenerate auth or invent SAML/SCIM/ABAC.
+**Rule:** Clerk is the human IdP. Lugemi owns tenant RBAC, API keys (machine identity), and audit. Do not regenerate auth or invent SAML/SCIM/ABAC.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Authentication | Clerk (`ClerkAuthGuard`, Next middleware) |
 | Authorization | Membership RBAC + platform admin allowlist |
@@ -17,7 +17,7 @@
 | RBAC | `owner` / `admin` / `member` + membership PATCH/DELETE |
 | ABAC | **Not built** (explicit non-goal) |
 | OAuth2 / OIDC / JWT | Via Clerk session tokens |
-| API Keys | `vl_live_…` hashed keys, workspace-scoped |
+| API Keys | `lg_live_…` hashed keys, workspace-scoped |
 | Machine Identity | Same API keys (`GET /v1/api-keys`, `lastUsedAt`) |
 | SSO / SAML / SCIM | **Buy** Clerk Enterprise or WorkOS when contracted |
 | Passkeys / MFA | **Clerk product** — not reimplemented |
@@ -34,7 +34,7 @@
 | PATCH | `/v1/organization/members/:id` | Change role (`owner`/`admin`/`member`) |
 | DELETE | `/v1/organization/members/:id` | Remove member |
 
-Session: Clerk JWT may include org role claim (`o.rol`); when present and org is Clerk-linked, VerbaLab syncs `member`/`admin`/`owner` mapping on sign-in.
+Session: Clerk JWT may include org role claim (`o.rol`); when present and org is Clerk-linked, Lugemi syncs `member`/`admin`/`owner` mapping on sign-in.
 
 Machine auth: Bearer API key updates `lastUsedAt`.
 

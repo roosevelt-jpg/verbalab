@@ -84,7 +84,7 @@ export function cacheNamespaces(): CacheNamespaceRow[] {
  */
 export function intelligentCacheCatalog() {
   return {
-    product: 'VerbaLab Intelligent Cache',
+    product: 'Lugemi Intelligent Cache',
     note:
       'Intelligent Cache (VL-210). Org/workspace-scoped inference result cache with namespaces for semantic/translation/embedding/speech/voice/document/prompt/context. Lookup is exact-key (or normalized-text hash for semantic). Not a Redis Cluster, vector similarity OS, or CDN. Does not auto-wire Gateway responses — opt-in put/lookup APIs.',
     capabilities: [
@@ -216,7 +216,7 @@ export function intelligentCacheCatalog() {
 }
 
 export function intelligentCacheMode(): 'sandbox' | 'disabled' {
-  const raw = (process.env.VERBALAB_INTELLIGENT_CACHE_MODE ?? 'sandbox').toLowerCase();
+  const raw = (process.env.LUGEMI_INTELLIGENT_CACHE_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
@@ -224,11 +224,11 @@ export function intelligentCacheMode(): 'sandbox' | 'disabled' {
 export function cacheCeilings() {
   const maxEntries = Math.max(
     1,
-    Number(process.env.VERBALAB_CACHE_MAX_ENTRIES ?? '200') || 200,
+    Number(process.env.LUGEMI_CACHE_MAX_ENTRIES ?? '200') || 200,
   );
   const defaultTtlSec = Math.max(
     60,
-    Number(process.env.VERBALAB_CACHE_DEFAULT_TTL_SEC ?? '3600') || 3600,
+    Number(process.env.LUGEMI_CACHE_DEFAULT_TTL_SEC ?? '3600') || 3600,
   );
   return {
     maxEntriesPerWorkspace: Math.min(maxEntries, 2000),

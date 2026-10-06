@@ -39,15 +39,15 @@ describe('Batch Runtime (VL-209)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
-  const prevMode = process.env.VERBALAB_BATCH_RUNTIME_MODE;
-  const prevItems = process.env.VERBALAB_BATCH_MAX_ITEMS;
-  const prevRetries = process.env.VERBALAB_BATCH_MAX_RETRIES;
+  const prevMode = process.env.LUGEMI_BATCH_RUNTIME_MODE;
+  const prevItems = process.env.LUGEMI_BATCH_MAX_ITEMS;
+  const prevRetries = process.env.LUGEMI_BATCH_MAX_RETRIES;
   const prevInline = process.env.JOBS_INLINE;
 
   beforeAll(async () => {
-    process.env.VERBALAB_BATCH_RUNTIME_MODE = 'sandbox';
-    process.env.VERBALAB_BATCH_MAX_ITEMS = '5';
-    process.env.VERBALAB_BATCH_MAX_RETRIES = '1';
+    process.env.LUGEMI_BATCH_RUNTIME_MODE = 'sandbox';
+    process.env.LUGEMI_BATCH_MAX_ITEMS = '5';
+    process.env.LUGEMI_BATCH_MAX_RETRIES = '1';
     process.env.JOBS_INLINE = '1';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -63,12 +63,12 @@ describe('Batch Runtime (VL-209)', () => {
   });
 
   afterAll(async () => {
-    if (prevMode === undefined) delete process.env.VERBALAB_BATCH_RUNTIME_MODE;
-    else process.env.VERBALAB_BATCH_RUNTIME_MODE = prevMode;
-    if (prevItems === undefined) delete process.env.VERBALAB_BATCH_MAX_ITEMS;
-    else process.env.VERBALAB_BATCH_MAX_ITEMS = prevItems;
-    if (prevRetries === undefined) delete process.env.VERBALAB_BATCH_MAX_RETRIES;
-    else process.env.VERBALAB_BATCH_MAX_RETRIES = prevRetries;
+    if (prevMode === undefined) delete process.env.LUGEMI_BATCH_RUNTIME_MODE;
+    else process.env.LUGEMI_BATCH_RUNTIME_MODE = prevMode;
+    if (prevItems === undefined) delete process.env.LUGEMI_BATCH_MAX_ITEMS;
+    else process.env.LUGEMI_BATCH_MAX_ITEMS = prevItems;
+    if (prevRetries === undefined) delete process.env.LUGEMI_BATCH_MAX_RETRIES;
+    else process.env.LUGEMI_BATCH_MAX_RETRIES = prevRetries;
     if (prevInline === undefined) delete process.env.JOBS_INLINE;
     else process.env.JOBS_INLINE = prevInline;
     await app.close();

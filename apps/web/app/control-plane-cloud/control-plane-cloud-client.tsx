@@ -27,7 +27,7 @@ export function ControlPlaneCloudClient() {
         Control Plane Cloud
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-314 — VerbaLab Control Plane Cloud console in the Control Plane Cloud.
+        VL-314 — Lugemi Control Plane Cloud console in the Control Plane Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

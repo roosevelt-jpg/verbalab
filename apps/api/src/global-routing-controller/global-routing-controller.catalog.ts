@@ -4,7 +4,7 @@
  */
 export function globalRoutingControllerEngineCatalog() {
   return {
-    product: 'VerbaLab Global Routing Controller',
+    product: 'Lugemi Global Routing Controller',
     capabilities: [
       { id: 'traffic', name: 'Traffic Routing', status: 'shipped', notes: 'VL-319 capability.' },
       { id: 'regional', name: 'Regional Routing', status: 'shipped', notes: 'VL-319 capability.' },

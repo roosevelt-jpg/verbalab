@@ -10,7 +10,7 @@ type Language = { code: string; name: string };
 type Mode = 'translate' | 'detect' | 'languages';
 
 function isApiKey(value: string) {
-  return value.startsWith('vl_live_') || value.startsWith('vl_test_');
+  return value.startsWith('lg_live_') || value.startsWith('lg_test_');
 }
 
 export function PlaygroundClient() {
@@ -35,11 +35,11 @@ export function PlaygroundClient() {
       ? `curl "${API_URL}/v1/languages"`
       : mode === 'detect'
         ? `curl -X POST "${API_URL}/v1/detect" \\
-  -H "Authorization: Bearer ${apiKey || 'vl_live_...'}" \\
+  -H "Authorization: Bearer ${apiKey || 'lg_live_...'}" \\
   -H "Content-Type: application/json" \\
   -d '{"text":${JSON.stringify(text)}}'`
         : `curl -X POST "${API_URL}/v1/translate" \\
-  -H "Authorization: Bearer ${apiKey || 'vl_live_...'}" \\
+  -H "Authorization: Bearer ${apiKey || 'lg_live_...'}" \\
   -H "Content-Type: application/json" \\
   -d '{"text":${JSON.stringify(text)},"source":"${source}","target":"${target}"}'`;
 
@@ -55,7 +55,7 @@ export function PlaygroundClient() {
         return;
       }
       if (!isApiKey(apiKey)) {
-        throw new Error('Paste a vl_live_ or vl_test_ API key from the console');
+        throw new Error('Paste a lg_live_ or lg_test_ API key from the console');
       }
       if (mode === 'detect') {
         const res = await apiFetch<unknown>('/v1/detect', {
@@ -122,7 +122,7 @@ export function PlaygroundClient() {
               className="vl-field vl-code"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
-              placeholder="vl_live_... or vl_test_..."
+              placeholder="lg_live_... or lg_test_..."
               required
             />
           </label>

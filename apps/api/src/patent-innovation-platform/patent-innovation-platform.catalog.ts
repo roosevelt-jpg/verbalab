@@ -44,7 +44,7 @@ export function patentInnovationPlatformEngineCatalog() {
     },
   ];
   return {
-    product: 'VerbaLab Patent & Innovation Platform',
+    product: 'Lugemi Patent & Innovation Platform',
     note:
       'Patent & Innovation Platform (VL-277). Disclosure workflow + IP portfolio tracking — usptoOs=false. Not a legal filing system or USPTO OS.',
     portfolio,

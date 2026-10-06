@@ -11,7 +11,7 @@ export type PromptCapability = {
 /** Library Phase 55 → Prompt Intelligence (VL-188). Extend VL-086 versioning — not an auto-prompt research lab. */
 export function promptIntelligenceCatalog() {
   return {
-    product: 'VerbaLab Prompt Intelligence',
+    product: 'Lugemi Prompt Intelligence',
     note:
       'Hub over versioned chat/rag/voice_faq prompts (VL-086 / VL-188). Registry, preview/test, heuristic evaluate + security scan, marketplace listings, and audit analytics. Not an auto-prompt research lab or red-team harness OS.',
     capabilities: [
@@ -106,8 +106,8 @@ export function promptIntelligenceCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

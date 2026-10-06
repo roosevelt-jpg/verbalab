@@ -80,7 +80,7 @@ describe('Knowledge Cloud Production Audit (VL-203)', () => {
 
   it('ships audit ADR, blueprint ADR, and report pack', () => {
     expect(existsSync(join(root, 'docs/adr/0114-knowledge-cloud-production-audit.md'))).toBe(true);
-    expect(existsSync(join(root, 'docs/adr/0080-verbalab-cloud-blueprint.md'))).toBe(true);
+    expect(existsSync(join(root, 'docs/adr/0080-lugemi-cloud-blueprint.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/CLOUD_BLUEPRINT.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/knowledge-cloud-audit/PRODUCTION_READINESS.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/knowledge-cloud-audit/ARCHITECTURE_REPORT.md'))).toBe(true);
@@ -214,7 +214,7 @@ describe('Knowledge Cloud Production Audit (VL-203)', () => {
   });
 
   it('documents 12-layer cloud blueprint with Knowledge Cloud closed', () => {
-    const blueprint = readFileSync(join(root, 'docs/adr/0080-verbalab-cloud-blueprint.md'), 'utf8');
+    const blueprint = readFileSync(join(root, 'docs/adr/0080-lugemi-cloud-blueprint.md'), 'utf8');
     expect(blueprint).toContain('Cloud Foundation');
     expect(blueprint).toContain('Production Audit');
     expect(blueprint).toContain('Knowledge');

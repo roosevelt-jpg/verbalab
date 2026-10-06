@@ -16,8 +16,8 @@ Inventing a hyperscaler GPU control plane or wiring live AWS/GCP GPU APIs in thi
 
 1. Ship `/v1/gpu-platform/*` + `/gpu-platform` console as a **sandbox logical inventory** over org/workspace-scoped `GpuAllocation` rows.
 2. Support NVIDIA/AMD/Intel as **pool tags** only — no vendor cloud account wiring.
-3. Enforce **hard ceilings** (`VERBALAB_GPU_MAX_INSTANCES`, `VERBALAB_GPU_MAX_SPEND_USD`) on allocate/scale; reject with 402 when exceeded; clamp scale targets.
-4. Default `VERBALAB_GPU_PROVISION_MODE=sandbox`; `disabled` blocks mutate paths.
+3. Enforce **hard ceilings** (`LUGEMI_GPU_MAX_INSTANCES`, `LUGEMI_GPU_MAX_SPEND_USD`) on allocate/scale; reject with 402 when exceeded; clamp scale targets.
+4. Default `LUGEMI_GPU_PROVISION_MODE=sandbox`; `disabled` blocks mutate paths.
 5. Defer MIG/GPU sharing OS, multi-GPU device binding OS, distributed training fabric, and any real cloud provisioner.
 6. Flip Inference Cloud catalog `gpu-platform` to partial; deferred flag → false.
 

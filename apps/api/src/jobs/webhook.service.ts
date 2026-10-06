@@ -57,9 +57,9 @@ export class WebhookService {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-VerbaLab-Timestamp': timestamp,
-          'X-VerbaLab-Signature': signature,
-          'User-Agent': 'VerbaLab-Webhooks/1.0',
+          'X-Lugemi-Timestamp': timestamp,
+          'X-Lugemi-Signature': signature,
+          'User-Agent': 'Lugemi-Webhooks/1.0',
         },
         body: payload,
         signal: AbortSignal.timeout(10_000),

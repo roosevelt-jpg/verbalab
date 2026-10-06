@@ -4,8 +4,8 @@ Library Phase 181 — part of Volume 17 Control Plane Cloud.
 
 ## Mission
 
-VerbaLab Control Plane Cloud is the highest-privilege management layer that manages,
-configures, secures, governs, deploys, and operates every VerbaLab cloud service.
+Lugemi Control Plane Cloud is the highest-privilege management layer that manages,
+configures, secures, governs, deploys, and operates every Lugemi cloud service.
 It never executes AI inference.
 
 ## Honesty

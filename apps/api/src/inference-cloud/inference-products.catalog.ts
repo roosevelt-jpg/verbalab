@@ -14,7 +14,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
   return [
     {
       id: 'inference-cloud',
-      name: 'VerbaLab Inference Cloud',
+      name: 'Lugemi Inference Cloud',
       status: 'shipped',
       api: 'GET /v1/inference-cloud/products',
       console: '/inference-cloud',
@@ -142,8 +142,8 @@ export function inferenceArchitectureNotes() {
     streaming: true,
     batch: true,
     enterpriseApis: true,
-    sdk: '@verbalab/sdk',
-    cli: '@verbalab/cli',
+    sdk: '@lugemi/sdk',
+    cli: '@lugemi/cli',
     docker: true,
     terraform: true,
     kubernetes: true,

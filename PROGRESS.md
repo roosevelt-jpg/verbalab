@@ -1,4 +1,4 @@
-# VerbaLab AI — Progress
+# Lugemi AI — Progress
 
 Track **executable** phases from `ROADMAP.md` only. Vision-backlog items from the libraries are not listed here so they cannot be marked Done by creating empty folders.
 
@@ -33,8 +33,8 @@ Last updated: 2026-10-03 (VL-353 Done — Enterprise Engineering System Producti
 | --- | --- | --- | --- |
 | VL-010 | Authentication | Blocked | Clerk integrated; needs `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` + `CLERK_SECRET_KEY`. `/setup` until then. OIDC/JWT via Clerk (VL-126). |
 | VL-011 | Organizations, members, basic RBAC | Done | Memberships + role PATCH/DELETE + Clerk `o.rol` sync (VL-126). Invites stay in Clerk. Live UI needs Clerk keys. |
-| VL-012 | Workspaces | Done | Multi-workspace CRUD `/v1/workspaces` + `X-VerbaLab-Workspace-Id`; default still created with org. Console switcher needs Clerk. |
-| VL-013 | API keys | Done | Hashed `vl_live_` / `vl_test_` keys; create/list/revoke; `lastUsedAt` + env (VL-126/127). |
+| VL-012 | Workspaces | Done | Multi-workspace CRUD `/v1/workspaces` + `X-Lugemi-Workspace-Id`; default still created with org. Console switcher needs Clerk. |
+| VL-013 | API keys | Done | Hashed `lg_live_` / `lg_test_` keys; create/list/revoke; `lastUsedAt` + env (VL-126/127). |
 
 ---
 
@@ -57,7 +57,7 @@ Last updated: 2026-10-03 (VL-353 Done — Enterprise Engineering System Producti
 | VL-030 | Developer portal slice | Done | OpenAPI + `/docs` + `/playground` (translate/detect/languages); hub `/developers` (VL-127). |
 | VL-031 | Billing (Stripe) | Blocked | Code Done: free/pro entitlements, quota on translate (402), Checkout/Portal/webhook. Live checkout needs Stripe env (ADR-0004). |
 | VL-032 | Audit log | Done | `audit_events`; key create/revoke, translate, daily sign-in; `GET /v1/audit-events` (owner/admin); console `/audit`. |
-| VL-033 | TypeScript SDK (thin) | Done | `@verbalab/sdk` + thin `@verbalab/cli` (VL-127). |
+| VL-033 | TypeScript SDK (thin) | Done | `@lugemi/sdk` + thin `@lugemi/cli` (VL-127). |
 
 ---
 
@@ -167,7 +167,7 @@ Last updated: 2026-10-03 (VL-353 Done — Enterprise Engineering System Producti
 | VL-124 | Named library pull-in | Not Started | Pick concrete library section after VL-123 |
 | VL-125 | Cloud Platform Foundation | Done | Mapped library Phase 1; workspaces API, flags, `/dashboard` + overview; ADR-0046. No AZ/discovery fake. |
 | VL-126 | Identity Cloud | Done | Mapped library Phase 2; membership RBAC writes, Clerk role sync, key `lastUsedAt`, `/identity`; ADR-0047. No SAML/SCIM/ABAC/Teams. |
-| VL-127 | Developer Cloud Foundation | Done | Mapped library Phase 3; `/developers`, soft `vl_test_` keys, `@verbalab/cli`, playground+overview; ADR-0048. No OAuth AS / sandbox cluster. |
+| VL-127 | Developer Cloud Foundation | Done | Mapped library Phase 3; `/developers`, soft `lg_test_` keys, `@lugemi/cli`, playground+overview; ADR-0048. No OAuth AS / sandbox cluster. |
 | VL-128 | Enterprise Cloud Foundation | Done | Mapped library Phase 4; `/enterprise` + policies overview; vendor policy on translate audit; ADR-0049. No policy engine / cert product. |
 | VL-129 | AI Gateway Cloud Foundation | Done | Mapped library Phase 5; `/gateway` + providers overview; OpenRouter chat fallback; ADR-0050. **Volume 1 Part A complete.** |
 | VL-130 | Language Cloud Foundation | Done | Mapped library Phase 6; `/language` + products overview; ADR-0051. No dialect/grammar/GraphQL rewrite. |
@@ -394,7 +394,7 @@ Last updated: 2026-10-03 (VL-353 Done — Enterprise Engineering System Producti
 | 2026-09-06 | Phase 0 complete (VL-001, VL-002). `pnpm test` / `typecheck` / `lint` green. Compose Postgres on host 5433. |
 | 2026-09-06 | Phase 1 code shipped (Clerk + Google MT + translate console). Auth/MT live paths **Blocked** until keys added — no fake translator. |
 | 2026-09-06 | VL-030 Done: OpenAPI + `/docs` + `/playground`. Console restyled (ElevenLabs-inspired light monochrome). |
-| 2026-09-06 | VL-032 + VL-033 Done: audit log + `@verbalab/sdk`. |
+| 2026-09-06 | VL-032 + VL-033 Done: audit log + `@lugemi/sdk`. |
 | 2026-09-06 | VL-031 billing code shipped (Stripe Checkout/Portal/webhooks + quota). Live checkout **Blocked** on Stripe keys. |
 | 2026-09-06 | VL-054 Done: language detection (`source=auto`, `POST /v1/detect`); Google + franc-min (ADR-0014). M5 complete. |
 | 2026-09-06 | VL-060 Done: AI Chat (`POST /v1/chat/completions`, console `/chat`, optional translate-then-answer). Live blocked on `OPENAI_API_KEY`. |
@@ -408,7 +408,7 @@ Last updated: 2026-10-03 (VL-353 Done — Enterprise Engineering System Producti
 | 2026-09-06 | VL-074 Done: Fly.io one-region deploy (Dockerfiles, fly.toml, release migrate, deploy.yml skip-without-token). ADR-0023. |
 | 2026-09-06 | VL-080 Done: Resend notifications (job complete, usage thresholds, member-added). Live needs `RESEND_API_KEY` + `EMAIL_FROM`. |
 | 2026-09-06 | VL-081 Done: customer members list + platform admin console (search/disable/revoke keys). ADR-0025. |
-| 2026-09-06 | VL-082 Done: Slack connector — slash `/verbalab <lang> <text>` → translate + in-channel reply; install/status APIs; console `/connectors`. ADR-0026. 108 API tests. Live needs `SLACK_SIGNING_SECRET`. |
+| 2026-09-06 | VL-082 Done: Slack connector — slash `/lugemi <lang> <text>` → translate + in-channel reply; install/status APIs; console `/connectors`. ADR-0026. 108 API tests. Live needs `SLACK_SIGNING_SECRET`. |
 | 2026-09-06 | VL-083 Done: workflows — `transcribe` → `translate` → `notify` as JSON job steps; saved defs + `/workflows`. ADR-0027. 111 API tests. |
 | 2026-09-06 | VL-084 Done: voice FAQ — Twilio inbound/outbound + STT→LLM→TTS; console `/voice` simulate. ADR-0028. 116 API tests. Live needs `TWILIO_*` + `OPENAI_API_KEY` + demo org/workspace. |
 | 2026-09-06 | VL-085 Done: org analytics — `GET /v1/analytics/overview` + console `/analytics` (volume, estimated cost, job error rate). ADR-0029. 120 API tests. |
@@ -426,7 +426,7 @@ Last updated: 2026-10-03 (VL-353 Done — Enterprise Engineering System Producti
 | 2026-09-07 | VL-112 Blocked: foundation model program not started (no Atlas/Baobab shells). Use vendors + fine-tunes. ADR-0041. Executable M0–M11 complete for a small team. |
 | 2026-09-07 | VL-064 Done: ElevenLabs voice cloning with consent attestation, pending_review → approve/reject, watermark on `clone:{id}` speech. ADR-0042. 157 API tests. |
 | 2026-09-07 | VL-075 Done: multi-region as residency islands (US/`iad` + EU/`ams`); `organizations.data_region`; public `/v1/regions`; pin enforcement; console `/data`. ADR-0043. 161 API tests. |
-| 2026-09-07 | Polish 1–3: `/coverage` nav + empty states + docs copy; README/setup/`.env.example` DX; `@verbalab/sdk` widened (regions/locales/localize/jobs/ocr/speech). |
+| 2026-09-07 | Polish 1–3: `/coverage` nav + empty states + docs copy; README/setup/`.env.example` DX; `@lugemi/sdk` widened (regions/locales/localize/jobs/ocr/speech). |
 | 2026-09-07 | Polish 4–5: web `/health` + Fly/Docker checks + `pnpm smoke`; Playwright public e2e + gated sign-in→translate. |
 | 2026-09-07 | M12 scheduled (VL-120–124). VL-120 Done: African Voice Studio UX over OpenAI/ElevenLabs (ADR-0044). |
 | 2026-09-07 | VL-121 Done: own TTS path — `own:*` catalog + rented HTTP/fixture adapter; OpenAI remains stock default (ADR-0045). |
@@ -434,7 +434,7 @@ Last updated: 2026-10-03 (VL-353 Done — Enterprise Engineering System Producti
 | 2026-09-07 | Phase 0 Engineering OS: `docs/ENGINEERING_OS.md` + RFC/PRD/Runbook templates. Production monorepo = this repo (no regenerate / no TODOs). |
 | 2026-09-07 | VL-125 Done: Cloud Platform Foundation — map library terms; `/v1/workspaces`, `/v1/feature-flags`, `/v1/cloud/overview`, console `/dashboard` + switcher; ADR-0046. VL-012 Done (multi-workspace). |
 | 2026-09-07 | VL-126 Done: Identity Cloud — membership role/remove, Clerk `o.rol` sync, API key `lastUsedAt`, `/identity` + overview; ADR-0047. VL-011 Done (RBAC writes). SAML/SCIM/ABAC/Teams deferred to buy. |
-| 2026-09-07 | VL-127 Done: Developer Cloud Foundation — `/developers` + overview/SDK APIs, soft `vl_test_` keys, `@verbalab/cli`, playground detect/languages; ADR-0048. |
+| 2026-09-07 | VL-127 Done: Developer Cloud Foundation — `/developers` + overview/SDK APIs, soft `lg_test_` keys, `@lugemi/cli`, playground detect/languages; ADR-0048. |
 | 2026-09-07 | VL-128 Done: Enterprise Cloud Foundation — `/enterprise` + policies overview; vendor-training policy on translate audits; ADR-0049. No GRC/policy-engine product. |
 | 2026-09-07 | VL-129 Done: AI Gateway Cloud Foundation — `/gateway` + provider catalog; optional OpenRouter chat fallback; ADR-0050. **Volume 1 Part A complete.** |
 | 2026-09-07 | VL-130 Done: Language Cloud Foundation — `/language` hub + product catalog/overview; ADR-0051. Dialect/accent/grammar/style deferred. |

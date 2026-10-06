@@ -1,13 +1,13 @@
-# VerbaLab Accent Intelligence
+# Lugemi Accent Intelligence
 
 **Status:** Partial shipped (VL-153 / library Phase 19)  
 **Rule:** Extends VL-132 cue-based accents. Do not regenerate dialects. Do not claim acoustic regional models.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Accent Intelligence / Engine | **VL-153** — `GET /v1/accents/engine` + `/accent-intelligence` |
 | Accent Detection | **Shipped** — `POST /v1/accents/detect` (VL-132) |

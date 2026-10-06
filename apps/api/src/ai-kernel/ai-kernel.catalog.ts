@@ -14,7 +14,7 @@ export function aiKernelRuntimeCatalog(): KernelRuntimeRow[] {
   return [
     {
       id: 'ai-kernel',
-      name: 'VerbaLab AI Kernel',
+      name: 'Lugemi AI Kernel',
       status: 'shipped',
       api: 'GET /v1/ai-kernel/products',
       console: '/ai-kernel',
@@ -114,8 +114,8 @@ export function aiKernelArchitectureNotes() {
     eventDriven: 'audit_and_jobs_only',
     rest: true,
     graphql: true,
-    sdk: '@verbalab/sdk',
-    cli: '@verbalab/cli',
+    sdk: '@lugemi/sdk',
+    cli: '@lugemi/cli',
     docker: true,
     terraform: true,
     kubernetes: true,

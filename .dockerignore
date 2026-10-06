@@ -1,4 +1,4 @@
-# VerbaLab monorepo — Docker build context is the repository root.
+# Lugemi monorepo — Docker build context is the repository root.
 node_modules
 **/node_modules
 .git

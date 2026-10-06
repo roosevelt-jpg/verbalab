@@ -4,7 +4,7 @@ Library Phase 218 — part of Volume 20 Enterprise Engineering System (EES).
 
 ## Mission
 
-VerbaLab Database Engineering Standards is a **standards and governance catalog** for engineers and Cursor.
+Lugemi Database Engineering Standards is a **standards and governance catalog** for engineers and Cursor.
 It is not a customer-facing product cloud, not Jira/Confluence/SonarQube OS, and not an
 Architecture Knowledge Base / ADR factory OS.
 

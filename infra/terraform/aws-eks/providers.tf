@@ -14,7 +14,7 @@ provider "aws" {
 
   default_tags {
     tags = {
-      Project   = "verbalab"
+      Project   = "lugemi"
       ManagedBy = "terraform"
       Phase     = "VL-138"
     }

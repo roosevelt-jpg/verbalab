@@ -387,7 +387,7 @@ export class ContextRuntimeService {
     if (contextRuntimeMode() === 'disabled') {
       throw new ApiException(
         'context_runtime_disabled',
-        'Context Runtime mode is disabled (VERBALAB_CONTEXT_RUNTIME_MODE=disabled).',
+        'Context Runtime mode is disabled (LUGEMI_CONTEXT_RUNTIME_MODE=disabled).',
         HttpStatus.FORBIDDEN,
       );
     }

@@ -4,7 +4,7 @@
  */
 export function engineeringQualityPlatformEngineCatalog() {
   return {
-    product: 'VerbaLab Engineering Quality Platform',
+    product: 'Lugemi Engineering Quality Platform',
     engineeringOsForHumansAndCursor: true,
     customerFacingProductCloud: false,
     architectureKnowledgeBaseOs: false,
@@ -26,7 +26,7 @@ export function engineeringQualityPlatformEngineCatalog() {
         path: '/v1/supply-chain-security/engine',
         role: 'Supply Chain Security',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       },
       {
         id: 'route-2',
@@ -34,7 +34,7 @@ export function engineeringQualityPlatformEngineCatalog() {
         path: '/v1/reliability-engineering/engine',
         role: 'Reliability Engineering',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       },
       {
         id: 'route-3',
@@ -42,7 +42,7 @@ export function engineeringQualityPlatformEngineCatalog() {
         path: '/v1/developer-experience-platform/engine',
         role: 'DX repo health',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       }
     ],
     routesTo: [

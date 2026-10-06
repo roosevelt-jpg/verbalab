@@ -51,7 +51,7 @@ export class VoiceCloningService {
       if (row.enrollmentVerified) enrollmentVerified += 1;
     }
     return {
-      product: 'VerbaLab Voice Cloning',
+      product: 'Lugemi Voice Cloning',
       total: rows.length,
       byStatus,
       byMode,

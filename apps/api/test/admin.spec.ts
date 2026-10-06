@@ -79,9 +79,9 @@ describe('Admin + customer portal (VL-081)', () => {
   it('isPlatformAdmin respects allowlists', () => {
     const prevEmails = process.env.ADMIN_EMAILS;
     const prevIds = process.env.ADMIN_USER_IDS;
-    process.env.ADMIN_EMAILS = 'ops@verbalab.test';
+    process.env.ADMIN_EMAILS = 'ops@lugemi.test';
     process.env.ADMIN_USER_IDS = 'clerk_ops_1';
-    expect(isPlatformAdmin({ email: 'ops@verbalab.test', clerkUserId: 'x' })).toBe(true);
+    expect(isPlatformAdmin({ email: 'ops@lugemi.test', clerkUserId: 'x' })).toBe(true);
     expect(isPlatformAdmin({ email: 'other@x.com', clerkUserId: 'clerk_ops_1' })).toBe(true);
     expect(isPlatformAdmin({ email: 'other@x.com', clerkUserId: 'nope' })).toBe(false);
     process.env.ADMIN_EMAILS = prevEmails;

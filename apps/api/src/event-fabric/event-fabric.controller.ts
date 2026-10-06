@@ -49,7 +49,7 @@ export class EventFabricController {
   ) {
     return this.fabric.publish({
       topic: body.topic ?? 'default',
-      type: body.type ?? 'com.verbalab.event',
+      type: body.type ?? 'com.lugemi.event',
       source: body.source,
       data: body.data,
       eventVersion: body.eventVersion,

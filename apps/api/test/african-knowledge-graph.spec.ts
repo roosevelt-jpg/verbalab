@@ -57,7 +57,7 @@ describe('African Knowledge Graph (VL-263)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/african-knowledge-graph/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab African Knowledge Graph');
+    expect(res.body.product).toBe('Lugemi African Knowledge Graph');
 
     expect(res.body.honesty.neo4jOs).toBe(false);
 

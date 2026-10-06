@@ -80,7 +80,7 @@ export class EmotionVoiceService {
       tts: summary.tts,
       emotionVoiceRequests: events.length,
       byEmotion,
-      product: 'VerbaLab Emotion Voice',
+      product: 'Lugemi Emotion Voice',
       note: 'Profile usage from audit events. Full Voice Analytics = Phase 35.',
       docs: '/docs/EMOTION_VOICE.md',
     };

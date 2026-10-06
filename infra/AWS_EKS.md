@@ -25,7 +25,7 @@ terraform apply
 Configure kubectl (printed as output `configure_kubectl`):
 
 ```bash
-aws eks update-kubeconfig --region af-south-1 --name verbalab
+aws eks update-kubeconfig --region af-south-1 --name lugemi
 ```
 
 ## 2. Images
@@ -37,7 +37,7 @@ Build and push to ECR (or any registry), then replace `REPLACE_ECR_OR_REGISTRY` 
 ```bash
 # Create real secret (do not commit)
 kubectl apply -f infra/k8s/namespace.yaml
-kubectl create secret generic verbalab-secrets -n verbalab \
+kubectl create secret generic lugemi-secrets -n lugemi \
   --from-literal=DATABASE_URL='postgresql://...' \
   --from-literal=REDIS_URL='redis://...' \
   --from-literal=CLERK_SECRET_KEY='...' \

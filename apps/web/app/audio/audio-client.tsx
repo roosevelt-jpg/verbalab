@@ -26,11 +26,11 @@ type VoiceClone = {
 };
 
 const LANG_PRESETS: { code: string; label: string; sample: string }[] = [
-  { code: 'en', label: 'English', sample: 'Hello, welcome to VerbaLab.' },
-  { code: 'sw', label: 'Swahili', sample: 'Habari, karibu VerbaLab.' },
-  { code: 'yo', label: 'Yoruba', sample: 'Ẹ n lẹ, ẹ káàbọ̀ sí VerbaLab.' },
+  { code: 'en', label: 'English', sample: 'Hello, welcome to Lugemi.' },
+  { code: 'sw', label: 'Swahili', sample: 'Habari, karibu Lugemi.' },
+  { code: 'yo', label: 'Yoruba', sample: 'Ẹ n lẹ, ẹ káàbọ̀ sí Lugemi.' },
   { code: 'am', label: 'Amharic', sample: 'ሰላም፣ ወደ ቬርባላብ እንኳን በደህና መጡ።' },
-  { code: 'fr', label: 'French', sample: 'Bonjour, bienvenue chez VerbaLab.' },
+  { code: 'fr', label: 'French', sample: 'Bonjour, bienvenue chez Lugemi.' },
 ];
 
 function statusBadge(status: string): CSSProperties {
@@ -98,8 +98,8 @@ export function AudioClient() {
   async function authHeader(): Promise<string> {
     const token = await getToken();
     if (token) return `Bearer ${token}`;
-    if (apiKey.startsWith('vl_live_')) return `Bearer ${apiKey}`;
-    throw new Error('Sign in with Clerk, or paste a vl_live_ API key');
+    if (apiKey.startsWith('lg_live_')) return `Bearer ${apiKey}`;
+    throw new Error('Sign in with Clerk, or paste a lg_live_ API key');
   }
 
   async function refreshClones(token: string) {
@@ -205,7 +205,7 @@ export function AudioClient() {
         const body = (await res.json().catch(() => ({}))) as { error?: { message: string } };
         throw new Error(body.error?.message ?? `Speech failed (${res.status})`);
       }
-      setWatermarkApplied(res.headers.get('x-verbalab-watermark') === 'required');
+      setWatermarkApplied(res.headers.get('x-lugemi-watermark') === 'required');
       const blob = await res.blob();
       setAudioUrl(URL.createObjectURL(blob));
       setTab('tts');
@@ -316,7 +316,7 @@ export function AudioClient() {
           className="vl-field vl-code"
           value={apiKey}
           onChange={(e) => setApiKey(e.target.value)}
-          placeholder="vl_live_... (fallback when not signed in)"
+          placeholder="lg_live_... (fallback when not signed in)"
         />
       </label>
 
@@ -605,13 +605,13 @@ export function AudioClient() {
         <div className="vl-panel" style={{ marginTop: '1.25rem', padding: '1.35rem' }}>
           {watermarkApplied ? (
             <p style={{ margin: '0 0 0.75rem', color: 'var(--muted)', fontSize: '0.85rem' }}>
-              Watermark required on this clone speech (`X-VerbaLab-Watermark`).
+              Watermark required on this clone speech (`X-Lugemi-Watermark`).
             </p>
           ) : null}
           <audio controls src={audioUrl} style={{ width: '100%' }} />
           <a
             href={audioUrl}
-            download="verbalab-speech.mp3"
+            download="lugemi-speech.mp3"
             className="vl-btn vl-btn-secondary"
             style={{ display: 'inline-block', marginTop: '0.75rem', textDecoration: 'none' }}
           >

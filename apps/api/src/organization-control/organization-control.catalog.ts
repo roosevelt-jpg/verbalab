@@ -39,7 +39,7 @@ export function organizationControlRoleCatalog(): Array<{
 
 export function organizationControlEngineCatalog() {
   return {
-    product: 'VerbaLab Organization Control',
+    product: 'Lugemi Organization Control',
     capabilities: [
       { id: 'organizations', name: 'Organizations', status: 'shipped', notes: 'VL-315.' },
       { id: 'business_units', name: 'Business Units', status: 'shipped', notes: 'VL-315.' },
@@ -53,8 +53,8 @@ export function organizationControlEngineCatalog() {
     ],
     organizations: [
       {
-        id: 'org-verbalab',
-        name: 'VerbaLab',
+        id: 'org-lugemi',
+        name: 'Lugemi',
         kind: 'organization',
         status: 'shipped',
         notes: 'Primary org seed over existing identity/org surfaces.',

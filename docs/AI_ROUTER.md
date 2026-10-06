@@ -1,4 +1,4 @@
-# VerbaLab AI Router
+# Lugemi AI Router
 
 **Status:** Partial (VL-207 / library Phase 74)  
 **Parent:** [Inference Cloud](./INFERENCE_CLOUD.md)  
@@ -17,7 +17,7 @@
 | Resolve (dry-run) | `POST /v1/ai-router/resolve` |
 | Decisions / analytics / monitoring | `GET …/decisions` · `/analytics` · `/monitoring` |
 | GraphQL | `aiRouterEngine` |
-| SDK / CLI | `aiRouterEngine()` · `verbalab ai-router-engine` |
+| SDK / CLI | `aiRouterEngine()` · `lugemi ai-router-engine` |
 
 ## Capabilities
 
@@ -37,7 +37,7 @@
 
 | Control | Default | Env |
 | --- | --- | --- |
-| Router mode | `sandbox` | `VERBALAB_AI_ROUTER_MODE=disabled\|sandbox` |
+| Router mode | `sandbox` | `LUGEMI_AI_ROUTER_MODE=disabled\|sandbox` |
 
 ## Honesty
 

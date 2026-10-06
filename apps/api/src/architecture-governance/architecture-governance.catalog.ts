@@ -4,7 +4,7 @@
  */
 export function architectureGovernanceEngineCatalog() {
   return {
-    product: 'VerbaLab Architecture Governance',
+    product: 'Lugemi Architecture Governance',
     engineeringOsForHumansAndCursor: true,
     customerFacingProductCloud: false,
     architectureKnowledgeBaseOs: false,
@@ -25,7 +25,7 @@ export function architectureGovernanceEngineCatalog() {
         path: 'docs/adr/',
         role: 'Existing ADR series',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       },
       {
         id: 'route-2',
@@ -33,7 +33,7 @@ export function architectureGovernanceEngineCatalog() {
         path: '/v1/platform-engineering-cloud/products',
         role: 'Platform Engineering',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       },
       {
         id: 'route-3',
@@ -41,7 +41,7 @@ export function architectureGovernanceEngineCatalog() {
         path: '/v1/developer-experience-platform/engine',
         role: 'Developer Experience',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       }
     ],
     routesTo: [

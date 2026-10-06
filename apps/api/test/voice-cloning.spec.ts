@@ -89,7 +89,7 @@ describe('Voice Cloning Platform (VL-172)', () => {
 
   it('exposes engine + consent policy with honest professional status', async () => {
     const engine = await request(app.getHttpServer()).get('/v1/voice-cloning/engine').expect(200);
-    expect(engine.body.product).toBe('VerbaLab Voice Cloning');
+    expect(engine.body.product).toBe('Lugemi Voice Cloning');
     expect(engine.body.trust.consentRequired).toBe(true);
     expect(engine.body.trust.watermarkRequired).toBe(true);
     expect(engine.body.architecture.primaryRegion).toBe('af-south-1');

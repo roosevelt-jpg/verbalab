@@ -4,7 +4,7 @@
  */
 export function gitopsPlatformEngineCatalog() {
   return {
-    product: 'VerbaLab GitOps Platform',
+    product: 'Lugemi GitOps Platform',
     capabilities: [
       { id: 'github', name: 'GitHub', status: 'shipped', notes: 'VL-306 capability.' },
       { id: 'gitlab', name: 'GitLab', status: 'shipped', notes: 'VL-306 capability.' },
@@ -22,7 +22,7 @@ export function gitopsPlatformEngineCatalog() {
         name: 'github',
         kind: 'github',
         status: 'shipped',
-        notes: 'GitHub Actions readiness for verbalab deploy',
+        notes: 'GitHub Actions readiness for lugemi deploy',
       },
       {
         id: 'go-gl',

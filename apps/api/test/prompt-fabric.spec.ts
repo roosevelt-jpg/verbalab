@@ -57,11 +57,11 @@ describe('Prompt Fabric (VL-243)', () => {
   let apiKeys: ApiKeysService;
   let fabric: PromptFabricService;
   let bus: EventFabricBus;
-  const prevMode = process.env.VERBALAB_PROMPT_RUNTIME_MODE;
+  const prevMode = process.env.LUGEMI_PROMPT_RUNTIME_MODE;
 
   beforeAll(async () => {
     process.env.EVENT_FABRIC_MEMORY = '1';
-    process.env.VERBALAB_PROMPT_RUNTIME_MODE = 'sandbox';
+    process.env.LUGEMI_PROMPT_RUNTIME_MODE = 'sandbox';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -77,8 +77,8 @@ describe('Prompt Fabric (VL-243)', () => {
   });
 
   afterAll(async () => {
-    if (prevMode === undefined) delete process.env.VERBALAB_PROMPT_RUNTIME_MODE;
-    else process.env.VERBALAB_PROMPT_RUNTIME_MODE = prevMode;
+    if (prevMode === undefined) delete process.env.LUGEMI_PROMPT_RUNTIME_MODE;
+    else process.env.LUGEMI_PROMPT_RUNTIME_MODE = prevMode;
     await app.close();
   });
 
@@ -112,7 +112,7 @@ describe('Prompt Fabric (VL-243)', () => {
 
   it('exposes catalog, routes, router, and policies with honesty', async () => {
     const res = await request(app.getHttpServer()).get('/v1/prompt-fabric/products').expect(200);
-    expect(res.body.product).toBe('VerbaLab Prompt Fabric');
+    expect(res.body.product).toBe('Lugemi Prompt Fabric');
     expect(res.body.architecture.customerFacingProduct).toBe(false);
     expect(res.body.architecture.promptMeshOs).toBe(false);
     expect(res.body.architecture.autoPromptResearchLab).toBe(false);
@@ -181,7 +181,7 @@ describe('Prompt Fabric (VL-243)', () => {
       })
       .expect(200);
     expect(dist.body.distribution.targets).toContain(peer.id);
-    expect(dist.body.event.type).toBe('com.verbalab.prompt.distributed');
+    expect(dist.body.event.type).toBe('com.lugemi.prompt.distributed');
 
     const sync = await request(app.getHttpServer())
       .post('/v1/prompt-fabric/sync')
@@ -193,7 +193,7 @@ describe('Prompt Fabric (VL-243)', () => {
       })
       .expect(200);
     expect(sync.body.sync.cursor).toMatch(/^pf:/);
-    expect(sync.body.event.type).toBe('com.verbalab.prompt.synced');
+    expect(sync.body.event.type).toBe('com.lugemi.prompt.synced');
 
     const monitoring = await request(app.getHttpServer())
       .get('/v1/prompt-fabric/monitoring')

@@ -125,7 +125,7 @@ export function findVoiceLanguagePackEntry(key: string): VoiceLanguageCatalogEnt
  */
 export function voiceLanguageMarketplaceEngineCatalog() {
   return {
-    product: 'VerbaLab Voice & Language Marketplace',
+    product: 'Lugemi Voice & Language Marketplace',
     note:
       'Voice & Language Marketplace (VL-257). Publish/license pack SKUs over VL-177 voice marketplace + Volume 1 language/dialect/glossary/locale surfaces. Install grants workspace entitlements — not voice CDN hosting, celebrity without rights, or cross-tenant clone synthesis. Monetization records MarketplaceSale receipts; Stripe Connect via VL-092.',
     capabilities: [
@@ -197,7 +197,7 @@ export function voiceLanguageMarketplaceEngineCatalog() {
         name: 'SDK',
         status: 'shipped',
         api: 'voiceLanguageMarketplaceEngine()',
-        notes: '@verbalab/sdk + CLI.',
+        notes: '@lugemi/sdk + CLI.',
       },
       {
         id: 'analytics',

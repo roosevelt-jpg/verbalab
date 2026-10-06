@@ -1,4 +1,4 @@
-# VerbaLab Enterprise Knowledge APIs
+# Lugemi Enterprise Knowledge APIs
 
 **Status:** Partial (VL-201 / library Phase 68)  
 **Parent:** [Knowledge Cloud](./KNOWLEDGE_CLOUD.md)  
@@ -20,7 +20,7 @@
 | Events | `GET /v1/knowledge-apis/events` · SSE `/events/stream` |
 | Analytics / monitoring | `GET …/analytics` · `/monitoring` |
 | GraphQL | `knowledgeApisEngine` |
-| SDK / CLI | `knowledgeApisEngine()` · `verbalab knowledge-apis-engine` |
+| SDK / CLI | `knowledgeApisEngine()` · `lugemi knowledge-apis-engine` |
 | Developer portal | `/developers` (VL-127) |
 
 ## Honesty

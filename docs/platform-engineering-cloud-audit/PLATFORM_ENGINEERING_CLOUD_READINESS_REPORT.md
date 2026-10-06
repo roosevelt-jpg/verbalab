@@ -2,7 +2,7 @@
 
 ## Verdict
 
-Volume 16 Platform Engineering Cloud is closed and ready as VerbaLab's internal IDP tooling.
+Volume 16 Platform Engineering Cloud is closed and ready as Lugemi's internal IDP tooling.
 
 ## Honesty checklist
 

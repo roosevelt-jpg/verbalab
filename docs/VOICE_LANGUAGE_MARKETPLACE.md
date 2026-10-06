@@ -1,13 +1,13 @@
-# VerbaLab Voice & Language Marketplace
+# Lugemi Voice & Language Marketplace
 
 **Status:** Shipped (VL-257 / library Phase 124)  
 **Rule:** Entitlement SKUs over VL-177 voice marketplace + Volume 1 language/dialect/glossary/locale packs — **not** ElevenLabs, voice CDN, or celebrity without rights. Real-money honesty: Stripe (or equivalent); `storesRawCardData: false`. Roadmap: [`docs/roadmap/volume11-ecosystem-cloud/`](./roadmap/volume11-ecosystem-cloud/).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Voice Packs | **Shipped** — `packType=voice` over VL-177 packs |
 | Language Packs | **Shipped** — `language.sw/yo/am/en` over VL-177 language packs |
@@ -33,7 +33,7 @@
 | Reviews / sales / analytics | under `/v1/voice-language-marketplace/*` |
 | GraphQL | `voiceLanguageMarketplaceEngine` |
 | SDK | `voiceLanguageMarketplaceEngine()` |
-| CLI | `verbalab voice-language-marketplace-engine` |
+| CLI | `lugemi voice-language-marketplace-engine` |
 
 ## Honesty
 

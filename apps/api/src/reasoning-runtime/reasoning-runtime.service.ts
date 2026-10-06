@@ -564,7 +564,7 @@ export class ReasoningRuntimeService {
     if (reasoningRuntimeMode() === 'disabled') {
       throw new ApiException(
         'reasoning_runtime_disabled',
-        'Reasoning Runtime mode is disabled (VERBALAB_REASONING_RUNTIME_MODE=disabled).',
+        'Reasoning Runtime mode is disabled (LUGEMI_REASONING_RUNTIME_MODE=disabled).',
         HttpStatus.FORBIDDEN,
       );
     }

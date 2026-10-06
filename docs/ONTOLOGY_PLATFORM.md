@@ -1,4 +1,4 @@
-# VerbaLab Ontology Platform
+# Lugemi Ontology Platform
 
 **Status:** Partial (VL-196 / library Phase 63)  
 **Parent:** [Knowledge Cloud](./KNOWLEDGE_CLOUD.md)  
@@ -21,7 +21,7 @@
 | Synonyms | `POST /v1/ontology/synonyms` |
 | Analytics / monitoring | `GET /v1/ontology/analytics` · `/monitoring` |
 | GraphQL | `ontologyEngine` |
-| SDK / CLI | `ontologyEngine()` · `verbalab ontology-engine` |
+| SDK / CLI | `ontologyEngine()` · `lugemi ontology-engine` |
 
 ## Honesty
 

@@ -27,7 +27,7 @@ export function GlobalRoutingControllerClient() {
         Global Routing Controller
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-319 — VerbaLab Global Routing Controller console in the Control Plane Cloud.
+        VL-319 — Lugemi Global Routing Controller console in the Control Plane Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

@@ -154,7 +154,7 @@ export class VoiceController {
     const turnUrl = this.absoluteWebhookPath('/v1/voice/twilio/turn');
     const twiml = `<?xml version="1.0" encoding="UTF-8"?>
 <Response>
-  <Say voice="Polly.Joanna">Welcome to VerbaLab FAQ. Ask your question after the beep, in English or Kiswahili.</Say>
+  <Say voice="Polly.Joanna">Welcome to Lugemi FAQ. Ask your question after the beep, in English or Kiswahili.</Say>
   <Record maxLength="45" playBeep="true" action="${escapeXml(turnUrl)}" method="POST" />
 </Response>`;
     res.type('text/xml').send(twiml);

@@ -122,7 +122,7 @@ export function streamingTransports() {
  */
 export function streamingRuntimeCatalog() {
   return {
-    product: 'VerbaLab Streaming Runtime',
+    product: 'Lugemi Streaming Runtime',
     note:
       'Streaming Runtime (VL-208). Catalogs speech/voice/translation SSE already shipped in product clouds, plus a sandbox LLM/token chunk SSE on this hub. Primary transport is SSE. WebSockets, gRPC, and video streaming OS deferred. Does not regenerate translate/speech/TTS streams.',
     capabilities: [
@@ -222,7 +222,7 @@ export function streamingRuntimeCatalog() {
         name: 'SDK',
         status: 'shipped',
         api: 'streamingRuntimeEngine()',
-        notes: '@verbalab/sdk',
+        notes: '@lugemi/sdk',
       },
       {
         id: 'documentation',
@@ -264,7 +264,7 @@ export function streamingRuntimeCatalog() {
 }
 
 export function streamingRuntimeMode(): 'sandbox' | 'disabled' {
-  const raw = (process.env.VERBALAB_STREAMING_RUNTIME_MODE ?? 'sandbox').toLowerCase();
+  const raw = (process.env.LUGEMI_STREAMING_RUNTIME_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
@@ -272,7 +272,7 @@ export function streamingRuntimeMode(): 'sandbox' | 'disabled' {
 export function streamingCeilings() {
   const maxChunks = Math.max(
     4,
-    Number(process.env.VERBALAB_STREAMING_MAX_CHUNKS ?? '64') || 64,
+    Number(process.env.LUGEMI_STREAMING_MAX_CHUNKS ?? '64') || 64,
   );
   return {
     maxChunksPerStream: Math.min(maxChunks, 256),

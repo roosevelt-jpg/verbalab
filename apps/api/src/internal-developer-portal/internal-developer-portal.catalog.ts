@@ -4,7 +4,7 @@
  */
 export function internalDeveloperPortalEngineCatalog() {
   return {
-    product: 'VerbaLab Internal Developer Portal',
+    product: 'Lugemi Internal Developer Portal',
     capabilities: [
       { id: 'project_creation', name: 'Project Creation', status: 'shipped', notes: 'VL-303 capability.' },
       { id: 'env_provisioning', name: 'Environment Provisioning', status: 'shipped', notes: 'VL-303 capability.' },

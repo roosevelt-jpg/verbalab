@@ -4,7 +4,7 @@
  */
 export function globalPolicyEngineCatalog() {
   return {
-    product: 'VerbaLab Global Policy Engine',
+    product: 'Lugemi Global Policy Engine',
     capabilities: [
       { id: 'security', name: 'Security Policies', status: 'shipped', notes: 'VL-317.' },
       { id: 'ai', name: 'AI Policies', status: 'shipped', notes: 'Via Policy Runtime / Trust.' },

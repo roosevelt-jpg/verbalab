@@ -40,7 +40,7 @@ export function NeuralTtsClient() {
   const [engine, setEngine] = useState<Engine | null>(null);
   const [voices, setVoices] = useState<Voice[]>([]);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
-  const [text, setText] = useState('Karibu VerbaLab Neural TTS.');
+  const [text, setText] = useState('Karibu Lugemi Neural TTS.');
   const [voice, setVoice] = useState('alloy');
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [streamNote, setStreamNote] = useState<string | null>(null);

@@ -2,10 +2,10 @@ import Link from 'next/link';
 import { LanguagePlayers } from './language-players';
 import { MarketingNav } from './nav';
 
-const SDK_SAMPLE = `import { VerbaLab } from '@verbalab/sdk';
+const SDK_SAMPLE = `import { Lugemi } from '@lugemi/sdk';
 
-const client = new VerbaLab({
-  apiKey: process.env.VERBALAB_API_KEY!,
+const client = new Lugemi({
+  apiKey: process.env.LUGEMI_API_KEY!,
 });
 
 const translated = await client.translate({
@@ -73,11 +73,11 @@ export function MarketingHome() {
               </article>
               <article className="mkt-card">
                 <div className="mkt-tile-art-mist" aria-hidden="true" />
-                <p className="mkt-caption">API keys use Bearer vl_live_ / vl_test_ headers.</p>
+                <p className="mkt-caption">API keys use Bearer lg_live_ / lg_test_ headers.</p>
                 <h3>Lugemi API</h3>
                 <p>
                   Generate speech, transcribe, and translate with documented endpoints and{' '}
-                  <code className="vl-code">@verbalab/sdk</code>. Start from the public docs.
+                  <code className="vl-code">@lugemi/sdk</code>. Start from the public docs.
                 </p>
                 <Link href="/docs" className="vl-btn vl-btn-primary">
                   Read the docs
@@ -182,9 +182,9 @@ export function MarketingHome() {
                 Build with the API
               </h2>
               <p className="mkt-lede">
-                Install <code className="vl-code">@verbalab/sdk</code> and talk to first-party endpoints. The
+                Install <code className="vl-code">@lugemi/sdk</code> and talk to first-party endpoints. The
                 historical package name is intentional — do not rename it in application code. Authenticate with{' '}
-                <code className="vl-code">Authorization: Bearer vl_live_...</code>.
+                <code className="vl-code">Authorization: Bearer lg_live_...</code>.
               </p>
               <div className="mkt-inline-links">
                 <Link href="/docs" className="vl-btn vl-btn-primary">

@@ -27,7 +27,7 @@ export function AiOperationsDashboardClient() {
         AI Operations Dashboard
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-290 — VerbaLab AI Operations Dashboard console in the MLOps & LLMOps Cloud.
+        VL-290 — Lugemi AI Operations Dashboard console in the MLOps & LLMOps Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

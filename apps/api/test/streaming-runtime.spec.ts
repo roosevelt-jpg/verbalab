@@ -39,12 +39,12 @@ describe('Streaming Runtime (VL-208)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
-  const prevMode = process.env.VERBALAB_STREAMING_RUNTIME_MODE;
-  const prevChunks = process.env.VERBALAB_STREAMING_MAX_CHUNKS;
+  const prevMode = process.env.LUGEMI_STREAMING_RUNTIME_MODE;
+  const prevChunks = process.env.LUGEMI_STREAMING_MAX_CHUNKS;
 
   beforeAll(async () => {
-    process.env.VERBALAB_STREAMING_RUNTIME_MODE = 'sandbox';
-    process.env.VERBALAB_STREAMING_MAX_CHUNKS = '32';
+    process.env.LUGEMI_STREAMING_RUNTIME_MODE = 'sandbox';
+    process.env.LUGEMI_STREAMING_MAX_CHUNKS = '32';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -59,10 +59,10 @@ describe('Streaming Runtime (VL-208)', () => {
   });
 
   afterAll(async () => {
-    if (prevMode === undefined) delete process.env.VERBALAB_STREAMING_RUNTIME_MODE;
-    else process.env.VERBALAB_STREAMING_RUNTIME_MODE = prevMode;
-    if (prevChunks === undefined) delete process.env.VERBALAB_STREAMING_MAX_CHUNKS;
-    else process.env.VERBALAB_STREAMING_MAX_CHUNKS = prevChunks;
+    if (prevMode === undefined) delete process.env.LUGEMI_STREAMING_RUNTIME_MODE;
+    else process.env.LUGEMI_STREAMING_RUNTIME_MODE = prevMode;
+    if (prevChunks === undefined) delete process.env.LUGEMI_STREAMING_MAX_CHUNKS;
+    else process.env.LUGEMI_STREAMING_MAX_CHUNKS = prevChunks;
     await app.close();
   });
 

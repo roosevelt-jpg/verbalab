@@ -237,7 +237,7 @@ export class RegistryService implements OnModuleInit, OnApplicationBootstrap {
       valid: errors.length === 0,
       errors,
       resolved,
-      note: 'Validates codes against the curated VerbaLab registry only.',
+      note: 'Validates codes against the curated Lugemi registry only.',
     };
   }
 

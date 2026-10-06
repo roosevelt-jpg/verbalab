@@ -377,7 +377,7 @@ export class IntelligentCacheService {
     if (intelligentCacheMode() === 'disabled') {
       throw new ApiException(
         'intelligent_cache_disabled',
-        'Intelligent Cache mode is disabled (VERBALAB_INTELLIGENT_CACHE_MODE=disabled).',
+        'Intelligent Cache mode is disabled (LUGEMI_INTELLIGENT_CACHE_MODE=disabled).',
         HttpStatus.FORBIDDEN,
       );
     }

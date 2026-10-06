@@ -11,7 +11,7 @@ export type StudioCapability = {
 /** Library Phase 31 → Voice Studio (VL-174). Extends VL-120 `/audio` — not a DAW. */
 export function voiceStudioEngineCatalog() {
   return {
-    product: 'VerbaLab Voice Studio',
+    product: 'Lugemi Voice Studio',
     note:
       'Professional Voice Studio hub over Neural TTS, clones, and VL-120 African studio UX. Linear timeline + SSML lite + pronunciation lexicon + voice comparison — not a nonlinear DAW / Premiere / Descript parity product.',
     capabilities: [
@@ -133,8 +133,8 @@ export function voiceStudioEngineCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

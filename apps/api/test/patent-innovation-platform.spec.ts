@@ -57,7 +57,7 @@ describe('Patent & Innovation Platform (VL-277)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/patent-innovation-platform/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Patent & Innovation Platform');
+    expect(res.body.product).toBe('Lugemi Patent & Innovation Platform');
 
     expect(res.body.honesty.usptoOs).toBe(false);
     expect(res.body.honesty.legalFilingSystem).toBe(false);

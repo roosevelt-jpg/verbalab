@@ -68,7 +68,7 @@ export class AgentFabricService {
 
   products() {
     return {
-      product: 'VerbaLab Agent Fabric',
+      product: 'Lugemi Agent Fabric',
       products: agentFabricCapabilityCatalog(),
       routes: agentFabricRoutingTable(),
       pipelines: agentFabricPipelines(),
@@ -250,8 +250,8 @@ export class AgentFabricService {
       this.eventPublishes += 1;
       event = await this.eventBus.publish({
         topic: input.topic ?? 'agent-fabric',
-        type: 'com.verbalab.agent.distributed',
-        source: '/verbalab/agent-fabric',
+        type: 'com.lugemi.agent.distributed',
+        source: '/lugemi/agent-fabric',
         eventVersion: '1',
         data: {
           distributionId: record.id,
@@ -278,7 +278,7 @@ export class AgentFabricService {
   streamSnapshot() {
     return {
       ts: new Date().toISOString(),
-      product: 'VerbaLab Agent Fabric',
+      product: 'Lugemi Agent Fabric',
       counters: {
         routePlans: this.routePlans,
         discoveries: this.discoveries,

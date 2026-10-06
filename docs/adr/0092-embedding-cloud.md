@@ -8,7 +8,7 @@
 
 Library Phase 48 asks for text/speech/voice/image/video/document/code/cross-modal/hybrid/multilingual embeddings plus engine, REST/GraphQL/SDK, dashboard, monitoring, analytics, and production deployment.
 
-VerbaLab already ships gateway embeddings (VL-063) and uses them in RAG (VL-062). Training models or faking multimodal encoders would violate honesty rules. Voice biometric vectors (VL-152/176) are a different product.
+Lugemi already ships gateway embeddings (VL-063) and uses them in RAG (VL-062). Training models or faking multimodal encoders would violate honesty rules. Voice biometric vectors (VL-152/176) are a different product.
 
 ## Decision
 

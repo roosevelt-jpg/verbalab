@@ -49,7 +49,7 @@ describe('Enterprise Search (VL-195)', () => {
   let storageDir: string;
 
   beforeAll(async () => {
-    storageDir = await mkdtemp(join(tmpdir(), 'verbalab-es-'));
+    storageDir = await mkdtemp(join(tmpdir(), 'lugemi-es-'));
     process.env.DOCUMENT_STORAGE_DIR = storageDir;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({

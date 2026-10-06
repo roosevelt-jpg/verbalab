@@ -1,4 +1,4 @@
-# VerbaLab Policy Fabric
+# Lugemi Policy Fabric
 
 **Status:** Shipped (VL-247 / library Phase 114)  
 **Rule:** Policy Fabric is the **fabric-wide hard gate** over Policy Runtime — **not** log-only, not OPA/Cedar enterprise policy OS, not a GRC suite, and not a customer-facing product. Extends AI Fabric + Policy Runtime. Do **not** regenerate Volumes 1–9 or VL-222. Roadmap: [`docs/roadmap/volume10-ai-fabric/`](./roadmap/volume10-ai-fabric/).
@@ -7,9 +7,9 @@ Volume 10 README: Policy Fabric must **enforce** across buses, not only log viol
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Policy Fabric | **VL-247** — `/policy-fabric` |
 | Policy Engine | **Shipped** — `POST /assert` hard gate (403 on deny) |
@@ -30,7 +30,7 @@ Volume 10 README: Policy Fabric must **enforce** across buses, not only log viol
 | Evaluate / Assert | `POST /evaluate`, `POST /assert` |
 | Sync / Distribute | `POST /sync`, `POST /distribute` (hard-gated) |
 | GraphQL | `policyFabricCapabilities`, `policyFabricRoutes` |
-| SDK / CLI | `policyFabricProducts()`, `verbalab policy-fabric-products` |
+| SDK / CLI | `policyFabricProducts()`, `lugemi policy-fabric-products` |
 | Gate | `FabricPolicyGate` — wired into Agent/Memory/Policy Fabric distribute |
 
 ## Action safety

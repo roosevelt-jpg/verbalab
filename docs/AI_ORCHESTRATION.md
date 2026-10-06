@@ -1,13 +1,13 @@
-# VerbaLab AI Orchestration
+# Lugemi AI Orchestration
 
 **Status:** Partial shipped (VL-190 / library Phase 57)  
 **Rule:** Load-bearing orchestration that coordinates the AI Gateway and engines with **real e2e requests**. Do **not** invent a multi-cloud agent OS, LangGraph OS, or distributed AI fabric.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Multi Model Execution | **Partial** — `pipeline=model_chain` sequential chat calls |
 | Multi Cloud Routing | **Deferred** |
@@ -18,7 +18,7 @@
 | Pipeline Execution | **Shipped** — `POST /v1/ai-orchestration/run` |
 | Distributed AI | **Deferred** |
 | Engine / Dashboard | **VL-190** — `GET /v1/ai-orchestration/engine` + `/ai-orchestration` |
-| GraphQL / SDK / CLI | `aiOrchestration`, `verbalab ai-orchestration-run` |
+| GraphQL / SDK / CLI | `aiOrchestration`, `lugemi ai-orchestration-run` |
 
 ---
 

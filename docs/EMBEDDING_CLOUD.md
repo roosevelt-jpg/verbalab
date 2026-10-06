@@ -1,13 +1,13 @@
-# VerbaLab Embedding Cloud
+# Lugemi Embedding Cloud
 
 **Status:** Partial shipped (VL-181 / library Phase 48)  
 **Rule:** Productize text embeddings over VL-063 / AI Gateway. Do not train embedding models. Do not claim speech/image/video/cross-modal parity.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Embedding Engine / Dashboard | **VL-181** — `GET /v1/embedding-cloud/engine` + `/embedding-cloud` |
 | Text Embeddings | **Shipped** — `POST /v1/embeddings` + `POST /v1/embedding-cloud/embed` |
@@ -17,7 +17,7 @@
 | Speech / Voice / Image / Video / Cross-modal / Hybrid | **Deferred** |
 | Models | `GET /v1/embedding-cloud/models` |
 | Analytics / Monitoring | **Shipped** — `/analytics`, `/monitoring` |
-| GraphQL / SDK / CLI | `embeddingCloudEngine`, `verbalab embedding-cloud-engine` |
+| GraphQL / SDK / CLI | `embeddingCloudEngine`, `lugemi embedding-cloud-engine` |
 | Related | Intelligence Cloud hub; Vector Cloud = VL-182 |
 
 ---

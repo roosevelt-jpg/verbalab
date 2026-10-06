@@ -150,7 +150,7 @@ export function aiSafetyDetectionsCatalog(): SafetyDetection[] {
 export function aiSafetyPlatformEngineCatalog() {
   const detections = aiSafetyDetectionsCatalog();
   return {
-    product: 'VerbaLab AI Safety Platform',
+    product: 'Lugemi AI Safety Platform',
     capabilities: [
       { id: 'prompt_injection', name: 'Prompt Injection Detection', status: 'shipped', notes: 'Direct + indirect.' },
       { id: 'jailbreak', name: 'Jailbreak Detection', status: 'shipped', notes: 'Block posture.' },

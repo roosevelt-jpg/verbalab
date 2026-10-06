@@ -14,7 +14,7 @@ export class AiFabricService {
 
   products() {
     return {
-      product: 'VerbaLab AI Fabric',
+      product: 'Lugemi AI Fabric',
       products: aiFabricBusCatalog(),
       architecture: aiFabricArchitectureNotes(),
       honesty: aiFabricHonesty(),
@@ -26,7 +26,7 @@ export class AiFabricService {
       },
       docs: '/docs/AI_FABRIC.md',
       note:
-        'AI Fabric hub (VL-239). Internal communication layer connecting VerbaLab clouds. Not a Kafka hyperscaler or customer-facing mesh product. Event Fabric (VL-240) provides Redis Streams + CloudEvents.',
+        'AI Fabric hub (VL-239). Internal communication layer connecting Lugemi clouds. Not a Kafka hyperscaler or customer-facing mesh product. Event Fabric (VL-240) provides Redis Streams + CloudEvents.',
     };
   }
 

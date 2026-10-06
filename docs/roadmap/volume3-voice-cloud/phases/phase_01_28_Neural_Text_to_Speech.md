@@ -4,7 +4,7 @@
 Phase 28
 Neural Text-to-Speech
 Cursor Prompt
-Build VerbaLab Neural Text-to-Speech.
+Build Lugemi Neural Text-to-Speech.
 
 Support
 

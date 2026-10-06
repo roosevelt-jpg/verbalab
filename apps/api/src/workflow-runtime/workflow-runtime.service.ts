@@ -700,7 +700,7 @@ export class WorkflowRuntimeService {
     if (workflowRuntimeMode() === 'disabled') {
       throw new ApiException(
         'workflow_runtime_disabled',
-        'Workflow Runtime mode is disabled (VERBALAB_WORKFLOW_RUNTIME_MODE=disabled).',
+        'Workflow Runtime mode is disabled (LUGEMI_WORKFLOW_RUNTIME_MODE=disabled).',
         HttpStatus.FORBIDDEN,
       );
     }

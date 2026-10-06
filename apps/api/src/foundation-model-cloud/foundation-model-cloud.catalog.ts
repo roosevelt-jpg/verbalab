@@ -12,7 +12,7 @@ export type FmcProductRow = {
 
 /**
  * Library Phase 91 → Foundation Model Cloud Foundation (VL-224).
- * Catalog of VerbaLab model-family products. Named models are scaffolds —
+ * Catalog of Lugemi model-family products. Named models are scaffolds —
  * this hub does not train competitive foundation weights (Volume 9 README).
  */
 export function foundationModelCloudCatalog(): FmcProductRow[] {
@@ -29,7 +29,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
     },
     {
       id: 'atlas',
-      name: 'VerbaLab Atlas',
+      name: 'Lugemi Atlas',
       status: 'partial',
       api: 'GET /v1/atlas/engine',
       console: '/atlas',
@@ -39,7 +39,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
     },
     {
       id: 'baobab',
-      name: 'VerbaLab Baobab',
+      name: 'Lugemi Baobab',
       status: 'deferred',
       api: null,
       console: null,
@@ -48,7 +48,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
     },
     {
       id: 'echo',
-      name: 'VerbaLab Echo',
+      name: 'Lugemi Echo',
       status: 'deferred',
       api: null,
       console: null,
@@ -57,7 +57,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
     },
     {
       id: 'voice',
-      name: 'VerbaLab Voice',
+      name: 'Lugemi Voice',
       status: 'deferred',
       api: null,
       console: null,
@@ -66,7 +66,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
     },
     {
       id: 'vision',
-      name: 'VerbaLab Vision',
+      name: 'Lugemi Vision',
       status: 'deferred',
       api: null,
       console: null,
@@ -75,7 +75,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
     },
     {
       id: 'vector',
-      name: 'VerbaLab Vector',
+      name: 'Lugemi Vector',
       status: 'deferred',
       api: null,
       console: null,
@@ -84,7 +84,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
     },
     {
       id: 'reason',
-      name: 'VerbaLab Reason',
+      name: 'Lugemi Reason',
       status: 'deferred',
       api: null,
       console: null,
@@ -93,7 +93,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
     },
     {
       id: 'edge',
-      name: 'VerbaLab Edge',
+      name: 'Lugemi Edge',
       status: 'deferred',
       api: null,
       console: null,
@@ -102,7 +102,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
     },
     {
       id: 'fusion',
-      name: 'VerbaLab Fusion',
+      name: 'Lugemi Fusion',
       status: 'deferred',
       api: null,
       console: null,
@@ -111,7 +111,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
     },
     {
       id: 'translate',
-      name: 'VerbaLab Translate',
+      name: 'Lugemi Translate',
       status: 'deferred',
       api: null,
       console: null,

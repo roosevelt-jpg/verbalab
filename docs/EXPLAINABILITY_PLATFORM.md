@@ -4,11 +4,11 @@ Library Phase 162 — part of Volume 15 Trust Cloud.
 
 ## Mission
 
-VerbaLab Explainability Platform provides the Explainability Platform surface inside the Trust Cloud.
+Lugemi Explainability Platform provides the Explainability Platform surface inside the Trust Cloud.
 
 ## Honesty
 
-- Extends existing VerbaLab systems — does not regenerate Volumes 1–14.
+- Extends existing Lugemi systems — does not regenerate Volumes 1–14.
 - `shapOs=false`.
 - Platform Engineering Cloud deferred to Volume 16+ (`platformEngineeringOs=false`).
 

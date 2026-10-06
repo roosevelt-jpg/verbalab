@@ -39,10 +39,10 @@ describe('Multi-region residency (VL-075)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let regions: RegionsService;
-  const prevRegion = process.env.VERBALAB_REGION;
+  const prevRegion = process.env.LUGEMI_REGION;
 
   beforeAll(async () => {
-    process.env.VERBALAB_REGION = 'us';
+    process.env.LUGEMI_REGION = 'us';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -56,7 +56,7 @@ describe('Multi-region residency (VL-075)', () => {
   });
 
   afterAll(async () => {
-    process.env.VERBALAB_REGION = prevRegion;
+    process.env.LUGEMI_REGION = prevRegion;
     await app.close();
   });
 
@@ -64,9 +64,9 @@ describe('Multi-region residency (VL-075)', () => {
     expect(existsSync(join(root, 'infra/fly/api.eu.toml'))).toBe(true);
     expect(existsSync(join(root, 'infra/fly/web.eu.toml'))).toBe(true);
     const eu = readFileSync(join(root, 'infra/fly/api.eu.toml'), 'utf8');
-    expect(eu).toContain("app = 'verbalab-api-eu'");
+    expect(eu).toContain("app = 'lugemi-api-eu'");
     expect(eu).toContain("primary_region = 'ams'");
-    expect(eu).toContain("VERBALAB_REGION = 'eu'");
+    expect(eu).toContain("LUGEMI_REGION = 'eu'");
     expect(eu).toContain('prisma migrate deploy');
   });
 
@@ -82,7 +82,7 @@ describe('Multi-region residency (VL-075)', () => {
 
     const health = await request(app.getHttpServer()).get('/health').expect(200);
     expect(health.body.region).toBe('us');
-    expect(health.headers['x-verbalab-region']).toBe('us');
+    expect(health.headers['x-lugemi-region']).toBe('us');
   });
 
   it('pins org residency and rejects mismatched deploy', async () => {

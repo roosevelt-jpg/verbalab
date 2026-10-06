@@ -4,7 +4,7 @@
  */
 export function releaseEngineeringEngineCatalog() {
   return {
-    product: 'VerbaLab Release Engineering',
+    product: 'Lugemi Release Engineering',
     capabilities: [
       { id: 'blue_green', name: 'Blue-Green', status: 'shipped', notes: 'VL-307 capability.' },
       { id: 'canary', name: 'Canary', status: 'shipped', notes: 'VL-307 capability.' },

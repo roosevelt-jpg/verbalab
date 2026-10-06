@@ -8,7 +8,7 @@
 
 Library Phase 28 asks for streaming/batch TTS, natural/male/female/children voices, multilingual/dialect/accent/personality/enterprise voices, plus REST/GraphQL/realtime/SDK/dashboard/monitoring/docs — “production deployment.”
 
-VerbaLab already ships `POST /v1/audio/speech`, `GET /v1/audio/voices`, own TTS (VL-121), and clone speech (VL-064). Inventing a second synthesis stack or claiming child-voice / true streaming parity would violate honesty rules.
+Lugemi already ships `POST /v1/audio/speech`, `GET /v1/audio/voices`, own TTS (VL-121), and clone speech (VL-064). Inventing a second synthesis stack or claiming child-voice / true streaming parity would violate honesty rules.
 
 ## Decision
 

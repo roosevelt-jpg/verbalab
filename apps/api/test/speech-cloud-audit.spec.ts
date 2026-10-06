@@ -80,7 +80,7 @@ describe('Speech Cloud Production Audit (VL-160)', () => {
 
   it('ships audit ADR, blueprint ADR, and report pack', () => {
     expect(existsSync(join(root, 'docs/adr/0079-speech-cloud-production-audit.md'))).toBe(true);
-    expect(existsSync(join(root, 'docs/adr/0080-verbalab-cloud-blueprint.md'))).toBe(true);
+    expect(existsSync(join(root, 'docs/adr/0080-lugemi-cloud-blueprint.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/CLOUD_BLUEPRINT.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/speech-cloud-audit/PRODUCTION_READINESS.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/speech-cloud-audit/ARCHITECTURE_REPORT.md'))).toBe(true);
@@ -187,7 +187,7 @@ describe('Speech Cloud Production Audit (VL-160)', () => {
     const wake = await request(app.getHttpServer())
       .post('/v1/wake-word/detect/stream')
       .set('Authorization', `Bearer ${rawKey}`)
-      .send({ text: 'hey verbalab please help' })
+      .send({ text: 'hey lugemi please help' })
       .expect(200);
     expect(wake.headers['content-type']).toMatch(/text\/event-stream/);
     expect(wake.text).toContain('event: done');
@@ -215,7 +215,7 @@ describe('Speech Cloud Production Audit (VL-160)', () => {
   });
 
   it('documents 12-layer cloud blueprint', () => {
-    const blueprint = readFileSync(join(root, 'docs/adr/0080-verbalab-cloud-blueprint.md'), 'utf8');
+    const blueprint = readFileSync(join(root, 'docs/adr/0080-lugemi-cloud-blueprint.md'), 'utf8');
     expect(blueprint).toContain('Cloud Foundation');
     expect(blueprint).toContain('Production Audit');
     expect(blueprint).toContain('Speech Cloud');

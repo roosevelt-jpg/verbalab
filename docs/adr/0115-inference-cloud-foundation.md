@@ -6,7 +6,7 @@
 
 ## Context
 
-Library Phase 71 asks for VerbaLab Enterprise Inference Cloud as the runtime for every AI model — Model Serving, GPU Scheduler, CPU Runtime, Streaming/Batch, AI Router, Model Registry, Autoscaling, Intelligent Cache, Cost Optimizer, Multi Region Runtime — plus DDD/CQRS/hexagonal, REST/GraphQL/realtime, SDKs, CLI, Terraform, Docker, Kubernetes — “everything production ready.”
+Library Phase 71 asks for Lugemi Enterprise Inference Cloud as the runtime for every AI model — Model Serving, GPU Scheduler, CPU Runtime, Streaming/Batch, AI Router, Model Registry, Autoscaling, Intelligent Cache, Cost Optimizer, Multi Region Runtime — plus DDD/CQRS/hexagonal, REST/GraphQL/realtime, SDKs, CLI, Terraform, Docker, Kubernetes — “everything production ready.”
 
 Volumes 1–6 already ship product clouds that call models through AI Gateway (VL-021), chat, and embeddings. Regenerating Gateway/orchestration or inventing a GPU hyperscaler would violate “extend, don’t regenerate.”
 

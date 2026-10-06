@@ -39,14 +39,14 @@ describe('GPU Platform (VL-205)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
-  const prevMode = process.env.VERBALAB_GPU_PROVISION_MODE;
-  const prevMax = process.env.VERBALAB_GPU_MAX_INSTANCES;
-  const prevSpend = process.env.VERBALAB_GPU_MAX_SPEND_USD;
+  const prevMode = process.env.LUGEMI_GPU_PROVISION_MODE;
+  const prevMax = process.env.LUGEMI_GPU_MAX_INSTANCES;
+  const prevSpend = process.env.LUGEMI_GPU_MAX_SPEND_USD;
 
   beforeAll(async () => {
-    process.env.VERBALAB_GPU_PROVISION_MODE = 'sandbox';
-    process.env.VERBALAB_GPU_MAX_INSTANCES = '2';
-    process.env.VERBALAB_GPU_MAX_SPEND_USD = '25';
+    process.env.LUGEMI_GPU_PROVISION_MODE = 'sandbox';
+    process.env.LUGEMI_GPU_MAX_INSTANCES = '2';
+    process.env.LUGEMI_GPU_MAX_SPEND_USD = '25';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -61,12 +61,12 @@ describe('GPU Platform (VL-205)', () => {
   });
 
   afterAll(async () => {
-    if (prevMode === undefined) delete process.env.VERBALAB_GPU_PROVISION_MODE;
-    else process.env.VERBALAB_GPU_PROVISION_MODE = prevMode;
-    if (prevMax === undefined) delete process.env.VERBALAB_GPU_MAX_INSTANCES;
-    else process.env.VERBALAB_GPU_MAX_INSTANCES = prevMax;
-    if (prevSpend === undefined) delete process.env.VERBALAB_GPU_MAX_SPEND_USD;
-    else process.env.VERBALAB_GPU_MAX_SPEND_USD = prevSpend;
+    if (prevMode === undefined) delete process.env.LUGEMI_GPU_PROVISION_MODE;
+    else process.env.LUGEMI_GPU_PROVISION_MODE = prevMode;
+    if (prevMax === undefined) delete process.env.LUGEMI_GPU_MAX_INSTANCES;
+    else process.env.LUGEMI_GPU_MAX_INSTANCES = prevMax;
+    if (prevSpend === undefined) delete process.env.LUGEMI_GPU_MAX_SPEND_USD;
+    else process.env.LUGEMI_GPU_MAX_SPEND_USD = prevSpend;
     await app.close();
   });
 

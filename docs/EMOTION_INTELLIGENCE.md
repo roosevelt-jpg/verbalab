@@ -1,4 +1,4 @@
-# VerbaLab Emotion Intelligence
+# Lugemi Emotion Intelligence
 
 **Status:** Partial shipped (VL-154 / library Phase 20)  
 **Rule:** Speech Cloud emotion product. Do not regenerate Language Intelligence emotion. Do not claim trained SER.
@@ -11,15 +11,15 @@ happy · sad · angry · fear · neutral · stress · confidence · excitement �
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Emotion Intelligence / Engine | **VL-154** — `GET /v1/emotion/engine` + `/emotion-intelligence` |
 | Detect (9 labels) | **Shipped** — `POST /v1/emotion/detect` (text and/or audio→STT) |
 | Realtime | **Partial** — `POST /v1/emotion/stream` SSE |
 | Acoustic SER | **Deferred** — soft energy/ZCR proxies only |
-| GraphQL / SDK / CLI / Dashboard | `emotionEngine`, `detectEmotion`, `verbalab emotion-engine` |
+| GraphQL / SDK / CLI / Dashboard | `emotionEngine`, `detectEmotion`, `lugemi emotion-engine` |
 | Related | Language Cloud `POST /v1/language-intelligence/emotion` (VL-144) remains separate |
 
 ---

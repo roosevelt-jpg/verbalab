@@ -66,7 +66,7 @@ export class KnowledgeFabricService {
   products() {
     const search = this.enterpriseSearch.engine();
     return {
-      product: 'VerbaLab Knowledge Fabric',
+      product: 'Lugemi Knowledge Fabric',
       products: knowledgeFabricCapabilityCatalog(),
       routes: knowledgeFabricRoutingTable(),
       knowledgeCloud: this.knowledgeCloud.products(),
@@ -145,8 +145,8 @@ export class KnowledgeFabricService {
       this.eventPublishes += 1;
       event = await this.eventBus.publish({
         topic: input.topic ?? 'knowledge-fabric',
-        type: 'com.verbalab.knowledge.distributed',
-        source: '/verbalab/knowledge-fabric',
+        type: 'com.lugemi.knowledge.distributed',
+        source: '/lugemi/knowledge-fabric',
         eventVersion: '1',
         data: {
           distributionId: record.id,
@@ -209,8 +209,8 @@ export class KnowledgeFabricService {
       this.eventPublishes += 1;
       event = await this.eventBus.publish({
         topic: input.topic ?? 'knowledge-fabric',
-        type: 'com.verbalab.knowledge.synced',
-        source: '/verbalab/knowledge-fabric',
+        type: 'com.lugemi.knowledge.synced',
+        source: '/lugemi/knowledge-fabric',
         eventVersion: '1',
         data: {
           syncId: record.id,

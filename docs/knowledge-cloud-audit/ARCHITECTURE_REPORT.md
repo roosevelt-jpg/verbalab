@@ -7,7 +7,7 @@
 
 Knowledge Cloud is a **hub over Nest modular monolith knowledge/RAG modules**, not a separate microservice mesh and not an enterprise knowledge OS. REST is primary; GraphQL is a façade; CQRS applies to the Knowledge Cloud catalog slice (VL-193).
 
-Clouds follow the **12-layer VerbaLab Cloud Blueprint** (ADR-0080).
+Clouds follow the **12-layer Lugemi Cloud Blueprint** (ADR-0080).
 
 ## System shape
 

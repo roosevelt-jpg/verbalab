@@ -8,7 +8,7 @@ export type LanguageIntelCapability = {
   notes: string;
 };
 
-/** Library Phase 12 → VerbaLab Language Intelligence (VL-144). */
+/** Library Phase 12 → Lugemi Language Intelligence (VL-144). */
 export function languageIntelligenceCatalog() {
   return {
     product: 'Language Intelligence',
@@ -90,7 +90,7 @@ export function languageIntelligenceCatalog() {
       realtime: { status: 'shipped', api: 'POST /v1/language-intelligence/analyze/stream', notes: 'SSE progressive signals' },
       rest: { status: 'shipped', api: '/v1/language-intelligence/*' },
       graphql: { status: 'shipped', notes: 'languageIntelligence + analyzeLanguage' },
-      sdk: { status: 'shipped', package: '@verbalab/sdk' },
+      sdk: { status: 'shipped', package: '@lugemi/sdk' },
       monitoring: { status: 'partial', api: 'GET /v1/metrics/translate', notes: 'Shared observability stack' },
       analytics: { status: 'shipped', api: 'GET /v1/language-intelligence/analytics' },
     },

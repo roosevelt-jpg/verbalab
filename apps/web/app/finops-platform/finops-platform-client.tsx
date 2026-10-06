@@ -27,7 +27,7 @@ export function FinopsPlatformClient() {
         FinOps Platform
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-309 — VerbaLab FinOps Platform console in the Platform Engineering Cloud.
+        VL-309 — Lugemi FinOps Platform console in the Platform Engineering Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

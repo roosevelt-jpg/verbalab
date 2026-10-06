@@ -51,7 +51,7 @@ export function agentopsPolicyViolations(): AgentPolicyViolation[] {
 export function agentopsPlatformEngineCatalog() {
   const policyViolations = agentopsPolicyViolations();
   return {
-    product: 'VerbaLab AgentOps Platform',
+    product: 'Lugemi AgentOps Platform',
     capabilities: [
       { id: 'lifecycle', name: 'Lifecycle', status: 'shipped', notes: 'Agent lifecycle states.' },
       { id: 'versioning', name: 'Versioning', status: 'shipped', notes: 'Agent version catalog.' },

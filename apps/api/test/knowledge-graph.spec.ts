@@ -99,9 +99,9 @@ describe('Knowledge Graph Cloud (VL-184)', () => {
     const a = await request(app.getHttpServer())
       .post('/v1/knowledge-graph/entities')
       .set('Authorization', `Bearer ${key.secret}`)
-      .send({ name: 'VerbaLab', type: 'organization', domain: 'general' })
+      .send({ name: 'Lugemi', type: 'organization', domain: 'general' })
       .expect(201);
-    expect(a.body.name).toBe('VerbaLab');
+    expect(a.body.name).toBe('Lugemi');
 
     const b = await request(app.getHttpServer())
       .post('/v1/knowledge-graph/entities')

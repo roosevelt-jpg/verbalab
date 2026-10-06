@@ -57,11 +57,11 @@ describe('Agent Fabric (VL-246)', () => {
   let apiKeys: ApiKeysService;
   let fabric: AgentFabricService;
   let bus: EventFabricBus;
-  const prevMode = process.env.VERBALAB_AGENT_RUNTIME_MODE;
+  const prevMode = process.env.LUGEMI_AGENT_RUNTIME_MODE;
 
   beforeAll(async () => {
     process.env.EVENT_FABRIC_MEMORY = '1';
-    process.env.VERBALAB_AGENT_RUNTIME_MODE = 'sandbox';
+    process.env.LUGEMI_AGENT_RUNTIME_MODE = 'sandbox';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -77,8 +77,8 @@ describe('Agent Fabric (VL-246)', () => {
   });
 
   afterAll(async () => {
-    if (prevMode === undefined) delete process.env.VERBALAB_AGENT_RUNTIME_MODE;
-    else process.env.VERBALAB_AGENT_RUNTIME_MODE = prevMode;
+    if (prevMode === undefined) delete process.env.LUGEMI_AGENT_RUNTIME_MODE;
+    else process.env.LUGEMI_AGENT_RUNTIME_MODE = prevMode;
     await app.close();
   });
 
@@ -114,7 +114,7 @@ describe('Agent Fabric (VL-246)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/agent-fabric/products')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Agent Fabric');
+    expect(res.body.product).toBe('Lugemi Agent Fabric');
     expect(res.body.architecture.customerFacingProduct).toBe(false);
     expect(res.body.architecture.langGraphOs).toBe(false);
     expect(res.body.architecture.autoGptOs).toBe(false);
@@ -189,7 +189,7 @@ describe('Agent Fabric (VL-246)', () => {
       })
       .expect(200);
     expect(dist.body.distribution.targets).toContain(peer.id);
-    expect(dist.body.event.type).toBe('com.verbalab.agent.distributed');
+    expect(dist.body.event.type).toBe('com.lugemi.agent.distributed');
 
     const stream = await request(app.getHttpServer())
       .get('/v1/agent-fabric/stream')

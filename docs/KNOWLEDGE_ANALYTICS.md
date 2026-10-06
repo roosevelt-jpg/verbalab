@@ -1,4 +1,4 @@
-# VerbaLab Knowledge Analytics
+# Lugemi Knowledge Analytics
 
 **Status:** Partial (VL-202 / library Phase 69)  
 **Parent:** [Knowledge Cloud](./KNOWLEDGE_CLOUD.md)  
@@ -18,7 +18,7 @@
 | Relationships | `GET /v1/knowledge-analytics/relationships` |
 | Report / monitoring | `GET …/report` · `/monitoring` |
 | GraphQL | `knowledgeAnalytics` |
-| SDK / CLI | `knowledgeAnalyticsEngine()` · `verbalab knowledge-analytics` |
+| SDK / CLI | `knowledgeAnalyticsEngine()` · `lugemi knowledge-analytics` |
 
 ## Tracks
 

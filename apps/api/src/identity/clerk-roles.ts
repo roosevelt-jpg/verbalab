@@ -1,6 +1,6 @@
 import { MembershipRole } from '@prisma/client';
 
-/** Map Clerk organization role claim (`o.rol`) → VerbaLab MembershipRole. */
+/** Map Clerk organization role claim (`o.rol`) → Lugemi MembershipRole. */
 export function mapClerkOrgRole(raw?: string | null): MembershipRole | null {
   if (!raw) return null;
   const normalized = raw.trim().toLowerCase().replace(/^org:/, '');

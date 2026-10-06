@@ -1,5 +1,5 @@
 {
-  "extends": "@verbalab/typescript-config/nestjs.json",
+  "extends": "@lugemi/typescript-config/nestjs.json",
   "compilerOptions": {
     "outDir": "dist",
     "rootDir": "src",

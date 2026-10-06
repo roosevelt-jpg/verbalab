@@ -8,12 +8,12 @@ export type WakeCapability = {
   notes: string;
 };
 
-export const DEFAULT_WAKE_PHRASES = ['hey verbalab', 'ok verbalab', 'verbalab'] as const;
+export const DEFAULT_WAKE_PHRASES = ['hey lugemi', 'ok lugemi', 'lugemi'] as const;
 
 /** Library Phase 23 → Wake Word & Keyword Intelligence (VL-157). */
 export function wakeWordEngineCatalog() {
   return {
-    product: 'VerbaLab Wake Word Engine',
+    product: 'Lugemi Wake Word Engine',
     note:
       'Transcript/text keyword spotting for wake words, custom keywords, and enterprise triggers. Not Picovoice Porcupine / Snowboy / on-device DNN.',
     defaultWakePhrases: [...DEFAULT_WAKE_PHRASES],
@@ -83,8 +83,8 @@ export function wakeWordEngineCatalog() {
     },
     architecture: {
       rest: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

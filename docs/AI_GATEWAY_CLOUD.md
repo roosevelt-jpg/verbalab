@@ -1,4 +1,4 @@
-# VerbaLab AI Gateway Cloud Foundation
+# Lugemi AI Gateway Cloud Foundation
 
 **Status:** Accepted (VL-129)  
 **Volume:** Closes **Volume 1 Part A** (strategy → blueprint → Engineering OS → Cloud/Identity/Developer/Enterprise foundations → AI Gateway).  
@@ -6,9 +6,9 @@
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | OpenAI | Chat, Whisper STT, TTS, embeddings |
 | Whisper | OpenAI Whisper STT |

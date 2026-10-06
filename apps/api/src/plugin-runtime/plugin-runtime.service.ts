@@ -504,7 +504,7 @@ export class PluginRuntimeService {
     if (pluginRuntimeMode() === 'disabled') {
       throw new ApiException(
         'plugin_runtime_disabled',
-        'Plugin Runtime mode is disabled (VERBALAB_PLUGIN_RUNTIME_MODE=disabled).',
+        'Plugin Runtime mode is disabled (LUGEMI_PLUGIN_RUNTIME_MODE=disabled).',
         HttpStatus.FORBIDDEN,
       );
     }

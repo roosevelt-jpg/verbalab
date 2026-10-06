@@ -112,7 +112,7 @@ export function culturalIntelligenceSeed(): CulturalEntry[] {
 export function culturalIntelligenceEngineCatalog() {
   const entries = culturalIntelligenceSeed();
   return {
-    product: 'VerbaLab Cultural Intelligence',
+    product: 'Lugemi Cultural Intelligence',
     note:
       'Cultural Intelligence (VL-262). Greetings/etiquette/festivals/proverbs/idioms with provenance, sourceCommunity, and consentStatus. traditionalKnowledgeConsentRequired=true — not an extractive scrape of traditional knowledge.',
     capabilities: [

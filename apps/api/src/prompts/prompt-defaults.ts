@@ -1,4 +1,4 @@
-import { VERBALAB_CHAT_SYSTEM } from '../chat/chat-prompt';
+import { LUGEMI_CHAT_SYSTEM } from '../chat/chat-prompt';
 import { VOICE_FAQ_SYSTEM } from '../voice/faq-prompt';
 
 export const PROMPT_KEYS = ['chat', 'rag', 'voice_faq'] as const;
@@ -9,8 +9,8 @@ export function isPromptKey(value: string): value is PromptKey {
 }
 
 /** RAG system prompt built from chat persona + citation rules (code fallback). */
-export const VERBALAB_RAG_SYSTEM = [
-  VERBALAB_CHAT_SYSTEM,
+export const LUGEMI_RAG_SYSTEM = [
+  LUGEMI_CHAT_SYSTEM,
   'You answer using ONLY the provided context passages from the workspace knowledge base.',
   'Cite sources as [n] matching the passage numbers. If the context is insufficient, say so.',
   'Do not invent facts outside the context.',
@@ -19,9 +19,9 @@ export const VERBALAB_RAG_SYSTEM = [
 export function defaultPromptBody(key: PromptKey): string {
   switch (key) {
     case 'chat':
-      return VERBALAB_CHAT_SYSTEM;
+      return LUGEMI_CHAT_SYSTEM;
     case 'rag':
-      return VERBALAB_RAG_SYSTEM;
+      return LUGEMI_RAG_SYSTEM;
     case 'voice_faq':
       return VOICE_FAQ_SYSTEM;
   }

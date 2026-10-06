@@ -1,4 +1,4 @@
-# VerbaLab Batch Runtime
+# Lugemi Batch Runtime
 
 **Status:** Partial (VL-209 / library Phase 76)  
 **Parent:** [Inference Cloud](./INFERENCE_CLOUD.md)  
@@ -17,7 +17,7 @@
 | Start / checkpoint / retry | `POST …/runs/:id/{start,checkpoint,retry}` |
 | Analytics / monitoring | `GET …/analytics` · `/monitoring` |
 | GraphQL | `batchRuntimeEngine` |
-| SDK / CLI | `batchRuntimeEngine()` · `verbalab batch-runtime-engine` |
+| SDK / CLI | `batchRuntimeEngine()` · `lugemi batch-runtime-engine` |
 
 ## Library map
 
@@ -36,9 +36,9 @@
 
 | Control | Default | Env |
 | --- | --- | --- |
-| Mode | `sandbox` | `VERBALAB_BATCH_RUNTIME_MODE=disabled\|sandbox` |
-| Max items / run | 50 (cap 100) | `VERBALAB_BATCH_MAX_ITEMS` |
-| Max retries | 2 (cap 5) | `VERBALAB_BATCH_MAX_RETRIES` |
+| Mode | `sandbox` | `LUGEMI_BATCH_RUNTIME_MODE=disabled\|sandbox` |
+| Max items / run | 50 (cap 100) | `LUGEMI_BATCH_MAX_ITEMS` |
+| Max retries | 2 (cap 5) | `LUGEMI_BATCH_MAX_RETRIES` |
 
 ## Honesty
 

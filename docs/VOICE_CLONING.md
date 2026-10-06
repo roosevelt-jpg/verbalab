@@ -1,13 +1,13 @@
-# VerbaLab Voice Cloning Platform
+# Lugemi Voice Cloning Platform
 
 **Status:** Shipped hub (VL-172 / library Phase 29)  
 **Rule:** Extend VL-064 ElevenLabs Instant Voice Cloning. Do not skip consent, abuse review, or watermark. Do not claim multi-hour professional model training.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Voice Cloning Engine | **VL-172** — `GET /v1/voice-cloning/engine` + `/voice-cloning` |
 | Instant Voice Cloning | **Shipped** — `POST /v1/voice-cloning/enroll` (`cloneMode=instant`) |
@@ -30,7 +30,7 @@
 
 1. **Consent:** `consentAttested=true` + descriptive `consentNotes` (min 8 chars) — not ToS-only.  
 2. **Abuse review:** clones start `pending_review`; owner/admin approve/reject.  
-3. **Watermark:** approved clone speech always `X-VerbaLab-Watermark: required`.  
+3. **Watermark:** approved clone speech always `X-Lugemi-Watermark: required`.  
 4. **Ownership:** professional enroll requires ownership attestation; API available for all clones.  
 5. **Audit:** `voice_clone.*` events for create, ownership, license, permissions, verify, review, disable.
 

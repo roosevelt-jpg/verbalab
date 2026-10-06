@@ -57,7 +57,7 @@ describe('AI Publication Platform (VL-276)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/ai-publication-platform/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab AI Publication Platform');
+    expect(res.body.product).toBe('Lugemi AI Publication Platform');
 
     expect(res.body.honesty.doiRegistryOs).toBe(false);
     expect(res.body.honesty.doiFieldOptionalStub).toBe(true);

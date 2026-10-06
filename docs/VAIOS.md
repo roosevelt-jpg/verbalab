@@ -1,10 +1,10 @@
-# VAIOS — VerbaLab AI Operating System (VL-334)
+# VAIOS — Lugemi AI Operating System (VL-334)
 
 Library Phase 201 — part of Volume 19 VAIOS.
 
 ## Mission
 
-VAIOS is the highest-level **unifying orchestration layer** for VerbaLab. It catalogs and
+VAIOS is the highest-level **unifying orchestration layer** for Lugemi. It catalogs and
 routes across AI Kernel (Volume 8), AI Fabric (Volume 10), and Data Plane Cloud (Volume 18).
 It is **not** Linux, **not** Kubernetes, and **not** a third parallel agent/workflow/memory OS.
 

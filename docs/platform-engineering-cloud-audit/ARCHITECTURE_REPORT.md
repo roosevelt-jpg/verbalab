@@ -9,4 +9,4 @@ finops-platform, supply-chain-security, developer-experience-platform,
 platform-engineering-analytics.
 
 Does **not** invent Backstage OS, ArgoCD/Flux OS, Kubernetes control-plane OS, Snyk OS,
-Datadog OS, FinOps cloud-billing OS, or VerbaLab AI Cloud OS / Control Plane / Data Plane.
+Datadog OS, FinOps cloud-billing OS, or Lugemi AI Cloud OS / Control Plane / Data Plane.

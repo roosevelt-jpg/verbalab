@@ -228,7 +228,7 @@ export function hydrateCandidates(
  */
 export function aiRouterCatalog() {
   return {
-    product: 'VerbaLab AI Router',
+    product: 'Lugemi AI Router',
     note:
       'AI Router (VL-207). Dry-run model/provider/inference selection over AI Gateway adapters with latency/cost/balanced strategies, fallbacks, retries, regional preference, and light load-balancing weights. Not a service mesh, multi-cloud router OS, or Gateway regenerate. Caching via Intelligent Cache (VL-210); spend caps enforced by Cost Optimization (VL-211) on resolve.',
     capabilities: [
@@ -342,7 +342,7 @@ export function aiRouterCatalog() {
         name: 'SDK',
         status: 'shipped',
         api: 'aiRouterEngine()',
-        notes: '@verbalab/sdk',
+        notes: '@lugemi/sdk',
       },
       {
         id: 'documentation',
@@ -398,7 +398,7 @@ export function defaultRouterPolicy() {
 }
 
 export function aiRouterMode(): 'sandbox' | 'disabled' {
-  const raw = (process.env.VERBALAB_AI_ROUTER_MODE ?? 'sandbox').toLowerCase();
+  const raw = (process.env.LUGEMI_AI_ROUTER_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }

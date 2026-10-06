@@ -4,7 +4,7 @@
 Phase 31
 Voice Studio
 Cursor Prompt
-Build VerbaLab Voice Studio.
+Build Lugemi Voice Studio.
 
 Support
 

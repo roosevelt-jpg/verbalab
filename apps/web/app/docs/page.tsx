@@ -28,18 +28,18 @@ export default function DocsPage() {
   "target": "sw"
 }`;
 
-  const sdkExample = `import { VerbaLab } from '@verbalab/sdk';
+  const sdkExample = `import { Lugemi } from '@lugemi/sdk';
 
-const client = new VerbaLab({
-  apiKey: process.env.VERBALAB_API_KEY!,
+const client = new Lugemi({
+  apiKey: process.env.LUGEMI_API_KEY!,
   baseUrl: '${API_URL}',
 });
 
 await client.translate({ text: 'Hello', source: 'en', target: 'sw' });`;
 
   const envExample = `# .env
-VERBALAB_API_KEY=vl_live_...
-VERBALAB_BASE_URL=${API_URL}`;
+LUGEMI_API_KEY=lg_live_...
+LUGEMI_BASE_URL=${API_URL}`;
 
   return (
     <div className="vl-api-public vl-fade-up">
@@ -65,8 +65,8 @@ VERBALAB_BASE_URL=${API_URL}`;
         First-party language intelligence API: generate speech, transcribe, and translate. African languages,
         dialects, accents, and scripts are the investment priority; LATAM, Southeast Asia, the Middle East, and the
         EU are in scope without claiming every language is live. Authenticate with{' '}
-        <code className="vl-code">Authorization: Bearer vl_live_...</code> or soft-sandbox{' '}
-        <code className="vl-code">vl_test_...</code>. OpenAPI at <code className="vl-code">/v1/openapi.json</code>.
+        <code className="vl-code">Authorization: Bearer lg_live_...</code> or soft-sandbox{' '}
+        <code className="vl-code">lg_test_...</code>. OpenAPI at <code className="vl-code">/v1/openapi.json</code>.
       </p>
 
       <div className="vl-endpoint-card" style={{ marginTop: '1.5rem' }}>

@@ -4,7 +4,7 @@ Library Phase 191 — part of Volume 18 Data Plane Cloud.
 
 ## Mission
 
-VerbaLab Data Plane Cloud executes every customer workload via thin runtime hubs that
+Lugemi Data Plane Cloud executes every customer workload via thin runtime hubs that
 route to existing product logic (Translation, Speech, Voice, Vision, Knowledge,
 Embeddings, Streaming, GPU). It never manages organizations, policies, or billing.
 

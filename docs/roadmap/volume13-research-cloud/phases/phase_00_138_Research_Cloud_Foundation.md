@@ -12,7 +12,7 @@ to incubate technology that later graduates into production services.
 Phase 138
 Research Cloud Foundation
 Cursor Master Prompt
-You are the Chief AI Scientist of VerbaLab AI.
+You are the Chief AI Scientist of Lugemi AI.
 
 Build the complete Research Cloud.
 

@@ -1,11 +1,11 @@
-# VerbaLab Engineering Operating System (Phase 0)
+# Lugemi Engineering Operating System (Phase 0)
 
 **Status:** Accepted — living standards  
 **Date:** 2026-09-07  
 **Maps to:** VL-001 (standards) + VL-002 (production monorepo already in repo)  
 **Companion:** Thin cheat-sheet [`ENGINEERING.md`](ENGINEERING.md) · Runtime shape [`ARCHITECTURE.md`](../ARCHITECTURE.md) · Enterprise blueprint [`ENTERPRISE_PRODUCT_BLUEPRINT.md`](ENTERPRISE_PRODUCT_BLUEPRINT.md)
 
-**Rule:** Document the OS we actually run. Do not invent empty cloud folders, placeholder apps, or TODO adapters. The production monorepo **is** this repository (`verbalab/`).
+**Rule:** Document the OS we actually run. Do not invent empty cloud folders, placeholder apps, or TODO adapters. The production monorepo **is** this repository (`lugemi/`).
 
 ---
 
@@ -39,10 +39,10 @@ Root scripts (authoritative): `pnpm dev`, `pnpm test`, `pnpm typecheck`, `pnpm l
 ## 3. Folder Standards
 
 ```text
-verbalab/
+lugemi/
   apps/api/          # NestJS HTTP + Prisma + workers-in-process
   apps/web/          # Next.js console + public docs/coverage
-  packages/sdk/      # @verbalab/sdk — real client, not a stub
+  packages/sdk/      # @lugemi/sdk — real client, not a stub
   packages/*-config/ # Shared TS/ESLint
   docs/adr/          # Numbered ADRs
   docs/templates/    # RFC / PRD / Runbook templates
@@ -87,7 +87,7 @@ Nest modules live under `apps/api/src/<context>/`. Next routes under `apps/web/a
 - Public product API: `/v1/*`.
 - Health: `GET /health` → `{ "status": "ok", ... }` (may include `region`).
 - JSON only; no GraphQL/gRPC in the executable roadmap.
-- Auth: `Authorization: Bearer vl_live_…` or Clerk session on console routes.
+- Auth: `Authorization: Bearer lg_live_…` or Clerk session on console routes.
 - Error envelope:
 
 ```json
@@ -149,7 +149,7 @@ Nest modules live under `apps/api/src/<context>/`. Next routes under `apps/web/a
 - No EKS/Terraform requirement for MVP; revisit when multi-service ops hurt.
 - Secrets: Fly secrets + GitHub Actions secrets; never bake into images.
 - Migrations run in API `release_command` (`prisma migrate deploy`).
-- `VERBALAB_REGION` stamped on health and `X-VerbaLab-Region`.
+- `LUGEMI_REGION` stamped on health and `X-Lugemi-Region`.
 - Object storage deferred until multi-instance document disks require it.
 
 ---

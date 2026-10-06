@@ -2,7 +2,7 @@
 
 ## Verdict
 
-Volume 15 Trust Cloud is closed and ready as VerbaLab's enforcement/governance layer.
+Volume 15 Trust Cloud is closed and ready as Lugemi's enforcement/governance layer.
 
 ## Honesty checklist
 

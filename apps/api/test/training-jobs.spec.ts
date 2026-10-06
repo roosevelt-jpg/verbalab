@@ -110,7 +110,7 @@ describe('Training jobs (VL-111)', () => {
 
     const res = await request(app.getHttpServer())
       .post('/v1/training-jobs/callback')
-      .set('X-VerbaLab-Training-Token', launched.callbackToken as string)
+      .set('X-Lugemi-Training-Token', launched.callbackToken as string)
       .send({
         jobId: created.id,
         status: 'succeeded',

@@ -4,7 +4,7 @@
 Phase 16
 Speech Cloud Foundation
 Cursor Master Prompt
-You are the Principal AI Speech Architect for VerbaLab AI.
+You are the Principal AI Speech Architect for Lugemi AI.
 
 Build the complete Speech Cloud Foundation.
 
@@ -14,7 +14,7 @@ Speech Cloud is a first-class cloud product.
 
 Products
 
-• VerbaLab Speech
+• Lugemi Speech
 • Streaming STT
 • Batch STT
 • Speaker Intelligence

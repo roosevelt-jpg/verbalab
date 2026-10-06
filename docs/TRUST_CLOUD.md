@@ -4,7 +4,7 @@ Library Phase 159 — part of Volume 15 Trust Cloud.
 
 ## Mission
 
-VerbaLab Trust Cloud is the enforcement/governance layer ensuring models, agents, datasets,
+Lugemi Trust Cloud is the enforcement/governance layer ensuring models, agents, datasets,
 workflows, and customer interactions are secure, explainable, governed, auditable, and
 supported for compliance work — integrating Policy Runtime, AgentOps, Continuous Learning,
 Volume 12 consent, and existing honesty surfaces.

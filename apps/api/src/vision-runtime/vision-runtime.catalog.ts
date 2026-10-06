@@ -4,7 +4,7 @@
  */
 export function visionRuntimeEngineCatalog() {
   return {
-    product: 'VerbaLab Vision Runtime',
+    product: 'Lugemi Vision Runtime',
     thinExecutionLayer: true,
     duplicatesProductLogic: false,
     capabilities: [

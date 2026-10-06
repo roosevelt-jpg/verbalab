@@ -1,4 +1,4 @@
-# VerbaLab Streaming Runtime
+# Lugemi Streaming Runtime
 
 **Status:** Partial (VL-208 / library Phase 75)  
 **Parent:** [Inference Cloud](./INFERENCE_CLOUD.md)  
@@ -17,7 +17,7 @@
 | Sandbox SSE | `POST /v1/streaming-runtime/stream` |
 | Analytics / monitoring | `GET …/analytics` · `/monitoring` |
 | GraphQL | `streamingRuntimeEngine` |
-| SDK / CLI | `streamingRuntimeEngine()` · `verbalab streaming-runtime-engine` |
+| SDK / CLI | `streamingRuntimeEngine()` · `lugemi streaming-runtime-engine` |
 
 ## Library map
 
@@ -41,8 +41,8 @@
 
 | Control | Default | Env |
 | --- | --- | --- |
-| Mode | `sandbox` | `VERBALAB_STREAMING_RUNTIME_MODE=disabled\|sandbox` |
-| Max chunks / stream | 64 (cap 256) | `VERBALAB_STREAMING_MAX_CHUNKS` |
+| Mode | `sandbox` | `LUGEMI_STREAMING_RUNTIME_MODE=disabled\|sandbox` |
+| Max chunks / stream | 64 (cap 256) | `LUGEMI_STREAMING_MAX_CHUNKS` |
 
 ## Honesty
 

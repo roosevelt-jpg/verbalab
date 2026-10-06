@@ -110,7 +110,7 @@ describe('Creator Economy (VL-258)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/creator-economy/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Creator Economy');
+    expect(res.body.product).toBe('Lugemi Creator Economy');
     expect(res.body.honesty.paymentProcessorOs).toBe(false);
     expect(res.body.honesty.storesRawCardData).toBe(false);
     expect(res.body.honesty.stripeOrEquivalentRequired).toBe(true);

@@ -39,7 +39,7 @@ export class ContextFabricService {
 
   products() {
     return {
-      product: 'VerbaLab Context Fabric',
+      product: 'Lugemi Context Fabric',
       products: contextFabricCapabilityCatalog(),
       routes: contextFabricRoutingTable(),
       architecture: contextFabricArchitectureNotes(),
@@ -152,8 +152,8 @@ export class ContextFabricService {
       this.eventPublishes += 1;
       event = await this.eventBus.publish({
         topic: body.topic ?? 'context-fabric',
-        type: 'com.verbalab.context.propagated',
-        source: '/verbalab/context-fabric',
+        type: 'com.lugemi.context.propagated',
+        source: '/lugemi/context-fabric',
         eventVersion: '1',
         data: {
           organizationId: auth.organizationId,
@@ -182,7 +182,7 @@ export class ContextFabricService {
   streamSnapshot() {
     return {
       ts: new Date().toISOString(),
-      product: 'VerbaLab Context Fabric',
+      product: 'Lugemi Context Fabric',
       counters: {
         routePlans: this.routePlans,
         propagations: this.propagations,

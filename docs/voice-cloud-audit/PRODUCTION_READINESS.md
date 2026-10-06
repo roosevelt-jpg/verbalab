@@ -5,7 +5,7 @@
 
 ## Executive verdict
 
-**Voice Cloud is production-ready as a bounded VerbaLab product volume** (deploy via Fly or optional EKS), with known honesty limits documented in ADR-0081–0090.
+**Voice Cloud is production-ready as a bounded Lugemi product volume** (deploy via Fly or optional EKS), with known honesty limits documented in ADR-0081–0090.
 
 It is a **voice synthesis hub** (neural TTS + cloning + emotion/studio/enhancement + biometrics + marketplace + analytics) that can support African studio, licensed clone, and entitlement workflows **within those limits**.
 

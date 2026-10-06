@@ -57,7 +57,7 @@ describe('Tourism & Heritage Intelligence (VL-269)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/tourism-heritage-intelligence/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Tourism & Heritage Intelligence');
+    expect(res.body.product).toBe('Lugemi Tourism & Heritage Intelligence');
 
   });
 });

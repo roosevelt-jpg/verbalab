@@ -71,7 +71,7 @@ export function StreamingRuntimeClient() {
         },
         body: JSON.stringify({
           kind: 'llm',
-          text: 'Streaming Runtime sandbox chunk demo for VerbaLab.',
+          text: 'Streaming Runtime sandbox chunk demo for Lugemi.',
         }),
       });
       if (!res.ok || !res.body) throw new Error(`Stream failed (${res.status})`);

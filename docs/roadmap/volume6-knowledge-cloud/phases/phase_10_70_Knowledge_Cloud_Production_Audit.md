@@ -51,7 +51,7 @@ Deployment Guide
 Everything production ready.
 END OF KNOWLEDGE CLOUD
 
-At this point, VerbaLab owns:
+At this point, Lugemi owns:
 
 ✅ Language Cloud
 
@@ -73,7 +73,7 @@ I recommend not doing that.
 
 Instead, introduce a new platform that every cloud depends on:
 
-VerbaLab Inference Cloud
+Lugemi Inference Cloud
 
 This becomes the runtime for every AI model.
 
@@ -95,8 +95,8 @@ Model Lifecycle Management
 
 Every cloud—Language, Speech, Voice, Vision, Intelligence, Knowledge, and future Foundation Models—calls Inference Cloud instead of talking directly to individual model providers or model servers.
 
-This gives VerbaLab a unified execution layer that can evolve from using third-party APIs today to serving your own models tomorrow with minimal changes to the rest of the platform.
+This gives Lugemi a unified execution layer that can evolve from using third-party APIs today to serving your own models tomorrow with minimal changes to the rest of the platform.
 
-This is the architecture I would use if I were building VerbaLab as a company intended to compete globally over the next decade.
+This is the architecture I would use if I were building Lugemi as a company intended to compete globally over the next decade.
 
-VERBALAB ENGINEERING LIBRARY v2.0
+LUGEMI ENGINEERING LIBRARY v2.0

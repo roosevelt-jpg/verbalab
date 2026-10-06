@@ -1,13 +1,13 @@
-# VerbaLab Speech Cloud
+# Lugemi Speech Cloud
 
 **Status:** Volume complete through Production Audit (VL-150–160)  
 **Rule:** Parent hub for speech capabilities. Extend existing audio/voice modules. Do not regenerate Language Cloud, Identity, or AI Gateway. Follow the [12-layer Cloud Blueprint](./CLOUD_BLUEPRINT.md) (ADR-0080).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Speech Cloud Foundation | **VL-150** — `/speech` + product catalog / overview |
 | Speech Recognition Engine | **VL-151** — see [`SPEECH_RECOGNITION.md`](./SPEECH_RECOGNITION.md) |
@@ -40,8 +40,8 @@
 | REST overview | `GET /v1/speech/overview` (Clerk session) |
 | GraphQL | `speechProducts` |
 | OpenAPI | `/v1/openapi.json` |
-| SDK | `speechProducts()` on `@verbalab/sdk` |
-| CLI | `verbalab speech-products` |
+| SDK | `speechProducts()` on `@lugemi/sdk` |
+| CLI | `lugemi speech-products` |
 | Docs | this file + ADR-0069 |
 
 ---

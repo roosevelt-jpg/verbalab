@@ -103,7 +103,7 @@ describe('Model Training Platform (VL-235)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/model-training-platform/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Model Training Platform');
+    expect(res.body.product).toBe('Lugemi Model Training Platform');
     expect(res.body.honesty.trainsCompetitiveFoundationWeights).toBe(false);
     expect(res.body.honesty.distributedTrainingOs).toBe(false);
     expect(res.body.honesty.rlhfLabOs).toBe(false);

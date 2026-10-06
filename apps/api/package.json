@@ -1,5 +1,5 @@
 {
-  "name": "@verbalab/api",
+  "name": "@lugemi/api",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -47,8 +47,8 @@
     "@types/node": "^22.10.2",
     "@types/pdf-parse": "^1.1.5",
     "@types/supertest": "^6.0.2",
-    "@verbalab/eslint-config": "workspace:*",
-    "@verbalab/typescript-config": "workspace:*",
+    "@lugemi/eslint-config": "workspace:*",
+    "@lugemi/typescript-config": "workspace:*",
     "eslint": "^9.17.0",
     "prisma": "^6.1.0",
     "supertest": "^7.0.0",

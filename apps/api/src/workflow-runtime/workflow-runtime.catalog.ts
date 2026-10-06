@@ -33,7 +33,7 @@ export const WORKFLOW_DENIED_ACTIONS = [
 ] as const;
 
 export function workflowRuntimeMode(): 'disabled' | 'sandbox' {
-  const raw = (process.env.VERBALAB_WORKFLOW_RUNTIME_MODE ?? 'sandbox').toLowerCase();
+  const raw = (process.env.LUGEMI_WORKFLOW_RUNTIME_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
@@ -42,15 +42,15 @@ export function workflowRuntimeCeilings() {
   return {
     maxWorkflowsPerWorkspace: Math.min(
       100,
-      Math.max(1, Number(process.env.VERBALAB_WORKFLOW_RUNTIME_MAX_WORKFLOWS ?? '20') || 20),
+      Math.max(1, Number(process.env.LUGEMI_WORKFLOW_RUNTIME_MAX_WORKFLOWS ?? '20') || 20),
     ),
     maxStepsPerRun: Math.min(
       50,
-      Math.max(1, Number(process.env.VERBALAB_WORKFLOW_RUNTIME_MAX_STEPS ?? '10') || 10),
+      Math.max(1, Number(process.env.LUGEMI_WORKFLOW_RUNTIME_MAX_STEPS ?? '10') || 10),
     ),
     maxRetries: Math.min(
       5,
-      Math.max(0, Number(process.env.VERBALAB_WORKFLOW_RUNTIME_MAX_RETRIES ?? '2') || 2),
+      Math.max(0, Number(process.env.LUGEMI_WORKFLOW_RUNTIME_MAX_RETRIES ?? '2') || 2),
     ),
     mode: workflowRuntimeMode(),
     liveStepExecution: false,
@@ -64,7 +64,7 @@ export function workflowRuntimeCeilings() {
  */
 export function workflowRuntimeCatalog() {
   return {
-    product: 'VerbaLab Workflow Runtime',
+    product: 'Lugemi Workflow Runtime',
     note:
       'Workflow Runtime (VL-220). Multi-step sandbox workflows with hard permission allowlists, sequential/parallel step plans, retries, human-approval stubs, rollback markers, versioning, and replay. Extends existing /v1/workflows product — does not regenerate it or invent a Temporal/Airflow OS. Actions are sandboxed; Policy Runtime (VL-222) is wired as a hard gate via WorkflowPolicyGate.',
     capabilities: [
@@ -164,7 +164,7 @@ export function workflowRuntimeCatalog() {
         name: 'SDK',
         status: 'shipped',
         api: 'workflowRuntimeEngine()',
-        notes: '@verbalab/sdk',
+        notes: '@lugemi/sdk',
       },
       {
         id: 'monitoring',

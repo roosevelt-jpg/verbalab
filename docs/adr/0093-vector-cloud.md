@@ -8,7 +8,7 @@
 
 Library Phase 49 asks for enterprise vector storage, semantic/NN/hybrid/similarity search, metadata filters, namespaces, collections, index management, sharding, replication, plus REST/GraphQL/SDK, dashboard, monitoring, analytics, and production deployment.
 
-VerbaLab already stores and retrieves 1536-d cosine vectors on `knowledge_chunks` with an HNSW index (VL-062). Building a Pinecone-parity managed vector OS would violate buy-vs-build and honesty rules.
+Lugemi already stores and retrieves 1536-d cosine vectors on `knowledge_chunks` with an HNSW index (VL-062). Building a Pinecone-parity managed vector OS would violate buy-vs-build and honesty rules.
 
 ## Decision
 

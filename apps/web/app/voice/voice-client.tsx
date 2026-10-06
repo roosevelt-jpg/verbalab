@@ -30,7 +30,7 @@ type SimResult = {
 export function VoiceClient() {
   const { getToken, isLoaded } = useAuth();
   const [status, setStatus] = useState<VoiceStatus | null>(null);
-  const [text, setText] = useState('What is VerbaLab?');
+  const [text, setText] = useState('What is Lugemi?');
   const [result, setResult] = useState<SimResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);

@@ -112,7 +112,7 @@ describe('Neural Text-to-Speech (VL-171)', () => {
 
   it('exposes engine catalog with honest streaming/children statuses', async () => {
     const res = await request(app.getHttpServer()).get('/v1/tts/engine').expect(200);
-    expect(res.body.product).toBe('VerbaLab Neural TTS');
+    expect(res.body.product).toBe('Lugemi Neural TTS');
     expect(res.body.architecture.primaryRegion).toBe('af-south-1');
 
     const ids = res.body.capabilities.map((c: { id: string }) => c.id);
@@ -158,8 +158,8 @@ describe('Neural Text-to-Speech (VL-171)', () => {
       .expect(200);
 
     expect(batch.headers['content-type']).toMatch(/audio/);
-    expect(batch.headers['x-verbalab-mode']).toBe('batch');
-    expect(batch.headers['x-verbalab-provider']).toBe('fixture');
+    expect(batch.headers['x-lugemi-mode']).toBe('batch');
+    expect(batch.headers['x-lugemi-provider']).toBe('fixture');
     expect(batch.body.toString()).toContain('AUDIO:Hello Neural TTS');
 
     const stream = await request(app.getHttpServer())
@@ -185,7 +185,7 @@ describe('Neural Text-to-Speech (VL-171)', () => {
       .expect(200);
 
     expect(res.body.errors).toBeUndefined();
-    expect(res.body.data.neuralTtsEngine.product).toBe('VerbaLab Neural TTS');
+    expect(res.body.data.neuralTtsEngine.product).toBe('Lugemi Neural TTS');
     expect(
       res.body.data.neuralTtsEngine.capabilities.some(
         (c: { id: string; status: string }) => c.id === 'streaming-tts' && c.status === 'partial',

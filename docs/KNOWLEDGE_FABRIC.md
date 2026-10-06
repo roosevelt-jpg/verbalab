@@ -1,13 +1,13 @@
-# VerbaLab Knowledge Fabric
+# Lugemi Knowledge Fabric
 
 **Status:** Shipped (VL-242 / library Phase 109)  
 **Rule:** Knowledge Fabric is the **internal** knowledge router over Knowledge Cloud — **not** Confluence/SharePoint, Neo4j federation, Elastic, or a customer-facing product. Extends AI Fabric + Knowledge Cloud. Do **not** regenerate Volumes 1–9 or VL-193–202 / VL-062. Roadmap: [`docs/roadmap/volume10-ai-fabric/`](./roadmap/volume10-ai-fabric/).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Knowledge Fabric | **VL-242** — `/knowledge-fabric` |
 | Knowledge Router / Routing | **Shipped** — `POST /route`, `GET /routes` |
@@ -30,7 +30,7 @@
 | Distribute / sync / federate | `POST /distribute`, `/sync`, `/federate` |
 | Monitoring / overview | `GET /monitoring`, `/overview` |
 | GraphQL | `knowledgeFabricCapabilities`, `knowledgeFabricRoutes` |
-| SDK / CLI | `knowledgeFabricProducts()`, `verbalab knowledge-fabric-products` |
+| SDK / CLI | `knowledgeFabricProducts()`, `lugemi knowledge-fabric-products` |
 
 ## Action safety
 

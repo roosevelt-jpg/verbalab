@@ -144,11 +144,11 @@ export class VoiceStudioController {
     res.setHeader('Content-Type', result.mimeType);
     res.setHeader('Content-Length', String(result.audio.length));
     res.setHeader('Content-Disposition', `inline; filename="studio-preview.${result.format}"`);
-    res.setHeader('X-VerbaLab-Provider', result.provider);
-    res.setHeader('X-VerbaLab-Voice', result.voice);
-    res.setHeader('X-VerbaLab-Mode', 'preview');
-    res.setHeader('X-VerbaLab-Rendered-Text', encodeURIComponent(result.renderedText.slice(0, 200)));
-    if (result.watermarkApplied) res.setHeader('X-VerbaLab-Watermark', 'required');
+    res.setHeader('X-Lugemi-Provider', result.provider);
+    res.setHeader('X-Lugemi-Voice', result.voice);
+    res.setHeader('X-Lugemi-Mode', 'preview');
+    res.setHeader('X-Lugemi-Rendered-Text', encodeURIComponent(result.renderedText.slice(0, 200)));
+    if (result.watermarkApplied) res.setHeader('X-Lugemi-Watermark', 'required');
     res.status(HttpStatus.OK).send(result.audio);
   }
 
@@ -170,10 +170,10 @@ export class VoiceStudioController {
     res.setHeader('Content-Type', result.mimeType);
     res.setHeader('Content-Length', String(result.audio.length));
     res.setHeader('Content-Disposition', `inline; filename="studio-generate.${result.format}"`);
-    res.setHeader('X-VerbaLab-Provider', result.provider);
-    res.setHeader('X-VerbaLab-Voice', result.voice);
-    res.setHeader('X-VerbaLab-Mode', 'generate');
-    if (result.watermarkApplied) res.setHeader('X-VerbaLab-Watermark', 'required');
+    res.setHeader('X-Lugemi-Provider', result.provider);
+    res.setHeader('X-Lugemi-Voice', result.voice);
+    res.setHeader('X-Lugemi-Mode', 'generate');
+    if (result.watermarkApplied) res.setHeader('X-Lugemi-Watermark', 'required');
     res.status(HttpStatus.OK).send(result.audio);
   }
 
@@ -187,10 +187,10 @@ export class VoiceStudioController {
     const result = await this.studio.testVoice(this.auth(req), body);
     res.setHeader('Content-Type', result.mimeType);
     res.setHeader('Content-Length', String(result.audio.length));
-    res.setHeader('X-VerbaLab-Provider', result.provider);
-    res.setHeader('X-VerbaLab-Voice', result.voice);
-    res.setHeader('X-VerbaLab-Mode', 'test');
-    if (result.watermarkApplied) res.setHeader('X-VerbaLab-Watermark', 'required');
+    res.setHeader('X-Lugemi-Provider', result.provider);
+    res.setHeader('X-Lugemi-Voice', result.voice);
+    res.setHeader('X-Lugemi-Mode', 'test');
+    if (result.watermarkApplied) res.setHeader('X-Lugemi-Watermark', 'required');
     res.status(HttpStatus.OK).send(result.audio);
   }
 

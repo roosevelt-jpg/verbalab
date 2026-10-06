@@ -145,7 +145,7 @@ export function findConnectorCatalogEntry(key: string): ConnectorCatalogEntry | 
  */
 export function connectorMarketplaceEngineCatalog() {
   return {
-    product: 'VerbaLab Connector Marketplace',
+    product: 'Lugemi Connector Marketplace',
     note:
       'Connector Marketplace (VL-256). Publish/license connector SKUs over the built-in connector catalog + existing Slack connector. Install grants workspace entitlements — not live arbitrary outbound, Zapier, or iPaaS OS. Monetization records MarketplaceSale receipts; Stripe Connect via VL-092.',
     capabilities: [

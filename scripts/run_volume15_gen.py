@@ -423,7 +423,7 @@ must complete under 5 seconds in vitest. No heavy inference paths introduced in 
 
 ## Verdict
 
-Volume 15 Trust Cloud is closed and ready as VerbaLab's enforcement/governance layer.
+Volume 15 Trust Cloud is closed and ready as Lugemi's enforcement/governance layer.
 
 ## Honesty checklist
 
@@ -833,13 +833,13 @@ export class GqlTrustAnalyticsEngine {
     help_lines = []
     for hub in HUBS:
         cmd = f"{hub['slug']}-products" if hub["kind"] == "foundation" else f"{hub['slug']}-engine"
-        line = f"  verbalab {cmd}"
+        line = f"  lugemi {cmd}"
         if line not in ct:
             help_lines.append(line)
     if help_lines:
         ct = ct.replace(
-            "  verbalab ai-operations-dashboard-engine\n",
-            "  verbalab ai-operations-dashboard-engine\n" + "\n".join(help_lines) + "\n",
+            "  lugemi ai-operations-dashboard-engine\n",
+            "  lugemi ai-operations-dashboard-engine\n" + "\n".join(help_lines) + "\n",
         )
     handlers = []
     for hub in HUBS:
@@ -919,7 +919,7 @@ Library Phase 159 — part of Volume 15 Trust Cloud.
 
 ## Mission
 
-VerbaLab Trust Cloud is the enforcement/governance layer ensuring models, agents, datasets,
+Lugemi Trust Cloud is the enforcement/governance layer ensuring models, agents, datasets,
 workflows, and customer interactions are secure, explainable, governed, auditable, and
 supported for compliance work — integrating Policy Runtime, AgentOps, Continuous Learning,
 Volume 12 consent, and existing honesty surfaces.

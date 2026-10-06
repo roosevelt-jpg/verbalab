@@ -1,13 +1,13 @@
-# VerbaLab Voice Biometrics
+# Lugemi Voice Biometrics
 
 **Status:** Partial (VL-176 / library Phase 33)  
 **Rule:** Enterprise voice auth governance over Speaker Intelligence (VL-152). **Not** NIST / PAD / ASVspoof certified. Prefer a specialist vendor for regulated MFA.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Biometric Engine | **VL-176** — `GET /v1/voice-biometrics/engine` + `/voice-biometrics` |
 | Voice Authentication | **Partial** — `POST …/authenticate` (verify + spoof + risk) |

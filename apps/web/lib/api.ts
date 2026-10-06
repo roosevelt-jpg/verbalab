@@ -1,6 +1,6 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
 
-export const WORKSPACE_STORAGE_KEY = 'verbalab_workspace_id';
+export const WORKSPACE_STORAGE_KEY = 'lugemi_workspace_id';
 
 export function getStoredWorkspaceId(): string | null {
   if (typeof window === 'undefined') return null;
@@ -28,7 +28,7 @@ export async function apiFetch<T>(
     headers: {
       ...(rest.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(ws ? { 'X-VerbaLab-Workspace-Id': ws } : {}),
+      ...(ws ? { 'X-Lugemi-Workspace-Id': ws } : {}),
       ...headers,
     },
   });

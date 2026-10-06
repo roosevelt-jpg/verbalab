@@ -1,13 +1,13 @@
-# VerbaLab Call Intelligence
+# Lugemi Call Intelligence
 
 **Status:** Partial shipped (VL-158 / library Phase 24)  
 **Rule:** Contact-center call ingest + heuristic analytics. Do not claim Gong/Chorus/Twilio Voice Intelligence. Do not regenerate Voice FAQ.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Call Intelligence Engine | **VL-158** — `GET /v1/call-intelligence/engine` + `/call-intelligence` |
 | Call Recording | **Partial** — upload stored via local storage on ingest |
@@ -18,7 +18,7 @@
 | Sales Coaching / QA | **Partial** — rubric tips + scorecard heuristics |
 | Reports | **Shipped** — `GET /v1/call-intelligence/report` |
 | Realtime CCaaS | **Deferred** |
-| GraphQL / SDK / CLI | `callIntelligenceEngine`, `ingestCall`, `verbalab call-engine` |
+| GraphQL / SDK / CLI | `callIntelligenceEngine`, `ingestCall`, `lugemi call-engine` |
 | Related | Voice FAQ remains `/voice` (VL-084) — not Call Intelligence |
 
 ---

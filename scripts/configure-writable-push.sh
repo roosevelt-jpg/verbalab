@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Route `git push` to roosevelt-jpg/v0-ppbb (writable from Cursor cloud),
-# because cursor[bot] cannot push to roosevelt-jpg/verbalab (403).
+# because cursor[bot] cannot push to roosevelt-jpg/lugemi (403).
 #
-# Usage (from verbalab repo root):
+# Usage (from lugemi repo root):
 #   ./scripts/configure-writable-push.sh [v0-ppbb-git-url]
-#   git push            # → v0-ppbb branch cursor/verbalab-main-5aae
+#   git push            # → v0-ppbb branch cursor/lugemi-main-5aae
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -19,9 +19,9 @@ if [[ -z "$PUSH_URL" ]]; then
   PUSH_URL="${PUSH_URL:-$DEFAULT_PUSH_URL}"
 fi
 
-BRANCH_REF="refs/heads/main:refs/heads/cursor/verbalab-main-5aae"
+BRANCH_REF="refs/heads/main:refs/heads/cursor/lugemi-main-5aae"
 
-git remote set-url origin https://github.com/roosevelt-jpg/verbalab.git
+git remote set-url origin https://github.com/roosevelt-jpg/lugemi.git
 git remote set-url --push origin "$PUSH_URL"
 git config remote.origin.push "$BRANCH_REF"
 
@@ -33,7 +33,7 @@ fi
 git config remote.v0ppbb.push "$BRANCH_REF"
 
 echo "Configured:"
-echo "  fetch: https://github.com/roosevelt-jpg/verbalab.git"
+echo "  fetch: https://github.com/roosevelt-jpg/lugemi.git"
 echo "  push:  $PUSH_URL ($BRANCH_REF)"
 echo
 echo "Verify with: git push origin main"

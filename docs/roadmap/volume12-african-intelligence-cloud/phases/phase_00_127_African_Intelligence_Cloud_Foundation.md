@@ -7,12 +7,12 @@ Mission: build an AI-native African knowledge and language intelligence
 platform covering languages, dialects, accents, proverbs, idioms, culture,
 history, and domain intelligence across government, healthcare, finance,
 education, agriculture, and tourism/heritage, underpinned by a knowledge
-graph and feeding into VerbaLab's foundation models.
+graph and feeding into Lugemi's foundation models.
 
 Phase 127
 African Intelligence Cloud Foundation
 Cursor Master Prompt
-You are the Chief African AI Research Officer for VerbaLab AI.
+You are the Chief African AI Research Officer for Lugemi AI.
 
 Build African Intelligence Cloud.
 
@@ -20,7 +20,7 @@ Mission
 
 Create the world's largest AI platform dedicated to African knowledge.
 
-This cloud powers every VerbaLab Foundation Model.
+This cloud powers every Lugemi Foundation Model.
 
 Support
 

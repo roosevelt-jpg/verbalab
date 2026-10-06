@@ -70,7 +70,7 @@ describe('Developer Cloud Foundation (VL-127)', () => {
     expect(text).toContain('OAuth Clients');
     expect(text).toContain('Not built');
     expect(text).toContain('same');
-    expect(text).toContain('@verbalab/cli');
+    expect(text).toContain('@lugemi/cli');
   });
 
   it('ships thin CLI package wrapping the SDK', () => {
@@ -81,16 +81,16 @@ describe('Developer Cloud Foundation (VL-127)', () => {
       bin: Record<string, string>;
       dependencies: Record<string, string>;
     };
-    expect(pkg.name).toBe('@verbalab/cli');
-    expect(pkg.bin.verbalab).toBeTruthy();
-    expect(pkg.dependencies['@verbalab/sdk']).toBe('workspace:*');
+    expect(pkg.name).toBe('@lugemi/cli');
+    expect(pkg.bin.lugemi).toBeTruthy();
+    expect(pkg.dependencies['@lugemi/sdk']).toBe('workspace:*');
   });
 
   it('creates live and test API keys with correct prefixes', async () => {
     const live = generateApiKeySecret('live');
     const test = generateApiKeySecret('test');
-    expect(live.secret.startsWith('vl_live_')).toBe(true);
-    expect(test.secret.startsWith('vl_test_')).toBe(true);
+    expect(live.secret.startsWith('lg_live_')).toBe(true);
+    expect(test.secret.startsWith('lg_test_')).toBe(true);
     expect(looksLikeApiKey(live.secret)).toBe(true);
     expect(looksLikeApiKey(test.secret)).toBe(true);
     expect(looksLikeApiKey('sk_test')).toBe(false);
@@ -103,7 +103,7 @@ describe('Developer Cloud Foundation (VL-127)', () => {
       name: 'sandbox',
       environment: 'test',
     });
-    expect(created.secret.startsWith('vl_test_')).toBe(true);
+    expect(created.secret.startsWith('lg_test_')).toBe(true);
     expect(created.environment).toBe('test');
 
     const listed = await apiKeys.list(org.id);
@@ -113,9 +113,9 @@ describe('Developer Cloud Foundation (VL-127)', () => {
 
   it('exposes public SDK catalog and authenticated developer overview', async () => {
     const sdkRes = await request(app.getHttpServer()).get('/v1/developer/sdk').expect(200);
-    expect(sdkRes.body.typescript.name).toBe('@verbalab/sdk');
-    expect(sdkRes.body.cli.bin).toBe('verbalab');
-    expect(sdkRes.body.auth.testPrefix).toBe('vl_test_');
+    expect(sdkRes.body.typescript.name).toBe('@lugemi/sdk');
+    expect(sdkRes.body.cli.bin).toBe('lugemi');
+    expect(sdkRes.body.auth.testPrefix).toBe('lg_test_');
 
     const org = await seedOrg(prisma, `dev_ov_${Date.now()}`);
     await apiKeys.create({
@@ -137,6 +137,6 @@ describe('Developer Cloud Foundation (VL-127)', () => {
     expect(overview.applications.mappedTo).toBe('workspaces');
     expect(overview.sandbox.separateCluster).toBe(false);
     expect(overview.oauthClients.supported).toBe(false);
-    expect(overview.sdk.cli.name).toBe('@verbalab/cli');
+    expect(overview.sdk.cli.name).toBe('@lugemi/cli');
   });
 });

@@ -68,7 +68,7 @@ describe('Model registry (VL-110)', () => {
     });
     const updated = await models.setExternalUrl({
       idOrSlug: 'vendor-translate-google',
-      externalUrl: 'https://wandb.ai/verbalab/example/runs/abc',
+      externalUrl: 'https://wandb.ai/lugemi/example/runs/abc',
       organizationId: org.id,
     });
     expect(updated.externalUrl).toContain('wandb.ai');

@@ -4,7 +4,7 @@ Library Phase 157 — part of Volume 14 MLOps & LLMOps Cloud.
 
 ## Mission
 
-VerbaLab AI Operations Dashboard provides the AI Operations Dashboard surface inside VerbaLab.
+Lugemi AI Operations Dashboard provides the AI Operations Dashboard surface inside Lugemi.
 
 ## Honesty
 

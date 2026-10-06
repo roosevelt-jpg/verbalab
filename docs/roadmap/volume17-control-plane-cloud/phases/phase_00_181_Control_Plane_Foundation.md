@@ -4,7 +4,7 @@
 VOLUME 17 — CONTROL PLANE CLOUD
 
 Mission: build the global control plane that manages, configures, secures,
-governs, deploys, and operates every VerbaLab cloud service. The control
+governs, deploys, and operates every Lugemi cloud service. The control
 plane never executes AI inference itself — it controls the platform. Covers:
 organization/workspace/tenant management, identity, policy engine, billing
 engine, deployment controller, routing controller, service discovery,
@@ -15,11 +15,11 @@ management.
 Phase 181
 Control Plane Foundation
 Cursor Master Prompt
-Build the complete VerbaLab Control Plane.
+Build the complete Lugemi Control Plane.
 
 Mission
 
-Control every VerbaLab Cloud.
+Control every Lugemi Cloud.
 
 This is the management layer.
 

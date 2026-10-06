@@ -57,7 +57,7 @@ describe('Research Analytics (VL-279)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/research-analytics/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Research Analytics');
+    expect(res.body.product).toBe('Lugemi Research Analytics');
 
     expect(res.body.honesty.aiSovereigntyOs).toBe(false);
     expect(res.body.honesty.financeGradeRoi).toBe(false);

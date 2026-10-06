@@ -10,7 +10,7 @@ Language data is confidential. We need a thin trust baseline without a “Securi
 
 ## Decision
 
-1. **API keys at rest:** SHA-256 hash of the full `vl_live_…` secret (`hashApiKey`). Plaintext returned once at create; list/revoke expose prefix only. Not reversible encryption — hashing is intentional.
+1. **API keys at rest:** SHA-256 hash of the full `lg_live_…` secret (`hashApiKey`). Plaintext returned once at create; list/revoke expose prefix only. Not reversible encryption — hashing is intentional.
 2. **Tenant isolation:** All org-scoped reads filter by `organizationId` from auth context. Tests assert org B cannot fetch org A jobs/knowledge and cannot revoke org A keys.
 3. **Security headers:** `helmet` on the Nest API; Next.js `headers()` for frame/nosniff/referrer/permissions/CSP (Clerk-compatible).
 4. **CI:** Gitleaks secret scan + `pnpm audit --prod` (high+). No self-hosted SIEM.

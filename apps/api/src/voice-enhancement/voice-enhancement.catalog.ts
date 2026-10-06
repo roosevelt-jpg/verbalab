@@ -11,7 +11,7 @@ export type EnhancementCapability = {
 /** Library Phase 32 → Voice Enhancement Platform (VL-175). Extends VL-155. */
 export function voiceEnhancementEngineCatalog() {
   return {
-    product: 'VerbaLab Voice Enhancement',
+    product: 'Lugemi Voice Enhancement',
     note:
       'Voice cleanup/restoration/mastering façade over Audio Intelligence PCM heuristics (VL-155). Profile pipelines for mic/podcast/meeting/broadcast. Not Krisp, Adobe Enhance, Demucs, or live AEC parity.',
     capabilities: [
@@ -119,8 +119,8 @@ export function voiceEnhancementEngineCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

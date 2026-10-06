@@ -28,7 +28,7 @@ export function DataPlaneStreamingClient() {
         Data Plane Streaming
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-331 — VerbaLab Data Plane Streaming console in the Data Plane Cloud.
+        VL-331 — Lugemi Data Plane Streaming console in the Data Plane Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

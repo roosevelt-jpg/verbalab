@@ -27,7 +27,7 @@ export function GoldenPathPlatformClient() {
         Golden Path Platform
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-305 — VerbaLab Golden Path Platform console in the Platform Engineering Cloud.
+        VL-305 — Lugemi Golden Path Platform console in the Platform Engineering Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

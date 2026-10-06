@@ -1,4 +1,4 @@
-# VerbaLab Ecosystem Cloud
+# Lugemi Ecosystem Cloud
 
 **Status:** Volume closed (VL-249–259 / library Phases 116–126) — audit pack under [`docs/ecosystem-cloud-audit/`](./ecosystem-cloud-audit/)  
 **Rule:** Ecosystem Cloud is the **marketplace + monetization hub** over existing VL-090+ content marketplace and voice marketplace — **not** a payment-processor OS, card vault, or regenerate of Volumes 1–10. Roadmap: [`docs/roadmap/volume11-ecosystem-cloud/`](./roadmap/volume11-ecosystem-cloud/).
@@ -7,9 +7,9 @@ Volume 11 README: this is a **real-money** volume (payments, licensing, royalty 
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Ecosystem Foundation | **VL-249** — `/ecosystem-cloud` + product catalog / routing |
 | Plugin Marketplace | **Shipped** — VL-250 — [`PLUGIN_MARKETPLACE.md`](./PLUGIN_MARKETPLACE.md); sandbox + Policy required |
@@ -41,7 +41,7 @@ Volume 11 README: this is a **real-money** volume (payments, licensing, royalty 
 | Monitoring | `GET /v1/ecosystem-cloud/monitoring` |
 | GraphQL | `ecosystemProducts` |
 | SDK | `ecosystemCloudProducts()` |
-| CLI | `verbalab ecosystem-cloud-products` |
+| CLI | `lugemi ecosystem-cloud-products` |
 
 ## Action safety (README)
 

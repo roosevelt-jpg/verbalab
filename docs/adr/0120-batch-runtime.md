@@ -8,7 +8,7 @@
 
 Library Phase 76 asks for Batch Runtime covering translation/speech/OCR/embedding/training/video jobs plus scheduling, retry, checkpointing, priority queues, engine/REST/SDK/dashboard/analytics and production deployment.
 
-VerbaLab already runs async work via BullMQ (`POST /v1/jobs` for `batch_translate`, document translate, workflows) and has a training-jobs API. Inventing a Spark/Airflow/Celery OS would violate extend-don’t-regenerate.
+Lugemi already runs async work via BullMQ (`POST /v1/jobs` for `batch_translate`, document translate, workflows) and has a training-jobs API. Inventing a Spark/Airflow/Celery OS would violate extend-don’t-regenerate.
 
 ## Decision
 
@@ -16,7 +16,7 @@ VerbaLab already runs async work via BullMQ (`POST /v1/jobs` for `batch_translat
 2. Translation runs **delegate** to existing `JobsService.create(batch_translate)`.
 3. Speech/OCR/embedding runs are **sandbox logical** item batches with checkpoint cursors.
 4. Training is linked, not reimplemented; video batch deferred.
-5. Support `priority` (low/normal/high), `runAt` scheduling + `/start`, `/checkpoint`, `/retry` with hard ceilings (`VERBALAB_BATCH_MAX_ITEMS`, `VERBALAB_BATCH_MAX_RETRIES`).
+5. Support `priority` (low/normal/high), `runAt` scheduling + `/start`, `/checkpoint`, `/retry` with hard ceilings (`LUGEMI_BATCH_MAX_ITEMS`, `LUGEMI_BATCH_MAX_RETRIES`).
 6. Flip Inference Cloud catalog `batch-runtime` to expose engine/console; deferred product flag → false.
 
 ## Consequences

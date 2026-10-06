@@ -57,7 +57,7 @@ describe('African Language Registry (VL-261)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/african-language-registry/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab African Language Registry');
+    expect(res.body.product).toBe('Lugemi African Language Registry');
 
     expect(res.body.honesty.coverageComplete).toBe(false);
 

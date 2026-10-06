@@ -1,4 +1,4 @@
-# VerbaLab — Volume 19: VAIOS (Phases 201–210)
+# Lugemi — Volume 19: VAIOS (Phases 201–210)
 
 Same workflow as Volumes 1–18. `.cursorrules` at the repo root still applies.
 

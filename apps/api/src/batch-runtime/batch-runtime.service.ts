@@ -494,7 +494,7 @@ export class BatchRuntimeService {
     if (batchRuntimeMode() === 'disabled') {
       throw new ApiException(
         'batch_runtime_disabled',
-        'Batch Runtime mode is disabled (VERBALAB_BATCH_RUNTIME_MODE=disabled).',
+        'Batch Runtime mode is disabled (LUGEMI_BATCH_RUNTIME_MODE=disabled).',
         HttpStatus.FORBIDDEN,
       );
     }

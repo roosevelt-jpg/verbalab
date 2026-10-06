@@ -57,7 +57,7 @@ describe('Evaluation Platform (VL-275)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/evaluation-platform/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Evaluation Platform');
+    expect(res.body.product).toBe('Lugemi Evaluation Platform');
 
     expect(res.body.honesty.regeneratesModelEvaluationPlatform).toBe(false);
     expect(res.body.extends.regeneratesExistingEval).toBe(false);

@@ -132,7 +132,7 @@ export function ChatClient() {
               className="vl-field"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Message VerbaLab…"
+              placeholder="Message Lugemi…"
               disabled={loading}
               required
             />

@@ -57,7 +57,7 @@ describe('Education Intelligence (VL-267)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/education-intelligence/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Education Intelligence');
+    expect(res.body.product).toBe('Lugemi Education Intelligence');
 
   });
 });

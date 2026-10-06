@@ -11,7 +11,7 @@ export type SpeechAnalyticsCapability = {
 /** Library Phase 25 → Speech Analytics (VL-159). */
 export function speechAnalyticsCatalog() {
   return {
-    product: 'VerbaLab Speech Analytics',
+    product: 'Lugemi Speech Analytics',
     note:
       'Org speech usage, languages, dialects/accents, cost estimates, industry packs, customer keys, and accuracy proxies from audits/usage. Not a BI cloud or NIST WER lab. Language Analytics remains separate.',
     capabilities: [
@@ -111,8 +111,8 @@ export function speechAnalyticsCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

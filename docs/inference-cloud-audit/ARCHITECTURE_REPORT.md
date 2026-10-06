@@ -7,7 +7,7 @@
 
 Inference Cloud is a **hub over Nest modular monolith model-runtime modules**, not a separate GPU cluster OS and not an AI Kernel. REST is primary; GraphQL is a façade; CQRS applies to the Inference Cloud catalog slice (VL-204).
 
-Clouds follow the **12-layer VerbaLab Cloud Blueprint** (ADR-0080).
+Clouds follow the **12-layer Lugemi Cloud Blueprint** (ADR-0080).
 
 ## System shape
 

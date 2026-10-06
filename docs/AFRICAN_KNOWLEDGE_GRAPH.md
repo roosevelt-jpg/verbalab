@@ -4,7 +4,7 @@
 **Cloud:** African Intelligence Cloud (Volume 12)  
 **ADR:** [ADR-0165](./adr/0165-african-knowledge-graph.md)
 
-African Knowledge Graph is part of VerbaLab's African Intelligence Cloud. It extends existing Language/Knowledge/Intelligence surfaces — it does **not** regenerate Volumes 1–11.
+African Knowledge Graph is part of Lugemi's African Intelligence Cloud. It extends existing Language/Knowledge/Intelligence surfaces — it does **not** regenerate Volumes 1–11.
 
 ## Surfaces
 

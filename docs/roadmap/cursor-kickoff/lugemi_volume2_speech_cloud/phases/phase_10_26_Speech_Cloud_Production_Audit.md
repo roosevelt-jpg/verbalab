@@ -53,7 +53,7 @@ Deployment Guide
 Everything production ready.
 END OF SPEECH CLOUD
 
-By the end of this volume, VerbaLab Speech Cloud will exceed a basic transcription API. It becomes a speech intelligence platform capable of powering contact centers, language learning, compliance, analytics, and multilingual voice experiences.
+By the end of this volume, Lugemi Speech Cloud will exceed a basic transcription API. It becomes a speech intelligence platform capable of powering contact centers, language learning, compliance, analytics, and multilingual voice experiences.
 
 🚀 Architecture Change (Very Important)
 
@@ -78,7 +78,7 @@ Cloud Foundation
 ├── Monitoring
 └── Production Audit
 
-This means every VerbaLab cloud becomes internally consistent.
+This means every Lugemi cloud becomes internally consistent.
 
 For example:
 
@@ -110,4 +110,4 @@ Analytics
 Billing
 Monitoring
 
-VERBALAB ENGINEERING LIBRARY v2.0
+LUGEMI ENGINEERING LIBRARY v2.0

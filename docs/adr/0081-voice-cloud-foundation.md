@@ -6,9 +6,9 @@
 
 ## Context
 
-Library Phase 27 asks for VerbaLab Voice, Neural TTS, Voice Cloning, Instant Cloning, Professional Voice Studio, Emotion Voice, Voice Conversion, Enhancement/Restoration/Mastering, Voice Biometrics/Authentication/Profiles, Voice Marketplace — plus DDD, CQRS, hexagonal, REST/GraphQL/realtime, SDKs, CLI, Terraform, Docker, Kubernetes, monitoring, billing, analytics — “everything production ready.”
+Library Phase 27 asks for Lugemi Voice, Neural TTS, Voice Cloning, Instant Cloning, Professional Voice Studio, Emotion Voice, Voice Conversion, Enhancement/Restoration/Mastering, Voice Biometrics/Authentication/Profiles, Voice Marketplace — plus DDD, CQRS, hexagonal, REST/GraphQL/realtime, SDKs, CLI, Terraform, Docker, Kubernetes, monitoring, billing, analytics — “everything production ready.”
 
-VerbaLab already ships vendor + own TTS (VL-042/121), consent-gated cloning (VL-064), Voice Studio UX (VL-120), speaker verify/identify (VL-152), and audio enhance (VL-155). Regenerating Speech/Language/Identity/Gateway or inventing a full voice-OS would violate “extend, don’t regenerate.” ADR-0080 previously left Voice Cloud unscheduled until ROADMAP executable phases existed; Volume 3 schedules VL-170+.
+Lugemi already ships vendor + own TTS (VL-042/121), consent-gated cloning (VL-064), Voice Studio UX (VL-120), speaker verify/identify (VL-152), and audio enhance (VL-155). Regenerating Speech/Language/Identity/Gateway or inventing a full voice-OS would violate “extend, don’t regenerate.” ADR-0080 previously left Voice Cloud unscheduled until ROADMAP executable phases existed; Volume 3 schedules VL-170+.
 
 ## Decision
 

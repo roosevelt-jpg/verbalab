@@ -180,7 +180,7 @@ export function evaluatePromote(candidateId: string): PromoteCheckResult & { can
 
 export function continuousLearningEngineCatalog() {
   return {
-    product: 'VerbaLab Continuous Learning',
+    product: 'Lugemi Continuous Learning',
     capabilities: [
       { id: 'feedback-collection', name: 'Feedback collection', status: 'shipped', notes: 'Collect production feedback.' },
       { id: 'human-review', name: 'Human review', status: 'shipped', notes: 'Required before promote.' },

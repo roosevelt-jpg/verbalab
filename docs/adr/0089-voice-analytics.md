@@ -8,7 +8,7 @@
 
 Library Phase 35 asks for voice usage, languages, voices, customers, revenue, latency, quality, streaming, downloads, marketplace analytics, dashboard, reports, REST/GraphQL/SDK/monitoring/docs.
 
-VerbaLab already has Speech Analytics (VL-159) for STT/TTS speech-cloud surfaces and Language Analytics for MT. Regenerating Speech Analytics under a Voice Cloud label would confuse products. A Looker-grade BI product is out of scope for a small team.
+Lugemi already has Speech Analytics (VL-159) for STT/TTS speech-cloud surfaces and Language Analytics for MT. Regenerating Speech Analytics under a Voice Cloud label would confuse products. A Looker-grade BI product is out of scope for a small team.
 
 ## Decision
 

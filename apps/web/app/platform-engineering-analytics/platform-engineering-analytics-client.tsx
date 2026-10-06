@@ -27,7 +27,7 @@ export function PlatformEngineeringAnalyticsClient() {
         Platform Engineering Analytics
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-312 — VerbaLab Platform Engineering Analytics console in the Platform Engineering Cloud.
+        VL-312 — Lugemi Platform Engineering Analytics console in the Platform Engineering Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

@@ -1,8 +1,8 @@
 {
-  "name": "@verbalab/sdk",
+  "name": "@lugemi/sdk",
   "version": "0.1.0",
   "private": true,
-  "description": "Official TypeScript SDK for the VerbaLab API",
+  "description": "Official TypeScript SDK for the Lugemi API",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -22,8 +22,8 @@
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
-    "@verbalab/eslint-config": "workspace:*",
-    "@verbalab/typescript-config": "workspace:*",
+    "@lugemi/eslint-config": "workspace:*",
+    "@lugemi/typescript-config": "workspace:*",
     "eslint": "^9.17.0",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"

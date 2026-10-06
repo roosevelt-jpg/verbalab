@@ -1,20 +1,20 @@
 # Fly.io — API EU residency island (VL-075). Separate app + DATABASE_URL from US.
-# fly apps create verbalab-api-eu
+# fly apps create lugemi-api-eu
 # fly deploy -c infra/fly/api.eu.toml --dockerfile apps/api/Dockerfile
-app = 'verbalab-api-eu'
+app = 'lugemi-api-eu'
 primary_region = 'ams'
 
 [build]
   dockerfile = 'apps/api/Dockerfile'
 
 [deploy]
-  release_command = 'pnpm --filter @verbalab/api exec prisma migrate deploy'
+  release_command = 'pnpm --filter @lugemi/api exec prisma migrate deploy'
 
 [env]
   NODE_ENV = 'production'
   API_PORT = '3001'
   PORT = '3001'
-  VERBALAB_REGION = 'eu'
+  LUGEMI_REGION = 'eu'
 
 [http_service]
   internal_port = 3001

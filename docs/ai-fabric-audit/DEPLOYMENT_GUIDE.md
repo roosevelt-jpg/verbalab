@@ -14,7 +14,7 @@ Reuse platform deploy docs — AI Fabric adds Nest modules, not a separate deplo
 | `DATABASE_URL` | Postgres |
 | `REDIS_URL` | Event Fabric Streams (omit + `EVENT_FABRIC_MEMORY=1` for memory bus) |
 | `EVENT_FABRIC_MEMORY` | `1` for in-process bus (tests/dev) |
-| `VERBALAB_POLICY_RUNTIME_MODE` | `enforce` (default) — hard gate |
+| `LUGEMI_POLICY_RUNTIME_MODE` | `enforce` (default) — hard gate |
 | Clerk / API keys | Tenant auth |
 
 ## Health

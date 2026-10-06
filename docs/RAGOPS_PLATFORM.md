@@ -4,7 +4,7 @@ Library Phase 153 — part of Volume 14 MLOps & LLMOps Cloud.
 
 ## Mission
 
-VerbaLab RAGOps Platform provides the RAGOps Platform surface inside VerbaLab.
+Lugemi RAGOps Platform provides the RAGOps Platform surface inside Lugemi.
 
 ## Honesty
 

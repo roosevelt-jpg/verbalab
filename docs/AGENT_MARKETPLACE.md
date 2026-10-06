@@ -1,13 +1,13 @@
-# VerbaLab Agent Marketplace
+# Lugemi Agent Marketplace
 
 **Status:** Shipped (VL-254 / library Phase 121)  
 **Rule:** Extends Agent Runtime (VL-219) + listings `kind=agent` — **not** LangGraph / AutoGPT OS. Third-party agents run only through Agent Runtime sandbox + AgentPolicyGate + Policy Fabric hard gate. Real-money honesty: Stripe (or equivalent); `storesRawCardData: false`. Roadmap: [`docs/roadmap/volume11-ecosystem-cloud/`](./roadmap/volume11-ecosystem-cloud/).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Business / Healthcare / Government / Legal / Financial / Education / Voice / Sales / Support / Research | **Shipped** — `category` |
 | Marketplace publish/install/run | **Shipped** — sandboxed |
@@ -30,7 +30,7 @@
 | Reviews / sales / analytics | under `/v1/agent-marketplace/*` |
 | GraphQL | `agentMarketplaceEngine` |
 | SDK | `agentMarketplaceEngine()` |
-| CLI | `verbalab agent-marketplace-engine` |
+| CLI | `lugemi agent-marketplace-engine` |
 
 ## Run path (must stay enforced)
 

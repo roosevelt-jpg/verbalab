@@ -106,7 +106,7 @@ describe('Voice Biometrics (VL-176)', () => {
 
   it('exposes engine with nistCertified=false', async () => {
     const engine = await request(app.getHttpServer()).get('/v1/voice-biometrics/engine').expect(200);
-    expect(engine.body.product).toBe('VerbaLab Voice Biometrics');
+    expect(engine.body.product).toBe('Lugemi Voice Biometrics');
     expect(engine.body.honesty.nistCertified).toBe(false);
     expect(engine.body.honesty.padCertified).toBe(false);
     const auth = engine.body.capabilities.find((c: { id: string }) => c.id === 'voice-authentication');

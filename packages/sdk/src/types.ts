@@ -1008,7 +1008,7 @@ export type InterpretResponse = {
   providers: { stt: string; mt: string | null; tts: string };
 };
 
-export type VerbaLabClientOptions = {
+export type LugemiClientOptions = {
   apiKey: string;
   baseUrl?: string;
   fetch?: typeof fetch;

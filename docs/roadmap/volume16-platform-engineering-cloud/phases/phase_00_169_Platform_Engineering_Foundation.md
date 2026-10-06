@@ -3,7 +3,7 @@
 
 VOLUME 16 — PLATFORM ENGINEERING CLOUD
 
-Mission: build the internal engineering platform that lets VerbaLab teams
+Mission: build the internal engineering platform that lets Lugemi teams
 build, deploy, secure, observe, and operate services consistently — this is
 for engineers, not end users. Covers: developer portal, service catalog,
 golden paths, project templates, infrastructure platform, GitOps, CI/CD,
@@ -14,13 +14,13 @@ supply chain security, and developer experience.
 Phase 169
 Platform Engineering Foundation
 Cursor Master Prompt
-You are the Chief Platform Engineering Architect for VerbaLab AI.
+You are the Chief Platform Engineering Architect for Lugemi AI.
 
 Build the Platform Engineering Cloud.
 
 Mission
 
-Create a complete Internal Developer Platform (IDP) for VerbaLab.
+Create a complete Internal Developer Platform (IDP) for Lugemi.
 
 Products
 

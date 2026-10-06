@@ -1,4 +1,4 @@
-import { VerbaLabError } from './errors.js';
+import { LugemiError } from './errors.js';
 import type {
   ChatCompletionRequest,
   ChatCompletionResponse,
@@ -93,7 +93,7 @@ import type {
   TranslateEngineOverview,
   TranslateStreamEvent,
   UploadFile,
-  VerbaLabClientOptions,
+  LugemiClientOptions,
   Voice,
 } from './types.js';
 
@@ -111,17 +111,25 @@ function toBlob(file: UploadFile): Blob {
   return new Blob([bytes], { type: file.contentType ?? 'application/octet-stream' });
 }
 
-export class VerbaLab {
+export class Lugemi {
   private readonly apiKey: string;
   private readonly baseUrl: string;
   private readonly fetchImpl: typeof fetch;
 
-  constructor(options: VerbaLabClientOptions) {
-    if (!options.apiKey?.startsWith('vl_live_') && !options.apiKey?.startsWith('vl_test_')) {
-      throw new Error('apiKey must be a VerbaLab key starting with vl_live_ or vl_test_');
+  constructor(options: LugemiClientOptions) {
+    const key = options.apiKey ?? '';
+    const validPrefix =
+      key.startsWith('lg_live_') ||
+      key.startsWith('lg_test_') ||
+      key.startsWith('vl_live_') ||
+      key.startsWith('vl_test_');
+    if (!validPrefix) {
+      throw new Error(
+        'apiKey must be a Lugemi key starting with lg_live_ or lg_test_ (legacy vl_live_ / vl_test_ also accepted)',
+      );
     }
     this.apiKey = options.apiKey;
-    this.baseUrl = (options.baseUrl ?? 'https://api.verbalab.ai').replace(/\/$/, '');
+    this.baseUrl = (options.baseUrl ?? 'https://api.lugemi.com').replace(/\/$/, '');
     this.fetchImpl = options.fetch ?? fetch;
   }
 
@@ -162,7 +170,7 @@ export class VerbaLab {
     });
     if (!res.ok) {
       const body = (await res.json().catch(() => ({}))) as ErrorBody;
-      throw new VerbaLabError(
+      throw new LugemiError(
         body.error?.message ?? `HTTP ${res.status}`,
         body.error?.code ?? 'http_error',
         res.status,
@@ -170,7 +178,7 @@ export class VerbaLab {
       );
     }
     if (!res.body) {
-      throw new VerbaLabError('Empty stream body', 'stream_error', res.status);
+      throw new LugemiError('Empty stream body', 'stream_error', res.status);
     }
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
@@ -4866,7 +4874,7 @@ export class VerbaLab {
 
     if (!response.ok) {
       const body = (await response.json().catch(() => ({}))) as ErrorBody;
-      throw new VerbaLabError(
+      throw new LugemiError(
         body.error?.message ?? `Request failed with status ${response.status}`,
         body.error?.code ?? 'http_error',
         response.status,
@@ -4878,10 +4886,10 @@ export class VerbaLab {
     return {
       audio,
       mimeType: response.headers.get('content-type') ?? 'audio/mpeg',
-      provider: response.headers.get('x-verbalab-provider') ?? undefined,
-      voice: response.headers.get('x-verbalab-voice') ?? undefined,
-      characters: Number(response.headers.get('x-verbalab-characters') ?? '') || undefined,
-      watermarkApplied: response.headers.get('x-verbalab-watermark') === 'required',
+      provider: response.headers.get('x-lugemi-provider') ?? undefined,
+      voice: response.headers.get('x-lugemi-voice') ?? undefined,
+      characters: Number(response.headers.get('x-lugemi-characters') ?? '') || undefined,
+      watermarkApplied: response.headers.get('x-lugemi-watermark') === 'required',
     };
   }
 
@@ -5367,7 +5375,7 @@ export class VerbaLab {
     const body = (await response.json().catch(() => ({}))) as T & ErrorBody;
 
     if (!response.ok) {
-      throw new VerbaLabError(
+      throw new LugemiError(
         body.error?.message ?? `Request failed with status ${response.status}`,
         body.error?.code ?? 'http_error',
         response.status,

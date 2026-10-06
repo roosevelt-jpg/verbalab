@@ -47,8 +47,8 @@ export class OpenAiCompatibleChatAdapter implements ChatProvider {
           'Content-Type': 'application/json',
           ...(this.name === 'openrouter_chat'
             ? {
-                'HTTP-Referer': process.env.OPENROUTER_HTTP_REFERER ?? 'https://verbalab.ai',
-                'X-Title': process.env.OPENROUTER_APP_TITLE ?? 'VerbaLab',
+                'HTTP-Referer': process.env.OPENROUTER_HTTP_REFERER ?? 'https://lugemi.ai',
+                'X-Title': process.env.OPENROUTER_APP_TITLE ?? 'Lugemi',
               }
             : {}),
         },

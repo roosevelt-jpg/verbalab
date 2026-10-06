@@ -4,7 +4,7 @@ Library Phase 152 — part of Volume 14 MLOps & LLMOps Cloud.
 
 ## Mission
 
-VerbaLab PromptOps Platform provides the PromptOps Platform surface inside VerbaLab.
+Lugemi PromptOps Platform provides the PromptOps Platform surface inside Lugemi.
 
 ## Honesty
 

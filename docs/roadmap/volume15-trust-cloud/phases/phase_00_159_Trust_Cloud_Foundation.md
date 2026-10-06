@@ -9,19 +9,19 @@ auditable, and compliant by design — covering AI safety, governance,
 responsible AI, privacy, compliance, risk management, explainability,
 decision traceability, policy engine, identity federation, consent
 management, data residency, audit, digital signatures, and supply chain
-security. Every other VerbaLab cloud is meant to integrate with this one.
+security. Every other Lugemi cloud is meant to integrate with this one.
 
 Phase 159
 Trust Cloud Foundation
 Cursor Master Prompt
-You are the Chief Trust Architect of VerbaLab AI.
+You are the Chief Trust Architect of Lugemi AI.
 
 Build the complete Trust Cloud.
 
 Mission
 
 Create one unified platform responsible for trust, governance,
-privacy, compliance and explainability across VerbaLab.
+privacy, compliance and explainability across Lugemi.
 
 Products
 

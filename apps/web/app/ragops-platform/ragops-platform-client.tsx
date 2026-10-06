@@ -27,7 +27,7 @@ export function RagopsPlatformClient() {
         RAGOps Platform
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-286 — VerbaLab RAGOps Platform console in the MLOps & LLMOps Cloud.
+        VL-286 — Lugemi RAGOps Platform console in the MLOps & LLMOps Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

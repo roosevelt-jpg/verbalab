@@ -1,13 +1,13 @@
-# VerbaLab Emotion Voice Engine
+# Lugemi Emotion Voice Engine
 
 **Status:** Partial (VL-173 / library Phase 30)  
 **Rule:** Emotion-conditioned *synthesis* façade over Neural TTS. Do not confuse with Speech Emotion Intelligence *detection* (VL-154). Do not claim trained expressive TTS / Hume / Azure Neural Emotion parity.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Emotion Voice Engine | **VL-173** — `GET /v1/emotion-voice/engine` + `/emotion-voice` |
 | Happy / Sad / Angry / Fear / Excited | **Partial** — profiles with soft prosody + preferred voices |

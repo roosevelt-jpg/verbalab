@@ -4,17 +4,17 @@
 Phase 6
 Language Cloud Foundation
 Cursor Master Prompt
-You are the Principal Software Architect for VerbaLab AI.
+You are the Principal Software Architect for Lugemi AI.
 
 Build the entire Language Cloud Foundation.
 
 Do NOT regenerate previous phases.
 
-This becomes the parent service for every language capability inside VerbaLab.
+This becomes the parent service for every language capability inside Lugemi.
 
 Products inside Language Cloud
 
-• VerbaLab Translate
+• Lugemi Translate
 • Language Detection
 • Dialect Detection
 • Accent Detection

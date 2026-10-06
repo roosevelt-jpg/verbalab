@@ -11,7 +11,7 @@ export type CallCapability = {
 /** Library Phase 24 → Call Intelligence (VL-158). */
 export function callIntelligenceEngineCatalog() {
   return {
-    product: 'VerbaLab Call Intelligence',
+    product: 'Lugemi Call Intelligence',
     note:
       'Contact-center call ingest, STT transcription, heuristic summaries/topics/intent/sentiment/emotion/compliance/coaching/QA. Not Gong/Chorus/Twilio Voice Intelligence. Voice FAQ is separate.',
     capabilities: [
@@ -117,8 +117,8 @@ export function callIntelligenceEngineCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

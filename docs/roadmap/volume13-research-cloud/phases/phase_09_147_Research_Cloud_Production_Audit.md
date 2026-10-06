@@ -45,7 +45,7 @@ AI Sovereignty Cloud
 
 Today, most companies depend on external AI providers.
 
-The long-term objective for VerbaLab should be to maximize sovereignty across every critical layer.
+The long-term objective for Lugemi should be to maximize sovereignty across every critical layer.
 
 AI Sovereignty Pillars
 Model Sovereignty
@@ -64,7 +64,7 @@ Cloud-agnostic architecture
 Self-hosted inference clusters
 GPU fleet management
 Knowledge Sovereignty
-VerbaLab Intelligence Graph
+Lugemi Intelligence Graph
 Regional Intelligence Clouds
 Organization Digital Twins
 Customer-owned knowledge bases
@@ -78,6 +78,6 @@ LLMOps
 
 This isn't just another cloud—it becomes a guiding architectural principle that informs decisions across the entire platform.
 
-By designing for sovereignty from the beginning, VerbaLab can support organizations that require strict control over their models, data, and operations, including governments, regulated industries, and large enterprises. That significantly broadens the platform's long-term applicability and resilience.
+By designing for sovereignty from the beginning, Lugemi can support organizations that require strict control over their models, data, and operations, including governments, regulated industries, and large enterprises. That significantly broadens the platform's long-term applicability and resilience.
 
-VERBALAB ENGINEERING LIBRARY v2.0
+LUGEMI ENGINEERING LIBRARY v2.0

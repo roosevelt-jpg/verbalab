@@ -40,7 +40,7 @@ African-language positioning starts as a **seeded registry + honest coverage**, 
 2. **Monorepo** (VL-002)  
    - pnpm workspaces + Turborepo  
    - `apps/api` NestJS: `GET /health` → `{ "status": "ok" }`  
-   - `apps/web` Next.js: a single page that shows API health (or a static “VerbaLab” shell + health fetch)  
+   - `apps/web` Next.js: a single page that shows API health (or a static “Lugemi” shell + health fetch)  
    - `infra/docker-compose.yml`: Postgres 16  
    - Prisma in the API (or `packages/db` if that is cleaner) with an empty-ish schema **plus** a `_prisma` migration that applies  
    - ESLint + Prettier + shared `tsconfig`  
@@ -102,7 +102,7 @@ GET  /health
 
 GET  /v1/languages
 POST /v1/translate
-Authorization: Bearer vl_live_...
+Authorization: Bearer lg_live_...
 
 POST /v1/api-keys          # session
 GET  /v1/api-keys          # session, prefixes only

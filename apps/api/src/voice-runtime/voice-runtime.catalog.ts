@@ -4,7 +4,7 @@
  */
 export function voiceRuntimeEngineCatalog() {
   return {
-    product: 'VerbaLab Voice Runtime',
+    product: 'Lugemi Voice Runtime',
     thinExecutionLayer: true,
     duplicatesProductLogic: false,
     capabilities: [

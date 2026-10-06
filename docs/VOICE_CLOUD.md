@@ -1,13 +1,13 @@
-# VerbaLab Voice Cloud
+# Lugemi Voice Cloud
 
 **Status:** Volume complete through Production Audit (VL-170–179)  
 **Rule:** Parent hub for voice synthesis products. Extend existing audio / voice-clone / studio modules. Do not regenerate Speech Cloud, Language Cloud, Identity, or AI Gateway. Follow the [12-layer Cloud Blueprint](./CLOUD_BLUEPRINT.md) (ADR-0080).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Voice Cloud Foundation | **VL-170** — `/voice-cloud` + product catalog / overview |
 | Neural TTS | **VL-171** — `GET /v1/tts/engine`, `POST /v1/tts/synthesize` (+ legacy VL-042/121) |
@@ -37,8 +37,8 @@
 | REST overview | `GET /v1/voice-cloud/overview` (Clerk session) |
 | GraphQL | `voiceProducts` |
 | OpenAPI | `/v1/openapi.json` |
-| SDK | `voiceProducts()` on `@verbalab/sdk` |
-| CLI | `verbalab voice-products` |
+| SDK | `voiceProducts()` on `@lugemi/sdk` |
+| CLI | `lugemi voice-products` |
 | Docs | this file + ADR-0081 |
 
 ---

@@ -8,7 +8,7 @@
 
 Library Phase 34 asks for voice publishing, licensing, selling, subscriptions, ratings, reviews, packs, celebrity/enterprise/language packs, marketplace engine, REST/GraphQL/SDK/analytics/billing/docs.
 
-VerbaLab already has localization Marketplace (VL-090–092) for glossary/prompt/dataset SKUs. Mixing voice SKUs into that catalog would confuse products. Celebrity voices without a rights chain are explicitly out of scope.
+Lugemi already has localization Marketplace (VL-090–092) for glossary/prompt/dataset SKUs. Mixing voice SKUs into that catalog would confuse products. Celebrity voices without a rights chain are explicitly out of scope.
 
 ## Decision
 

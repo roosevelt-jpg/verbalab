@@ -4,7 +4,7 @@
  */
 export function aiEngineeringStandardsEngineCatalog() {
   return {
-    product: 'VerbaLab AI Engineering Standards',
+    product: 'Lugemi AI Engineering Standards',
     engineeringOsForHumansAndCursor: true,
     customerFacingProductCloud: false,
     architectureKnowledgeBaseOs: false,
@@ -26,7 +26,7 @@ export function aiEngineeringStandardsEngineCatalog() {
         path: '/v1/ai-governance-platform/engine',
         role: 'AI Governance',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       },
       {
         id: 'route-2',
@@ -34,7 +34,7 @@ export function aiEngineeringStandardsEngineCatalog() {
         path: '/v1/ai-safety-platform/engine',
         role: 'AI Safety',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       },
       {
         id: 'route-3',
@@ -42,7 +42,7 @@ export function aiEngineeringStandardsEngineCatalog() {
         path: '/v1/evaluation-platform/engine',
         role: 'Evaluation Platform',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       },
       {
         id: 'route-4',
@@ -50,7 +50,7 @@ export function aiEngineeringStandardsEngineCatalog() {
         path: '/v1/promptops-platform/engine',
         role: 'PromptOps',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       },
       {
         id: 'route-5',
@@ -58,7 +58,7 @@ export function aiEngineeringStandardsEngineCatalog() {
         path: '/v1/secrets-certificate-platform/engine',
         role: 'Secrets (Vol 17)',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       }
     ],
     routesTo: [

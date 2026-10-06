@@ -8,7 +8,7 @@
 
 Library Phase 10 asks for Grammar Intelligence covering grammar/spell/sentence correction, writing/style suggestions, and professional/academic/medical/legal/government writing — plus engine, REST, SDK, dashboard, analytics, monitoring, docs, tests, and production deploy.
 
-VL-133 (grammar check) and VL-134 (style rewrite) already ship bounded products. Claiming Grammarly parity or certified vertical writing OS products would violate VerbaLab honesty rules (ADR-0054/0055).
+VL-133 (grammar check) and VL-134 (style rewrite) already ship bounded products. Claiming Grammarly parity or certified vertical writing OS products would violate Lugemi honesty rules (ADR-0054/0055).
 
 ## Decision
 

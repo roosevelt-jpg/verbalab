@@ -4,7 +4,7 @@ Library Phase 138 → Research Cloud Foundation (VL-271). Volume 13 incubates in
 
 ## Mission
 
-Build VerbaLab’s Research Cloud as an incubation hub over Intelligence / Knowledge / Foundation Model clouds. **Not** Weights & Biases OS, Hugging Face hub OS, DOI registry OS, USPTO patent OS, MLflow OS, or public leaderboard OS. **AI Sovereignty Cloud** is deferred to Volume 14+ (`aiSovereigntyOs: false`).
+Build Lugemi’s Research Cloud as an incubation hub over Intelligence / Knowledge / Foundation Model clouds. **Not** Weights & Biases OS, Hugging Face hub OS, DOI registry OS, USPTO patent OS, MLflow OS, or public leaderboard OS. **AI Sovereignty Cloud** is deferred to Volume 14+ (`aiSovereigntyOs: false`).
 
 ## Research areas
 

@@ -65,7 +65,7 @@ export class ReasoningFabricService {
   products() {
     const cacheEngine = this.intelligentCache.engine();
     return {
-      product: 'VerbaLab Reasoning Fabric',
+      product: 'Lugemi Reasoning Fabric',
       products: reasoningFabricCapabilityCatalog(),
       routes: reasoningFabricRoutingTable(),
       pipelines: reasoningFabricPipelines(),
@@ -233,8 +233,8 @@ export class ReasoningFabricService {
       this.eventPublishes += 1;
       event = await this.eventBus.publish({
         topic: input.topic ?? 'reasoning-fabric',
-        type: 'com.verbalab.reasoning.distributed',
-        source: '/verbalab/reasoning-fabric',
+        type: 'com.lugemi.reasoning.distributed',
+        source: '/lugemi/reasoning-fabric',
         eventVersion: '1',
         data: {
           distributionId: record.id,

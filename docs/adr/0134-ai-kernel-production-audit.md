@@ -15,7 +15,7 @@ Production Audit phases are **review gates**, not feature factories (same patter
 1. Treat VL-223 as a **checklist + evidence pack** over VL-214–222.  
 2. Ship audit tests (`ai-kernel-audit.spec.ts`): TODO scan, catalog integration, auth rejection, Agent Runtime sandbox exercise, Policy hard-gate wiring, GraphQL façade, honesty flags.  
 3. Publish reports under `docs/ai-kernel-audit/` and point deployment to existing `infra/DEPLOY.md` / `infra/AWS_EKS.md`.  
-4. Record honest verdict: VerbaLab AI Kernel is an **internal runtime hub** over Nest modules (Memory/Prompt/Context/Reasoning/Agent/Workflow/Plugin/Policy) with sandbox + hard permission gates — **not** a customer-facing OS, Linux rewrite, or Foundation Model Cloud.  
+4. Record honest verdict: Lugemi AI Kernel is an **internal runtime hub** over Nest modules (Memory/Prompt/Context/Reasoning/Agent/Workflow/Plugin/Policy) with sandbox + hard permission gates — **not** a customer-facing OS, Linux rewrite, or Foundation Model Cloud.  
 5. Confirm Volume 8 closes; Volume 9 Foundation Model Cloud requires new ROADMAP phases — ask when ready.
 
 ## Consequences

@@ -2,16 +2,21 @@ import { createHash, randomBytes } from 'crypto';
 
 export type ApiKeyEnvironment = 'live' | 'test';
 
-const LIVE_PREFIX = 'vl_live_';
-const TEST_PREFIX = 'vl_test_';
+/** Current Lugemi prefixes (issued for new keys). */
+const LIVE_PREFIX = 'lg_live_';
+const TEST_PREFIX = 'lg_test_';
+
+/** Legacy VerbaLab prefixes — accepted for one release. */
+const LEGACY_LIVE_PREFIX = 'vl_live_';
+const LEGACY_TEST_PREFIX = 'vl_test_';
 
 export function keyPrefixForEnvironment(environment: ApiKeyEnvironment): string {
   return environment === 'test' ? TEST_PREFIX : LIVE_PREFIX;
 }
 
 export function environmentFromSecret(secret: string): ApiKeyEnvironment | null {
-  if (secret.startsWith(TEST_PREFIX)) return 'test';
-  if (secret.startsWith(LIVE_PREFIX)) return 'live';
+  if (secret.startsWith(TEST_PREFIX) || secret.startsWith(LEGACY_TEST_PREFIX)) return 'test';
+  if (secret.startsWith(LIVE_PREFIX) || secret.startsWith(LEGACY_LIVE_PREFIX)) return 'live';
   return null;
 }
 
@@ -30,5 +35,10 @@ export function hashApiKey(secret: string): string {
 }
 
 export function looksLikeApiKey(token: string): boolean {
-  return token.startsWith(LIVE_PREFIX) || token.startsWith(TEST_PREFIX);
+  return (
+    token.startsWith(LIVE_PREFIX) ||
+    token.startsWith(TEST_PREFIX) ||
+    token.startsWith(LEGACY_LIVE_PREFIX) ||
+    token.startsWith(LEGACY_TEST_PREFIX)
+  );
 }

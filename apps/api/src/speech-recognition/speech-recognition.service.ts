@@ -69,7 +69,7 @@ export class SpeechRecognitionService {
     return {
       periodStart: summary.periodStart,
       stt: summary.stt,
-      product: 'VerbaLab Speech',
+      product: 'Lugemi Speech',
       note: 'Usage metering for STT. Full Speech Analytics: GET /v1/speech-analytics/* (VL-159).',
       docs: '/docs/SPEECH_ANALYTICS.md',
     };

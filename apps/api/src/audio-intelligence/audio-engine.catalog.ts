@@ -11,7 +11,7 @@ export type AudioCapability = {
 /** Library Phase 21 → Audio Intelligence (VL-155). */
 export function audioEngineCatalog() {
   return {
-    product: 'VerbaLab Audio Intelligence',
+    product: 'Lugemi Audio Intelligence',
     note:
       'PCM heuristic noise/silence analysis, noise-gate enhancement, linear upsampling, and energy VAD isolation. Not Krisp/Adobe Enhance/Demucs parity.',
     capabilities: [
@@ -94,8 +94,8 @@ export function audioEngineCatalog() {
     },
     architecture: {
       rest: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

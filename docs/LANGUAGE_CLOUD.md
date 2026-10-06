@@ -1,13 +1,13 @@
-# VerbaLab Language Cloud
+# Lugemi Language Cloud
 
 **Status:** Volume complete through Production Audit (VL-130–147)  
 **Rule:** Parent hub for language capabilities. Do not regenerate M5 modules. Do not claim multi-vendor parity.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Language Cloud Foundation | **VL-130** — `/language` + product catalog |
 | Dialect Detection / Accent Detection | **VL-131–132** — cue scoring (not acoustic ID) |

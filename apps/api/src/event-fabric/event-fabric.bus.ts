@@ -146,7 +146,7 @@ export class EventFabricBus implements OnModuleInit, OnModuleDestroy {
     return {
       specversion: '1.0',
       id: randomUUID(),
-      source: input.source ?? '/verbalab/event-fabric',
+      source: input.source ?? '/lugemi/event-fabric',
       type: input.type,
       time: new Date().toISOString(),
       datacontenttype: 'application/json',
@@ -296,8 +296,8 @@ export class EventFabricBus implements OnModuleInit, OnModuleDestroy {
     const base: CloudEvent = {
       specversion: '1.0',
       id: params.event?.id ?? fromHistory?.id ?? randomUUID(),
-      source: params.event?.source ?? fromHistory?.source ?? '/verbalab/event-fabric',
-      type: params.event?.type ?? fromHistory?.type ?? 'com.verbalab.event.fail',
+      source: params.event?.source ?? fromHistory?.source ?? '/lugemi/event-fabric',
+      type: params.event?.type ?? fromHistory?.type ?? 'com.lugemi.event.fail',
       time: params.event?.time ?? fromHistory?.time ?? new Date().toISOString(),
       datacontenttype: 'application/json',
       dataschema: params.event?.dataschema ?? fromHistory?.dataschema ?? null,

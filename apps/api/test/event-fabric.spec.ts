@@ -102,7 +102,7 @@ describe('Event Fabric (VL-240)', () => {
 
   it('exposes public catalog with Redis Streams honesty + deferred brokers', async () => {
     const res = await request(app.getHttpServer()).get('/v1/event-fabric/products').expect(200);
-    expect(res.body.product).toBe('VerbaLab Event Fabric');
+    expect(res.body.product).toBe('Lugemi Event Fabric');
     expect(res.body.architecture.customerFacingProduct).toBe(false);
     expect(res.body.architecture.kafkaHyperscalerOs).toBe(false);
     expect(res.body.architecture.redisStreamsActive).toBe(true);
@@ -126,14 +126,14 @@ describe('Event Fabric (VL-240)', () => {
       .post('/v1/event-fabric/events')
       .send({
         topic,
-        type: 'com.verbalab.test.ping',
+        type: 'com.lugemi.test.ping',
         data: { n: 1 },
         eventVersion: '1',
       })
       .expect(201);
 
     expect(published.body.event.specversion).toBe('1.0');
-    expect(published.body.event.type).toBe('com.verbalab.test.ping');
+    expect(published.body.event.type).toBe('com.lugemi.test.ping');
     expect(published.body.backend).toBe('memory');
 
     const polled = await request(app.getHttpServer())

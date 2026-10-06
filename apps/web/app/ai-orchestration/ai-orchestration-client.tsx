@@ -24,7 +24,7 @@ export function AiOrchestrationClient() {
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [pipeline, setPipeline] = useState('detect_translate');
-  const [text, setText] = useState('Hello from VerbaLab orchestration');
+  const [text, setText] = useState('Hello from Lugemi orchestration');
   const [target, setTarget] = useState('sw');
   const [result, setResult] = useState<RunResult | null>(null);
   const [error, setError] = useState<string | null>(null);

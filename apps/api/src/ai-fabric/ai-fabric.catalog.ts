@@ -11,7 +11,7 @@ export type FabricBusRow = {
 
 /**
  * Library Phase 106 → AI Fabric Foundation (VL-239).
- * Internal communication hub connecting VerbaLab clouds — not a Kafka hyperscaler OS.
+ * Internal communication hub connecting Lugemi clouds — not a Kafka hyperscaler OS.
  * Volume 10 README: buildable event/message-bus architecture; Policy Fabric must hard-gate.
  */
 export function aiFabricBusCatalog(): FabricBusRow[] {

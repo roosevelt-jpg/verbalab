@@ -4,7 +4,7 @@ Library Phase 148 — part of Volume 14 MLOps & LLMOps Cloud.
 
 ## Mission
 
-VerbaLab MLOps & LLMOps Cloud provides the MLOps & LLMOps Cloud surface inside VerbaLab.
+Lugemi MLOps & LLMOps Cloud provides the MLOps & LLMOps Cloud surface inside Lugemi.
 
 ## Honesty
 

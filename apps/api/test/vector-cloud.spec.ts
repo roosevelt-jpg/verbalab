@@ -49,7 +49,7 @@ describe('Vector Cloud (VL-182)', () => {
   let storageDir: string;
 
   beforeAll(async () => {
-    storageDir = await mkdtemp(join(tmpdir(), 'verbalab-vc-'));
+    storageDir = await mkdtemp(join(tmpdir(), 'lugemi-vc-'));
     process.env.DOCUMENT_STORAGE_DIR = storageDir;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -123,7 +123,7 @@ describe('Vector Cloud (VL-182)', () => {
     });
 
     const body = Buffer.from(
-      'VerbaLab headquarters is located in Nairobi, Kenya. The platform focuses on African language intelligence.',
+      'Lugemi headquarters is located in Nairobi, Kenya. The platform focuses on African language intelligence.',
       'utf8',
     );
 
@@ -144,7 +144,7 @@ describe('Vector Cloud (VL-182)', () => {
     const search = await request(app.getHttpServer())
       .post('/v1/vector-cloud/search')
       .set('Authorization', `Bearer ${key.secret}`)
-      .send({ query: 'Where is VerbaLab HQ?', k: 3 })
+      .send({ query: 'Where is Lugemi HQ?', k: 3 })
       .expect(200);
 
     expect(search.body.collection).toBe('knowledge');

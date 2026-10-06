@@ -16,7 +16,7 @@ export class EnterpriseEngineeringSystemService {
 
   products() {
     return {
-      product: 'VerbaLab Enterprise Engineering System',
+      product: 'Lugemi Enterprise Engineering System',
       products: enterpriseEngineeringSystemProductCatalog(),
       hubInventory: enterpriseEngineeringSystemHubInventory(),
       extendsSurfaces: enterpriseEngineeringSystemExtends(),

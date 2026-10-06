@@ -82,7 +82,7 @@ describe('Inference Cloud Production Audit (VL-213)', () => {
     expect(existsSync(join(root, 'docs/adr/0124-inference-cloud-production-audit.md'))).toBe(
       true,
     );
-    expect(existsSync(join(root, 'docs/adr/0080-verbalab-cloud-blueprint.md'))).toBe(true);
+    expect(existsSync(join(root, 'docs/adr/0080-lugemi-cloud-blueprint.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/CLOUD_BLUEPRINT.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/inference-cloud-audit/PRODUCTION_READINESS.md'))).toBe(
       true,
@@ -258,7 +258,7 @@ describe('Inference Cloud Production Audit (VL-213)', () => {
   });
 
   it('documents 12-layer cloud blueprint with Inference Cloud closed', () => {
-    const blueprint = readFileSync(join(root, 'docs/adr/0080-verbalab-cloud-blueprint.md'), 'utf8');
+    const blueprint = readFileSync(join(root, 'docs/adr/0080-lugemi-cloud-blueprint.md'), 'utf8');
     expect(blueprint).toContain('Cloud Foundation');
     expect(blueprint).toContain('Production Audit');
     expect(blueprint).toContain('Inference');

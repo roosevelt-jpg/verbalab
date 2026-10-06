@@ -4,7 +4,7 @@ Library Phase 150 — part of Volume 14 MLOps & LLMOps Cloud.
 
 ## Mission
 
-VerbaLab Training Pipeline provides the Training Pipeline surface inside VerbaLab.
+Lugemi Training Pipeline provides the Training Pipeline surface inside Lugemi.
 
 ## Honesty
 

@@ -8,7 +8,7 @@ export type LanguageAnalyticsCapability = {
   notes: string;
 };
 
-/** Library Phase 14 → VerbaLab Language Analytics (VL-146). */
+/** Library Phase 14 → Lugemi Language Analytics (VL-146). */
 export function languageAnalyticsCatalog() {
   return {
     product: 'Language Analytics',
@@ -84,7 +84,7 @@ export function languageAnalyticsCatalog() {
       dashboards: { status: 'shipped', console: '/analytics' },
       rest: { status: 'shipped' },
       graphql: { status: 'shipped', notes: 'languageAnalytics + analyticsOverview + enterpriseAnalyticsReport' },
-      sdk: { status: 'shipped', package: '@verbalab/sdk' },
+      sdk: { status: 'shipped', package: '@lugemi/sdk' },
       monitoring: { status: 'partial', api: 'GET /v1/metrics/translate', notes: 'In-process p95 + analytics latency' },
       reports: { status: 'shipped', api: 'GET /v1/analytics/reports/enterprise' },
     },

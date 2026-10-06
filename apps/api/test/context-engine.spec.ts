@@ -49,7 +49,7 @@ describe('Context Engine (VL-185)', () => {
   let storageDir: string;
 
   beforeAll(async () => {
-    storageDir = await mkdtemp(join(tmpdir(), 'verbalab-ce-'));
+    storageDir = await mkdtemp(join(tmpdir(), 'lugemi-ce-'));
     process.env.DOCUMENT_STORAGE_DIR = storageDir;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -135,7 +135,7 @@ describe('Context Engine (VL-185)', () => {
       .attach(
         'file',
         Buffer.from(
-          'VerbaLab headquarters is located in Nairobi, Kenya. The platform focuses on African language intelligence.',
+          'Lugemi headquarters is located in Nairobi, Kenya. The platform focuses on African language intelligence.',
           'utf8',
         ),
         'hq.txt',
@@ -146,7 +146,7 @@ describe('Context Engine (VL-185)', () => {
       .post('/v1/context-engine/assemble')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
-        query: 'Where is VerbaLab HQ?',
+        query: 'Where is Lugemi HQ?',
         maxChars: 2500,
         promptKey: 'rag',
         include: {

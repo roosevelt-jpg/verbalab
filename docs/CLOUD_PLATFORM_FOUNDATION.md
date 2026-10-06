@@ -1,4 +1,4 @@
-# VerbaLab Cloud Platform Foundation
+# Lugemi Cloud Platform Foundation
 
 **Status:** Accepted (VL-125)  
 **Rule:** Extend the modular monolith. Do not regenerate Clerk/Stripe/regions. Do not invent Availability Zones or Consul-style service discovery.
@@ -7,9 +7,9 @@ This is the foundation **every product surface** (translate, voice, marketplace,
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Cloud Console | Next AppShell console (`apps/web`) |
 | Cloud Accounts | Clerk users ↔ `users` |
@@ -39,7 +39,7 @@ This is the foundation **every product surface** (translate, voice, marketplace,
 | GET | `/v1/feature-flags` | Org-visible flag map |
 | GET | `/v1/cloud/overview` | Dashboard aggregate |
 
-Session workspace: send `X-VerbaLab-Workspace-Id` with Clerk Bearer token to select a non-default workspace (must belong to the org).
+Session workspace: send `X-Lugemi-Workspace-Id` with Clerk Bearer token to select a non-default workspace (must belong to the org).
 
 ---
 

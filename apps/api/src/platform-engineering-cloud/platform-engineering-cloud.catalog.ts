@@ -11,7 +11,7 @@ export type PlatformEngineeringCloudProductRow = {
 
 /**
  * Library Phase 169 → Platform Engineering Cloud Foundation (VL-302).
- * Internal Developer Platform for VerbaLab engineers — not Backstage OS,
+ * Internal Developer Platform for Lugemi engineers — not Backstage OS,
  * ArgoCD/Flux OS, Kubernetes control-plane OS, Snyk OS, Datadog OS, or AI Cloud OS.
  */
 export function platformEngineeringCloudProductCatalog(): PlatformEngineeringCloudProductRow[] {
@@ -41,7 +41,7 @@ export function platformEngineeringCloudProductCatalog(): PlatformEngineeringClo
       api: 'GET /v1/service-catalog/engine',
       console: '/service-catalog',
       notes:
-        'VL-304. VerbaLab service inventory.',
+        'VL-304. Lugemi service inventory.',
     },
     {
       id: 'golden-path-platform',
@@ -195,6 +195,6 @@ export function platformEngineeringCloudHonesty(): Record<string, boolean | stri
     internalEngineeringTooling: true,
     internalIdp: true,
     note:
-      'Platform Engineering Cloud is internal IDP tooling for VerbaLab engineers. Catalog/dashboard surfaces over Fly/shared platform, Volume 7 GPU costs, and Volume 10 Fabric — not Backstage/Argo/K8s/Snyk/Datadog/AI Cloud OS. Control Plane deferred to Volume 17+.',
+      'Platform Engineering Cloud is internal IDP tooling for Lugemi engineers. Catalog/dashboard surfaces over Fly/shared platform, Volume 7 GPU costs, and Volume 10 Fabric — not Backstage/Argo/K8s/Snyk/Datadog/AI Cloud OS. Control Plane deferred to Volume 17+.',
   };
 }

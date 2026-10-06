@@ -54,10 +54,10 @@ describe('Context Fabric (VL-241)', () => {
   let apiKeys: ApiKeysService;
   let fabric: ContextFabricService;
   let bus: EventFabricBus;
-  const prevMode = process.env.VERBALAB_CONTEXT_RUNTIME_MODE;
+  const prevMode = process.env.LUGEMI_CONTEXT_RUNTIME_MODE;
 
   beforeAll(async () => {
-    process.env.VERBALAB_CONTEXT_RUNTIME_MODE = 'sandbox';
+    process.env.LUGEMI_CONTEXT_RUNTIME_MODE = 'sandbox';
     process.env.EVENT_FABRIC_MEMORY = '1';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -74,8 +74,8 @@ describe('Context Fabric (VL-241)', () => {
   });
 
   afterAll(async () => {
-    if (prevMode === undefined) delete process.env.VERBALAB_CONTEXT_RUNTIME_MODE;
-    else process.env.VERBALAB_CONTEXT_RUNTIME_MODE = prevMode;
+    if (prevMode === undefined) delete process.env.LUGEMI_CONTEXT_RUNTIME_MODE;
+    else process.env.LUGEMI_CONTEXT_RUNTIME_MODE = prevMode;
     await app.close();
   });
 
@@ -109,7 +109,7 @@ describe('Context Fabric (VL-241)', () => {
 
   it('exposes catalog, routes, and router plan with honesty', async () => {
     const res = await request(app.getHttpServer()).get('/v1/context-fabric/products').expect(200);
-    expect(res.body.product).toBe('VerbaLab Context Fabric');
+    expect(res.body.product).toBe('Lugemi Context Fabric');
     expect(res.body.architecture.customerFacingProduct).toBe(false);
     expect(res.body.architecture.infiniteContextWindow).toBe(false);
     expect(res.body.architecture.websocketOs).toBe(false);
@@ -164,7 +164,7 @@ describe('Context Fabric (VL-241)', () => {
     expect(res.body.plan.length).toBe(3);
     expect(res.body.assembled).toBeTruthy();
     expect(res.body.event).toBeTruthy();
-    expect(res.body.event.type).toBe('com.verbalab.context.propagated');
+    expect(res.body.event.type).toBe('com.lugemi.context.propagated');
     expect(res.body.honesty.regeneratesContextRuntime).toBe(false);
 
     const monitoring = await request(app.getHttpServer())

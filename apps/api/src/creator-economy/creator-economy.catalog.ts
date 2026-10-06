@@ -55,7 +55,7 @@ export const ROYALTY_HAND_CHECK_SCENARIOS = [
  */
 export function creatorEconomyEngineCatalog() {
   return {
-    product: 'VerbaLab Creator Economy',
+    product: 'Lugemi Creator Economy',
     note:
       'Creator Economy (VL-258). Extends VL-092 Stripe Connect Express + MarketplaceSale receipts with royalty math, creator/org profiles, invoice-style sale receipts, and honest tax/dispute gaps. Not a payment-processor OS, tax engine, or card vault. Hand-check royalty scenarios before live creators.',
     capabilities: [

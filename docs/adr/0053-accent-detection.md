@@ -6,7 +6,7 @@
 
 ## Context
 
-Dialect detection (VL-131) labels written variety via lexical cues. Buyers also ask for “accent detection.” A production acoustic accent-ID model is a speech-research product (vision backlog / VL-122 streaming depth). VerbaLab must not claim phonetics ASR accent ID we do not run.
+Dialect detection (VL-131) labels written variety via lexical cues. Buyers also ask for “accent detection.” A production acoustic accent-ID model is a speech-research product (vision backlog / VL-122 streaming depth). Lugemi must not claim phonetics ASR accent ID we do not run.
 
 ## Decision
 

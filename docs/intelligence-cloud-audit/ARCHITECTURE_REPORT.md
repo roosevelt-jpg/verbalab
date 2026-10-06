@@ -7,7 +7,7 @@
 
 Intelligence Cloud is a **hub over Nest modular monolith chat/embeddings/RAG modules**, not a separate microservice mesh and not a custom AI research OS. REST is primary; GraphQL is a façade; CQRS applies to the Intelligence Cloud catalog slice (VL-180).
 
-Clouds follow the **12-layer VerbaLab Cloud Blueprint** (ADR-0080).
+Clouds follow the **12-layer Lugemi Cloud Blueprint** (ADR-0080).
 
 ## System shape
 
@@ -46,5 +46,5 @@ Clouds follow the **12-layer VerbaLab Cloud Blueprint** (ADR-0080).
 ## Rejected architecture claims
 
 - Custom AI kernel / LangGraph OS  
-- Proprietary VerbaLab Intelligence Graph as this phase’s deliverable  
+- Proprietary Lugemi Intelligence Graph as this phase’s deliverable  
 - Enterprise BRMS / retail recommender / multi-cloud agent OS

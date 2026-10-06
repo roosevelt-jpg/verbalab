@@ -4,7 +4,7 @@
 **Cloud:** African Intelligence Cloud (Volume 12)  
 **ADR:** [ADR-0169](./adr/0169-education-intelligence.md)
 
-Education Intelligence is part of VerbaLab's African Intelligence Cloud. It extends existing Language/Knowledge/Intelligence surfaces — it does **not** regenerate Volumes 1–11.
+Education Intelligence is part of Lugemi's African Intelligence Cloud. It extends existing Language/Knowledge/Intelligence surfaces — it does **not** regenerate Volumes 1–11.
 
 ## Surfaces
 

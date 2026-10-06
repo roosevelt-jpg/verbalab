@@ -4,7 +4,7 @@
  */
 export function engineeringGovernanceEngineCatalog() {
   return {
-    product: 'VerbaLab Engineering Governance',
+    product: 'Lugemi Engineering Governance',
     engineeringOsForHumansAndCursor: true,
     customerFacingProductCloud: false,
     architectureKnowledgeBaseOs: false,
@@ -26,7 +26,7 @@ export function engineeringGovernanceEngineCatalog() {
         path: '/v1/ai-governance-platform/engine',
         role: 'AI Governance (Vol 15)',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       },
       {
         id: 'route-2',
@@ -34,7 +34,7 @@ export function engineeringGovernanceEngineCatalog() {
         path: '/v1/trust-cloud/products',
         role: 'Trust Cloud',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       },
       {
         id: 'route-3',
@@ -42,7 +42,7 @@ export function engineeringGovernanceEngineCatalog() {
         path: '/v1/release-engineering/engine',
         role: 'Release Engineering',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       },
       {
         id: 'route-4',
@@ -50,7 +50,7 @@ export function engineeringGovernanceEngineCatalog() {
         path: '/v1/platform-engineering-cloud/products',
         role: 'Platform Engineering Cloud',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       }
     ],
     routesTo: [

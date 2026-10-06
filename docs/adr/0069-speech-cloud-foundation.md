@@ -6,9 +6,9 @@
 
 ## Context
 
-Library Phase 16 asks for VerbaLab Speech, Streaming/Batch STT, Speaker/Audio/Call Intelligence, Pronunciation/Emotion AI, Voice Biometrics, Wake Word, Audio Enhancement — plus DDD, CQRS, hexagonal, realtime/streaming/batch, enterprise APIs, SDKs, CLI, monitoring, billing, analytics, Terraform, Docker, Kubernetes — “everything production ready.”
+Library Phase 16 asks for Lugemi Speech, Streaming/Batch STT, Speaker/Audio/Call Intelligence, Pronunciation/Emotion AI, Voice Biometrics, Wake Word, Audio Enhancement — plus DDD, CQRS, hexagonal, realtime/streaming/batch, enterprise APIs, SDKs, CLI, monitoring, billing, analytics, Terraform, Docker, Kubernetes — “everything production ready.”
 
-VerbaLab already ships vendor STT/TTS (VL-041/042), interpreter (VL-061), voice clones (VL-064), Voice Studio (VL-120), own TTS (VL-121), and accent cue detection (VL-132). Regenerating Language Cloud / Identity / Gateway or inventing a full speech-intelligence OS would violate “extend, don’t regenerate.” VL-147 explicitly deferred Speech Cloud kickoff to a separate phase.
+Lugemi already ships vendor STT/TTS (VL-041/042), interpreter (VL-061), voice clones (VL-064), Voice Studio (VL-120), own TTS (VL-121), and accent cue detection (VL-132). Regenerating Language Cloud / Identity / Gateway or inventing a full speech-intelligence OS would violate “extend, don’t regenerate.” VL-147 explicitly deferred Speech Cloud kickoff to a separate phase.
 
 ## Decision
 

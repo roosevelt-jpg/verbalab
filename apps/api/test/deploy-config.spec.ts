@@ -13,7 +13,7 @@ describe('Production deploy config (VL-074)', () => {
 
   it('configures Fly API release migrate and health check', () => {
     const toml = readFileSync(join(root, 'infra/fly/api.toml'), 'utf8');
-    expect(toml).toContain("app = 'verbalab-api'");
+    expect(toml).toContain("app = 'lugemi-api'");
     expect(toml).toContain('prisma migrate deploy');
     expect(toml).toContain("path = '/health'");
   });
@@ -27,9 +27,9 @@ describe('Production deploy config (VL-074)', () => {
 
   it('ships EU residency island configs (VL-075)', () => {
     const eu = readFileSync(join(root, 'infra/fly/api.eu.toml'), 'utf8');
-    expect(eu).toContain("app = 'verbalab-api-eu'");
+    expect(eu).toContain("app = 'lugemi-api-eu'");
     expect(eu).toContain("primary_region = 'ams'");
-    expect(eu).toContain("VERBALAB_REGION = 'eu'");
+    expect(eu).toContain("LUGEMI_REGION = 'eu'");
     expect(existsSync(join(root, 'infra/fly/web.eu.toml'))).toBe(true);
     const yml = readFileSync(join(root, '.github/workflows/deploy.yml'), 'utf8');
     expect(yml).toContain('FLY_DEPLOY_EU');

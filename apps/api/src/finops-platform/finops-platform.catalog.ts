@@ -139,7 +139,7 @@ export function finopsPlatformEngineCatalog() {
   const alerts = seedFinOpsAlerts();
   const costs = seedFinOpsCosts();
   return {
-    product: 'VerbaLab FinOps Platform',
+    product: 'Lugemi FinOps Platform',
     capabilities: [
       { id: 'cloud_cost', name: 'Cloud Cost', status: 'shipped', notes: 'Shared platform cost.' },
       { id: 'gpu_cost', name: 'GPU Cost', status: 'shipped', notes: 'Volume 7 GPU pairing.' },

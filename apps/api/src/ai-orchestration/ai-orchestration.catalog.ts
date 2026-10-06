@@ -11,7 +11,7 @@ export type OrchCapability = {
 /** Library Phase 57 → AI Orchestration (VL-190). Coordinate gateway/engines — not multi-cloud agent OS. */
 export function aiOrchestrationCatalog() {
   return {
-    product: 'VerbaLab AI Orchestration',
+    product: 'Lugemi AI Orchestration',
     note:
       'Load-bearing orchestration over the AI Gateway + engines (VL-190). Runs real e2e pipelines (detect→translate, translate→chat, decide→act, tool/model chains). Extends VL-083 workflows. Not a multi-cloud agent OS, LangGraph OS, or distributed AI fabric.',
     capabilities: [
@@ -106,8 +106,8 @@ export function aiOrchestrationCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

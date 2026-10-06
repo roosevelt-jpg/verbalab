@@ -57,7 +57,7 @@ describe('Research Cloud (VL-271)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/research-cloud/products')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Research Cloud');
+    expect(res.body.product).toBe('Lugemi Research Cloud');
 
     expect(res.body.honesty.weightsAndBiasesOs).toBe(false);
     expect(res.body.honesty.mlflowOs).toBe(false);

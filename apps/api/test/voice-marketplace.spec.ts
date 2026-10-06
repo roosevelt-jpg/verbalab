@@ -76,7 +76,7 @@ describe('Voice Marketplace (VL-177)', () => {
 
   it('exposes engine with celebrityWithoutRights=false', async () => {
     const engine = await request(app.getHttpServer()).get('/v1/voice-marketplace/engine').expect(200);
-    expect(engine.body.product).toBe('VerbaLab Voice Marketplace');
+    expect(engine.body.product).toBe('Lugemi Voice Marketplace');
     expect(engine.body.honesty.celebrityWithoutRights).toBe(false);
     expect(engine.body.honesty.crossTenantCloneSynthesis).toBe(false);
     const celeb = engine.body.capabilities.find((c: { id: string }) => c.id === 'celebrity-voices');

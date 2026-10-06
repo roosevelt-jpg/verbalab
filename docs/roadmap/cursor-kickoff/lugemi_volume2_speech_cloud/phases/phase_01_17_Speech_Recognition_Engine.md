@@ -6,7 +6,7 @@ Speech Recognition Engine
 
 Cursor Prompt
 
-Build VerbaLab Speech.
+Build Lugemi Speech.
 
 Support
 

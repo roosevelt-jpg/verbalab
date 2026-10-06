@@ -28,7 +28,7 @@ export function PluginOperatingSystemClient() {
         Plugin Operating System
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-342 — VerbaLab Plugin Operating System console in VAIOS (unifying orchestration layer).
+        VL-342 — Lugemi Plugin Operating System console in VAIOS (unifying orchestration layer).
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

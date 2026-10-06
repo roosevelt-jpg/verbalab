@@ -4,7 +4,7 @@ Library Phase 149 — part of Volume 14 MLOps & LLMOps Cloud.
 
 ## Mission
 
-VerbaLab Dataset Pipeline provides the Dataset Pipeline surface inside VerbaLab.
+Lugemi Dataset Pipeline provides the Dataset Pipeline surface inside Lugemi.
 
 ## Honesty
 

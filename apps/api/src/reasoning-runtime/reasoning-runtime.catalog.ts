@@ -9,7 +9,7 @@ export type ReasoningRuntimeCapability = {
 };
 
 export function reasoningRuntimeMode(): 'disabled' | 'sandbox' {
-  const raw = (process.env.VERBALAB_REASONING_RUNTIME_MODE ?? 'sandbox').toLowerCase();
+  const raw = (process.env.LUGEMI_REASONING_RUNTIME_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
@@ -18,7 +18,7 @@ export function reasoningRuntimeCeilings() {
   return {
     maxHistoryPerWorkspace: Math.min(
       500,
-      Math.max(10, Number(process.env.VERBALAB_REASONING_RUNTIME_MAX_HISTORY ?? '100') || 100),
+      Math.max(10, Number(process.env.LUGEMI_REASONING_RUNTIME_MAX_HISTORY ?? '100') || 100),
     ),
     mode: reasoningRuntimeMode(),
     note: 'Hard ceiling for stored reasoning runs (kernel MemoryRecords).',
@@ -31,7 +31,7 @@ export function reasoningRuntimeCeilings() {
  */
 export function reasoningRuntimeCatalog() {
   return {
-    product: 'VerbaLab Reasoning Runtime',
+    product: 'Lugemi Reasoning Runtime',
     note:
       'Reasoning Runtime (VL-218). Kernel execution over VL-186 Reasoning Cloud (graphs/ToT/planning/tool+model selection) plus reflection, self-eval, confidence, decision-tree façade, history/replay via kernel MemoryRecords. Not a custom reasoner kernel, not symbolic reasoner OS, not tool-execution agent OS. Does not regenerate Reasoning Cloud.',
     capabilities: [
@@ -131,7 +131,7 @@ export function reasoningRuntimeCatalog() {
         name: 'SDK',
         status: 'shipped',
         api: 'reasoningRuntimeEngine()',
-        notes: '@verbalab/sdk',
+        notes: '@lugemi/sdk',
       },
       {
         id: 'monitoring',

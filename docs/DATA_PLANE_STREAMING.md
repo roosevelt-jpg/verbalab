@@ -4,7 +4,7 @@ Library Phase 198 — part of Volume 18 Data Plane Cloud.
 
 ## Mission
 
-VerbaLab Data Plane Streaming is a **thin execution/routing layer** inside the Data Plane Cloud.
+Lugemi Data Plane Streaming is a **thin execution/routing layer** inside the Data Plane Cloud.
 It never manages organizations, policies, or billing — that is Control Plane (Volume 17).
 
 ## Honesty

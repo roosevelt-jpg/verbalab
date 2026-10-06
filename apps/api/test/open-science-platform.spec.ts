@@ -57,7 +57,7 @@ describe('Open Science Platform (VL-278)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/open-science-platform/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Open Science Platform');
+    expect(res.body.product).toBe('Lugemi Open Science Platform');
 
     expect(res.body.honesty.traditionalKnowledgeConsentRequired).toBe(true);
     expect(res.body.safety.traditionalKnowledgeConsentRequired).toBe(true);

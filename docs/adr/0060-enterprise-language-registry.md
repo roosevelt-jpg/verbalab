@@ -8,7 +8,7 @@
 
 Library Phase 7 asks for an “Enterprise Language Registry” covering every language, dialect, writing system, alphabet, script, locale, pronunciation/grammar/phonetic/morphology rule, and language family — plus REST, SDK, admin, analytics, validation, monitoring, docs, and production deploy.
 
-VL-020 already shipped a curated language seed. Language Cloud (VL-102, VL-131–135) added locales, dialects, accents, and country packs. Claiming Ethnologue / full CLDR / linguistics-engine parity would violate VerbaLab’s “no fake completeness” rule.
+VL-020 already shipped a curated language seed. Language Cloud (VL-102, VL-131–135) added locales, dialects, accents, and country packs. Claiming Ethnologue / full CLDR / linguistics-engine parity would violate Lugemi’s “no fake completeness” rule.
 
 ## Decision
 

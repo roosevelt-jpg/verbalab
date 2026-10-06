@@ -8,7 +8,7 @@
 
 Library Phase 11 asks for Writing Style Intelligence covering formal/professional/academic/legal/medical/business/marketing/technical/government/casual tones, tone detection, tone transformation, style transfer — plus engine, REST, GraphQL, SDK, monitoring, analytics, docs, and production deploy.
 
-VL-134 already ships bounded rewrite profiles; VL-142 added domain tone profiles with disclaimers. Claiming author style cloning or certified vertical writing products would violate VerbaLab honesty rules (ADR-0054/0055/0063).
+VL-134 already ships bounded rewrite profiles; VL-142 added domain tone profiles with disclaimers. Claiming author style cloning or certified vertical writing products would violate Lugemi honesty rules (ADR-0054/0055/0063).
 
 ## Decision
 

@@ -1,4 +1,4 @@
-# VerbaLab AI Runtime Analytics
+# Lugemi AI Runtime Analytics
 
 **Status:** Partial (VL-212 / library Phase 79)  
 **Parent:** [Inference Cloud](./INFERENCE_CLOUD.md)  
@@ -19,7 +19,7 @@
 | Cost / customers / models / streaming | `GET …/cost` · `/customers` · `/models` · `/streaming` |
 | Monitoring | `GET …/monitoring` |
 | GraphQL | `aiRuntimeAnalyticsEngine` |
-| SDK / CLI | `aiRuntimeAnalyticsEngine()` · `verbalab ai-runtime-analytics-engine` |
+| SDK / CLI | `aiRuntimeAnalyticsEngine()` · `lugemi ai-runtime-analytics-engine` |
 
 ## Sources
 

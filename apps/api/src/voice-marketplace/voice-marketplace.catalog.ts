@@ -11,7 +11,7 @@ export type VmCapability = {
 /** Library Phase 34 → Voice Marketplace (VL-177). Distinct from VL-090 localization marketplace. */
 export function voiceMarketplaceEngineCatalog() {
   return {
-    product: 'VerbaLab Voice Marketplace',
+    product: 'Lugemi Voice Marketplace',
     note:
       'Publish/license/sell voice SKUs with ratings — distinct from localization Marketplace (VL-090). Consent/rights attestation required for clones. Celebrity SKUs without a rights chain are forbidden. Not ElevenLabs Voice Library / Soundraw parity.',
     capabilities: [
@@ -125,8 +125,8 @@ export function voiceMarketplaceEngineCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

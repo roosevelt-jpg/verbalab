@@ -47,7 +47,7 @@ describe('Knowledge + RAG (VL-062)', () => {
   let storageDir: string;
 
   beforeAll(async () => {
-    storageDir = await mkdtemp(join(tmpdir(), 'verbalab-know-'));
+    storageDir = await mkdtemp(join(tmpdir(), 'lugemi-know-'));
     process.env.DOCUMENT_STORAGE_DIR = storageDir;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -86,7 +86,7 @@ describe('Knowledge + RAG (VL-062)', () => {
         return {
           message: {
             role: 'assistant',
-            content: `Based on context [1]: VerbaLab HQ is in Nairobi. (q=${user?.content.slice(-40)})`,
+            content: `Based on context [1]: Lugemi HQ is in Nairobi. (q=${user?.content.slice(-40)})`,
           },
           model: 'fixture-model',
           provider: 'fixture_chat',
@@ -114,7 +114,7 @@ describe('Knowledge + RAG (VL-062)', () => {
     });
 
     const body = Buffer.from(
-      'VerbaLab headquarters is located in Nairobi, Kenya. The platform focuses on African language intelligence.',
+      'Lugemi headquarters is located in Nairobi, Kenya. The platform focuses on African language intelligence.',
       'utf8',
     );
 
@@ -136,7 +136,7 @@ describe('Knowledge + RAG (VL-062)', () => {
     const answer = await request(app.getHttpServer())
       .post('/v1/knowledge/query')
       .set('Authorization', `Bearer ${key.secret}`)
-      .send({ question: 'Where is VerbaLab HQ?' })
+      .send({ question: 'Where is Lugemi HQ?' })
       .expect(200);
 
     expect(answer.body.answer).toContain('Nairobi');

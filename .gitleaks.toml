@@ -1,4 +1,4 @@
-title = "VerbaLab gitleaks"
+title = "Lugemi gitleaks"
 [allowlist]
 description = "Allow documented placeholders and example env files"
 paths = [
@@ -8,7 +8,7 @@ paths = [
   '''apps/api/test/.*''',
 ]
 regexes = [
-  '''vl_live_\.\.\.''',
+  '''lg_live_\.\.\.''',
   '''sk_test''',
   '''CHANGE_ME''',
 ]

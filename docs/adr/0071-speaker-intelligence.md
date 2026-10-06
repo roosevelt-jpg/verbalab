@@ -8,7 +8,7 @@
 
 Library Phase 18 asks for speaker identification, verification, diarization, profiles, voice fingerprints, history, realtime APIs, REST/GraphQL/SDK, monitoring, docs, and production deployment.
 
-VerbaLab has no NIST-grade biometric vendor and Whisper does not label speakers. Inventing a fake biometrics OS would violate honesty rules. VL-064 voice clones are TTS enrollment, not verification.
+Lugemi has no NIST-grade biometric vendor and Whisper does not label speakers. Inventing a fake biometrics OS would violate honesty rules. VL-064 voice clones are TTS enrollment, not verification.
 
 ## Decision
 

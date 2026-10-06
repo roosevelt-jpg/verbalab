@@ -39,10 +39,10 @@ describe('AI Router (VL-207)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
-  const prevMode = process.env.VERBALAB_AI_ROUTER_MODE;
+  const prevMode = process.env.LUGEMI_AI_ROUTER_MODE;
 
   beforeAll(async () => {
-    process.env.VERBALAB_AI_ROUTER_MODE = 'sandbox';
+    process.env.LUGEMI_AI_ROUTER_MODE = 'sandbox';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -57,8 +57,8 @@ describe('AI Router (VL-207)', () => {
   });
 
   afterAll(async () => {
-    if (prevMode === undefined) delete process.env.VERBALAB_AI_ROUTER_MODE;
-    else process.env.VERBALAB_AI_ROUTER_MODE = prevMode;
+    if (prevMode === undefined) delete process.env.LUGEMI_AI_ROUTER_MODE;
+    else process.env.LUGEMI_AI_ROUTER_MODE = prevMode;
     await app.close();
   });
 

@@ -57,7 +57,7 @@ describe('Experiment Platform (VL-272)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/experiment-platform/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Experiment Platform');
+    expect(res.body.product).toBe('Lugemi Experiment Platform');
 
     expect(res.body.honesty.weightsAndBiasesOs).toBe(false);
     expect(res.body.honesty.mlflowOs).toBe(false);

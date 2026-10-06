@@ -1,13 +1,13 @@
-# VerbaLab Prompt Marketplace
+# Lugemi Prompt Marketplace
 
 **Status:** Shipped (VL-253 / library Phase 120)  
 **Rule:** Extends content-marketplace `prompt` kind + Prompt Fabric / Prompt Runtime — **not** a prompt mesh OS or auto-prompt research lab. Real-money honesty: Stripe (or equivalent); `storesRawCardData: false`. Roadmap: [`docs/roadmap/volume11-ecosystem-cloud/`](./roadmap/volume11-ecosystem-cloud/).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Prompt Packs / Templates / Libraries | **Shipped** — `category` |
 | Prompt Testing | **Shipped** — dry-run `POST .../test` |
@@ -30,7 +30,7 @@
 | Reviews / sales / analytics | under `/v1/prompt-marketplace/*` |
 | GraphQL | `promptMarketplaceEngine` |
 | SDK | `promptMarketplaceEngine()` |
-| CLI | `verbalab prompt-marketplace-engine` |
+| CLI | `lugemi prompt-marketplace-engine` |
 
 ## Honesty
 

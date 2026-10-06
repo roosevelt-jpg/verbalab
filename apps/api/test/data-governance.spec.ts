@@ -47,7 +47,7 @@ describe('Data governance (VL-073)', () => {
   let storageDir: string;
 
   beforeAll(async () => {
-    storageDir = await mkdtemp(join(tmpdir(), 'verbalab-gov-'));
+    storageDir = await mkdtemp(join(tmpdir(), 'lugemi-gov-'));
     process.env.DOCUMENT_STORAGE_DIR = storageDir;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({

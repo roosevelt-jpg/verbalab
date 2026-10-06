@@ -125,12 +125,12 @@ export class NeuralTtsController {
     res.setHeader('Content-Type', result.mimeType);
     res.setHeader('Content-Length', String(result.audio.length));
     res.setHeader('Content-Disposition', `inline; filename="speech.${result.format}"`);
-    res.setHeader('X-VerbaLab-Provider', result.provider);
-    res.setHeader('X-VerbaLab-Voice', result.voice);
-    res.setHeader('X-VerbaLab-Characters', String(result.characters));
-    res.setHeader('X-VerbaLab-Mode', 'batch');
+    res.setHeader('X-Lugemi-Provider', result.provider);
+    res.setHeader('X-Lugemi-Voice', result.voice);
+    res.setHeader('X-Lugemi-Characters', String(result.characters));
+    res.setHeader('X-Lugemi-Mode', 'batch');
     if (result.watermarkApplied) {
-      res.setHeader('X-VerbaLab-Watermark', 'required');
+      res.setHeader('X-Lugemi-Watermark', 'required');
     }
     res.status(HttpStatus.OK).send(result.audio);
   }
@@ -163,7 +163,7 @@ export class NeuralTtsController {
     res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('Connection', 'keep-alive');
-    res.setHeader('X-VerbaLab-Mode', 'chunk_sse');
+    res.setHeader('X-Lugemi-Mode', 'chunk_sse');
     res.flushHeaders?.();
 
     const stream = this.tts.streamSynthesize({

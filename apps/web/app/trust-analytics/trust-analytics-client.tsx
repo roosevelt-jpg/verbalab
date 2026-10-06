@@ -27,7 +27,7 @@ export function TrustAnalyticsClient() {
         Trust Analytics
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-300 — VerbaLab Trust Analytics console in the Trust Cloud.
+        VL-300 — Lugemi Trust Analytics console in the Trust Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

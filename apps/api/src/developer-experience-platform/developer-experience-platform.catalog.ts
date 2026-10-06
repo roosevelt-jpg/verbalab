@@ -4,7 +4,7 @@
  */
 export function developerExperiencePlatformEngineCatalog() {
   return {
-    product: 'VerbaLab Developer Experience Platform',
+    product: 'Lugemi Developer Experience Platform',
     capabilities: [
       { id: 'cli', name: 'CLI', status: 'shipped', notes: 'VL-311 capability.' },
       { id: 'sdk_gen', name: 'SDK Generation', status: 'shipped', notes: 'VL-311 capability.' },

@@ -16,4 +16,4 @@ Executed by `apps/api/test/inference-cloud-audit.spec.ts` in CI/local vitest. No
 
 ## Honesty
 
-Library Phase 80 asks for load/stress/GPU/latency benchmarks. VerbaLab ships **bounded smokes + existing suite evidence**, not a benchmark lab. Live provider latency depends on vendor keys and is env-gated. GPU Platform is sandbox logical allocations — not cloud GPU telemetry.
+Library Phase 80 asks for load/stress/GPU/latency benchmarks. Lugemi ships **bounded smokes + existing suite evidence**, not a benchmark lab. Live provider latency depends on vendor keys and is env-gated. GPU Platform is sandbox logical allocations — not cloud GPU telemetry.

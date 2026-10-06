@@ -5,7 +5,7 @@
 
 ## Executive verdict
 
-**Intelligence Cloud is production-ready as a bounded VerbaLab product volume** (deploy via Fly or optional EKS), with known honesty limits documented in ADR-0091–0103.
+**Intelligence Cloud is production-ready as a bounded Lugemi product volume** (deploy via Fly or optional EKS), with known honesty limits documented in ADR-0091–0103.
 
 It is a **shared intelligence hub** over the LLM gateway, embeddings, and RAG that can support African localization and knowledge workflows **within those limits**.
 

@@ -1,13 +1,13 @@
-# VerbaLab AI Decision Engine
+# Lugemi AI Decision Engine
 
 **Status:** Partial shipped (VL-189 / library Phase 56)  
 **Rule:** Bounded decision helpers (policy/routing) over light rules + plan entitlements. Do **not** build Drools/Pega enterprise BRMS parity.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Model Selection | **Shipped** — `kind=model_selection` fixed catalog + plan gate |
 | Routing | **Shipped** — `kind=routing` intent → API surface |
@@ -21,7 +21,7 @@
 | Cost Optimization | **Partial** — prefer economy models |
 | Enterprise BRMS | **Deferred** |
 | Engine / Dashboard | **VL-189** — `GET /v1/decision-engine/engine` + `/decision-engine` |
-| GraphQL / SDK / CLI | `decisionEngine`, `verbalab decide` |
+| GraphQL / SDK / CLI | `decisionEngine`, `lugemi decide` |
 
 ---
 

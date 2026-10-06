@@ -29,7 +29,7 @@ export function RepositoryStandardsClient() {
         Repository Standards
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-347 — VerbaLab Repository Standards console in Enterprise Engineering System (standards for humans + Cursor).
+        VL-347 — Lugemi Repository Standards console in Enterprise Engineering System (standards for humans + Cursor).
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

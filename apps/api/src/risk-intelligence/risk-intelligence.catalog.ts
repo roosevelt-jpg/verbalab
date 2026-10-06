@@ -33,7 +33,7 @@ export function riskIntelligenceEngineCatalog() {
   const scores = riskScoresCatalog();
   const avg = Math.round(scores.reduce((s, r) => s + r.score, 0) / scores.length);
   return {
-    product: 'VerbaLab Risk Intelligence',
+    product: 'Lugemi Risk Intelligence',
     capabilities: [
       { id: 'operational', name: 'Operational Risk', status: 'shipped', notes: 'Ops risk scoring.' },
       { id: 'model', name: 'Model Risk', status: 'shipped', notes: 'Model risk scoring.' },

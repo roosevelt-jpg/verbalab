@@ -23,7 +23,7 @@ export class ResidencyInterceptor implements NestInterceptor {
       translateAuth?: TranslateAuthContext;
     };
     if (res && typeof res.setHeader === 'function') {
-      res.setHeader('X-VerbaLab-Region', currentRegionCode());
+      res.setHeader('X-Lugemi-Region', currentRegionCode());
     }
 
     const organizationId =

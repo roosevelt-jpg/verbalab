@@ -572,7 +572,7 @@ export class AiRuntimeAnalyticsService {
       this.streaming(input),
     ]);
     return {
-      product: 'VerbaLab AI Runtime Analytics',
+      product: 'Lugemi AI Runtime Analytics',
       overview,
       latency,
       throughput,
@@ -612,7 +612,7 @@ export class AiRuntimeAnalyticsService {
     if (aiRuntimeAnalyticsMode() === 'disabled') {
       throw new ApiException(
         'ai_runtime_analytics_disabled',
-        'AI Runtime Analytics mode is disabled (VERBALAB_AI_RUNTIME_ANALYTICS_MODE=disabled).',
+        'AI Runtime Analytics mode is disabled (LUGEMI_AI_RUNTIME_ANALYTICS_MODE=disabled).',
         HttpStatus.FORBIDDEN,
       );
     }

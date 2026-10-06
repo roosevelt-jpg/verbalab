@@ -8,7 +8,7 @@
 
 Library Phase 21 asks for noise detection/removal, echo cancellation, silence detection, enhancement, upscaling, background separation, voice isolation, plus engine/REST/SDK/realtime/monitoring/production.
 
-True AEC needs a far-end reference or a vendor SDK. Neural denoise and stem separation are vendor/research products (Krisp, Demucs, Adobe Enhance). VerbaLab already has Speech Cloud surfaces and PCM utilities from Speaker Intelligence.
+True AEC needs a far-end reference or a vendor SDK. Neural denoise and stem separation are vendor/research products (Krisp, Demucs, Adobe Enhance). Lugemi already has Speech Cloud surfaces and PCM utilities from Speaker Intelligence.
 
 ## Decision
 

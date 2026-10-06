@@ -27,7 +27,7 @@ export function RiskIntelligenceClient() {
         Risk Intelligence
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-298 — VerbaLab Risk Intelligence console in the Trust Cloud.
+        VL-298 — Lugemi Risk Intelligence console in the Trust Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

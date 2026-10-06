@@ -1,4 +1,4 @@
-# VerbaLab — Volume 20: Enterprise Engineering System (Phases 211–220)
+# Lugemi — Volume 20: Enterprise Engineering System (Phases 211–220)
 
 Same workflow as Volumes 1–19. `.cursorrules` at the repo root still applies.
 

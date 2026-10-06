@@ -5,7 +5,7 @@
 
 ## Executive verdict
 
-**Language Cloud is production-ready as a bounded VerbaLab product volume** (deploy via Fly or optional EKS), with known honesty limits documented in ADR-0051–0068.
+**Language Cloud is production-ready as a bounded Lugemi product volume** (deploy via Fly or optional EKS), with known honesty limits documented in ADR-0051–0068.
 
 It is **not comparable** to Google Translate + DeepL + Microsoft Translator + Amazon Translate + Grammarly + LanguageTool + Crowdin + Phrase combined.
 

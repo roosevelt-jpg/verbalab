@@ -60,7 +60,7 @@ describe('Atlas scaffold (VL-225)', () => {
 
   it('exposes public engine with honest capabilities', async () => {
     const res = await request(app.getHttpServer()).get('/v1/atlas/engine').expect(200);
-    expect(res.body.product).toBe('VerbaLab Atlas');
+    expect(res.body.product).toBe('Lugemi Atlas');
     expect(res.body.honesty.shipsTrainedAtlasWeights).toBe(false);
     expect(res.body.honesty.scaffoldOnly).toBe(true);
     expect(res.body.honesty.openAiReplacementOs).toBe(false);

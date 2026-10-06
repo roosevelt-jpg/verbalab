@@ -74,7 +74,7 @@ export class PromptFabricService {
   products() {
     const policy = this.policyRuntime.engine();
     return {
-      product: 'VerbaLab Prompt Fabric',
+      product: 'Lugemi Prompt Fabric',
       products: promptFabricCapabilityCatalog(),
       routes: promptFabricRoutingTable(),
       promptRuntime: this.promptRuntime.engine(),
@@ -213,8 +213,8 @@ export class PromptFabricService {
       this.eventPublishes += 1;
       event = await this.eventBus.publish({
         topic: input.topic ?? 'prompt-fabric',
-        type: 'com.verbalab.prompt.distributed',
-        source: '/verbalab/prompt-fabric',
+        type: 'com.lugemi.prompt.distributed',
+        source: '/lugemi/prompt-fabric',
         eventVersion: '1',
         data: {
           distributionId: record.id,
@@ -274,8 +274,8 @@ export class PromptFabricService {
       this.eventPublishes += 1;
       event = await this.eventBus.publish({
         topic: input.topic ?? 'prompt-fabric',
-        type: 'com.verbalab.prompt.synced',
-        source: '/verbalab/prompt-fabric',
+        type: 'com.lugemi.prompt.synced',
+        source: '/lugemi/prompt-fabric',
         eventVersion: '1',
         data: {
           syncId: record.id,

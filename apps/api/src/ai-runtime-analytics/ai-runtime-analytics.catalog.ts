@@ -9,7 +9,7 @@ export type RuntimeAnalyticsCapability = {
 };
 
 export function aiRuntimeAnalyticsMode(): 'disabled' | 'sandbox' {
-  const raw = (process.env.VERBALAB_AI_RUNTIME_ANALYTICS_MODE ?? 'sandbox').toLowerCase();
+  const raw = (process.env.LUGEMI_AI_RUNTIME_ANALYTICS_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
@@ -20,7 +20,7 @@ export function aiRuntimeAnalyticsMode(): 'disabled' | 'sandbox' {
  */
 export function aiRuntimeAnalyticsCatalog() {
   return {
-    product: 'VerbaLab AI Runtime Analytics',
+    product: 'Lugemi AI Runtime Analytics',
     note:
       'AI Runtime Analytics (VL-212). Org/workspace aggregates for Inference Cloud latency/throughput/GPU/CPU/cache/requests/errors/cost/customers/models/streaming. Reads GPU Platform, AI Router, Streaming, Batch, Cache, Cost Optimization, Model Serving, and usage_events. Not a BI dashboard OS, APM suite, or regenerate of Intelligence Analytics (VL-191) / Knowledge Analytics (VL-202).',
     capabilities: [
@@ -127,7 +127,7 @@ export function aiRuntimeAnalyticsCatalog() {
         name: 'SDK',
         status: 'shipped',
         api: 'aiRuntimeAnalyticsEngine()',
-        notes: '@verbalab/sdk',
+        notes: '@lugemi/sdk',
       },
       {
         id: 'monitoring',

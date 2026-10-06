@@ -1,4 +1,4 @@
-# VerbaLab — Volume 12: African Intelligence Cloud (Phases 127–137)
+# Lugemi — Volume 12: African Intelligence Cloud (Phases 127–137)
 
 Same workflow as Volumes 1–11. `.cursorrules` at the repo root still applies.
 This volume builds on the Language/Knowledge/Intelligence clouds from

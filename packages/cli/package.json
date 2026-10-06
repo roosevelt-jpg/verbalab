@@ -1,11 +1,11 @@
 {
-  "name": "@verbalab/cli",
+  "name": "@lugemi/cli",
   "version": "0.1.0",
   "private": true,
-  "description": "Thin CLI for the VerbaLab API (wraps @verbalab/sdk)",
+  "description": "Thin CLI for the Lugemi API (wraps @lugemi/sdk)",
   "type": "module",
   "bin": {
-    "verbalab": "./dist/cli.js"
+    "lugemi": "./dist/cli.js"
   },
   "files": ["dist", "README.md"],
   "scripts": {
@@ -16,12 +16,12 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@verbalab/sdk": "workspace:*"
+    "@lugemi/sdk": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "^22.10.2",
-    "@verbalab/eslint-config": "workspace:*",
-    "@verbalab/typescript-config": "workspace:*",
+    "@lugemi/eslint-config": "workspace:*",
+    "@lugemi/typescript-config": "workspace:*",
     "eslint": "^9.17.0",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"

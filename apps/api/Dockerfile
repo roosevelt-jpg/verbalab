@@ -1,5 +1,5 @@
 # Build from repo root:
-#   docker build -f apps/api/Dockerfile -t verbalab-api .
+#   docker build -f apps/api/Dockerfile -t lugemi-api .
 FROM node:20-bookworm-slim AS base
 RUN apt-get update \
   && apt-get install -y --no-install-recommends openssl ca-certificates \
@@ -12,10 +12,10 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY apps/api/package.json ./apps/api/
 COPY packages/typescript-config ./packages/typescript-config
 COPY packages/eslint-config ./packages/eslint-config
-RUN pnpm install --frozen-lockfile --filter @verbalab/api...
+RUN pnpm install --frozen-lockfile --filter @lugemi/api...
 COPY apps/api ./apps/api
-RUN pnpm --filter @verbalab/api exec prisma generate \
-  && pnpm --filter @verbalab/api run build
+RUN pnpm --filter @lugemi/api exec prisma generate \
+  && pnpm --filter @lugemi/api run build
 
 FROM base AS runner
 ENV NODE_ENV=production

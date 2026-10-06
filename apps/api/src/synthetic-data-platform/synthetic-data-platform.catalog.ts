@@ -61,7 +61,7 @@ export function syntheticDataPlatformEngineCatalog() {
     },
   ];
   return {
-    product: 'VerbaLab Synthetic Data Platform',
+    product: 'Lugemi Synthetic Data Platform',
     note:
       'Synthetic Data Platform (VL-273). Modalities catalog with mandatory synthetic labeling. Not a generative-media OS.',
     modalities,

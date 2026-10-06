@@ -49,7 +49,7 @@ describe('Knowledge Memory (VL-199)', () => {
   let storageDir: string;
 
   beforeAll(async () => {
-    storageDir = await mkdtemp(join(tmpdir(), 'verbalab-km-'));
+    storageDir = await mkdtemp(join(tmpdir(), 'lugemi-km-'));
     process.env.DOCUMENT_STORAGE_DIR = storageDir;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -129,7 +129,7 @@ describe('Knowledge Memory (VL-199)', () => {
     const doc = await request(app.getHttpServer())
       .post('/v1/knowledge/documents')
       .set('Authorization', `Bearer ${key.secret}`)
-      .attach('file', Buffer.from('# HQ\n\nVerbaLab HQ is in Nairobi.'), 'hq.md')
+      .attach('file', Buffer.from('# HQ\n\nLugemi HQ is in Nairobi.'), 'hq.md')
       .expect(201);
 
     const created = await request(app.getHttpServer())

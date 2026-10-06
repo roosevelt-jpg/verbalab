@@ -27,7 +27,7 @@ export function DatasetPipelineClient() {
         Dataset Pipeline
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-282 — VerbaLab Dataset Pipeline console in the MLOps & LLMOps Cloud.
+        VL-282 — Lugemi Dataset Pipeline console in the MLOps & LLMOps Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

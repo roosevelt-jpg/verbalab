@@ -51,7 +51,7 @@ Deployment Guide
 Everything production ready.
 END OF LANGUAGE CLOUD
 
-At this point VerbaLab already owns an entire cloud product.
+At this point Lugemi already owns an entire cloud product.
 
 Comparable to:
 
@@ -75,13 +75,13 @@ combined.
 
 What comes next?
 
-Next we build Speech Cloud, and this is where VerbaLab starts becoming truly unique.
+Next we build Speech Cloud, and this is where Lugemi starts becoming truly unique.
 
 Instead of simply providing Speech-to-Text, Speech Cloud will become a complete enterprise speech intelligence platform.
 
 It will include:
 
-VerbaLab Speech (Speech-to-Text)
+Lugemi Speech (Speech-to-Text)
 Speaker Recognition
 Speaker Verification
 Speaker Diarization
@@ -98,6 +98,6 @@ Audio Intelligence
 Speech Analytics
 Real-time Streaming
 
-This will be significantly broader than services such as Amazon Transcribe or Google Speech-to-Text because it will integrate deeply with the rest of the VerbaLab platform.
+This will be significantly broader than services such as Amazon Transcribe or Google Speech-to-Text because it will integrate deeply with the rest of the Lugemi platform.
 
-VERBALAB ENGINEERING LIBRARY v2.0
+LUGEMI ENGINEERING LIBRARY v2.0

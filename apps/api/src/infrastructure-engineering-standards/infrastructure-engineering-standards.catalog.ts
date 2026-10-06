@@ -4,7 +4,7 @@
  */
 export function infrastructureEngineeringStandardsEngineCatalog() {
   return {
-    product: 'VerbaLab Infrastructure Engineering Standards',
+    product: 'Lugemi Infrastructure Engineering Standards',
     engineeringOsForHumansAndCursor: true,
     customerFacingProductCloud: false,
     architectureKnowledgeBaseOs: false,
@@ -27,7 +27,7 @@ export function infrastructureEngineeringStandardsEngineCatalog() {
         path: '/v1/finops-platform/engine',
         role: 'FinOps GPU budgets',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       },
       {
         id: 'route-2',
@@ -35,7 +35,7 @@ export function infrastructureEngineeringStandardsEngineCatalog() {
         path: '/v1/secrets-certificate-platform/engine',
         role: 'Control Plane secrets honesty',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       },
       {
         id: 'route-3',
@@ -43,7 +43,7 @@ export function infrastructureEngineeringStandardsEngineCatalog() {
         path: '/v1/gpu-platform/engine',
         role: 'GPU Platform',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       },
       {
         id: 'route-4',
@@ -51,7 +51,7 @@ export function infrastructureEngineeringStandardsEngineCatalog() {
         path: '/v1/gitops-platform/engine',
         role: 'GitOps / deploy',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       },
       {
         id: 'route-5',
@@ -59,7 +59,7 @@ export function infrastructureEngineeringStandardsEngineCatalog() {
         path: '/v1/global-deployment-controller/engine',
         role: 'Deploy controller',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       }
     ],
     routesTo: [

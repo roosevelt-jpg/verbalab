@@ -44,7 +44,7 @@ export function governmentIntelligenceEngineCatalog() {
       }
   ];
   return {
-    product: 'VerbaLab Government Intelligence',
+    product: 'Lugemi Government Intelligence',
     note:
       'Government Intelligence (VL-264). Domain terms/services catalog for African Intelligence Cloud with domain-specific safety flags. Extends Knowledge/Intelligence clouds — not a vertical operations OS.',
     capabilities: terms,

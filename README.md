@@ -6,7 +6,7 @@ Lugemi is in the same category as ElevenLabs: **our API** and **our models** —
 
 **Africa first:** African languages, dialects, accents, and scripts are the product investment priority. We also support (and intend to expand in) **Latin America, Southeast Asia, the Middle East, the EU**, and other global markets. Coverage is published per language and task; we do not claim every language is live, treat Africa as one culture, or use flags as language selectors.
 
-Visible brand is Lugemi. The repository and APIs still use historical **VerbaLab** package names, env vars, `X-VerbaLab-*` headers, and health JSON `verbalab-web`. See `docs/brand/LUGEMI_BRAND_GUIDELINES.md` and `docs/brand/PUBLIC_POSITIONING.md`.
+Visible brand, packages, env vars, `X-Lugemi-*` headers, and health JSON (`lugemi-web` / `lugemi-api`) are **Lugemi**. Legacy API key prefixes `vl_live_` / `vl_test_` are still accepted for one release; new keys use `lg_live_` / `lg_test_`. See `docs/brand/LUGEMI_BRAND_GUIDELINES.md` and `docs/brand/PUBLIC_POSITIONING.md`.
 
 Vendor adapters in `apps/api/src/gateway/` (Google, OpenAI, ElevenLabs) are **historical scaffolding** for local/legacy fallbacks — not the public product. Intended production speech uses `OWN_TTS_URL` (`own:*` voices). Do not treat fixtures as live GPU.
 
@@ -63,11 +63,11 @@ Create a Pro product/price in Stripe Dashboard, then map `STRIPE_PRICE_ID_PRO`.
 ## TypeScript SDK
 
 ```ts
-import { VerbaLab } from '@verbalab/sdk';
+import { Lugemi } from '@lugemi/sdk';
 
-const client = new VerbaLab({
-  apiKey: process.env.VERBALAB_API_KEY!,
-  baseUrl: process.env.VERBALAB_BASE_URL ?? 'http://localhost:3001',
+const client = new Lugemi({
+  apiKey: process.env.LUGEMI_API_KEY!,
+  baseUrl: process.env.LUGEMI_BASE_URL ?? 'http://localhost:3001',
 });
 
 await client.translate({ text: 'Hello', source: 'en', target: 'sw' });
@@ -87,13 +87,13 @@ Add to `apps/api/.env` and `apps/web/.env.local` (see `.env.example`). Lead with
 | `CLERK_SECRET_KEY` | web + api | Sessions |
 | `REDIS_URL` | api | Jobs + rate limits (Compose Redis) |
 | `OWN_TTS_URL` | api | **Intended production speech** (`own:*` voices). Optional `OWN_TTS_API_KEY`. Unset = that path not configured |
-| `VERBALAB_REGION` | api | Residency island (`us` / `eu`) |
+| `LUGEMI_REGION` | api | Residency island (`us` / `eu`) |
 | `STRIPE_*` | api | Billing (optional) |
 | `GOOGLE_TRANSLATE_API_KEY` | api | **Legacy / internal** translate + detect adapter |
 | `OPENAI_API_KEY` | api | **Legacy / internal** STT, stock TTS, chat, embeddings adapter |
 | `ELEVENLABS_API_KEY` | api | **Legacy / internal** voice-clone adapter |
 
-Without Clerk, open http://localhost:3000/setup. API tests still pass (fixtures). Live MT via the legacy adapter: `TRANSLATE_LIVE=1 pnpm --filter @verbalab/api test`. `OWN_TTS_FIXTURE=1` is CI/local only — never claim live GPU without `OWN_TTS_URL`.
+Without Clerk, open http://localhost:3000/setup. API tests still pass (fixtures). Live MT via the legacy adapter: `TRANSLATE_LIVE=1 pnpm --filter @lugemi/api test`. `OWN_TTS_FIXTURE=1` is CI/local only — never claim live GPU without `OWN_TTS_URL`.
 
 Playwright signed-in translate (optional): set `E2E_CLERK_USER_EMAIL` + `E2E_CLERK_USER_PASSWORD` with a Clerk test user, then `pnpm test:e2e`. Without those env vars the signed-in case is skipped; public `/setup`, `/docs`, `/coverage`, `/health` still run.
 
@@ -101,14 +101,14 @@ Playwright signed-in translate (optional): set `E2E_CLERK_USER_EMAIL` + `E2E_CLE
 
 Production hostname: **lugemi.com**. The Next.js console (`apps/web`) is configured for Vercel. The Nest API stays on Fly / Docker — do not set this repo’s Root Directory to `apps/api`.
 
-1. Open [Import Git Repository](https://vercel.com/new/import) and select `roosevelt-jpg/verbalab` (the Vercel GitHub App is already installed on the account).
+1. Open [Import Git Repository](https://vercel.com/new/import) and select `roosevelt-jpg/lugemi` (the Vercel GitHub App is already installed on the account).
 2. Confirm **Root Directory** is `apps/web` (also set in root `vercel.json`).
-3. Framework: **Next.js**. Install is `pnpm install --filter @verbalab/web...` from the repo root.
+3. Framework: **Next.js**. Install is `pnpm install --filter @lugemi/web...` from the repo root.
 4. Add environment variables, then Deploy:
 
 | Variable | Required |
 | --- | --- |
-| `NEXT_PUBLIC_API_URL` | Production API origin (e.g. `https://verbalab-api.fly.dev`) |
+| `NEXT_PUBLIC_API_URL` | Production API origin (e.g. `https://lugemi-api.fly.dev`) |
 | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Console sign-in (omit to keep `/setup`) |
 | `CLERK_SECRET_KEY` | Server-side Clerk (omit with the publishable key) |
 

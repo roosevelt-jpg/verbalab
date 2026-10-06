@@ -1,4 +1,4 @@
-# VerbaLab Intelligent Cache
+# Lugemi Intelligent Cache
 
 **Status:** Partial (VL-210 / library Phase 77)  
 **Parent:** [Inference Cloud](./INFERENCE_CLOUD.md)  
@@ -17,7 +17,7 @@
 | Put / lookup / invalidate | `POST …/put` · `/lookup` · `/invalidate` |
 | Analytics / monitoring | `GET …/analytics` · `/monitoring` |
 | GraphQL | `intelligentCacheEngine` |
-| SDK / CLI | `intelligentCacheEngine()` · `verbalab intelligent-cache-engine` |
+| SDK / CLI | `intelligentCacheEngine()` · `lugemi intelligent-cache-engine` |
 
 ## Namespaces
 
@@ -29,9 +29,9 @@ Semantic uses normalized whitespace/case hash — **not** embedding similarity s
 
 | Control | Default | Env |
 | --- | --- | --- |
-| Mode | `sandbox` | `VERBALAB_INTELLIGENT_CACHE_MODE=disabled\|sandbox` |
-| Max entries / workspace | 200 (cap 2000) | `VERBALAB_CACHE_MAX_ENTRIES` |
-| Default TTL | 3600s (cap 7d) | `VERBALAB_CACHE_DEFAULT_TTL_SEC` |
+| Mode | `sandbox` | `LUGEMI_INTELLIGENT_CACHE_MODE=disabled\|sandbox` |
+| Max entries / workspace | 200 (cap 2000) | `LUGEMI_CACHE_MAX_ENTRIES` |
+| Default TTL | 3600s (cap 7d) | `LUGEMI_CACHE_DEFAULT_TTL_SEC` |
 
 ## Honesty
 

@@ -30,7 +30,7 @@ export type AgentMarketplaceCategory = (typeof AGENT_MARKETPLACE_CATEGORIES)[num
  */
 export function agentMarketplaceEngineCatalog() {
   return {
-    product: 'VerbaLab Agent Marketplace',
+    product: 'Lugemi Agent Marketplace',
     note:
       'Agent Marketplace (VL-254). Publish/install/run sandboxed enterprise agents. Execution always goes through Agent Runtime run + AgentPolicyGate (hard allowlist) and Policy Fabric hard gate — never open tool execution. Extends VL-219 / listings kind=agent. Not a LangGraph/AutoGPT OS.',
     capabilities: [

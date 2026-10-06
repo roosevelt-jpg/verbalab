@@ -16,4 +16,4 @@ Executed by `apps/api/test/intelligence-cloud-audit.spec.ts` in CI/local vitest.
 
 ## Honesty
 
-Library Phase 59 asks for performance/reasoning/vector benchmarks. VerbaLab ships **bounded smokes + existing suite evidence**, not a benchmark lab. Live LLM latency depends on OpenAI availability and is env-gated.
+Library Phase 59 asks for performance/reasoning/vector benchmarks. Lugemi ships **bounded smokes + existing suite evidence**, not a benchmark lab. Live LLM latency depends on OpenAI availability and is env-gated.

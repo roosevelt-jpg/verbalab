@@ -71,7 +71,7 @@ describe('AI Fabric Production Audit (VL-248)', () => {
 
   beforeAll(async () => {
     process.env.EVENT_FABRIC_MEMORY = '1';
-    process.env.VERBALAB_POLICY_RUNTIME_MODE = 'enforce';
+    process.env.LUGEMI_POLICY_RUNTIME_MODE = 'enforce';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();

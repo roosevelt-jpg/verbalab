@@ -99,7 +99,7 @@ describe('Model Marketplace (VL-251)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/model-marketplace/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Model Marketplace');
+    expect(res.body.product).toBe('Lugemi Model Marketplace');
     expect(res.body.honesty.huggingFaceOs).toBe(false);
     expect(res.body.honesty.weightHostingOs).toBe(false);
     expect(res.body.honesty.storesRawCardData).toBe(false);

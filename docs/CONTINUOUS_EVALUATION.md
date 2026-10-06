@@ -4,7 +4,7 @@ Library Phase 151 — part of Volume 14 MLOps & LLMOps Cloud.
 
 ## Mission
 
-VerbaLab Continuous Evaluation provides the Continuous Evaluation surface inside VerbaLab.
+Lugemi Continuous Evaluation provides the Continuous Evaluation surface inside Lugemi.
 
 ## Honesty
 

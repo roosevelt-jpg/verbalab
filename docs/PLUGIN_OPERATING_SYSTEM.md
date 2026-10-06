@@ -1,10 +1,10 @@
 # Plugin Operating System (VL-342)
 
-Library Phase 209 — part of Volume 19 VAIOS (VerbaLab AI Operating System).
+Library Phase 209 — part of Volume 19 VAIOS (Lugemi AI Operating System).
 
 ## Mission
 
-VerbaLab Plugin Operating System is a **unifying orchestration façade** above AI Kernel (Volume 8),
+Lugemi Plugin Operating System is a **unifying orchestration façade** above AI Kernel (Volume 8),
 AI Fabric (Volume 10), and Data Plane (Volume 18). It is not Linux, not Kubernetes,
 and not a third parallel agent/workflow/memory implementation.
 

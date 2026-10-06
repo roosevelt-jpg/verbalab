@@ -611,7 +611,7 @@ export class VoiceMarketplaceService {
       salesCount: sales._count._all,
       revenueCents: sales._sum.amountCents ?? 0,
       reviewsReceived: reviews,
-      product: 'VerbaLab Voice Marketplace',
+      product: 'Lugemi Voice Marketplace',
       note: 'Publisher-side aggregates. Full Voice Analytics = Phase 35.',
       docs: '/docs/VOICE_MARKETPLACE.md',
     };

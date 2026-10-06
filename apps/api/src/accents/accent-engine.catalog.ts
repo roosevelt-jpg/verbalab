@@ -11,7 +11,7 @@ export type AccentCapability = {
 /** Library Phase 19 → Accent Intelligence (VL-153). Extends VL-132 — not acoustic OS. */
 export function accentEngineCatalog() {
   return {
-    product: 'VerbaLab Accent Intelligence',
+    product: 'Lugemi Accent Intelligence',
     note:
       'Cue-based spoken accent detection/classification with confidence and analytics. Dialect detection is Language Cloud. Regional acoustic models are deferred.',
     capabilities: [
@@ -89,8 +89,8 @@ export function accentEngineCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

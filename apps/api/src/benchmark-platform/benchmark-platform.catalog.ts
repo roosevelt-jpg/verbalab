@@ -42,7 +42,7 @@ export function benchmarkPlatformEngineCatalog() {
     { id: 'lb-bias-001', suiteId: 'bias', modelLabel: 'research-chat-v0', score: 0.12, unit: 'bias_rate', notes: 'Internal bias seed — not market leadership.' },
   ];
   return {
-    product: 'VerbaLab Benchmark Platform',
+    product: 'Lugemi Benchmark Platform',
     note:
       'Benchmark Platform (VL-274). Internal suites and leaderboard seed — not a public leaderboard OS and never claims market leadership or SOTA.',
     suites,

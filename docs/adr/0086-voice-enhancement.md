@@ -8,7 +8,7 @@
 
 Library Phase 32 asks for noise removal, echo cancellation, upscaling, restoration, mic/podcast/broadcast/meeting cleanup, enhancement engine, REST/realtime/SDK/monitoring/docs.
 
-VerbaLab already ships Audio Intelligence PCM heuristics (VL-155). Claiming Krisp / Adobe Enhance / Demucs / live AEC would be dishonest. Full spectral ML denoise can be bought later behind the same API.
+Lugemi already ships Audio Intelligence PCM heuristics (VL-155). Claiming Krisp / Adobe Enhance / Demucs / live AEC would be dishonest. Full spectral ML denoise can be bought later behind the same API.
 
 ## Decision
 

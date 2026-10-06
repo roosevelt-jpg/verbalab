@@ -4,7 +4,7 @@
  */
 export function workflowOperatingSystemEngineCatalog() {
   return {
-    product: 'VerbaLab Workflow Operating System',
+    product: 'Lugemi Workflow Operating System',
     unifyingOrchestrationLayer: true,
     duplicatesKernelOrFabric: false,
     notLinux: true,

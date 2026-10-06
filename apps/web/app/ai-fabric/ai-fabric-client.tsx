@@ -63,7 +63,7 @@ export function AiFabricClient() {
         AI Fabric
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        Internal communication hub connecting VerbaLab clouds — not a customer product or Kafka
+        Internal communication hub connecting Lugemi clouds — not a customer product or Kafka
         hyperscaler OS.
       </p>
 

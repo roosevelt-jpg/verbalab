@@ -11,7 +11,7 @@ export type VectorCapability = {
 /** Library Phase 49 → Vector Cloud (VL-182). Hub over pgvector Knowledge (VL-062) — not Pinecone. */
 export function vectorCloudCatalog() {
   return {
-    product: 'VerbaLab Vector Cloud',
+    product: 'Lugemi Vector Cloud',
     note:
       'Enterprise vector search over Postgres pgvector knowledge_chunks (VL-062). Workspace = namespace; collection = knowledge. Not a managed vector DB OS (Pinecone/Weaviate/Qdrant parity deferred).',
     capabilities: [
@@ -126,8 +126,8 @@ export function vectorCloudCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

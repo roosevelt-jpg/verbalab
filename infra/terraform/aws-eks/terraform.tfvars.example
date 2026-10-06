@@ -1,6 +1,6 @@
 # Copy to terraform.tfvars (do not commit secrets).
 aws_region           = "af-south-1"
-cluster_name         = "verbalab"
+cluster_name         = "lugemi"
 kubernetes_version   = "1.31"
 node_instance_types  = ["t3.medium"]
 node_desired_size    = 2

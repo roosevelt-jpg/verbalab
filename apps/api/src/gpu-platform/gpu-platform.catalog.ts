@@ -101,7 +101,7 @@ export function gpuVendors() {
  */
 export function gpuPlatformCatalog() {
   return {
-    product: 'VerbaLab GPU Platform',
+    product: 'Lugemi GPU Platform',
     note:
       'Sandbox GPU pools/scheduling/quotas/autoscaling with hard instance and spend ceilings (VL-205). Logical allocations only — does not call AWS/GCP/Azure GPU APIs. Not a hyperscaler GPU OS, MIG sharing suite, or distributed training fabric.',
     capabilities: [
@@ -236,7 +236,7 @@ export function gpuPlatformCatalog() {
 export type GpuProvisionMode = 'disabled' | 'sandbox';
 
 export function gpuProvisionMode(): GpuProvisionMode {
-  const raw = (process.env.VERBALAB_GPU_PROVISION_MODE ?? 'sandbox').toLowerCase();
+  const raw = (process.env.LUGEMI_GPU_PROVISION_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
@@ -245,11 +245,11 @@ export function gpuProvisionMode(): GpuProvisionMode {
 export function gpuCeilings() {
   const maxInstances = Math.max(
     1,
-    Number(process.env.VERBALAB_GPU_MAX_INSTANCES ?? '2') || 2,
+    Number(process.env.LUGEMI_GPU_MAX_INSTANCES ?? '2') || 2,
   );
   const maxSpendUsd = Math.max(
     1,
-    Number(process.env.VERBALAB_GPU_MAX_SPEND_USD ?? '25') || 25,
+    Number(process.env.LUGEMI_GPU_MAX_SPEND_USD ?? '25') || 25,
   );
   return {
     maxInstances: Math.min(maxInstances, 8),

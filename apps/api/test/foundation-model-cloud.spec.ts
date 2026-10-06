@@ -107,7 +107,7 @@ describe('Foundation Model Cloud Foundation (VL-224)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/foundation-model-cloud/products')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Foundation Model Cloud');
+    expect(res.body.product).toBe('Lugemi Foundation Model Cloud');
     expect(res.body.architecture.customerFacingProduct).toBe(true);
     expect(res.body.architecture.trainsCompetitiveFoundationWeights).toBe(false);
     expect(res.body.architecture.openAiReplacementOs).toBe(false);

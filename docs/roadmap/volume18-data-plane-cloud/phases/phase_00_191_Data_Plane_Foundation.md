@@ -3,7 +3,7 @@
 
 VOLUME 18 — DATA PLANE CLOUD
 
-Mission: the Data Plane executes every workload inside VerbaLab. Unlike the
+Mission: the Data Plane executes every workload inside Lugemi. Unlike the
 Control Plane (Volume 17), it never manages organizations, policies, or
 billing — it only executes work. Every request eventually reaches it, flowing
 through: API Runtime → Translation Runtime → Speech Runtime → Voice Runtime →
@@ -23,9 +23,9 @@ explicitly rather than duplicating it.
 Phase 191
 Data Plane Foundation
 Cursor Master Prompt
-You are the Chief Runtime Architect of VerbaLab AI.
+You are the Chief Runtime Architect of Lugemi AI.
 
-Build the VerbaLab Data Plane.
+Build the Lugemi Data Plane.
 
 Mission
 

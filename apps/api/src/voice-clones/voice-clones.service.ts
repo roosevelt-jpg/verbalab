@@ -480,7 +480,7 @@ export class VoiceClonesService {
 
     const created = await this.provider().createClone({
       name: row.name,
-      description: `VerbaLab clone ${row.id}. Consent: ${row.consentNotes}`,
+      description: `Lugemi clone ${row.id}. Consent: ${row.consentNotes}`,
       samples,
     });
 

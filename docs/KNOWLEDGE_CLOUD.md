@@ -1,13 +1,13 @@
-# VerbaLab Knowledge Cloud
+# Lugemi Knowledge Cloud
 
 **Status:** Volume complete through Production Audit (VL-193–203 / library Phases 60–70)  
 **Rule:** Enterprise knowledge layer over VL-062 RAG and Intelligence Cloud (embeddings, vectors, knowledge graph, context). Extend existing Knowledge / Vector / Graph modules. Do **not** regenerate Intelligence Cloud or invent a Confluence/SharePoint/ontology OS. Follow the [12-layer Cloud Blueprint](./CLOUD_BLUEPRINT.md) (ADR-0080). Roadmap: [`docs/roadmap/volume6-knowledge-cloud/`](./roadmap/volume6-knowledge-cloud/). Evidence: [`docs/knowledge-cloud-audit/`](./knowledge-cloud-audit/).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Knowledge Cloud Foundation | **VL-193** — `/knowledge-cloud` + product catalog / overview |
 | Enterprise Knowledge Base | **Partial** — **VL-194** `/knowledge-base` over VL-062; org/workspace-scoped; media/approval deferred |
@@ -35,8 +35,8 @@
 | REST overview | `GET /v1/knowledge-cloud/overview` (Clerk session) |
 | GraphQL | `knowledgeProducts` |
 | OpenAPI | `/v1/openapi.json` |
-| SDK | `knowledgeProducts()` on `@verbalab/sdk` |
-| CLI | `verbalab knowledge-products` |
+| SDK | `knowledgeProducts()` on `@lugemi/sdk` |
+| CLI | `lugemi knowledge-products` |
 | Existing RAG | `/knowledge` · `POST /v1/knowledge/query` (VL-062) |
 | Knowledge Base | `/knowledge-base` · `GET /v1/knowledge-base/engine` (VL-194) |
 | Enterprise Search | `/enterprise-search` · `POST /v1/enterprise-search/search` (VL-195) |

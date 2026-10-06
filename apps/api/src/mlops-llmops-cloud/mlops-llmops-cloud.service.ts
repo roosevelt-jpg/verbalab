@@ -15,7 +15,7 @@ export class MlopsLlmopsCloudService {
 
   products() {
     return {
-      product: 'VerbaLab MLOps & LLMOps Cloud',
+      product: 'Lugemi MLOps & LLMOps Cloud',
       products: mlopsLlmopsCloudProductCatalog(),
       assetTypes: mlopsAssetTypesCatalog(),
       architecture: mlopsLlmopsCloudArchitectureNotes(),

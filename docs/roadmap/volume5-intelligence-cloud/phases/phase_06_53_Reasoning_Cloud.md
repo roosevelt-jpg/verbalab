@@ -4,7 +4,7 @@
 Phase 53
 Reasoning Cloud
 Cursor Prompt
-Build VerbaLab Reasoner.
+Build Lugemi Reasoner.
 
 Support
 

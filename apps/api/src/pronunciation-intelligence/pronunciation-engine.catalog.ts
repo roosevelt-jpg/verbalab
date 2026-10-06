@@ -11,7 +11,7 @@ export type PronunciationCapability = {
 /** Library Phase 22 → Pronunciation Intelligence (VL-156). */
 export function pronunciationEngineCatalog() {
   return {
-    product: 'VerbaLab Pronunciation Intelligence',
+    product: 'Lugemi Pronunciation Intelligence',
     note:
       'Reference vs transcript assessment, fluency proxies, grapheme phoneme/stress heuristics, and coaching tips. Not ELSA / SpeechAce / forced-alignment phoneme ASR.',
     capabilities: [
@@ -102,8 +102,8 @@ export function pronunciationEngineCatalog() {
     },
     architecture: {
       rest: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate VerbaLab Volume 20 Enterprise Engineering System (VL-344–353).
+"""Generate Lugemi Volume 20 Enterprise Engineering System (VL-344–353).
 
 Standards, governance, templates, and quality catalogs for humans + Cursor —
 extends Platform Engineering / DX / existing docs/adr / Trust AI Governance.
@@ -12,7 +12,7 @@ import json
 import re
 from pathlib import Path
 
-ROOT = Path("/workspace/verbalab")
+ROOT = Path("/workspace/lugemi")
 ADR_COUNT = len(list((ROOT / "docs/adr").glob("*.md")))
 
 
@@ -148,7 +148,7 @@ HUBS = [
         "nav": "Repo Standards",
         "honesty_key": "matchesMonorepoReality",
         "honesty_val": True,
-        "note": "Repository Standards (VL-347). Monorepo/polyrepo/templates/naming/folder/branch/git/commit/versioning catalog matching VerbaLab monorepo reality (pnpm/turbo apps/* packages/*).",
+        "note": "Repository Standards (VL-347). Monorepo/polyrepo/templates/naming/folder/branch/git/commit/versioning catalog matching Lugemi monorepo reality (pnpm/turbo apps/* packages/*).",
         "routes_to": [
             {"module": "developer-experience-platform", "path": "/v1/developer-experience-platform/engine", "role": "Developer Experience"},
             {"module": "golden-path-platform", "path": "/v1/golden-path-platform/engine", "role": "Golden Paths"},
@@ -627,7 +627,7 @@ export function {to_pascal(slug)}Client() {{
         {title}
       </h1>
       <p style={{{{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}}}>
-        VL-{vl} — VerbaLab {title} console in Enterprise Engineering System (standards for humans + Cursor).
+        VL-{vl} — Lugemi {title} console in Enterprise Engineering System (standards for humans + Cursor).
       </p>
       {{error ? <p style={{{{ color: '#b42318' }}}}>{{error}}</p> : null}}
       {{!data && !error ? <p style={{{{ color: 'var(--muted)' }}}}>Loading…</p> : null}}
@@ -662,7 +662,7 @@ Library Phase {hub["phase"]} — part of Volume 20 Enterprise Engineering System
 
 ## Mission
 
-VerbaLab {hub["title"]} is a **standards and governance catalog** for engineers and Cursor.
+Lugemi {hub["title"]} is a **standards and governance catalog** for engineers and Cursor.
 It is not a customer-facing product cloud, not Jira/Confluence/SonarQube OS, and not an
 Architecture Knowledge Base / ADR factory OS.
 
@@ -934,7 +934,7 @@ export class EnterpriseEngineeringSystemService {
 
   products() {
     return {
-      product: 'VerbaLab Enterprise Engineering System',
+      product: 'Lugemi Enterprise Engineering System',
       products: enterpriseEngineeringSystemProductCatalog(),
       hubInventory: enterpriseEngineeringSystemHubInventory(),
       extendsSurfaces: enterpriseEngineeringSystemExtends(),
@@ -1267,7 +1267,7 @@ def standards_catalog(hub: dict) -> str:
         path: '{r["path"]}',
         role: '{r["role"]}',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       }}"""
         for i, r in enumerate(routes, 1)
     )
@@ -1283,7 +1283,7 @@ def standards_catalog(hub: dict) -> str:
  */
 export function {camel}EngineCatalog() {{
   return {{
-    product: 'VerbaLab {hub['title']}',
+    product: 'Lugemi {hub['title']}',
     engineeringOsForHumansAndCursor: true,
     customerFacingProductCloud: false,
     architectureKnowledgeBaseOs: false,
@@ -2476,15 +2476,15 @@ def patch_wiring() -> None:
     help_lines = []
     for hub in HUBS:
         cmd = f"{hub['slug']}-products" if hub["kind"] == "foundation" else f"{hub['slug']}-engine"
-        line = f"  verbalab {cmd}"
+        line = f"  lugemi {cmd}"
         if line not in ct:
             help_lines.append(line)
-    if "  verbalab ai-engineering-standards-checks" not in ct:
-        help_lines.append("  verbalab ai-engineering-standards-checks")
+    if "  lugemi ai-engineering-standards-checks" not in ct:
+        help_lines.append("  lugemi ai-engineering-standards-checks")
     if help_lines:
         ct = ct.replace(
-            "  verbalab plugin-operating-system-engine\n",
-            "  verbalab plugin-operating-system-engine\n" + "\n".join(help_lines) + "\n",
+            "  lugemi plugin-operating-system-engine\n",
+            "  lugemi plugin-operating-system-engine\n" + "\n".join(help_lines) + "\n",
         )
     handlers = []
     for hub in HUBS:

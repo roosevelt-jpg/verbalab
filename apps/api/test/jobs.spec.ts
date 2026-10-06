@@ -216,8 +216,8 @@ describe('Jobs + webhooks (VL-044)', () => {
       expect(payload.event).toBe('job.succeeded');
       expect(payload.data.id).toBe(created.body.id);
 
-      const timestamp = String(received[0]!.headers['x-verbalab-timestamp']);
-      const signature = String(received[0]!.headers['x-verbalab-signature']);
+      const timestamp = String(received[0]!.headers['x-lugemi-timestamp']);
+      const signature = String(received[0]!.headers['x-lugemi-signature']);
       const orgRow = await prisma.organization.findUniqueOrThrow({ where: { id: org.id } });
       expect(orgRow.webhookSigningSecret).toBeTruthy();
       expect(

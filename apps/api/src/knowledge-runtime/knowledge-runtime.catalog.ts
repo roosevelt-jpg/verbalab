@@ -4,7 +4,7 @@
  */
 export function knowledgeRuntimeEngineCatalog() {
   return {
-    product: 'VerbaLab Knowledge Runtime',
+    product: 'Lugemi Knowledge Runtime',
     thinExecutionLayer: true,
     duplicatesProductLogic: false,
     capabilities: [

@@ -1,7 +1,7 @@
-# VerbaLab AI — Consolidated Roadmap
+# Lugemi AI — Consolidated Roadmap
 
 **Status:** living document. Update this file and `PROGRESS.md` every session.  
-**Sources:** `VERBALAB AI ENGINEERING LIBRARY V1.md` (v1) and `VERBALAB ENGINEERING LIBRARY v2.md` (v2).  
+**Sources:** `LUGEMI AI ENGINEERING LIBRARY V1.md` (v1) and `LUGEMI ENGINEERING LIBRARY v2.md` (v2).  
 **Rule:** one executable phase in flight at a time. A phase is Done only when it is real, integrated, and tested — not merely present.
 
 ---
@@ -76,7 +76,7 @@ This roadmap is a **backlog and vision**, not a one-shot build script. v1 and v2
 2. **Extend, don’t regenerate.** No greenfield rewrites of prior phases unless a migration is called out first.
 3. **No fake completeness.** If a real provider key, DNS, or Stripe account is missing, stop and list the blocker.
 4. **Tests are the Done gate.** Unit/integration for APIs; at least one end-to-end path for UI.
-5. **Buy models first.** VerbaLab’s early product is **orchestration, tenancy, eval, African-language coverage, and UX** — not a new foundation model.
+5. **Buy models first.** Lugemi’s early product is **orchestration, tenancy, eval, African-language coverage, and UX** — not a new foundation model.
 6. **Override library order freely.** The library assumes unlimited headcount. This file is the real order.
 
 ---
@@ -192,7 +192,7 @@ Dependencies are **hard**: do not start a phase until listed predecessors are Do
 
 #### VL-012 — Workspaces
 
-- **Goal:** Org workspaces with name + default language pair; multi-workspace CRUD; session override via `X-VerbaLab-Workspace-Id`. Workspace-scoped API keys already exist.
+- **Goal:** Org workspaces with name + default language pair; multi-workspace CRUD; session override via `X-Lugemi-Workspace-Id`. Workspace-scoped API keys already exist.
 - **Why it matters:** Matches how translation tools are actually used (projects/workspaces), without building a CMS or a separate Project tier.
 - **Complexity:** S
 - **Depends on:** VL-011
@@ -201,7 +201,7 @@ Dependencies are **hard**: do not start a phase until listed predecessors are Do
 
 #### VL-013 — API keys
 
-- **Goal:** Create/revoke hashed API keys (`vl_live_...`). Authenticate `Authorization: Bearer` on `/v1/*`. Show secret **once**.
+- **Goal:** Create/revoke hashed API keys (`lg_live_...`). Authenticate `Authorization: Bearer` on `/v1/*`. Show secret **once**.
 - **Why it matters:** The product is an API company; a dashboard-only demo is not the product.
 - **Complexity:** S
 - **Depends on:** VL-012
@@ -274,7 +274,7 @@ Dependencies are **hard**: do not start a phase until listed predecessors are Do
 #### VL-031 — Billing (Stripe)
 
 - **Goal:** Free tier + one paid plan. Stripe Customer on the org. Metered item for translation characters **or** a simple included quota + overage. Customer portal for payment method. Webhook → local entitlement (`plan`, `characterQuota`).
-- **Why it matters:** Otherwise VerbaLab is a demo.
+- **Why it matters:** Otherwise Lugemi is a demo.
 - **Complexity:** L
 - **Depends on:** VL-024, VL-011
 - **Buy vs build:** **Stripe**. Never store cards.
@@ -292,7 +292,7 @@ Dependencies are **hard**: do not start a phase until listed predecessors are Do
 
 #### VL-033 — TypeScript SDK (thin)
 
-- **Goal:** Published-as-workspace package: `new VerbaLab({ apiKey }).translate(...)`. Types match OpenAPI. Tests against a mock server or local API.
+- **Goal:** Published-as-workspace package: `new Lugemi({ apiKey }).translate(...)`. Types match OpenAPI. Tests against a mock server or local API.
 - **Why it matters:** Copy-paste `fetch` is not a developer platform.
 - **Complexity:** S
 - **Depends on:** VL-030
@@ -719,16 +719,16 @@ User override (2026-09-07): build tracks 1–5 from the library ambition as **bo
 
 #### VL-126 — Identity Cloud (library Phase 2 mapped)
 
-- **Goal:** Map library Identity Cloud onto Clerk + VerbaLab RBAC/API keys/audit. Ship membership role/remove APIs, Clerk org-role sync, API key `lastUsedAt`, `/identity` + `GET /v1/identity/overview`.
+- **Goal:** Map library Identity Cloud onto Clerk + Lugemi RBAC/API keys/audit. Ship membership role/remove APIs, Clerk org-role sync, API key `lastUsedAt`, `/identity` + `GET /v1/identity/overview`.
 - **Complexity:** M
 - **Depends on:** VL-010–013, VL-032
-- **Buy vs build:** Clerk for human IdP; VerbaLab for tenant RBAC + machine keys
+- **Buy vs build:** Clerk for human IdP; Lugemi for tenant RBAC + machine keys
 - **Sources:** Library Phase 2 “Identity Cloud”
 - **Out of scope:** First-party SAML/SCIM/ABAC/Teams/passkeys/MFA engines; custom OAuth AS
 
 #### VL-127 — Developer Cloud Foundation (library Phase 3 mapped)
 
-- **Goal:** Map library Developer Cloud onto existing portal (keys, OpenAPI, docs, playground, SDK, billing, usage). Ship `/developers` + overview API, soft `vl_test_` keys, thin `@verbalab/cli`, playground detect/languages.
+- **Goal:** Map library Developer Cloud onto existing portal (keys, OpenAPI, docs, playground, SDK, billing, usage). Ship `/developers` + overview API, soft `lg_test_` keys, thin `@lugemi/cli`, playground detect/languages.
 - **Complexity:** M
 - **Depends on:** VL-013, VL-030, VL-033, VL-031
 - **Buy vs build:** Extend Nest/Next/SDK; docs in `DEVELOPER_CLOUD.md` + ADR-0048
@@ -845,7 +845,7 @@ User override (2026-09-07): build tracks 1–5 from the library ambition as **bo
 
 #### VL-140 — Translation Engine (Phase 8)
 
-- **Goal:** Consolidate VerbaLab Translate: engine catalog, HTML/Markdown/XML/CSV/SRT codecs, SSE streaming, chat-message MT, GraphQL translate, SDK/CLI/docs — on top of existing realtime/batch/docs/localize/TM/glossary/quality/Slack.
+- **Goal:** Consolidate Lugemi Translate: engine catalog, HTML/Markdown/XML/CSV/SRT codecs, SSE streaming, chat-message MT, GraphQL translate, SDK/CLI/docs — on top of existing realtime/batch/docs/localize/TM/glossary/quality/Slack.
 - **Complexity:** M
 - **Depends on:** VL-022–053, VL-044, VL-082
 - **Buy vs build:** Continue buying MT; build format/stream façade
@@ -926,7 +926,7 @@ User override (2026-09-07): build tracks 1–5 from the library ambition as **bo
 
 #### VL-151 — Speech Recognition Engine (Phase 17)
 
-- **Goal:** VerbaLab Speech Recognition — batch recognize with timestamps/confidence, segment SSE stream, multilingual/auto-detect, custom + industry vocabulary, subtitles, punctuation/capitalization, engine catalog, GraphQL/SDK/dashboard/analytics hooks. Extend Whisper; do not claim live-mic WebSocket ASR OS.
+- **Goal:** Lugemi Speech Recognition — batch recognize with timestamps/confidence, segment SSE stream, multilingual/auto-detect, custom + industry vocabulary, subtitles, punctuation/capitalization, engine catalog, GraphQL/SDK/dashboard/analytics hooks. Extend Whisper; do not claim live-mic WebSocket ASR OS.
 - **Complexity:** L
 - **Depends on:** VL-041, VL-150
 - **Buy vs build:** Buy Whisper; build engine façade + vocab/subtitles/SSE

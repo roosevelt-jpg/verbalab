@@ -14,7 +14,7 @@ export function voiceProductCatalog(): VoiceProductRow[] {
   return [
     {
       id: 'voice',
-      name: 'VerbaLab Voice',
+      name: 'Lugemi Voice',
       status: 'shipped',
       api: 'GET /v1/voice-cloud/products',
       console: '/voice-cloud',
@@ -175,8 +175,8 @@ export function voiceArchitectureNotes() {
     streaming: true,
     batch: true,
     enterpriseApis: true,
-    sdk: '@verbalab/sdk',
-    cli: '@verbalab/cli',
+    sdk: '@lugemi/sdk',
+    cli: '@lugemi/cli',
     openapi: '/v1/openapi.json',
     monitoring: true,
     billing: true,

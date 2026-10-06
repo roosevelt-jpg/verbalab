@@ -8,7 +8,7 @@ export type LocalizationCapability = {
   notes: string;
 };
 
-/** Library Phase 9 → VerbaLab Localization Platform (VL-141). */
+/** Library Phase 9 → Lugemi Localization Platform (VL-141). */
 export function localizationPlatformCatalog() {
   return {
     product: 'Enterprise Localization Platform',
@@ -128,7 +128,7 @@ export function localizationPlatformCatalog() {
       qa: { status: 'shipped', api: 'POST /v1/localize/qa' },
       rest: { status: 'shipped' },
       graphql: { status: 'shipped', notes: 'localize + ICU ops (VL-141)' },
-      sdk: { status: 'shipped', package: '@verbalab/sdk' },
+      sdk: { status: 'shipped', package: '@lugemi/sdk' },
       analytics: { status: 'partial', api: 'GET /v1/analytics/overview', notes: 'Org translate analytics' },
       monitoring: { status: 'partial', api: 'GET /v1/metrics/translate' },
     },

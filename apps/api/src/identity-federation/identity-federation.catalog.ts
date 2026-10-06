@@ -4,7 +4,7 @@
  */
 export function identityFederationEngineCatalog() {
   return {
-    product: 'VerbaLab Identity Federation',
+    product: 'Lugemi Identity Federation',
     capabilities: [
       { id: 'oauth2', name: 'OAuth2', status: 'shipped', notes: 'OAuth2 federation readiness via Clerk.' },
       { id: 'oidc', name: 'OIDC', status: 'shipped', notes: 'OIDC via Clerk.' },
@@ -29,7 +29,7 @@ export function identityFederationEngineCatalog() {
         provider: 'Enterprise SAML (discovery)',
         protocols: ['saml'],
         status: 'discovery',
-        notes: 'Federation readiness only — VerbaLab is not a SAML IdP OS.',
+        notes: 'Federation readiness only — Lugemi is not a SAML IdP OS.',
       },
       {
         id: 'fed-scim-ready',
@@ -40,7 +40,7 @@ export function identityFederationEngineCatalog() {
       },
       {
         id: 'fed-machine',
-        provider: 'VerbaLab API keys',
+        provider: 'Lugemi API keys',
         protocols: ['api_key'],
         status: 'ready',
         notes: 'Machine/service identity via existing API keys.',

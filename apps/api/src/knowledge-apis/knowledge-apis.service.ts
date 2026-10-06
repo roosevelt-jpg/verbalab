@@ -48,8 +48,8 @@ export class KnowledgeApisService {
 
   sdk() {
     return {
-      package: '@verbalab/sdk',
-      install: 'pnpm add @verbalab/sdk',
+      package: '@lugemi/sdk',
+      install: 'pnpm add @lugemi/sdk',
       methods: [
         'knowledgeProducts',
         'knowledgeBaseEngine',
@@ -78,9 +78,9 @@ export class KnowledgeApisService {
 
   cli() {
     return {
-      package: '@verbalab/cli',
-      bin: 'verbalab',
-      install: 'pnpm add -g @verbalab/cli',
+      package: '@lugemi/cli',
+      bin: 'lugemi',
+      install: 'pnpm add -g @lugemi/cli',
       commands: [
         'knowledge-products',
         'knowledge-base-engine',
@@ -107,7 +107,7 @@ export class KnowledgeApisService {
     return {
       events: KNOWLEDGE_WEBHOOK_EVENTS,
       signingSecret: 'POST /v1/webhooks/signing-secret',
-      delivery: 'Signed HTTP POST (X-VerbaLab-Timestamp + X-VerbaLab-Signature) via existing WebhookService',
+      delivery: 'Signed HTTP POST (X-Lugemi-Timestamp + X-Lugemi-Signature) via existing WebhookService',
       note: 'Event catalog for Knowledge Cloud. Full per-event fanout subscriptions deferred — job webhooks + SSE cover MVP.',
       honesty: { kafkaEventStreamingOs: false },
     };

@@ -28,7 +28,7 @@ export function KnowledgeRuntimeClient() {
         Knowledge Runtime
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-329 — VerbaLab Knowledge Runtime console in the Data Plane Cloud.
+        VL-329 — Lugemi Knowledge Runtime console in the Data Plane Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

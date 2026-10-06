@@ -15,7 +15,7 @@ export class DataPlaneCloudService {
 
   products() {
     return {
-      product: 'VerbaLab Data Plane Cloud',
+      product: 'Lugemi Data Plane Cloud',
       products: dataPlaneCloudProductCatalog(),
       runtimeInventory: dataPlaneCloudRuntimeInventory(),
       architecture: dataPlaneCloudArchitectureNotes(),

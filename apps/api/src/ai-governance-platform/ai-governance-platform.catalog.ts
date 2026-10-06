@@ -92,7 +92,7 @@ export function seedApprovalRequests(): ApprovalRequest[] {
 
 export function aiGovernancePlatformEngineCatalog(approvals: ApprovalRequest[]) {
   return {
-    product: 'VerbaLab AI Governance Platform',
+    product: 'Lugemi AI Governance Platform',
     capabilities: [
       { id: 'model_approval', name: 'Model Approval', status: 'shipped', notes: 'Human sign-off.' },
       { id: 'prompt_approval', name: 'Prompt Approval', status: 'shipped', notes: 'Human sign-off.' },

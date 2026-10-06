@@ -57,7 +57,7 @@ describe('Financial Intelligence (VL-266)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/financial-intelligence/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Financial Intelligence');
+    expect(res.body.product).toBe('Lugemi Financial Intelligence');
 
     expect(res.body.honesty.notInvestmentAdvice).toBe(true);
     expect(res.body.honesty.fairLendingConsiderationsFlagged).toBe(true);

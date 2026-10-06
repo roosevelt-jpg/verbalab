@@ -1,4 +1,4 @@
-# VerbaLab Memory Runtime
+# Lugemi Memory Runtime
 
 **Status:** Partial shipped (VL-215 / library Phase 82)  
 **Rule:** Kernel-layer memory over VL-183 Memory Cloud (`metadata.layer=kernel`). Extends — does **not** regenerate — Memory Cloud or Knowledge Memory. Not Mem0 / infinite personalization / multi-region replication OS.
@@ -7,9 +7,9 @@ Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roa
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Short-term Memory | **Shipped** — `kind=short_term` + TTL |
 | Long-term Memory | **Shipped** — `kind=long_term` |
@@ -24,7 +24,7 @@ Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roa
 | Memory Replication | **Deferred** |
 | Memory Snapshots | **Partial** — sandbox snapshot rows |
 | Engine / Console | `/memory-runtime` + `GET /v1/memory-runtime/engine` |
-| GraphQL / SDK / CLI | `memoryRuntimeEngine`, `verbalab memory-runtime-engine` |
+| GraphQL / SDK / CLI | `memoryRuntimeEngine`, `lugemi memory-runtime-engine` |
 
 ---
 
@@ -40,7 +40,7 @@ Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roa
 | Analytics / monitoring | `GET /v1/memory-runtime/analytics|monitoring` |
 | GraphQL | `memoryRuntimeEngine` |
 | SDK | `memoryRuntimeEngine()`, `memoryRuntimePut()` |
-| CLI | `verbalab memory-runtime-engine` |
+| CLI | `lugemi memory-runtime-engine` |
 
 ## Honesty
 
@@ -56,6 +56,6 @@ Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roa
 | `kernelLayerOnly` | true |
 | `vectorSemanticOs` | false |
 
-Env: `VERBALAB_MEMORY_RUNTIME_MODE` (`sandbox`\|`disabled`), `VERBALAB_KERNEL_MEMORY_MAX_ENTRIES`, `VERBALAB_KERNEL_MEMORY_SHORT_TTL_SEC`.
+Env: `LUGEMI_MEMORY_RUNTIME_MODE` (`sandbox`\|`disabled`), `LUGEMI_KERNEL_MEMORY_MAX_ENTRIES`, `LUGEMI_KERNEL_MEMORY_SHORT_TTL_SEC`.
 
 See ADR-0126.

@@ -4,7 +4,7 @@
  */
 export function trainingPipelineEngineCatalog() {
   return {
-    product: 'VerbaLab Training Pipeline',
+    product: 'Lugemi Training Pipeline',
     methods: [
       { id: 'lora', name: 'LoRA', status: 'shipped', notes: 'Low-rank adaptation jobs.' },
       { id: 'qlora', name: 'QLoRA', status: 'shipped', notes: 'Quantized LoRA jobs.' },

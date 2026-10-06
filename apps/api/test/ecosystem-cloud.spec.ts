@@ -98,7 +98,7 @@ describe('Ecosystem Cloud Foundation (VL-249)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/ecosystem-cloud/products')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Ecosystem Cloud');
+    expect(res.body.product).toBe('Lugemi Ecosystem Cloud');
     expect(res.body.architecture.paymentProcessorOs).toBe(false);
     expect(res.body.architecture.storesRawCardData).toBe(false);
     expect(res.body.architecture.stripeOrEquivalentRequired).toBe(true);

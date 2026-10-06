@@ -4,7 +4,7 @@
  */
 export function controlPlaneAnalyticsEngineCatalog() {
   return {
-    product: 'VerbaLab Control Plane Analytics',
+    product: 'Lugemi Control Plane Analytics',
     capabilities: [
       { id: 'organizations', name: 'Organizations', status: 'shipped', notes: 'From org control.' },
       { id: 'deployments', name: 'Deployments', status: 'shipped', notes: 'From deploy controller.' },

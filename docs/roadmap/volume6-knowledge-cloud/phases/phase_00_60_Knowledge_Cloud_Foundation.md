@@ -4,7 +4,7 @@
 Phase 60
 Knowledge Cloud Foundation
 Cursor Master Prompt
-You are the Chief Knowledge Architect for VerbaLab AI.
+You are the Chief Knowledge Architect for Lugemi AI.
 
 Build the Enterprise Knowledge Cloud.
 
@@ -12,7 +12,7 @@ This becomes a first-class cloud platform.
 
 Do NOT regenerate previous phases.
 
-Knowledge Cloud powers every VerbaLab service.
+Knowledge Cloud powers every Lugemi service.
 
 Products
 

@@ -322,7 +322,7 @@ finops-platform, supply-chain-security, developer-experience-platform,
 platform-engineering-analytics.
 
 Does **not** invent Backstage OS, ArgoCD/Flux OS, Kubernetes control-plane OS, Snyk OS,
-Datadog OS, FinOps cloud-billing OS, or VerbaLab AI Cloud OS / Control Plane / Data Plane.
+Datadog OS, FinOps cloud-billing OS, or Lugemi AI Cloud OS / Control Plane / Data Plane.
 """,
         "COVERAGE_REPORT.md": """# Platform Engineering Cloud Coverage Report (VL-313)
 
@@ -359,7 +359,7 @@ remote vuln DB crawl). No heavy inference paths introduced in Volume 16.
 
 ## Verdict
 
-Volume 16 Platform Engineering Cloud is closed and ready as VerbaLab's internal IDP tooling.
+Volume 16 Platform Engineering Cloud is closed and ready as Lugemi's internal IDP tooling.
 
 ## Honesty checklist
 
@@ -873,13 +873,13 @@ def patch_wiring() -> None:
     help_lines = []
     for hub in HUBS:
         cmd = f"{hub['slug']}-products" if hub["kind"] == "foundation" else f"{hub['slug']}-engine"
-        line = f"  verbalab {cmd}"
+        line = f"  lugemi {cmd}"
         if line not in ct:
             help_lines.append(line)
     if help_lines:
         ct = ct.replace(
-            "  verbalab trust-analytics-engine\n",
-            "  verbalab trust-analytics-engine\n" + "\n".join(help_lines) + "\n",
+            "  lugemi trust-analytics-engine\n",
+            "  lugemi trust-analytics-engine\n" + "\n".join(help_lines) + "\n",
         )
     handlers = []
     for hub in HUBS:
@@ -961,7 +961,7 @@ Library Phase 169 — part of Volume 16 Platform Engineering Cloud.
 
 ## Mission
 
-VerbaLab Platform Engineering Cloud is the internal Developer Platform (IDP) that lets
+Lugemi Platform Engineering Cloud is the internal Developer Platform (IDP) that lets
 engineering teams build, deploy, secure, observe, and operate services consistently —
 for engineers, not end users. Integrates Volume 7 GPU/Inference cost surfaces and
 Volume 10 Fabric where relevant.

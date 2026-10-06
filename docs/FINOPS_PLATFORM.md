@@ -4,13 +4,13 @@ Library Phase 176 — part of Volume 16 Platform Engineering Cloud.
 
 ## Mission
 
-VerbaLab FinOps Platform provides the FinOps Platform surface inside the Platform Engineering Cloud — internal engineering tooling, not a product cloud.
+Lugemi FinOps Platform provides the FinOps Platform surface inside the Platform Engineering Cloud — internal engineering tooling, not a product cloud.
 
 ## Honesty
 
-- Extends existing VerbaLab systems — does not regenerate Volumes 1–15.
+- Extends existing Lugemi systems — does not regenerate Volumes 1–15.
 - `finopsOs=false`.
-- Not Backstage OS, ArgoCD/Flux OS, Kubernetes control-plane OS, Snyk OS, Datadog OS, or VerbaLab AI Cloud OS.
+- Not Backstage OS, ArgoCD/Flux OS, Kubernetes control-plane OS, Snyk OS, Datadog OS, or Lugemi AI Cloud OS.
 - Control Plane / Data Plane / AI Cloud OS deferred to Volume 17+.
 
 ## Surfaces

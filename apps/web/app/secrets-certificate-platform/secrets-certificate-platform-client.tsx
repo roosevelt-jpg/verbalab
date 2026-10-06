@@ -27,7 +27,7 @@ export function SecretsCertificatePlatformClient() {
         Secrets & Certificate Platform
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-320 — VerbaLab Secrets & Certificate Platform console in the Control Plane Cloud.
+        VL-320 — Lugemi Secrets & Certificate Platform console in the Control Plane Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

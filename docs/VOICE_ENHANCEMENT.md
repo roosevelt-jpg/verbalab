@@ -1,13 +1,13 @@
-# VerbaLab Voice Enhancement Platform
+# Lugemi Voice Enhancement Platform
 
 **Status:** Partial (VL-175 / library Phase 32)  
 **Rule:** Cleanup/restoration/mastering façade over Audio Intelligence PCM heuristics (VL-155). **Not** Krisp, Adobe Enhance, Demucs, or live AEC.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Enhancement Engine | **VL-175** — `GET /v1/voice-enhancement/engine` + `/voice-enhancement` |
 | Noise Removal | **Partial** — profile `noise_removal` |

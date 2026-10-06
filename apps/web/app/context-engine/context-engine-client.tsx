@@ -18,7 +18,7 @@ export function ContextEngineClient() {
   const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
-  const [query, setQuery] = useState('Where is VerbaLab HQ?');
+  const [query, setQuery] = useState('Where is Lugemi HQ?');
   const [maxChars, setMaxChars] = useState(4000);
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);

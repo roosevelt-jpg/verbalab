@@ -6,7 +6,7 @@
 
 ## Context
 
-Volume 16 builds Platform Engineering Cloud as internal IDP tooling for VerbaLab engineers. Risks: inventing Backstage/Argo/Flux/K8s/Snyk/Datadog/AI Cloud OS, regenerating Volumes 1–15, or claiming Control Plane / Data Plane here.
+Volume 16 builds Platform Engineering Cloud as internal IDP tooling for Lugemi engineers. Risks: inventing Backstage/Argo/Flux/K8s/Snyk/Datadog/AI Cloud OS, regenerating Volumes 1–15, or claiming Control Plane / Data Plane here.
 
 ## Decision
 

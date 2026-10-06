@@ -101,7 +101,7 @@ export class DeveloperCloudService {
       sandbox: {
         mode: 'soft_key_environment',
         separateCluster: false,
-        note: 'vl_test_ keys hit the same API/DB and share quota with live.',
+        note: 'lg_test_ keys hit the same API/DB and share quota with live.',
       },
       oauthClients: {
         supported: false,

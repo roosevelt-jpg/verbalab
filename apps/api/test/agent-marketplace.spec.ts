@@ -56,10 +56,10 @@ describe('Agent Marketplace (VL-254)', () => {
   let billing: BillingService;
   let agents: AgentRuntimeService;
   let marketplace: AgentMarketplaceService;
-  const prevMode = process.env.VERBALAB_AGENT_RUNTIME_MODE;
+  const prevMode = process.env.LUGEMI_AGENT_RUNTIME_MODE;
 
   beforeAll(async () => {
-    process.env.VERBALAB_AGENT_RUNTIME_MODE = 'sandbox';
+    process.env.LUGEMI_AGENT_RUNTIME_MODE = 'sandbox';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -74,8 +74,8 @@ describe('Agent Marketplace (VL-254)', () => {
   });
 
   afterAll(async () => {
-    if (prevMode === undefined) delete process.env.VERBALAB_AGENT_RUNTIME_MODE;
-    else process.env.VERBALAB_AGENT_RUNTIME_MODE = prevMode;
+    if (prevMode === undefined) delete process.env.LUGEMI_AGENT_RUNTIME_MODE;
+    else process.env.LUGEMI_AGENT_RUNTIME_MODE = prevMode;
     await app.close();
   });
 
@@ -107,7 +107,7 @@ describe('Agent Marketplace (VL-254)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/agent-marketplace/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Agent Marketplace');
+    expect(res.body.product).toBe('Lugemi Agent Marketplace');
     expect(res.body.honesty.liveToolExecution).toBe(false);
     expect(res.body.honesty.sandboxRequired).toBe(true);
     expect(res.body.honesty.agentPolicyHardGateRequired).toBe(true);

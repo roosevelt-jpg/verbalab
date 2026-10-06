@@ -1,13 +1,13 @@
-# VerbaLab Model Marketplace
+# Lugemi Model Marketplace
 
 **Status:** Shipped (VL-251 / library Phase 118)  
 **Rule:** License SKUs over Model Registry / VL-110 — **not** Hugging Face hub, weight CDN, or traffic-mesh deploy OS. Real-money honesty: Stripe (or equivalent); `storesRawCardData: false`. Roadmap: [`docs/roadmap/volume11-ecosystem-cloud/`](./roadmap/volume11-ecosystem-cloud/).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Foundation / Fine-tuned / Private / Enterprise / Community / Commercial | **Shipped** — `category` on listings |
 | Versioning | **Shipped** — `modelVersion` on snapshot + update |
@@ -30,7 +30,7 @@
 | Sales / analytics | `GET /v1/model-marketplace/sales`, `/analytics` |
 | GraphQL | `modelMarketplaceEngine` |
 | SDK | `modelMarketplaceEngine()` |
-| CLI | `verbalab model-marketplace-engine` |
+| CLI | `lugemi model-marketplace-engine` |
 
 ## Honesty
 

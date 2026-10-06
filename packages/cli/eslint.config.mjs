@@ -1,4 +1,4 @@
-import nestjsConfig from '@verbalab/eslint-config/nestjs';
+import nestjsConfig from '@lugemi/eslint-config/nestjs';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [...nestjsConfig];

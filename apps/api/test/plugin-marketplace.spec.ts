@@ -57,10 +57,10 @@ describe('Plugin Marketplace (VL-250)', () => {
   let billing: BillingService;
   let plugins: PluginRuntimeService;
   let marketplace: PluginMarketplaceService;
-  const prevMode = process.env.VERBALAB_PLUGIN_RUNTIME_MODE;
+  const prevMode = process.env.LUGEMI_PLUGIN_RUNTIME_MODE;
 
   beforeAll(async () => {
-    process.env.VERBALAB_PLUGIN_RUNTIME_MODE = 'sandbox';
+    process.env.LUGEMI_PLUGIN_RUNTIME_MODE = 'sandbox';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -94,8 +94,8 @@ describe('Plugin Marketplace (VL-250)', () => {
   });
 
   afterAll(async () => {
-    if (prevMode === undefined) delete process.env.VERBALAB_PLUGIN_RUNTIME_MODE;
-    else process.env.VERBALAB_PLUGIN_RUNTIME_MODE = prevMode;
+    if (prevMode === undefined) delete process.env.LUGEMI_PLUGIN_RUNTIME_MODE;
+    else process.env.LUGEMI_PLUGIN_RUNTIME_MODE = prevMode;
     await app.close();
   });
 
@@ -126,7 +126,7 @@ describe('Plugin Marketplace (VL-250)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/plugin-marketplace/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Plugin Marketplace');
+    expect(res.body.product).toBe('Lugemi Plugin Marketplace');
     expect(res.body.honesty.liveCodeExecution).toBe(false);
     expect(res.body.honesty.sandboxRequired).toBe(true);
     expect(res.body.honesty.pluginPolicyHardGateRequired).toBe(true);

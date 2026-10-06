@@ -21,11 +21,11 @@ export class TrainingJobsController {
 
   /**
    * Signed callback from Modal/Vertex workers.
-   * Auth: header `X-VerbaLab-Training-Token` or body.callbackToken.
+   * Auth: header `X-Lugemi-Training-Token` or body.callbackToken.
    */
   @Post('callback')
   callback(
-    @Headers('x-verbalab-training-token') headerToken: string | undefined,
+    @Headers('x-lugemi-training-token') headerToken: string | undefined,
     @Body()
     body: {
       jobId?: string;

@@ -1,4 +1,4 @@
-# VerbaLab Enterprise Knowledge Base
+# Lugemi Enterprise Knowledge Base
 
 **Status:** Partial (VL-194 / library Phase 61)  
 **Parent:** [Knowledge Cloud](./KNOWLEDGE_CLOUD.md) (VL-193+)  
@@ -19,7 +19,7 @@
 | Analytics / monitoring | `GET /v1/knowledge-base/analytics` · `/monitoring` |
 | Ingest (existing) | `POST /v1/knowledge/documents` (multipart + optional `collection`/`tags`/`contentKind`) |
 | GraphQL | `knowledgeBaseEngine` |
-| SDK / CLI | `knowledgeBaseEngine()` · `verbalab knowledge-base-engine` |
+| SDK / CLI | `knowledgeBaseEngine()` · `lugemi knowledge-base-engine` |
 
 ---
 

@@ -63,7 +63,7 @@ export class ClerkAuthGuard implements CanActivate {
       throw new ApiException('unauthorized', 'Invalid session token', HttpStatus.UNAUTHORIZED);
     }
 
-    const preferredWorkspaceRaw = request.headers['x-verbalab-workspace-id'];
+    const preferredWorkspaceRaw = request.headers['x-lugemi-workspace-id'];
     const preferredWorkspaceId = Array.isArray(preferredWorkspaceRaw)
       ? preferredWorkspaceRaw[0]
       : preferredWorkspaceRaw;

@@ -11,7 +11,7 @@ export type DecisionCapability = {
 /** Library Phase 56 → AI Decision Engine (VL-189). Light rules + helpers — not Drools/Pega BRMS. */
 export function decisionEngineCatalog() {
   return {
-    product: 'VerbaLab AI Decision Engine',
+    product: 'Lugemi AI Decision Engine',
     note:
       'Bounded decision helpers for model selection, routing, fallback, confidence, risk, policy, safety, tools, workflows, and cost (VL-189). Light rules over plan/entitlements + fixed catalogs. Optional LLM narrative deferred for most kinds. Not an enterprise BRMS (Drools/Pega parity).',
     capabilities: [
@@ -126,8 +126,8 @@ export function decisionEngineCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

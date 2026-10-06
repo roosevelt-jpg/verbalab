@@ -73,7 +73,7 @@ export class EmbeddingCloudService {
     return {
       ...result,
       modality,
-      product: 'VerbaLab Embedding Cloud',
+      product: 'Lugemi Embedding Cloud',
     };
   }
 

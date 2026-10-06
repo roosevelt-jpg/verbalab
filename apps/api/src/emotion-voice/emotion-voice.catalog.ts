@@ -13,7 +13,7 @@ export type EmotionVoiceCapability = {
 /** Library Phase 30 → Emotion Voice Engine (VL-173). */
 export function emotionVoiceEngineCatalog() {
   return {
-    product: 'VerbaLab Emotion Voice',
+    product: 'Lugemi Emotion Voice',
     note:
       'Emotion-conditioned synthesis façade over Neural TTS (VL-171). Soft prosody + voice recommendations for OpenAI/own voices; partial ElevenLabs style settings on clone:{id}. Not trained expressive TTS / Hume / Azure Neural Emotion. Distinct from Speech Emotion Intelligence detection (VL-154).',
     capabilities: [
@@ -161,8 +161,8 @@ export function emotionVoiceEngineCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

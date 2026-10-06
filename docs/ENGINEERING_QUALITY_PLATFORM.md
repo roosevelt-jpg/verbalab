@@ -4,7 +4,7 @@ Library Phase 215 — part of Volume 20 Enterprise Engineering System (EES).
 
 ## Mission
 
-VerbaLab Engineering Quality Platform is a **standards and governance catalog** for engineers and Cursor.
+Lugemi Engineering Quality Platform is a **standards and governance catalog** for engineers and Cursor.
 It is not a customer-facing product cloud, not Jira/Confluence/SonarQube OS, and not an
 Architecture Knowledge Base / ADR factory OS.
 

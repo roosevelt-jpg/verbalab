@@ -11,7 +11,7 @@ export type IntelAnalyticsCapability = {
 /** Library Phase 58 → Intelligence Analytics (VL-191). Aggregates for this cloud — not Language/Speech/Voice analytics. */
 export function intelligenceAnalyticsCatalog() {
   return {
-    product: 'VerbaLab Intelligence Analytics',
+    product: 'Lugemi Intelligence Analytics',
     note:
       'Usage/quality aggregates for Intelligence Cloud surfaces (VL-191): embeddings, memory, knowledge/vector, context, reasoning, recommendations, prompts, decisions, orchestration, chat. Distinct from Language/Speech/Voice analytics. Not a BI dashboard OS or enterprise reporting suite.',
     capabilities: [
@@ -121,8 +121,8 @@ export function intelligenceAnalyticsCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

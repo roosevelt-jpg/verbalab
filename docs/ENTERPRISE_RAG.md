@@ -1,4 +1,4 @@
-# VerbaLab Enterprise RAG Platform
+# Lugemi Enterprise RAG Platform
 
 **Status:** Partial (VL-198 / library Phase 65)  
 **Parent:** [Knowledge Cloud](./KNOWLEDGE_CLOUD.md)  

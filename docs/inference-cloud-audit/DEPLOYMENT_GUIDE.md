@@ -14,9 +14,9 @@ This guide points at the **existing** production paths. Inference Cloud ships in
 3. Configure Clerk + `CORS_ORIGIN`.
 4. Configure vendor keys for Gateway paths (`OPENAI_API_KEY`, etc.).
 5. Set spend-safety env before any real GPU billing account:
-   - `VERBALAB_GPU_MAX_INSTANCES`, `VERBALAB_GPU_MAX_SPEND_USD`
-   - `VERBALAB_COST_DAILY_CAP_USD`, `VERBALAB_COST_MONTHLY_CAP_USD`
-   - Prefer `VERBALAB_GPU_PROVISION_MODE=sandbox` / cost mode `sandbox`
+   - `LUGEMI_GPU_MAX_INSTANCES`, `LUGEMI_GPU_MAX_SPEND_USD`
+   - `LUGEMI_COST_DAILY_CAP_USD`, `LUGEMI_COST_MONTHLY_CAP_USD`
+   - Prefer `LUGEMI_GPU_PROVISION_MODE=sandbox` / cost mode `sandbox`
 6. Optional: Stripe for plan entitlements.
 
 ## Post-deploy smoke

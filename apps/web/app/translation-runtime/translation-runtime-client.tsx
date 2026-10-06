@@ -28,7 +28,7 @@ export function TranslationRuntimeClient() {
         Translation Runtime
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-325 — VerbaLab Translation Runtime console in the Data Plane Cloud.
+        VL-325 — Lugemi Translation Runtime console in the Data Plane Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

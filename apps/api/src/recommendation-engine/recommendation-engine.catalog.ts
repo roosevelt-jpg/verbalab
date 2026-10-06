@@ -11,7 +11,7 @@ export type RecCapability = {
 /** Library Phase 54 → Recommendation Engine (VL-187). Light rankers — not a retail recommender OS. */
 export function recommendationEngineCatalog() {
   return {
-    product: 'VerbaLab Recommendation Engine',
+    product: 'Lugemi Recommendation Engine',
     note:
       'Light rankers over languages, voices, knowledge/content, translation pairs, models, and workflow APIs (VL-187). Uses registry/TTS/Vector/Memory catalogs + optional memory text signals. Not a collaborative-filtering / retail recommender OS.',
     capabilities: [
@@ -106,8 +106,8 @@ export function recommendationEngineCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

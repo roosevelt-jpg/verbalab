@@ -13,7 +13,7 @@ export class FoundationModelCloudService {
 
   products() {
     return {
-      product: 'VerbaLab Foundation Model Cloud',
+      product: 'Lugemi Foundation Model Cloud',
       products: foundationModelCloudCatalog(),
       architecture: foundationModelCloudArchitectureNotes(),
       honesty: foundationModelCloudHonesty(),

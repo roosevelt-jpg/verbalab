@@ -57,8 +57,8 @@ describe('AI Kernel Production Audit (VL-223)', () => {
   let rawKey: string;
 
   beforeAll(async () => {
-    process.env.VERBALAB_POLICY_RUNTIME_MODE = 'enforce';
-    process.env.VERBALAB_AGENT_RUNTIME_MODE = 'sandbox';
+    process.env.LUGEMI_POLICY_RUNTIME_MODE = 'enforce';
+    process.env.LUGEMI_AGENT_RUNTIME_MODE = 'sandbox';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -104,7 +104,7 @@ describe('AI Kernel Production Audit (VL-223)', () => {
 
   it('ships audit ADR and report pack', () => {
     expect(existsSync(join(root, 'docs/adr/0134-ai-kernel-production-audit.md'))).toBe(true);
-    expect(existsSync(join(root, 'docs/adr/0080-verbalab-cloud-blueprint.md'))).toBe(true);
+    expect(existsSync(join(root, 'docs/adr/0080-lugemi-cloud-blueprint.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/CLOUD_BLUEPRINT.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/ai-kernel-audit/PRODUCTION_READINESS.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/ai-kernel-audit/ARCHITECTURE_REPORT.md'))).toBe(true);

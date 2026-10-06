@@ -1,4 +1,4 @@
-# VerbaLab Model Serving
+# Lugemi Model Serving
 
 **Status:** Partial (VL-206 / library Phase 73)  
 **Parent:** [Inference Cloud](./INFERENCE_CLOUD.md)  
@@ -18,7 +18,7 @@
 | Traffic / promote / rollback / release | `POST …/deployments/:id/{traffic,promote,rollback,release,redeploy}` |
 | Health / analytics / monitoring | `GET …/health` · `/analytics` · `/monitoring` |
 | GraphQL | `modelServingEngine` |
-| SDK / CLI | `modelServingEngine()` · `verbalab model-serving-engine` |
+| SDK / CLI | `modelServingEngine()` · `lugemi model-serving-engine` |
 
 ## Model kinds
 
@@ -44,8 +44,8 @@
 
 | Control | Default | Env |
 | --- | --- | --- |
-| Serving mode | `sandbox` | `VERBALAB_MODEL_SERVING_MODE=disabled\|sandbox` |
-| Max active deployments | 8 (cap 32) | `VERBALAB_MODEL_SERVING_MAX_ACTIVE` |
+| Serving mode | `sandbox` | `LUGEMI_MODEL_SERVING_MODE=disabled\|sandbox` |
+| Max active deployments | 8 (cap 32) | `LUGEMI_MODEL_SERVING_MAX_ACTIVE` |
 
 - Deploy returns **402** when the active-deployment ceiling would be exceeded.
 - GPU spend ceilings remain on [GPU Platform](./GPU_PLATFORM.md) — Model Serving does not provision GPUs.

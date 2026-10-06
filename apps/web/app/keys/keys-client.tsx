@@ -86,8 +86,8 @@ export function KeysClient() {
         API keys
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0', lineHeight: 1.6, maxWidth: '40rem' }}>
-        Secrets are shown once. Use <code className="vl-code">vl_live_</code> or soft-sandbox{' '}
-        <code className="vl-code">vl_test_</code> (same cluster & quota). See{' '}
+        Secrets are shown once. Use <code className="vl-code">lg_live_</code> or soft-sandbox{' '}
+        <code className="vl-code">lg_test_</code> (same cluster & quota). See{' '}
         <Link href="/developers" style={{ color: 'var(--action-primary)' }}>
           Developers
         </Link>
@@ -113,8 +113,8 @@ export function KeysClient() {
           onChange={(e) => setEnvironment(e.target.value as 'live' | 'test')}
           style={{ width: 'auto', minWidth: '10rem' }}
         >
-          <option value="live">live (vl_live_)</option>
-          <option value="test">test (vl_test_)</option>
+          <option value="live">live (lg_live_)</option>
+          <option value="test">test (lg_test_)</option>
         </select>
         <button type="submit" className="vl-btn vl-btn-primary">
           Create

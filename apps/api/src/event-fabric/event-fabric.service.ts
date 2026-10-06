@@ -18,7 +18,7 @@ export class EventFabricService {
 
   products() {
     return {
-      product: 'VerbaLab Event Fabric',
+      product: 'Lugemi Event Fabric',
       products: eventFabricCapabilityCatalog(),
       brokers: eventFabricBrokerCatalog(),
       architecture: eventFabricArchitectureNotes(),

@@ -4,7 +4,7 @@
 Phase 71
 Inference Cloud Foundation
 Cursor Master Prompt
-You are the Principal AI Infrastructure Architect for VerbaLab AI.
+You are the Principal AI Infrastructure Architect for Lugemi AI.
 
 Build the Enterprise Inference Cloud.
 

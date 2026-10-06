@@ -1,4 +1,4 @@
-# VerbaLab — Volume 14: MLOps & LLMOps Cloud (Phases 148–158)
+# Lugemi — Volume 14: MLOps & LLMOps Cloud (Phases 148–158)
 
 Same workflow as Volumes 1–13. `.cursorrules` at the repo root still applies.
 This volume builds the operations layer over Volumes 7–9 (Inference, AI

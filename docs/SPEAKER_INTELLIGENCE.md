@@ -1,13 +1,13 @@
-# VerbaLab Speaker Intelligence
+# Lugemi Speaker Intelligence
 
 **Status:** Partial shipped (VL-152 / library Phase 18)  
 **Rule:** Bounded speaker profiles + local fingerprints + gap diarization. Do not claim NIST biometrics or neural diarization OS.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Speaker Intelligence / Engine | **VL-152** — `GET /v1/speakers/engine` + `/speaker-intelligence` |
 | Speaker Profiles | **Shipped** — CRUD `/v1/speakers/profiles` |

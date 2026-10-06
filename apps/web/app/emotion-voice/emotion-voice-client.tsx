@@ -62,7 +62,7 @@ export function EmotionVoiceClient() {
         body: JSON.stringify({ text, emotion, format: 'mp3' }),
       });
       if (!res.ok) throw new Error(await res.text());
-      setMode(res.headers.get('X-VerbaLab-Emotion-Mode'));
+      setMode(res.headers.get('X-Lugemi-Emotion-Mode'));
       const blob = await res.blob();
       if (audioUrl) URL.revokeObjectURL(audioUrl);
       setAudioUrl(URL.createObjectURL(blob));

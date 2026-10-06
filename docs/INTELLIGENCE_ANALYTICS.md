@@ -1,13 +1,13 @@
-# VerbaLab Intelligence Analytics
+# Lugemi Intelligence Analytics
 
 **Status:** Partial shipped (VL-191 / library Phase 58)  
 **Rule:** Usage/quality aggregates for **Intelligence Cloud** surfaces only. Do **not** regenerate Language, Speech, or Voice analytics products. Not a BI dashboard OS or enterprise reporting suite.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Reasoning | **Shipped** — reasoning_cloud audit counts |
 | Memory | **Shipped** — memory_cloud audits |
@@ -19,7 +19,7 @@
 | Cost | **Shipped** — estimated chat/embeddings USD |
 | Enterprise Reports | **Deferred** |
 | Dashboard / Report | **VL-191** — `/intelligence-analytics` + `/report` |
-| GraphQL / SDK / CLI | `intelligenceAnalytics`, `verbalab intelligence-analytics` |
+| GraphQL / SDK / CLI | `intelligenceAnalytics`, `lugemi intelligence-analytics` |
 
 ---
 

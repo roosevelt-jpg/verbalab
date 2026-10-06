@@ -14,7 +14,7 @@ export class EcosystemCloudService {
 
   products() {
     return {
-      product: 'VerbaLab Ecosystem Cloud',
+      product: 'Lugemi Ecosystem Cloud',
       products: ecosystemProductCatalog(),
       architecture: ecosystemArchitectureNotes(),
       honesty: ecosystemHonesty(),

@@ -5,7 +5,7 @@
 
 ## Executive verdict
 
-**AI Kernel is production-ready as a bounded internal VerbaLab volume** (ships inside the Nest API + Next console), with known honesty limits documented in ADR-0125–0134.
+**AI Kernel is production-ready as a bounded internal Lugemi volume** (ships inside the Nest API + Next console), with known honesty limits documented in ADR-0125–0134.
 
 It is an **internal execution hub** for Memory/Prompt/Context/Reasoning/Agent/Workflow/Plugin/Policy runtimes over Inference Cloud + existing product modules.
 
@@ -52,7 +52,7 @@ Realtime agent bus · distributed workflow/Temporal · live plugin code/network 
 ## Remaining ops dependencies
 
 - `DATABASE_URL`, `REDIS_URL`, Clerk, vendor keys as for Inference Cloud
-- Prefer sandbox modes: `VERBALAB_*_RUNTIME_MODE=sandbox` / Policy `enforce`
+- Prefer sandbox modes: `LUGEMI_*_RUNTIME_MODE=sandbox` / Policy `enforce`
 - Fly token or EKS for production traffic
 - **Never** enable open tool/live plugin execution against real accounts without Policy review
 

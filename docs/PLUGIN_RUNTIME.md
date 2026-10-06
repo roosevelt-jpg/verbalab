@@ -1,4 +1,4 @@
-# VerbaLab Plugin Runtime
+# Lugemi Plugin Runtime
 
 **Status:** Partial shipped (VL-221 / library Phase 88)  
 **Rule:** Plugins require **scoped permissions** and **sandboxing**. Missing permissions and globally denied actions are **hard-blocked**. Not live arbitrary code/network plugins. Not a browser/VS Code extension OS. Extends marketplace — does not regenerate it.
@@ -16,9 +16,9 @@ Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roa
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Plugin Registry | **Shipped** — kernel MemoryRecords |
 | Plugin Sandbox | **Shipped** — simulated handlers only |
@@ -42,7 +42,7 @@ Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roa
 | Marketplace | `GET /v1/plugin-runtime/marketplace` |
 | GraphQL | `pluginRuntimeEngine` |
 | SDK | `pluginRuntimeEngine()`, `pluginRuntimeRegister()`, `pluginRuntimeInvoke()` |
-| CLI | `verbalab plugin-runtime-engine` |
+| CLI | `lugemi plugin-runtime-engine` |
 
 ## Grantable permissions
 

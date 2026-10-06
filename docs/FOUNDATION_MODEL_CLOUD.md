@@ -1,4 +1,4 @@
-# VerbaLab Foundation Model Cloud
+# Lugemi Foundation Model Cloud
 
 **Status:** Volume MLOps track complete through Production Audit (VL-224 + VL-235–238 / library Phases 91 + 102–105)  
 **Rule:** This volume ships **platform/MLOps scaffolding** — **not** trained competitive foundation weights. Extends Inference Cloud + AI Kernel. Do **not** regenerate Volumes 1–8 or claim OpenAI replacement. Roadmap: [`docs/roadmap/volume9-foundation-model-cloud/`](./roadmap/volume9-foundation-model-cloud/). Audit pack: [`docs/foundation-model-cloud-audit/`](./foundation-model-cloud-audit/).
@@ -9,9 +9,9 @@ ADR-0041 deferred the *training program* (VL-112). VL-224+ ships an **honest pla
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Foundation Model Cloud Foundation | **VL-224** — `/foundation-model-cloud` + product catalog / overview |
 | Atlas (Phase 92) | **Partial** — VL-225 ([`ATLAS.md`](./ATLAS.md)); scaffold only |
@@ -40,8 +40,8 @@ ADR-0041 deferred the *training program* (VL-112). VL-224+ ships an **honest pla
 | Monitoring | `GET /v1/foundation-model-cloud/monitoring` |
 | GraphQL | `foundationModelCloudProducts` |
 | OpenAPI | `/v1/openapi.json` |
-| SDK | `foundationModelCloudProducts()` on `@verbalab/sdk` |
-| CLI | `verbalab foundation-model-cloud-products` |
+| SDK | `foundationModelCloudProducts()` on `@lugemi/sdk` |
+| CLI | `lugemi foundation-model-cloud-products` |
 
 ## Honesty
 

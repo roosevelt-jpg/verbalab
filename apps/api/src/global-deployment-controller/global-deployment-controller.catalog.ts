@@ -5,7 +5,7 @@
  */
 export function globalDeploymentControllerEngineCatalog() {
   return {
-    product: 'VerbaLab Global Deployment Controller',
+    product: 'Lugemi Global Deployment Controller',
     capabilities: [
       { id: 'multi_region', name: 'Multi Region', status: 'shipped', notes: 'VL-318.' },
       { id: 'blue_green', name: 'Blue Green', status: 'shipped', notes: 'VL-318.' },

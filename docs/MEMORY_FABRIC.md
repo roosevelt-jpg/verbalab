@@ -1,13 +1,13 @@
-# VerbaLab Memory Fabric
+# Lugemi Memory Fabric
 
 **Status:** Shipped (VL-245 / library Phase 112)  
 **Rule:** Memory Fabric is the **internal** memory router over Memory Runtime — **not** Mem0, multi-region replication OS, infinite personalization OS, or a customer-facing product. Extends AI Fabric + Memory Runtime. Do **not** regenerate Volumes 1–9 or VL-215 / VL-183. Roadmap: [`docs/roadmap/volume10-ai-fabric/`](./roadmap/volume10-ai-fabric/).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Memory Fabric | **VL-245** — `/memory-fabric` |
 | Memory Router | **Shipped** — `POST /route` |
@@ -30,7 +30,7 @@
 | Sync / list / search | `POST /sync`, `GET /memories`, `POST /search` |
 | Replicate / Distribute | `POST /replicate`, `POST /distribute` |
 | GraphQL | `memoryFabricCapabilities`, `memoryFabricRoutes` |
-| SDK / CLI | `memoryFabricProducts()`, `verbalab memory-fabric-products` |
+| SDK / CLI | `memoryFabricProducts()`, `lugemi memory-fabric-products` |
 
 ## Action safety
 

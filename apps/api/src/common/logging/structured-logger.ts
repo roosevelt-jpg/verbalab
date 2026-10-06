@@ -5,7 +5,7 @@ function emit(level: string, message: string, fields?: LogFields) {
     ts: new Date().toISOString(),
     level,
     msg: message,
-    service: 'verbalab-api',
+    service: 'lugemi-api',
     ...(fields ?? {}),
   };
   const payload = JSON.stringify(line);

@@ -32,7 +32,7 @@ export const PROMPT_MARKETPLACE_LICENSE_TYPES = [
  */
 export function promptMarketplaceEngineCatalog() {
   return {
-    product: 'VerbaLab Prompt Marketplace',
+    product: 'Lugemi Prompt Marketplace',
     note:
       'Prompt Marketplace (VL-253). Publish/license prompt packs over content-marketplace prompt kind + Prompt Fabric (VL-243). Install copies managed prompt versions into buyer workspaces — not a prompt mesh OS or auto-prompt research lab.',
     capabilities: [

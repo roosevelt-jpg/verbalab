@@ -1,4 +1,4 @@
-# VerbaLab — Volume 7: Inference Cloud (Phases 71–80)
+# Lugemi — Volume 7: Inference Cloud (Phases 71–80)
 
 Same workflow as Volumes 1–6. `.cursorrules` at the repo root still applies.
 This volume is the actual model-serving/compute layer underneath AI

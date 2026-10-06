@@ -16,4 +16,4 @@ Executed by `apps/api/test/knowledge-cloud-audit.spec.ts` in CI/local vitest. No
 
 ## Honesty
 
-Library Phase 70 asks for performance/search/knowledge benchmarks. VerbaLab ships **bounded smokes + existing suite evidence**, not a benchmark lab. Live semantic/RAG latency depends on OpenAI availability and is env-gated.
+Library Phase 70 asks for performance/search/knowledge benchmarks. Lugemi ships **bounded smokes + existing suite evidence**, not a benchmark lab. Live semantic/RAG latency depends on OpenAI availability and is env-gated.

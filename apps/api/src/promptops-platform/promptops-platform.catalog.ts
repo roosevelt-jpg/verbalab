@@ -4,7 +4,7 @@
  */
 export function promptopsPlatformEngineCatalog() {
   return {
-    product: 'VerbaLab PromptOps Platform',
+    product: 'Lugemi PromptOps Platform',
     capabilities: [
       { id: 'registry', name: 'Registry', status: 'shipped', notes: 'Prompt registry catalog.' },
       { id: 'versioning', name: 'Versioning', status: 'shipped', notes: 'Immutable prompt versions.' },

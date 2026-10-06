@@ -57,7 +57,7 @@ describe('Synthetic Data Platform (VL-273)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/synthetic-data-platform/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Synthetic Data Platform');
+    expect(res.body.product).toBe('Lugemi Synthetic Data Platform');
 
     expect(res.body.honesty.syntheticLabelRequired).toBe(true);
     expect(res.body.safety.syntheticLabelRequired).toBe(true);

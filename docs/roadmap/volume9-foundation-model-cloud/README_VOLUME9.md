@@ -1,4 +1,4 @@
-# VerbaLab — Volume 9: Foundation Model Cloud (Phases 91–105)
+# Lugemi — Volume 9: Foundation Model Cloud (Phases 91–105)
 
 Same workflow as Volumes 1–8. `.cursorrules` at the repo root still applies.
 

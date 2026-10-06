@@ -29,7 +29,7 @@ export const KERNEL_MEMORY_KINDS = [
 export type KernelMemoryKind = (typeof KERNEL_MEMORY_KINDS)[number];
 
 export function memoryRuntimeMode(): 'disabled' | 'sandbox' {
-  const raw = (process.env.VERBALAB_MEMORY_RUNTIME_MODE ?? 'sandbox').toLowerCase();
+  const raw = (process.env.LUGEMI_MEMORY_RUNTIME_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
@@ -37,13 +37,13 @@ export function memoryRuntimeMode(): 'disabled' | 'sandbox' {
 export function memoryRuntimeCeilings() {
   const max = Math.max(
     1,
-    Number(process.env.VERBALAB_KERNEL_MEMORY_MAX_ENTRIES ?? '200') || 200,
+    Number(process.env.LUGEMI_KERNEL_MEMORY_MAX_ENTRIES ?? '200') || 200,
   );
   return {
     maxEntriesPerWorkspace: Math.min(max, 2000),
     defaultShortTermTtlSec: Math.min(
       86_400,
-      Math.max(60, Number(process.env.VERBALAB_KERNEL_MEMORY_SHORT_TTL_SEC ?? '3600') || 3600),
+      Math.max(60, Number(process.env.LUGEMI_KERNEL_MEMORY_SHORT_TTL_SEC ?? '3600') || 3600),
     ),
     mode: memoryRuntimeMode(),
     note: 'Hard entry ceiling for kernel-layer MemoryRecord rows. Eviction enforces under ceiling.',
@@ -56,7 +56,7 @@ export function memoryRuntimeCeilings() {
  */
 export function memoryRuntimeCatalog() {
   return {
-    product: 'VerbaLab Memory Runtime',
+    product: 'Lugemi Memory Runtime',
     note:
       'Memory Runtime (VL-215). Kernel-layer short/long-term/semantic/workspace/org/conversation/agent memory over VL-183 MemoryRecord (metadata.layer=kernel). Versioning, eviction, heuristic compression, sandbox snapshots/sync. Not Mem0 OS, not infinite personalization, not multi-region replication. Does not regenerate Memory Cloud or Knowledge Memory.',
     capabilities: [
@@ -177,7 +177,7 @@ export function memoryRuntimeCatalog() {
         name: 'SDK',
         status: 'shipped',
         api: 'memoryRuntimeEngine()',
-        notes: '@verbalab/sdk',
+        notes: '@lugemi/sdk',
       },
       {
         id: 'realtime',

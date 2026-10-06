@@ -531,7 +531,7 @@ export class CostOptimizationService {
     if (costOptimizationMode() === 'disabled') {
       throw new ApiException(
         'cost_optimization_disabled',
-        'Cost Optimization mode is disabled (VERBALAB_COST_OPTIMIZATION_MODE=disabled).',
+        'Cost Optimization mode is disabled (LUGEMI_COST_OPTIMIZATION_MODE=disabled).',
         HttpStatus.FORBIDDEN,
       );
     }

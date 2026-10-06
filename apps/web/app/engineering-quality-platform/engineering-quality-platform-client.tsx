@@ -29,7 +29,7 @@ export function EngineeringQualityPlatformClient() {
         Engineering Quality Platform
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-348 — VerbaLab Engineering Quality Platform console in Enterprise Engineering System (standards for humans + Cursor).
+        VL-348 — Lugemi Engineering Quality Platform console in Enterprise Engineering System (standards for humans + Cursor).
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

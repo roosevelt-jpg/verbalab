@@ -4,11 +4,11 @@ Library Phase 161 — part of Volume 15 Trust Cloud.
 
 ## Mission
 
-VerbaLab AI Governance Platform provides the AI Governance Platform surface inside the Trust Cloud.
+Lugemi AI Governance Platform provides the AI Governance Platform surface inside the Trust Cloud.
 
 ## Honesty
 
-- Extends existing VerbaLab systems — does not regenerate Volumes 1–14.
+- Extends existing Lugemi systems — does not regenerate Volumes 1–14.
 - `humanSignOffRequired=true`.
 - Platform Engineering Cloud deferred to Volume 16+ (`platformEngineeringOs=false`).
 

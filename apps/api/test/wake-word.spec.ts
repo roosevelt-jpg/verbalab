@@ -73,7 +73,7 @@ describe('Wake Word Engine (VL-157)', () => {
     const res = await request(app.getHttpServer()).get('/v1/wake-word/engine').expect(200);
     expect(res.body.product).toContain('Wake');
     expect(res.body.defaultWakePhrases).toEqual(
-      expect.arrayContaining(['hey verbalab', 'ok verbalab', 'verbalab']),
+      expect.arrayContaining(['hey lugemi', 'ok lugemi', 'lugemi']),
     );
     const dnn = res.body.capabilities.find((c: { id: string }) => c.id === 'on-device-dnn');
     expect(dnn.status).toBe('deferred');
@@ -91,7 +91,7 @@ describe('Wake Word Engine (VL-157)', () => {
     const detect = await request(app.getHttpServer())
       .post('/v1/wake-word/detect')
       .set('Authorization', `Bearer ${key.secret}`)
-      .send({ text: 'Hey VerbaLab please help me' })
+      .send({ text: 'Hey Lugemi please help me' })
       .expect(200);
     expect(detect.body.wakeDetected).toBe(true);
     expect(detect.body.hits.length).toBeGreaterThan(0);
@@ -141,7 +141,7 @@ describe('Wake Word Engine (VL-157)', () => {
     const res = await request(app.getHttpServer())
       .post('/v1/wake-word/detect/stream')
       .set('Authorization', `Bearer ${key.secret}`)
-      .send({ text: 'ok verbalab start listening' })
+      .send({ text: 'ok lugemi start listening' })
       .expect(200);
 
     expect(res.headers['content-type']).toMatch(/text\/event-stream/);
@@ -157,14 +157,14 @@ describe('Wake Word Engine (VL-157)', () => {
       })
       .expect(200);
     expect(res.body.errors).toBeUndefined();
-    expect(res.body.data.wakeWordEngine.defaultWakePhrases).toContain('hey verbalab');
+    expect(res.body.data.wakeWordEngine.defaultWakePhrases).toContain('hey lugemi');
   });
 
   it('spots phrases with word boundaries', () => {
-    const hits = spotPhrases('please hey verbalab now', [
-      { phrase: 'hey verbalab', kind: 'wake_word' },
+    const hits = spotPhrases('please hey lugemi now', [
+      { phrase: 'hey lugemi', kind: 'wake_word' },
     ]);
     expect(hits.length).toBe(1);
-    expect(hits[0]!.matched).toContain('hey verbalab');
+    expect(hits[0]!.matched).toContain('hey lugemi');
   });
 });

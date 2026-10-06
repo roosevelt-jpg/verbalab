@@ -57,7 +57,7 @@ describe('Benchmark Platform (VL-274)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/benchmark-platform/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Benchmark Platform');
+    expect(res.body.product).toBe('Lugemi Benchmark Platform');
 
     expect(res.body.honesty.publicLeaderboardOs).toBe(false);
     expect(res.body.honesty.sotaClaim).toBe(false);

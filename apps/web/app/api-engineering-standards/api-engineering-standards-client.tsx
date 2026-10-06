@@ -29,7 +29,7 @@ export function ApiEngineeringStandardsClient() {
         API Engineering Standards
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-350 — VerbaLab API Engineering Standards console in Enterprise Engineering System (standards for humans + Cursor).
+        VL-350 — Lugemi API Engineering Standards console in Enterprise Engineering System (standards for humans + Cursor).
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

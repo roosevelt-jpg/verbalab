@@ -4,7 +4,7 @@
  */
 export function trustAnalyticsEngineCatalog() {
   return {
-    product: 'VerbaLab Trust Analytics',
+    product: 'Lugemi Trust Analytics',
     capabilities: [
       { id: 'safety_incidents', name: 'Safety Incidents', status: 'shipped', notes: 'From AI Safety.' },
       { id: 'compliance_status', name: 'Compliance Status', status: 'shipped', notes: 'From Compliance.' },

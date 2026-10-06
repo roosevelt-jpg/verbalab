@@ -8,7 +8,7 @@
 
 Library Phase 33 asks for enterprise voice biometrics: authentication, verification, identification, fraud, anti-spoof, liveness, risk scoring, engine, REST/GraphQL/SDK/dashboard/monitoring/docs.
 
-VerbaLab already ships Speaker Intelligence (VL-152) with local fingerprints. Claiming NIST/PAD/ASVspoof certification would be dishonest. ROADMAP prefers a specialist vendor for regulated auth and asks us to harden governance (encryption-at-rest, deletion, honest heuristics).
+Lugemi already ships Speaker Intelligence (VL-152) with local fingerprints. Claiming NIST/PAD/ASVspoof certification would be dishonest. ROADMAP prefers a specialist vendor for regulated auth and asks us to harden governance (encryption-at-rest, deletion, honest heuristics).
 
 ## Decision
 

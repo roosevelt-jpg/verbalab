@@ -61,7 +61,7 @@ describe('Enterprise RAG Platform (VL-198)', () => {
   let storageDir: string;
 
   beforeAll(async () => {
-    storageDir = await mkdtemp(join(tmpdir(), 'verbalab-erag-'));
+    storageDir = await mkdtemp(join(tmpdir(), 'lugemi-erag-'));
     process.env.DOCUMENT_STORAGE_DIR = storageDir;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -174,7 +174,7 @@ describe('Enterprise RAG Platform (VL-198)', () => {
     const leaveDoc = [
       '# Employee Leave Policy',
       '',
-      'VerbaLab full-time employees receive twenty-two (22) paid leave days per year.',
+      'Lugemi full-time employees receive twenty-two (22) paid leave days per year.',
       'Leave requests must be submitted at least five business days in advance.',
     ].join('\n');
 

@@ -4,7 +4,7 @@
 
 ## Summary
 
-Data Plane Cloud ships as thin execution/routing façades over existing VerbaLab product logic.
+Data Plane Cloud ships as thin execution/routing façades over existing Lugemi product logic.
 No org/policy/billing management. No Service Mesh invention. GPU budget honesty retained.
 
 ## Evidence

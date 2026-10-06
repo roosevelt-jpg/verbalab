@@ -11,7 +11,7 @@ export type EmotionCapability = {
 /** Library Phase 20 → Emotion Intelligence (VL-154). */
 export function emotionEngineCatalog() {
   return {
-    product: 'VerbaLab Emotion Intelligence',
+    product: 'Lugemi Emotion Intelligence',
     note:
       'Speech Cloud emotion detect for happy/sad/angry/fear/neutral/stress/confidence/excitement/urgency via text cues (+ optional soft audio proxies). Not a commercial SER lab.',
     labels: [
@@ -75,8 +75,8 @@ export function emotionEngineCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

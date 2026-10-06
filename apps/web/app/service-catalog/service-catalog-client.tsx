@@ -27,7 +27,7 @@ export function ServiceCatalogClient() {
         Service Catalog
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-304 — VerbaLab Service Catalog console in the Platform Engineering Cloud.
+        VL-304 — Lugemi Service Catalog console in the Platform Engineering Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

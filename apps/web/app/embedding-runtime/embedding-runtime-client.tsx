@@ -28,7 +28,7 @@ export function EmbeddingRuntimeClient() {
         Embedding Runtime
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-330 — VerbaLab Embedding Runtime console in the Data Plane Cloud.
+        VL-330 — Lugemi Embedding Runtime console in the Data Plane Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

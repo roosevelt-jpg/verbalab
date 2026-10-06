@@ -33,7 +33,7 @@ export const AGENT_DENIED_ACTIONS = [
 ] as const;
 
 export function agentRuntimeMode(): 'disabled' | 'sandbox' {
-  const raw = (process.env.VERBALAB_AGENT_RUNTIME_MODE ?? 'sandbox').toLowerCase();
+  const raw = (process.env.LUGEMI_AGENT_RUNTIME_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
@@ -42,11 +42,11 @@ export function agentRuntimeCeilings() {
   return {
     maxAgentsPerWorkspace: Math.min(
       100,
-      Math.max(1, Number(process.env.VERBALAB_AGENT_RUNTIME_MAX_AGENTS ?? '20') || 20),
+      Math.max(1, Number(process.env.LUGEMI_AGENT_RUNTIME_MAX_AGENTS ?? '20') || 20),
     ),
     maxStepsPerRun: Math.min(
       50,
-      Math.max(1, Number(process.env.VERBALAB_AGENT_RUNTIME_MAX_STEPS ?? '8') || 8),
+      Math.max(1, Number(process.env.LUGEMI_AGENT_RUNTIME_MAX_STEPS ?? '8') || 8),
     ),
     mode: agentRuntimeMode(),
     liveToolExecution: false,
@@ -60,7 +60,7 @@ export function agentRuntimeCeilings() {
  */
 export function agentRuntimeCatalog() {
   return {
-    product: 'VerbaLab Agent Runtime',
+    product: 'Lugemi Agent Runtime',
     note:
       'Agent Runtime (VL-219). Single/multi-agent sandbox with hard permission allowlists, lifecycle, scheduling stubs, agent memory via Memory Runtime, and marketplace listing counts. Actions are sandboxed — not open function calls against real accounts/data. Policy Runtime (VL-222) is wired as a hard gate via AgentPolicyGate. Not a LangGraph/AutoGPT OS.',
     capabilities: [
@@ -146,7 +146,7 @@ export function agentRuntimeCatalog() {
         name: 'SDK',
         status: 'shipped',
         api: 'agentRuntimeEngine()',
-        notes: '@verbalab/sdk',
+        notes: '@lugemi/sdk',
       },
       {
         id: 'realtime',

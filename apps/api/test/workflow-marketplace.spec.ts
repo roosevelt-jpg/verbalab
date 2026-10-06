@@ -57,10 +57,10 @@ describe('Workflow Marketplace (VL-255)', () => {
   let billing: BillingService;
   let workflows: WorkflowRuntimeService;
   let marketplace: WorkflowMarketplaceService;
-  const prevMode = process.env.VERBALAB_WORKFLOW_RUNTIME_MODE;
+  const prevMode = process.env.LUGEMI_WORKFLOW_RUNTIME_MODE;
 
   beforeAll(async () => {
-    process.env.VERBALAB_WORKFLOW_RUNTIME_MODE = 'sandbox';
+    process.env.LUGEMI_WORKFLOW_RUNTIME_MODE = 'sandbox';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -94,8 +94,8 @@ describe('Workflow Marketplace (VL-255)', () => {
   });
 
   afterAll(async () => {
-    if (prevMode === undefined) delete process.env.VERBALAB_WORKFLOW_RUNTIME_MODE;
-    else process.env.VERBALAB_WORKFLOW_RUNTIME_MODE = prevMode;
+    if (prevMode === undefined) delete process.env.LUGEMI_WORKFLOW_RUNTIME_MODE;
+    else process.env.LUGEMI_WORKFLOW_RUNTIME_MODE = prevMode;
     await app.close();
   });
 
@@ -127,7 +127,7 @@ describe('Workflow Marketplace (VL-255)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/workflow-marketplace/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Workflow Marketplace');
+    expect(res.body.product).toBe('Lugemi Workflow Marketplace');
     expect(res.body.honesty.liveStepExecution).toBe(false);
     expect(res.body.honesty.sandboxRequired).toBe(true);
     expect(res.body.honesty.workflowPolicyHardGateRequired).toBe(true);

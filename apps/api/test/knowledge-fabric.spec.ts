@@ -108,7 +108,7 @@ describe('Knowledge Fabric (VL-242)', () => {
 
   it('exposes catalog, routes, router, and federation with honesty', async () => {
     const res = await request(app.getHttpServer()).get('/v1/knowledge-fabric/products').expect(200);
-    expect(res.body.product).toBe('VerbaLab Knowledge Fabric');
+    expect(res.body.product).toBe('Lugemi Knowledge Fabric');
     expect(res.body.architecture.customerFacingProduct).toBe(false);
     expect(res.body.architecture.confluenceSharepointOs).toBe(false);
     expect(res.body.architecture.neo4jFederationOs).toBe(false);
@@ -169,7 +169,7 @@ describe('Knowledge Fabric (VL-242)', () => {
       })
       .expect(200);
     expect(dist.body.distribution.targets).toContain(peer.id);
-    expect(dist.body.event.type).toBe('com.verbalab.knowledge.distributed');
+    expect(dist.body.event.type).toBe('com.lugemi.knowledge.distributed');
 
     const sync = await request(app.getHttpServer())
       .post('/v1/knowledge-fabric/sync')
@@ -182,7 +182,7 @@ describe('Knowledge Fabric (VL-242)', () => {
       .expect(200);
     expect(sync.body.sync.targetWorkspaceId).toBe(peer.id);
     expect(sync.body.sync.cursor).toMatch(/^kf:/);
-    expect(sync.body.event.type).toBe('com.verbalab.knowledge.synced');
+    expect(sync.body.event.type).toBe('com.lugemi.knowledge.synced');
 
     const bad = await request(app.getHttpServer())
       .post('/v1/knowledge-fabric/sync')

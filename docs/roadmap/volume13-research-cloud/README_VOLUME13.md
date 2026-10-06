@@ -1,4 +1,4 @@
-# VerbaLab — Volume 13: Research Cloud (Phases 138–147)
+# Lugemi — Volume 13: Research Cloud (Phases 138–147)
 
 Same workflow as Volumes 1–12. `.cursorrules` at the repo root still applies.
 This volume builds on the Intelligence/Knowledge/Foundation Model clouds

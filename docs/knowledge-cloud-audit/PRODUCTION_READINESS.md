@@ -5,7 +5,7 @@
 
 ## Executive verdict
 
-**Knowledge Cloud is production-ready as a bounded VerbaLab product volume** (deploy via Fly or optional EKS), with known honesty limits documented in ADR-0104–0114.
+**Knowledge Cloud is production-ready as a bounded Lugemi product volume** (deploy via Fly or optional EKS), with known honesty limits documented in ADR-0104–0114.
 
 It is an **enterprise knowledge layer** over VL-062 RAG and Intelligence Cloud surfaces that can support org/workspace-scoped knowledge workflows **within those limits**.
 

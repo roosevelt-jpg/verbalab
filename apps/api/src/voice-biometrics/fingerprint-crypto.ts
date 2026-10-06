@@ -16,7 +16,7 @@ function keyBytes(): Buffer {
   const raw =
     process.env.VOICE_BIOMETRIC_KEY?.trim() ||
     process.env.ENCRYPTION_KEY?.trim() ||
-    'verbalab-dev-voice-biometric-key';
+    'lugemi-dev-voice-biometric-key';
   return createHash('sha256').update(raw).digest();
 }
 

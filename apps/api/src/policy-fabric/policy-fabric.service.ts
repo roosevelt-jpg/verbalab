@@ -69,7 +69,7 @@ export class PolicyFabricService {
 
   products() {
     return {
-      product: 'VerbaLab Policy Fabric',
+      product: 'Lugemi Policy Fabric',
       products: policyFabricCapabilityCatalog(),
       routes: policyFabricRoutingTable(),
       pipelines: policyFabricPipelines(),
@@ -306,8 +306,8 @@ export class PolicyFabricService {
       this.eventPublishes += 1;
       event = await this.eventBus.publish({
         topic: input.topic ?? 'policy-fabric',
-        type: 'com.verbalab.policy.distributed',
-        source: '/verbalab/policy-fabric',
+        type: 'com.lugemi.policy.distributed',
+        source: '/lugemi/policy-fabric',
         eventVersion: '1',
         data: {
           distributionId: record.id,

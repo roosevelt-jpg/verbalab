@@ -1,4 +1,4 @@
-# VerbaLab Workflow Runtime
+# Lugemi Workflow Runtime
 
 **Status:** Partial shipped (VL-220 / library Phase 87)  
 **Rule:** Workflows require **scoped permissions** and **sandboxing**. Missing permissions and globally denied actions are **hard-blocked**. Not live Temporal/Airflow OS. Extends product `/workflows` — does not regenerate it.
@@ -16,9 +16,9 @@ Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roa
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Workflow Execution | **Shipped** — sandbox sequential/parallel runs |
 | Workflow Scheduling | **Partial** — record `runAt` (not cron fleet) |
@@ -42,7 +42,7 @@ Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roa
 | Product workflows (existing) | `/workflows` + `/v1/workflows` |
 | GraphQL | `workflowRuntimeEngine` |
 | SDK | `workflowRuntimeEngine()`, `workflowRuntimeCreate()`, `workflowRuntimeRun()` |
-| CLI | `verbalab workflow-runtime-engine` |
+| CLI | `lugemi workflow-runtime-engine` |
 
 ## Grantable permissions
 

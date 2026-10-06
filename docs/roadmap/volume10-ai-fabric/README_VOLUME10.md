@@ -1,4 +1,4 @@
-# VerbaLab — Volume 10: AI Fabric (Phases 106–115)
+# Lugemi — Volume 10: AI Fabric (Phases 106–115)
 
 Same workflow as Volumes 1–9. `.cursorrules` at the repo root still applies.
 

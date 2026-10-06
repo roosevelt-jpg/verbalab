@@ -1,7 +1,7 @@
 import { createServer, type IncomingMessage, type ServerResponse } from 'node:http';
 import { AddressInfo } from 'node:net';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
-import { VerbaLab, VerbaLabError } from '../src/index.js';
+import { Lugemi, LugemiError } from '../src/index.js';
 
 function readBody(req: IncomingMessage): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -12,14 +12,14 @@ function readBody(req: IncomingMessage): Promise<string> {
   });
 }
 
-describe('VerbaLab SDK', () => {
+describe('Lugemi SDK', () => {
   let baseUrl: string;
   let close: () => Promise<void>;
 
   beforeAll(async () => {
     const server = createServer(async (req: IncomingMessage, res: ServerResponse) => {
       const auth = req.headers.authorization;
-      if (auth !== 'Bearer vl_live_testkey') {
+      if (auth !== 'Bearer lg_live_testkey') {
         res.writeHead(401, { 'Content-Type': 'application/json' });
         res.end(JSON.stringify({ error: { code: 'unauthorized', message: 'Invalid API key', request_id: 'r1' } }));
         return;
@@ -232,9 +232,9 @@ describe('VerbaLab SDK', () => {
         const audio = Buffer.from(`AUDIO:${body.voice}:${body.text}`);
         res.writeHead(200, {
           'Content-Type': 'audio/mpeg',
-          'X-VerbaLab-Provider': 'fixture_tts',
-          'X-VerbaLab-Voice': body.voice,
-          'X-VerbaLab-Characters': String([...body.text].length),
+          'X-Lugemi-Provider': 'fixture_tts',
+          'X-Lugemi-Voice': body.voice,
+          'X-Lugemi-Characters': String([...body.text].length),
         });
         res.end(audio);
         return;
@@ -257,7 +257,7 @@ describe('VerbaLab SDK', () => {
   });
 
   it('translates via the mock API', async () => {
-    const client = new VerbaLab({ apiKey: 'vl_live_testkey', baseUrl });
+    const client = new Lugemi({ apiKey: 'lg_live_testkey', baseUrl });
     const result = await client.translate({ text: 'Hello', source: 'en', target: 'sw' });
     expect(result.text).toBe('[sw] Hello');
     expect(result.characters).toBe(5);
@@ -265,32 +265,32 @@ describe('VerbaLab SDK', () => {
   });
 
   it('detects language via the mock API', async () => {
-    const client = new VerbaLab({ apiKey: 'vl_live_testkey', baseUrl });
+    const client = new Lugemi({ apiKey: 'lg_live_testkey', baseUrl });
     const result = await client.detect({ text: 'Hello' });
     expect(result.language).toBe('en');
     expect(result.provider).toBe('fixture_detect');
   });
 
   it('chats via the mock API', async () => {
-    const client = new VerbaLab({ apiKey: 'vl_live_testkey', baseUrl });
+    const client = new Lugemi({ apiKey: 'lg_live_testkey', baseUrl });
     const result = await client.chat({ messages: [{ role: 'user', content: 'Hi' }] });
     expect(result.choices[0]?.message.content).toBe('Echo: Hi');
   });
 
   it('creates embeddings via the mock API', async () => {
-    const client = new VerbaLab({ apiKey: 'vl_live_testkey', baseUrl });
+    const client = new Lugemi({ apiKey: 'lg_live_testkey', baseUrl });
     const result = await client.embeddings({ input: 'Habari' });
     expect(result.data[0]?.embedding).toEqual([6, 0]);
   });
 
   it('lists languages', async () => {
-    const client = new VerbaLab({ apiKey: 'vl_live_testkey', baseUrl });
+    const client = new Lugemi({ apiKey: 'lg_live_testkey', baseUrl });
     const languages = await client.languages();
     expect(languages[0]?.code).toBe('en');
   });
 
   it('lists regions and locales', async () => {
-    const client = new VerbaLab({ apiKey: 'vl_live_testkey', baseUrl });
+    const client = new Lugemi({ apiKey: 'lg_live_testkey', baseUrl });
     const regions = await client.regions();
     expect(regions.currentRegion).toBe('us');
     const locales = await client.locales();
@@ -298,7 +298,7 @@ describe('VerbaLab SDK', () => {
   });
 
   it('localizes JSON content', async () => {
-    const client = new VerbaLab({ apiKey: 'vl_live_testkey', baseUrl });
+    const client = new Lugemi({ apiKey: 'lg_live_testkey', baseUrl });
     const result = await client.localize({
       source: 'en',
       target: 'sw',
@@ -308,7 +308,7 @@ describe('VerbaLab SDK', () => {
   });
 
   it('creates and fetches jobs', async () => {
-    const client = new VerbaLab({ apiKey: 'vl_live_testkey', baseUrl });
+    const client = new Lugemi({ apiKey: 'lg_live_testkey', baseUrl });
     const created = await client.createJob({
       type: 'batch_translate',
       input: { source: 'en', target: 'sw', items: [{ id: '1', text: 'Hi' }] },
@@ -321,7 +321,7 @@ describe('VerbaLab SDK', () => {
   });
 
   it('runs OCR and speech', async () => {
-    const client = new VerbaLab({ apiKey: 'vl_live_testkey', baseUrl });
+    const client = new Lugemi({ apiKey: 'lg_live_testkey', baseUrl });
     const ocr = await client.ocr({
       file: { data: new Uint8Array([1, 2, 3]), filename: 'page.png', contentType: 'image/png' },
     });
@@ -331,18 +331,23 @@ describe('VerbaLab SDK', () => {
     expect(speech.provider).toBe('fixture_tts');
   });
 
-  it('maps API errors to VerbaLabError', async () => {
-    const client = new VerbaLab({ apiKey: 'vl_live_wrong', baseUrl });
+  it('maps API errors to LugemiError', async () => {
+    const client = new Lugemi({ apiKey: 'lg_live_wrong', baseUrl });
     await expect(client.translate({ text: 'Hi', source: 'en', target: 'sw' })).rejects.toBeInstanceOf(
-      VerbaLabError,
+      LugemiError,
     );
   });
 
-  it('rejects non VerbaLab keys at construction', () => {
-    expect(() => new VerbaLab({ apiKey: 'sk_test' })).toThrow(/vl_live_|vl_test_/);
+  it('rejects non Lugemi keys at construction', () => {
+    expect(() => new Lugemi({ apiKey: 'sk_test' })).toThrow(/lg_live_|lg_test_/);
   });
 
-  it('accepts vl_test_ soft-sandbox keys at construction', () => {
-    expect(() => new VerbaLab({ apiKey: 'vl_test_abc', baseUrl: 'http://127.0.0.1' })).not.toThrow();
+  it('accepts lg_test_ soft-sandbox keys at construction', () => {
+    expect(() => new Lugemi({ apiKey: 'lg_test_abc', baseUrl: 'http://127.0.0.1' })).not.toThrow();
+  });
+
+  it('accepts legacy vl_live_ / vl_test_ keys at construction', () => {
+    expect(() => new Lugemi({ apiKey: 'vl_live_legacy', baseUrl: 'http://127.0.0.1' })).not.toThrow();
+    expect(() => new Lugemi({ apiKey: 'vl_test_legacy', baseUrl: 'http://127.0.0.1' })).not.toThrow();
   });
 });

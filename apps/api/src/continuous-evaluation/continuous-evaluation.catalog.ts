@@ -96,7 +96,7 @@ export function continuousEvalGateStatus() {
 export function continuousEvaluationEngineCatalog() {
   const gateStatus = continuousEvalGateStatus();
   return {
-    product: 'VerbaLab Continuous Evaluation',
+    product: 'Lugemi Continuous Evaluation',
     capabilities: [
       { id: 'online', name: 'Online eval', status: 'shipped', notes: 'Production traffic sampling.' },
       { id: 'offline', name: 'Offline eval', status: 'shipped', notes: 'Held-out suites.' },

@@ -4,7 +4,7 @@
  */
 export function knowledgeOperatingSystemEngineCatalog() {
   return {
-    product: 'VerbaLab Knowledge Operating System',
+    product: 'Lugemi Knowledge Operating System',
     unifyingOrchestrationLayer: true,
     duplicatesKernelOrFabric: false,
     notLinux: true,

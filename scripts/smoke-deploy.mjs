@@ -46,8 +46,8 @@ function run(cmd, args, opts = {}) {
 async function maybeDockerWeb() {
   if (process.env.SMOKE_DOCKER_WEB !== '1') return null;
 
-  const image = process.env.SMOKE_WEB_IMAGE ?? 'verbalab-web-smoke';
-  const name = 'verbalab-web-smoke';
+  const image = process.env.SMOKE_WEB_IMAGE ?? 'lugemi-web-smoke';
+  const name = 'lugemi-web-smoke';
   console.log('Building web image…');
   run('docker', [
     'build',

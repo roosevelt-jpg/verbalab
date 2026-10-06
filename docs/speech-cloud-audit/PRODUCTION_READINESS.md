@@ -5,7 +5,7 @@
 
 ## Executive verdict
 
-**Speech Cloud is production-ready as a bounded VerbaLab product volume** (deploy via Fly or optional EKS), with known honesty limits documented in ADR-0069–0079.
+**Speech Cloud is production-ready as a bounded Lugemi product volume** (deploy via Fly or optional EKS), with known honesty limits documented in ADR-0069–0079.
 
 It is a **speech intelligence hub** (recognition + adjacent intelligence products + analytics) that can support contact-center, language-learning, compliance, analytics, and multilingual voice **workflows within those limits**.
 

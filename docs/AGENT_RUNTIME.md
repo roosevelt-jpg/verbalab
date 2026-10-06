@@ -1,4 +1,4 @@
-# VerbaLab Agent Runtime
+# Lugemi Agent Runtime
 
 **Status:** Partial shipped (VL-219 / library Phase 86)  
 **Rule:** Agents require **scoped permissions** and **sandboxing**. Missing permissions and globally denied actions are **hard-blocked** (403). Not open tool execution against real accounts/data. Not LangGraph/AutoGPT OS.
@@ -16,9 +16,9 @@ Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roa
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Single Agents | **Shipped** — create/lifecycle/run |
 | Multi-Agent / Collaboration | **Partial** — sandbox transcript exchange |
@@ -43,7 +43,7 @@ Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roa
 | Collaborate / schedule / memory | `POST /v1/agent-runtime/collaborate\|schedule\|memory` |
 | GraphQL | `agentRuntimeEngine` |
 | SDK | `agentRuntimeEngine()`, `agentRuntimeCreate()`, `agentRuntimeRun()` |
-| CLI | `verbalab agent-runtime-engine` |
+| CLI | `lugemi agent-runtime-engine` |
 
 ## Grantable permissions
 

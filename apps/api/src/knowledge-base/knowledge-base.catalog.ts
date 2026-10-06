@@ -11,7 +11,7 @@ export type KnowledgeBaseCapability = {
 /** Library Phase 61 → Enterprise Knowledge Base (VL-194). Extends VL-062 — not Confluence/SharePoint OS. */
 export function knowledgeBaseCatalog() {
   return {
-    product: 'VerbaLab Enterprise Knowledge Base',
+    product: 'Lugemi Enterprise Knowledge Base',
     note:
       'Org/workspace-scoped document store over VL-062 ingest (VL-194). Collections/tags/content kinds + Markdown/HTML. Not a Confluence/SharePoint OS; media/OCR/approval workflows deferred.',
     capabilities: [

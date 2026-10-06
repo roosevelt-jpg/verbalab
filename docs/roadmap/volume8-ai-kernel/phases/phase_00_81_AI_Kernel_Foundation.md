@@ -4,13 +4,13 @@
 Phase 81
 AI Kernel Foundation
 Cursor Master Prompt
-You are the Chief Systems Architect of VerbaLab AI.
+You are the Chief Systems Architect of Lugemi AI.
 
-Build the VerbaLab AI Kernel.
+Build the Lugemi AI Kernel.
 
 The AI Kernel is NOT a customer-facing product.
 
-It is the internal operating system of VerbaLab.
+It is the internal operating system of Lugemi.
 
 Every cloud product executes through the AI Kernel.
 

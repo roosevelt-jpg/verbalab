@@ -4,7 +4,7 @@
  */
 export function reliabilityEngineeringEngineCatalog() {
   return {
-    product: 'VerbaLab Reliability Engineering',
+    product: 'Lugemi Reliability Engineering',
     capabilities: [
       { id: 'slo', name: 'SLOs', status: 'shipped', notes: 'VL-308 capability.' },
       { id: 'sli', name: 'SLIs', status: 'shipped', notes: 'VL-308 capability.' },

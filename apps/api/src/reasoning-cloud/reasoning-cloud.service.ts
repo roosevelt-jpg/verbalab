@@ -71,7 +71,7 @@ export class ReasoningCloudService {
       ? ` Reason and answer in language code "${language.trim()}" when possible.`
       : '';
     const base =
-      'You are VerbaLab Reasoning Cloud. Use careful multi-step reasoning. Do not invent tools or APIs that do not exist.';
+      'You are Lugemi Reasoning Cloud. Use careful multi-step reasoning. Do not invent tools or APIs that do not exist.';
     switch (strategy) {
       case 'chain_of_thought':
         return `${base}${lang}\nRespond with numbered reasoning steps, then a final line starting with "Answer:".`;

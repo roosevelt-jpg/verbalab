@@ -4,7 +4,7 @@
  */
 export function aiMemoryOperatingSystemEngineCatalog() {
   return {
-    product: 'VerbaLab AI Memory Operating System',
+    product: 'Lugemi AI Memory Operating System',
     unifyingOrchestrationLayer: true,
     duplicatesKernelOrFabric: false,
     notLinux: true,

@@ -57,7 +57,7 @@ describe('Agricultural Intelligence (VL-268)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/agricultural-intelligence/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Agricultural Intelligence');
+    expect(res.body.product).toBe('Lugemi Agricultural Intelligence');
 
   });
 });

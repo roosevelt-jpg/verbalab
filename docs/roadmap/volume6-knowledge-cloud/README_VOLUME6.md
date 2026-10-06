@@ -1,4 +1,4 @@
-# VerbaLab — Volume 6: Knowledge Cloud (Phases 60–70)
+# Lugemi — Volume 6: Knowledge Cloud (Phases 60–70)
 
 Same workflow as Volumes 1–5. `.cursorrules` at the repo root still applies.
 This volume builds on Intelligence Cloud (Volume 5) directly — Enterprise RAG,

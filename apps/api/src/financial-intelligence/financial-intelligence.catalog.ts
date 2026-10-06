@@ -44,7 +44,7 @@ export function financialIntelligenceEngineCatalog() {
       }
   ];
   return {
-    product: 'VerbaLab Financial Intelligence',
+    product: 'Lugemi Financial Intelligence',
     note:
       'Financial Intelligence (VL-266). Domain terms/services catalog for African Intelligence Cloud with domain-specific safety flags. Extends Knowledge/Intelligence clouds — not a vertical operations OS.',
     capabilities: terms,

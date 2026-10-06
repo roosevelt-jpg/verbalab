@@ -4,7 +4,7 @@
  */
 export function databaseEngineeringStandardsEngineCatalog() {
   return {
-    product: 'VerbaLab Database Engineering Standards',
+    product: 'Lugemi Database Engineering Standards',
     engineeringOsForHumansAndCursor: true,
     customerFacingProductCloud: false,
     architectureKnowledgeBaseOs: false,
@@ -26,7 +26,7 @@ export function databaseEngineeringStandardsEngineCatalog() {
         path: '/v1/knowledge-cloud/products',
         role: 'Knowledge Cloud',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       },
       {
         id: 'route-2',
@@ -34,7 +34,7 @@ export function databaseEngineeringStandardsEngineCatalog() {
         path: '/v1/vector-cloud/engine',
         role: 'Vector Cloud',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       },
       {
         id: 'route-3',
@@ -42,7 +42,7 @@ export function databaseEngineeringStandardsEngineCatalog() {
         path: '/v1/embedding-runtime/engine',
         role: 'Embedding Runtime',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       }
     ],
     routesTo: [

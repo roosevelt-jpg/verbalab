@@ -1,4 +1,4 @@
-# VerbaLab AI — Enterprise Product Blueprint (Phase −1)
+# Lugemi AI — Enterprise Product Blueprint (Phase −1)
 
 **Status:** Accepted as living documentation  
 **Date:** 2026-09-07  
@@ -11,17 +11,17 @@
 
 ## 1. System Context
 
-VerbaLab sits between **enterprise buyers / developers** and **vendor AI + identity + billing**. Customers never call Google/OpenAI/ElevenLabs/Stripe/Clerk directly for product workflows; they call VerbaLab’s `/v1` API or use the console.
+Lugemi sits between **enterprise buyers / developers** and **vendor AI + identity + billing**. Customers never call Google/OpenAI/ElevenLabs/Stripe/Clerk directly for product workflows; they call Lugemi’s `/v1` API or use the console.
 
 ```mermaid
 C4Context
-  title System Context — VerbaLab AI
+  title System Context — Lugemi AI
 
   Person(dev, "Developer / Integrator", "Builds apps with API keys + SDK")
   Person(ops, "Org owner / admin", "Billing, members, residency, studio")
-  Person(end, "End user", "Uses customer apps that call VerbaLab")
+  Person(end, "End user", "Uses customer apps that call Lugemi")
 
-  System(vl, "VerbaLab AI", "Modular monolith: API + console + jobs")
+  System(vl, "Lugemi AI", "Modular monolith: API + console + jobs")
 
   System_Ext(clerk, "Clerk", "IdP / orgs / sessions")
   System_Ext(stripe, "Stripe", "Checkout, subscriptions, Connect")
@@ -48,7 +48,7 @@ C4Context
 | Developer | Stable REST `/v1`, OpenAPI, SDK, API keys, usage |
 | Org owner | Plan, members, data residency, governance export/delete |
 | Platform admin | Allowlisted org disable / key revoke |
-| Vendors | Paid capacity; VerbaLab meters and enforces quotas |
+| Vendors | Paid capacity; Lugemi meters and enforces quotas |
 
 ---
 
@@ -58,7 +58,7 @@ C4Context
 
 ```mermaid
 C4Container
-  title Containers — VerbaLab MVP-realistic
+  title Containers — Lugemi MVP-realistic
 
   Person(user, "User", "Console or API consumer")
 
@@ -66,7 +66,7 @@ C4Container
   Container(api, "API", "NestJS", "All /v1 routes + BullMQ workers in-process")
   ContainerDb(pg, "Postgres + pgvector", "PostgreSQL", "System of record")
   ContainerDb(redis, "Redis", "Redis", "Jobs + rate limits")
-  Container(sdk, "TypeScript SDK", "npm", "@verbalab/sdk")
+  Container(sdk, "TypeScript SDK", "npm", "@lugemi/sdk")
 
   Rel(user, web, "HTTPS")
   Rel(user, api, "HTTPS /v1")
@@ -151,7 +151,7 @@ Make **African-language** speech, translation, and voice products **sellable and
 | Console | `apps/web` | Operators |
 | Public API | `/v1/*` | Developers |
 | OpenAPI | `/v1/openapi.json`, `/docs` | Integrators |
-| SDK | `@verbalab/sdk` | TypeScript apps |
+| SDK | `@lugemi/sdk` | TypeScript apps |
 | Coverage | `/coverage`, `GET /v1/coverage` | Truthful marketing |
 | Voice Studio | `/audio` | TTS / clones / own TTS |
 
@@ -178,9 +178,9 @@ Make **African-language** speech, translation, and voice products **sellable and
 
 ## 5. Cloud Context
 
-Library v2 names dozens of “Clouds.” VerbaLab maps them to **modules + vendors**, not separate deployables:
+Library v2 names dozens of “Clouds.” Lugemi maps them to **modules + vendors**, not separate deployables:
 
-| Library cloud (examples) | VerbaLab home |
+| Library cloud (examples) | Lugemi home |
 | --- | --- |
 | Identity Cloud | Clerk + `identity` module |
 | Language / Translation Cloud | `translate`, glossary, TM, locales |
@@ -197,8 +197,8 @@ Library v2 names dozens of “Clouds.” VerbaLab maps them to **modules + vendo
 
 | Island | Fly region | Env |
 | --- | --- | --- |
-| US | `iad` | `VERBALAB_REGION=us` |
-| EU | `ams` | `VERBALAB_REGION=eu` |
+| US | `iad` | `LUGEMI_REGION=us` |
+| EU | `ams` | `LUGEMI_REGION=eu` |
 
 Each island: own Fly apps + `DATABASE_URL` + Redis. Org `data_region` pin enforced.
 
@@ -233,7 +233,7 @@ Each island: own Fly apps + `DATABASE_URL` + Redis. Org `data_region` pin enforc
 | --- | --- |
 | Organization | Paying tenant (Clerk org mapped) |
 | Workspace | Language defaults + glossary/TM scope |
-| API key | `vl_live_` secret; hashed at rest |
+| API key | `lg_live_` secret; hashed at rest |
 | Gateway | Only place vendor SDKs live |
 | Residency island | Separate deploy + DB |
 | Voice clone | Consent-gated, reviewed, watermarked |
@@ -362,7 +362,7 @@ Service catalog (logical modules, one binary): Identity, Keys, Gateway, Translat
 
 - REST/JSON under `/v1`  
 - Unversioned `GET /health`  
-- Auth: `Authorization: Bearer vl_live_…` or Clerk session  
+- Auth: `Authorization: Bearer lg_live_…` or Clerk session  
 - Errors:
 
 ```json
@@ -397,7 +397,7 @@ Service catalog (logical modules, one binary): Identity, Keys, Gateway, Translat
 
 ## 13. SDK Contracts
 
-**Package:** `@verbalab/sdk`
+**Package:** `@lugemi/sdk`
 
 | Method | Maps to |
 | --- | --- |
@@ -409,8 +409,8 @@ Service catalog (logical modules, one binary): Identity, Keys, Gateway, Translat
 
 **Rules:**
 
-- Construct with `vl_live_` key only  
-- Map HTTP errors → `VerbaLabError`  
+- Construct with `lg_live_` key only  
+- Map HTTP errors → `LugemiError`  
 - No secret Clerk tokens in SDK  
 - Binary TTS returns `Uint8Array` + metadata headers where applicable  
 

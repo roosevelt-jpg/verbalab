@@ -8,7 +8,7 @@
 
 Library Phase 75 asks for Streaming Runtime covering speech/voice/translation/LLM/video streaming, realtime APIs, WebSockets, SSE, and gRPC, plus engine/SDK/REST/monitoring/docs and production deployment.
 
-VerbaLab already ships SSE on translate, speech recognition, neural TTS, and several Voice/Speech intelligence products. Inventing a WebSocket mesh, gRPC streaming plane, or video OS would violate extend-don’t-regenerate.
+Lugemi already ships SSE on translate, speech recognition, neural TTS, and several Voice/Speech intelligence products. Inventing a WebSocket mesh, gRPC streaming plane, or video OS would violate extend-don’t-regenerate.
 
 ## Decision
 

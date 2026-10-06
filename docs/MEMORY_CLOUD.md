@@ -1,13 +1,13 @@
-# VerbaLab Memory Cloud
+# Lugemi Memory Cloud
 
 **Status:** Partial shipped (VL-183 / library Phase 50)  
 **Rule:** Persist AI interaction memory only with **GDPR export + erase** available. Do not claim infinite personalization OS. Do not confuse with Translation Memory (VL-051).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Conversation / Workspace / Org / Project Memory | **Shipped** — scopes on `memory_records` |
 | Agent Memory | **Partial** — `scope=agent` + `agentId`; agent OS deferred |
@@ -18,7 +18,7 @@
 | GDPR Export / Erase | **Shipped** — `/export`, `/erase`; also in org export |
 | Engine / Dashboard | **VL-183** — `GET /v1/memory-cloud/engine` + `/memory-cloud` |
 | Retention sweeper | **Deferred** — `expiresAt` honored on read; no background job |
-| GraphQL / SDK / CLI | `memoryCloudEngine`, `verbalab memory-cloud-engine` |
+| GraphQL / SDK / CLI | `memoryCloudEngine`, `lugemi memory-cloud-engine` |
 
 ---
 

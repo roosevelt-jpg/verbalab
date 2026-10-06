@@ -4,11 +4,11 @@ Library Phase 165 — part of Volume 15 Trust Cloud.
 
 ## Mission
 
-VerbaLab Risk Intelligence provides the Risk Intelligence surface inside the Trust Cloud.
+Lugemi Risk Intelligence provides the Risk Intelligence surface inside the Trust Cloud.
 
 ## Honesty
 
-- Extends existing VerbaLab systems — does not regenerate Volumes 1–14.
+- Extends existing Lugemi systems — does not regenerate Volumes 1–14.
 - `grcSuiteOs=false`.
 - Platform Engineering Cloud deferred to Volume 16+ (`platformEngineeringOs=false`).
 

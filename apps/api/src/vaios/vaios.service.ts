@@ -16,7 +16,7 @@ export class VaiosService {
 
   products() {
     return {
-      product: 'VerbaLab AI Operating System (VAIOS)',
+      product: 'Lugemi AI Operating System (VAIOS)',
       products: vaiosProductCatalog(),
       hubInventory: vaiosHubInventory(),
       unifiedSurfaces: vaiosUnifiedSurfaces(),

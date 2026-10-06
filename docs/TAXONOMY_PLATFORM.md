@@ -1,4 +1,4 @@
-# VerbaLab Taxonomy Platform
+# Lugemi Taxonomy Platform
 
 **Status:** Partial (VL-197 / library Phase 64)  
 **Parent:** [Knowledge Cloud](./KNOWLEDGE_CLOUD.md)  
@@ -20,7 +20,7 @@
 | Classify | `POST /v1/taxonomy/classify` `{ documentId, apply? }` (heuristic) |
 | Analytics / monitoring | `GET /v1/taxonomy/analytics` · `/monitoring` |
 | GraphQL | `taxonomyEngine` |
-| SDK / CLI | `taxonomyEngine()` · `verbalab taxonomy-engine` |
+| SDK / CLI | `taxonomyEngine()` · `lugemi taxonomy-engine` |
 
 ## Kind → Knowledge Document sync
 

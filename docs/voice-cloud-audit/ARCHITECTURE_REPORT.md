@@ -7,7 +7,7 @@
 
 Voice Cloud is a **hub over Nest modular monolith audio/voice modules**, not a separate microservice mesh and not a voice research OS. REST is primary; GraphQL is a façade; CQRS applies to the Voice Cloud catalog slice (VL-170).
 
-Clouds follow the **12-layer VerbaLab Cloud Blueprint** (ADR-0080).
+Clouds follow the **12-layer Lugemi Cloud Blueprint** (ADR-0080).
 
 ## System shape
 
@@ -44,4 +44,4 @@ Clouds follow the **12-layer VerbaLab Cloud Blueprint** (ADR-0080).
 
 ## Explicit non-claims
 
-VerbaLab Voice Cloud is **not** a replacement for ElevenLabs + Resemble + Krisp + Soundraw + NIST biometrics + commercial DAW suites combined.
+Lugemi Voice Cloud is **not** a replacement for ElevenLabs + Resemble + Krisp + Soundraw + NIST biometrics + commercial DAW suites combined.

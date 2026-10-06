@@ -40,10 +40,10 @@ describe('Workflow Runtime (VL-220)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
-  const prevMode = process.env.VERBALAB_WORKFLOW_RUNTIME_MODE;
+  const prevMode = process.env.LUGEMI_WORKFLOW_RUNTIME_MODE;
 
   beforeAll(async () => {
-    process.env.VERBALAB_WORKFLOW_RUNTIME_MODE = 'sandbox';
+    process.env.LUGEMI_WORKFLOW_RUNTIME_MODE = 'sandbox';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -77,8 +77,8 @@ describe('Workflow Runtime (VL-220)', () => {
   });
 
   afterAll(async () => {
-    if (prevMode === undefined) delete process.env.VERBALAB_WORKFLOW_RUNTIME_MODE;
-    else process.env.VERBALAB_WORKFLOW_RUNTIME_MODE = prevMode;
+    if (prevMode === undefined) delete process.env.LUGEMI_WORKFLOW_RUNTIME_MODE;
+    else process.env.LUGEMI_WORKFLOW_RUNTIME_MODE = prevMode;
     await app.close();
   });
 

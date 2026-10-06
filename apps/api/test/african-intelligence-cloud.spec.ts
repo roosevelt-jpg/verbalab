@@ -57,7 +57,7 @@ describe('African Intelligence Cloud (VL-260)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/african-intelligence-cloud/products')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab African Intelligence Cloud');
+    expect(res.body.product).toBe('Lugemi African Intelligence Cloud');
 
     expect(res.body.honesty.neo4jOs).toBe(false);
     expect(res.body.honesty.digitalTwinOs).toBe(false);

@@ -57,7 +57,7 @@ export function aiPublicationPlatformEngineCatalog() {
     },
   ];
   return {
-    product: 'VerbaLab AI Publication Platform',
+    product: 'Lugemi AI Publication Platform',
     note:
       'AI Publication Platform (VL-276). Papers/reports/datasets/benchmarks/reproducibility packages with versioning. doiRegistryOs=false — DOI is optional stub, not a DOI registry OS.',
     publications,

@@ -14,10 +14,10 @@ This guide points at the **existing** production paths. AI Kernel ships inside t
 3. Configure Clerk + `CORS_ORIGIN`.
 4. Configure vendor keys for Gateway paths used by Reasoning/Context (`OPENAI_API_KEY`, etc.).
 5. Prefer sandbox/enforce modes:
-   - `VERBALAB_AGENT_RUNTIME_MODE=sandbox`
-   - `VERBALAB_WORKFLOW_RUNTIME_MODE=sandbox`
-   - `VERBALAB_PLUGIN_RUNTIME_MODE=sandbox`
-   - `VERBALAB_POLICY_RUNTIME_MODE=enforce`
+   - `LUGEMI_AGENT_RUNTIME_MODE=sandbox`
+   - `LUGEMI_WORKFLOW_RUNTIME_MODE=sandbox`
+   - `LUGEMI_PLUGIN_RUNTIME_MODE=sandbox`
+   - `LUGEMI_POLICY_RUNTIME_MODE=enforce`
 6. Optional: Stripe for plan entitlements.
 
 ## Post-deploy smoke

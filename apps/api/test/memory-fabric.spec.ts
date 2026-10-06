@@ -57,11 +57,11 @@ describe('Memory Fabric (VL-245)', () => {
   let apiKeys: ApiKeysService;
   let fabric: MemoryFabricService;
   let bus: EventFabricBus;
-  const prevMode = process.env.VERBALAB_MEMORY_RUNTIME_MODE;
+  const prevMode = process.env.LUGEMI_MEMORY_RUNTIME_MODE;
 
   beforeAll(async () => {
     process.env.EVENT_FABRIC_MEMORY = '1';
-    process.env.VERBALAB_MEMORY_RUNTIME_MODE = 'sandbox';
+    process.env.LUGEMI_MEMORY_RUNTIME_MODE = 'sandbox';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -77,8 +77,8 @@ describe('Memory Fabric (VL-245)', () => {
   });
 
   afterAll(async () => {
-    if (prevMode === undefined) delete process.env.VERBALAB_MEMORY_RUNTIME_MODE;
-    else process.env.VERBALAB_MEMORY_RUNTIME_MODE = prevMode;
+    if (prevMode === undefined) delete process.env.LUGEMI_MEMORY_RUNTIME_MODE;
+    else process.env.LUGEMI_MEMORY_RUNTIME_MODE = prevMode;
     await app.close();
   });
 
@@ -113,7 +113,7 @@ describe('Memory Fabric (VL-245)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/memory-fabric/products')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Memory Fabric');
+    expect(res.body.product).toBe('Lugemi Memory Fabric');
     expect(res.body.architecture.customerFacingProduct).toBe(false);
     expect(res.body.architecture.mem0Os).toBe(false);
     expect(res.body.architecture.multiRegionReplicationOs).toBe(false);
@@ -183,7 +183,7 @@ describe('Memory Fabric (VL-245)', () => {
       })
       .expect(200);
     expect(dist.body.distribution.targets).toContain(peer.id);
-    expect(dist.body.event.type).toBe('com.verbalab.memory.distributed');
+    expect(dist.body.event.type).toBe('com.lugemi.memory.distributed');
 
     const replicate = await request(app.getHttpServer())
       .post('/v1/memory-fabric/replicate')

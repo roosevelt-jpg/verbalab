@@ -13,7 +13,7 @@ export default function SetupPage() {
           <code className="vl-code">.env.example</code> into <code className="vl-code">apps/api/.env</code> and{' '}
           <code className="vl-code">apps/web/.env.local</code>, then restart <code className="vl-code">pnpm dev</code>.
           Console sign-in needs Clerk. The product path is Our API (
-          <code className="vl-code">vl_live_</code> keys, <code className="vl-code">/v1</code> speech, transcribe, and
+          <code className="vl-code">lg_live_</code> keys, <code className="vl-code">/v1</code> speech, transcribe, and
           translate) and first-party models — not third-party vendor accounts. We will not fake providers.
         </p>
 
@@ -34,7 +34,7 @@ export default function SetupPage() {
             <code className="vl-code">DATABASE_URL</code>, <code className="vl-code">REDIS_URL</code>)
           </li>
           <li>
-            Optional residency pin: <code className="vl-code">VERBALAB_REGION=us|eu</code>
+            Optional residency pin: <code className="vl-code">LUGEMI_REGION=us|eu</code>
           </li>
         </ul>
 

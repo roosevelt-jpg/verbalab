@@ -133,7 +133,7 @@ export class ModelServingService {
     if (modelServingMode() === 'disabled') {
       throw new ApiException(
         'model_serving_disabled',
-        'Model Serving mode is disabled (VERBALAB_MODEL_SERVING_MODE=disabled).',
+        'Model Serving mode is disabled (LUGEMI_MODEL_SERVING_MODE=disabled).',
         HttpStatus.FORBIDDEN,
       );
     }

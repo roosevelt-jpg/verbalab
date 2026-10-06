@@ -4,7 +4,7 @@
  */
 export function aiOperationsDashboardEngineCatalog() {
   return {
-    product: 'VerbaLab AI Operations Dashboard',
+    product: 'Lugemi AI Operations Dashboard',
     honesty: {
       inventsTrustCloud: false,
       trustCloudOs: false,

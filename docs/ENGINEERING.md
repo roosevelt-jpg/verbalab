@@ -1,4 +1,4 @@
-# VerbaLab Engineering Standards
+# Lugemi Engineering Standards
 
 Thin daily cheat-sheet for Phase 0+. **Full Engineering Operating System:** [`ENGINEERING_OS.md`](ENGINEERING_OS.md). Templates: [`templates/`](templates/). Expand sticky decisions with ADRs — do not grow a 30-folder empty encyclopedia.
 
@@ -14,7 +14,7 @@ Thin daily cheat-sheet for Phase 0+. **Full Engineering Operating System:** [`EN
 ```text
 apps/api          NestJS HTTP API
 apps/web          Next.js console
-packages/*        Shared config + @verbalab/sdk
+packages/*        Shared config + @lugemi/sdk
 docs/             ENGINEERING_OS, ADRs, templates, blueprint
 infra/            Compose + Fly + DEPLOY.md
 ```
@@ -39,7 +39,7 @@ Do not pre-create empty “cloud” folders for future products. This repo **is*
 ```
 
 - Prefer stable `code` strings over parsing `message`.
-- Auth for product routes: `Authorization: Bearer vl_live_...`. Console may use Clerk session/JWT.
+- Auth for product routes: `Authorization: Bearer lg_live_...`. Console may use Clerk session/JWT.
 
 ## Database
 

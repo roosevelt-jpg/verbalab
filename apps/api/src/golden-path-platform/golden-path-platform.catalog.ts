@@ -4,7 +4,7 @@
  */
 export function goldenPathPlatformEngineCatalog() {
   return {
-    product: 'VerbaLab Golden Path Platform',
+    product: 'Lugemi Golden Path Platform',
     capabilities: [
       { id: 'service_template', name: 'Service Template', status: 'shipped', notes: 'VL-305 capability.' },
       { id: 'microservice_template', name: 'Microservice Template', status: 'shipped', notes: 'VL-305 capability.' },

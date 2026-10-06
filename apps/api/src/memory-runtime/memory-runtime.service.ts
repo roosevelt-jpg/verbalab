@@ -406,7 +406,7 @@ export class MemoryRuntimeService {
     if (memoryRuntimeMode() === 'disabled') {
       throw new ApiException(
         'memory_runtime_disabled',
-        'Memory Runtime mode is disabled (VERBALAB_MEMORY_RUNTIME_MODE=disabled).',
+        'Memory Runtime mode is disabled (LUGEMI_MEMORY_RUNTIME_MODE=disabled).',
         HttpStatus.FORBIDDEN,
       );
     }

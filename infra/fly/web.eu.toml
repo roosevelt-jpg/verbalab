@@ -1,6 +1,6 @@
-# Fly.io — Web EU residency island (VL-075). Point NEXT_PUBLIC_API_URL at verbalab-api-eu.
-# fly apps create verbalab-web-eu
-app = 'verbalab-web-eu'
+# Fly.io — Web EU residency island (VL-075). Point NEXT_PUBLIC_API_URL at lugemi-api-eu.
+# fly apps create lugemi-web-eu
+app = 'lugemi-web-eu'
 primary_region = 'ams'
 
 [build]
@@ -9,7 +9,7 @@ primary_region = 'ams'
 [env]
   NODE_ENV = 'production'
   PORT = '3000'
-  VERBALAB_REGION = 'eu'
+  LUGEMI_REGION = 'eu'
 
 [http_service]
   internal_port = 3000

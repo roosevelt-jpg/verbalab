@@ -1,5 +1,5 @@
-export { VerbaLab } from './client.js';
-export { VerbaLabError } from './errors.js';
+export { Lugemi } from './client.js';
+export { LugemiError } from './errors.js';
 export type {
   ChatCompletionRequest,
   ChatCompletionResponse,
@@ -99,6 +99,6 @@ export type {
   TranslateEngineOverview,
   TranslateStreamEvent,
   UploadFile,
-  VerbaLabClientOptions,
+  LugemiClientOptions,
   Voice,
 } from './types.js';

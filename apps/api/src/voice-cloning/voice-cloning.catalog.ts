@@ -11,7 +11,7 @@ export type CloningCapability = {
 /** Library Phase 29 → Enterprise Voice Cloning Platform (VL-172). */
 export function voiceCloningEngineCatalog() {
   return {
-    product: 'VerbaLab Voice Cloning',
+    product: 'Lugemi Voice Cloning',
     note:
       'Enterprise cloning over ElevenLabs Instant Voice Cloning with mandatory consent, ownership, abuse review, and watermark (ADR-0042/0083). Professional mode = stricter enrollment on the same vendor path — not a separate trained pro model. NIST voice biometrics deferred to Phase 33.',
     capabilities: [
@@ -135,8 +135,8 @@ export function voiceCloningEngineCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,
@@ -148,7 +148,7 @@ export function voiceCloningEngineCatalog() {
 
 export function voiceCloningConsentPolicy() {
   return {
-    product: 'VerbaLab Voice Cloning',
+    product: 'Lugemi Voice Cloning',
     required: {
       consentAttested: true,
       consentNotesMinChars: 8,

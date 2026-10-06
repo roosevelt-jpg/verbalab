@@ -1,4 +1,4 @@
-# VerbaLab Context Runtime
+# Lugemi Context Runtime
 
 **Status:** Partial shipped (VL-217 / library Phase 84)  
 **Rule:** Kernel context assembly over VL-185 Context Engine. Extends — does **not** regenerate — Context Engine. Not an infinite context window, LLM summarization OS, or realtime push bus.
@@ -7,9 +7,9 @@ Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roa
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Conversation / Workspace / Org / Project / User / Language | **Shipped** — via Context Engine assemble |
 | Knowledge Context | **Shipped** — documents + KG (`include.knowledge` alias) |
@@ -19,7 +19,7 @@ Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roa
 | Context Retrieval | **Shipped** — `POST /retrieve` façade |
 | Realtime APIs | **Deferred** |
 | Engine / Console | `/context-runtime` + `GET /v1/context-runtime/engine` |
-| GraphQL / SDK / CLI | `contextRuntimeEngine`, `verbalab context-runtime-engine` |
+| GraphQL / SDK / CLI | `contextRuntimeEngine`, `lugemi context-runtime-engine` |
 
 ---
 
@@ -34,7 +34,7 @@ Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roa
 | Analytics / monitoring | `GET /v1/context-runtime/analytics\|monitoring` |
 | GraphQL | `contextRuntimeEngine` |
 | SDK | `contextRuntimeEngine()`, `contextRuntimeAssemble()` |
-| CLI | `verbalab context-runtime-engine` |
+| CLI | `lugemi context-runtime-engine` |
 
 ## Honesty
 
@@ -48,6 +48,6 @@ Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roa
 | `usesIntelligentCacheContextNamespace` | true |
 | `modelRouterOs` | false |
 
-Env: `VERBALAB_CONTEXT_RUNTIME_MODE`, `VERBALAB_CONTEXT_RUNTIME_MAX_CHARS`, `VERBALAB_CONTEXT_RUNTIME_CACHE_TTL_SEC`.
+Env: `LUGEMI_CONTEXT_RUNTIME_MODE`, `LUGEMI_CONTEXT_RUNTIME_MAX_CHARS`, `LUGEMI_CONTEXT_RUNTIME_CACHE_TTL_SEC`.
 
 See ADR-0128.

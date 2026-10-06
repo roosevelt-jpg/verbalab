@@ -94,7 +94,7 @@ export function servingModelKinds(): ServingModelKindRow[] {
  */
 export function modelServingCatalog() {
   return {
-    product: 'VerbaLab Model Serving',
+    product: 'Lugemi Model Serving',
     note:
       'Enterprise Model Serving hub (VL-206). Catalogs LLM/speech/voice/OCR/embedding/vision/reasoning endpoints over AI Gateway + /v1/models. Sandbox deployments support light versioning, canary traffic %, blue/green slots, and rollback. Not a vLLM/KServe/Triton control plane or self-hosted GPU serving OS.',
     capabilities: [
@@ -243,7 +243,7 @@ export function modelServingCatalog() {
         name: 'SDK',
         status: 'shipped',
         api: 'modelServingEngine()',
-        notes: '@verbalab/sdk',
+        notes: '@lugemi/sdk',
       },
       {
         id: 'documentation',
@@ -342,7 +342,7 @@ export function servingModes() {
 export type ServingMode = 'sandbox' | 'disabled';
 
 export function modelServingMode(): ServingMode {
-  const raw = (process.env.VERBALAB_MODEL_SERVING_MODE ?? 'sandbox').toLowerCase();
+  const raw = (process.env.LUGEMI_MODEL_SERVING_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
@@ -351,7 +351,7 @@ export function modelServingMode(): ServingMode {
 export function modelServingCeilings() {
   const maxActive = Math.max(
     1,
-    Number(process.env.VERBALAB_MODEL_SERVING_MAX_ACTIVE ?? '8') || 8,
+    Number(process.env.LUGEMI_MODEL_SERVING_MAX_ACTIVE ?? '8') || 8,
   );
   return {
     maxActiveDeployments: Math.min(maxActive, 32),

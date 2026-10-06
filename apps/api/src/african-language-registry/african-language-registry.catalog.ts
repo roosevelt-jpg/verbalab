@@ -132,7 +132,7 @@ export function africanLanguageFamilies() {
 export function africanLanguageRegistryEngineCatalog() {
   const languages = africanLanguageSeed();
   return {
-    product: 'VerbaLab African Language Registry',
+    product: 'Lugemi African Language Registry',
     note:
       'African Language Registry (VL-261). Representative language/dialect/writing-system seed extending dialects/locales. coverageComplete=false — not every African language.',
     capabilities: [

@@ -1,13 +1,13 @@
-# VerbaLab Audio Intelligence
+# Lugemi Audio Intelligence
 
 **Status:** Partial shipped (VL-155 / library Phase 21)  
 **Rule:** PCM heuristic DSP for noise/silence/enhance/upscale/isolate. Do not claim Krisp, Adobe Enhance, Demucs, or live AEC.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Audio Intelligence / Engine | **VL-155** — `GET /v1/audio-intelligence/engine` + `/audio-intelligence` |
 | Noise Detection | **Shipped** — `POST /v1/audio-intelligence/analyze` |
@@ -18,7 +18,7 @@
 | Echo Cancellation | **Deferred** — `GET /v1/audio-intelligence/echo` |
 | Realtime | **Partial** — `POST /v1/audio-intelligence/analyze/stream` SSE |
 | Monitoring | Audit `audio_intelligence.*` + shared observability |
-| GraphQL / SDK / CLI | `audioEngine`, `analyzeAudio` / `enhanceAudio` / `isolateAudio`, `verbalab audio-engine` |
+| GraphQL / SDK / CLI | `audioEngine`, `analyzeAudio` / `enhanceAudio` / `isolateAudio`, `lugemi audio-engine` |
 | Production | Shared Fly/Docker/K8s platform |
 
 ---

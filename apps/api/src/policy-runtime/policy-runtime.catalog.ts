@@ -48,7 +48,7 @@ export const POLICY_GLOBAL_DENIES = [
 ] as const;
 
 export function policyRuntimeMode(): 'enforce' | 'disabled' {
-  const raw = (process.env.VERBALAB_POLICY_RUNTIME_MODE ?? 'enforce').toLowerCase();
+  const raw = (process.env.LUGEMI_POLICY_RUNTIME_MODE ?? 'enforce').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'enforce';
 }
@@ -57,7 +57,7 @@ export function policyRuntimeCeilings() {
   return {
     maxPoliciesPerWorkspace: Math.min(
       200,
-      Math.max(1, Number(process.env.VERBALAB_POLICY_RUNTIME_MAX_POLICIES ?? '50') || 50),
+      Math.max(1, Number(process.env.LUGEMI_POLICY_RUNTIME_MAX_POLICIES ?? '50') || 50),
     ),
     mode: policyRuntimeMode(),
     logOnlyForbidden: true,
@@ -72,7 +72,7 @@ export function policyRuntimeCeilings() {
  */
 export function policyRuntimeCatalog() {
   return {
-    product: 'VerbaLab Policy Runtime',
+    product: 'Lugemi Policy Runtime',
     note:
       'Policy Runtime (VL-222). Shared hard-gate enforcement for Agent/Workflow/Plugin Runtimes. Org policies (deny rules) and global denies block actions with 403 — not log-only. Extends local runtime allowlists; does not invent OPA/Cedar enterprise policy OS. Wired into AgentPolicyGate / WorkflowPolicyGate / PluginPolicyGate.',
     capabilities: [
@@ -158,7 +158,7 @@ export function policyRuntimeCatalog() {
         name: 'SDK',
         status: 'shipped',
         api: 'policyRuntimeEngine()',
-        notes: '@verbalab/sdk',
+        notes: '@lugemi/sdk',
       },
       {
         id: 'monitoring',

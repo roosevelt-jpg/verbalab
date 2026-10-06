@@ -98,7 +98,7 @@ describe('Model Evaluation Platform (VL-236)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/model-evaluation-platform/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Model Evaluation Platform');
+    expect(res.body.product).toBe('Lugemi Model Evaluation Platform');
     expect(res.body.honesty.globalLeaderboardOs).toBe(false);
     expect(res.body.honesty.mmluOs).toBe(false);
     expect(res.body.honesty.sotaClaimsForbidden).toBe(true);

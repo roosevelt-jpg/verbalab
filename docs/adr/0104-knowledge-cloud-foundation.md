@@ -6,7 +6,7 @@
 
 ## Context
 
-Library Phase 60 asks for VerbaLab Enterprise Knowledge Cloud as a first-class platform with Knowledge Base, Enterprise Search, Knowledge Graph, Document Intelligence, Semantic Knowledge, Organizational/AI Memory, Ontology, Taxonomy, Knowledge APIs — plus DDD/CQRS/hexagonal, REST/GraphQL/realtime, SDKs, CLI, Terraform, Docker, Kubernetes — “everything production ready.”
+Library Phase 60 asks for Lugemi Enterprise Knowledge Cloud as a first-class platform with Knowledge Base, Enterprise Search, Knowledge Graph, Document Intelligence, Semantic Knowledge, Organizational/AI Memory, Ontology, Taxonomy, Knowledge APIs — plus DDD/CQRS/hexagonal, REST/GraphQL/realtime, SDKs, CLI, Terraform, Docker, Kubernetes — “everything production ready.”
 
 Volumes 1–5 already ship Knowledge/RAG (VL-062), Embeddings (VL-063), Vector Cloud, Memory Cloud, Knowledge Graph (bounded ER), and Intelligence Cloud. Regenerating those or inventing a Confluence/SharePoint/ontology OS would violate “extend, don’t regenerate.”
 

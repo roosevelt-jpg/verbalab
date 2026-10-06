@@ -1,13 +1,13 @@
-# VerbaLab Reasoning Fabric
+# Lugemi Reasoning Fabric
 
 **Status:** Shipped (VL-244 / library Phase 111)  
 **Rule:** Reasoning Fabric is the **internal** reasoning router over Reasoning Runtime — **not** a custom reasoner kernel, symbolic reasoner OS, tool-execution agent OS, or customer-facing product. Extends AI Fabric + Reasoning Runtime. Do **not** regenerate Volumes 1–9 or VL-218 / VL-186. Roadmap: [`docs/roadmap/volume10-ai-fabric/`](./roadmap/volume10-ai-fabric/).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Reasoning Fabric | **VL-244** — `/reasoning-fabric` |
 | Reasoning Router | **Shipped** — `POST /route` |
@@ -30,7 +30,7 @@
 | History / replay | `GET /history`, `GET /replay/:id` |
 | Distribute | `POST /distribute` |
 | GraphQL | `reasoningFabricCapabilities`, `reasoningFabricRoutes` |
-| SDK / CLI | `reasoningFabricProducts()`, `verbalab reasoning-fabric-products` |
+| SDK / CLI | `reasoningFabricProducts()`, `lugemi reasoning-fabric-products` |
 
 ## Action safety
 

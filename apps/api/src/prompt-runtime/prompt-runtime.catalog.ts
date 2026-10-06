@@ -9,7 +9,7 @@ export type PromptRuntimeCapability = {
 };
 
 export function promptRuntimeMode(): 'disabled' | 'sandbox' {
-  const raw = (process.env.VERBALAB_PROMPT_RUNTIME_MODE ?? 'sandbox').toLowerCase();
+  const raw = (process.env.LUGEMI_PROMPT_RUNTIME_MODE ?? 'sandbox').toLowerCase();
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
@@ -18,11 +18,11 @@ export function promptRuntimeCeilings() {
   return {
     maxRenderedChars: Math.min(
       64_000,
-      Math.max(256, Number(process.env.VERBALAB_PROMPT_RUNTIME_MAX_CHARS ?? '32000') || 32_000),
+      Math.max(256, Number(process.env.LUGEMI_PROMPT_RUNTIME_MAX_CHARS ?? '32000') || 32_000),
     ),
     cacheTtlSec: Math.min(
       86_400,
-      Math.max(30, Number(process.env.VERBALAB_PROMPT_RUNTIME_CACHE_TTL_SEC ?? '600') || 600),
+      Math.max(30, Number(process.env.LUGEMI_PROMPT_RUNTIME_CACHE_TTL_SEC ?? '600') || 600),
     ),
     mode: promptRuntimeMode(),
     note: 'Hard render size ceiling. Cache TTL for opt-in Intelligent Cache namespace=prompt.',
@@ -48,7 +48,7 @@ export const PROMPT_RUNTIME_ROUTES: Array<{
  */
 export function promptRuntimeCatalog() {
   return {
-    product: 'VerbaLab Prompt Runtime',
+    product: 'Lugemi Prompt Runtime',
     note:
       'Prompt Runtime (VL-216). Kernel execution over VL-086 versioned prompts + VL-188 Prompt Intelligence (resolve, variables, validate, security, cache via Intelligent Cache namespace=prompt). Not an auto-prompt research lab, LLM-as-judge, or prompt mesh OS. Does not regenerate Prompt Intelligence.',
     capabilities: [
@@ -148,7 +148,7 @@ export function promptRuntimeCatalog() {
         name: 'SDK',
         status: 'shipped',
         api: 'promptRuntimeEngine()',
-        notes: '@verbalab/sdk',
+        notes: '@lugemi/sdk',
       },
       {
         id: 'monitoring',

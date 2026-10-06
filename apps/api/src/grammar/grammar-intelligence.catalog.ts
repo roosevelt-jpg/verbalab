@@ -8,7 +8,7 @@ export type GrammarCapability = {
   notes: string;
 };
 
-/** Library Phase 10 → VerbaLab Grammar Intelligence (VL-142). */
+/** Library Phase 10 → Lugemi Grammar Intelligence (VL-142). */
 export function grammarIntelligenceCatalog() {
   return {
     product: 'Grammar Intelligence',
@@ -91,7 +91,7 @@ export function grammarIntelligenceCatalog() {
       style: { status: 'shipped', api: '/v1/style/*' },
       rest: { status: 'shipped' },
       graphql: { status: 'shipped', notes: 'checkGrammar + suggestWriting (VL-142)' },
-      sdk: { status: 'shipped', package: '@verbalab/sdk' },
+      sdk: { status: 'shipped', package: '@lugemi/sdk' },
       analytics: { status: 'shipped', api: 'GET /v1/grammar/analytics' },
       monitoring: { status: 'partial', api: 'GET /v1/metrics/translate', notes: 'Shared observability stack' },
     },

@@ -27,7 +27,7 @@ export function ExplainabilityPlatformClient() {
         Explainability Platform
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-295 — VerbaLab Explainability Platform console in the Trust Cloud.
+        VL-295 — Lugemi Explainability Platform console in the Trust Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

@@ -29,7 +29,7 @@ export function EngineeringGovernanceClient() {
         Engineering Governance
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-345 — VerbaLab Engineering Governance console in Enterprise Engineering System (standards for humans + Cursor).
+        VL-345 — Lugemi Engineering Governance console in Enterprise Engineering System (standards for humans + Cursor).
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

@@ -1,13 +1,13 @@
-# VerbaLab Speech Analytics
+# Lugemi Speech Analytics
 
 **Status:** Partial shipped (VL-159 / library Phase 25)  
 **Rule:** Org speech usage/quality analytics over metering + audits. Do not claim BI cloud or NIST WER lab. Do not regenerate Language Analytics (`/v1/analytics`).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Speech Analytics / Dashboard | **VL-159** — `GET /v1/speech-analytics/engine` + `/speech-analytics` |
 | Speech Usage | **Shipped** — `GET /v1/speech-analytics/usage` (STT/TTS) |
@@ -21,7 +21,7 @@
 | Industries | **Partial** — industry vocabulary pack usage |
 | Reports / Monitoring | **Shipped** — `report`, `monitoring` |
 | WER Evaluation Lab | **Deferred** |
-| GraphQL / SDK / CLI | `speechAnalyticsEngine`, `speechAnalyticsOverview`, `verbalab speech-analytics` |
+| GraphQL / SDK / CLI | `speechAnalyticsEngine`, `speechAnalyticsOverview`, `lugemi speech-analytics` |
 | Related | Language Analytics remains `/analytics` (VL-146); `/usage` still meters STT/TTS |
 
 ---

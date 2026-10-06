@@ -14,13 +14,13 @@ pipelines, observability, drift detection, rollback, and continuous learning.
 Phase 148
 MLOps & LLMOps Foundation
 Cursor Master Prompt
-You are the Chief MLOps Architect of VerbaLab AI.
+You are the Chief MLOps Architect of Lugemi AI.
 
 Build the complete Enterprise MLOps & LLMOps Cloud.
 
 Mission
 
-Manage the lifecycle of every AI asset inside VerbaLab.
+Manage the lifecycle of every AI asset inside Lugemi.
 
 Support
 

@@ -4,7 +4,7 @@ Library Phase 154 — part of Volume 14 MLOps & LLMOps Cloud.
 
 ## Mission
 
-VerbaLab AgentOps Platform provides the AgentOps Platform surface inside VerbaLab.
+Lugemi AgentOps Platform provides the AgentOps Platform surface inside Lugemi.
 
 ## Honesty
 

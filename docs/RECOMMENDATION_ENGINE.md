@@ -1,13 +1,13 @@
-# VerbaLab Recommendation Engine
+# Lugemi Recommendation Engine
 
 **Status:** Partial shipped (VL-187 / library Phase 54)  
 **Rule:** Light rankers over languages, voices, knowledge/content, translation pairs, models, and workflow recipes. Do **not** build a retail recommender OS (CF, bandits, feature stores).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Content / Knowledge Recommendation | **Shipped** — `kind=content\|knowledge` via Vector Cloud or filename rank |
 | Language Recommendation | **Shipped** — registry + African tier + workspace defaults |
@@ -17,7 +17,7 @@
 | Workflow Recommendation | **Partial** — fixed API recipes |
 | Enterprise Recommendation | **Deferred** |
 | Engine / Dashboard | **VL-187** — `GET /v1/recommendation-engine/engine` + `/recommendation-engine` |
-| GraphQL / SDK / CLI | `recommendationEngine`, `verbalab recommend` |
+| GraphQL / SDK / CLI | `recommendationEngine`, `lugemi recommend` |
 
 ---
 

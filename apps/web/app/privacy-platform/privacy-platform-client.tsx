@@ -27,7 +27,7 @@ export function PrivacyPlatformClient() {
         Privacy Platform
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-296 — VerbaLab Privacy Platform console in the Trust Cloud.
+        VL-296 — Lugemi Privacy Platform console in the Trust Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

@@ -92,7 +92,7 @@ describe('Voice Enhancement Platform (VL-175)', () => {
 
   it('exposes engine with spectralMlDenoise=false and echo deferred', async () => {
     const engine = await request(app.getHttpServer()).get('/v1/voice-enhancement/engine').expect(200);
-    expect(engine.body.product).toBe('VerbaLab Voice Enhancement');
+    expect(engine.body.product).toBe('Lugemi Voice Enhancement');
     expect(engine.body.honesty.spectralMlDenoise).toBe(false);
     expect(engine.body.honesty.liveAec).toBe(false);
     const echoCap = engine.body.capabilities.find((c: { id: string }) => c.id === 'echo-cancellation');

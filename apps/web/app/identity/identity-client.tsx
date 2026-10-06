@@ -101,7 +101,7 @@ export function IdentityClient() {
         Identity
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '38rem' }}>
-        Human sign-in is Clerk (OIDC/JWT). VerbaLab owns org RBAC, API keys as machine identity, and
+        Human sign-in is Clerk (OIDC/JWT). Lugemi owns org RBAC, API keys as machine identity, and
         audit. SAML/SCIM/MFA stay with the IdP.
       </p>
 
@@ -232,7 +232,7 @@ export function IdentityClient() {
               {data.machineIdentity.activeKeys === 1 ? '' : 's'}
             </p>
             <p style={{ margin: '0.25rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
-              {data.machineIdentity.revokedKeys} revoked · workspace-scoped <code>vl_live_</code> secrets
+              {data.machineIdentity.revokedKeys} revoked · workspace-scoped <code>lg_live_</code> secrets
             </p>
             <p style={{ margin: '0.65rem 0 0' }}>
               <Link href="/keys" style={{ color: 'var(--accent)', fontWeight: 550 }}>

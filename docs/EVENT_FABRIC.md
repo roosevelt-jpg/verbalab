@@ -1,4 +1,4 @@
-# VerbaLab Event Fabric
+# Lugemi Event Fabric
 
 **Status:** Shipped (VL-240 / library Phase 107)  
 **Rule:** Event Fabric is the **internal** event/message bus for AI Fabric — **not** a Kafka hyperscaler, NATS/Rabbit cluster OS, or customer-facing product. Extends AI Fabric Foundation. Do **not** regenerate Volumes 1–9. Roadmap: [`docs/roadmap/volume10-ai-fabric/`](./roadmap/volume10-ai-fabric/).
@@ -7,9 +7,9 @@ Volume 10 README names Kafka / NATS / RabbitMQ / Redis Streams / CloudEvents. Th
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Event Fabric / Event Platform | **VL-240** — `/event-fabric` + bus APIs |
 | Redis Streams | **Active** — `REDIS_URL` XADD/XREADGROUP; memory if unavailable |
@@ -37,7 +37,7 @@ Volume 10 README names Kafka / NATS / RabbitMQ / Redis Streams / CloudEvents. Th
 | Overview | `GET /v1/event-fabric/overview` (Clerk) |
 | GraphQL | `eventFabricCapabilities`, `eventFabricBrokers` |
 | SDK | `eventFabricProducts()`, `eventFabricPublish()`, … |
-| CLI | `verbalab event-fabric-products` |
+| CLI | `lugemi event-fabric-products` |
 
 ## Env
 

@@ -36,7 +36,7 @@ export type MtpMethod = {
  */
 export function modelTrainingPlatformCatalog() {
   return {
-    product: 'VerbaLab Model Training Platform',
+    product: 'Lugemi Model Training Platform',
     note:
       'Model Training Platform (VL-235). Catalogs LoRA/instruction-tuning orchestration over existing `/v1/training-jobs` (VL-111). Experiment plans are sandbox-tracked. Does not ship distributed GPU clusters, RLHF/DPO labs, or trained competitive foundation weights (Volume 9 README).',
     capabilities: [

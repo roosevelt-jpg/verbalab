@@ -1,4 +1,4 @@
-# VerbaLab — Volume 15: Trust Cloud (Phases 159–168)
+# Lugemi — Volume 15: Trust Cloud (Phases 159–168)
 
 Same workflow as Volumes 1–14. `.cursorrules` at the repo root still applies.
 This volume is meant to be the enforcement layer for most of the risk notes
@@ -27,7 +27,7 @@ systems, not stand alone.
 **Code that models compliance is not the same thing as being compliant.**
 Phase 05 (Compliance Platform) will likely produce dashboards, controls, and
 tracking for frameworks like GDPR, HIPAA, SOC 2, PCI-DSS, etc. That's real
-and useful infrastructure — but it does not make VerbaLab actually compliant
+and useful infrastructure — but it does not make Lugemi actually compliant
 with any of those frameworks. Real compliance requires legal review, external
 audits, and (for several of these) formal certification processes that no
 amount of Cursor-generated code can substitute for. Don't let a working

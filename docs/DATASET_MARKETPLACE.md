@@ -1,13 +1,13 @@
-# VerbaLab Dataset Marketplace
+# Lugemi Dataset Marketplace
 
 **Status:** Shipped (VL-252 / library Phase 119)  
 **Rule:** Extends content-marketplace `dataset` kind + VL-101 DatasetAsset — **not** Label Studio, annotation OS, or Dataset Cloud. Real-money honesty: Stripe (or equivalent); `storesRawCardData: false`. Roadmap: [`docs/roadmap/volume11-ecosystem-cloud/`](./roadmap/volume11-ecosystem-cloud/).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Public / Enterprise / Research | **Shipped** — `category` |
 | Translation / Speech / OCR / Vision corpora | **Shipped** — categories; TM or DatasetAsset sources |
@@ -29,7 +29,7 @@
 | Reviews / sales / analytics | under `/v1/dataset-marketplace/*` |
 | GraphQL | `datasetMarketplaceEngine` |
 | SDK | `datasetMarketplaceEngine()` |
-| CLI | `verbalab dataset-marketplace-engine` |
+| CLI | `lugemi dataset-marketplace-engine` |
 
 ## Honesty
 

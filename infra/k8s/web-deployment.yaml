@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: verbalab-web
-  namespace: verbalab
+  name: lugemi-web
+  namespace: lugemi
   labels:
-    app: verbalab-web
+    app: lugemi-web
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: verbalab-web
+      app: lugemi-web
   template:
     metadata:
       labels:
-        app: verbalab-web
+        app: lugemi-web
     spec:
       containers:
         - name: web
-          image: REPLACE_ECR_OR_REGISTRY/verbalab-web:latest
+          image: REPLACE_ECR_OR_REGISTRY/lugemi-web:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate VerbaLab Volume 18 Data Plane Cloud (VL-324–333).
+"""Generate Lugemi Volume 18 Data Plane Cloud (VL-324–333).
 
 Thin execution/routing façades over existing product modules — never duplicates
 translation/STT/TTS/OCR/RAG business logic. Module slug for streaming is
@@ -12,7 +12,7 @@ import json
 import re
 from pathlib import Path
 
-ROOT = Path("/workspace/verbalab")
+ROOT = Path("/workspace/lugemi")
 
 
 def to_pascal(slug: str) -> str:
@@ -579,7 +579,7 @@ export function {to_pascal(slug)}Client() {{
         {title}
       </h1>
       <p style={{{{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}}}>
-        VL-{vl} — VerbaLab {title} console in the Data Plane Cloud.
+        VL-{vl} — Lugemi {title} console in the Data Plane Cloud.
       </p>
       {{error ? <p style={{{{ color: '#b42318' }}}}>{{error}}</p> : null}}
       {{!data && !error ? <p style={{{{ color: 'var(--muted)' }}}}>Loading…</p> : null}}
@@ -611,7 +611,7 @@ Library Phase {hub["phase"]} — part of Volume 18 Data Plane Cloud.
 
 ## Mission
 
-VerbaLab {hub["title"]} is a **thin execution/routing layer** inside the Data Plane Cloud.
+Lugemi {hub["title"]} is a **thin execution/routing layer** inside the Data Plane Cloud.
 It never manages organizations, policies, or billing — that is Control Plane (Volume 17).
 
 ## Honesty
@@ -799,7 +799,7 @@ export class DataPlaneCloudService {
 
   products() {
     return {
-      product: 'VerbaLab Data Plane Cloud',
+      product: 'Lugemi Data Plane Cloud',
       products: dataPlaneCloudProductCatalog(),
       runtimeInventory: dataPlaneCloudRuntimeInventory(),
       architecture: dataPlaneCloudArchitectureNotes(),
@@ -967,7 +967,7 @@ def runtime_catalog(hub: dict) -> str:
  */
 export function {camel}EngineCatalog() {{
   return {{
-    product: 'VerbaLab {hub['title']}',
+    product: 'Lugemi {hub['title']}',
     thinExecutionLayer: true,
     duplicatesProductLogic: false,
     capabilities: [
@@ -1614,7 +1614,7 @@ Streaming and GPU budgets remain governed by Volume 7 ceilings (`gpuBudgetLimits
 
 ## Summary
 
-Data Plane Cloud ships as thin execution/routing façades over existing VerbaLab product logic.
+Data Plane Cloud ships as thin execution/routing façades over existing Lugemi product logic.
 No org/policy/billing management. No Service Mesh invention. GPU budget honesty retained.
 
 ## Evidence
@@ -2039,13 +2039,13 @@ def patch_wiring() -> None:
     help_lines = []
     for hub in HUBS:
         cmd = f"{hub['slug']}-products" if hub["kind"] == "foundation" else f"{hub['slug']}-engine"
-        line = f"  verbalab {cmd}"
+        line = f"  lugemi {cmd}"
         if line not in ct:
             help_lines.append(line)
     if help_lines:
         ct = ct.replace(
-            "  verbalab control-plane-analytics-engine\n",
-            "  verbalab control-plane-analytics-engine\n" + "\n".join(help_lines) + "\n",
+            "  lugemi control-plane-analytics-engine\n",
+            "  lugemi control-plane-analytics-engine\n" + "\n".join(help_lines) + "\n",
         )
     handlers = []
     for hub in HUBS:
@@ -2127,7 +2127,7 @@ Library Phase 191 — part of Volume 18 Data Plane Cloud.
 
 ## Mission
 
-VerbaLab Data Plane Cloud executes every customer workload via thin runtime hubs that
+Lugemi Data Plane Cloud executes every customer workload via thin runtime hubs that
 route to existing product logic (Translation, Speech, Voice, Vision, Knowledge,
 Embeddings, Streaming, GPU). It never manages organizations, policies, or billing.
 

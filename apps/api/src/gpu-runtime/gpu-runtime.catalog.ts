@@ -4,7 +4,7 @@
  */
 export function gpuRuntimeEngineCatalog() {
   return {
-    product: 'VerbaLab GPU Runtime',
+    product: 'Lugemi GPU Runtime',
     thinExecutionLayer: true,
     duplicatesProductLogic: false,
     capabilities: [

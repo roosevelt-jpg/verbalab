@@ -28,7 +28,7 @@ export function WakeWordClient() {
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [phrase, setPhrase] = useState('escalate to human');
   const [kind, setKind] = useState('trigger');
-  const [text, setText] = useState('Hey VerbaLab, please escalate to human now.');
+  const [text, setText] = useState('Hey Lugemi, please escalate to human now.');
   const [result, setResult] = useState<DetectResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);

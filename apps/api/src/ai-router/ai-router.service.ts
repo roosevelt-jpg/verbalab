@@ -136,7 +136,7 @@ export class AiRouterService {
     if (aiRouterMode() === 'disabled') {
       throw new ApiException(
         'ai_router_disabled',
-        'AI Router mode is disabled (VERBALAB_AI_ROUTER_MODE=disabled).',
+        'AI Router mode is disabled (LUGEMI_AI_ROUTER_MODE=disabled).',
         HttpStatus.FORBIDDEN,
       );
     }

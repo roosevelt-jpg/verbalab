@@ -8,7 +8,7 @@ export type StyleCapability = {
   notes: string;
 };
 
-/** Library Phase 11 → VerbaLab Style Intelligence (VL-143). */
+/** Library Phase 11 → Lugemi Style Intelligence (VL-143). */
 export function styleIntelligenceCatalog() {
   return {
     product: 'Style Intelligence',
@@ -111,7 +111,7 @@ export function styleIntelligenceCatalog() {
       style: { status: 'shipped', api: '/v1/style/*' },
       rest: { status: 'shipped' },
       graphql: { status: 'shipped', notes: 'styleIntelligence + detectTone + transformTone + transferStyle' },
-      sdk: { status: 'shipped', package: '@verbalab/sdk' },
+      sdk: { status: 'shipped', package: '@lugemi/sdk' },
       analytics: { status: 'shipped', api: 'GET /v1/style/analytics' },
       monitoring: { status: 'partial', api: 'GET /v1/metrics/translate', notes: 'Shared observability stack' },
     },

@@ -4,7 +4,7 @@
  */
 export function embeddingRuntimeEngineCatalog() {
   return {
-    product: 'VerbaLab Embedding Runtime',
+    product: 'Lugemi Embedding Runtime',
     thinExecutionLayer: true,
     duplicatesProductLogic: false,
     capabilities: [

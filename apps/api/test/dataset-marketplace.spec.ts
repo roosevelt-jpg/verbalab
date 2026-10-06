@@ -96,7 +96,7 @@ describe('Dataset Marketplace (VL-252)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/dataset-marketplace/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Dataset Marketplace');
+    expect(res.body.product).toBe('Lugemi Dataset Marketplace');
     expect(res.body.honesty.labelStudioOs).toBe(false);
     expect(res.body.honesty.datasetCloudOs).toBe(false);
     expect(res.body.honesty.storesRawCardData).toBe(false);

@@ -95,7 +95,7 @@ describe('Connector Marketplace (VL-256)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/connector-marketplace/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Connector Marketplace');
+    expect(res.body.product).toBe('Lugemi Connector Marketplace');
     expect(res.body.honesty.liveConnectorExecution).toBe(false);
     expect(res.body.honesty.ipaasOs).toBe(false);
     expect(res.body.honesty.zapierOs).toBe(false);

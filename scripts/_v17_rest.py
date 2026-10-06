@@ -41,7 +41,7 @@ def deploy_catalog() -> str:
  */
 export function globalDeploymentControllerEngineCatalog() {
   return {
-    product: 'VerbaLab Global Deployment Controller',
+    product: 'Lugemi Global Deployment Controller',
     capabilities: [
       { id: 'multi_region', name: 'Multi Region', status: 'shipped', notes: 'VL-318.' },
       { id: 'blue_green', name: 'Blue Green', status: 'shipped', notes: 'VL-318.' },
@@ -432,7 +432,7 @@ export function listAccessAudit() {
 export function secretsCertificatePlatformEngineCatalog() {
   const secrets = SECRET_STORE.map(toSecretMetadata);
   return {
-    product: 'VerbaLab Secrets & Certificate Platform',
+    product: 'Lugemi Secrets & Certificate Platform',
     capabilities: [
       { id: 'secrets', name: 'Secrets', status: 'shipped', notes: 'Metadata only.' },
       { id: 'certificates', name: 'Certificates', status: 'shipped', notes: 'VL-320.' },
@@ -615,7 +615,7 @@ def analytics_catalog() -> str:
  */
 export function controlPlaneAnalyticsEngineCatalog() {
   return {
-    product: 'VerbaLab Control Plane Analytics',
+    product: 'Lugemi Control Plane Analytics',
     capabilities: [
       { id: 'organizations', name: 'Organizations', status: 'shipped', notes: 'From org control.' },
       { id: 'deployments', name: 'Deployments', status: 'shipped', notes: 'From deploy controller.' },
@@ -1424,7 +1424,7 @@ No inference execution paths introduced in Volume 17.
 
 ## Verdict
 
-Volume 17 Control Plane Cloud is closed and ready as VerbaLab's highest-privilege management layer.
+Volume 17 Control Plane Cloud is closed and ready as Lugemi's highest-privilege management layer.
 
 ## Honesty checklist
 
@@ -1962,13 +1962,13 @@ def patch_wiring() -> None:
     help_lines = []
     for hub in HUBS:
         cmd = f"{hub['slug']}-products" if hub["kind"] == "foundation" else f"{hub['slug']}-engine"
-        line = f"  verbalab {cmd}"
+        line = f"  lugemi {cmd}"
         if line not in ct:
             help_lines.append(line)
     if help_lines:
         ct = ct.replace(
-            "  verbalab platform-engineering-analytics-engine\n",
-            "  verbalab platform-engineering-analytics-engine\n" + "\n".join(help_lines) + "\n",
+            "  lugemi platform-engineering-analytics-engine\n",
+            "  lugemi platform-engineering-analytics-engine\n" + "\n".join(help_lines) + "\n",
         )
     handlers = []
     for hub in HUBS:
@@ -2050,8 +2050,8 @@ Library Phase 181 — part of Volume 17 Control Plane Cloud.
 
 ## Mission
 
-VerbaLab Control Plane Cloud is the highest-privilege management layer that manages,
-configures, secures, governs, deploys, and operates every VerbaLab cloud service.
+Lugemi Control Plane Cloud is the highest-privilege management layer that manages,
+configures, secures, governs, deploys, and operates every Lugemi cloud service.
 It never executes AI inference.
 
 ## Honesty

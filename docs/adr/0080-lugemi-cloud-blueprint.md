@@ -1,4 +1,4 @@
-# ADR-0080: VerbaLab Cloud Blueprint (12 standard layers)
+# ADR-0080: Lugemi Cloud Blueprint (12 standard layers)
 
 - Status: Accepted
 - Date: 2026-09-07
@@ -6,21 +6,21 @@
 
 ## Context
 
-After Language Cloud (VL-130–147) and Speech Cloud (VL-150–160), the library asks every VerbaLab “cloud” (Language, Speech, Voice, Vision, Media, Intelligence, Knowledge, AI, …) to share the same internal blueprint so products stay consistent instead of isolated one-offs.
+After Language Cloud (VL-130–147) and Speech Cloud (VL-150–160), the library asks every Lugemi “cloud” (Language, Speech, Voice, Vision, Media, Intelligence, Knowledge, AI, …) to share the same internal blueprint so products stay consistent instead of isolated one-offs.
 
 Creating empty folder clouds for Vision/Media/etc. would violate executable ROADMAP rules. The blueprint must map onto the **existing modular monolith** (shared Identity, Gateway, Billing, Observability) rather than spawning duplicate platforms.
 
 ## Decision
 
-Every VerbaLab product cloud **shall** organize work and docs against these **12 layers**:
+Every Lugemi product cloud **shall** organize work and docs against these **12 layers**:
 
 1. **Cloud Foundation** — hub catalog/overview + bounded domain module  
 2. **Core Engine** — primary capability engine (translate / speech recognize / …)  
 3. **AI Models** — vendor adapters + own/rented model paths (honest env gating)  
 4. **Intelligence Layer** — adjacent AI products (grammar, speaker, emotion, call, …)  
 5. **Enterprise APIs** — versioned REST (+ GraphQL façade where present)  
-6. **SDKs** — `@verbalab/sdk` methods  
-7. **CLI** — `@verbalab/cli` commands  
+6. **SDKs** — `@lugemi/sdk` methods  
+7. **CLI** — `@lugemi/cli` commands  
 8. **Dashboard** — Next.js console routes  
 9. **Analytics** — usage/audit aggregates for that cloud  
 10. **Billing Integration** — metering + Stripe entitlements (shared)  
@@ -36,7 +36,7 @@ Every VerbaLab product cloud **shall** organize work and docs against these **12
 | AI Models | Google/OpenAI MT (+ LLM) | Whisper STT, OpenAI/own TTS, ElevenLabs | OpenAI/own TTS, ElevenLabs | OpenAI embeddings/chat (gateway) | OpenAI embeddings (shared) | Vendor APIs today; rented GPU later |
 | Intelligence | Dialect/Grammar/Style/LI/TM | Speaker/Emotion/Audio/Wake/Call | Emotion/studio/enhance/biometrics/market | Memory/context/reason/recommend/decide | KB/search/ontology/taxonomy (VL-194+) | Router/cache/cost (VL-207+) |
 | Enterprise APIs | `/v1/*` + GraphQL | `/v1/speech*` + GraphQL | `/v1/tts*` `/v1/voice-*` | `/v1/intelligence-cloud*` + GraphQL | `/v1/knowledge-cloud*` + `/v1/knowledge*` | `/v1/inference-cloud*` + GraphQL |
-| SDK / CLI | `@verbalab/sdk` / CLI | speech methods | voice methods | `intelligenceProducts` + intel hubs | `knowledgeProducts` + knowledge hubs | `inferenceProducts` |
+| SDK / CLI | `@lugemi/sdk` / CLI | speech methods | voice methods | `intelligenceProducts` + intel hubs | `knowledgeProducts` + knowledge hubs | `inferenceProducts` |
 | Dashboard | `/language` | `/speech` | `/voice-cloud` | `/intelligence-cloud` | `/knowledge-cloud` | `/inference-cloud` |
 | Analytics | VL-146 | VL-159 | VL-178 | VL-191 | VL-202 | VL-212 |
 | Billing | shared metering | STT/TTS | TTS | chat/embeddings metering | embeddings/RAG metering | chat/embeddings + future GPU caps |

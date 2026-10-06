@@ -1,4 +1,4 @@
-import nextjsConfig from '@verbalab/eslint-config/nextjs';
+import nextjsConfig from '@lugemi/eslint-config/nextjs';
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [...nextjsConfig];

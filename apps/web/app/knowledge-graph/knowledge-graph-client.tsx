@@ -20,7 +20,7 @@ export function KnowledgeGraphClient() {
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [entities, setEntities] = useState<Entity[]>([]);
-  const [nameA, setNameA] = useState('VerbaLab');
+  const [nameA, setNameA] = useState('Lugemi');
   const [nameB, setNameB] = useState('Nairobi');
   const [relType, setRelType] = useState('headquartered_in');
   const [result, setResult] = useState<string | null>(null);

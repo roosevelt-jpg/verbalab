@@ -4,7 +4,7 @@
 **Cloud:** African Intelligence Cloud (Volume 12)  
 **ADR:** [ADR-0166](./adr/0166-government-intelligence.md)
 
-Government Intelligence is part of VerbaLab's African Intelligence Cloud. It extends existing Language/Knowledge/Intelligence surfaces — it does **not** regenerate Volumes 1–11.
+Government Intelligence is part of Lugemi's African Intelligence Cloud. It extends existing Language/Knowledge/Intelligence surfaces — it does **not** regenerate Volumes 1–11.
 
 ## Surfaces
 

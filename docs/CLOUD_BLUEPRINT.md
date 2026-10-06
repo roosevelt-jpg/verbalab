@@ -1,4 +1,4 @@
-# VerbaLab Cloud Blueprint
+# Lugemi Cloud Blueprint
 
 **Status:** Accepted (ADR-0080)  
 **Rule:** Every product cloud uses the same 12 layers. Extend the shared platform — do not invent empty clouds.
@@ -22,7 +22,7 @@ Cloud Foundation
 └── Production Audit
 ```
 
-See [`docs/adr/0080-verbalab-cloud-blueprint.md`](./adr/0080-verbalab-cloud-blueprint.md) for Language/Speech mapping and governance rules.
+See [`docs/adr/0080-lugemi-cloud-blueprint.md`](./adr/0080-lugemi-cloud-blueprint.md) for Language/Speech mapping and governance rules.
 
 ## Shipped volumes
 

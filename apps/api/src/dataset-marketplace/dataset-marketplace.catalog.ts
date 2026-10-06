@@ -37,7 +37,7 @@ export const DATASET_MARKETPLACE_LICENSE_TYPES = [
  */
 export function datasetMarketplaceEngineCatalog() {
   return {
-    product: 'VerbaLab Dataset Marketplace',
+    product: 'Lugemi Dataset Marketplace',
     note:
       'Dataset Marketplace (VL-252). Publish/license dataset SKUs over content-marketplace dataset kind + Dataset Asset program (VL-101). TM corpora install copy pairs; DatasetAsset listings grant license entitlements — not Label Studio, annotation OS, or Dataset Cloud.',
     capabilities: [

@@ -35,7 +35,7 @@ export const MODEL_LICENSE_TYPES = [
  */
 export function modelMarketplaceEngineCatalog() {
   return {
-    product: 'VerbaLab Model Marketplace',
+    product: 'Lugemi Model Marketplace',
     note:
       'Model Marketplace (VL-251). Publish/license model SKUs over Model Registry cards (VL-237 / VL-110). Entitlements on install — not weight hosting, Hugging Face hub, or traffic-mesh deploy OS. Monetization records MarketplaceSale receipts; Stripe Connect via VL-092.',
     capabilities: [

@@ -61,7 +61,7 @@ export function seedExplanations(): ExplanationRecord[] {
 export function explainabilityPlatformEngineCatalog() {
   const explanations = seedExplanations();
   return {
-    product: 'VerbaLab Explainability Platform',
+    product: 'Lugemi Explainability Platform',
     capabilities: [
       { id: 'confidence', name: 'Confidence Scores', status: 'shipped', notes: 'Per-decision confidence.' },
       { id: 'evidence', name: 'Evidence', status: 'shipped', notes: 'Evidence bundles.' },

@@ -49,7 +49,7 @@ describe('Taxonomy Platform (VL-197)', () => {
   let storageDir: string;
 
   beforeAll(async () => {
-    storageDir = await mkdtemp(join(tmpdir(), 'verbalab-tax-'));
+    storageDir = await mkdtemp(join(tmpdir(), 'lugemi-tax-'));
     process.env.DOCUMENT_STORAGE_DIR = storageDir;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({

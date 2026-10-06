@@ -1,4 +1,4 @@
-# VerbaLab — Volume 17: Control Plane Cloud (Phases 181–190)
+# Lugemi — Volume 17: Control Plane Cloud (Phases 181–190)
 
 Same workflow as Volumes 1–16. `.cursorrules` at the repo root still applies.
 

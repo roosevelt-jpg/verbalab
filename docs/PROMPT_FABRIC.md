@@ -1,13 +1,13 @@
-# VerbaLab Prompt Fabric
+# Lugemi Prompt Fabric
 
 **Status:** Shipped (VL-243 / library Phase 110)  
 **Rule:** Prompt Fabric is the **internal** prompt router over Prompt Runtime — **not** a prompt mesh, auto-prompt research lab, LLM-as-judge, or customer-facing product. Extends AI Fabric + Prompt Runtime. Do **not** regenerate Volumes 1–9 or VL-216 / VL-086 / VL-188. Roadmap: [`docs/roadmap/volume10-ai-fabric/`](./roadmap/volume10-ai-fabric/).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Prompt Fabric / Prompt Platform | **VL-243** — `/prompt-fabric` |
 | Prompt Routing | **Shipped** — fabric routes + Prompt Runtime feature→key |
@@ -30,7 +30,7 @@
 | Distribute / sync | `POST /distribute`, `/sync` |
 | Monitoring / overview | `GET /monitoring`, `/overview` |
 | GraphQL | `promptFabricCapabilities`, `promptFabricRoutes` |
-| SDK / CLI | `promptFabricProducts()`, `verbalab prompt-fabric-products` |
+| SDK / CLI | `promptFabricProducts()`, `lugemi prompt-fabric-products` |
 
 ## Action safety
 

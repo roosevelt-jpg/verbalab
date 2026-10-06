@@ -57,11 +57,11 @@ describe('Policy Fabric (VL-247)', () => {
   let apiKeys: ApiKeysService;
   let fabric: PolicyFabricService;
   let bus: EventFabricBus;
-  const prevMode = process.env.VERBALAB_POLICY_RUNTIME_MODE;
+  const prevMode = process.env.LUGEMI_POLICY_RUNTIME_MODE;
 
   beforeAll(async () => {
     process.env.EVENT_FABRIC_MEMORY = '1';
-    process.env.VERBALAB_POLICY_RUNTIME_MODE = 'enforce';
+    process.env.LUGEMI_POLICY_RUNTIME_MODE = 'enforce';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();
@@ -77,8 +77,8 @@ describe('Policy Fabric (VL-247)', () => {
   });
 
   afterAll(async () => {
-    if (prevMode === undefined) delete process.env.VERBALAB_POLICY_RUNTIME_MODE;
-    else process.env.VERBALAB_POLICY_RUNTIME_MODE = prevMode;
+    if (prevMode === undefined) delete process.env.LUGEMI_POLICY_RUNTIME_MODE;
+    else process.env.LUGEMI_POLICY_RUNTIME_MODE = prevMode;
     await app.close();
   });
 
@@ -113,7 +113,7 @@ describe('Policy Fabric (VL-247)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/policy-fabric/products')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Policy Fabric');
+    expect(res.body.product).toBe('Lugemi Policy Fabric');
     expect(res.body.architecture.customerFacingProduct).toBe(false);
     expect(res.body.architecture.hardGate).toBe(true);
     expect(res.body.architecture.logOnlyMode).toBe(false);
@@ -187,7 +187,7 @@ describe('Policy Fabric (VL-247)', () => {
       })
       .expect(200);
     expect(dist.body.distribution.targets).toContain(peer.id);
-    expect(dist.body.event.type).toBe('com.verbalab.policy.distributed');
+    expect(dist.body.event.type).toBe('com.lugemi.policy.distributed');
 
     const sync = await request(app.getHttpServer())
       .post('/v1/policy-fabric/sync')

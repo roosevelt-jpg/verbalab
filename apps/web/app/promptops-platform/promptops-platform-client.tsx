@@ -27,7 +27,7 @@ export function PromptopsPlatformClient() {
         PromptOps Platform
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-285 — VerbaLab PromptOps Platform console in the MLOps & LLMOps Cloud.
+        VL-285 — Lugemi PromptOps Platform console in the MLOps & LLMOps Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

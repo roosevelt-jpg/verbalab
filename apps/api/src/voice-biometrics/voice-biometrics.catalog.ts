@@ -11,7 +11,7 @@ export type BioCapability = {
 /** Library Phase 33 → Enterprise Voice Biometrics (VL-176). Extends VL-152. */
 export function voiceBiometricsEngineCatalog() {
   return {
-    product: 'VerbaLab Voice Biometrics',
+    product: 'Lugemi Voice Biometrics',
     note:
       'Enterprise voice auth governance over Speaker Intelligence fingerprints (VL-152): encrypt-at-rest templates, deletion path, heuristic anti-spoof/liveness/risk. Not NIST/PAD/ASVspoof certified. Prefer specialist vendor for regulated auth.',
     capabilities: [
@@ -110,8 +110,8 @@ export function voiceBiometricsEngineCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

@@ -4,7 +4,7 @@
 Phase 48
 Embedding Cloud
 Cursor Prompt
-Build VerbaLab Embeddings.
+Build Lugemi Embeddings.
 
 Support
 

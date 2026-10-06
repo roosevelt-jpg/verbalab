@@ -96,7 +96,7 @@ describe('AI Fabric Foundation (VL-239)', () => {
 
   it('exposes public bus catalog with honest architecture + safety', async () => {
     const res = await request(app.getHttpServer()).get('/v1/ai-fabric/products').expect(200);
-    expect(res.body.product).toBe('VerbaLab AI Fabric');
+    expect(res.body.product).toBe('Lugemi AI Fabric');
     expect(res.body.architecture.customerFacingProduct).toBe(false);
     expect(res.body.architecture.kafkaHyperscalerOs).toBe(false);
     expect(res.body.architecture.serviceMeshOs).toBe(false);

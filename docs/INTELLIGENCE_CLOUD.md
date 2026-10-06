@@ -1,13 +1,13 @@
-# VerbaLab Intelligence Cloud
+# Lugemi Intelligence Cloud
 
 **Status:** Volume complete (VL-180–192 / library Phases 47–59)  
 **Rule:** Shared intelligence layer over the LLM gateway, embeddings, and RAG. Extend existing Chat / Embeddings / Knowledge modules. Do not regenerate Language/Speech/Voice Clouds. Do **not** invent a custom AI kernel or reasoner OS. Follow the [12-layer Cloud Blueprint](./CLOUD_BLUEPRINT.md) (ADR-0080). Audit evidence: [`docs/intelligence-cloud-audit/`](./intelligence-cloud-audit/).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Intelligence Cloud Foundation | **VL-180** — `/intelligence-cloud` + product catalog / overview |
 | Embedding Cloud | **Partial** — **VL-181** `/embedding-cloud` over VL-063 text; multimodal deferred |
@@ -36,8 +36,8 @@
 | REST overview | `GET /v1/intelligence-cloud/overview` (Clerk session) |
 | GraphQL | `intelligenceProducts` |
 | OpenAPI | `/v1/openapi.json` |
-| SDK | `intelligenceProducts()` on `@verbalab/sdk` |
-| CLI | `verbalab intelligence-products` |
+| SDK | `intelligenceProducts()` on `@lugemi/sdk` |
+| CLI | `lugemi intelligence-products` |
 
 ---
 

@@ -1,4 +1,4 @@
-﻿# VerbaLab AI ? Architecture (MVP-realistic)
+﻿# Lugemi AI ? Architecture (MVP-realistic)
 
 This is the **starting** architecture for a small team. It is allowed to disagree with the libraries. When a later phase changes the shape of the system, update this file in the same session.
 
@@ -127,7 +127,7 @@ v1 and v2 specify OAuth2, OIDC, JWT, SAML, SCIM, passkeys, MFA, ABAC, audit ? **
 ## Target repo layout (Phase 0 ? shipped)
 
 ```text
-verbalab/
+lugemi/
   apps/
     web/                 # Next.js 15 console (health page)
     api/                 # NestJS HTTP API + Prisma
@@ -153,7 +153,7 @@ verbalab/
 ## API conventions (lock this in VL-001)
 
 - Base path: `/v1`
-- Auth: `Authorization: Bearer vl_live_...` for public API; session/Clerk for console BFF routes
+- Auth: `Authorization: Bearer lg_live_...` for public API; session/Clerk for console BFF routes
 - Errors: `{ "error": { "code": "unsupported_language", "message": "...", "request_id": "..." } }`
 - Idempotency: `Idempotency-Key` on paid mutations once billing exists
 - Versioning: URL version; no header soup
@@ -250,7 +250,7 @@ If `GOOGLE_TRANSLATE_API_KEY` (or Azure equivalent) is missing, **stop** and ask
 | --- | --- |
 | Local | Compose Postgres, `.env.local`, Clerk dev keys, vendor key |
 | CI | Postgres service container, no vendor calls except optional nightly |
-| Production (VL-074/075) | Fly.io residency islands (`infra/fly/*.toml` + `*.eu.toml`); each island has its own Postgres+Redis; `VERBALAB_REGION` + org `data_region` pin (ADR-0043) |
+| Production (VL-074/075) | Fly.io residency islands (`infra/fly/*.toml` + `*.eu.toml`); each island has its own Postgres+Redis; `LUGEMI_REGION` + org `data_region` pin (ADR-0043) |
 
 No ?dev / staging / prod / gov / sovereign? matrix until there is staff to operate it.
 
@@ -334,7 +334,7 @@ Public surfaces: `/`, `/docs`, `/playground`, `/coverage`. Console: `/dashboard`
 - Without Clerk/Google keys: `/setup` page; API returns `auth_not_configured` / `provider_not_configured` — not fake data.
 - Tests: API + SDK suites green with DB + fixture provider; live Google test gated on `TRANSLATE_LIVE=1`.
 - Audit (`audit_events`): `api_key.created` / `api_key.revoked` / `translate.completed` / daily `session.sign_in`. Console `/audit` for owners/admins.
-- SDK: workspace package `@verbalab/sdk` (`VerbaLab` client).
+- SDK: workspace package `@lugemi/sdk` (`Lugemi` client).
 - Billing: org entitlements (`free` 50k chars / `pro` 1M). Stripe Checkout + Customer Portal + webhook. Translate returns `402 quota_exceeded` when over quota. Console `/billing`.
 - Marketplace (VL-090–092): Pro orgs publish frozen `glossary` / `prompt` / `dataset` (TM) listings; optional `priceCents` with Stripe Connect destination charges + platform fee (`/marketplace`, ADR-0031–0033).
 - Coverage (VL-100): golden EN→sw/yo/am eval harness + public `GET /v1/coverage` and `/coverage` (ADR-0034); reference metrics only — no leadership claims.
@@ -348,9 +348,9 @@ Public surfaces: `/`, `/docs`, `/playground`, `/coverage`. Console: `/dashboard`
 - Voice cloning (VL-064): ElevenLabs Instant Voice Cloning with consent attestation, abuse review, required watermark header; speak via `clone:{id}` (ADR-0042).
 - Voice Studio (VL-120): `/audio` African studio UX — language presets, clone lifecycle UI, Clerk-first TTS; vendors only (ADR-0044).
 - Own TTS (VL-121): `own:*` voices via `OWN_TTS_URL` rented endpoint (or fixture); OpenAI remains stock default (ADR-0045).
-- Cloud Platform Foundation (VL-125): library Phase 1 mapped onto org/workspace/Clerk/Stripe/residency — not a control plane. Workspaces API + `X-VerbaLab-Workspace-Id`, thin feature flags, `/dashboard` + `GET /v1/cloud/overview`. See [`docs/CLOUD_PLATFORM_FOUNDATION.md`](docs/CLOUD_PLATFORM_FOUNDATION.md) + ADR-0046. No AZs / service discovery.
-- Identity Cloud (VL-126): library Phase 2 mapped — Clerk human IdP; VerbaLab RBAC membership writes + Clerk role sync; API keys as machine identity (`lastUsedAt`); `/identity` + `GET /v1/identity/overview`. See [`docs/IDENTITY_CLOUD.md`](docs/IDENTITY_CLOUD.md) + ADR-0047. No first-party SAML/SCIM/ABAC/Teams.
-- Developer Cloud (VL-127): library Phase 3 mapped — `/developers` hub, soft `vl_test_` keys (same cluster), `@verbalab/cli`, playground detect/languages, `GET /v1/developer/*`. See [`docs/DEVELOPER_CLOUD.md`](docs/DEVELOPER_CLOUD.md) + ADR-0048. No OAuth AS / sandbox island.
+- Cloud Platform Foundation (VL-125): library Phase 1 mapped onto org/workspace/Clerk/Stripe/residency — not a control plane. Workspaces API + `X-Lugemi-Workspace-Id`, thin feature flags, `/dashboard` + `GET /v1/cloud/overview`. See [`docs/CLOUD_PLATFORM_FOUNDATION.md`](docs/CLOUD_PLATFORM_FOUNDATION.md) + ADR-0046. No AZs / service discovery.
+- Identity Cloud (VL-126): library Phase 2 mapped — Clerk human IdP; Lugemi RBAC membership writes + Clerk role sync; API keys as machine identity (`lastUsedAt`); `/identity` + `GET /v1/identity/overview`. See [`docs/IDENTITY_CLOUD.md`](docs/IDENTITY_CLOUD.md) + ADR-0047. No first-party SAML/SCIM/ABAC/Teams.
+- Developer Cloud (VL-127): library Phase 3 mapped — `/developers` hub, soft `lg_test_` keys (same cluster), `@lugemi/cli`, playground detect/languages, `GET /v1/developer/*`. See [`docs/DEVELOPER_CLOUD.md`](docs/DEVELOPER_CLOUD.md) + ADR-0048. No OAuth AS / sandbox island.
 - Enterprise Cloud (VL-128): library Phase 4 mapped — `/enterprise` + derived policies from governance/admin/residency/billing/RBAC. See [`docs/ENTERPRISE_CLOUD.md`](docs/ENTERPRISE_CLOUD.md) + ADR-0049. No policy engine / Trust Center product.
 - AI Gateway Cloud (VL-129): library Phase 5 mapped — thin gateway hub + optional OpenRouter chat fallback. See [`docs/AI_GATEWAY_CLOUD.md`](docs/AI_GATEWAY_CLOUD.md) + ADR-0050. **Closes Volume 1 Part A.**
 - Language Cloud volume complete through Production Audit (VL-130–147). See LANGUAGE_CLOUD + `docs/language-cloud-audit/` and ADR-0051–0068. Fly remains default PaaS. Competitor-parity claims rejected.
@@ -365,7 +365,7 @@ Public surfaces: `/`, `/docs`, `/playground`, `/coverage`. Console: `/dashboard`
 - Call Intelligence partial (VL-158 / Phase 24). See CALL_INTELLIGENCE + ADR-0077. Heuristic analytics; Voice FAQ remains separate.
 - Speech Analytics partial (VL-159 / Phase 25). See SPEECH_ANALYTICS + ADR-0078. Usage/audit aggregates; WER lab deferred. Language Analytics separate.
 - Speech Cloud volume complete through Production Audit (VL-150–160). See SPEECH_CLOUD + `docs/speech-cloud-audit/` and ADR-0069–0079. Competitor-parity claims rejected.
-- **VerbaLab Cloud Blueprint (12 layers)** accepted (ADR-0080 / `docs/CLOUD_BLUEPRINT.md`). Future clouds map Foundation → Production Audit without regenerating Identity/Gateway/Billing.
+- **Lugemi Cloud Blueprint (12 layers)** accepted (ADR-0080 / `docs/CLOUD_BLUEPRINT.md`). Future clouds map Foundation → Production Audit without regenerating Identity/Gateway/Billing.
 - Voice Cloud Foundation shipped (VL-170 / Phase 27). See VOICE_CLOUD + ADR-0081. Extends TTS/clones/studio; does not regenerate Speech Cloud.
 - Neural Text-to-Speech shipped (VL-171 / Phase 28). See NEURAL_TTS + ADR-0082. Batch + chunk SSE; children voices deferred.
 - Voice Cloning Platform shipped (VL-172 / Phase 29). See VOICE_CLONING + ADR-0083. Extends VL-064 consent/review/watermark with ownership/licensing/permissions.

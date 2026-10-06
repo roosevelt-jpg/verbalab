@@ -4,11 +4,11 @@
 Phase 47
 Intelligence Cloud Foundation
 Cursor Master Prompt
-You are the Chief AI Architect of VerbaLab AI.
+You are the Chief AI Architect of Lugemi AI.
 
 Build the complete Intelligence Cloud.
 
-This becomes the brain of the entire VerbaLab Platform.
+This becomes the brain of the entire Lugemi Platform.
 
 Every cloud communicates with Intelligence Cloud.
 

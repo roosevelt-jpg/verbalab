@@ -119,7 +119,7 @@ describe('Slack connector (VL-082)', () => {
       team_id: teamId,
       channel_id: 'C1',
       user_id: 'U1',
-      command: '/verbalab',
+      command: '/lugemi',
       text: 'sw Hello there',
     }).toString();
     const { timestamp, signature } = signed(form, 'application/x-www-form-urlencoded');

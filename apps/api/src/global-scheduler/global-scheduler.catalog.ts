@@ -4,7 +4,7 @@
  */
 export function globalSchedulerEngineCatalog() {
   return {
-    product: 'VerbaLab Global Scheduler',
+    product: 'Lugemi Global Scheduler',
     capabilities: [
       { id: 'jobs', name: 'Jobs', status: 'shipped', notes: 'VL-321 capability.' },
       { id: 'cron', name: 'Cron', status: 'shipped', notes: 'VL-321 capability.' },

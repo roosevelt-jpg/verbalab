@@ -8,7 +8,7 @@
 
 Library Phase 30 asks for emotion-conditioned synthesis (happy/sad/angry/fear/excited/professional/calm/urgent/empathetic + medical/legal/sales/customer support) with REST/GraphQL/SDK/monitoring/docs.
 
-VerbaLab already has Neural TTS (VL-171) and Speech Emotion *detection* (VL-154). OpenAI TTS has no first-class emotion controls. Training an expressive TTS model is out of scope. Confusing detection with synthesis would violate product boundaries.
+Lugemi already has Neural TTS (VL-171) and Speech Emotion *detection* (VL-154). OpenAI TTS has no first-class emotion controls. Training an expressive TTS model is out of scope. Confusing detection with synthesis would violate product boundaries.
 
 ## Decision
 

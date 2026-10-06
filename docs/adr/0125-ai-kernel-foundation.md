@@ -6,7 +6,7 @@
 
 ## Context
 
-Library Phase 81 asks for VerbaLab AI Kernel as the internal OS of every cloud product — DDD/CQRS/hexagonal/repository/SOLID/event-driven, Kernel/Runtime APIs, SDK, CLI, telemetry, monitoring, Terraform, Docker, Kubernetes — “everything production ready,” without regenerating previous phases.
+Library Phase 81 asks for Lugemi AI Kernel as the internal OS of every cloud product — DDD/CQRS/hexagonal/repository/SOLID/event-driven, Kernel/Runtime APIs, SDK, CLI, telemetry, monitoring, Terraform, Docker, Kubernetes — “everything production ready,” without regenerating previous phases.
 
 Volumes 1–7 already ship product clouds, Intelligence, Knowledge, and Inference over Nest + AI Gateway. Inventing a Linux-style OS rewrite (VAIOS) or customer-facing “Kernel product” would violate “extend, don’t regenerate.”
 

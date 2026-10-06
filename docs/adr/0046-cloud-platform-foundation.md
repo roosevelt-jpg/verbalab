@@ -6,12 +6,12 @@
 
 ## Context
 
-Library Phase 1 asks for Accounts, Projects, AZs, Service Discovery, Feature Flags, Cloud Dashboard, etc. VerbaLab already ships org/workspace tenancy, Clerk identity, Stripe billing, residency islands, notifications, and an AppShell console. Regenerating a hyperscaler control plane would fake completeness.
+Library Phase 1 asks for Accounts, Projects, AZs, Service Discovery, Feature Flags, Cloud Dashboard, etc. Lugemi already ships org/workspace tenancy, Clerk identity, Stripe billing, residency islands, notifications, and an AppShell console. Regenerating a hyperscaler control plane would fake completeness.
 
 ## Decision
 
 1. **Map, don’t clone:** Document library terms → existing modules in `docs/CLOUD_PLATFORM_FOUNDATION.md`.
-2. **Projects = Workspaces:** No third hierarchy tier. Extend workspace CRUD + `X-VerbaLab-Workspace-Id` session override.
+2. **Projects = Workspaces:** No third hierarchy tier. Extend workspace CRUD + `X-Lugemi-Workspace-Id` session override.
 3. **Billing Account = Organization** Stripe fields (already).
 4. **Regions = residency islands** (VL-075). **AZs / Service Discovery = not built** (Fly single-region islands + `/health`).
 5. **Feature flags:** Thin org-scoped map from plan + env kill-switches (`GET /v1/feature-flags`), not LaunchDarkly.

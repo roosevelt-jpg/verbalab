@@ -4,7 +4,7 @@
  */
 export function datasetPipelineEngineCatalog() {
   return {
-    product: 'VerbaLab Dataset Pipeline',
+    product: 'Lugemi Dataset Pipeline',
     capabilities: [
       { id: 'validation', name: 'Validation', status: 'shipped', notes: 'Schema and quality checks.' },
       { id: 'cleaning', name: 'Cleaning', status: 'shipped', notes: 'Normalize/clean raw rows.' },

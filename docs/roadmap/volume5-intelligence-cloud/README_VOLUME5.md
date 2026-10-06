@@ -1,4 +1,4 @@
-# VerbaLab — Volume 5: Intelligence Cloud (Phases 47–59)
+# Lugemi — Volume 5: Intelligence Cloud (Phases 47–59)
 
 Same workflow as Volumes 1–4. `.cursorrules` at the repo root still applies.
 This volume is different in character from the last three: instead of a

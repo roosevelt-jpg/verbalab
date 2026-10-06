@@ -51,7 +51,7 @@ export class VoiceBiometricsService {
       windowDays: 30,
       total: events.length,
       byAction,
-      product: 'VerbaLab Voice Biometrics',
+      product: 'Lugemi Voice Biometrics',
       note: 'Biometric action counts from audit. Not NIST quality metrics.',
       docs: '/docs/VOICE_BIOMETRICS.md',
     };

@@ -1,4 +1,4 @@
-# VerbaLab Model Registry (Foundation Model Cloud)
+# Lugemi Model Registry (Foundation Model Cloud)
 
 **Status:** Partial (VL-237 / library Phase 104)  
 **Rule:** Governance hub over **VL-110** `model_registry` / `/models`. Does **not** invent MLflow, SageMaker Model Registry, automatic weight deploy, or traffic-mesh canary/shadow/blue-green. Roadmap: [`docs/roadmap/volume9-foundation-model-cloud/`](./roadmap/volume9-foundation-model-cloud/).
@@ -7,9 +7,9 @@ Console `/models` (VL-110) remains the live adapter matrix. This hub adds cards,
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Model Registry | **VL-237** — `/model-registry` hub |
 | Model Cards | **Partial** — derived from VL-110 entries |
@@ -37,7 +37,7 @@ Console `/models` (VL-110) remains the live adapter matrix. This hub adds cards,
 | Monitoring | `GET /v1/model-registry/monitoring` |
 | GraphQL | `modelRegistryCapabilities` |
 | SDK | `modelRegistryEngine()` |
-| CLI | `verbalab model-registry-engine` |
+| CLI | `lugemi model-registry-engine` |
 | Underlying registry | `/v1/models`, `/v1/models/live` (VL-110, ADR-0039) |
 
 ## Honesty

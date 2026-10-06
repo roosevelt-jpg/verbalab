@@ -4,7 +4,7 @@
  */
 export function aiSchedulerEngineCatalog() {
   return {
-    product: 'VerbaLab AI Scheduler',
+    product: 'Lugemi AI Scheduler',
     unifyingOrchestrationLayer: true,
     duplicatesKernelOrFabric: false,
     notLinux: true,

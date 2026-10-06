@@ -57,7 +57,7 @@ describe('Healthcare Intelligence (VL-265)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/healthcare-intelligence/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Healthcare Intelligence');
+    expect(res.body.product).toBe('Lugemi Healthcare Intelligence');
 
     expect(res.body.honesty.notMedicalAdvice).toBe(true);
     expect(res.body.safety.notMedicalAdvice).toBe(true);

@@ -27,7 +27,7 @@ export function GlobalConfigurationPlatformClient() {
         Global Configuration Platform
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-316 — VerbaLab Global Configuration Platform console in the Control Plane Cloud.
+        VL-316 — Lugemi Global Configuration Platform console in the Control Plane Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

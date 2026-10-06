@@ -39,12 +39,12 @@ describe('Intelligent Cache (VL-210)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
-  const prevMode = process.env.VERBALAB_INTELLIGENT_CACHE_MODE;
-  const prevMax = process.env.VERBALAB_CACHE_MAX_ENTRIES;
+  const prevMode = process.env.LUGEMI_INTELLIGENT_CACHE_MODE;
+  const prevMax = process.env.LUGEMI_CACHE_MAX_ENTRIES;
 
   beforeAll(async () => {
-    process.env.VERBALAB_INTELLIGENT_CACHE_MODE = 'sandbox';
-    process.env.VERBALAB_CACHE_MAX_ENTRIES = '3';
+    process.env.LUGEMI_INTELLIGENT_CACHE_MODE = 'sandbox';
+    process.env.LUGEMI_CACHE_MAX_ENTRIES = '3';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -59,10 +59,10 @@ describe('Intelligent Cache (VL-210)', () => {
   });
 
   afterAll(async () => {
-    if (prevMode === undefined) delete process.env.VERBALAB_INTELLIGENT_CACHE_MODE;
-    else process.env.VERBALAB_INTELLIGENT_CACHE_MODE = prevMode;
-    if (prevMax === undefined) delete process.env.VERBALAB_CACHE_MAX_ENTRIES;
-    else process.env.VERBALAB_CACHE_MAX_ENTRIES = prevMax;
+    if (prevMode === undefined) delete process.env.LUGEMI_INTELLIGENT_CACHE_MODE;
+    else process.env.LUGEMI_INTELLIGENT_CACHE_MODE = prevMode;
+    if (prevMax === undefined) delete process.env.LUGEMI_CACHE_MAX_ENTRIES;
+    else process.env.LUGEMI_CACHE_MAX_ENTRIES = prevMax;
     await app.close();
   });
 

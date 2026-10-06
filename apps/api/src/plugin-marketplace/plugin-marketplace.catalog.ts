@@ -15,7 +15,7 @@ export type PluginMarketplaceCapability = {
  */
 export function pluginMarketplaceEngineCatalog() {
   return {
-    product: 'VerbaLab Plugin Marketplace',
+    product: 'Lugemi Plugin Marketplace',
     note:
       'Plugin Marketplace (VL-250). Publish/install/version/review sandboxed plugins. Execution always goes through Plugin Runtime invoke + PluginPolicyGate (hard allowlist) and Policy Fabric hard gate — never live arbitrary code. Extends VL-221 / VL-090 listings kind=plugin. Not a browser/VS Code extension store OS.',
     capabilities: [

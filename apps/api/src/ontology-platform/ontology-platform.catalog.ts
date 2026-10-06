@@ -11,7 +11,7 @@ export type OntologyCapability = {
 /** Library Phase 63 → Ontology Platform (VL-196). Concepts over VL-184 KG — not OWL/Protege OS. */
 export function ontologyPlatformCatalog() {
   return {
-    product: 'VerbaLab Ontology Platform',
+    product: 'Lugemi Ontology Platform',
     note:
       'Workspace-scoped concepts, hierarchies (is_a), synonyms, and multilingual labels over Knowledge Graph entities (VL-196 / VL-184). Not OWL/RDF/Protege OS; vertical medical/legal packs are light domain tags, not certified ontologies.',
     capabilities: [

@@ -1,30 +1,30 @@
 services:
   postgres:
     image: pgvector/pgvector:pg16
-    container_name: verbalab-postgres
+    container_name: lugemi-postgres
     restart: unless-stopped
     ports:
       - "5433:5432"
     environment:
-      POSTGRES_USER: verbalab
-      POSTGRES_PASSWORD: verbalab
-      POSTGRES_DB: verbalab
+      POSTGRES_USER: lugemi
+      POSTGRES_PASSWORD: lugemi
+      POSTGRES_DB: lugemi
     volumes:
-      - verbalab_pg_data:/var/lib/postgresql/data
+      - lugemi_pg_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U verbalab -d verbalab"]
+      test: ["CMD-SHELL", "pg_isready -U lugemi -d lugemi"]
       interval: 5s
       timeout: 5s
       retries: 10
 
   redis:
     image: redis:7-alpine
-    container_name: verbalab-redis
+    container_name: lugemi-redis
     restart: unless-stopped
     ports:
       - "6379:6379"
     volumes:
-      - verbalab_redis_data:/data
+      - lugemi_redis_data:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 5s
@@ -32,5 +32,5 @@ services:
       retries: 10
 
 volumes:
-  verbalab_pg_data:
-  verbalab_redis_data:
+  lugemi_pg_data:
+  lugemi_redis_data:

@@ -11,7 +11,7 @@ export type MemoryCapability = {
 /** Library Phase 50 → Memory Cloud (VL-183). Persistent memory with GDPR delete/export — not infinite personalization OS. */
 export function memoryCloudCatalog() {
   return {
-    product: 'VerbaLab Memory Cloud',
+    product: 'Lugemi Memory Cloud',
     note:
       'Persistent AI interaction memory in Postgres with subject export/erase (VL-183). Conversation/workspace/org/project/agent scopes. Not an infinite personalization OS; semantic vector memory deferred to Vector Cloud patterns.',
     capabilities: [
@@ -143,8 +143,8 @@ export function memoryCloudCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

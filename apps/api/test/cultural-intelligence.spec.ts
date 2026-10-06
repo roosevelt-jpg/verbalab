@@ -57,7 +57,7 @@ describe('Cultural Intelligence (VL-262)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/cultural-intelligence/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Cultural Intelligence');
+    expect(res.body.product).toBe('Lugemi Cultural Intelligence');
 
     expect(res.body.honesty.traditionalKnowledgeConsentRequired).toBe(true);
     expect(res.body.honesty.extractiveTraditionalKnowledgeScrape).toBe(false);

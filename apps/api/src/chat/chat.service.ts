@@ -6,10 +6,10 @@ import { PrismaService } from '../prisma/prisma.service';
 import { TranslateService } from '../translate/translate.service';
 import { ApiException } from '../common/errors/api-exception';
 import { ChatMessage, ChatRole } from '../gateway/chat-provider';
-import { VERBALAB_CHAT_SYSTEM } from './chat-prompt';
+import { LUGEMI_CHAT_SYSTEM } from './chat-prompt';
 import { PromptsService } from '../prompts/prompts.service';
 
-export { VERBALAB_CHAT_SYSTEM } from './chat-prompt';
+export { LUGEMI_CHAT_SYSTEM } from './chat-prompt';
 export function chatMaxMessages(): number {
   const raw = Number(process.env.CHAT_MAX_MESSAGES ?? 40);
   return Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 40;

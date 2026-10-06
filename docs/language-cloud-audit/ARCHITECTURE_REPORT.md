@@ -39,4 +39,4 @@ Language Cloud is a **hub over Nest modular monolith services**, not a separate 
 
 ## Explicit non-claims
 
-VerbaLab Language Cloud is **not** comparable to Google Translate + DeepL + Microsoft Translator + Amazon Translate + Grammarly + LanguageTool + Crowdin + Phrase combined.
+Lugemi Language Cloud is **not** comparable to Google Translate + DeepL + Microsoft Translator + Amazon Translate + Grammarly + LanguageTool + Crowdin + Phrase combined.

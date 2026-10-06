@@ -49,7 +49,7 @@ describe('Knowledge Intelligence (VL-200)', () => {
   let storageDir: string;
 
   beforeAll(async () => {
-    storageDir = await mkdtemp(join(tmpdir(), 'verbalab-ki-'));
+    storageDir = await mkdtemp(join(tmpdir(), 'lugemi-ki-'));
     process.env.DOCUMENT_STORAGE_DIR = storageDir;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({

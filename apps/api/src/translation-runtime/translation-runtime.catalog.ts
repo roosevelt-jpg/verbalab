@@ -4,7 +4,7 @@
  */
 export function translationRuntimeEngineCatalog() {
   return {
-    product: 'VerbaLab Translation Runtime',
+    product: 'Lugemi Translation Runtime',
     thinExecutionLayer: true,
     duplicatesProductLogic: false,
     capabilities: [

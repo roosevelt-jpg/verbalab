@@ -1,13 +1,13 @@
-# VerbaLab Model Evaluation Platform
+# Lugemi Model Evaluation Platform
 
 **Status:** Partial (VL-236 / library Phase 103)  
 **Rule:** Hub over **VL-100** coverage/eval plus sandbox bias/safety/latency suites. Does **not** ship MMLU/HumanEval/MT-Bench corpora, claim SOTA, or invent a global leaderboard OS. Roadmap: [`docs/roadmap/volume9-foundation-model-cloud/`](./roadmap/volume9-foundation-model-cloud/).
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Model Evaluation Platform | **VL-236** — `/model-evaluation-platform` + run plans |
 | MMLU / HumanEval / MT Bench | **Deferred** |
@@ -36,7 +36,7 @@
 | Monitoring | `GET /v1/model-evaluation-platform/monitoring` |
 | GraphQL | `modelEvaluationSuites` |
 | SDK | `modelEvaluationPlatformEngine()` |
-| CLI | `verbalab model-evaluation-platform-engine` |
+| CLI | `lugemi model-evaluation-platform-engine` |
 | Underlying harness | `/v1/coverage`, `POST /v1/eval/run` (VL-100) |
 
 ## Honesty

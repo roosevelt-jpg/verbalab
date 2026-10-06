@@ -23,13 +23,13 @@ export function VoiceStudioClient() {
   const [voices, setVoices] = useState<Voice[]>([]);
   const [lexemes, setLexemes] = useState<Lexeme[]>([]);
   const [profiles, setProfiles] = useState<Profile[]>([]);
-  const [text, setText] = useState('Welcome to VerbaLab Voice Studio.');
+  const [text, setText] = useState('Welcome to Lugemi Voice Studio.');
   const [ssml, setSsml] = useState(
-    '<speak>Welcome to <prosody rate="slow">VerbaLab</prosody>. <break time="400ms"/>Voice Studio.</speak>',
+    '<speak>Welcome to <prosody rate="slow">Lugemi</prosody>. <break time="400ms"/>Voice Studio.</speak>',
   );
   const [voice, setVoice] = useState('alloy');
   const [compareVoice, setCompareVoice] = useState('nova');
-  const [grapheme, setGrapheme] = useState('VerbaLab');
+  const [grapheme, setGrapheme] = useState('Lugemi');
   const [alias, setAlias] = useState('Verba Lab');
   const [compiled, setCompiled] = useState<string | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);

@@ -56,7 +56,7 @@ describe('Security baseline (VL-072)', () => {
   let storageDir: string;
 
   beforeAll(async () => {
-    storageDir = await mkdtemp(join(tmpdir(), 'verbalab-sec-'));
+    storageDir = await mkdtemp(join(tmpdir(), 'lugemi-sec-'));
     process.env.DOCUMENT_STORAGE_DIR = storageDir;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({

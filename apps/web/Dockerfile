@@ -1,5 +1,5 @@
 # Build from repo root:
-#   docker build -f apps/web/Dockerfile -t verbalab-web \
+#   docker build -f apps/web/Dockerfile -t lugemi-web \
 #     --build-arg NEXT_PUBLIC_API_URL=https://api.example.com \
 #     --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_... .
 FROM node:20-bookworm-slim AS base
@@ -24,9 +24,9 @@ COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY apps/web/package.json ./apps/web/
 COPY packages/typescript-config ./packages/typescript-config
 COPY packages/eslint-config ./packages/eslint-config
-RUN pnpm install --frozen-lockfile --filter @verbalab/web...
+RUN pnpm install --frozen-lockfile --filter @lugemi/web...
 COPY apps/web ./apps/web
-RUN pnpm --filter @verbalab/web run build
+RUN pnpm --filter @lugemi/web run build
 
 FROM base AS runner
 ENV NODE_ENV=production

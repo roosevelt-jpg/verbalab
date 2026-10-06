@@ -1,13 +1,13 @@
-# VerbaLab Prompt Intelligence
+# Lugemi Prompt Intelligence
 
 **Status:** Partial shipped (VL-188 / library Phase 55)  
 **Rule:** Extend existing versioned prompts (VL-086). Do **not** invent an auto-prompt research lab, evolutionary optimizer, or LLM-as-judge evaluation OS.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Prompt Registry | **Shipped** — `GET /v1/prompt-intelligence/registry` |
 | Prompt Versioning | **Shipped** — `/v1/prompts/*` (ADR-0030) |
@@ -19,7 +19,7 @@
 | Prompt Optimization | **Deferred** — auto-prompt research lab |
 | Prompt Approval | **Partial** — admin activate as approval proxy |
 | Engine / Dashboard | **VL-188** — `GET /v1/prompt-intelligence/engine` + `/prompt-intelligence` |
-| GraphQL / SDK / CLI | `promptIntelligence`, `verbalab prompt-intelligence` |
+| GraphQL / SDK / CLI | `promptIntelligence`, `lugemi prompt-intelligence` |
 
 ---
 

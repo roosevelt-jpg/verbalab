@@ -79,7 +79,7 @@ export function seedSupplyChainFindings(): SupplyChainFinding[] {
     },
     {
       id: 'find-container-api',
-      packageName: 'verbalab-api-image',
+      packageName: 'lugemi-api-image',
       ecosystem: 'container',
       severity: 'medium',
       kind: 'container',
@@ -126,11 +126,11 @@ export function inventoryWorkspacePackages(): Array<{
   kind: string;
 }> {
   return [
-    { name: 'verbalab', path: 'package.json', kind: 'workspace-root' },
-    { name: '@verbalab/api', path: 'apps/api/package.json', kind: 'app' },
-    { name: '@verbalab/web', path: 'apps/web/package.json', kind: 'app' },
-    { name: '@verbalab/sdk', path: 'packages/sdk/package.json', kind: 'package' },
-    { name: '@verbalab/cli', path: 'packages/cli/package.json', kind: 'package' },
+    { name: 'lugemi', path: 'package.json', kind: 'workspace-root' },
+    { name: '@lugemi/api', path: 'apps/api/package.json', kind: 'app' },
+    { name: '@lugemi/web', path: 'apps/web/package.json', kind: 'app' },
+    { name: '@lugemi/sdk', path: 'packages/sdk/package.json', kind: 'package' },
+    { name: '@lugemi/cli', path: 'packages/cli/package.json', kind: 'package' },
   ];
 }
 
@@ -138,7 +138,7 @@ export function supplyChainSecurityEngineCatalog() {
   const findings = seedSupplyChainFindings();
   const packages = inventoryWorkspacePackages();
   return {
-    product: 'VerbaLab Supply Chain Security',
+    product: 'Lugemi Supply Chain Security',
     capabilities: supplyChainCapabilities(),
     findings,
     packages,

@@ -4,7 +4,7 @@
  */
 export function speechRuntimeEngineCatalog() {
   return {
-    product: 'VerbaLab Speech Runtime',
+    product: 'Lugemi Speech Runtime',
     thinExecutionLayer: true,
     duplicatesProductLogic: false,
     capabilities: [

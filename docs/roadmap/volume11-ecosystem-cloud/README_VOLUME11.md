@@ -1,4 +1,4 @@
-# VerbaLab — Volume 11: Ecosystem Cloud (Phases 116–126)
+# Lugemi — Volume 11: Ecosystem Cloud (Phases 116–126)
 
 Same workflow as Volumes 1–10. `.cursorrules` at the repo root still applies.
 This volume builds marketplaces for everything you've built so far (plugins,

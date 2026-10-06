@@ -83,7 +83,7 @@ export function openSciencePlatformEngineCatalog() {
     },
   ];
   return {
-    product: 'VerbaLab Open Science Platform',
+    product: 'Lugemi Open Science Platform',
     note:
       'Open Science Platform (VL-278). Open models/datasets/benchmarks/APIs/collaborations with traditional-knowledge consent gate. traditionalKnowledgeConsentRequired=true.',
     candidates,

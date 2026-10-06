@@ -44,7 +44,7 @@ export function healthcareIntelligenceEngineCatalog() {
       }
   ];
   return {
-    product: 'VerbaLab Healthcare Intelligence',
+    product: 'Lugemi Healthcare Intelligence',
     note:
       'Healthcare Intelligence (VL-265). Domain terms/services catalog for African Intelligence Cloud with domain-specific safety flags. Extends Knowledge/Intelligence clouds — not a vertical operations OS.',
     capabilities: terms,

@@ -105,7 +105,7 @@ export function evaluatePrivacyRelease(asset: PrivacyAsset): {
 export function privacyPlatformEngineCatalog() {
   const assets = seedPrivacyAssets();
   return {
-    product: 'VerbaLab Privacy Platform',
+    product: 'Lugemi Privacy Platform',
     capabilities: [
       { id: 'pii', name: 'PII Detection', status: 'shipped', notes: 'PII detectors.' },
       { id: 'phi', name: 'PHI Detection', status: 'shipped', notes: 'PHI detectors.' },

@@ -11,7 +11,7 @@ export type ContextCapability = {
 /** Library Phase 52 → Context Engine (VL-185). Assemble retrieval + memory + prompt — not infinite context. */
 export function contextEngineCatalog() {
   return {
-    product: 'VerbaLab Context Engine',
+    product: 'Lugemi Context Engine',
     note:
       'Assembles workspace/language/user/org/project/conversation/document/historical/KG context for AI requests (VL-185). Compression is char-budget truncation, not LLM summarization. Not an infinite context window product. Realtime push deferred.',
     capabilities: [
@@ -120,8 +120,8 @@ export function contextEngineCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

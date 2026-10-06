@@ -90,6 +90,6 @@ Accessibility
 Human oversight
 Auditability
 
-I recommend treating Trust Cloud as a peer to Language Cloud, Speech Cloud, and Foundation Model Cloud rather than a supporting subsystem. As AI regulations mature globally, organizations will increasingly choose platforms that can demonstrate governance, transparency, and compliance as first-class capabilities. Building Trust Cloud from the beginning positions VerbaLab to serve governments, regulated industries, and enterprise customers with much stronger confidence.
+I recommend treating Trust Cloud as a peer to Language Cloud, Speech Cloud, and Foundation Model Cloud rather than a supporting subsystem. As AI regulations mature globally, organizations will increasingly choose platforms that can demonstrate governance, transparency, and compliance as first-class capabilities. Building Trust Cloud from the beginning positions Lugemi to serve governments, regulated industries, and enterprise customers with much stronger confidence.
 
-VERBALAB ENGINEERING LIBRARY v2.0
+LUGEMI ENGINEERING LIBRARY v2.0

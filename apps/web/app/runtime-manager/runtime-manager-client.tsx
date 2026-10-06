@@ -28,7 +28,7 @@ export function RuntimeManagerClient() {
         Runtime Manager
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-336 — VerbaLab Runtime Manager console in VAIOS (unifying orchestration layer).
+        VL-336 — Lugemi Runtime Manager console in VAIOS (unifying orchestration layer).
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

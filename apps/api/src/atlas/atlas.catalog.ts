@@ -14,7 +14,7 @@ export type AtlasCapability = {
  */
 export function atlasCatalog() {
   return {
-    product: 'VerbaLab Atlas',
+    product: 'Lugemi Atlas',
     note:
       'Atlas (VL-225). Interface scaffold for a large multilingual reasoning family. Capabilities map to existing Gateway/Reasoning Runtime/MLOps hubs. Does not ship trained Atlas weights, OpenAI replacement, or frontier-lab compute (Volume 9 README).',
     capabilities: [

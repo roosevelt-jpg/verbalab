@@ -1,7 +1,7 @@
 export const openApiDocument = {
   openapi: '3.1.0',
   info: {
-    title: 'VerbaLab API',
+    title: 'Lugemi API',
     version: '0.1.0',
     description:
       'Enterprise language-intelligence API. Phase 1 surface: languages, translate, API keys, and usage.',
@@ -12,8 +12,8 @@ export const openApiDocument = {
       ApiKeyAuth: {
         type: 'http',
         scheme: 'bearer',
-        bearerFormat: 'vl_live_ | vl_test_',
-        description: 'API key from the console (vl_live_… production label, vl_test_… soft sandbox).',
+        bearerFormat: 'lg_live_ | lg_test_',
+        description: 'API key from the console (lg_live_… production label, lg_test_… soft sandbox).',
       },
       ClerkAuth: {
         type: 'http',
@@ -1403,7 +1403,7 @@ export const openApiDocument = {
       patch: {
         summary: 'Set organization data residency pin (owner only)',
         description:
-          'Pinning does not migrate data. A pin that mismatches VERBALAB_REGION yields residency_mismatch on authenticated routes.',
+          'Pinning does not migrate data. A pin that mismatches LUGEMI_REGION yields residency_mismatch on authenticated routes.',
         operationId: 'setOrganizationResidency',
         security: [{ ClerkAuth: [] }],
         requestBody: {
@@ -9659,10 +9659,10 @@ export const openApiDocument = {
               'audio/mpeg': { schema: { type: 'string', format: 'binary' } },
             },
             headers: {
-              'X-VerbaLab-Provider': { schema: { type: 'string' } },
-              'X-VerbaLab-Voice': { schema: { type: 'string' } },
-              'X-VerbaLab-Characters': { schema: { type: 'string' } },
-              'X-VerbaLab-Watermark': {
+              'X-Lugemi-Provider': { schema: { type: 'string' } },
+              'X-Lugemi-Voice': { schema: { type: 'string' } },
+              'X-Lugemi-Characters': { schema: { type: 'string' } },
+              'X-Lugemi-Watermark': {
                 schema: { type: 'string' },
                 description: 'required when synthesizing an approved voice clone',
               },

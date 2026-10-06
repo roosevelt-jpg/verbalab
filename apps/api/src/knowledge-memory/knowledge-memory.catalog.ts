@@ -26,7 +26,7 @@ export const KNOWLEDGE_MEMORY_LAYER = 'knowledge';
  */
 export function knowledgeMemoryCatalog() {
   return {
-    product: 'VerbaLab Knowledge Memory',
+    product: 'Lugemi Knowledge Memory',
     note:
       'Persistent knowledge-layer memory for Knowledge Cloud (VL-199). Org/workspace/user/conversation/AI scopes with document links, evolution, and versioning. Backed by VL-183 MemoryRecord rows (metadata.layer=knowledge). Distinct from Intelligence Memory Cloud product surface; not Mem0/Zep/infinite personalization OS.',
     capabilities: [

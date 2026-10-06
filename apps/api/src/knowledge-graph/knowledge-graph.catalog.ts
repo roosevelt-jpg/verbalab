@@ -11,7 +11,7 @@ export type KgCapability = {
 /** Library Phase 51 → Knowledge Graph Cloud (VL-184). Bounded ER layer — prefer RAG; not Neo4j OS. */
 export function knowledgeGraphCatalog() {
   return {
-    product: 'VerbaLab Knowledge Graph Cloud',
+    product: 'Lugemi Knowledge Graph Cloud',
     note:
       'Bounded entity/relationship layer in Postgres (VL-184). Prefer Knowledge/RAG (VL-062) for retrieval. Not Neo4j / ontology / taxonomy enterprise OS. Vertical domain graphs are catalog stubs.',
     capabilities: [
@@ -137,8 +137,8 @@ export function knowledgeGraphCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

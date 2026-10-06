@@ -1,4 +1,4 @@
-# VerbaLab — Volume 8: AI Kernel (Phases 81–90)
+# Lugemi — Volume 8: AI Kernel (Phases 81–90)
 
 Same workflow as Volumes 1–7. `.cursorrules` at the repo root still applies.
 This volume is the runtime core that Agent/Workflow/Plugin behavior across

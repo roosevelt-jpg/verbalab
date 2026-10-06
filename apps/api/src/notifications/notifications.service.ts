@@ -54,8 +54,8 @@ export class NotificationsService {
 
     const subject =
       input.status === 'succeeded'
-        ? `VerbaLab job succeeded (${input.type})`
-        : `VerbaLab job failed (${input.type})`;
+        ? `Lugemi job succeeded (${input.type})`
+        : `Lugemi job failed (${input.type})`;
     const text =
       input.status === 'succeeded'
         ? `Job ${input.jobId} (${input.type}) completed successfully.`
@@ -134,7 +134,7 @@ export class NotificationsService {
         try {
           const result = await this.sendEmail({
             to: recipients,
-            subject: `VerbaLab usage at ${threshold.pct}% — ${org.name}`,
+            subject: `Lugemi usage at ${threshold.pct}% — ${org.name}`,
             text: `Your organization "${org.name}" has used ${characters.toLocaleString()} of ${org.characterQuota.toLocaleString()} monthly characters (${threshold.pct}% threshold).`,
           });
 
@@ -183,8 +183,8 @@ export class NotificationsService {
     try {
       const result = await this.sendEmail({
         to: input.email,
-        subject: `You've been added to ${input.organizationName} on VerbaLab`,
-        text: `You now have ${input.role} access to "${input.organizationName}" on VerbaLab. Sign in with the same email to open the console. (Invites are managed in Clerk; this message confirms membership sync.)`,
+        subject: `You've been added to ${input.organizationName} on Lugemi`,
+        text: `You now have ${input.role} access to "${input.organizationName}" on Lugemi. Sign in with the same email to open the console. (Invites are managed in Clerk; this message confirms membership sync.)`,
       });
       if (!result) return;
       await this.audit.record({

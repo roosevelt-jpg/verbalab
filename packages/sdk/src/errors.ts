@@ -1,4 +1,4 @@
-export class VerbaLabError extends Error {
+export class LugemiError extends Error {
   constructor(
     message: string,
     public readonly code: string,
@@ -6,6 +6,6 @@ export class VerbaLabError extends Error {
     public readonly requestId?: string,
   ) {
     super(message);
-    this.name = 'VerbaLabError';
+    this.name = 'LugemiError';
   }
 }

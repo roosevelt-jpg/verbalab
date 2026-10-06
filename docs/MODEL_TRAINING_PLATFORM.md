@@ -1,4 +1,4 @@
-# VerbaLab Model Training Platform
+# Lugemi Model Training Platform
 
 **Status:** Partial (VL-235 / library Phase 102)  
 **Rule:** Orchestration and experiment plans over existing rented-GPU jobs (**VL-111**). Does **not** train competitive foundation weights, invent distributed GPU clusters, or ship RLHF/DPO labs. Roadmap: [`docs/roadmap/volume9-foundation-model-cloud/`](./roadmap/volume9-foundation-model-cloud/).
@@ -7,9 +7,9 @@ Volume 9 README: Cursor can write real MLOps tooling; it cannot train Atlas-clas
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Model Training Platform | **VL-235** — `/model-training-platform` + experiment plans |
 | Distributed Training | **Deferred** — no multi-node fabric |
@@ -41,7 +41,7 @@ Volume 9 README: Cursor can write real MLOps tooling; it cannot train Atlas-clas
 | Monitoring | `GET /v1/model-training-platform/monitoring` |
 | GraphQL | `modelTrainingMethods` |
 | SDK | `modelTrainingPlatformEngine()` |
-| CLI | `verbalab model-training-platform-engine` |
+| CLI | `lugemi model-training-platform-engine` |
 | Underlying jobs | `/v1/training-jobs` (VL-111, ADR-0040) |
 
 ## Honesty

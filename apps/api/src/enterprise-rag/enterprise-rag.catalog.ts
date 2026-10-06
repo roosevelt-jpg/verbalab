@@ -11,7 +11,7 @@ export type EnterpriseRagCapability = {
 /** Library Phase 65 → Enterprise RAG Platform (VL-198). Grounded RAG over VL-062 — not LangChain OS. */
 export function enterpriseRagCatalog() {
   return {
-    product: 'VerbaLab Enterprise RAG Platform',
+    product: 'Lugemi Enterprise RAG Platform',
     note:
       'Workspace-scoped retrieval-augmented generation over Knowledge Base chunks (VL-198). Extends VL-062 RAG + Enterprise Search hybrid + Vector/Context. Not a LangChain/LlamaIndex/agentic-RAG OS. Hand-verify retrieval on real docs — green tests alone are insufficient.',
     capabilities: [

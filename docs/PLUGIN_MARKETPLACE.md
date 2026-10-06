@@ -1,4 +1,4 @@
-# VerbaLab Plugin Marketplace
+# Lugemi Plugin Marketplace
 
 **Status:** Shipped (VL-250 / library Phase 117)  
 **Rule:** Third-party plugins from the marketplace **must not execute** until Plugin Runtime sandbox + Policy gates allow. `liveCodeExecution: false`. Not a browser/VS Code extension store OS. Roadmap: [`docs/roadmap/volume11-ecosystem-cloud/`](./roadmap/volume11-ecosystem-cloud/).
@@ -7,9 +7,9 @@ Volume 11 README: Plugin Marketplace sells code that runs on the platform — Vo
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Plugin Publishing | **Shipped** — listing over Plugin Runtime plugin snapshot (`kind=plugin`) |
 | Plugin Installation | **Shipped** — register + activate in buyer workspace via Plugin Runtime |
@@ -36,7 +36,7 @@ Volume 11 README: Plugin Marketplace sells code that runs on the platform — Vo
 | Analytics / monitoring | `GET /v1/plugin-marketplace/analytics`, `/monitoring` |
 | GraphQL | `pluginMarketplaceEngine` |
 | SDK | `pluginMarketplaceEngine()` |
-| CLI | `verbalab plugin-marketplace-engine` |
+| CLI | `lugemi plugin-marketplace-engine` |
 
 ## Execution safety
 

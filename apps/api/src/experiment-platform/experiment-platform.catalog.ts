@@ -53,7 +53,7 @@ export function experimentPlatformEngineCatalog() {
     },
   ];
   return {
-    product: 'VerbaLab Experiment Platform',
+    product: 'Lugemi Experiment Platform',
     note:
       'Experiment Platform (VL-272). Tracks runs with hyperparameters, lineage, artifacts, datasets, and comparison — not Weights & Biases OS or MLflow OS.',
     capabilities: [

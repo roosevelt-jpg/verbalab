@@ -6,7 +6,7 @@
 
 ## Context
 
-Library Phase 4 asks for Workspace Management, Enterprise/Security/Compliance/Billing/Cloud Policies, Tenant Isolation, Governance, and Administration. VerbaLab already ships workspaces (VL-012/125), data governance (VL-073), residency islands (VL-075), platform admin (VL-081), tenant isolation (VL-072), RBAC (VL-126), and billing quotas (VL-031/071). Building a Policy-as-Code / Trust Center product would regenerate those phases.
+Library Phase 4 asks for Workspace Management, Enterprise/Security/Compliance/Billing/Cloud Policies, Tenant Isolation, Governance, and Administration. Lugemi already ships workspaces (VL-012/125), data governance (VL-073), residency islands (VL-075), platform admin (VL-081), tenant isolation (VL-072), RBAC (VL-126), and billing quotas (VL-031/071). Building a Policy-as-Code / Trust Center product would regenerate those phases.
 
 ## Decision
 

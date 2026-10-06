@@ -97,7 +97,7 @@ describe('Model Registry hub (VL-237)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/model-registry/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Model Registry');
+    expect(res.body.product).toBe('Lugemi Model Registry');
     expect(res.body.honesty.mlflowOs).toBe(false);
     expect(res.body.honesty.trafficMeshOs).toBe(false);
     expect(res.body.honesty.regeneratesVl110).toBe(false);

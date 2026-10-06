@@ -366,7 +366,7 @@ export class WorkflowsService {
     const message = this.interpolate(step.message, ctx.context);
     const subject = step.subject
       ? this.interpolate(step.subject, ctx.context)
-      : `VerbaLab workflow notify (${ctx.jobId})`;
+      : `Lugemi workflow notify (${ctx.jobId})`;
 
     if (step.channel === 'email') {
       const result = await this.notifications.notifyWorkflowMessage({

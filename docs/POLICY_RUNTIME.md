@@ -1,4 +1,4 @@
-# VerbaLab Policy Runtime
+# Lugemi Policy Runtime
 
 **Status:** Partial shipped (VL-222 / library Phase 89)  
 **Rule:** Policy Runtime is a **hard gate** wired into Agent / Workflow / Plugin Runtimes. Denied actions return **403** — not log/flag-only decoration. Not an OPA/Cedar enterprise GRC OS.
@@ -16,9 +16,9 @@ Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roa
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Security / AI / Org policies | **Shipped** — deny rules + global denies |
 | Compliance / Billing / Regional / Routing / Governance | **Partial** — kind labels + deny rules; not GRC OS |
@@ -37,6 +37,6 @@ Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roa
 | Evaluate | `POST /v1/policy-runtime/evaluate` |
 | GraphQL | `policyRuntimeEngine` |
 | SDK | `policyRuntimeEngine()`, `policyRuntimeEvaluate()`, `policyRuntimeCreate()` |
-| CLI | `verbalab policy-runtime-engine` |
+| CLI | `lugemi policy-runtime-engine` |
 
 See ADR-0133.

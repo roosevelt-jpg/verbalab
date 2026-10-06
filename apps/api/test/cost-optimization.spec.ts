@@ -39,12 +39,12 @@ describe('Cost Optimization (VL-211)', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
-  const prevMode = process.env.VERBALAB_COST_OPTIMIZATION_MODE;
-  const prevDaily = process.env.VERBALAB_COST_DAILY_CAP_USD;
+  const prevMode = process.env.LUGEMI_COST_OPTIMIZATION_MODE;
+  const prevDaily = process.env.LUGEMI_COST_DAILY_CAP_USD;
 
   beforeAll(async () => {
-    process.env.VERBALAB_COST_OPTIMIZATION_MODE = 'sandbox';
-    process.env.VERBALAB_COST_DAILY_CAP_USD = '1';
+    process.env.LUGEMI_COST_OPTIMIZATION_MODE = 'sandbox';
+    process.env.LUGEMI_COST_DAILY_CAP_USD = '1';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
@@ -59,10 +59,10 @@ describe('Cost Optimization (VL-211)', () => {
   });
 
   afterAll(async () => {
-    if (prevMode === undefined) delete process.env.VERBALAB_COST_OPTIMIZATION_MODE;
-    else process.env.VERBALAB_COST_OPTIMIZATION_MODE = prevMode;
-    if (prevDaily === undefined) delete process.env.VERBALAB_COST_DAILY_CAP_USD;
-    else process.env.VERBALAB_COST_DAILY_CAP_USD = prevDaily;
+    if (prevMode === undefined) delete process.env.LUGEMI_COST_OPTIMIZATION_MODE;
+    else process.env.LUGEMI_COST_OPTIMIZATION_MODE = prevMode;
+    if (prevDaily === undefined) delete process.env.LUGEMI_COST_DAILY_CAP_USD;
+    else process.env.LUGEMI_COST_DAILY_CAP_USD = prevDaily;
     await app.close();
   });
 

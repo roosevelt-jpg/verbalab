@@ -84,7 +84,7 @@ export class VoiceEnhancementService {
       total: events.length,
       byAction,
       byProfile,
-      product: 'VerbaLab Voice Enhancement',
+      product: 'Lugemi Voice Enhancement',
       note: 'Profile usage from audit. Full Voice Analytics = Phase 35.',
       docs: '/docs/VOICE_ENHANCEMENT.md',
     };

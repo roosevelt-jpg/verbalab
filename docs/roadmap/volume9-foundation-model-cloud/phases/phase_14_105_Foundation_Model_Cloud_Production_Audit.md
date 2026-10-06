@@ -69,6 +69,6 @@ Workflow orchestration
 Cross-cloud communication
 Multi-region synchronization
 
-This gives VerbaLab a clean separation between products, runtime, models, and infrastructure, making the platform much easier to scale and evolve over the coming decade. I strongly recommend making AI Fabric a core architectural component before moving on to the remaining clouds.
+This gives Lugemi a clean separation between products, runtime, models, and infrastructure, making the platform much easier to scale and evolve over the coming decade. I strongly recommend making AI Fabric a core architectural component before moving on to the remaining clouds.
 
-VERBALAB ENGINEERING LIBRARY v2.0
+LUGEMI ENGINEERING LIBRARY v2.0

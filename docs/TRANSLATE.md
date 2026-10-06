@@ -1,4 +1,4 @@
-# VerbaLab Translate
+# Lugemi Translate
 
 **Status:** Accepted (VL-022–053 + VL-140 / Phase 8)  
 **ADR:** [0061-translation-engine-phase-8.md](./adr/0061-translation-engine-phase-8.md)
@@ -7,7 +7,7 @@
 
 ## Honest scope
 
-| Library ask | VerbaLab |
+| Library ask | Lugemi |
 | --- | --- |
 | Realtime / batch / streaming | Shipped |
 | JSON / YAML | Shipped (`/v1/localize`) |
@@ -46,9 +46,9 @@ for await (const ev of vl.translateStream({ text, source, target })) { … }
 ```
 
 ```bash
-verbalab translate --text "Hello" --target sw
-verbalab translate-format --format srt --file demo.srt --target sw --source en
-verbalab translate-engine
+lugemi translate --text "Hello" --target sw
+lugemi translate-format --format srt --file demo.srt --target sw --source en
+lugemi translate-engine
 ```
 
 ---

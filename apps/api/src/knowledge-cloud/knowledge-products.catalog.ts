@@ -14,7 +14,7 @@ export function knowledgeProductCatalog(): KnowledgeProductRow[] {
   return [
     {
       id: 'knowledge-cloud',
-      name: 'VerbaLab Knowledge Cloud',
+      name: 'Lugemi Knowledge Cloud',
       status: 'shipped',
       api: 'GET /v1/knowledge-cloud/products',
       console: '/knowledge-cloud',
@@ -136,8 +136,8 @@ export function knowledgeArchitectureNotes() {
     streaming: true,
     batch: true,
     enterpriseApis: true,
-    sdk: '@verbalab/sdk',
-    cli: '@verbalab/cli',
+    sdk: '@lugemi/sdk',
+    cli: '@lugemi/cli',
     docker: true,
     terraform: true,
     kubernetes: true,

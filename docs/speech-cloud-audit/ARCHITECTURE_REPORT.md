@@ -7,7 +7,7 @@
 
 Speech Cloud is a **hub over Nest modular monolith audio/speech modules**, not a separate microservice mesh and not a speech research OS. REST is primary; GraphQL is a façade; CQRS applies to the Speech Cloud catalog slice (VL-150).
 
-Clouds follow the **12-layer VerbaLab Cloud Blueprint** (ADR-0080).
+Clouds follow the **12-layer Lugemi Cloud Blueprint** (ADR-0080).
 
 ## System shape
 
@@ -45,4 +45,4 @@ Clouds follow the **12-layer VerbaLab Cloud Blueprint** (ADR-0080).
 
 ## Explicit non-claims
 
-VerbaLab Speech Cloud is **not** a replacement for Deepgram + AssemblyAI + Twilio Voice Intelligence + Gong + commercial wake-word/pronunciation suites combined.
+Lugemi Speech Cloud is **not** a replacement for Deepgram + AssemblyAI + Twilio Voice Intelligence + Gong + commercial wake-word/pronunciation suites combined.

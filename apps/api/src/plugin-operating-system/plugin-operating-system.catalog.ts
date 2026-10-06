@@ -4,7 +4,7 @@
  */
 export function pluginOperatingSystemEngineCatalog() {
   return {
-    product: 'VerbaLab Plugin Operating System',
+    product: 'Lugemi Plugin Operating System',
     unifyingOrchestrationLayer: true,
     duplicatesKernelOrFabric: false,
     notLinux: true,

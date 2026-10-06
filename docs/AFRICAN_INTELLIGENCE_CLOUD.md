@@ -1,4 +1,4 @@
-# VerbaLab African Intelligence Cloud
+# Lugemi African Intelligence Cloud
 
 **Status:** Volume closed (VL-260–270 / library Phases 127–137) — audit pack under [`docs/african-intelligence-cloud-audit/`](./african-intelligence-cloud-audit/)  
 **Rule:** African Intelligence Cloud is the **African language/culture/knowledge + domain intelligence hub** over existing Language/Knowledge/Intelligence clouds — **not** Neo4j OS, extractive scrape OS, Digital Twin OS, or Global Intelligence OS. Roadmap: [`docs/roadmap/volume12-african-intelligence-cloud/`](./roadmap/volume12-african-intelligence-cloud/).
@@ -7,9 +7,9 @@ Volume 12 README: traditional knowledge needs provenance/source-community/consen
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | African Intelligence Cloud Foundation | **VL-260** — `/african-intelligence-cloud` + product catalog / routing |
 | African Language Registry | **Shipped** — VL-261 — [`AFRICAN_LANGUAGE_REGISTRY.md`](./AFRICAN_LANGUAGE_REGISTRY.md); `coverageComplete=false` |

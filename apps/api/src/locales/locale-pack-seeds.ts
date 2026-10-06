@@ -29,7 +29,7 @@ export const LOCALE_PACK_SEEDS: LocalePackSeed[] = [
       { form: 'Mr./Ms./Mx.', usage: 'Titles before surname', notes: 'Prefer gender-neutral Mx. when unknown' },
       { form: 'Dr.', usage: 'Medical/academic title' },
     ],
-    doNotTranslate: ['United Nations', 'WHO', 'VerbaLab'],
+    doNotTranslate: ['United Nations', 'WHO', 'Lugemi'],
     culturalNotes: 'Baseline vendor language. Keep brand and org names unchanged.',
   },
   {
@@ -44,7 +44,7 @@ export const LOCALE_PACK_SEEDS: LocalePackSeed[] = [
       { form: 'Mme', usage: 'Madame' },
       { form: 'Dr', usage: 'Docteur' },
     ],
-    doNotTranslate: ['ONU', 'OMS', 'VerbaLab'],
+    doNotTranslate: ['ONU', 'OMS', 'Lugemi'],
     culturalNotes: 'Formal vous vs informal tu matters in government copy.',
   },
   {

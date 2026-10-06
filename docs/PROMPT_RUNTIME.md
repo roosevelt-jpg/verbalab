@@ -1,4 +1,4 @@
-# VerbaLab Prompt Runtime
+# Lugemi Prompt Runtime
 
 **Status:** Partial shipped (VL-216 / library Phase 83)  
 **Rule:** Kernel prompt execution over VL-086 versioned prompts + VL-188 Prompt Intelligence. Extends — does **not** regenerate — those hubs. Not an auto-prompt research lab, LLM-as-judge, or prompt mesh OS. `execute` does **not** call an LLM.
@@ -7,9 +7,9 @@ Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roa
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Prompt Execution | **Shipped** — resolve + `{{var}}` render + validate (+ optional cache) |
 | Prompt Templates | **Shipped** — chat/rag/voice_faq over VL-086 |
@@ -23,7 +23,7 @@ Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roa
 | Prompt Analytics | **Shipped** — audit aggregates |
 | Prompt Registry Integration | **Shipped** — reads VL-086/188 registry |
 | Engine / Console | `/prompt-runtime` + `GET /v1/prompt-runtime/engine` |
-| GraphQL / SDK / CLI | `promptRuntimeEngine`, `verbalab prompt-runtime-engine` |
+| GraphQL / SDK / CLI | `promptRuntimeEngine`, `lugemi prompt-runtime-engine` |
 
 ---
 
@@ -39,7 +39,7 @@ Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roa
 | Analytics / monitoring | `GET /v1/prompt-runtime/analytics\|monitoring` |
 | GraphQL | `promptRuntimeEngine` |
 | SDK | `promptRuntimeEngine()`, `promptRuntimeExecute()` |
-| CLI | `verbalab prompt-runtime-engine` |
+| CLI | `lugemi prompt-runtime-engine` |
 
 ## Honesty
 
@@ -55,6 +55,6 @@ Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roa
 | `extendsVersionedPrompts` | true |
 | `usesIntelligentCachePromptNamespace` | true |
 
-Env: `VERBALAB_PROMPT_RUNTIME_MODE`, `VERBALAB_PROMPT_RUNTIME_MAX_CHARS`, `VERBALAB_PROMPT_RUNTIME_CACHE_TTL_SEC`.
+Env: `LUGEMI_PROMPT_RUNTIME_MODE`, `LUGEMI_PROMPT_RUNTIME_MAX_CHARS`, `LUGEMI_PROMPT_RUNTIME_CACHE_TTL_SEC`.
 
 See ADR-0127.

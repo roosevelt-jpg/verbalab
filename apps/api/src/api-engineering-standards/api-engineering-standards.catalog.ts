@@ -4,7 +4,7 @@
  */
 export function apiEngineeringStandardsEngineCatalog() {
   return {
-    product: 'VerbaLab API Engineering Standards',
+    product: 'Lugemi API Engineering Standards',
     engineeringOsForHumansAndCursor: true,
     customerFacingProductCloud: false,
     architectureKnowledgeBaseOs: false,
@@ -28,7 +28,7 @@ export function apiEngineeringStandardsEngineCatalog() {
         path: '/v1/openapi.json',
         role: 'OpenAPI document',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       },
       {
         id: 'route-2',
@@ -36,7 +36,7 @@ export function apiEngineeringStandardsEngineCatalog() {
         path: '/v1/developer-cloud/products',
         role: 'Developer Cloud',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       },
       {
         id: 'route-3',
@@ -44,7 +44,7 @@ export function apiEngineeringStandardsEngineCatalog() {
         path: '/v1/developer-experience-platform/engine',
         role: 'DX SDK/CLI',
         status: 'shipped',
-        notes: 'Extends existing VerbaLab surface — EES catalogs standards over it.',
+        notes: 'Extends existing Lugemi surface — EES catalogs standards over it.',
       }
     ],
     routesTo: [

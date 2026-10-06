@@ -4,7 +4,7 @@ Library Phase 192 — part of Volume 18 Data Plane Cloud.
 
 ## Mission
 
-VerbaLab Translation Runtime is a **thin execution/routing layer** inside the Data Plane Cloud.
+Lugemi Translation Runtime is a **thin execution/routing layer** inside the Data Plane Cloud.
 It never manages organizations, policies, or billing — that is Control Plane (Volume 17).
 
 ## Honesty

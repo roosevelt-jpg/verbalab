@@ -28,7 +28,7 @@ export function DataPlaneCloudClient() {
         Data Plane Cloud
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-324 — VerbaLab Data Plane Cloud console in the Data Plane Cloud.
+        VL-324 — Lugemi Data Plane Cloud console in the Data Plane Cloud.
       </p>
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}

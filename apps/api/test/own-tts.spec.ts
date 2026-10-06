@@ -86,7 +86,7 @@ describe('Own TTS path (VL-121)', () => {
       .expect(200);
 
     expect(res.headers['content-type']).toMatch(/audio/);
-    expect(res.headers['x-verbalab-provider']).toMatch(/own_tts/);
+    expect(res.headers['x-lugemi-provider']).toMatch(/own_tts/);
     expect(Buffer.from(res.body).length).toBeGreaterThan(40);
   });
 

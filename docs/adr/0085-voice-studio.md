@@ -8,7 +8,7 @@
 
 Library Phase 31 asks for a professional Voice Studio: library, editing, pronunciation, profiles, projects, preview, timeline, SSML, comparison, testing, generate, dashboard, REST/GraphQL/SDK/monitoring/docs.
 
-VerbaLab already has African Voice Studio UX (`/audio`, VL-120), Neural TTS (VL-171), and Pronunciation Intelligence assessment (VL-156). Building a nonlinear DAW or claiming vendor SSML passthrough would be dishonest — OpenAI TTS does not accept SSML markup.
+Lugemi already has African Voice Studio UX (`/audio`, VL-120), Neural TTS (VL-171), and Pronunciation Intelligence assessment (VL-156). Building a nonlinear DAW or claiming vendor SSML passthrough would be dishonest — OpenAI TTS does not accept SSML markup.
 
 ## Decision
 

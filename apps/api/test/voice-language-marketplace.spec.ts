@@ -95,7 +95,7 @@ describe('Voice & Language Marketplace (VL-257)', () => {
     const res = await request(app.getHttpServer())
       .get('/v1/voice-language-marketplace/engine')
       .expect(200);
-    expect(res.body.product).toBe('VerbaLab Voice & Language Marketplace');
+    expect(res.body.product).toBe('Lugemi Voice & Language Marketplace');
     expect(res.body.honesty.elevenLabsOs).toBe(false);
     expect(res.body.honesty.voiceCdnOs).toBe(false);
     expect(res.body.honesty.celebrityWithoutRights).toBe(false);

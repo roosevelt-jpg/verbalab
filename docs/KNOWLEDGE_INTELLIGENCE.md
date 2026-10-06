@@ -1,4 +1,4 @@
-# VerbaLab Knowledge Intelligence
+# Lugemi Knowledge Intelligence
 
 **Status:** Partial (VL-200 / library Phase 67)  
 **Parent:** [Knowledge Cloud](./KNOWLEDGE_CLOUD.md)  
@@ -22,7 +22,7 @@
 | Evolution | `GET /v1/knowledge-intelligence/evolution` |
 | Analytics / monitoring | `GET …/analytics` · `/monitoring` |
 | GraphQL | `knowledgeIntelligenceEngine` |
-| SDK / CLI | `knowledgeIntelligenceEngine()` · `verbalab knowledge-intelligence-engine` |
+| SDK / CLI | `knowledgeIntelligenceEngine()` · `lugemi knowledge-intelligence-engine` |
 
 ## Honesty
 

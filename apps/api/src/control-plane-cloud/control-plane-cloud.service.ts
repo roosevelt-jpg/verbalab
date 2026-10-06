@@ -14,7 +14,7 @@ export class ControlPlaneCloudService {
 
   products() {
     return {
-      product: 'VerbaLab Control Plane Cloud',
+      product: 'Lugemi Control Plane Cloud',
       products: controlPlaneCloudProductCatalog(),
       architecture: controlPlaneCloudArchitectureNotes(),
       honesty: controlPlaneCloudHonesty(),

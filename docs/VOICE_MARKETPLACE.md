@@ -1,13 +1,13 @@
-# VerbaLab Voice Marketplace
+# Lugemi Voice Marketplace
 
 **Status:** Partial (VL-177 / library Phase 34)  
 **Rule:** Voice SKU publish/license/ratings — **distinct** from localization Marketplace (VL-090). Celebrity SKUs without a rights chain are **forbidden**. Install is a license entitlement, not cross-tenant clone synthesis.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Marketplace | **VL-177** — `GET /v1/voice-marketplace/engine` + `/voice-marketplace` |
 | Voice Publishing | **Shipped** — listings (own/stock/approved clone) |

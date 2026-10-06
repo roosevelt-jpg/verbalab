@@ -8,10 +8,10 @@ export type TtsCapability = {
   notes: string;
 };
 
-/** Library Phase 28 → VerbaLab Neural Text-to-Speech (VL-171). */
+/** Library Phase 28 → Lugemi Neural Text-to-Speech (VL-171). */
 export function neuralTtsEngineCatalog() {
   return {
-    product: 'VerbaLab Neural TTS',
+    product: 'Lugemi Neural TTS',
     note:
       'Neural TTS engine over OpenAI TTS + own rented voices + clone:{id}. Batch synthesize shipped; streaming is chunk SSE after full synthesis — not vendor low-latency token streaming. Not ElevenLabs/Polly/Azure Speech parity.',
     capabilities: [
@@ -145,8 +145,8 @@ export function neuralTtsEngineCatalog() {
     architecture: {
       rest: true,
       graphql: true,
-      sdk: '@verbalab/sdk',
-      cli: '@verbalab/cli',
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
       docker: true,
       terraform: true,
       kubernetes: true,

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate VerbaLab Volume 17 Control Plane Cloud (VL-314–323)."""
+"""Generate Lugemi Volume 17 Control Plane Cloud (VL-314–323)."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ import json
 import re
 from pathlib import Path
 
-ROOT = Path("/workspace/verbalab")
+ROOT = Path("/workspace/lugemi")
 
 
 def to_pascal(slug: str) -> str:
@@ -458,7 +458,7 @@ export function {to_pascal(slug)}Client() {{
         {title}
       </h1>
       <p style={{{{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}}}>
-        VL-{vl} — VerbaLab {title} console in the Control Plane Cloud.
+        VL-{vl} — Lugemi {title} console in the Control Plane Cloud.
       </p>
       {{error ? <p style={{{{ color: '#b42318' }}}}>{{error}}</p> : null}}
       {{!data && !error ? <p style={{{{ color: 'var(--muted)' }}}}>Loading…</p> : null}}
@@ -488,12 +488,12 @@ Library Phase {hub["phase"]} — part of Volume 17 Control Plane Cloud.
 
 ## Mission
 
-VerbaLab {hub["title"]} provides the {hub["title"]} surface inside the Control Plane Cloud —
+Lugemi {hub["title"]} provides the {hub["title"]} surface inside the Control Plane Cloud —
 the highest-privilege management layer. The control plane never executes AI inference.
 
 ## Honesty
 
-- Extends existing VerbaLab systems — does not regenerate Volumes 1–16.
+- Extends existing Lugemi systems — does not regenerate Volumes 1–16.
 - `{hub["honesty_key"]}={str(hub["honesty_val"]).lower()}`.
 - `executesInference=false`.
 - Not Kubernetes control-plane OS, Istio OS, HashiCorp Vault OS, or Data Plane OS.
@@ -660,7 +660,7 @@ export class ControlPlaneCloudService {
 
   products() {
     return {
-      product: 'VerbaLab Control Plane Cloud',
+      product: 'Lugemi Control Plane Cloud',
       products: controlPlaneCloudProductCatalog(),
       architecture: controlPlaneCloudArchitectureNotes(),
       honesty: controlPlaneCloudHonesty(),
@@ -822,7 +822,7 @@ def catalog_ts(hub: dict) -> str:
  */
 export function {camel}EngineCatalog() {{
   return {{
-    product: 'VerbaLab {hub['title']}',
+    product: 'Lugemi {hub['title']}',
     capabilities: [
 {cap_rows}
     ],
@@ -984,7 +984,7 @@ export function organizationControlRoleCatalog(): Array<{
 
 export function organizationControlEngineCatalog() {
   return {
-    product: 'VerbaLab Organization Control',
+    product: 'Lugemi Organization Control',
     capabilities: [
       { id: 'organizations', name: 'Organizations', status: 'shipped', notes: 'VL-315.' },
       { id: 'business_units', name: 'Business Units', status: 'shipped', notes: 'VL-315.' },
@@ -998,8 +998,8 @@ export function organizationControlEngineCatalog() {
     ],
     organizations: [
       {
-        id: 'org-verbalab',
-        name: 'VerbaLab',
+        id: 'org-lugemi',
+        name: 'Lugemi',
         kind: 'organization',
         status: 'shipped',
         notes: 'Primary org seed over existing identity/org surfaces.',
@@ -1187,7 +1187,7 @@ def policy_catalog() -> str:
  */
 export function globalPolicyEngineCatalog() {
   return {
-    product: 'VerbaLab Global Policy Engine',
+    product: 'Lugemi Global Policy Engine',
     capabilities: [
       { id: 'security', name: 'Security Policies', status: 'shipped', notes: 'VL-317.' },
       { id: 'ai', name: 'AI Policies', status: 'shipped', notes: 'Via Policy Runtime / Trust.' },

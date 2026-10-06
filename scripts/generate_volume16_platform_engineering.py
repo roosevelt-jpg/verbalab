@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate VerbaLab Volume 16 Platform Engineering Cloud (VL-302–313)."""
+"""Generate Lugemi Volume 16 Platform Engineering Cloud (VL-302–313)."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ import json
 import re
 from pathlib import Path
 
-ROOT = Path("/workspace/verbalab")
+ROOT = Path("/workspace/lugemi")
 
 
 def to_pascal(slug: str) -> str:
@@ -91,7 +91,7 @@ HUBS = [
         "honesty_key": "serviceMeshOs",
         "honesty_val": False,
         "list_key": "services",
-        "note": "Service Catalog (VL-304). Seed catalog of VerbaLab services (api, web, SDK, CLI) with ownership/deps. serviceMeshOs=false.",
+        "note": "Service Catalog (VL-304). Seed catalog of Lugemi services (api, web, SDK, CLI) with ownership/deps. serviceMeshOs=false.",
         "capabilities": [
             ("microservices", "Microservices"),
             ("ownership", "Ownership"),
@@ -169,7 +169,7 @@ HUBS = [
             ("promotion", "Promotion"),
         ],
         "seed": [
-            ("go-gh", "github", "GitHub Actions readiness for verbalab deploy", "github"),
+            ("go-gh", "github", "GitHub Actions readiness for lugemi deploy", "github"),
             ("go-gl", "gitlab", "GitLab CI readiness catalog", "gitlab"),
             ("go-argo", "argo", "ArgoCD discovery only — argoCdOs=false", "argo"),
             ("go-flux", "flux", "Flux discovery only — fluxOs=false", "flux"),
@@ -330,7 +330,7 @@ HUBS = [
 FOUNDATION_PRODUCTS = [
     ("platform-engineering-cloud", "Platform Engineering Cloud", "GET /v1/platform-engineering-cloud/products", "/platform-engineering-cloud", "Foundation hub (VL-302). Internal IDP. controlPlaneOs=false; dataPlaneOs=false; aiCloudOs=false."),
     ("internal-developer-portal", "Developer Portal", "GET /v1/internal-developer-portal/engine", "/internal-developer-portal", "VL-303. backstageOs=false — extends developer-cloud."),
-    ("service-catalog", "Service Catalog", "GET /v1/service-catalog/engine", "/service-catalog", "VL-304. VerbaLab service inventory."),
+    ("service-catalog", "Service Catalog", "GET /v1/service-catalog/engine", "/service-catalog", "VL-304. Lugemi service inventory."),
     ("golden-path-platform", "Golden Paths", "GET /v1/golden-path-platform/engine", "/golden-path-platform", "VL-305. Scaffolding templates catalog."),
     ("infrastructure-platform", "Infrastructure Platform", "GET /v1/gitops-platform/engine", "/gitops-platform", "Infra readiness over Fly/shared platform — not Kubernetes control-plane OS."),
     ("gitops-platform", "GitOps", "GET /v1/gitops-platform/engine", "/gitops-platform", "VL-306. argoCdOs=false; fluxOs=false."),
@@ -566,7 +566,7 @@ export function {to_pascal(slug)}Client() {{
         {title}
       </h1>
       <p style={{{{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}}}>
-        VL-{vl} — VerbaLab {title} console in the Platform Engineering Cloud.
+        VL-{vl} — Lugemi {title} console in the Platform Engineering Cloud.
       </p>
       {{error ? <p style={{{{ color: '#b42318' }}}}>{{error}}</p> : null}}
       {{!data && !error ? <p style={{{{ color: 'var(--muted)' }}}}>Loading…</p> : null}}
@@ -596,13 +596,13 @@ Library Phase {hub["phase"]} — part of Volume 16 Platform Engineering Cloud.
 
 ## Mission
 
-VerbaLab {hub["title"]} provides the {hub["title"]} surface inside the Platform Engineering Cloud — internal engineering tooling, not a product cloud.
+Lugemi {hub["title"]} provides the {hub["title"]} surface inside the Platform Engineering Cloud — internal engineering tooling, not a product cloud.
 
 ## Honesty
 
-- Extends existing VerbaLab systems — does not regenerate Volumes 1–15.
+- Extends existing Lugemi systems — does not regenerate Volumes 1–15.
 - `{hub["honesty_key"]}={str(hub["honesty_val"]).lower()}`.
-- Not Backstage OS, ArgoCD/Flux OS, Kubernetes control-plane OS, Snyk OS, Datadog OS, or VerbaLab AI Cloud OS.
+- Not Backstage OS, ArgoCD/Flux OS, Kubernetes control-plane OS, Snyk OS, Datadog OS, or Lugemi AI Cloud OS.
 - Control Plane / Data Plane / AI Cloud OS deferred to Volume 17+.
 
 ## Surfaces
@@ -628,7 +628,7 @@ def adr_doc(hub: dict) -> str:
 
 ## Context
 
-Volume 16 builds Platform Engineering Cloud as internal IDP tooling for VerbaLab engineers. Risks: inventing Backstage/Argo/Flux/K8s/Snyk/Datadog/AI Cloud OS, regenerating Volumes 1–15, or claiming Control Plane / Data Plane here.
+Volume 16 builds Platform Engineering Cloud as internal IDP tooling for Lugemi engineers. Risks: inventing Backstage/Argo/Flux/K8s/Snyk/Datadog/AI Cloud OS, regenerating Volumes 1–15, or claiming Control Plane / Data Plane here.
 
 ## Decision
 
@@ -675,7 +675,7 @@ export type PlatformEngineeringCloudProductRow = {{
 
 /**
  * Library Phase 169 → Platform Engineering Cloud Foundation (VL-302).
- * Internal Developer Platform for VerbaLab engineers — not Backstage OS,
+ * Internal Developer Platform for Lugemi engineers — not Backstage OS,
  * ArgoCD/Flux OS, Kubernetes control-plane OS, Snyk OS, Datadog OS, or AI Cloud OS.
  */
 export function platformEngineeringCloudProductCatalog(): PlatformEngineeringCloudProductRow[] {{
@@ -734,7 +734,7 @@ export function platformEngineeringCloudHonesty(): Record<string, boolean | stri
     internalEngineeringTooling: true,
     internalIdp: true,
     note:
-      'Platform Engineering Cloud is internal IDP tooling for VerbaLab engineers. Catalog/dashboard surfaces over Fly/shared platform, Volume 7 GPU costs, and Volume 10 Fabric — not Backstage/Argo/K8s/Snyk/Datadog/AI Cloud OS. Control Plane deferred to Volume 17+.',
+      'Platform Engineering Cloud is internal IDP tooling for Lugemi engineers. Catalog/dashboard surfaces over Fly/shared platform, Volume 7 GPU costs, and Volume 10 Fabric — not Backstage/Argo/K8s/Snyk/Datadog/AI Cloud OS. Control Plane deferred to Volume 17+.',
   }};
 }}
 """
@@ -757,7 +757,7 @@ export class PlatformEngineeringCloudService {
 
   products() {
     return {
-      product: 'VerbaLab Platform Engineering Cloud',
+      product: 'Lugemi Platform Engineering Cloud',
       products: platformEngineeringCloudProductCatalog(),
       architecture: platformEngineeringCloudArchitectureNotes(),
       honesty: platformEngineeringCloudHonesty(),
@@ -924,7 +924,7 @@ def catalog_ts(hub: dict) -> str:
  */
 export function {camel}EngineCatalog() {{
   return {{
-    product: 'VerbaLab {hub['title']}',
+    product: 'Lugemi {hub['title']}',
     capabilities: [
 {cap_rows}
     ],
@@ -1181,7 +1181,7 @@ export function finopsPlatformEngineCatalog() {
   const alerts = seedFinOpsAlerts();
   const costs = seedFinOpsCosts();
   return {
-    product: 'VerbaLab FinOps Platform',
+    product: 'Lugemi FinOps Platform',
     capabilities: [
       { id: 'cloud_cost', name: 'Cloud Cost', status: 'shipped', notes: 'Shared platform cost.' },
       { id: 'gpu_cost', name: 'GPU Cost', status: 'shipped', notes: 'Volume 7 GPU pairing.' },
@@ -1426,7 +1426,7 @@ export function seedSupplyChainFindings(): SupplyChainFinding[] {
     },
     {
       id: 'find-container-api',
-      packageName: 'verbalab-api-image',
+      packageName: 'lugemi-api-image',
       ecosystem: 'container',
       severity: 'medium',
       kind: 'container',
@@ -1473,11 +1473,11 @@ export function inventoryWorkspacePackages(): Array<{
   kind: string;
 }> {
   return [
-    { name: 'verbalab', path: 'package.json', kind: 'workspace-root' },
-    { name: '@verbalab/api', path: 'apps/api/package.json', kind: 'app' },
-    { name: '@verbalab/web', path: 'apps/web/package.json', kind: 'app' },
-    { name: '@verbalab/sdk', path: 'packages/sdk/package.json', kind: 'package' },
-    { name: '@verbalab/cli', path: 'packages/cli/package.json', kind: 'package' },
+    { name: 'lugemi', path: 'package.json', kind: 'workspace-root' },
+    { name: '@lugemi/api', path: 'apps/api/package.json', kind: 'app' },
+    { name: '@lugemi/web', path: 'apps/web/package.json', kind: 'app' },
+    { name: '@lugemi/sdk', path: 'packages/sdk/package.json', kind: 'package' },
+    { name: '@lugemi/cli', path: 'packages/cli/package.json', kind: 'package' },
   ];
 }
 
@@ -1485,7 +1485,7 @@ export function supplyChainSecurityEngineCatalog() {
   const findings = seedSupplyChainFindings();
   const packages = inventoryWorkspacePackages();
   return {
-    product: 'VerbaLab Supply Chain Security',
+    product: 'Lugemi Supply Chain Security',
     capabilities: supplyChainCapabilities(),
     findings,
     packages,
@@ -1653,7 +1653,7 @@ def analytics_catalog() -> str:
  */
 export function platformEngineeringAnalyticsEngineCatalog() {
   return {
-    product: 'VerbaLab Platform Engineering Analytics',
+    product: 'Lugemi Platform Engineering Analytics',
     capabilities: [
       { id: 'deploy_frequency', name: 'Deploy Frequency', status: 'shipped', notes: 'DORA.' },
       { id: 'lead_time', name: 'Lead Time for Changes', status: 'shipped', notes: 'DORA.' },

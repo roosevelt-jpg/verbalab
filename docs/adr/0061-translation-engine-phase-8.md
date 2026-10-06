@@ -6,7 +6,7 @@
 
 ## Context
 
-Library Phase 8 asks for VerbaLab Translate covering realtime/batch/streaming, many file formats, messaging channels (SMS/WhatsApp/Teams/Slack), website/email, plus TM/glossary/quality, REST/GraphQL/SDK/CLI, monitoring, analytics, docs, and tests.
+Library Phase 8 asks for Lugemi Translate covering realtime/batch/streaming, many file formats, messaging channels (SMS/WhatsApp/Teams/Slack), website/email, plus TM/glossary/quality, REST/GraphQL/SDK/CLI, monitoring, analytics, docs, and tests.
 
 Much of this already shipped across VL-022–053, VL-044, VL-082. Claiming website localization or WhatsApp Business APIs would be fake completeness.
 

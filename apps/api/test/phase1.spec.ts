@@ -102,7 +102,7 @@ describe('Phase 1 API', () => {
       name: 'test',
     });
 
-    expect(created.secret.startsWith('vl_live_')).toBe(true);
+    expect(created.secret.startsWith('lg_live_')).toBe(true);
 
     await request(app.getHttpServer())
       .post('/v1/translate')

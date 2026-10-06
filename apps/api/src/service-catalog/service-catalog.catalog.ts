@@ -1,10 +1,10 @@
 /**
  * Library Phase 171 → Service Catalog (VL-304).
- * Service Catalog (VL-304). Seed catalog of VerbaLab services (api, web, SDK, CLI) with ownership/deps. serviceMeshOs=false.
+ * Service Catalog (VL-304). Seed catalog of Lugemi services (api, web, SDK, CLI) with ownership/deps. serviceMeshOs=false.
  */
 export function serviceCatalogEngineCatalog() {
   return {
-    product: 'VerbaLab Service Catalog',
+    product: 'Lugemi Service Catalog',
     capabilities: [
       { id: 'microservices', name: 'Microservices', status: 'shipped', notes: 'VL-304 capability.' },
       { id: 'ownership', name: 'Ownership', status: 'shipped', notes: 'VL-304 capability.' },
@@ -74,9 +74,9 @@ export function serviceCatalogEngineCatalog() {
     },
     safety: {
       serviceMeshOs: false,
-      note: 'Service Catalog (VL-304). Seed catalog of VerbaLab services (api, web, SDK, CLI) with ownership/deps. serviceMeshOs=false.',
+      note: 'Service Catalog (VL-304). Seed catalog of Lugemi services (api, web, SDK, CLI) with ownership/deps. serviceMeshOs=false.',
     },
     docs: '/docs/SERVICE_CATALOG.md',
-    note: 'Service Catalog (VL-304). Seed catalog of VerbaLab services (api, web, SDK, CLI) with ownership/deps. serviceMeshOs=false.',
+    note: 'Service Catalog (VL-304). Seed catalog of Lugemi services (api, web, SDK, CLI) with ownership/deps. serviceMeshOs=false.',
   };
 }

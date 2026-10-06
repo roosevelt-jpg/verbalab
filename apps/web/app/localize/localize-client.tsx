@@ -18,8 +18,8 @@ export function LocalizeClient() {
     event.preventDefault();
     setError(null);
     setOutput('');
-    if (!apiKey.startsWith('vl_live_')) {
-      setError('Paste a vl_live_ API key');
+    if (!apiKey.startsWith('lg_live_')) {
+      setError('Paste a lg_live_ API key');
       return;
     }
     setLoading(true);
@@ -65,7 +65,7 @@ export function LocalizeClient() {
             className="vl-field vl-code"
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
-            placeholder="vl_live_..."
+            placeholder="lg_live_..."
             required
           />
         </label>

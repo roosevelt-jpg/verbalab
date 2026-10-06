@@ -1,4 +1,4 @@
-# VerbaLab — Volume 2: Speech Cloud (Phases 16–26)
+# Lugemi — Volume 2: Speech Cloud (Phases 16–26)
 
 Same workflow as Volume 1. Your existing `.cursorrules` at the repo root still
 applies — no changes needed there. This builds Speech Cloud **on top of** your

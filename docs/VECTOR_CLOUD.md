@@ -1,13 +1,13 @@
-# VerbaLab Vector Cloud
+# Lugemi Vector Cloud
 
 **Status:** Partial shipped (VL-182 / library Phase 49)  
 **Rule:** Productize nearest-neighbor search over Postgres pgvector (`knowledge_chunks`). Do not ship a Pinecone/Weaviate/Qdrant managed vector OS. Hybrid BM25, sharding, and replication product APIs stay deferred.
 
 ---
 
-## Library term → VerbaLab
+## Library term → Lugemi
 
-| Library ask | VerbaLab reality |
+| Library ask | Lugemi reality |
 | --- | --- |
 | Vector Storage | **Shipped** — `knowledge_chunks.embedding` via Knowledge ingest (VL-062) |
 | Semantic / NN / Similarity Search | **Shipped** — `POST /v1/vector-cloud/search` |
@@ -19,7 +19,7 @@
 | Sharding / Replication | **Deferred** — use Postgres scale / HA |
 | Engine / Dashboard | **VL-182** — `GET /v1/vector-cloud/engine` + `/vector-cloud` |
 | Analytics / Monitoring | **Shipped** — `/analytics`, `/monitoring` |
-| GraphQL / SDK / CLI | `vectorCloudEngine`, `verbalab vector-cloud-engine` |
+| GraphQL / SDK / CLI | `vectorCloudEngine`, `lugemi vector-cloud-engine` |
 | Related | Embedding Cloud VL-181; RAG answers stay `POST /v1/knowledge/query` |
 
 ---

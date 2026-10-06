@@ -83,7 +83,7 @@ export class MemoryFabricService {
   products() {
     const cacheEngine = this.intelligentCache.engine();
     return {
-      product: 'VerbaLab Memory Fabric',
+      product: 'Lugemi Memory Fabric',
       products: memoryFabricCapabilityCatalog(),
       routes: memoryFabricRoutingTable(),
       pipelines: memoryFabricPipelines(),
@@ -309,8 +309,8 @@ export class MemoryFabricService {
       this.eventPublishes += 1;
       event = await this.eventBus.publish({
         topic: input.topic ?? 'memory-fabric',
-        type: 'com.verbalab.memory.distributed',
-        source: '/verbalab/memory-fabric',
+        type: 'com.lugemi.memory.distributed',
+        source: '/lugemi/memory-fabric',
         eventVersion: '1',
         data: {
           distributionId: record.id,
