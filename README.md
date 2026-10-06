@@ -96,7 +96,7 @@ Add to `apps/api/.env` and `apps/web/.env.local` (see `.env.example`). Lead with
 | `STRIPE_*` | api | Billing (optional) |
 | `GOOGLE_TRANSLATE_API_KEY` | api | **Legacy / internal** translate + detect adapter |
 | `OPENAI_API_KEY` | api | **Legacy / internal** STT, stock TTS, chat, embeddings adapter |
-| `ELEVENLABS_API_KEY` | api | **Legacy / internal** voice-clone adapter |
+| `VENDOR_VOICE_CLONE_API_KEY` | api | **Legacy / internal** voice-clone adapter (alias `ELEVENLABS_API_KEY`) |
 
 Without Clerk, open http://localhost:3000/setup. API tests still pass (fixtures). Live MT via the legacy adapter: `TRANSLATE_LIVE=1 pnpm --filter @lugemi/api test`. `OWN_TTS_FIXTURE=1` is CI/local only — never claim live GPU without `OWN_TTS_URL`.
 

@@ -35,7 +35,9 @@ export class GatewayCloudService {
         ),
         openrouter: Boolean(process.env.OPENROUTER_API_KEY?.trim()),
         ownTts: ownTtsConfigured(),
-        elevenlabs: Boolean(process.env.ELEVENLABS_API_KEY?.trim()),
+        vendorClone: Boolean(
+          process.env.VENDOR_VOICE_CLONE_API_KEY?.trim() || process.env.ELEVENLABS_API_KEY?.trim(),
+        ),
       },
       liveModels: live,
       ...providers,

@@ -75,7 +75,7 @@ export class NeuralTtsService {
               name: row.name,
               gender: 'neutral',
               languages: ['en'],
-              provider: 'elevenlabs_clone',
+              provider: 'vendor_clone',
             },
             { enterprise: true, category: 'clone' },
           ),

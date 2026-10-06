@@ -47,6 +47,76 @@ export class GovernanceController {
     });
   }
 
+  @Get('invites')
+  listInvites(@CurrentSession() session: SessionContext) {
+    return this.governance.listInvites(session.organizationId);
+  }
+
+  @Post('invites')
+  createInvite(
+    @CurrentSession() session: SessionContext,
+    @Body() body: { email?: string; role?: string },
+    @Req() req: Request,
+  ) {
+    return this.governance.createInvite({
+      organizationId: session.organizationId,
+      actorUserId: session.userId,
+      actorRole: session.role,
+      email: body.email ?? '',
+      role: body.role ?? 'member',
+      ip: clientIp(req),
+    });
+  }
+
+  @Delete('invites/:id')
+  revokeInvite(
+    @CurrentSession() session: SessionContext,
+    @Param('id') id: string,
+    @Req() req: Request,
+  ) {
+    return this.governance.revokeInvite({
+      organizationId: session.organizationId,
+      actorUserId: session.userId,
+      actorRole: session.role,
+      inviteId: id,
+      ip: clientIp(req),
+    });
+  }
+
+  @Get('branding')
+  getBranding() {
+    return this.governance.getBranding();
+  }
+
+  @Patch('branding')
+  updateBranding(
+    @CurrentSession() session: SessionContext,
+    @Req() req: Request,
+    @Body()
+    body: {
+      companyName?: string;
+      logoUrl?: string;
+      addressLine1?: string;
+      addressLine2?: string;
+      city?: string;
+      region?: string;
+      postalCode?: string;
+      country?: string;
+      socialX?: string;
+      socialLinkedIn?: string;
+      socialGitHub?: string;
+      socialWebsite?: string;
+    },
+  ) {
+    return this.governance.updateBranding({
+      organizationId: session.organizationId,
+      actorUserId: session.userId,
+      actorRole: session.role,
+      patch: body,
+      ip: clientIp(req),
+    });
+  }
+
   @Get('data-settings')
   getSettings(@CurrentSession() session: SessionContext) {
     return this.governance.getSettings(session.organizationId);

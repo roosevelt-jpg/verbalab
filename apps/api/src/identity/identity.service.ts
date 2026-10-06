@@ -37,6 +37,9 @@ export class IdentityService {
       },
     });
 
+    // Apply pending Lugemi invites before creating a personal org.
+    await this.acceptPendingInvitesForUser(user.id, input.email);
+
     let organization =
       input.clerkOrgId != null
         ? await this.prisma.organization.findUnique({ where: { clerkOrgId: input.clerkOrgId } })
@@ -51,7 +54,7 @@ export class IdentityService {
             create: { userId: user.id, role: MembershipRole.owner },
           },
           workspaces: {
-            create: { name: 'Default', defaultSourceLang: 'en', defaultTargetLang: 'sw' },
+            create: { name: 'Default', defaultSourceLang: 'en', defaultTargetLang: 'ak' },
           },
         },
       });
@@ -74,7 +77,7 @@ export class IdentityService {
               create: { userId: user.id, role: MembershipRole.owner },
             },
             workspaces: {
-              create: { name: 'Default', defaultSourceLang: 'en', defaultTargetLang: 'sw' },
+              create: { name: 'Default', defaultSourceLang: 'en', defaultTargetLang: 'ak' },
             },
           },
         });
@@ -129,7 +132,7 @@ export class IdentityService {
           organizationId: organization.id,
           name: 'Default',
           defaultSourceLang: 'en',
-          defaultTargetLang: 'sw',
+          defaultTargetLang: 'ak',
         },
       });
     }
@@ -147,5 +150,42 @@ export class IdentityService {
       clerkUserId: user.clerkUserId,
       role: membership.role,
     };
+  }
+
+  /** Accept pending org invites matching the user's email (workspace RBAC invites). */
+  private async acceptPendingInvitesForUser(userId: string, email?: string) {
+    const normalized = email?.trim().toLowerCase();
+    if (!normalized) return;
+
+    const pending = await this.prisma.organizationInvite.findMany({
+      where: {
+        email: normalized,
+        status: 'pending',
+        expiresAt: { gt: new Date() },
+      },
+    });
+
+    for (const invite of pending) {
+      await this.prisma.$transaction(async (tx) => {
+        await tx.membership.upsert({
+          where: {
+            organizationId_userId: {
+              organizationId: invite.organizationId,
+              userId,
+            },
+          },
+          create: {
+            organizationId: invite.organizationId,
+            userId,
+            role: invite.role,
+          },
+          update: {},
+        });
+        await tx.organizationInvite.update({
+          where: { id: invite.id },
+          data: { status: 'accepted', acceptedAt: new Date() },
+        });
+      });
+    }
   }
 }

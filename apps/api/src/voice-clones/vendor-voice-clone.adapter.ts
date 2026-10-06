@@ -15,14 +15,16 @@ export type VoiceCloneCreateResult = {
 
 /**
  * Instant Voice Cloning + TTS (VL-064).
- * Without ELEVENLABS_API_KEY → provider_not_configured (no fake clone).
+ * Without VENDOR_VOICE_CLONE_API_KEY (or legacy alias) → provider_not_configured.
  */
 export class VendorVoiceCloneAdapter implements TtsProvider {
-  readonly name = 'elevenlabs';
+  readonly name = 'vendor_clone';
 
   constructor(
     private readonly apiKey: string,
     private readonly fetchImpl: typeof fetch = fetch,
+    private readonly apiBase = process.env.VENDOR_VOICE_CLONE_API_BASE?.trim() ||
+      'https://api.elevenlabs.io',
   ) {}
 
   isConfigured(): boolean {
@@ -41,7 +43,7 @@ export class VendorVoiceCloneAdapter implements TtsProvider {
     if (!this.apiKey) {
       throw new ApiException(
         'provider_not_configured',
-        'ELEVENLABS_API_KEY is not set. Add the key to enable vendor voice cloning.',
+        'VENDOR_VOICE_CLONE_API_KEY is not set. Add the key to enable vendor voice cloning.',
         HttpStatus.SERVICE_UNAVAILABLE,
       );
     }
@@ -63,7 +65,7 @@ export class VendorVoiceCloneAdapter implements TtsProvider {
       form.append('files', blob, sample.filename);
     }
 
-    const response = await this.fetchImpl('https://api.elevenlabs.io/v1/voices/add', {
+    const response = await this.fetchImpl(`${this.apiBase}/v1/voices/add`, {
       method: 'POST',
       headers: { 'xi-api-key': this.apiKey },
       body: form,
@@ -113,7 +115,7 @@ export class VendorVoiceCloneAdapter implements TtsProvider {
     if (!this.apiKey) {
       throw new ApiException(
         'provider_not_configured',
-        'ELEVENLABS_API_KEY is not set.',
+        'VENDOR_VOICE_CLONE_API_KEY is not set.',
         HttpStatus.SERVICE_UNAVAILABLE,
       );
     }
@@ -122,7 +124,7 @@ export class VendorVoiceCloneAdapter implements TtsProvider {
     const format = input.format ?? 'mp3';
     const body: Record<string, unknown> = {
       text: input.text,
-      model_id: process.env.ELEVENLABS_TTS_MODEL ?? 'eleven_multilingual_v2',
+      model_id: process.env.VENDOR_VOICE_CLONE_TTS_MODEL ?? 'multilingual_v2',
     };
     if (input.voiceSettings) {
       body.voice_settings = {
@@ -133,7 +135,7 @@ export class VendorVoiceCloneAdapter implements TtsProvider {
       };
     }
     const response = await this.fetchImpl(
-      `https://api.elevenlabs.io/v1/text-to-speech/${encodeURIComponent(input.providerVoiceId)}`,
+      `${this.apiBase}/v1/text-to-speech/${encodeURIComponent(input.providerVoiceId)}`,
       {
         method: 'POST',
         headers: {
@@ -170,7 +172,7 @@ export class VendorVoiceCloneAdapter implements TtsProvider {
 
 /** CI fixture — never calls the vendor clone API. */
 export class FixtureVoiceCloneAdapter {
-  readonly name = 'fixture_elevenlabs';
+  readonly name = 'fixture_vendor_clone';
 
   isConfigured(): boolean {
     return true;

@@ -104,13 +104,13 @@ export const VENDOR_MODEL_SEEDS: VendorDefaultSeed[] = [
     role: 'fallback',
   },
   {
-    slug: 'vendor-tts-elevenlabs-clone',
+    slug: 'vendor-tts-clone',
     feature: 'tts',
-    provider: 'elevenlabs',
+    provider: 'vendor_clone',
     displayName: 'Legacy voice cloning adapter',
-    baseModel: 'eleven_multilingual_v2',
+    baseModel: 'multilingual_v2',
     notes: 'Optional cloned voices (VL-064). Consent + abuse review required; watermark always on.',
-    envKey: 'ELEVENLABS_API_KEY',
+    envKey: 'VENDOR_VOICE_CLONE_API_KEY',
     role: 'fallback',
   },
   {

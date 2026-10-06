@@ -1,9 +1,11 @@
+import { randomBytes } from 'crypto';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { MembershipRole } from '@prisma/client';
+import { MembershipRole, PlatformBranding } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiException } from '../common/errors/api-exception';
 import { AuditService } from '../audit/audit.service';
 import { LocalStorageService } from '../documents/local-storage.service';
+import { NotificationsService } from '../notifications/notifications.service';
 
 export type DataSettings = {
   organizationId: string;
@@ -13,12 +15,28 @@ export type DataSettings = {
   allowVendorTraining: boolean;
 };
 
+export type BrandingInput = {
+  companyName?: string;
+  logoUrl?: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  city?: string;
+  region?: string;
+  postalCode?: string;
+  country?: string;
+  socialX?: string;
+  socialLinkedIn?: string;
+  socialGitHub?: string;
+  socialWebsite?: string;
+};
+
 @Injectable()
 export class GovernanceService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
     private readonly storage: LocalStorageService,
+    private readonly notifications: NotificationsService,
   ) {}
 
   async listMembers(organizationId: string) {
@@ -35,6 +53,207 @@ export class GovernanceService {
       createdAt: m.createdAt,
       user: m.user,
     }));
+  }
+
+  async listInvites(organizationId: string) {
+    const invites = await this.prisma.organizationInvite.findMany({
+      where: { organizationId },
+      orderBy: { createdAt: 'desc' },
+      take: 50,
+      include: { invitedBy: { select: { id: true, email: true, name: true } } },
+    });
+    return invites.map((inv) => ({
+      id: inv.id,
+      email: inv.email,
+      role: inv.role,
+      status: inv.status,
+      expiresAt: inv.expiresAt,
+      createdAt: inv.createdAt,
+      acceptedAt: inv.acceptedAt,
+      invitedBy: inv.invitedBy,
+    }));
+  }
+
+  async createInvite(input: {
+    organizationId: string;
+    actorUserId: string;
+    actorRole: string;
+    email: string;
+    role: string;
+    ip?: string;
+  }) {
+    this.assertOwnerOrAdmin(input.actorRole);
+    const email = input.email.trim().toLowerCase();
+    if (!email || !email.includes('@')) {
+      throw new ApiException('validation_error', 'A valid email is required', HttpStatus.BAD_REQUEST);
+    }
+    const role = this.parseRole(input.role || 'member');
+    if (role === MembershipRole.owner && input.actorRole !== 'owner') {
+      throw new ApiException('forbidden', 'Only owners can invite another owner', HttpStatus.FORBIDDEN);
+    }
+
+    const existingMember = await this.prisma.membership.findFirst({
+      where: {
+        organizationId: input.organizationId,
+        user: { email: { equals: email, mode: 'insensitive' } },
+      },
+    });
+    if (existingMember) {
+      throw new ApiException(
+        'conflict',
+        'That email already belongs to a member of this organization',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const pending = await this.prisma.organizationInvite.findFirst({
+      where: { organizationId: input.organizationId, email, status: 'pending' },
+    });
+    if (pending && pending.expiresAt > new Date()) {
+      throw new ApiException(
+        'conflict',
+        'A pending invite already exists for that email',
+        HttpStatus.CONFLICT,
+      );
+    }
+    if (pending) {
+      await this.prisma.organizationInvite.update({
+        where: { id: pending.id },
+        data: { status: 'expired' },
+      });
+    }
+
+    const org = await this.prisma.organization.findUniqueOrThrow({
+      where: { id: input.organizationId },
+      select: { id: true, name: true },
+    });
+
+    const token = randomBytes(24).toString('hex');
+    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    const invite = await this.prisma.organizationInvite.create({
+      data: {
+        organizationId: input.organizationId,
+        email,
+        role,
+        token,
+        invitedById: input.actorUserId,
+        expiresAt,
+      },
+    });
+
+    await this.audit.record({
+      organizationId: input.organizationId,
+      userId: input.actorUserId,
+      action: 'membership.invite_created',
+      route: 'POST /v1/organization/invites',
+      ip: input.ip,
+      metadata: { inviteId: invite.id, email, role },
+    });
+
+    void this.notifications.notifyInvite({
+      organizationId: org.id,
+      organizationName: org.name,
+      email,
+      role,
+      token,
+      expiresAt,
+    });
+
+    return {
+      id: invite.id,
+      email: invite.email,
+      role: invite.role,
+      status: invite.status,
+      expiresAt: invite.expiresAt,
+      createdAt: invite.createdAt,
+    };
+  }
+
+  async revokeInvite(input: {
+    organizationId: string;
+    actorUserId: string;
+    actorRole: string;
+    inviteId: string;
+    ip?: string;
+  }) {
+    this.assertOwnerOrAdmin(input.actorRole);
+    const invite = await this.prisma.organizationInvite.findFirst({
+      where: { id: input.inviteId, organizationId: input.organizationId },
+    });
+    if (!invite) {
+      throw new ApiException('not_found', 'Invite not found', HttpStatus.NOT_FOUND);
+    }
+    if (invite.status !== 'pending') {
+      throw new ApiException(
+        'validation_error',
+        'Only pending invites can be revoked',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const updated = await this.prisma.organizationInvite.update({
+      where: { id: invite.id },
+      data: { status: 'revoked' },
+    });
+    await this.audit.record({
+      organizationId: input.organizationId,
+      userId: input.actorUserId,
+      action: 'membership.invite_revoked',
+      route: `DELETE /v1/organization/invites/${invite.id}`,
+      ip: input.ip,
+      metadata: { inviteId: invite.id, email: invite.email },
+    });
+    return { id: updated.id, status: updated.status };
+  }
+
+  async getBranding(): Promise<PlatformBranding> {
+    return this.prisma.platformBranding.upsert({
+      where: { id: 'default' },
+      create: { id: 'default' },
+      update: {},
+    });
+  }
+
+  async updateBranding(input: {
+    actorUserId: string;
+    actorRole: string;
+    organizationId: string;
+    patch: BrandingInput;
+    ip?: string;
+  }) {
+    this.assertOwnerOrAdmin(input.actorRole);
+    const data: BrandingInput = {};
+    for (const key of [
+      'companyName',
+      'logoUrl',
+      'addressLine1',
+      'addressLine2',
+      'city',
+      'region',
+      'postalCode',
+      'country',
+      'socialX',
+      'socialLinkedIn',
+      'socialGitHub',
+      'socialWebsite',
+    ] as const) {
+      if (input.patch[key] !== undefined) {
+        data[key] = String(input.patch[key] ?? '').trim();
+      }
+    }
+    const branding = await this.prisma.platformBranding.upsert({
+      where: { id: 'default' },
+      create: { id: 'default', ...data },
+      update: data,
+    });
+    await this.audit.record({
+      organizationId: input.organizationId,
+      userId: input.actorUserId,
+      action: 'platform.branding_updated',
+      route: 'PATCH /v1/organization/branding',
+      ip: input.ip,
+      metadata: { fields: Object.keys(data) },
+    });
+    return branding;
   }
 
   async updateMemberRole(input: {

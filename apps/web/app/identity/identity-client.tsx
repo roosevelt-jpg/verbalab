@@ -13,6 +13,16 @@ type MemberRow = {
   user: { id: string; email: string | null; name: string | null };
 };
 
+type InviteRow = {
+  id: string;
+  email: string;
+  role: string;
+  status: string;
+  expiresAt: string;
+  createdAt: string;
+  acceptedAt: string | null;
+};
+
 type Overview = {
   session: { role: string; userId: string; clerkUserId: string };
   organization: { name: string; clerkOrgId: string | null; plan: string };
@@ -32,14 +42,22 @@ type Overview = {
 export function IdentityClient() {
   const { getToken, isLoaded } = useAuth();
   const [data, setData] = useState<Overview | null>(null);
+  const [invites, setInvites] = useState<InviteRow[]>([]);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteRole, setInviteRole] = useState('member');
   const [error, setError] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     const token = await getToken();
     if (!token) throw new Error('Not signed in');
-    const overview = await apiFetch<Overview>('/v1/identity/overview', { token });
+    const [overview, inviteRows] = await Promise.all([
+      apiFetch<Overview>('/v1/identity/overview', { token }),
+      apiFetch<InviteRow[]>('/v1/organization/invites', { token }).catch(() => [] as InviteRow[]),
+    ]);
     setData(overview);
+    setInvites(inviteRows);
   }, [getToken]);
 
   useEffect(() => {
@@ -85,6 +103,43 @@ export function IdentityClient() {
     }
   }
 
+  async function sendInvite() {
+    setError(null);
+    setMessage(null);
+    setBusyId('invite');
+    try {
+      const token = await getToken();
+      if (!token) throw new Error('Not signed in');
+      await apiFetch('/v1/organization/invites', {
+        method: 'POST',
+        token,
+        body: JSON.stringify({ email: inviteEmail, role: inviteRole }),
+      });
+      setInviteEmail('');
+      setMessage('Invite sent. They accept by signing in with that email.');
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Invite failed');
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  async function revokeInvite(inviteId: string) {
+    setError(null);
+    setBusyId(inviteId);
+    try {
+      const token = await getToken();
+      if (!token) throw new Error('Not signed in');
+      await apiFetch(`/v1/organization/invites/${inviteId}`, { method: 'DELETE', token });
+      await load();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Revoke failed');
+    } finally {
+      setBusyId(null);
+    }
+  }
+
   const canManage = data?.session.role === 'owner' || data?.session.role === 'admin';
 
   return (
@@ -106,6 +161,7 @@ export function IdentityClient() {
       </p>
 
       {error ? <p style={{ color: '#b42318', marginBottom: '1rem' }}>{error}</p> : null}
+      {message ? <p style={{ color: 'var(--muted)', marginBottom: '1rem' }}>{message}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}
 
       {data ? (
@@ -142,9 +198,93 @@ export function IdentityClient() {
               Members ({data.members.total})
             </h2>
             <p style={{ color: 'var(--muted)', fontSize: '0.9rem', margin: '0 0 1rem' }}>
-              Invite in Clerk Organizations. Roles here: owner {data.members.byRole.owner ?? 0} · admin{' '}
+              Invite teammates below to share this workspace. Roles: owner {data.members.byRole.owner ?? 0} · admin{' '}
               {data.members.byRole.admin ?? 0} · member {data.members.byRole.member ?? 0}.
             </p>
+            {canManage ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  void sendInvite();
+                }}
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: '0.5rem',
+                  alignItems: 'center',
+                  marginBottom: '1rem',
+                }}
+              >
+                <input
+                  className="vl-field"
+                  type="email"
+                  required
+                  placeholder="teammate@company.com"
+                  value={inviteEmail}
+                  onChange={(e) => setInviteEmail(e.target.value)}
+                  style={{ minWidth: '14rem', flex: 1 }}
+                />
+                <select
+                  className="vl-field"
+                  value={inviteRole}
+                  onChange={(e) => setInviteRole(e.target.value)}
+                >
+                  {(data.rbac.roles.includes('owner')
+                    ? data.session.role === 'owner'
+                      ? data.rbac.roles
+                      : data.rbac.roles.filter((r) => r !== 'owner')
+                    : ['admin', 'member']
+                  ).map((r) => (
+                    <option key={r} value={r}>
+                      {r}
+                    </option>
+                  ))}
+                </select>
+                <button
+                  type="submit"
+                  className="vl-btn vl-btn-primary"
+                  disabled={busyId === 'invite' || !inviteEmail.trim()}
+                >
+                  Send invite
+                </button>
+              </form>
+            ) : null}
+            {invites.filter((i) => i.status === 'pending').length > 0 ? (
+              <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1rem', display: 'grid', gap: '0.45rem' }}>
+                {invites
+                  .filter((i) => i.status === 'pending')
+                  .map((inv) => (
+                    <li
+                      key={inv.id}
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        gap: '0.75rem',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                        padding: '0.55rem 0',
+                        borderTop: '1px solid var(--line)',
+                        fontSize: '0.9rem',
+                      }}
+                    >
+                      <span>
+                        <strong>{inv.email}</strong> · {inv.role} · pending
+                      </span>
+                      {canManage ? (
+                        <button
+                          type="button"
+                          className="vl-btn vl-btn-secondary"
+                          disabled={busyId === inv.id}
+                          onClick={() => void revokeInvite(inv.id)}
+                          style={{ minHeight: 32, fontSize: '0.78rem' }}
+                        >
+                          Revoke
+                        </button>
+                      ) : null}
+                    </li>
+                  ))}
+              </ul>
+            ) : null}
             <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.65rem' }}>
               {data.members.data.map((m) => {
                 const isSelf = m.user.id === data.session.userId;

@@ -1,8 +1,10 @@
 import { Injectable, Logger } from '@nestjs/common';
+import { PlatformBranding } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
 import { EmailProvider, SendEmailInput, SendEmailResult } from './email-provider';
 import { ResendAdapter } from './resend.adapter';
+import { paragraph, renderSystemEmailHtml } from './email-layout';
 
 @Injectable()
 export class NotificationsService {
@@ -41,6 +43,35 @@ export class NotificationsService {
     return this.provider.send(input);
   }
 
+  private async loadBranding(): Promise<PlatformBranding> {
+    return this.prisma.platformBranding.upsert({
+      where: { id: 'default' },
+      create: { id: 'default' },
+      update: {},
+    });
+  }
+
+  private async sendBranded(input: {
+    to: string | string[];
+    subject: string;
+    text: string;
+    title: string;
+    bodyHtml: string;
+  }) {
+    const branding = await this.loadBranding();
+    const html = renderSystemEmailHtml({
+      branding,
+      title: input.title,
+      bodyHtml: input.bodyHtml,
+    });
+    return this.sendEmail({
+      to: input.to,
+      subject: input.subject,
+      text: input.text,
+      html,
+    });
+  }
+
   async notifyJobComplete(input: {
     organizationId: string;
     jobId: string;
@@ -62,7 +93,13 @@ export class NotificationsService {
         : `Job ${input.jobId} (${input.type}) failed: ${input.error ?? 'unknown error'}`;
 
     try {
-      const result = await this.sendEmail({ to: recipients, subject, text });
+      const result = await this.sendBranded({
+        to: recipients,
+        subject,
+        text,
+        title: subject,
+        bodyHtml: paragraph(text),
+      });
       if (!result) return;
       await this.audit.record({
         organizationId: input.organizationId,
@@ -132,10 +169,13 @@ export class NotificationsService {
         }
 
         try {
-          const result = await this.sendEmail({
+          const text = `Your organization "${org.name}" has used ${characters.toLocaleString()} of ${org.characterQuota.toLocaleString()} monthly characters (${threshold.pct}% threshold).`;
+          const result = await this.sendBranded({
             to: recipients,
             subject: `Lugemi usage at ${threshold.pct}% — ${org.name}`,
-            text: `Your organization "${org.name}" has used ${characters.toLocaleString()} of ${org.characterQuota.toLocaleString()} monthly characters (${threshold.pct}% threshold).`,
+            text,
+            title: `Usage at ${threshold.pct}%`,
+            bodyHtml: paragraph(text),
           });
 
           await this.audit.record({
@@ -165,7 +205,6 @@ export class NotificationsService {
         }
       }
     } catch (error) {
-      // Fire-and-forget from translate; ignore teardown / disconnect races in tests.
       this.logger.debug(
         `Usage threshold check skipped: ${error instanceof Error ? error.message : error}`,
       );
@@ -181,10 +220,13 @@ export class NotificationsService {
     if (this.disabled() || !input.email) return;
 
     try {
-      const result = await this.sendEmail({
+      const text = `You now have ${input.role} access to "${input.organizationName}" on Lugemi. Sign in with the same email to open the console.`;
+      const result = await this.sendBranded({
         to: input.email,
         subject: `You've been added to ${input.organizationName} on Lugemi`,
-        text: `You now have ${input.role} access to "${input.organizationName}" on Lugemi. Sign in with the same email to open the console. (Invites are managed in Clerk; this message confirms membership sync.)`,
+        text,
+        title: `Welcome to ${input.organizationName}`,
+        bodyHtml: paragraph(text),
       });
       if (!result) return;
       await this.audit.record({
@@ -197,6 +239,55 @@ export class NotificationsService {
       this.logger.warn(
         `Member-added notification failed: ${error instanceof Error ? error.message : error}`,
       );
+    }
+  }
+
+  async notifyInvite(input: {
+    organizationId: string;
+    organizationName: string;
+    email: string;
+    role: string;
+    token: string;
+    expiresAt: Date;
+  }) {
+    if (this.disabled() || !input.email) return;
+
+    const publicBase =
+      process.env.APP_PUBLIC_URL?.trim() ||
+      process.env.NEXT_PUBLIC_APP_URL?.trim() ||
+      'http://127.0.0.1:43123';
+    const signInUrl = `${publicBase.replace(/\/$/, '')}/sign-in`;
+    const text = `You've been invited to join "${input.organizationName}" on Lugemi as ${input.role}. Sign in with ${input.email} to accept: ${signInUrl}. Invite expires ${input.expiresAt.toISOString()}.`;
+
+    try {
+      const result = await this.sendBranded({
+        to: input.email,
+        subject: `Join ${input.organizationName} on Lugemi`,
+        text,
+        title: `You're invited to ${input.organizationName}`,
+        bodyHtml: [
+          paragraph(
+            `You've been invited to join "${input.organizationName}" on Lugemi as ${input.role}.`,
+          ),
+          paragraph(`Sign in with ${input.email} to accept the invite and open the shared workspace.`),
+          `<p style="margin:0 0 12px;"><a href="${signInUrl}" style="display:inline-block;padding:10px 16px;background:#007c78;color:#fff;text-decoration:none;border-radius:8px;font-weight:600;">Accept invite</a></p>`,
+          paragraph(`This invite expires on ${input.expiresAt.toUTCString()}.`),
+        ].join(''),
+      });
+      if (!result) return;
+      await this.audit.record({
+        organizationId: input.organizationId,
+        action: 'notification.invite_sent',
+        route: 'organization.invites',
+        metadata: {
+          email: input.email,
+          role: input.role,
+          emailId: result.id,
+          tokenSuffix: input.token.slice(-6),
+        },
+      });
+    } catch (error) {
+      this.logger.warn(`Invite notification failed: ${error instanceof Error ? error.message : error}`);
     }
   }
 
@@ -213,10 +304,12 @@ export class NotificationsService {
     if (recipients.length === 0) return null;
 
     try {
-      const result = await this.sendEmail({
+      const result = await this.sendBranded({
         to: recipients,
         subject: input.subject,
         text: input.message,
+        title: input.subject,
+        bodyHtml: paragraph(input.message),
       });
       if (!result) return null;
       await this.audit.record({

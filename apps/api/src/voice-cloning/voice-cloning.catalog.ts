@@ -103,7 +103,7 @@ export function voiceCloningEngineCatalog() {
     ] satisfies CloningCapability[],
     engines: [
       {
-        id: 'elevenlabs_ivc',
+        id: 'vendor_ivc',
         name: 'Instant Voice Cloning',
         role: 'primary',
         modes: ['instant', 'professional_enrollment'],

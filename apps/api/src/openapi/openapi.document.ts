@@ -9764,7 +9764,7 @@ export const openApiDocument = {
             },
           },
           '503': {
-            description: 'OPENAI_API_KEY / ELEVENLABS_API_KEY not configured',
+            description: 'OPENAI_API_KEY / VENDOR_VOICE_CLONE_API_KEY not configured',
             content: { 'application/json': { schema: { $ref: '#/components/schemas/Error' } } },
           },
         },

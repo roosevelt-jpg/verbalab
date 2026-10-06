@@ -164,7 +164,7 @@ describe('Voice cloning (VL-064)', () => {
       workspaceId,
       userId,
     });
-    expect(spoken.provider).toBe('fixture_elevenlabs');
+    expect(spoken.provider).toBe('fixture_vendor_clone');
     expect(spoken.watermarkApplied).toBe(true);
     expect(spoken.audio.toString('utf8')).toContain('FIXTURE_CLONE');
 

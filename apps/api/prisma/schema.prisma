@@ -45,6 +45,7 @@ model Organization {
   updatedAt            DateTime @updatedAt @map("updated_at")
 
   memberships         Membership[]
+  invites             OrganizationInvite[]
   workspaces          Workspace[]
   apiKeys             ApiKey[]
   translationRequests TranslationRequest[]
@@ -108,11 +109,53 @@ model User {
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   memberships Membership[]
+  invitesSent OrganizationInvite[] @relation("InviteSender")
   apiKeys     ApiKey[]
   auditEvents AuditEvent[]
   reviews     TranslationReview[]
 
   @@map("users")
+}
+
+model OrganizationInvite {
+  id             String         @id @default(cuid())
+  organizationId String         @map("organization_id")
+  email          String
+  role           MembershipRole @default(member)
+  token          String         @unique
+  status         String         @default("pending") // pending | accepted | revoked | expired
+  invitedById    String         @map("invited_by_id")
+  expiresAt      DateTime       @map("expires_at")
+  acceptedAt     DateTime?      @map("accepted_at")
+  createdAt      DateTime       @default(now()) @map("created_at")
+  updatedAt      DateTime       @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  invitedBy    User         @relation("InviteSender", fields: [invitedById], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, status])
+  @@index([email, status])
+  @@map("organization_invites")
+}
+
+/// Platform-wide branding for system emails (logo, address, social). Singleton row id=default.
+model PlatformBranding {
+  id             String   @id @default("default")
+  companyName    String   @default("Lugemi") @map("company_name")
+  logoUrl        String   @default("/brand/lugemi-symbol-teal.svg") @map("logo_url")
+  addressLine1   String   @default("") @map("address_line1")
+  addressLine2   String   @default("") @map("address_line2")
+  city           String   @default("")
+  region         String   @default("")
+  postalCode     String   @default("") @map("postal_code")
+  country        String   @default("")
+  socialX        String   @default("") @map("social_x")
+  socialLinkedIn String   @default("") @map("social_linkedin")
+  socialGitHub   String   @default("") @map("social_github")
+  socialWebsite  String   @default("") @map("social_website")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@map("platform_branding")
 }
 
 model Membership {

@@ -27,11 +27,28 @@ type RegionCatalog = {
   regions: { code: string; name: string; residencyLabel: string }[];
 };
 
+type Branding = {
+  id: string;
+  companyName: string;
+  logoUrl: string;
+  addressLine1: string;
+  addressLine2: string;
+  city: string;
+  region: string;
+  postalCode: string;
+  country: string;
+  socialX: string;
+  socialLinkedIn: string;
+  socialGitHub: string;
+  socialWebsite: string;
+};
+
 export function DataClient() {
   const { getToken, isLoaded } = useAuth();
   const [settings, setSettings] = useState<DataSettings | null>(null);
   const [residency, setResidency] = useState<Residency | null>(null);
   const [catalog, setCatalog] = useState<RegionCatalog | null>(null);
+  const [branding, setBranding] = useState<Branding | null>(null);
   const [regionPick, setRegionPick] = useState('');
   const [retentionInput, setRetentionInput] = useState('');
   const [confirmName, setConfirmName] = useState('');
@@ -42,14 +59,16 @@ export function DataClient() {
   const load = useCallback(async () => {
     const token = await getToken();
     if (!token) throw new Error('Not signed in');
-    const [data, res, regions] = await Promise.all([
+    const [data, res, regions, brand] = await Promise.all([
       apiFetch<DataSettings>('/v1/organization/data-settings', { token }),
       apiFetch<Residency>('/v1/organization/residency', { token }),
       apiFetch<RegionCatalog>('/v1/regions'),
+      apiFetch<Branding>('/v1/organization/branding', { token }),
     ]);
     setSettings(data);
     setResidency(res);
     setCatalog(regions);
+    setBranding(brand);
     setRegionPick(res.dataRegion ?? '');
     setRetentionInput(data.retentionDays != null ? String(data.retentionDays) : '');
   }, [getToken]);
@@ -102,6 +121,41 @@ export function DataClient() {
       setMessage('Settings saved.');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Save failed');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function saveBranding() {
+    if (!branding) return;
+    setError(null);
+    setMessage(null);
+    setBusy(true);
+    try {
+      const token = await getToken();
+      if (!token) throw new Error('Not signed in');
+      const data = await apiFetch<Branding>('/v1/organization/branding', {
+        method: 'PATCH',
+        token,
+        body: JSON.stringify({
+          companyName: branding.companyName,
+          logoUrl: branding.logoUrl,
+          addressLine1: branding.addressLine1,
+          addressLine2: branding.addressLine2,
+          city: branding.city,
+          region: branding.region,
+          postalCode: branding.postalCode,
+          country: branding.country,
+          socialX: branding.socialX,
+          socialLinkedIn: branding.socialLinkedIn,
+          socialGitHub: branding.socialGitHub,
+          socialWebsite: branding.socialWebsite,
+        }),
+      });
+      setBranding(data);
+      setMessage('Email branding saved. System emails use this logo, address, and socials.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Branding save failed');
     } finally {
       setBusy(false);
     }
@@ -160,7 +214,7 @@ export function DataClient() {
         Data
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0' }}>
-        Retention, residency, export, and deletion. See the DPA data map in the repo docs.
+        Retention, residency, email branding, export, and deletion. See the DPA data map in the repo docs.
       </p>
 
       {error ? <p style={{ color: 'var(--bad)' }}>{error}</p> : null}
@@ -168,6 +222,47 @@ export function DataClient() {
 
       {settings ? (
         <div style={{ marginTop: '1.5rem', display: 'grid', gap: '1.25rem', maxWidth: '42rem' }}>
+          <section className="vl-panel" style={{ padding: '1.25rem' }}>
+            <h2 style={{ margin: 0, fontSize: '1.1rem' }}>Email branding</h2>
+            <p style={{ color: 'var(--muted)', fontSize: '0.9rem', margin: '0.4rem 0 1rem' }}>
+              Logo, postal address, and social links appear on every system email. Add your Resend key later —
+              templates are ready now.
+            </p>
+            {branding ? (
+              <div style={{ display: 'grid', gap: '0.65rem' }}>
+                {(
+                  [
+                    ['companyName', 'Company name'],
+                    ['logoUrl', 'Logo URL (path or absolute)'],
+                    ['addressLine1', 'Address line 1'],
+                    ['addressLine2', 'Address line 2'],
+                    ['city', 'City'],
+                    ['region', 'Region / state'],
+                    ['postalCode', 'Postal code'],
+                    ['country', 'Country'],
+                    ['socialWebsite', 'Website'],
+                    ['socialX', 'X / Twitter URL'],
+                    ['socialLinkedIn', 'LinkedIn URL'],
+                    ['socialGitHub', 'GitHub URL'],
+                  ] as const
+                ).map(([key, label]) => (
+                  <label key={key} style={{ display: 'grid', gap: '0.3rem' }}>
+                    <span style={{ fontSize: '0.85rem' }}>{label}</span>
+                    <input
+                      className="vl-input"
+                      value={branding[key]}
+                      disabled={busy}
+                      onChange={(e) => setBranding({ ...branding, [key]: e.target.value })}
+                    />
+                  </label>
+                ))}
+                <button type="button" className="vl-btn vl-btn-primary" disabled={busy} onClick={() => void saveBranding()}>
+                  Save email branding
+                </button>
+              </div>
+            ) : null}
+          </section>
+
           <section className="vl-panel" style={{ padding: '1.25rem' }}>
             <h2 style={{ margin: 0, fontSize: '1.1rem' }}>Data residency</h2>
             <p style={{ color: 'var(--muted)', fontSize: '0.9rem', margin: '0.4rem 0 1rem' }}>

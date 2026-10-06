@@ -73,12 +73,12 @@ export function gatewayProviderCatalog(): GatewayProviderRow[] {
       notes: 'own:* voices (VL-121).',
     },
     {
-      id: 'elevenlabs',
-      libraryName: 'third-party TTS',
+      id: 'vendor_clone',
+      libraryName: 'Vendor voice clone',
       status: 'optional',
       features: ['tts'],
-      envKey: 'ELEVENLABS_API_KEY',
-      notes: 'Voice clones (VL-064).',
+      envKey: 'VENDOR_VOICE_CLONE_API_KEY',
+      notes: 'Voice clones (VL-064). Legacy ELEVENLABS_API_KEY still accepted.',
     },
     {
       id: 'claude',

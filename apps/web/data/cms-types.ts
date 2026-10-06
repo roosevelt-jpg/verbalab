@@ -48,6 +48,9 @@ export type CmsPageSection = {
   title: string;
   body: string;
   media?: CmsMedia;
+  kind?: 'content' | 'guide' | 'api';
+  steps?: string[];
+  links?: CmsLink[];
 };
 
 export type CmsPage = {

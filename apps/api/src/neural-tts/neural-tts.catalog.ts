@@ -128,7 +128,7 @@ export function neuralTtsEngineCatalog() {
         modes: ['batch', 'chunk_sse'],
       },
       {
-        id: 'elevenlabs_clone',
+        id: 'vendor_clone',
         name: 'Instant Voice Cloning',
         role: 'clone',
         modes: ['batch', 'chunk_sse'],

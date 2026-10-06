@@ -47,7 +47,11 @@ export class VoiceClonesService {
   private provider() {
     if (this.fixtureOverride) return this.fixtureOverride;
     if (process.env.VOICE_CLONE_FIXTURE === '1') return new FixtureVoiceCloneAdapter();
-    return new VendorVoiceCloneAdapter(process.env.ELEVENLABS_API_KEY ?? '');
+    return new VendorVoiceCloneAdapter(
+      process.env.VENDOR_VOICE_CLONE_API_KEY?.trim() ||
+        process.env.ELEVENLABS_API_KEY?.trim() ||
+        '',
+    );
   }
 
   serialize(row: {
@@ -232,7 +236,7 @@ export class VoiceClonesService {
         watermarkRequired: true,
         sampleStorageKeys: keys as Prisma.InputJsonValue,
         sampleCount: keys.length,
-        provider: 'elevenlabs',
+        provider: 'vendor_clone',
         createdByUserId: input.userId,
       },
     });
