@@ -19,7 +19,7 @@ Fly dashboard launch of a single app named **verbalab** failed with “Could not
 
 ## Required secrets before a healthy API
 
-Set these **before** expecting migrations or DB-backed routes to work. A deploy can still succeed without `DATABASE_URL` (migrate soft-skips); the process will boot, but Prisma-backed handlers will fail until Postgres is configured.
+Set these **before** expecting migrations or DB-backed routes to work. A deploy can still succeed without `DATABASE_URL` (migrate soft-skips; Prisma skips `$connect` so `/health` can pass). DB routes fail until Postgres is configured.
 
 ### API (`verbalab` or `verbalab-api`) — set first
 
