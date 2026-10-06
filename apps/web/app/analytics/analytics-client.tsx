@@ -317,15 +317,3 @@ export function AnalyticsClient() {
     </AppShell>
   );
 }
-
-function Stat({ label, value, hint }: { label: string; value: string; hint?: string }) {
-  return (
-    <div className="vl-panel" style={{ padding: '1.2rem', background: 'var(--bg-soft)', border: 'none' }}>
-      <div style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>{label}</div>
-      <div style={{ fontSize: '1.75rem', fontWeight: 700, marginTop: '0.25rem', fontFamily: 'var(--font-display)' }}>
-        {value}
-      </div>
-      {hint ? <div style={{ color: 'var(--muted)', fontSize: '0.8rem', marginTop: '0.35rem' }}>{hint}</div> : null}
-    </div>
-  );
-}
