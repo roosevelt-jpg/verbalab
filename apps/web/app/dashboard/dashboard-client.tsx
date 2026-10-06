@@ -26,6 +26,15 @@ type Overview = {
   account: { role: string };
 };
 
+const QUICK_LINKS = [
+  { href: '/translate', label: 'Translate', primary: true },
+  { href: '/audio', label: 'Voice Studio', primary: false },
+  { href: '/playground', label: 'API playground', primary: false },
+  { href: '/docs', label: 'API docs', primary: false },
+  { href: '/keys', label: 'API keys', primary: false },
+  { href: '/developers', label: 'Developers', primary: false },
+];
+
 export function DashboardClient() {
   const { getToken, isLoaded } = useAuth();
   const [data, setData] = useState<Overview | null>(null);
@@ -52,134 +61,117 @@ export function DashboardClient() {
           fontWeight: 720,
           letterSpacing: '-0.03em',
           margin: '0 0 0.35rem',
+          color: 'var(--brand-navy)',
         }}
       >
-        Cloud dashboard
+        Dashboard
       </h1>
-      <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '36rem' }}>
-        Organization, workspace, residency, and plan at a glance. Product work happens in Translate,
-        Voice Studio, and the rest of the console.
+      <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '36rem', lineHeight: 1.6 }}>
+        Organization, workspace, residency, and plan at a glance. Product work happens in Translate, Voice Studio, and
+        the Lugemi API console.
       </p>
 
-      {error ? (
-        <p style={{ color: '#b42318', marginBottom: '1rem' }}>{error}</p>
-      ) : null}
+      {error ? <p style={{ color: '#b42318', marginBottom: '1rem' }}>{error}</p> : null}
 
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}
 
       {data ? (
-        <div style={{ display: 'grid', gap: '1.5rem' }}>
-          <section>
-            <h2 style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--muted)', margin: '0 0 0.5rem' }}>
-              Organization
-            </h2>
-            <p style={{ margin: 0, fontSize: '1.15rem', fontWeight: 600 }}>{data.organization.name}</p>
-            <p style={{ margin: '0.25rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
-              Plan {data.billing.planName} · {data.account.role} · billing {data.organization.billingStatus}
-            </p>
-          </section>
+        <div style={{ display: 'grid', gap: '1rem' }}>
+          <div
+            style={{
+              display: 'grid',
+              gap: '1rem',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(14rem, 1fr))',
+            }}
+          >
+            <section className="vl-endpoint-card">
+              <h2 style={sectionLabel}>Organization</h2>
+              <p style={{ margin: 0, fontSize: '1.1rem', fontWeight: 600, color: 'var(--brand-navy)' }}>
+                {data.organization.name}
+              </p>
+              <p style={{ margin: '0.25rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
+                Plan {data.billing.planName} · {data.account.role} · billing {data.organization.billingStatus}
+              </p>
+            </section>
 
-          <section>
-            <h2 style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--muted)', margin: '0 0 0.5rem' }}>
-              Workspace
-            </h2>
-            <p style={{ margin: 0, fontWeight: 600 }}>{data.workspace?.name ?? '—'}</p>
-            <p style={{ margin: '0.25rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
-              Defaults {data.workspace?.defaultSourceLang ?? '—'} → {data.workspace?.defaultTargetLang ?? '—'} ·{' '}
-              {data.workspaces.length} workspace{data.workspaces.length === 1 ? '' : 's'}
-            </p>
-          </section>
+            <section className="vl-endpoint-card">
+              <h2 style={sectionLabel}>Workspace</h2>
+              <p style={{ margin: 0, fontWeight: 600, color: 'var(--brand-navy)' }}>
+                {data.workspace?.name ?? '—'}
+              </p>
+              <p style={{ margin: '0.25rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
+                Defaults {data.workspace?.defaultSourceLang ?? '—'} → {data.workspace?.defaultTargetLang ?? '—'} ·{' '}
+                {data.workspaces.length} workspace{data.workspaces.length === 1 ? '' : 's'}
+              </p>
+            </section>
 
-          <section>
-            <h2 style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--muted)', margin: '0 0 0.5rem' }}>
-              Usage this period
-            </h2>
-            <p style={{ margin: 0, fontWeight: 600 }}>
-              {data.billing.charactersUsed.toLocaleString()} / {data.billing.characterQuota.toLocaleString()} characters
-            </p>
-            <p style={{ margin: '0.25rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
-              {data.billing.charactersRemaining.toLocaleString()} remaining · {data.billing.requests} requests
-            </p>
-            <p style={{ margin: '0.65rem 0 0' }}>
-              <Link href="/billing" style={{ color: 'var(--accent)', fontWeight: 550 }}>
-                Billing →
-              </Link>
-            </p>
-          </section>
+            <section className="vl-endpoint-card">
+              <h2 style={sectionLabel}>Usage this period</h2>
+              <p style={{ margin: 0, fontWeight: 600, color: 'var(--brand-navy)' }}>
+                {data.billing.charactersUsed.toLocaleString()} / {data.billing.characterQuota.toLocaleString()}{' '}
+                characters
+              </p>
+              <p style={{ margin: '0.25rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
+                {data.billing.charactersRemaining.toLocaleString()} remaining · {data.billing.requests} requests
+              </p>
+              <p style={{ margin: '0.65rem 0 0' }}>
+                <Link href="/billing" style={{ color: 'var(--action-primary)', fontWeight: 550 }}>
+                  Billing →
+                </Link>
+              </p>
+            </section>
 
-          <section>
-            <h2 style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--muted)', margin: '0 0 0.5rem' }}>
-              Residency
-            </h2>
-            <p style={{ margin: 0, fontWeight: 600 }}>
-              Deploy {data.residency.currentDeploy.name} ({data.residency.currentDeploy.code})
-            </p>
-            <p style={{ margin: '0.25rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
-              Pin {data.residency.dataRegion ?? 'none'} ·{' '}
-              {data.residency.matchesCurrentDeploy ? 'matches this island' : 'mismatch — use regional API'}
-            </p>
-            <p style={{ margin: '0.65rem 0 0' }}>
-              <Link href="/data" style={{ color: 'var(--accent)', fontWeight: 550 }}>
-                Data & residency →
-              </Link>
-            </p>
-          </section>
+            <section className="vl-endpoint-card">
+              <h2 style={sectionLabel}>Residency</h2>
+              <p style={{ margin: 0, fontWeight: 600, color: 'var(--brand-navy)' }}>
+                Deploy {data.residency.currentDeploy.name} ({data.residency.currentDeploy.code})
+              </p>
+              <p style={{ margin: '0.25rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
+                Pin {data.residency.dataRegion ?? 'none'} ·{' '}
+                {data.residency.matchesCurrentDeploy ? 'matches this island' : 'mismatch — use regional API'}
+              </p>
+              <p style={{ margin: '0.65rem 0 0' }}>
+                <Link href="/data" style={{ color: 'var(--action-primary)', fontWeight: 550 }}>
+                  Data & residency →
+                </Link>
+              </p>
+            </section>
+          </div>
 
-          <section>
-            <h2 style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--muted)', margin: '0 0 0.5rem' }}>
-              Feature flags
-            </h2>
+          <section className="vl-endpoint-card">
+            <h2 style={sectionLabel}>Feature flags</h2>
             <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
               {Object.entries(data.featureFlags).map(([key, on]) => (
-                <li
-                  key={key}
-                  style={{
-                    fontSize: '0.8rem',
-                    padding: '0.25rem 0.55rem',
-                    borderRadius: '0.35rem',
-                    background: on ? 'var(--bg-soft)' : 'transparent',
-                    border: '1px solid var(--line)',
-                    color: on ? 'var(--ink)' : 'var(--muted)',
-                  }}
-                >
+                <li key={key} className="vl-tag" style={{ opacity: on ? 1 : 0.55 }}>
                   {key}
                 </li>
               ))}
             </ul>
           </section>
 
-          <section style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', paddingTop: '0.5rem' }}>
-            <Link
-              href="/translate"
-              style={{
-                textDecoration: 'none',
-                padding: '0.65rem 1.1rem',
-                background: 'var(--ink)',
-                color: '#fff',
-                borderRadius: '0.45rem',
-                fontWeight: 600,
-                fontSize: '0.9rem',
-              }}
-            >
-              Translate
-            </Link>
-            <Link
-              href="/audio"
-              style={{
-                textDecoration: 'none',
-                padding: '0.65rem 1.1rem',
-                border: '1px solid var(--line)',
-                borderRadius: '0.45rem',
-                fontWeight: 600,
-                fontSize: '0.9rem',
-                color: 'var(--ink)',
-              }}
-            >
-              Voice Studio
-            </Link>
+          <section className="vl-player-bar">
+            {QUICK_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`vl-btn ${link.primary ? 'vl-btn-primary' : 'vl-btn-secondary'}`}
+                style={{ textDecoration: 'none' }}
+              >
+                {link.label}
+              </Link>
+            ))}
           </section>
         </div>
       ) : null}
     </AppShell>
   );
 }
+
+const sectionLabel: React.CSSProperties = {
+  fontSize: '0.75rem',
+  textTransform: 'uppercase',
+  letterSpacing: '0.06em',
+  color: 'var(--muted)',
+  margin: '0 0 0.55rem',
+  fontWeight: 700,
+};

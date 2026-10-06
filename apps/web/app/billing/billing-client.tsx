@@ -85,10 +85,18 @@ export function BillingClient() {
 
   return (
     <AppShell>
-      <h1 style={{ margin: 0, fontFamily: 'var(--font-display)', letterSpacing: '-0.03em', fontSize: '2rem' }}>
+      <h1
+        style={{
+          margin: 0,
+          fontFamily: 'var(--font-display)',
+          letterSpacing: '-0.03em',
+          fontSize: '2rem',
+          color: 'var(--brand-navy)',
+        }}
+      >
         Billing
       </h1>
-      <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0' }}>
+      <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0', lineHeight: 1.6, maxWidth: '40rem' }}>
         Free tier includes a monthly character quota. Upgrade to Pro for higher limits — cards stay with Stripe.
       </p>
 
@@ -97,14 +105,10 @@ export function BillingClient() {
       {summary ? (
         <div style={{ marginTop: '1.5rem', display: 'grid', gap: '1rem' }}>
           <div
-            className="vl-panel"
             style={{
-              padding: '1.35rem',
               display: 'grid',
-              gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
-              gap: '1rem',
-              background: 'var(--bg-soft)',
-              border: 'none',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(10rem, 1fr))',
+              gap: '0.75rem',
             }}
           >
             <Stat label="Plan" value={summary.planName} />
@@ -112,13 +116,13 @@ export function BillingClient() {
             <Stat label="Quota" value={`${summary.characterQuota.toLocaleString()} / mo`} />
           </div>
 
-          <div className="vl-panel" style={{ padding: '1.25rem' }}>
+          <div className="vl-endpoint-card">
             <div style={{ color: 'var(--muted)', fontSize: '0.9rem' }}>
               Status: <strong style={{ color: 'var(--ink)' }}>{summary.billingStatus}</strong>
               {' · '}
               Remaining this period: {summary.charactersRemaining.toLocaleString()} characters
             </div>
-            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1.1rem', flexWrap: 'wrap' }}>
+            <div className="vl-player-bar" style={{ marginTop: '1.1rem', border: 'none', padding: 0, background: 'transparent' }}>
               {summary.plan !== 'pro' ? (
                 <button
                   type="button"
@@ -148,11 +152,11 @@ export function BillingClient() {
             ) : null}
           </div>
 
-          <div className="vl-panel" style={{ padding: '1.25rem' }}>
-            <h2 style={{ margin: 0, fontSize: '1.1rem' }}>Members</h2>
+          <div className="vl-endpoint-card">
+            <h2 style={{ margin: 0, fontSize: '1.1rem', color: 'var(--brand-navy)' }}>Members</h2>
             <p style={{ color: 'var(--muted)', fontSize: '0.9rem', margin: '0.4rem 0 1rem' }}>
               Invite teammates in Clerk Organizations. Manage roles on{' '}
-              <a href="/identity" style={{ color: 'var(--accent)' }}>
+              <a href="/identity" style={{ color: 'var(--action-primary)' }}>
                 Identity
               </a>
               .
@@ -195,9 +199,11 @@ export function BillingClient() {
 
 function Stat({ label, value }: { label: string; value: string }) {
   return (
-    <div style={{ background: 'var(--bg)', borderRadius: 14, padding: '1rem', border: '1px solid var(--line)' }}>
-      <div style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>{label}</div>
-      <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.35rem', fontWeight: 700, marginTop: 4 }}>
+    <div className="vl-endpoint-card">
+      <div style={{ color: 'var(--muted)', fontSize: '0.8rem', fontWeight: 600, letterSpacing: '0.04em', textTransform: 'uppercase' }}>
+        {label}
+      </div>
+      <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.35rem', fontWeight: 700, marginTop: 4, color: 'var(--brand-navy)' }}>
         {value}
       </div>
     </div>

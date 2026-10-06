@@ -2,283 +2,211 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { UserButton } from '@clerk/nextjs';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { WorkspaceSwitcher } from '@/components/workspace-switcher';
 import { BrandMark } from '@/components/brand-mark';
 
-const links = [
-  { href: '/dashboard', label: 'Dashboard' },
-  { href: '/language', label: 'Language' },
-  { href: '/speech', label: 'Speech' },
-  { href: '/voice-cloud', label: 'Voice' },
-  { href: '/intelligence-cloud', label: 'Intelligence' },
-  { href: '/knowledge-cloud', label: 'Knowledge Cloud' },
-  { href: '/inference-cloud', label: 'Inference Cloud' },
-  { href: '/ai-kernel', label: 'AI Kernel' },
-  { href: '/foundation-model-cloud', label: 'Foundation Models' },
-  { href: '/model-training-platform', label: 'Training Platform' },
-  { href: '/model-evaluation-platform', label: 'Evaluation Platform' },
-  { href: '/model-registry', label: 'Model Registry' },
-  { href: '/atlas', label: 'Atlas' },
-  { href: '/ecosystem-cloud', label: 'Ecosystem' },
-  { href: '/plugin-marketplace', label: 'Plugin market' },
-  { href: '/model-marketplace', label: 'Model market' },
-  { href: '/dataset-marketplace', label: 'Dataset market' },
-  { href: '/prompt-marketplace', label: 'Prompt market' },
-  { href: '/agent-marketplace', label: 'Agent market' },
-  { href: '/workflow-marketplace', label: 'Workflow market' },
-  { href: '/connector-marketplace', label: 'Connector market' },
-  { href: '/voice-language-marketplace', label: 'Voice/Lang market' },
-  { href: '/creator-economy', label: 'Creator Economy' },
-  { href: '/african-intelligence-cloud', label: 'African Intel' },
-  { href: '/african-language-registry', label: 'Lang Registry' },
-  { href: '/cultural-intelligence', label: 'Cultural Intel' },
-  { href: '/african-knowledge-graph', label: 'Africa Graph' },
-  { href: '/government-intelligence', label: 'Gov Intel' },
-  { href: '/healthcare-intelligence', label: 'Health Intel' },
-  { href: '/financial-intelligence', label: 'Finance Intel' },
-  { href: '/education-intelligence', label: 'Edu Intel' },
-  { href: '/agricultural-intelligence', label: 'Agri Intel' },
-  { href: '/tourism-heritage-intelligence', label: 'Tourism Intel' },
-  { href: '/research-cloud', label: 'Research Cloud' },
-  { href: '/experiment-platform', label: 'Experiments' },
-  { href: '/synthetic-data-platform', label: 'Synthetic Data' },
-  { href: '/benchmark-platform', label: 'Benchmarks' },
-  { href: '/evaluation-platform', label: 'Evaluation' },
-  { href: '/ai-publication-platform', label: 'Publications' },
-  { href: '/patent-innovation-platform', label: 'Patents' },
-  { href: '/open-science-platform', label: 'Open Science' },
-  { href: '/research-analytics', label: 'Research Analytics' },
-  { href: '/mlops-llmops-cloud', label: 'MLOps Cloud' },
-  { href: '/dataset-pipeline', label: 'Dataset Pipeline' },
-  { href: '/training-pipeline', label: 'Training Pipeline' },
-  { href: '/continuous-evaluation', label: 'Continuous Eval' },
-  { href: '/promptops-platform', label: 'PromptOps' },
-  { href: '/ragops-platform', label: 'RAGOps' },
-  { href: '/agentops-platform', label: 'AgentOps' },
-  { href: '/ai-drift-detection', label: 'Drift Detection' },
-  { href: '/continuous-learning', label: 'Continuous Learning' },
-  { href: '/ai-operations-dashboard', label: 'AI Ops Dashboard' },
-  { href: '/trust-cloud', label: 'Trust Cloud' },
-  { href: '/ai-safety-platform', label: 'AI Safety' },
-  { href: '/ai-governance-platform', label: 'AI Governance' },
-  { href: '/explainability-platform', label: 'Explainability' },
-  { href: '/privacy-platform', label: 'Privacy' },
-  { href: '/compliance-platform', label: 'Compliance' },
-  { href: '/risk-intelligence', label: 'Risk Intel' },
-  { href: '/identity-federation', label: 'Identity Federation' },
-  { href: '/trust-analytics', label: 'Trust Analytics' },
-  { href: '/platform-engineering-cloud', label: 'Platform Eng' },
-  { href: '/internal-developer-portal', label: 'Dev Portal' },
-  { href: '/service-catalog', label: 'Service Catalog' },
-  { href: '/golden-path-platform', label: 'Golden Paths' },
-  { href: '/gitops-platform', label: 'GitOps' },
-  { href: '/release-engineering', label: 'Release Eng' },
-  { href: '/reliability-engineering', label: 'Reliability' },
-  { href: '/finops-platform', label: 'FinOps' },
-  { href: '/supply-chain-security', label: 'Supply Chain' },
-  { href: '/developer-experience-platform', label: 'DevEx' },
-  { href: '/platform-engineering-analytics', label: 'PE Analytics' },
-  { href: '/control-plane-cloud', label: 'Control Plane' },
-  { href: '/organization-control', label: 'Org Control' },
-  { href: '/global-configuration-platform', label: 'Global Config' },
-  { href: '/global-policy-engine', label: 'Global Policy' },
-  { href: '/global-deployment-controller', label: 'Global Deploy' },
-  { href: '/global-routing-controller', label: 'Global Routing' },
-  { href: '/secrets-certificate-platform', label: 'Secrets & Certs' },
-  { href: '/global-scheduler', label: 'Global Scheduler' },
-  { href: '/control-plane-analytics', label: 'CP Analytics' },
-  { href: '/data-plane-cloud', label: 'Data Plane' },
-  { href: '/translation-runtime', label: 'Translation Runtime' },
-  { href: '/speech-runtime', label: 'Speech Runtime' },
-  { href: '/voice-runtime', label: 'Voice Runtime' },
-  { href: '/vision-runtime', label: 'Vision Runtime' },
-  { href: '/knowledge-runtime', label: 'Knowledge Runtime' },
-  { href: '/embedding-runtime', label: 'Embedding Runtime' },
-  { href: '/data-plane-streaming', label: 'DP Streaming' },
-  { href: '/gpu-runtime', label: 'GPU Runtime' },
-  { href: '/vaios', label: 'VAIOS' },
-  { href: '/ai-scheduler', label: 'AI Scheduler' },
-  { href: '/runtime-manager', label: 'Runtime Manager' },
-  { href: '/resource-manager', label: 'Resource Manager' },
-  { href: '/workflow-operating-system', label: 'Workflow OS' },
-  { href: '/agent-operating-system', label: 'Agent OS' },
-  { href: '/ai-memory-operating-system', label: 'Memory OS' },
-  { href: '/knowledge-operating-system', label: 'Knowledge OS' },
-  { href: '/plugin-operating-system', label: 'Plugin OS' },
-  { href: '/enterprise-engineering-system', label: 'EES' },
-  { href: '/engineering-governance', label: 'Eng Governance' },
-  { href: '/architecture-governance', label: 'Arch Governance' },
-  { href: '/repository-standards', label: 'Repo Standards' },
-  { href: '/engineering-quality-platform', label: 'Eng Quality' },
-  { href: '/ai-engineering-standards', label: 'AI Eng Standards' },
-  { href: '/api-engineering-standards', label: 'API Standards' },
-  { href: '/database-engineering-standards', label: 'DB Standards' },
-  { href: '/infrastructure-engineering-standards', label: 'Infra Standards' },
-  { href: '/ai-fabric', label: 'AI Fabric' },
-  { href: '/event-fabric', label: 'Event Fabric' },
-  { href: '/context-fabric', label: 'Context Fabric' },
-  { href: '/knowledge-fabric', label: 'Knowledge Fabric' },
-  { href: '/prompt-fabric', label: 'Prompt Fabric' },
-  { href: '/reasoning-fabric', label: 'Reasoning Fabric' },
-  { href: '/memory-fabric', label: 'Memory Fabric' },
-  { href: '/agent-fabric', label: 'Agent Fabric' },
-  { href: '/policy-fabric', label: 'Policy Fabric' },
-  { href: '/memory-runtime', label: 'Memory Runtime' },
-  { href: '/prompt-runtime', label: 'Prompt Runtime' },
-  { href: '/context-runtime', label: 'Context Runtime' },
-  { href: '/reasoning-runtime', label: 'Reasoning Runtime' },
-  { href: '/agent-runtime', label: 'Agent Runtime' },
-  { href: '/workflow-runtime', label: 'Workflow Runtime' },
-  { href: '/plugin-runtime', label: 'Plugin Runtime' },
-  { href: '/policy-runtime', label: 'Policy Runtime' },
-  { href: '/gpu-platform', label: 'GPU Platform' },
-  { href: '/model-serving', label: 'Model Serving' },
-  { href: '/ai-router', label: 'AI Router' },
-  { href: '/streaming-runtime', label: 'Streaming Runtime' },
-  { href: '/batch-runtime', label: 'Batch Runtime' },
-  { href: '/intelligent-cache', label: 'Intelligent Cache' },
-  { href: '/cost-optimization', label: 'Cost Optimization' },
-  { href: '/ai-runtime-analytics', label: 'Runtime Analytics' },
-  { href: '/knowledge-base', label: 'Knowledge Base' },
-  { href: '/enterprise-search', label: 'Enterprise Search' },
-  { href: '/ontology', label: 'Ontology' },
-  { href: '/taxonomy', label: 'Taxonomy' },
-  { href: '/enterprise-rag', label: 'Enterprise RAG' },
-  { href: '/knowledge-memory', label: 'Knowledge Memory' },
-  { href: '/knowledge-intelligence', label: 'Knowledge Intel' },
-  { href: '/knowledge-apis', label: 'Knowledge APIs' },
-  { href: '/knowledge-analytics', label: 'Knowledge Analytics' },
-  { href: '/embedding-cloud', label: 'Embeddings' },
-  { href: '/vector-cloud', label: 'Vectors' },
-  { href: '/memory-cloud', label: 'Memory' },
-  { href: '/knowledge-graph', label: 'Knowledge Graph' },
-  { href: '/context-engine', label: 'Context' },
-  { href: '/reasoning-cloud', label: 'Reasoning' },
-  { href: '/recommendation-engine', label: 'Recommend' },
-  { href: '/prompt-intelligence', label: 'Prompt Intel' },
-  { href: '/decision-engine', label: 'Decisions' },
-  { href: '/ai-orchestration', label: 'Orchestration' },
-  { href: '/intelligence-analytics', label: 'Intel Analytics' },
-  { href: '/neural-tts', label: 'Neural TTS' },
-  { href: '/voice-cloning', label: 'Cloning' },
-  { href: '/emotion-voice', label: 'Emotion Voice' },
-  { href: '/speech-recognition', label: 'STT Engine' },
-  { href: '/voice-biometrics', label: 'Biometrics' },
-  { href: '/speaker-intelligence', label: 'Speakers' },
-  { href: '/accent-intelligence', label: 'Accent AI' },
-  { href: '/emotion-intelligence', label: 'Emotion AI' },
-  { href: '/voice-enhancement', label: 'Enhancement' },
-  { href: '/audio-intelligence', label: 'Audio AI' },
-  { href: '/pronunciation-intelligence', label: 'Pronunciation' },
-  { href: '/wake-word', label: 'Wake Word' },
-  { href: '/call-intelligence', label: 'Calls' },
-  { href: '/speech-analytics', label: 'Speech Analytics' },
-  { href: '/language-intelligence', label: 'Lang Intel' },
-  { href: '/registry', label: 'Registry' },
-  { href: '/dialects', label: 'Dialects' },
-  { href: '/accents', label: 'Accents' },
-  { href: '/grammar', label: 'Grammar' },
-  { href: '/grammar-intelligence', label: 'Grammar AI' },
-  { href: '/style', label: 'Style' },
-  { href: '/style-intelligence', label: 'Style AI' },
-  { href: '/countries', label: 'Countries' },
-  { href: '/graphql', label: 'GraphQL' },
-  { href: '/developers', label: 'Developers' },
-  { href: '/enterprise', label: 'Enterprise' },
-  { href: '/gateway', label: 'AI Gateway' },
-  { href: '/identity', label: 'Identity' },
-  { href: '/chat', label: 'Chat' },
-  { href: '/prompts', label: 'Prompts' },
-  { href: '/knowledge', label: 'Knowledge' },
-  { href: '/datasets', label: 'Datasets' },
-  { href: '/finetunes', label: 'Fine-tunes' },
-  { href: '/models', label: 'Models' },
-  { href: '/coverage', label: 'Coverage' },
-  { href: '/interpret', label: 'Interpreter' },
-  { href: '/voice', label: 'Voice FAQ' },
-  { href: '/translate', label: 'Translate' },
-  { href: '/translate/formats', label: 'Formats' },
-  { href: '/locales', label: 'Locales' },
-  { href: '/glossary', label: 'Glossary' },
-  { href: '/voice-marketplace', label: 'Voice market' },
-  { href: '/voice-analytics', label: 'Voice Analytics' },
-  { href: '/marketplace', label: 'Marketplace' },
-  { href: '/tm', label: 'TM' },
-  { href: '/reviews', label: 'Reviews' },
-  { href: '/localize', label: 'Localize' },
-  { href: '/localization', label: 'L10n' },
-  { href: '/documents', label: 'Documents' },
-  { href: '/ocr', label: 'OCR' },
-  { href: '/voice-studio', label: 'Voice Studio' },
-  { href: '/audio', label: 'Audio studio' },
-  { href: '/playground', label: 'Playground' },
-  { href: '/connectors', label: 'Connectors' },
-  { href: '/workflows', label: 'Workflows' },
-  { href: '/keys', label: 'API keys' },
-  { href: '/usage', label: 'Usage' },
-  { href: '/analytics', label: 'Analytics' },
-  { href: '/billing', label: 'Billing' },
-  { href: '/data', label: 'Data' },
-  { href: '/audit', label: 'Audit' },
-  { href: '/admin', label: 'Admin' },
-  { href: '/docs', label: 'Docs' },
+type NavLink = { href: string; label: string };
+
+type NavGroup = {
+  id: string;
+  label: string;
+  links: NavLink[];
+};
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    id: 'voice',
+    label: 'Voice & audio',
+    links: [
+      { href: '/audio', label: 'Voice Studio' },
+      { href: '/speech', label: 'Speech' },
+      { href: '/voice-cloud', label: 'Voice Cloud' },
+      { href: '/neural-tts', label: 'Neural TTS' },
+      { href: '/voice-cloning', label: 'Voice cloning' },
+      { href: '/speech-recognition', label: 'Speech recognition' },
+      { href: '/voice-marketplace', label: 'Voice marketplace' },
+      { href: '/interpret', label: 'Interpreter' },
+      { href: '/voice', label: 'Voice FAQ' },
+    ],
+  },
+  {
+    id: 'translation',
+    label: 'Translation & localization',
+    links: [
+      { href: '/translate', label: 'Translate' },
+      { href: '/translate/formats', label: 'Formats' },
+      { href: '/localize', label: 'Localize' },
+      { href: '/localization', label: 'Localization' },
+      { href: '/glossary', label: 'Glossary' },
+      { href: '/tm', label: 'Translation memory' },
+      { href: '/reviews', label: 'Reviews' },
+      { href: '/documents', label: 'Documents' },
+      { href: '/ocr', label: 'OCR' },
+      { href: '/language', label: 'Language' },
+      { href: '/coverage', label: 'Coverage' },
+      { href: '/locales', label: 'Locales' },
+    ],
+  },
+  {
+    id: 'knowledge',
+    label: 'Knowledge & agents',
+    links: [
+      { href: '/knowledge', label: 'Knowledge' },
+      { href: '/knowledge-cloud', label: 'Knowledge Cloud' },
+      { href: '/knowledge-base', label: 'Knowledge base' },
+      { href: '/chat', label: 'Chat' },
+      { href: '/prompts', label: 'Prompts' },
+      { href: '/datasets', label: 'Datasets' },
+      { href: '/models', label: 'Models' },
+      { href: '/workflows', label: 'Workflows' },
+      { href: '/connectors', label: 'Connectors' },
+      { href: '/intelligence-cloud', label: 'Intelligence' },
+    ],
+  },
+  {
+    id: 'developer',
+    label: 'Developer tools',
+    links: [
+      { href: '/developers', label: 'Developers' },
+      { href: '/playground', label: 'Playground' },
+      { href: '/docs', label: 'Docs' },
+      { href: '/keys', label: 'API keys' },
+      { href: '/graphql', label: 'GraphQL' },
+      { href: '/usage', label: 'Usage' },
+      { href: '/analytics', label: 'Analytics' },
+      { href: '/gateway', label: 'AI Gateway' },
+    ],
+  },
+  {
+    id: 'admin',
+    label: 'Admin & workspace',
+    links: [
+      { href: '/dashboard', label: 'Dashboard' },
+      { href: '/billing', label: 'Billing' },
+      { href: '/data', label: 'Data & residency' },
+      { href: '/audit', label: 'Audit' },
+      { href: '/admin', label: 'Admin' },
+      { href: '/enterprise', label: 'Enterprise' },
+      { href: '/identity', label: 'Identity' },
+    ],
+  },
 ];
+
+function groupContainsPath(group: NavGroup, pathname: string) {
+  return group.links.some(
+    (link) => pathname === link.href || pathname.startsWith(`${link.href}/`),
+  );
+}
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [navOpen, setNavOpen] = useState(false);
+  const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
+    const initial: Record<string, boolean> = {};
+    for (const group of NAV_GROUPS) {
+      initial[group.id] = groupContainsPath(group, pathname) || group.id === 'developer' || group.id === 'admin';
+    }
+    return initial;
+  });
+
+  useEffect(() => {
+    setOpenGroups((prev) => {
+      const next = { ...prev };
+      for (const group of NAV_GROUPS) {
+        if (groupContainsPath(group, pathname)) next[group.id] = true;
+      }
+      return next;
+    });
+    setNavOpen(false);
+  }, [pathname]);
+
+  function toggleGroup(id: string) {
+    setOpenGroups((prev) => ({ ...prev, [id]: !prev[id] }));
+  }
 
   return (
-    <div style={{ minHeight: '100vh' }}>
-      <header
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gap: '1rem',
-          padding: '0.9rem 1.5rem',
-          borderBottom: '1px solid var(--line)',
-          background: 'rgba(255,255,255,0.86)',
-          backdropFilter: 'blur(12px)',
-          position: 'sticky',
-          top: 0,
-          zIndex: 10,
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.75rem' }}>
+    <div className="vl-console">
+      <header className="vl-console-header">
+        <div className="vl-console-header-left">
+          <button
+            type="button"
+            className="vl-console-menu-btn"
+            aria-expanded={navOpen}
+            aria-controls="vl-console-nav"
+            onClick={() => setNavOpen((v) => !v)}
+          >
+            Menu
+          </button>
           <BrandMark href="/dashboard" />
-          <nav style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap' }}>
-            {links.map((link) => {
-              const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
-              return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  style={{
-                    textDecoration: 'none',
-                    fontSize: '0.9rem',
-                    padding: '0.45rem 0.8rem',
-                    borderRadius: '999px',
-                    color: active ? 'var(--ink)' : 'var(--muted)',
-                    background: active ? 'var(--bg-soft)' : 'transparent',
-                    fontWeight: active ? 600 : 500,
-                  }}
-                >
-                  {link.label}
-                </Link>
-              );
-            })}
-          </nav>
+          <span className="vl-console-product-label">Studio</span>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem' }}>
+        <div className="vl-console-header-right">
           <WorkspaceSwitcher />
           {isClerkConfigured() ? <UserButton afterSignOutUrl="/" /> : null}
         </div>
       </header>
-      <main className="vl-fade-up" style={{ maxWidth: '56rem', margin: '0 auto', padding: '2.25rem 1.5rem 4rem' }}>
-        {children}
-      </main>
+
+      <div className="vl-console-body">
+        <aside
+          id="vl-console-nav"
+          className={`vl-console-sidebar${navOpen ? ' is-open' : ''}`}
+          aria-label="Console navigation"
+        >
+          <nav className="vl-console-nav">
+            {NAV_GROUPS.map((group) => {
+              const expanded = openGroups[group.id] ?? false;
+              const groupActive = groupContainsPath(group, pathname);
+              return (
+                <div key={group.id} className="vl-console-nav-group">
+                  <button
+                    type="button"
+                    className={`vl-console-nav-group-btn${groupActive ? ' is-active' : ''}`}
+                    aria-expanded={expanded}
+                    onClick={() => toggleGroup(group.id)}
+                  >
+                    <span>{group.label}</span>
+                    <span className="vl-console-chevron" aria-hidden="true">
+                      {expanded ? '▾' : '▸'}
+                    </span>
+                  </button>
+                  {expanded ? (
+                    <ul className="vl-console-nav-list">
+                      {group.links.map((link) => {
+                        const active =
+                          pathname === link.href || pathname.startsWith(`${link.href}/`);
+                        return (
+                          <li key={link.href}>
+                            <Link
+                              href={link.href}
+                              className={`vl-console-nav-link${active ? ' is-active' : ''}`}
+                            >
+                              {link.label}
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  ) : null}
+                </div>
+              );
+            })}
+          </nav>
+        </aside>
+
+        {navOpen ? (
+          <button
+            type="button"
+            className="vl-console-backdrop"
+            aria-label="Close navigation"
+            onClick={() => setNavOpen(false)}
+          />
+        ) : null}
+
+        <main className="vl-console-main vl-fade-up">{children}</main>
+      </div>
     </div>
   );
 }

@@ -1,9 +1,11 @@
 'use client';
 
+import Link from 'next/link';
 import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { CodePanel } from '@/components/code-panel';
 
 type ApiKeyRow = {
   id: string;
@@ -69,34 +71,47 @@ export function KeysClient() {
 
   return (
     <AppShell>
-      <h1 style={{ margin: 0, fontFamily: 'var(--font-display)', letterSpacing: '-0.03em', fontSize: '2rem' }}>
+      <p className="vl-tag" style={{ margin: 0 }}>
+        Lugemi API
+      </p>
+      <h1
+        style={{
+          margin: '0.55rem 0 0',
+          fontFamily: 'var(--font-display)',
+          letterSpacing: '-0.03em',
+          fontSize: '2rem',
+          color: 'var(--brand-navy)',
+        }}
+      >
         API keys
       </h1>
-      <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0' }}>
+      <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0', lineHeight: 1.6, maxWidth: '40rem' }}>
         Secrets are shown once. Use <code className="vl-code">vl_live_</code> or soft-sandbox{' '}
         <code className="vl-code">vl_test_</code> (same cluster & quota). See{' '}
-        <a href="/developers" style={{ color: 'var(--accent)' }}>
+        <Link href="/developers" style={{ color: 'var(--action-primary)' }}>
           Developers
-        </a>
+        </Link>
         .
       </p>
 
       <form
         onSubmit={onCreate}
-        style={{ display: 'flex', gap: '0.75rem', margin: '1.5rem 0', flexWrap: 'wrap', alignItems: 'center' }}
+        className="vl-player-bar"
+        style={{ margin: '1.5rem 0', alignItems: 'stretch' }}
       >
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Key name"
           className="vl-field"
+          style={{ flex: '1 1 10rem', minWidth: '8rem' }}
           required
         />
         <select
           className="vl-field"
           value={environment}
           onChange={(e) => setEnvironment(e.target.value as 'live' | 'test')}
-          style={{ width: 'auto' }}
+          style={{ width: 'auto', minWidth: '10rem' }}
         >
           <option value="live">live (vl_live_)</option>
           <option value="test">test (vl_test_)</option>
@@ -107,11 +122,11 @@ export function KeysClient() {
       </form>
 
       {secretOnce ? (
-        <div className="vl-panel" style={{ padding: '1rem', marginBottom: '1rem', background: 'var(--brand-soft)', border: 'none' }}>
-          <strong>Copy now — shown once</strong>
-          <div className="vl-code" style={{ marginTop: '0.5rem', wordBreak: 'break-all' }}>
-            {secretOnce}
-          </div>
+        <div style={{ marginBottom: '1rem' }}>
+          <p style={{ margin: '0 0 0.5rem', fontWeight: 600, color: 'var(--brand-navy)' }}>
+            Copy now — shown once
+          </p>
+          <CodePanel code={secretOnce} label="Secret" />
         </div>
       ) : null}
 
@@ -126,23 +141,22 @@ export function KeysClient() {
           {keys.map((key) => (
             <li
               key={key.id}
-              className="vl-panel"
+              className="vl-endpoint-card"
               style={{
                 display: 'flex',
                 justifyContent: 'space-between',
                 gap: '1rem',
-                padding: '0.95rem 1.05rem',
                 alignItems: 'center',
               }}
             >
               <div>
-                <div style={{ fontWeight: 600 }}>
+                <div style={{ fontWeight: 600, color: 'var(--brand-navy)' }}>
                   {key.name}{' '}
-                  <span style={{ fontWeight: 500, color: 'var(--muted)', fontSize: '0.85rem' }}>
-                    · {key.environment}
+                  <span className="vl-tag" style={{ marginLeft: '0.35rem' }}>
+                    {key.environment}
                   </span>
                 </div>
-                <div className="vl-code" style={{ color: 'var(--muted)', marginTop: '0.2rem' }}>
+                <div className="vl-code" style={{ color: 'var(--muted)', marginTop: '0.35rem' }}>
                   {key.prefix}…{key.revokedAt ? ' · revoked' : ''}
                   {key.lastUsedAt ? ` · last used ${new Date(key.lastUsedAt).toLocaleString()}` : ' · never used'}
                 </div>

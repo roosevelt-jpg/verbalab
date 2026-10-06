@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { FormEvent, useEffect, useState } from 'react';
 import { API_URL, apiFetch } from '@/lib/api';
 import { BrandMark } from '@/components/brand-mark';
+import { CodePanel } from '@/components/code-panel';
 
 type Language = { code: string; name: string };
 type Mode = 'translate' | 'detect' | 'languages';
@@ -79,27 +80,25 @@ export function PlaygroundClient() {
   }
 
   return (
-    <div className="vl-fade-up" style={{ maxWidth: '56rem', margin: '0 auto', padding: '2.25rem 1.5rem 4rem' }}>
+    <div className="vl-api-public vl-fade-up">
       <PublicHeader />
-      <h1 style={{ margin: '1.5rem 0 0', fontFamily: 'var(--font-display)', letterSpacing: '-0.03em', fontSize: '2rem' }}>
+      <p className="vl-tag" style={{ margin: '1.35rem 0 0' }}>
+        Lugemi API
+      </p>
+      <h1 style={{ margin: '0.55rem 0 0', fontFamily: 'var(--font-display)', letterSpacing: '-0.03em', fontSize: '2rem', color: 'var(--brand-navy)' }}>
         API playground
       </h1>
-      <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0' }}>
-        Explore translate, detect, and languages. No Clerk session required for API-key calls.
+      <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0', maxWidth: '38rem', lineHeight: 1.6 }}>
+        Try translate, detect, and languages against the Lugemi API. No Clerk session required for API-key calls.
       </p>
 
-      <div style={{ display: 'flex', gap: '0.4rem', marginTop: '1.25rem', flexWrap: 'wrap' }}>
+      <div className="vl-player-bar" style={{ marginTop: '1.25rem' }}>
         {(['translate', 'detect', 'languages'] as Mode[]).map((m) => (
           <button
             key={m}
             type="button"
             onClick={() => setMode(m)}
-            className="vl-btn"
-            style={{
-              background: mode === m ? 'var(--ink)' : 'transparent',
-              color: mode === m ? '#fff' : 'var(--muted)',
-              border: '1px solid var(--line)',
-            }}
+            className={`vl-mode-tab${mode === m ? ' is-active' : ''}`}
           >
             {m}
           </button>
@@ -107,6 +106,15 @@ export function PlaygroundClient() {
       </div>
 
       <form onSubmit={onSubmit} className="vl-panel" style={{ marginTop: '1rem', padding: '1.35rem', display: 'grid', gap: '1rem' }}>
+        <div style={{ marginBottom: '-0.25rem' }}>
+          <span className="vl-endpoint-method">
+            {mode === 'languages' ? 'GET' : 'POST'}
+          </span>
+          <span className="vl-endpoint-path">
+            {mode === 'languages' ? '/v1/languages' : mode === 'detect' ? '/v1/detect' : '/v1/translate'}
+          </span>
+        </div>
+
         {mode !== 'languages' ? (
           <label className="vl-label">
             API key
@@ -159,22 +167,18 @@ export function PlaygroundClient() {
           <p style={{ margin: 0, color: 'var(--muted)' }}>Public language registry — no API key required.</p>
         )}
 
-        <button type="submit" className="vl-btn vl-btn-primary" disabled={loading} style={{ justifySelf: 'start' }}>
-          {loading ? 'Sending…' : 'Send request'}
-        </button>
+        <div className="vl-player-bar" style={{ border: 'none', padding: 0, background: 'transparent' }}>
+          <button type="submit" className="vl-btn vl-btn-primary" disabled={loading}>
+            {loading ? 'Sending…' : 'Send request'}
+          </button>
+        </div>
       </form>
 
       {error ? <p style={{ color: 'var(--bad)' }}>{error}</p> : null}
 
       <div style={{ display: 'grid', gap: '1rem', marginTop: '1.25rem' }}>
-        <pre className="vl-panel vl-code" style={{ margin: 0, padding: '1rem', overflow: 'auto', background: 'var(--bg-soft)', border: 'none' }}>
-          {curl}
-        </pre>
-        {response ? (
-          <pre className="vl-panel vl-code" style={{ margin: 0, padding: '1rem', overflow: 'auto' }}>
-            {response}
-          </pre>
-        ) : null}
+        <CodePanel code={curl} label="cURL" />
+        {response ? <CodePanel code={response} label="Response" /> : null}
       </div>
     </div>
   );
@@ -182,16 +186,12 @@ export function PlaygroundClient() {
 
 function PublicHeader() {
   return (
-    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
+    <div className="vl-api-public-header">
       <BrandMark href="/" />
-      <div style={{ display: 'flex', gap: '0.75rem' }}>
-        <Link href="/docs" style={{ color: 'var(--muted)', textDecoration: 'none' }}>
-          Docs
-        </Link>
-        <Link href="/developers" style={{ color: 'var(--muted)', textDecoration: 'none' }}>
-          Developers
-        </Link>
-        <Link href="/dashboard" className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none', padding: '0.45rem 0.9rem' }}>
+      <div className="vl-api-public-links">
+        <Link href="/docs">Docs</Link>
+        <Link href="/developers">Developers</Link>
+        <Link href="/dashboard" className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none', padding: '0.45rem 0.9rem', minHeight: 40 }}>
           Console
         </Link>
       </div>
