@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
 import { useCallback, useEffect, useId, useState } from 'react';
 import { apiFetch } from '@/lib/api';
+import { isClerkConfigured } from '@/lib/clerk-config';
 import {
   FEATURE_LABELS,
   WEB_BILLING_PLANS,
@@ -84,8 +85,45 @@ function cellValue(plan: PlanCard, row: (typeof COMPARE_ROWS)[number]): string {
   return plan.features.includes(row.key) ? 'Yes' : '—';
 }
 
+type AuthBag = {
+  getToken: () => Promise<string | null>;
+  isLoaded: boolean;
+  isSignedIn: boolean;
+};
+
+/** Public entry — avoids useAuth crash when ClerkProvider is not mounted. */
 export function PricingClient({ brandName }: { brandName: string }) {
+  if (!isClerkConfigured()) {
+    return (
+      <PricingFlow
+        brandName={brandName}
+        getToken={async () => null}
+        isLoaded
+        isSignedIn={false}
+      />
+    );
+  }
+  return <PricingClientAuthed brandName={brandName} />;
+}
+
+function PricingClientAuthed({ brandName }: { brandName: string }) {
   const { getToken, isLoaded, isSignedIn } = useAuth();
+  return (
+    <PricingFlow
+      brandName={brandName}
+      getToken={async () => (await getToken()) ?? null}
+      isLoaded={isLoaded}
+      isSignedIn={Boolean(isSignedIn)}
+    />
+  );
+}
+
+function PricingFlow({
+  brandName,
+  getToken,
+  isLoaded,
+  isSignedIn,
+}: { brandName: string } & AuthBag) {
   const [plans, setPlans] = useState<PlanCard[]>(WEB_BILLING_PLANS);
   const [summary, setSummary] = useState<BillingLite | null>(null);
   const [loading, setLoading] = useState(true);

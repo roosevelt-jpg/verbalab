@@ -26,7 +26,13 @@ type WorkspaceEntitlements = {
   unlimited: boolean;
 };
 
+/** Shell entry — never call useAuth when ClerkProvider is absent. */
 export function WorkspaceSwitcher() {
+  if (!isClerkConfigured()) return null;
+  return <WorkspaceSwitcherAuthed />;
+}
+
+function WorkspaceSwitcherAuthed() {
   const { getToken, isLoaded } = useAuth();
   const [workspaces, setWorkspaces] = useState<WorkspaceRow[]>([]);
   const [entitlements, setEntitlements] = useState<WorkspaceEntitlements | null>(null);
@@ -34,7 +40,6 @@ export function WorkspaceSwitcher() {
   const [creating, setCreating] = useState(false);
 
   const load = useCallback(async () => {
-    if (!isClerkConfigured()) return;
     const token = await getToken();
     if (!token) return;
     const res = await apiFetch<{ data: WorkspaceRow[]; entitlements?: WorkspaceEntitlements }>(
@@ -62,7 +67,7 @@ export function WorkspaceSwitcher() {
     });
   }, [isLoaded, load]);
 
-  if (!isClerkConfigured() || workspaces.length === 0) return null;
+  if (workspaces.length === 0) return null;
 
   async function onChange(id: string) {
     setSelected(id);
