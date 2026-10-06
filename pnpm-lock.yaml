@@ -93,6 +93,12 @@ importers:
         specifier: ^2.9.0
         version: 2.9.0
     devDependencies:
+      '@lugemi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@lugemi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       '@nestjs/cli':
         specifier: ^10.4.9
         version: 10.4.9(@swc/cli@0.8.1(@swc/core@1.16.2)(chokidar@3.6.0))(@swc/core@1.16.2)(esbuild@0.21.5)(lightningcss@1.32.0)
@@ -120,12 +126,6 @@ importers:
       '@types/supertest':
         specifier: ^6.0.2
         version: 6.0.3
-      '@verbalab/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@verbalab/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
       eslint:
         specifier: ^9.17.0
         version: 9.39.5(jiti@2.7.0)
@@ -166,6 +166,12 @@ importers:
         specifier: ^19.0.0
         version: 19.2.8(react@19.2.8)
     devDependencies:
+      '@lugemi/eslint-config':
+        specifier: workspace:*
+        version: link:../../packages/eslint-config
+      '@lugemi/typescript-config':
+        specifier: workspace:*
+        version: link:../../packages/typescript-config
       '@playwright/test':
         specifier: ^1.51.0
         version: 1.63.0
@@ -181,12 +187,6 @@ importers:
       '@types/react-dom':
         specifier: ^19.0.2
         version: 19.2.7(@types/react@19.2.18)
-      '@verbalab/eslint-config':
-        specifier: workspace:*
-        version: link:../../packages/eslint-config
-      '@verbalab/typescript-config':
-        specifier: workspace:*
-        version: link:../../packages/typescript-config
       eslint:
         specifier: ^9.17.0
         version: 9.39.5(jiti@2.7.0)
@@ -202,19 +202,19 @@ importers:
 
   packages/cli:
     dependencies:
-      '@verbalab/sdk':
+      '@lugemi/sdk':
         specifier: workspace:*
         version: link:../sdk
     devDependencies:
+      '@lugemi/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@lugemi/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       '@types/node':
         specifier: ^22.10.2
         version: 22.20.1
-      '@verbalab/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@verbalab/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
       eslint:
         specifier: ^9.17.0
         version: 9.39.5(jiti@2.7.0)
@@ -248,15 +248,15 @@ importers:
 
   packages/sdk:
     devDependencies:
+      '@lugemi/eslint-config':
+        specifier: workspace:*
+        version: link:../eslint-config
+      '@lugemi/typescript-config':
+        specifier: workspace:*
+        version: link:../typescript-config
       '@types/node':
         specifier: ^22.10.2
         version: 22.20.1
-      '@verbalab/eslint-config':
-        specifier: workspace:*
-        version: link:../eslint-config
-      '@verbalab/typescript-config':
-        specifier: workspace:*
-        version: link:../typescript-config
       eslint:
         specifier: ^9.17.0
         version: 9.39.5(jiti@2.7.0)
