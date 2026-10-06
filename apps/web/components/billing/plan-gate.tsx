@@ -63,7 +63,7 @@ export function PlanGate({
         }}
       >
         {headline}.{' '}
-        <Link href="/billing" style={{ color: 'var(--action-primary)', fontWeight: 600 }}>
+        <Link href="/pricing" style={{ color: 'var(--action-primary)', fontWeight: 600 }}>
           Upgrade →
         </Link>
       </p>
@@ -84,10 +84,10 @@ export function PlanGate({
       <h3 style={{ margin: 0, fontSize: '1.05rem', color: 'var(--brand-navy)' }}>{headline}</h3>
       <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.55 }}>
         Your workspace inherits the {plan.name} subscription. Unlock {featureName.toLowerCase()} by
-        upgrading under Billing.
+        upgrading under Pricing.
       </p>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-        <Link href="/billing" className="vl-btn vl-btn-primary" style={{ textDecoration: 'none' }}>
+        <Link href="/pricing" className="vl-btn vl-btn-primary" style={{ textDecoration: 'none' }}>
           View plans
         </Link>
         {children}

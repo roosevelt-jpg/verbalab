@@ -34,6 +34,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/data', label: 'Data & branding' },
       { href: '/connectors', label: 'Connectors' },
       { href: '/billing', label: 'Billing' },
+      { href: '/pricing', label: 'Pricing' },
     ],
   },
   {

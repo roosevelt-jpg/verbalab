@@ -228,6 +228,11 @@ export function BillingClient() {
       <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0', lineHeight: 1.6, maxWidth: '42rem' }}>
         Each workspace inherits your subscription. Plans:
         Free → Pro → Business → Enterprise. Features and workspace seats unlock with your plan.
+        Prefer a marketing view? See{' '}
+        <a href="/pricing" style={{ color: 'var(--action-primary)', fontWeight: 600, textDecoration: 'none' }}>
+          Pricing
+        </a>
+        .
       </p>
 
       {usingLocalBilling ? (

@@ -479,6 +479,7 @@ export const CMS_DEFAULTS: CmsDocument = {
         title: 'Company',
         links: [
           { label: 'About', href: '/p/about' },
+          { label: 'Pricing', href: '/pricing' },
           { label: 'Log in', href: '/sign-in' },
           { label: 'Safety', href: '/p/safety' },
           { label: 'Legal integrity', href: '/p/legal-integrity' },

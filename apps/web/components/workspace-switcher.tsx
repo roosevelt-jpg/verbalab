@@ -152,7 +152,7 @@ export function WorkspaceSwitcher() {
       </button>
       {atLimit ? (
         <Link
-          href="/billing"
+          href="/pricing"
           style={{ fontSize: '0.7rem', color: 'var(--action-primary)', fontWeight: 600, whiteSpace: 'nowrap' }}
         >
           Upgrade
