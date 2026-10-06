@@ -77,7 +77,7 @@ export function CountriesClient() {
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.5rem', maxWidth: '42rem' }}>
         {engine?.note ??
-          'ISO country guidance that composes language locale packs. Curated African-priority set — not a CLDR dump or billing SKU catalog.'}
+          'Full ISO country catalog with Africa-first guidance. Composes language locale packs where seeded — not a CLDR dump of every dialect or billing SKU catalog.'}
       </p>
 
       <label className="vl-label" style={{ marginBottom: '1rem', display: 'grid', maxWidth: '20rem' }}>
@@ -90,6 +90,11 @@ export function CountriesClient() {
         />
       </label>
 
+      {packs.length > 0 ? (
+        <p style={{ color: 'var(--muted)', fontSize: '0.9rem', margin: '0 0 0.75rem' }}>
+          Showing {packs.length} countr{packs.length === 1 ? 'y' : 'ies'}
+        </p>
+      ) : null}
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
 
       <ul style={{ margin: '0 0 1.75rem', padding: 0, listStyle: 'none', display: 'grid', gap: '0.55rem' }}>

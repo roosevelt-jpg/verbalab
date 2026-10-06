@@ -2,6 +2,7 @@
  * Accent Identity Packs — tribe/culture/religion-linked speech identity for Lugemi Echo Voice demos.
  * Plain-text metadata; pronunciation markers are illustrative, not phonetic transcriptions.
  */
+import { ISO_COUNTRY_BY_CODE, isoCountryName } from '../country-packs/iso-countries';
 export type AccentIdentitySeed = {
   id: string;
   nameEn: string;
@@ -626,32 +627,10 @@ export const ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
   },
 ];
 
-export const COUNTRY_LABELS: Record<string, string> = {
-  GH: 'Ghana',
-  NG: 'Nigeria',
-  PH: 'Philippines',
-  ZA: 'South Africa',
-  KE: 'Kenya',
-  SN: 'Senegal',
-  EG: 'Egypt',
-  ET: 'Ethiopia',
-  TH: 'Thailand',
-  VN: 'Vietnam',
-  MY: 'Malaysia',
-  ID: 'Indonesia',
-  SA: 'Saudi Arabia',
-  LB: 'Lebanon',
-  GB: 'United Kingdom',
-  US: 'United States',
-  MX: 'Mexico',
-  BR: 'Brazil',
-  HT: 'Haiti',
-  TZ: 'Tanzania',
-  CI: "Côte d'Ivoire",
-  CM: 'Cameroon',
-  RW: 'Rwanda',
-  AO: 'Angola',
-};
+/** Full ISO labels for accent identity filters. */
+export const COUNTRY_LABELS: Record<string, string> = Object.fromEntries(
+  Object.keys(ISO_COUNTRY_BY_CODE).map((code) => [code, isoCountryName(code)]),
+);
 
 export function countryFlag(country: string): string {
   const code = country.toUpperCase();

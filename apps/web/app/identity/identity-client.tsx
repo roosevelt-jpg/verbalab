@@ -5,6 +5,7 @@ import { useAuth } from '@clerk/nextjs';
 import { useCallback, useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { CountrySelect } from '@/components/country-select';
 
 type MemberRow = {
   id: string;
@@ -252,14 +253,14 @@ export function IdentityClient() {
               <div className="vl-panel" style={{ padding: '1rem' }}>
                 <div style={{ fontWeight: 650 }}>Your profile</div>
                 <p style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>Registered from {data.profile?.registeredFrom ?? '—'}</p>
-                <input className="vl-field" value={residencyCountry} onChange={(e) => setResidencyCountry(e.target.value.toUpperCase())} placeholder="Country ISO" maxLength={2} style={{ marginBottom: '0.5rem', width: '100%' }} />
+                <CountrySelect value={residencyCountry} onChange={setResidencyCountry} emptyLabel="Residency country" style={{ marginBottom: '0.5rem', width: '100%' }} />
                 <input className="vl-field" value={residencyRegion} onChange={(e) => setResidencyRegion(e.target.value)} placeholder="Region label" style={{ marginBottom: '0.75rem', width: '100%' }} />
                 <button type="button" className="vl-btn vl-btn-primary" disabled={busyId === 'user-residency'} onClick={() => void saveUserResidency()}>Save my residency</button>
               </div>
               <div className="vl-panel" style={{ padding: '1rem' }}>
                 <div style={{ fontWeight: 650 }}>Organization</div>
                 <p style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>Registered from {data.organization.registeredFrom ?? '—'}</p>
-                <input className="vl-field" value={orgResidencyCountry} onChange={(e) => setOrgResidencyCountry(e.target.value.toUpperCase())} placeholder="Country ISO" maxLength={2} disabled={!canManage} style={{ marginBottom: '0.5rem', width: '100%' }} />
+                <CountrySelect value={orgResidencyCountry} onChange={setOrgResidencyCountry} disabled={!canManage} emptyLabel="Org residency country" style={{ marginBottom: '0.5rem', width: '100%' }} />
                 <input className="vl-field" value={orgResidencyRegion} onChange={(e) => setOrgResidencyRegion(e.target.value)} placeholder="Region label" disabled={!canManage} style={{ marginBottom: '0.75rem', width: '100%' }} />
                 {canManage ? <button type="button" className="vl-btn vl-btn-primary" disabled={busyId === 'org-residency'} onClick={() => void saveOrgResidency()}>Save org residency</button> : <p style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>Owners/admins edit org residency.</p>}
               </div>
