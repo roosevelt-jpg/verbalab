@@ -48,11 +48,11 @@ export class AccentsController {
   }
 
   @Get()
-  list(
+  async list(
     @Query('language') language?: string,
     @Query('includeIdentity') includeIdentity?: string,
   ) {
-    const base = this.accents.list(language?.trim() || undefined);
+    const base = await this.accents.list(language?.trim() || undefined);
     if (includeIdentity === 'true' || includeIdentity === '1') {
       const identity = this.identity.list({ language: language?.trim() });
       return { ...base, identityPacks: identity.data, identityCount: identity.count };

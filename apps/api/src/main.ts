@@ -18,11 +18,19 @@ async function bootstrap() {
     'https://www.lugemi.com',
     'https://api.lugemi.com',
   ];
+  // Local Studio (:43125) + legacy Next (:3000) — keep reachable even if CORS_ORIGIN is incomplete.
+  const localStudioCorsOrigins = [
+    'http://127.0.0.1:43125',
+    'http://localhost:43125',
+    'http://127.0.0.1:3000',
+    'http://localhost:3000',
+  ];
   const corsRaw = process.env.CORS_ORIGIN ?? 'http://localhost:3000';
   const corsOrigins = new Set(
     [
       ...corsRaw.split(',').map((s) => s.trim()).filter(Boolean),
       ...productionCorsOrigins,
+      ...localStudioCorsOrigins,
     ],
   );
   for (const origin of [...corsOrigins]) {
@@ -37,6 +45,15 @@ async function bootstrap() {
       /* ignore malformed CORS_ORIGIN entries */
     }
   }
+
+  // Chrome Private Network Access: public/less-private pages calling loopback APIs.
+  app.use((req, res, next) => {
+    if (req.headers['access-control-request-private-network'] === 'true') {
+      res.setHeader('Access-Control-Allow-Private-Network', 'true');
+    }
+    next();
+  });
+
   app.enableCors({
     origin: (requestOrigin, callback) => {
       if (!requestOrigin || corsOrigins.has(requestOrigin)) {
@@ -45,6 +62,14 @@ async function bootstrap() {
       }
       callback(null, false);
     },
+    allowedHeaders: [
+      'Content-Type',
+      'Authorization',
+      'X-Lugemi-Workspace-Id',
+      'X-Lugemi-Organization-Id',
+      'X-Request-Id',
+      'X-Api-Key',
+    ],
   });
 
   // Fly proxy routes to internal_port; bind all interfaces and honor process.env.PORT.

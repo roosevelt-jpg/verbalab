@@ -9,9 +9,10 @@ export type DialectSeed = {
 };
 
 /**
- * African + related dialect seeds — curated priority varieties plus catalog ethnic/locale variants.
+ * Curated African + related dialect seeds — priority varieties plus catalog ethnic/locale variants.
+ * Full catalog is built by `buildDialectSeeds()` so every registry language has ≥1 dialect.
  */
-export const DIALECT_SEEDS: DialectSeed[] = [
+const CURATED_DIALECT_SEEDS: DialectSeed[] = [
   {
     code: 'aa-dj-djibouti-afar',
     languageCode: 'aa',
@@ -1423,5 +1424,220 @@ export const DIALECT_SEEDS: DialectSeed[] = [
     region: 'US',
     cueTerms: ["ua tsaug"],
     notes: 'Regional registry dialect for US.',
-  }
+  },
+  {
+    code: 'ar-lb-levantine',
+    languageCode: 'ar',
+    nameEn: 'Levantine Arabic',
+    nameNative: 'شامي',
+    region: 'LB',
+    cueTerms: ['شو', 'هلق', 'يعني', 'كتير', 'مرحبا'],
+    notes: 'Levantine colloquial cues (LB/SY/JO/PS bridge).',
+  },
+  {
+    code: 'ar-tn-tunisian',
+    languageCode: 'ar',
+    nameEn: 'Tunisian Arabic',
+    nameNative: 'تونسي',
+    region: 'TN',
+    cueTerms: ['برشا', 'يشتي', 'عيشك', 'شنوة'],
+    notes: 'Maghrebi Tunisian cues.',
+  },
+  {
+    code: 'es-cl-chilean',
+    languageCode: 'es',
+    nameEn: 'Chilean Spanish',
+    nameNative: 'Español chileno',
+    region: 'CL',
+    cueTerms: ['po', 'cachai', 'weón', 'al tiro'],
+    notes: 'Chilean Spanish lexical cues.',
+  },
+  {
+    code: 'es-cu-caribbean',
+    languageCode: 'es',
+    nameEn: 'Caribbean Spanish',
+    nameNative: 'Español caribeño',
+    region: 'CU',
+    cueTerms: ['asere', 'qué bolá', 'vaina'],
+    notes: 'Caribbean Spanish bridge cues.',
+  },
+  {
+    code: 'pt-br-nordestino',
+    languageCode: 'pt',
+    nameEn: 'Nordestino Portuguese',
+    nameNative: 'Português nordestino',
+    region: 'BR',
+    cueTerms: ['oxente', 'visse', 'arreé'],
+    notes: 'Brazilian Northeast variety cues.',
+  },
+  {
+    code: 'sw-ug-ugandan',
+    languageCode: 'sw',
+    nameEn: 'Ugandan Swahili',
+    nameNative: 'Kiswahili cha Uganda',
+    region: 'UG',
+    cueTerms: ['webale', 'nss', 'poa', 'sasa'],
+    notes: 'Uganda / Great Lakes Swahili cues.',
+  },
+  {
+    code: 'zh-cn-mandarin',
+    languageCode: 'zh',
+    nameEn: 'Mandarin Chinese',
+    nameNative: '普通话',
+    region: 'CN',
+    cueTerms: ['你好', '谢谢', '请', '吗'],
+    notes: 'Standard Mandarin lexical cues.',
+  },
+  {
+    code: 'zh-hk-cantonese',
+    languageCode: 'zh',
+    nameEn: 'Cantonese (Hong Kong)',
+    nameNative: '廣東話',
+    region: 'HK',
+    cueTerms: ['唔該', '多谢', '係', '嘅'],
+    notes: 'Hong Kong Cantonese bridge cues.',
+  },
+  {
+    code: 'hi-in-standard',
+    languageCode: 'hi',
+    nameEn: 'Standard Hindi',
+    nameNative: 'हिन्दी',
+    region: 'IN',
+    cueTerms: ['नमस्ते', 'धन्यवाद', 'कृपया', 'हाँ'],
+    notes: 'Standard Hindi cues.',
+  },
+  {
+    code: 'ja-jp-standard',
+    languageCode: 'ja',
+    nameEn: 'Standard Japanese',
+    nameNative: '標準語',
+    region: 'JP',
+    cueTerms: ['です', 'ます', 'ありがとう', 'ください'],
+    notes: 'Standard Japanese cues.',
+  },
+  {
+    code: 'ko-kr-seoul',
+    languageCode: 'ko',
+    nameEn: 'Seoul Korean',
+    nameNative: '서울말',
+    region: 'KR',
+    cueTerms: ['감사합니다', '안녕하세요', '네'],
+    notes: 'Seoul Korean cues.',
+  },
 ];
+
+import { LANGUAGE_SEEDS } from '../languages/language-seeds';
+import { LOCALE_PACK_SEEDS, LOCALE_VARIANT_SEEDS } from '../locales/locale-pack-seeds';
+import { COUNTRY_PACK_SEEDS } from '../country-packs/country-pack-seeds';
+
+function bcp47ToDialectCode(bcp47: string): string {
+  return bcp47.trim().toLowerCase().replace(/_/g, '-');
+}
+
+function parseRegion(bcp47: string): string | undefined {
+  const parts = bcp47.split(/[-_]/);
+  const region = parts[1];
+  return region && /^[A-Za-z]{2}$/.test(region) ? region.toUpperCase() : undefined;
+}
+
+/**
+ * Expand curated dialects so every registry language/locale has ≥1 dialect entry.
+ * Prefer locale packs + variants + country BCP-47 tags over hand-maintaining gaps.
+ */
+export function buildDialectSeeds(curated: DialectSeed[] = CURATED_DIALECT_SEEDS): DialectSeed[] {
+  const byCode = new Map<string, DialectSeed>();
+  for (const d of curated) {
+    if (!d?.languageCode) continue;
+    byCode.set(d.code, d);
+  }
+
+  const upsert = (input: {
+    code: string;
+    languageCode: string;
+    region?: string;
+    nameEn?: string;
+    nameNative?: string;
+    cueTerms?: string[];
+    notes?: string;
+    hint?: string;
+  }) => {
+    if (!LANGUAGE_SEEDS.some((l) => l.code === input.languageCode)) return;
+    const code = bcp47ToDialectCode(input.code);
+    if (!code || byCode.has(code)) return;
+    const lang = LANGUAGE_SEEDS.find((l) => l.code === input.languageCode);
+    const place = input.region ?? '';
+    const nameEn =
+      input.nameEn ??
+      (input.hint && !/locale pack/i.test(input.hint)
+        ? input.hint.replace(/\.$/, '').trim()
+        : place
+          ? `${lang?.nameEn ?? input.languageCode} (${place})`
+          : `${lang?.nameEn ?? input.languageCode}`);
+    byCode.set(code, {
+      code,
+      languageCode: input.languageCode,
+      nameEn,
+      nameNative: input.nameNative ?? lang?.nameNative,
+      region: input.region,
+      cueTerms: input.cueTerms ?? [],
+      notes:
+        input.notes ??
+        'Dialect label from language/locale registry — lexical cue heuristics, not speech accent ID.',
+    });
+  };
+
+  for (const pack of LOCALE_PACK_SEEDS) {
+    if (!pack.bcp47) continue;
+    upsert({
+      code: pack.bcp47,
+      languageCode: pack.languageCode,
+      region: parseRegion(pack.bcp47),
+      hint: pack.culturalNotes,
+    });
+  }
+
+  for (const variant of LOCALE_VARIANT_SEEDS) {
+    upsert({
+      code: variant.bcp47,
+      languageCode: variant.languageCode,
+      region: parseRegion(variant.bcp47),
+      hint: variant.culturalNotes,
+    });
+  }
+
+  for (const country of COUNTRY_PACK_SEEDS) {
+    for (const tag of country.bcp47Tags ?? []) {
+      const languageCode = tag.split(/[-_]/)[0]?.toLowerCase();
+      if (!languageCode) continue;
+      upsert({
+        code: tag,
+        languageCode,
+        region: country.code,
+        hint: `${country.nameEn} ${LANGUAGE_SEEDS.find((l) => l.code === languageCode)?.nameEn ?? languageCode}`,
+      });
+    }
+  }
+
+  for (const lang of LANGUAGE_SEEDS) {
+    const covered = [...byCode.values()].some((d) => d.languageCode === lang.code);
+    if (covered) continue;
+    const pack = LOCALE_PACK_SEEDS.find((p) => p.languageCode === lang.code);
+    upsert({
+      code: pack?.bcp47 ? bcp47ToDialectCode(pack.bcp47) : lang.code,
+      languageCode: lang.code,
+      region: pack?.bcp47 ? parseRegion(pack.bcp47) : undefined,
+      nameEn: lang.nameEn,
+      nameNative: lang.nameNative,
+      cueTerms: [],
+      notes: 'Fallback dialect for registry language — lexical cue heuristics, not speech accent ID.',
+    });
+  }
+
+  return [...byCode.values()].sort((a, b) => {
+    const langCmp = a.languageCode.localeCompare(b.languageCode);
+    return langCmp !== 0 ? langCmp : a.code.localeCompare(b.code);
+  });
+}
+
+export const DIALECT_SEEDS: DialectSeed[] = buildDialectSeeds();
+export const DIALECT_SEED_COUNT = DIALECT_SEEDS.length;
