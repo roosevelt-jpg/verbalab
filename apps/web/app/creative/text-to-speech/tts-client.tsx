@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
+import { isClerkConfigured } from '@/lib/clerk-config';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { API_URL, apiFetch } from '@/lib/api';
@@ -27,8 +28,21 @@ const SUGGESTIONS = [
   'Warm product welcome',
 ];
 
+
 export function CreativeTtsClient() {
+  if (!isClerkConfigured()) {
+    return <CreativeTtsClientInner getToken={async () => null} isLoaded={true} />;
+  }
+  return <CreativeTtsClientAuthed />;
+}
+
+function CreativeTtsClientAuthed() {
   const { getToken, isLoaded } = useAuth();
+  return <CreativeTtsClientInner getToken={getToken} isLoaded={isLoaded} />;
+}
+
+function CreativeTtsClientInner({ getToken, isLoaded }: { getToken: any; isLoaded: any }) {
+  // auth via props: getToken, isLoaded
   const search = useSearchParams();
   const [voices, setVoices] = useState<Voice[]>([]);
   const [voiceId, setVoiceId] = useState('alloy');

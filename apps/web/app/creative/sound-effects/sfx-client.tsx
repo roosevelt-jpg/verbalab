@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
+import { isClerkConfigured } from '@/lib/clerk-config';
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { apiFetch } from '@/lib/api';
@@ -56,8 +57,21 @@ const CATALOG = [
 
 const PROMPTS = ['Footsteps on gravel', 'Rain on window', 'Busy open-air market'];
 
+
 export function CreativeSfxClient() {
+  if (!isClerkConfigured()) {
+    return <CreativeSfxClientInner getToken={async () => null} isLoaded={true} />;
+  }
+  return <CreativeSfxClientAuthed />;
+}
+
+function CreativeSfxClientAuthed() {
   const { getToken, isLoaded } = useAuth();
+  return <CreativeSfxClientInner getToken={getToken} isLoaded={isLoaded} />;
+}
+
+function CreativeSfxClientInner({ getToken, isLoaded }: { getToken: any; isLoaded: any }) {
+  // auth via props: getToken, isLoaded
   const search = useSearchParams();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [query, setQuery] = useState(() => search.get('q') || '');

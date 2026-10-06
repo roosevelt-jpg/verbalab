@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
+import { isClerkConfigured } from '@/lib/clerk-config';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { API_URL, apiFetch } from '@/lib/api';
 import { CreativeShell } from '@/components/creative/creative-shell';
@@ -27,8 +28,21 @@ type Recognition = {
   confidence: number | null;
 };
 
+
 export function CreativeSpeechToTextClient() {
+  if (!isClerkConfigured()) {
+    return <CreativeSpeechToTextClientInner getToken={async () => null} isLoaded={true} />;
+  }
+  return <CreativeSpeechToTextClientAuthed />;
+}
+
+function CreativeSpeechToTextClientAuthed() {
   const { getToken, isLoaded } = useAuth();
+  return <CreativeSpeechToTextClientInner getToken={getToken} isLoaded={isLoaded} />;
+}
+
+function CreativeSpeechToTextClientInner({ getToken, isLoaded }: { getToken: any; isLoaded: any }) {
+  // auth via props: getToken, isLoaded
   const catalog = useLocaleCatalog();
   const credits = useCreativeCredits();
   const inputRef = useRef<HTMLInputElement>(null);

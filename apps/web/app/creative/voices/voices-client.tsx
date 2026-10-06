@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
+import { isClerkConfigured } from '@/lib/clerk-config';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { CreativeShell } from '@/components/creative/creative-shell';
@@ -28,8 +29,21 @@ type Voice = {
 
 const FILTERS = ['Conversational', 'Narration', 'Characters', 'Social Media', 'Educational', 'Advertisement'];
 
+
 export function CreativeVoicesClient() {
+  if (!isClerkConfigured()) {
+    return <CreativeVoicesClientInner getToken={async () => null} isLoaded={true} />;
+  }
+  return <CreativeVoicesClientAuthed />;
+}
+
+function CreativeVoicesClientAuthed() {
   const { getToken, isLoaded } = useAuth();
+  return <CreativeVoicesClientInner getToken={getToken} isLoaded={isLoaded} />;
+}
+
+function CreativeVoicesClientInner({ getToken, isLoaded }: { getToken: any; isLoaded: any }) {
+  // auth via props: getToken, isLoaded
   const [tab, setTab] = useState<'explore' | 'mine'>('explore');
   const [listings, setListings] = useState<Listing[]>([]);
   const [voices, setVoices] = useState<Voice[]>([]);

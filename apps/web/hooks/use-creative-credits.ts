@@ -1,9 +1,10 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
 import { useCallback, useEffect, useState } from 'react';
+import { useAuth } from '@clerk/nextjs';
 import { apiFetch } from '@/lib/api';
 import { WEB_BILLING_PLANS, planById } from '@/data/billing-plans';
+import { isClerkConfigured } from '@/lib/clerk-config';
 
 export type CreativeCredits = {
   plan: string;
@@ -24,8 +25,29 @@ type BillingSummary = {
   charactersRemaining: number;
 };
 
+function guestCredits(): CreativeCredits {
+  const free = WEB_BILLING_PLANS[0]!;
+  return {
+    plan: free.id,
+    planName: free.name,
+    used: 0,
+    quota: free.characterQuota,
+    remaining: free.characterQuota,
+    loading: false,
+    error: null,
+    refresh: async () => undefined,
+  };
+}
+
 /** Character credits from `/v1/billing/summary` (Free mock when unsigned / unreachable). */
 export function useCreativeCredits(): CreativeCredits {
+  if (!isClerkConfigured()) return guestCredits();
+  // NEXT_PUBLIC flag is compile-time constant — Authed path only when ClerkProvider mounts.
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  return useCreativeCreditsAuthed();
+}
+
+function useCreativeCreditsAuthed(): CreativeCredits {
   const { getToken, isLoaded } = useAuth();
   const free = WEB_BILLING_PLANS[0]!;
   const [plan, setPlan] = useState(free.id);
