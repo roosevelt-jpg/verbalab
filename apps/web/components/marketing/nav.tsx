@@ -4,33 +4,14 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { BrandMark } from '@/components/brand-mark';
 
-const LINKS = [
-  { href: '#research', label: 'Research' },
+const CENTER_LINKS = [
   { href: '#products', label: 'Products' },
-  { href: '/docs', label: 'Developers' },
+  { href: '#hubs', label: 'Hubs' },
+  { href: '#use-cases', label: 'Use cases' },
+  { href: '#research', label: 'Research' },
   { href: '#safety', label: 'Safety' },
-  { href: '#enterprise', label: 'Enterprise' },
-  { href: '#api', label: 'Open source' },
-  { href: '#updates', label: 'Careers' },
-  { href: '#updates', label: 'News' },
-  { href: '/coverage', label: 'Coverage' },
   { href: '/docs', label: 'Docs' },
-  { href: '/sign-in', label: 'Sign in' },
 ] as const;
-
-function NavList({ onNavigate }: { onNavigate?: () => void }) {
-  return (
-    <ul className="mkt-nav-links">
-      {LINKS.map((item) => (
-        <li key={`${item.href}-${item.label}`}>
-          <Link href={item.href} onClick={onNavigate}>
-            {item.label}
-          </Link>
-        </li>
-      ))}
-    </ul>
-  );
-}
 
 export function MarketingNav() {
   const [open, setOpen] = useState(false);
@@ -40,28 +21,60 @@ export function MarketingNav() {
       <div className="mkt-wrap mkt-header-inner">
         <BrandMark />
         <nav className="mkt-nav-desktop" aria-label="Primary">
-          <NavList />
+          <ul className="mkt-nav-links">
+            {CENTER_LINKS.map((item) => (
+              <li key={item.href}>
+                <Link href={item.href}>{item.label}</Link>
+              </li>
+            ))}
+          </ul>
         </nav>
         <div className="mkt-nav-actions">
-          <Link href="/sign-up" className="vl-btn vl-btn-primary" style={{ textDecoration: 'none' }}>
-            Sign up
+          <Link href="/dashboard" className="mkt-nav-text">
+            Open console
           </Link>
-          <Link href="#contact" className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none' }}>
-            Contact sales
+          <Link href="/sign-in" className="mkt-nav-text">
+            Log in
+          </Link>
+          <Link href="/sign-up" className="vl-btn vl-btn-primary mkt-nav-signup">
+            Sign up
           </Link>
           <button
             type="button"
             className="mkt-menu-btn"
             aria-expanded={open}
             aria-controls="mkt-mobile-nav"
-            onClick={() => setOpen((value) => !value)}
+            onClick={() => setOpen((v) => !v)}
           >
             {open ? 'Close' : 'Menu'}
           </button>
         </div>
       </div>
       <nav id="mkt-mobile-nav" className="mkt-nav-mobile" aria-label="Primary mobile" hidden={!open}>
-        <NavList onNavigate={() => setOpen(false)} />
+        <ul className="mkt-nav-links">
+          {CENTER_LINKS.map((item) => (
+            <li key={`m-${item.href}`}>
+              <Link href={item.href} onClick={() => setOpen(false)}>
+                {item.label}
+              </Link>
+            </li>
+          ))}
+          <li>
+            <Link href="/dashboard" onClick={() => setOpen(false)}>
+              Open console
+            </Link>
+          </li>
+          <li>
+            <Link href="/sign-in" onClick={() => setOpen(false)}>
+              Log in
+            </Link>
+          </li>
+          <li>
+            <Link href="/sign-up" onClick={() => setOpen(false)}>
+              Sign up
+            </Link>
+          </li>
+        </ul>
       </nav>
     </header>
   );
