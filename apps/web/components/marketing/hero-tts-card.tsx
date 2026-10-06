@@ -1,32 +1,34 @@
 'use client';
 
 import { useState } from 'react';
-import { AnamorphicPanel } from '@/components/media/anamorphic-panel';
-import { SITE_CONTENT } from '@/data/site-content';
 
-const VOICES = SITE_CONTENT.sampleVoices.slice(0, 4);
-const DEFAULT_TEXT = SITE_CONTENT.samplePrompts[0]?.text ?? '';
+const VOICES = [
+  { id: 'abe', label: 'Abe · Lagos' },
+  { id: 'amara', label: 'Amara · Nairobi' },
+  { id: 'thandi', label: 'Thandi · Johannesburg' },
+  { id: 'kwame', label: 'Kwame · Accra' },
+] as const;
+
+const DEFAULT_TEXT =
+  'Lugemi voices carry creative work, customer conversations, and public speech with literacy and presence across African languages.';
 
 export function HeroTtsCard() {
   const [text, setText] = useState(DEFAULT_TEXT);
-  const [voice, setVoice] = useState(VOICES[0]?.id ?? 'sw-ke-female');
+  const [voice, setVoice] = useState<(typeof VOICES)[number]['id']>('abe');
   const [status, setStatus] = useState<string | null>(null);
 
   function onPlay() {
-    const selected = VOICES.find((item) => item.id === voice);
+    const selected = VOICES.find((item) => item.id === voice)?.label ?? 'Selected voice';
     setStatus(
-      selected
-        ? `${selected.label} (${selected.voiceId}): preview audio needs OWN_TTS_URL / console keys. Open Studio to generate speech — this card does not invent audio.`
-        : 'Open Studio to generate speech.',
+      `${selected}: preview audio needs OWN_TTS_URL / console keys. Open Studio to generate speech — this card does not invent audio.`,
     );
   }
 
   return (
     <div className="mkt-tts-card">
-      <AnamorphicPanel variant="voice" size="sm" label="Voice depth" />
-      <div className="mkt-tts-card-head" style={{ marginTop: 12 }}>
-        <h2>Speaking agent script</h2>
-        <span className="mkt-tts-badge">Prefill demo</span>
+      <div className="mkt-tts-card-head">
+        <h2>Text to speech</h2>
+        <span className="mkt-tts-badge">Interactive demo</span>
       </div>
       <label className="mkt-tts-label" htmlFor="mkt-tts-text">
         Script
@@ -40,7 +42,7 @@ export function HeroTtsCard() {
         spellCheck
       />
       <fieldset className="mkt-tts-voices">
-        <legend className="mkt-tts-label">Sample voice</legend>
+        <legend className="mkt-tts-label">Voice</legend>
         <div className="mkt-voice-chips">
           {VOICES.map((item) => (
             <button
@@ -63,8 +65,7 @@ export function HeroTtsCard() {
           Play
         </button>
         <p className="mkt-tts-hint" role="status" aria-live="polite">
-          {status ??
-            'No autoplay. Play explains the OWN_TTS_URL path — it does not invent waveforms or audio levels.'}
+          {status ?? 'No autoplay. Play explains the generation path — it does not invent waveforms or audio levels.'}
         </p>
       </div>
     </div>

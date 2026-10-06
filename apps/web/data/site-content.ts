@@ -93,12 +93,12 @@ export const SITE_CONTENT: SiteContent = {
       'Developers build AI agents that speak and talk across languages and accents — with cultural understanding of countries, ethnic groups, and tribes. Africa-first completeness; LATAM, SEA, Middle East, and the EU in scope. Own API and own models.',
   },
   hero: {
-    eyebrow: 'Speaking agents · Languages · Accents · Culture',
+    eyebrow: "Africa's voice, speech, and language platform",
     brand: 'Lugemi',
-    headline: 'Build agents that speak every language and accent.',
+    headline: 'Own every African voice.',
     lead:
-      'The next-generation language intelligence platform for developers. Ship AI agents that talk with cultural context — countries, ethnic groups, and tribes — starting with complete African language coverage, then LATAM, Southeast Asia, the Middle East, and the EU. First-party API and models.',
-    primaryCta: { label: 'Start building', href: '/sign-up' },
+      'Speak, translate, and ship first-party speaking agents across African languages, accents, and cultural contexts — then into LATAM, Southeast Asia, the Middle East, and the EU. Our API and our models, not a vendor wrapper.',
+    primaryCta: { label: 'Start free', href: '/sign-up' },
     secondaryCta: { label: 'Open console', href: '/dashboard' },
   },
   products: [

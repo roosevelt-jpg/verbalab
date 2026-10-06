@@ -193,6 +193,48 @@
   }
 }
 
+/* Product / use-case color planes — anamorphic depth with distinct palettes */
+.lg-ana[data-variant='voice'] {
+  background:
+    radial-gradient(ellipse 80% 70% at 20% 30%, rgba(0, 184, 174, 0.42), transparent 55%),
+    radial-gradient(ellipse 70% 60% at 85% 70%, rgba(16, 38, 77, 0.9), transparent 50%),
+    linear-gradient(145deg, #0b1a36 0%, #0d3d45 45%, #007c78 100%);
+}
+
+.lg-ana[data-variant='speech'] {
+  background:
+    radial-gradient(ellipse 80% 70% at 75% 25%, rgba(100, 170, 255, 0.35), transparent 55%),
+    radial-gradient(ellipse 70% 60% at 20% 80%, rgba(16, 38, 77, 0.85), transparent 50%),
+    linear-gradient(145deg, #0b1a36 0%, #163a63 50%, #2a6fad 100%);
+}
+
+.lg-ana[data-variant='translate'] {
+  background:
+    radial-gradient(ellipse 80% 70% at 30% 20%, rgba(255, 176, 96, 0.4), transparent 55%),
+    radial-gradient(ellipse 70% 60% at 80% 75%, rgba(16, 38, 77, 0.8), transparent 50%),
+    linear-gradient(145deg, #1a1420 0%, #5a3a1a 48%, #c47a2e 100%);
+}
+
+.lg-ana[data-variant='agents'] {
+  background:
+    radial-gradient(ellipse 80% 70% at 25% 30%, rgba(180, 120, 255, 0.35), transparent 55%),
+    radial-gradient(ellipse 70% 60% at 85% 70%, rgba(16, 38, 77, 0.85), transparent 50%),
+    linear-gradient(145deg, #141028 0%, #3a2860 50%, #6b4aa8 100%);
+}
+
+.lg-ana[data-variant='api'] {
+  background:
+    radial-gradient(ellipse 80% 70% at 20% 30%, rgba(0, 184, 174, 0.28), transparent 55%),
+    radial-gradient(ellipse 70% 60% at 85% 70%, rgba(16, 38, 77, 0.9), transparent 50%),
+    linear-gradient(145deg, #071018 0%, #10264d 55%, #1a4a55 100%);
+}
+
+.lg-ana[data-variant='coverage'] {
+  background:
+    radial-gradient(ellipse 80% 70% at 60% 20%, rgba(127, 217, 211, 0.35), transparent 55%),
+    linear-gradient(145deg, #0b1a36 0%, #10264d 45%, #007c78 100%);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .lg-ana__orb,
   .lg-ana__beam {

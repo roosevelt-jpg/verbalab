@@ -6,7 +6,6 @@ import { BrandMark } from '@/components/brand-mark';
 
 const CENTER_LINKS = [
   { href: '#products', label: 'Products' },
-  { href: '/coverage', label: 'Coverage' },
   { href: '#hubs', label: 'Hubs' },
   { href: '#use-cases', label: 'Use cases' },
   { href: '#research', label: 'Research' },
