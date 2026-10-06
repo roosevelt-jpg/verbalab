@@ -31,6 +31,10 @@ export class AccentsService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
+    if (!this.prisma.isReady()) {
+      this.logger.warn('DATABASE_URL unset — skipping accent seed');
+      return;
+    }
     await this.languages.seed();
     await this.seed();
   }

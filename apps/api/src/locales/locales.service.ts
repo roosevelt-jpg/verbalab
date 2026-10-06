@@ -21,6 +21,9 @@ export class LocalesService implements OnModuleInit {
   constructor(private readonly prisma: PrismaService) {}
 
   async onModuleInit() {
+    if (!this.prisma.isReady()) {
+      return;
+    }
     await this.seed();
   }
 

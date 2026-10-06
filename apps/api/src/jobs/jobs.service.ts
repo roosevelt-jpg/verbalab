@@ -43,7 +43,8 @@ export class JobsService implements OnModuleInit, OnModuleDestroy {
   ) {}
 
   private redisEnabled() {
-    return process.env.JOBS_INLINE !== '1';
+    // Prefer inline when Redis is not configured (Fly first boot without secrets).
+    return process.env.JOBS_INLINE !== '1' && Boolean(process.env.REDIS_URL?.trim());
   }
 
   private createRedis() {
@@ -52,12 +53,17 @@ export class JobsService implements OnModuleInit, OnModuleDestroy {
       maxRetriesPerRequest: null,
       enableReadyCheck: true,
       lazyConnect: true,
+      connectTimeout: 2_000,
     });
   }
 
   async onModuleInit() {
     if (!this.redisEnabled()) {
-      this.logger.warn('JOBS_INLINE=1 — processing jobs in-process without Redis/BullMQ');
+      this.logger.warn(
+        process.env.JOBS_INLINE === '1'
+          ? 'JOBS_INLINE=1 — processing jobs in-process without Redis/BullMQ'
+          : 'REDIS_URL unset — processing jobs in-process without Redis/BullMQ',
+      );
       return;
     }
 

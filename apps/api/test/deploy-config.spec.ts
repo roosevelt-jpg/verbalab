@@ -16,7 +16,10 @@ describe('Production deploy config', () => {
     expect(toml).toContain("app = 'lugemi-api'");
     expect(toml).toContain('fly-migrate.sh');
     expect(toml).toContain("path = '/health'");
+    expect(toml).toContain("PORT = '3001'");
+    expect(toml).toContain('internal_port = 3001');
   });
+
 
   it('documents deploy skip-without-token workflow', () => {
     const yml = readFileSync(join(root, '.github/workflows/deploy.yml'), 'utf8');

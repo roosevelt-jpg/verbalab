@@ -24,6 +24,10 @@ export class ModelsService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
+    if (!this.prisma.isReady()) {
+      this.logger.warn('DATABASE_URL unset — skipping model registry seed');
+      return;
+    }
     await this.ensureVendorDefaults();
   }
 

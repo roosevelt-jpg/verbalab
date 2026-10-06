@@ -22,13 +22,18 @@ export class RateLimitService implements OnModuleInit, OnModuleDestroy {
     return (
       process.env.RATE_LIMIT_MEMORY === '1' ||
       process.env.JOBS_INLINE === '1' ||
-      process.env.RATE_LIMIT_DISABLED === '1'
+      process.env.RATE_LIMIT_DISABLED === '1' ||
+      !process.env.REDIS_URL?.trim()
     );
   }
 
   async onModuleInit() {
     if (this.useMemory()) {
-      this.logger.warn('Rate limits using in-memory store (RATE_LIMIT_MEMORY / JOBS_INLINE)');
+      this.logger.warn(
+        process.env.REDIS_URL?.trim()
+          ? 'Rate limits using in-memory store (RATE_LIMIT_MEMORY / JOBS_INLINE)'
+          : 'REDIS_URL unset — rate limits using in-memory store',
+      );
       return;
     }
 

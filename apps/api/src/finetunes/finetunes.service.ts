@@ -73,7 +73,9 @@ export class FineTunesService implements OnModuleInit {
   }
 
   async onModuleInit() {
-    await this.refreshReadyCache();
+    if (this.prisma.isReady()) {
+      await this.refreshReadyCache();
+    }
     this.gateway.setFineTuneRouting({
       resolve: (source, target) => this.resolveReady(source, target),
       adapter: new FineTuneTranslateAdapter(),

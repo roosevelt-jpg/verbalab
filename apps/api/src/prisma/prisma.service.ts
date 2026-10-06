@@ -6,6 +6,11 @@ export class PrismaService extends PrismaClient implements OnModuleInit, OnModul
   private readonly logger = new Logger(PrismaService.name);
   private connected = false;
 
+  /** True after a successful `$connect` (false when DATABASE_URL is unset). */
+  isReady(): boolean {
+    return this.connected;
+  }
+
   async onModuleInit() {
     if (!process.env.DATABASE_URL?.trim()) {
       this.logger.warn(

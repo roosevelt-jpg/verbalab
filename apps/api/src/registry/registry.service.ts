@@ -20,11 +20,17 @@ export class RegistryService implements OnModuleInit, OnApplicationBootstrap {
   constructor(private readonly prisma: PrismaService) {}
 
   async onModuleInit() {
+    if (!this.prisma.isReady()) {
+      return;
+    }
     await seedFamiliesAndScripts(this.prisma);
   }
 
   /** Rules reference language codes — run after LanguagesService seeds. */
   async onApplicationBootstrap() {
+    if (!this.prisma.isReady()) {
+      return;
+    }
     await seedLinguisticRules(this.prisma);
   }
 

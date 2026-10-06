@@ -68,14 +68,19 @@ export class EventFabricBus implements OnModuleInit, OnModuleDestroy {
     return (
       process.env.EVENT_FABRIC_MEMORY === '1' ||
       process.env.JOBS_INLINE === '1' ||
-      process.env.RATE_LIMIT_MEMORY === '1'
+      process.env.RATE_LIMIT_MEMORY === '1' ||
+      !process.env.REDIS_URL?.trim()
     );
   }
 
   async onModuleInit() {
     if (this.preferMemory()) {
       this.backend = 'memory';
-      this.logger.warn('Event Fabric using in-memory streams (EVENT_FABRIC_MEMORY / JOBS_INLINE)');
+      this.logger.warn(
+        process.env.REDIS_URL?.trim()
+          ? 'Event Fabric using in-memory streams (EVENT_FABRIC_MEMORY / JOBS_INLINE)'
+          : 'REDIS_URL unset — Event Fabric using in-memory streams',
+      );
       return;
     }
 

@@ -28,6 +28,10 @@ export class DialectsService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
+    if (!this.prisma.isReady()) {
+      this.logger.warn('DATABASE_URL unset — skipping dialect seed');
+      return;
+    }
     await this.languages.seed();
     await this.seed();
   }

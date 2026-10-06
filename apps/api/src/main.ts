@@ -47,10 +47,13 @@ async function bootstrap() {
     },
   });
 
+  // Fly proxy routes to internal_port; bind all interfaces and honor process.env.PORT.
   const port = Number(process.env.PORT ?? process.env.API_PORT ?? 3001);
-  await app.listen(port, '0.0.0.0');
+  const host = '0.0.0.0';
+  await app.listen(port, host);
   structuredLog.info('api.started', {
     event: 'api.started',
+    host,
     port,
     sentry: sentryOn,
   });

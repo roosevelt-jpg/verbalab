@@ -15,6 +15,10 @@ export class CountryPacksService implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
+    if (!this.prisma.isReady()) {
+      this.logger.warn('DATABASE_URL unset — skipping country pack seed');
+      return;
+    }
     await this.seed();
   }
 
