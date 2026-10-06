@@ -25,7 +25,7 @@ export default function DocsPage() {
   const translateExample = `{
   "text": "Hello",
   "source": "auto",
-  "target": "sw"
+  "target": "ak"
 }`;
 
   const sdkExample = `import { Lugemi } from '@lugemi/sdk';
@@ -35,7 +35,7 @@ const client = new Lugemi({
   baseUrl: '${API_URL}',
 });
 
-await client.translate({ text: 'Hello', source: 'en', target: 'sw' });`;
+await client.translate({ text: 'Hello', source: 'en', target: 'ak' });`;
 
   const envExample = `# .env
 LUGEMI_API_KEY=lg_live_...
@@ -47,6 +47,8 @@ LUGEMI_BASE_URL=${API_URL}`;
         <BrandMark href="/" />
         <div className="vl-api-public-links">
           <Link href="/playground">Playground</Link>
+          <Link href="/models">Models</Link>
+          <Link href="/translate">Translate</Link>
           <Link href="/coverage">Coverage</Link>
           <Link href="/developers">Developers</Link>
           <a href={specUrl} className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none', padding: '0.45rem 0.9rem', minHeight: 40 }}>
@@ -75,7 +77,7 @@ LUGEMI_BASE_URL=${API_URL}`;
           <span className="vl-endpoint-path">/v1/translate</span>
         </div>
         <p style={{ color: 'var(--muted)', lineHeight: 1.55, margin: '0 0 1rem' }}>
-          Translate text between registry languages via the Lugemi API. Use{' '}
+          Translate text between registry languages via the Lugemi API. Console default is English → Twi (ak / ak-GH). BCP-47 locales are accepted and normalized. Use{' '}
           <code className="vl-code">source: &quot;auto&quot;</code> to detect first. Returns translated text, provider
           id, character count, and optional <code className="vl-code">detection</code>.
         </p>
@@ -130,6 +132,8 @@ LUGEMI_BASE_URL=${API_URL}`;
         <Endpoint method="POST" title="/v1/chat/completions" body="Language-intelligence chat (optional translateReplyTo)." />
         <Endpoint method="POST" title="/v1/detect" body="Detect source language (Lugemi detect pipeline with offline fallback)." />
         <Endpoint method="GET" title="/v1/languages" body="List seeded language codes, names, and tiers." />
+        <Endpoint method="GET" title="/v1/locales" body="Locale packs (BCP-47, cultural notes) for every registry language." />
+        <Endpoint method="GET" title="/v1/models/live" body="Live Lugemi Language Intelligence model matrix (voice, video, chat, verticals)." />
         <Endpoint method="GET/POST" title="/v1/glossary/terms" body="Workspace terminology (Clerk); applied on translate." />
         <Endpoint method="GET/POST" title="/v1/tm/entries" body="Approved translation memory; exact match bypasses MT." />
         <Endpoint method="GET" title="/v1/reviews" body="Quality reviews; accept/reject (accept can upsert TM)." />

@@ -233,7 +233,7 @@ export function DataClient() {
                 {(
                   [
                     ['companyName', 'Company name'],
-                    ['logoUrl', 'Logo URL (path or absolute)'],
+                    ['logoUrl', 'Logo URL (default /brand/lugemi-email-logo.png)'],
                     ['addressLine1', 'Address line 1'],
                     ['addressLine2', 'Address line 2'],
                     ['city', 'City'],

@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { useAuth } from '@clerk/nextjs';
+import Link from 'next/link';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
 import { LanguageLocaleSelect } from '@/components/language-locale-select';
@@ -23,6 +24,7 @@ export function TranslateClient() {
   const [languages, setLanguages] = useState<Language[]>([]);
   const [locales, setLocales] = useState<LocalePack[]>([]);
   const [engine, setEngine] = useState<Engine | null>(null);
+  const [catalogLoading, setCatalogLoading] = useState(true);
   const [source, setSource] = useState(DEFAULT_SOURCE);
   const [target, setTarget] = useState(DEFAULT_TARGET);
   const [text, setText] = useState('');
@@ -33,6 +35,7 @@ export function TranslateClient() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setCatalogLoading(true);
     void Promise.all([
       apiFetch<{ data: Language[] }>('/v1/languages'),
       apiFetch<{ data: LocalePack[] }>('/v1/locales').catch(() => ({ data: [] as LocalePack[] })),
@@ -44,11 +47,16 @@ export function TranslateClient() {
         if (eng) setEngine(eng);
         const hasAk = langRes.data.some((l) => l.code === 'ak');
         if (hasAk) setTarget('ak');
+        if (!langRes.data.length) {
+          setError('No languages in the registry yet. Check /v1/languages.');
+        }
       })
-      .catch((err: Error) => setError(err.message));
+      .catch((err: Error) => setError(err.message))
+      .finally(() => setCatalogLoading(false));
   }, []);
 
   const targetHint = useMemo(() => {
+    if (target.includes('-') || target.includes('_')) return `Locale ${target}`;
     const pack = locales.find((l) => l.languageCode === target);
     if (pack?.bcp47) return `Locale ${pack.bcp47}`;
     return null;
@@ -93,8 +101,18 @@ export function TranslateClient() {
     <AppShell>
       <h1 style={titleStyle}>Translate</h1>
       <p style={ledeStyle}>
-        Default pair is English → Twi (Akan, Ghana). Pick any supported language or locale code from the
-        dropdowns — Lugemi Language Intelligence, not a generic vendor panel.
+        Default pair is English → Twi (Akan, Ghana / <code className="vl-code">ak</code> ·{' '}
+        <code className="vl-code">ak-GH</code>). Pick any language or BCP-47 locale from the dropdowns —
+        Lugemi Language Intelligence infrastructure, not a generic vendor panel.
+      </p>
+      <p style={{ margin: '0.65rem 0 0', fontSize: '0.9rem' }}>
+        <Link href="/models">Lugemi models</Link>
+        {' · '}
+        <Link href="/locales">Locale packs</Link>
+        {' · '}
+        <Link href="/docs">API docs</Link>
+        {' · '}
+        <Link href="/translate/formats">Formats</Link>
       </p>
 
       {engine ? (
@@ -122,7 +140,15 @@ export function TranslateClient() {
         </div>
       ) : null}
 
-      <form onSubmit={onSubmit} className="vl-panel" style={{ display: 'grid', gap: '1rem', padding: '1.35rem', marginTop: '1.5rem' }}>
+      {catalogLoading ? (
+        <p style={{ color: 'var(--muted)', marginTop: '1.25rem' }}>Loading languages and locales…</p>
+      ) : null}
+
+      <form
+        onSubmit={onSubmit}
+        className="vl-panel"
+        style={{ display: 'grid', gap: '1rem', padding: '1.35rem', marginTop: '1.5rem' }}
+      >
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <label className="vl-label">
             Source
@@ -136,7 +162,10 @@ export function TranslateClient() {
             />
           </label>
           <label className="vl-label">
-            Target{targetHint ? <span style={{ color: 'var(--muted)', fontWeight: 500 }}> · {targetHint}</span> : null}
+            Target
+            {targetHint ? (
+              <span style={{ color: 'var(--muted)', fontWeight: 500 }}> · {targetHint}</span>
+            ) : null}
             <LanguageLocaleSelect
               value={target}
               onChange={setTarget}
@@ -146,6 +175,11 @@ export function TranslateClient() {
             />
           </label>
         </div>
+        {!catalogLoading && languages.length === 0 ? (
+          <p style={{ color: 'var(--muted)', margin: 0 }}>
+            No languages available. Retry after the API finishes seeding.
+          </p>
+        ) : null}
         <textarea
           data-testid="translate-input"
           value={text}
@@ -159,7 +193,7 @@ export function TranslateClient() {
         <button
           type="submit"
           data-testid="translate-submit"
-          disabled={loading}
+          disabled={loading || catalogLoading || languages.length === 0}
           className="vl-btn vl-btn-primary"
           style={{ justifySelf: 'start' }}
         >

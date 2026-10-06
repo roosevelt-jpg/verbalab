@@ -142,7 +142,7 @@ model OrganizationInvite {
 model PlatformBranding {
   id             String   @id @default("default")
   companyName    String   @default("Lugemi") @map("company_name")
-  logoUrl        String   @default("/brand/lugemi-symbol-teal.svg") @map("logo_url")
+  logoUrl        String   @default("/brand/lugemi-email-logo.png") @map("logo_url")
   addressLine1   String   @default("") @map("address_line1")
   addressLine2   String   @default("") @map("address_line2")
   city           String   @default("")

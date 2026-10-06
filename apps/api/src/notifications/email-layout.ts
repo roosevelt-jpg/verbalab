@@ -1,5 +1,7 @@
 import type { PlatformBranding } from '@prisma/client';
 
+export const DEFAULT_EMAIL_LOGO_PATH = '/brand/lugemi-email-logo.png';
+
 function escapeHtml(value: string): string {
   return value
     .replace(/&/g, '&amp;')
@@ -29,12 +31,14 @@ function formatAddress(branding: PlatformBranding): string {
   return lines.join('<br />');
 }
 
-function socialLinks(branding: PlatformBranding): Array<{ label: string; href: string }> {
+type SocialLink = { label: string; href: string; mark: string };
+
+function socialLinks(branding: PlatformBranding): SocialLink[] {
   return [
-    { label: 'Website', href: branding.socialWebsite },
-    { label: 'X', href: branding.socialX },
-    { label: 'LinkedIn', href: branding.socialLinkedIn },
-    { label: 'GitHub', href: branding.socialGitHub },
+    { label: 'Website', href: branding.socialWebsite, mark: 'W' },
+    { label: 'X', href: branding.socialX, mark: 'X' },
+    { label: 'LinkedIn', href: branding.socialLinkedIn, mark: 'in' },
+    { label: 'GitHub', href: branding.socialGitHub, mark: 'GH' },
   ].filter((l) => Boolean(l.href.trim()));
 }
 
@@ -51,16 +55,16 @@ export function renderSystemEmailHtml(input: {
     process.env.NEXT_PUBLIC_APP_URL?.trim() ||
     'http://127.0.0.1:43123';
   const company = escapeHtml(input.branding.companyName || 'Lugemi');
-  const logo = absoluteUrl(input.branding.logoUrl || '/brand/lugemi-symbol-teal.svg', publicBase);
+  const logo = absoluteUrl(input.branding.logoUrl || DEFAULT_EMAIL_LOGO_PATH, publicBase);
   const address = formatAddress(input.branding);
   const socials = socialLinks(input.branding);
   const socialHtml = socials.length
-    ? `<p style="margin:12px 0 0;font-size:13px;line-height:1.5;">${socials
+    ? `<table role="presentation" cellpadding="0" cellspacing="0" style="margin:14px 0 0;border-collapse:collapse;"><tr>${socials
         .map(
           (s) =>
-            `<a href="${escapeHtml(s.href)}" style="color:#007c78;text-decoration:none;margin-right:12px;">${escapeHtml(s.label)}</a>`,
+            `<td style="padding:0 8px 0 0;"><a href="${escapeHtml(s.href)}" title="${escapeHtml(s.label)}" aria-label="${escapeHtml(s.label)}" style="display:inline-block;width:28px;height:28px;line-height:28px;text-align:center;border-radius:14px;background:#007c78;color:#ffffff;text-decoration:none;font-size:11px;font-weight:700;font-family:Arial,Helvetica,sans-serif;">${escapeHtml(s.mark)}</a></td>`,
         )
-        .join('')}</p>`
+        .join('')}</tr></table>`
     : '';
 
   return `<!DOCTYPE html>
@@ -70,13 +74,12 @@ export function renderSystemEmailHtml(input: {
   <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f7fb;padding:24px 12px;">
     <tr><td align="center">
       <table role="presentation" width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;background:#ffffff;border:1px solid #d9e2ef;border-radius:16px;overflow:hidden;">
-        <tr><td style="padding:20px 28px;border-bottom:1px solid #e8eef6;background:linear-gradient(135deg,#f7fffe,#f4f7fb);">
+        <tr><td style="padding:22px 28px;border-bottom:1px solid #e8eef6;background:#0a1931;">
           ${
             logo
-              ? `<img src="${escapeHtml(logo)}" alt="${company}" width="48" height="54" style="display:block;border:0;" />`
-              : ''
+              ? `<img src="${escapeHtml(logo)}" alt="${company}" width="200" style="display:block;border:0;width:200px;max-width:70%;height:auto;" />`
+              : `<div style="font-size:20px;font-weight:700;letter-spacing:-0.02em;color:#ffffff;">${company}</div>`
           }
-          <div style="margin-top:10px;font-size:20px;font-weight:700;letter-spacing:-0.02em;color:#10264d;">${company}</div>
         </td></tr>
         <tr><td style="padding:28px;">
           <h1 style="margin:0 0 14px;font-size:22px;line-height:1.3;letter-spacing:-0.02em;">${escapeHtml(input.title)}</h1>

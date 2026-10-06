@@ -10,6 +10,7 @@ import {
   formatLocaleDateTime,
   formatLocaleNumber,
 } from './locale-format';
+import { localeEngineCatalog } from './locale-engine.catalog';
 
 @Injectable()
 export class LocalesService implements OnModuleInit {
@@ -17,6 +18,10 @@ export class LocalesService implements OnModuleInit {
 
   async onModuleInit() {
     await this.seed();
+  }
+
+  engine() {
+    return localeEngineCatalog();
   }
 
   async seed() {
@@ -103,8 +108,9 @@ export class LocalesService implements OnModuleInit {
   }
 
   async get(code: string) {
+    const languageCode = code.includes('-') || code.includes('_') ? code.split(/[-_]/)[0]!.toLowerCase() : code;
     const row = await this.prisma.localePack.findUnique({
-      where: { languageCode: code },
+      where: { languageCode },
       include: {
         language: {
           select: { nameEn: true, nameNative: true, tier: true, script: true, rtl: true },
@@ -119,8 +125,12 @@ export class LocalesService implements OnModuleInit {
 
   /** Entities kept through MT (source === target) for glossary-style protect. */
   async doNotTranslateTerms(languageCode: string): Promise<GlossaryTermLike[]> {
+    const normalized =
+      languageCode.includes('-') || languageCode.includes('_')
+        ? languageCode.split(/[-_]/)[0]!.toLowerCase()
+        : languageCode;
     const pack = await this.prisma.localePack.findUnique({
-      where: { languageCode },
+      where: { languageCode: normalized },
       select: { doNotTranslate: true },
     });
     const entities = (pack?.doNotTranslate as string[] | null) ?? [];

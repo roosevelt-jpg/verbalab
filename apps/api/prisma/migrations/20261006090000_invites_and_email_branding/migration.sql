@@ -26,7 +26,7 @@ ALTER TABLE "organization_invites" ADD CONSTRAINT "organization_invites_invited_
 CREATE TABLE "platform_branding" (
     "id" TEXT NOT NULL DEFAULT 'default',
     "company_name" TEXT NOT NULL DEFAULT 'Lugemi',
-    "logo_url" TEXT NOT NULL DEFAULT '/brand/lugemi-symbol-teal.svg',
+    "logo_url" TEXT NOT NULL DEFAULT '/brand/lugemi-email-logo.png',
     "address_line1" TEXT NOT NULL DEFAULT '',
     "address_line2" TEXT NOT NULL DEFAULT '',
     "city" TEXT NOT NULL DEFAULT '',
@@ -43,5 +43,5 @@ CREATE TABLE "platform_branding" (
 );
 
 INSERT INTO "platform_branding" ("id", "company_name", "logo_url", "updated_at")
-VALUES ('default', 'Lugemi', '/brand/lugemi-symbol-teal.svg', CURRENT_TIMESTAMP)
+VALUES ('default', 'Lugemi', '/brand/lugemi-email-logo.png', CURRENT_TIMESTAMP)
 ON CONFLICT ("id") DO NOTHING;

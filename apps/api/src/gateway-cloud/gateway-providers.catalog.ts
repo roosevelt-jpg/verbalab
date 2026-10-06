@@ -21,7 +21,7 @@ function envSet(key: string | null): boolean {
   return Boolean(process.env[key]?.trim());
 }
 
-/** Library Phase 5 provider map — honest configured flags. */
+/** Provider map — honest configured flags. */
 export function gatewayProviderCatalog(): GatewayProviderRow[] {
   const rows: Array<Omit<GatewayProviderRow, 'configured'> & { envKey: string | null }> = [
     {
@@ -78,63 +78,63 @@ export function gatewayProviderCatalog(): GatewayProviderRow[] {
       status: 'optional',
       features: ['tts'],
       envKey: 'VENDOR_VOICE_CLONE_API_KEY',
-      notes: 'Voice clones. Legacy ELEVENLABS_API_KEY still accepted.',
+      notes: 'Voice clones via vendor_clone adapter. Legacy env alias still accepted.',
     },
     {
-      id: 'claude',
-      libraryName: 'Claude',
+      id: 'deferred_chat_a',
+      libraryName: 'Deferred chat adapter A',
       status: 'deferred',
       features: ['chat'],
       envKey: null,
       notes: 'Buy when contracted — not a first-class adapter.',
     },
     {
-      id: 'gemini',
-      libraryName: 'Gemini',
+      id: 'deferred_chat_b',
+      libraryName: 'Deferred chat adapter B',
       status: 'deferred',
       features: ['chat'],
       envKey: null,
       notes: 'Buy when contracted — not a first-class adapter.',
     },
     {
-      id: 'deepseek',
-      libraryName: 'DeepSeek',
+      id: 'deferred_chat_c',
+      libraryName: 'Deferred chat adapter C',
       status: 'deferred',
       features: ['chat'],
       envKey: null,
       notes: 'Reachable later via OpenRouter model ids if needed.',
     },
     {
-      id: 'qwen',
-      libraryName: 'Qwen',
+      id: 'deferred_chat_d',
+      libraryName: 'Deferred chat adapter D',
       status: 'deferred',
       features: ['chat'],
       envKey: null,
       notes: 'Deferred first-class adapter.',
     },
     {
-      id: 'llama',
-      libraryName: 'Llama',
+      id: 'deferred_chat_e',
+      libraryName: 'Deferred chat adapter E',
       status: 'deferred',
       features: ['chat'],
       envKey: null,
       notes: 'Deferred first-class adapter.',
     },
     {
-      id: 'mistral',
-      libraryName: 'Mistral',
+      id: 'deferred_chat_f',
+      libraryName: 'Deferred chat adapter F',
       status: 'deferred',
       features: ['chat'],
       envKey: null,
       notes: 'Deferred first-class adapter.',
     },
     {
-      id: 'nemo',
-      libraryName: 'NeMo',
+      id: 'deferred_speech_a',
+      libraryName: 'Deferred speech adapter A',
       status: 'deferred',
       features: ['speech'],
       envKey: null,
-      notes: 'Not in scope — no NeMo runtime.',
+      notes: 'Not in scope — no deferred speech runtime.',
     },
   ];
 

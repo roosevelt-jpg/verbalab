@@ -5,9 +5,11 @@ import { FormEvent, useEffect, useState } from 'react';
 import { API_URL, apiFetch } from '@/lib/api';
 import { BrandMark } from '@/components/brand-mark';
 import { CodePanel } from '@/components/code-panel';
+import { LanguageLocaleSelect } from '@/components/language-locale-select';
 import { SITE_CONTENT } from '@/data/site-content';
 
-type Language = { code: string; name: string };
+type Language = { code: string; name: string; nativeName?: string | null };
+type LocalePack = { languageCode: string; bcp47: string | null };
 type Mode = 'translate' | 'detect' | 'languages';
 
 function isApiKey(value: string) {
@@ -18,6 +20,7 @@ export function PlaygroundClient() {
   const [mode, setMode] = useState<Mode>('translate');
   const [apiKey, setApiKey] = useState('');
   const [languages, setLanguages] = useState<Language[]>([]);
+  const [locales, setLocales] = useState<LocalePack[]>([]);
   const [source, setSource] = useState(SITE_CONTENT.playgroundDefaults.source);
   const [target, setTarget] = useState(SITE_CONTENT.playgroundDefaults.target);
   const [text, setText] = useState(SITE_CONTENT.playgroundDefaults.text);
@@ -26,8 +29,14 @@ export function PlaygroundClient() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    void apiFetch<{ data: Language[] }>('/v1/languages')
-      .then((res) => setLanguages(res.data))
+    void Promise.all([
+      apiFetch<{ data: Language[] }>('/v1/languages'),
+      apiFetch<{ data: LocalePack[] }>('/v1/locales').catch(() => ({ data: [] as LocalePack[] })),
+    ])
+      .then(([langRes, locRes]) => {
+        setLanguages(langRes.data);
+        setLocales(locRes.data);
+      })
       .catch(() => undefined);
   }, []);
 
@@ -135,28 +144,24 @@ export function PlaygroundClient() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <label className="vl-label">
               Source
-              <select className="vl-field" value={source} onChange={(e) => setSource(e.target.value)}>
-                <option value="auto">Auto-detect</option>
-                {(languages.length ? languages : [{ code: 'en', name: 'English' }, { code: 'sw', name: 'Swahili' }]).map(
-                  (lang) => (
-                    <option key={lang.code} value={lang.code}>
-                      {lang.name} ({lang.code})
-                    </option>
-                  ),
-                )}
-              </select>
+              <LanguageLocaleSelect
+                value={source}
+                onChange={setSource}
+                languages={languages.length ? languages : [{ code: 'en', name: 'English' }, { code: 'ak', name: 'Akan (Twi)' }]}
+                locales={locales}
+                allowAuto
+                className="vl-field"
+              />
             </label>
             <label className="vl-label">
               Target
-              <select className="vl-field" value={target} onChange={(e) => setTarget(e.target.value)}>
-                {(languages.length ? languages : [{ code: 'en', name: 'English' }, { code: 'sw', name: 'Swahili' }]).map(
-                  (lang) => (
-                    <option key={lang.code} value={lang.code}>
-                      {lang.name} ({lang.code})
-                    </option>
-                  ),
-                )}
-              </select>
+              <LanguageLocaleSelect
+                value={target}
+                onChange={setTarget}
+                languages={languages.length ? languages : [{ code: 'en', name: 'English' }, { code: 'ak', name: 'Akan (Twi)' }]}
+                locales={locales}
+                className="vl-field"
+              />
             </label>
           </div>
         ) : null}
@@ -193,6 +198,7 @@ function PublicHeader() {
       <BrandMark href="/" />
       <div className="vl-api-public-links">
         <Link href="/docs">Docs</Link>
+        <Link href="/models">Models</Link>
         <Link href="/developers">Developers</Link>
         <Link href="/dashboard" className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none', padding: '0.45rem 0.9rem', minHeight: 40 }}>
           Console

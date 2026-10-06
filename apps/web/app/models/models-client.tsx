@@ -113,6 +113,15 @@ export function ModelsClient() {
         video, chat, security, law, government, insurance, and compliance. Infrastructure for African
         languages, accents, culture, and routines — not just another translation wrapper.
       </p>
+      <p style={{ margin: '0.65rem 0 0', fontSize: '0.9rem' }}>
+        <Link href="/translate">Translate (English → Twi)</Link>
+        {' · '}
+        <Link href="/language-intelligence">Language Intelligence</Link>
+        {' · '}
+        <Link href="/docs">API docs</Link>
+        {' · '}
+        <Link href="/developers">Developers</Link>
+      </p>
 
       <section style={{ marginTop: '1.5rem' }} aria-labelledby="li-verticals">
         <h2 id="li-verticals" style={sectionTitle}>
@@ -146,11 +155,31 @@ export function ModelsClient() {
           {matrix.disclaimer}
         </p>
       ) : null}
-      {error ? <p style={{ color: 'var(--bad)', marginTop: '1rem' }}>{error}</p> : null}
+      {error ? (
+        <p style={{ color: 'var(--bad)', marginTop: '1rem' }}>
+          {error}{' '}
+          <button
+            type="button"
+            className="vl-btn vl-btn-secondary"
+            style={{ marginLeft: '0.5rem', minHeight: 32, padding: '0.25rem 0.65rem' }}
+            onClick={() => {
+              setError(null);
+              setMatrix(null);
+              void apiFetch<LiveMatrix>('/v1/models/live')
+                .then(setMatrix)
+                .catch((err: Error) => setError(err.message));
+            }}
+          >
+            Retry
+          </button>
+        </p>
+      ) : null}
 
       <div style={{ marginTop: '1.75rem', display: 'grid', gap: '1.25rem' }}>
-        {!matrix ? (
+        {!matrix && !error ? (
           <p style={{ color: 'var(--muted)' }}>Loading registry…</p>
+        ) : !matrix ? (
+          <p style={{ color: 'var(--muted)' }}>Registry unavailable.</p>
         ) : (
           matrix.features.map((block) => (
             <section key={block.feature}>

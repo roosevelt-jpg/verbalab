@@ -82,15 +82,16 @@ export class TranslateService {
   }) {
     const sourceWasAuto = input.source === 'auto';
     let detection: DetectOutput | null = null;
-    let source = input.source;
+    let source = input.source === 'auto' ? 'auto' : this.languages.normalizeCode(input.source);
+    const target = this.languages.normalizeCode(input.target);
 
     if (sourceWasAuto) {
       detection = await this.gateway.detect({ text: input.text });
-      source = detection.language;
+      source = this.languages.normalizeCode(detection.language);
     }
 
     await this.languages.assertSupported(source);
-    await this.languages.assertSupported(input.target);
+    await this.languages.assertSupported(target);
 
     const characters = [...input.text].length;
     const dataSettings = await this.prisma.organization.findUniqueOrThrow({
@@ -112,7 +113,7 @@ export class TranslateService {
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,
       sourceLang: source,
-      targetLang: input.target,
+      targetLang: target,
       sourceText: input.text,
     });
 
@@ -124,7 +125,7 @@ export class TranslateService {
         characters,
         provider: 'tm',
         sourceLang: source,
-        targetLang: input.target,
+        targetLang: target,
         latencyMs: 0,
       });
       void this.notifications.maybeNotifyUsageThresholds(input.organizationId);
@@ -135,7 +136,7 @@ export class TranslateService {
             organizationId: input.organizationId,
             workspaceId: input.workspaceId,
             sourceLang: source,
-            targetLang: input.target,
+            targetLang: target,
             sourceText: input.text,
             targetText: tmHit.targetText,
             provider: 'tm',
@@ -156,7 +157,7 @@ export class TranslateService {
         apiKeyPrefix,
         metadata: {
           source,
-          target: input.target,
+          target: target,
           characters,
           provider: 'tm',
           tmHit: true,
@@ -175,7 +176,7 @@ export class TranslateService {
       return {
         text: tmHit.targetText,
         source,
-        target: input.target,
+        target: target,
         provider: 'tm',
         characters,
         glossaryApplied: 0,
@@ -193,13 +194,13 @@ export class TranslateService {
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,
       source,
-      target: input.target,
+      target: target,
       text: input.text,
     });
 
     const localeTerms = [
       ...(await this.locales.doNotTranslateTerms(source)),
-      ...(await this.locales.doNotTranslateTerms(input.target)),
+      ...(await this.locales.doNotTranslateTerms(target)),
     ].filter(
       (term, index, all) =>
         all.findIndex((t) => t.sourceTerm.toLowerCase() === term.sourceTerm.toLowerCase()) === index,
@@ -219,7 +220,7 @@ export class TranslateService {
     const result = await this.gateway.translate({
       text: localeProtect.text,
       source,
-      target: input.target,
+      target: target,
     });
 
     const text =

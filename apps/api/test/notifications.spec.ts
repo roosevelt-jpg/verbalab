@@ -183,5 +183,7 @@ describe('Notifications', () => {
     expect(mailbox.sent).toHaveLength(1);
     expect(mailbox.sent[0]!.to).toBe('newbie@example.com');
     expect(String(mailbox.sent[0]!.subject)).toContain('added');
+    expect(String(mailbox.sent[0]!.html)).toContain('/brand/lugemi-email-logo.png');
+    expect(String(mailbox.sent[0]!.html)).toContain('Lugemi');
   });
 });
