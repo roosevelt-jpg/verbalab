@@ -110,6 +110,25 @@ await client.localize({ source: 'en', target: 'sw', content: { hello: 'Hello' } 
 
 Package lives at `packages/sdk`.
 
+## Lugemi MCP
+
+Agent IDE connector for first-party **Baobab** (translate), **Echo** (TTS/STT), and **Atlas** (models) — plus Mix, accents, and voice clones.
+
+- Marketing: `/mcp` · Docs: [`docs/mcp.md`](docs/mcp.md) · `/docs/mcp`
+- Hosted: `POST https://api.lugemi.com/v1/mcp` with `Authorization: Bearer lg_live_…`
+- Stdio: `packages/mcp` (`pnpm --filter @lugemi/mcp build`)
+
+```json
+{
+  "mcpServers": {
+    "lugemi": {
+      "url": "https://api.lugemi.com/v1/mcp",
+      "headers": { "Authorization": "Bearer lg_live_..." }
+    }
+  }
+}
+```
+
 ## Credentials
 
 Add to `apps/api/.env` and `apps/web/.env.local` (see `.env.example`). Lead with Lugemi / first-party. Vendor keys are optional legacy adapters, not the product path.
@@ -158,6 +177,7 @@ Without Clerk keys the production site serves `/setup`, same as local.
 
 ## Docs
 
+- `docs/mcp.md` — Lugemi MCP (Cursor / Claude Desktop / Claude Code)
 - `docs/cloudflare.md` — free Cloudflare products useful with this monorepo (DNS/SSL/CDN, R2, Turnstile, …)
 - `docs/brand/LUGEMI_BRAND_GUIDELINES.md` — identity, voice, and visual standards
 - `docs/brand/PUBLIC_POSITIONING.md` — public category (first-party API + models; Africa first; global regions)

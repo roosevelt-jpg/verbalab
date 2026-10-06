@@ -48,9 +48,11 @@ LUGEMI_BASE_URL=${API_URL}`;
         <div className="vl-api-public-links">
           <Link href="/playground">Playground</Link>
           <Link href="/models">Models</Link>
+          <Link href="/mcp">MCP</Link>
           <Link href="/translate">Translate</Link>
           <Link href="/connectors">Connectors</Link>
           <Link href="/docs/connectors">Connector guides</Link>
+          <Link href="/docs/mcp">MCP guide</Link>
           <Link href="/coverage">Coverage</Link>
           <Link href="/developers">Developers</Link>
           <a href={specUrl} className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none', padding: '0.45rem 0.9rem', minHeight: 40 }}>

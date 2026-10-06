@@ -419,6 +419,7 @@ export const CMS_DEFAULTS: CmsDocument = {
         title: 'LugemiAPI',
         links: [
           { label: 'API Reference', href: '/docs' },
+          { label: 'Lugemi MCP', href: '/mcp' },
           { label: 'Infrastructure', href: '/p/infrastructure' },
           { label: 'Agents API', href: '/p/agents-api' },
           { label: 'Speech Engine', href: '/p/speech-engine' },
@@ -438,6 +439,7 @@ export const CMS_DEFAULTS: CmsDocument = {
         title: 'Resources',
         links: [
           { label: 'Docs', href: '/docs' },
+          { label: 'MCP guide', href: '/docs/mcp' },
           { label: 'Builders', href: '/p/builders' },
           { label: 'OpenAPI explorer', href: '/p/openapi-explorer' },
           { label: 'Playground', href: '/playground' },

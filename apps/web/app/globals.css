@@ -2134,3 +2134,48 @@ textarea {
 @media (max-width: 980px) {
   .lg-admin-grid, .lg-admin-columns, .lg-admin-stat-row, .lg-admin-filters { grid-template-columns: 1fr; }
 }
+
+
+/* —— Lugemi MCP marketing —— */
+.lg-mcp-page { --mcp-ink: var(--brand-navy); max-width: 72rem; margin: 0 auto; padding: 1.25rem 1.35rem 4rem; }
+.lg-mcp-top { display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.5rem; }
+.lg-mcp-top-links { display: flex; flex-wrap: wrap; align-items: center; gap: 0.75rem; font-size: 0.9rem; font-weight: 500; color: var(--muted); }
+.lg-mcp-top-links a:not(.vl-btn) { text-decoration: none; color: inherit; }
+.lg-mcp-top-links a:not(.vl-btn):hover { color: var(--action-primary); }
+.lg-mcp-hero { position: relative; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); gap: 1.5rem; align-items: end; min-height: min(72vh, 34rem); margin: 0 -1.35rem; padding: 2.5rem 1.35rem 2rem; background: radial-gradient(ellipse 55% 70% at 85% 40%, rgba(0, 184, 174, 0.22), transparent 60%), radial-gradient(ellipse 40% 50% at 10% 90%, rgba(16, 38, 77, 0.08), transparent 55%), linear-gradient(165deg, #e8f6f5 0%, #f7fafc 45%, #ffffff 100%); overflow: hidden; animation: lg-mcp-fade 0.7s ease-out both; }
+.lg-mcp-hero-copy { max-width: 34rem; z-index: 1; }
+.lg-mcp-eyebrow { margin: 0 0 0.65rem; font-size: 0.8rem; font-weight: 650; letter-spacing: 0.08em; text-transform: uppercase; color: var(--action-primary); }
+.lg-mcp-hero h1 { margin: 0; font-family: var(--font-display); font-size: clamp(2.6rem, 6vw, 4rem); letter-spacing: -0.04em; line-height: 1.05; color: var(--mcp-ink); animation: lg-mcp-rise 0.75s ease-out 0.08s both; }
+.lg-mcp-lede { margin: 1rem 0 0; font-size: 1.1rem; line-height: 1.6; color: var(--text-secondary); max-width: 32rem; animation: lg-mcp-rise 0.75s ease-out 0.16s both; }
+.lg-mcp-cta { display: flex; flex-wrap: wrap; gap: 0.65rem; margin-top: 1.5rem; animation: lg-mcp-rise 0.75s ease-out 0.24s both; }
+.lg-mcp-hero-visual { display: flex; align-items: center; justify-content: center; min-height: 14rem; }
+.lg-mcp-orbit { position: relative; width: min(100%, 18rem); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle at 50% 50%, rgba(0, 184, 174, 0.35), transparent 55%), conic-gradient(from 200deg, rgba(16, 38, 77, 0.15), rgba(0, 184, 174, 0.35), rgba(16, 38, 77, 0.1)); display: grid; place-items: center; animation: lg-mcp-pulse 4.5s ease-in-out infinite; }
+.lg-mcp-orbit span { position: absolute; font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; color: var(--brand-navy); letter-spacing: -0.02em; }
+.lg-mcp-orbit span:nth-child(1) { top: 14%; left: 50%; transform: translateX(-50%); }
+.lg-mcp-orbit span:nth-child(2) { bottom: 24%; left: 14%; }
+.lg-mcp-orbit span:nth-child(3) { bottom: 24%; right: 14%; }
+.lg-mcp-section { margin-top: 3rem; padding-top: 0.5rem; }
+.lg-mcp-section--tight { margin-top: 2rem; }
+.lg-mcp-section h2 { margin: 0; font-family: var(--font-display); font-size: 1.55rem; letter-spacing: -0.03em; color: var(--brand-navy); }
+.lg-mcp-section-lede { margin: 0.55rem 0 1.15rem; color: var(--muted); line-height: 1.55; max-width: 40rem; }
+.lg-mcp-h3 { margin: 1.5rem 0 0.35rem; font-size: 1.05rem; color: var(--brand-navy); }
+.lg-mcp-hint { margin: 0 0 0.65rem; font-size: 0.88rem; color: var(--muted); }
+.lg-mcp-tools { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.55rem; }
+.lg-mcp-tools li { display: grid; grid-template-columns: minmax(12rem, 18rem) 1fr; gap: 0.75rem; align-items: baseline; padding: 0.55rem 0; border-bottom: 1px solid color-mix(in srgb, var(--line) 70%, transparent); }
+.lg-mcp-tools code { font-family: var(--font-mono); font-size: 0.82rem; color: var(--action-primary); font-weight: 600; }
+.lg-mcp-tools span { color: var(--muted); font-size: 0.92rem; line-height: 1.45; }
+.lg-mcp-links { display: flex; flex-wrap: wrap; gap: 0.85rem; margin-top: 0.75rem; }
+.lg-mcp-links a { color: var(--action-primary); font-weight: 600; text-decoration: none; }
+.lg-mcp-links a:hover { text-decoration: underline; }
+@keyframes lg-mcp-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes lg-mcp-rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes lg-mcp-pulse { 0%, 100% { transform: scale(1); filter: saturate(1); } 50% { transform: scale(1.04); filter: saturate(1.15); } }
+@media (max-width: 800px) {
+  .lg-mcp-hero { grid-template-columns: 1fr; min-height: auto; }
+  .lg-mcp-hero-visual { order: -1; min-height: 10rem; }
+  .lg-mcp-orbit { width: 12rem; }
+  .lg-mcp-tools li { grid-template-columns: 1fr; gap: 0.2rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lg-mcp-hero, .lg-mcp-hero h1, .lg-mcp-lede, .lg-mcp-cta, .lg-mcp-orbit { animation: none; }
+}

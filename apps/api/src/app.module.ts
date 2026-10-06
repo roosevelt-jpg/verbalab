@@ -71,6 +71,7 @@ import { ModelRegistryModule } from './model-registry/model-registry.module';
 import { AtlasModule } from './atlas/atlas.module';
 import { PortfolioModule } from './portfolio/portfolio.module';
 import { MixModule } from './mix/mix.module';
+import { McpModule } from './mcp/mcp.module';
 import { FidelityModule } from './fidelity/fidelity.module';
 import { LiveModule } from './live/live.module';
 import { PragmaticsModule } from './pragmatics/pragmatics.module';
@@ -273,6 +274,7 @@ import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
     AtlasModule,
     PortfolioModule,
     MixModule,
+    McpModule,
     FidelityModule,
     LiveModule,
     PragmaticsModule,

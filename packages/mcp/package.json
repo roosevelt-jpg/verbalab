@@ -1,14 +1,17 @@
 {
   "name": "@lugemi/mcp",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
-  "description": "Model Context Protocol server for Lugemi speech/translate — for video and agent platforms",
+  "description": "Lugemi MCP server — Baobab translate, Echo speech/STT, Atlas models, Mix, accents for agent IDEs",
   "type": "module",
-  "bin": {
-    "lugemi-mcp": "./dist/index.js"
-  },
+  "bin": { "lugemi-mcp": "./dist/index.js" },
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "import": "./dist/index.js" },
+    "./tools": { "types": "./dist/tools.d.ts", "import": "./dist/tools.js" },
+    "./api": { "types": "./dist/api.d.ts", "import": "./dist/api.js" }
+  },
   "files": ["dist", "README.md"],
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -16,15 +19,11 @@
     "start": "node dist/index.js",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
-  "dependencies": {
-    "@lugemi/sdk": "workspace:*"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^22.10.2",
     "@lugemi/typescript-config": "workspace:*",
     "typescript": "^5.7.2"
   },
-  "engines": {
-    "node": ">=20"
-  }
+  "engines": { "node": ">=20" }
 }
