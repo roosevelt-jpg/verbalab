@@ -1,6 +1,6 @@
 /**
  * Privacy Platform.
- * Enforces Volume 12 traditional knowledge consent fields.
+ * Enforces traditional knowledge consent fields.
  */
 export type ConsentStatus = 'attested' | 'restricted' | 'unverified';
 
@@ -23,7 +23,7 @@ export function seedPrivacyAssets(): PrivacyAsset[] {
       provenance: 'community-archive-12',
       sourceCommunity: 'Yoruba heritage council',
       consentStatus: 'attested',
-      notes: 'Release allowed — Volume 12 fields complete.',
+      notes: 'Release allowed — fields complete.',
     },
     {
       id: 'priv-tk-restricted',
@@ -82,7 +82,7 @@ export function evaluatePrivacyRelease(asset: PrivacyAsset): {
       return {
         allowed: false,
         reason:
-          'Missing required Volume 12 consent fields: provenance, sourceCommunity, consentStatus.',
+          'Missing required consent fields: provenance, sourceCommunity, consentStatus.',
       };
     }
     if (asset.consentStatus === 'restricted' || asset.consentStatus === 'unverified') {
@@ -116,7 +116,7 @@ export function privacyPlatformEngineCatalog() {
       { id: 'anonymization', name: 'Anonymization', status: 'shipped', notes: 'Anonymization controls.' },
       { id: 'pseudonymization', name: 'Pseudonymization', status: 'shipped', notes: 'Pseudonymization controls.' },
       { id: 'encryption', name: 'Encryption', status: 'shipped', notes: 'Encryption posture catalog.' },
-      { id: 'consent', name: 'Consent Tracking', status: 'shipped', notes: 'Volume 12 TK consent.' },
+      { id: 'consent', name: 'Consent Tracking', status: 'shipped', notes: 'TK consent.' },
       { id: 'retention', name: 'Retention Policies', status: 'shipped', notes: 'Retention catalog.' },
     ],
     assets,
@@ -136,9 +136,9 @@ export function privacyPlatformEngineCatalog() {
     safety: {
       traditionalKnowledgeConsentRequired: true,
       note:
-        'Before release of traditional knowledge, require Volume 12 consent fields. Block when consentStatus is restricted or unverified. Integrates with cultural consent concepts.',
+        'Before release of traditional knowledge, require consent fields. Block when consentStatus is restricted or unverified. Integrates with cultural consent concepts.',
     },
     docs: '/docs/PRIVACY_PLATFORM.md',
-    note: 'Privacy Platform. Detection/redaction + Volume 12 TK consent enforcement.',
+    note: 'Privacy Platform. Detection/redaction + TK consent enforcement.',
   };
 }

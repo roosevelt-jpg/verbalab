@@ -23,7 +23,7 @@ export function enterpriseEngineeringSystemProductCatalog(): EnterpriseEngineeri
       api: 'GET /v1/enterprise-engineering-system/products',
       console: '/enterprise-engineering-system',
       notes:
-        '. Engineering OS for humans+Cursor; architectureKnowledgeBaseOs=false; adrFactoryOs=false.',
+        'Engineering OS for humans+Cursor; architectureKnowledgeBaseOs=false; adrFactoryOs=false.',
     },
     {
       id: 'engineering-governance',
@@ -32,7 +32,7 @@ export function enterpriseEngineeringSystemProductCatalog(): EnterpriseEngineeri
       api: 'GET /v1/engineering-governance/engine',
       console: '/engineering-governance',
       notes:
-        '. Councils + CAB/TSC; humanSignOffRequired; extends AI Governance.',
+        'Councils + CAB/TSC; humanSignOffRequired; extends AI Governance.',
     },
     {
       id: 'architecture-governance',
@@ -41,7 +41,7 @@ export function enterpriseEngineeringSystemProductCatalog(): EnterpriseEngineeri
       api: 'GET /v1/architecture-governance/engine',
       console: '/architecture-governance',
       notes:
-        '. ADR/RFC workflows pointing at docs/adr; adrFactoryOs=false.',
+        'ADR/RFC workflows pointing at docs/adr; adrFactoryOs=false.',
     },
     {
       id: 'repository-standards',
@@ -50,7 +50,7 @@ export function enterpriseEngineeringSystemProductCatalog(): EnterpriseEngineeri
       api: 'GET /v1/repository-standards/engine',
       console: '/repository-standards',
       notes:
-        '. Monorepo/polyrepo/naming/branch/git standards matching reality.',
+        'Monorepo/polyrepo/naming/branch/git standards matching reality.',
     },
     {
       id: 'engineering-quality-platform',
@@ -59,7 +59,7 @@ export function enterpriseEngineeringSystemProductCatalog(): EnterpriseEngineeri
       api: 'GET /v1/engineering-quality-platform/engine',
       console: '/engineering-quality-platform',
       notes:
-        '. Quality catalog + dashboard snapshot; sonarqubeOs=false.',
+        'Quality catalog + dashboard snapshot; sonarqubeOs=false.',
     },
     {
       id: 'ai-engineering-standards',
@@ -68,7 +68,7 @@ export function enterpriseEngineeringSystemProductCatalog(): EnterpriseEngineeri
       api: 'GET /v1/ai-engineering-standards/engine',
       console: '/ai-engineering-standards',
       notes:
-        '. AI standards + retroactiveChecks (Vol 11/12/17).',
+        'AI standards + retroactiveChecks (Vol 11/12/17).',
     },
     {
       id: 'api-engineering-standards',
@@ -77,7 +77,7 @@ export function enterpriseEngineeringSystemProductCatalog(): EnterpriseEngineeri
       api: 'GET /v1/api-engineering-standards/engine',
       console: '/api-engineering-standards',
       notes:
-        '. REST/GraphQL/gRPC/SDK standards reflecting OpenAPI/SDK.',
+        'REST/GraphQL/gRPC/SDK standards reflecting OpenAPI/SDK.',
     },
     {
       id: 'database-engineering-standards',
@@ -86,7 +86,7 @@ export function enterpriseEngineeringSystemProductCatalog(): EnterpriseEngineeri
       api: 'GET /v1/database-engineering-standards/engine',
       console: '/database-engineering-standards',
       notes:
-        '. Postgres/Redis/ES/vector/KG standards; databaseOs=false.',
+        'Postgres/Redis/ES/vector/KG standards; databaseOs=false.',
     },
     {
       id: 'infrastructure-engineering-standards',
@@ -95,7 +95,7 @@ export function enterpriseEngineeringSystemProductCatalog(): EnterpriseEngineeri
       api: 'GET /v1/infrastructure-engineering-standards/engine',
       console: '/infrastructure-engineering-standards',
       notes:
-        '. IaC/deploy/GPU standards; kubernetesOs=false; FinOps+secrets honesty.',
+        'IaC/deploy/GPU standards; kubernetesOs=false; FinOps+secrets honesty.',
     },
     {
       id: 'platform-engineering-cloud',
@@ -104,7 +104,7 @@ export function enterpriseEngineeringSystemProductCatalog(): EnterpriseEngineeri
       api: 'GET /v1/platform-engineering-cloud/products',
       console: '/platform-engineering-cloud',
       notes:
-        'Volume 16 surface extended by EES.',
+        'Upstream surface extended by EES.',
     },
     {
       id: 'developer-experience-platform',
@@ -113,7 +113,7 @@ export function enterpriseEngineeringSystemProductCatalog(): EnterpriseEngineeri
       api: 'GET /v1/developer-experience-platform/engine',
       console: '/developer-experience-platform',
       notes:
-        'Volume 16 DX surface extended by EES.',
+        'Developer-experience surface extended by EES.',
     },
     {
       id: 'ai-governance-platform',
@@ -122,7 +122,7 @@ export function enterpriseEngineeringSystemProductCatalog(): EnterpriseEngineeri
       api: 'GET /v1/ai-governance-platform/engine',
       console: '/ai-governance-platform',
       notes:
-        'Volume 15 Trust surface extended by EES.',
+        'Trust surface extended by EES.',
     },
     {
       id: 'monitoring',
@@ -270,7 +270,7 @@ export function enterpriseEngineeringSystemExtends(): Array<{
       id: 'docs-adr',
       volume: 0,
       path: 'docs/adr/',
-      role: 'Existing ADR series (246 files at Volume 20 ship)',
+      role: 'Existing architecture decision record series',
     },
     {
       id: 'finops-platform',

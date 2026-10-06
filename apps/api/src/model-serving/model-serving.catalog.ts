@@ -152,14 +152,14 @@ export function modelServingCatalog() {
         name: 'Streaming',
         status: 'partial',
         api: 'GET /v1/model-serving/modes',
-        notes: 'Existing chat/TTS SSE — dedicated Streaming Runtime is .',
+        notes: 'Existing chat/TTS SSE — dedicated Streaming Runtime is.',
       },
       {
         id: 'batch',
         name: 'Batch',
         status: 'partial',
         api: 'GET /v1/model-serving/modes',
-        notes: 'BullMQ jobs today — dedicated Batch Runtime is .',
+        notes: 'BullMQ jobs today — dedicated Batch Runtime is.',
       },
       {
         id: 'realtime',
@@ -250,7 +250,7 @@ export function modelServingCatalog() {
         name: 'Documentation',
         status: 'shipped',
         api: '/docs/MODEL_SERVING.md',
-        notes: 'Product doc + ADR-0117.',
+        notes: 'Product documentation.',
       },
       {
         id: 'production-deployment',
@@ -292,13 +292,13 @@ export function servingModes() {
       id: 'streaming',
       name: 'Streaming',
       status: 'partial' as const,
-      notes: 'Chat/TTS SSE where wired; dedicated Streaming Runtime .',
+      notes: 'Chat/TTS SSE where wired; dedicated Streaming Runtime.',
     },
     {
       id: 'batch',
       name: 'Batch',
       status: 'partial' as const,
-      notes: 'BullMQ jobs; dedicated Batch Runtime .',
+      notes: 'BullMQ jobs; dedicated Batch Runtime.',
     },
     {
       id: 'realtime',

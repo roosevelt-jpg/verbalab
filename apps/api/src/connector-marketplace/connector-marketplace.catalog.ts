@@ -33,7 +33,7 @@ export type ConnectorCatalogEntry = {
   notes: string;
 };
 
-/** Built-in connector SKUs — extend Slack (ADR-0026); not a full iPaaS catalog OS. */
+/** Built-in connector SKUs — extend Slack; not a full iPaaS catalog OS. */
 export const CONNECTOR_CATALOG: ConnectorCatalogEntry[] = [
   {
     key: 'slack',
@@ -41,7 +41,7 @@ export const CONNECTOR_CATALOG: ConnectorCatalogEntry[] = [
     category: 'cloud',
     status: 'shipped',
     api: '/v1/connectors/slack/commands',
-    notes: 'Existing Slack slash connector (ADR-0026). Marketplace listing is an entitlement SKU.',
+    notes: 'Existing Slack slash connector. Marketplace listing is an entitlement SKU.',
   },
   {
     key: 'crm.generic',
@@ -141,7 +141,7 @@ export function findConnectorCatalogEntry(key: string): ConnectorCatalogEntry | 
 /**
  * Connector Marketplace.
  * Buy/sell/publish connector entitlements — not an iPaaS automation OS.
- * Extends Slack connector (ADR-0026). Volume 11: Stripe-only; never store raw cards.
+ * Extends Slack connector.: Stripe-only; never store raw cards.
  */
 export function connectorMarketplaceEngineCatalog() {
   return {
@@ -299,7 +299,7 @@ export function connectorMarketplaceEngineCatalog() {
       stripeOrEquivalentRequired: true,
       storesRawCardData: false,
       note:
-        'Volume 11 real-money volume. Connector listings are entitlements — not live arbitrary outbound. Use Stripe (or equivalent); never store raw card data. Not an iPaaS automation OS.',
+        'Real-money volume. Connector listings are entitlements — not live arbitrary outbound. Use Stripe (or equivalent); never store raw card data. Not an iPaaS automation OS.',
     },
     docs: '/docs/CONNECTOR_MARKETPLACE.md',
   };

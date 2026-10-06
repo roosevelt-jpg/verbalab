@@ -27,7 +27,7 @@ export class AfricanIntelligenceCloudService {
         fairLendingConsiderationsFlagged: true,
         staleGuidanceRiskNoted: true,
         note:
-          'Volume 12 README: traditional knowledge needs provenance/consent; healthcare/finance/government outputs need behavioral guardrails — not buried ToS disclaimers. Global Intelligence OS is deferred past Production Audit.',
+          'Platform docs: traditional knowledge needs provenance/consent; healthcare/finance/government outputs need behavioral guardrails — not buried ToS disclaimers. Global Intelligence OS is deferred past Production Audit.',
       },
       docs: '/docs/AFRICAN_INTELLIGENCE_CLOUD.md',
       note:

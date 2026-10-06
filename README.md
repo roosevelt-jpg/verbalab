@@ -47,7 +47,7 @@ pnpm dev
 | `pnpm smoke` | Hit API + web `/health` (services must be up) |
 | `pnpm test:e2e` | Playwright public pages + optional signed-in translate |
 
-## Stripe billing (VL-031)
+## Stripe billing
 
 Plans mirror tiered packaging: **Free → Starter → Creator → Pro → Scale → Enterprise**.
 Each organization workspace inherits the subscribed features (speech, commercial use, voice clones, marketplace, SSO, …).
@@ -124,16 +124,16 @@ Without Clerk keys the production site serves `/setup`, same as local.
 - `docs/brand/LUGEMI_BRAND_GUIDELINES.md` — identity, voice, and visual standards
 - `docs/brand/PUBLIC_POSITIONING.md` — public category (first-party API + models; Africa first; global regions)
 - `docs/ENGINEERING.md` — thin daily standards
-- `docs/ENGINEERING_OS.md` — Phase 0 Engineering Operating System (full standards)
-- `docs/ENTERPRISE_PRODUCT_BLUEPRINT.md` — Phase −1 enterprise blueprint (C4, DDD, contracts, deploy)
-- `docs/CLOUD_PLATFORM_FOUNDATION.md` — Library Phase 1 Cloud Foundation mapped (VL-125 / ADR-0046)
-- `docs/IDENTITY_CLOUD.md` — Library Phase 2 Identity Cloud mapped (VL-126 / ADR-0047)
-- `docs/DEVELOPER_CLOUD.md` — Library Phase 3 Developer Cloud mapped (VL-127 / ADR-0048)
-- `docs/ENTERPRISE_CLOUD.md` — Library Phase 4 Enterprise Cloud mapped (VL-128 / ADR-0049)
-- `docs/AI_GATEWAY_CLOUD.md` — Library Phase 5 AI Gateway Cloud mapped (VL-129 / ADR-0050); Volume 1 Part A complete
-- `docs/LANGUAGE_CLOUD.md` — Library Phase 6 Language Cloud mapped (VL-130 / ADR-0051)
+- `docs/ENGINEERING_OS.md` — Engineering Operating System (full standards)
+- `docs/ENTERPRISE_PRODUCT_BLUEPRINT.md` — Enterprise blueprint (C4, DDD, contracts, deploy)
+- `docs/CLOUD_PLATFORM_FOUNDATION.md` — Cloud Foundation
+- `docs/IDENTITY_CLOUD.md` — Identity Cloud
+- `docs/DEVELOPER_CLOUD.md` — Developer Cloud
+- `docs/ENTERPRISE_CLOUD.md` — Enterprise Cloud
+- `docs/AI_GATEWAY_CLOUD.md` — AI Gateway Cloud
+- `docs/LANGUAGE_CLOUD.md` — Language Cloud
 - `docs/templates/` — RFC / PRD / Runbook templates
 - `ARCHITECTURE.md` — stack and boundaries
 - `infra/DEPLOY.md` — Fly.io production (US + EU residency islands)
-- `PHASE_0_1.md` — Phase 0 / Phase 1 scope
-- `PROGRESS.md` / `ROADMAP.md` — phase status
+- `PHASE_0_1.md` — Early platform scope
+- `PROGRESS.md` / `ROADMAP.md` — delivery status

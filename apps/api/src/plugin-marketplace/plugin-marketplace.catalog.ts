@@ -11,7 +11,7 @@ export type PluginMarketplaceCapability = {
 /**
  * Plugin Marketplace.
  * Buy/sell/publish sandboxed plugins over Plugin Runtime — not a browser/VS Code extension OS.
- * Volume 11 README: enforce Volume 8 sandbox + Policy gate before third-party plugins run.
+ * Platform docs: enforce sandbox + Policy gate before third-party plugins run.
  */
 export function pluginMarketplaceEngineCatalog() {
   return {
@@ -132,7 +132,7 @@ export function pluginMarketplaceEngineCatalog() {
       fabricPolicyHardGateRequired: true,
       policyLogOnlyForbidden: true,
       note:
-        'Volume 11: third-party marketplace plugins must not run until Plugin Runtime sandbox + Policy gates allow. Denied actions (shell.exec, network.fetch, plugin.invoke_live, …) always 403.',
+        ': third-party marketplace plugins must not run until Plugin Runtime sandbox + Policy gates allow. Denied actions (shell.exec, network.fetch, plugin.invoke_live, …) always 403.',
     },
     docs: '/docs/PLUGIN_MARKETPLACE.md',
   };

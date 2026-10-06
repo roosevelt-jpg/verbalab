@@ -145,7 +145,7 @@ export function reasoningRuntimeCatalog() {
         name: 'Documentation',
         status: 'shipped',
         api: '/docs/REASONING_RUNTIME.md',
-        notes: 'Product doc + ADR-0129.',
+        notes: 'Product documentation.',
       },
       {
         id: 'production-deployment',

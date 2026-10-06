@@ -1,6 +1,6 @@
 /**
  * FinOps Platform.
- * Pairs with Volume 7 GPU/Inference cost surfaces. Catalog/dashboard — not cloud-billing OS.
+ * Pairs with GPU/Inference cost surfaces. Catalog/dashboard — not cloud-billing OS.
  */
 export type FinOpsBudget = {
   id: string;
@@ -38,7 +38,7 @@ export function seedFinOpsBudgets(): FinOpsBudget[] {
       kind: 'gpu',
       monthlyUsd: 2500,
       alertThresholdPct: 80,
-      source: 'Volume 7 gpu-platform / ai-runtime-analytics',
+      source: 'gpu-platform / ai-runtime-analytics',
       notes: 'Primary GPU budget alert — pairs Inference Cloud cost surfaces.',
     },
     {
@@ -47,7 +47,7 @@ export function seedFinOpsBudgets(): FinOpsBudget[] {
       kind: 'model',
       monthlyUsd: 1200,
       alertThresholdPct: 85,
-      source: 'Volume 7 inference cost ledger',
+      source: 'inference cost ledger',
       notes: 'Model/token cost budget with alert seeding.',
     },
     {
@@ -89,7 +89,7 @@ export function seedFinOpsAlerts(): FinOpsAlert[] {
       severity: 'high',
       message: 'GPU spend crossed 80% of monthly budget',
       enabled: true,
-      notes: 'gpuBudgetAlertsEnabled=true — Volume 7 pairing.',
+      notes: 'gpuBudgetAlertsEnabled=true — pairing.',
     },
     {
       id: 'alert-gpu-critical',
@@ -142,7 +142,7 @@ export function finopsPlatformEngineCatalog() {
     product: 'Lugemi FinOps Platform',
     capabilities: [
       { id: 'cloud_cost', name: 'Cloud Cost', status: 'shipped', notes: 'Shared platform cost.' },
-      { id: 'gpu_cost', name: 'GPU Cost', status: 'shipped', notes: 'Volume 7 GPU pairing.' },
+      { id: 'gpu_cost', name: 'GPU Cost', status: 'shipped', notes: 'GPU pairing.' },
       { id: 'model_cost', name: 'Model Cost', status: 'shipped', notes: 'Inference ledger.' },
       { id: 'storage_cost', name: 'Storage Cost', status: 'shipped', notes: 'Storage showback.' },
       { id: 'bandwidth_cost', name: 'Bandwidth Cost', status: 'shipped', notes: 'Bandwidth showback.' },
@@ -169,7 +169,7 @@ export function finopsPlatformEngineCatalog() {
       finopsOs: false,
       gpuBudgetAlertsEnabled: true,
       note:
-        'FinOps is a catalog/dashboard over Volume 7 GPU/inference costs and shared platform spend — not a cloud-billing OS. GPU budget alerts are enabled.',
+        'FinOps is a catalog/dashboard over GPU/inference costs and shared platform spend — not a cloud-billing OS. GPU budget alerts are enabled.',
     },
     docs: '/docs/FINOPS_PLATFORM.md',
     note:

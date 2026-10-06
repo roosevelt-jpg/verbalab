@@ -99,7 +99,7 @@ export class CreatorEconomyService {
         action: 'creator_economy.royalty_previewed',
         route: 'POST /v1/creator-economy/royalty/preview',
         ip: input.ip,
-        metadata: { ...split, schedule },
+        metadata: {...split, schedule },
       });
 
       return {
@@ -109,7 +109,7 @@ export class CreatorEconomyService {
         note:
           schedule === 'content_marketplace'
             ? 'Uses billing.platformFeeBps() (MARKETPLACE_PLATFORM_FEE_BPS, default 20%).'
-            : 'Uses ecosystem hub fee 15% (1500 bps) — Volume 11 model→voice-language marketplaces.',
+            : 'Uses ecosystem hub fee 15% (1500 bps) — model→voice-language marketplaces.',
       };
     });
   }
@@ -138,7 +138,7 @@ export class CreatorEconomyService {
           listingId: r.listingId,
           listingTitle: r.listing.title,
           listingKind: r.listing.kind,
-          role: r.publisherOrgId === organizationId ? 'publisher' : 'buyer',
+          role: r.publisherOrgId === organizationId ? 'publisher': 'buyer',
           amountCents: r.amountCents,
           applicationFeeCents: r.applicationFeeCents,
           publisherNetCents: r.amountCents - r.applicationFeeCents,
@@ -149,7 +149,7 @@ export class CreatorEconomyService {
         };
       }),
       honesty: this.engine().honesty,
-      note: 'Aggregated MarketplaceSale receipts ( + Volume 11 hubs). Not a payment ledger OS.',
+      note: 'Aggregated MarketplaceSale receipts ( + hubs). Not a payment ledger OS.',
     };
   }
 
@@ -173,7 +173,7 @@ export class CreatorEconomyService {
         applicationFeeCents: r.applicationFeeCents,
         publisherNetCents: r.amountCents - r.applicationFeeCents,
         currency: r.currency,
-        status: r.status === 'paid' ? 'paid' : 'recorded',
+        status: r.status === 'paid' ? 'paid': 'recorded',
         issuedAt: r.createdAt.toISOString(),
       })),
       honesty: {

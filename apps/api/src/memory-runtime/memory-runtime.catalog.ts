@@ -198,7 +198,7 @@ export function memoryRuntimeCatalog() {
         name: 'Documentation',
         status: 'shipped',
         api: '/docs/MEMORY_RUNTIME.md',
-        notes: 'Product doc + ADR-0126.',
+        notes: 'Product documentation.',
       },
       {
         id: 'production-deployment',

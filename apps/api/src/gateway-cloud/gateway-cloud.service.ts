@@ -49,7 +49,7 @@ export class GatewayCloudService {
         health: '/health',
       },
       volume: {
-        closes: 'Volume 1 Part A',
+        closes: 'Cloud foundations',
         note: 'Foundations complete: strategy, blueprint, Engineering OS, cloud/identity/developer/enterprise, AI gateway.',
       },
     };

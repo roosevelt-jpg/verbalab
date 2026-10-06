@@ -38,7 +38,7 @@ export function modelTrainingPlatformCatalog() {
   return {
     product: 'Lugemi Model Training Platform',
     note:
-      'Model Training Platform. Catalogs LoRA/instruction-tuning orchestration over existing `/v1/training-jobs`. Experiment plans are sandbox-tracked. Does not ship distributed GPU clusters, RLHF/DPO labs, or trained competitive foundation weights (Volume 9 README).',
+      'Model Training Platform. Catalogs LoRA/instruction-tuning orchestration over existing `/v1/training-jobs`. Experiment plans are sandbox-tracked. Does not ship distributed GPU clusters, RLHF/DPO labs, or trained competitive foundation weights.',
     capabilities: [
       {
         id: 'training-orchestration',
@@ -80,14 +80,14 @@ export function modelTrainingPlatformCatalog() {
         name: 'GPU Scheduling',
         status: 'partial',
         api: 'GET /v1/training-jobs/launchers',
-        notes: 'Buy Modal/Vertex/manual launchers (ADR-0040) — not K8s device plugins.',
+        notes: 'Buy Modal/Vertex/manual launchers — not K8s device plugins.',
       },
       {
         id: 'model-versioning',
         name: 'Model Versioning',
         status: 'partial',
         api: 'GET /v1/models/live',
-        notes: 'Links registry; full FMC registry is .',
+        notes: 'Links registry; full FMC registry is.',
       },
       {
         id: 'distributed-training',
@@ -178,7 +178,7 @@ export function modelTrainingMethods(): MtpMethod[] {
       status: 'partial',
       launchable: false,
       existingApi: 'GET /v1/models/live',
-      notes: 'Defers full FMC registry to ; uses today.',
+      notes: 'Defers full FMC registry to; uses today.',
     },
     {
       id: 'qlora',

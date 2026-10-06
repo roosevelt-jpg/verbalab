@@ -12,7 +12,7 @@ export type AfricanIntelProductRow = {
 /**
  * African Intelligence Cloud Foundation.
  * Hub over Language/Knowledge/Intelligence clouds — not Neo4j OS, not extractive scrape OS,
- * not Digital Twin OS, not Global Intelligence OS (Volume 13+ recommendation after audit).
+ * not Digital Twin OS, not Global Intelligence OS ( recommendation after audit).
  */
 export function africanIntelligenceProductCatalog(): AfricanIntelProductRow[] {
   return [
@@ -23,7 +23,7 @@ export function africanIntelligenceProductCatalog(): AfricanIntelProductRow[] {
       api: 'GET /v1/african-intelligence-cloud/products',
       console: '/african-intelligence-cloud',
       notes:
-        'Foundation hub. Extends Language/Knowledge/Intelligence clouds — does not regenerate Volumes 1–11.',
+        'Foundation hub. Extends Language/Knowledge/Intelligence clouds — does not regenerate.',
     },
     {
       id: 'african-language-registry',
@@ -31,7 +31,7 @@ export function africanIntelligenceProductCatalog(): AfricanIntelProductRow[] {
       status: 'shipped',
       api: 'GET /v1/african-language-registry/engine',
       console: '/african-language-registry',
-      notes: '. Representative language/dialect/writing-system seed. coverageComplete=false.',
+      notes: 'Representative language/dialect/writing-system seed. coverageComplete=false.',
     },
     {
       id: 'cultural-intelligence',
@@ -40,7 +40,7 @@ export function africanIntelligenceProductCatalog(): AfricanIntelProductRow[] {
       api: 'GET /v1/cultural-intelligence/engine',
       console: '/cultural-intelligence',
       notes:
-        '. Provenance/sourceCommunity/consentStatus required. traditionalKnowledgeConsentRequired=true.',
+        'Provenance/sourceCommunity/consentStatus required. traditionalKnowledgeConsentRequired=true.',
     },
     {
       id: 'african-knowledge-graph',
@@ -48,7 +48,7 @@ export function africanIntelligenceProductCatalog(): AfricanIntelProductRow[] {
       status: 'shipped',
       api: 'GET /v1/african-knowledge-graph/engine',
       console: '/african-knowledge-graph',
-      notes: '. In-process entity/relationship graph. neo4jOs=false.',
+      notes: 'In-process entity/relationship graph. neo4jOs=false.',
     },
     {
       id: 'government-intelligence',
@@ -56,7 +56,7 @@ export function africanIntelligenceProductCatalog(): AfricanIntelProductRow[] {
       status: 'shipped',
       api: 'GET /v1/government-intelligence/engine',
       console: '/government-intelligence',
-      notes: '. officialGuidanceMustBeSourced=true; stale-guidance risk flagged.',
+      notes: 'officialGuidanceMustBeSourced=true; stale-guidance risk flagged.',
     },
     {
       id: 'healthcare-intelligence',
@@ -64,7 +64,7 @@ export function africanIntelligenceProductCatalog(): AfricanIntelProductRow[] {
       status: 'shipped',
       api: 'GET /v1/healthcare-intelligence/engine',
       console: '/healthcare-intelligence',
-      notes: '. notMedicalAdvice=true; consult-professional framing in engine/safety.',
+      notes: 'notMedicalAdvice=true; consult-professional framing in engine/safety.',
     },
     {
       id: 'financial-intelligence',
@@ -72,7 +72,7 @@ export function africanIntelligenceProductCatalog(): AfricanIntelProductRow[] {
       status: 'shipped',
       api: 'GET /v1/financial-intelligence/engine',
       console: '/financial-intelligence',
-      notes: '. notInvestmentAdvice=true; fair-lending considerations flagged.',
+      notes: 'notInvestmentAdvice=true; fair-lending considerations flagged.',
     },
     {
       id: 'education-intelligence',
@@ -80,7 +80,7 @@ export function africanIntelligenceProductCatalog(): AfricanIntelProductRow[] {
       status: 'shipped',
       api: 'GET /v1/education-intelligence/engine',
       console: '/education-intelligence',
-      notes: '. Curriculum/terms catalog — not a national education OS.',
+      notes: 'Curriculum/terms catalog — not a national education OS.',
     },
     {
       id: 'agricultural-intelligence',
@@ -88,7 +88,7 @@ export function africanIntelligenceProductCatalog(): AfricanIntelProductRow[] {
       status: 'shipped',
       api: 'GET /v1/agricultural-intelligence/engine',
       console: '/agricultural-intelligence',
-      notes: '. Crop/climate/terms catalog — not a farm-management OS.',
+      notes: 'Crop/climate/terms catalog — not a farm-management OS.',
     },
     {
       id: 'tourism-heritage-intelligence',
@@ -97,7 +97,7 @@ export function africanIntelligenceProductCatalog(): AfricanIntelProductRow[] {
       api: 'GET /v1/tourism-heritage-intelligence/engine',
       console: '/tourism-heritage-intelligence',
       notes:
-        '. Heritage/tourism terms with traditional-knowledge consent posture.',
+        'Heritage/tourism terms with traditional-knowledge consent posture.',
     },
   ];
 }
@@ -126,7 +126,7 @@ export function africanIntelligenceArchitectureNotes() {
     globalIntelligenceOs: false,
     traditionalKnowledgeConsentRequired: true,
     note:
-      'Volume 12 African Intelligence Cloud hub. Extends Language/Knowledge/Intelligence clouds. Not Neo4j OS, not extractive scrape OS, not Digital Twin OS. Global Intelligence OS is a Volume 13+ recommendation after Production Audit — not invented here.',
+      'African Intelligence Cloud hub. Extends Language/Knowledge/Intelligence clouds. Not Neo4j OS, not extractive scrape OS, not Digital Twin OS. Global Intelligence OS is a recommendation after Production Audit — not invented here.',
   };
 }
 

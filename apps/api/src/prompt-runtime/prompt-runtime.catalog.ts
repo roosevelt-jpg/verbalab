@@ -162,7 +162,7 @@ export function promptRuntimeCatalog() {
         name: 'Documentation',
         status: 'shipped',
         api: '/docs/PROMPT_RUNTIME.md',
-        notes: 'Product doc + ADR-0127.',
+        notes: 'Product documentation.',
       },
       {
         id: 'production-deployment',

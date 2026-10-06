@@ -25,9 +25,9 @@ export type MlopsAssetTypeId =
 
 /**
  * MLOps & LLMOps Cloud Foundation.
- * Ops layer over Inference/Kernel/Foundation Models (7–9), RAG (Volume 6),
- * Agent Runtime (Volume 8), and Prompt Runtime. Not Kubeflow/SageMaker/Vertex/
- * W&B/MLflow/LangSmith/Ray cluster OS. Trust Cloud deferred to Volume 15+.
+ * Ops layer over Inference/Kernel/Foundation Models (7–9), RAG,
+ * Agent Runtime, and Prompt Runtime. Not Kubeflow/SageMaker/Vertex/
+ * W&B/MLflow/LangSmith/Ray cluster OS. Trust Cloud deferred.
  */
 export function mlopsLlmopsCloudProductCatalog(): MlopsLlmopsCloudProductRow[] {
   return [
@@ -38,7 +38,7 @@ export function mlopsLlmopsCloudProductCatalog(): MlopsLlmopsCloudProductRow[] {
       api: 'GET /v1/mlops-llmops-cloud/products',
       console: '/mlops-llmops-cloud',
       notes:
-        'Foundation hub. Extends Inference/Kernel/Foundation/RAG/Agent/Prompt — does not regenerate Volumes 1–13.',
+        'Foundation hub. Extends Inference/Kernel/Foundation/RAG/Agent/Prompt — does not regenerate.',
     },
     {
       id: 'dataset-pipeline',
@@ -46,7 +46,7 @@ export function mlopsLlmopsCloudProductCatalog(): MlopsLlmopsCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/dataset-pipeline/engine',
       console: '/dataset-pipeline',
-      notes: '. Extends dataset marketplace / — does not regenerate.',
+      notes: 'Extends dataset marketplace — does not regenerate.',
     },
     {
       id: 'training-pipeline',
@@ -54,7 +54,7 @@ export function mlopsLlmopsCloudProductCatalog(): MlopsLlmopsCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/training-pipeline/engine',
       console: '/training-pipeline',
-      notes: '. LoRA/QLoRA/DPO/RLHF/SFT catalog. distributedTrainingOs=false.',
+      notes: 'LoRA/QLoRA/DPO/RLHF/SFT catalog. distributedTrainingOs=false.',
     },
     {
       id: 'continuous-evaluation',
@@ -62,7 +62,7 @@ export function mlopsLlmopsCloudProductCatalog(): MlopsLlmopsCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/continuous-evaluation/engine',
       console: '/continuous-evaluation',
-      notes: '. Extends evaluation-platform / model-evaluation — gate status for Continuous Learning.',
+      notes: 'Extends evaluation-platform / model-evaluation — gate status for Continuous Learning.',
     },
     {
       id: 'promptops-platform',
@@ -70,7 +70,7 @@ export function mlopsLlmopsCloudProductCatalog(): MlopsLlmopsCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/promptops-platform/engine',
       console: '/promptops-platform',
-      notes: '. Over Prompt Runtime / Prompt Fabric. Not LangSmith OS.',
+      notes: 'Over Prompt Runtime / Prompt Fabric. Not LangSmith OS.',
     },
     {
       id: 'ragops-platform',
@@ -78,7 +78,7 @@ export function mlopsLlmopsCloudProductCatalog(): MlopsLlmopsCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/ragops-platform/engine',
       console: '/ragops-platform',
-      notes: '. Over Volume 6 RAG. Not vector-DB OS.',
+      notes: 'Over RAG. Not vector-DB OS.',
     },
     {
       id: 'agentops-platform',
@@ -86,7 +86,7 @@ export function mlopsLlmopsCloudProductCatalog(): MlopsLlmopsCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/agentops-platform/engine',
       console: '/agentops-platform',
-      notes: '. policyViolationsVisible=true for human monitoring.',
+      notes: 'policyViolationsVisible=true for human monitoring.',
     },
     {
       id: 'ai-drift-detection',
@@ -94,7 +94,7 @@ export function mlopsLlmopsCloudProductCatalog(): MlopsLlmopsCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/ai-drift-detection/engine',
       console: '/ai-drift-detection',
-      notes: '. driftClear check required before Continuous Learning promote.',
+      notes: 'driftClear check required before Continuous Learning promote.',
     },
     {
       id: 'continuous-learning',
@@ -103,7 +103,7 @@ export function mlopsLlmopsCloudProductCatalog(): MlopsLlmopsCloudProductRow[] {
       api: 'GET /v1/continuous-learning/engine',
       console: '/continuous-learning',
       notes:
-        '. humanApprovalRequiredBeforePromote=true; poisonedInputGuard=true; requiresDriftClear + requiresContinuousEvalPass.',
+        'humanApprovalRequiredBeforePromote=true; poisonedInputGuard=true; requiresDriftClear + requiresContinuousEvalPass.',
     },
     {
       id: 'ai-operations-dashboard',
@@ -111,7 +111,7 @@ export function mlopsLlmopsCloudProductCatalog(): MlopsLlmopsCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/ai-operations-dashboard/engine',
       console: '/ai-operations-dashboard',
-      notes: '. Unified sibling hub snapshot.',
+      notes: 'Unified sibling hub snapshot.',
     },
   ];
 }
@@ -128,7 +128,7 @@ export function mlopsAssetTypesCatalog(): Array<{
     { id: 'embeddings', name: 'Embeddings', status: 'shipped', notes: 'Embedding refresh via RAGOps.' },
     { id: 'prompts', name: 'Prompts', status: 'shipped', notes: 'PromptOps registry/versioning.' },
     { id: 'agents', name: 'Agents', status: 'shipped', notes: 'AgentOps over Agent Runtime.' },
-    { id: 'ragPipelines', name: 'RAG Pipelines', status: 'shipped', notes: 'RAGOps over Volume 6 RAG.' },
+    { id: 'ragPipelines', name: 'RAG Pipelines', status: 'shipped', notes: 'RAGOps over RAG.' },
     { id: 'knowledgeGraph', name: 'Knowledge Graph', status: 'shipped', notes: 'Ops view — not graph DB OS.' },
     { id: 'inference', name: 'Inference', status: 'shipped', notes: 'Extends Inference Cloud.' },
     { id: 'evaluation', name: 'Evaluation', status: 'shipped', notes: 'Continuous Evaluation gates.' },
@@ -172,7 +172,7 @@ export function mlopsLlmopsCloudArchitectureNotes() {
     rayClusterOs: false,
     trustCloudOs: false,
     note:
-      'Volume 14 MLOps & LLMOps Cloud hub. Ops layer over Inference/Kernel/Foundation/RAG/Agent/Prompt. Not Kubeflow/SageMaker/Vertex/W&B/MLflow/LangSmith/Ray OS. Trust Cloud deferred to Volume 15+.',
+      'MLOps & LLMOps Cloud hub. Ops layer over Inference/Kernel/Foundation/RAG/Agent/Prompt. Not Kubeflow/SageMaker/Vertex/W&B/MLflow/LangSmith/Ray OS. Trust Cloud deferred.',
   };
 }
 

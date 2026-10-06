@@ -156,7 +156,7 @@ export function intelligentCacheCatalog() {
         name: 'Analytics',
         status: 'shipped',
         api: 'GET /v1/intelligent-cache/analytics',
-        notes: 'Hit/miss + entry counts — ≠ .',
+        notes: 'Hit/miss + entry counts — ≠.',
       },
       {
         id: 'monitoring',
@@ -184,7 +184,7 @@ export function intelligentCacheCatalog() {
         name: 'Documentation',
         status: 'shipped',
         api: '/docs/INTELLIGENT_CACHE.md',
-        notes: 'Product doc + ADR-0121.',
+        notes: 'Product documentation.',
       },
       {
         id: 'production-deployment',

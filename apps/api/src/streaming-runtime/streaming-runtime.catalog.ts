@@ -208,7 +208,7 @@ export function streamingRuntimeCatalog() {
         name: 'Analytics',
         status: 'shipped',
         api: 'GET /v1/streaming-runtime/analytics',
-        notes: 'Session aggregates — ≠ .',
+        notes: 'Session aggregates — ≠.',
       },
       {
         id: 'rest',
@@ -229,7 +229,7 @@ export function streamingRuntimeCatalog() {
         name: 'Documentation',
         status: 'shipped',
         api: '/docs/STREAMING_RUNTIME.md',
-        notes: 'Product doc + ADR-0119.',
+        notes: 'Product documentation.',
       },
       {
         id: 'production-deployment',

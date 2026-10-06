@@ -98,7 +98,7 @@ export function pluginRuntimeCatalog() {
         status: 'shipped',
         api: 'GET /v1/plugin-marketplace/engine',
         notes:
-          ' dedicated Plugin Marketplace. Runtime still exposes listing counts at GET /v1/plugin-runtime/marketplace.',
+          'dedicated Plugin Marketplace. Runtime still exposes listing counts at GET /v1/plugin-runtime/marketplace.',
       },
       {
         id: 'plugin-dependencies',
@@ -161,7 +161,7 @@ export function pluginRuntimeCatalog() {
         name: 'Documentation',
         status: 'shipped',
         api: '/docs/PLUGIN_RUNTIME.md',
-        notes: 'Product doc + ADR-0132.',
+        notes: 'Product documentation.',
       },
       {
         id: 'production-deployment',

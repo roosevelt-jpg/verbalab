@@ -10,14 +10,14 @@ export function aiEngineeringStandardsEngineCatalog() {
     architectureKnowledgeBaseOs: false,
     adrFactoryOs: false,
     capabilities: [
-      { id: 'prompt', name: 'Prompt Engineering Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
-      { id: 'model', name: 'Model Engineering Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
-      { id: 'dataset', name: 'Dataset Engineering Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
-      { id: 'evaluation', name: 'Evaluation Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
-      { id: 'safety', name: 'Safety Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
-      { id: 'reasoning', name: 'Reasoning Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
-      { id: 'agent', name: 'Agent Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
-      { id: 'inference', name: 'Inference Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' }
+      { id: 'prompt', name: 'Prompt Engineering Standards', status: 'shipped', notes: 'standards capability — catalog, not a new OS.' },
+      { id: 'model', name: 'Model Engineering Standards', status: 'shipped', notes: 'standards capability — catalog, not a new OS.' },
+      { id: 'dataset', name: 'Dataset Engineering Standards', status: 'shipped', notes: 'standards capability — catalog, not a new OS.' },
+      { id: 'evaluation', name: 'Evaluation Standards', status: 'shipped', notes: 'standards capability — catalog, not a new OS.' },
+      { id: 'safety', name: 'Safety Standards', status: 'shipped', notes: 'standards capability — catalog, not a new OS.' },
+      { id: 'reasoning', name: 'Reasoning Standards', status: 'shipped', notes: 'standards capability — catalog, not a new OS.' },
+      { id: 'agent', name: 'Agent Standards', status: 'shipped', notes: 'standards capability — catalog, not a new OS.' },
+      { id: 'inference', name: 'Inference Standards', status: 'shipped', notes: 'standards capability — catalog, not a new OS.' }
     ],
     routes: [
       {
@@ -77,7 +77,7 @@ export function aiEngineeringStandardsEngineCatalog() {
         checkedAgainstStandards: true,
         finding: 'pass',
         notes:
-          'Volume 11 payments use Stripe honesty + sandbox safety; not payment-processor OS. Matches AI/API security standards: no invented PCI certification.',
+          'payments use Stripe honesty + sandbox safety; not payment-processor OS. Matches AI/API security standards: no invented PCI certification.',
       },
       {
         id: 'vol12-healthcare',

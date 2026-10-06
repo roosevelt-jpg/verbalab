@@ -27,7 +27,7 @@ export class ControlPlaneCloudService {
         secondPolicyOs: false,
         secondIdp: false,
         note:
-          'Volume 17 README: highest-privilege management layer. Secrets use envelope encryption + audit; production deploys require authorization with rollback; least-privilege admin roles. Data Plane rejected here (Volume 18+).',
+          'Platform docs: highest-privilege management layer. Secrets use envelope encryption + audit; production deploys require authorization with rollback; least-privilege admin roles. Data Plane rejected here.',
       },
       docs: '/docs/CONTROL_PLANE_CLOUD.md',
       note:

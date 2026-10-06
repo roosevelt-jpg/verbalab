@@ -70,11 +70,11 @@ export function VoiceLanguageMarketplaceClient() {
         Voice & Language Marketplace
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        License voice and language pack SKUs over Volume 1 — not third-party TTS or a voice CDN.
+        License voice and language pack SKUs over — not third-party TTS or a voice CDN.
       </p>
 
-      {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
-      {!engine && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}
+      {error ? <p style={{ color: '#b42318' }}>{error}</p>: null}
+      {!engine && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p>: null}
 
       {engine ? (
         <div style={{ display: 'grid', gap: '1.75rem' }}>
@@ -121,20 +121,20 @@ export function VoiceLanguageMarketplaceClient() {
               <p style={{ margin: 0, color: 'var(--muted)' }}>
                 No published pack listings yet. Publish a catalog key (e.g. language.sw) here.
               </p>
-            ) : (
+            ): (
               <ul style={{ margin: 0, paddingLeft: '1.1rem', lineHeight: 1.7 }}>
                 {listings.map((l) => (
                   <li key={l.id}>
                     <strong>{l.title}</strong> ({l.packType} · {l.packKey} · {l.packVersion})
-                    {l.verified ? ' · verified' : ''} — {l.publisherName ?? 'publisher'}
-                    {l.priceCents > 0 ? ` · $${(l.priceCents / 100).toFixed(2)}` : ' · free'}
+                    {l.verified ? ' · verified': ''} — {l.publisherName ?? 'publisher'}
+                    {l.priceCents > 0 ? ` · $${(l.priceCents / 100).toFixed(2)}`: ' · free'}
                   </li>
                 ))}
               </ul>
             )}
           </section>
         </div>
-      ) : null}
+      ): null}
     </AppShell>
   );
 }

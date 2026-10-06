@@ -16,7 +16,7 @@ export type OpenReleaseCandidate = {
 /**
  * Open Science Platform.
  * traditionalKnowledgeConsentRequired=true.
- * Before open release of traditional knowledge, require Volume 12 consent fields
+ * Before open release of traditional knowledge, require consent fields
  * (provenance, sourceCommunity, consentStatus). Block restricted/unverified.
  */
 export function openSciencePlatformEngineCatalog() {
@@ -112,7 +112,7 @@ export function openSciencePlatformEngineCatalog() {
       requiredConsentFields: ['provenance', 'sourceCommunity', 'consentStatus'],
       blockConsentStatuses: ['restricted', 'unverified'],
       note:
-        'Before open release of traditional knowledge, require Volume 12 consent fields. Block open release when consentStatus is restricted or unverified.',
+        'Before open release of traditional knowledge, require consent fields. Block open release when consentStatus is restricted or unverified.',
     },
     docs: '/docs/OPEN_SCIENCE_PLATFORM.md',
   };
@@ -127,7 +127,7 @@ export function evaluateOpenRelease(
   if (!candidate.provenance || !candidate.sourceCommunity || !candidate.consentStatus) {
     return {
       allowed: false,
-      reason: 'Missing required Volume 12 consent fields: provenance, sourceCommunity, consentStatus.',
+      reason: 'Missing required consent fields: provenance, sourceCommunity, consentStatus.',
     };
   }
   if (candidate.consentStatus === 'restricted' || candidate.consentStatus === 'unverified') {

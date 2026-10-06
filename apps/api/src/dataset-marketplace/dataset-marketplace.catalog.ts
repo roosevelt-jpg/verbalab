@@ -33,7 +33,7 @@ export const DATASET_MARKETPLACE_LICENSE_TYPES = [
 /**
  * Dataset Marketplace.
  * Extends existing dataset listings + DatasetAsset — not Label Studio / Dataset Cloud OS.
- * Volume 11 README: real-money honesty — Stripe (or equivalent); never store raw cards.
+ * Platform docs: real-money honesty — Stripe (or equivalent); never store raw cards.
  */
 export function datasetMarketplaceEngineCatalog() {
   return {
@@ -157,7 +157,7 @@ export function datasetMarketplaceEngineCatalog() {
       fabricPolicyHardGateRequired: true,
       realMoneyRiskCategory: true,
       note:
-        'Volume 11 real-money volume. Use Stripe (or equivalent); never store raw card data. Not Label Studio / Dataset Cloud.',
+        'Real-money volume. Use Stripe (or equivalent); never store raw card data. Not Label Studio / Dataset Cloud.',
     },
     docs: '/docs/DATASET_MARKETPLACE.md',
   };

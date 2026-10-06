@@ -26,7 +26,7 @@ export class TrustCloudService {
         notCertifiedCompliant: true,
         platformEngineeringOs: false,
         note:
-          'Volume 15 README: Compliance tooling is not certification; AI Safety wires to Policy Runtime; Privacy enforces Volume 12 TK consent; Governance requires human sign-off. Platform Engineering deferred.',
+          'Platform docs: Compliance tooling is not certification; AI Safety wires to Policy Runtime; Privacy enforces TK consent; Governance requires human sign-off. Platform Engineering deferred.',
       },
       docs: '/docs/TRUST_CLOUD.md',
       note:

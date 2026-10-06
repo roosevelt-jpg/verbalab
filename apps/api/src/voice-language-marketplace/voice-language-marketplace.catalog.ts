@@ -29,7 +29,7 @@ export type VoiceLanguageCatalogEntry = {
   notes: string;
 };
 
-/** Built-in pack SKUs — extend voice marketplace + Volume 1 language surfaces. */
+/** Built-in pack SKUs — extend voice marketplace + language surfaces. */
 export const VOICE_LANGUAGE_PACK_CATALOG: VoiceLanguageCatalogEntry[] = [
   {
     key: 'voice.pack',
@@ -121,13 +121,13 @@ export function findVoiceLanguagePackEntry(key: string): VoiceLanguageCatalogEnt
 /**
  * Voice & Language Marketplace.
  * Buy/sell/publish voice + language pack entitlements — not a third-party voice CDN OS.
- * Extends existing voice marketplace + Volume 1 language packs. Volume 11: Stripe-only.
+ * Extends existing voice marketplace + language packs.: Stripe-only.
  */
 export function voiceLanguageMarketplaceEngineCatalog() {
   return {
     product: 'Lugemi Voice & Language Marketplace',
     note:
-      'Voice & Language Marketplace. Publish/license pack SKUs over existing voice marketplace + Volume 1 language/dialect/glossary/locale surfaces. Install grants workspace entitlements — not voice CDN hosting, celebrity without rights, or cross-tenant clone synthesis. Monetization records MarketplaceSale receipts; Stripe Connect via existing.',
+      'Voice & Language Marketplace. Publish/license pack SKUs over existing voice marketplace + language/dialect/glossary/locale surfaces. Install grants workspace entitlements — not voice CDN hosting, celebrity without rights, or cross-tenant clone synthesis. Monetization records MarketplaceSale receipts; Stripe Connect via existing.',
     capabilities: [
       {
         id: 'voice-packs',
@@ -183,7 +183,7 @@ export function voiceLanguageMarketplaceEngineCatalog() {
         name: 'Marketplace',
         status: 'shipped',
         api: 'GET /v1/voice-language-marketplace/engine',
-        notes: 'Hub over Volume 1 — regeneratesVoiceCloud=false.',
+        notes: 'Hub over — regeneratesVoiceCloud=false.',
       },
       {
         id: 'rest-apis',
@@ -218,7 +218,7 @@ export function voiceLanguageMarketplaceEngineCatalog() {
         name: 'Documentation',
         status: 'shipped',
         api: null,
-        notes: '/docs/VOICE_LANGUAGE_MARKETPLACE.md + ADR-0159.',
+        notes: '/docs/VOICE_LANGUAGE_MARKETPLACE.md.',
       },
     ] satisfies VoiceLanguageMarketplaceCapability[],
     packTypes: VOICE_LANGUAGE_PACK_TYPES.map((id) => ({ id })),
@@ -267,7 +267,7 @@ export function voiceLanguageMarketplaceEngineCatalog() {
       stripeOrEquivalentRequired: true,
       storesRawCardData: false,
       note:
-        'Volume 11 real-money volume. Pack listings are entitlements over Volume 1 surfaces — not voice CDN hosting or celebrity without rights. Use Stripe (or equivalent); never store raw card data. Not a third-party voice OS.',
+        'Real-money volume. Pack listings are entitlements over surfaces — not voice CDN hosting or celebrity without rights. Use Stripe (or equivalent); never store raw card data. Not a third-party voice OS.',
     },
     docs: '/docs/VOICE_LANGUAGE_MARKETPLACE.md',
   };

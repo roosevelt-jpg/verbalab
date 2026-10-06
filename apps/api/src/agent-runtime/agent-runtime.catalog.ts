@@ -167,7 +167,7 @@ export function agentRuntimeCatalog() {
         name: 'Documentation',
         status: 'shipped',
         api: '/docs/AGENT_RUNTIME.md',
-        notes: 'Product doc + ADR-0130.',
+        notes: 'Product documentation.',
       },
       {
         id: 'production-deployment',

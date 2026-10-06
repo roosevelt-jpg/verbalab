@@ -28,10 +28,10 @@ export function OpenSciencePlatformClient() {
         Open Science Platform
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        Traditional-knowledge open releases require attested Volume 12 consent.
+        Traditional-knowledge open releases require attested consent.
       </p>
-      {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
-      {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}
+      {error ? <p style={{ color: '#b42318' }}>{error}</p>: null}
+      {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p>: null}
       {data ? (
         <div style={{ display: 'grid', gap: '1.25rem' }}>
           <p style={{ margin: 0, color: 'var(--muted)' }}>{data.note}</p>
@@ -39,13 +39,13 @@ export function OpenSciencePlatformClient() {
             <p style={{ margin: 0, borderLeft: '3px solid #0f766e', paddingLeft: '0.85rem', color: 'var(--muted)' }}>
               {String(data.safety.note)}
             </p>
-          ) : null}
+          ): null}
           <pre style={{ margin: 0, padding: '1rem', background: 'var(--surface)', overflow: 'auto', fontSize: '0.8rem' }}>
             {JSON.stringify(data.honesty, null, 2)}
           </pre>
           <Link href="/research-cloud">← Research Cloud</Link>
         </div>
-      ) : null}
+      ): null}
     </AppShell>
   );
 }

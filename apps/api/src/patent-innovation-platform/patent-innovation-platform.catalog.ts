@@ -32,7 +32,7 @@ export function patentInnovationPlatformEngineCatalog() {
       id: 'ip-002',
       title: 'Consent-gated cultural knowledge release',
       disclosureStatus: 'prior_art_review',
-      priorArtNotes: 'Cross-check Volume 12 consent posture.',
+      priorArtNotes: 'Cross-check consent posture.',
       notes: 'Innovation pipeline seed.',
     },
     {

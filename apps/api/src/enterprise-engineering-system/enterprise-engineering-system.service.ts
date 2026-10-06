@@ -31,7 +31,7 @@ export class EnterpriseEngineeringSystemService {
         confluenceOs: false,
         sonarqubeOs: false,
         note:
-          'Volume 20 README: standards/templates/governance — not new product features. architectureKnowledgeBaseOs and adrFactoryOs deferred past Volume 20.',
+          'Platform docs: standards/templates/governance — not new product features. architectureKnowledgeBaseOs and adrFactoryOs deferred.',
       },
       docs: '/docs/ENTERPRISE_ENGINEERING_SYSTEM.md',
       note:

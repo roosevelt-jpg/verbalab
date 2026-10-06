@@ -54,7 +54,7 @@ export class VoiceEnhancementService {
       status: 'deferred',
       capability: 'echo-cancellation',
       note:
-        'Echo cancellation requires an AEC reference path or vendor SDK — deferred (same honesty as Audio Intelligence). See ADR-0086.',
+        'Echo cancellation requires an AEC reference path or vendor SDK — deferred (same honesty as Audio Intelligence).',
       docs: '/docs/VOICE_ENHANCEMENT.md',
     };
   }
@@ -112,7 +112,7 @@ export class VoiceEnhancementService {
     } catch (err) {
       throw new ApiException(
         'validation_error',
-        err instanceof Error ? err.message : 'Enhance failed',
+        err instanceof Error ? err.message: 'Enhance failed',
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -217,7 +217,7 @@ export class VoiceEnhancementService {
     } catch (error) {
       yield {
         event: 'error',
-        message: error instanceof Error ? error.message : 'Enhance stream failed',
+        message: error instanceof Error ? error.message: 'Enhance stream failed',
       };
     }
   }

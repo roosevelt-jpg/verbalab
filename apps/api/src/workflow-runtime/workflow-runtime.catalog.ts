@@ -178,7 +178,7 @@ export function workflowRuntimeCatalog() {
         name: 'Documentation',
         status: 'shipped',
         api: '/docs/WORKFLOW_RUNTIME.md',
-        notes: 'Product doc + ADR-0131.',
+        notes: 'Product documentation.',
       },
       {
         id: 'production-deployment',

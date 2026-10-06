@@ -39,10 +39,10 @@ export function MlopsLlmopsCloudClient() {
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
         Ops layer over Inference, Kernel, Foundation Models, RAG, Agent Runtime, and Prompt Runtime — not
-        Kubeflow/SageMaker/Vertex/W&amp;B/MLflow/LangSmith/Ray OS. Trust Cloud deferred to Volume 15+.
+        Kubeflow/SageMaker/Vertex/W&amp;B/MLflow/LangSmith/Ray OS. Trust Cloud deferred.
       </p>
-      {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
-      {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}
+      {error ? <p style={{ color: '#b42318' }}>{error}</p>: null}
+      {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p>: null}
       {data ? (
         <div style={{ display: 'grid', gap: '1.25rem' }}>
           <p style={{ margin: 0, color: 'var(--muted)' }}>{data.note}</p>
@@ -50,7 +50,7 @@ export function MlopsLlmopsCloudClient() {
             <p style={{ margin: 0, borderLeft: '3px solid #0f766e', paddingLeft: '0.85rem', color: 'var(--muted)' }}>
               {String(data.safety.note)}
             </p>
-          ) : null}
+          ): null}
           <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.85rem' }}>
             {data.products.map((p) => (
               <li key={p.id} style={{ borderBottom: '1px solid var(--line)', paddingBottom: '0.75rem' }}>
@@ -59,7 +59,7 @@ export function MlopsLlmopsCloudClient() {
                     <Link href={p.console} style={{ color: 'var(--ink)', fontWeight: 600 }}>
                       {p.name}
                     </Link>
-                  ) : (
+                  ): (
                     <span style={{ fontWeight: 600 }}>{p.name}</span>
                   )}
                   <span style={{ color: 'var(--muted)', fontSize: '0.8rem', textTransform: 'uppercase' }}>
@@ -71,7 +71,7 @@ export function MlopsLlmopsCloudClient() {
             ))}
           </ul>
         </div>
-      ) : null}
+      ): null}
     </AppShell>
   );
 }

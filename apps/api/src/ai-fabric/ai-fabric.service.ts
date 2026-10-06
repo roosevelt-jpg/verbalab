@@ -22,7 +22,7 @@ export class AiFabricService {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Volume 10 README: Policy Fabric must hard-gate across buses when shipped — not log-only decoration.',
+          'Platform docs: Policy Fabric must hard-gate across buses when shipped — not log-only decoration.',
       },
       docs: '/docs/AI_FABRIC.md',
       note:

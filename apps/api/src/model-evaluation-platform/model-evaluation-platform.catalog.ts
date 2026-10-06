@@ -51,7 +51,7 @@ export function modelEvaluationPlatformCatalog() {
         name: 'Translation Benchmarks',
         status: 'partial',
         api: 'POST /v1/eval/run',
-        notes: 'Golden exact-match + char similarity (ADR-0034).',
+        notes: 'Golden exact-match + char similarity.',
       },
       {
         id: 'bias',

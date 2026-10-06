@@ -12,7 +12,7 @@ export type FabricBusRow = {
 /**
  * AI Fabric Foundation.
  * Internal communication hub connecting Lugemi clouds — not a Kafka hyperscaler OS.
- * Volume 10 README: buildable event/message-bus architecture; Policy Fabric must hard-gate.
+ * Platform docs: buildable event/message-bus architecture; Policy Fabric must hard-gate.
  */
 export function aiFabricBusCatalog(): FabricBusRow[] {
   return [
@@ -23,7 +23,7 @@ export function aiFabricBusCatalog(): FabricBusRow[] {
       api: 'GET /v1/ai-fabric/products',
       console: '/ai-fabric',
       notes:
-        'Internal communication hub. Extends AI Kernel + Inference Cloud — does not regenerate Volumes 1–9. Not a customer product mesh OS.',
+        'Internal communication hub. Extends AI Kernel + Inference Cloud — does not regenerate. Not a customer product mesh OS.',
     },
     {
       id: 'event-fabric',
@@ -198,7 +198,7 @@ export function aiFabricArchitectureNotes() {
     redisStreamsActive: true,
     kafkaAdapterDeferred: true,
     note:
-      'Volume 10 README: buildable internal bus architecture. Foundation ships discovery/routing hub; Event Fabric wires Redis Streams + CloudEvents. Kafka/NATS/Rabbit adapters remain deferred. Policy Fabric must hard-gate when shipped.',
+      'Platform docs: buildable internal bus architecture. Foundation ships discovery/routing hub; Event Fabric wires Redis Streams + CloudEvents. Kafka/NATS/Rabbit adapters remain deferred. Policy Fabric must hard-gate when shipped.',
   };
 }
 

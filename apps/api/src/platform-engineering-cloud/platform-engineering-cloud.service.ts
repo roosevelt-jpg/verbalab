@@ -29,7 +29,7 @@ export class PlatformEngineeringCloudService {
         datadogOs: false,
         finopsOs: false,
         note:
-          'Volume 16 README: internal engineering tooling. FinOps pairs Volume 7 GPU budgets; Supply Chain inventories workspace deps; GitOps is readiness over Fly — not Argo/Flux OS. Control Plane rejected here (Volume 17+).',
+          'Platform docs: internal engineering tooling. FinOps pairs GPU budgets; Supply Chain inventories workspace deps; GitOps is readiness over Fly — not Argo/Flux OS. Control Plane rejected here.',
       },
       docs: '/docs/PLATFORM_ENGINEERING_CLOUD.md',
       note:
@@ -72,7 +72,7 @@ export class PlatformEngineeringCloudService {
         dataPlaneOs: false,
         aiCloudOs: false,
         note:
-          'Internal IDP honesty enforced. Control Plane / Data Plane / AI Cloud OS deferred to Volume 17+.',
+          'Internal IDP honesty enforced. Control Plane / Data Plane / AI Cloud OS deferred.',
       },
       deferred: {
         controlPlaneOs: true,

@@ -24,11 +24,11 @@ export class EcosystemCloudService {
         pluginAgentSandboxRequired: true,
         realMoneyRiskCategory: true,
         note:
-          'Volume 11 README: real payments/licensing/royalties. Do not store raw card data. Plugin/Agent marketplaces must enforce Volume 8 sandboxes + Policy hard-gate before third-party code runs. Creator Economy payout math must be hand-checked before live creators.',
+          'Platform docs: real payments/licensing/royalties. Do not store raw card data. Plugin/Agent marketplaces must enforce sandboxes + Policy hard-gate before third-party code runs. Creator Economy payout math must be hand-checked before live creators.',
       },
       docs: '/docs/ECOSYSTEM_CLOUD.md',
       note:
-        'Ecosystem Foundation hub. Extends existing+ content marketplace and voice marketplace. Not a payment-processor OS or regenerate of Volumes 1–10.',
+        'Ecosystem Foundation hub. Extends existing+ content marketplace and voice marketplace. Not a payment-processor OS or regenerate of.',
     };
   }
 

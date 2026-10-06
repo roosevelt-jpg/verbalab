@@ -29,7 +29,7 @@ export type ResearchAreaId =
 /**
  * Research Cloud Foundation.
  * Incubates R&D that graduates into production — not Weights & Biases OS, not a public model-hub OS,
- * not DOI registry OS, not USPTO patent OS, not MLflow OS. AI Sovereignty Cloud deferred to Volume 14+.
+ * not DOI registry OS, not USPTO patent OS, not MLflow OS. AI Sovereignty Cloud deferred.
  */
 export function researchCloudProductCatalog(): ResearchCloudProductRow[] {
   return [
@@ -40,7 +40,7 @@ export function researchCloudProductCatalog(): ResearchCloudProductRow[] {
       api: 'GET /v1/research-cloud/products',
       console: '/research-cloud',
       notes:
-        'Foundation hub. Extends Intelligence/Knowledge/Foundation Model clouds — does not regenerate Volumes 1–12.',
+        'Foundation hub. Extends Intelligence/Knowledge/Foundation Model clouds — does not regenerate.',
     },
     {
       id: 'experiment-platform',
@@ -48,7 +48,7 @@ export function researchCloudProductCatalog(): ResearchCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/experiment-platform/engine',
       console: '/experiment-platform',
-      notes: '. Experiment tracking catalog — not W&B/MLflow OS.',
+      notes: 'Experiment tracking catalog — not W&B/MLflow OS.',
     },
     {
       id: 'synthetic-data-platform',
@@ -56,7 +56,7 @@ export function researchCloudProductCatalog(): ResearchCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/synthetic-data-platform/engine',
       console: '/synthetic-data-platform',
-      notes: '. syntheticLabelRequired=true; artifacts marked isSynthetic=true.',
+      notes: 'syntheticLabelRequired=true; artifacts marked isSynthetic=true.',
     },
     {
       id: 'benchmark-platform',
@@ -64,7 +64,7 @@ export function researchCloudProductCatalog(): ResearchCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/benchmark-platform/engine',
       console: '/benchmark-platform',
-      notes: '. Suites + leaderboard seed — not public leaderboard OS.',
+      notes: 'Suites + leaderboard seed — not public leaderboard OS.',
     },
     {
       id: 'evaluation-platform',
@@ -72,7 +72,7 @@ export function researchCloudProductCatalog(): ResearchCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/evaluation-platform/engine',
       console: '/evaluation-platform',
-      notes: '. Extends model-evaluation-platform / eval surfaces — does not regenerate them.',
+      notes: 'Extends model-evaluation-platform / eval surfaces — does not regenerate them.',
     },
     {
       id: 'ai-publication-platform',
@@ -80,7 +80,7 @@ export function researchCloudProductCatalog(): ResearchCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/ai-publication-platform/engine',
       console: '/ai-publication-platform',
-      notes: '. Papers/reports/datasets with versioning. doiRegistryOs=false.',
+      notes: 'Papers/reports/datasets with versioning. doiRegistryOs=false.',
     },
     {
       id: 'patent-innovation-platform',
@@ -88,7 +88,7 @@ export function researchCloudProductCatalog(): ResearchCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/patent-innovation-platform/engine',
       console: '/patent-innovation-platform',
-      notes: '. Disclosure workflow + IP portfolio seed. usptoOs=false.',
+      notes: 'Disclosure workflow + IP portfolio seed. usptoOs=false.',
     },
     {
       id: 'open-science-platform',
@@ -97,7 +97,7 @@ export function researchCloudProductCatalog(): ResearchCloudProductRow[] {
       api: 'GET /v1/open-science-platform/engine',
       console: '/open-science-platform',
       notes:
-        '. traditionalKnowledgeConsentRequired=true; blocks restricted/unverified cultural open releases.',
+        'traditionalKnowledgeConsentRequired=true; blocks restricted/unverified cultural open releases.',
     },
     {
       id: 'research-analytics',
@@ -105,7 +105,7 @@ export function researchCloudProductCatalog(): ResearchCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/research-analytics/engine',
       console: '/research-analytics',
-      notes: '. Aggregates sibling Research Cloud catalogs into TRL/ROI snapshot.',
+      notes: 'Aggregates sibling Research Cloud catalogs into TRL/ROI snapshot.',
     },
   ];
 }
@@ -138,9 +138,9 @@ export function researchAreasCatalog(): Array<{
       status: 'deferred',
       notes: 'Readiness notes only — not a quantum computing OS.',
     },
-    { id: 'syntheticData', name: 'Synthetic Data', status: 'shipped', notes: ' modality catalog.' },
-    { id: 'evaluation', name: 'Evaluation', status: 'shipped', notes: ' evaluation catalog.' },
-    { id: 'benchmarking', name: 'Benchmarking', status: 'shipped', notes: ' benchmark suites.' },
+    { id: 'syntheticData', name: 'Synthetic Data', status: 'shipped', notes: 'modality catalog.' },
+    { id: 'evaluation', name: 'Evaluation', status: 'shipped', notes: 'evaluation catalog.' },
+    { id: 'benchmarking', name: 'Benchmarking', status: 'shipped', notes: 'benchmark suites.' },
     { id: 'responsibleAi', name: 'Responsible AI', status: 'shipped', notes: 'Bias/fairness/safety research posture.' },
   ];
 }
@@ -169,7 +169,7 @@ export function researchCloudArchitectureNotes() {
     mlflowOs: false,
     aiSovereigntyOs: false,
     note:
-      'Volume 13 Research Cloud hub. Incubates R&D that graduates into production. Not W&B/MLflow/HF/DOI/USPTO OS. AI Sovereignty Cloud deferred to Volume 14+.',
+      'Research Cloud hub. Incubates R&D that graduates into production. Not W&B/MLflow/HF/DOI/USPTO OS. AI Sovereignty Cloud deferred.',
   };
 }
 

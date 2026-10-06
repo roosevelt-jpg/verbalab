@@ -34,7 +34,7 @@ export class FinopsPlatformService {
       count: catalog.budgets.length,
       gpuBudgetAlertsEnabled: true,
       honesty: catalog.honesty,
-      note: 'FinOps budgets including GPU/model cost budgets paired with Volume 7.',
+      note: 'FinOps budgets including GPU/model cost budgets paired with.',
       docs: catalog.docs,
     };
   }
@@ -48,7 +48,7 @@ export class FinopsPlatformService {
       gpuBudgetAlertsEnabled: true,
       enabledCount: catalog.alerts.filter((a) => a.enabled).length,
       honesty: catalog.honesty,
-      note: 'GPU budget alerts enabled — Volume 7 pairing.',
+      note: 'GPU budget alerts enabled — pairing.',
       docs: catalog.docs,
     };
   }

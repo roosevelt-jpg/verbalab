@@ -192,7 +192,7 @@ export class AudioIntelligenceService {
       status: 'deferred',
       capability: 'echo-cancellation',
       note:
-        'Echo cancellation requires an AEC reference path or vendor SDK — deferred. See ADR-0074.',
+        'Echo cancellation requires an AEC reference path or vendor SDK — deferred.',
     };
   }
 
@@ -240,7 +240,7 @@ export class AudioIntelligenceService {
     } catch (err) {
       yield {
         event: 'error',
-        message: err instanceof Error ? err.message : 'Audio analysis failed',
+        message: err instanceof Error ? err.message: 'Audio analysis failed',
       };
     }
   }

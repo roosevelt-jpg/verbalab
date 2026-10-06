@@ -6,14 +6,14 @@ export function reliabilityEngineeringEngineCatalog() {
   return {
     product: 'Lugemi Reliability Engineering',
     capabilities: [
-      { id: 'slo', name: 'SLOs', status: 'shipped', notes: ' capability.' },
-      { id: 'sli', name: 'SLIs', status: 'shipped', notes: ' capability.' },
-      { id: 'error_budget', name: 'Error Budgets', status: 'shipped', notes: ' capability.' },
-      { id: 'incident', name: 'Incident Management', status: 'shipped', notes: ' capability.' },
-      { id: 'capacity', name: 'Capacity', status: 'shipped', notes: ' capability.' },
-      { id: 'autoscaling', name: 'Autoscaling', status: 'shipped', notes: ' capability.' },
-      { id: 'dr', name: 'Disaster Recovery', status: 'shipped', notes: ' capability.' },
-      { id: 'chaos', name: 'Chaos Engineering', status: 'shipped', notes: ' capability.' }
+      { id: 'slo', name: 'SLOs', status: 'shipped', notes: 'capability.' },
+      { id: 'sli', name: 'SLIs', status: 'shipped', notes: 'capability.' },
+      { id: 'error_budget', name: 'Error Budgets', status: 'shipped', notes: 'capability.' },
+      { id: 'incident', name: 'Incident Management', status: 'shipped', notes: 'capability.' },
+      { id: 'capacity', name: 'Capacity', status: 'shipped', notes: 'capability.' },
+      { id: 'autoscaling', name: 'Autoscaling', status: 'shipped', notes: 'capability.' },
+      { id: 'dr', name: 'Disaster Recovery', status: 'shipped', notes: 'capability.' },
+      { id: 'chaos', name: 'Chaos Engineering', status: 'shipped', notes: 'capability.' }
     ],
     reliability: [
       {
@@ -49,7 +49,7 @@ export function reliabilityEngineeringEngineCatalog() {
         name: 'gpu-capacity',
         kind: 'capacity',
         status: 'shipped',
-        notes: 'GPU capacity signal from Volume 7',
+        notes: 'GPU capacity signal from ',
       },
       {
         id: 'sre-auto-fly',

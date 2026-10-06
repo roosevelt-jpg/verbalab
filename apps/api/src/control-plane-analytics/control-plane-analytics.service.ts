@@ -51,7 +51,7 @@ export class ControlPlaneAnalyticsService {
           routeCount: routes.routes.length,
         },
         costs: {
-          note: 'Cost analytics handoff to FinOps Platform (Volume 16).',
+          note: 'Cost analytics handoff to FinOps Platform.',
         },
         configuration: {
           count: config.configurations.length,

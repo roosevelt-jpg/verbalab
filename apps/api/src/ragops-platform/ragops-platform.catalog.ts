@@ -1,6 +1,6 @@
 /**
  * RAGOps Platform.
- * Over Volume 6 RAG. Not vector-DB OS.
+ * Over RAG. Not vector-DB OS.
  */
 export function ragopsPlatformEngineCatalog() {
   return {
@@ -21,7 +21,7 @@ export function ragopsPlatformEngineCatalog() {
         stage: 'embedding-refresh',
         freshnessHours: 12,
         citationCoverage: 0.93,
-        notes: 'Over Volume 6 RAG — not vector-DB OS.',
+        notes: 'Over RAG — not vector-DB OS.',
       },
       {
         id: 'ragops-002',

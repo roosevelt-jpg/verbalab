@@ -11,9 +11,9 @@ export type EcosystemProductRow = {
 
 /**
  * Ecosystem Foundation.
- * Marketplace + monetization hub over existing + / voice marketplace —
- * not a payment-processor OS or regenerate of Volumes 1–10.
- * Volume 11 README: real-money risk; Stripe (or equivalent) only; no raw cards.
+ * Marketplace + monetization hub over existing + / voice marketplace
+ * not a payment-processor OS or regenerate of.
+ * Platform docs: real-money risk; Stripe (or equivalent) only; no raw cards.
  */
 export function ecosystemProductCatalog(): EcosystemProductRow[] {
   return [
@@ -24,7 +24,7 @@ export function ecosystemProductCatalog(): EcosystemProductRow[] {
       api: 'GET /v1/ecosystem-cloud/products',
       console: '/ecosystem-cloud',
       notes:
-        'Ecosystem hub. Discovery + honesty for marketplaces/monetization. Extends existing+/voice marketplace — does not regenerate Volumes 1–10.',
+        'Ecosystem hub. Discovery + honesty for marketplaces/monetization. Extends existing+/voice marketplace — does not regenerate.',
     },
     {
       id: 'content-marketplace',
@@ -33,7 +33,7 @@ export function ecosystemProductCatalog(): EcosystemProductRow[] {
       api: 'GET /v1/marketplace/listings',
       console: '/marketplace',
       notes:
-        'Existing –092 glossary/prompt/dataset listings + Stripe Connect (ADR-0031–0033). Foundation links here; dedicated kind marketplaces extend later.',
+        'Existing glossary/prompt/dataset listings + Stripe Connect. Foundation links here; dedicated kind marketplaces extend later.',
     },
     {
       id: 'voice-marketplace',
@@ -105,7 +105,7 @@ export function ecosystemProductCatalog(): EcosystemProductRow[] {
       api: 'GET /v1/connector-marketplace/engine',
       console: '/connector-marketplace',
       notes:
-        'Entitlement SKUs over connector catalog + Slack (ADR-0026); FabricPolicyGate + Stripe honesty. Not an iPaaS automation OS.',
+        'Entitlement SKUs over connector catalog + Slack; FabricPolicyGate + Stripe honesty. Not an iPaaS automation OS.',
     },
     {
       id: 'voice-language-marketplace',
@@ -114,7 +114,7 @@ export function ecosystemProductCatalog(): EcosystemProductRow[] {
       api: 'GET /v1/voice-language-marketplace/engine',
       console: '/voice-language-marketplace',
       notes:
-        'Entitlement SKUs over existing voice marketplace + Volume 1 packs; FabricPolicyGate + Stripe honesty. Not a third-party voice CDN OS.',
+        'Entitlement SKUs over existing voice marketplace + packs; FabricPolicyGate + Stripe honesty. Not a third-party voice CDN OS.',
     },
     {
       id: 'creator-economy',
@@ -186,7 +186,7 @@ export function ecosystemArchitectureNotes() {
     taxDisputeOs: false,
     realMoneyRiskCategory: true,
     note:
-      'Volume 11 README: real payments/licensing/royalties. Foundation ships discovery hub + honesty. Later phases extend marketplaces; Creator Economy must hand-check payout math; Plugin/Agent marketplaces must enforce Volume 8 sandboxes before third-party code runs.',
+      'Platform docs: real payments/licensing/royalties. Foundation ships discovery hub + honesty. Later phases extend marketplaces; Creator Economy must hand-check payout math; Plugin/Agent marketplaces must enforce sandboxes before third-party code runs.',
   };
 }
 

@@ -1,6 +1,6 @@
 /**
  * Translation Runtime.
- * Translation Runtime. Thin execution layer over Volume 1 translate — routes streaming/realtime/batch/parallel/low-latency; does not reimplement MT.
+ * Translation Runtime. Thin execution layer over translate — routes streaming/realtime/batch/parallel/low-latency; does not reimplement MT.
  */
 export function translationRuntimeEngineCatalog() {
   return {
@@ -8,11 +8,11 @@ export function translationRuntimeEngineCatalog() {
     thinExecutionLayer: true,
     duplicatesProductLogic: false,
     capabilities: [
-      { id: 'streaming', name: 'Streaming Translation Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
-      { id: 'realtime', name: 'Realtime Translation Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
-      { id: 'batch', name: 'Batch Translation Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
-      { id: 'parallel', name: 'Parallel Translation Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
-      { id: 'low_latency', name: 'Low-Latency Translation Routing', status: 'shipped', notes: ' routing capability — not a new engine.' }
+      { id: 'streaming', name: 'Streaming Translation Routing', status: 'shipped', notes: 'routing capability — not a new engine.' },
+      { id: 'realtime', name: 'Realtime Translation Routing', status: 'shipped', notes: 'routing capability — not a new engine.' },
+      { id: 'batch', name: 'Batch Translation Routing', status: 'shipped', notes: 'routing capability — not a new engine.' },
+      { id: 'parallel', name: 'Parallel Translation Routing', status: 'shipped', notes: 'routing capability — not a new engine.' },
+      { id: 'low_latency', name: 'Low-Latency Translation Routing', status: 'shipped', notes: 'routing capability — not a new engine.' }
     ],
     routes: [
       {
@@ -51,9 +51,9 @@ export function translationRuntimeEngineCatalog() {
       duplicatesProductLogic: false,
       managesOrgsPoliciesBilling: false,
       serviceMeshOs: false,
-      note: 'Translation Runtime. Thin execution layer over Volume 1 translate — routes streaming/realtime/batch/parallel/low-latency; does not reimplement MT.',
+      note: 'Translation Runtime. Thin execution layer over translate — routes streaming/realtime/batch/parallel/low-latency; does not reimplement MT.',
     },
     docs: '/docs/TRANSLATION_RUNTIME.md',
-    note: 'Translation Runtime. Thin execution layer over Volume 1 translate — routes streaming/realtime/batch/parallel/low-latency; does not reimplement MT.',
+    note: 'Translation Runtime. Thin execution layer over translate — routes streaming/realtime/batch/parallel/low-latency; does not reimplement MT.',
   };
 }

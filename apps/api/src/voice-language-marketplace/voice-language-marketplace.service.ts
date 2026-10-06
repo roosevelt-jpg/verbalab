@@ -110,7 +110,7 @@ export class VoiceLanguageMarketplaceService {
     publisherOrg?: { name: string };
   }) {
     const snap = this.parseSnapshot(row.snapshot);
-    const avg = snap.ratingCount > 0 ? snap.ratingSum / snap.ratingCount : null;
+    const avg = snap.ratingCount > 0 ? snap.ratingSum / snap.ratingCount: null;
     return {
       id: row.id,
       kind: row.kind,
@@ -130,7 +130,7 @@ export class VoiceLanguageMarketplaceService {
       storesRawCardData: snap.storesRawCardData,
       priceCents: row.priceCents,
       currency: row.currency,
-      ratingAverage: avg != null ? Number(avg.toFixed(2)) : null,
+      ratingAverage: avg != null ? Number(avg.toFixed(2)): null,
       ratingCount: snap.ratingCount,
       publisherOrgId: row.publisherOrgId,
       publisherWorkspaceId: row.publisherWorkspaceId,
@@ -351,7 +351,7 @@ export class VoiceLanguageMarketplaceService {
       listing: this.serialize(listing),
       honesty: this.engine().honesty,
       note:
-        'Voice/language pack listing published as an entitlement SKU over Volume 1 surfaces. Install grants entitlement — not voice CDN hosting.',
+        'Voice/language pack listing published as an entitlement SKU over surfaces. Install grants entitlement — not voice CDN hosting.',
     };
   }
 
@@ -552,7 +552,7 @@ export class VoiceLanguageMarketplaceService {
         crossTenantCloneSynthesis: false,
         storesRawCardData: false,
         note:
-          'Pack entitlement only — voice synthesis stays on Voice Cloud paths; language packs extend Volume 1 surfaces.',
+          'Pack entitlement only — voice synthesis stays on Voice Cloud paths; language packs extend surfaces.',
       },
       sale,
       honesty: this.engine().honesty,
@@ -678,7 +678,7 @@ export class VoiceLanguageMarketplaceService {
     await this.prisma.marketplaceListing.update({
       where: { id: listing.id },
       data: {
-        snapshot: { ...snap, ratingSum, ratingCount } as unknown as Prisma.InputJsonValue,
+        snapshot: {...snap, ratingSum, ratingCount } as unknown as Prisma.InputJsonValue,
       },
     });
 

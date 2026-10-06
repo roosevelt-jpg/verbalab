@@ -63,8 +63,8 @@ export function GatewayClient() {
         and fine-tune routes. Not an Inference Cloud.
       </p>
 
-      {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
-      {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}
+      {error ? <p style={{ color: '#b42318' }}>{error}</p>: null}
+      {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p>: null}
 
       {data ? (
         <div style={{ display: 'grid', gap: '1.75rem' }}>
@@ -86,8 +86,8 @@ export function GatewayClient() {
                     padding: '0.25rem 0.55rem',
                     border: '1px solid var(--line)',
                     borderRadius: '0.35rem',
-                    background: on ? 'var(--bg-soft)' : 'transparent',
-                    color: on ? 'var(--ink)' : 'var(--muted)',
+                    background: on ? 'var(--bg-soft)': 'transparent',
+                    color: on ? 'var(--ink)': 'var(--muted)',
                   }}
                 >
                   {key}
@@ -105,7 +105,7 @@ export function GatewayClient() {
                     {p.libraryName}{' '}
                     <span style={{ fontWeight: 500, color: 'var(--muted)', fontSize: '0.85rem' }}>
                       · {p.status}
-                      {p.status !== 'deferred' ? (p.configured ? ' · configured' : ' · not configured') : ''}
+                      {p.status !== 'deferred' ? (p.configured ? ' · configured': ' · not configured'): ''}
                     </span>
                   </div>
                   <div style={{ color: 'var(--muted)', fontSize: '0.85rem', marginTop: '0.2rem' }}>
@@ -120,9 +120,9 @@ export function GatewayClient() {
             <h2 style={label}>Capabilities</h2>
             <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.55 }}>
               Fallbacks: {data.capabilities.fallback.join('; ')}. Response cache:{' '}
-              {data.capabilities.caching.responseCache ? 'yes' : 'no'}. Streaming:{' '}
-              {data.capabilities.streaming ? 'yes' : 'no'}. Cost optimizer:{' '}
-              {data.capabilities.costOptimization ? 'yes' : 'no'}.
+              {data.capabilities.caching.responseCache ? 'yes': 'no'}. Streaming:{' '}
+              {data.capabilities.streaming ? 'yes': 'no'}. Cost optimizer:{' '}
+              {data.capabilities.costOptimization ? 'yes': 'no'}.
             </p>
           </section>
 
@@ -142,12 +142,12 @@ export function GatewayClient() {
           </section>
 
           <section>
-            <h2 style={label}>Volume 1A</h2>
+            <h2 style={label}>Status</h2>
             <p style={{ margin: 0, fontWeight: 600 }}>{data.volume.closes}</p>
             <p style={{ margin: '0.35rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>{data.volume.note}</p>
           </section>
         </div>
-      ) : null}
+      ): null}
     </AppShell>
   );
 }

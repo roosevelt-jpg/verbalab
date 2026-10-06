@@ -30,8 +30,8 @@ export const MODEL_LICENSE_TYPES = [
 
 /**
  * Model Marketplace.
- * Buy/sell/publish model listings over Model Registry / — not a public model-hub OS.
- * Volume 11 README: real-money honesty — Stripe (or equivalent); never store raw cards.
+ * Buy/sell/publish model listings over Model Registry — not a public model-hub OS.
+ * Platform docs: real-money honesty — Stripe (or equivalent); never store raw cards.
  */
 export function modelMarketplaceEngineCatalog() {
   return {
@@ -150,7 +150,7 @@ export function modelMarketplaceEngineCatalog() {
       fabricPolicyHardGateRequired: true,
       realMoneyRiskCategory: true,
       note:
-        'Volume 11 real-money volume. Use Stripe (or equivalent); never store raw card data. Listings are license entitlements over registry metadata — not a weight CDN.',
+        'Real-money volume. Use Stripe (or equivalent); never store raw card data. Listings are license entitlements over registry metadata — not a weight CDN.',
     },
     docs: '/docs/MODEL_MARKETPLACE.md',
   };

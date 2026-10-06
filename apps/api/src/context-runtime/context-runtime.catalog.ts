@@ -172,7 +172,7 @@ export function contextRuntimeCatalog() {
         name: 'Documentation',
         status: 'shipped',
         api: '/docs/CONTEXT_RUNTIME.md',
-        notes: 'Product doc + ADR-0128.',
+        notes: 'Product documentation.',
       },
       {
         id: 'production-deployment',

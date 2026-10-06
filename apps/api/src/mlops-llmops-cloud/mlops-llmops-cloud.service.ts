@@ -28,7 +28,7 @@ export class MlopsLlmopsCloudService {
         policyViolationsVisible: true,
         trustCloudOs: false,
         note:
-          'Volume 14 README: Continuous Learning never auto-promotes; AgentOps surfaces policy violations for humans; Trust Cloud deferred to Volume 15+.',
+          'Platform docs: Continuous Learning never auto-promotes; AgentOps surfaces policy violations for humans; Trust Cloud deferred.',
       },
       docs: '/docs/MLOPS_LLMOPS_CLOUD.md',
       note:

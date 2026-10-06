@@ -105,7 +105,7 @@ export class DeveloperCloudService {
       },
       oauthClients: {
         supported: false,
-        note: 'Human OAuth is Clerk; machine auth is API keys (ADR-0047/0048).',
+        note: 'Human OAuth is Clerk; machine auth is API keys.',
       },
       docs: '/docs/DEVELOPER_CLOUD.md',
     };

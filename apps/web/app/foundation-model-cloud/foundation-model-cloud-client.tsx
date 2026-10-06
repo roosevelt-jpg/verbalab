@@ -76,8 +76,8 @@ export function FoundationModelCloudClient() {
         competitive foundation weights.
       </p>
 
-      {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
-      {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}
+      {error ? <p style={{ color: '#b42318' }}>{error}</p>: null}
+      {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p>: null}
 
       {data ? (
         <div style={{ display: 'grid', gap: '1.75rem' }}>
@@ -91,7 +91,7 @@ export function FoundationModelCloudClient() {
           >
             <h2 style={label}>Honesty</h2>
             <p style={{ margin: 0, maxWidth: '44rem', color: 'var(--muted)' }}>
-              Volume 9 README: Cursor delivers MLOps/platform scaffolding — not trained Atlas,
+              Platform docs: Cursor delivers MLOps/platform scaffolding — not trained Atlas,
               Baobab, or other competitive foundation models.
             </p>
             <ul style={{ margin: '0.5rem 0 0', color: 'var(--muted)' }}>
@@ -164,7 +164,7 @@ export function FoundationModelCloudClient() {
             </ul>
           </section>
         </div>
-      ) : null}
+      ): null}
     </AppShell>
   );
 }

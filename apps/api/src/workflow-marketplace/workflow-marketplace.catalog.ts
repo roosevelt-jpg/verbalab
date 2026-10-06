@@ -23,7 +23,7 @@ export type WorkflowMarketplaceCategory = (typeof WORKFLOW_MARKETPLACE_CATEGORIE
 /**
  * Workflow Marketplace.
  * Buy/sell/publish sandboxed workflows over Workflow Runtime — not iPaaS / distributed-workflow OS.
- * Volume 11: enforce Workflow Runtime sandbox + Policy gate before third-party workflows run.
+ *: enforce Workflow Runtime sandbox + Policy gate before third-party workflows run.
  */
 export function workflowMarketplaceEngineCatalog() {
   return {
@@ -150,7 +150,7 @@ export function workflowMarketplaceEngineCatalog() {
       stripeOrEquivalentRequired: true,
       storesRawCardData: false,
       note:
-        'Volume 11: third-party marketplace workflows must not run until Workflow Runtime sandbox + Policy gates allow. Denied actions (shell.exec, workflow.execute_live, …) always 403.',
+        ': third-party marketplace workflows must not run until Workflow Runtime sandbox + Policy gates allow. Denied actions (shell.exec, workflow.execute_live, …) always 403.',
     },
     docs: '/docs/WORKFLOW_MARKETPLACE.md',
   };

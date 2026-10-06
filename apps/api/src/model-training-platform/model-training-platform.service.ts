@@ -61,7 +61,7 @@ export class ModelTrainingPlatformService {
         noFakeGpuSuccess: true,
         noFakeTrainedWeights: true,
         note:
-          'Launchers never invent GPU success without callback (ADR-0040). Platform does not claim trained competitive weights.',
+          'Launchers never invent GPU success without callback. Platform does not claim trained competitive weights.',
       },
     };
   }
@@ -163,7 +163,7 @@ export class ModelTrainingPlatformService {
       targetLang: (body.targetLang ?? 'sw').trim().toLowerCase().slice(0, 16),
       datasetRef: body.datasetRef?.trim().slice(0, 240) || null,
       hyperparams,
-      status: LAUNCHABLE.includes(method) ? 'ready_to_launch' : 'planned',
+      status: LAUNCHABLE.includes(method) ? 'ready_to_launch': 'planned',
       checkpointIndex: 0,
       trainingJobId: null,
       notes: (body.notes ?? '').slice(0, 500),

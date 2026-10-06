@@ -20,7 +20,7 @@ export type SyntheticArtifact = {
 /**
  * Synthetic Data Platform.
  * syntheticLabelRequired=true; every artifact isSynthetic=true.
- * If used with Volume 12 sensitive domains, remain labeled synthetic downstream.
+ * If used with sensitive domains, remain labeled synthetic downstream.
  */
 export function syntheticDataPlatformEngineCatalog() {
   const modalities: SyntheticModality[] = [
@@ -49,7 +49,7 @@ export function syntheticDataPlatformEngineCatalog() {
       modality: 'dialogue',
       isSynthetic: true,
       sensitiveDomainHint: 'healthcare',
-      notes: 'Volume 12 healthcare domain — must remain isSynthetic downstream.',
+      notes: 'healthcare domain — must remain isSynthetic downstream.',
     },
     {
       id: 'syn-doc-finance-001',
@@ -57,7 +57,7 @@ export function syntheticDataPlatformEngineCatalog() {
       modality: 'document',
       isSynthetic: true,
       sensitiveDomainHint: 'financial',
-      notes: 'Volume 12 financial domain — must remain isSynthetic downstream.',
+      notes: 'financial domain — must remain isSynthetic downstream.',
     },
   ];
   return {
@@ -85,7 +85,7 @@ export function syntheticDataPlatformEngineCatalog() {
       isSyntheticRequiredOnArtifacts: true,
       sensitiveDomainDownstreamLabelingRequired: true,
       note:
-        'Every artifact carries isSynthetic=true. If used with Volume 12 healthcare/financial/government domains, remain labeled synthetic downstream — never silently treated as real training signal.',
+        'Every artifact carries isSynthetic=true. If used with healthcare/financial/government domains, remain labeled synthetic downstream — never silently treated as real training signal.',
     },
     docs: '/docs/SYNTHETIC_DATA_PLATFORM.md',
   };

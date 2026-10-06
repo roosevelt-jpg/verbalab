@@ -152,7 +152,7 @@ export function costOptimizationCatalog() {
         name: 'Documentation',
         status: 'shipped',
         api: '/docs/COST_OPTIMIZATION.md',
-        notes: 'Product doc + ADR-0122.',
+        notes: 'Product documentation.',
       },
       {
         id: 'production-deployment',

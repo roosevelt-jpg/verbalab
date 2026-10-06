@@ -37,7 +37,7 @@ const client = new Lugemi({
 
 await client.translate({ text: 'Hello', source: 'en', target: 'ak' });`;
 
-  const envExample = `# .env
+  const envExample = `#.env
 LUGEMI_API_KEY=lg_live_...
 LUGEMI_BASE_URL=${API_URL}`;
 
@@ -88,7 +88,7 @@ LUGEMI_BASE_URL=${API_URL}`;
         <Endpoint
           method="GET/POST"
           title="/v1/prompts…"
-          body="Versioned chat/RAG/voice_faq system prompts with rollback (ADR-0030). Console /prompts."
+          body="Versioned chat/RAG/voice_faq system prompts with rollback. Console /prompts."
         />
         <Endpoint method="GET" title="/v1/analytics/overview" body="SQL aggregates for the current org (Clerk or API key; ?from=&to=)." />
         <Endpoint method="POST" title="/v1/voice/simulate" body="Text or audio FAQ turn (API key or Clerk)." />
@@ -193,9 +193,9 @@ LUGEMI_BASE_URL=${API_URL}`;
         <CodePanel code={envExample} label="Environment" />
         {error ? (
           <p style={{ color: 'var(--bad)', marginBottom: 0 }}>Could not reach OpenAPI ({error}). Is the API running?</p>
-        ) : (
+        ): (
           <p style={{ color: 'var(--ok)', marginBottom: 0 }}>
-            {loaded ? 'OpenAPI reachable.' : 'Checking OpenAPI…'}
+            {loaded ? 'OpenAPI reachable.': 'Checking OpenAPI…'}
           </p>
         )}
       </div>

@@ -13,7 +13,7 @@ export function voiceCloningEngineCatalog() {
   return {
     product: 'Lugemi Voice Cloning',
     note:
-      'Enterprise cloning over Instant Voice Cloning with mandatory consent, ownership, abuse review, and watermark (ADR-0042/0083). Professional mode = stricter enrollment on the same vendor path — not a separate trained pro model. NIST voice biometrics deferred to Voice Biometrics.',
+      'Enterprise cloning over Instant Voice Cloning with mandatory consent, ownership, abuse review, and watermark. Professional mode = stricter enrollment on the same vendor path — not a separate trained pro model. NIST voice biometrics deferred to Voice Biometrics.',
     capabilities: [
       {
         id: 'instant-cloning',

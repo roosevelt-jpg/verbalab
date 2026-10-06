@@ -163,7 +163,7 @@ export function batchRuntimeCatalog() {
         name: 'Analytics',
         status: 'shipped',
         api: 'GET /v1/batch-runtime/analytics',
-        notes: 'Run aggregates — ≠ .',
+        notes: 'Run aggregates — ≠.',
       },
       {
         id: 'monitoring',
@@ -198,7 +198,7 @@ export function batchRuntimeCatalog() {
         name: 'Documentation',
         status: 'shipped',
         api: '/docs/BATCH_RUNTIME.md',
-        notes: 'Product doc + ADR-0120.',
+        notes: 'Product documentation.',
       },
       {
         id: 'production-deployment',

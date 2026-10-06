@@ -32,7 +32,7 @@ export function platformEngineeringCloudProductCatalog(): PlatformEngineeringClo
       api: 'GET /v1/internal-developer-portal/engine',
       console: '/internal-developer-portal',
       notes:
-        '. backstageOs=false — extends developer-cloud.',
+        'backstageOs=false — extends developer-cloud.',
     },
     {
       id: 'service-catalog',
@@ -41,7 +41,7 @@ export function platformEngineeringCloudProductCatalog(): PlatformEngineeringClo
       api: 'GET /v1/service-catalog/engine',
       console: '/service-catalog',
       notes:
-        '. Lugemi service inventory.',
+        'Lugemi service inventory.',
     },
     {
       id: 'golden-path-platform',
@@ -50,7 +50,7 @@ export function platformEngineeringCloudProductCatalog(): PlatformEngineeringClo
       api: 'GET /v1/golden-path-platform/engine',
       console: '/golden-path-platform',
       notes:
-        '. Scaffolding templates catalog.',
+        'Scaffolding templates catalog.',
     },
     {
       id: 'infrastructure-platform',
@@ -68,7 +68,7 @@ export function platformEngineeringCloudProductCatalog(): PlatformEngineeringClo
       api: 'GET /v1/gitops-platform/engine',
       console: '/gitops-platform',
       notes:
-        '. argoCdOs=false; fluxOs=false.',
+        'argoCdOs=false; fluxOs=false.',
     },
     {
       id: 'cicd',
@@ -86,7 +86,7 @@ export function platformEngineeringCloudProductCatalog(): PlatformEngineeringClo
       api: 'GET /v1/developer-experience-platform/engine',
       console: '/developer-experience-platform',
       notes:
-        '. Extends SDK/CLI.',
+        'Extends SDK/CLI.',
     },
     {
       id: 'observability',
@@ -104,7 +104,7 @@ export function platformEngineeringCloudProductCatalog(): PlatformEngineeringClo
       api: 'GET /v1/release-engineering/engine',
       console: '/release-engineering',
       notes:
-        '. Progressive delivery catalog.',
+        'Progressive delivery catalog.',
     },
     {
       id: 'reliability-engineering',
@@ -113,7 +113,7 @@ export function platformEngineeringCloudProductCatalog(): PlatformEngineeringClo
       api: 'GET /v1/reliability-engineering/engine',
       console: '/reliability-engineering',
       notes:
-        '. SLO/SLI/error budgets.',
+        'SLO/SLI/error budgets.',
     },
     {
       id: 'finops-platform',
@@ -122,7 +122,7 @@ export function platformEngineeringCloudProductCatalog(): PlatformEngineeringClo
       api: 'GET /v1/finops-platform/engine',
       console: '/finops-platform',
       notes:
-        '. gpuBudgetAlertsEnabled=true; finopsOs=false.',
+        'gpuBudgetAlertsEnabled=true; finopsOs=false.',
     },
     {
       id: 'supply-chain-security',
@@ -131,7 +131,7 @@ export function platformEngineeringCloudProductCatalog(): PlatformEngineeringClo
       api: 'GET /v1/supply-chain-security/engine',
       console: '/supply-chain-security',
       notes:
-        '. SBOM/scan/findings; snykOs=false.',
+        'SBOM/scan/findings; snykOs=false.',
     },
     {
       id: 'platform-engineering-analytics',
@@ -140,7 +140,7 @@ export function platformEngineeringCloudProductCatalog(): PlatformEngineeringClo
       api: 'GET /v1/platform-engineering-analytics/engine',
       console: '/platform-engineering-analytics',
       notes:
-        '. DORA + sibling aggregation.',
+        'DORA + sibling aggregation.',
     },
   ];
 }
@@ -195,6 +195,6 @@ export function platformEngineeringCloudHonesty(): Record<string, boolean | stri
     internalEngineeringTooling: true,
     internalIdp: true,
     note:
-      'Platform Engineering Cloud is internal IDP tooling for Lugemi engineers. Catalog/dashboard surfaces over Fly/shared platform, Volume 7 GPU costs, and Volume 10 Fabric — not Backstage/Argo/K8s/Snyk/Datadog/AI Cloud OS. Control Plane deferred to Volume 17+.',
+      'Platform Engineering Cloud is internal IDP tooling for Lugemi engineers. Catalog/dashboard surfaces over Fly/shared platform, GPU costs, and Fabric — not Backstage/Argo/K8s/Snyk/Datadog/AI Cloud OS. Control Plane deferred.',
   };
 }

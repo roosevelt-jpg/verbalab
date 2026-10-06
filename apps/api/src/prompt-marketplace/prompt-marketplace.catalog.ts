@@ -28,7 +28,7 @@ export const PROMPT_MARKETPLACE_LICENSE_TYPES = [
 /**
  * Prompt Marketplace.
  * Extends existing prompt listings + Prompt Fabric / Prompt Runtime — not a prompt mesh OS.
- * Volume 11 README: real-money honesty — Stripe (or equivalent); never store raw cards.
+ * Platform docs: real-money honesty — Stripe (or equivalent); never store raw cards.
  */
 export function promptMarketplaceEngineCatalog() {
   return {
@@ -136,7 +136,7 @@ export function promptMarketplaceEngineCatalog() {
       fabricPolicyHardGateRequired: true,
       realMoneyRiskCategory: true,
       note:
-        'Volume 11 real-money volume. Use Stripe (or equivalent); never store raw card data. Not a prompt mesh / auto-prompt research OS.',
+        'Real-money volume. Use Stripe (or equivalent); never store raw card data. Not a prompt mesh / auto-prompt research OS.',
     },
     docs: '/docs/PROMPT_MARKETPLACE.md',
   };

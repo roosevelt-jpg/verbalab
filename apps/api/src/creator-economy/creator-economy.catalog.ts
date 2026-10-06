@@ -8,7 +8,7 @@ export type CreatorEconomyCapability = {
   notes: string;
 };
 
-/** Volume 11 ecosystem hub listings use 15% platform fee (1500 bps). */
+/** ecosystem hub listings use 15% platform fee (1500 bps). */
 export const ECOSYSTEM_HUB_PLATFORM_FEE_BPS = 1500;
 
 /**
@@ -51,7 +51,7 @@ export const ROYALTY_HAND_CHECK_SCENARIOS = [
 /**
  * Creator Economy.
  * Extends existing Stripe Connect Express + MarketplaceSale — not a payment-processor OS.
- * Volume 11: Stripe-only; never store raw cards; hand-check payout math.
+ *: Stripe-only; never store raw cards; hand-check payout math.
  */
 export function creatorEconomyEngineCatalog() {
   return {
@@ -171,7 +171,7 @@ export function creatorEconomyEngineCatalog() {
         name: 'Documentation',
         status: 'shipped',
         api: null,
-        notes: '/docs/CREATOR_ECONOMY.md + ADR-0160.',
+        notes: '/docs/CREATOR_ECONOMY.md.',
       },
     ] satisfies CreatorEconomyCapability[],
     royalty: {
@@ -188,7 +188,7 @@ export function creatorEconomyEngineCatalog() {
         expectedPublisherNetCents: s.net,
       })),
       note:
-        'Volume 11 hubs (model→voice-language) record 15%. Content marketplace Checkout uses billing.platformFeeBps() (default 20%). Voice marketplace still uses 10% — not regenerated here.',
+        'Ecosystem hubs (model→voice-language) record 15%. Content marketplace Checkout uses billing.platformFeeBps() (default 20%). Voice marketplace still uses 10% — not regenerated here.',
     },
     architecture: {
       style: 'nest_modular_monolith',
@@ -227,7 +227,7 @@ export function creatorEconomyEngineCatalog() {
       disputeChargebackComplete: false,
       creatorPayoutMathVerifiedLive: false,
       note:
-        'Volume 11 real-money volume. Use Stripe Connect (or equivalent); never store raw card data. Hand-check royalty scenarios before paying live creators. Tax (1099/VAT) and dispute/chargeback flows are documented gaps — not a tax engine or payment-processor OS.',
+        'Real-money volume. Use Stripe Connect (or equivalent); never store raw card data. Hand-check royalty scenarios before paying live creators. Tax (1099/VAT) and dispute/chargeback flows are documented gaps — not a tax engine or payment-processor OS.',
     },
     docs: '/docs/CREATOR_ECONOMY.md',
     links: {

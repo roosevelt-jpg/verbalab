@@ -26,7 +26,7 @@ export class DataPlaneCloudService {
         thinExecutionLayer: true,
         duplicatesProductLogic: false,
         note:
-          'Volume 18 README: Data Plane executes workloads. Thin hubs route to Volumes 1–7 product logic. Service Mesh / VAIOS deferred past Volume 18.',
+          'Platform docs: Data Plane executes workloads. Thin hubs route to product logic. Service Mesh / VAIOS deferred.',
       },
       docs: '/docs/DATA_PLANE_CLOUD.md',
       note:

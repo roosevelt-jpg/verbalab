@@ -16,7 +16,7 @@ export function atlasCatalog() {
   return {
     product: 'Lugemi Atlas',
     note:
-      'Atlas. Interface scaffold for a large multilingual reasoning family. Capabilities map to existing Gateway/Reasoning Runtime/MLOps hubs. Does not ship trained Atlas weights, OpenAI replacement, or frontier-lab compute (Volume 9 README).',
+      'Atlas. Interface scaffold for a large multilingual reasoning family. Capabilities map to existing Gateway/Reasoning Runtime/MLOps hubs. Does not ship trained Atlas weights, OpenAI replacement, or frontier-lab compute.',
     capabilities: [
       {
         id: 'reasoning',
@@ -114,7 +114,7 @@ export function atlasCatalog() {
         name: 'Training Pipeline',
         status: 'partial',
         api: 'POST /v1/model-training-platform/experiments',
-        notes: 'Handoff to Model Training Platform / .',
+        notes: 'Handoff to Model Training Platform /.',
       },
       {
         id: 'inference',
@@ -181,7 +181,7 @@ export function atlasArchitectureNotes() {
     customerFacingProduct: true,
     scaffoldOnly: true,
     note:
-      'Atlas as discoverable family scaffold. Real inference uses bought Gateway models until research charter + compute exist (ADR-0041 / ADR-0135).',
+      'Atlas as discoverable family scaffold. Real inference uses bought Gateway models until research charter + compute exist.',
   };
 }
 

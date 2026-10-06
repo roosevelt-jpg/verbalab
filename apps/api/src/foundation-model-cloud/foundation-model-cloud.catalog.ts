@@ -12,8 +12,8 @@ export type FmcProductRow = {
 
 /**
  * Foundation Model Cloud Foundation.
- * Catalog of Lugemi model-family products. Named models are scaffolds —
- * this hub does not train competitive foundation weights (Volume 9 README).
+ * Catalog of Lugemi model-family products. Named models are scaffolds
+ * this hub does not train competitive foundation weights.
  */
 export function foundationModelCloudCatalog(): FmcProductRow[] {
   return [
@@ -25,7 +25,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
       console: '/foundation-model-cloud',
       modality: 'hub',
       notes:
-        'First-class model-family hub. Extends Inference Cloud + AI Kernel — does not regenerate Volumes 1–8. Does not ship trained competitive weights.',
+        'First-class model-family hub. Extends Inference Cloud + AI Kernel — does not regenerate. Does not ship trained competitive weights.',
     },
     {
       id: 'atlas',
@@ -174,7 +174,7 @@ export function foundationModelCloudArchitectureNotes() {
     openAiReplacementOs: false,
     modelFamilyScaffoldCatalog: true,
     note:
-      'Volume 9 README: Cursor delivers MLOps/platform scaffolding — not trained competitive foundation models. Named families (Atlas…Translate) stay deferred until later phases; Training/Eval/Registry are the high-value MLOps track.',
+      'Platform docs: Cursor delivers MLOps/platform scaffolding — not trained competitive foundation models. Named families (Atlas…Translate) stay deferred until later phases; Training/Eval/Registry are the high-value MLOps track.',
   };
 }
 

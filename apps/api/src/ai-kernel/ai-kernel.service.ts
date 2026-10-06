@@ -19,7 +19,7 @@ export class AiKernelService {
       safety: aiKernelSafetyNotes(),
       docs: '/docs/AI_KERNEL.md',
       note:
-        'Internal operating-system hub for Lugemi runtimes. Not a customer-facing product. Does not regenerate Volumes 1–7 or invent a Linux/VAIOS rewrite.',
+        'Internal operating-system hub for Lugemi runtimes. Not a customer-facing product. Does not regenerate or invent a Linux/VAIOS rewrite.',
     };
   }
 
@@ -77,7 +77,7 @@ export class AiKernelService {
       },
       docs: '/docs/AI_KERNEL.md',
       note:
-        'Internal kernel hub. Volumes 1–7 product/inference clouds remain; this volume layers execution runtimes with permission/sandbox/policy constraints from day one.',
+        'Internal kernel hub. product/inference clouds remain; this volume layers execution runtimes with permission/sandbox/policy constraints from day one.',
     };
   }
 
@@ -95,7 +95,7 @@ export class AiKernelService {
         vaiosOs: false,
         regeneratesVolumes1to7: false,
       },
-      note: 'Kernel monitoring snapshot (–223). Volume 8 closed via Production Audit evidence pack; Foundation Model Cloud is Volume 9 when scheduled.',
+      note: 'Kernel monitoring snapshot (–223). closed via Production Audit evidence pack; Foundation Model Cloud is when scheduled.',
     };
   }
 }

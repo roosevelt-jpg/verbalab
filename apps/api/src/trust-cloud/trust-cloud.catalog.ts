@@ -12,9 +12,9 @@ export type TrustCloudProductRow = {
 /**
  * Trust Cloud Foundation.
  * Enforcement/governance layer over Policy Runtime (Vol 8), AgentOps,
- * Continuous Learning, Volume 12 consent, PCI/Stripe honesty, healthcare/
+ * Continuous Learning, consent, PCI/Stripe honesty, healthcare/
  * financial posture. Not Okta OS, GRC suite OS, certification OS, SIEM OS,
- * or Platform Engineering OS (deferred Volume 16+).
+ * or Platform Engineering OS (deferred ).
  */
 export function trustCloudProductCatalog(): TrustCloudProductRow[] {
   return [
@@ -25,7 +25,7 @@ export function trustCloudProductCatalog(): TrustCloudProductRow[] {
       api: 'GET /v1/trust-cloud/products',
       console: '/trust-cloud',
       notes:
-        'Foundation hub. Integrates with existing systems — does not regenerate Volumes 1–14. platformEngineeringOs=false.',
+        'Foundation hub. Integrates with existing systems — does not regenerate. platformEngineeringOs=false.',
     },
     {
       id: 'ai-safety-platform',
@@ -33,7 +33,7 @@ export function trustCloudProductCatalog(): TrustCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/ai-safety-platform/engine',
       console: '/ai-safety-platform',
-      notes: '. policyRuntimeIntegrated=true — wires to Policy Runtime / Policy Fabric.',
+      notes: 'policyRuntimeIntegrated=true — wires to Policy Runtime / Policy Fabric.',
     },
     {
       id: 'ai-governance-platform',
@@ -41,7 +41,7 @@ export function trustCloudProductCatalog(): TrustCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/ai-governance-platform/engine',
       console: '/ai-governance-platform',
-      notes: '. humanSignOffRequired=true for consequential approvals.',
+      notes: 'humanSignOffRequired=true for consequential approvals.',
     },
     {
       id: 'explainability-platform',
@@ -49,7 +49,7 @@ export function trustCloudProductCatalog(): TrustCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/explainability-platform/engine',
       console: '/explainability-platform',
-      notes: '. Confidence/evidence/attribution/decision-trace. shapOs=false.',
+      notes: 'Confidence/evidence/attribution/decision-trace. shapOs=false.',
     },
     {
       id: 'privacy-platform',
@@ -57,7 +57,7 @@ export function trustCloudProductCatalog(): TrustCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/privacy-platform/engine',
       console: '/privacy-platform',
-      notes: '. traditionalKnowledgeConsentRequired=true — Volume 12 consent fields enforced.',
+      notes: 'traditionalKnowledgeConsentRequired=true — consent fields enforced.',
     },
     {
       id: 'compliance-platform',
@@ -66,7 +66,7 @@ export function trustCloudProductCatalog(): TrustCloudProductRow[] {
       api: 'GET /v1/compliance-platform/engine',
       console: '/compliance-platform',
       notes:
-        '. complianceToolingNotCertification=true; notCertifiedCompliant=true — lawyers/auditors still required.',
+        'complianceToolingNotCertification=true; notCertifiedCompliant=true — lawyers/auditors still required.',
     },
     {
       id: 'trust-audit',
@@ -82,7 +82,7 @@ export function trustCloudProductCatalog(): TrustCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/risk-intelligence/engine',
       console: '/risk-intelligence',
-      notes: '. Risk scoring seed + analytics. grcSuiteOs=false.',
+      notes: 'Risk scoring seed + analytics. grcSuiteOs=false.',
     },
     {
       id: 'policy-integration',
@@ -98,7 +98,7 @@ export function trustCloudProductCatalog(): TrustCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/identity-federation/engine',
       console: '/identity-federation',
-      notes: '. Federation readiness over Clerk. oktaOs=false; samlIdpOs=false.',
+      notes: 'Federation readiness over Clerk. oktaOs=false; samlIdpOs=false.',
     },
     {
       id: 'responsible-ai',
@@ -114,7 +114,7 @@ export function trustCloudProductCatalog(): TrustCloudProductRow[] {
       status: 'shipped',
       api: 'GET /v1/trust-analytics/engine',
       console: '/trust-analytics',
-      notes: '. Aggregates sibling trust hubs. siemOs=false.',
+      notes: 'Aggregates sibling trust hubs. siemOs=false.',
     },
   ];
 }
@@ -165,6 +165,6 @@ export function trustCloudHonesty(): Record<string, boolean | string> {
     traditionalKnowledgeConsentRequired: true,
     humanSignOffRequired: true,
     note:
-      'Trust Cloud integrates with Policy Runtime, AgentOps, Continuous Learning, and Volume 12 consent. Dashboards support compliance work but do not certify GDPR/HIPAA/SOC2/PCI. Platform Engineering Cloud deferred to Volume 16+.',
+      'Trust Cloud integrates with Policy Runtime, AgentOps, Continuous Learning, and consent. Dashboards support compliance work but do not certify GDPR/HIPAA/SOC2/PCI. Platform Engineering Cloud deferred.',
   };
 }

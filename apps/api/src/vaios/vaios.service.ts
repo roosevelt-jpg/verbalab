@@ -30,7 +30,7 @@ export class VaiosService {
         literalOsKernel: false,
         enterpriseEngineeringSystemOs: false,
         note:
-          'Volume 19 README: VAIOS is the unifying orchestration layer ON TOP OF AI Kernel and AI Fabric — not a third reimplementation. Not Linux / not Kubernetes.',
+          'Platform docs: VAIOS is the unifying orchestration layer ON TOP OF AI Kernel and AI Fabric — not a third reimplementation. Not Linux / not Kubernetes.',
       },
       docs: '/docs/VAIOS.md',
       note:

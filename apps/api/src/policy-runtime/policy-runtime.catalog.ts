@@ -172,7 +172,7 @@ export function policyRuntimeCatalog() {
         name: 'Documentation',
         status: 'shipped',
         api: '/docs/POLICY_RUNTIME.md',
-        notes: 'Product doc + ADR-0133.',
+        notes: 'Product documentation.',
       },
       {
         id: 'production-deployment',

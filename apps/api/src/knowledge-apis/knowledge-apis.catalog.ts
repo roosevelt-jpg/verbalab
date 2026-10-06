@@ -130,7 +130,7 @@ export function knowledgeApisCatalog() {
   return {
     product: 'Lugemi Enterprise Knowledge APIs',
     note:
-      'Public-facing API pack for Knowledge Cloud: REST catalog, GraphQL façades, OpenAPI, SDK/CLI, developer portal links, signed webhooks, and light SSE event tails. Extends existing + Volume 6 hubs. Not a gRPC mesh, Kafka event-streaming OS, or multi-language SDK generator factory.',
+      'Public-facing API pack for Knowledge Cloud: REST catalog, GraphQL façades, OpenAPI, SDK/CLI, developer portal links, signed webhooks, and light SSE event tails. Extends existing + hubs. Not a gRPC mesh, Kafka event-streaming OS, or multi-language SDK generator factory.',
     capabilities: [
       {
         id: 'rest',

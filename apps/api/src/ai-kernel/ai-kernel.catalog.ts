@@ -144,6 +144,6 @@ export function aiKernelSafetyNotes() {
     policyMustHardGate: true,
     policyLogOnlyRejected: true,
     note:
-      'Volume 8 README: Agent/Workflow/Plugin Runtimes must have scoped permissions and sandboxing — not open function calls. Policy Runtime must be a hard gate wired into those runtimes, not decoration that only logs.',
+      'Platform docs: Agent/Workflow/Plugin Runtimes must have scoped permissions and sandboxing — not open function calls. Policy Runtime must be a hard gate wired into those runtimes, not decoration that only logs.',
   };
 }

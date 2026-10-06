@@ -27,7 +27,7 @@ export function promptIntelligenceCatalog() {
         name: 'Prompt Versioning',
         status: 'shipped',
         api: 'GET /v1/prompts/{key}/versions',
-        notes: 'Create/activate/rollback via existing Prompts API (ADR-0030).',
+        notes: 'Create/activate/rollback via existing Prompts API.',
       },
       {
         id: 'prompt-testing',

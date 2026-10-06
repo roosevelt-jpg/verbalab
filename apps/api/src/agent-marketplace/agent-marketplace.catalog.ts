@@ -26,7 +26,7 @@ export type AgentMarketplaceCategory = (typeof AGENT_MARKETPLACE_CATEGORIES)[num
 /**
  * Agent Marketplace.
  * Buy/sell/publish sandboxed agents over Agent Runtime — not open agent-orchestration OS.
- * Volume 11 README: enforce Agent Runtime sandbox + Policy gate before third-party agents run.
+ * Platform docs: enforce Agent Runtime sandbox + Policy gate before third-party agents run.
  */
 export function agentMarketplaceEngineCatalog() {
   return {
@@ -172,7 +172,7 @@ export function agentMarketplaceEngineCatalog() {
       stripeOrEquivalentRequired: true,
       storesRawCardData: false,
       note:
-        'Volume 11: third-party marketplace agents must not run until Agent Runtime sandbox + Policy gates allow. Denied actions (shell.exec, external.execute, …) always 403.',
+        ': third-party marketplace agents must not run until Agent Runtime sandbox + Policy gates allow. Denied actions (shell.exec, external.execute, …) always 403.',
     },
     docs: '/docs/AGENT_MARKETPLACE.md',
   };

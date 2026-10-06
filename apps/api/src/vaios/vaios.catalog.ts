@@ -23,7 +23,7 @@ export function vaiosProductCatalog(): VaiosProductRow[] {
       api: 'GET /v1/vaios/products',
       console: '/vaios',
       notes:
-        '. Unifying orchestration layer; notLinux/notKubernetes.',
+        'Unifying orchestration layer; notLinux/notKubernetes.',
     },
     {
       id: 'ai-scheduler',
@@ -32,7 +32,7 @@ export function vaiosProductCatalog(): VaiosProductRow[] {
       api: 'GET /v1/ai-scheduler/engine',
       console: '/ai-scheduler',
       notes:
-        '. Unifies scheduling over global-scheduler/GPU/workflow/agent queues.',
+        'Unifies scheduling over global-scheduler/GPU/workflow/agent queues.',
     },
     {
       id: 'runtime-manager',
@@ -41,7 +41,7 @@ export function vaiosProductCatalog(): VaiosProductRow[] {
       api: 'GET /v1/runtime-manager/engine',
       console: '/runtime-manager',
       notes:
-        '. Lifecycle catalog over Kernel + Data Plane runtimes.',
+        'Lifecycle catalog over Kernel + Data Plane runtimes.',
     },
     {
       id: 'resource-manager',
@@ -50,7 +50,7 @@ export function vaiosProductCatalog(): VaiosProductRow[] {
       api: 'GET /v1/resource-manager/engine',
       console: '/resource-manager',
       notes:
-        '. Resource allocation catalog; gpuBudgetLimitsRequired=true.',
+        'Resource allocation catalog; gpuBudgetLimitsRequired=true.',
     },
     {
       id: 'workflow-operating-system',
@@ -59,7 +59,7 @@ export function vaiosProductCatalog(): VaiosProductRow[] {
       api: 'GET /v1/workflow-operating-system/engine',
       console: '/workflow-operating-system',
       notes:
-        '. Façade over workflow-runtime + marketplace.',
+        'Façade over workflow-runtime + marketplace.',
     },
     {
       id: 'agent-operating-system',
@@ -68,7 +68,7 @@ export function vaiosProductCatalog(): VaiosProductRow[] {
       api: 'GET /v1/agent-operating-system/engine',
       console: '/agent-operating-system',
       notes:
-        '. Façade over agent-runtime + fabric + marketplace.',
+        'Façade over agent-runtime + fabric + marketplace.',
     },
     {
       id: 'ai-memory-operating-system',
@@ -77,7 +77,7 @@ export function vaiosProductCatalog(): VaiosProductRow[] {
       api: 'GET /v1/ai-memory-operating-system/engine',
       console: '/ai-memory-operating-system',
       notes:
-        '. Façade over memory-runtime + fabric + knowledge-memory.',
+        'Façade over memory-runtime + fabric + knowledge-memory.',
     },
     {
       id: 'knowledge-operating-system',
@@ -86,7 +86,7 @@ export function vaiosProductCatalog(): VaiosProductRow[] {
       api: 'GET /v1/knowledge-operating-system/engine',
       console: '/knowledge-operating-system',
       notes:
-        '. Façade over knowledge-runtime/fabric/cloud + AKG.',
+        'Façade over knowledge-runtime/fabric/cloud + AKG.',
     },
     {
       id: 'plugin-operating-system',
@@ -95,7 +95,7 @@ export function vaiosProductCatalog(): VaiosProductRow[] {
       api: 'GET /v1/plugin-operating-system/engine',
       console: '/plugin-operating-system',
       notes:
-        '. Façade over plugin-runtime + marketplace; existing policy gates.',
+        'Façade over plugin-runtime + marketplace; existing policy gates.',
     },
     {
       id: 'ai-kernel',
@@ -104,7 +104,7 @@ export function vaiosProductCatalog(): VaiosProductRow[] {
       api: 'GET /v1/ai-kernel/products',
       console: '/ai-kernel',
       notes:
-        'Volume 8 surface unified by VAIOS.',
+        'Upstream surface unified by VAIOS.',
     },
     {
       id: 'ai-fabric',
@@ -113,7 +113,7 @@ export function vaiosProductCatalog(): VaiosProductRow[] {
       api: 'GET /v1/ai-fabric/products',
       console: '/ai-fabric',
       notes:
-        'Volume 10 surface unified by VAIOS.',
+        'Upstream surface unified by VAIOS.',
     },
     {
       id: 'data-plane-cloud',
@@ -122,7 +122,7 @@ export function vaiosProductCatalog(): VaiosProductRow[] {
       api: 'GET /v1/data-plane-cloud/products',
       console: '/data-plane-cloud',
       notes:
-        'Volume 18 surface unified by VAIOS.',
+        'Upstream surface unified by VAIOS.',
     },
     {
       id: 'monitoring',
@@ -320,6 +320,6 @@ export function vaiosHonesty(): Record<string, boolean | string> {
     enterpriseEngineeringSystemOs: false,
     integratesExistingSystems: true,
     note:
-      'VAIOS unifies Kernel + Fabric + Data Plane as orchestration façades. Not Linux/Kubernetes. Not a third agent/workflow/memory implementation. Enterprise Engineering System deferred past Volume 19.',
+      'VAIOS unifies Kernel + Fabric + Data Plane as orchestration façades. Not Linux/Kubernetes. Not a third agent/workflow/memory implementation. Enterprise Engineering System deferred.',
   };
 }

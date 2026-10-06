@@ -25,7 +25,7 @@ export class ResearchCloudService {
         traditionalKnowledgeConsentRequired: true,
         aiSovereigntyOs: false,
         note:
-          'Volume 13 README: label synthetic data used with Volume 12 sensitive domains; require Volume 12 consent fields before open-releasing traditional knowledge. AI Sovereignty Cloud deferred to Volume 14+.',
+          'Platform docs: label synthetic data used with sensitive domains; require consent fields before open-releasing traditional knowledge. AI Sovereignty Cloud deferred.',
       },
       docs: '/docs/RESEARCH_CLOUD.md',
       note:

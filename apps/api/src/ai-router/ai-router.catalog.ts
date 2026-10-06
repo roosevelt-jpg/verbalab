@@ -300,7 +300,7 @@ export function aiRouterCatalog() {
         name: 'Streaming',
         status: 'partial',
         api: 'POST /v1/ai-router/resolve',
-        notes: 'Flags streamingCapable when feature supports SSE — runtime is .',
+        notes: 'Flags streamingCapable when feature supports SSE — runtime is.',
       },
       {
         id: 'load-balancing',
@@ -321,7 +321,7 @@ export function aiRouterCatalog() {
         name: 'Analytics',
         status: 'shipped',
         api: 'GET /v1/ai-router/analytics',
-        notes: 'Route decision counts — ≠ .',
+        notes: 'Route decision counts — ≠.',
       },
       {
         id: 'rest',
@@ -349,7 +349,7 @@ export function aiRouterCatalog() {
         name: 'Documentation',
         status: 'shipped',
         api: '/docs/AI_ROUTER.md',
-        notes: 'Product doc + ADR-0118.',
+        notes: 'Product documentation.',
       },
       {
         id: 'production-deployment',
