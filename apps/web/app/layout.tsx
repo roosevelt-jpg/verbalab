@@ -2,6 +2,7 @@ import { ClerkProvider } from '@clerk/nextjs';
 import type { Metadata } from 'next';
 import { Noto_Sans, Noto_Sans_Mono } from 'next/font/google';
 import './globals.css';
+import '@/components/marketing/marketing.css';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { SentryInit } from '@/components/sentry-init';
 
