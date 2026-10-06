@@ -10,7 +10,7 @@ type Db = Pick<
 >;
 
 export async function seedFamiliesAndScripts(prisma: Db) {
-  for (const family of FAMILY_SEEDS) {
+  for (const family of FAMILY_SEEDS.filter(Boolean)) {
     await prisma.languageFamily.upsert({
       where: { code: family.code },
       create: {
@@ -27,7 +27,7 @@ export async function seedFamiliesAndScripts(prisma: Db) {
     });
   }
 
-  for (const script of WRITING_SYSTEM_SEEDS) {
+  for (const script of WRITING_SYSTEM_SEEDS.filter(Boolean)) {
     await prisma.writingSystem.upsert({
       where: { code: script.code },
       create: {
