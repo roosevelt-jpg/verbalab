@@ -231,6 +231,10 @@ export function ChatClient() {
   const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
   const liveFinalRef = useRef('');
   const activeIdRef = useRef<string | null>(null);
+  const wantRecordingRef = useRef(false);
+  const segmentQueueRef = useRef<string[]>([]);
+  const translatingSegmentRef = useRef(false);
+  const liveTargetRef = useRef('ak');
 
   const [languages, setLanguages] = useState<Language[]>([]);
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -242,6 +246,7 @@ export function ChatClient() {
   const [uploadTarget, setUploadTarget] = useState('ak');
   const [mode, setMode] = useState<'chat' | 'live'>('chat');
   const [pluginsOpen, setPluginsOpen] = useState(false);
+  const [libraryOpen, setLibraryOpen] = useState(false);
   const [connected, setConnected] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -249,8 +254,6 @@ export function ChatClient() {
   const [interim, setInterim] = useState('');
   const [livePreview, setLivePreview] = useState('');
   const [hydrated, setHydrated] = useState(false);
-  const liveTargetRef = useRef(liveTarget);
-  const translatingSegmentRef = useRef(false);
 
   useEffect(() => {
     liveTargetRef.current = liveTarget;
@@ -286,6 +289,7 @@ export function ChatClient() {
 
   useEffect(() => {
     return () => {
+      wantRecordingRef.current = false;
       recognitionRef.current?.abort();
       stopDemoSpeech();
     };
@@ -476,15 +480,38 @@ export function ChatClient() {
   }
 
   function stopRecording() {
+    wantRecordingRef.current = false;
     recognitionRef.current?.stop();
+    recognitionRef.current = null;
     setRecording(false);
-    setLivePreview('');
+  }
+
+  function enqueueLiveSegment(spoken: string) {
+    const text = spoken.trim();
+    if (!text) return;
+    segmentQueueRef.current.push(text);
+    void drainLiveSegmentQueue();
+  }
+
+  async function drainLiveSegmentQueue() {
+    if (translatingSegmentRef.current) return;
+    translatingSegmentRef.current = true;
+    try {
+      while (segmentQueueRef.current.length > 0) {
+        const text = segmentQueueRef.current.shift()!;
+        await translateFinalSegment(text);
+      }
+    } finally {
+      translatingSegmentRef.current = false;
+      if (segmentQueueRef.current.length > 0) {
+        void drainLiveSegmentQueue();
+      }
+    }
   }
 
   async function translateFinalSegment(spoken: string) {
     const text = spoken.trim();
-    if (!text || translatingSegmentRef.current) return;
-    translatingSegmentRef.current = true;
+    if (!text) return;
     const target = liveTargetRef.current;
     const convId = ensureConversation();
     const userTurn: ChatTurn = {
@@ -523,34 +550,17 @@ export function ChatClient() {
       void playTranslation(res.text, recognitionLangFor(target));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Live translate failed');
-    } finally {
-      translatingSegmentRef.current = false;
     }
   }
 
-  function toggleRecord() {
-    if (recording) {
-      stopRecording();
-      const leftover = (liveFinalRef.current || interim).trim();
-      liveFinalRef.current = '';
-      setInterim('');
-      if (leftover) void translateFinalSegment(leftover);
-      return;
-    }
-
+  function startRecognitionSession() {
     const Ctor = getSpeechRecognitionCtor();
     if (!Ctor) {
       setError('Speech recognition is not supported in this browser. Type instead, or upload audio.');
+      wantRecordingRef.current = false;
+      setRecording(false);
       return;
     }
-
-    setError(null);
-    setMode('live');
-    setPluginsOpen(false);
-    liveFinalRef.current = '';
-    setInterim('');
-    setLivePreview('');
-    ensureConversation();
 
     const recognition = new Ctor();
     recognition.continuous = true;
@@ -566,21 +576,46 @@ export function ChatClient() {
       }
       if (newlyFinal.trim()) {
         liveFinalRef.current = '';
+        setInterim('');
         setInput('');
-        void translateFinalSegment(newlyFinal);
+        // Translate each FINAL segment immediately while recording continues.
+        enqueueLiveSegment(newlyFinal);
       } else {
         setInterim(interimBuf);
         setInput(interimBuf.trim());
       }
     };
     recognition.onerror = (event) => {
-      if (event.error !== 'aborted' && event.error !== 'no-speech') {
-        setError(`Microphone error: ${event.error}`);
+      if (event.error === 'aborted') return;
+      if (event.error === 'no-speech') {
+        // Keep continuous session alive; browser may end and we restart in onend.
+        return;
       }
+      setError(`Microphone error: ${event.error}`);
+      wantRecordingRef.current = false;
       setRecording(false);
     };
     recognition.onend = () => {
-      setRecording(false);
+      if (!wantRecordingRef.current) {
+        setRecording(false);
+        return;
+      }
+      // Web Speech often ends after a pause even with continuous=true — restart for live translate.
+      window.setTimeout(() => {
+        if (!wantRecordingRef.current) return;
+        try {
+          recognition.start();
+          setRecording(true);
+        } catch {
+          try {
+            startRecognitionSession();
+          } catch (err) {
+            setError(err instanceof Error ? err.message : 'Could not keep microphone open');
+            wantRecordingRef.current = false;
+            setRecording(false);
+          }
+        }
+      }, 120);
     };
 
     recognitionRef.current = recognition;
@@ -589,8 +624,37 @@ export function ChatClient() {
       setRecording(true);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not start microphone');
+      wantRecordingRef.current = false;
       setRecording(false);
     }
+  }
+
+  function toggleRecord() {
+    if (recording || wantRecordingRef.current) {
+      stopRecording();
+      const leftover = (liveFinalRef.current || interim).trim();
+      liveFinalRef.current = '';
+      setInterim('');
+      setLivePreview('');
+      if (leftover) enqueueLiveSegment(leftover);
+      return;
+    }
+
+    if (!speechRecognitionSupported()) {
+      setError('Speech recognition is not supported in this browser. Type instead, or upload audio.');
+      return;
+    }
+
+    setError(null);
+    setMode('live');
+    setPluginsOpen(false);
+    liveFinalRef.current = '';
+    segmentQueueRef.current = [];
+    setInterim('');
+    setLivePreview('');
+    ensureConversation();
+    wantRecordingRef.current = true;
+    startRecognitionSession();
   }
 
   async function transcribeFile(token: string, file: File) {
@@ -767,9 +831,19 @@ export function ChatClient() {
   return (
     <AppShell>
       <div className="lg-chat-studio">
-        <aside className="lg-chat-history" aria-label="Library">
+        <aside
+          className={`lg-chat-history${libraryOpen ? ' is-open' : ''}`}
+          aria-label="Library"
+        >
           <div className="lg-chat-history-brand">Lugemi</div>
-          <button type="button" className="vl-btn vl-btn-primary lg-chat-new" onClick={startNewChat}>
+          <button
+            type="button"
+            className="vl-btn vl-btn-primary lg-chat-new"
+            onClick={() => {
+              startNewChat();
+              setLibraryOpen(false);
+            }}
+          >
             New chat
           </button>
           <nav className="lg-chat-side-nav" aria-label="Studio sections">
@@ -779,7 +853,10 @@ export function ChatClient() {
             <button
               type="button"
               className={`lg-chat-side-link${pluginsOpen ? ' is-active' : ''}`}
-              onClick={() => setPluginsOpen(true)}
+              onClick={() => {
+                setPluginsOpen(true);
+                setLibraryOpen(false);
+              }}
             >
               Plugins
             </button>
@@ -800,6 +877,7 @@ export function ChatClient() {
                     onClick={() => {
                       activeIdRef.current = c.id;
                       setActiveId(c.id);
+                      setLibraryOpen(false);
                     }}
                   >
                     <span>{c.title}</span>
@@ -811,7 +889,23 @@ export function ChatClient() {
               ))
             )}
           </ul>
+          <button
+            type="button"
+            className="lg-chat-history-close"
+            aria-label="Close library"
+            onClick={() => setLibraryOpen(false)}
+          >
+            Close
+          </button>
         </aside>
+        {libraryOpen ? (
+          <button
+            type="button"
+            className="lg-chat-library-backdrop"
+            aria-label="Dismiss library"
+            onClick={() => setLibraryOpen(false)}
+          />
+        ) : null}
 
         <section className="lg-chat-main" aria-label="Chat">
           <header className="lg-chat-toolbar">
@@ -822,6 +916,14 @@ export function ChatClient() {
               </p>
             </div>
             <div className="lg-chat-toolbar-actions">
+              <button
+                type="button"
+                className="vl-btn vl-btn-secondary lg-chat-library-toggle"
+                aria-expanded={libraryOpen}
+                onClick={() => setLibraryOpen((v) => !v)}
+              >
+                Library
+              </button>
               <div className="lg-chat-mode" role="group" aria-label="Mode">
                 <button
                   type="button"
@@ -1041,7 +1143,7 @@ export function ChatClient() {
                       : 'Click to record'
                     : 'Speech recognition unavailable'
                 }
-                disabled={loading}
+                disabled={loading && !recording}
                 onClick={toggleRecord}
               >
                 {recording ? 'Stop' : 'Record'}
@@ -1096,9 +1198,10 @@ export function ChatClient() {
                         <button
                           type="button"
                           className={`vl-btn ${on ? 'vl-btn-secondary' : 'vl-btn-primary'}`}
+                          aria-pressed={on}
                           onClick={() => toggleConnector(c.id)}
                         >
-                          {on ? 'Connected' : 'Connect'}
+                          {on ? 'Disconnect' : 'Connect'}
                         </button>
                       </li>
                     );
