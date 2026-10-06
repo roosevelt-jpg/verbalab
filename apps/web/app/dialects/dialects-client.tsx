@@ -41,12 +41,25 @@ export function DialectsClient() {
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(async () => {
-    const [res, eng] = await Promise.all([
-      apiFetch<{ data: DialectRow[] }>('/v1/dialects'),
-      apiFetch<Engine>('/v1/dialects/engine').catch(() => null),
-    ]);
-    setDialects(res.data);
-    if (eng) setEngine(eng);
+    const attempt = async () => {
+      const [res, eng] = await Promise.all([
+        apiFetch<{ data: DialectRow[] }>('/v1/dialects'),
+        apiFetch<Engine>('/v1/dialects/engine').catch(() => null),
+      ]);
+      setDialects(res.data);
+      if (eng) setEngine(eng);
+    };
+    try {
+      await attempt();
+    } catch (first) {
+      // Nest --watch restarts briefly drop :3001; one retry recovers Studio registry load.
+      await new Promise((r) => setTimeout(r, 600));
+      try {
+        await attempt();
+      } catch {
+        throw first instanceof Error ? first : new Error(String(first));
+      }
+    }
   }, []);
 
   useEffect(() => {
