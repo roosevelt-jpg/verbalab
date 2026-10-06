@@ -13,6 +13,7 @@ const EXTRA = [
   { href: '/workflows', label: 'Workflows console', hint: 'JSON flows' },
   { href: '/chat', label: 'Chat Studio immersive', hint: 'LugemiAgents' },
   { href: '/billing', label: 'Billing', hint: 'Plans & quotas' },
+  { href: '/creative/subscription', label: 'Subscription', hint: 'Creative / Agents / API' },
   { href: '/dashboard', label: 'Platform ops', hint: 'Operator dashboard' },
 ];
 

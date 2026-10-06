@@ -11,50 +11,17 @@ export function formatCredits(n: number): string {
   return n.toLocaleString();
 }
 
-export async function recordAudioBlob(maxMs = 60_000): Promise<File> {
-  if (!navigator.mediaDevices?.getUserMedia) {
-    throw new Error('Microphone recording is not supported in this browser.');
-  }
-  const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-  const mime = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : undefined;
-  const recorder = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
-  const chunks: BlobPart[] = [];
-  return new Promise((resolve, reject) => {
-    const timer = window.setTimeout(() => {
-      if (recorder.state === 'recording') recorder.stop();
-    }, maxMs);
-    recorder.ondataavailable = (e) => {
-      if (e.data.size) chunks.push(e.data);
-    };
-    recorder.onerror = () => {
-      window.clearTimeout(timer);
-      stream.getTracks().forEach((t) => t.stop());
-      reject(new Error('Recording failed'));
-    };
-    recorder.onstop = () => {
-      window.clearTimeout(timer);
-      stream.getTracks().forEach((t) => t.stop());
-      const blob = new Blob(chunks, { type: recorder.mimeType || 'audio/webm' });
-      const ext = blob.type.includes('webm') ? 'webm' : 'audio';
-      resolve(new File([blob], `recording-${Date.now()}.${ext}`, { type: blob.type }));
-    };
-    recorder.start();
-    // Caller stops via returned promise only on auto-timeout; expose stop by resolving early?
-    // For UI we stop after user clicks again — see startRecordingSession.
-  });
-}
-
 export type RecordingSession = {
   stop: () => Promise<File>;
   cancel: () => void;
 };
 
 export function startRecordingSession(): RecordingSession {
-  let resolveFile: ((f: File) => void) | null = null;
-  let rejectFile: ((e: Error) => void) | null = null;
+  const resolveRef: { current: ((f: File) => void) | null } = { current: null };
+  const rejectRef: { current: ((e: Error) => void) | null } = { current: null };
   const filePromise = new Promise<File>((resolve, reject) => {
-    resolveFile = resolve;
-    rejectFile = reject;
+    resolveRef.current = resolve;
+    rejectRef.current = reject;
   });
 
   let recorder: MediaRecorder | null = null;
@@ -76,15 +43,15 @@ export function startRecordingSession(): RecordingSession {
         stream?.getTracks().forEach((t) => t.stop());
         const blob = new Blob(chunks, { type: recorder?.mimeType || 'audio/webm' });
         const ext = blob.type.includes('webm') ? 'webm' : 'audio';
-        resolveFile?.(new File([blob], `recording-${Date.now()}.${ext}`, { type: blob.type }));
+        resolveRef.current?.(new File([blob], `recording-${Date.now()}.${ext}`, { type: blob.type }));
       };
       recorder.onerror = () => {
         stream?.getTracks().forEach((t) => t.stop());
-        rejectFile?.(new Error('Recording failed'));
+        rejectRef.current?.(new Error('Recording failed'));
       };
       recorder.start();
     } catch (err) {
-      rejectFile?.(err instanceof Error ? err : new Error('Recording failed'));
+      rejectRef.current?.(err instanceof Error ? err : new Error('Recording failed'));
     }
   })();
 
@@ -96,7 +63,7 @@ export function startRecordingSession(): RecordingSession {
     cancel: () => {
       if (recorder && recorder.state === 'recording') recorder.stop();
       stream?.getTracks().forEach((t) => t.stop());
-      rejectFile?.(new Error('Recording cancelled'));
+      rejectRef.current?.(new Error('Recording cancelled'));
     },
   };
 }
