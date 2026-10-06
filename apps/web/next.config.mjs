@@ -24,7 +24,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https:",
               "font-src 'self' data:",
-              "connect-src 'self' https: http://localhost:3001",
+              "connect-src 'self' https: http://localhost:3001 http://127.0.0.1:3001",
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'",
