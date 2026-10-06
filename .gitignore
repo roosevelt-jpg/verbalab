@@ -1,0 +1,25 @@
+node_modules
+agent-tools
+
+.turbo
+dist
+.next
+coverage
+.env
+.env.local
+apps/*/.env
+apps/*/.env.local
+*.log
+.DS_Store
+apps/api/prisma/*.db
+apps/api/prisma/*.db-journal
+apps/api/storage/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+scripts/__pycache__/
+
+# Local secrets (never commit)
+.local/
+**/firebase-adminsdk*.json

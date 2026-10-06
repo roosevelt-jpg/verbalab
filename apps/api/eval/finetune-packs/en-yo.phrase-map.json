@@ -1,0 +1,55 @@
+{
+  "sourceLang": "en",
+  "targetLang": "yo",
+  "baseModel": "nllb-200-distilled-600M",
+  "entries": [
+    {
+      "source": "Hello",
+      "target": "Báwo"
+    },
+    {
+      "source": "Thank you",
+      "target": "E ṣé"
+    },
+    {
+      "source": "How are you?",
+      "target": "Báwo ni?"
+    },
+    {
+      "source": "Good morning",
+      "target": "Ẹ káàárọ̀"
+    },
+    {
+      "source": "Where is the clinic?",
+      "target": "Ibi ìtọ́jú wà níbo?"
+    },
+    {
+      "source": "Please wait here",
+      "target": "Jọ̀wọ́ dúró níbí"
+    },
+    {
+      "source": "I need help",
+      "target": "Mo nílò ìrànlọ́wọ́"
+    },
+    {
+      "source": "The office is closed",
+      "target": "Ọ́fíìsì ti padé"
+    },
+    {
+      "source": "Bring your identity card",
+      "target": "Mú káàdì ìdánimọ̀ rẹ wá"
+    },
+    {
+      "source": "Water is available",
+      "target": "Omi wà"
+    },
+    {
+      "source": "School starts tomorrow",
+      "target": "Ilé-ìwé yóò bẹ̀rẹ̀ lọ́la"
+    },
+    {
+      "source": "The meeting is at noon",
+      "target": "Ìpàdé wà ní ọ̀sán"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check Fly credentials
+        id: fly
+        run: |
+          if [ -n "${{ secrets.FLY_API_TOKEN }}" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "FLY_API_TOKEN not set — skipping production deploy (documented in infra/DEPLOY.md)."
+          fi
+
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+        if: steps.fly.outputs.configured == 'true'
+
+      - name: Deploy API
+        if: steps.fly.outputs.configured == 'true'
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: flyctl deploy -c infra/fly/api.toml --dockerfile apps/api/Dockerfile --remote-only
+
+      - name: Deploy Web
+        if: steps.fly.outputs.configured == 'true'
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: >
+          flyctl deploy -c infra/fly/web.toml --dockerfile apps/web/Dockerfile --remote-only
+          --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
+          --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+
+      - name: Deploy API (EU island)
+        if: steps.fly.outputs.configured == 'true' && vars.FLY_DEPLOY_EU == 'true'
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: flyctl deploy -c infra/fly/api.eu.toml --dockerfile apps/api/Dockerfile --remote-only
+
+      - name: Deploy Web (EU island)
+        if: steps.fly.outputs.configured == 'true' && vars.FLY_DEPLOY_EU == 'true'
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: >
+          flyctl deploy -c infra/fly/web.eu.toml --dockerfile apps/web/Dockerfile --remote-only
+          --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL_EU }}
+          --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+
+      - name: Skip notice
+        if: steps.fly.outputs.configured != 'true'
+        run: echo "Deploy skipped — add FLY_API_TOKEN to enable."

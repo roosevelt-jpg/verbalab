@@ -1,0 +1,136 @@
+/**
+ * Library Phase 203 → Runtime Manager (VL-336).
+ * Runtime Manager (VL-336). Lifecycle/allocation/health/recovery/scaling catalog over existing Kernel + Data Plane runtimes — routes to ai-kernel inventory.
+ */
+export function runtimeManagerEngineCatalog() {
+  return {
+    product: 'VerbaLab Runtime Manager',
+    unifyingOrchestrationLayer: true,
+    duplicatesKernelOrFabric: false,
+    notLinux: true,
+    notKubernetes: true,
+    literalOsKernel: false,
+    capabilities: [
+      { id: 'lifecycle', name: 'Runtime Lifecycle Catalog', status: 'shipped', notes: 'VL-336 routed capability — not a new engine.' },
+      { id: 'allocation', name: 'Runtime Allocation Catalog', status: 'shipped', notes: 'VL-336 routed capability — not a new engine.' },
+      { id: 'health', name: 'Runtime Health Catalog', status: 'shipped', notes: 'VL-336 routed capability — not a new engine.' },
+      { id: 'recovery', name: 'Runtime Recovery Catalog', status: 'shipped', notes: 'VL-336 routed capability — not a new engine.' },
+      { id: 'scaling', name: 'Runtime Scaling Catalog', status: 'shipped', notes: 'VL-336 routed capability — not a new engine.' }
+    ],
+    routes: [
+      {
+        id: 'route-1',
+        module: 'ai-kernel',
+        path: '/v1/ai-kernel/products',
+        role: 'AI Kernel inventory',
+        status: 'shipped',
+        notes: 'Upstream Kernel/Fabric/Data Plane surface — unifying layer routes here.',
+      },
+      {
+        id: 'route-2',
+        module: 'agent-runtime',
+        path: '/v1/agent-runtime/engine',
+        role: 'Agent Runtime',
+        status: 'shipped',
+        notes: 'Upstream Kernel/Fabric/Data Plane surface — unifying layer routes here.',
+      },
+      {
+        id: 'route-3',
+        module: 'workflow-runtime',
+        path: '/v1/workflow-runtime/engine',
+        role: 'Workflow Runtime',
+        status: 'shipped',
+        notes: 'Upstream Kernel/Fabric/Data Plane surface — unifying layer routes here.',
+      },
+      {
+        id: 'route-4',
+        module: 'memory-runtime',
+        path: '/v1/memory-runtime/engine',
+        role: 'Memory Runtime',
+        status: 'shipped',
+        notes: 'Upstream Kernel/Fabric/Data Plane surface — unifying layer routes here.',
+      },
+      {
+        id: 'route-5',
+        module: 'policy-runtime',
+        path: '/v1/policy-runtime/engine',
+        role: 'Policy Runtime',
+        status: 'shipped',
+        notes: 'Upstream Kernel/Fabric/Data Plane surface — unifying layer routes here.',
+      },
+      {
+        id: 'route-6',
+        module: 'prompt-runtime',
+        path: '/v1/prompt-runtime/engine',
+        role: 'Prompt Runtime',
+        status: 'shipped',
+        notes: 'Upstream Kernel/Fabric/Data Plane surface — unifying layer routes here.',
+      },
+      {
+        id: 'route-7',
+        module: 'context-runtime',
+        path: '/v1/context-runtime/engine',
+        role: 'Context Runtime',
+        status: 'shipped',
+        notes: 'Upstream Kernel/Fabric/Data Plane surface — unifying layer routes here.',
+      },
+      {
+        id: 'route-8',
+        module: 'batch-runtime',
+        path: '/v1/batch-runtime/engine',
+        role: 'Batch Runtime',
+        status: 'shipped',
+        notes: 'Upstream Kernel/Fabric/Data Plane surface — unifying layer routes here.',
+      },
+      {
+        id: 'route-9',
+        module: 'streaming-runtime',
+        path: '/v1/streaming-runtime/engine',
+        role: 'Streaming Runtime',
+        status: 'shipped',
+        notes: 'Upstream Kernel/Fabric/Data Plane surface — unifying layer routes here.',
+      },
+      {
+        id: 'route-10',
+        module: 'data-plane-cloud',
+        path: '/v1/data-plane-cloud/products',
+        role: 'Data Plane runtimes',
+        status: 'shipped',
+        notes: 'Upstream Kernel/Fabric/Data Plane surface — unifying layer routes here.',
+      }
+    ],
+    routesTo: [
+      { module: 'ai-kernel', path: '/v1/ai-kernel/products', role: 'AI Kernel inventory' },
+      { module: 'agent-runtime', path: '/v1/agent-runtime/engine', role: 'Agent Runtime' },
+      { module: 'workflow-runtime', path: '/v1/workflow-runtime/engine', role: 'Workflow Runtime' },
+      { module: 'memory-runtime', path: '/v1/memory-runtime/engine', role: 'Memory Runtime' },
+      { module: 'policy-runtime', path: '/v1/policy-runtime/engine', role: 'Policy Runtime' },
+      { module: 'prompt-runtime', path: '/v1/prompt-runtime/engine', role: 'Prompt Runtime' },
+      { module: 'context-runtime', path: '/v1/context-runtime/engine', role: 'Context Runtime' },
+      { module: 'batch-runtime', path: '/v1/batch-runtime/engine', role: 'Batch Runtime' },
+      { module: 'streaming-runtime', path: '/v1/streaming-runtime/engine', role: 'Streaming Runtime' },
+      { module: 'data-plane-cloud', path: '/v1/data-plane-cloud/products', role: 'Data Plane runtimes' }
+    ],
+    honesty: {
+      unifyingOrchestrationLayer: true,
+      duplicatesKernelOrFabric: false,
+      notLinux: true,
+      notKubernetes: true,
+      literalOsKernel: false,
+      enterpriseEngineeringSystemOs: false,
+      integratesExistingSystems: true,
+      newRuntimeEngine: false,
+    },
+    safety: {
+      unifyingOrchestrationLayer: true,
+      duplicatesKernelOrFabric: false,
+      notLinux: true,
+      notKubernetes: true,
+      literalOsKernel: false,
+      enterpriseEngineeringSystemOs: false,
+      note: 'Runtime Manager (VL-336). Lifecycle/allocation/health/recovery/scaling catalog over existing Kernel + Data Plane runtimes — routes to ai-kernel inventory.',
+    },
+    docs: '/docs/RUNTIME_MANAGER.md',
+    note: 'Runtime Manager (VL-336). Lifecycle/allocation/health/recovery/scaling catalog over existing Kernel + Data Plane runtimes — routes to ai-kernel inventory.',
+  };
+}

@@ -1,0 +1,37 @@
+# Fly.io — API EU residency island (VL-075). Separate app + DATABASE_URL from US.
+# fly apps create verbalab-api-eu
+# fly deploy -c infra/fly/api.eu.toml --dockerfile apps/api/Dockerfile
+app = 'verbalab-api-eu'
+primary_region = 'ams'
+
+[build]
+  dockerfile = 'apps/api/Dockerfile'
+
+[deploy]
+  release_command = 'pnpm --filter @verbalab/api exec prisma migrate deploy'
+
+[env]
+  NODE_ENV = 'production'
+  API_PORT = '3001'
+  PORT = '3001'
+  VERBALAB_REGION = 'eu'
+
+[http_service]
+  internal_port = 3001
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ['app']
+
+  [[http_service.checks]]
+    interval = '15s'
+    timeout = '5s'
+    grace_period = '20s'
+    method = 'GET'
+    path = '/health'
+
+[[vm]]
+  memory = '512mb'
+  cpu_kind = 'shared'
+  cpus = 1

@@ -1,0 +1,28 @@
+{
+  "name": "verbalab",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "dev": "turbo run dev --parallel",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "audit": "pnpm audit --prod --audit-level=high",
+    "db:generate": "pnpm --filter @verbalab/api exec prisma generate",
+    "db:migrate": "pnpm --filter @verbalab/api exec prisma migrate deploy",
+    "db:migrate:dev": "pnpm --filter @verbalab/api exec prisma migrate dev",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
+    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,json,md,yml,yaml}\"",
+    "smoke": "node scripts/smoke-deploy.mjs",
+    "test:e2e": "pnpm --filter @verbalab/web test:e2e"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2",
+    "turbo": "^2.3.3",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

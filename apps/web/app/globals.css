@@ -1,0 +1,179 @@
+@import 'tailwindcss';
+
+:root {
+  --bg: #ffffff;
+  --bg-soft: #f7f7f8;
+  --bg-elevated: #ffffff;
+  --ink: #0a0a0a;
+  --muted: #6b6b76;
+  --line: #ebebef;
+  --line-strong: #d8d8de;
+  --accent: #0a0a0a;
+  --accent-fg: #ffffff;
+  --brand: #1a6b52;
+  --brand-soft: rgba(26, 107, 82, 0.08);
+  --ok: #1a6b52;
+  --bad: #c23b2e;
+  --shadow: 0 1px 2px rgba(10, 10, 10, 0.04), 0 12px 40px rgba(10, 10, 10, 0.06);
+  --radius: 14px;
+  --radius-lg: 22px;
+  --font-display: var(--font-display), 'Avenir Next', sans-serif;
+  --font-body: var(--font-body), 'Avenir Next', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse 70% 45% at 50% -20%, rgba(26, 107, 82, 0.07), transparent 55%),
+    var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(26, 107, 82, 0.18);
+}
+
+@keyframes vl-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes vl-soft-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.vl-fade-up {
+  animation: vl-fade-up 0.55s ease both;
+}
+
+.vl-fade-up-delay {
+  animation: vl-fade-up 0.65s ease 0.08s both;
+}
+
+.vl-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border: none;
+  cursor: pointer;
+  border-radius: 999px;
+  padding: 0.7rem 1.15rem;
+  font-weight: 600;
+  font-size: 0.925rem;
+  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.vl-btn:hover {
+  transform: translateY(-1px);
+}
+
+.vl-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.vl-btn-primary {
+  background: var(--accent);
+  color: var(--accent-fg);
+}
+
+.vl-btn-primary:hover {
+  background: #222;
+}
+
+.vl-btn-secondary {
+  background: var(--bg);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+}
+
+.vl-btn-secondary:hover {
+  background: var(--bg-soft);
+}
+
+.vl-btn-danger {
+  background: transparent;
+  color: var(--bad);
+  border: 1px solid var(--line);
+}
+
+.vl-field {
+  width: 100%;
+  padding: 0.8rem 0.95rem;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.vl-field:focus {
+  border-color: #b8b8c0;
+  box-shadow: 0 0 0 3px rgba(10, 10, 10, 0.06);
+}
+
+.vl-panel {
+  background: var(--bg-elevated);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+}
+
+.vl-label {
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.vl-code {
+  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 800px) {
+  .vl-hero-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .vl-feature-grid {
+    grid-template-columns: 1fr !important;
+  }
+}

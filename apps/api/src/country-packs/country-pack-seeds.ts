@@ -1,0 +1,161 @@
+export type CountryPackSeed = {
+  code: string;
+  nameEn: string;
+  region: string;
+  currencyCode: string;
+  primaryLanguages: string[];
+  bcp47Tags: string[];
+  relatedDialectCodes?: string[];
+  relatedAccentCodes?: string[];
+  dateNotes: string;
+  numberNotes: string;
+  currencyNotes: string;
+  culturalNotes: string;
+};
+
+/**
+ * Curated African-priority country packs (VL-135).
+ * Guidance bundles — not a CLDR dump or billing SKU catalog.
+ */
+export const COUNTRY_PACK_SEEDS: CountryPackSeed[] = [
+  {
+    code: 'KE',
+    nameEn: 'Kenya',
+    region: 'East Africa',
+    currencyCode: 'KES',
+    primaryLanguages: ['sw', 'en'],
+    bcp47Tags: ['sw-KE', 'en-KE'],
+    relatedDialectCodes: ['sw-ke'],
+    relatedAccentCodes: ['sw-ke', 'en-ke'],
+    dateNotes: 'DMY common in administration; ISO 8601 for APIs.',
+    numberNotes: 'Arabic digits; prefer consistent thousand separators in product UI.',
+    currencyNotes: 'Kenyan shilling (KSh / KES).',
+    culturalNotes: 'Swahili + English bilingual contexts; Sheng-influenced urban Swahili may appear in informal copy.',
+  },
+  {
+    code: 'TZ',
+    nameEn: 'Tanzania',
+    region: 'East Africa',
+    currencyCode: 'TZS',
+    primaryLanguages: ['sw', 'en'],
+    bcp47Tags: ['sw-TZ', 'en-TZ'],
+    relatedDialectCodes: ['sw-tz'],
+    relatedAccentCodes: [],
+    dateNotes: 'DMY; Monday week start common in formal contexts.',
+    numberNotes: 'Arabic digits; align with sw locale pack formatting.',
+    currencyNotes: 'Tanzanian shilling (TSh / TZS).',
+    culturalNotes: 'Coastal Swahili norms; respectful address (Mheshimiwa) in public-sector copy.',
+  },
+  {
+    code: 'NG',
+    nameEn: 'Nigeria',
+    region: 'West Africa',
+    currencyCode: 'NGN',
+    primaryLanguages: ['en', 'yo', 'ha'],
+    bcp47Tags: ['en-NG', 'yo-NG', 'ha-NG'],
+    relatedDialectCodes: ['en-ng', 'yo-ng', 'ha-ng'],
+    relatedAccentCodes: ['en-ng', 'ha-ng'],
+    dateNotes: 'DMY common in administration.',
+    numberNotes: 'Arabic digits; naira amounts often use ₦.',
+    currencyNotes: 'Nigerian naira (₦ / NGN).',
+    culturalNotes: 'Multilingual federation; tone marks matter in formal Yoruba; English is a bridge language.',
+  },
+  {
+    code: 'GH',
+    nameEn: 'Ghana',
+    region: 'West Africa',
+    currencyCode: 'GHS',
+    primaryLanguages: ['en'],
+    bcp47Tags: ['en-GH'],
+    relatedDialectCodes: [],
+    relatedAccentCodes: ['en-gh'],
+    dateNotes: 'DMY common.',
+    numberNotes: 'Arabic digits.',
+    currencyNotes: 'Ghanaian cedi (GH₵ / GHS).',
+    culturalNotes: 'English official; local languages appear in community contexts — keep brand names stable.',
+  },
+  {
+    code: 'ZA',
+    nameEn: 'South Africa',
+    region: 'Southern Africa',
+    currencyCode: 'ZAR',
+    primaryLanguages: ['en', 'zu', 'af'],
+    bcp47Tags: ['en-ZA', 'zu-ZA', 'af-ZA'],
+    relatedDialectCodes: ['en-za', 'zu-za', 'af-za'],
+    relatedAccentCodes: ['en-za', 'zu-za'],
+    dateNotes: 'YMD often in formal/business; DMY also appears — prefer ISO in APIs.',
+    numberNotes: 'Space or comma thousands; period decimal in many EN contexts.',
+    currencyNotes: 'South African rand (R / ZAR).',
+    culturalNotes: 'Multiple official languages; English, isiZulu, and Afrikaans are common product targets.',
+  },
+  {
+    code: 'EG',
+    nameEn: 'Egypt',
+    region: 'North Africa',
+    currencyCode: 'EGP',
+    primaryLanguages: ['ar'],
+    bcp47Tags: ['ar-EG'],
+    relatedDialectCodes: ['ar-eg'],
+    relatedAccentCodes: ['ar-eg'],
+    dateNotes: 'DMY; Hijri may appear in cultural contexts — keep civil Gregorian for APIs.',
+    numberNotes: 'Arabic-Indic or Western digits depending on audience; prefer Western digits in APIs.',
+    currencyNotes: 'Egyptian pound (E£ / EGP).',
+    culturalNotes: 'Egyptian Arabic differs from MSA; RTL layout required for Arabic UI.',
+  },
+  {
+    code: 'MA',
+    nameEn: 'Morocco',
+    region: 'North Africa',
+    currencyCode: 'MAD',
+    primaryLanguages: ['ar', 'fr'],
+    bcp47Tags: ['ar-MA', 'fr-MA'],
+    relatedDialectCodes: ['ar-ma'],
+    relatedAccentCodes: [],
+    dateNotes: 'DMY common in French/Arabic admin contexts.',
+    numberNotes: 'French-influenced decimal comma may appear in FR copy.',
+    currencyNotes: 'Moroccan dirham (MAD).',
+    culturalNotes: 'Darija + French bilingual markets; MSA for formal Arabic.',
+  },
+  {
+    code: 'SN',
+    nameEn: 'Senegal',
+    region: 'West Africa',
+    currencyCode: 'XOF',
+    primaryLanguages: ['fr'],
+    bcp47Tags: ['fr-SN'],
+    relatedDialectCodes: [],
+    relatedAccentCodes: ['fr-sn'],
+    dateNotes: 'DMY (French).',
+    numberNotes: 'French decimal comma conventions in FR copy.',
+    currencyNotes: 'West African CFA franc (XOF).',
+    culturalNotes: 'French official; Wolof strongly present in spoken contexts.',
+  },
+  {
+    code: 'CI',
+    nameEn: 'Côte d’Ivoire',
+    region: 'West Africa',
+    currencyCode: 'XOF',
+    primaryLanguages: ['fr'],
+    bcp47Tags: ['fr-CI'],
+    relatedDialectCodes: [],
+    relatedAccentCodes: ['fr-ci'],
+    dateNotes: 'DMY (French).',
+    numberNotes: 'French decimal conventions in FR copy.',
+    currencyNotes: 'West African CFA franc (XOF).',
+    culturalNotes: 'French official; Nouchi influences informal speech.',
+  },
+  {
+    code: 'ET',
+    nameEn: 'Ethiopia',
+    region: 'East Africa',
+    currencyCode: 'ETB',
+    primaryLanguages: ['am', 'en'],
+    bcp47Tags: ['am-ET', 'en-ET'],
+    relatedDialectCodes: ['am-et'],
+    relatedAccentCodes: [],
+    dateNotes: 'Ethiopian calendar may appear culturally; use Gregorian ISO in APIs.',
+    numberNotes: 'Arabic digits in Latin UI; Ethiopic script for Amharic.',
+    currencyNotes: 'Ethiopian birr (Br / ETB).',
+    culturalNotes: 'Amharic primary; respectful forms and script fidelity matter.',
+  },
+];

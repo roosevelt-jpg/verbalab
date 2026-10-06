@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: verbalab-web
+  namespace: verbalab
+  labels:
+    app: verbalab-web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: verbalab-web
+  template:
+    metadata:
+      labels:
+        app: verbalab-web
+    spec:
+      containers:
+        - name: web
+          image: REPLACE_ECR_OR_REGISTRY/verbalab-web:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+              name: http
+          env:
+            - name: NODE_ENV
+              value: "production"
+            - name: NEXT_PUBLIC_API_URL
+              value: "https://api.example.com"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 20
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "1Gi"
