@@ -76,8 +76,10 @@ export default async function HomePage() {
           className="vl-fade-up-delay"
           style={{ color: 'var(--muted)', fontSize: '1.05rem', lineHeight: 1.65, margin: 0, maxWidth: '28rem' }}
         >
-          Create, understand and communicate through speech, translation and language tools built around local
-          context, with African languages at the centre of our investment.
+          Generate speech, transcribe, and translate through our API and our models. African languages, dialects,
+          accents, and scripts are the product investment priority. We also support — and intend to expand in —
+          Latin America, Southeast Asia, the Middle East, and the EU. Coverage is published per language and task;
+          not every language is live.
         </p>
       </section>
 
@@ -102,16 +104,16 @@ export default async function HomePage() {
         >
           {[
             {
-              title: 'Translate API',
-              body: 'Text translation with language registry checks and usage metering.',
+              title: 'Generate speech',
+              body: 'Text-to-speech through the Lugemi API. African-priority voices are the intended production path.',
             },
             {
-              title: 'Developer playground',
-              body: 'Call endpoints with your API key and inspect real JSON responses.',
+              title: 'Transcribe',
+              body: 'Speech-to-text for recordings and workflows, with usage metering and language metadata.',
             },
             {
-              title: 'OpenAPI first',
-              body: 'Machine-readable spec for /v1 — ready for SDKs and partners.',
+              title: 'Translate',
+              body: 'Text translation with language registry checks. Integrate via Our API — /v1, keys vl_live_.',
             },
           ].map((item) => (
             <div

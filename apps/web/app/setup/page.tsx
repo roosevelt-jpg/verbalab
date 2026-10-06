@@ -6,24 +6,24 @@ export default function SetupPage() {
           SETUP
         </p>
         <h1 style={{ fontFamily: 'var(--font-display)', letterSpacing: '-0.03em', margin: '0.5rem 0 0.75rem' }}>
-          Keys required
+          Set up Lugemi
         </h1>
         <p style={{ color: 'var(--muted)', lineHeight: 1.6 }}>
-          Copy <code className="vl-code">.env.example</code> into <code className="vl-code">apps/api/.env</code> and{' '}
+          Lugemi is first-party language intelligence infrastructure. Copy{' '}
+          <code className="vl-code">.env.example</code> into <code className="vl-code">apps/api/.env</code> and{' '}
           <code className="vl-code">apps/web/.env.local</code>, then restart <code className="vl-code">pnpm dev</code>.
-          Console sign-in needs Clerk; live MT needs Google. We will not fake providers.
+          Console sign-in needs Clerk. The product path is Our API (
+          <code className="vl-code">vl_live_</code> keys, <code className="vl-code">/v1</code> speech, transcribe, and
+          translate) and first-party models — not third-party vendor accounts. We will not fake providers.
         </p>
 
-        <h2 style={{ fontSize: '1rem', margin: '1.25rem 0 0.4rem' }}>Required for console + translate</h2>
+        <h2 style={{ fontSize: '1rem', margin: '1.25rem 0 0.4rem' }}>Required for the console</h2>
         <ul style={{ color: 'var(--ink)', lineHeight: 1.8, paddingLeft: '1.1rem', margin: 0 }}>
           <li>
             <code className="vl-code">NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY</code> (web)
           </li>
           <li>
             <code className="vl-code">CLERK_SECRET_KEY</code> (web + api)
-          </li>
-          <li>
-            <code className="vl-code">GOOGLE_TRANSLATE_API_KEY</code> (api)
           </li>
         </ul>
 
@@ -38,19 +38,39 @@ export default function SetupPage() {
           </li>
         </ul>
 
-        <h2 style={{ fontSize: '1rem', margin: '1.25rem 0 0.4rem' }}>Optional product keys</h2>
+        <h2 style={{ fontSize: '1rem', margin: '1.25rem 0 0.4rem' }}>First-party speech (intended production)</h2>
         <ul style={{ color: 'var(--ink)', lineHeight: 1.8, paddingLeft: '1.1rem', margin: 0 }}>
           <li>
-            <code className="vl-code">OPENAI_API_KEY</code> — STT/TTS/chat/embeddings/RAG
+            <code className="vl-code">OWN_TTS_URL</code> — Lugemi <code className="vl-code">own:*</code> voices (optional{' '}
+            <code className="vl-code">OWN_TTS_API_KEY</code>). Unset means that path is not configured; do not treat a
+            fixture as live GPU.
           </li>
-          <li>
-            <code className="vl-code">ELEVENLABS_API_KEY</code> — voice cloning
-          </li>
+        </ul>
+
+        <h2 style={{ fontSize: '1rem', margin: '1.25rem 0 0.4rem' }}>Optional (billing / email)</h2>
+        <ul style={{ color: 'var(--ink)', lineHeight: 1.8, paddingLeft: '1.1rem', margin: 0 }}>
           <li>
             <code className="vl-code">STRIPE_*</code> — billing checkout / Connect
           </li>
           <li>
             <code className="vl-code">RESEND_API_KEY</code> — email notifications
+          </li>
+        </ul>
+
+        <h2 style={{ fontSize: '1rem', margin: '1.25rem 0 0.4rem' }}>Legacy / internal adapters (not the public product)</h2>
+        <p style={{ color: 'var(--muted)', lineHeight: 1.55, margin: '0 0 0.4rem', fontSize: '0.95rem' }}>
+          Historical scaffolding in the API gateway. Optional for local fallbacks. Lugemi is not a wrapper around
+          these vendors.
+        </p>
+        <ul style={{ color: 'var(--ink)', lineHeight: 1.8, paddingLeft: '1.1rem', margin: 0 }}>
+          <li>
+            <code className="vl-code">GOOGLE_TRANSLATE_API_KEY</code> — legacy translate / detect adapter
+          </li>
+          <li>
+            <code className="vl-code">OPENAI_API_KEY</code> — legacy STT / stock TTS / chat / embeddings adapter
+          </li>
+          <li>
+            <code className="vl-code">ELEVENLABS_API_KEY</code> — legacy voice-clone adapter
           </li>
         </ul>
 

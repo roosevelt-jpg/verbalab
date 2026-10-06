@@ -1,8 +1,14 @@
 # Lugemi
 
-Africa-first language intelligence platform (public brand). Site: [lugemi.com](https://lugemi.com).
+First-party **language intelligence infrastructure**. Site: [lugemi.com](https://lugemi.com).
 
-The repository and APIs still use the historical VerbaLab package names. See `docs/brand/LUGEMI_BRAND_GUIDELINES.md`.
+Lugemi is in the same category as ElevenLabs: **our API** and **our models** — generate speech, transcribe, and translate. We do not position the product as a wrapper around Google Translate, OpenAI, ElevenLabs, or other vendor APIs.
+
+**Africa first:** African languages, dialects, accents, and scripts are the product investment priority. We also support (and intend to expand in) **Latin America, Southeast Asia, the Middle East, the EU**, and other global markets. Coverage is published per language and task; we do not claim every language is live, treat Africa as one culture, or use flags as language selectors.
+
+Visible brand is Lugemi. The repository and APIs still use historical **VerbaLab** package names, env vars, `X-VerbaLab-*` headers, and health JSON `verbalab-web`. See `docs/brand/LUGEMI_BRAND_GUIDELINES.md` and `docs/brand/PUBLIC_POSITIONING.md`.
+
+Vendor adapters in `apps/api/src/gateway/` (Google, OpenAI, ElevenLabs) are **historical scaffolding** for local/legacy fallbacks — not the public product. Intended production speech uses `OWN_TTS_URL` (`own:*` voices). Do not treat fixtures as live GPU.
 
 ## Prerequisites
 
@@ -73,20 +79,21 @@ Package lives at `packages/sdk`.
 
 ## Credentials
 
-Add to `apps/api/.env` and `apps/web/.env.local` (see `.env.example`):
+Add to `apps/api/.env` and `apps/web/.env.local` (see `.env.example`). Lead with Lugemi / first-party. Vendor keys are optional legacy adapters, not the product path.
 
 | Variable | Where | Needed for |
 | --- | --- | --- |
 | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | web | Console sign-in |
 | `CLERK_SECRET_KEY` | web + api | Sessions |
-| `GOOGLE_TRANSLATE_API_KEY` | api | Live MT / detect |
 | `REDIS_URL` | api | Jobs + rate limits (Compose Redis) |
-| `OPENAI_API_KEY` | api | Audio, chat, embeddings, RAG |
-| `ELEVENLABS_API_KEY` | api | Voice cloning |
-| `STRIPE_*` | api | Billing |
+| `OWN_TTS_URL` | api | **Intended production speech** (`own:*` voices). Optional `OWN_TTS_API_KEY`. Unset = that path not configured |
 | `VERBALAB_REGION` | api | Residency island (`us` / `eu`) |
+| `STRIPE_*` | api | Billing (optional) |
+| `GOOGLE_TRANSLATE_API_KEY` | api | **Legacy / internal** translate + detect adapter |
+| `OPENAI_API_KEY` | api | **Legacy / internal** STT, stock TTS, chat, embeddings adapter |
+| `ELEVENLABS_API_KEY` | api | **Legacy / internal** voice-clone adapter |
 
-Without Clerk/Google, open http://localhost:3000/setup. API tests still pass (fixtures). Live MT: `TRANSLATE_LIVE=1 pnpm --filter @verbalab/api test`.
+Without Clerk, open http://localhost:3000/setup. API tests still pass (fixtures). Live MT via the legacy adapter: `TRANSLATE_LIVE=1 pnpm --filter @verbalab/api test`. `OWN_TTS_FIXTURE=1` is CI/local only — never claim live GPU without `OWN_TTS_URL`.
 
 Playwright signed-in translate (optional): set `E2E_CLERK_USER_EMAIL` + `E2E_CLERK_USER_PASSWORD` with a Clerk test user, then `pnpm test:e2e`. Without those env vars the signed-in case is skipped; public `/setup`, `/docs`, `/coverage`, `/health` still run.
 
@@ -109,6 +116,8 @@ Without Clerk keys the production site serves `/setup`, same as local.
 
 ## Docs
 
+- `docs/brand/LUGEMI_BRAND_GUIDELINES.md` — identity, voice, and visual standards
+- `docs/brand/PUBLIC_POSITIONING.md` — public category (first-party API + models; Africa first; global regions)
 - `docs/ENGINEERING.md` — thin daily standards
 - `docs/ENGINEERING_OS.md` — Phase 0 Engineering Operating System (full standards)
 - `docs/ENTERPRISE_PRODUCT_BLUEPRINT.md` — Phase −1 enterprise blueprint (C4, DDD, contracts, deploy)

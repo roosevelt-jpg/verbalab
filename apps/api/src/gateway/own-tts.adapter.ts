@@ -2,7 +2,7 @@ import { HttpStatus } from '@nestjs/common';
 import { ApiException } from '../common/errors/api-exception';
 import { TtsInput, TtsOutput, TtsProvider, TtsVoice } from './tts-provider';
 
-/** Catalog of African-focused voices served by a rented open-weight TTS endpoint (VL-121). */
+/** Intended production Lugemi speech catalog (`own:*`) via OWN_TTS_URL. Not a live-GPU claim. */
 export const OWN_TTS_VOICES: TtsVoice[] = [
   {
     id: 'own:sw-aisha',

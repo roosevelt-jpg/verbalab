@@ -8,7 +8,7 @@ This guide defines the proposed Lugemi identity for a language intelligence plat
 
 ## 01 | Brand at a glance
 ### The essential identity
-Brand name: Lugemi. Proposed pronunciation: loo-GEH-mee. Category: language intelligence platform. Strategic focus: Africa first, with Latin America, Southeast Asia, the Caribbean, Russia, Ukraine, India and Pakistan in the strategic scope. Personality: welcoming, capable, precise and culturally respectful. Core visual identity: a teal speech bubble containing a rounded L, paired with a navy rounded wordmark.
+Brand name: Lugemi. Proposed pronunciation: loo-GEH-mee. Category: first-party language intelligence infrastructure (our API and our models). Strategic focus: Africa first, with Latin America, Southeast Asia, the Middle East, the EU, the Caribbean, Russia, Ukraine, India and Pakistan in the strategic scope. Personality: welcoming, capable, precise and culturally respectful. Core visual identity: a teal speech bubble containing a rounded L, paired with a navy rounded wordmark.
 ### The operating principle
 Make language technology useful in the languages people actually speak. Begin with evaluated language and dialect coverage, understandable workflows and clear controls. Let actual product capability determine promises. Africa-first is the product development priority; global usefulness is part of the brand scope. Distinguish current task availability from planned geographic and language coverage.
 ### Quick implementation rules
@@ -27,6 +27,8 @@ Inclusion: assess underserved language needs before copying market defaults. Res
 ## 03 | Positioning and audience
 ### Positioning statement
 For creators, developers and organizations working across African and global languages, Lugemi is a language intelligence platform designed to make speech and text workflows accessible through one coherent experience. Its intended distinction is Africa-first investment, local language depth, dialect awareness and useful integration, demonstrated through evaluated capability rather than broad coverage claims.
+### Public product category
+Lugemi is first-party language intelligence infrastructure: our API and our models (speech, text, translation). The comparable category is a first-party language/speech platform (for example ElevenLabs), not a wrapper around Google Translate, OpenAI or ElevenLabs. Strategic regions besides Africa include Latin America, Southeast Asia, the Middle East and the EU; do not claim every language is live. Domain: https://lugemi.com. Package names and env vars may still say VerbaLab. See `docs/brand/PUBLIC_POSITIONING.md`.
 ### Priority audiences
 Creators and media teams need narration, transcription, dubbing and subtitles with controllable quality. Developers need predictable APIs, clear documentation and capability-specific language metadata. Businesses need understandable translation and communication workflows. Research and language partners need transparent evaluation, attribution and contribution terms. Education and public-service teams need accessible content and review workflows; sector suitability must be validated separately.
 ### Messaging priorities
@@ -34,7 +36,7 @@ Creators: sound natural and keep control. Developers: integrate clearly and meas
 
 ## 04 | Brand story and differentiation
 ### Founder-ready narrative
-People should not need to abandon their language to benefit from technology. Lugemi begins with African languages because their diversity deserves deliberate product investment. Our ambition is to turn speech, text and knowledge into useful tools for people, creators and organizations, with local context and clear controls built into the experience. Africa is our starting priority; communities across Latin America, Southeast Asia, the Caribbean, Russia, Ukraine, India and Pakistan belong in our global vision.
+People should not need to abandon their language to benefit from technology. Lugemi begins with African languages because their diversity deserves deliberate product investment. Our ambition is to turn speech, text and knowledge into useful tools for people, creators and organizations, with local context and clear controls built into the experience. Africa is our starting priority; communities across Latin America, Southeast Asia, the Middle East, the EU, the Caribbean, Russia, Ukraine, India and Pakistan belong in our global vision.
 ### Evidence that makes the story credible
 Publish evaluated language coverage, dialect-specific examples, representative audio samples, documented review workflows and integration examples. Attribute collaborators with permission. Show how the platform handles difficult names, code-switching and regional accents. Separate publicly released capability from experiments and roadmap items.
 ### Competitive expression

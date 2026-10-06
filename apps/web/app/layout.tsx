@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     template: '%s · Lugemi',
   },
   description:
-    'Lugemi is an Africa-first language intelligence platform for speech, text and cross-language workflows across global markets.',
+    'Lugemi is Africa-first language intelligence infrastructure with a first-party API and first-party models for speech, text, and translation. Built for African languages, dialects, accents, and scripts; also supporting LATAM, Southeast Asia, the Middle East, and the EU.',
   applicationName: 'Lugemi',
   icons: {
     icon: '/brand/lugemi-symbol-teal.svg',

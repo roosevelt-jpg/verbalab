@@ -56,8 +56,10 @@ export function DevelopersClient() {
         Developers
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '40rem' }}>
-        Integrate Lugemi with API keys, the TypeScript SDK, CLI, OpenAPI, and the playground. Soft{' '}
-        <code className="vl-code">vl_test_</code> keys share this cluster and quota — not a separate sandbox plane.
+        Our API: generate speech, transcribe, and translate with first-party Lugemi models. Africa-first coverage,
+        with LATAM, Southeast Asia, the Middle East, and the EU in strategic scope. Use API keys, the TypeScript SDK,
+        CLI, OpenAPI, and the playground. Soft <code className="vl-code">vl_test_</code> keys share this cluster and
+        quota — not a separate sandbox plane.
       </p>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}

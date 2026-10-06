@@ -1,6 +1,6 @@
 # @verbalab/cli
 
-Thin command-line wrapper over `@verbalab/sdk`.
+Thin command-line client for the Lugemi API (`@verbalab/sdk`). Historical package name; public product is Lugemi.
 
 ```bash
 pnpm --filter @verbalab/cli build

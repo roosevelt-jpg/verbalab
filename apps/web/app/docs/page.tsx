@@ -39,19 +39,23 @@ export default function DocsPage() {
       </div>
 
       <h1 style={{ margin: '1.75rem 0 0', fontFamily: 'var(--font-display)', letterSpacing: '-0.03em', fontSize: '2.35rem' }}>
-        API documentation
+        Lugemi API
       </h1>
       <p style={{ color: 'var(--muted)', lineHeight: 1.65, maxWidth: '38rem' }}>
-        Machine-readable OpenAPI for the Lugemi API (translate, media, jobs, knowledge, and more). Authenticate
-        product calls with <code className="vl-code">Authorization: Bearer vl_live_...</code> or soft-sandbox{' '}
-        <code className="vl-code">vl_test_...</code>. Hub: <Link href="/developers">/developers</Link>.
+        First-party language intelligence API: generate speech, transcribe, and translate. African languages,
+        dialects, accents, and scripts are the investment priority; LATAM, Southeast Asia, the Middle East, and the
+        EU are in scope without claiming every language is live. Authenticate with{' '}
+        <code className="vl-code">Authorization: Bearer vl_live_...</code> or soft-sandbox{' '}
+        <code className="vl-code">vl_test_...</code>. OpenAPI at <code className="vl-code">/v1/openapi.json</code>.
+        Hub: <Link href="/developers">/developers</Link>.
       </p>
 
       <div className="vl-panel" style={{ marginTop: '1.5rem', padding: '1.35rem', background: 'var(--bg-soft)', border: 'none' }}>
         <h2 style={{ marginTop: 0, fontFamily: 'var(--font-display)', fontSize: '1.2rem' }}>POST /v1/translate</h2>
         <p style={{ color: 'var(--muted)', lineHeight: 1.55 }}>
-          Translate text between registry languages. Use <code className="vl-code">source: "auto"</code> to detect first.
-          Returns translated text, provider id, character count, and optional <code className="vl-code">detection</code>.
+          Translate text between registry languages via the Lugemi API. Use{' '}
+          <code className="vl-code">source: &quot;auto&quot;</code> to detect first. Returns translated text, provider
+          id, character count, and optional <code className="vl-code">detection</code>.
         </p>
         <pre className="vl-code" style={{ margin: 0, whiteSpace: 'pre-wrap' }}>{`{
   "text": "Hello",
@@ -79,13 +83,13 @@ export default function DocsPage() {
         <Endpoint title="POST /v1/voice/twilio/inbound|turn" body="Signed Twilio webhooks → TwiML." />
         <Endpoint
           title="Voice Studio / clones"
-          body="African Voice Studio console (/audio): stock TTS, language presets, consent-gated clones with review + disable (ADR-0044). Vendors only."
+          body="African Voice Studio console (/audio): generate speech, language presets, consent-gated clones with review + disable (ADR-0044)."
         />
         <Endpoint title="GET/POST /v1/voice-clones" body="List / create clones (Clerk; Pro + consent for create)." />
         <Endpoint title="GET /v1/voice-clones/{id}" body="Get clone profile." />
-        <Endpoint title="POST /v1/voice-clones/{id}/review" body="Approve/reject pending_review (approve → ElevenLabs or fixture)." />
+        <Endpoint title="POST /v1/voice-clones/{id}/review" body="Approve/reject pending_review (clone pipeline or fixture)." />
         <Endpoint title="POST /v1/voice-clones/{id}/disable" body="Disable clone for abuse/policy." />
-        <Endpoint title="POST /v1/audio/speech" body="TTS; stock OpenAI, own:* rented open-weight (VL-121), or voice=clone:{id} (watermark)." />
+        <Endpoint title="POST /v1/audio/speech" body="Generate speech. Intended production: own:* via OWN_TTS_URL. Also stock catalog or voice=clone:{id} (watermark)." />
         <Endpoint
           title="Workflows"
           body="JSON steps (transcribe → translate → notify) via job runner. Console /workflows (ADR-0027)."
@@ -130,10 +134,10 @@ export default function DocsPage() {
         />
         <Endpoint title="POST /v1/knowledge/documents" body="Upload DOCX/PDF/TXT into the workspace knowledge base (embed)." />
         <Endpoint title="POST /v1/knowledge/query" body="Ask the knowledge base; returns answer + citations (RAG)." />
-        <Endpoint title="POST /v1/embeddings" body="Create text embeddings (OpenAI-shaped; used by RAG)." />
+        <Endpoint title="POST /v1/embeddings" body="Create text embeddings (request shape compatible with common embedding APIs; used by RAG)." />
         <Endpoint title="POST /v1/interpret" body="Live interpreter: audio → STT → MT → TTS (JSON + audioBase64)." />
         <Endpoint title="POST /v1/chat/completions" body="Language-intelligence chat (optional translateReplyTo)." />
-        <Endpoint title="POST /v1/detect" body="Detect source language (Google detect with franc-min fallback)." />
+        <Endpoint title="POST /v1/detect" body="Detect source language (Lugemi detect pipeline with offline fallback)." />
         <Endpoint title="GET /v1/languages" body="List seeded language codes, names, and tiers." />
         <Endpoint title="GET/POST /v1/glossary/terms" body="Workspace terminology (Clerk); applied on translate." />
         <Endpoint title="GET/POST /v1/tm/entries" body="Approved translation memory; exact match bypasses MT." />
@@ -170,7 +174,7 @@ await client.translate({ text: 'Hello', source: 'en', target: 'sw' });`}
         <ol style={{ color: 'var(--muted)', lineHeight: 1.7, paddingLeft: '1.2rem' }}>
           <li>Create an API key in the console.</li>
           <li>Copy the secret (shown once).</li>
-          <li>Call translate or use the playground.</li>
+          <li>Call Our API (translate, transcribe, or generate speech) or use the playground.</li>
         </ol>
         <pre className="vl-code" style={{ margin: 0, background: 'var(--bg-soft)', padding: '1rem', borderRadius: 12, overflow: 'auto' }}>
 {`# .env

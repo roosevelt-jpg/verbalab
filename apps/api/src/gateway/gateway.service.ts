@@ -1,3 +1,9 @@
+/**
+ * AI Gateway for the Lugemi API (translate, STT, TTS, detect, chat, embeddings).
+ * Google / OpenAI / ElevenLabs classes in this folder are historical scaffolding for
+ * local or legacy fallbacks — they are not the public product. Intended production
+ * speech is OWN_TTS_URL (`own:*`). Do not treat fixtures as live GPU.
+ */
 import { Injectable, Logger } from '@nestjs/common';
 import { GoogleTranslateAdapter } from './google-translate.adapter';
 import { OpenAiWhisperAdapter } from './openai-whisper.adapter';

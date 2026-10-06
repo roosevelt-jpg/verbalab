@@ -3,13 +3,13 @@ import { expect, test } from '@playwright/test';
 test.describe('Public console surfaces', () => {
   test('setup page explains required keys when Clerk is missing', async ({ page }) => {
     await page.goto('/setup');
-    await expect(page.getByRole('heading', { name: 'Keys required' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Set up Lugemi' })).toBeVisible();
     await expect(page.getByText('NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY')).toBeVisible();
   });
 
   test('docs page loads OpenAPI marketing surface', async ({ page }) => {
     await page.goto('/docs');
-    await expect(page.getByRole('heading', { name: 'API documentation' })).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Lugemi API' })).toBeVisible();
     await expect(page.getByRole('heading', { name: 'POST /v1/translate' })).toBeVisible();
   });
 

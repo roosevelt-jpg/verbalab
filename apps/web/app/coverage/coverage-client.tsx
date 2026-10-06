@@ -55,8 +55,9 @@ export function CoverageClient() {
         Language coverage
       </h1>
       <p style={{ color: 'var(--muted)', lineHeight: 1.65, maxWidth: '40rem' }}>
-        Africa-first is the product investment priority. This page reports the language registry and measured
-        translation goldens — not a claim that every language or task is available.
+        Africa-first is the product investment priority (languages, dialects, accents, scripts). Latin America,
+        Southeast Asia, the Middle East, and the EU are in strategic scope. This page reports the language registry
+        and measured goldens — not a claim that every language or task is live.
       </p>
 
       {error ? (

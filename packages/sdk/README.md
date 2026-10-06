@@ -1,6 +1,6 @@
 # @verbalab/sdk
 
-TypeScript client for the VerbaLab API.
+TypeScript client for the **Lugemi API** (historical package name `@verbalab/sdk`). Generate speech, transcribe, and translate with `vl_live_` keys. Not a vendor-SDK wrapper.
 
 ```ts
 import { VerbaLab } from '@verbalab/sdk';
