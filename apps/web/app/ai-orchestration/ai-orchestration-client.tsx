@@ -5,6 +5,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { LocaleSelect } from '@/components/language-locale-select';
+import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
 type Engine = {
   product: string;
@@ -21,6 +23,7 @@ type RunResult = {
 
 export function AiOrchestrationClient() {
   const { getToken, isLoaded } = useAuth();
+  const catalog = useLocaleCatalog();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [pipeline, setPipeline] = useState('detect_translate');
@@ -109,16 +112,14 @@ export function AiOrchestrationClient() {
               <option value="model_chain">model_chain</option>
               <option value="assemble_chat">assemble_chat</option>
             </select>
-            <input
+            <LocaleSelect
+              className="vl-field"
               value={target}
-              onChange={(e) => setTarget(e.target.value)}
-              placeholder="target"
-              style={{
-                width: '4.5rem',
-                padding: '0.45rem',
-                borderRadius: '0.35rem',
-                border: '1px solid var(--line)',
-              }}
+              onChange={setTarget}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
             />
             <button type="button" onClick={() => void run()} disabled={loading} style={btn}>
               Run

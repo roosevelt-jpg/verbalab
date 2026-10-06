@@ -11,6 +11,8 @@ import {
   type VoicePickerValue,
 } from '@/components/console/native-accent-voice-picker';
 import { extractAudioTrackClient } from '@/lib/extract-audio-track';
+import { LocaleSelect } from '@/components/language-locale-select';
+import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
 type StudioTab = 'tts' | 'clone' | 'extract' | 'stt' | 'projects';
 const STUDIO_TABS = new Set<StudioTab>(['tts', 'clone', 'extract', 'stt', 'projects']);
@@ -76,6 +78,7 @@ function base64ToWavFile(base64: string, name: string): File {
 }
 
 export function AudioClient() {
+  const catalog = useLocaleCatalog();
   const { getToken, isLoaded } = useAuth();
   const searchParams = useSearchParams();
   const initialTab = searchParams.get('tab');
@@ -675,7 +678,17 @@ export function AudioClient() {
         >
           <label className="vl-label">
             Language hint
-            <input className="vl-field" value={language} onChange={(e) => setLanguage(e.target.value)} />
+            <LocaleSelect
+              className="vl-field"
+              value={language}
+              onChange={setLanguage}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+              allowEmpty
+              emptyLabel="—"
+            />
           </label>
           <label className="vl-label">
             Audio file

@@ -3,6 +3,8 @@
 import { CSSProperties, useCallback, useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { LocaleSelect } from '@/components/language-locale-select';
+import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
 type Overview = {
   product: string;
@@ -37,6 +39,7 @@ type Health = { status: string; issues: string[]; checkedAt: string };
 type ValidateResult = { valid: boolean; errors: string[] };
 
 export function RegistryClient() {
+  const catalog = useLocaleCatalog();
   const [overview, setOverview] = useState<Overview | null>(null);
   const [languages, setLanguages] = useState<Language[]>([]);
   const [families, setFamilies] = useState<Family[]>([]);
@@ -154,11 +157,14 @@ export function RegistryClient() {
         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'end', flexWrap: 'wrap' }}>
           <label className="vl-label" style={{ display: 'grid' }}>
             Language code
-            <input
+            <LocaleSelect
               className="vl-field"
               value={validateCode}
-              onChange={(e) => setValidateCode(e.target.value)}
-              style={{ minWidth: '8rem' }}
+              onChange={setValidateCode}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
             />
           </label>
           <button type="button" className="vl-button" onClick={() => void runValidate()}>

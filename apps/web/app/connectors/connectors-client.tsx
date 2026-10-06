@@ -17,6 +17,8 @@ import {
   type ConnectorField,
   type ConnectorInstall,
 } from '@/lib/connectors-catalog';
+import { LocaleSelect } from '@/components/language-locale-select';
+import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
 type SlackStatus = {
   provider: string;
@@ -39,6 +41,7 @@ const emptyInstall = (): ConnectorInstall => ({ connected: false });
 
 export function ConnectorsClient() {
   const { getToken, isLoaded } = useAuth();
+  const catalog = useLocaleCatalog();
   const [status, setStatus] = useState<SlackStatus | null>(null);
   const [installations, setInstallations] = useState<Installation[]>([]);
   const [teamId, setTeamId] = useState('');
@@ -320,10 +323,14 @@ export function ConnectorsClient() {
                         </label>
                         <label>
                           <span>Default target dialect</span>
-                          <input
+                          <LocaleSelect
                             className="vl-input"
                             value={target}
-                            onChange={(e) => setTarget(e.target.value)}
+                            onChange={setTarget}
+                            languages={catalog.languages}
+                            locales={catalog.locales}
+                            dialects={catalog.dialects}
+                            accents={catalog.accents}
                             disabled={busy}
                           />
                         </label>

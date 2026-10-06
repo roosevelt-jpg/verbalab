@@ -1,10 +1,11 @@
 'use client';
 
-import { FormEvent, useEffect, useState, type CSSProperties } from 'react';
-import { API_URL, apiFetch } from '@/lib/api';
+import { FormEvent, useState, type CSSProperties } from 'react';
+import { API_URL } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { LocaleSelect } from '@/components/language-locale-select';
+import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
-type Language = { code: string; name: string };
 type OcrResult = {
   text: string;
   pages: number;
@@ -15,8 +16,8 @@ type OcrResult = {
 };
 
 export function OcrClient() {
+  const catalog = useLocaleCatalog();
   const [apiKey, setApiKey] = useState('');
-  const [languages, setLanguages] = useState<Language[]>([]);
   const [file, setFile] = useState<File | null>(null);
   const [languageHint, setLanguageHint] = useState('');
   const [source, setSource] = useState('');
@@ -24,12 +25,6 @@ export function OcrClient() {
   const [result, setResult] = useState<OcrResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    void apiFetch<{ data: Language[] }>('/v1/languages')
-      .then((res) => setLanguages(res.data))
-      .catch(() => undefined);
-  }, []);
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -101,35 +96,46 @@ export function OcrClient() {
         </label>
         <label className="vl-label">
           Language hint (optional)
-          <input
-            className="vl-field"
-            value={languageHint}
-            onChange={(e) => setLanguageHint(e.target.value)}
-            placeholder="sw"
-          />
+          <LocaleSelect
+              className="vl-field"
+              value={languageHint}
+              onChange={setLanguageHint}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+              allowEmpty
+              emptyLabel="—"
+            />
         </label>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <label className="vl-label">
             Translate from (optional)
-            <select className="vl-field" value={source} onChange={(e) => setSource(e.target.value)}>
-              <option value="">—</option>
-              {languages.map((lang) => (
-                <option key={lang.code} value={lang.code}>
-                  {lang.name} ({lang.code})
-                </option>
-              ))}
-            </select>
+            <LocaleSelect
+              className="vl-field"
+              value={source}
+              onChange={setSource}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+              allowEmpty
+              emptyLabel="—"
+            />
           </label>
           <label className="vl-label">
             Translate to (optional)
-            <select className="vl-field" value={target} onChange={(e) => setTarget(e.target.value)}>
-              <option value="">—</option>
-              {languages.map((lang) => (
-                <option key={lang.code} value={lang.code}>
-                  {lang.name} ({lang.code})
-                </option>
-              ))}
-            </select>
+            <LocaleSelect
+              className="vl-field"
+              value={target}
+              onChange={setTarget}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+              allowEmpty
+              emptyLabel="—"
+            />
           </label>
         </div>
         <button type="submit" className="vl-btn" disabled={loading}>

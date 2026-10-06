@@ -28,8 +28,8 @@ import {
   type ConnectorCategory,
   type ConnectorInstall,
 } from '@/lib/connectors-catalog';
-
-type Language = { code: string; name: string };
+import { LocaleSelect } from '@/components/language-locale-select';
+import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
 type ChatTurn = {
   id: string;
@@ -159,7 +159,7 @@ export function ChatClient() {
   const translatingSegmentRef = useRef(false);
   const liveTargetRef = useRef('ak');
 
-  const [languages, setLanguages] = useState<Language[]>([]);
+  const catalog = useLocaleCatalog();
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [input, setInput] = useState('');
@@ -196,9 +196,6 @@ export function ChatClient() {
     activeIdRef.current = rows[0]?.id ?? null;
     setConnected(connectedFlags(loadInstalls()));
     setHydrated(true);
-    void apiFetch<{ data: Language[] }>('/v1/languages')
-      .then((res) => setLanguages(res.data))
-      .catch(() => undefined);
   }, []);
 
   useEffect(() => {
@@ -991,63 +988,56 @@ export function ChatClient() {
               {mode === 'chat' ? (
                 <label className="vl-label lg-chat-inline-label">
                   Translate reply
-                  <select
-                    className="vl-field"
-                    value={translateReplyTo}
-                    onChange={(e) => setTranslateReplyTo(e.target.value)}
-                  >
-                    <option value="">Off</option>
-                    {languages.map((lang) => (
-                      <option key={lang.code} value={lang.code}>
-                        {lang.name} ({lang.code})
-                      </option>
-                    ))}
-                  </select>
+                  <LocaleSelect
+              className="vl-field"
+              value={translateReplyTo}
+              onChange={setTranslateReplyTo}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+              allowEmpty
+              emptyLabel="Off"
+            />
                 </label>
               ) : (
                 <label className="vl-label lg-chat-inline-label">
                   Live target
-                  <select
-                    className="vl-field"
-                    value={liveTarget}
-                    onChange={(e) => setLiveTarget(e.target.value)}
-                  >
-                    {languages.map((lang) => (
-                      <option key={lang.code} value={lang.code}>
-                        {lang.name} ({lang.code})
-                      </option>
-                    ))}
-                  </select>
+                  <LocaleSelect
+              className="vl-field"
+              value={liveTarget}
+              onChange={setLiveTarget}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+            />
                 </label>
               )}
               <label className="vl-label lg-chat-inline-label">
                 Upload source
-                <select
-                  className="vl-field"
-                  value={uploadSource}
-                  onChange={(e) => setUploadSource(e.target.value)}
-                >
-                  <option value="auto">Auto</option>
-                  {languages.map((lang) => (
-                    <option key={lang.code} value={lang.code}>
-                      {lang.name}
-                    </option>
-                  ))}
-                </select>
+                <LocaleSelect
+              className="vl-field"
+              value={uploadSource}
+              onChange={setUploadSource}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+              allowAuto
+            />
               </label>
               <label className="vl-label lg-chat-inline-label">
                 Upload target
-                <select
-                  className="vl-field"
-                  value={uploadTarget}
-                  onChange={(e) => setUploadTarget(e.target.value)}
-                >
-                  {languages.map((lang) => (
-                    <option key={lang.code} value={lang.code}>
-                      {lang.name}
-                    </option>
-                  ))}
-                </select>
+                <LocaleSelect
+              className="vl-field"
+              value={uploadTarget}
+              onChange={setUploadTarget}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+            />
               </label>
             </div>
 

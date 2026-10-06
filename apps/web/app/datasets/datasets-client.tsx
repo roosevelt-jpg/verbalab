@@ -4,6 +4,8 @@ import { useAuth } from '@clerk/nextjs';
 import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { API_URL, apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { LocaleSelect } from '@/components/language-locale-select';
+import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
 type DatasetAsset = {
   id: string;
@@ -34,6 +36,7 @@ const LICENSE_OPTIONS = [
 
 export function DatasetsClient() {
   const { getToken, isLoaded } = useAuth();
+  const catalog = useLocaleCatalog();
   const [rows, setRows] = useState<DatasetAsset[]>([]);
   const [title, setTitle] = useState('');
   const [licenseTag, setLicenseTag] = useState('university-mou');
@@ -194,17 +197,23 @@ export function DatasetsClient() {
             style={{ padding: '0.55rem 0.7rem', border: '1px solid #ccc' }}
           />
           <div style={{ display: 'flex', gap: '0.5rem' }}>
-            <input
+            <LocaleSelect
+              className="vl-field"
               value={sourceLang}
-              onChange={(e) => setSourceLang(e.target.value)}
-              placeholder="source"
-              style={{ flex: 1, padding: '0.55rem 0.7rem', border: '1px solid #ccc' }}
+              onChange={setSourceLang}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
             />
-            <input
+            <LocaleSelect
+              className="vl-field"
               value={targetLang}
-              onChange={(e) => setTargetLang(e.target.value)}
-              placeholder="target"
-              style={{ flex: 1, padding: '0.55rem 0.7rem', border: '1px solid #ccc' }}
+              onChange={setTargetLang}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
             />
           </div>
           <label style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', color: '#444' }}>

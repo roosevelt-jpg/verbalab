@@ -3,8 +3,9 @@
 import { FormEvent, useEffect, useState, type CSSProperties } from 'react';
 import { API_URL, apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { LocaleSelect } from '@/components/language-locale-select';
+import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
-type Language = { code: string; name: string };
 type Voice = { id: string; name: string };
 
 type InterpretResult = {
@@ -21,8 +22,8 @@ type InterpretResult = {
 };
 
 export function InterpretClient() {
+  const catalog = useLocaleCatalog();
   const [apiKey, setApiKey] = useState('');
-  const [languages, setLanguages] = useState<Language[]>([]);
   const [voices, setVoices] = useState<Voice[]>([]);
   const [source, setSource] = useState('auto');
   const [target, setTarget] = useState('sw');
@@ -34,9 +35,6 @@ export function InterpretClient() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    void apiFetch<{ data: Language[] }>('/v1/languages')
-      .then((res) => setLanguages(res.data))
-      .catch(() => undefined);
     void apiFetch<{ data: Voice[] }>('/v1/audio/voices')
       .then((res) => {
         setVoices(res.data);
@@ -112,24 +110,28 @@ export function InterpretClient() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1rem' }}>
           <label className="vl-label">
             Source
-            <select className="vl-field" value={source} onChange={(e) => setSource(e.target.value)}>
-              <option value="auto">Auto-detect</option>
-              {languages.map((lang) => (
-                <option key={lang.code} value={lang.code}>
-                  {lang.name} ({lang.code})
-                </option>
-              ))}
-            </select>
+            <LocaleSelect
+              className="vl-field"
+              value={source}
+              onChange={setSource}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+              allowAuto
+            />
           </label>
           <label className="vl-label">
             Target
-            <select className="vl-field" value={target} onChange={(e) => setTarget(e.target.value)}>
-              {languages.map((lang) => (
-                <option key={lang.code} value={lang.code}>
-                  {lang.name} ({lang.code})
-                </option>
-              ))}
-            </select>
+            <LocaleSelect
+              className="vl-field"
+              value={target}
+              onChange={setTarget}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+            />
           </label>
           <label className="vl-label">
             Voice

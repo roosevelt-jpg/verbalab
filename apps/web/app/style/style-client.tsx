@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { LocaleSelect } from '@/components/language-locale-select';
+import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
 type Profile = { id: string; name: string; description: string };
 
@@ -23,6 +25,7 @@ type RewriteResult = {
 
 export function StyleClient() {
   const { getToken, isLoaded } = useAuth();
+  const catalog = useLocaleCatalog();
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [text, setText] = useState("I'm gonna really just finish this ASAP, yeah?");
   const [profile, setProfile] = useState('professional');
@@ -104,7 +107,17 @@ export function StyleClient() {
         </label>
         <label className="vl-label">
           Language hint (optional)
-          <input className="vl-field" value={language} onChange={(e) => setLanguage(e.target.value)} />
+          <LocaleSelect
+              className="vl-field"
+              value={language}
+              onChange={setLanguage}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+              allowEmpty
+              emptyLabel="—"
+            />
         </label>
         <button type="submit" className="vl-btn vl-btn-primary" disabled={busy} style={{ justifySelf: 'start' }}>
           {busy ? 'Rewriting…' : 'Rewrite'}

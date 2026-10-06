@@ -1,16 +1,15 @@
 'use client';
 
 import Link from 'next/link';
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { API_URL, apiFetch } from '@/lib/api';
 import { BrandMark } from '@/components/brand-mark';
 import { CodePanel } from '@/components/code-panel';
-import { LanguageLocaleSelect } from '@/components/language-locale-select';
+import { LocaleSelect } from '@/components/language-locale-select';
+import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 import { SITE_CONTENT } from '@/data/site-content';
 
-type Language = { code: string; name: string; nativeName?: string | null };
-type LocalePack = { languageCode: string; bcp47: string | null };
 type Mode = 'translate' | 'detect' | 'languages';
 
 function isApiKey(value: string) {
@@ -19,10 +18,9 @@ function isApiKey(value: string) {
 
 export function PlaygroundClient() {
   const searchParams = useSearchParams();
+  const catalog = useLocaleCatalog();
   const [mode, setMode] = useState<Mode>('translate');
   const [apiKey, setApiKey] = useState('');
-  const [languages, setLanguages] = useState<Language[]>([]);
-  const [locales, setLocales] = useState<LocalePack[]>([]);
   const [source, setSource] = useState(
     () => searchParams.get('source') || SITE_CONTENT.playgroundDefaults.source,
   );
@@ -33,18 +31,6 @@ export function PlaygroundClient() {
   const [response, setResponse] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    void Promise.all([
-      apiFetch<{ data: Language[] }>('/v1/languages'),
-      apiFetch<{ data: LocalePack[] }>('/v1/locales').catch(() => ({ data: [] as LocalePack[] })),
-    ])
-      .then(([langRes, locRes]) => {
-        setLanguages(langRes.data);
-        setLocales(locRes.data);
-      })
-      .catch(() => undefined);
-  }, []);
 
   const curl =
     mode === 'languages'
@@ -150,22 +136,40 @@ export function PlaygroundClient() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
             <label className="vl-label">
               Source
-              <LanguageLocaleSelect
+              <LocaleSelect
                 value={source}
                 onChange={setSource}
-                languages={languages.length ? languages : [{ code: 'en', name: 'English' }, { code: 'ak', name: 'Akan (Twi)' }]}
-                locales={locales}
+                languages={
+                  catalog.languages.length
+                    ? catalog.languages
+                    : [
+                        { code: 'en', name: 'English' },
+                        { code: 'ak', name: 'Akan (Twi)', nativeName: 'Twi' },
+                      ]
+                }
+                locales={catalog.locales}
+                dialects={catalog.dialects}
+                accents={catalog.accents}
                 allowAuto
                 className="vl-field"
               />
             </label>
             <label className="vl-label">
               Target
-              <LanguageLocaleSelect
+              <LocaleSelect
                 value={target}
                 onChange={setTarget}
-                languages={languages.length ? languages : [{ code: 'en', name: 'English' }, { code: 'ak', name: 'Akan (Twi)' }]}
-                locales={locales}
+                languages={
+                  catalog.languages.length
+                    ? catalog.languages
+                    : [
+                        { code: 'en', name: 'English' },
+                        { code: 'ak', name: 'Akan (Twi)', nativeName: 'Twi' },
+                      ]
+                }
+                locales={catalog.locales}
+                dialects={catalog.dialects}
+                accents={catalog.accents}
                 className="vl-field"
               />
             </label>
