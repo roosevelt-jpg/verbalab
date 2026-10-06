@@ -1586,6 +1586,57 @@ export const openApiDocument = {
         },
       },
     },
+    '/v1/feature-flags': {
+      get: {
+        summary: 'Organization feature flags and entitlements',
+        operationId: 'getFeatureFlags',
+        security: [{ ClerkAuth: [] }],
+        responses: {
+          '200': { description: 'Plan-aware flags, overrides, and entitlements' },
+        },
+      },
+      patch: {
+        summary: 'Toggle workspace entitlement overrides',
+        operationId: 'patchFeatureFlags',
+        security: [{ ClerkAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  overrides: {
+                    type: 'object',
+                    additionalProperties: {
+                      oneOf: [{ type: 'boolean' }, { type: 'null' }],
+                    },
+                    description: 'Plan-included features only; null clears an override',
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          '200': { description: 'Updated flags and entitlements' },
+          '402': { description: 'Feature requires a higher plan' },
+          '403': { description: 'Only owners and admins can patch' },
+        },
+      },
+    },
+    '/v1/cloud/overview': {
+      get: {
+        summary: 'Workspace Console operator overview',
+        operationId: 'getCloudOverview',
+        security: [{ ClerkAuth: [] }],
+        responses: {
+          '200': {
+            description: 'Org, workspace, billing, residency, feature flags, and entitlements',
+          },
+        },
+      },
+    },
     '/v1/billing/checkout': {
       post: {
         summary: 'Create Stripe Checkout session for Pro',

@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
 import { FeatureFlagsService } from './feature-flags.service';
 import { CloudOverviewService } from './cloud-overview.service';
 import { ClerkAuthGuard, SessionContext } from '../common/guards/clerk-auth.guard';
@@ -15,6 +15,18 @@ export class CloudFoundationController {
   @Get('feature-flags')
   featureFlags(@CurrentSession() session: SessionContext) {
     return this.flags.forOrganization(session.organizationId);
+  }
+
+  @Patch('feature-flags')
+  patchFeatureFlags(
+    @CurrentSession() session: SessionContext,
+    @Body() body: { overrides?: Record<string, boolean | null> },
+  ) {
+    return this.flags.patchOverrides({
+      organizationId: session.organizationId,
+      role: session.role,
+      patch: body?.overrides ?? {},
+    });
   }
 
   @Get('cloud/overview')

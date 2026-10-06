@@ -202,4 +202,40 @@ describe('Cloud Platform Foundation', () => {
     expect(ov.foundation.availabilityZones).toBe(false);
     expect(ov.foundation.serviceDiscovery).toBe(false);
   });
+
+  it('lets owners toggle plan-included entitlements and rejects plan-locked enables', async () => {
+    const pro = await seedOrg(prisma, `cf_toggle_${Date.now()}`, 'pro');
+    const toggled = await flags.patchOverrides({
+      organizationId: pro.id,
+      role: 'owner',
+      patch: { marketplace: false },
+    });
+    expect(toggled.flags.marketplace).toBe(false);
+    expect(toggled.entitlements.features).not.toContain('marketplace');
+    expect(toggled.entitlements.planFeatures).toContain('marketplace');
+
+    const restored = await flags.patchOverrides({
+      organizationId: pro.id,
+      role: 'owner',
+      patch: { marketplace: true },
+    });
+    expect(restored.flags.marketplace).toBe(true);
+
+    const free = await seedOrg(prisma, `cf_toggle_free_${Date.now()}`, 'free');
+    await expect(
+      flags.patchOverrides({
+        organizationId: free.id,
+        role: 'owner',
+        patch: { marketplace: true },
+      }),
+    ).rejects.toMatchObject({ code: 'plan_required' });
+
+    await expect(
+      flags.patchOverrides({
+        organizationId: free.id,
+        role: 'member',
+        patch: { speech: false },
+      }),
+    ).rejects.toMatchObject({ code: 'forbidden' });
+  });
 });
