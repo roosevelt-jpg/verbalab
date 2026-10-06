@@ -85,5 +85,31 @@ export function CmsPageDemos({ slug }: { slug: string }) {
     );
   }
 
+  if (slug === 'research' || slug === 'about' || slug === 'updates') {
+    return (
+      <div className="mkt-page-demos">
+        <TranslatePlayDemo compact />
+        <div style={{ marginTop: '1.25rem' }}>
+          <p className="mkt-tts-label">Sample Africa-first voices</p>
+          <VoiceChipRow voices={SAMPLE_VOICES.slice(0, 4)} />
+        </div>
+      </div>
+    );
+  }
+
+  if (slug === 'safety' || slug === 'policies') {
+    return (
+      <div className="mkt-page-demos">
+        <AgentChatDemo
+          title="Disclosure-aware speaking turn"
+          userText="Can you repeat that in Twi for my customer?"
+          agentText="Aane — me bɛka bio wɔ Twi mu. Generated speech stays labeled when it could be mistaken for a live person."
+          userVoiceId="user"
+          agentVoiceId="abe"
+        />
+      </div>
+    );
+  }
+
   return null;
 }
