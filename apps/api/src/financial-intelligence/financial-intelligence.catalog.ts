@@ -9,7 +9,7 @@ export type DomainTerm = {
 };
 
 /**
- * Library Phase 133 → Financial Intelligence.
+ * Financial Intelligence.
  * Domain vocabulary + safety flags for African Intelligence Cloud.
  */
 export function financialIntelligenceEngineCatalog() {

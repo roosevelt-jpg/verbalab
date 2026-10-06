@@ -46,7 +46,7 @@ export const CONTEXT_RUNTIME_PRIORITIES: Array<{ kind: string; priority: number 
 ];
 
 /**
- * Library Phase 84 → Context Runtime.
+ * Context Runtime.
  * Kernel assembly over existing Context Engine — not infinite-context OS.
  */
 export function contextRuntimeCatalog() {

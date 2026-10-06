@@ -24,7 +24,7 @@ export type MlopsAssetTypeId =
   | 'continuousLearning';
 
 /**
- * Library Phase 148 → MLOps & LLMOps Cloud Foundation.
+ * MLOps & LLMOps Cloud Foundation.
  * Ops layer over Inference/Kernel/Foundation Models (7–9), RAG (Volume 6),
  * Agent Runtime (Volume 8), and Prompt Runtime. Not Kubeflow/SageMaker/Vertex/
  * W&B/MLflow/LangSmith/Ray cluster OS. Trust Cloud deferred to Volume 15+.

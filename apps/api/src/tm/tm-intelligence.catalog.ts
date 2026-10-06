@@ -8,7 +8,7 @@ export type TmCapability = {
   notes: string;
 };
 
-/** Library Phase 13 → Lugemi Enterprise Translation Memory. */
+/** Lugemi Enterprise Translation Memory. */
 export function tmIntelligenceCatalog() {
   return {
     product: 'Enterprise Translation Memory',

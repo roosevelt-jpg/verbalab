@@ -43,7 +43,7 @@ export const PROMPT_RUNTIME_ROUTES: Array<{
 ];
 
 /**
- * Library Phase 83 → Prompt Runtime.
+ * Prompt Runtime.
  * Kernel execution over existing — not an auto-prompt research lab.
  */
 export function promptRuntimeCatalog() {

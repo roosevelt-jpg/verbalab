@@ -31,7 +31,7 @@ export type MtpMethod = {
 };
 
 /**
- * Library Phase 102 → Model Training Platform.
+ * Model Training Platform.
  * Orchestration hub over existing rented-GPU jobs — not a frontier training cluster.
  */
 export function modelTrainingPlatformCatalog() {
@@ -248,7 +248,7 @@ export function modelTrainingPlatformArchitectureNotes() {
     wandbMlflowOs: false,
     customerFacingProduct: true,
     note:
-      'Volume 9 Phase 102: real orchestration APIs over rented-GPU jobs. Not frontier-lab distributed training.',
+      'real orchestration APIs over rented-GPU jobs. Not frontier-lab distributed training.',
   };
 }
 

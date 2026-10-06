@@ -67,7 +67,7 @@ export class ContextEngineService {
         { id: 'knowledgeGraph', status: 'partial', from: 'entity name list' },
         { id: 'prompt', status: 'shipped', from: 'prompts resolve (chat/rag)' },
       ],
-      note: 'Context sources assembled by . Realtime deferred.',
+      note: 'Context sources assembled by this context engine. Realtime deferred.',
     };
   }
 

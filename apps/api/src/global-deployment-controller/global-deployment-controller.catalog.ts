@@ -1,5 +1,5 @@
 /**
- * Library Phase 185 → Global Deployment Controller.
+ * Global Deployment Controller.
  * Largest blast-radius honesty: production deploys require authorization; rollback path required.
  * Extends release-engineering — does not regenerate Spinnaker/Argo.
  */

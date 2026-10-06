@@ -117,7 +117,7 @@ export function streamingTransports() {
 }
 
 /**
- * Library Phase 75 → Streaming Runtime.
+ * Streaming Runtime.
  * Hub over existing SSE + sandbox chunk stream — not a WebSocket/gRPC/video OS.
  */
 export function streamingRuntimeCatalog() {

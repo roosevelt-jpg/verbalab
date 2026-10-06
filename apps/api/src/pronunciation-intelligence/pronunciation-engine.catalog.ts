@@ -8,7 +8,7 @@ export type PronunciationCapability = {
   notes: string;
 };
 
-/** Library Phase 22 → Pronunciation Intelligence. */
+/** Pronunciation Intelligence. */
 export function pronunciationEngineCatalog() {
   return {
     product: 'Lugemi Pronunciation Intelligence',

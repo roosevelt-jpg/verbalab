@@ -1,5 +1,5 @@
 /**
- * Library Phase 156 → Continuous Learning.
+ * Continuous Learning.
  * CRITICAL: never auto-promote. Requires humanApproval + drift clear + continuous eval pass + vetted feedback.
  */
 import { continuousEvalGateStatus } from '../continuous-evaluation/continuous-evaluation.catalog';

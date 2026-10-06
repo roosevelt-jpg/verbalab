@@ -196,7 +196,7 @@ export class ModelEvaluationPlatformService {
       };
       run.score = snapshot?.pairs[0]?.exactMatchRate ?? null;
       run.report =
-        'Handoff to . Owner/admin: POST /v1/eval/run?mode=fixture|live|reference_oracle. Platform does not regenerate the harness or invent leadership scores.';
+        'Handoff to the eval harness. Owner/admin: POST /v1/eval/run?mode=fixture|live|reference_oracle. Platform does not regenerate the harness or invent leadership scores.';
       run.updatedAt = new Date().toISOString();
       this.runs.set(run.id, run);
       return {

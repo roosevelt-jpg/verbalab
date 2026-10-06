@@ -1,5 +1,5 @@
 /**
- * Library Phase 205 → Workflow Operating System.
+ * Workflow Operating System.
  * Workflow Operating System. Façade over workflow-runtime + workflow-marketplace. HITL/approval/rollback as routed capabilities — duplicatesKernelOrFabric=false.
  */
 export function workflowOperatingSystemEngineCatalog() {

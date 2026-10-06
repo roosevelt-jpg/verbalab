@@ -11,6 +11,11 @@ import { SessionContext } from '../common/guards/clerk-auth.guard';
 export class DialectsController {
   constructor(private readonly dialects: DialectsService) {}
 
+  @Get('engine')
+  engine() {
+    return this.dialects.engine();
+  }
+
   @Get()
   list(@Query('language') language?: string) {
     return this.dialects.list(language?.trim() || undefined);

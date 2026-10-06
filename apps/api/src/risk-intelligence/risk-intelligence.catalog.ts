@@ -1,5 +1,5 @@
 /**
- * Library Phase 165 → Risk Intelligence.
+ * Risk Intelligence.
  * Scoring seed + analytics — not GRC suite OS.
  */
 export type RiskScore = {

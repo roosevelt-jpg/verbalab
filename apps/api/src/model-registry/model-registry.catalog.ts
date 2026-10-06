@@ -11,7 +11,7 @@ export type MrCapability = {
 export type MrDeployStrategy = 'direct' | 'canary' | 'shadow' | 'blue_green';
 
 /**
- * Library Phase 104 → Model Registry.
+ * Model Registry.
  * Hub over existing `model_registry` — not MLflow / SageMaker Model Registry OS.
  */
 export function modelRegistryCatalog() {
@@ -25,7 +25,7 @@ export function modelRegistryCatalog() {
         name: 'Registry Hub',
         status: 'partial',
         api: 'GET /v1/model-registry/engine',
-        notes: 'Catalog + live matrix bridge to .',
+        notes: 'Catalog + live matrix bridge to model serving.',
       },
       {
         id: 'model-cards',
@@ -117,7 +117,7 @@ export function modelRegistryArchitectureNotes() {
     trainsCompetitiveFoundationWeights: false,
     customerFacingProduct: true,
     note:
-      'Volume 9 Phase 104: registry governance hub over existing. Canary/shadow/blue-green are plan metadata, not mesh control.',
+      'registry governance hub over existing. Canary/shadow/blue-green are plan metadata, not mesh control.',
   };
 }
 

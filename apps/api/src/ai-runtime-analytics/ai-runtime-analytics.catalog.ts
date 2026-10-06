@@ -15,7 +15,7 @@ export function aiRuntimeAnalyticsMode(): 'disabled' | 'sandbox' {
 }
 
 /**
- * Library Phase 79 → AI Runtime Analytics.
+ * AI Runtime Analytics.
  * Inference Cloud aggregates — ≠ Intelligence/Knowledge/Language analytics; not BI OS.
  */
 export function aiRuntimeAnalyticsCatalog() {

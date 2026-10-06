@@ -8,12 +8,12 @@ export type CloningCapability = {
   notes: string;
 };
 
-/** Library Phase 29 → Enterprise Voice Cloning Platform. */
+/** Enterprise Voice Cloning Platform. */
 export function voiceCloningEngineCatalog() {
   return {
     product: 'Lugemi Voice Cloning',
     note:
-      'Enterprise cloning over Instant Voice Cloning with mandatory consent, ownership, abuse review, and watermark (ADR-0042/0083). Professional mode = stricter enrollment on the same vendor path — not a separate trained pro model. NIST voice biometrics deferred to Phase 33.',
+      'Enterprise cloning over Instant Voice Cloning with mandatory consent, ownership, abuse review, and watermark (ADR-0042/0083). Professional mode = stricter enrollment on the same vendor path — not a separate trained pro model. NIST voice biometrics deferred to Voice Biometrics.',
     capabilities: [
       {
         id: 'instant-cloning',
@@ -56,7 +56,7 @@ export function voiceCloningEngineCatalog() {
         name: 'Voice Licensing',
         status: 'shipped',
         api: 'PATCH /v1/voice-cloning/clones/:id/license',
-        notes: 'internal | commercial | restricted license tags + notes. Marketplace SKUs = Phase 34.',
+        notes: 'internal | commercial | restricted license tags + notes. Marketplace SKUs live in Voice Marketplace.',
       },
       {
         id: 'voice-permissions',
@@ -98,7 +98,7 @@ export function voiceCloningEngineCatalog() {
         name: 'Analytics',
         status: 'partial',
         api: 'GET /v1/voice-cloning/engine/analytics',
-        notes: 'Clone counts by status/mode. Full Voice Analytics = Phase 35.',
+        notes: 'Clone counts by status/mode. Full Voice Analytics lives in the Voice Analytics hub.',
       },
     ] satisfies CloningCapability[],
     engines: [

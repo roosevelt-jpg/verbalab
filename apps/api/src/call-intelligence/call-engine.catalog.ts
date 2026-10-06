@@ -8,7 +8,7 @@ export type CallCapability = {
   notes: string;
 };
 
-/** Library Phase 24 → Call Intelligence. */
+/** Call Intelligence. */
 export function callIntelligenceEngineCatalog() {
   return {
     product: 'Lugemi Call Intelligence',

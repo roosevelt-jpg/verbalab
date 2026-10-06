@@ -1,5 +1,5 @@
 /**
- * Library Phase 173 → GitOps Platform.
+ * GitOps Platform.
  * GitOps Platform. GitHub/GitLab/Argo/Flux/Terraform/Helm/Kustomize readiness over Fly/shared platform. argoCdOs=false; fluxOs=false.
  */
 export function gitopsPlatformEngineCatalog() {

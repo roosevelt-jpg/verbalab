@@ -1,5 +1,5 @@
 /**
- * Library Phase 208 → Knowledge Operating System.
+ * Knowledge Operating System.
  * Knowledge Operating System. Façade over knowledge-runtime + knowledge-fabric + knowledge-cloud / african-knowledge-graph. Federation/sync as catalog.
  */
 export function knowledgeOperatingSystemEngineCatalog() {

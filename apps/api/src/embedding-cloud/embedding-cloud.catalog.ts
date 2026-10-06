@@ -15,7 +15,7 @@ export type EmbeddingModality = {
   notes: string;
 };
 
-/** Library Phase 48 → Embedding Cloud. Extends existing — not a multimodal embedding OS. */
+/** Embedding Cloud. Extends existing — not a multimodal embedding OS. */
 export function embeddingCloudCatalog() {
   return {
     product: 'Lugemi Embedding Cloud',

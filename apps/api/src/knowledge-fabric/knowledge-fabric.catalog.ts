@@ -18,7 +18,7 @@ export type KnowledgeFabricRoute = {
 };
 
 /**
- * Library Phase 109 → Knowledge Fabric.
+ * Knowledge Fabric.
  * Cross-cloud knowledge routing over Knowledge Cloud — not Confluence/Neo4j OS.
  */
 export function knowledgeFabricCapabilityCatalog(): KnowledgeFabricCapability[] {

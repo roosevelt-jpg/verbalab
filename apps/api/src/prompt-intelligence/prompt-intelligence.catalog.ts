@@ -8,7 +8,7 @@ export type PromptCapability = {
   notes: string;
 };
 
-/** Library Phase 55 → Prompt Intelligence. Extend versioning — not an auto-prompt research lab. */
+/** Prompt Intelligence. Extend versioning — not an auto-prompt research lab. */
 export function promptIntelligenceCatalog() {
   return {
     product: 'Lugemi Prompt Intelligence',

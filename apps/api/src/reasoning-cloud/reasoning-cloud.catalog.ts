@@ -8,7 +8,7 @@ export type ReasoningCapability = {
   notes: string;
 };
 
-/** Library Phase 53 → Reasoning Cloud. LLM gateway multi-step prompts — not a custom reasoner kernel. */
+/** Reasoning Cloud. LLM gateway multi-step prompts — not a custom reasoner kernel. */
 export function reasoningCloudCatalog() {
   return {
     product: 'Lugemi Reasoning Cloud',

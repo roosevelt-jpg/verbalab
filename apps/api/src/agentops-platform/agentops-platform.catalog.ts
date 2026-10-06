@@ -1,5 +1,5 @@
 /**
- * Library Phase 154 → AgentOps Platform.
+ * AgentOps Platform.
  * Over Agent Runtime. policyViolationsVisible=true — surface for humans, not log-only.
  */
 export type AgentPolicyViolation = {

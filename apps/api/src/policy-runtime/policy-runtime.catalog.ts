@@ -67,7 +67,7 @@ export function policyRuntimeCeilings() {
 }
 
 /**
- * Library Phase 89 → Policy Runtime.
+ * Policy Runtime.
  * Must hard-gate Agent/Workflow/Plugin — not log/flag decoration.
  */
 export function policyRuntimeCatalog() {

@@ -38,6 +38,7 @@ const NAV_GROUPS: NavGroup[] = [
     links: [
       { href: '/translate', label: 'Translate' },
       { href: '/translate/formats', label: 'Formats' },
+      { href: '/translation-runtime', label: 'Translation runtime' },
       { href: '/localize', label: 'Localize' },
       { href: '/localization', label: 'Localization' },
       { href: '/glossary', label: 'Glossary' },

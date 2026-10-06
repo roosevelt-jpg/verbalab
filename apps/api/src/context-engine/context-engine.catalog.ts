@@ -8,7 +8,7 @@ export type ContextCapability = {
   notes: string;
 };
 
-/** Library Phase 52 → Context Engine. Assemble retrieval + memory + prompt — not infinite context. */
+/** Context Engine. Assemble retrieval + memory + prompt — not infinite context. */
 export function contextEngineCatalog() {
   return {
     product: 'Lugemi Context Engine',

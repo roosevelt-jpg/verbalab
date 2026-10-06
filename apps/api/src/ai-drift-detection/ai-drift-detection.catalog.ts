@@ -1,5 +1,5 @@
 /**
- * Library Phase 155 → AI Drift Detection.
+ * AI Drift Detection.
  * Exposes driftClear for Continuous Learning promote gate.
  */
 export type DriftSignal = {

@@ -1,5 +1,5 @@
 /**
- * Library Phase 157 → AI Operations Dashboard.
+ * AI Operations Dashboard.
  * Aggregates sibling MLOps/LLMOps hubs into a unified snapshot.
  */
 export function aiOperationsDashboardEngineCatalog() {

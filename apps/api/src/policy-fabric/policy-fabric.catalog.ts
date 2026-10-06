@@ -67,7 +67,7 @@ export const FABRIC_BUSES = [
 ] as const;
 
 /**
- * Library Phase 114 → Policy Fabric.
+ * Policy Fabric.
  * Fabric-wide hard gate over Policy Runtime — not log-only, not OPA/Cedar enterprise OS.
  */
 export function policyFabricCapabilityCatalog(): PolicyFabricCapability[] {

@@ -1,5 +1,5 @@
 /**
- * Library Phase 166 → Identity Federation.
+ * Identity Federation.
  * Discovery/honest federation readiness over Clerk — not Okta/SAML IdP OS.
  */
 export function identityFederationEngineCatalog() {

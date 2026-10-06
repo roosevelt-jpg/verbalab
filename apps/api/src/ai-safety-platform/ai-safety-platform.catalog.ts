@@ -1,5 +1,5 @@
 /**
- * Library Phase 160 → AI Safety Platform.
+ * AI Safety Platform.
  * Wires to Policy Runtime / Policy Fabric — does not invent a second policy OS.
  */
 export type SafetyDetection = {

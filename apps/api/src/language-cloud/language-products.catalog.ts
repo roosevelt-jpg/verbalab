@@ -9,7 +9,7 @@ export type LanguageProductRow = {
   notes: string;
 };
 
-/** Library Phase 6 product map. */
+/** Product map. */
 export function languageProductCatalog(): LanguageProductRow[] {
   return [
     {

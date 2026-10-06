@@ -1,5 +1,5 @@
 /**
- * Library Phase 152 → PromptOps Platform.
+ * PromptOps Platform.
  * Over Prompt Runtime / Prompt Fabric. Not LangSmith OS.
  */
 export function promptopsPlatformEngineCatalog() {

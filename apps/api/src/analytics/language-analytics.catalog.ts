@@ -8,7 +8,7 @@ export type LanguageAnalyticsCapability = {
   notes: string;
 };
 
-/** Library Phase 14 → Lugemi Language Analytics. */
+/** Lugemi Language Analytics. */
 export function languageAnalyticsCatalog() {
   return {
     product: 'Language Analytics',

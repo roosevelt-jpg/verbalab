@@ -48,7 +48,7 @@ export class EnterpriseSearchService {
               : 'ILIKE substring match on chunk content.',
       })),
       deferred: ['image', 'voice', 'translation_os', 'bm25_parity'],
-      note: 'Enterprise Search modes for .',
+      note: 'Enterprise Search modes for this product surface.',
     };
   }
 

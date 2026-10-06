@@ -5,6 +5,7 @@ import { ApiException } from '../common/errors/api-exception';
 import { AuditService } from '../audit/audit.service';
 import { LanguagesService } from '../languages/languages.service';
 import { DIALECT_SEEDS } from './dialect-seeds';
+import { dialectEngineCatalog } from './dialect-engine.catalog';
 
 export type DialectScore = {
   code: string;
@@ -29,6 +30,10 @@ export class DialectsService implements OnModuleInit {
   async onModuleInit() {
     await this.languages.seed();
     await this.seed();
+  }
+
+  engine() {
+    return dialectEngineCatalog();
   }
 
   async seed() {

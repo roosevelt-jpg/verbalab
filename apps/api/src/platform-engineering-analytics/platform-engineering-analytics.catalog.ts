@@ -1,5 +1,5 @@
 /**
- * Library Phase 179 → Platform Engineering Analytics.
+ * Platform Engineering Analytics.
  * DORA + velocity/adoption/cost/reliability aggregation from sibling hubs.
  */
 export function platformEngineeringAnalyticsEngineCatalog() {

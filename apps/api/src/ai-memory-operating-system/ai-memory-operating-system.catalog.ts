@@ -1,5 +1,5 @@
 /**
- * Library Phase 207 → AI Memory Operating System.
+ * AI Memory Operating System.
  * AI Memory Operating System. Façade over memory-runtime + memory-fabric + knowledge-memory. Global/org/workspace/user/semantic scopes as catalog — not a third memory store.
  */
 export function aiMemoryOperatingSystemEngineCatalog() {

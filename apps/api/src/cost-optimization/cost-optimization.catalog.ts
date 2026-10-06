@@ -54,7 +54,7 @@ export function costCeilings() {
 }
 
 /**
- * Library Phase 78 → Cost Optimization Engine.
+ * Cost Optimization Engine.
  * Enforces spend caps — does not invent FinOps / Spot / reserved cloud OS.
  */
 export function costOptimizationCatalog() {
@@ -75,7 +75,7 @@ export function costOptimizationCatalog() {
         name: 'GPU Cost Optimization',
         status: 'partial',
         api: 'GET /v1/cost-optimization/gpu',
-        notes: 'Surfaces GPU Platform ceilings + estimated spend; hard GPU caps remain .',
+        notes: 'Surfaces GPU Platform ceilings + estimated spend; hard GPU caps remain enforced.',
       },
       {
         id: 'provider-cost-optimization',

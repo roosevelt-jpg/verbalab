@@ -8,7 +8,7 @@ export type EnterpriseRagCapability = {
   notes: string;
 };
 
-/** Library Phase 65 → Enterprise RAG Platform. Grounded RAG over existing — not LangChain OS. */
+/** Enterprise RAG Platform. Grounded RAG over existing — not LangChain OS. */
 export function enterpriseRagCatalog() {
   return {
     product: 'Lugemi Enterprise RAG Platform',

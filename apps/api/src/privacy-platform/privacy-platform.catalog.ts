@@ -1,5 +1,5 @@
 /**
- * Library Phase 163 → Privacy Platform.
+ * Privacy Platform.
  * Enforces Volume 12 traditional knowledge consent fields.
  */
 export type ConsentStatus = 'attested' | 'restricted' | 'unverified';

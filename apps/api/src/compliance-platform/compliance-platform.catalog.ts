@@ -1,5 +1,5 @@
 /**
- * Library Phase 164 → Compliance Platform.
+ * Compliance Platform.
  * Tooling supports compliance work — does NOT certify GDPR/HIPAA/SOC2/PCI.
  */
 export type FrameworkControl = {

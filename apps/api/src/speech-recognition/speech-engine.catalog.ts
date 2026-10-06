@@ -8,7 +8,7 @@ export type SpeechCapability = {
   notes: string;
 };
 
-/** Library Phase 17 → Lugemi Speech Recognition Engine. */
+/** Lugemi Speech Recognition Engine. */
 export function speechEngineCatalog() {
   return {
     product: 'Lugemi Speech',

@@ -1,5 +1,5 @@
 /**
- * Library Phase 161 → AI Governance Platform.
+ * AI Governance Platform.
  * Real human approval workflow — not post-facto log only.
  */
 export type ApprovalStatus = 'pending' | 'approved' | 'rejected';

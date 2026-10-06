@@ -32,6 +32,12 @@ export class LanguageIntelligenceController {
     return this.intel.catalog();
   }
 
+  /** Alias for hub/engine convention used across Lugemi products. */
+  @Get('engine')
+  engine() {
+    return this.intel.catalog();
+  }
+
   @Get('analytics')
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   analytics(@Req() req: AuthedReq) {

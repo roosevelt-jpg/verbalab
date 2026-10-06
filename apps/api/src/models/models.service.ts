@@ -9,6 +9,7 @@ import {
   isModelFeature,
   type ModelFeature,
 } from './model-registry.seeds';
+import { modelsEngineCatalog } from './models-engine.catalog';
 
 @Injectable()
 export class ModelsService implements OnModuleInit {
@@ -22,6 +23,10 @@ export class ModelsService implements OnModuleInit {
 
   async onModuleInit() {
     await this.ensureVendorDefaults();
+  }
+
+  engine() {
+    return modelsEngineCatalog();
   }
 
   async ensureVendorDefaults() {

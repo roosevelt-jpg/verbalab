@@ -1,5 +1,5 @@
 /**
- * Library Phase 212 → Engineering Governance.
+ * Engineering Governance.
  * Engineering Governance. ARB/Engineering/Security/AI/Data/Release councils + CAB/TSC catalog. Extends AI Governance (Vol 15); humanSignOffRequired for consequential decisions.
  */
 export function engineeringGovernanceEngineCatalog() {

@@ -3606,6 +3606,84 @@ export class GqlAccentEngine {
   capabilities!: GqlAccentCapability[];
 }
 
+@ObjectType()
+export class GqlCatalogCapability {
+  @Field()
+  id!: string;
+
+  @Field()
+  name!: string;
+
+  @Field()
+  status!: string;
+
+  @Field(() => String, { nullable: true })
+  api!: string | null;
+
+  @Field()
+  notes!: string;
+}
+
+@ObjectType()
+export class GqlCountryEngine {
+  @Field()
+  product!: string;
+
+  @Field()
+  note!: string;
+
+  @Field(() => [GqlCatalogCapability])
+  capabilities!: GqlCatalogCapability[];
+}
+
+@ObjectType()
+export class GqlLanguageEngine {
+  @Field()
+  product!: string;
+
+  @Field()
+  note!: string;
+
+  @Field(() => [GqlCatalogCapability])
+  capabilities!: GqlCatalogCapability[];
+}
+
+@ObjectType()
+export class GqlModelsEngine {
+  @Field()
+  product!: string;
+
+  @Field()
+  note!: string;
+
+  @Field(() => [GqlCatalogCapability])
+  capabilities!: GqlCatalogCapability[];
+}
+
+@ObjectType()
+export class GqlDialectEngine {
+  @Field()
+  product!: string;
+
+  @Field()
+  note!: string;
+
+  @Field(() => [GqlCatalogCapability])
+  capabilities!: GqlCatalogCapability[];
+}
+
+@ObjectType()
+export class GqlLocaleEngine {
+  @Field()
+  product!: string;
+
+  @Field()
+  note!: string;
+
+  @Field(() => [GqlCatalogCapability])
+  capabilities!: GqlCatalogCapability[];
+}
+
 @InputType()
 export class DetectAccentInput {
   @Field()

@@ -18,7 +18,7 @@ export type ContextFabricRoute = {
 };
 
 /**
- * Library Phase 108 → Context Fabric.
+ * Context Fabric.
  * Cross-cloud context routing over Context Runtime — not infinite-context OS.
  */
 export function contextFabricCapabilityCatalog(): ContextFabricCapability[] {

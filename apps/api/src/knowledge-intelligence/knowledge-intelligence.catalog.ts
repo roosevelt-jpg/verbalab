@@ -9,7 +9,7 @@ export type KnowledgeIntelCapability = {
 };
 
 /**
- * Library Phase 67 → Knowledge Intelligence.
+ * Knowledge Intelligence.
  * Combined knowledge analysis/insight over Knowledge Cloud surfaces — not a BI / Palantir OS.
  */
 export function knowledgeIntelligenceCatalog() {

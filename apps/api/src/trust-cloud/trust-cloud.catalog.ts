@@ -10,7 +10,7 @@ export type TrustCloudProductRow = {
 };
 
 /**
- * Library Phase 159 → Trust Cloud Foundation.
+ * Trust Cloud Foundation.
  * Enforcement/governance layer over Policy Runtime (Vol 8), AgentOps,
  * Continuous Learning, Volume 12 consent, PCI/Stripe honesty, healthcare/
  * financial posture. Not Okta OS, GRC suite OS, certification OS, SIEM OS,

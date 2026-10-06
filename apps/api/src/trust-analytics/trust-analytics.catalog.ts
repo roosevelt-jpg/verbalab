@@ -1,5 +1,5 @@
 /**
- * Library Phase 167 → Trust Analytics.
+ * Trust Analytics.
  * Aggregates sibling Trust Cloud hubs — not SIEM OS.
  */
 export function trustAnalyticsEngineCatalog() {

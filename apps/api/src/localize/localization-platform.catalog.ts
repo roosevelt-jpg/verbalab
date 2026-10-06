@@ -8,7 +8,7 @@ export type LocalizationCapability = {
   notes: string;
 };
 
-/** Library Phase 9 → Lugemi Localization Platform. */
+/** Lugemi Localization Platform. */
 export function localizationPlatformCatalog() {
   return {
     product: 'Enterprise Localization Platform',

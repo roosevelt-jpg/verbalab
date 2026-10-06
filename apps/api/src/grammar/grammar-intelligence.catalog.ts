@@ -8,7 +8,7 @@ export type GrammarCapability = {
   notes: string;
 };
 
-/** Library Phase 10 → Lugemi Grammar Intelligence. */
+/** Lugemi Grammar Intelligence. */
 export function grammarIntelligenceCatalog() {
   return {
     product: 'Grammar Intelligence',

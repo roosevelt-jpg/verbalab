@@ -17,7 +17,7 @@ export type EventFabricBroker = {
 };
 
 /**
- * Library Phase 107 → Event Fabric.
+ * Event Fabric.
  * Enterprise event bus over Redis Streams (active) + CloudEvents.
  * Kafka/NATS/RabbitMQ are catalogued adapters — not provisioned clusters.
  */

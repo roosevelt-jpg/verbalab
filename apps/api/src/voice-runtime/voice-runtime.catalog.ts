@@ -1,5 +1,5 @@
 /**
- * Library Phase 194 → Voice Runtime.
+ * Voice Runtime.
  * Voice Runtime. Thin layer over voice-cloud / voice — routes streaming/neural/cloning/rendering; does not reimplement TTS.
  */
 export function voiceRuntimeEngineCatalog() {

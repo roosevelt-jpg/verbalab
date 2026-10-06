@@ -9,7 +9,7 @@ export type KnowledgeProductRow = {
   notes: string;
 };
 
-/** Library Phase 60 product map. Hub only — maps onto RAG + Intelligence surfaces. */
+/** Product map. Hub only — maps onto RAG + Intelligence surfaces. */
 export function knowledgeProductCatalog(): KnowledgeProductRow[] {
   return [
     {

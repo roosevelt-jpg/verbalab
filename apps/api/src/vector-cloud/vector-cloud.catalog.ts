@@ -8,7 +8,7 @@ export type VectorCapability = {
   notes: string;
 };
 
-/** Library Phase 49 → Vector Cloud. Hub over pgvector Knowledge — not Pinecone. */
+/** Vector Cloud. Hub over pgvector Knowledge — not Pinecone. */
 export function vectorCloudCatalog() {
   return {
     product: 'Lugemi Vector Cloud',

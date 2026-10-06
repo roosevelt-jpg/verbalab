@@ -31,7 +31,7 @@ export const DATASET_MARKETPLACE_LICENSE_TYPES = [
 ] as const;
 
 /**
- * Library Phase 119 → Dataset Marketplace.
+ * Dataset Marketplace.
  * Extends existing dataset listings + DatasetAsset — not Label Studio / Dataset Cloud OS.
  * Volume 11 README: real-money honesty — Stripe (or equivalent); never store raw cards.
  */

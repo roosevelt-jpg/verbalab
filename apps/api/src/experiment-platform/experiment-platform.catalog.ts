@@ -13,7 +13,7 @@ export type ExperimentRun = {
 };
 
 /**
- * Library Phase 139 → Experiment Platform.
+ * Experiment Platform.
  * Experiment tracking catalog — not Weights & Biases OS, not MLflow OS.
  */
 export function experimentPlatformEngineCatalog() {

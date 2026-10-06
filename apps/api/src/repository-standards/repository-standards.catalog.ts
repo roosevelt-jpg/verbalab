@@ -1,5 +1,5 @@
 /**
- * Library Phase 214 → Repository Standards.
+ * Repository Standards.
  * Repository Standards. Monorepo/polyrepo/templates/naming/folder/branch/git/commit/versioning catalog matching Lugemi monorepo reality (pnpm/turbo apps/* packages/*).
  */
 export function repositoryStandardsEngineCatalog() {

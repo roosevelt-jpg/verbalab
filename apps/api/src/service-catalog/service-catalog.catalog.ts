@@ -1,5 +1,5 @@
 /**
- * Library Phase 171 → Service Catalog.
+ * Service Catalog.
  * Service Catalog. Seed catalog of Lugemi services (api, web, SDK, CLI) with ownership/deps. serviceMeshOs=false.
  */
 export function serviceCatalogEngineCatalog() {

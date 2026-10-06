@@ -26,7 +26,7 @@ export const PROMPT_MARKETPLACE_LICENSE_TYPES = [
 ] as const;
 
 /**
- * Library Phase 120 → Prompt Marketplace.
+ * Prompt Marketplace.
  * Extends existing prompt listings + Prompt Fabric / Prompt Runtime — not a prompt mesh OS.
  * Volume 11 README: real-money honesty — Stripe (or equivalent); never store raw cards.
  */

@@ -59,7 +59,7 @@ export class VoiceCloningService {
       consentAttested: consentCount,
       ownershipAttested: ownershipCount,
       enrollmentVerified,
-      note: 'Clone inventory analytics. Full Voice Analytics deferred to Phase 35.',
+      note: 'Clone inventory analytics. Full Voice Analytics deferred to the Voice Analytics hub.',
       docs: '/docs/VOICE_CLONING.md',
     };
   }

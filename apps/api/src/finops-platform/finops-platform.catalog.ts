@@ -1,5 +1,5 @@
 /**
- * Library Phase 176 → FinOps Platform.
+ * FinOps Platform.
  * Pairs with Volume 7 GPU/Inference cost surfaces. Catalog/dashboard — not cloud-billing OS.
  */
 export type FinOpsBudget = {

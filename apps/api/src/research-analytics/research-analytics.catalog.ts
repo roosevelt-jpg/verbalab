@@ -1,7 +1,7 @@
 export type AnalyticsStatus = 'shipped' | 'partial' | 'deferred';
 
 /**
- * Library Phase 146 → Research Analytics.
+ * Research Analytics.
  * Honest static/computed summary aggregating sibling Research Cloud catalogs.
  */
 export function researchAnalyticsEngineCatalog() {

@@ -1,5 +1,5 @@
 /**
- * Library Phase 172 → Golden Path Platform.
+ * Golden Path Platform.
  * Golden Path Platform. Service/microservice/cloud/SDK/repo/CI/security templates catalog. scaffoldingOs=false.
  */
 export function goldenPathPlatformEngineCatalog() {

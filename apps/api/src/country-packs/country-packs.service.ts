@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ApiException } from '../common/errors/api-exception';
 import { LocalesService } from '../locales/locales.service';
 import { COUNTRY_PACK_SEEDS } from './country-pack-seeds';
+import { countryEngineCatalog } from './country-engine.catalog';
 
 @Injectable()
 export class CountryPacksService implements OnModuleInit {
@@ -15,6 +16,10 @@ export class CountryPacksService implements OnModuleInit {
 
   async onModuleInit() {
     await this.seed();
+  }
+
+  engine() {
+    return countryEngineCatalog();
   }
 
   async seed() {

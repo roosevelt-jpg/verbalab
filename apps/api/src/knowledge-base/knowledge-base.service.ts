@@ -24,7 +24,7 @@ export class KnowledgeBaseService {
     return {
       kinds: KNOWLEDGE_CONTENT_KINDS.map((id) => ({ id })),
       deferred: ['image', 'video', 'audio', 'powerpoint', 'excel', 'web_crawl'],
-      note: 'Shipped text document kinds for . Media/Office decks deferred.',
+      note: 'Shipped text document kinds for this knowledge base. Media/Office decks deferred.',
     };
   }
 

@@ -96,7 +96,7 @@ export function gpuVendors() {
 }
 
 /**
- * Library Phase 72 → GPU Platform.
+ * GPU Platform.
  * Sandbox scheduler + hard ceilings — not a GPU hyperscaler OS.
  */
 export function gpuPlatformCatalog() {

@@ -1,5 +1,5 @@
 /**
- * Library Phase 219 → Infrastructure Engineering Standards.
+ * Infrastructure Engineering Standards.
  * Infrastructure Engineering Standards. AWS/Cloudflare/Terraform/Helm/K8s/Docker/networking/storage/GPU standards. Fly default + GPU budget + secrets envelope honesty. kubernetesOs=false.
  */
 export function infrastructureEngineeringStandardsEngineCatalog() {

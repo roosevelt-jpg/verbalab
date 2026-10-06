@@ -8,7 +8,7 @@ export type KgCapability = {
   notes: string;
 };
 
-/** Library Phase 51 → Knowledge Graph Cloud. Bounded ER layer — prefer RAG; not Neo4j OS. */
+/** Knowledge Graph Cloud. Bounded ER layer — prefer RAG; not Neo4j OS. */
 export function knowledgeGraphCatalog() {
   return {
     product: 'Lugemi Knowledge Graph Cloud',

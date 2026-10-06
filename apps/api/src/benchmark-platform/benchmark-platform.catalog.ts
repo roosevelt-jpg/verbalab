@@ -19,7 +19,7 @@ export type LeaderboardRow = {
 };
 
 /**
- * Library Phase 141 → Benchmark Platform.
+ * Benchmark Platform.
  * Suites + leaderboard seed — not a public leaderboard OS.
  */
 export function benchmarkPlatformEngineCatalog() {

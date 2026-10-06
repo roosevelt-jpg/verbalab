@@ -1,7 +1,7 @@
 /**
- * Hand-authored EN→African golden segments for .
+ * Hand-authored EN→African golden segments for the eval harness.
  * Short everyday / public-sector phrases — not a licensed FLORES dump.
- * Expand with licensed datasets under .
+ * Expand with licensed datasets under a licensed corpus program.
  */
 export type GoldenSegment = {
   id: string;

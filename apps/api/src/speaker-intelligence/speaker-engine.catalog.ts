@@ -8,7 +8,7 @@ export type SpeakerCapability = {
   notes: string;
 };
 
-/** Library Phase 18 → Speaker Intelligence. */
+/** Speaker Intelligence. */
 export function speakerEngineCatalog() {
   return {
     product: 'Lugemi Speaker Intelligence',

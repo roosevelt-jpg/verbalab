@@ -1,5 +1,5 @@
 /**
- * Library Phase 215 → Engineering Quality Platform.
+ * Engineering Quality Platform.
  * Engineering Quality Platform. Static analysis/complexity/deps/security/performance/tech-debt/coverage/mutation catalog + quality dashboard snapshot. sonarqubeOs=false.
  */
 export function engineeringQualityPlatformEngineCatalog() {

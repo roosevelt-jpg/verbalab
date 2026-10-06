@@ -8,7 +8,7 @@ export type TtsCapability = {
   notes: string;
 };
 
-/** Library Phase 28 → Lugemi Neural Text-to-Speech. */
+/** Lugemi Neural Text-to-Speech. */
 export function neuralTtsEngineCatalog() {
   return {
     product: 'Lugemi Neural TTS',
@@ -90,14 +90,14 @@ export function neuralTtsEngineCatalog() {
         name: 'Voice Personalities',
         status: 'partial',
         api: 'GET /v1/tts/voices',
-        notes: 'Personality labels on catalog (warm, formal, …). Emotion synthesis is Phase 30.',
+        notes: 'Personality labels on catalog (warm, formal, …). Emotion synthesis lives in Emotion Voice.',
       },
       {
         id: 'enterprise-voices',
         name: 'Enterprise Voices',
         status: 'partial',
         api: '/v1/voice-clones',
-        notes: 'Consent-gated clone:{id} voices. Enterprise library productization continues in Phase 29.',
+        notes: 'Consent-gated clone:{id} voices. Enterprise library productization continues in Enterprise Voice Cloning.',
       },
       {
         id: 'monitoring',
@@ -111,7 +111,7 @@ export function neuralTtsEngineCatalog() {
         name: 'Analytics',
         status: 'partial',
         api: 'GET /v1/tts/engine/analytics',
-        notes: 'TTS usage summary. Dedicated Voice Analytics: Phase 35.',
+        notes: 'TTS usage summary. Dedicated Voice Analytics lives in the Voice Analytics hub.',
       },
     ] satisfies TtsCapability[],
     engines: [

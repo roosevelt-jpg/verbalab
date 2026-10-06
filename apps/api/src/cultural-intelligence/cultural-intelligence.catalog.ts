@@ -23,7 +23,7 @@ export type CulturalEntry = {
 };
 
 /**
- * Library Phase 129 → Cultural Intelligence.
+ * Cultural Intelligence.
  * Traditional knowledge requires provenance/sourceCommunity/consentStatus.
  * traditionalKnowledgeConsentRequired=true — not an extractive scrape.
  */

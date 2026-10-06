@@ -8,7 +8,7 @@ export type KnowledgeBaseCapability = {
   notes: string;
 };
 
-/** Library Phase 61 → Enterprise Knowledge Base. Extends existing — not Confluence/SharePoint OS. */
+/** Enterprise Knowledge Base. Extends existing — not Confluence/SharePoint OS. */
 export function knowledgeBaseCatalog() {
   return {
     product: 'Lugemi Enterprise Knowledge Base',

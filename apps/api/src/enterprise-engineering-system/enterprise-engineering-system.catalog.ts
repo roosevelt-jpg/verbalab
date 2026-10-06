@@ -10,7 +10,7 @@ export type EnterpriseEngineeringSystemProductRow = {
 };
 
 /**
- * Library Phase 211 → Enterprise Engineering System Foundation.
+ * Enterprise Engineering System Foundation.
  * Engineering OS for humans + Cursor — standards/governance catalogs.
  * Not customer-facing product cloud; not ADR factory / Architecture Knowledge Base OS.
  */

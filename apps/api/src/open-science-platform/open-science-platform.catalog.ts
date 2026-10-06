@@ -14,7 +14,7 @@ export type OpenReleaseCandidate = {
 };
 
 /**
- * Library Phase 145 → Open Science Platform.
+ * Open Science Platform.
  * traditionalKnowledgeConsentRequired=true.
  * Before open release of traditional knowledge, require Volume 12 consent fields
  * (provenance, sourceCommunity, consentStatus). Block restricted/unverified.

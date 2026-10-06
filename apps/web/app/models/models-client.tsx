@@ -33,6 +33,12 @@ type LiveMatrix = {
   features: FeatureBlock[];
 };
 
+type Engine = {
+  product: string;
+  note: string;
+  capabilities: Array<{ id: string; name: string; status: string }>;
+};
+
 const VERTICALS = [
   {
     id: 'voice',
@@ -87,13 +93,18 @@ const VERTICALS = [
 export function ModelsClient() {
   const { getToken, isLoaded } = useAuth();
   const [matrix, setMatrix] = useState<LiveMatrix | null>(null);
+  const [engine, setEngine] = useState<Engine | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     void (async () => {
       try {
-        const data = await apiFetch<LiveMatrix>('/v1/models/live');
+        const [data, eng] = await Promise.all([
+          apiFetch<LiveMatrix>('/v1/models/live'),
+          apiFetch<Engine>('/v1/models/engine').catch(() => null),
+        ]);
         setMatrix(data);
+        if (eng) setEngine(eng);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load model registry');
       }
@@ -107,11 +118,10 @@ export function ModelsClient() {
 
   return (
     <AppShell>
-      <h1 style={titleStyle}>Lugemi models</h1>
+      <h1 style={titleStyle}>{engine?.product ?? 'Lugemi models'}</h1>
       <p style={ledeStyle}>
-        Lugemi ships its own Language Intelligence models for voice,
-        video, chat, security, law, government, insurance, and compliance. Infrastructure for African
-        languages, accents, culture, and routines — not just another translation wrapper.
+        {engine?.note ??
+          'Lugemi ships its own Language Intelligence models for voice, video, chat, security, law, government, insurance, and compliance. Infrastructure for African languages, accents, culture, and routines — not just another translation wrapper.'}
       </p>
       <p style={{ margin: '0.65rem 0 0', fontSize: '0.9rem' }}>
         <Link href="/translate">Translate (English → Twi)</Link>

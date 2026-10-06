@@ -612,7 +612,7 @@ export class VoiceMarketplaceService {
       revenueCents: sales._sum.amountCents ?? 0,
       reviewsReceived: reviews,
       product: 'Lugemi Voice Marketplace',
-      note: 'Publisher-side aggregates. Full Voice Analytics = Phase 35.',
+      note: 'Publisher-side aggregates. Full Voice Analytics lives in the Voice Analytics hub.',
       docs: '/docs/VOICE_MARKETPLACE.md',
     };
   }

@@ -9,7 +9,7 @@ export type DomainTerm = {
 };
 
 /**
- * Library Phase 132 → Healthcare Intelligence.
+ * Healthcare Intelligence.
  * Domain vocabulary + safety flags for African Intelligence Cloud.
  */
 export function healthcareIntelligenceEngineCatalog() {

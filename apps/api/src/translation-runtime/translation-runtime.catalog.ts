@@ -1,5 +1,5 @@
 /**
- * Library Phase 192 → Translation Runtime.
+ * Translation Runtime.
  * Translation Runtime. Thin execution layer over Volume 1 translate — routes streaming/realtime/batch/parallel/low-latency; does not reimplement MT.
  */
 export function translationRuntimeEngineCatalog() {

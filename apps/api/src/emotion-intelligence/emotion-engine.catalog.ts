@@ -8,7 +8,7 @@ export type EmotionCapability = {
   notes: string;
 };
 
-/** Library Phase 20 → Emotion Intelligence. */
+/** Emotion Intelligence. */
 export function emotionEngineCatalog() {
   return {
     product: 'Lugemi Emotion Intelligence',

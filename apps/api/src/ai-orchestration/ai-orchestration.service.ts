@@ -60,7 +60,7 @@ export class AiOrchestrationService {
         workflowsConsole: '/workflows',
         note: ' JSON job workflows remain available for transcribe→translate→notify.',
       },
-      note: 'Named e2e pipelines for . Multi-cloud deferred.',
+      note: 'Named e2e pipelines for common orchestration flows. Multi-cloud deferred.',
     };
   }
 

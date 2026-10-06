@@ -21,7 +21,7 @@ export type KmScope = (typeof KNOWLEDGE_MEMORY_SCOPES)[number];
 export const KNOWLEDGE_MEMORY_LAYER = 'knowledge';
 
 /**
- * Library Phase 66 → Knowledge Memory.
+ * Knowledge Memory.
  * Knowledge-layer memory over existing Memory Cloud storage — not a second Mem0/Zep OS.
  */
 export function knowledgeMemoryCatalog() {

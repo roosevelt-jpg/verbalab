@@ -18,7 +18,7 @@ export type SyntheticArtifact = {
 };
 
 /**
- * Library Phase 140 → Synthetic Data Platform.
+ * Synthetic Data Platform.
  * syntheticLabelRequired=true; every artifact isSynthetic=true.
  * If used with Volume 12 sensitive domains, remain labeled synthetic downstream.
  */

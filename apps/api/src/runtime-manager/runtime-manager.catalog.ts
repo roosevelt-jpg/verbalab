@@ -1,5 +1,5 @@
 /**
- * Library Phase 203 → Runtime Manager.
+ * Runtime Manager.
  * Runtime Manager. Lifecycle/allocation/health/recovery/scaling catalog over existing Kernel + Data Plane runtimes — routes to ai-kernel inventory.
  */
 export function runtimeManagerEngineCatalog() {

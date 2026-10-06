@@ -10,7 +10,7 @@ export type ControlPlaneCloudProductRow = {
 };
 
 /**
- * Library Phase 181 → Control Plane Cloud Foundation.
+ * Control Plane Cloud Foundation.
  * Highest-privilege management layer — never executes inference.
  * Not Kubernetes/Istio/Vault/Data Plane OS.
  */

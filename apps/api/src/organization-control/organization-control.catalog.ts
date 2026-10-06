@@ -1,5 +1,5 @@
 /**
- * Library Phase 182 → Organization Control.
+ * Organization Control.
  * Orgs/BUs/departments/teams/projects/environments/quotas/policies with least-privilege roles.
  * Extends identity/org surfaces — does not regenerate Clerk.
  */

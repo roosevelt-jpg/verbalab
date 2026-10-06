@@ -1,5 +1,5 @@
 /**
- * Library Phase 178 → Developer Experience Platform.
+ * Developer Experience Platform.
  * Developer Experience Platform. CLI/SDK/codegen/docs/AI assistant/repo health/analytics catalog. Extends SDK/CLI. ideOs=false.
  */
 export function developerExperiencePlatformEngineCatalog() {

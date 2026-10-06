@@ -16,7 +16,7 @@ export type GraphEdge = {
 };
 
 /**
- * Library Phase 130 → African Knowledge Graph.
+ * African Knowledge Graph.
  * In-process entity/relationship graph. neo4jOs=false.
  */
 export function africanKnowledgeGraphSeed(): { nodes: GraphNode[]; edges: GraphEdge[] } {

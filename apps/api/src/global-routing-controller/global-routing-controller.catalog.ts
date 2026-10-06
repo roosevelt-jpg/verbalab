@@ -1,5 +1,5 @@
 /**
- * Library Phase 186 → Global Routing Controller.
+ * Global Routing Controller.
  * Global Routing Controller. Traffic/regional/geo/latency/cost/AI/model routing + failover catalog. Extends AI Fabric / gateway routing — istioOs=false.
  */
 export function globalRoutingControllerEngineCatalog() {

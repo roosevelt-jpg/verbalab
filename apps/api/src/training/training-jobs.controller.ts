@@ -7,7 +7,7 @@ import { CurrentSession } from '../common/decorators/auth.decorators';
 import { ApiException } from '../common/errors/api-exception';
 
 /**
- * surface for rented-GPU training jobs (same `fine_tune_jobs` table as ).
+ * Surface for rented-GPU training jobs (same `fine_tune_jobs` table as fine-tunes).
  */
 @Controller('v1/training-jobs')
 export class TrainingJobsController {

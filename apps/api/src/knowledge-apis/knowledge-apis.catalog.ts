@@ -123,7 +123,7 @@ export const KNOWLEDGE_WEBHOOK_EVENTS = [
 ] as const;
 
 /**
- * Library Phase 68 → Enterprise Knowledge APIs.
+ * Enterprise Knowledge APIs.
  * Public API pack for Knowledge Cloud — not a gRPC/Kafka API platform OS.
  */
 export function knowledgeApisCatalog() {

@@ -1,5 +1,5 @@
 /**
- * Library Phase 213 → Architecture Governance.
+ * Architecture Governance.
  * Architecture Governance. ADR/RFC/design-review/tech-radar/dependency/compliance catalogs pointing at existing docs/adr — adrFactoryOs=false; no mass ADR generation.
  */
 export function architectureGovernanceEngineCatalog() {

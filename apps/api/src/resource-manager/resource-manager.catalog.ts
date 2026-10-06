@@ -1,5 +1,5 @@
 /**
- * Library Phase 204 → Resource Manager.
+ * Resource Manager.
  * Resource Manager. GPU/CPU/RAM/storage/networking/vector/context-window allocation catalog over gpu-platform/gpu-runtime + FinOps budget honesty — not K8s resource OS.
  */
 export function resourceManagerEngineCatalog() {

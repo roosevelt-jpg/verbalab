@@ -8,7 +8,7 @@ export type BioCapability = {
   notes: string;
 };
 
-/** Library Phase 33 → Enterprise Voice Biometrics. Extends existing. */
+/** Enterprise Voice Biometrics. Extends existing. */
 export function voiceBiometricsEngineCatalog() {
   return {
     product: 'Lugemi Voice Biometrics',

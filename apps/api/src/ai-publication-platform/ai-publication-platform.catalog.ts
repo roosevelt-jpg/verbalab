@@ -10,7 +10,7 @@ export type PublicationRecord = {
 };
 
 /**
- * Library Phase 143 → AI Publication Platform.
+ * AI Publication Platform.
  * doiRegistryOs=false — DOI field optional/stub honesty.
  */
 export function aiPublicationPlatformEngineCatalog() {

@@ -13,7 +13,7 @@ export type AfricanLanguageEntry = {
 };
 
 /**
- * Library Phase 128 → African Language Registry.
+ * African Language Registry.
  * Representative seed — Expanded seed aligned with marketing catalog; full country directory lives in the web Africa catalog.
  */
 export function africanLanguageSeed(): AfricanLanguageEntry[] {

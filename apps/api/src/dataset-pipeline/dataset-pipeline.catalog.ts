@@ -1,5 +1,5 @@
 /**
- * Library Phase 149 → Dataset Pipeline.
+ * Dataset Pipeline.
  * Extends dataset marketplace / — does not regenerate Dataset Cloud OS.
  */
 export function datasetPipelineEngineCatalog() {

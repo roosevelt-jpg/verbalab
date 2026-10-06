@@ -223,7 +223,7 @@ export function hydrateCandidates(
 }
 
 /**
- * Library Phase 74 → AI Router.
+ * AI Router.
  * Extends Gateway routing — not a service mesh / multi-cloud router OS.
  */
 export function aiRouterCatalog() {

@@ -25,7 +25,7 @@ export type MemoryPipeline = {
 };
 
 /**
- * Library Phase 112 → Memory Fabric.
+ * Memory Fabric.
  * Cross-cloud memory routing over Memory Runtime — not Mem0 / multi-region replication OS.
  */
 export function memoryFabricCapabilityCatalog(): MemoryFabricCapability[] {

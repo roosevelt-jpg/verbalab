@@ -1,5 +1,5 @@
 /**
- * Library Phase 162 → Explainability Platform.
+ * Explainability Platform.
  * Not SHAP OS — confidence/evidence/attribution/decision-trace/provenance.
  */
 export type ExplanationRecord = {

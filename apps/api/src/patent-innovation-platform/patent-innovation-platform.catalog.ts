@@ -16,7 +16,7 @@ export type IpPortfolioItem = {
 };
 
 /**
- * Library Phase 144 → Patent & Innovation Platform.
+ * Patent & Innovation Platform.
  * usptoOs=false — tracking catalog, not a legal filing system.
  */
 export function patentInnovationPlatformEngineCatalog() {
@@ -40,7 +40,7 @@ export function patentInnovationPlatformEngineCatalog() {
       title: 'Synthetic label propagation for sensitive domains',
       disclosureStatus: 'idea',
       priorArtNotes: 'Idea slot only.',
-      notes: 'Tracks honesty requirement from .',
+      notes: 'Tracks honesty requirement from the research charter.',
     },
   ];
   return {

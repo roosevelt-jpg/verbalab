@@ -7,6 +7,11 @@ import { CurrentSession } from '../common/decorators/auth.decorators';
 export class LanguageCloudController {
   constructor(private readonly languageCloud: LanguageCloudService) {}
 
+  @Get('engine')
+  engine() {
+    return this.languageCloud.engine();
+  }
+
   @Get('products')
   products() {
     return this.languageCloud.products();

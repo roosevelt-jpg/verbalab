@@ -9,7 +9,7 @@ export type DomainTerm = {
 };
 
 /**
- * Library Phase 135 → Agricultural Intelligence.
+ * Agricultural Intelligence.
  * Domain vocabulary + safety flags for African Intelligence Cloud.
  */
 export function agriculturalIntelligenceEngineCatalog() {

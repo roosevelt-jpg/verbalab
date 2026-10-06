@@ -22,17 +22,27 @@ import {
   CheckGrammarInput,
   DetectDialectInput,
   GqlAccent,
+  GqlCatalogCapability,
+  GqlCountryEngine,
   GqlCountryPack,
   GqlDialect,
   GqlDialectDetectResult,
+  GqlDialectEngine,
   GqlGrammarCheckResult,
   GqlLanguage,
+  GqlLanguageEngine,
   GqlLanguageProduct,
+  GqlLocaleEngine,
   GqlLocalePack,
   GqlStyleProfile,
   GqlStyleRewriteResult,
   RewriteStyleInput,
 } from './gql.types';
+import { CountryPacksService } from '../country-packs/country-packs.service';
+import { LanguagesService } from '../languages/languages.service';
+import { DialectsService } from '../dialects/dialects.service';
+import { LocalesService } from '../locales/locales.service';
+import { LanguageCloudService } from '../language-cloud/language-cloud.service';
 
 type GqlReq = Request & {
   translateAuth?: TranslateAuthContext;
@@ -44,7 +54,62 @@ export class LanguageCloudGraphqlResolver {
   constructor(
     private readonly commands: CommandBus,
     private readonly queries: QueryBus,
+    private readonly countryPacks: CountryPacksService,
+    private readonly languagesService: LanguagesService,
+    private readonly dialectsService: DialectsService,
+    private readonly localesService: LocalesService,
+    private readonly languageCloud: LanguageCloudService,
   ) {}
+
+  @Query(() => GqlCountryEngine, { name: 'countryEngine' })
+  countryEngine(): GqlCountryEngine {
+    const catalog = this.countryPacks.engine();
+    return {
+      product: catalog.product,
+      note: catalog.note,
+      capabilities: catalog.capabilities as GqlCatalogCapability[],
+    };
+  }
+
+  @Query(() => GqlLanguageEngine, { name: 'languageEngine' })
+  languageEngine(): GqlLanguageEngine {
+    const catalog = this.languagesService.engine();
+    return {
+      product: catalog.product,
+      note: catalog.note,
+      capabilities: catalog.capabilities as GqlCatalogCapability[],
+    };
+  }
+
+  @Query(() => GqlLanguageEngine, { name: 'languageCloudEngine' })
+  languageCloudEngine(): GqlLanguageEngine {
+    const catalog = this.languageCloud.engine();
+    return {
+      product: catalog.product,
+      note: catalog.note,
+      capabilities: catalog.capabilities as GqlCatalogCapability[],
+    };
+  }
+
+  @Query(() => GqlDialectEngine, { name: 'dialectEngine' })
+  dialectEngine(): GqlDialectEngine {
+    const catalog = this.dialectsService.engine();
+    return {
+      product: catalog.product,
+      note: catalog.note,
+      capabilities: catalog.capabilities as GqlCatalogCapability[],
+    };
+  }
+
+  @Query(() => GqlLocaleEngine, { name: 'localeEngine' })
+  localeEngine(): GqlLocaleEngine {
+    const catalog = this.localesService.engine();
+    return {
+      product: catalog.product,
+      note: catalog.note,
+      capabilities: catalog.capabilities as GqlCatalogCapability[],
+    };
+  }
 
   @Query(() => [GqlLanguage], { name: 'languages' })
   languages(): Promise<GqlLanguage[]> {

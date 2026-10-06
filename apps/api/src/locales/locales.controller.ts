@@ -6,6 +6,11 @@ import { ApiException } from '../common/errors/api-exception';
 export class LocalesController {
   constructor(private readonly locales: LocalesService) {}
 
+  @Get('engine')
+  engine() {
+    return this.locales.engine();
+  }
+
   @Get()
   async list() {
     const data = await this.locales.list();

@@ -26,6 +26,40 @@ export class LanguageCloudService {
     };
   }
 
+  /** Language Cloud hub engine — parent map over language products. */
+  engine() {
+    const products = languageProductCatalog();
+    return {
+      product: 'Lugemi Language Cloud',
+      note:
+        'Parent hub for Translate, detection, dialects, accents, locales, country packs, grammar, style, and Language Intelligence. Does not regenerate those modules.',
+      capabilities: products.map((p) => ({
+        id: p.id,
+        name: p.name,
+        status: p.status,
+        api: p.api,
+        notes: p.notes,
+      })),
+      architecture: languageArchitectureNotes(),
+      honesty: {
+        multiVendorMtParity: false,
+        ethnologueParity: false,
+        regeneratesTranslate: false,
+        regeneratesSpeechCloud: false,
+      },
+      links: {
+        console: '/language',
+        languagesEngine: '/v1/languages/engine',
+        translateEngine: '/v1/translate/engine',
+        accentsEngine: '/v1/accents/engine',
+        countryEngine: '/v1/country-packs/engine',
+        modelsEngine: '/v1/models/engine',
+        docs: '/docs/LANGUAGE_CLOUD.md',
+        openapi: '/v1/openapi.json',
+      },
+    };
+  }
+
   async overview(session: SessionContext) {
     const [langs, localePacks, coverage, glossaryCount, tmCount, reviewCount] =
       await Promise.all([

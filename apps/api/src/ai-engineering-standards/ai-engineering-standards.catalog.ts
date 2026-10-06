@@ -1,5 +1,5 @@
 /**
- * Library Phase 216 → AI Engineering Standards.
+ * AI Engineering Standards.
  * AI Engineering Standards. Prompt/model/dataset/eval/safety/reasoning/agent/inference standards + retroactiveChecks for Vol 11 payments, Vol 12 healthcare/financial/consent, Vol 17 secrets. Not fake compliance certification.
  */
 export function aiEngineeringStandardsEngineCatalog() {

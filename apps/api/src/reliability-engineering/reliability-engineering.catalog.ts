@@ -1,5 +1,5 @@
 /**
- * Library Phase 175 → Reliability Engineering.
+ * Reliability Engineering.
  * Reliability Engineering. SLO/SLI/error budgets/incident/capacity/autoscaling/DR/chaos catalog. Extends observability — datadogOs=false.
  */
 export function reliabilityEngineeringEngineCatalog() {

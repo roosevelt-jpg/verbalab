@@ -9,6 +9,12 @@ import { CurrentSession } from '../common/decorators/auth.decorators';
 export class ModelsController {
   constructor(private readonly models: ModelsService) {}
 
+  /** Public Models Engine catalog — honesty + links (not MLflow). */
+  @Get('engine')
+  engine() {
+    return this.models.engine();
+  }
+
   /** Public live matrix — which adapters are ready per feature. */
   @Get('live')
   live() {

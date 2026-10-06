@@ -10,7 +10,7 @@ export type VaiosProductRow = {
 };
 
 /**
- * Library Phase 201 → VAIOS Foundation.
+ * VAIOS Foundation.
  * Unifying orchestration layer over Kernel + Fabric + Data Plane.
  * Not Linux / not Kubernetes / not a third parallel OS.
  */

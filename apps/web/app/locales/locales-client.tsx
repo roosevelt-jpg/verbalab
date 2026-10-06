@@ -30,18 +30,31 @@ type Examples = {
   currency: string | null;
 };
 
+type Engine = {
+  product: string;
+  note: string;
+};
+
 export function LocalesClient() {
   const [rows, setRows] = useState<LocalePack[]>([]);
+  const [engine, setEngine] = useState<Engine | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [examples, setExamples] = useState<Examples | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    void fetch(`${API_URL}/v1/locales`)
-      .then(async (res) => {
+    void Promise.all([
+      fetch(`${API_URL}/v1/locales`).then(async (res) => {
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const body = (await res.json()) as { data: LocalePack[] };
+        return (await res.json()) as { data: LocalePack[] };
+      }),
+      fetch(`${API_URL}/v1/locales/engine`)
+        .then(async (res) => (res.ok ? ((await res.json()) as Engine) : null))
+        .catch(() => null),
+    ])
+      .then(([body, eng]) => {
         setRows(body.data);
+        if (eng) setEngine(eng);
         if (body.data[0]) setSelected(body.data[0].languageCode);
       })
       .catch((err: Error) => setError(err.message));
@@ -62,14 +75,20 @@ export function LocalesClient() {
   return (
     <AppShell>
       <main style={{ maxWidth: 920, margin: '0 auto', padding: '2rem 1.25rem 4rem' }}>
-        <h1 style={{ fontSize: '1.75rem', marginBottom: '0.35rem' }}>Locale packs</h1>
+        <h1 style={{ fontSize: '1.75rem', marginBottom: '0.35rem' }}>
+          {engine?.product ?? 'Locale packs'}
+        </h1>
         <p style={{ color: '#555', marginBottom: '1.5rem', lineHeight: 1.55 }}>
-          Date/number/currency notes, honorifics, and do-not-translate entities for registry languages.
-          This is a curated pack — not a cultural intelligence platform.{' '}
+          {engine?.note ??
+            'Date/number/currency notes, honorifics, and do-not-translate entities for registry languages. This is a curated pack — not a cultural intelligence platform.'}{' '}
           <Link href="/coverage" style={{ color: 'inherit' }}>
             Coverage
           </Link>{' '}
-          measures MT quality separately.
+          measures MT quality separately.{' '}
+          <Link href="/countries" style={{ color: 'inherit' }}>
+            Country packs
+          </Link>
+          .
         </p>
 
         {error ? (

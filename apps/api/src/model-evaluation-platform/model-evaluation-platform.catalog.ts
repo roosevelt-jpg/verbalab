@@ -30,7 +30,7 @@ export type MepSuite = {
 };
 
 /**
- * Library Phase 103 → Model Evaluation Platform.
+ * Model Evaluation Platform.
  * Hub over existing coverage/eval harness — not a global LLM leaderboard OS.
  */
 export function modelEvaluationPlatformCatalog() {
@@ -245,7 +245,7 @@ export function modelEvaluationPlatformArchitectureNotes() {
     sotaClaimsForbidden: true,
     customerFacingProduct: true,
     note:
-      'Volume 9 Phase 103: evaluation hub over existing goldens + sandbox suites. Not LMSYS/HELM replacement.',
+      'evaluation hub over existing goldens + sandbox suites. Not LMSYS/HELM replacement.',
   };
 }
 

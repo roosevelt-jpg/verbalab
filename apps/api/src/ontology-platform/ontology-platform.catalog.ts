@@ -8,7 +8,7 @@ export type OntologyCapability = {
   notes: string;
 };
 
-/** Library Phase 63 → Ontology Platform. Concepts over existing KG — not OWL/Protege OS. */
+/** Ontology Platform. Concepts over existing KG — not OWL/Protege OS. */
 export function ontologyPlatformCatalog() {
   return {
     product: 'Lugemi Ontology Platform',

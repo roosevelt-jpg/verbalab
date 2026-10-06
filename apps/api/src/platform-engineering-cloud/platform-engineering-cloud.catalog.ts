@@ -10,7 +10,7 @@ export type PlatformEngineeringCloudProductRow = {
 };
 
 /**
- * Library Phase 169 → Platform Engineering Cloud Foundation.
+ * Platform Engineering Cloud Foundation.
  * Internal Developer Platform for Lugemi engineers — not Backstage OS,
  * ArgoCD/Flux OS, Kubernetes control-plane OS, Snyk OS, Datadog OS, or AI Cloud OS.
  */

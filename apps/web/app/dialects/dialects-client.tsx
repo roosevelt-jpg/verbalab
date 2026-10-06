@@ -23,9 +23,16 @@ type DetectResult = {
   note: string;
 };
 
+type Engine = {
+  product: string;
+  note: string;
+  capabilities: Array<{ id: string; name: string; status: string }>;
+};
+
 export function DialectsClient() {
   const { getToken, isLoaded } = useAuth();
   const [dialects, setDialects] = useState<DialectRow[]>([]);
+  const [engine, setEngine] = useState<Engine | null>(null);
   const [text, setText] = useState('Sasa bro, uko aje? Poa sana.');
   const [language, setLanguage] = useState('');
   const [result, setResult] = useState<DetectResult | null>(null);
@@ -33,8 +40,12 @@ export function DialectsClient() {
   const [busy, setBusy] = useState(false);
 
   const load = useCallback(async () => {
-    const res = await apiFetch<{ data: DialectRow[] }>('/v1/dialects');
+    const [res, eng] = await Promise.all([
+      apiFetch<{ data: DialectRow[] }>('/v1/dialects'),
+      apiFetch<Engine>('/v1/dialects/engine').catch(() => null),
+    ]);
     setDialects(res.data);
+    if (eng) setEngine(eng);
   }, []);
 
   useEffect(() => {
@@ -75,11 +86,11 @@ export function DialectsClient() {
           margin: '0 0 0.35rem',
         }}
       >
-        Dialect detection
+        {engine?.product ?? 'Dialect detection'}
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.5rem', maxWidth: '40rem' }}>
-        Curated African-priority dialects with lexical cue scoring. This is not accent detection and not
-        unlimited coverage.
+        {engine?.note ??
+          'Curated African-priority dialects with lexical cue scoring. This is not accent detection and not unlimited coverage.'}
       </p>
 
       {!isLoaded ? <p style={{ color: 'var(--muted)' }}>Loading auth…</p> : null}

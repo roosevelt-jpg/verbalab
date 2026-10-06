@@ -1,5 +1,5 @@
 /**
- * Library Phase 187 → Secrets & Certificate Platform.
+ * Secrets & Certificate Platform.
  * Envelope-encryption + access-audit catalog over platform secrets.
  * Metadata-only APIs — never return plaintext secret values.
  * hashicorpVaultOs=false.

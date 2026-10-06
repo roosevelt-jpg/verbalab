@@ -8,7 +8,7 @@ export type IntelAnalyticsCapability = {
   notes: string;
 };
 
-/** Library Phase 58 → Intelligence Analytics. Aggregates for this cloud — not Language/Speech/Voice analytics. */
+/** Intelligence Analytics. Aggregates for this cloud — not Language/Speech/Voice analytics. */
 export function intelligenceAnalyticsCatalog() {
   return {
     product: 'Lugemi Intelligence Analytics',

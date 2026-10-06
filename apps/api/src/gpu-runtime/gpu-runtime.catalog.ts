@@ -1,5 +1,5 @@
 /**
- * Library Phase 199 → GPU Runtime.
+ * GPU Runtime.
  * GPU Runtime. Thin layer over gpu-platform — allocation/scheduling/memory/parallelism/health/autoscaling as catalog. gpuBudgetLimitsRequired=true. Not Ray/K8s GPU OS.
  */
 export function gpuRuntimeEngineCatalog() {

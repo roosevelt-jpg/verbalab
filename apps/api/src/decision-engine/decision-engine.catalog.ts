@@ -8,7 +8,7 @@ export type DecisionCapability = {
   notes: string;
 };
 
-/** Library Phase 56 → AI Decision Engine. Light rules + helpers — not Drools/Pega BRMS. */
+/** AI Decision Engine. Light rules + helpers — not Drools/Pega BRMS. */
 export function decisionEngineCatalog() {
   return {
     product: 'Lugemi AI Decision Engine',

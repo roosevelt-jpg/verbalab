@@ -49,7 +49,7 @@ export const ROYALTY_HAND_CHECK_SCENARIOS = [
 ] as const;
 
 /**
- * Library Phase 125 → Creator Economy.
+ * Creator Economy.
  * Extends existing Stripe Connect Express + MarketplaceSale — not a payment-processor OS.
  * Volume 11: Stripe-only; never store raw cards; hand-check payout math.
  */

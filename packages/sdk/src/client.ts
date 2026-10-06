@@ -264,6 +264,86 @@ export class Lugemi {
     return this.requestJson('/v1/accents/engine', { method: 'GET' });
   }
 
+  async countryEngine(): Promise<{
+    product: string;
+    note: string;
+    capabilities: Array<{
+      id: string;
+      name: string;
+      status: string;
+      api: string | null;
+      notes: string;
+    }>;
+    honesty: Record<string, boolean>;
+    links: Record<string, string>;
+  }> {
+    return this.requestJson('/v1/country-packs/engine', { method: 'GET' });
+  }
+
+  async languageEngine(): Promise<{
+    product: string;
+    note: string;
+    capabilities: Array<{
+      id: string;
+      name: string;
+      status: string;
+      api: string | null;
+      notes: string;
+    }>;
+    honesty: Record<string, boolean>;
+    links: Record<string, string>;
+  }> {
+    return this.requestJson('/v1/languages/engine', { method: 'GET' });
+  }
+
+  async dialectEngine(): Promise<{
+    product: string;
+    note: string;
+    capabilities: Array<{
+      id: string;
+      name: string;
+      status: string;
+      api: string | null;
+      notes: string;
+    }>;
+    honesty: Record<string, boolean>;
+    links: Record<string, string>;
+  }> {
+    return this.requestJson('/v1/dialects/engine', { method: 'GET' });
+  }
+
+  async localeEngine(): Promise<{
+    product: string;
+    note: string;
+    capabilities: Array<{
+      id: string;
+      name: string;
+      status: string;
+      api: string | null;
+      notes: string;
+    }>;
+    honesty: Record<string, boolean>;
+    links: Record<string, string>;
+  }> {
+    return this.requestJson('/v1/locales/engine', { method: 'GET' });
+  }
+
+  async modelsEngine(): Promise<{
+    product: string;
+    note: string;
+    capabilities: Array<{
+      id: string;
+      name: string;
+      status: string;
+      api: string | null;
+      notes: string;
+    }>;
+    honesty: Record<string, boolean>;
+    links: Record<string, string>;
+  }> {
+    return this.requestJson('/v1/models/engine', { method: 'GET' });
+  }
+
   async accentAnalytics(): Promise<{
     windowDays: number;
     detects: number;

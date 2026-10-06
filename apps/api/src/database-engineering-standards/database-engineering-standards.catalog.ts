@@ -1,5 +1,5 @@
 /**
- * Library Phase 218 → Database Engineering Standards.
+ * Database Engineering Standards.
  * Database Engineering Standards. Postgres/Redis/ES/vector/KG/schema/migration/performance standards. Extends existing Prisma/DB usage — not a new Database OS.
  */
 export function databaseEngineeringStandardsEngineCatalog() {

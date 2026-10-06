@@ -81,7 +81,7 @@ export class EmotionVoiceService {
       emotionVoiceRequests: events.length,
       byEmotion,
       product: 'Lugemi Emotion Voice',
-      note: 'Profile usage from audit events. Full Voice Analytics = Phase 35.',
+      note: 'Profile usage from audit events. Full Voice Analytics lives in the Voice Analytics hub.',
       docs: '/docs/EMOTION_VOICE.md',
     };
   }

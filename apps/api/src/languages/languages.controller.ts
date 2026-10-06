@@ -5,6 +5,11 @@ import { LanguagesService } from './languages.service';
 export class LanguagesController {
   constructor(private readonly languages: LanguagesService) {}
 
+  @Get('engine')
+  engine() {
+    return this.languages.engine();
+  }
+
   @Get()
   async list() {
     const items = await this.languages.list();

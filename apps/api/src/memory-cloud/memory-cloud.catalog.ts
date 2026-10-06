@@ -8,7 +8,7 @@ export type MemoryCapability = {
   notes: string;
 };
 
-/** Library Phase 50 → Memory Cloud. Persistent memory with GDPR delete/export — not infinite personalization OS. */
+/** Memory Cloud. Persistent memory with GDPR delete/export — not infinite personalization OS. */
 export function memoryCloudCatalog() {
   return {
     product: 'Lugemi Memory Cloud',

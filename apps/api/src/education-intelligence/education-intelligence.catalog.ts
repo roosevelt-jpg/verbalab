@@ -9,7 +9,7 @@ export type DomainTerm = {
 };
 
 /**
- * Library Phase 134 → Education Intelligence.
+ * Education Intelligence.
  * Domain vocabulary + safety flags for African Intelligence Cloud.
  */
 export function educationIntelligenceEngineCatalog() {

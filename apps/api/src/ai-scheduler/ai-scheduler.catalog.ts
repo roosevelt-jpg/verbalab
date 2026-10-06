@@ -1,5 +1,5 @@
 /**
- * Library Phase 202 → AI Scheduler.
+ * AI Scheduler.
  * AI Scheduler. Unifies scheduling over global-scheduler, gpu-runtime/gpu-platform, workflow-runtime, agent-runtime queues — not a new cron OS.
  */
 export function aiSchedulerEngineCatalog() {

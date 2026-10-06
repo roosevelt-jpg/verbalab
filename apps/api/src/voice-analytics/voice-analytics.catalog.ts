@@ -8,7 +8,7 @@ export type VoiceAnalyticsCapability = {
   notes: string;
 };
 
-/** Library Phase 35 → Voice Analytics. Distinct from Speech Analytics. */
+/** Voice Analytics. Distinct from Speech Analytics. */
 export function voiceAnalyticsCatalog() {
   return {
     product: 'Lugemi Voice Analytics',

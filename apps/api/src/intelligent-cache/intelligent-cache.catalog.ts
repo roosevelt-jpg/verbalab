@@ -79,7 +79,7 @@ export function cacheNamespaces(): CacheNamespaceRow[] {
 }
 
 /**
- * Library Phase 77 → Intelligent Cache.
+ * Intelligent Cache.
  * Org/workspace sandbox entry store — not Redis Cluster / vector / CDN OS.
  */
 export function intelligentCacheCatalog() {

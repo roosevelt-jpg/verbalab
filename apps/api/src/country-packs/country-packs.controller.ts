@@ -5,6 +5,11 @@ import { CountryPacksService } from './country-packs.service';
 export class CountryPacksController {
   constructor(private readonly countryPacks: CountryPacksService) {}
 
+  @Get('engine')
+  engine() {
+    return this.countryPacks.engine();
+  }
+
   @Get()
   list(@Query('region') region?: string) {
     return this.countryPacks.list(region?.trim() || undefined);

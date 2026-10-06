@@ -62,7 +62,7 @@ export const KNOWLEDGE_AUDIT_PREFIXES = [
 ] as const;
 
 /**
- * Library Phase 69 → Knowledge Analytics.
+ * Knowledge Analytics.
  * Aggregates for Knowledge Cloud — not Language/Speech/Voice/Intelligence analytics or BI OS.
  */
 export function knowledgeAnalyticsCatalog() {

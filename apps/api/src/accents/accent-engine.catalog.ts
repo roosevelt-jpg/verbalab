@@ -8,7 +8,7 @@ export type AccentCapability = {
   notes: string;
 };
 
-/** Library Phase 19 → Accent Intelligence. Extends existing — not acoustic OS. */
+/** Accent Intelligence. Extends existing — not acoustic OS. */
 export function accentEngineCatalog() {
   return {
     product: 'Lugemi Accent Intelligence',

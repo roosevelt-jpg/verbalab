@@ -9,7 +9,7 @@ export type AtlasCapability = {
 };
 
 /**
- * Library Phase 92 → Atlas.
+ * Atlas.
  * Large multilingual reasoning family scaffold — not trained competitive weights.
  */
 export function atlasCatalog() {
@@ -181,7 +181,7 @@ export function atlasArchitectureNotes() {
     customerFacingProduct: true,
     scaffoldOnly: true,
     note:
-      'Volume 9 Phase 92: Atlas as discoverable family scaffold. Real inference uses bought Gateway models until research charter + compute exist (ADR-0041 / ADR-0135).',
+      'Atlas as discoverable family scaffold. Real inference uses bought Gateway models until research charter + compute exist (ADR-0041 / ADR-0135).',
   };
 }
 

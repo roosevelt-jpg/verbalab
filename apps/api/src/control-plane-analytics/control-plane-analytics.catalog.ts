@@ -1,5 +1,5 @@
 /**
- * Library Phase 189 → Control Plane Analytics.
+ * Control Plane Analytics.
  * Aggregates orgs/deployments/policies/regions/traffic/costs/config/health from siblings.
  */
 export function controlPlaneAnalyticsEngineCatalog() {

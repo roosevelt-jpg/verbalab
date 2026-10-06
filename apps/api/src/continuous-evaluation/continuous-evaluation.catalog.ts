@@ -1,5 +1,5 @@
 /**
- * Library Phase 151 → Continuous Evaluation.
+ * Continuous Evaluation.
  * Extends evaluation-platform / model-evaluation — does not regenerate.
  * Gate status is a required check before Continuous Learning promote.
  */

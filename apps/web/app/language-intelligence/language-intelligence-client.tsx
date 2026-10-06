@@ -33,7 +33,7 @@ export function LanguageIntelligenceClient() {
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    setOverview(await apiFetch<Overview>('/v1/language-intelligence'));
+    setOverview(await apiFetch<Overview>('/v1/language-intelligence/engine'));
   }, []);
 
   useEffect(() => {

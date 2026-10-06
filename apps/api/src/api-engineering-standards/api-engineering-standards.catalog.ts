@@ -1,5 +1,5 @@
 /**
- * Library Phase 217 → API Engineering Standards.
+ * API Engineering Standards.
  * API Engineering Standards. REST/GraphQL/gRPC/streaming/versioning/SDK/rate-limit/pagination/errors/idempotency standards reflecting existing OpenAPI/SDK patterns.
  */
 export function apiEngineeringStandardsEngineCatalog() {

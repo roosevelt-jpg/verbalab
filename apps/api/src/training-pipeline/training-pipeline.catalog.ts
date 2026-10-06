@@ -1,5 +1,5 @@
 /**
- * Library Phase 150 → Training Pipeline.
+ * Training Pipeline.
  * Not Ray cluster OS, Kubeflow OS, or distributed training OS.
  */
 export function trainingPipelineEngineCatalog() {

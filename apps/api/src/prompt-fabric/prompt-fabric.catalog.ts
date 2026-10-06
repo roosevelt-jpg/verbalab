@@ -18,7 +18,7 @@ export type PromptFabricRoute = {
 };
 
 /**
- * Library Phase 110 → Prompt Fabric.
+ * Prompt Fabric.
  * Cross-cloud prompt routing over Prompt Runtime — not a prompt mesh / research lab OS.
  */
 export function promptFabricCapabilityCatalog(): PromptFabricCapability[] {

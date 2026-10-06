@@ -1,5 +1,5 @@
 /**
- * Library Phase 206 → Agent Operating System.
+ * Agent Operating System.
  * Agent Operating System. Façade over agent-runtime + agent-fabric + agent-marketplace. Registry/lifecycle/security/collaboration/memory as routed — not a third agent executor.
  */
 export function agentOperatingSystemEngineCatalog() {

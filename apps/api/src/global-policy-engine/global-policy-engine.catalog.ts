@@ -1,5 +1,5 @@
 /**
- * Library Phase 184 → Global Policy Engine.
+ * Global Policy Engine.
  * Extends Policy Runtime / Trust — does not invent a second policy OS.
  */
 export function globalPolicyEngineCatalog() {

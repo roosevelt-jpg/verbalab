@@ -8,7 +8,7 @@ export type StyleCapability = {
   notes: string;
 };
 
-/** Library Phase 11 → Lugemi Style Intelligence. */
+/** Lugemi Style Intelligence. */
 export function styleIntelligenceCatalog() {
   return {
     product: 'Style Intelligence',

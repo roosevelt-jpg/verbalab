@@ -1,5 +1,5 @@
 /**
- * Library Phase 183 → Global Configuration Platform.
+ * Global Configuration Platform.
  * Global Configuration Platform. Versioning/env/regional config/secrets refs/feature flags/validation. Secrets refs only — never plaintext secret values.
  */
 export function globalConfigurationPlatformEngineCatalog() {

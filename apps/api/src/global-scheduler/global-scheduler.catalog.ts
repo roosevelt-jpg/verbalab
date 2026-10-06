@@ -1,5 +1,5 @@
 /**
- * Library Phase 188 → Global Scheduler.
+ * Global Scheduler.
  * Global Scheduler. Jobs/cron/distributed/workflow/training/inference scheduling control — does not run inference. executesInference=false.
  */
 export function globalSchedulerEngineCatalog() {

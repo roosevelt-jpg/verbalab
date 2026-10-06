@@ -1,5 +1,5 @@
 /**
- * Library Phase 174 → Release Engineering.
+ * Release Engineering.
  * Release Engineering. Blue-green/canary/rolling/feature-flags/rollback/approval/progressive delivery catalog + seed releases. spinnakerOs=false.
  */
 export function releaseEngineeringEngineCatalog() {

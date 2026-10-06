@@ -8,7 +8,7 @@ export type EnterpriseSearchCapability = {
   notes: string;
 };
 
-/** Library Phase 62 → Enterprise Search. Search over EKB/ — not Elastic/OpenSearch OS. */
+/** Enterprise Search. Search over EKB/ — not Elastic/OpenSearch OS. */
 export function enterpriseSearchCatalog() {
   return {
     product: 'Lugemi Enterprise Search',

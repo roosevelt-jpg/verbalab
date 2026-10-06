@@ -62,7 +62,7 @@ export class VoiceStudioService {
       studioActions: events.length,
       byAction,
       product: 'Lugemi Voice Studio',
-      note: 'Studio action counts from audit. Full Voice Analytics = Phase 35.',
+      note: 'Studio action counts from audit. Full Voice Analytics lives in the Voice Analytics hub.',
       docs: '/docs/VOICE_STUDIO.md',
     };
   }

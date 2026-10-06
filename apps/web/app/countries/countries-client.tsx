@@ -24,16 +24,27 @@ type Detail = CountryPack & {
   note?: string;
 };
 
+type Engine = {
+  product: string;
+  note: string;
+  capabilities: Array<{ id: string; name: string; status: string }>;
+};
+
 export function CountriesClient() {
   const [packs, setPacks] = useState<CountryPack[]>([]);
   const [selected, setSelected] = useState<Detail | null>(null);
+  const [engine, setEngine] = useState<Engine | null>(null);
   const [region, setRegion] = useState('');
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     const q = region.trim() ? `?region=${encodeURIComponent(region.trim())}` : '';
-    const res = await apiFetch<{ data: CountryPack[] }>(`/v1/country-packs${q}`);
+    const [res, eng] = await Promise.all([
+      apiFetch<{ data: CountryPack[] }>(`/v1/country-packs${q}`),
+      apiFetch<Engine>('/v1/country-packs/engine').catch(() => null),
+    ]);
     setPacks(res.data);
+    if (eng) setEngine(eng);
   }, [region]);
 
   useEffect(() => {
@@ -51,6 +62,8 @@ export function CountriesClient() {
     }
   }
 
+  const deferred = engine?.capabilities.filter((c) => c.status === 'deferred') ?? [];
+
   return (
     <AppShell>
       <h1
@@ -62,11 +75,14 @@ export function CountriesClient() {
           margin: '0 0 0.35rem',
         }}
       >
-        Country packs
+        {engine?.product ?? 'Country packs'}
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.5rem', maxWidth: '42rem' }}>
-        ISO country guidance that composes language locale packs. Curated African-priority set — not a CLDR dump
-        or billing SKU catalog.
+        {engine?.note ??
+          'ISO country guidance that composes language locale packs. Curated African-priority set — not a CLDR dump or billing SKU catalog.'}
+        {deferred.length > 0
+          ? ` Deferred: ${deferred.map((d) => d.name).join(', ')}.`
+          : ''}
       </p>
 
       <label className="vl-label" style={{ marginBottom: '1rem', display: 'grid', maxWidth: '20rem' }}>

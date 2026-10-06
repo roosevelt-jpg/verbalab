@@ -30,14 +30,29 @@ type Overview = {
   links: Record<string, string>;
 };
 
+type Engine = {
+  product: string;
+  note: string;
+  capabilities: Product[];
+};
+
 export function LanguageClient() {
   const { getToken, isLoaded } = useAuth();
   const [data, setData] = useState<Overview | null>(null);
+  const [hub, setHub] = useState<Engine | null>(null);
+  const [langEngine, setLangEngine] = useState<Engine | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
+    const [cloud, languages] = await Promise.all([
+      apiFetch<Engine>('/v1/language/engine'),
+      apiFetch<Engine>('/v1/languages/engine'),
+    ]);
+    setHub(cloud);
+    setLangEngine(languages);
+
     const token = await getToken();
-    if (!token) throw new Error('Not signed in');
+    if (!token) return;
     setData(await apiFetch<Overview>('/v1/language/overview', { token }));
   }, [getToken]);
 
@@ -57,16 +72,22 @@ export function LanguageClient() {
           margin: '0 0 0.35rem',
         }}
       >
-        Language Cloud
+        {hub?.product ?? 'Language Cloud'}
       </h1>
-      <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        Parent hub for Translate, detection, glossary, TM, quality, localization, and locale packs.
-        Language Cloud deferred queue is complete (dialect through AWS EKS). Enterprise Language Registry is at{' '}
-        <Link href="/registry">/registry</Link>. Fly remains the default PaaS; EKS is optional.
+      <p style={{ color: 'var(--muted)', margin: '0 0 1rem', maxWidth: '42rem' }}>
+        {hub?.note ??
+          'Parent hub for Translate, detection, glossary, TM, quality, localization, and locale packs.'}{' '}
+        Enterprise Language Registry is at <Link href="/registry">/registry</Link>. Fly remains the
+        default PaaS; EKS is optional.
       </p>
+      {langEngine ? (
+        <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem', fontSize: '0.92rem' }}>
+          <strong style={{ color: 'inherit' }}>{langEngine.product}</strong> — {langEngine.note}
+        </p>
+      ) : null}
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
-      {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}
+      {!data && !error && !hub ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}
 
       {data ? (
         <div style={{ display: 'grid', gap: '1.75rem' }}>

@@ -9,7 +9,7 @@ export type IntelligenceProductRow = {
   notes: string;
 };
 
-/** Library Phase 47 product map. Hub only — maps onto LLM gateway + embeddings + RAG. */
+/** Product map. Hub only — maps onto LLM gateway + embeddings + RAG. */
 export function intelligenceProductCatalog(): IntelligenceProductRow[] {
   return [
     {

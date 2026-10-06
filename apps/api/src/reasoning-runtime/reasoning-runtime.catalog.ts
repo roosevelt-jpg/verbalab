@@ -26,7 +26,7 @@ export function reasoningRuntimeCeilings() {
 }
 
 /**
- * Library Phase 85 → Reasoning Runtime.
+ * Reasoning Runtime.
  * Kernel execution over existing Reasoning Cloud — not a custom reasoner OS.
  */
 export function reasoningRuntimeCatalog() {

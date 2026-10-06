@@ -9,7 +9,7 @@ export type EvalCapability = {
 };
 
 /**
- * Library Phase 142 → Evaluation Platform.
+ * Evaluation Platform.
  * Extends model-evaluation-platform / eval surfaces — does not regenerate them.
  */
 export function evaluationPlatformEngineCatalog() {

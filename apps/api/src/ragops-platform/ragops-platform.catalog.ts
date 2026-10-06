@@ -1,5 +1,5 @@
 /**
- * Library Phase 153 → RAGOps Platform.
+ * RAGOps Platform.
  * Over Volume 6 RAG. Not vector-DB OS.
  */
 export function ragopsPlatformEngineCatalog() {

@@ -167,6 +167,12 @@ import { VoiceAnalyticsModule } from '../voice-analytics/voice-analytics.module'
 import { SpeechRecognitionModule } from '../speech-recognition/speech-recognition.module';
 import { SpeakerIntelligenceModule } from '../speaker-intelligence/speaker-intelligence.module';
 import { AccentsModule } from '../accents/accents.module';
+import { CountryPacksModule } from '../country-packs/country-packs.module';
+import { LanguagesModule } from '../languages/languages.module';
+import { DialectsModule } from '../dialects/dialects.module';
+import { LocalesModule } from '../locales/locales.module';
+import { LanguageCloudModule } from '../language-cloud/language-cloud.module';
+import { ModelsModule } from '../models/models.module';
 import { EmotionIntelligenceModule } from '../emotion-intelligence/emotion-intelligence.module';
 import { AudioIntelligenceModule } from '../audio-intelligence/audio-intelligence.module';
 import { PronunciationIntelligenceModule } from '../pronunciation-intelligence/pronunciation-intelligence.module';
@@ -178,6 +184,7 @@ import { GrammarModule } from '../grammar/grammar.module';
 import { LocalizeModule } from '../localize/localize.module';
 import { TranslateAuthGuard } from '../common/guards/translate-auth.guard';
 import { LanguageCloudGraphqlResolver } from './language-cloud.resolver';
+import { ModelsEngineGraphqlResolver } from './models-engine.resolver';
 import { SpeechCloudGraphqlResolver } from './speech-cloud.resolver';
 import { VoiceCloudGraphqlResolver } from './voice-cloud.resolver';
 import { IntelligenceCloudGraphqlResolver } from './intelligence-cloud.resolver';
@@ -533,6 +540,12 @@ import { AnalyticsModule } from '../analytics/analytics.module';
     SpeechRecognitionModule,
     SpeakerIntelligenceModule,
     AccentsModule,
+    CountryPacksModule,
+    LanguagesModule,
+    DialectsModule,
+    LocalesModule,
+    LanguageCloudModule,
+    ModelsModule,
     EmotionIntelligenceModule,
     AudioIntelligenceModule,
     PronunciationIntelligenceModule,
@@ -552,6 +565,7 @@ import { AnalyticsModule } from '../analytics/analytics.module';
   ],
   providers: [
     LanguageCloudGraphqlResolver,
+    ModelsEngineGraphqlResolver,
     SpeechCloudGraphqlResolver,
     VoiceCloudGraphqlResolver,
     IntelligenceCloudGraphqlResolver,

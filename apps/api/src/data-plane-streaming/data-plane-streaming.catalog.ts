@@ -1,5 +1,5 @@
 /**
- * Library Phase 198 → Data Plane Streaming.
+ * Data Plane Streaming.
  * Data Plane Streaming. Façade over Volume 7 streaming-runtime — extendsStreamingRuntime=true; does not create a second streaming-runtime module.
  */
 export function dataPlaneStreamingEngineCatalog() {

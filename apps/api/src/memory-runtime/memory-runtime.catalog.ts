@@ -51,7 +51,7 @@ export function memoryRuntimeCeilings() {
 }
 
 /**
- * Library Phase 82 → Memory Runtime.
+ * Memory Runtime.
  * Kernel primitives over existing Memory Cloud — not Mem0 / replication OS.
  */
 export function memoryRuntimeCatalog() {

@@ -10,7 +10,7 @@ export type AfricanIntelProductRow = {
 };
 
 /**
- * Library Phase 127 → African Intelligence Cloud Foundation.
+ * African Intelligence Cloud Foundation.
  * Hub over Language/Knowledge/Intelligence clouds — not Neo4j OS, not extractive scrape OS,
  * not Digital Twin OS, not Global Intelligence OS (Volume 13+ recommendation after audit).
  */

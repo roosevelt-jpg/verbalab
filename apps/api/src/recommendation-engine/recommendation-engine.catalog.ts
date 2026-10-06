@@ -8,7 +8,7 @@ export type RecCapability = {
   notes: string;
 };
 
-/** Library Phase 54 → Recommendation Engine. Light rankers — not a retail recommender OS. */
+/** Recommendation Engine. Light rankers — not a retail recommender OS. */
 export function recommendationEngineCatalog() {
   return {
     product: 'Lugemi Recommendation Engine',

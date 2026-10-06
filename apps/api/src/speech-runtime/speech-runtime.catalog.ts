@@ -1,5 +1,5 @@
 /**
- * Library Phase 193 → Speech Runtime.
+ * Speech Runtime.
  * Speech Runtime. Thin layer over speech-cloud / speech-recognition — routes realtime STT/streaming/speaker/emotion; does not reimplement STT.
  */
 export function speechRuntimeEngineCatalog() {

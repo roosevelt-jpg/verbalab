@@ -89,7 +89,7 @@ export function servingModelKinds(): ServingModelKindRow[] {
 }
 
 /**
- * Library Phase 73 → Model Serving.
+ * Model Serving.
  * Serving hub over AI Gateway + model registry — not a vLLM / KServe OS.
  */
 export function modelServingCatalog() {

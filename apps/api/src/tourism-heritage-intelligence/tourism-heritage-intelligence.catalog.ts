@@ -9,7 +9,7 @@ export type DomainTerm = {
 };
 
 /**
- * Library Phase 136 → Tourism & Heritage Intelligence.
+ * Tourism & Heritage Intelligence.
  * Domain vocabulary + safety flags for African Intelligence Cloud.
  */
 export function tourismHeritageIntelligenceEngineCatalog() {

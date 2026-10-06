@@ -1,5 +1,5 @@
 /**
- * Library Phase 170 → Internal Developer Portal.
+ * Internal Developer Portal.
  * Internal Developer Portal. Project/env/team/templates/ownership catalog over developer-cloud. backstageOs=false.
  */
 export function internalDeveloperPortalEngineCatalog() {

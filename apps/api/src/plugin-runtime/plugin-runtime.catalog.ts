@@ -21,7 +21,7 @@ export const PLUGIN_PERMISSIONS = [
 
 export type PluginPermission = (typeof PLUGIN_PERMISSIONS)[number];
 
-/** Always denied — never grantable in . */
+/** Always denied — never grantable in this runtime. */
 export const PLUGIN_DENIED_ACTIONS = [
   'external.execute',
   'billing.charge',
@@ -50,12 +50,12 @@ export function pluginRuntimeCeilings() {
     ),
     mode: pluginRuntimeMode(),
     liveCodeExecution: false,
-    note: 'Sandbox plugin runtime. Live arbitrary code / network plugin execution is forbidden in .',
+    note: 'Sandbox plugin runtime. Live arbitrary code / network plugin execution is forbidden in this runtime.',
   };
 }
 
 /**
- * Library Phase 88 → Plugin Runtime.
+ * Plugin Runtime.
  * Scoped permissions + sandbox required. Extends marketplace — not a browser/VS Code extension OS.
  */
 export function pluginRuntimeCatalog() {

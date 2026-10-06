@@ -1,5 +1,5 @@
 /**
- * Library Phase 195 → Vision Runtime.
+ * Vision Runtime.
  * Vision Runtime. Thin layer over ocr / documents — routes OCR/document vision; does not invent a new OCR engine.
  */
 export function visionRuntimeEngineCatalog() {

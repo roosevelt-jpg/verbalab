@@ -1,5 +1,5 @@
 /**
- * Library Phase 209 → Plugin Operating System.
+ * Plugin Operating System.
  * Plugin Operating System. Façade over plugin-runtime + plugin-marketplace. Isolation/sandbox/security honesty from existing policy gates — do not invent new sandbox OS.
  */
 export function pluginOperatingSystemEngineCatalog() {

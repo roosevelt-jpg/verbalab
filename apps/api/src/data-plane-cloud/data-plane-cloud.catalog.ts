@@ -10,7 +10,7 @@ export type DataPlaneCloudProductRow = {
 };
 
 /**
- * Library Phase 191 → Data Plane Cloud Foundation.
+ * Data Plane Cloud Foundation.
  * Execution layer — never manages orgs/policies/billing.
  * Not Service Mesh / VAIOS / architecture-freeze OS.
  */

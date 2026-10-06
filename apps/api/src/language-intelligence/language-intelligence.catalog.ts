@@ -8,7 +8,7 @@ export type LanguageIntelCapability = {
   notes: string;
 };
 
-/** Library Phase 12 → Lugemi Language Intelligence. */
+/** Lugemi Language Intelligence. */
 export function languageIntelligenceCatalog() {
   return {
     product: 'Language Intelligence',

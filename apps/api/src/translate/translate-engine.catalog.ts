@@ -8,7 +8,7 @@ export type TranslateCapability = {
   notes: string;
 };
 
-/** Library Phase 8 → Lugemi Translate. */
+/** Lugemi Translate. */
 export function translateEngineCatalog() {
   return {
     product: 'Lugemi Translate',

@@ -1,5 +1,5 @@
 /**
- * Library Phase 197 → Embedding Runtime.
+ * Embedding Runtime.
  * Embedding Runtime. Thin layer over embeddings / embedding-cloud — routes vector encode/batch; does not reimplement embedding models.
  */
 export function embeddingRuntimeEngineCatalog() {

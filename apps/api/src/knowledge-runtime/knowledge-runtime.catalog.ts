@@ -1,5 +1,5 @@
 /**
- * Library Phase 196 → Knowledge Runtime.
+ * Knowledge Runtime.
  * Knowledge Runtime. Thin layer over knowledge-cloud / knowledge / knowledge-fabric — routes search/graph/RAG/semantic/ontology.
  */
 export function knowledgeRuntimeEngineCatalog() {
