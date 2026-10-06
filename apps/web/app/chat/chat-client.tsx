@@ -20,6 +20,14 @@ import {
   speechRecognitionSupported,
   type SpeechRecognitionLike,
 } from '@/lib/speech-recognition';
+import {
+  PLATFORM_CONNECTORS,
+  connectedFlags,
+  loadInstalls,
+  saveInstalls,
+  type ConnectorCategory,
+  type ConnectorInstall,
+} from '@/lib/connectors-catalog';
 
 type Language = { code: string; name: string };
 
@@ -47,85 +55,15 @@ type ChatCompletion = {
   translateReplyTo?: string | null;
 };
 
-type ConnectorDef = {
-  id: string;
-  name: string;
-  category: 'office' | 'storage' | 'email' | 'chat';
-  blurb: string;
-  href?: string;
-};
-
 const STORAGE_KEY = 'lugemi_chat_studio_v1';
-const CONNECTOR_KEY = 'lugemi_chat_connectors_v1';
 
-const CONNECTORS: ConnectorDef[] = [
-  {
-    id: 'slack',
-    name: 'Slack',
-    category: 'chat',
-    blurb: 'Slash-command translate in channels.',
-    href: '/connectors',
-  },
-  {
-    id: 'teams',
-    name: 'Microsoft Teams',
-    category: 'chat',
-    blurb: 'Meeting captions and channel localization.',
-  },
-  {
-    id: 'gmail',
-    name: 'Gmail',
-    category: 'email',
-    blurb: 'Draft replies in the recipient’s language.',
-  },
-  {
-    id: 'outlook',
-    name: 'Outlook',
-    category: 'email',
-    blurb: 'Office 365 mail + calendar phrasing.',
-  },
-  {
-    id: 'gdrive',
-    name: 'Google Drive',
-    category: 'storage',
-    blurb: 'Pull docs into Chat Studio for translate.',
-  },
-  {
-    id: 'onedrive',
-    name: 'OneDrive',
-    category: 'storage',
-    blurb: 'Sync Word/PDF folders for localization.',
-  },
-  {
-    id: 'dropbox',
-    name: 'Dropbox',
-    category: 'storage',
-    blurb: 'Watch shared folders for new assets.',
-  },
-  {
-    id: 'notion',
-    name: 'Notion',
-    category: 'office',
-    blurb: 'Translate pages and knowledge bases.',
-  },
-  {
-    id: 'sheets',
-    name: 'Google Sheets',
-    category: 'office',
-    blurb: 'Batch glossary + string tables.',
-  },
-  {
-    id: 'docs',
-    name: 'Google Docs',
-    category: 'office',
-    blurb: 'Export localized copies of long-form docs.',
-  },
-  {
-    id: 'box',
-    name: 'Box',
-    category: 'storage',
-    blurb: 'Enterprise file sync for localization jobs.',
-  },
+const PLUGIN_CATEGORIES: ConnectorCategory[] = [
+  'voice',
+  'video',
+  'chat',
+  'office',
+  'storage',
+  'email',
 ];
 
 const SUGGESTIONS = [
@@ -154,21 +92,6 @@ function loadConversations(): Conversation[] {
 function saveConversations(rows: Conversation[]) {
   if (typeof window === 'undefined') return;
   window.localStorage.setItem(STORAGE_KEY, JSON.stringify(rows.slice(0, 40)));
-}
-
-function loadConnected(): Record<string, boolean> {
-  if (typeof window === 'undefined') return {};
-  try {
-    const raw = window.localStorage.getItem(CONNECTOR_KEY);
-    return raw ? (JSON.parse(raw) as Record<string, boolean>) : {};
-  } catch {
-    return {};
-  }
-}
-
-function saveConnected(map: Record<string, boolean>) {
-  if (typeof window === 'undefined') return;
-  window.localStorage.setItem(CONNECTOR_KEY, JSON.stringify(map));
 }
 
 function isTextLike(file: File) {
@@ -271,7 +194,7 @@ export function ChatClient() {
     setConversations(rows);
     setActiveId(rows[0]?.id ?? null);
     activeIdRef.current = rows[0]?.id ?? null;
-    setConnected(loadConnected());
+    setConnected(connectedFlags(loadInstalls()));
     setHydrated(true);
     void apiFetch<{ data: Language[] }>('/v1/languages')
       .then((res) => setLanguages(res.data))
@@ -844,9 +767,13 @@ export function ChatClient() {
 
   function toggleConnector(id: string) {
     setConnected((prev) => {
-      const next = { ...prev, [id]: !prev[id] };
-      saveConnected(next);
-      return next;
+      const turningOn = !prev[id];
+      const installs: Record<string, ConnectorInstall> = { ...loadInstalls() };
+      installs[id] = turningOn
+        ? { ...(installs[id] ?? {}), connected: true, connectedAt: Date.now() }
+        : { ...(installs[id] ?? {}), connected: false, connectedAt: undefined };
+      saveInstalls(installs);
+      return connectedFlags(installs);
     });
   }
 
@@ -1197,7 +1124,11 @@ export function ChatClient() {
         <aside className={`lg-chat-plugins${pluginsOpen ? ' is-open' : ''}`} aria-label="Connectors and plugins">
           <div className="lg-chat-plugins-head">
             <h2>Plugins</h2>
-            <p>Connect office, storage, email, and chat tools to Chat Studio.</p>
+            <p>
+              Voice, video, office, and chat connectors — same installer as{' '}
+              <Link href="/connectors">Workspace Connectors</Link>. Lugemi audio stays clean for
+              voice/video sync.
+            </p>
             <button
               type="button"
               className="lg-chat-plugins-close"
@@ -1208,22 +1139,20 @@ export function ChatClient() {
             </button>
           </div>
           <ul className="lg-chat-plugin-list">
-            {(['office', 'storage', 'email', 'chat'] as const).map((cat) => (
+            {PLUGIN_CATEGORIES.map((cat) => (
               <li key={cat} className="lg-chat-plugin-group">
                 <h3 className="lg-chat-plugin-group-title">{cat}</h3>
                 <ul className="lg-chat-plugin-list">
-                  {CONNECTORS.filter((c) => c.category === cat).map((c) => {
+                  {PLATFORM_CONNECTORS.filter((c) => c.category === cat).map((c) => {
                     const on = Boolean(connected[c.id]);
                     return (
                       <li key={c.id} className="lg-chat-plugin">
                         <div>
                           <strong>{c.name}</strong>
                           <p>{c.blurb}</p>
-                          {c.href ? (
-                            <Link href={c.href} className="lg-chat-plugin-link">
-                              Open connector settings
-                            </Link>
-                          ) : null}
+                          <Link href={c.href ?? `/connectors#${c.id}`} className="lg-chat-plugin-link">
+                            Open installer / docs
+                          </Link>
                         </div>
                         <button
                           type="button"

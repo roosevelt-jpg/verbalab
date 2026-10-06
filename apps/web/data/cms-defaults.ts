@@ -1240,28 +1240,28 @@ export const CMS_DEFAULTS: CmsDocument = {
   ],
   console: {
     dashboardWelcome: {
-      title: 'Welcome to Lugemi',
-      lead: 'Build speaking agents across languages and accents with cultural context. Start from Voice Studio, Agent Runtime, or the API playground — Africa-first coverage is the investment priority.',
+      title: 'Language Intelligence operator home',
+      lead: 'Africa-first Workspace Console — manage identity, profile, API keys, Chat Studio, model selection, live dialect demos, and platform connectors. Trade, negotiate, and educate with real live dialect translations; Lugemi voice/video sync stays clean without external audio noise.',
       starterCards: [
         {
-          title: 'Ship a speaking agent',
-          body: 'Simulate Voice FAQ turns or create a sandbox agent with permission allowlists.',
-          href: '/voice',
+          title: 'Trade in dialect',
+          body: 'Translate contracts and market terms English → Twi, Yorùbá, or Kiswahili with cultural context.',
+          href: '/translate?source=en&target=ak',
         },
         {
-          title: 'Generate speech',
-          body: 'Try own:* voices in Voice Studio. Production path uses OWN_TTS_URL when configured.',
-          href: '/audio',
+          title: 'Negotiate live',
+          body: 'Chat Studio realtime phrase translation and speaking agents for deal rooms.',
+          href: '/chat',
         },
         {
-          title: 'Call the API',
-          body: 'Translate, detect, and speech via @lugemi/sdk with lg_live_ / lg_test_ keys.',
-          href: '/playground',
+          title: 'Install connectors',
+          body: 'One-key plugins for Twilio, VAPI, Google Voice, Higgsfield, Google Video, and office stacks.',
+          href: '/connectors',
         },
         {
-          title: 'Browse Africa coverage',
-          body: 'Countries, languages, scripts, and ethnic varieties in the curated catalog.',
-          href: '/coverage',
+          title: 'API docs & playground',
+          body: 'Straight /v1 APIs with en→ak dialect defaults for testing before production keys.',
+          href: '/playground?source=en&target=ak',
         },
       ],
     },

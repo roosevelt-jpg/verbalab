@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
 import { LanguageLocaleSelect } from '@/components/language-locale-select';
@@ -21,12 +22,13 @@ const DEFAULT_TARGET = 'ak';
 
 export function TranslateClient() {
   const { getToken, isLoaded } = useAuth();
+  const searchParams = useSearchParams();
   const [languages, setLanguages] = useState<Language[]>([]);
   const [locales, setLocales] = useState<LocalePack[]>([]);
   const [engine, setEngine] = useState<Engine | null>(null);
   const [catalogLoading, setCatalogLoading] = useState(true);
-  const [source, setSource] = useState(DEFAULT_SOURCE);
-  const [target, setTarget] = useState(DEFAULT_TARGET);
+  const [source, setSource] = useState(() => searchParams.get('source') || DEFAULT_SOURCE);
+  const [target, setTarget] = useState(() => searchParams.get('target') || DEFAULT_TARGET);
   const [text, setText] = useState('');
   const [result, setResult] = useState('');
   const [characters, setCharacters] = useState<number | null>(null);

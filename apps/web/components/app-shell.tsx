@@ -18,6 +18,21 @@ type NavGroup = {
 
 const NAV_GROUPS: NavGroup[] = [
   {
+    id: 'workspace',
+    label: 'Workspace Console',
+    links: [
+      { href: '/dashboard', label: 'Dashboard' },
+      { href: '/identity', label: 'Identity & profile' },
+      { href: '/keys', label: 'API keys' },
+      { href: '/chat', label: 'Chat Studio' },
+      { href: '/models', label: 'Models' },
+      { href: '/translate', label: 'Translate' },
+      { href: '/data', label: 'Data & branding' },
+      { href: '/connectors', label: 'Connectors' },
+      { href: '/billing', label: 'Billing' },
+    ],
+  },
+  {
     id: 'voice',
     label: 'Voice & audio',
     links: [
@@ -91,15 +106,11 @@ const NAV_GROUPS: NavGroup[] = [
   },
   {
     id: 'admin',
-    label: 'Admin & workspace',
+    label: 'Admin & enterprise',
     links: [
-      { href: '/dashboard', label: 'Dashboard' },
-      { href: '/billing', label: 'Billing' },
-      { href: '/data', label: 'Data & residency' },
       { href: '/audit', label: 'Audit' },
       { href: '/admin', label: 'Admin' },
       { href: '/enterprise', label: 'Enterprise' },
-      { href: '/identity', label: 'Identity' },
     ],
   },
 ];
@@ -116,7 +127,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {};
     for (const group of NAV_GROUPS) {
-      initial[group.id] = groupContainsPath(group, pathname) || group.id === 'developer' || group.id === 'admin';
+      initial[group.id] =
+        groupContainsPath(group, pathname) ||
+        group.id === 'workspace' ||
+        group.id === 'developer';
     }
     return initial;
   });

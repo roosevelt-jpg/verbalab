@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { FormEvent, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { API_URL, apiFetch } from '@/lib/api';
 import { BrandMark } from '@/components/brand-mark';
 import { CodePanel } from '@/components/code-panel';
@@ -17,12 +18,17 @@ function isApiKey(value: string) {
 }
 
 export function PlaygroundClient() {
+  const searchParams = useSearchParams();
   const [mode, setMode] = useState<Mode>('translate');
   const [apiKey, setApiKey] = useState('');
   const [languages, setLanguages] = useState<Language[]>([]);
   const [locales, setLocales] = useState<LocalePack[]>([]);
-  const [source, setSource] = useState(SITE_CONTENT.playgroundDefaults.source);
-  const [target, setTarget] = useState(SITE_CONTENT.playgroundDefaults.target);
+  const [source, setSource] = useState(
+    () => searchParams.get('source') || SITE_CONTENT.playgroundDefaults.source,
+  );
+  const [target, setTarget] = useState(
+    () => searchParams.get('target') || SITE_CONTENT.playgroundDefaults.target,
+  );
   const [text, setText] = useState(SITE_CONTENT.playgroundDefaults.text);
   const [response, setResponse] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
