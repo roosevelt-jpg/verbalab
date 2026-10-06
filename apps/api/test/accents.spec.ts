@@ -93,10 +93,12 @@ describe('Accent detection', () => {
     await app.close();
   });
 
-  it('GET /v1/accents lists curated profiles', async () => {
+  it('GET /v1/accents lists full language/locale registry', async () => {
     const res = await request(app.getHttpServer()).get('/v1/accents').expect(200);
-    expect(res.body.data.length).toBeGreaterThanOrEqual(8);
+    expect(res.body.data.length).toBeGreaterThanOrEqual(200);
     expect(res.body.data.some((a: { code: string }) => a.code === 'en-ng')).toBe(true);
+    const langs = new Set(res.body.data.map((a: { languageCode: string }) => a.languageCode));
+    expect(langs.size).toBeGreaterThanOrEqual(200);
   });
 
   it('POST /v1/accents/detect scores Nigerian English cues from text', async () => {

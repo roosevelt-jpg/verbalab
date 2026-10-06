@@ -1,6 +1,6 @@
 'use client';
 
-import { CSSProperties, FormEvent, useCallback, useEffect, useState } from 'react';
+import { CSSProperties, FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
@@ -28,6 +28,7 @@ type DetectResult = {
 export function AccentsClient() {
   const { getToken, isLoaded } = useAuth();
   const [accents, setAccents] = useState<AccentRow[]>([]);
+  const [registryQuery, setRegistryQuery] = useState('');
   const [text, setText] = useState('How far, abi you dey come? Wetin happen sef?');
   const [language, setLanguage] = useState('en');
   const [file, setFile] = useState<File | null>(null);
@@ -43,6 +44,17 @@ export function AccentsClient() {
   useEffect(() => {
     void load().catch((err: Error) => setError(err.message));
   }, [load]);
+
+  const filteredAccents = useMemo(() => {
+    const q = registryQuery.trim().toLowerCase();
+    if (!q) return accents;
+    return accents.filter((a) => {
+      const hay = [a.code, a.nameEn, a.languageCode, a.region ?? '', a.relatedDialectCode ?? '']
+        .join(' ')
+        .toLowerCase();
+      return hay.includes(q);
+    });
+  }, [accents, registryQuery]);
 
   async function onDetect(event: FormEvent) {
     event.preventDefault();
@@ -95,8 +107,8 @@ export function AccentsClient() {
         Accent detection
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.5rem', maxWidth: '42rem' }}>
-        Spoken accent profiles from transcript or text cues (optional audio → STT). This is not a dedicated
-        acoustic phonetics classifier and not unlimited coverage.
+        Spoken accent profiles across the full language/locale registry. Detection scores transcript or
+        text cues (optional audio → STT) — cue/transcript scoring, not acoustic phonetics.
       </p>
 
       {!isLoaded ? <p style={{ color: 'var(--muted)' }}>Loading auth…</p> : null}
@@ -158,9 +170,21 @@ export function AccentsClient() {
       ) : null}
 
       <section>
-        <h2 style={label}>Registry ({accents.length})</h2>
+        <h2 style={label}>
+          Registry ({filteredAccents.length}
+          {registryQuery.trim() ? ` of ${accents.length}` : ''})
+        </h2>
+        <label className="vl-label" style={{ marginBottom: '0.85rem', display: 'grid' }}>
+          Search registry
+          <input
+            className="vl-field"
+            value={registryQuery}
+            onChange={(e) => setRegistryQuery(e.target.value)}
+            placeholder="Filter by code, name, language, country…"
+          />
+        </label>
         <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: '0.55rem' }}>
-          {accents.map((a) => (
+          {filteredAccents.map((a) => (
             <li key={a.code} style={{ borderTop: '1px solid var(--line)', paddingTop: '0.55rem' }}>
               <strong>{a.code}</strong> · {a.nameEn} · {a.languageCode}
               {a.region ? ` · ${a.region}` : ''}
@@ -168,6 +192,9 @@ export function AccentsClient() {
             </li>
           ))}
         </ul>
+        {filteredAccents.length === 0 ? (
+          <p style={{ color: 'var(--muted)', marginTop: '0.75rem' }}>No accents match that search.</p>
+        ) : null}
       </section>
     </AppShell>
   );

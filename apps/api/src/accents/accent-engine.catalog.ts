@@ -75,7 +75,7 @@ export function accentEngineCatalog() {
     ],
     regionalProfiles: {
       count: 'seeded',
-      note: 'Curated African-priority spoken accent profiles (en/fr/ar/sw/ha/zu) — registry, not acoustic models.',
+      note: 'Full language/locale spoken accent registry generated from languages + locale/country packs — cue scoring, not acoustic models.',
       console: '/accents',
     },
     links: {

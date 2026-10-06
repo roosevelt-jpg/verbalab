@@ -73,6 +73,27 @@ export class AccentsService implements OnModuleInit {
   }
 
   async list(languageCode?: string) {
+    if (!this.prisma.isReady()) {
+      const rows = ACCENT_SEEDS.filter((s) =>
+        languageCode ? s.languageCode === languageCode : true,
+      );
+      return {
+        data: rows.map((s) =>
+          this.toDto({
+            id: `seed-${s.code}`,
+            code: s.code,
+            languageCode: s.languageCode,
+            nameEn: s.nameEn,
+            nameNative: s.nameNative ?? null,
+            region: s.region ?? null,
+            relatedDialectCode: s.relatedDialectCode ?? null,
+            cueTerms: s.cueTerms,
+            notes: s.notes ?? null,
+          }),
+        ),
+        note: 'Seed catalog (database unavailable).',
+      };
+    }
     const rows = await this.prisma.accent.findMany({
       where: languageCode ? { languageCode } : undefined,
       orderBy: [{ languageCode: 'asc' }, { code: 'asc' }],
