@@ -28,9 +28,9 @@ export function MarketingFooter({
                   {col.links.map((link) => {
                     const external = link.href.startsWith('http');
                     return (
-                      <li key={`${col.id}-${link.label}`}>
+                      <li key={`${col.id}-${link.label}-${link.href}`}>
                         {external ? (
-                          <a href={link.href} rel="noreferrer">
+                          <a href={link.href} rel="noreferrer" target="_blank">
                             {link.label}
                           </a>
                         ) : (

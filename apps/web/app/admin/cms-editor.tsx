@@ -575,42 +575,55 @@ export function CmsEditor() {
                 })
               }
             />
-            {doc.footer.columns.map((col, cIdx) => (
-              <div key={col.id} style={{ display: 'grid', gap: '0.5rem' }}>
-                <Field
-                  label={`${col.title} column title`}
-                  value={col.title}
-                  onChange={(v) => {
-                    const columns = [...doc.footer.columns];
-                    columns[cIdx] = { ...col, title: v };
-                    setDoc({ ...doc, footer: { ...doc.footer, columns } });
-                  }}
-                />
-                <Field
-                  label={`${col.title} links (label|href)`}
-                  value={col.links.map((l) => `${l.label}|${l.href}`).join('\n')}
-                  multiline
-                  rows={6}
-                  onChange={(v) => {
-                    const columns = [...doc.footer.columns];
-                    columns[cIdx] = {
-                      ...col,
-                      links: v
-                        .split('\n')
-                        .map((line) => line.trim())
-                        .filter(Boolean)
-                        .map((line) => {
-                          const parts = line.split('|');
-                          const label = (parts[0] ?? 'Link').trim();
-                          const href = (parts[1] ?? '/').trim();
-                          return { label, href };
-                        }),
-                    };
-                    setDoc({ ...doc, footer: { ...doc.footer, columns } });
-                  }}
-                />
-              </div>
-            ))}
+            {doc.footer.columns.map((col, cIdx) => {
+              const isSocials = col.id === 'socials';
+              return (
+                <div key={col.id} style={{ display: 'grid', gap: '0.5rem' }}>
+                  <Field
+                    label={`${col.title} column title`}
+                    value={col.title}
+                    onChange={(v) => {
+                      const columns = [...doc.footer.columns];
+                      columns[cIdx] = { ...col, title: v };
+                      setDoc({ ...doc, footer: { ...doc.footer, columns } });
+                    }}
+                  />
+                  <Field
+                    label={
+                      isSocials
+                        ? 'Socials (label|href per line — channel name and URL only)'
+                        : `${col.title} links (label|href)`
+                    }
+                    value={col.links.map((l) => `${l.label}|${l.href}`).join('\n')}
+                    multiline
+                    rows={isSocials ? 10 : 6}
+                    onChange={(v) => {
+                      const columns = [...doc.footer.columns];
+                      columns[cIdx] = {
+                        ...col,
+                        links: v
+                          .split('\n')
+                          .map((line) => line.trim())
+                          .filter(Boolean)
+                          .map((line) => {
+                            const parts = line.split('|');
+                            const label = (parts[0] ?? 'Link').trim();
+                            const href = (parts[1] ?? '/').trim();
+                            return { label, href };
+                          }),
+                      };
+                      setDoc({ ...doc, footer: { ...doc.footer, columns } });
+                    }}
+                  />
+                  {isSocials ? (
+                    <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--muted)' }}>
+                      These entries drive the footer Socials column and /p/socials. No descriptions
+                      needed — one label and one URL per line.
+                    </p>
+                  ) : null}
+                </div>
+              );
+            })}
           </>
         ) : null}
 

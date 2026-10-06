@@ -37,7 +37,7 @@ export type SiteContent = {
   docsIntro: CmsDocument['console']['docsIntro'];
   playgroundDefaults: CmsDocument['console']['playgroundDefaults'];
   hubDefaults: CmsDocument['console']['hubDefaults'];
-  social: { label: string; href: string | null; note: string }[];
+  social: { label: string; href: string }[];
 };
 
 function toSiteContent(doc: CmsDocument): SiteContent {
@@ -67,13 +67,7 @@ function toSiteContent(doc: CmsDocument): SiteContent {
     docsIntro: doc.console.docsIntro,
     playgroundDefaults: doc.console.playgroundDefaults,
     hubDefaults: doc.console.hubDefaults,
-    social: doc.footer.columns
-      .find((c) => c.id === 'socials')
-      ?.links.map((l) => ({
-        label: l.label,
-        href: l.href.startsWith('http') ? l.href : l.href,
-        note: '',
-      })) ?? [],
+    social: doc.footer.columns.find((c) => c.id === 'socials')?.links ?? [],
   };
 }
 

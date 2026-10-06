@@ -145,7 +145,7 @@ export function CmsPageDemos({ slug }: { slug: string }) {
     );
   }
 
-  if (slug === 'research' || slug === 'about' || slug === 'updates' || slug === 'socials') {
+  if (slug === 'research' || slug === 'about' || slug === 'updates') {
     return (
       <div className="mkt-page-demos">
         <TranslatePlayDemo compact />

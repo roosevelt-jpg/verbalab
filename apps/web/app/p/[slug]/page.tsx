@@ -69,30 +69,51 @@ export default async function CmsMarketingPage({ params }: { params: Promise<{ s
             <p className="mkt-lede" style={{ maxWidth: '46rem' }}>
               {page.body}
             </p>
-            <CmsPageDemos slug={page.slug} />
-            <ProductGuideKit page={page} />
-            {page.sections && page.sections.filter((s) => !s.kind || s.kind === 'content').length > 0 ? (
-              <div className="mkt-feature-grid" style={{ marginTop: '2.5rem' }}>
-                {page.sections
-                  .filter((s) => !s.kind || s.kind === 'content')
-                  .map((section) => (
-                  <article key={section.id} className="mkt-plain-card">
-                    {section.media?.imageUrl || section.media?.videoUrl ? (
-                      <div className="mkt-page-section-media">
-                        {section.media.videoUrl ? (
-                          <video src={section.media.videoUrl} controls playsInline />
-                        ) : (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img src={section.media.imageUrl} alt={section.media.alt ?? section.title} />
-                        )}
-                      </div>
-                    ) : null}
-                    <h3>{section.title}</h3>
-                    <p>{section.body}</p>
-                  </article>
-                ))}
-              </div>
-            ) : null}
+            {page.slug === 'socials' ? (
+              <ul className="mkt-socials-list" style={{ marginTop: '1.5rem', padding: 0, listStyle: 'none' }}>
+                {(doc.footer.columns.find((c) => c.id === 'socials')?.links ?? []).map((link) => {
+                  const external = link.href.startsWith('http');
+                  return (
+                    <li key={`${link.label}-${link.href}`} style={{ marginBottom: '0.65rem' }}>
+                      {external ? (
+                        <a href={link.href} rel="noreferrer" target="_blank">
+                          {link.label}
+                        </a>
+                      ) : (
+                        <Link href={link.href}>{link.label}</Link>
+                      )}
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : (
+              <>
+                <CmsPageDemos slug={page.slug} />
+                <ProductGuideKit page={page} />
+                {page.sections && page.sections.filter((s) => !s.kind || s.kind === 'content').length > 0 ? (
+                  <div className="mkt-feature-grid" style={{ marginTop: '2.5rem' }}>
+                    {page.sections
+                      .filter((s) => !s.kind || s.kind === 'content')
+                      .map((section) => (
+                      <article key={section.id} className="mkt-plain-card">
+                        {section.media?.imageUrl || section.media?.videoUrl ? (
+                          <div className="mkt-page-section-media">
+                            {section.media.videoUrl ? (
+                              <video src={section.media.videoUrl} controls playsInline />
+                            ) : (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={section.media.imageUrl} alt={section.media.alt ?? section.title} />
+                            )}
+                          </div>
+                        ) : null}
+                        <h3>{section.title}</h3>
+                        <p>{section.body}</p>
+                      </article>
+                    ))}
+                  </div>
+                ) : null}
+              </>
+            )}
           </div>
         </section>
 
