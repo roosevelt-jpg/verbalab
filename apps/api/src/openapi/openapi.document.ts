@@ -1300,6 +1300,74 @@ export const openApiDocument = {
         },
       },
     },
+    '/v1/connectors/platform': {
+      get: {
+        summary: 'List Lugemi Studio platform connector installers',
+        operationId: 'listPlatformConnectors',
+        parameters: [
+          {
+            name: 'category',
+            in: 'query',
+            required: false,
+            schema: { type: 'string' },
+            description: 'Filter by category (voice, messaging, crm, …)',
+          },
+        ],
+        responses: {
+          '200': { description: 'Platform connector registry' },
+        },
+      },
+    },
+    '/v1/connectors/platform/engine': {
+      get: {
+        summary: 'Platform connectors engine overview',
+        operationId: 'platformConnectorsEngine',
+        responses: {
+          '200': { description: 'Engine catalog with core Lugemi APIs' },
+        },
+      },
+    },
+    '/v1/connectors/platform/{id}': {
+      get: {
+        summary: 'Platform connector integration guide + SDK snippets',
+        operationId: 'getPlatformConnector',
+        parameters: [
+          { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+        ],
+        responses: {
+          '200': { description: 'Integration guide' },
+          '404': { description: 'Unknown connector' },
+        },
+      },
+    },
+    '/v1/connectors/platform/{id}/demo': {
+      post: {
+        summary: 'Soft-sandbox demo hook for a platform connector',
+        operationId: 'demoPlatformConnector',
+        parameters: [
+          { name: 'id', in: 'path', required: true, schema: { type: 'string' } },
+        ],
+        requestBody: {
+          required: false,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  text: { type: 'string' },
+                  source: { type: 'string' },
+                  target: { type: 'string' },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          '200': { description: 'Demo wiring tips + next API calls' },
+          '404': { description: 'Unknown connector' },
+        },
+      },
+    },
     '/v1/organization/members': {
       get: {
         summary: 'List organization members',

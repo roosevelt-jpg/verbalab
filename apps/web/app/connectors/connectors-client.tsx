@@ -62,6 +62,8 @@ export function ConnectorsClient() {
   const [filter, setFilter] = useState<ConnectorCategory | 'all'>('all');
   const [expandedId, setExpandedId] = useState<string | null>('twilio');
   const [drafts, setDrafts] = useState<Record<string, ConnectorInstall>>({});
+  const [demoBusyId, setDemoBusyId] = useState<string | null>(null);
+  const [demoResult, setDemoResult] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     const token = await getToken();
@@ -142,6 +144,27 @@ export function ConnectorsClient() {
     setMessage(`${def.name} disconnected.`);
   }
 
+  async function runDemoHook(def: ConnectorDef) {
+    setDemoBusyId(def.id);
+    setDemoResult(null);
+    setError(null);
+    try {
+      const res = await fetch(`${API_URL}/v1/connectors/platform/${def.id}/demo`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({ text: 'Hello', source: 'en', target: 'ak' }),
+      });
+      if (!res.ok) throw new Error(`Demo HTTP ${res.status}`);
+      const body = (await res.json()) as { message?: string; ok?: boolean };
+      setDemoResult(body.message ?? `${def.name} demo ok.`);
+      setMessage(body.message ?? `${def.name} demo ok.`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Demo failed');
+    } finally {
+      setDemoBusyId(null);
+    }
+  }
+
   async function saveSlackInstallation() {
     setBusy(true);
     setError(null);
@@ -182,9 +205,10 @@ export function ConnectorsClient() {
           <p className="lg-workspace-kicker">Single-integration plugin installer</p>
           <h1 className="lg-workspace-title">Connectors</h1>
           <p className="lg-workspace-lead">
-            Connect Lugemi Language Intelligence to voice platforms (Twilio, VAPI, Google Voice), video
-            generation (Higgsfield, Google Video, Runway), and office stacks with one API key or webhook
-            per connector — then demo dialect translate for trade, negotiate, and educate.
+            Connect Lugemi Language Intelligence to voice agents, contact centers, messaging and African
+            CPaaS, video generators, LMS, healthcare/gov portals, CRM, conferencing, game engines, CMS,
+            subtitle tools, and fintech — one API key or webhook per connector. Demo dialect translate for
+            trade, negotiate, and educate.
           </p>
           <p className="lg-workspace-sync">
             Voice/video sync clarity: Lugemi owns speech and dialect audio. Downstream platforms render
@@ -195,6 +219,7 @@ export function ConnectorsClient() {
           <strong>{connectedCount}</strong>
           <span>plugins connected</span>
           <Link href="/docs">API docs →</Link>
+          <Link href="/docs/connectors">Connector guides →</Link>
           <Link href="/playground?source=en&target=ak">Playground en→Twi →</Link>
           <Link href="/chat">Chat Studio demo →</Link>
         </aside>
@@ -325,6 +350,14 @@ export function ConnectorsClient() {
                 <div className="lg-connectors-install__body">
                   <p>{def.blurb}</p>
                   <p className="lg-connectors-docs">{def.docs}</p>
+                  <div className="lg-connectors-guide">
+                    <strong>Integration guide</strong>
+                    <p>{def.integrationGuide}</p>
+                    <p>
+                      Core Lugemi APIs: translate, TTS, STT, voice clone refs, realtime segments — see{' '}
+                      <Link href={`/docs/connectors#${def.id}`}>full guide + SDK snippets</Link>.
+                    </p>
+                  </div>
                   <p className="lg-connectors-env">
                     <span>Env</span> {def.envHint}
                   </p>
@@ -446,13 +479,27 @@ export function ConnectorsClient() {
                         Connect / Install
                       </button>
                     )}
+                    <button
+                      type="button"
+                      className="vl-btn vl-btn-secondary"
+                      disabled={demoBusyId === def.id}
+                      onClick={() => void runDemoHook(def)}
+                    >
+                      {demoBusyId === def.id ? 'Testing…' : 'Run demo hook'}
+                    </button>
                     <Link href={def.demoHref} className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none' }}>
                       {def.demoLabel}
+                    </Link>
+                    <Link href={`/docs/connectors#${def.id}`} className="lg-connectors-doclink">
+                      Integration guide
                     </Link>
                     <Link href="/docs" className="lg-connectors-doclink">
                       Full API docs
                     </Link>
                   </div>
+                  {demoResult && expandedId === def.id ? (
+                    <p className="lg-connectors-demo-result">{demoResult}</p>
+                  ) : null}
                 </div>
               ) : null}
             </li>

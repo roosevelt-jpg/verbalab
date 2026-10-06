@@ -1998,6 +1998,110 @@ export class Lugemi {
     return this.requestJson('/v1/connector-marketplace/engine', { method: 'GET' });
   }
 
+  /** Studio Connectors hub — platform installer registry. */
+  async platformConnectors(category?: string): Promise<{
+    product: string;
+    note: string;
+    categories: Array<{ id: string; label: string; lead: string }>;
+    apis: Record<string, { method: string; path: string; summary: string }>;
+    connectors: Array<{
+      id: string;
+      name: string;
+      category: string;
+      blurb: string;
+      fields: string[];
+      demoHref: string;
+      lugemiApis: string[];
+    }>;
+    console: string;
+    docs: string;
+    sdk: Record<string, string>;
+  }> {
+    const qs = category ? `?category=${encodeURIComponent(category)}` : '';
+    return this.requestJson(`/v1/connectors/platform${qs}`, { method: 'GET' });
+  }
+
+  async platformConnector(id: string): Promise<{
+    id: string;
+    name: string;
+    category: string;
+    blurb: string;
+    docs: string;
+    integrationGuide: string;
+    fields: string[];
+    envHint: string;
+    demoHref: string;
+    demoLabel: string;
+    lugemiApis: Array<{ method: string; path: string; summary: string }>;
+    apiReference: string;
+    sdk: { typescript: string; python: string };
+    demo: { method: string; path: string; summary: string };
+  }> {
+    return this.requestJson(`/v1/connectors/platform/${encodeURIComponent(id)}`, {
+      method: 'GET',
+    });
+  }
+
+  async platformConnectorDemo(
+    id: string,
+    input?: { text?: string; source?: string; target?: string },
+  ): Promise<{
+    connectorId: string;
+    name: string;
+    ok: boolean;
+    message: string;
+    sample: Record<string, unknown>;
+    next: Record<string, unknown>;
+    integrationGuide: string;
+    console: string;
+  }> {
+    return this.requestJson(`/v1/connectors/platform/${encodeURIComponent(id)}/demo`, {
+      method: 'POST',
+      body: JSON.stringify(input ?? {}),
+    });
+  }
+
+  /** First-party TTS synthesize (JSON → audio bytes). */
+  async ttsSynthesize(input: {
+    text: string;
+    voice?: string;
+    format?: string;
+    language?: string;
+  }): Promise<SpeechResponse> {
+    const response = await this.fetchImpl(`${this.baseUrl}/v1/tts/synthesize`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${this.apiKey}`,
+        'Content-Type': 'application/json',
+        Accept: '*/*',
+      },
+      body: JSON.stringify(input),
+    });
+    if (!response.ok) {
+      const body = (await response.json().catch(() => ({}))) as ErrorBody;
+      throw new LugemiError(
+        body.error?.message ?? `Request failed with status ${response.status}`,
+        body.error?.code ?? 'http_error',
+        response.status,
+        body.error?.request_id,
+      );
+    }
+    const audio = new Uint8Array(await response.arrayBuffer());
+    return {
+      audio,
+      mimeType: response.headers.get('content-type') ?? 'audio/mpeg',
+      provider: response.headers.get('x-lugemi-provider') ?? undefined,
+      voice: response.headers.get('x-lugemi-voice') ?? undefined,
+      characters: Number(response.headers.get('x-lugemi-characters') ?? '') || undefined,
+      watermarkApplied: response.headers.get('x-lugemi-watermark') === 'required',
+    };
+  }
+
+  /** List workspace voice clone refs (Clerk or org-scoped key). */
+  async listVoiceClones(): Promise<unknown> {
+    return this.requestJson('/v1/voice-clones', { method: 'GET' });
+  }
+
   async voiceLanguageMarketplaceEngine(): Promise<{
     product: string;
     note: string;

@@ -325,8 +325,8 @@ export function DashboardClient() {
                   Plugin installer
                 </h2>
                 <p>
-                  {connectedCount} connected · {voiceVideoConnected} voice/video · Twilio, VAPI, Google
-                  Voice, Higgsfield, Google Video, and office stacks — one API integration each.
+                  {connectedCount} connected · {voiceVideoConnected} voice/video · LiveKit, Retell,
+                  Africa&apos;s Talking, WhatsApp Cloud, CRM, LMS, and more — one API integration each.
                 </p>
                 <Link href="/connectors" className="vl-btn vl-btn-primary" style={{ textDecoration: 'none' }}>
                   Open installer

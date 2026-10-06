@@ -8,15 +8,22 @@ import {
 } from './connectors-catalog';
 
 describe('connectors-catalog', () => {
-  it('includes voice and video platform install targets', () => {
+  it('includes legacy and new high-value platform install targets', () => {
     const ids = PLATFORM_CONNECTORS.map((c) => c.id);
     expect(ids).toContain('twilio');
-    expect(ids).toContain('vapi');
-    expect(ids).toContain('google-voice');
-    expect(ids).toContain('higgsfield');
-    expect(ids).toContain('google-video');
-    expect(CONNECTOR_CATEGORIES.some((c) => c.id === 'voice')).toBe(true);
-    expect(CONNECTOR_CATEGORIES.some((c) => c.id === 'video')).toBe(true);
+    expect(ids).toContain('livekit');
+    expect(ids).toContain('retell');
+    expect(ids).toContain('africas-talking');
+    expect(ids).toContain('whatsapp-cloud');
+    expect(ids).toContain('amazon-connect');
+    expect(ids).toContain('salesforce');
+    expect(ids).toContain('moodle');
+    expect(ids).toContain('dhis2');
+    expect(ids).toContain('unity');
+    expect(ids).toContain('captionhub');
+    expect(ids).toContain('flutterwave');
+    expect(CONNECTOR_CATEGORIES.some((c) => c.id === 'messaging')).toBe(true);
+    expect(CONNECTOR_CATEGORIES.some((c) => c.id === 'fintech')).toBe(true);
   });
 
   it('counts connected installs and mirrors chat flags', () => {
@@ -33,11 +40,14 @@ describe('connectors-catalog', () => {
     });
   });
 
-  it('gives every connector a demo path and docs blurb', () => {
+  it('gives every connector a demo path, docs blurb, and integration guide', () => {
     for (const c of PLATFORM_CONNECTORS) {
       expect(c.docs.length).toBeGreaterThan(20);
+      expect(c.integrationGuide.length).toBeGreaterThan(20);
       expect(c.demoHref.startsWith('/')).toBe(true);
       expect(c.envHint.length).toBeGreaterThan(5);
+      expect(c.integrationGuide).not.toMatch(/ADR-\d+/i);
+      expect(c.docs).not.toMatch(/\b(shipped|partial)\b/i);
     }
   });
 });

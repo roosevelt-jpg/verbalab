@@ -29,6 +29,17 @@ const speech = await client.speech({ text: 'Hello', voice: 'alloy' });
 // speech.audio is Uint8Array
 ```
 
-Also: `chat`, `embeddings`, `languages`, `ocr`, `transcribe`, `interpret`, `voices`, `listJobs`, `getJob`.
+Also: `chat`, `embeddings`, `languages`, `ocr`, `transcribe`, `interpret`, `voices`, `listJobs`, `getJob`,
+`platformConnectors`, `platformConnector`, `platformConnectorDemo`, `ttsSynthesize`, `listVoiceClones`.
+
+Platform connector guides (Studio Connectors hub):
+
+```ts
+const registry = await client.platformConnectors();
+const guide = await client.platformConnector('livekit');
+await client.platformConnectorDemo('africas-talking', { text: 'Hello', target: 'ak' });
+```
+
+Python stubs live in `packages/sdk-python`.
 
 See repo `.env.example` for API credentials.

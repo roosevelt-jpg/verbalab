@@ -1,9 +1,9 @@
 /**
- * Shared Lugemi connector / plugin catalog for Workspace Console + Chat Studio.
- * Keep in sync with apps/api/src/connectors/platform-connectors.catalog.ts.
+ * Lugemi Studio Connectors hub — platform installer registry.
+ * Vendor names are integration targets. Lugemi is first-party speech + language.
  */
 
-export type ConnectorCategory =
+export type PlatformConnectorCategory =
   | 'voice'
   | 'video'
   | 'messaging'
@@ -21,36 +21,25 @@ export type ConnectorCategory =
   | 'storage'
   | 'email';
 
-export type ConnectorField = 'apiKey' | 'webhookUrl' | 'accountSid' | 'projectId';
+export type PlatformConnectorField = 'apiKey' | 'webhookUrl' | 'accountSid' | 'projectId';
 
-export type ConnectorDef = {
-  id: string;
-  name: string;
-  category: ConnectorCategory;
-  blurb: string;
-  docs: string;
-  integrationGuide: string;
-  demoHref: string;
-  demoLabel: string;
-  fields: ConnectorField[];
-  envHint: string;
-  href?: string;
-  liveStatus?: 'slack';
+export const LUGEMI_PLATFORM_APIS = {
+  translate: { method: 'POST', path: '/v1/translate', summary: 'Translate text between registry languages (Africa-first dialects).' },
+  tts: { method: 'POST', path: '/v1/tts/synthesize', summary: 'Synthesize speech with Lugemi first-party voices (legacy: /v1/audio/speech).' },
+  stt: { method: 'POST', path: '/v1/speech/recognize', summary: 'Speech-to-text with timestamps (legacy: /v1/audio/transcriptions).' },
+  voiceClone: { method: 'GET', path: '/v1/voice-clones', summary: 'List workspace voice clone refs for TTS voice=clone:{id}.' },
+  realtimeSegments: { method: 'POST', path: '/v1/speech/stream', summary: 'Realtime STT segment stream for live agents and captions.' },
+  translateStream: { method: 'POST', path: '/v1/translate/stream', summary: 'SSE translate segments for live caption and agent loops.' },
+  ttsStream: { method: 'POST', path: '/v1/tts/stream', summary: 'Chunked TTS stream for low-latency agent replies.' },
+} as const;
+
+export type PlatformConnectorEntry = {
+  id: string; name: string; category: PlatformConnectorCategory; blurb: string; docs: string;
+  integrationGuide: string; demoHref: string; demoLabel: string; fields: PlatformConnectorField[];
+  envHint: string; lugemiApis: Array<keyof typeof LUGEMI_PLATFORM_APIS>; webhookHint?: string;
 };
 
-export type ConnectorInstall = {
-  connected: boolean;
-  apiKey?: string;
-  webhookUrl?: string;
-  accountSid?: string;
-  projectId?: string;
-  connectedAt?: number;
-};
-
-export const PLATFORM_CONNECTOR_KEY = 'lugemi_platform_connectors_v1';
-export const CHAT_CONNECTOR_KEY = 'lugemi_chat_connectors_v1';
-
-export const CONNECTOR_CATEGORIES: { id: ConnectorCategory; label: string; lead: string }[] = [
+export const PLATFORM_CONNECTOR_CATEGORIES: { id: PlatformConnectorCategory; label: string; lead: string }[] = [
   { id: 'voice', label: 'Voice platforms', lead: 'Route Lugemi speech + dialect translate into telephony and voice agent stacks with one API key.' },
   { id: 'video', label: 'Video generation', lead: 'Drive lip-sync and localized video from Lugemi voice without stacking external audio noise.' },
   { id: 'messaging', label: 'Messaging & CPaaS', lead: 'WhatsApp-class and African USSD/SMS stacks that need dialect-aware reply audio and text.' },
@@ -69,7 +58,7 @@ export const CONNECTOR_CATEGORIES: { id: ConnectorCategory; label: string; lead:
   { id: 'email', label: 'Email', lead: 'Draft replies in the recipient language — Twi, Yorùbá, Kiswahili, and more.' },
 ];
 
-export const PLATFORM_CONNECTORS: ConnectorDef[] = [
+export const PLATFORM_CONNECTOR_REGISTRY: PlatformConnectorEntry[] = [
   {
     id: 'twilio', name: 'Twilio', category: 'voice',
     blurb: 'PSTN / WhatsApp voice with Lugemi realtime dialect translate.',
@@ -77,7 +66,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'On each turn call Lugemi STT → translate → TTS (or /v1/interpret). Use voice=clone:{id} for brand voice. Demo: POST /v1/connectors/platform/twilio/demo.',
     demoHref: '/playground?source=en&target=ak', demoLabel: 'Try en→Twi API playground',
     fields: ['accountSid', 'apiKey', 'webhookUrl'], envHint: 'TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN — configure in deploy env for production.',
-    href: '/connectors#twilio',
+    lugemiApis: ['stt', 'translate', 'tts', 'realtimeSegments', 'voiceClone'], webhookHint: '/v1/voice/twilio/inbound',
   },
   {
     id: 'vapi', name: 'VAPI', category: 'voice',
@@ -86,7 +75,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Custom STT/TTS → /v1/speech/stream and /v1/tts/stream; localize prompts with /v1/translate. Keep clone refs on Lugemi.',
     demoHref: '/chat', demoLabel: 'Open Chat Studio live demo',
     fields: ['apiKey', 'webhookUrl'], envHint: 'VAPI_API_KEY — set in env for live calls; soft-sandbox works without it.',
-    href: '/connectors#vapi',
+    lugemiApis: ['realtimeSegments', 'ttsStream', 'translate', 'voiceClone'],
   },
   {
     id: 'google-voice', name: 'Google Voice', category: 'voice',
@@ -95,7 +84,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Use /v1/interpret for bilingual turns on forwarded calls. Persist projectId for OAuth.',
     demoHref: '/interpret', demoLabel: 'Open Interpreter',
     fields: ['projectId', 'apiKey', 'webhookUrl'], envHint: 'GOOGLE_VOICE_PROJECT_ID, GOOGLE_VOICE_API_KEY — configure env later for live routing.',
-    href: '/connectors#google-voice',
+    lugemiApis: ['stt', 'translate', 'tts'],
   },
   {
     id: 'vonage', name: 'Vonage', category: 'voice',
@@ -104,7 +93,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'On NCCO answer events, POST audio to /v1/speech/recognize, translate, then return Lugemi TTS.',
     demoHref: '/docs', demoLabel: 'Read voice API docs',
     fields: ['apiKey', 'webhookUrl'], envHint: 'VONAGE_API_KEY, VONAGE_API_SECRET — optional until go-live.',
-    href: '/connectors#vonage',
+    lugemiApis: ['stt', 'translate', 'tts', 'realtimeSegments'],
   },
   {
     id: 'livekit', name: 'LiveKit', category: 'voice',
@@ -113,7 +102,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'In LiveKit workers stream frames to /v1/speech/stream, translate if needed, speak with /v1/tts/stream using own:* or clone:{id}.',
     demoHref: '/playground?source=en&target=sw', demoLabel: 'Demo en→Kiswahili speech path',
     fields: ['apiKey', 'webhookUrl'], envHint: 'LIVEKIT_API_KEY, LIVEKIT_API_SECRET',
-    href: '/connectors#livekit',
+    lugemiApis: ['realtimeSegments', 'ttsStream', 'translate', 'voiceClone'],
   },
   {
     id: 'retell', name: 'Retell', category: 'voice',
@@ -122,7 +111,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Create agents with custom STT/TTS URLs that proxy to Lugemi. Use /v1/voice-clones for brand voice refs.',
     demoHref: '/voice', demoLabel: 'Open voice agents console',
     fields: ['apiKey', 'webhookUrl'], envHint: 'RETELL_API_KEY',
-    href: '/connectors#retell',
+    lugemiApis: ['stt', 'tts', 'translate', 'voiceClone', 'realtimeSegments'],
   },
   {
     id: 'pipecat', name: 'Pipecat', category: 'voice',
@@ -131,7 +120,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Wire Pipecat STT/TTS services to Lugemi HTTP streaming endpoints for barge-in.',
     demoHref: '/docs/connectors#pipecat', demoLabel: 'Pipecat integration guide',
     fields: ['apiKey', 'webhookUrl'], envHint: 'LUGEMI_API_KEY (Pipecat worker env)',
-    href: '/connectors#pipecat',
+    lugemiApis: ['realtimeSegments', 'ttsStream', 'translateStream', 'voiceClone'],
   },
   {
     id: 'telnyx', name: 'Telnyx', category: 'voice',
@@ -140,7 +129,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'On call events, forward audio to Lugemi STT and speak replies from Lugemi TTS.',
     demoHref: '/voice', demoLabel: 'Open voice console',
     fields: ['apiKey', 'webhookUrl'], envHint: 'TELNYX_API_KEY',
-    href: '/connectors#telnyx',
+    lugemiApis: ['stt', 'tts', 'translate', 'realtimeSegments'],
   },
   {
     id: 'higgsfield', name: 'Higgsfield', category: 'video',
@@ -149,7 +138,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Generate dialogue with Lugemi TTS, then attach audio as the sole voice bed.',
     demoHref: '/audio', demoLabel: 'Generate Lugemi voice first',
     fields: ['apiKey', 'webhookUrl'], envHint: 'HIGGSFIELD_API_KEY — configure env when ready for production renders.',
-    href: '/connectors#higgsfield',
+    lugemiApis: ['translate', 'tts', 'voiceClone'],
   },
   {
     id: 'google-video', name: 'Google Video', category: 'video',
@@ -158,7 +147,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Translate scripts, synthesize with Lugemi, then pass audio to Google video jobs.',
     demoHref: '/translate?source=en&target=ak', demoLabel: 'Translate en→Twi for captions',
     fields: ['projectId', 'apiKey'], envHint: 'GOOGLE_VIDEO_PROJECT_ID, GOOGLE_VIDEO_API_KEY — requires credentials before use.',
-    href: '/connectors#google-video',
+    lugemiApis: ['translate', 'tts'],
   },
   {
     id: 'runway', name: 'Runway', category: 'video',
@@ -167,7 +156,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Call Lugemi TTS and feed Runway renders with Lugemi-only audio.',
     demoHref: '/playground', demoLabel: 'Test speech timing via playground',
     fields: ['apiKey'], envHint: 'RUNWAY_API_KEY — optional until creative pipeline is live.',
-    href: '/connectors#runway',
+    lugemiApis: ['tts', 'stt', 'translate'],
   },
   {
     id: 'luma', name: 'Luma', category: 'video',
@@ -176,7 +165,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Translate scripts, synthesize Lugemi audio, then render — Lugemi owns speech.',
     demoHref: '/audio', demoLabel: 'Generate narration first',
     fields: ['apiKey'], envHint: 'LUMA_API_KEY',
-    href: '/connectors#luma',
+    lugemiApis: ['translate', 'tts', 'voiceClone'],
   },
   {
     id: 'pika', name: 'Pika', category: 'video',
@@ -185,7 +174,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Validate dialect lines in Playground, then attach Lugemi audio to Pika renders.',
     demoHref: '/playground?source=en&target=ak', demoLabel: 'Validate dialect line',
     fields: ['apiKey', 'webhookUrl'], envHint: 'PIKA_API_KEY',
-    href: '/connectors#pika',
+    lugemiApis: ['tts', 'translate', 'stt'],
   },
   {
     id: 'whatsapp-cloud', name: 'WhatsApp Cloud API', category: 'messaging',
@@ -194,7 +183,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Inbound text → translate; voice notes → STT → translate → TTS reply note.',
     demoHref: '/translate?source=en&target=ha', demoLabel: 'Demo en→Hausa translate',
     fields: ['projectId', 'apiKey', 'webhookUrl'], envHint: 'WHATSAPP_CLOUD_TOKEN, WHATSAPP_PHONE_NUMBER_ID',
-    href: '/connectors#whatsapp-cloud',
+    lugemiApis: ['translate', 'stt', 'tts', 'voiceClone'],
   },
   {
     id: 'africas-talking', name: 'Africa\'s Talking', category: 'messaging',
@@ -203,7 +192,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'USSD/IVR prompts via translate + TTS; WhatsApp bots reuse the same dialect path.',
     demoHref: '/playground?source=en&target=ak', demoLabel: 'Try en→Twi playground',
     fields: ['accountSid', 'apiKey', 'webhookUrl'], envHint: 'AT_USERNAME, AT_API_KEY',
-    href: '/connectors#africas-talking',
+    lugemiApis: ['translate', 'tts', 'stt', 'realtimeSegments'],
   },
   {
     id: 'infobip', name: 'Infobip', category: 'messaging',
@@ -212,7 +201,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Localize templates before send; inbound media through /v1/speech/recognize.',
     demoHref: '/translate?source=en&target=yo', demoLabel: 'Demo en→Yorùbá',
     fields: ['apiKey', 'webhookUrl'], envHint: 'INFOBIP_API_KEY, INFOBIP_BASE_URL',
-    href: '/connectors#infobip',
+    lugemiApis: ['translate', 'tts', 'stt'],
   },
   {
     id: 'amazon-connect', name: 'Amazon Connect', category: 'contact-center',
@@ -221,7 +210,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Lambda: recordings → STT; IVR prompts from TTS; agent assist via translate.',
     demoHref: '/interpret', demoLabel: 'Try interpret STT→MT→TTS',
     fields: ['projectId', 'apiKey', 'webhookUrl'], envHint: 'AMAZON_CONNECT_INSTANCE_ID, AWS_REGION',
-    href: '/connectors#amazon-connect',
+    lugemiApis: ['stt', 'translate', 'tts', 'realtimeSegments'],
   },
   {
     id: 'genesys', name: 'Genesys Cloud', category: 'contact-center',
@@ -230,7 +219,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Architect data actions → Lugemi translate/TTS; captions via speech + translate streams.',
     demoHref: '/chat', demoLabel: 'Chat Studio agent assist demo',
     fields: ['apiKey', 'webhookUrl', 'projectId'], envHint: 'GENESYS_CLIENT_ID, GENESYS_CLIENT_SECRET',
-    href: '/connectors#genesys',
+    lugemiApis: ['stt', 'translate', 'tts', 'realtimeSegments', 'translateStream'],
   },
   {
     id: 'salesforce', name: 'Salesforce', category: 'crm',
@@ -239,7 +228,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Flow/Apex: translate case comments; STT call recordings; dialect fields on Contact.',
     demoHref: '/glossary', demoLabel: 'Open glossary for CRM terms',
     fields: ['apiKey', 'projectId', 'webhookUrl'], envHint: 'SALESFORCE_CLIENT_ID, SALESFORCE_CLIENT_SECRET',
-    href: '/connectors#salesforce',
+    lugemiApis: ['translate', 'stt', 'tts'],
   },
   {
     id: 'hubspot', name: 'HubSpot', category: 'crm',
@@ -248,7 +237,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Localize ticket replies; transcribe calls before CRM note writeback.',
     demoHref: '/chat', demoLabel: 'Draft multilingual reply',
     fields: ['apiKey', 'webhookUrl'], envHint: 'HUBSPOT_PRIVATE_APP_TOKEN',
-    href: '/connectors#hubspot',
+    lugemiApis: ['translate', 'stt'],
   },
   {
     id: 'moodle', name: 'Moodle', category: 'lms',
@@ -257,7 +246,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Batch course strings with /v1/localize; dub lectures STT → translate → TTS.',
     demoHref: '/translate?source=en&target=sw', demoLabel: 'Localize lesson en→Kiswahili',
     fields: ['apiKey', 'webhookUrl'], envHint: 'MOODLE_TOKEN, MOODLE_BASE_URL',
-    href: '/connectors#moodle',
+    lugemiApis: ['translate', 'stt', 'tts'],
   },
   {
     id: 'canvas-lms', name: 'Canvas LMS', category: 'lms',
@@ -266,7 +255,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Translate assignment HTML; generate Lugemi voice beds and SRT for video modules.',
     demoHref: '/audio', demoLabel: 'Generate lesson narration',
     fields: ['apiKey', 'projectId', 'webhookUrl'], envHint: 'CANVAS_ACCESS_TOKEN, CANVAS_ACCOUNT_ID',
-    href: '/connectors#canvas-lms',
+    lugemiApis: ['translate', 'tts', 'stt'],
   },
   {
     id: 'dhis2', name: 'DHIS2', category: 'healthcare',
@@ -275,7 +264,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Localize program SMS; voice reminders via TTS; human review for clinical wording.',
     demoHref: '/language-integrity', demoLabel: 'Language integrity console',
     fields: ['apiKey', 'webhookUrl'], envHint: 'DHIS2_TOKEN, DHIS2_BASE_URL',
-    href: '/connectors#dhis2',
+    lugemiApis: ['translate', 'tts'],
   },
   {
     id: 'openmrs', name: 'OpenMRS', category: 'healthcare',
@@ -284,7 +273,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Patient education leaflets + clinic IVR/WhatsApp voice notes via Lugemi.',
     demoHref: '/audio', demoLabel: 'Synthesize patient education audio',
     fields: ['apiKey', 'webhookUrl'], envHint: 'OPENMRS_USER, OPENMRS_PASS',
-    href: '/connectors#openmrs',
+    lugemiApis: ['translate', 'tts', 'stt', 'voiceClone'],
   },
   {
     id: 'zoom', name: 'Zoom', category: 'conferencing',
@@ -293,7 +282,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Meeting audio → speech/translate streams → captions; optional TTS interpret channel.',
     demoHref: '/interpret', demoLabel: 'Open live interpreter',
     fields: ['projectId', 'apiKey', 'webhookUrl'], envHint: 'ZOOM_CLIENT_ID, ZOOM_CLIENT_SECRET',
-    href: '/connectors#zoom',
+    lugemiApis: ['realtimeSegments', 'translateStream', 'tts'],
   },
   {
     id: 'daily', name: 'Daily', category: 'conferencing',
@@ -302,7 +291,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Daily bot forwards PCM to /v1/speech/stream and plays /v1/tts/stream replies.',
     demoHref: '/chat', demoLabel: 'Chat Studio live demo',
     fields: ['apiKey', 'webhookUrl'], envHint: 'DAILY_API_KEY',
-    href: '/connectors#daily',
+    lugemiApis: ['realtimeSegments', 'ttsStream', 'translate'],
   },
   {
     id: 'unity', name: 'Unity', category: 'gaming',
@@ -311,7 +300,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Game server → /v1/tts/synthesize or stream; subtitle banks via /v1/localize.',
     demoHref: '/audio', demoLabel: 'Preview Lugemi game voices',
     fields: ['projectId', 'apiKey'], envHint: 'UNITY_LUGEMI_PROXY_URL, LUGEMI_API_KEY',
-    href: '/connectors#unity',
+    lugemiApis: ['tts', 'ttsStream', 'translate', 'voiceClone'],
   },
   {
     id: 'unreal', name: 'Unreal Engine', category: 'gaming',
@@ -320,7 +309,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'HTTP via trusted backend to Lugemi TTS/STT; clone enrollment stays on Lugemi.',
     demoHref: '/voice-cloning', demoLabel: 'Open voice cloning',
     fields: ['apiKey', 'projectId'], envHint: 'UNREAL_LUGEMI_PROXY_URL, LUGEMI_API_KEY',
-    href: '/connectors#unreal',
+    lugemiApis: ['tts', 'voiceClone', 'translate'],
   },
   {
     id: 'contentful', name: 'Contentful', category: 'cms',
@@ -329,7 +318,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Publish webhook → translate/localize fields; optional TTS asset for spoken articles.',
     demoHref: '/localize', demoLabel: 'Open localize console',
     fields: ['apiKey', 'projectId', 'webhookUrl'], envHint: 'CONTENTFUL_MANAGEMENT_TOKEN, CONTENTFUL_SPACE_ID',
-    href: '/connectors#contentful',
+    lugemiApis: ['translate', 'tts'],
   },
   {
     id: 'wordpress', name: 'WordPress', category: 'cms',
@@ -338,7 +327,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Translate posts; featured audio via TTS; caption media via STT.',
     demoHref: '/translate', demoLabel: 'Open translate',
     fields: ['apiKey', 'webhookUrl'], envHint: 'WORDPRESS_APP_PASSWORD, WORDPRESS_SITE_URL',
-    href: '/connectors#wordpress',
+    lugemiApis: ['translate', 'tts', 'stt'],
   },
   {
     id: 'captionhub', name: 'CaptionHub', category: 'localization',
@@ -347,7 +336,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'STT + translate cues + Lugemi TTS dubs; CaptionHub remains the editorial shell.',
     demoHref: '/playground', demoLabel: 'Test caption translate path',
     fields: ['apiKey', 'webhookUrl'], envHint: 'CAPTIONHUB_API_KEY',
-    href: '/connectors#captionhub',
+    lugemiApis: ['stt', 'translate', 'tts'],
   },
   {
     id: 'phrase', name: 'Phrase', category: 'localization',
@@ -356,7 +345,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Export Phrase jobs → /v1/localize; glossary sync via /v1/glossary/terms.',
     demoHref: '/glossary', demoLabel: 'Open glossary',
     fields: ['apiKey', 'projectId'], envHint: 'PHRASE_ACCESS_TOKEN, PHRASE_PROJECT_ID',
-    href: '/connectors#phrase',
+    lugemiApis: ['translate'],
   },
   {
     id: 'flutterwave', name: 'Flutterwave', category: 'fintech',
@@ -365,7 +354,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Charge webhooks → localized SMS/WhatsApp + optional TTS receipt audio.',
     demoHref: '/translate?source=en&target=yo', demoLabel: 'Localize payment SMS en→Yorùbá',
     fields: ['apiKey', 'webhookUrl'], envHint: 'FLUTTERWAVE_SECRET_KEY',
-    href: '/connectors#flutterwave',
+    lugemiApis: ['translate', 'tts'],
   },
   {
     id: 'paystack', name: 'Paystack', category: 'fintech',
@@ -374,7 +363,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Translate settlement/OTP messages; IVR confirmations via Lugemi TTS + your CPaaS.',
     demoHref: '/translate?source=en&target=ha', demoLabel: 'Localize alerts en→Hausa',
     fields: ['apiKey', 'webhookUrl'], envHint: 'PAYSTACK_SECRET_KEY',
-    href: '/connectors#paystack',
+    lugemiApis: ['translate', 'tts'],
   },
   {
     id: 'slack', name: 'Slack', category: 'chat',
@@ -383,7 +372,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Slash Request URL → POST /v1/connectors/slack/commands; default dialect per Team ID.',
     demoHref: '/connectors#slack', demoLabel: 'Configure Slack install',
     fields: [], envHint: 'SLACK_SIGNING_SECRET, SLACK_BOT_TOKEN',
-    href: '/connectors#slack', liveStatus: 'slack',
+    lugemiApis: ['translate'],
   },
   {
     id: 'teams', name: 'Microsoft Teams', category: 'chat',
@@ -392,7 +381,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Meeting audio → /v1/speech/stream + /v1/translate/stream → Graph captions.',
     demoHref: '/chat', demoLabel: 'Try Chat Studio plugins',
     fields: ['webhookUrl', 'apiKey'], envHint: 'TEAMS_APP_ID, TEAMS_APP_SECRET — configure env later.',
-    href: '/connectors#teams',
+    lugemiApis: ['realtimeSegments', 'translateStream', 'tts'],
   },
   {
     id: 'gmail', name: 'Gmail', category: 'email',
@@ -401,7 +390,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Draft body through /v1/translate before send.',
     demoHref: '/translate?source=en&target=yo', demoLabel: 'Demo en→Yorùbá translate',
     fields: ['apiKey'], envHint: 'GOOGLE_OAUTH_CLIENT_ID — configure env later.',
-    href: '/connectors#gmail',
+    lugemiApis: ['translate'],
   },
   {
     id: 'outlook', name: 'Outlook', category: 'email',
@@ -410,7 +399,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Localize subject/body with /v1/translate; glossary via workspace TM.',
     demoHref: '/chat', demoLabel: 'Draft in Chat Studio',
     fields: ['apiKey'], envHint: 'MS_GRAPH_CLIENT_ID, MS_GRAPH_CLIENT_SECRET',
-    href: '/connectors#outlook',
+    lugemiApis: ['translate'],
   },
   {
     id: 'gdrive', name: 'Google Drive', category: 'storage',
@@ -419,7 +408,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Watch folders → /v1/documents/translate or knowledge upload.',
     demoHref: '/chat', demoLabel: 'Upload in Chat Studio',
     fields: ['apiKey', 'projectId'], envHint: 'GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON',
-    href: '/connectors#gdrive',
+    lugemiApis: ['translate'],
   },
   {
     id: 'onedrive', name: 'OneDrive', category: 'storage',
@@ -428,7 +417,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Enqueue document_translate jobs; return localized copies to the folder.',
     demoHref: '/documents', demoLabel: 'Open Documents',
     fields: ['apiKey'], envHint: 'ONEDRIVE_CLIENT_ID',
-    href: '/connectors#onedrive',
+    lugemiApis: ['translate'],
   },
   {
     id: 'dropbox', name: 'Dropbox', category: 'storage',
@@ -437,7 +426,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Webhook file adds → STT for media, translate for text.',
     demoHref: '/chat', demoLabel: 'Attach files in Chat Studio',
     fields: ['apiKey', 'webhookUrl'], envHint: 'DROPBOX_ACCESS_TOKEN',
-    href: '/connectors#dropbox',
+    lugemiApis: ['stt', 'translate', 'tts'],
   },
   {
     id: 'notion', name: 'Notion', category: 'office',
@@ -446,7 +435,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Export blocks → translate/localize → write localized pages back.',
     demoHref: '/knowledge', demoLabel: 'Open Knowledge',
     fields: ['apiKey'], envHint: 'NOTION_TOKEN',
-    href: '/connectors#notion',
+    lugemiApis: ['translate'],
   },
   {
     id: 'sheets', name: 'Google Sheets', category: 'office',
@@ -455,7 +444,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Batch cells through /v1/translate; upsert glossary terms.',
     demoHref: '/glossary', demoLabel: 'Open Glossary',
     fields: ['apiKey', 'projectId'], envHint: 'GOOGLE_SHEETS_SERVICE_ACCOUNT',
-    href: '/connectors#sheets',
+    lugemiApis: ['translate'],
   },
   {
     id: 'docs', name: 'Google Docs', category: 'office',
@@ -464,7 +453,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'document_translate jobs; official filings on human review.',
     demoHref: '/translate/formats', demoLabel: 'Document formats',
     fields: ['apiKey', 'projectId'], envHint: 'GOOGLE_DOCS_API_KEY',
-    href: '/connectors#docs',
+    lugemiApis: ['translate'],
   },
   {
     id: 'box', name: 'Box', category: 'storage',
@@ -473,60 +462,92 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     integrationGuide: 'Enterprise media → Lugemi STT/TTS/translate with audit events.',
     demoHref: '/documents', demoLabel: 'Open Documents',
     fields: ['apiKey'], envHint: 'BOX_CLIENT_ID, BOX_CLIENT_SECRET',
-    href: '/connectors#box',
+    lugemiApis: ['stt', 'translate', 'tts'],
   },
 ];
 
-export const FIELD_LABELS: Record<ConnectorField, string> = {
-  apiKey: 'API key',
-  webhookUrl: 'Webhook URL',
-  accountSid: 'Account SID',
-  projectId: 'Project ID',
-};
-
-export function loadInstalls(): Record<string, ConnectorInstall> {
-  if (typeof window === 'undefined') return {};
-  try {
-    const raw = window.localStorage.getItem(PLATFORM_CONNECTOR_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw) as Record<string, ConnectorInstall>;
-      if (parsed && typeof parsed === 'object') return parsed;
-    }
-    const legacy = window.localStorage.getItem(CHAT_CONNECTOR_KEY);
-    if (legacy) {
-      const flags = JSON.parse(legacy) as Record<string, boolean>;
-      const migrated: Record<string, ConnectorInstall> = {};
-      for (const [id, on] of Object.entries(flags)) {
-        if (on) migrated[id] = { connected: true, connectedAt: Date.now() };
-      }
-      saveInstalls(migrated);
-      return migrated;
-    }
-  } catch {
-    /* ignore */
-  }
-  return {};
+export function findPlatformConnector(id: string): PlatformConnectorEntry | undefined {
+  const normalized = id.trim().toLowerCase();
+  return PLATFORM_CONNECTOR_REGISTRY.find((c) => c.id === normalized);
 }
 
-export function saveInstalls(map: Record<string, ConnectorInstall>) {
-  if (typeof window === 'undefined') return;
-  window.localStorage.setItem(PLATFORM_CONNECTOR_KEY, JSON.stringify(map));
-  const flags: Record<string, boolean> = {};
-  for (const [id, row] of Object.entries(map)) {
-    flags[id] = Boolean(row.connected);
-  }
-  window.localStorage.setItem(CHAT_CONNECTOR_KEY, JSON.stringify(flags));
+export function platformConnectorsEngine() {
+  return {
+    product: 'Lugemi Platform Connectors',
+    note: 'Studio Connectors hub registry for one-click plugin installs. Lugemi is first-party language intelligence; listed vendors are integration targets only.',
+    categories: PLATFORM_CONNECTOR_CATEGORIES,
+    apis: LUGEMI_PLATFORM_APIS,
+    connectors: PLATFORM_CONNECTOR_REGISTRY.map((c) => ({
+      id: c.id, name: c.name, category: c.category, blurb: c.blurb, fields: c.fields,
+      demoHref: c.demoHref, lugemiApis: c.lugemiApis,
+    })),
+    console: '/connectors',
+    docs: '/docs/connectors',
+    sdk: {
+      typescript: '@lugemi/sdk → platformConnectors(), platformConnector(id), platformConnectorDemo(id)',
+      python: 'packages/sdk-python → Lugemi.platform_connectors()',
+    },
+  };
 }
 
-export function connectedFlags(map: Record<string, ConnectorInstall>): Record<string, boolean> {
-  const flags: Record<string, boolean> = {};
-  for (const [id, row] of Object.entries(map)) {
-    flags[id] = Boolean(row.connected);
-  }
-  return flags;
-}
+export function platformConnectorGuide(entry: PlatformConnectorEntry) {
+  const apiLines = entry.lugemiApis
+    .map((key) => {
+      const api = LUGEMI_PLATFORM_APIS[key];
+      return `${api.method} ${api.path} — ${api.summary}`;
+    })
+    .join('\n');
+  const tsSnippet = `import { Lugemi } from '@lugemi/sdk';
 
-export function countConnected(map: Record<string, ConnectorInstall>) {
-  return Object.values(map).filter((r) => r.connected).length;
+const client = new Lugemi({
+  apiKey: process.env.LUGEMI_API_KEY!,
+  baseUrl: process.env.LUGEMI_BASE_URL,
+});
+
+// ${entry.name} → Lugemi language path
+const translated = await client.translate({
+  text: 'Hello',
+  source: 'en',
+  target: 'ak',
+});
+
+const speech = await client.speech({
+  text: translated.text,
+  voice: 'own:ak-gh-female', // or clone:{id}
+});
+
+const guide = await client.platformConnector('${entry.id}');
+await client.platformConnectorDemo('${entry.id}', { text: 'Hello', target: 'ak' });`;
+
+  const pySnippet = `from lugemi import Lugemi
+
+client = Lugemi(api_key=os.environ["LUGEMI_API_KEY"])
+
+translated = client.translate(text="Hello", source="en", target="ak")
+audio = client.speech(text=translated["text"], voice="own:ak-gh-female")
+guide = client.platform_connector("${entry.id}")
+demo = client.platform_connector_demo("${entry.id}", text="Hello", target="ak")`;
+
+  return {
+    id: entry.id,
+    name: entry.name,
+    category: entry.category,
+    blurb: entry.blurb,
+    docs: entry.docs,
+    integrationGuide: entry.integrationGuide,
+    fields: entry.fields,
+    envHint: entry.envHint,
+    demoHref: entry.demoHref,
+    demoLabel: entry.demoLabel,
+    webhookHint: entry.webhookHint ?? null,
+    lugemiApis: entry.lugemiApis.map((key) => LUGEMI_PLATFORM_APIS[key]),
+    apiReference: apiLines,
+    sdk: { typescript: tsSnippet, python: pySnippet },
+    demo: {
+      method: 'POST',
+      path: `/v1/connectors/platform/${entry.id}/demo`,
+      summary: 'Soft-sandbox demo: translate sample text and echo connector wiring tips.',
+    },
+  };
 }
 
