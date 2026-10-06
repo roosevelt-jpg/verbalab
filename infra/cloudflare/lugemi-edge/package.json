@@ -1,0 +1,9 @@
+{
+  "name": "lugemi-edge",
+  "private": true,
+  "description": "Cloudflare Worker BFF scaffold for Lugemi API edge cache — not part of the pnpm workspace deploy graph.",
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "dev": "wrangler dev"
+  }
+}

@@ -16,6 +16,8 @@ Domain is already on **Cloudflare Registrar**. This note maps **current free / i
 
 Keep Nest on **Fly** (and optionally web on **Vercel**). Use Cloudflare as DNS/CDN/security and optional storage — not as a forced full rewrite to Pages/Workers.
 
+**Workers deep-dive:** ranked free-tier uses (catalog edge cache, Turnstile at edge, `CF-IPCountry` residency forward, thin BFF, bot shield), env bindings, and a `lugemi-edge` wrangler sketch → [`docs/cloudflare-workers.md`](./cloudflare-workers.md).
+
 ## Recommendation table
 
 | Product | Free? | How it helps Lugemi | Setup effort |
@@ -27,7 +29,7 @@ Keep Nest on **Fly** (and optionally web on **Vercel**). Use Cloudflare as DNS/C
 | **WAF** | Partial free | **Free Managed Ruleset** (high-severity vulns) + custom rules + **1** IP rate-limit rule. Full Cloudflare/OWASP managed rulesets need Pro+ | Low — leave Free Managed Ruleset on; add 1 rate-limit on `/v1/*` if needed |
 | **Bot Fight Mode** | Basic on Free | Cheap bot filtering at the edge (complements app rate limits in Nest/Redis) | Low |
 | **Pages** | Yes (static assets unlimited; Functions share Workers Free quota) | Optional alternate host for marketing/static; **not** a drop-in for Nest. Next.js on Pages is possible but Fly/Vercel already cover web | Medium — only if migrating web off Vercel/Fly |
-| **Workers** | Yes — 100k req/day, 10 ms CPU/request | Edge helpers: Turnstile verify proxy, image/CDN transforms glue, thin API gateway — **not** a replacement for Nest jobs/Postgres | Medium for small Workers; high to rehost API |
+| **Workers** | Yes — 100k req/day, 10 ms CPU/request | Edge helpers: Turnstile verify proxy, image/CDN transforms glue, thin API gateway — **not** a replacement for Nest jobs/Postgres. Concrete Lugemi uses: [`docs/cloudflare-workers.md`](./cloudflare-workers.md) + scaffold `infra/cloudflare/lugemi-edge` | Medium for small Workers; high to rehost API |
 | **R2** | Yes — 10 GB-month storage, 1M Class A / 10M Class B ops/month; **egress free** | Replace local disk (`DOCUMENT_STORAGE_DIR`, CMS `/cms-media/`) for durable uploads across Fly machines | Medium — S3-compatible SDK + bucket + public/custom domain |
 | **Images** | Transformations only free (5k unique transforms/month). **Storage + delivery in Images = paid** | Resize/optimize CMS or marketing images stored in R2 or elsewhere | Low–medium for transform URLs; skip Images storage unless paying |
 | **Stream** | **Not free** (storage from ~$5 / 1k minutes; delivery billed). Pro/Business website plans include a small allotment | Hosted video encode/playback for CMS demos — use only if budgeted; otherwise R2 + own player | N/A for free tier |
@@ -169,3 +171,4 @@ Avoid double-CDN surprises: if Vercel already fronts the web app, either DNS-onl
 - Cloudflare Stream as the default video pipeline without budget
 - Cloudflare Images **storage** (paid) when R2 + free transforms suffice
 - Marketing Lugemi speech/MT as “Workers AI”
+- Long SSE / WebSocket / heavy TTS on Workers (keep on Fly — see [`docs/cloudflare-workers.md`](./cloudflare-workers.md))
