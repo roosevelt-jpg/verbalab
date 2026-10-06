@@ -19,6 +19,9 @@ async function bootstrap() {
     'https://lugemi.com',
     'https://www.lugemi.com',
     'https://api.lugemi.com',
+    // Live Clerk keys require a lugemi.com subdomain on HTTPS :443 (see Clerk prod-keys-in-dev guide).
+    'https://local.lugemi.com',
+    'http://local.lugemi.com',
   ];
   // Local Studio ports + legacy Next (:3000) — keep reachable even if CORS_ORIGIN is incomplete.
   // Agents often spin Studio on 43123–43130; missing one origin surfaces as browser "Cannot reach API".
