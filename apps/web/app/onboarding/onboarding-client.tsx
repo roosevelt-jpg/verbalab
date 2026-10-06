@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
-import { useRouter } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Outfit } from 'next/font/google';
 import { apiFetch } from '@/lib/api';
 import { BrandMark } from '@/components/brand-mark';
@@ -22,6 +22,7 @@ import {
   PLATFORM_CARDS,
   destinationForPlatform,
   loadOnboardingLocal,
+  markOnboardingSkipped,
   saveOnboardingLocal,
   type OnboardingBillingInterval,
   type OnboardingPersona,
@@ -164,6 +165,7 @@ function OnboardingClientAuthed() {
 
 function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const catalog = useLocaleCatalog();
   const [state, setState] = useState<OnboardingState>(EMPTY_ONBOARDING_STATE);
   const [hydrated, setHydrated] = useState(false);
@@ -172,6 +174,9 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
   const [plans, setPlans] = useState<PlanCard[]>(WEB_BILLING_PLANS);
   const [checkoutNote, setCheckoutNote] = useState<string | null>(null);
   const [showCheckout, setShowCheckout] = useState(false);
+  const skipHandled = useRef(false);
+  const stateRef = useRef(state);
+  stateRef.current = state;
 
   const persistLocal = useCallback((next: OnboardingState) => {
     setState(next);
@@ -182,20 +187,21 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
     async (patch: Partial<OnboardingState> & { complete?: boolean }) => {
       const token = await getToken();
       if (!token) return null;
+      const current = stateRef.current;
       try {
         return await apiFetch<ApiProfile & { persisted?: boolean }>('/v1/onboarding', {
           method: 'POST',
           token,
           body: JSON.stringify({
-            platform: patch.platform ?? state.platform,
-            displayName: (patch.displayName ?? state.displayName) || null,
-            preferredLanguage: (patch.preferredLanguage ?? state.preferredLanguage) || null,
-            referralSource: (patch.referralSource ?? state.referralSource) || null,
-            ageConfirmed: patch.ageConfirmed ?? state.ageConfirmed,
-            persona: patch.persona !== undefined ? patch.persona : state.persona,
-            planId: patch.planId !== undefined ? patch.planId : state.planId,
-            billingInterval: patch.billingInterval ?? state.billingInterval,
-            step: patch.step ?? state.step,
+            platform: patch.platform ?? current.platform,
+            displayName: (patch.displayName ?? current.displayName) || null,
+            preferredLanguage: (patch.preferredLanguage ?? current.preferredLanguage) || null,
+            referralSource: (patch.referralSource ?? current.referralSource) || null,
+            ageConfirmed: patch.ageConfirmed ?? current.ageConfirmed,
+            persona: patch.persona !== undefined ? patch.persona : current.persona,
+            planId: patch.planId !== undefined ? patch.planId : current.planId,
+            billingInterval: patch.billingInterval ?? current.billingInterval,
+            step: patch.step ?? current.step,
             complete: patch.complete,
           }),
         });
@@ -203,7 +209,19 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
         return null;
       }
     },
-    [getToken, state],
+    [getToken],
+  );
+
+  const skipAll = useCallback(
+    async (platform: OnboardingPlatform = 'creative') => {
+      setError(null);
+      setBusy(true);
+      const next = markOnboardingSkipped(platform, stateRef.current);
+      persistLocal(next);
+      await saveRemote({ ...next, complete: true, planId: next.planId ?? 'free' });
+      router.replace(destinationForPlatform(platform));
+    },
+    [persistLocal, router, saveRemote],
   );
 
   useEffect(() => {
@@ -213,7 +231,17 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
   }, []);
 
   useEffect(() => {
-    if (!isLoaded || !hydrated) return;
+    if (!hydrated || !isLoaded || skipHandled.current) return;
+    const skip = searchParams.get('skipOnboarding') === '1';
+    if (!skip) return;
+    skipHandled.current = true;
+    const platformParam = searchParams.get('platform');
+    const platform: OnboardingPlatform = platformParam === 'agents' ? 'agents' : 'creative';
+    void skipAll(platform);
+  }, [hydrated, isLoaded, searchParams, skipAll]);
+
+  useEffect(() => {
+    if (!isLoaded || !hydrated || skipHandled.current) return;
     void (async () => {
       try {
         const planRes = await apiFetch<{ plans: PlanCard[] }>('/v1/billing/plans');
@@ -228,25 +256,30 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
 
       const token = await getToken();
       if (!token) return;
+      if (skipHandled.current) return;
       try {
         const remote = await apiFetch<ApiProfile>('/v1/onboarding', { token });
         if (remote.completed) {
           router.replace(destinationForPlatform(remote.platform));
           return;
         }
+        const local = loadOnboardingLocal();
+        if (local.completed) {
+          router.replace(destinationForPlatform(local.platform));
+          return;
+        }
         const merged: OnboardingState = {
-          ...loadOnboardingLocal(),
-          platform: remote.platform ?? loadOnboardingLocal().platform,
-          displayName: remote.displayName ?? loadOnboardingLocal().displayName,
-          preferredLanguage:
-            remote.preferredLanguage ?? loadOnboardingLocal().preferredLanguage ?? 'en',
-          referralSource: remote.referralSource ?? loadOnboardingLocal().referralSource,
-          ageConfirmed: remote.ageConfirmed || loadOnboardingLocal().ageConfirmed,
-          persona: remote.persona ?? loadOnboardingLocal().persona,
-          planId: remote.planId ?? loadOnboardingLocal().planId,
+          ...local,
+          platform: remote.platform ?? local.platform,
+          displayName: remote.displayName ?? local.displayName,
+          preferredLanguage: remote.preferredLanguage ?? local.preferredLanguage ?? 'en',
+          referralSource: remote.referralSource ?? local.referralSource,
+          ageConfirmed: remote.ageConfirmed || local.ageConfirmed,
+          persona: remote.persona ?? local.persona,
+          planId: remote.planId ?? local.planId,
           billingInterval: remote.billingInterval ?? 'monthly',
           completed: false,
-          step: Math.max(remote.step ?? 0, loadOnboardingLocal().step),
+          step: Math.max(remote.step ?? 0, local.step),
         };
         persistLocal(merged);
       } catch {
@@ -264,8 +297,10 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
     setError(null);
     setBusy(true);
     const planId = opts?.planId !== undefined ? opts.planId : state.planId;
+    const platform = state.platform ?? 'creative';
     const next: OnboardingState = {
       ...state,
+      platform,
       planId,
       completed: true,
       step: STEPS - 1,
@@ -343,11 +378,23 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
     <main className={`ob-root ${outfit.variable}`}>
       <header className="ob-top">
         <BrandMark href="/" />
-        {!isSignedIn && isLoaded ? (
-          <Link href="/sign-in" className="ob-signin">
-            Sign in
-          </Link>
-        ) : null}
+        <div className="ob-top-actions">
+          {!showCheckout ? (
+            <button
+              type="button"
+              className="ob-text-btn"
+              disabled={busy}
+              onClick={() => void skipAll(state.platform ?? 'creative')}
+            >
+              Skip setup
+            </button>
+          ) : null}
+          {!isSignedIn && isLoaded ? (
+            <Link href="/sign-in" className="ob-signin">
+              Sign in
+            </Link>
+          ) : null}
+        </div>
       </header>
 
       <div className="ob-stage" key={showCheckout ? 'checkout' : step}>
@@ -452,6 +499,15 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
               onClick={() => go(1)}
             >
               Continue
+            </button>
+            <button
+              type="button"
+              className="ob-text-btn"
+              disabled={busy}
+              style={{ marginTop: '0.75rem' }}
+              onClick={() => void skipAll(state.platform ?? 'creative')}
+            >
+              Skip all — go to Studio
             </button>
           </section>
         ) : null}

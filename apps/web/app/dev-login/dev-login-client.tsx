@@ -3,6 +3,7 @@
 import { useSignIn } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { SKIP_ONBOARDING_PATH } from '@/lib/onboarding';
 
 export function DevLoginClient() {
   const { isLoaded, signIn, setActive } = useSignIn();
@@ -12,11 +13,12 @@ export function DevLoginClient() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
+  const [skipOnboarding, setSkipOnboarding] = useState(true);
 
   async function completeSession(sessionId: string | null | undefined) {
     if (!sessionId || !setActive) throw new Error('No session created');
     await setActive({ session: sessionId });
-    router.replace('/onboarding');
+    router.replace(skipOnboarding ? SKIP_ONBOARDING_PATH : '/onboarding');
   }
 
   async function signInWithTicket() {
@@ -117,6 +119,25 @@ export function DevLoginClient() {
           This instance’s hosted Sign-in UI prefers email codes. Use the ticket button below for a
           one-click session on localhost.
         </p>
+
+        <label
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.5rem',
+            marginBottom: '1rem',
+            color: '#57534e',
+            fontSize: '0.9rem',
+            cursor: 'pointer',
+          }}
+        >
+          <input
+            type="checkbox"
+            checked={skipOnboarding}
+            onChange={(e) => setSkipOnboarding(e.target.checked)}
+          />
+          Skip setup → Creative Studio
+        </label>
 
         <button
           type="button"

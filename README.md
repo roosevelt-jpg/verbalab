@@ -34,6 +34,7 @@ pnpm dev
 - Web console: http://localhost:3000
 - API health: http://localhost:3001/health
 - Without Clerk keys: http://localhost:3000/setup
+- **Skip setup after login (local):** open **`/dev-login`** (Skip setup checked by default) or visit `/onboarding?skipOnboarding=1` → Creative Studio; optional `NEXT_PUBLIC_SKIP_ONBOARDING=1` in web env
 - Marketing CMS: signed-in **Admin → CMS content** edits homepage, footer, `/p/*` pages, images, and videos (`GET/PUT /api/cms`, uploads to `/cms-media/`)
 
 ## Workspace scripts
@@ -137,6 +138,7 @@ Add to `apps/api/.env` and `apps/web/.env.local` (see `.env.example`). Lead with
 | --- | --- | --- |
 | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | web | Console sign-in |
 | `CLERK_SECRET_KEY` | web + api | Sessions |
+| `NEXT_PUBLIC_SKIP_ONBOARDING` | web | Set `1` locally to land in Creative after sign-in (skips setup wizard) |
 | `REDIS_URL` | api | Jobs + rate limits (Compose Redis) |
 | `OWN_TTS_URL` | api | **Intended production speech** (`own:*` voices). Optional `OWN_TTS_API_KEY`. Unset = that path not configured |
 | `LUGEMI_REGION` | api | Residency island (`us` / `eu`) |
