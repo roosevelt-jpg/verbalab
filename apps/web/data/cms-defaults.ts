@@ -1,4 +1,5 @@
 import type { CmsDocument, CmsPage } from './cms-types';
+import { FOOTER_CMS_PAGES } from './cms-footer-pages';
 
 const API_SNIPPET = `import { Lugemi } from '@lugemi/sdk';
 
@@ -331,39 +332,63 @@ export const CMS_DEFAULTS: CmsDocument = {
   },
   footer: {
     mission:
-      'Global language intelligence. Africa first. First-party API and models for voice, speech, translation, and speaking agents.',
+      "Africa's own voice — for trade, learning, creation, and public life.",
     columns: [
       {
-        id: 'product',
-        title: 'Product',
+        id: 'creative',
+        title: 'LugemiCreative',
         links: [
-          { label: 'Lugemi Studio', href: '/p/lugemi-studio' },
-          { label: 'Lugemi Voice', href: '/p/lugemi-voice' },
-          { label: 'Lugemi Speech', href: '/p/lugemi-speech' },
-          { label: 'Lugemi Translate', href: '/p/lugemi-translate' },
-          { label: 'Lugemi Agents', href: '/p/lugemi-agents' },
+          { label: 'Text to Speech', href: '/p/text-to-speech' },
+          { label: 'Speech to Text', href: '/p/speech-to-text' },
+          { label: 'Voice Changer', href: '/p/voice-changer' },
+          { label: 'Text to Sound Effects', href: '/p/text-to-sound-effects' },
+          { label: 'Voice Cloning', href: '/p/voice-cloning' },
+          { label: 'Voice Isolator', href: '/p/voice-isolator' },
+          { label: 'AI Music Generator', href: '/p/ai-music-generator' },
+          { label: 'Studio', href: '/p/lugemi-studio' },
+          { label: 'Voice Design', href: '/p/voice-design' },
+          { label: 'AI Voice Generator', href: '/p/ai-voice-generator' },
+          { label: 'AI Image Generator', href: '/p/ai-image-generator' },
+          { label: 'AI Video Generator', href: '/p/ai-video-generator' },
+          { label: 'Ads Engine', href: '/p/ads-engine' },
+          { label: 'Dubbing', href: '/p/dubbing' },
         ],
       },
       {
-        id: 'developers',
-        title: 'Developers',
+        id: 'agents',
+        title: 'LugemiAgents',
         links: [
-          { label: 'API reference', href: '/docs' },
-          { label: 'Lugemi API', href: '/p/lugemi-api' },
-          { label: 'Playground', href: '/playground' },
-          { label: 'Developer hub', href: '/developers' },
-          { label: 'Models', href: '/models' },
-        ],
-      },
-      {
-        id: 'solutions',
-        title: 'Solutions',
-        links: [
-          { label: 'Trade', href: '/p/trade' },
+          { label: 'Voice Agents', href: '/p/voice-agents' },
+          { label: 'Conversational AI', href: '/p/conversational-ai' },
+          { label: 'Integrations', href: '/p/integrations' },
+          { label: 'Telecommunications', href: '/p/telecommunications' },
+          { label: 'Financial Services', href: '/p/financial-services' },
+          { label: 'Healthcare', href: '/p/healthcare' },
+          { label: 'Government', href: '/p/government' },
+          { label: 'Technology', href: '/p/technology' },
+          { label: 'Retail & E-commerce', href: '/p/retail' },
+          { label: 'Travel & Hospitality', href: '/p/travel' },
+          { label: 'Customer Support', href: '/p/customer-support' },
+          { label: 'Chatbots', href: '/p/chatbots' },
           { label: 'Education', href: '/p/education' },
-          { label: 'Customer experience', href: '/p/customer-experience' },
-          { label: 'Creative', href: '/p/creative' },
-          { label: 'Agents', href: '/p/lugemi-agents' },
+        ],
+      },
+      {
+        id: 'api',
+        title: 'LugemiAPI',
+        links: [
+          { label: 'API Reference', href: '/docs' },
+          { label: 'Agents API', href: '/p/agents-api' },
+          { label: 'Speech Engine', href: '/p/speech-engine' },
+          { label: 'Dubbing API', href: '/p/dubbing-api' },
+          { label: 'Text to Speech API', href: '/p/tts-api' },
+          { label: 'Speech to Text API', href: '/p/stt-api' },
+          { label: 'Sound Effects API', href: '/p/sound-effects-api' },
+          { label: 'Music API', href: '/p/music-api' },
+          { label: 'Translate API', href: '/p/translate-api' },
+          { label: 'iOS SDK', href: '/p/ios-sdk' },
+          { label: 'Android SDK', href: '/p/android-sdk' },
+          { label: 'API Key', href: '/keys' },
         ],
       },
       {
@@ -371,19 +396,28 @@ export const CMS_DEFAULTS: CmsDocument = {
         title: 'Resources',
         links: [
           { label: 'Docs', href: '/docs' },
+          { label: 'OpenAPI explorer', href: '/p/openapi-explorer' },
+          { label: 'Playground', href: '/playground' },
+          { label: 'Marketplace', href: '/p/marketplace' },
+          { label: 'Enterprise', href: '/p/enterprise' },
+          { label: 'Trust Center', href: '/p/trust-center' },
           { label: 'Coverage', href: '/coverage' },
-          { label: 'Research', href: '/p/research' },
-          { label: 'Safety', href: '/p/safety' },
-          { label: 'Latest updates', href: '/p/updates' },
+          { label: 'Developers', href: '/developers' },
         ],
       },
       {
         id: 'socials',
         title: 'Socials',
         links: [
-          { label: 'lugemi.com', href: 'https://lugemi.com' },
-          { label: 'X — channel opens after brand launch', href: '/p/socials' },
-          { label: 'LinkedIn — channel opens after brand launch', href: '/p/socials' },
+          { label: 'X', href: '/p/socials' },
+          { label: 'LinkedIn', href: '/p/socials' },
+          { label: 'GitHub', href: '/p/socials' },
+          { label: 'YouTube', href: '/p/socials' },
+          { label: 'Discord', href: '/p/socials' },
+          { label: 'TikTok', href: '/p/socials' },
+          { label: 'Instagram', href: '/p/socials' },
+          { label: 'Facebook', href: '/p/socials' },
+          { label: 'Reddit', href: '/p/socials' },
         ],
       },
       {
@@ -392,15 +426,13 @@ export const CMS_DEFAULTS: CmsDocument = {
         links: [
           { label: 'About', href: '/p/about' },
           { label: 'Log in', href: '/sign-in' },
-          { label: 'Sign up', href: '/sign-up' },
           { label: 'Safety', href: '/p/safety' },
           { label: 'Policies', href: '/p/policies' },
-          { label: 'Open console', href: '/dashboard' },
         ],
       },
     ],
     copyright: '© Lugemi. All rights reserved.',
-    metaNote: ' · Africa-first language intelligence · every country, every community',
+    metaNote: ' · Global language intelligence. Africa first.',
     supportFab: { label: 'Chat for support', href: '/sign-up' },
   },
   mediaLibrary: [],
@@ -704,6 +736,22 @@ export const CMS_DEFAULTS: CmsDocument = {
         },
         {
           id: 'guide-api',
+          kind: 'guide',
+          title: 'Quickstart path',
+          body: 'See the live translate demo and SDK snippet on this page, then ship from docs.',
+          steps: [
+            'Create an lg_live_ or lg_test_ key in the console.',
+            'Run the TypeScript snippet with @lugemi/sdk against /v1.',
+            'Compare OpenAPI routes to your workload on Coverage and Models.',
+          ],
+          links: [
+            { label: 'API keys', href: '/keys' },
+            { label: 'Playground', href: '/playground' },
+            { label: 'Coverage', href: '/coverage' },
+          ],
+        },
+        {
+          id: 'api-kit',
           kind: 'api',
           title: 'Integration checklist',
           body: 'Authenticate, call /v1, meter usage, then wire MCP/CLI for video voice.',
@@ -1182,7 +1230,7 @@ export const CMS_DEFAULTS: CmsDocument = {
       title: 'Social channels',
       eyebrow: 'Company',
       lead: 'Follow Lugemi for product and coverage updates.',
-      body: 'Primary destination is lugemi.com. Add X, LinkedIn, and GitHub URLs in Data → Email branding (used in system emails) and update these page links from Admin → CMS when channels go live.',
+      body: 'Primary destination is lugemi.com. Public social channels open after brand launch — until then, use Latest updates and configure handles under Data → Email branding so system emails stay current. Update footer URLs anytime from Admin → CMS.',
       sections: [
         {
           id: 'web',
@@ -1190,9 +1238,49 @@ export const CMS_DEFAULTS: CmsDocument = {
           body: 'https://lugemi.com — primary brand destination for Studio, Agents, and API.',
         },
         {
-          id: 'updates',
-          title: 'Product updates',
-          body: 'Ship notes and coverage changes are listed on Latest updates until social channels launch.',
+          id: 'x',
+          title: 'X',
+          body: 'Channel opens after brand launch. Add the handle in Data → Email branding and replace this page’s footer link when live.',
+        },
+        {
+          id: 'linkedin',
+          title: 'LinkedIn',
+          body: 'Company page opens after brand launch. Owners can store the URL in email branding for outbound mail.',
+        },
+        {
+          id: 'github',
+          title: 'GitHub',
+          body: 'Public repos and SDK samples will link here when published. Developers hub and Docs remain the live integration path today.',
+        },
+        {
+          id: 'youtube',
+          title: 'YouTube',
+          body: 'Product walkthroughs and language demos will publish after launch. Until then, try interactive demos on product pages.',
+        },
+        {
+          id: 'discord',
+          title: 'Discord',
+          body: 'Community server opens after brand launch. Use workspace Identity invites for private team collaboration now.',
+        },
+        {
+          id: 'tiktok',
+          title: 'TikTok',
+          body: 'Short-form creative demos planned after launch — not a live Lugemi channel yet.',
+        },
+        {
+          id: 'instagram',
+          title: 'Instagram',
+          body: 'Visual brand channel opens after launch. Brand mark and guidelines live under docs/brand.',
+        },
+        {
+          id: 'facebook',
+          title: 'Facebook',
+          body: 'Page opens after brand launch. Configure the URL in Admin CMS footer socials when ready.',
+        },
+        {
+          id: 'reddit',
+          title: 'Reddit',
+          body: 'Community presence opens after launch. Prefer Docs and Developers for technical Q&A today.',
         },
         {
           id: 'branding',
@@ -1220,6 +1308,7 @@ export const CMS_DEFAULTS: CmsDocument = {
       secondaryCta: { label: 'Latest updates', href: '/p/updates' },
       footerColumn: 'socials',
     }),
+    ...FOOTER_CMS_PAGES,
   ],
   console: {
     dashboardWelcome: {

@@ -2,10 +2,8 @@
 
 import { AgentChatDemo } from '@/components/marketing/agent-chat-demo';
 import { HeroTtsCard } from '@/components/marketing/hero-tts-card';
-import { StudioSampleDemo } from '@/components/marketing/studio-sample-demo';
 import { TranslatePlayDemo } from '@/components/marketing/translate-play-demo';
 import { VoiceChipRow } from '@/components/marketing/voice-chip-row';
-import { CodePanel } from '@/components/code-panel';
 import { CMS_DEFAULTS } from '@/data/cms-defaults';
 
 const SAMPLE_VOICES = CMS_DEFAULTS.console.sampleVoices.map((v) => ({
@@ -28,24 +26,69 @@ const SAMPLE_VOICES = CMS_DEFAULTS.console.sampleVoices.map((v) => ({
                 : 'en-US',
 }));
 
+const VOICE_DEMO_SLUGS = new Set([
+  'lugemi-voice',
+  'lugemi-studio',
+  'creative',
+  'text-to-speech',
+  'voice-changer',
+  'voice-cloning',
+  'voice-isolator',
+  'voice-design',
+  'ai-voice-generator',
+  'ai-music-generator',
+  'text-to-sound-effects',
+  'ads-engine',
+  'dubbing',
+  'ai-video-generator',
+  'ai-image-generator',
+]);
+
+const AGENT_DEMO_SLUGS = new Set([
+  'lugemi-agents',
+  'trade',
+  'customer-experience',
+  'voice-agents',
+  'conversational-ai',
+  'telecommunications',
+  'financial-services',
+  'healthcare',
+  'government',
+  'technology',
+  'retail',
+  'travel',
+  'customer-support',
+  'chatbots',
+  'integrations',
+]);
+
+const TRANSLATE_DEMO_SLUGS = new Set([
+  'lugemi-translate',
+  'education',
+  'translate-api',
+  'dubbing-api',
+  'openapi-explorer',
+  'marketplace',
+  'enterprise',
+  'trust-center',
+]);
+
+const API_DEMO_SLUGS = new Set([
+  'lugemi-api',
+  'agents-api',
+  'speech-engine',
+  'tts-api',
+  'stt-api',
+  'sound-effects-api',
+  'music-api',
+  'ios-sdk',
+  'android-sdk',
+  'api-key',
+]);
+
 /** Interactive demos injected on CMS marketing pages by slug. */
 export function CmsPageDemos({ slug }: { slug: string }) {
-  if (slug === 'lugemi-studio') {
-    return (
-      <div className="mkt-page-demos">
-        <StudioSampleDemo
-          sample={CMS_DEFAULTS.creative.studioSample}
-          chips={CMS_DEFAULTS.creative.languageChips}
-        />
-        <div style={{ marginTop: '1.25rem' }}>
-          <p className="mkt-tts-label">Region voices for review</p>
-          <VoiceChipRow voices={SAMPLE_VOICES.slice(0, 4)} />
-        </div>
-      </div>
-    );
-  }
-
-  if (slug === 'lugemi-voice' || slug === 'creative') {
+  if (VOICE_DEMO_SLUGS.has(slug)) {
     return (
       <div className="mkt-page-demos">
         <HeroTtsCard demo={CMS_DEFAULTS.hero.demo} />
@@ -57,7 +100,7 @@ export function CmsPageDemos({ slug }: { slug: string }) {
     );
   }
 
-  if (slug === 'lugemi-agents' || slug === 'trade' || slug === 'customer-experience') {
+  if (AGENT_DEMO_SLUGS.has(slug)) {
     return (
       <div className="mkt-page-demos">
         <AgentChatDemo
@@ -69,7 +112,7 @@ export function CmsPageDemos({ slug }: { slug: string }) {
     );
   }
 
-  if (slug === 'lugemi-translate' || slug === 'education') {
+  if (TRANSLATE_DEMO_SLUGS.has(slug)) {
     return (
       <div className="mkt-page-demos">
         <TranslatePlayDemo />
@@ -77,7 +120,7 @@ export function CmsPageDemos({ slug }: { slug: string }) {
     );
   }
 
-  if (slug === 'lugemi-speech') {
+  if (slug === 'lugemi-speech' || slug === 'speech-to-text') {
     return (
       <div className="mkt-page-demos">
         <AgentChatDemo
@@ -94,18 +137,15 @@ export function CmsPageDemos({ slug }: { slug: string }) {
     );
   }
 
-  if (slug === 'lugemi-api') {
+  if (API_DEMO_SLUGS.has(slug)) {
     return (
       <div className="mkt-page-demos">
         <TranslatePlayDemo compact />
-        <div style={{ marginTop: '1.25rem' }}>
-          <CodePanel code={CMS_DEFAULTS.api.snippet} label="TypeScript · @lugemi/sdk" />
-        </div>
       </div>
     );
   }
 
-  if (slug === 'research' || slug === 'about' || slug === 'updates') {
+  if (slug === 'research' || slug === 'about' || slug === 'updates' || slug === 'socials') {
     return (
       <div className="mkt-page-demos">
         <TranslatePlayDemo compact />
@@ -127,14 +167,6 @@ export function CmsPageDemos({ slug }: { slug: string }) {
           userVoiceId="user"
           agentVoiceId="abe"
         />
-      </div>
-    );
-  }
-
-  if (slug === 'socials') {
-    return (
-      <div className="mkt-page-demos">
-        <HeroTtsCard demo={CMS_DEFAULTS.hero.demo} />
       </div>
     );
   }

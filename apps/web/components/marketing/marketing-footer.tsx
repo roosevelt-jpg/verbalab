@@ -27,14 +27,9 @@ export function MarketingFooter({
                 <ul>
                   {col.links.map((link) => {
                     const external = link.href.startsWith('http');
-                    const muted = link.href === '/p/socials' && link.label.includes('opens after');
                     return (
                       <li key={`${col.id}-${link.label}`}>
-                        {muted ? (
-                          <Link href={link.href} className="mkt-footer-muted">
-                            {link.label}
-                          </Link>
-                        ) : external ? (
+                        {external ? (
                           <a href={link.href} rel="noreferrer">
                             {link.label}
                           </a>
