@@ -36,7 +36,7 @@ export function AgentRuntimeClient() {
   const [engine, setEngine] = useState<Engine | null>(null);
   const [agents, setAgents] = useState<Agent[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [name, setName] = useState('Sandbox Researcher');
+  const [name, setName] = useState('East Africa trade desk');
   const [result, setResult] = useState<string | null>(null);
 
   const load = useCallback(async () => {
@@ -113,8 +113,8 @@ export function AgentRuntimeClient() {
         Agent Runtime
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        Sandbox agents with hard permission allowlists. Missing permissions are blocked — not open
-        tool execution against real accounts.
+        Sandbox speaking agents with hard permission allowlists — the runtime layer for agents that talk across
+        languages and accents. Missing permissions are blocked — not open tool execution against real accounts.
       </p>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}

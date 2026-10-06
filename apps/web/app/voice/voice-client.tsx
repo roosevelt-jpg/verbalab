@@ -30,7 +30,9 @@ type SimResult = {
 export function VoiceClient() {
   const { getToken, isLoaded } = useAuth();
   const [status, setStatus] = useState<VoiceStatus | null>(null);
-  const [text, setText] = useState('What is Lugemi?');
+  const [text, setText] = useState(
+    'What languages and accents can Lugemi speaking agents use across African countries and ethnic communities?',
+  );
   const [result, setResult] = useState<SimResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
@@ -69,10 +71,11 @@ export function VoiceClient() {
   return (
     <AppShell>
       <h1 style={{ margin: 0, fontFamily: 'var(--font-display)', letterSpacing: '-0.03em', fontSize: '2rem' }}>
-        Voice FAQ
+        Speaking agents · Voice FAQ
       </h1>
-      <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0' }}>
-        One bilingual phone demo: Twilio + STT + LLM + TTS. Not a call-center platform.
+      <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0', maxWidth: '40rem', lineHeight: 1.6 }}>
+        Build agents that speak and listen. Prefill a bilingual FAQ turn, then simulate STT → FAQ model → TTS. Twilio
+        inbound hooks when keys are set — not a call-center platform.
       </p>
 
       {error ? <p style={{ color: 'var(--bad)' }}>{error}</p> : null}

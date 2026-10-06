@@ -1,47 +1,15 @@
 import Link from 'next/link';
 import { BrandMark } from '@/components/brand-mark';
+import { AnamorphicPanel } from '@/components/media/anamorphic-panel';
+import { SITE_CONTENT } from '@/data/site-content';
 import { HeroTtsCard } from './hero-tts-card';
 import { LanguageBar } from './language-bar';
 import { MarketingNav } from './nav';
 import './marketing.css';
 
-const SDK_SAMPLE = `import { Lugemi } from '@lugemi/sdk';
-
-const client = new Lugemi({
-  apiKey: process.env.LUGEMI_API_KEY!,
-});
-
-const speech = await client.speech({
-  text: 'Habari, dunia.',
-  voice: 'own:sw-ke-female',
-});
-
-const translated = await client.translate({
-  text: 'Habari, dunia.',
-  source: 'sw',
-  target: 'en',
-});`;
-
-const PRODUCTS = [
-  {
-    name: 'Lugemi Voice',
-    body: 'Text to speech and cloning. Resonant, real-time African voices for content, brand, and personal presence.',
-    href: '/speech',
-    art: 'voice',
-  },
-  {
-    name: 'Lugemi Speech',
-    body: 'Speech to text. Transcribe accents, dialects, and code-switching with research intelligence built for Africa.',
-    href: '/audio',
-    art: 'speech',
-  },
-  {
-    name: 'Lugemi Translate',
-    body: 'Translate every tongue. Move meaning across African languages with global context — without context loss.',
-    href: '/translate',
-    art: 'translate',
-  },
-] as const;
+const SDK_SAMPLE = SITE_CONTENT.apiSnippets.speech;
+const PRODUCTS = SITE_CONTENT.products.slice(0, 3);
+const AGENT_TEMPLATES = SITE_CONTENT.agentTemplates;
 
 const USE_CASES = [
   { title: 'Trade & negotiations', body: 'Close deals in the languages partners actually speak — with tone that holds trust.', tone: 'gold' },
@@ -71,12 +39,7 @@ const TIMELINE = [
   { year: 'Now', title: 'Lugemi platform', body: 'Studio, Agents, and API on one foundation with published per-task availability.' },
 ] as const;
 
-const SAFETY = [
-  { title: 'Moderation', body: 'Policy checks on generative speech paths so misuse surfaces before scale.' },
-  { title: 'Accountability', body: 'Workspace keys, usage logs, and review states for clones and translations.' },
-  { title: 'Provenance', body: 'Synthetic-speech disclosure and watermarking on clone voices where required.' },
-  { title: 'Biometrics', body: 'Consent gates for voice cloning — authorization is required, not assumed.' },
-] as const;
+const SAFETY = SITE_CONTENT.safety;
 
 const UPDATES = [
   { title: 'Public language coverage', body: 'A coverage page lands so homepage CTAs point at real availability, not slogans.' },
@@ -95,22 +58,18 @@ export function MarketingHome() {
         <section className="mkt-hero" aria-labelledby="mkt-hero-title">
           <div className="mkt-wrap mkt-hero-grid">
             <div className="mkt-hero-copy">
-              <p className="mkt-eyebrow">Voice · Speech · Translate · API</p>
+              <p className="mkt-eyebrow">{SITE_CONTENT.hero.eyebrow}</p>
               <h1 id="mkt-hero-title">
-                <span className="mkt-brand-hero">Lugemi</span>
-                <span className="mkt-tagline">Own every African voice.</span>
+                <span className="mkt-brand-hero">{SITE_CONTENT.hero.brand}</span>
+                <span className="mkt-tagline">{SITE_CONTENT.hero.headline}</span>
               </h1>
-              <p className="mkt-hero-lead">
-                Fully built Africa-first language intelligence — speak, translate, clone, and reason across languages,
-                dialects, and ethnic communities for trade, education, sales, and public speech. First-party API and
-                models; LATAM, Southeast Asia, the Middle East, and the EU also in product scope.
-              </p>
+              <p className="mkt-hero-lead">{SITE_CONTENT.hero.lead}</p>
               <div className="mkt-cta-row">
-                <Link href="/sign-up" className="vl-btn vl-btn-primary">
-                  Start free
+                <Link href={SITE_CONTENT.hero.primaryCta.href} className="vl-btn vl-btn-primary">
+                  {SITE_CONTENT.hero.primaryCta.label}
                 </Link>
-                <Link href="/dashboard" className="vl-btn vl-btn-secondary">
-                  Open console
+                <Link href={SITE_CONTENT.hero.secondaryCta.href} className="vl-btn vl-btn-secondary">
+                  {SITE_CONTENT.hero.secondaryCta.label}
                 </Link>
                 <Link href="/coverage" className="vl-btn vl-btn-secondary">
                   Browse coverage
@@ -127,16 +86,16 @@ export function MarketingHome() {
           <div className="mkt-wrap">
             <p className="mkt-kicker">Products</p>
             <h2 className="mkt-h2" id="mkt-products-title">
-              One platform for African voice, speech, and translation
+              Language intelligence for agents that speak
             </h2>
             <p className="mkt-lede">
-              Three product surfaces on the same first-party foundation. Availability follows the published coverage
-              matrix — not a claim that every dialect is live everywhere.
+              Voice, speech, and translation on the same first-party foundation — the stack developers use to ship
+              speaking agents with cultural context. Availability follows the published coverage matrix.
             </p>
             <div className="mkt-card-grid-3">
               {PRODUCTS.map((product) => (
-                <article key={product.name} className="mkt-product-card">
-                  <div className={`mkt-product-art mkt-product-art-${product.art}`} aria-hidden="true" />
+                <article key={product.id} className="mkt-product-card">
+                  <AnamorphicPanel variant={product.art} size="sm" label={product.name} />
                   <h3>{product.name}</h3>
                   <p>{product.body}</p>
                   <Link href={product.href} className="mkt-text-link">
@@ -211,39 +170,30 @@ export function MarketingHome() {
                   Open Studio
                 </Link>
               </div>
-              <div className="mkt-module-panel" aria-hidden="true">
-                <div className="mkt-fake-ui">
-                  <div className="mkt-fake-ui-bar">Studio editor</div>
-                  <p className="mkt-fake-ui-script">
-                    Hello! Your brand can speak to customers in Swahili, Yoruba, and French from one draft.
-                  </p>
-                  <div className="mkt-fake-chips">
-                    <span>English</span>
-                    <span className="is-on">Swahili</span>
-                    <span>French</span>
-                    <span>Yoruba</span>
-                  </div>
-                </div>
+              <div className="mkt-module-panel">
+                <AnamorphicPanel variant="api" size="lg" label="Studio depth" />
               </div>
             </div>
 
             <div className="mkt-module mkt-module-reverse">
               <div className="mkt-module-copy">
-                <h3>Lugemi Agents</h3>
+                <h3>Speaking agents</h3>
                 <p>
-                  Conversational voice FAQ turns: STT, a FAQ model, and TTS. Simulate from the console or call{' '}
-                  <code className="vl-code">POST /v1/voice/simulate</code>.
+                  Developers build AI agents that speak and talk across languages and accents — with cultural
+                  understanding of countries, ethnic groups, and tribes. Simulate turns via{' '}
+                  <code className="vl-code">POST /v1/voice/simulate</code> or Agent Runtime.
                 </p>
                 <Link href="/voice" className="vl-btn vl-btn-primary">
                   Open Agents
                 </Link>
               </div>
-              <div className="mkt-module-panel" aria-hidden="true">
-                <div className="mkt-fake-chat">
-                  <div className="mkt-fake-ui-bar">Agent: Mandisa</div>
-                  <div className="mkt-chat-bubble mkt-chat-user">I would like to place an order for chips, please.</div>
+              <div className="mkt-module-panel">
+                <AnamorphicPanel variant="agents" size="lg" label="Speaking agent depth" />
+                <div className="mkt-fake-chat" style={{ marginTop: 12 }}>
+                  <div className="mkt-fake-ui-bar">Agent · East Africa trade desk</div>
+                  <div className="mkt-chat-bubble mkt-chat-user">Habari — naweza kupata bei za usafirishaji?</div>
                   <div className="mkt-chat-bubble mkt-chat-agent">
-                    Of course — I can take that order. How many portions would you like?
+                    Karibu. Ninaweza kukusaidia na bei, malipo, na ratiba ya usafirishaji.
                   </div>
                 </div>
               </div>
@@ -268,6 +218,36 @@ export function MarketingHome() {
               <pre className="mkt-code" tabIndex={0}>
                 {SDK_SAMPLE}
               </pre>
+            </div>
+          </div>
+        </section>
+
+
+        <section className="mkt-section mkt-section-mist" id="agent-templates" aria-labelledby="mkt-agent-templates-title">
+          <div className="mkt-wrap">
+            <p className="mkt-kicker">Agent templates</p>
+            <h2 className="mkt-h2" id="mkt-agent-templates-title">
+              Prefill scripts with cultural context
+            </h2>
+            <p className="mkt-lede">
+              Sample speaking-agent templates an admin can later edit — language, accent, country, and ethnic context
+              included.
+            </p>
+            <div className="mkt-card-grid-2">
+              {AGENT_TEMPLATES.map((agent) => (
+                <article key={agent.id} className="mkt-plain-card">
+                  <AnamorphicPanel variant="agents" size="sm" label={agent.name} />
+                  <h3>{agent.name}</h3>
+                  <p>
+                    <strong>{agent.language}</strong> · {agent.accent}
+                  </p>
+                  <p>{agent.culturalContext}</p>
+                  <pre className="mkt-code" tabIndex={0} style={{ fontSize: '0.78rem', maxHeight: '7rem' }}>
+                    {agent.script}
+                  </pre>
+                  <p>{agent.goal}</p>
+                </article>
+              ))}
             </div>
           </div>
         </section>
@@ -460,10 +440,10 @@ export function MarketingHome() {
                   </a>
                 </li>
                 <li>
-                  <span className="mkt-footer-muted">X — coming soon</span>
+                  <span className="mkt-footer-muted">X — channel opens after brand launch</span>
                 </li>
                 <li>
-                  <span className="mkt-footer-muted">LinkedIn — coming soon</span>
+                  <span className="mkt-footer-muted">LinkedIn — channel opens after brand launch</span>
                 </li>
               </ul>
             </div>

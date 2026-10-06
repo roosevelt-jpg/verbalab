@@ -5,6 +5,7 @@ import { FormEvent, useEffect, useState } from 'react';
 import { API_URL, apiFetch } from '@/lib/api';
 import { BrandMark } from '@/components/brand-mark';
 import { CodePanel } from '@/components/code-panel';
+import { SITE_CONTENT } from '@/data/site-content';
 
 type Language = { code: string; name: string };
 type Mode = 'translate' | 'detect' | 'languages';
@@ -17,9 +18,9 @@ export function PlaygroundClient() {
   const [mode, setMode] = useState<Mode>('translate');
   const [apiKey, setApiKey] = useState('');
   const [languages, setLanguages] = useState<Language[]>([]);
-  const [source, setSource] = useState('en');
-  const [target, setTarget] = useState('sw');
-  const [text, setText] = useState('Hello, world');
+  const [source, setSource] = useState(SITE_CONTENT.playgroundDefaults.source);
+  const [target, setTarget] = useState(SITE_CONTENT.playgroundDefaults.target);
+  const [text, setText] = useState(SITE_CONTENT.playgroundDefaults.text);
   const [response, setResponse] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -89,8 +90,9 @@ export function PlaygroundClient() {
         API playground
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0', maxWidth: '38rem', lineHeight: 1.6 }}>
-        Paste a <code className="vl-code">vl_live_</code> or <code className="vl-code">vl_test_</code> key and try
-        translate or detect. List languages without a key. Copy the cURL below into your terminal when it looks right.
+        Try translate, detect, and languages against the Lugemi API — the same surface speaking agents use for
+        multilingual turns. Prefill text is editable. Paste a <code className="vl-code">lg_live_</code> or{' '}
+        <code className="vl-code">lg_test_</code> key; list languages without a key.
       </p>
 
       <div className="vl-player-bar" style={{ marginTop: '1.25rem' }}>
@@ -123,7 +125,7 @@ export function PlaygroundClient() {
               className="vl-field vl-code"
               value={apiKey}
               onChange={(e) => setApiKey(e.target.value)}
-              placeholder="vl_live_... or vl_test_..."
+              placeholder="lg_live_... or lg_test_..."
               required
             />
           </label>

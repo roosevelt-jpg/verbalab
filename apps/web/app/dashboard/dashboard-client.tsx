@@ -5,6 +5,9 @@ import { useAuth } from '@clerk/nextjs';
 import { useCallback, useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { AnamorphicPanel } from '@/components/media/anamorphic-panel';
+import { SITE_CONTENT } from '@/data/site-content';
+import '@/components/media/anamorphic.css';
 
 type Overview = {
   organization: { id: string; name: string; plan: string; billingStatus: string };
@@ -27,18 +30,19 @@ type Overview = {
 };
 
 const QUICK_LINKS = [
-  { href: '/translate', label: '1. Translate', primary: true },
-  { href: '/speech', label: '2. Speech', primary: true },
-  { href: '/keys', label: '3. API keys', primary: false },
-  { href: '/docs', label: '4. Docs', primary: false },
-  { href: '/playground', label: 'Playground', primary: false },
-  { href: '/coverage', label: 'Coverage', primary: false },
+  { href: '/voice', label: 'Speaking agents', primary: true },
+  { href: '/audio', label: 'Voice Studio', primary: false },
+  { href: '/agent-runtime', label: 'Agent Runtime', primary: false },
+  { href: '/playground', label: 'API playground', primary: false },
+  { href: '/docs', label: 'API docs', primary: false },
+  { href: '/keys', label: 'API keys', primary: false },
 ];
 
 export function DashboardClient() {
   const { getToken, isLoaded } = useAuth();
   const [data, setData] = useState<Overview | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const welcome = SITE_CONTENT.dashboardWelcome;
 
   const load = useCallback(async () => {
     const token = await getToken();
@@ -54,26 +58,69 @@ export function DashboardClient() {
 
   return (
     <AppShell>
-      <h1
-        style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: '1.85rem',
-          fontWeight: 720,
-          letterSpacing: '-0.03em',
-          margin: '0 0 0.35rem',
-          color: 'var(--brand-navy)',
-        }}
+      <div className="lg-hub-hero">
+        <div>
+          <h1
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: '1.85rem',
+              fontWeight: 720,
+              letterSpacing: '-0.03em',
+              margin: '0 0 0.35rem',
+              color: 'var(--brand-navy)',
+            }}
+          >
+            {welcome.title}
+          </h1>
+          <p style={{ color: 'var(--muted)', margin: 0, maxWidth: '40rem', lineHeight: 1.6 }}>{welcome.lead}</p>
+        </div>
+        <AnamorphicPanel variant="agents" size="sm" label="Console depth" />
+      </div>
+
+      <section
+        className="vl-endpoint-card"
+        style={{ marginBottom: '1.25rem' }}
+        aria-labelledby="dash-starters"
       >
-        Welcome to Lugemi
-      </h1>
-      <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '40rem', lineHeight: 1.6 }}>
-        Here is what to do next: translate text, generate speech, create an API key, or open the docs. Your organization,
-        workspace, and usage sit below when you need them.
-      </p>
+        <h2
+          id="dash-starters"
+          style={{
+            fontSize: '0.75rem',
+            textTransform: 'uppercase',
+            letterSpacing: '0.06em',
+            color: 'var(--muted)',
+            margin: '0 0 0.75rem',
+            fontWeight: 700,
+          }}
+        >
+          Starter paths
+        </h2>
+        <ul
+          style={{
+            margin: 0,
+            padding: 0,
+            listStyle: 'none',
+            display: 'grid',
+            gap: '0.75rem',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(14rem, 1fr))',
+          }}
+        >
+          {welcome.starterCards.map((card) => (
+            <li key={card.href} style={{ borderTop: '1px solid var(--line)', paddingTop: '0.55rem' }}>
+              <Link href={card.href} style={{ textDecoration: 'none', color: 'inherit' }}>
+                <div style={{ fontWeight: 600, color: 'var(--brand-navy)' }}>{card.title}</div>
+                <div style={{ color: 'var(--muted)', fontSize: '0.85rem', marginTop: '0.25rem', lineHeight: 1.45 }}>
+                  {card.body}
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
 
       {error ? <p style={{ color: '#b42318', marginBottom: '1rem' }}>{error}</p> : null}
 
-      {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}
+      {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading workspace…</p> : null}
 
       {data ? (
         <div style={{ display: 'grid', gap: '1rem' }}>

@@ -3,7 +3,8 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
-import { AppShell } from '@/components/app-shell';
+import { HubConsole } from '@/components/hub-console';
+import { SITE_CONTENT } from '@/data/site-content';
 
 type Engine = {
   product: string;
@@ -23,15 +24,20 @@ export function AiPublicationPlatformClient() {
   }, []);
 
   return (
-    <AppShell>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '1.85rem', fontWeight: 720, letterSpacing: '-0.03em', margin: '0 0 0.35rem' }}>
-        AI Publication Platform
-      </h1>
-      <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        DOI field is optional stub — doiRegistryOs=false.
-      </p>
+    <HubConsole
+      title="AI Publication Platform"
+      lede="Publish research and language-intelligence notes with Lugemi metadata. DOI registry wiring is optional when doiRegistryOs is false — the console still ships prefill catalog and live honesty flags."
+      catalogItems={[
+        ...SITE_CONTENT.hubDefaults.items,
+        {
+          id: 'doi-optional',
+          title: 'DOI optional',
+          body: 'DOI field stays available for future registry OS; not required for local publication drafts.',
+        },
+      ]}
+    >
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
-      {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}
+      {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading engine…</p> : null}
       {data ? (
         <div style={{ display: 'grid', gap: '1.25rem' }}>
           <p style={{ margin: 0, color: 'var(--muted)' }}>{data.note}</p>
@@ -46,6 +52,6 @@ export function AiPublicationPlatformClient() {
           <Link href="/research-cloud">← Research Cloud</Link>
         </div>
       ) : null}
-    </AppShell>
+    </HubConsole>
   );
 }

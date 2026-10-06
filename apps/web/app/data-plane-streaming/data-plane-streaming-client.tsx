@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
-import { AppShell } from '@/components/app-shell';
+import { HubConsole } from '@/components/hub-console';
 
 type Engine = {
   product: string;
@@ -23,13 +23,10 @@ export function DataPlaneStreamingClient() {
   }, []);
 
   return (
-    <AppShell>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '1.85rem', fontWeight: 720, letterSpacing: '-0.03em', margin: '0 0 0.35rem' }}>
-        Data Plane Streaming
-      </h1>
-      <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-331 — Lugemi Data Plane Streaming console in the Data Plane Cloud.
-      </p>
+    <HubConsole
+      title="Data Plane Streaming"
+      lede="Data Plane Streaming console in the Data Plane Cloud. Prefill catalog below — live engine data appears when the API is reachable."
+    >
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}
       {data ? (
@@ -45,6 +42,6 @@ export function DataPlaneStreamingClient() {
           </pre>
         </div>
       ) : null}
-    </AppShell>
+    </HubConsole>
   );
 }

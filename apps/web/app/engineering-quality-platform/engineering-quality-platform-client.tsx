@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
-import { AppShell } from '@/components/app-shell';
+import { HubConsole } from '@/components/hub-console';
 
 type Engine = {
   product: string;
@@ -24,13 +24,10 @@ export function EngineeringQualityPlatformClient() {
   }, []);
 
   return (
-    <AppShell>
-      <h1 style={{ fontFamily: 'var(--font-display)', fontSize: '1.85rem', fontWeight: 720, letterSpacing: '-0.03em', margin: '0 0 0.35rem' }}>
-        Engineering Quality Platform
-      </h1>
-      <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        VL-348 — Lugemi Engineering Quality Platform console in Enterprise Engineering System (standards for humans + Cursor).
-      </p>
+    <HubConsole
+      title="Engineering Quality Platform"
+      lede="Engineering Quality Platform console in Enterprise Engineering System (standards for humans + Cursor). Prefill catalog below — live engine data appears when the API is reachable."
+    >
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
       {!data && !error ? <p style={{ color: 'var(--muted)' }}>Loading…</p> : null}
       {data ? (
@@ -46,6 +43,6 @@ export function EngineeringQualityPlatformClient() {
           </pre>
         </div>
       ) : null}
-    </AppShell>
+    </HubConsole>
   );
 }
