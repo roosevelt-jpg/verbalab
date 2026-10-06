@@ -2,8 +2,20 @@
 
 import { useSignIn } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SKIP_ONBOARDING_PATH } from '@/lib/onboarding';
+
+/** Live Clerk keys reject bare localhost Origin — use the lugemi.com subdomain on :443. */
+function liveKeysNeedLocalHost(): boolean {
+  if (typeof window === 'undefined') return false;
+  const host = window.location.hostname;
+  if (host === 'local.lugemi.com' || host.endsWith('.lugemi.com')) return false;
+  return host === 'localhost' || host === '127.0.0.1';
+}
+
+function localLiveOrigin(): string {
+  return 'https://local.lugemi.com';
+}
 
 export function DevLoginClient() {
   const { isLoaded, signIn, setActive } = useSignIn();
@@ -14,6 +26,11 @@ export function DevLoginClient() {
   const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
   const [skipOnboarding, setSkipOnboarding] = useState(true);
+  const [needsLocalHost, setNeedsLocalHost] = useState(false);
+
+  useEffect(() => {
+    setNeedsLocalHost(liveKeysNeedLocalHost());
+  }, []);
 
   async function completeSession(sessionId: string | null | undefined) {
     if (!sessionId || !setActive) throw new Error('No session created');
@@ -22,6 +39,14 @@ export function DevLoginClient() {
   }
 
   async function signInWithTicket() {
+    if (liveKeysNeedLocalHost()) {
+      const dest = `${localLiveOrigin()}/dev-login`;
+      setError(
+        `Live Clerk keys cannot run on localhost Origin. Open ${dest} (HTTPS :443 → Next :43125) and try again.`,
+      );
+      window.location.assign(dest);
+      return;
+    }
     if (!isLoaded || !signIn) return;
     setBusy(true);
     setError(null);
@@ -117,8 +142,31 @@ export function DevLoginClient() {
         </h1>
         <p style={{ color: '#78716c', margin: '0 0 1.25rem', lineHeight: 1.5 }}>
           This instance’s hosted Sign-in UI prefers email codes. Use the ticket button below for a
-          one-click session on localhost.
+          one-click session. Live keys require{' '}
+          <code style={{ fontSize: '0.85em' }}>https://local.lugemi.com</code> (Frontend API{' '}
+          <code style={{ fontSize: '0.85em' }}>clerk.lugemi.com</code>).
         </p>
+
+        {needsLocalHost ? (
+          <p
+            style={{
+              color: '#92400e',
+              background: '#fffbeb',
+              border: '1px solid #fcd34d',
+              borderRadius: '0.65rem',
+              padding: '0.75rem 0.9rem',
+              margin: '0 0 1rem',
+              lineHeight: 1.45,
+              fontSize: '0.9rem',
+            }}
+          >
+            Clerk production keys reject this Origin. Continue on{' '}
+            <a href={`${localLiveOrigin()}/dev-login`} style={{ color: '#0f766e', fontWeight: 700 }}>
+              {localLiveOrigin()}/dev-login
+            </a>{' '}
+            (hosts → 127.0.0.1, HTTPS proxy → Next :43125).
+          </p>
+        ) : null}
 
         <label
           style={{
@@ -141,7 +189,7 @@ export function DevLoginClient() {
 
         <button
           type="button"
-          disabled={!isLoaded || busy}
+          disabled={(!isLoaded && !needsLocalHost) || busy}
           onClick={() => void signInWithTicket()}
           style={{
             width: '100%',
@@ -155,7 +203,7 @@ export function DevLoginClient() {
             marginBottom: '1rem',
           }}
         >
-          {busy ? 'Working…' : 'Sign in without OTP'}
+          {busy ? 'Working…' : needsLocalHost ? 'Continue on local.lugemi.com' : 'Sign in without OTP'}
         </button>
 
         <details>
