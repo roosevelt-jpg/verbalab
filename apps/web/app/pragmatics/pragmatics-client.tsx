@@ -45,7 +45,7 @@ export function PragmaticsClient() {
   return (
     <PortfolioShell
       title="Lugemi Pragmatics"
-      lede="Preserve speech acts and register. Choose faithful, literal, or clearly labelled localized — never silently mixed."
+      lede="Preserve speech acts and register. Choose faithful, literal, or clearly labelled localized — never silently mixed. Target language covers the full registry."
     >
       <form onSubmit={onSubmit} className="vl-panel" style={{ padding: '1rem', display: 'grid', gap: '0.75rem' }}>
         <input className="vl-field" value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder="API key" />

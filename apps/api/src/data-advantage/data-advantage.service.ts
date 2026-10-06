@@ -3,9 +3,11 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { AuditService } from '../audit/audit.service';
 import { ApiException } from '../common/errors/api-exception';
 import { portfolioMeta } from '../portfolio/portfolio.meta';
+import { registryLanguageTags } from '../portfolio/portfolio.corridors';
 import { dataAdvantageCatalog } from './data-advantage.catalog';
 
-const VALID_TAGS = new Set(['ak', 'en', 'yo', 'ha', 'ee', 'tw']);
+/** Full language registry tags (plus legacy `tw` alias for Twi). */
+const VALID_TAGS = new Set([...registryLanguageTags(), 'tw']);
 const VALID_SPLITS = new Set(['train', 'development', 'calibration', 'test', 'shadow']);
 const VALID_LABEL_STATUS = new Set(['raw', 'annotated', 'adjudicated', 'rejected', 'ambiguous']);
 const VALID_STREAMS = new Set([
@@ -303,7 +305,7 @@ export class DataAdvantageService {
       if (!VALID_TAGS.has(tag)) {
         throw new ApiException(
           'validation_error',
-          `Language tag "${tag}" is not in the pilot registry. Validate against the registry rather than inventing tags.`,
+          `Language tag "${tag}" is not in the language registry. Validate against GET /v1/languages rather than inventing tags.`,
           HttpStatus.BAD_REQUEST,
         );
       }

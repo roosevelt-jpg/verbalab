@@ -1,20 +1,24 @@
-'use client';
+use client';
 
-import { FormEvent, useEffect, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { PortfolioShell } from '@/components/portfolio/portfolio-shell';
+import { SearchableCombobox, type ComboboxOption } from '@/components/searchable-combobox';
 
 type EdgePack = {
   pack_id: string;
   version: string;
   corridor: string;
   variety: string;
+  language_code: string;
+  name_en: string;
   device_class: string;
   peak_ram_mb: number;
   disk_mb: number;
   directions: string[];
   hashes: { manifest: string };
   revoked: boolean;
+  pack_kind?: string;
 };
 
 type RunResult = {
@@ -40,6 +44,7 @@ type VerifyResult = {
 export function EdgeClient() {
   const [apiKey, setApiKey] = useState('');
   const [packs, setPacks] = useState<EdgePack[]>([]);
+  const [total, setTotal] = useState(0);
   const [packId, setPackId] = useState('');
   const [mode, setMode] = useState<'local' | 'cloud_allowed' | 'cloud_forbidden'>('local');
   const [text, setText] = useState(
@@ -52,13 +57,29 @@ export function EdgeClient() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    void apiFetch<{ packs: EdgePack[] }>('/v1/edge/packs')
+    void apiFetch<{ packs: EdgePack[]; total?: number }>('/v1/edge/packs')
       .then((res) => {
         setPacks(res.packs);
-        if (res.packs[0]) setPackId(res.packs[0].pack_id);
+        setTotal(res.total ?? res.packs.length);
+        const preferred =
+          res.packs.find((p) => p.pack_id === 'lugemi-edge-ak-en') ?? res.packs[0];
+        if (preferred) setPackId(preferred.pack_id);
       })
       .catch(() => undefined);
   }, []);
+
+  const packOptions: ComboboxOption[] = useMemo(
+    () =>
+      packs.map((p) => ({
+        value: p.pack_id,
+        label: `${p.name_en} ↔ English · ${p.device_class} · ${p.peak_ram_mb} MB`,
+        keywords: `${p.pack_id} ${p.corridor} ${p.variety} ${p.language_code} ${p.name_en}`,
+        group: p.device_class,
+      })),
+    [packs],
+  );
+
+  const selected = packs.find((p) => p.pack_id === packId) ?? null;
 
   async function onVerify() {
     if (!packId) return;
@@ -104,7 +125,7 @@ export function EdgeClient() {
   return (
     <PortfolioShell
       title="Lugemi Edge"
-      lede="Verified offline corridor packs for declared device classes. Modes: local, cloud_allowed, and cloud_forbidden — no silent cloud fallback when forbidden. Limited device list; peak RAM is a measured budget subject to review."
+      lede={`Verified offline corridor packs for declared device classes. Modes: local, cloud_allowed, and cloud_forbidden — no silent cloud fallback when forbidden. Full registry catalog (${total || '…'} language↔English packs). Packs are local/demo signed manifests until real on-device weights ship.`}
     >
       <form onSubmit={onRun} className="vl-panel" style={{ padding: '1rem', display: 'grid', gap: '0.75rem' }}>
         <label style={{ display: 'grid', gap: '0.25rem' }}>
@@ -112,14 +133,17 @@ export function EdgeClient() {
           <input className="vl-field" value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder="lg_live_…" />
         </label>
         <label style={{ display: 'grid', gap: '0.25rem' }}>
-          <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Pack</span>
-          <select className="vl-field" value={packId} onChange={(e) => setPackId(e.target.value)}>
-            {packs.map((p) => (
-              <option key={p.pack_id} value={p.pack_id}>
-                {p.pack_id} · {p.corridor} · {p.device_class} · {p.peak_ram_mb} MB RAM
-              </option>
-            ))}
-          </select>
+          <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>
+            Pack {total ? `(${total} in catalog)` : ''}
+          </span>
+          <SearchableCombobox
+            value={packId}
+            onChange={setPackId}
+            options={packOptions}
+            placeholder="Search language, corridor, or device class…"
+            emptyLabel="Select a pack…"
+            aria-label="Edge pack"
+          />
         </label>
         <label style={{ display: 'grid', gap: '0.25rem' }}>
           <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Mode</span>
@@ -156,6 +180,17 @@ export function EdgeClient() {
       </form>
 
       {error ? <p style={{ color: 'var(--bad)', marginTop: '1rem' }}>{error}</p> : null}
+
+      {selected ? (
+        <div className="vl-panel" style={{ padding: '0.9rem', marginTop: '1rem' }}>
+          <strong>{selected.name_en} ↔ English</strong>
+          <span style={{ color: 'var(--muted)', fontSize: '0.85rem', marginLeft: '0.5rem' }}>
+            {selected.pack_id} · {selected.version} · {selected.variety} · {selected.directions.join(', ')} ·{' '}
+            {selected.device_class} · disk {selected.disk_mb} MB
+            {selected.pack_kind ? ` · ${selected.pack_kind}` : ''}
+          </span>
+        </div>
+      ) : null}
 
       {verify ? (
         <div className="vl-panel" style={{ padding: '0.9rem', marginTop: '1rem' }}>
@@ -195,20 +230,6 @@ export function EdgeClient() {
             <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--muted)' }}>{result.note}</p>
           ) : null}
         </div>
-      ) : null}
-
-      {packs.length ? (
-        <ul style={{ marginTop: '1.25rem', padding: 0, listStyle: 'none', display: 'grid', gap: '0.5rem' }}>
-          {packs.map((p) => (
-            <li key={p.pack_id} className="vl-panel" style={{ padding: '0.75rem 1rem' }}>
-              <strong>{p.pack_id}</strong>
-              <span style={{ color: 'var(--muted)', fontSize: '0.85rem', marginLeft: '0.5rem' }}>
-                {p.version} · {p.variety} · {p.directions.join(', ')} · disk {p.disk_mb} MB
-                {p.revoked ? ' · revoked' : ''}
-              </span>
-            </li>
-          ))}
-        </ul>
       ) : null}
     </PortfolioShell>
   );

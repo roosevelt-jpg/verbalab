@@ -76,7 +76,7 @@ export function GroundedClient() {
   return (
     <PortfolioShell
       title="Lugemi Grounded"
-      lede="Speech plus the selected visual referent. Returns document evidence, speaker claim, and translation separately. Highlights the referenced region and supports wrong-region correction. Assistive document communication only."
+      lede="Speech plus the selected visual referent. Returns document evidence, speaker claim, and translation separately. Highlights the referenced region and supports wrong-region correction. Target language covers the full registry. Assistive document communication only."
     >
       <form onSubmit={onSubmit} className="vl-panel" style={{ padding: '1rem', display: 'grid', gap: '0.75rem' }}>
         <label style={{ display: 'grid', gap: '0.25rem' }}>

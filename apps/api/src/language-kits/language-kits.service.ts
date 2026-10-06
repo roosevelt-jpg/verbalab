@@ -56,6 +56,26 @@ export class LanguageKitsService {
     return languageKitsCatalog();
   }
 
+  languages(query?: string) {
+    const catalog = languageKitsCatalog();
+    const q = query?.trim().toLowerCase();
+    const languages = q
+      ? catalog.languages.filter(
+          (l) =>
+            l.languageTag.includes(q) ||
+            l.displayName.toLowerCase().includes(q) ||
+            l.varietyId.toLowerCase().includes(q) ||
+            (l.nameNative?.toLowerCase().includes(q) ?? false),
+        )
+      : catalog.languages;
+    return {
+      languages,
+      count: languages.length,
+      total: catalog.language_count,
+      note: 'Full language registry available for kit drafting. A registry entry is not a model release.',
+    };
+  }
+
   async create(input: {
     languageTag: string;
     varietyId: string;
@@ -237,7 +257,7 @@ export class LanguageKitsService {
       ];
       kit.coverage.synthesis = 'unsupported';
       kit.coverage.evaluated_domains = kit.stage === 'evaluated' ? ['customer_service'] : [];
-      kit.coverage.device_limitations = ['Cloud batch only — no edge pack'];
+      kit.coverage.device_limitations = ['Cloud batch only — local/demo edge manifest available in catalog'];
     }
     if (kit.stage === 'preview' || kit.stage === 'released') {
       kit.coverage.asr = kit.stage === 'released' ? 'supported' : 'preview';
@@ -250,8 +270,8 @@ export class LanguageKitsService {
       kit.coverage.evaluated_domains = ['customer_service'];
       kit.coverage.device_limitations =
         kit.stage === 'released'
-          ? ['Synthesis not included without separate voice permission']
-          : ['Preview — limited domains; synthesis unsupported'];
+          ? ['Edge pack: local/demo signed manifest until on-device weights ship']
+          : ['Preview — limited domains; synthesis unsupported; edge catalog entry available'];
     }
   }
 

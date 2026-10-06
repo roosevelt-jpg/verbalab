@@ -24,6 +24,8 @@ export function FidelityClient() {
   const [apiKey, setApiKey] = useState('');
   const [source, setSource] = useState('I did not approve the transfer of 500');
   const [target, setTarget] = useState('I approved the transfer of 5,000');
+  const [sourceLanguage, setSourceLanguage] = useState('en');
+  const [targetLanguage, setTargetLanguage] = useState('ak');
   const [verify, setVerify] = useState<VerifyResult | null>(null);
   const [clarifyAnswer, setClarifyAnswer] = useState('');
   const [clarify, setClarify] = useState<ClarifyResult | null>(null);
@@ -46,8 +48,8 @@ export function FidelityClient() {
         body: JSON.stringify({
           source,
           target,
-          sourceLanguage: 'en',
-          targetLanguage: 'en',
+          sourceLanguage,
+          targetLanguage,
         }),
       });
       setVerify(res);
@@ -81,13 +83,28 @@ export function FidelityClient() {
   return (
     <PortfolioShell
       title="Lugemi Fidelity"
-      lede="Translation verification and clarification. Flags changed negation or quantity before the result is spoken or used by an agent. Silence and refusal never become confirmation."
+      lede="Translation verification and clarification. Flags changed negation or quantity before the result is spoken or used by an agent. Silence and refusal never become confirmation. Source/target languages cover the full registry."
     >
       <form onSubmit={onVerify} className="vl-panel" style={{ padding: '1rem', display: 'grid', gap: '0.75rem' }}>
         <label style={{ display: 'grid', gap: '0.25rem' }}>
           <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>API key</span>
           <input className="vl-field" value={apiKey} onChange={(e) => setApiKey(e.target.value)} />
         </label>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
+          <label style={{ display: 'grid', gap: '0.25rem' }}>
+            <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Source language</span>
+            <input className="vl-field" value={sourceLanguage} onChange={(e) => setSourceLanguage(e.target.value)} list="fid-langs" />
+          </label>
+          <label style={{ display: 'grid', gap: '0.25rem' }}>
+            <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Target language</span>
+            <input className="vl-field" value={targetLanguage} onChange={(e) => setTargetLanguage(e.target.value)} list="fid-langs" />
+          </label>
+        </div>
+        <datalist id="fid-langs">
+          {['en','ak','yo','sw','ha','ig','am','ee','zu','fr','ar','pt'].map((c) => (
+            <option key={c} value={c} />
+          ))}
+        </datalist>
         <label style={{ display: 'grid', gap: '0.25rem' }}>
           <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Source</span>
           <textarea className="vl-field" rows={2} value={source} onChange={(e) => setSource(e.target.value)} />
