@@ -8,7 +8,10 @@ export type CulturalEntryKind =
   | 'proverb'
   | 'idiom'
   | 'naming'
-  | 'oral_history';
+  | 'oral_history'
+  | 'lifestyle'
+  | 'habit'
+  | 'routine';
 
 export type CulturalEntry = {
   id: string;
@@ -17,6 +20,9 @@ export type CulturalEntry = {
   summary: string;
   languageCodes: string[];
   regions: string[];
+  /** Optional habits / routines context for culture-aware engines. */
+  habits?: string[];
+  routines?: string[];
   provenance: string;
   sourceCommunity: string;
   consentStatus: ConsentStatus;
@@ -104,6 +110,97 @@ export function culturalIntelligenceSeed(): CulturalEntry[] {
       regions: ['Horn of Africa'],
       provenance: 'Public literary histories — traditional texts not scraped',
       sourceCommunity: 'Somali communities',
+      consentStatus: 'unverified',
+    },
+    {
+      id: 'lifestyle-th-wai',
+      kind: 'lifestyle',
+      title: 'Thai wai and polite particles',
+      summary: 'Public overview of wai greeting and polite speech particles in Thai daily life.',
+      languageCodes: ['th'],
+      regions: ['Southeast Asia', 'Thailand'],
+      habits: ['wai greeting', 'shoe removal indoors'],
+      routines: ['temple offerings on Buddhist holy days'],
+      provenance: 'Public cultural etiquette summaries — community attestation pending',
+      sourceCommunity: 'Thai communities',
+      consentStatus: 'unverified',
+    },
+    {
+      id: 'habit-vi-coffee',
+      kind: 'habit',
+      title: 'Vietnamese morning street coffee habit',
+      summary: 'High-level public description of morning cà phê routines in urban Vietnam.',
+      languageCodes: ['vi'],
+      regions: ['Southeast Asia', 'Vietnam'],
+      habits: ['morning street coffee'],
+      routines: ['scooter commuting', 'evening family meals'],
+      provenance: 'Public lifestyle descriptions',
+      sourceCommunity: 'Vietnamese urban communities',
+      consentStatus: 'unverified',
+    },
+    {
+      id: 'routine-ar-iftar',
+      kind: 'routine',
+      title: 'Ramadan iftar hospitality routine',
+      summary: 'Public overview of iftar gathering patterns common across many Arabic-speaking communities.',
+      languageCodes: ['ar'],
+      regions: ['Middle East', 'North Africa'],
+      habits: ['Ramadan fasting'],
+      routines: ['iftar hospitality', 'Friday congregational prayer'],
+      provenance: 'Public cultural calendar descriptions',
+      sourceCommunity: 'Arabic-speaking Muslim communities',
+      consentStatus: 'attested',
+    },
+    {
+      id: 'lifestyle-es-mx-family',
+      kind: 'lifestyle',
+      title: 'Mexican Spanish family gathering lifestyle',
+      summary: 'Public overview of extended-family weekend gatherings and celebration calendars.',
+      languageCodes: ['es'],
+      regions: ['Latin America', 'Mexico', 'North America'],
+      habits: ['compadrazgo social ties'],
+      routines: ['weekend family gatherings', 'late dinners'],
+      provenance: 'Public cultural summaries — attestation pending',
+      sourceCommunity: 'Mexican Spanish-speaking communities',
+      consentStatus: 'unverified',
+    },
+    {
+      id: 'habit-en-gb-tea',
+      kind: 'habit',
+      title: 'British English tea-break habit',
+      summary: 'Light public description of tea-break social norms in UK English contexts.',
+      languageCodes: ['en'],
+      regions: ['United Kingdom'],
+      habits: ['tea breaks', 'queueing norms'],
+      routines: ['bank-holiday weekends'],
+      provenance: 'Public cultural descriptions',
+      sourceCommunity: 'UK English-speaking communities',
+      consentStatus: 'unverified',
+    },
+    {
+      id: 'routine-fr-ca-cabane',
+      kind: 'routine',
+      title: 'Québécois sugar-shack season routine',
+      summary: 'Public overview of cabane à sucre seasonal gatherings in French Canada.',
+      languageCodes: ['fr'],
+      regions: ['North America', 'Canada'],
+      habits: ['Saint-Jean-Baptiste celebrations'],
+      routines: ['cabane à sucre season', 'winter indoor social life'],
+      provenance: 'Public cultural calendar descriptions',
+      sourceCommunity: 'Québécois communities',
+      consentStatus: 'unverified',
+    },
+    {
+      id: 'lifestyle-pl-nameday',
+      kind: 'lifestyle',
+      title: 'Polish name-day social lifestyle',
+      summary: 'Public overview of name-day (imieniny) visiting patterns in Polish communities.',
+      languageCodes: ['pl'],
+      regions: ['European Union', 'Poland'],
+      habits: ['name-day celebrations'],
+      routines: ['Sunday family dinners'],
+      provenance: 'Public cultural summaries',
+      sourceCommunity: 'Polish communities',
       consentStatus: 'unverified',
     },
   ];

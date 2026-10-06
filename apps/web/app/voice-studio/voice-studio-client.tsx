@@ -6,6 +6,7 @@ import { useCallback, useEffect, useState, type CSSProperties } from 'react';
 import { API_URL, apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
 import { AudioPreviewBar } from '@/components/media/audio-preview-bar';
+import { SearchableCombobox } from '@/components/searchable-combobox';
 
 type Capability = { id: string; name: string; status: string; notes: string };
 type Engine = {
@@ -235,13 +236,17 @@ export function VoiceStudioClient() {
         </label>
         <label style={{ display: 'grid', gap: '0.35rem' }}>
           <span style={label}>Voice</span>
-          <select value={voice} onChange={(e) => setVoice(e.target.value)} style={input}>
-            {voices.map((v) => (
-              <option key={v.id} value={v.id}>
-                {v.name} ({v.id})
-              </option>
-            ))}
-          </select>
+          <SearchableCombobox
+            value={voice}
+            onChange={setVoice}
+            options={voices.map((v) => ({
+              value: v.id,
+              label: `${v.name} (${v.id})`,
+              keywords: `${v.id} ${v.name}`,
+            }))}
+            aria-label="Voice"
+            placeholder="Search voice…"
+          />
         </label>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
           <button type="button" disabled={busy} onClick={() => void compileSsml()} style={secondary}>
@@ -286,13 +291,17 @@ export function VoiceStudioClient() {
       <section style={{ marginBottom: '1.75rem', maxWidth: '44rem' }}>
         <h2 style={h2}>Voice comparison</h2>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.75rem' }}>
-          <select value={compareVoice} onChange={(e) => setCompareVoice(e.target.value)} style={input}>
-            {voices.map((v) => (
-              <option key={v.id} value={v.id}>
-                {v.name}
-              </option>
-            ))}
-          </select>
+          <SearchableCombobox
+            value={compareVoice}
+            onChange={setCompareVoice}
+            options={voices.map((v) => ({
+              value: v.id,
+              label: v.name,
+              keywords: `${v.id} ${v.name}`,
+            }))}
+            aria-label="Compare voice"
+            placeholder="Search voice…"
+          />
           <button type="button" disabled={busy} onClick={() => void compare()} style={primary}>
             Compare
           </button>

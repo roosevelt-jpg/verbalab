@@ -5,6 +5,7 @@ import { apiFetch } from '@/lib/api';
 import { SITE_CONTENT } from '@/data/site-content';
 import { formatLanguageLabel, formatVariantLabel, regionDisplayName } from '@/lib/locale-catalog';
 import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
+import { SearchableCombobox } from '@/components/searchable-combobox';
 
 export type AccentVoice = {
   id: string;
@@ -208,48 +209,54 @@ export function NativeAccentVoicePicker({
         </label>
         <label style={field}>
           <span style={label}>Language</span>
-          <select
+          <SearchableCombobox
             value={value.language}
-            onChange={(e) => patch({ language: e.target.value })}
-            style={input}
-          >
-            <option value="any">Any</option>
-            {languages.map((lang) => (
-              <option key={lang} value={lang}>
-                {languageLabel(lang)}
-              </option>
-            ))}
-          </select>
+            onChange={(language) => patch({ language })}
+            options={[
+              { value: 'any', label: 'Any', keywords: 'all' },
+              ...languages.map((lang) => ({
+                value: lang,
+                label: languageLabel(lang),
+                keywords: lang,
+              })),
+            ]}
+            aria-label="Language"
+            placeholder="Search language…"
+          />
         </label>
         <label style={field}>
           <span style={label}>Country</span>
-          <select
+          <SearchableCombobox
             value={value.country}
-            onChange={(e) => patch({ country: e.target.value })}
-            style={input}
-          >
-            <option value="any">Any</option>
-            {countries.map((c) => (
-              <option key={c} value={c}>
-                {regionDisplayName(c) ?? c} ({c})
-              </option>
-            ))}
-          </select>
+            onChange={(country) => patch({ country })}
+            options={[
+              { value: 'any', label: 'Any', keywords: 'all' },
+              ...countries.map((c) => ({
+                value: c,
+                label: `${regionDisplayName(c) ?? c} (${c})`,
+                keywords: c,
+              })),
+            ]}
+            aria-label="Country"
+            placeholder="Search country…"
+          />
         </label>
         <label style={field}>
           <span style={label}>Accent / region</span>
-          <select
+          <SearchableCombobox
             value={value.accent}
-            onChange={(e) => patch({ accent: e.target.value })}
-            style={input}
-          >
-            <option value="any">Any</option>
-            {accents.map((a) => (
-              <option key={a.code} value={a.code}>
-                {formatVariantLabel(a)}
-              </option>
-            ))}
-          </select>
+            onChange={(accent) => patch({ accent })}
+            options={[
+              { value: 'any', label: 'Any', keywords: 'all' },
+              ...accents.map((a) => ({
+                value: a.code,
+                label: formatVariantLabel(a),
+                keywords: `${a.code} ${a.languageCode}`,
+              })),
+            ]}
+            aria-label="Accent"
+            placeholder="Search accent…"
+          />
         </label>
         {showEmotionTone ? (
           <label style={field}>
@@ -273,20 +280,21 @@ export function NativeAccentVoicePicker({
 
       <label style={field}>
         <span style={label}>Voice</span>
-        <select
+        <SearchableCombobox
           value={value.voiceId}
-          onChange={(e) => patch({ voiceId: e.target.value })}
-          style={input}
-        >
-          {filtered.length === 0 ? <option value="">No voices match filters</option> : null}
-          {filtered.map((v) => (
-            <option key={v.id} value={v.id}>
-              {v.name} · {v.gender}
-              {v.accent ? ` · ${v.accent}` : ''}
-              {v.country ? ` · ${v.country}` : ''}
-            </option>
-          ))}
-        </select>
+          onChange={(voiceId) => patch({ voiceId })}
+          options={
+            filtered.length === 0
+              ? [{ value: '', label: 'No voices match filters' }]
+              : filtered.map((v) => ({
+                  value: v.id,
+                  label: `${v.name} · ${v.gender}${v.accent ? ` · ${v.accent}` : ''}${v.country ? ` · ${v.country}` : ''}`,
+                  keywords: `${v.id} ${v.name} ${v.accent ?? ''} ${v.country ?? ''}`,
+                }))
+          }
+          aria-label="Voice"
+          placeholder="Search voice…"
+        />
       </label>
 
       {selected ? (

@@ -13,6 +13,7 @@ import {
 } from '@/components/console/native-accent-voice-picker';
 import { extractAudioTrackClient } from '@/lib/extract-audio-track';
 import { LocaleSelect } from '@/components/language-locale-select';
+import { SearchableCombobox } from '@/components/searchable-combobox';
 import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
 type StudioTab = 'tts' | 'clone' | 'extract' | 'stt' | 'projects';
@@ -605,43 +606,39 @@ export function AudioClient() {
 
           <label className="vl-label">
             Voice (advanced)
-            <select
+            <SearchableCombobox
               className="vl-field"
               value={voice}
-              onChange={(e) => {
-                setVoice(e.target.value);
-                setPicker((p) => ({ ...p, voiceId: e.target.value }));
+              onChange={(next) => {
+                setVoice(next);
+                setPicker((p) => ({ ...p, voiceId: next }));
               }}
-            >
-              <optgroup label="Stock">
-                {(stockVoices.length
+              options={[
+                ...(stockVoices.length
                   ? stockVoices
                   : [{ id: 'alloy', name: 'Alloy', gender: 'neutral' }]
-                ).map((v) => (
-                  <option key={v.id} value={v.id}>
-                    {v.name} ({v.id})
-                  </option>
-                ))}
-              </optgroup>
-              {ownVoices.length > 0 ? (
-                <optgroup label="Own TTS (Africa-first)">
-                  {ownVoices.map((v) => (
-                    <option key={v.id} value={v.id}>
-                      {v.name}
-                    </option>
-                  ))}
-                </optgroup>
-              ) : null}
-              {usableClones.length > 0 ? (
-                <optgroup label="Approved clones">
-                  {usableClones.map((c) => (
-                    <option key={c.id} value={c.voice}>
-                      {c.name}
-                    </option>
-                  ))}
-                </optgroup>
-              ) : null}
-            </select>
+                ).map((v) => ({
+                  value: v.id,
+                  label: `${v.name} (${v.id})`,
+                  group: 'Stock',
+                  keywords: v.id,
+                })),
+                ...ownVoices.map((v) => ({
+                  value: v.id,
+                  label: v.name,
+                  group: 'Own TTS (Africa-first)',
+                  keywords: v.id,
+                })),
+                ...usableClones.map((c) => ({
+                  value: c.voice,
+                  label: c.name,
+                  group: 'Approved clones',
+                  keywords: c.voice,
+                })),
+              ]}
+              aria-label="Voice"
+              placeholder="Search voice…"
+            />
           </label>
           <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.8rem' }}>
             Prefer <code className="vl-code">own:*</code> region voices for native accent metadata. Approved clones

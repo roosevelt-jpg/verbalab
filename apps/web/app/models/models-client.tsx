@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, type CSSProperties } from 'react';
+import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import Link from 'next/link';
 import { apiFetch } from '@/lib/api';
@@ -110,6 +110,26 @@ export function ModelsClient() {
   const [matrix, setMatrix] = useState<LiveMatrix | null>(null);
   const [engine, setEngine] = useState<Engine | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [modelQuery, setModelQuery] = useState('');
+
+  const filteredFeatures = useMemo(() => {
+    if (!matrix) return [];
+    const needle = modelQuery.trim().toLowerCase();
+    if (!needle) return matrix.features;
+    return matrix.features
+      .map((block) => ({
+        ...block,
+        models: block.models.filter(
+          (m) =>
+            m.displayName.toLowerCase().includes(needle) ||
+            m.slug.toLowerCase().includes(needle) ||
+            m.kind.toLowerCase().includes(needle) ||
+            block.feature.toLowerCase().includes(needle) ||
+            (m.notes ?? '').toLowerCase().includes(needle),
+        ),
+      }))
+      .filter((block) => block.models.length > 0 || block.feature.toLowerCase().includes(needle));
+  }, [matrix, modelQuery]);
 
   useEffect(() => {
     void (async () => {
@@ -272,12 +292,23 @@ export function ModelsClient() {
       ) : null}
 
       <div style={{ marginTop: '1.75rem', display: 'grid', gap: '1.25rem' }}>
+        {matrix ? (
+          <label style={{ display: 'grid', gap: '0.35rem', maxWidth: '24rem' }}>
+            <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Search Lugemi models</span>
+            <input
+              className="vl-field"
+              value={modelQuery}
+              onChange={(e) => setModelQuery(e.target.value)}
+              placeholder="e.g. Atlas, Baobab, Echo, Lex…"
+            />
+          </label>
+        ) : null}
         {!matrix && !error ? (
           <p style={{ color: 'var(--muted)' }}>Loading registry…</p>
         ) : !matrix ? (
           <p style={{ color: 'var(--muted)' }}>Registry unavailable.</p>
         ) : (
-          matrix.features.map((block) => (
+          filteredFeatures.map((block) => (
             <section key={block.feature}>
               <h2 style={sectionTitle}>
                 {block.feature}{' '}

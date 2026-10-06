@@ -60,6 +60,7 @@ export function ConnectorsClient() {
   const [busy, setBusy] = useState(false);
   const [installs, setInstalls] = useState<Record<string, ConnectorInstall>>({});
   const [filter, setFilter] = useState<ConnectorCategory | 'all'>('all');
+  const [connectorQuery, setConnectorQuery] = useState('');
   const [expandedId, setExpandedId] = useState<string | null>('twilio');
   const [drafts, setDrafts] = useState<Record<string, ConnectorInstall>>({});
   const [demoBusyId, setDemoBusyId] = useState<string | null>(null);
@@ -97,13 +98,21 @@ export function ConnectorsClient() {
     }
   }, []);
 
-  const visible = useMemo(
-    () =>
+  const visible = useMemo(() => {
+    const base =
       filter === 'all'
         ? PLATFORM_CONNECTORS
-        : PLATFORM_CONNECTORS.filter((c) => c.category === filter),
-    [filter],
-  );
+        : PLATFORM_CONNECTORS.filter((c) => c.category === filter);
+    const needle = connectorQuery.trim().toLowerCase();
+    if (!needle) return base;
+    return base.filter(
+      (c) =>
+        c.name.toLowerCase().includes(needle) ||
+        c.id.toLowerCase().includes(needle) ||
+        c.blurb.toLowerCase().includes(needle) ||
+        c.category.toLowerCase().includes(needle),
+    );
+  }, [filter, connectorQuery]);
 
   const connectedCount = countConnected(installs);
 
@@ -315,6 +324,16 @@ export function ConnectorsClient() {
           </button>
         ))}
       </div>
+
+      <label className="vl-label" style={{ maxWidth: '24rem', margin: '0.75rem 0' }}>
+        Search connectors
+        <input
+          className="vl-input"
+          value={connectorQuery}
+          onChange={(e) => setConnectorQuery(e.target.value)}
+          placeholder="e.g. Slack, Twilio, WhatsApp…"
+        />
+      </label>
 
       {filter !== 'all' ? (
         <p className="lg-connectors-cat-lead">
