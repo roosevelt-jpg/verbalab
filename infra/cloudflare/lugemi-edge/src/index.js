@@ -18,6 +18,7 @@ const CACHEABLE_PREFIXES = [
   '/v1/models',
   '/v1/portfolio',
   '/v1/country-packs',
+  '/v1/countries',
   '/v1/residency',
   '/health',
 ];

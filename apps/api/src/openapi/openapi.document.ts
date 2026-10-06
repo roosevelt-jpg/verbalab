@@ -2853,6 +2853,18 @@ export const openApiDocument = {
         },
       },
     },
+        '/v1/countries': {
+      get: {
+        tags: ['Country packs'],
+        summary: 'List countries (alias of country-packs)',
+        description: 'Full ISO catalog. Use ?picker=1 for lightweight picker rows; ?region= to filter.',
+        parameters: [
+          { name: 'region', in: 'query', schema: { type: 'string' } },
+          { name: 'picker', in: 'query', schema: { type: 'string', enum: ['1', 'true', 'yes'] } },
+        ],
+        responses: { '200': { description: 'Country list' } },
+      },
+    },
     '/v1/country-packs': {
       get: {
         summary: 'List country packs',

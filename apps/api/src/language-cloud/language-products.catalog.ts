@@ -124,9 +124,10 @@ export function languageProductCatalog(): LanguageProductRow[] {
       id: 'country-packs',
       name: 'Country / regional packs',
       status: 'shipped',
-      api: 'GET /v1/country-packs',
+      api: 'GET /v1/country-packs (alias GET /v1/countries)',
       console: '/countries',
-      notes: 'ISO country guidance composing locale packs. Not billing SKUs.',
+      notes:
+        'Full ISO country catalog (Africa-first). Composes locale packs where seeded — not CLDR dialect completeness or billing SKUs.',
     },
     {
       id: 'registry',

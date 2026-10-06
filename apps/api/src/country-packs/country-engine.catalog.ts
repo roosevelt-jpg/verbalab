@@ -13,14 +13,14 @@ export function countryEngineCatalog() {
   return {
     product: 'Lugemi Country Engine',
     note:
-      'Curated ISO country packs that compose language locale packs. African-priority guidance — not a CLDR dump, billing SKU catalog, or worldwide coverage claim.',
+      'Full ISO country catalog with Africa-first guidance. Each pack composes language locale packs from the registry where seeded — curated composition, not a CLDR dump of every dialect, and not a billing SKU catalog.',
     capabilities: [
       {
         id: 'list',
         name: 'List country packs',
         status: 'shipped',
         api: 'GET /v1/country-packs',
-        notes: 'Optional ?region= filter.',
+        notes: 'Full ISO set; optional ?region= filter. Alias: GET /v1/countries.',
       },
       {
         id: 'get',
@@ -59,16 +59,19 @@ export function countryEngineCatalog() {
       },
       {
         id: 'worldwide',
-        name: 'Worldwide coverage',
-        status: 'deferred',
-        api: null,
-        notes: 'Curated African-priority set; not every ISO country.',
+        name: 'Worldwide country list',
+        status: 'shipped',
+        api: 'GET /v1/country-packs',
+        notes:
+          'All ISO countries listed (Africa-first order). Locale composition is curated where seeded — not every dialect/variant.',
       },
     ] satisfies CountryCapability[],
     honesty: {
       cldrOs: false,
       billingSkuCatalog: false,
-      worldwideCoverage: false,
+      /** Full ISO country list is shipped; full CLDR dialect completeness is not. */
+      worldwideCoverage: true,
+      worldwideDialectCompleteness: false,
       regeneratesLocalePacks: false,
     },
     links: {
