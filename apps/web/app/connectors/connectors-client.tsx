@@ -82,7 +82,7 @@ export function ConnectorsClient() {
         Connectors
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0' }}>
-        Slack slash command translates a message back into the channel. One connector — not a Zapier clone.
+        Slack slash command translates a message back into the channel. One connector — not an iPaaS clone.
       </p>
 
       {error ? <p style={{ color: 'var(--bad)' }}>{error}</p> : null}

@@ -119,7 +119,7 @@ export function findVoiceLanguagePackEntry(key: string): VoiceLanguageCatalogEnt
 }
 
 /**
- * Library Phase 124 → Voice & Language Marketplace.
+ * Voice & Language Marketplace.
  * Buy/sell/publish voice + language pack entitlements — not a third-party voice CDN OS.
  * Extends existing voice marketplace + Volume 1 language packs. Volume 11: Stripe-only.
  */

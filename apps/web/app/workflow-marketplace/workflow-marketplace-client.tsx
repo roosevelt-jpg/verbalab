@@ -67,7 +67,7 @@ export function WorkflowMarketplaceClient() {
         Workflow Marketplace
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        License sandboxed workflow templates over Workflow Runtime — Policy-gated, not Zapier OS.
+        License sandboxed workflow templates over Workflow Runtime — Policy-gated, not iPaaS OS.
       </p>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}

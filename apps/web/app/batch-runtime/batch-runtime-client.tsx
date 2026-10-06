@@ -96,7 +96,7 @@ export function BatchRuntimeClient() {
         Batch Runtime
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.5rem', maxWidth: '44rem' }}>
-        Batch hub over BullMQ jobs with sandbox priority/retry/checkpoint. Not Spark/Airflow.{' '}
+        Batch hub over BullMQ jobs with sandbox priority/retry/checkpoint. Not a distributed batch OS.{' '}
         <Link href="/inference-cloud">Inference Cloud</Link>.
       </p>
 

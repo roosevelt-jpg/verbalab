@@ -66,7 +66,7 @@ Voice Cloud is a **bounded enterprise voice API hub** in the Nest modular monoli
 - Monitoring / billing = shared observability + TTS character metering + Stripe entitlements.
 - Infra = Docker + Fly + GitHub Actions + optional Terraform/EKS (shared).
 
-Voice Cloud is **not** ElevenLabs + Resemble + Nuance + Amazon Polly + Adobe Podcast + Clearview biometrics combined.
+Voice Cloud is **not** vendor voice clone + Resemble + Nuance + Amazon Polly + Adobe Podcast + Clearview biometrics combined.
 
 Cloud blueprint: [`CLOUD_BLUEPRINT.md`](./CLOUD_BLUEPRINT.md) (ADR-0080). ADR: [`adr/0081-voice-cloud-foundation.md`](./adr/0081-voice-cloud-foundation.md).
 

@@ -68,7 +68,7 @@ export function ModelMarketplaceClient() {
         Model Marketplace
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        License model SKUs over Model Registry — not a Hugging Face hub or weight CDN.
+        License model SKUs over Model Registry — not a public model-hub or weight CDN.
       </p>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}

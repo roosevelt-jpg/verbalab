@@ -27,8 +27,8 @@ export type ResearchAreaId =
   | 'responsibleAi';
 
 /**
- * Library Phase 138 → Research Cloud Foundation.
- * Incubates R&D that graduates into production — not Weights & Biases OS, not Hugging Face hub OS,
+ * Research Cloud Foundation.
+ * Incubates R&D that graduates into production — not Weights & Biases OS, not a public model-hub OS,
  * not DOI registry OS, not USPTO patent OS, not MLflow OS. AI Sovereignty Cloud deferred to Volume 14+.
  */
 export function researchCloudProductCatalog(): ResearchCloudProductRow[] {

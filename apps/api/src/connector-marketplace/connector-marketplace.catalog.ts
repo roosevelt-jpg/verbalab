@@ -139,15 +139,15 @@ export function findConnectorCatalogEntry(key: string): ConnectorCatalogEntry | 
 }
 
 /**
- * Library Phase 123 → Connector Marketplace.
- * Buy/sell/publish connector entitlements — not Zapier/iPaaS OS.
+ * Connector Marketplace.
+ * Buy/sell/publish connector entitlements — not an iPaaS automation OS.
  * Extends Slack connector (ADR-0026). Volume 11: Stripe-only; never store raw cards.
  */
 export function connectorMarketplaceEngineCatalog() {
   return {
     product: 'Lugemi Connector Marketplace',
     note:
-      'Connector Marketplace. Publish/license connector SKUs over the built-in connector catalog + existing Slack connector. Install grants workspace entitlements — not live arbitrary outbound, Zapier, or iPaaS OS. Monetization records MarketplaceSale receipts; Stripe Connect via existing.',
+      'Connector Marketplace. Publish/license connector SKUs over the built-in connector catalog + existing Slack connector. Install grants workspace entitlements — not live arbitrary outbound, or iPaaS automation OS. Monetization records MarketplaceSale receipts; Stripe Connect via existing.',
     capabilities: [
       {
         id: 'crm-connectors',
@@ -299,7 +299,7 @@ export function connectorMarketplaceEngineCatalog() {
       stripeOrEquivalentRequired: true,
       storesRawCardData: false,
       note:
-        'Volume 11 real-money volume. Connector listings are entitlements — not live arbitrary outbound. Use Stripe (or equivalent); never store raw card data. Not Zapier/iPaaS OS.',
+        'Volume 11 real-money volume. Connector listings are entitlements — not live arbitrary outbound. Use Stripe (or equivalent); never store raw card data. Not an iPaaS automation OS.',
     },
     docs: '/docs/CONNECTOR_MARKETPLACE.md',
   };

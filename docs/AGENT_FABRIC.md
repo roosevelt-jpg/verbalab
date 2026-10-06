@@ -1,7 +1,7 @@
 # Lugemi Agent Fabric
 
 **Status:** Shipped (VL-246 / library Phase 113)  
-**Rule:** Agent Fabric is the **internal** agent router over Agent Runtime — **sandboxed + Policy-gated**. Not LangGraph/AutoGPT OS, open tool execution, or a customer-facing product. Extends AI Fabric + Agent Runtime. Do **not** regenerate Volumes 1–9 or VL-219. Roadmap: [`docs/roadmap/volume10-ai-fabric/`](./roadmap/volume10-ai-fabric/).
+**Rule:** Agent Fabric is the **internal** agent router over Agent Runtime — **sandboxed + Policy-gated**. Not open agent-orchestration OS, open tool execution, or a customer-facing product. Extends AI Fabric + Agent Runtime. Do **not** regenerate Volumes 1–9 or VL-219. Roadmap: [`docs/roadmap/volume10-ai-fabric/`](./roadmap/volume10-ai-fabric/).
 
 ---
 

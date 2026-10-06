@@ -131,7 +131,7 @@ describe('Ecosystem Cloud Foundation', () => {
     const model = res.body.products.find((p: { id: string }) => p.id === 'model-marketplace');
     expect(model.status).toBe('shipped');
     expect(model.console).toBe('/model-marketplace');
-    expect(model.notes).toMatch(/Hugging Face|registry|Stripe/i);
+    expect(model.notes).toMatch(/public model-hub|registry|Stripe/i);
 
     const dataset = res.body.products.find((p: { id: string }) => p.id === 'dataset-marketplace');
     expect(dataset.status).toBe('shipped');
@@ -146,19 +146,19 @@ describe('Ecosystem Cloud Foundation', () => {
     const agent = res.body.products.find((p: { id: string }) => p.id === 'agent-marketplace');
     expect(agent.status).toBe('shipped');
     expect(agent.console).toBe('/agent-marketplace');
-    expect(agent.notes).toMatch(/sandbox|Policy|LangGraph|AutoGPT/i);
+    expect(agent.notes).toMatch(/sandbox|Policy|open agent-orchestration/i);
 
     const workflow = res.body.products.find((p: { id: string }) => p.id === 'workflow-marketplace');
     expect(workflow.status).toBe('shipped');
     expect(workflow.console).toBe('/workflow-marketplace');
-    expect(workflow.notes).toMatch(/sandbox|Policy|Zapier|Temporal/i);
+    expect(workflow.notes).toMatch(/sandbox|Policy|iPaaS|distributed-workflow/i);
 
     const connector = res.body.products.find(
       (p: { id: string }) => p.id === 'connector-marketplace',
     );
     expect(connector.status).toBe('shipped');
     expect(connector.console).toBe('/connector-marketplace');
-    expect(connector.notes).toMatch(/iPaaS|Zapier|Stripe|Slack/i);
+    expect(connector.notes).toMatch(/iPaaS|Stripe|Slack/i);
 
     const voiceLang = res.body.products.find(
       (p: { id: string }) => p.id === 'voice-language-marketplace',

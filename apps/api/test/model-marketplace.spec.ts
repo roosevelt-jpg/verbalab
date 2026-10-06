@@ -80,7 +80,7 @@ describe('Model Marketplace', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toContain('');
-    expect(text).toMatch(/Hugging Face|huggingFaceOs/i);
+    expect(text).toMatch(/public model-hub|huggingFaceOs|model-hub/i);
     expect(text).toMatch(/Stripe|storesRawCardData/i);
     expect(text).toMatch(/weight/i);
   });

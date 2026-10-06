@@ -10,12 +10,12 @@ export type EmotionVoiceCapability = {
   notes: string;
 };
 
-/** Library Phase 30 → Emotion Voice Engine. */
+/** Emotion Voice Engine. */
 export function emotionVoiceEngineCatalog() {
   return {
     product: 'Lugemi Emotion Voice',
     note:
-      'Emotion-conditioned synthesis façade over Neural TTS. Soft prosody + voice recommendations for OpenAI/own voices; partial clone provider style settings on clone:{id}. Not trained expressive TTS / Hume / Azure Neural Emotion. Distinct from Speech Emotion Intelligence detection.',
+      'Emotion-conditioned synthesis façade over Neural TTS. Soft prosody + voice recommendations for OpenAI/own voices; partial clone provider style settings on clone:{id}. Not trained expressive TTS / emotion-vendor / cloud neural-emotion OS. Distinct from Speech Emotion Intelligence detection.',
     capabilities: [
       {
         id: 'emotion-profiles',
@@ -37,7 +37,7 @@ export function emotionVoiceEngineCatalog() {
         name: 'Streaming Emotion Synthesis',
         status: 'partial',
         api: 'POST /v1/emotion-voice/stream',
-        notes: 'Chunk SSE after synthesis (same honesty as ).',
+        notes: 'Chunk SSE after synthesis (same honesty as Neural TTS streaming).',
       },
       {
         id: 'happy',

@@ -94,7 +94,7 @@ export function VoiceEnhancementClient() {
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
         Cleanup profiles over Audio Intelligence PCM heuristics — mic, podcast, meeting, broadcast,
-        restore. Not Krisp or Adobe Enhance.
+        restore. Not third-party noise-cancellation or enhance OS.
       </p>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}

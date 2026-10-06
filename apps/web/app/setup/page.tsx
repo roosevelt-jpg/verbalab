@@ -71,7 +71,6 @@ export default function SetupPage() {
           </li>
           <li>
             <code className="vl-code">VENDOR_VOICE_CLONE_API_KEY</code> — legacy voice-clone adapter
-            (optional alias <code className="vl-code">ELEVENLABS_API_KEY</code>)
           </li>
         </ul>
 

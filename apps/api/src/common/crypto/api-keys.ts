@@ -6,7 +6,7 @@ export type ApiKeyEnvironment = 'live' | 'test';
 const LIVE_PREFIX = 'lg_live_';
 const TEST_PREFIX = 'lg_test_';
 
-/** Legacy VerbaLab prefixes — accepted for one release. */
+/** Legacy prefixes — accepted for one release. */
 const LEGACY_LIVE_PREFIX = 'vl_live_';
 const LEGACY_TEST_PREFIX = 'vl_test_';
 

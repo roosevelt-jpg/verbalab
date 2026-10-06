@@ -9,7 +9,7 @@ export type KernelRuntimeRow = {
   notes: string;
 };
 
-/** Library Phase 81 runtime map. Internal OS hub — not a customer product. */
+/** Runtime map. Internal OS hub — not a customer product. */
 export function aiKernelRuntimeCatalog(): KernelRuntimeRow[] {
   return [
     {
@@ -73,7 +73,7 @@ export function aiKernelRuntimeCatalog(): KernelRuntimeRow[] {
       api: 'GET /v1/workflow-runtime/engine',
       console: '/workflow-runtime',
       notes:
-        'Sandbox multi-step workflows with hard permission allowlists. Extends /v1/workflows; not Temporal/Airflow OS.',
+        'Sandbox multi-step workflows with hard permission allowlists. Extends /v1/workflows; not a distributed-workflow OS.',
     },
     {
       id: 'plugin-runtime',

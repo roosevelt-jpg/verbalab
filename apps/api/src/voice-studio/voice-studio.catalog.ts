@@ -8,12 +8,12 @@ export type StudioCapability = {
   notes: string;
 };
 
-/** Library Phase 31 → Voice Studio. Extends existing `/audio` — not a DAW. */
+/** Voice Studio. Extends existing `/audio` — not a DAW. */
 export function voiceStudioEngineCatalog() {
   return {
     product: 'Lugemi Voice Studio',
     note:
-      'Professional Voice Studio hub over Neural TTS, clones, and African studio UX. Linear timeline + SSML lite + pronunciation lexicon + voice comparison — not a nonlinear DAW / Premiere / Descript parity product.',
+      'Professional Voice Studio hub over Neural TTS, clones, and African studio UX. Linear timeline + SSML lite + pronunciation lexicon + voice comparison — not a nonlinear DAW / NLE / overdub parity product.',
     capabilities: [
       {
         id: 'voice-library',
@@ -111,7 +111,7 @@ export function voiceStudioEngineCatalog() {
         name: 'Analytics',
         status: 'partial',
         api: 'GET /v1/voice-studio/engine/analytics',
-        notes: 'Studio action counts. Full Voice Analytics = Phase 35.',
+        notes: 'Studio action counts. Full Voice Analytics lives in the Voice Analytics hub.',
       },
     ] satisfies StudioCapability[],
     honesty: {

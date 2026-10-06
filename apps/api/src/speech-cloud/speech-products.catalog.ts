@@ -9,7 +9,7 @@ export type SpeechProductRow = {
   notes: string;
 };
 
-/** Library Phase 16 product map. Hub only — does not reimplement STT/TTS. */
+/** Product map. Hub only — does not reimplement STT/TTS. */
 export function speechProductCatalog(): SpeechProductRow[] {
   return [
     {
@@ -82,7 +82,7 @@ export function speechProductCatalog(): SpeechProductRow[] {
       status: 'partial',
       api: '/v1/voice',
       console: '/voice',
-      notes: 'Twilio FAQ voice agent ( area). Call Intelligence analytics deferred to Phase 24.',
+      notes: 'Twilio FAQ voice agent. Call Intelligence analytics deferred.',
     },
     {
       id: 'speaker-intelligence',
@@ -118,7 +118,7 @@ export function speechProductCatalog(): SpeechProductRow[] {
       api: 'GET /v1/audio-intelligence/engine',
       console: '/audio-intelligence',
       notes:
-        'Noise/silence analyze, gate enhance, linear upscale, VAD isolate. Echo AEC deferred. Not Krisp/Demucs.',
+        'Noise/silence analyze, gate enhance, linear upscale, VAD isolate. Echo AEC deferred. Not third-party denoise/stem-separation OS.',
     },
     {
       id: 'pronunciation-ai',
@@ -154,7 +154,7 @@ export function speechProductCatalog(): SpeechProductRow[] {
       api: 'POST /v1/audio-intelligence/enhance',
       console: '/audio-intelligence',
       notes:
-        'Noise-gate enhance under Audio Intelligence. Not spectral ML denoise / Adobe Enhance.',
+        'Noise-gate enhance under Audio Intelligence. Not spectral ML denoise / commercial enhance OS.',
     },
     {
       id: 'speech-analytics',

@@ -1,7 +1,7 @@
 # Lugemi Model Marketplace
 
 **Status:** Shipped (VL-251 / library Phase 118)  
-**Rule:** License SKUs over Model Registry / VL-110 — **not** Hugging Face hub, weight CDN, or traffic-mesh deploy OS. Real-money honesty: Stripe (or equivalent); `storesRawCardData: false`. Roadmap: [`docs/roadmap/volume11-ecosystem-cloud/`](./roadmap/volume11-ecosystem-cloud/).
+**Rule:** License SKUs over Model Registry / VL-110 — **not** public model-hub, weight CDN, or traffic-mesh deploy OS. Real-money honesty: Stripe (or equivalent); `storesRawCardData: false`. Roadmap: [`docs/roadmap/volume11-ecosystem-cloud/`](./roadmap/volume11-ecosystem-cloud/).
 
 ---
 
@@ -14,7 +14,7 @@
 | Licensing | **Shipped** — install grants workspace entitlement |
 | Revenue Sharing | **Partial** — 15% platform fee on `MarketplaceSale`; VL-258 deepens payouts |
 | GraphQL / SDK / Analytics / Monitoring / Docs | **Shipped** |
-| Weight hosting / HF hub OS | **Forbidden** — `weightHostingOs: false`, `huggingFaceOs: false` |
+| Weight hosting / public model-hub OS | **Forbidden** — `weightHostingOs: false`, `huggingFaceOs: false` |
 
 ---
 

@@ -352,7 +352,7 @@ export class AgentMarketplaceService {
       listing: this.serialize(listing),
       honesty: this.engine().honesty,
       note:
-        'Agent listing published. Buyers install into Agent Runtime sandbox; run is Policy-gated. Not LangGraph/AutoGPT OS.',
+        'Agent listing published. Buyers install into Agent Runtime sandbox; run is Policy-gated. Not open agent-orchestration OS.',
     };
   }
 
@@ -700,7 +700,7 @@ export class AgentMarketplaceService {
         ...result.honesty,
       },
       note:
-        'Marketplace run completed via Agent Runtime sandbox + AgentPolicyGate. Not open tool execution / LangGraph OS.',
+        'Marketplace run completed via Agent Runtime sandbox + AgentPolicyGate. Not open tool execution / open agent-orchestration OS.',
     };
   }
 

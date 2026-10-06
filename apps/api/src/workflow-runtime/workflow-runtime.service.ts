@@ -73,7 +73,7 @@ export class WorkflowRuntimeService {
         liveStepExecutionForbidden: true,
         policyMustHardGate: true,
         note:
-          'Every workflow step passes WorkflowPolicyGate (local hard allowlist). Policy Runtime will harden further. Extends /v1/workflows — not Temporal/Airflow.',
+          'Every workflow step passes WorkflowPolicyGate (local hard allowlist). Policy Runtime will harden further. Extends /v1/workflows — not a distributed-workflow OS.',
       },
     };
   }
@@ -327,7 +327,7 @@ export class WorkflowRuntimeService {
       },
       note: denied
         ? 'Run stopped on hard permission/policy deny.'
-        : 'Sandbox workflow completed — steps simulated within allowlist; not live Temporal/Airflow execution.',
+        : 'Sandbox workflow completed — steps simulated within allowlist; not live distributed-workflow execution.',
     };
   }
 

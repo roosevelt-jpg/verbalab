@@ -8,12 +8,12 @@ export type EnhancementCapability = {
   notes: string;
 };
 
-/** Library Phase 32 → Voice Enhancement Platform. Extends existing. */
+/** Voice Enhancement Platform. Extends existing. */
 export function voiceEnhancementEngineCatalog() {
   return {
     product: 'Lugemi Voice Enhancement',
     note:
-      'Voice cleanup/restoration/mastering façade over Audio Intelligence PCM heuristics. Profile pipelines for mic/podcast/meeting/broadcast. Not Krisp, Adobe Enhance, Demucs, or live AEC parity.',
+      'Voice cleanup/restoration/mastering façade over Audio Intelligence PCM heuristics. Profile pipelines for mic/podcast/meeting/broadcast. Not third-party noise-cancellation, enhance, stem-separation, or live AEC parity.',
     capabilities: [
       {
         id: 'noise-removal',
@@ -27,7 +27,7 @@ export function voiceEnhancementEngineCatalog() {
         name: 'Echo Cancellation',
         status: 'deferred',
         api: 'GET /v1/voice-enhancement/echo',
-        notes: 'Requires AEC reference / vendor SDK. Still deferred (same as ).',
+        notes: 'Requires AEC reference / vendor SDK. Still deferred (same as Audio Intelligence).',
       },
       {
         id: 'audio-upscaling',
@@ -97,7 +97,7 @@ export function voiceEnhancementEngineCatalog() {
         name: 'Analytics',
         status: 'partial',
         api: 'GET /v1/voice-enhancement/engine/analytics',
-        notes: 'Profile usage counts. Full Voice Analytics = Phase 35.',
+        notes: 'Profile usage counts. Full Voice Analytics lives in the Voice Analytics hub.',
       },
     ] satisfies EnhancementCapability[],
     honesty: {

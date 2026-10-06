@@ -99,7 +99,7 @@ describe('Workflow Marketplace', () => {
     await app.close();
   });
 
-  it('documents Workflow Marketplace honesty (sandbox + Policy; not Zapier OS)', () => {
+  it('documents Workflow Marketplace honesty (sandbox + Policy; not iPaaS OS)', () => {
     const doc = join(root, 'docs/WORKFLOW_MARKETPLACE.md');
     const adr = join(root, 'docs/adr/0157-workflow-marketplace.md');
     expect(existsSync(doc)).toBe(true);
@@ -109,7 +109,7 @@ describe('Workflow Marketplace', () => {
     expect(text).toMatch(/sandbox/i);
     expect(text).toMatch(/Policy/i);
     expect(text).toMatch(/liveStepExecution/i);
-    expect(text).toMatch(/Zapier|Temporal|Airflow/i);
+    expect(text).toMatch(/iPaaS|distributed-workflow|workflow OS/i);
     expect(text).toMatch(/Stripe|storesRawCardData/i);
   });
 

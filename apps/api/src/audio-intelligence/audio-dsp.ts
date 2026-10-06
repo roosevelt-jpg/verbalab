@@ -211,7 +211,7 @@ export function upscaleAudio(buffer: Buffer, targetRate = 32000): { wav: Buffer;
 
 /**
  * Energy VAD voice isolation — attenuate non-speech frames.
- * Not ML background separation / Demucs.
+ * Not ML background separation / stem-separation OS.
  */
 export function isolateVoice(buffer: Buffer): {
   wav: Buffer;

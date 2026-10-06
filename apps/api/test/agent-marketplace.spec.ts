@@ -79,7 +79,7 @@ describe('Agent Marketplace', () => {
     await app.close();
   });
 
-  it('documents Agent Marketplace honesty (sandbox + Policy; not LangGraph OS)', () => {
+  it('documents Agent Marketplace honesty (sandbox + Policy; not open agent-orchestration OS)', () => {
     const doc = join(root, 'docs/AGENT_MARKETPLACE.md');
     const adr = join(root, 'docs/adr/0156-agent-marketplace.md');
     expect(existsSync(doc)).toBe(true);
@@ -89,7 +89,7 @@ describe('Agent Marketplace', () => {
     expect(text).toMatch(/sandbox/i);
     expect(text).toMatch(/Policy/i);
     expect(text).toMatch(/liveToolExecution/i);
-    expect(text).toMatch(/LangGraph|AutoGPT/i);
+    expect(text).toMatch(/open agent-orchestration|sandbox/i);
     expect(text).toMatch(/Stripe|storesRawCardData/i);
   });
 

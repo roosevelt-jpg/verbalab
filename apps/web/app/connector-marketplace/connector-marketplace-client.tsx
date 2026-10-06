@@ -70,7 +70,7 @@ export function ConnectorMarketplaceClient() {
         Connector Marketplace
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        License connector SKUs over the built-in catalog + Slack — not Zapier or iPaaS.
+        License connector SKUs over the built-in catalog + Slack — not an iPaaS automation OS.
       </p>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}

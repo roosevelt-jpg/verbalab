@@ -71,13 +71,13 @@ describe('Voice Enhancement Platform', () => {
     await app.close();
   });
 
-  it('documents Voice Enhancement honesty (not Krisp / Adobe Enhance)', () => {
+  it('documents Voice Enhancement honesty (not third-party noise-cancellation OS)', () => {
     const doc = join(root, 'docs/VOICE_ENHANCEMENT.md');
     const adr = join(root, 'docs/adr/0086-voice-enhancement.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toMatch(/is \*\*not\*\* Krisp/i);
+    expect(text).toMatch(/is \*\*not\*\* a third-party noise-cancellation OS/i);
     expect(text).toContain('Echo Cancellation');
   });
 

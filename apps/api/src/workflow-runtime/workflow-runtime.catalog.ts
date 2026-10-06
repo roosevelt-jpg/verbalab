@@ -22,7 +22,7 @@ export const WORKFLOW_PERMISSIONS = [
 
 export type WorkflowPermission = (typeof WORKFLOW_PERMISSIONS)[number];
 
-/** Always denied — never grantable in . */
+/** Always denied — never grantable in this runtime. */
 export const WORKFLOW_DENIED_ACTIONS = [
   'external.execute',
   'billing.charge',
@@ -54,19 +54,19 @@ export function workflowRuntimeCeilings() {
     ),
     mode: workflowRuntimeMode(),
     liveStepExecution: false,
-    note: 'Sandbox workflow runtime. Live open step execution against real accounts is forbidden in .',
+    note: 'Sandbox workflow runtime. Live open step execution against real accounts is forbidden in this runtime.',
   };
 }
 
 /**
- * Library Phase 87 → Workflow Runtime.
- * Scoped permissions + sandbox required. Extends /v1/workflows — not Temporal/Airflow OS.
+ * Workflow Runtime.
+ * Scoped permissions + sandbox required. Extends /v1/workflows — not a distributed-workflow OS.
  */
 export function workflowRuntimeCatalog() {
   return {
     product: 'Lugemi Workflow Runtime',
     note:
-      'Workflow Runtime. Multi-step sandbox workflows with hard permission allowlists, sequential/parallel step plans, retries, human-approval stubs, rollback markers, versioning, and replay. Extends existing /v1/workflows product — does not regenerate it or invent a Temporal/Airflow OS. Actions are sandboxed; Policy Runtime is wired as a hard gate via WorkflowPolicyGate.',
+      'Workflow Runtime. Multi-step sandbox workflows with hard permission allowlists, sequential/parallel step plans, retries, human-approval stubs, rollback markers, versioning, and replay. Extends existing /v1/workflows product — does not regenerate it or invent a distributed-workflow OS. Actions are sandboxed; Policy Runtime is wired as a hard gate via WorkflowPolicyGate.',
     capabilities: [
       {
         id: 'workflow-execution',
@@ -122,7 +122,7 @@ export function workflowRuntimeCatalog() {
         name: 'Distributed Execution',
         status: 'deferred',
         api: null,
-        notes: 'Not a distributed workflow OS (Temporal/Airflow parity deferred).',
+        notes: 'Not a distributed workflow OS (distributed-workflow parity deferred).',
       },
       {
         id: 'workflow-versioning',

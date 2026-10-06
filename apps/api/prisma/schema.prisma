@@ -1170,7 +1170,7 @@ model VoiceClone {
   watermarkRequired  Boolean   @default(true) @map("watermark_required")
   sampleStorageKeys  Json      @map("sample_storage_keys")
   sampleCount        Int       @default(0) @map("sample_count")
-  provider           String    @default("elevenlabs")
+  provider           String    @default("vendor_clone")
   providerVoiceId    String?   @map("provider_voice_id")
   reviewNotes        String?   @map("review_notes")
   reviewedBy         String?   @map("reviewed_by")

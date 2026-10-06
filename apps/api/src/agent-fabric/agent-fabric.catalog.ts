@@ -25,8 +25,8 @@ export type AgentPipeline = {
 };
 
 /**
- * Library Phase 113 → Agent Fabric.
- * Cross-cloud agent routing over Agent Runtime — sandboxed + Policy-gated; not LangGraph/AutoGPT OS.
+ * Agent Fabric.
+ * Cross-cloud agent routing over Agent Runtime — sandboxed + Policy-gated; not open agent-orchestration OS.
  */
 export function agentFabricCapabilityCatalog(): AgentFabricCapability[] {
   return [
@@ -257,7 +257,7 @@ export function agentFabricArchitectureNotes() {
     fabricWidePolicyHardGateRequired: true,
     policyLogOnlyForbidden: true,
     note:
-      'Agent Fabric. Router/discovery/collaborate/schedule façades over Agent Runtime. Sandboxed + Policy Runtime hard-gated. Not LangGraph/AutoGPT OS.',
+      'Agent Fabric. Router/discovery/collaborate/schedule façades over Agent Runtime. Sandboxed + Policy Runtime hard-gated. Not open agent-orchestration OS.',
   };
 }
 

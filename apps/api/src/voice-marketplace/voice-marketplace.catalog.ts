@@ -8,12 +8,12 @@ export type VmCapability = {
   notes: string;
 };
 
-/** Library Phase 34 → Voice Marketplace. Distinct from localization marketplace. */
+/** Voice Marketplace. Distinct from localization marketplace. */
 export function voiceMarketplaceEngineCatalog() {
   return {
     product: 'Lugemi Voice Marketplace',
     note:
-      'Publish/license/sell voice SKUs with ratings — distinct from localization Marketplace. Consent/rights attestation required for clones. Celebrity SKUs without a rights chain are forbidden. Not third-party voice library / Soundraw parity.',
+      'Publish/license/sell voice SKUs with ratings — distinct from localization Marketplace. Consent/rights attestation required for clones. Celebrity SKUs without a rights chain are forbidden. Not third-party voice library / generative-music OS parity.',
     capabilities: [
       {
         id: 'marketplace',
@@ -97,7 +97,7 @@ export function voiceMarketplaceEngineCatalog() {
         name: 'Analytics',
         status: 'partial',
         api: 'GET /v1/voice-marketplace/analytics',
-        notes: 'Listing/install/rating aggregates. Full Voice Analytics = Phase 35.',
+        notes: 'Listing/install/rating aggregates. Full Voice Analytics lives in the Voice Analytics hub.',
       },
       {
         id: 'billing',

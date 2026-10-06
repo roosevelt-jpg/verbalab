@@ -10,7 +10,7 @@ export type FabricBusRow = {
 };
 
 /**
- * Library Phase 106 → AI Fabric Foundation.
+ * AI Fabric Foundation.
  * Internal communication hub connecting Lugemi clouds — not a Kafka hyperscaler OS.
  * Volume 10 README: buildable event/message-bus architecture; Policy Fabric must hard-gate.
  */
@@ -86,7 +86,7 @@ export function aiFabricBusCatalog(): FabricBusRow[] {
       api: 'GET /v1/agent-fabric/products',
       console: '/agent-fabric',
       notes:
-        'Agent router over Agent Runtime. Sandboxed + Policy-gated; not LangGraph/AutoGPT OS.',
+        'Agent router over Agent Runtime. Sandboxed + Policy-gated; not open agent-orchestration OS.',
     },
     {
       id: 'policy-fabric',

@@ -9,7 +9,7 @@ export type PluginMarketplaceCapability = {
 };
 
 /**
- * Library Phase 117 → Plugin Marketplace.
+ * Plugin Marketplace.
  * Buy/sell/publish sandboxed plugins over Plugin Runtime — not a browser/VS Code extension OS.
  * Volume 11 README: enforce Volume 8 sandbox + Policy gate before third-party plugins run.
  */

@@ -9,7 +9,7 @@ export type VoiceProductRow = {
   notes: string;
 };
 
-/** Library Phase 27 product map. Hub only — does not reimplement TTS/clones. */
+/** Product map. Hub only — does not reimplement TTS/clones. */
 export function voiceProductCatalog(): VoiceProductRow[] {
   return [
     {
@@ -89,7 +89,7 @@ export function voiceProductCatalog(): VoiceProductRow[] {
       api: 'GET /v1/voice-enhancement/engine',
       console: '/voice-enhancement',
       notes:
-        'Voice Enhancement Platform: profile pipelines over existing PCM heuristics (mic/podcast/meeting/broadcast/restore). Not Krisp/Adobe Enhance.',
+        'Voice Enhancement Platform: profile pipelines over existing PCM heuristics (mic/podcast/meeting/broadcast/restore). Not third-party noise-cancellation/enhance OS.',
     },
     {
       id: 'voice-restoration',

@@ -88,7 +88,7 @@ export class AgentFabricService {
       },
       docs: '/docs/AGENT_FABRIC.md',
       note:
-        'Agent Fabric. Cross-cloud agent router over Agent Runtime. Sandboxed + Policy-gated. Not LangGraph/AutoGPT OS.',
+        'Agent Fabric. Cross-cloud agent router over Agent Runtime. Sandboxed + Policy-gated. Not open agent-orchestration OS.',
     };
   }
 

@@ -82,7 +82,7 @@ describe('Workflow Runtime', () => {
     await app.close();
   });
 
-  it('documents Workflow Runtime honesty (sandbox + permissions; not Temporal OS)', () => {
+  it('documents Workflow Runtime honesty (sandbox + permissions; not distributed-workflow OS)', () => {
     const doc = join(root, 'docs/WORKFLOW_RUNTIME.md');
     const adr = join(root, 'docs/adr/0131-workflow-runtime.md');
     expect(existsSync(doc)).toBe(true);
@@ -90,7 +90,7 @@ describe('Workflow Runtime', () => {
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/sandbox/i);
     expect(text).toMatch(/permission/i);
-    expect(text).toMatch(/Temporal|Airflow/i);
+    expect(text).toMatch(/distributed-workflow|workflow OS/i);
     expect(text).toMatch(/hard/i);
   });
 

@@ -1,7 +1,7 @@
 # Lugemi Voice & Language Marketplace
 
 **Status:** Shipped (VL-257 / library Phase 124)  
-**Rule:** Entitlement SKUs over VL-177 voice marketplace + Volume 1 language/dialect/glossary/locale packs — **not** ElevenLabs, voice CDN, or celebrity without rights. Real-money honesty: Stripe (or equivalent); `storesRawCardData: false`. Roadmap: [`docs/roadmap/volume11-ecosystem-cloud/`](./roadmap/volume11-ecosystem-cloud/).
+**Rule:** Entitlement SKUs over VL-177 voice marketplace + Volume 1 language/dialect/glossary/locale packs — **not** vendor voice clone, voice CDN, or celebrity without rights. Real-money honesty: Stripe (or equivalent); `storesRawCardData: false`. Roadmap: [`docs/roadmap/volume11-ecosystem-cloud/`](./roadmap/volume11-ecosystem-cloud/).
 
 ---
 
@@ -17,7 +17,7 @@
 | Terminology Packs | **Shipped** — over vertical glossaries |
 | Localization Packs | **Shipped** — over locales / country packs |
 | Analytics / Monitoring / Docs | **Shipped** (analytics partial) |
-| ElevenLabs / voice CDN OS | **Forbidden** — `elevenLabsOs: false`, `voiceCdnOs: false` |
+| vendor voice clone / voice CDN OS | **Forbidden** — `thirdPartyVoiceOs: false`, `voiceCdnOs: false` |
 
 ---
 
@@ -39,7 +39,7 @@
 
 | Flag | Value |
 | --- | --- |
-| `elevenLabsOs` / `voiceCdnOs` | false |
+| `thirdPartyVoiceOs` / `voiceCdnOs` | false |
 | `celebrityWithoutRights` | false |
 | `crossTenantCloneSynthesis` | false |
 | `regeneratesVoiceCloud` / `regeneratesVoiceMarketplace` | false |

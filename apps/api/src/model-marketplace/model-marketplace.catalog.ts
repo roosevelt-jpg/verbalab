@@ -29,15 +29,15 @@ export const MODEL_LICENSE_TYPES = [
 ] as const;
 
 /**
- * Library Phase 118 → Model Marketplace.
- * Buy/sell/publish model listings over Model Registry / — not Hugging Face OS.
+ * Model Marketplace.
+ * Buy/sell/publish model listings over Model Registry / — not a public model-hub OS.
  * Volume 11 README: real-money honesty — Stripe (or equivalent); never store raw cards.
  */
 export function modelMarketplaceEngineCatalog() {
   return {
     product: 'Lugemi Model Marketplace',
     note:
-      'Model Marketplace. Publish/license model SKUs over Model Registry cards. Entitlements on install — not weight hosting, Hugging Face hub, or traffic-mesh deploy OS. Monetization records MarketplaceSale receipts; Stripe Connect via existing.',
+      'Model Marketplace. Publish/license model SKUs over Model Registry cards. Entitlements on install — not weight hosting, public model-hub, or traffic-mesh deploy OS. Monetization records MarketplaceSale receipts; Stripe Connect via existing.',
     capabilities: [
       {
         id: 'foundation-models',
@@ -79,7 +79,7 @@ export function modelMarketplaceEngineCatalog() {
         name: 'Commercial Models',
         status: 'partial',
         api: 'POST /v1/model-marketplace/listings/:id/install',
-        notes: 'Paid listings record sales; Stripe Connect path shared with .',
+        notes: 'Paid listings record sales; Stripe Connect path shared with Creator Economy.',
       },
       {
         id: 'versioning',

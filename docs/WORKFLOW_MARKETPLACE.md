@@ -1,7 +1,7 @@
 # Lugemi Workflow Marketplace
 
 **Status:** Shipped (VL-255 / library Phase 122)  
-**Rule:** Extends Workflow Runtime (VL-220) + listings `kind=workflow` — **not** Zapier / Temporal / Airflow OS. Third-party workflows run only through Workflow Runtime sandbox + WorkflowPolicyGate + Policy Fabric hard gate. Real-money honesty: Stripe (or equivalent); `storesRawCardData: false`. Roadmap: [`docs/roadmap/volume11-ecosystem-cloud/`](./roadmap/volume11-ecosystem-cloud/).
+**Rule:** Extends Workflow Runtime (VL-220) + listings `kind=workflow` — **not** iPaaS / distributed-workflow / distributed-workflow OS. Third-party workflows run only through Workflow Runtime sandbox + WorkflowPolicyGate + Policy Fabric hard gate. Real-money honesty: Stripe (or equivalent); `storesRawCardData: false`. Roadmap: [`docs/roadmap/volume11-ecosystem-cloud/`](./roadmap/volume11-ecosystem-cloud/).
 
 ---
 
@@ -14,7 +14,7 @@
 | AI Chains / Approval / Scheduling | **Shipped** — sandboxed stubs |
 | Marketplace REST / SDK / Dashboard / Monitoring / Docs | **Shipped** |
 | Live open step execution | **Forbidden** |
-| Zapier / Temporal / Airflow OS | **Forbidden** |
+| iPaaS / distributed-workflow / distributed-workflow OS | **Forbidden** |
 
 ---
 

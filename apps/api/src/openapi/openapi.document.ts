@@ -4,7 +4,7 @@ export const openApiDocument = {
     title: 'Lugemi API',
     version: '0.1.0',
     description:
-      'Enterprise language-intelligence API. Phase 1 surface: languages, translate, API keys, and usage.',
+      'Enterprise language-intelligence API. Core surface: languages, translate, API keys, and usage.',
   },
   servers: [{ url: 'http://localhost:3001', description: 'Local' }],
   components: {
@@ -225,6 +225,17 @@ export const openApiDocument = {
         responses: {
           '200': {
             description: 'Rolling-window p50/p95/p99 for this API instance',
+          },
+        },
+      },
+    },
+    '/v1/languages/engine': {
+      get: {
+        summary: 'Language Engine catalog',
+        operationId: 'getLanguageEngine',
+        responses: {
+          '200': {
+            description: 'Language registry capabilities and honesty notes',
           },
         },
       },
@@ -820,7 +831,7 @@ export const openApiDocument = {
     },
     '/v1/translate/engine': {
       get: {
-        summary: 'Translation engine capability catalog (Phase 8)',
+        summary: 'Translation engine capability catalog (capability catalog)',
         operationId: 'translateEngine',
         responses: { '200': { description: 'Shipped / partial / deferred capabilities' } },
       },
@@ -1276,6 +1287,92 @@ export const openApiDocument = {
         security: [{ ClerkAuth: [] }],
         responses: {
           '200': { description: 'Members with role and profile fields' },
+        },
+      },
+    },
+    '/v1/organization/members/{id}': {
+      patch: {
+        summary: 'Update organization member role',
+        operationId: 'updateOrganizationMemberRole',
+        security: [{ ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['role'],
+                properties: {
+                  role: { type: 'string', enum: ['owner', 'admin', 'member'] },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          '200': { description: 'Updated membership' },
+          '403': { description: 'Forbidden for members or insufficient role' },
+        },
+      },
+      delete: {
+        summary: 'Remove organization member',
+        operationId: 'removeOrganizationMember',
+        security: [{ ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: {
+          '200': { description: 'Removed' },
+          '403': { description: 'Forbidden' },
+        },
+      },
+    },
+    '/v1/organization/invites': {
+      get: {
+        summary: 'List organization invites',
+        operationId: 'listOrganizationInvites',
+        security: [{ ClerkAuth: [] }],
+        responses: {
+          '200': { description: 'Recent invites including pending' },
+        },
+      },
+      post: {
+        summary: 'Invite teammate by email',
+        operationId: 'createOrganizationInvite',
+        security: [{ ClerkAuth: [] }],
+        description:
+          'Owners and admins invite teammates to share the workspace (owner/admin/member). Branded email sends when Resend is configured; create succeeds without it. Invitee accepts by signing in with the invited email.',
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['email'],
+                properties: {
+                  email: { type: 'string', format: 'email' },
+                  role: { type: 'string', enum: ['owner', 'admin', 'member'], default: 'member' },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          '201': { description: 'Invite created' },
+          '200': { description: 'Invite created' },
+          '403': { description: 'Forbidden for members' },
+          '409': { description: 'Already a member or pending invite exists' },
+        },
+      },
+    },
+    '/v1/organization/invites/{id}': {
+      delete: {
+        summary: 'Revoke a pending organization invite',
+        operationId: 'revokeOrganizationInvite',
+        security: [{ ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: {
+          '200': { description: 'Invite revoked' },
+          '404': { description: 'Invite not found' },
         },
       },
     },
@@ -2223,6 +2320,15 @@ export const openApiDocument = {
         responses: { '200': { description: 'Dialect candidates' } },
       },
     },
+    '/v1/language/engine': {
+      get: {
+        summary: 'Language Cloud hub engine catalog',
+        operationId: 'getLanguageCloudEngine',
+        responses: {
+          '200': { description: 'Language Cloud product map and honesty notes' },
+        },
+      },
+    },
     '/v1/language/products': {
       get: {
         summary: 'Language Cloud product catalog',
@@ -2236,6 +2342,32 @@ export const openApiDocument = {
         operationId: 'getLanguageOverview',
         security: [{ ClerkAuth: [] }],
         responses: { '200': { description: 'Workspace language overview' } },
+      },
+    },
+    '/v1/language-intelligence': {
+      get: {
+        summary: 'Language Intelligence catalog',
+        operationId: 'getLanguageIntelligence',
+        responses: {
+          '200': { description: 'Language Intelligence capabilities and honesty notes' },
+        },
+      },
+    },
+    '/v1/language-intelligence/engine': {
+      get: {
+        summary: 'Language Intelligence engine catalog (alias)',
+        operationId: 'getLanguageIntelligenceEngine',
+        responses: {
+          '200': { description: 'Same catalog as GET /v1/language-intelligence' },
+        },
+      },
+    },
+    '/v1/language-intelligence/analyze': {
+      post: {
+        summary: 'Unified language intelligence analyze',
+        operationId: 'analyzeLanguageIntelligence',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '200': { description: 'Detect + heuristic signals' } },
       },
     },
     '/v1/emotion/engine': {
@@ -3056,7 +3188,7 @@ export const openApiDocument = {
         responses: {
           '200': {
             description:
-              'Cards/versions/deploy capabilities + VL-110 live summary (not MLflow/mesh OS)',
+              'Cards/versions/deploy capabilities + live summary (not MLflow/mesh OS)',
           },
         },
       },
@@ -3072,7 +3204,7 @@ export const openApiDocument = {
     },
     '/v1/model-registry/cards': {
       get: {
-        summary: 'Model cards from VL-110 entries',
+        summary: 'Model cards from registry entries',
         operationId: 'listModelRegistryCards',
         responses: {
           '200': { description: 'Lightweight cards derived from registry metadata' },
@@ -3405,7 +3537,7 @@ export const openApiDocument = {
         responses: {
           '200': {
             description:
-              'Model marketplace capabilities, Stripe honesty, Hugging Face / weight-hosting denials',
+              'Model marketplace capabilities, Stripe honesty, public model-hub / weight-hosting denials',
           },
         },
       },
@@ -6309,7 +6441,7 @@ export const openApiDocument = {
         summary: 'Prompt Runtime registry façade',
         operationId: 'getPromptRuntimeRegistry',
         security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
-        responses: { '200': { description: 'VL-086 registry rows' } },
+        responses: { '200': { description: 'Language registry rows' } },
       },
     },
     '/v1/prompt-runtime/templates': {
@@ -8150,7 +8282,7 @@ export const openApiDocument = {
       get: {
         summary: 'Knowledge Memory scopes',
         operationId: 'listKnowledgeMemoryScopes',
-        responses: { '200': { description: 'Scope map onto VL-183 Memory Cloud' } },
+        responses: { '200': { description: 'Scope map onto Memory Cloud' } },
       },
     },
     '/v1/knowledge-memory/memories': {
@@ -9738,7 +9870,7 @@ export const openApiDocument = {
                     type: 'string',
                     example: 'alloy',
                     description:
-                      'Stock OpenAI voice id, own:* rented African TTS (VL-121), or clone:{voiceCloneId}',
+                      'Stock OpenAI voice id, own:* rented African TTS, or clone:{voiceCloneId}',
                   },
                   language: { type: 'string' },
                   format: { type: 'string', enum: ['mp3', 'wav', 'opus', 'aac', 'flac'] },

@@ -9,7 +9,7 @@ export type InferenceProductRow = {
   notes: string;
 };
 
-/** Library Phase 71 product map. Hub only — maps onto AI Gateway + chat/embeddings. */
+/** Product map. Hub only — maps onto AI Gateway + chat/embeddings. */
 export function inferenceProductCatalog(): InferenceProductRow[] {
   return [
     {
@@ -64,7 +64,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
       api: 'GET /v1/batch-runtime/engine',
       console: '/batch-runtime',
       notes:
-        'Batch hub over BullMQ jobs + sandbox runs with priority/retry/checkpoint. Not Spark/Airflow OS; video deferred.',
+        'Batch hub over BullMQ jobs + sandbox runs with priority/retry/checkpoint. Not a distributed batch OS; video deferred.',
     },
     {
       id: 'intelligent-cache',
@@ -115,7 +115,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
       status: 'deferred',
       api: null,
       console: null,
-      notes: 'Autoscaling with hard ceilings (Phase 72+). Fly/platform scale today; no open-ended GPU autoscale.',
+      notes: 'Autoscaling with hard ceilings (+). Fly/platform scale today; no open-ended GPU autoscale.',
     },
     {
       id: 'multi-region-runtime',

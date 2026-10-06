@@ -506,7 +506,7 @@ export class ModelMarketplaceService {
       },
       sale,
       honesty: this.engine().honesty,
-      note: 'Installed model license entitlement. Not a weight download or Hugging Face clone.',
+      note: 'Installed model license entitlement. Not a weight download or public model-hub clone.',
     };
   }
 

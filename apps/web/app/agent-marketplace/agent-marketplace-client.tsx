@@ -66,7 +66,7 @@ export function AgentMarketplaceClient() {
         Agent Marketplace
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        License sandboxed enterprise agents over Agent Runtime — Policy-gated, not LangGraph OS.
+        License sandboxed enterprise agents over Agent Runtime — Policy-gated, not open agent-orchestration OS.
       </p>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}

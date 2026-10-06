@@ -25,7 +25,7 @@ export type ReasoningPipeline = {
 };
 
 /**
- * Library Phase 111 → Reasoning Fabric.
+ * Reasoning Fabric.
  * Cross-cloud reasoning routing over Reasoning Runtime — not a custom reasoner OS.
  */
 export function reasoningFabricCapabilityCatalog(): ReasoningFabricCapability[] {
@@ -85,7 +85,7 @@ export function reasoningFabricCapabilityCatalog(): ReasoningFabricCapability[] 
       name: 'Reasoning Pipelines',
       status: 'shipped',
       api: 'POST /v1/reasoning-fabric/pipeline',
-      notes: 'Ordered strategy step plans — not Airflow/Spark reasoning OS.',
+      notes: 'Ordered strategy step plans — not a distributed reasoning OS.',
     },
     {
       id: 'monitoring',

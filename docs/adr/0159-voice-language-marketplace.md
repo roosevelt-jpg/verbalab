@@ -8,7 +8,7 @@
 
 Library Phase 124 asks for Voice / Language / Dialect / Accent / Grammar / Terminology / Localization packs with marketplace, REST, SDK, analytics, monitoring, and docs.
 
-Volume 11 requires real-money honesty (Stripe-or-equivalent; no raw cards). Regenerating Voice Cloud, replacing VL-177 voice marketplace, inventing ElevenLabs/voice CDN OS, or allowing celebrity without rights would violate “extend, don’t regenerate.”
+Volume 11 requires real-money honesty (Stripe-or-equivalent; no raw cards). Regenerating Voice Cloud, replacing VL-177 voice marketplace, inventing a third-party voice CDN OS, or allowing celebrity without rights would violate “extend, don’t regenerate.”
 
 ## Decision
 
@@ -18,7 +18,7 @@ Volume 11 requires real-money honesty (Stripe-or-equivalent; no raw cards). Rege
 4. **Reject** `celebrityClaim=true` (same bar as VL-177).  
 5. **Revenue sharing** records `MarketplaceSale` with 15% platform fee; Creator Economy (VL-258) deepens payout math.  
 6. **FabricPolicyGate** on publish/install via `voice-language-marketplace` bus.  
-7. Honesty: `elevenLabsOs: false`, `voiceCdnOs: false`, `celebrityWithoutRights: false`, `crossTenantCloneSynthesis: false`, `storesRawCardData: false`, `stripeOrEquivalentRequired: true`.
+7. Honesty: `thirdPartyVoiceOs: false`, `voiceCdnOs: false`, `celebrityWithoutRights: false`, `crossTenantCloneSynthesis: false`, `storesRawCardData: false`, `stripeOrEquivalentRequired: true`.
 
 ## Consequences
 

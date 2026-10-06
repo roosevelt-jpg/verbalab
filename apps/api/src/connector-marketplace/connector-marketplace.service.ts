@@ -545,7 +545,7 @@ export class ConnectorMarketplaceService {
       },
       sale,
       honesty: this.engine().honesty,
-      note: 'Installed connector entitlement. Not Zapier/iPaaS or live arbitrary outbound.',
+      note: 'Installed connector entitlement. Not iPaaS automation or live arbitrary outbound.',
     };
   }
 

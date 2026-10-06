@@ -25,7 +25,7 @@
 
 1. **Profile catalog** — emotion + domain IDs with preferred stock/own voices.  
 2. **Soft prosody** — punctuation/pacing cues only (never audible stage directions).  
-3. **Clone path** — when `voice=clone:{id}`, optional ElevenLabs `voice_settings` (stability/style).  
+3. **Clone path** — when `voice=clone:{id}`, optional vendor voice clone `voice_settings` (stability/style).  
 4. **OpenAI stock** — no native emotion API; voice pick + soft prosody only.
 
 Speech emotion *detection* remains [`EMOTION_INTELLIGENCE.md`](./EMOTION_INTELLIGENCE.md) (VL-154).

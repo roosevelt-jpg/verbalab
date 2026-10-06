@@ -29,7 +29,7 @@ export class ResearchCloudService {
       },
       docs: '/docs/RESEARCH_CLOUD.md',
       note:
-        'Research Cloud Foundation. Extends Intelligence/Knowledge/Foundation Model clouds. Not W&B, Hugging Face hub, DOI registry, USPTO, or MLflow OS. AI Sovereignty OS deferred.',
+        'Research Cloud Foundation. Extends Intelligence/Knowledge/Foundation Model clouds. Not experiment-tracking, public model-hub, DOI registry, USPTO, or MLflow OS. AI Sovereignty OS deferred.',
     };
   }
 

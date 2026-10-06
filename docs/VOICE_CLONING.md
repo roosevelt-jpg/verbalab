@@ -1,7 +1,7 @@
 # Lugemi Voice Cloning Platform
 
 **Status:** Shipped hub (VL-172 / library Phase 29)  
-**Rule:** Extend VL-064 ElevenLabs Instant Voice Cloning. Do not skip consent, abuse review, or watermark. Do not claim multi-hour professional model training.
+**Rule:** Extend VL-064 Instant Voice Cloning (vendor_clone). Do not skip consent, abuse review, or watermark. Do not claim multi-hour professional model training.
 
 ---
 
@@ -11,7 +11,7 @@
 | --- | --- |
 | Voice Cloning Engine | **VL-172** — `GET /v1/voice-cloning/engine` + `/voice-cloning` |
 | Instant Voice Cloning | **Shipped** — `POST /v1/voice-cloning/enroll` (`cloneMode=instant`) |
-| Professional Voice Cloning | **Partial** — stricter enrollment (≥3 samples + ownership); still ElevenLabs IVC |
+| Professional Voice Cloning | **Partial** — stricter enrollment (≥3 samples + ownership); still vendor_clone IVC |
 | Secure Voice Enrollment | **Shipped** — `POST …/verify-enrollment` sample/consent gate |
 | Voice Verification | **Partial** — speaker verify VL-152; enrollment verify ≠ PAD/anti-spoof |
 | Voice Ownership | **Shipped** — `PATCH …/ownership` (separate from consent) |
@@ -40,8 +40,8 @@ Legacy paths `/v1/voice-clones` remain supported.
 
 ## Honesty
 
-- Primary engine: **ElevenLabs Instant Voice Cloning**.  
+- Primary engine: **Instant Voice Cloning (vendor_clone)**.  
 - Professional mode is **enrollment rigor**, not a separate trained pro model.  
-- Voice Cloning is **not** Resemble + Descript Overdub + NIST biometrics + marketplace combined.
+- Voice Cloning is **not** a third-party clone marketplace + overdub + NIST biometrics + marketplace combined.
 
 See ADR-0083. Hub: [`VOICE_CLOUD.md`](./VOICE_CLOUD.md). Prior: ADR-0042.

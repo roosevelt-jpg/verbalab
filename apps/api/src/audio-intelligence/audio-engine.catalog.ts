@@ -8,12 +8,12 @@ export type AudioCapability = {
   notes: string;
 };
 
-/** Library Phase 21 → Audio Intelligence. */
+/** Audio Intelligence. */
 export function audioEngineCatalog() {
   return {
     product: 'Lugemi Audio Intelligence',
     note:
-      'PCM heuristic noise/silence analysis, noise-gate enhancement, linear upsampling, and energy VAD isolation. Not Krisp/Adobe Enhance/Demucs parity.',
+      'PCM heuristic noise/silence analysis, noise-gate enhancement, linear upsampling, and energy VAD isolation. Not third-party noise-cancellation/enhance/stem-separation parity.',
     capabilities: [
       {
         id: 'noise-detection',

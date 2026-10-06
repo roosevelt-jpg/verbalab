@@ -1,7 +1,7 @@
 # Lugemi Agent Marketplace
 
 **Status:** Shipped (VL-254 / library Phase 121)  
-**Rule:** Extends Agent Runtime (VL-219) + listings `kind=agent` — **not** LangGraph / AutoGPT OS. Third-party agents run only through Agent Runtime sandbox + AgentPolicyGate + Policy Fabric hard gate. Real-money honesty: Stripe (or equivalent); `storesRawCardData: false`. Roadmap: [`docs/roadmap/volume11-ecosystem-cloud/`](./roadmap/volume11-ecosystem-cloud/).
+**Rule:** Extends Agent Runtime (VL-219) + listings `kind=agent` — **not** open agent-orchestration / open agent-orchestration OS. Third-party agents run only through Agent Runtime sandbox + AgentPolicyGate + Policy Fabric hard gate. Real-money honesty: Stripe (or equivalent); `storesRawCardData: false`. Roadmap: [`docs/roadmap/volume11-ecosystem-cloud/`](./roadmap/volume11-ecosystem-cloud/).
 
 ---
 
@@ -14,7 +14,7 @@
 | Monitoring / Analytics | **Shipped** / **Partial** |
 | GraphQL / SDK / REST / Docs | **Shipped** |
 | Live open tool execution | **Forbidden** |
-| LangGraph / AutoGPT OS | **Forbidden** |
+| open agent-orchestration / open agent-orchestration OS | **Forbidden** |
 
 ---
 

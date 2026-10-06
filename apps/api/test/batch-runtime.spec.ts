@@ -82,7 +82,7 @@ describe('Batch Runtime', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(readme)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toMatch(/Spark|Airflow|Celery/i);
+    expect(text).toMatch(/distributed batch|queue OS|BullMQ/i);
     expect(text).toMatch(/does \*\*not\*\*|not regenerate/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
     expect(text).toContain('');

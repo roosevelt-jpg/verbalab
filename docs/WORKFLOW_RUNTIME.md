@@ -1,7 +1,7 @@
 # Lugemi Workflow Runtime
 
 **Status:** Partial shipped (VL-220 / library Phase 87)  
-**Rule:** Workflows require **scoped permissions** and **sandboxing**. Missing permissions and globally denied actions are **hard-blocked**. Not live Temporal/Airflow OS. Extends product `/workflows` — does not regenerate it.
+**Rule:** Workflows require **scoped permissions** and **sandboxing**. Missing permissions and globally denied actions are **hard-blocked**. Not live distributed-workflow OS. Extends product `/workflows` — does not regenerate it.
 
 Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roadmap/volume8-ai-kernel/`](./roadmap/volume8-ai-kernel/).
 
@@ -26,7 +26,7 @@ Part of the internal [AI Kernel](./AI_KERNEL.md) (Volume 8). Roadmap: [`docs/roa
 | Human Approval | **Partial** — approval stub + `approved:true` on run |
 | Rollback | **Partial** — run status marker (not distributed saga) |
 | Parallel / Sequential | **Partial / Shipped** — in-process only |
-| Distributed Execution | **Deferred** — not Temporal/Airflow parity |
+| Distributed Execution | **Deferred** — not distributed-workflow parity |
 | Versioning / Replay | **Shipped** — kernel MemoryRecords |
 
 ---

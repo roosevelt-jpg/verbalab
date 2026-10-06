@@ -1,7 +1,7 @@
 # Lugemi Connector Marketplace
 
 **Status:** Shipped (VL-256 / library Phase 123)  
-**Rule:** Entitlement SKUs over the built-in connector catalog + Slack (ADR-0026) — **not** Zapier, MuleSoft, or iPaaS OS. Real-money honesty: Stripe (or equivalent); `storesRawCardData: false`. Install never opens live arbitrary outbound. Roadmap: [`docs/roadmap/volume11-ecosystem-cloud/`](./roadmap/volume11-ecosystem-cloud/).
+**Rule:** Entitlement SKUs over the built-in connector catalog + Slack (ADR-0026) — **not** iPaaS, MuleSoft, or iPaaS OS. Real-money honesty: Stripe (or equivalent); `storesRawCardData: false`. Install never opens live arbitrary outbound. Roadmap: [`docs/roadmap/volume11-ecosystem-cloud/`](./roadmap/volume11-ecosystem-cloud/).
 
 ---
 
@@ -14,7 +14,7 @@
 | Connector Analytics | **Partial** — listing/install/review aggregates |
 | Connector Monetization | **Partial** — 15% platform fee on `MarketplaceSale`; VL-258 deepens payouts |
 | GraphQL / SDK / Monitoring / Docs | **Shipped** |
-| Zapier / iPaaS / live arbitrary outbound | **Forbidden** — `ipaasOs: false`, `liveConnectorExecution: false` |
+| iPaaS / iPaaS / live arbitrary outbound | **Forbidden** — `ipaasOs: false`, `liveConnectorExecution: false` |
 
 ---
 

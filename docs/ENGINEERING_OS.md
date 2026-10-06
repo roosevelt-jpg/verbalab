@@ -109,7 +109,7 @@ Nest modules live under `apps/api/src/<context>/`. Next routes under `apps/web/a
 
 ## 7. UI Standards
 
-- Console: light, monochrome, ElevenLabs-inspired density (see ADR-0003); brand-first on marketing surfaces.
+- Console: light, monochrome, vendor voice clone-inspired density (see ADR-0003); brand-first on marketing surfaces.
 - Design tokens via CSS variables (`--ink`, `--muted`, `--line`, `--brand`, …).
 - Expressive fonts via Next font loading — avoid default Inter/Roboto/Arial stacks on branded pages.
 - AppShell nav for authenticated product pages; public pages (`/docs`, `/coverage`, `/setup`) may use lighter chrome.

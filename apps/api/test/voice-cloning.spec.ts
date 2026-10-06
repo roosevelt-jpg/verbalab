@@ -84,7 +84,7 @@ describe('Voice Cloning Platform', () => {
     expect(text).toContain('Consent');
     expect(text).toContain('Watermark');
     expect(text).toContain('ownership');
-    expect(text).toMatch(/not\*\* Resemble|is \*\*not\*\* Resemble/i);
+    expect(text).toMatch(/not\*\* a third-party clone marketplace|is \*\*not\*\* a third-party clone marketplace/i);
   });
 
   it('exposes engine + consent policy with honest professional status', async () => {

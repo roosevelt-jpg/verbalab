@@ -82,7 +82,7 @@ describe('Agent Fabric', () => {
     await app.close();
   });
 
-  it('documents Agent Fabric honesty (sandboxed + Policy-gated; not LangGraph/AutoGPT OS)', () => {
+  it('documents Agent Fabric honesty (sandboxed + Policy-gated; not open agent-orchestration OS)', () => {
     const doc = join(root, 'docs/AGENT_FABRIC.md');
     const adr = join(root, 'docs/adr/0148-agent-fabric.md');
     const phase = join(
@@ -97,7 +97,7 @@ describe('Agent Fabric', () => {
     expect(text).toMatch(/Agent Runtime/i);
     expect(text).toMatch(/sandbox/i);
     expect(text).toMatch(/hard gate|hard-gate|Policy/i);
-    expect(text).toMatch(/LangGraph|AutoGPT/i);
+    expect(text).toMatch(/open agent-orchestration|sandbox/i);
   });
 
   it('has no TODO/FIXME/implement-later markers in Agent Fabric source', () => {

@@ -79,14 +79,14 @@ export function batchKinds(): BatchKindRow[] {
 }
 
 /**
- * Library Phase 76 → Batch Runtime.
+ * Batch Runtime.
  * Hub over BullMQ /v1/jobs + sandbox runs — not a distributed batch OS.
  */
 export function batchRuntimeCatalog() {
   return {
     product: 'Lugemi Batch Runtime',
     note:
-      'Batch Runtime. Catalogs translation/speech/OCR/embedding/training batch surfaces. Translation runs delegate to existing BullMQ jobs. Sandbox runs support priority, retry budget, and checkpoint cursors. Not a Spark/Airflow/Celery OS or video batch fabric.',
+      'Batch Runtime. Catalogs translation/speech/OCR/embedding/training batch surfaces. Translation runs delegate to existing BullMQ jobs. Sandbox runs support priority, retry budget, and checkpoint cursors. Not a distributed batch/queue OS or video batch fabric.',
     capabilities: [
       {
         id: 'translation-jobs',

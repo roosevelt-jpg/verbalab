@@ -390,7 +390,7 @@ export class WorkflowMarketplaceService {
       listing: this.serialize(listing),
       honesty: this.engine().honesty,
       note:
-        'Workflow listing published. Buyers install into Workflow Runtime sandbox; run is Policy-gated. Not Zapier/Temporal OS.',
+        'Workflow listing published. Buyers install into Workflow Runtime sandbox; run is Policy-gated. Not iPaaS / distributed-workflow OS.',
     };
   }
 
@@ -772,7 +772,7 @@ export class WorkflowMarketplaceService {
           listingId: input.listingId,
           honesty: this.engine().honesty,
           note:
-            'Marketplace probe denied by WorkflowPolicyGate. Not live step execution / Zapier OS.',
+            'Marketplace probe denied by WorkflowPolicyGate. Not live step execution / iPaaS OS.',
         };
       }
     }
@@ -809,7 +809,7 @@ export class WorkflowMarketplaceService {
         ...result.honesty,
       },
       note:
-        'Marketplace run completed via Workflow Runtime sandbox + WorkflowPolicyGate. Not live Zapier/Temporal execution.',
+        'Marketplace run completed via Workflow Runtime sandbox + WorkflowPolicyGate. Not live iPaaS / distributed-workflow execution.',
     };
   }
 

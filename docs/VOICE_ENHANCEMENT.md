@@ -1,7 +1,7 @@
 # Lugemi Voice Enhancement Platform
 
 **Status:** Partial (VL-175 / library Phase 32)  
-**Rule:** Cleanup/restoration/mastering façade over Audio Intelligence PCM heuristics (VL-155). **Not** Krisp, Adobe Enhance, Demucs, or live AEC.
+**Rule:** Cleanup/restoration/mastering façade over Audio Intelligence PCM heuristics (VL-155). **Not** third-party noise-cancellation, commercial enhance OS, stem-separation OS, or live AEC.
 
 ---
 
@@ -34,6 +34,6 @@
 | Stream | `POST …/enhance/stream` |
 | Docs | this file + ADR-0086 |
 
-Voice Enhancement is **not** Krisp / Adobe Enhance / Demucs, and is **not** a spectral ML denoise lab.
+Voice Enhancement is **not** a third-party noise-cancellation OS / commercial enhance OS / stem-separation OS, and is **not** a spectral ML denoise lab.
 
 See ADR-0086. Hub: [`VOICE_CLOUD.md`](./VOICE_CLOUD.md). Parent DSP: [`AUDIO_INTELLIGENCE.md`](./AUDIO_INTELLIGENCE.md).

@@ -1,7 +1,7 @@
 # Lugemi Neural Text-to-Speech
 
 **Status:** Shipped (VL-171 / library Phase 28)  
-**Rule:** Extend OpenAI TTS + own rented voices + clone speech. Do not regenerate AudioModule consumers or claim ElevenLabs/Polly/Azure Speech parity.
+**Rule:** Extend OpenAI TTS + own rented voices + clone speech. Do not regenerate AudioModule consumers or claim vendor voice clone/Polly/Azure Speech parity.
 
 ---
 
@@ -43,9 +43,9 @@
 
 ## Honesty
 
-- Primary engine: **OpenAI TTS** via AI Gateway; **own:\*** via rented endpoint; **clone:\*** via ElevenLabs with consent/watermark.
+- Primary engine: **OpenAI TTS** via AI Gateway; **own:\*** via rented endpoint; **clone:\*** via vendor voice clone with consent/watermark.
 - Streaming is **chunk SSE after synthesis**, not low-latency streaming TTS.
 - Dialect/accent/personality fields are **catalog metadata**, not synthesis controls.
-- Neural TTS is **not** ElevenLabs + Amazon Polly + Azure Neural TTS + Google WaveNet combined.
+- Neural TTS is **not** vendor voice clone + Amazon Polly + Azure Neural TTS + Google WaveNet combined.
 
 See ADR-0082. Hub: [`VOICE_CLOUD.md`](./VOICE_CLOUD.md).

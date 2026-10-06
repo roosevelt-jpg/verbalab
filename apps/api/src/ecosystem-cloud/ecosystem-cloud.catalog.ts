@@ -10,7 +10,7 @@ export type EcosystemProductRow = {
 };
 
 /**
- * Library Phase 116 → Ecosystem Foundation.
+ * Ecosystem Foundation.
  * Marketplace + monetization hub over existing + / voice marketplace —
  * not a payment-processor OS or regenerate of Volumes 1–10.
  * Volume 11 README: real-money risk; Stripe (or equivalent) only; no raw cards.
@@ -51,7 +51,7 @@ export function ecosystemProductCatalog(): EcosystemProductRow[] {
       api: 'GET /v1/plugin-marketplace/engine',
       console: '/plugin-marketplace',
       notes:
-        'Phase 117. Publish/install/run via Plugin Runtime sandbox + PluginPolicyGate + FabricPolicyGate. liveCodeExecution=false.',
+        'Publish/install/run via Plugin Runtime sandbox + PluginPolicyGate + FabricPolicyGate. liveCodeExecution=false.',
     },
     {
       id: 'model-marketplace',
@@ -60,7 +60,7 @@ export function ecosystemProductCatalog(): EcosystemProductRow[] {
       api: 'GET /v1/model-marketplace/engine',
       console: '/model-marketplace',
       notes:
-        'Phase 118. License SKUs over Model Registry; FabricPolicyGate + Stripe honesty. Not Hugging Face / weight CDN OS.',
+        'License SKUs over Model Registry; FabricPolicyGate + Stripe honesty. Not a public model-hub / weight CDN OS.',
     },
     {
       id: 'dataset-marketplace',
@@ -69,7 +69,7 @@ export function ecosystemProductCatalog(): EcosystemProductRow[] {
       api: 'GET /v1/dataset-marketplace/engine',
       console: '/dataset-marketplace',
       notes:
-        'Phase 119. Extends dataset kind + assets; FabricPolicyGate + Stripe honesty. Not Label Studio / Dataset Cloud OS.',
+        'Extends dataset kind + assets; FabricPolicyGate + Stripe honesty. Not Label Studio / Dataset Cloud OS.',
     },
     {
       id: 'prompt-marketplace',
@@ -78,7 +78,7 @@ export function ecosystemProductCatalog(): EcosystemProductRow[] {
       api: 'GET /v1/prompt-marketplace/engine',
       console: '/prompt-marketplace',
       notes:
-        'Phase 120. Extends prompt kind + Prompt Fabric; FabricPolicyGate + Stripe honesty. Not a prompt mesh OS.',
+        'Extends prompt kind + Prompt Fabric; FabricPolicyGate + Stripe honesty. Not a prompt mesh OS.',
     },
     {
       id: 'agent-marketplace',
@@ -87,7 +87,7 @@ export function ecosystemProductCatalog(): EcosystemProductRow[] {
       api: 'GET /v1/agent-marketplace/engine',
       console: '/agent-marketplace',
       notes:
-        'Phase 121. Agent Runtime sandbox + AgentPolicyGate + FabricPolicyGate; Stripe honesty. Not LangGraph/AutoGPT OS.',
+        'Agent Runtime sandbox + AgentPolicyGate + FabricPolicyGate; Stripe honesty. Not open agent-orchestration OS.',
     },
     {
       id: 'workflow-marketplace',
@@ -96,7 +96,7 @@ export function ecosystemProductCatalog(): EcosystemProductRow[] {
       api: 'GET /v1/workflow-marketplace/engine',
       console: '/workflow-marketplace',
       notes:
-        'Phase 122. Workflow Runtime sandbox + WorkflowPolicyGate + FabricPolicyGate; Stripe honesty. Not Zapier/Temporal OS.',
+        'Workflow Runtime sandbox + WorkflowPolicyGate + FabricPolicyGate; Stripe honesty. Not iPaaS / distributed-workflow OS.',
     },
     {
       id: 'connector-marketplace',
@@ -105,7 +105,7 @@ export function ecosystemProductCatalog(): EcosystemProductRow[] {
       api: 'GET /v1/connector-marketplace/engine',
       console: '/connector-marketplace',
       notes:
-        'Phase 123. Entitlement SKUs over connector catalog + Slack (ADR-0026); FabricPolicyGate + Stripe honesty. Not Zapier/iPaaS OS.',
+        'Entitlement SKUs over connector catalog + Slack (ADR-0026); FabricPolicyGate + Stripe honesty. Not an iPaaS automation OS.',
     },
     {
       id: 'voice-language-marketplace',
@@ -114,7 +114,7 @@ export function ecosystemProductCatalog(): EcosystemProductRow[] {
       api: 'GET /v1/voice-language-marketplace/engine',
       console: '/voice-language-marketplace',
       notes:
-        'Phase 124. Entitlement SKUs over existing voice marketplace + Volume 1 packs; FabricPolicyGate + Stripe honesty. Not a third-party voice CDN OS.',
+        'Entitlement SKUs over existing voice marketplace + Volume 1 packs; FabricPolicyGate + Stripe honesty. Not a third-party voice CDN OS.',
     },
     {
       id: 'creator-economy',
@@ -123,7 +123,7 @@ export function ecosystemProductCatalog(): EcosystemProductRow[] {
       api: 'GET /v1/creator-economy/engine',
       console: '/creator-economy',
       notes:
-        'Phase 125. Extends existing Connect + MarketplaceSale; hand-checked royalty math; tax/dispute gaps explicit. Stripe-only — not a payment-processor OS.',
+        'Extends existing Connect + MarketplaceSale; hand-checked royalty math; tax/dispute gaps explicit. Stripe-only — not a payment-processor OS.',
     },
     {
       id: 'sdk-marketplace',
@@ -131,7 +131,7 @@ export function ecosystemProductCatalog(): EcosystemProductRow[] {
       status: 'deferred',
       api: null,
       console: null,
-      notes: 'Catalog placeholder from Phase 116 product list. Not a package registry OS in Foundation.',
+      notes: 'Catalog placeholder from the ecosystem product list. Not a package registry OS in Foundation.',
     },
     {
       id: 'template-marketplace',
@@ -139,7 +139,7 @@ export function ecosystemProductCatalog(): EcosystemProductRow[] {
       status: 'deferred',
       api: null,
       console: null,
-      notes: 'Catalog placeholder from Phase 116 product list. Templates stay deferred until a dedicated phase.',
+      notes: 'Catalog placeholder from the ecosystem product list. Templates stay deferred until a dedicated phase.',
     },
     {
       id: 'extension-marketplace',
@@ -147,7 +147,7 @@ export function ecosystemProductCatalog(): EcosystemProductRow[] {
       status: 'deferred',
       api: null,
       console: null,
-      notes: 'Catalog placeholder from Phase 116 product list. Extensions map to Plugin Marketplace later.',
+      notes: 'Catalog placeholder from the ecosystem product list. Extensions map to Plugin Marketplace later.',
     },
     {
       id: 'billing-analytics',

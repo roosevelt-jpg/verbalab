@@ -1,5 +1,5 @@
 /**
- * Library Phase 177 → Supply Chain Security.
+ * Supply Chain Security.
  * SBOM/dependency/container/secrets/license catalog + real workspace inventory posture.
  * Not a full vulnerability database / Snyk OS.
  */
@@ -143,7 +143,7 @@ export function supplyChainSecurityEngineCatalog() {
     findings,
     packages,
     sbom: {
-      format: 'verbaLab-inventory-v1',
+      format: 'lugemi-inventory-v1',
       packageCount: packages.length,
       findingCount: findings.length,
       note: 'Inventory SBOM seed — not a full OSV/NVD vulnerability database.',

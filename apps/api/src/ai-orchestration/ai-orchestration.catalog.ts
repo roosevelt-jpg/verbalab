@@ -8,12 +8,12 @@ export type OrchCapability = {
   notes: string;
 };
 
-/** Library Phase 57 → AI Orchestration. Coordinate gateway/engines — not multi-cloud agent OS. */
+/** AI Orchestration. Coordinate gateway/engines — not multi-cloud agent OS. */
 export function aiOrchestrationCatalog() {
   return {
     product: 'Lugemi AI Orchestration',
     note:
-      'Load-bearing orchestration over the AI Gateway + engines. Runs real e2e pipelines (detect→translate, translate→chat, decide→act, tool/model chains). Extends existing workflows. Not a multi-cloud agent OS, LangGraph OS, or distributed AI fabric.',
+      'Load-bearing orchestration over the AI Gateway + engines. Runs real e2e pipelines (detect→translate, translate→chat, decide→act, tool/model chains). Extends existing workflows. Not a multi-cloud agent OS, open agent-orchestration OS, or distributed AI fabric.',
     capabilities: [
       {
         id: 'multi-model-execution',

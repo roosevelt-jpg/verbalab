@@ -22,7 +22,7 @@ export const AGENT_PERMISSIONS = [
 
 export type AgentPermission = (typeof AGENT_PERMISSIONS)[number];
 
-/** Always denied — never grantable in . */
+/** Always denied — never grantable in this runtime. */
 export const AGENT_DENIED_ACTIONS = [
   'external.execute',
   'billing.charge',
@@ -50,19 +50,19 @@ export function agentRuntimeCeilings() {
     ),
     mode: agentRuntimeMode(),
     liveToolExecution: false,
-    note: 'Sandbox agent runtime. Live open tool execution is forbidden in .',
+    note: 'Sandbox agent runtime. Live open tool execution is forbidden in this runtime.',
   };
 }
 
 /**
- * Library Phase 86 → Agent Runtime.
+ * Agent Runtime.
  * Scoped permissions + sandbox required. Not open tool execution.
  */
 export function agentRuntimeCatalog() {
   return {
     product: 'Lugemi Agent Runtime',
     note:
-      'Agent Runtime. Single/multi-agent sandbox with hard permission allowlists, lifecycle, scheduling stubs, agent memory via Memory Runtime, and marketplace listing counts. Actions are sandboxed — not open function calls against real accounts/data. Policy Runtime is wired as a hard gate via AgentPolicyGate. Not a LangGraph/AutoGPT OS.',
+      'Agent Runtime. Single/multi-agent sandbox with hard permission allowlists, lifecycle, scheduling stubs, agent memory via Memory Runtime, and marketplace listing counts. Actions are sandboxed — not open function calls against real accounts/data. Policy Runtime is wired as a hard gate via AgentPolicyGate. Not an open agent-orchestration OS.',
     capabilities: [
       {
         id: 'single-agents',

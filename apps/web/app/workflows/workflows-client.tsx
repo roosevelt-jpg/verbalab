@@ -88,7 +88,7 @@ export function WorkflowsClient() {
         Workflows
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0' }}>
-        Directed steps as JSON, executed by the job runner. Ops: transcribe, translate, notify. Not Temporal.
+        Directed steps as JSON, executed by the job runner. Ops: transcribe, translate, notify. Not a distributed-workflow OS.
       </p>
 
       {error ? <p style={{ color: 'var(--bad)' }}>{error}</p> : null}

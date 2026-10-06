@@ -83,7 +83,7 @@ export function AgentFabricClient() {
         Agent Fabric
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        Cross-cloud agent router over Agent Runtime — sandboxed and Policy-gated, not LangGraph/AutoGPT OS.
+        Cross-cloud agent router over Agent Runtime — sandboxed and Policy-gated, not open agent-orchestration OS.
       </p>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}

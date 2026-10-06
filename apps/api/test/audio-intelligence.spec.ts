@@ -83,7 +83,7 @@ describe('Audio Intelligence', () => {
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/deferred/i);
     expect(text).toContain('Echo Cancellation');
-    expect(text).not.toMatch(/Krisp.*shipped/i);
+    expect(text).not.toMatch(/third-party denoise.*shipped|noise-cancellation OS.*shipped/i);
   });
 
   it('exposes audio engine with echo deferred', async () => {

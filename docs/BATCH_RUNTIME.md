@@ -2,7 +2,7 @@
 
 **Status:** Partial (VL-209 / library Phase 76)  
 **Parent:** [Inference Cloud](./INFERENCE_CLOUD.md)  
-**Rule:** Batch hub over existing **BullMQ `/v1/jobs`** for translation, plus **sandbox runs** for speech/OCR/embedding with priority, retry budget, and checkpoint cursors. Authed runs are org/workspace-scoped. Does **not** invent Spark/Airflow/Celery OS or video batch fabric. Does **not** regenerate the jobs or training-jobs APIs.
+**Rule:** Batch hub over existing **BullMQ `/v1/jobs`** for translation, plus **sandbox runs** for speech/OCR/embedding with priority, retry budget, and checkpoint cursors. Authed runs are org/workspace-scoped. Does **not** invent Spark/distributed-workflow/Celery OS or video batch fabric. Does **not** regenerate the jobs or training-jobs APIs.
 
 ---
 

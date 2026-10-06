@@ -35,6 +35,6 @@
 | Install / Reviews | `…/listings/:id/install` · `/reviews` |
 | Analytics / Sales | `GET …/analytics` · `/sales` |
 
-Voice Marketplace is **not** ElevenLabs Voice Library + celebrity marketplace combined.
+Voice Marketplace is **not** vendor voice clone Voice Library + celebrity marketplace combined.
 
 See ADR-0088. Hub: [`VOICE_CLOUD.md`](./VOICE_CLOUD.md). Cloning trust: [`VOICE_CLONING.md`](./VOICE_CLONING.md).

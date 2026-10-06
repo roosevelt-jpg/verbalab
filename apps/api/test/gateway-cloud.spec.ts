@@ -45,7 +45,7 @@ describe('AI Gateway Cloud Foundation', () => {
     expect(text).toContain('Volume 1 Part A');
     expect(text).toContain('OpenRouter');
     expect(text).toContain('Deferred');
-    expect(text).toContain('NeMo');
+    expect(text).toContain('Deferred chat/speech');
     const adrText = readFileSync(adr, 'utf8');
     expect(adrText).toContain('Volume 1 Part A');
   });
@@ -55,9 +55,11 @@ describe('AI Gateway Cloud Foundation', () => {
     expect(res.body.capabilities.streaming).toBe(false);
     expect(res.body.capabilities.caching.responseCache).toBe(false);
     const ids = res.body.providers.map((p: { id: string }) => p.id);
-    expect(ids).toEqual(expect.arrayContaining(['openai', 'openrouter', 'claude', 'nemo']));
-    const claude = res.body.providers.find((p: { id: string }) => p.id === 'claude');
-    expect(claude.status).toBe('deferred');
+    expect(ids).toEqual(
+      expect.arrayContaining(['openai', 'openrouter', 'deferred_chat_a', 'deferred_speech_a']),
+    );
+    const deferredChat = res.body.providers.find((p: { id: string }) => p.id === 'deferred_chat_a');
+    expect(deferredChat.status).toBe('deferred');
     const openrouter = res.body.providers.find((p: { id: string }) => p.id === 'openrouter');
     expect(openrouter.status).toBe('optional');
   });

@@ -108,7 +108,7 @@ export function WorkflowRuntimeClient() {
         <h1 style={{ margin: '0.35rem 0 0.5rem', fontSize: '1.75rem' }}>Workflow Runtime</h1>
         <p style={{ color: 'var(--muted)', lineHeight: 1.55 }}>
           Sandbox multi-step workflows with hard permission allowlists. Extends product{' '}
-          <Link href="/workflows">/workflows</Link> — not Temporal/Airflow OS.
+          <Link href="/workflows">/workflows</Link> — not a distributed-workflow OS.
         </p>
 
         {error ? (

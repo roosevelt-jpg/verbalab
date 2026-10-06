@@ -106,7 +106,7 @@ export type ProfileEnhanceResult = {
   note: string;
 };
 
-/** Run a named cleanup profile over PCM heuristics — not Krisp / Adobe Enhance / Demucs. */
+/** Run a named cleanup profile over PCM heuristics — not third-party noise-cancellation / enhance / stem-separation. */
 export function applyEnhancementProfile(
   buffer: Buffer,
   profileId: string,
