@@ -18,7 +18,7 @@ export function languageProductCatalog(): LanguageProductRow[] {
       status: 'shipped',
       api: 'POST /v1/translate',
       console: '/translate',
-      notes: 'Google MT via gateway; glossary/TM/locale DNT; formats + SSE.',
+      notes: 'Lugemi Baobab MT via gateway; glossary/TM/locale DNT; formats + SSE.',
     },
     {
       id: 'detect',
@@ -26,7 +26,7 @@ export function languageProductCatalog(): LanguageProductRow[] {
       status: 'shipped',
       api: 'POST /v1/detect',
       console: '/playground',
-      notes: 'Google detect + franc offline fallback; source=auto on translate.',
+      notes: 'Lugemi Lid language identification; source=auto on translate.',
     },
     {
       id: 'dialect',

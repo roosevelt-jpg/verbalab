@@ -75,7 +75,7 @@ export function ModelServingClient() {
         method: 'POST',
         body: JSON.stringify({
           kind: 'llm',
-          modelSlug: 'vendor-chat-openai',
+          modelSlug: 'lugemi-atlas-reason',
           version: 'v1',
           strategy: 'canary',
           trafficPercent: 10,
@@ -151,7 +151,7 @@ export function ModelServingClient() {
             cursor: 'pointer',
           }}
         >
-          Deploy LLM canary (vendor-chat-openai)
+          Deploy LLM canary (lugemi-atlas-reason)
         </button>
       </section>
 

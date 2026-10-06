@@ -151,8 +151,8 @@ export function NeuralTtsClient() {
         Neural TTS
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        Batch synthesize and chunk-SSE streaming over OpenAI, own rented, and clone voices. Extends
-        existing speech APIs — not a second TTS stack.
+        Batch synthesize and chunk-SSE streaming over Lugemi Echo Voice (own:* Africa-first accents)
+        and Instant Voice Cloning. Extends existing speech APIs — not a second TTS stack.
       </p>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}

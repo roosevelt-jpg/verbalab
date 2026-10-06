@@ -28,7 +28,7 @@ export function voiceProductCatalog(): VoiceProductRow[] {
       api: 'GET /v1/tts/engine',
       console: '/neural-tts',
       notes:
-        'Neural TTS engine: batch synthesize + chunk SSE stream over OpenAI/own/clone voices. Legacy: POST /v1/audio/speech.',
+        'Lugemi Echo Voice: batch synthesize + chunk SSE stream over own:*/clone voices. Legacy: POST /v1/audio/speech.',
     },
     {
       id: 'natural-voices',

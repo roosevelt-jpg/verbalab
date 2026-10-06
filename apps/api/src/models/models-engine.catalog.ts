@@ -13,7 +13,7 @@ export function modelsEngineCatalog() {
   return {
     product: 'Lugemi Models Engine',
     note:
-      'Live model matrix for gateway features (translate, STT, TTS, OCR, detect, chat, embeddings, and Language Intelligence verticals). First-party Lugemi entries plus optional vendor adapters. Not MLflow, SageMaker Model Registry, or a training OS.',
+      'Live matrix of proprietary Lugemi model families for complex multilingual reasoning, dialect-aware speech, translation, and vertical packs (law, government, insurance, compliance, security). Default inference is Lugemi-owned — optional legacy adapters stay silent. Not MLflow or a training OS.',
     capabilities: [
       {
         id: 'live-matrix',

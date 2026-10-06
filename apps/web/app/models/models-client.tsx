@@ -42,50 +42,56 @@ type Engine = {
 const VERTICALS = [
   {
     id: 'voice',
-    title: 'Voice',
-    body: 'Lugemi TTS and ASR for African accents — own:* production voices.',
+    title: 'Echo Voice',
+    body: 'Lugemi Echo — proprietary TTS/ASR for African accents and complex speaking agents (own:*).',
     href: '/audio',
   },
   {
     id: 'video',
-    title: 'Video',
-    body: 'MCP/CLI voice generation for dubbing and content pipelines.',
+    title: 'Fusion Video',
+    body: 'Lugemi Fusion — MCP/CLI voice for dubbing and content pipelines.',
     href: '/developers',
   },
   {
     id: 'chat',
-    title: 'Chat',
-    body: 'Chat Intelligence for culture, lifestyle, and routines — not a generic chatbot skin.',
+    title: 'Atlas Reason',
+    body: 'Lugemi Atlas — multilingual reasoning for complex dialect, culture, and vertical tasks.',
     href: '/chat',
   },
   {
+    id: 'translate',
+    title: 'Baobab Translate',
+    body: 'Lugemi Baobab — Africa-first MT for long-context and dialect-aware pairs (default en→Twi).',
+    href: '/translate',
+  },
+  {
     id: 'law',
-    title: 'Law',
-    body: 'Legal language packs, jurisdiction glossaries, and provenance for synthetic speech in filings.',
+    title: 'Lex',
+    body: 'Lugemi Lex — legal language packs, jurisdiction glossaries, provenance for filings.',
     href: '/p/legal-integrity',
   },
   {
     id: 'government',
-    title: 'Government',
-    body: 'Citizen-service bilingual notices, public-sector forms, and Language Integrity for attested speech.',
+    title: 'Civic',
+    body: 'Lugemi Civic — citizen-service bilingual notices and public-sector forms.',
     href: '/p/legal-integrity',
   },
   {
     id: 'insurance',
-    title: 'Insurance',
-    body: 'Claims and policy language across African markets.',
+    title: 'Cover',
+    body: 'Lugemi Cover — claims and policy language across African markets.',
     href: '/models',
   },
   {
     id: 'compliance',
-    title: 'Compliance',
-    body: 'KYC, AML, and disclosure localization with audit-friendly wording.',
+    title: 'Accord',
+    body: 'Lugemi Accord — KYC, AML, and disclosure localization with audit-friendly wording.',
     href: '/models',
   },
   {
     id: 'security',
-    title: 'Security',
-    body: 'Threat and policy language understanding across locales.',
+    title: 'Sentinel',
+    body: 'Lugemi Sentinel — threat and policy language understanding across locales.',
     href: '/models',
   },
 ];
@@ -121,7 +127,7 @@ export function ModelsClient() {
       <h1 style={titleStyle}>{engine?.product ?? 'Lugemi models'}</h1>
       <p style={ledeStyle}>
         {engine?.note ??
-          'Lugemi ships its own Language Intelligence models for voice, video, chat, security, law, government, insurance, and compliance. Infrastructure for African languages, accents, culture, and routines — not just another translation wrapper.'}
+          'Proprietary Lugemi model families — Atlas, Baobab, Echo, Vector, Lex, Civic, Cover, Accord, Sentinel, Fusion — for complex multilingual reasoning, dialect, and vertical tasks. Lugemi-owned intelligence, not third-party wrappers.'}
       </p>
       <p style={{ margin: '0.65rem 0 0', fontSize: '0.9rem' }}>
         <Link href="/translate">Translate (English → Twi)</Link>

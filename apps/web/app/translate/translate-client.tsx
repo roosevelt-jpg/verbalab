@@ -96,7 +96,7 @@ export function TranslateClient() {
       <h1 style={titleStyle}>Translate</h1>
       <p style={ledeStyle}>
         Default pair is English → Twi (Akan, Ghana / <code className="vl-code">ak</code> ·{' '}\n        <code className="vl-code">ak-GH</code>). Pick any language or BCP-47 locale from the dropdowns —
-        Lugemi Language Intelligence infrastructure, not a generic vendor panel.
+        Powered by Lugemi Baobab — proprietary Africa-first MT for complex multilingual and dialect-aware tasks.
       </p>
       <p style={{ margin: '0.65rem 0 0', fontSize: '0.9rem' }}>
         <Link href="/models">Lugemi models</Link>

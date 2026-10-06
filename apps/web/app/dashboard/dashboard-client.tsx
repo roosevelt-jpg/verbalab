@@ -76,7 +76,7 @@ const AFRICA_MISSIONS = [
   {
     id: 'negotiate',
     title: 'Negotiate',
-    body: 'Voice agents that hold the room: speak back in the dialect your counterpart uses, with clean Lugemi audio — no stacked vendor voice noise.',
+    body: 'Voice agents that hold the room: speak back in the dialect your counterpart uses, with Lugemi Echo Voice — proprietary Africa-first audio.',
     href: '/chat',
     cta: 'Open Chat Studio',
   },

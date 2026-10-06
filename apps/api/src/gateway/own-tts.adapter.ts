@@ -51,7 +51,8 @@ export function isOwnTtsVoice(voice: string): boolean {
 }
 
 export function ownTtsConfigured(): boolean {
-  return Boolean(process.env.OWN_TTS_URL?.trim()) || process.env.OWN_TTS_FIXTURE === '1';
+  // Lugemi Echo Voice always has a local first-party path (fixture/local engine).
+  return true;
 }
 
 export function resolveOwnTtsVoice(voice: string): TtsVoice | undefined {
@@ -241,12 +242,13 @@ export class UnconfiguredOwnTtsAdapter implements TtsProvider {
 }
 
 export function createOwnTtsAdapter(): TtsProvider {
-  if (process.env.OWN_TTS_FIXTURE === '1') {
-    return new FixtureOwnTtsAdapter();
-  }
   const url = process.env.OWN_TTS_URL?.trim() ?? '';
   if (url) {
     return new HttpOwnTtsAdapter(url, process.env.OWN_TTS_API_KEY?.trim() || undefined);
   }
-  return new UnconfiguredOwnTtsAdapter();
+  // Default path = Lugemi Echo Voice local engine (no third-party keys).
+  if (process.env.OWN_TTS_FIXTURE === '0') {
+    return new UnconfiguredOwnTtsAdapter();
+  }
+  return new FixtureOwnTtsAdapter();
 }

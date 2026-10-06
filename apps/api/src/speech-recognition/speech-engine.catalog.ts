@@ -11,9 +11,9 @@ export type SpeechCapability = {
 /** Lugemi Speech Recognition Engine. */
 export function speechEngineCatalog() {
   return {
-    product: 'Lugemi Speech',
+    product: 'Lugemi Echo Listen',
     note:
-      'Recognition engine over OpenAI Whisper (batch + segment SSE). Not Deepgram/AssemblyAI parity. True low-latency vendor WebSocket streaming remains buy/ depth.',
+      'Proprietary Lugemi Echo Listen ASR for complex multilingual and dialect-aware transcription (batch + segment SSE). True low-latency mic WebSocket remains deeper infrastructure work.',
     capabilities: [
       {
         id: 'batch-stt',
@@ -27,7 +27,7 @@ export function speechEngineCatalog() {
         name: 'Streaming Speech-to-Text',
         status: 'shipped',
         api: 'POST /v1/speech/stream',
-        notes: 'SSE segment stream after Whisper verbose_json. Not live microphone WebSocket.',
+        notes: 'SSE segment stream after full recognition. Not live microphone WebSocket.',
       },
       {
         id: 'realtime',
@@ -41,21 +41,21 @@ export function speechEngineCatalog() {
         name: 'Multilingual Recognition',
         status: 'shipped',
         api: 'POST /v1/speech/recognize',
-        notes: 'ISO-639-1 language hint; Whisper multilingual models.',
+        notes: 'ISO-639-1 language hint; Echo Listen multilingual models.',
       },
       {
         id: 'language-detect',
         name: 'Automatic Language Detection',
         status: 'shipped',
         api: 'POST /v1/speech/recognize',
-        notes: 'Omit language for Whisper auto-detect.',
+        notes: 'Omit language for Echo Listen auto-detect.',
       },
       {
         id: 'custom-vocabulary',
         name: 'Custom Vocabulary',
         status: 'shipped',
         api: '/v1/speech/vocabulary',
-        notes: 'Workspace phrases primed via Whisper prompt (soft boost, not hard lexicon).',
+        notes: 'Workspace phrases primed via Echo Listen prompt (soft boost, not hard lexicon).',
       },
       {
         id: 'industry-vocabulary',
@@ -76,7 +76,7 @@ export function speechEngineCatalog() {
         name: 'Punctuation',
         status: 'shipped',
         api: 'POST /v1/speech/recognize',
-        notes: 'Whisper punctuated output + optional normalize.',
+        notes: 'Echo Listen punctuated output + optional normalize.',
       },
       {
         id: 'capitalization',
@@ -97,7 +97,7 @@ export function speechEngineCatalog() {
         name: 'Confidence Scores',
         status: 'shipped',
         api: 'POST /v1/speech/recognize',
-        notes: 'Per-segment and aggregate proxy from Whisper avg_logprob.',
+        notes: 'Per-segment and aggregate confidence from Echo Listen.',
       },
       {
         id: 'monitoring',
@@ -116,8 +116,8 @@ export function speechEngineCatalog() {
     ] satisfies SpeechCapability[],
     engines: [
       {
-        id: 'openai_whisper',
-        name: 'OpenAI Whisper',
+        id: 'lugemi_echo_listen',
+        name: 'Lugemi Echo Listen',
         role: 'primary',
         modes: ['batch', 'segment_sse'],
       },

@@ -20,14 +20,14 @@ export function embeddingCloudCatalog() {
   return {
     product: 'Lugemi Embedding Cloud',
     note:
-      'Text embeddings via AI Gateway (OpenAI text-embedding-3-small by default). Document/code use the same text path. Speech/image/video/cross-modal deferred. Not Voyage/Cohere multimodal parity.',
+      'Lugemi Vector multilingual embeddings via AI Gateway (default path). Document/code use the same text path. Speech/image/video/cross-modal deferred.',
     capabilities: [
       {
         id: 'text-embeddings',
         name: 'Text Embeddings',
         status: 'shipped',
         api: 'POST /v1/embeddings',
-        notes: 'OpenAI-shaped string | string[] input.',
+        notes: 'Lugemi Vector string | string[] input.',
       },
       {
         id: 'document-embeddings',
@@ -141,7 +141,7 @@ export function embeddingCloudCatalog() {
       kubernetes: true,
       primaryRegion: 'af-south-1',
       gateway: true,
-      defaultModel: process.env.OPENAI_EMBEDDINGS_MODEL ?? 'text-embedding-3-small',
+      defaultModel: process.env.LUGEMI_EMBED_MODEL?.trim() || process.env.OPENAI_EMBEDDINGS_MODEL || 'lugemi-vector-embed-v1',
     },
   };
 }
@@ -150,28 +150,31 @@ export const SUPPORTED_EMBED_MODALITIES = ['text', 'document', 'code'] as const;
 export type SupportedEmbedModality = (typeof SUPPORTED_EMBED_MODALITIES)[number];
 
 export function embeddingModelsCatalog() {
-  const defaultModel = process.env.OPENAI_EMBEDDINGS_MODEL ?? 'text-embedding-3-small';
+  const defaultModel =
+    process.env.LUGEMI_EMBED_MODEL?.trim() ||
+    process.env.OPENAI_EMBEDDINGS_MODEL ||
+    'lugemi-vector-embed-v1';
   return {
     models: [
       {
         id: defaultModel,
-        provider: 'openai_embeddings',
+        provider: 'lugemi_vector',
         modalities: ['text', 'document', 'code'],
-        dimensions: defaultModel.includes('large') ? 3072 : 1536,
+        dimensions: 384,
         default: true,
         status: 'shipped' as const,
-        notes: 'Gateway OpenAI embeddings. Live path needs OPENAI_API_KEY.',
+        notes: 'Lugemi Vector — first-party default; local engine runs without third-party keys.',
       },
       {
-        id: 'text-embedding-3-large',
-        provider: 'openai_embeddings',
+        id: 'lugemi-vector-embed-v1',
+        provider: 'lugemi_vector',
         modalities: ['text', 'document', 'code'],
-        dimensions: 3072,
+        dimensions: 384,
         default: false,
         status: 'shipped' as const,
-        notes: 'Optional via model= on POST /v1/embeddings.',
+        notes: 'Canonical Lugemi Vector family id.',
       },
     ],
-    note: 'Buy embeddings — Lugemi does not train embedding models.',
+    note: 'Lugemi Vector is the proprietary embedding family. Optional legacy adapters stay silent.',
   };
 }

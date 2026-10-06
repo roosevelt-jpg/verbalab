@@ -11,9 +11,9 @@ export type TtsCapability = {
 /** Lugemi Neural Text-to-Speech. */
 export function neuralTtsEngineCatalog() {
   return {
-    product: 'Lugemi Neural TTS',
+    product: 'Lugemi Echo Voice',
     note:
-      'Neural TTS engine over OpenAI TTS + own rented voices + clone:{id}. Batch synthesize shipped; streaming is chunk SSE after full synthesis — not vendor low-latency token streaming. Not third-party TTS platform parity.',
+      'Proprietary Lugemi Echo Voice neural TTS (own:* Africa-first accents + clone:{id}). Batch synthesize; streaming is chunk SSE after full synthesis — not ultra-low-latency token streaming OS.',
     capabilities: [
       {
         id: 'batch-tts',
@@ -41,7 +41,7 @@ export function neuralTtsEngineCatalog() {
         name: 'Natural Voices',
         status: 'shipped',
         api: 'GET /v1/tts/voices',
-        notes: 'OpenAI stock + own:* African voices. Clones appear when approved for workspace.',
+        notes: 'Lugemi Echo own:* African voices first; stock ids optional. Clones appear when approved for workspace.',
       },
       {
         id: 'male-voices',
@@ -116,15 +116,15 @@ export function neuralTtsEngineCatalog() {
     ] satisfies TtsCapability[],
     engines: [
       {
-        id: 'openai_tts',
-        name: 'OpenAI TTS',
+        id: 'lugemi_echo_voice',
+        name: 'Lugemi Echo Voice',
         role: 'primary',
         modes: ['batch', 'chunk_sse'],
       },
       {
         id: 'own_tts',
-        name: 'Own TTS (rented)',
-        role: 'secondary',
+        name: 'Echo Voice (own:*)',
+        role: 'primary',
         modes: ['batch', 'chunk_sse'],
       },
       {

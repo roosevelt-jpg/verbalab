@@ -31,13 +31,13 @@ describe('Model registry', () => {
     await app.close();
   });
 
-  it('seeds vendor defaults for each gateway feature', async () => {
-    const rows = await prisma.modelRegistryEntry.findMany({
-      where: { kind: 'vendor' },
-    });
+  it('seeds Lugemi family defaults for each gateway feature', async () => {
+    const rows = await prisma.modelRegistryEntry.findMany();
     for (const seed of VENDOR_MODEL_SEEDS) {
       expect(rows.some((r) => r.slug === seed.slug && r.status === 'ready')).toBe(true);
     }
+    expect(rows.some((r) => r.slug === 'lugemi-atlas-reason' && r.kind === 'lugemi')).toBe(true);
+    expect(rows.some((r) => r.slug === 'lugemi-baobab-translate' && r.kind === 'lugemi')).toBe(true);
   });
 
   it('GET /v1/models/live is public and lists features with configured flags', async () => {
@@ -53,11 +53,19 @@ describe('Model registry', () => {
     const translate = res.body.features.find(
       (f: { feature: string }) => f.feature === 'translate',
     );
+    expect(res.body.disclaimer).toMatch(/Baobab|Atlas|Echo/i);
+    expect(
+      translate.models.some((m: { slug: string }) => m.slug === 'lugemi-baobab-translate'),
+    ).toBe(true);
     expect(translate.models.some((m: { slug: string }) => m.slug === 'vendor-translate-google')).toBe(
       true,
     );
+    const chat = res.body.features.find((f: { feature: string }) => f.feature === 'chat');
+    expect(chat.models.some((m: { slug: string; configured: boolean }) => m.slug === 'lugemi-atlas-reason' && m.configured)).toBe(
+      true,
+    );
     const detect = res.body.features.find((f: { feature: string }) => f.feature === 'detect');
-    expect(detect.models.some((m: { slug: string; configured: boolean }) => m.slug === 'vendor-detect-franc' && m.configured)).toBe(
+    expect(detect.models.some((m: { slug: string; configured: boolean }) => m.slug === 'lugemi-lid' && m.configured)).toBe(
       true,
     );
   });

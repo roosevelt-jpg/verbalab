@@ -122,7 +122,7 @@ describe('AI Router', () => {
       .send({ feature: 'detect', optimize: 'latency', preferConfiguredOnly: false })
       .expect(200);
     expect(detect.body.dryRun).toBe(true);
-    expect(detect.body.selected.providerId).toBe('franc');
+    expect(detect.body.selected.providerId).toBe('lugemi_lid');
     expect(detect.body.chain.length).toBeGreaterThanOrEqual(1);
     expect(detect.body.honesty.serviceMeshOs).toBe(false);
     expect(detect.body.caching.enabled).toBe(false);
@@ -136,8 +136,10 @@ describe('AI Router', () => {
         allowFallback: true,
       })
       .expect(200);
-    // openrouter is cheaper when configured; otherwise openai primary
-    expect(['openai', 'openrouter']).toContain(costChat.body.selected.providerId);
+    // Lugemi Atlas is primary and always configured (cost 0); legacy adapters are silent fallbacks
+    expect(['lugemi_atlas', 'legacy_chat', 'legacy_chat_alt']).toContain(
+      costChat.body.selected.providerId,
+    );
     expect(costChat.body.spendSafety?.enforcesSpendCaps ?? false).toBe(false);
     expect(costChat.body.honesty.enforcesSpendCaps).toBe(false);
 

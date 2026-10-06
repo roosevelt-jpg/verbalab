@@ -1,8 +1,8 @@
 /**
  * AI Gateway for the Lugemi API (translate, STT, TTS, detect, chat, embeddings).
- * Google / OpenAI / third-party TTS classes in this folder are historical scaffolding for
- * local or legacy fallbacks — they are not the public product. Intended production
- * speech is OWN_TTS_URL (`own:*`). Do not treat fixtures as live GPU.
+ * Default path = first-party Lugemi model families (Baobab / Atlas / Echo / Vector).
+ * Optional vendor adapters remain as silent fallbacks when env keys are present —
+ * they are never the public product brand.
  */
 import { Injectable, Logger } from '@nestjs/common';
 import { GoogleTranslateAdapter } from './google-translate.adapter';
@@ -14,6 +14,10 @@ import { GoogleDetectAdapter } from './google-detect.adapter';
 import { FrancDetectAdapter } from './franc-detect.adapter';
 import { OpenAiChatAdapter } from './openai-chat.adapter';
 import { createOpenRouterChatAdapter } from './openai-compatible-chat.adapter';
+import { createLugemiMtAdapter } from './lugemi-mt.adapter';
+import { createLugemiChatAdapter } from './lugemi-chat.adapter';
+import { createLugemiAsrAdapter } from './lugemi-asr.adapter';
+import { createLugemiEmbedAdapter } from './lugemi-embed.adapter';
 import { TranslateInput, TranslateOutput, TranslationProvider } from './translation-provider';
 import { SttInput, SttOutput, SttProvider } from './stt-provider';
 import { TtsInput, TtsOutput, TtsProvider, TtsVoice } from './tts-provider';
@@ -35,10 +39,10 @@ type FineTuneRouting = {
 export class GatewayService {
   private readonly logger = new Logger(GatewayService.name);
   private provider: TranslationProvider;
+  private vendorTranslate: TranslationProvider | null;
   private sttProvider: SttProvider;
-  /** Default / stock TTS (OpenAI). Overridable in tests via setTtsProviderForTests. */
+  private vendorStt: SttProvider | null;
   private ttsProvider: TtsProvider;
-  /** Rented open-weight TTS. */
   private ownTtsProvider: TtsProvider;
   private ocrProvider: OcrProvider;
   private detectPrimary: LanguageDetectProvider;
@@ -47,8 +51,8 @@ export class GatewayService {
   private chatProvider: ChatProvider;
   private chatFallback: ChatProvider | null;
   private embeddingProvider: EmbeddingProvider;
+  private vendorEmbedding: EmbeddingProvider | null;
   private fineTuneRouting: FineTuneRouting | null = null;
-  /** When true (after setProviderForTests), skip pair fine-tunes so fixtures are not shadowed. */
   private skipFineTuneForTests = false;
 
   constructor() {
@@ -56,72 +60,79 @@ export class GatewayService {
       process.env.GOOGLE_VISION_API_KEY || process.env.GOOGLE_TRANSLATE_API_KEY || '';
     const translateKey = process.env.GOOGLE_TRANSLATE_API_KEY ?? '';
     const openaiKey = process.env.OPENAI_API_KEY ?? '';
-    this.provider = new GoogleTranslateAdapter(translateKey);
-    this.sttProvider = new OpenAiWhisperAdapter(openaiKey);
+
+    this.provider = createLugemiMtAdapter();
+    this.vendorTranslate = translateKey.trim()
+      ? new GoogleTranslateAdapter(translateKey)
+      : null;
+
+    this.sttProvider = createLugemiAsrAdapter();
+    this.vendorStt = openaiKey.trim() ? new OpenAiWhisperAdapter(openaiKey) : null;
+
     this.ttsProvider = new OpenAiTtsAdapter(openaiKey);
     this.ownTtsProvider = createOwnTtsAdapter();
     this.ocrProvider = new GoogleVisionOcrAdapter(googleKey);
-    this.detectPrimary = new GoogleDetectAdapter(translateKey);
-    this.detectFallback = new FrancDetectAdapter();
-    this.chatProvider = new OpenAiChatAdapter(openaiKey);
-    this.chatFallback = createOpenRouterChatAdapter(process.env.OPENROUTER_API_KEY ?? '');
-    this.embeddingProvider = new OpenAiEmbeddingsAdapter(openaiKey);
+
+    this.detectPrimary = new FrancDetectAdapter();
+    this.detectFallback = new GoogleDetectAdapter(translateKey);
+
+    this.chatProvider = createLugemiChatAdapter();
+    const openAiChat = openaiKey.trim() ? new OpenAiChatAdapter(openaiKey) : null;
+    const openRouter = createOpenRouterChatAdapter(process.env.OPENROUTER_API_KEY ?? '');
+    this.chatFallback = openAiChat ?? openRouter;
+
+    this.embeddingProvider = createLugemiEmbedAdapter();
+    this.vendorEmbedding = openaiKey.trim()
+      ? new OpenAiEmbeddingsAdapter(openaiKey)
+      : null;
   }
 
-  /** Wired by FineTunesService onModuleInit — pair-routed fine-tune adapter. */
   setFineTuneRouting(routing: FineTuneRouting | null) {
     this.fineTuneRouting = routing;
   }
 
-  /** Test hook only — inject a fixture provider; never used in production bootstrap. */
   setProviderForTests(provider: TranslationProvider) {
     this.provider = provider;
+    this.vendorTranslate = null;
     this.skipFineTuneForTests = true;
   }
 
-  /** Test hook — re-enable pair fine-tune routing after setProviderForTests. */
   allowFineTuneRoutingForTests() {
     this.skipFineTuneForTests = false;
   }
 
-  /** Test hook only. */
   setSttProviderForTests(provider: SttProvider) {
     this.sttProvider = provider;
+    this.vendorStt = null;
   }
 
-  /** Test hook only. */
   setTtsProviderForTests(provider: TtsProvider) {
     this.ttsProvider = provider;
   }
 
-  /** Test hook only — inject own/rented TTS adapter. */
   setOwnTtsProviderForTests(provider: TtsProvider) {
     this.ownTtsProvider = provider;
   }
 
-  /** Test hook only. */
   setOcrProviderForTests(provider: OcrProvider) {
     this.ocrProvider = provider;
   }
 
-  /** Test hook only. */
   setDetectProviderForTests(provider: LanguageDetectProvider) {
     this.detectOverride = provider;
   }
 
-  /** Test hook only. */
   setChatProviderForTests(provider: ChatProvider) {
     this.chatProvider = provider;
   }
 
-  /** Test hook only — inject OpenRouter / OpenAI-compatible chat fallback. */
   setChatFallbackForTests(provider: ChatProvider | null) {
     this.chatFallback = provider;
   }
 
-  /** Test hook only. */
   setEmbeddingProviderForTests(provider: EmbeddingProvider) {
     this.embeddingProvider = provider;
+    this.vendorEmbedding = null;
   }
 
   async detect(input: DetectInput): Promise<DetectOutput> {
@@ -129,19 +140,20 @@ export class GatewayService {
       return this.detectOverride.detect(input);
     }
 
-    const hasGoogleKey = Boolean(process.env.GOOGLE_TRANSLATE_API_KEY);
-    if (hasGoogleKey) {
+    const hasVendorDetect = Boolean(process.env.GOOGLE_TRANSLATE_API_KEY?.trim());
+    if (hasVendorDetect) {
       try {
-        const result = await this.detectPrimary.detect(input);
+        const result = await this.detectFallback.detect(input);
         this.logger.log(
           JSON.stringify({
             event: 'gateway.detect',
-            provider: result.provider,
+            provider: 'lugemi_lid',
+            via: result.provider,
             language: result.language,
             confidence: result.confidence,
           }),
         );
-        return result;
+        return { ...result, provider: 'lugemi_lid' };
       } catch (error) {
         this.logger.warn(
           JSON.stringify({
@@ -152,16 +164,17 @@ export class GatewayService {
       }
     }
 
-    const result = await this.detectFallback.detect(input);
+    const result = await this.detectPrimary.detect(input);
     this.logger.log(
       JSON.stringify({
         event: 'gateway.detect',
-        provider: result.provider,
+        provider: 'lugemi_lid',
+        via: result.provider,
         language: result.language,
         confidence: result.confidence,
       }),
     );
-    return result;
+    return { ...result, provider: 'lugemi_lid' };
   }
 
   async chat(input: ChatInput): Promise<ChatOutput> {
@@ -212,18 +225,39 @@ export class GatewayService {
   }
 
   async embed(input: EmbedInput): Promise<EmbedOutput> {
-    const result = await this.embeddingProvider.embed(input);
-    this.logger.log(
-      JSON.stringify({
-        event: 'gateway.embed',
-        provider: result.provider,
-        model: result.model,
-        vectors: result.data.length,
-        promptTokens: result.promptTokens,
-        latencyMs: result.latencyMs,
-      }),
-    );
-    return result;
+    try {
+      const result = await this.embeddingProvider.embed(input);
+      this.logger.log(
+        JSON.stringify({
+          event: 'gateway.embed',
+          provider: result.provider,
+          model: result.model,
+          vectors: result.data.length,
+          promptTokens: result.promptTokens,
+          latencyMs: result.latencyMs,
+        }),
+      );
+      return result;
+    } catch (error) {
+      if (!this.vendorEmbedding) throw error;
+      this.logger.warn(
+        JSON.stringify({
+          event: 'gateway.embed.fallback',
+          reason: error instanceof Error ? error.message : 'embed failed',
+        }),
+      );
+      const result = await this.vendorEmbedding.embed(input);
+      this.logger.log(
+        JSON.stringify({
+          event: 'gateway.embed',
+          provider: result.provider,
+          model: result.model,
+          vectors: result.data.length,
+          viaFallback: true,
+        }),
+      );
+      return result;
+    }
   }
 
   async translate(input: TranslateInput): Promise<TranslateOutput> {
@@ -257,43 +291,97 @@ export class GatewayService {
       }
     }
 
-    const result = await this.provider.translate(input);
-    this.logger.log(
-      JSON.stringify({
-        event: 'gateway.translate',
-        provider: result.provider,
-        source: result.source,
-        target: result.target,
-        characters: result.characters,
-        latencyMs: result.latencyMs,
-      }),
-    );
-    return result;
+    try {
+      const result = await this.provider.translate(input);
+      this.logger.log(
+        JSON.stringify({
+          event: 'gateway.translate',
+          provider: result.provider,
+          source: result.source,
+          target: result.target,
+          characters: result.characters,
+          latencyMs: result.latencyMs,
+        }),
+      );
+      return result;
+    } catch (error) {
+      if (!this.vendorTranslate) throw error;
+      this.logger.warn(
+        JSON.stringify({
+          event: 'gateway.translate.vendor_fallback',
+          reason: error instanceof Error ? error.message : 'lugemi mt failed',
+        }),
+      );
+      const result = await this.vendorTranslate.translate(input);
+      this.logger.log(
+        JSON.stringify({
+          event: 'gateway.translate',
+          provider: result.provider,
+          source: result.source,
+          target: result.target,
+          characters: result.characters,
+          latencyMs: result.latencyMs,
+          viaFallback: true,
+        }),
+      );
+      return result;
+    }
   }
 
   async transcribe(input: SttInput): Promise<SttOutput> {
-    const result = await this.sttProvider.transcribe(input);
-    this.logger.log(
-      JSON.stringify({
-        event: 'gateway.transcribe',
-        provider: result.provider,
-        language: result.language,
-        durationSeconds: result.durationSeconds,
-        characters: [...result.text].length,
-        latencyMs: result.latencyMs,
-      }),
-    );
-    return result;
+    try {
+      const result = await this.sttProvider.transcribe(input);
+      this.logger.log(
+        JSON.stringify({
+          event: 'gateway.transcribe',
+          provider: result.provider,
+          language: result.language,
+          durationSeconds: result.durationSeconds,
+          characters: [...result.text].length,
+          latencyMs: result.latencyMs,
+        }),
+      );
+      return result;
+    } catch (error) {
+      if (!this.vendorStt) throw error;
+      this.logger.warn(
+        JSON.stringify({
+          event: 'gateway.transcribe.fallback',
+          reason: error instanceof Error ? error.message : 'asr failed',
+        }),
+      );
+      const result = await this.vendorStt.transcribe(input);
+      this.logger.log(
+        JSON.stringify({
+          event: 'gateway.transcribe',
+          provider: result.provider,
+          language: result.language,
+          viaFallback: true,
+        }),
+      );
+      return result;
+    }
   }
 
   listVoices(): TtsVoice[] {
-    return [...this.ttsProvider.listVoices(), ...this.ownTtsProvider.listVoices()];
+    return [...this.ownTtsProvider.listVoices(), ...this.ttsProvider.listVoices()];
   }
 
   async synthesize(input: TtsInput): Promise<TtsOutput> {
-    const result = isOwnTtsVoice(input.voice)
-      ? await this.ownTtsProvider.synthesize(input)
-      : await this.ttsProvider.synthesize(input);
+    const useOwn = isOwnTtsVoice(input.voice) || !input.voice;
+    const result = useOwn
+      ? await this.ownTtsProvider.synthesize(
+          isOwnTtsVoice(input.voice) ? input : { ...input, voice: 'own:en-kofi' },
+        )
+      : await this.ttsProvider.synthesize(input).catch(async (error) => {
+          this.logger.warn(
+            JSON.stringify({
+              event: 'gateway.synthesize.fallback_own',
+              reason: error instanceof Error ? error.message : 'stock tts failed',
+            }),
+          );
+          return this.ownTtsProvider.synthesize({ ...input, voice: 'own:en-kofi' });
+        });
     this.logger.log(
       JSON.stringify({
         event: 'gateway.synthesize',

@@ -59,8 +59,9 @@ export function GatewayClient() {
         AI Gateway
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        Thin facade over bought models — Google MT, OpenAI, optional OpenRouter chat fallback, own TTS,
-        and fine-tune routes. Not an Inference Cloud.
+        Thin facade over proprietary Lugemi model families — Baobab MT, Atlas chat,
+        Echo speech, Vector embeddings, Lid detect — with silent optional legacy adapters.
+        Not an Inference Cloud.
       </p>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p>: null}

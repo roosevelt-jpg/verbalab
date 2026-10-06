@@ -4,6 +4,7 @@ import { ApiException } from '../common/errors/api-exception';
 import { AuditService } from '../audit/audit.service';
 import {
   MODEL_FEATURES,
+  MODEL_SLUG_ALIASES,
   VENDOR_MODEL_SEEDS,
   envConfigured,
   isModelFeature,
@@ -56,6 +57,14 @@ export class ModelsService implements OnModuleInit {
         },
       });
     }
+    const retiredAliases = Object.keys(MODEL_SLUG_ALIASES);
+    if (retiredAliases.length) {
+      await this.prisma.modelRegistryEntry.updateMany({
+        where: { slug: { in: retiredAliases } },
+        data: { status: 'retired' },
+      });
+    }
+
     this.seeded = true;
     this.logger.log(
       JSON.stringify({ event: 'models.vendor_defaults_ensured', count: VENDOR_MODEL_SEEDS.length }),
@@ -70,9 +79,10 @@ export class ModelsService implements OnModuleInit {
   }
 
   async get(idOrSlug: string) {
+    const resolved = MODEL_SLUG_ALIASES[idOrSlug] ?? idOrSlug;
     const row = await this.prisma.modelRegistryEntry.findFirst({
       where: {
-        OR: [{ id: idOrSlug }, { slug: idOrSlug }],
+        OR: [{ id: idOrSlug }, { slug: idOrSlug }, { slug: resolved }],
       },
     });
     if (!row) {
@@ -126,7 +136,7 @@ export class ModelsService implements OnModuleInit {
     return {
       asOf: new Date().toISOString(),
       disclaimer:
-        'Lugemi Language Intelligence models are first-party. Vendor adapters remain as optional fallbacks. This registry is not MLflow.',
+        'Lugemi proprietary Language Intelligence model families (Baobab, Atlas, Echo, Vector, Lex, Civic, Cover, Accord, Sentinel, Fusion). Optional legacy adapters are silent fallbacks only — never branded in product UI. This registry is not MLflow.',
       features: byFeature,
     };
   }
