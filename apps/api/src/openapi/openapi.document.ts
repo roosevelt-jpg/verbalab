@@ -559,6 +559,204 @@ export const openApiDocument = {
         responses: { '200': { description: 'Updated' }, '403': { description: 'Platform admin required' } },
       },
     },
+    '/v1/portfolio/engine': {
+      get: {
+        summary: 'Next-model portfolio engine (Verified Interpreter pillars)',
+        operationId: 'getPortfolioEngine',
+        responses: { '200': { description: 'Pillar catalog and links' } },
+      },
+    },
+    '/v1/portfolio/corridors': {
+      get: {
+        summary: 'Pilot corridors for Verified Interpreter',
+        operationId: 'getPortfolioCorridors',
+        responses: { '200': { description: 'Corridor list' } },
+      },
+    },
+    '/v1/mix/engine': {
+      get: {
+        summary: 'Lugemi Mix engine',
+        operationId: 'getMixEngine',
+        responses: { '200': { description: 'Mix catalog' } },
+      },
+    },
+    '/v1/mix/transcribe-translate': {
+      post: {
+        summary: 'Mixed-language transcribe and translate',
+        operationId: 'mixTranscribeTranslate',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '200': { description: 'Spans, transcript, translation, entity alignment' } },
+      },
+    },
+    '/v1/fidelity/engine': {
+      get: {
+        summary: 'Lugemi Fidelity engine',
+        operationId: 'getFidelityEngine',
+        responses: { '200': { description: 'Fidelity catalog' } },
+      },
+    },
+    '/v1/fidelity/verify': {
+      post: {
+        summary: 'Verify translation meaning ledger',
+        operationId: 'fidelityVerify',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '200': { description: 'Decision, error spans, clarification' } },
+      },
+    },
+    '/v1/fidelity/clarify': {
+      post: {
+        summary: 'Associate caller answer with unresolved fidelity span',
+        operationId: 'fidelityClarify',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '200': { description: 'Clarification resolution' } },
+      },
+    },
+    '/v1/live/engine': {
+      get: {
+        summary: 'Lugemi Live engine',
+        operationId: 'getLiveEngine',
+        responses: { '200': { description: 'Live catalog' } },
+      },
+    },
+    '/v1/live/sessions': {
+      post: {
+        summary: 'Create live interpretation session',
+        operationId: 'createLiveSession',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '201': { description: 'Session negotiated' } },
+      },
+    },
+    '/v1/live/sessions/{id}/audio': {
+      post: {
+        summary: 'Ingest live audio chunk or text hint',
+        operationId: 'liveSessionAudio',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: { '200': { description: 'Provisional/committed events' } },
+      },
+    },
+    '/v1/live/sessions/{id}/events': {
+      get: {
+        summary: 'SSE event stream for live session',
+        operationId: 'liveSessionEvents',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: { '200': { description: 'text/event-stream' } },
+      },
+    },
+    '/v1/live/sessions/{id}/repair': {
+      post: {
+        summary: 'Emit audible repair for a spoken segment',
+        operationId: 'liveSessionRepair',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: { '200': { description: 'Repair events' } },
+      },
+    },
+    '/v1/live/sessions/{id}/ack': {
+      post: {
+        summary: 'Acknowledge live event for exactly-once resume',
+        operationId: 'liveSessionAck',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: { '200': { description: 'Ack recorded' } },
+      },
+    },
+    '/v1/pragmatics/engine': {
+      get: {
+        summary: 'Lugemi Pragmatics engine',
+        operationId: 'getPragmaticsEngine',
+        responses: { '200': { description: 'Pragmatics catalog' } },
+      },
+    },
+    '/v1/pragmatics/translate': {
+      post: {
+        summary: 'Speech-act preserving translation',
+        operationId: 'pragmaticsTranslate',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '200': { description: 'Mode, candidates, preserved-act checks' } },
+      },
+    },
+    '/v1/language-kits/engine': {
+      get: {
+        summary: 'Lugemi Language Kit engine',
+        operationId: 'getLanguageKitsEngine',
+        responses: { '200': { description: 'Language Kit catalog' } },
+      },
+    },
+    '/v1/language-kits': {
+      get: {
+        summary: 'List language kits',
+        operationId: 'listLanguageKits',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '200': { description: 'Kits' } },
+      },
+      post: {
+        summary: 'Create draft language kit',
+        operationId: 'createLanguageKit',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '201': { description: 'Draft kit' } },
+      },
+    },
+    '/v1/language-kits/{id}/coverage': {
+      get: {
+        summary: 'Language kit task coverage',
+        operationId: 'getLanguageKitCoverage',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: { '200': { description: 'ASR/translation/synthesis statuses' } },
+      },
+    },
+    '/v1/edge/engine': {
+      get: {
+        summary: 'Lugemi Edge engine',
+        operationId: 'getEdgeEngine',
+        responses: { '200': { description: 'Edge catalog' } },
+      },
+    },
+    '/v1/edge/packs': {
+      get: {
+        summary: 'List edge packs',
+        operationId: 'listEdgePacks',
+        responses: { '200': { description: 'Signed pack manifests' } },
+      },
+    },
+    '/v1/edge/packs/{packId}/verify': {
+      post: {
+        summary: 'Verify edge pack signature and hashes',
+        operationId: 'verifyEdgePack',
+        parameters: [{ name: 'packId', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: { '200': { description: 'Verification result' } },
+      },
+    },
+    '/v1/edge/packs/{packId}/run': {
+      post: {
+        summary: 'Run offline push-to-talk translation under edge mode',
+        operationId: 'runEdgePack',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        parameters: [{ name: 'packId', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: { '200': { description: 'Local or disclosed cloud result' } },
+      },
+    },
+    '/v1/grounded/engine': {
+      get: {
+        summary: 'Lugemi Grounded engine',
+        operationId: 'getGroundedEngine',
+        responses: { '200': { description: 'Grounded catalog' } },
+      },
+    },
+    '/v1/grounded/interpret': {
+      post: {
+        summary: 'Grounded interpret of selected document region',
+        operationId: 'groundedInterpret',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: {
+          '200': {
+            description: 'document_evidence, speaker_claim, translation, discrepancy flags',
+          },
+        },
+      },
+    },
     '/v1/training-jobs/launchers': {
       get: {
         summary: 'List training launchers and configuration status',

@@ -13,7 +13,7 @@ export function modelsEngineCatalog() {
   return {
     product: 'Lugemi Models Engine',
     note:
-      'Live matrix of proprietary Lugemi model families for complex multilingual reasoning, dialect-aware speech, translation, and vertical packs (law, government, insurance, compliance, security). Default inference is Lugemi-owned — optional legacy adapters stay silent. Not MLflow or a training OS.',
+      'Live matrix of proprietary Lugemi model families for complex multilingual reasoning, dialect-aware speech, translation, vertical packs, and the next-model portfolio (Mix, Fidelity, Live, Pragmatics, Language Kit, Edge, Grounded). Default inference is Lugemi-owned — optional legacy adapters stay silent. Not MLflow or a training OS.',
     capabilities: [
       {
         id: 'live-matrix',
@@ -58,6 +58,14 @@ export function modelsEngineCatalog() {
         notes: 'Serving plans over existing gateway — not vLLM OS.',
       },
       {
+        id: 'portfolio',
+        name: 'Next-model portfolio',
+        status: 'shipped',
+        api: 'GET /v1/portfolio/engine',
+        notes:
+          'Mix, Fidelity, Live, Pragmatics, Language Kit, Edge, Grounded — Verified Interpreter wedge. See /docs/models/.',
+      },
+      {
         id: 'mlflow',
         name: 'MLflow / experiment tracking OS',
         status: 'deferred',
@@ -83,6 +91,8 @@ export function modelsEngineCatalog() {
       modelRegistry: '/model-registry',
       translate: '/translate',
       languageIntelligence: '/language-intelligence',
+      portfolio: '/v1/portfolio/engine',
+      verifiedInterpreter: '/verified-interpreter',
       openapi: '/v1/openapi.json',
       live: '/v1/models/live',
     },
