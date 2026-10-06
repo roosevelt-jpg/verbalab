@@ -68,7 +68,7 @@ const EMOTION_CUES: Array<{ label: SpeechEmotionLabel; re: RegExp; weight: numbe
 const POSITIVE_POLARITY =
   /\b(good|great|excellent|amazing|love|happy|thanks|thank you|awesome|wonderful|pleased|delighted|karibu|asante)\b/gi;
 const NEGATIVE_POLARITY =
-  /\b(bad|terrible|awful|hate|angry|upset|worst|horrible|disappointed|frustrated|broken|fail)\b/gi;
+  /\b(bad|terrible|awful|hate|angry|upset|worst|horrible|disappointed|frustrated|broken|fail|sad|miserable|grief|afraid|terrified)\b/gi;
 
 const TONE_CUES: Array<{ label: SpeechToneLabel; re: RegExp; weight: number }> = [
   {
