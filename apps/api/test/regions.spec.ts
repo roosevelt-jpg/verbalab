@@ -70,18 +70,18 @@ describe('Multi-region residency', () => {
     expect(eu).toContain('fly-migrate.sh');
   });
 
-  it('ships Africa jnb Fly configs for verbalab (not a mesh)', () => {
+  it('ships Africa jnb Fly configs for lugemi (not a mesh)', () => {
     expect(existsSync(join(root, 'Dockerfile'))).toBe(true);
     expect(existsSync(join(root, 'fly.toml'))).toBe(true);
     expect(existsSync(join(root, 'infra/fly/api.jnb.toml'))).toBe(true);
     expect(existsSync(join(root, 'infra/fly/web.jnb.toml'))).toBe(true);
     const af = readFileSync(join(root, 'infra/fly/api.jnb.toml'), 'utf8');
-    expect(af).toContain("app = 'verbalab-api'");
+    expect(af).toContain("app = 'lugemi-api'");
     expect(af).toContain("primary_region = 'jnb'");
     expect(af).toContain("LUGEMI_REGION = 'af'");
     expect(af).toContain('fly-migrate.sh');
     const rootFly = readFileSync(join(root, 'fly.toml'), 'utf8');
-    expect(rootFly).toContain("app = 'verbalab'");
+    expect(rootFly).toContain("app = 'lugemi'");
     expect(rootFly).toContain("primary_region = 'jnb'");
     expect(rootFly).toContain('fly-migrate.sh');
     expect(existsSync(join(root, 'apps/api/scripts/fly-migrate.sh'))).toBe(true);

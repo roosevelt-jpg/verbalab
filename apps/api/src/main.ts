@@ -12,7 +12,7 @@ async function bootstrap() {
   app.useGlobalFilters(new ApiExceptionFilter());
 
   // Accept comma-separated origins; always allow localhost↔127.0.0.1 twins for local consoles.
-  // Production brand hosts are always allowed (Fly app names like verbalab-web ≠ public domain).
+  // Production brand hosts are always allowed (Fly app names like lugemi-web ≠ public domain).
   const productionCorsOrigins = [
     'https://lugemi.com',
     'https://www.lugemi.com',

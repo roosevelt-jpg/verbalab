@@ -137,13 +137,13 @@ Playwright signed-in translate (optional): set `E2E_CLERK_USER_EMAIL` + `E2E_CLE
 | Web | `https://lugemi.com` (`www` → apex) |
 | API | `https://api.lugemi.com` |
 
-Fly **app names** may still be `verbalab` / `verbalab-api` / `verbalab-web` — that is an internal Fly identifier, **not** the public domain. Default `*.fly.dev` URLs appear until Cloudflare DNS + `fly certs add` are completed. See `docs/fly.md` and `docs/cloudflare.md`.
+Preferred Fly **app names** are `lugemi` / `lugemi-api` / `lugemi-web` (legacy `verbalab*` may need `fly apps rename` or new apps). That is an internal Fly identifier, **not** the public domain. Default `*.fly.dev` URLs appear until Cloudflare DNS + `fly certs add` are completed. See `docs/fly.md` and `docs/cloudflare.md`.
 
 ## Vercel (web console)
 
-Production hostname: **lugemi.com**. The Next.js console (`apps/web`) can be configured for Vercel **or** Fly (`verbalab-web`). Prefer **one** origin for the apex. The Nest API stays on Fly / Docker — do not set this repo’s Root Directory to `apps/api`.
+Production hostname: **lugemi.com**. The Next.js console (`apps/web`) can be configured for Vercel **or** Fly (`lugemi-web`). Prefer **one** origin for the apex. The Nest API stays on Fly / Docker — do not set this repo’s Root Directory to `apps/api`.
 
-1. Open [Import Git Repository](https://vercel.com/new/import) and select `roosevelt-jpg/lugemi` (the Vercel GitHub App is already installed on the account).
+1. Open [Import Git Repository](https://vercel.com/new/import) and select the Lugemi monorepo (GitHub may still show as `roosevelt-jpg/verbalab` — product brand is **Lugemi**; the Vercel GitHub App is already installed on the account).
 2. Confirm **Root Directory** is `apps/web` (also set in root `vercel.json`).
 3. Framework: **Next.js**. Install is `pnpm install --filter @lugemi/web...` from the repo root.
 4. Add environment variables, then Deploy:
@@ -172,7 +172,7 @@ Without Clerk keys the production site serves `/setup`, same as local.
 - `docs/LANGUAGE_CLOUD.md` — Language Cloud
 - `docs/templates/` — RFC / PRD / Runbook templates
 - `ARCHITECTURE.md` — stack and boundaries
-- `docs/fly.md` — Fly.io (`verbalab*` apps → **lugemi.com** / **api.lugemi.com**), certs, secrets
+- `docs/fly.md` — Fly.io (`lugemi*` apps → **lugemi.com** / **api.lugemi.com**), certs, secrets
 - `infra/DEPLOY.md` — Fly.io production (AF `jnb` + US/EU residency islands)
 - `PHASE_0_1.md` — Early platform scope
 - `PROGRESS.md` / `ROADMAP.md` — delivery status

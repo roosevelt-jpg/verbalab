@@ -266,7 +266,7 @@ First approve the master identity and tokens. Next apply the standards to the co
 
 ## 27 | References and approval register
 ### Source references
-Product source: https://github.com/roosevelt-jpg/lugemi at commit 75d22e58097b9971b0bc47785bc7207322d493c8, reviewed for product scope and language coverage. Interface reference: supplied Lugemi1.png screenshot.
+Product source: GitHub monorepo (path may still be `roosevelt-jpg/verbalab` — product brand is Lugemi) at commit 75d22e58097b9971b0bc47785bc7207322d493c8, reviewed for product scope and language coverage. Interface reference: supplied Lugemi1.png screenshot.
 
 W3C Web Content Accessibility Guidelines 2.2: https://www.w3.org/TR/WCAG22/ . W3C Understanding Contrast Minimum: https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html . Noto official usage guidance: https://notofonts.github.io/noto-docs/website/use/ . These support accessibility thresholds and script-family selection; the Lugemi strategy, palette and layouts are proposed design decisions.
 ### Approval register

@@ -1,5 +1,5 @@
 # Build from repo root:
-#   docker build -f apps/api/Dockerfile -t verbalab-api .
+#   docker build -f apps/api/Dockerfile -t lugemi-api .
 # (Same image as root ./Dockerfile — kept for -f path / EKS / CI.)
 FROM node:20-bookworm-slim AS base
 RUN apt-get update \

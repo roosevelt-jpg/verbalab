@@ -4,7 +4,7 @@ Three supported paths:
 
 1. **Fly.io (default PaaS)** — this document (VL-074 / ADR-0023)  
 2. **AWS EKS `af-south-1`** — [`AWS_EKS.md`](./AWS_EKS.md) + Terraform under `infra/terraform/aws-eks/` (VL-138 / ADR-0059)
-3. **Vercel (web console only)** — import `roosevelt-jpg/lugemi`, Root Directory `apps/web`. See the Vercel section in `README.md`. Keep the API on Fly or Compose.
+3. **Vercel (web console only)** — import the Lugemi monorepo (GitHub may still be `roosevelt-jpg/verbalab`; product brand is **Lugemi**), Root Directory `apps/web`. See the Vercel section in `README.md`. Keep the API on Fly or Compose.
 
 PaaS choice for day-to-day API: **Fly.io**. EKS is optional when AWS/K8s is required. Vercel hosts the Next.js console.
 
@@ -14,25 +14,25 @@ Enterprise Language Registry (VL-139), Localization Platform (VL-141), and Langu
 
 | Piece | What |
 | --- | --- |
-| `verbalab` / `verbalab-api` | Nest API (`Dockerfile` at repo root + `apps/api/Dockerfile`) — Africa default `jnb`. **Public:** `https://api.lugemi.com` |
-| `verbalab-web` | Next console (`apps/web/Dockerfile`, standalone) — `jnb`. **Public:** `https://lugemi.com` |
-| `lugemi-api` / `lugemi-web` | Legacy US/EU island names in `infra/fly/*.toml` / `*.eu.toml` |
+| `lugemi` / `lugemi-api` | Nest API (`Dockerfile` at repo root + `apps/api/Dockerfile`) — Africa default `jnb`. **Public:** `https://api.lugemi.com` |
+| `lugemi-web` | Next console (`apps/web/Dockerfile`, standalone) — `jnb`. **Public:** `https://lugemi.com` |
+| `lugemi-api` / `lugemi-web` (+ `-eu`) | US/EU residency islands in `infra/fly/*.toml` / `*.eu.toml` |
 | Postgres | Managed DB with **pgvector** (Neon / Supabase / Fly Postgres + `CREATE EXTENSION vector`) via `DATABASE_URL` |
 | Redis | Required for BullMQ + rate limits (`REDIS_URL`). Fly Redis or Upstash. Do **not** set `JOBS_INLINE=1` in production. |
 | Region | Africa-first: `jnb` (`infra/fly/*.jnb.toml`, root `fly.toml`). US `iad` / EU `ams` remain for residency islands. |
 
-**App name ≠ domain.** Fly apps can stay named `verbalab*`; users hit **lugemi.com** / **api.lugemi.com** after Cloudflare DNS + `fly certs`. Until then only `*.fly.dev` works. Short guide: [`docs/fly.md`](../docs/fly.md). Cloudflare DNS: [`docs/cloudflare.md`](../docs/cloudflare.md).
+**App name ≠ domain.** Fly apps can stay named `lugemi*`; users hit **lugemi.com** / **api.lugemi.com** after Cloudflare DNS + `fly certs`. Until then only `*.fly.dev` works. Short guide: [`docs/fly.md`](../docs/fly.md). Cloudflare DNS: [`docs/cloudflare.md`](../docs/cloudflare.md).
 
 ## First-time setup (manual; needs Fly account)
 
 ```bash
 # Install flyctl, then:
 fly auth login
-fly apps create verbalab-api   # Africa primary; or lugemi-api for US island
-fly apps create verbalab-web
+fly apps create lugemi-api   # Africa primary (or: fly apps rename verbalab-api lugemi-api)
+fly apps create lugemi-web   # or rename verbalab-web
 
 # Attach or set secrets (examples — use your real values; brand URLs)
-fly secrets set -a verbalab-api \
+fly secrets set -a lugemi-api \
   DATABASE_URL='postgresql://...' \
   REDIS_URL='redis://...' \
   CORS_ORIGIN='https://lugemi.com,https://www.lugemi.com' \
@@ -49,7 +49,7 @@ fly secrets set -a verbalab-api \
   BILLING_PORTAL_RETURN_URL='https://lugemi.com/billing'
 
 # Web build args are set at deploy time; also set runtime Clerk secret if used server-side:
-fly secrets set -a verbalab-web CLERK_SECRET_KEY='...' APP_URL='https://lugemi.com'
+fly secrets set -a lugemi-web CLERK_SECRET_KEY='...' APP_URL='https://lugemi.com'
 ```
 
 Deploy (from repo root) — Africa preferred:
@@ -64,13 +64,13 @@ fly deploy -c infra/fly/web.jnb.toml --dockerfile apps/web/Dockerfile \
 Custom domains (after deploy):
 
 ```bash
-fly certs add lugemi.com -a verbalab-web
-fly certs add www.lugemi.com -a verbalab-web
-fly certs add api.lugemi.com -a verbalab-api
+fly certs add lugemi.com -a lugemi-web
+fly certs add www.lugemi.com -a lugemi-web
+fly certs add api.lugemi.com -a lugemi-api
 # Then Cloudflare DNS — see docs/cloudflare.md / docs/fly.md
 ```
 
-US island (legacy `infra/fly/api.toml` / `web.toml`) still uses `lugemi-api` / `lugemi-web` app names and `*.fly.dev` until those hosts get their own custom domains.
+US island (`infra/fly/api.toml` / `web.toml`) uses `lugemi-api` / `lugemi-web` and `*.fly.dev` until those hosts get their own custom domains.
 
 API **release_command** runs `/bin/sh /app/apps/api/scripts/fly-migrate.sh` (`prisma migrate deploy` when `DATABASE_URL` is set; soft-skips when unset). See `docs/fly.md`.
 
@@ -129,7 +129,7 @@ Each region is a **separate deploy + database** (residency island), not a mesh.
 
 | Island | Fly configs | `LUGEMI_REGION` | Fly `primary_region` |
 | --- | --- | --- | --- |
-| AF (verbalab default) | root `fly.toml`, `infra/fly/*.jnb.toml`, `apps/*/fly.toml` | `af` | `jnb` |
+| AF (Lugemi default) | root `fly.toml`, `infra/fly/*.jnb.toml`, `apps/*/fly.toml` | `af` | `jnb` |
 | US | `infra/fly/api.toml`, `web.toml` | `us` | `iad` |
 | EU | `infra/fly/api.eu.toml`, `web.eu.toml` | `eu` | `ams` |
 

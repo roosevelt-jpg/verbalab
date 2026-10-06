@@ -47,7 +47,7 @@ function defaultApiUrl(code: RegionCode): string {
     return (
       process.env.LUGEMI_API_URL_AF ??
       process.env.LUGEMI_API_URL ??
-      // Public brand domain (Fly app name verbalab-api ≠ hostname)
+      // Public brand domain (Fly app name lugemi-api ≠ hostname)
       'https://api.lugemi.com'
     );
   }
@@ -63,7 +63,7 @@ function defaultWebUrl(code: RegionCode): string {
       process.env.LUGEMI_WEB_URL_AF ??
       process.env.LUGEMI_WEB_URL ??
       process.env.APP_URL ??
-      // Public brand domain (Fly app name verbalab-web ≠ hostname)
+      // Public brand domain (Fly app name lugemi-web ≠ hostname)
       'https://lugemi.com'
     );
   }

@@ -1,9 +1,11 @@
-# Default Fly app when launching from the Fly dashboard / GitHub (single app "verbalab").
-# Prefer two apps for production: verbalab-api + verbalab-web — see docs/fly.md
+# Default Fly app when launching from the Fly dashboard / GitHub (single app "lugemi").
+# Prefer two apps for production: lugemi-api + lugemi-web — see docs/fly.md
 #
-# Public brand domain (≠ Fly app name):
-#   Web  https://lugemi.com  (+ www → apex)
-#   API  https://api.lugemi.com
+# If an existing Fly app is still named verbalab / verbalab-api / verbalab-web:
+#   fly apps rename verbalab lugemi
+#   fly apps rename verbalab-api lugemi-api
+#   fly apps rename verbalab-web lugemi-web
+# Or create new lugemi* apps and update DNS/certs — do not break an in-flight deploy.
 #
 # Deploy API (this config):
 #   fly deploy -c fly.toml
@@ -11,9 +13,7 @@
 #   fly deploy -c infra/fly/api.jnb.toml --dockerfile apps/api/Dockerfile
 #   fly deploy -c infra/fly/web.jnb.toml --dockerfile apps/web/Dockerfile \
 #     --build-arg NEXT_PUBLIC_API_URL=https://api.lugemi.com
-#
-# Custom domains (after DNS): fly certs add lugemi.com / api.lugemi.com — docs/fly.md
-app = 'verbalab'
+app = 'lugemi'
 primary_region = 'jnb'
 
 [build]
@@ -29,10 +29,6 @@ primary_region = 'jnb'
   API_PORT = '3001'
   PORT = '3001'
   LUGEMI_REGION = 'af'
-  APP_URL = 'https://lugemi.com'
-  APP_PUBLIC_URL = 'https://lugemi.com'
-  LUGEMI_API_URL_AF = 'https://api.lugemi.com'
-  LUGEMI_WEB_URL_AF = 'https://lugemi.com'
 
 [http_service]
   internal_port = 3001

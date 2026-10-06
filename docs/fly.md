@@ -1,18 +1,29 @@
-# Fly.io deploy (verbalab apps → lugemi.com)
+# Fly.io deploy (Lugemi → lugemi.com)
 
 Monorepo: Nest API (`apps/api`) + Next.js console (`apps/web`), pnpm workspaces.
 
-**Fly app name ≠ public domain.** Apps may still be named `verbalab` / `verbalab-api` / `verbalab-web` (dashboard history). Production users hit **lugemi.com** / **api.lugemi.com**. Default `*.fly.dev` hostnames remain as Fly internals until custom certs + DNS are live — they are not the brand URLs.
+**Product brand is Lugemi.** The GitHub git repository may still be named `verbalab` (e.g. `roosevelt-jpg/verbalab`); that remote path is not the product brand — do not rename the GitHub repo as part of this branding pass.
 
-Fly dashboard launch of a single app named **verbalab** failed with “Could not find a Dockerfile” because images lived only under `apps/*/`. This repo ships a **root `Dockerfile` + `fly.toml`** so Fly can detect a runtime, plus preferred **two-app** configs for Africa-first (`jnb`).
+**Fly app name ≠ public domain.** Preferred Fly apps: **`lugemi`** / **`lugemi-api`** / **`lugemi-web`**. Production users hit **lugemi.com** / **api.lugemi.com**. Default `*.fly.dev` hostnames remain as Fly internals until custom certs + DNS are live — they are not the brand URLs.
+
+If production still has `verbalab` / `verbalab-api` / `verbalab-web`, either rename or create new apps (do not assume rename already happened):
+
+```bash
+fly apps rename verbalab lugemi
+fly apps rename verbalab-api lugemi-api
+fly apps rename verbalab-web lugemi-web
+# Or: fly apps create lugemi-api && fly apps create lugemi-web
+```
+
+Fly dashboard launch of a single app once named **verbalab** failed with “Could not find a Dockerfile” because images lived only under `apps/*/`. This repo ships a **root `Dockerfile` + `fly.toml`** so Fly can detect a runtime, plus preferred **two-app** configs for Africa-first (`jnb`).
 
 ## Public URLs (production)
 
-| Surface | Public URL | Fly app (internal name) |
+| Surface | Public URL | Fly app (preferred internal name) |
 | --- | --- | --- |
-| Web console / marketing | `https://lugemi.com` | `verbalab-web` |
+| Web console / marketing | `https://lugemi.com` | `lugemi-web` |
 | `www` | `https://www.lugemi.com` → apex (`lugemi.com`) | same web app |
-| Nest API | `https://api.lugemi.com` | `verbalab-api` or single-app `verbalab` |
+| Nest API | `https://api.lugemi.com` | `lugemi-api` or single-app `lugemi` |
 
 Do **not** put the Nest API under `https://lugemi.com/api` — prefer the `api.` subdomain.
 
@@ -20,14 +31,14 @@ Do **not** put the Nest API under `https://lugemi.com/api` — prefer the `api.`
 
 | App | Role | Internal port | Config |
 | --- | --- | --- | --- |
-| `verbalab` | API (dashboard default) | **3001** | root `fly.toml` + root `Dockerfile` |
-| `verbalab-api` | Nest API (preferred) | **3001** | `infra/fly/api.jnb.toml` or `apps/api/fly.toml` |
-| `verbalab-web` | Next console (preferred) | **3000** | `infra/fly/web.jnb.toml` or `apps/web/fly.toml` |
+| `lugemi` | API (dashboard default) | **3001** | root `fly.toml` + root `Dockerfile` |
+| `lugemi-api` | Nest API (preferred) | **3001** | `infra/fly/api.jnb.toml` or `apps/api/fly.toml` |
+| `lugemi-web` | Next console (preferred) | **3000** | `infra/fly/web.jnb.toml` or `apps/web/fly.toml` |
 
 - **Primary region:** `jnb` (Johannesburg)
 - Health checks: `GET /health` on both services
 - Nest listens on `0.0.0.0:$PORT` (`PORT` / `API_PORT`, default **3001** in Fly `[env]`)
-- Legacy US/EU islands remain in `infra/fly/api.toml`, `web.toml`, `*.eu.toml` (`lugemi-*` app names + `*.fly.dev` until those islands get custom hosts)
+- US/EU residency islands remain in `infra/fly/api.toml`, `web.toml`, `*.eu.toml` (`lugemi-*` / `lugemi-*-eu` + `*.fly.dev` until those islands get custom hosts)
 
 ## Custom domains (Fly certs + Cloudflare DNS)
 
@@ -37,34 +48,36 @@ Domain is on **Cloudflare Registrar** (`lugemi.com`). Full DNS table: [`docs/clo
 
 ```bash
 # Preferred two-app layout
-fly ips list -a verbalab-web
-fly ips list -a verbalab-api
+fly ips list -a lugemi-web
+fly ips list -a lugemi-api
 
 # Web (apex + www)
-fly certs add lugemi.com -a verbalab-web
-fly certs add www.lugemi.com -a verbalab-web
+fly certs add lugemi.com -a lugemi-web
+fly certs add www.lugemi.com -a lugemi-web
 
 # API subdomain
-fly certs add api.lugemi.com -a verbalab-api
+fly certs add api.lugemi.com -a lugemi-api
 
-# If you kept the single dashboard API app instead of verbalab-api:
-# fly certs add api.lugemi.com -a verbalab
+# If you kept the single dashboard API app instead of lugemi-api:
+# fly certs add api.lugemi.com -a lugemi
 ```
 
 Then print the ownership / ACME records Fly expects:
 
 ```bash
-fly certs setup lugemi.com -a verbalab-web
-fly certs setup www.lugemi.com -a verbalab-web
-fly certs setup api.lugemi.com -a verbalab-api
+fly certs setup lugemi.com -a lugemi-web
+fly certs setup www.lugemi.com -a lugemi-web
+fly certs setup api.lugemi.com -a lugemi-api
 ```
 
 Add every `_fly-ownership` TXT (and any other challenge records shown) in Cloudflare DNS **exactly** as printed. Monitor with:
 
 ```bash
-fly certs check lugemi.com -a verbalab-web
-fly certs check api.lugemi.com -a verbalab-api
+fly certs check lugemi.com -a lugemi-web
+fly certs check api.lugemi.com -a lugemi-api
 ```
+
+If you still run legacy `verbalab*` app names, pass `-a verbalab-web` / `-a verbalab-api` until renamed.
 
 ### 2. Cloudflare DNS (create these records)
 
@@ -72,10 +85,10 @@ Get IPs from `fly ips list` (or use CNAME to `*.fly.dev` where Fly’s setup out
 
 | Type | Name | Target / content | Proxy |
 | --- | --- | --- | --- |
-| `A` | `@` (`lugemi.com`) | Fly **shared/dedicated IPv4** for `verbalab-web` | Orange (CDN) **or** DNS-only — see notes |
-| `AAAA` | `@` | Fly **IPv6** for `verbalab-web` | Same as A |
+| `A` | `@` (`lugemi.com`) | Fly **shared/dedicated IPv4** for `lugemi-web` | Orange (CDN) **or** DNS-only — see notes |
+| `AAAA` | `@` | Fly **IPv6** for `lugemi-web` | Same as A |
 | `CNAME` | `www` | `lugemi.com` (or Fly web `.fly.dev` target) | Same; redirect www→apex via Cloudflare Redirect Rule if desired |
-| `A` / `AAAA` or `CNAME` | `api` | Fly IPs for `verbalab-api` **or** `verbalab-api.fly.dev` | Orange or DNS-only |
+| `A` / `AAAA` or `CNAME` | `api` | Fly IPs for `lugemi-api` **or** `lugemi-api.fly.dev` | Orange or DNS-only |
 | `TXT` | `_fly-ownership` (and host-specific names from `fly certs setup`) | Value from Fly | **DNS-only** (grey cloud) |
 
 **Proxy guidance (Fly + Cloudflare):**
@@ -87,10 +100,10 @@ Until these records exist and certs check green, browsers still only reach `*.fl
 
 ### 3. Secrets + build args (brand URLs)
 
-#### API (`verbalab` or `verbalab-api`)
+#### API (`lugemi` or `lugemi-api`)
 
 ```bash
-fly secrets set -a verbalab-api \
+fly secrets set -a lugemi-api \
   DATABASE_URL='postgresql://USER:PASS@HOST:5432/DB?sslmode=require' \
   REDIS_URL='redis://...' \
   CORS_ORIGIN='https://lugemi.com,https://www.lugemi.com' \
@@ -105,16 +118,16 @@ fly secrets set -a verbalab-api \
   BILLING_PORTAL_RETURN_URL='https://lugemi.com/billing'
 ```
 
-Use `-a verbalab` when deploying the single dashboard API app. Nest also always allows `https://lugemi.com`, `https://www.lugemi.com`, and `https://api.lugemi.com` in CORS (see `apps/api/src/main.ts`).
+Use `-a lugemi` when deploying the single dashboard API app. Nest also always allows `https://lugemi.com`, `https://www.lugemi.com`, and `https://api.lugemi.com` in CORS (see `apps/api/src/main.ts`).
 
 Optional: `MIGRATE_STRICT=1` makes migrate failures abort release/boot (default is soft-fail so a bad DB URL does not brick the Fly release step).
 
 Also set any legacy adapter keys you use (`GOOGLE_TRANSLATE_API_KEY`, `OPENAI_API_KEY`, `OWN_TTS_URL`, …). Full list: `.env.example`.
 
-#### Web (`verbalab-web`)
+#### Web (`lugemi-web`)
 
 ```bash
-fly secrets set -a verbalab-web \
+fly secrets set -a lugemi-web \
   CLERK_SECRET_KEY='...' \
   APP_URL='https://lugemi.com'
 ```
@@ -158,18 +171,19 @@ The same script runs again from the Docker **entrypoint** before `node apps/api/
 ## What to do in the Fly UI (existing `verbalab` app)
 
 1. Set **`DATABASE_URL`** (and other secrets above) on the app — including `CORS_ORIGIN` / `APP_URL` for lugemi.com.
-2. Pull / reconnect the GitHub repo so Fly sees the latest root **`Dockerfile`** and **`fly.toml`**.
-3. Use **Retry from latest commit (main)** after this fix lands on `main`.
-4. After the first successful API deploy, create the second app for the console (recommended):
+2. Optionally **`fly apps rename verbalab lugemi`** (and rename `verbalab-api` / `verbalab-web`), **or** create new `lugemi*` apps — either path is fine; update secrets/DNS after.
+3. Pull / reconnect the GitHub repo so Fly sees the latest root **`Dockerfile`** and **`fly.toml`**.
+4. Use **Retry from latest commit (main)** after this lands on `main`.
+5. After the first successful API deploy, ensure the console app exists:
 
 ```bash
-fly apps create verbalab-api   # or rename/reuse verbalab as the API
-fly apps create verbalab-web
+fly apps create lugemi-api   # or rename/reuse verbalab / verbalab-api as the API
+fly apps create lugemi-web   # or rename verbalab-web
 ```
 
-5. Add custom certs + Cloudflare DNS (section above). Until then the UI still shows `*.fly.dev` — that is expected.
+6. Add custom certs + Cloudflare DNS (section above). Until then the UI still shows `*.fly.dev` — that is expected.
 
-If you keep the single dashboard app `verbalab`, it runs the **API** on port **3001**. Deploy web separately as `verbalab-web`.
+If you keep a single dashboard API app (`lugemi` or legacy `verbalab`), it runs the **API** on port **3001**. Deploy web separately as `lugemi-web`.
 
 If the Fly account shows **Suspended**, unsuspend/billing must be fixed on Fly’s side before any retry succeeds — configs here only fix the release_command / migrate path.
 
@@ -180,8 +194,8 @@ From the **repository root** (pnpm lockfile + workspace packages must be in the 
 ```bash
 fly auth login
 
-fly apps create verbalab-api
-fly apps create verbalab-web
+fly apps create lugemi-api
+fly apps create lugemi-web
 
 # API — set DATABASE_URL + CORS/APP_URL first (see secrets above)
 fly deploy -c infra/fly/api.jnb.toml --dockerfile apps/api/Dockerfile
@@ -203,12 +217,12 @@ fly deploy -c fly.toml
 ## Local Docker dry-run
 
 ```bash
-docker build -t verbalab-api .
-docker build -f apps/web/Dockerfile -t verbalab-web \
+docker build -t lugemi-api .
+docker build -f apps/web/Dockerfile -t lugemi-web \
   --build-arg NEXT_PUBLIC_API_URL=http://localhost:3001 .
 
 # Migrate soft-skips without DATABASE_URL; Nest still starts on 0.0.0.0:3001
-docker run --rm -e PORT=3001 -p 3001:3001 verbalab-api
+docker run --rm -e PORT=3001 -p 3001:3001 lugemi-api
 ```
 
 ## Why monorepo Dockerfiles copy the workspace

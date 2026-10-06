@@ -1,9 +1,9 @@
-# Lugemi / verbalab — Nest API image (repo-root Dockerfile for Fly UI detection).
+# Lugemi — Nest API image (repo-root Dockerfile for Fly UI detection).
 # Preferred production: two apps — see docs/fly.md and infra/fly/*.jnb.toml
 #
 # Build from repo root:
-#   docker build -t verbalab-api .
-#   # or: docker build -f apps/api/Dockerfile -t verbalab-api .
+#   docker build -t lugemi-api .
+#   # or: docker build -f apps/api/Dockerfile -t lugemi-api .
 FROM node:20-bookworm-slim AS base
 RUN apt-get update \
   && apt-get install -y --no-install-recommends openssl ca-certificates \

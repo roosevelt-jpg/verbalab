@@ -1,6 +1,6 @@
 # Build from repo root (Next.js standalone):
-#   docker build -f apps/web/Dockerfile -t verbalab-web \
-#     --build-arg NEXT_PUBLIC_API_URL=https://verbalab-api.fly.dev \
+#   docker build -f apps/web/Dockerfile -t lugemi-web \
+#     --build-arg NEXT_PUBLIC_API_URL=https://api.lugemi.com \
 #     --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_... .
 FROM node:20-bookworm-slim AS base
 RUN apt-get update \

@@ -1,9 +1,9 @@
-# verbalab-api (Nest) — Africa-first primary region Johannesburg.
-# Fly app name ≠ public hostname. Public API: https://api.lugemi.com
+# lugemi-api (Nest) — Africa-first primary region Johannesburg.
 # Deploy from repo root (build context = monorepo root):
 #   fly deploy -c apps/api/fly.toml --dockerfile apps/api/Dockerfile
-# Custom domain: fly certs add api.lugemi.com -a verbalab-api
-app = 'verbalab-api'
+# Existing Fly app verbalab-api: fly apps rename verbalab-api lugemi-api (or create lugemi-api).
+# Custom domain: fly certs add api.lugemi.com -a lugemi-api
+app = 'lugemi-api'
 primary_region = 'jnb'
 
 [build]
@@ -19,10 +19,6 @@ primary_region = 'jnb'
   API_PORT = '3001'
   PORT = '3001'
   LUGEMI_REGION = 'af'
-  APP_URL = 'https://lugemi.com'
-  APP_PUBLIC_URL = 'https://lugemi.com'
-  LUGEMI_API_URL_AF = 'https://api.lugemi.com'
-  LUGEMI_WEB_URL_AF = 'https://lugemi.com'
 
 [http_service]
   internal_port = 3001

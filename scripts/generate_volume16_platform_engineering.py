@@ -1490,7 +1490,7 @@ export function supplyChainSecurityEngineCatalog() {
     findings,
     packages,
     sbom: {
-      format: 'verbaLab-inventory-v1',
+      format: 'lugemi-inventory-v1',
       packageCount: packages.length,
       findingCount: findings.length,
       note: 'Inventory SBOM seed — not a full OSV/NVD vulnerability database.',

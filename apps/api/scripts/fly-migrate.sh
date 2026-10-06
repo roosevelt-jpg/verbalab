@@ -14,7 +14,7 @@ log() {
 if [ -z "${DATABASE_URL:-}" ]; then
   log "DATABASE_URL unset — skipping prisma migrate deploy."
   log "Set secrets before relying on schema, e.g.:"
-  log "  fly secrets set -a verbalab DATABASE_URL='postgresql://...'"
+  log "  fly secrets set -a lugemi-api DATABASE_URL='postgresql://...'"
   exit 0
 fi
 
