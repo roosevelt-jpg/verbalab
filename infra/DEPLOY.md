@@ -1,11 +1,12 @@
 # Production deploy
 
-Two supported paths:
+Three supported paths:
 
 1. **Fly.io (default PaaS)** — this document (VL-074 / ADR-0023)  
 2. **AWS EKS `af-south-1`** — [`AWS_EKS.md`](./AWS_EKS.md) + Terraform under `infra/terraform/aws-eks/` (VL-138 / ADR-0059)
+3. **Vercel (web console only)** — import `roosevelt-jpg/verbalab`, Root Directory `apps/web`. See the Vercel section in `README.md`. Keep the API on Fly or Compose.
 
-PaaS choice for day-to-day: **Fly.io**. EKS is optional when AWS/K8s is required.
+PaaS choice for day-to-day API: **Fly.io**. EKS is optional when AWS/K8s is required. Vercel hosts the Next.js console.
 
 Enterprise Language Registry (VL-139), Localization Platform (VL-141), and Language Analytics (VL-146) ship with the API database/migrations + boot seed / Intl helpers. Language Cloud production audit evidence: [`docs/language-cloud-audit/`](../docs/language-cloud-audit/) (VL-147). Speech Cloud production audit evidence: [`docs/speech-cloud-audit/`](../docs/speech-cloud-audit/) (VL-160). Voice Cloud production audit evidence: [`docs/voice-cloud-audit/`](../docs/voice-cloud-audit/) (VL-179). Cloud blueprint: [`docs/CLOUD_BLUEPRINT.md`](../docs/CLOUD_BLUEPRINT.md) (ADR-0080).
 

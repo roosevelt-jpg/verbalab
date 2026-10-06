@@ -1,9 +1,18 @@
+function apiConnectOrigins() {
+  const origins = new Set(['http://localhost:3001', 'http://127.0.0.1:3001']);
+  const raw = process.env.NEXT_PUBLIC_API_URL;
+  if (raw) {
+    try {
+      origins.add(new URL(raw).origin);
+    } catch {
+      /* ignore invalid URL */
+    }
+  }
+  return [...origins].join(' ');
+}
+
 const nextConfig = {
   reactStrictMode: true,
-  // Enables apps/web/instrumentation.ts (Sentry server/edge init when DSN set).
-  experimental: {
-    instrumentationHook: true,
-  },
   async headers() {
     return [
       {
@@ -24,7 +33,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https:",
               "font-src 'self' data:",
-              "connect-src 'self' https: http://localhost:3001 http://127.0.0.1:3001",
+              `connect-src 'self' https: ${apiConnectOrigins()}`,
               "frame-ancestors 'none'",
               "base-uri 'self'",
               "form-action 'self'",

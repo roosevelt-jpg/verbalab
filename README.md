@@ -88,6 +88,23 @@ Without Clerk/Google, open http://localhost:3000/setup. API tests still pass (fi
 
 Playwright signed-in translate (optional): set `E2E_CLERK_USER_EMAIL` + `E2E_CLERK_USER_PASSWORD` with a Clerk test user, then `pnpm test:e2e`. Without those env vars the signed-in case is skipped; public `/setup`, `/docs`, `/coverage`, `/health` still run.
 
+## Vercel (web console)
+
+The Next.js console (`apps/web`) is configured for Vercel. The Nest API stays on Fly / Docker — do not set this repo’s Root Directory to `apps/api`.
+
+1. Open [Import Git Repository](https://vercel.com/new/import) and select `roosevelt-jpg/verbalab` (the Vercel GitHub App is already installed on the account).
+2. Confirm **Root Directory** is `apps/web` (also set in root `vercel.json`).
+3. Framework: **Next.js**. Install is `pnpm install --filter @verbalab/web...` from the repo root.
+4. Add environment variables, then Deploy:
+
+| Variable | Required |
+| --- | --- |
+| `NEXT_PUBLIC_API_URL` | Production API origin (e.g. `https://verbalab-api.fly.dev`) |
+| `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Console sign-in (omit to keep `/setup`) |
+| `CLERK_SECRET_KEY` | Server-side Clerk (omit with the publishable key) |
+
+Without Clerk keys the production site serves `/setup`, same as local.
+
 ## Docs
 
 - `docs/ENGINEERING.md` — thin daily standards
