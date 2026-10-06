@@ -68,6 +68,15 @@ describe('Dialect detection', () => {
     expect(res.body.data.some((d: { code: string }) => d.code === 'sw-ke')).toBe(true);
   });
 
+  it('GET /v1/dialects?includeIdentity=true still returns dialect data', async () => {
+    const res = await request(app.getHttpServer())
+      .get('/v1/dialects?includeIdentity=true')
+      .expect(200);
+    expect(Array.isArray(res.body.data)).toBe(true);
+    expect(res.body.data.length).toBeGreaterThanOrEqual(8);
+    expect(typeof res.body.identityCount).toBe('number');
+  });
+
   it('GET /v1/dialects?language=sw filters', async () => {
     const res = await request(app.getHttpServer()).get('/v1/dialects?language=sw').expect(200);
     expect(res.body.data.every((d: { languageCode: string }) => d.languageCode === 'sw')).toBe(true);

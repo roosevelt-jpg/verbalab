@@ -21,11 +21,11 @@ export class DialectsController {
   }
 
   @Get()
-  list(
+  async list(
     @Query('language') language?: string,
     @Query('includeIdentity') includeIdentity?: string,
   ) {
-    const base = this.dialects.list(language?.trim() || undefined);
+    const base = await this.dialects.list(language?.trim() || undefined);
     if (includeIdentity === 'true' || includeIdentity === '1') {
       const identity = this.identity.list({ language: language?.trim() });
       const withDialect = identity.data.filter((p) => p.dialectCode);

@@ -1,6 +1,6 @@
 'use client';
 
-import { CSSProperties, FormEvent, useCallback, useEffect, useState } from 'react';
+import { CSSProperties, FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
@@ -32,6 +32,7 @@ type Engine = {
 export function DialectsClient() {
   const { getToken, isLoaded } = useAuth();
   const [dialects, setDialects] = useState<DialectRow[]>([]);
+  const [registryQuery, setRegistryQuery] = useState('');
   const [engine, setEngine] = useState<Engine | null>(null);
   const [text, setText] = useState('Sasa bro, uko aje? Poa sana.');
   const [language, setLanguage] = useState('');
@@ -51,6 +52,15 @@ export function DialectsClient() {
   useEffect(() => {
     void load().catch((err: Error) => setError(err.message));
   }, [load]);
+
+  const filteredDialects = useMemo(() => {
+    const q = registryQuery.trim().toLowerCase();
+    if (!q) return dialects;
+    return dialects.filter((d) => {
+      const hay = [d.code, d.nameEn, d.languageCode, d.region ?? ''].join(' ').toLowerCase();
+      return hay.includes(q);
+    });
+  }, [dialects, registryQuery]);
 
   async function onDetect(event: FormEvent) {
     event.preventDefault();
@@ -90,7 +100,7 @@ export function DialectsClient() {
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.5rem', maxWidth: '40rem' }}>
         {engine?.note ??
-          'Curated African-priority dialects with lexical cue scoring. This is not accent detection and not unlimited coverage.'}
+          'Full language/locale dialect registry with lexical cue scoring — not speech accent detection or acoustic phonetics.'}
       </p>
 
       {!isLoaded ? <p style={{ color: 'var(--muted)' }}>Loading auth…</p> : null}
@@ -138,18 +148,30 @@ export function DialectsClient() {
       ) : null}
 
       <section>
-        <h2 style={label}>Registry ({dialects.length})</h2>
+        <h2 style={label}>
+          Registry ({filteredDialects.length}
+          {registryQuery.trim() ? ` of ${dialects.length}` : ''})
+        </h2>
+        <label className="vl-label" style={{ marginBottom: '0.85rem', display: 'grid' }}>
+          Search registry
+          <input
+            className="vl-field"
+            value={registryQuery}
+            onChange={(e) => setRegistryQuery(e.target.value)}
+            placeholder="Filter by code, name, language, country…"
+          />
+        </label>
         <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: '0.55rem' }}>
-          {dialects.map((d) => (
+          {filteredDialects.map((d) => (
             <li key={d.code} style={{ borderTop: '1px solid var(--line)', paddingTop: '0.55rem' }}>
-              <strong>
-                {d.code}
-              </strong>{' '}
-              · {d.nameEn} · {d.languageCode}
+              <strong>{d.code}</strong> · {d.nameEn} · {d.languageCode}
               {d.region ? ` · ${d.region}` : ''}
             </li>
           ))}
         </ul>
+        {filteredDialects.length === 0 ? (
+          <p style={{ color: 'var(--muted)', marginTop: '0.75rem' }}>No dialects match that search.</p>
+        ) : null}
       </section>
     </AppShell>
   );
