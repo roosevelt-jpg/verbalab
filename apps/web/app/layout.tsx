@@ -5,6 +5,7 @@ import './globals.css';
 import '@/components/marketing/marketing.css';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { SentryInit } from '@/components/sentry-init';
+import { SupportChatWidget } from '@/components/support/support-chat';
 
 const noto = Noto_Sans({
   subsets: ['latin', 'latin-ext', 'cyrillic'],
@@ -39,6 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <SentryInit />
         {isClerkConfigured() ? <ClerkProvider>{children}</ClerkProvider> : children}
+        <SupportChatWidget />
       </body>
     </html>
   );

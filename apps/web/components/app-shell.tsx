@@ -7,7 +7,6 @@ import { UserButton } from '@clerk/nextjs';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { WorkspaceSwitcher } from '@/components/workspace-switcher';
 import { BrandMark } from '@/components/brand-mark';
-import { SupportChatWidget } from '@/components/support/support-chat';
 
 type NavLink = { href: string; label: string };
 
@@ -220,7 +219,6 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           {children}
         </main>
       </div>
-      <SupportChatWidget />
     </div>
   );
 }

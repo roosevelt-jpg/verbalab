@@ -27,3 +27,4 @@ scripts/__pycache__/
 # Local secrets (never commit)
 .local/
 **/firebase-adminsdk*.json
+.data/
