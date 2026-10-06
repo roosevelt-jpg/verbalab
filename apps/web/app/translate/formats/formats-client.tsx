@@ -27,7 +27,7 @@ export function TranslateFormatsClient() {
   const [engine, setEngine] = useState<Engine | null>(null);
   const [format, setFormat] = useState<(typeof FORMATS)[number]>('html');
   const [source, setSource] = useState('en');
-  const [target, setTarget] = useState('sw');
+  const [target, setTarget] = useState('ak');
   const [content, setContent] = useState('<p>Hello <strong>world</strong></p>');
   const [result, setResult] = useState<FormatResult | null>(null);
   const [streamLog, setStreamLog] = useState<string>('');

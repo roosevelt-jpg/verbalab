@@ -45,8 +45,8 @@ export const VENDOR_MODEL_SEEDS: VendorDefaultSeed[] = [
     displayName: 'Lugemi Translate (Africa-first)',
     baseModel: 'lugemi-mt-africa-v1',
     notes:
-      'First-party MT for African languages, accents, and cultural routines — not a vendor wrapper. Default panel pair: English → Twi (ak-GH).',
-    envKey: null,
+      'First-party Language Intelligence MT product. Runtime uses the AI Gateway (fine-tunes + Google fallback) until LUGEMI_MT_URL is set. Default panel pair: English → Twi (ak-GH).',
+    envKey: 'GOOGLE_TRANSLATE_API_KEY',
     role: 'primary',
     kind: 'lugemi',
   },
@@ -66,8 +66,8 @@ export const VENDOR_MODEL_SEEDS: VendorDefaultSeed[] = [
     provider: 'lugemi',
     displayName: 'Lugemi Speech Recognition',
     baseModel: 'lugemi-asr-africa-v1',
-    notes: 'First-party ASR tuned for African accents and code-switching.',
-    envKey: null,
+    notes: 'First-party ASR product surface. Runtime uses Whisper adapter until LUGEMI_ASR_URL is set.',
+    envKey: 'OPENAI_API_KEY',
     role: 'primary',
     kind: 'lugemi',
   },
@@ -119,8 +119,8 @@ export const VENDOR_MODEL_SEEDS: VendorDefaultSeed[] = [
     provider: 'lugemi',
     displayName: 'Lugemi Document OCR',
     baseModel: 'lugemi-ocr-v1',
-    notes: 'First-party OCR path for scanned African-language documents.',
-    envKey: null,
+    notes: 'First-party OCR product surface. Runtime uses Vision adapter until LUGEMI_OCR_URL is set.',
+    envKey: 'GOOGLE_VISION_API_KEY',
     role: 'primary',
     kind: 'lugemi',
   },
@@ -140,7 +140,8 @@ export const VENDOR_MODEL_SEEDS: VendorDefaultSeed[] = [
     provider: 'lugemi',
     displayName: 'Lugemi Language Detect',
     baseModel: 'lugemi-lid-v1',
-    notes: 'Africa-aware language identification including Ghanaian Twi/Akan and code-switched text.',
+    notes:
+      'Africa-aware language identification product. Runtime uses Google detect + franc offline fallback.',
     envKey: null,
     role: 'primary',
     kind: 'lugemi',
@@ -172,8 +173,8 @@ export const VENDOR_MODEL_SEEDS: VendorDefaultSeed[] = [
     displayName: 'Lugemi Chat Intelligence',
     baseModel: 'lugemi-chat-africa-v1',
     notes:
-      'First-party chat for African language intelligence — culture, lifestyle, and routines — not another generic LLM wrapper.',
-    envKey: null,
+      'First-party chat for African language intelligence. Runtime uses OpenAI/OpenRouter until LUGEMI_CHAT_URL is set.',
+    envKey: 'OPENAI_API_KEY',
     role: 'primary',
     kind: 'lugemi',
   },
@@ -203,8 +204,8 @@ export const VENDOR_MODEL_SEEDS: VendorDefaultSeed[] = [
     provider: 'lugemi',
     displayName: 'Lugemi Multilingual Embeddings',
     baseModel: 'lugemi-embed-africa-v1',
-    notes: 'Retrieval embeddings for African-language knowledge and glossaries.',
-    envKey: null,
+    notes: 'Retrieval embeddings product. Runtime uses OpenAI embeddings until LUGEMI_EMBED_URL is set.',
+    envKey: 'OPENAI_API_KEY',
     role: 'primary',
     kind: 'lugemi',
   },
@@ -290,6 +291,18 @@ export function envConfigured(envKey: string | null): boolean {
   if (!envKey) return true;
   if (envKey === 'GOOGLE_VISION_API_KEY') {
     return Boolean(process.env.GOOGLE_VISION_API_KEY || process.env.GOOGLE_TRANSLATE_API_KEY);
+  }
+  if (envKey === 'GOOGLE_TRANSLATE_API_KEY') {
+    return Boolean(process.env.LUGEMI_MT_URL?.trim() || process.env.GOOGLE_TRANSLATE_API_KEY?.trim());
+  }
+  if (envKey === 'OPENAI_API_KEY') {
+    return Boolean(
+      process.env.LUGEMI_CHAT_URL?.trim() ||
+        process.env.LUGEMI_ASR_URL?.trim() ||
+        process.env.LUGEMI_EMBED_URL?.trim() ||
+        process.env.OPENAI_API_KEY?.trim() ||
+        process.env.OPENROUTER_API_KEY?.trim(),
+    );
   }
   return Boolean(process.env[envKey]);
 }

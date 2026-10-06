@@ -8,6 +8,11 @@ import { LanguageLocaleSelect } from '@/components/language-locale-select';
 
 type Language = { code: string; name: string; nativeName?: string | null; tier: string };
 type LocalePack = { languageCode: string; bcp47: string | null };
+type Engine = {
+  product: string;
+  note: string;
+  capabilities: Array<{ id: string; name: string; status: string; api: string | null; notes: string }>;
+};
 
 /** Default Translation Panel pair: English → Twi (Akan / Ghana). */
 const DEFAULT_SOURCE = 'en';
@@ -17,6 +22,7 @@ export function TranslateClient() {
   const { getToken, isLoaded } = useAuth();
   const [languages, setLanguages] = useState<Language[]>([]);
   const [locales, setLocales] = useState<LocalePack[]>([]);
+  const [engine, setEngine] = useState<Engine | null>(null);
   const [source, setSource] = useState(DEFAULT_SOURCE);
   const [target, setTarget] = useState(DEFAULT_TARGET);
   const [text, setText] = useState('');
@@ -30,10 +36,12 @@ export function TranslateClient() {
     void Promise.all([
       apiFetch<{ data: Language[] }>('/v1/languages'),
       apiFetch<{ data: LocalePack[] }>('/v1/locales').catch(() => ({ data: [] as LocalePack[] })),
+      apiFetch<Engine>('/v1/translate/engine').catch(() => null),
     ])
-      .then(([langRes, locRes]) => {
+      .then(([langRes, locRes, eng]) => {
         setLanguages(langRes.data);
         setLocales(locRes.data);
+        if (eng) setEngine(eng);
         const hasAk = langRes.data.some((l) => l.code === 'ak');
         if (hasAk) setTarget('ak');
       })
@@ -88,6 +96,31 @@ export function TranslateClient() {
         Default pair is English → Twi (Akan, Ghana). Pick any supported language or locale code from the
         dropdowns — Lugemi Language Intelligence, not a generic vendor panel.
       </p>
+
+      {engine ? (
+        <div className="vl-panel" style={{ marginTop: '1.15rem', padding: '0.9rem 1.1rem' }}>
+          <div style={{ fontWeight: 650, color: 'var(--brand-navy)' }}>{engine.product}</div>
+          <p style={{ margin: '0.35rem 0 0.65rem', color: 'var(--muted)', fontSize: '0.85rem', lineHeight: 1.45 }}>
+            {engine.note}
+          </p>
+          <ul
+            style={{
+              margin: 0,
+              padding: 0,
+              listStyle: 'none',
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '0.4rem',
+            }}
+          >
+            {engine.capabilities.slice(0, 8).map((c) => (
+              <li key={c.id} className="vl-tag" style={{ opacity: c.status === 'deferred' ? 0.55 : 1 }}>
+                {c.name} · {c.status}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
 
       <form onSubmit={onSubmit} className="vl-panel" style={{ display: 'grid', gap: '1rem', padding: '1.35rem', marginTop: '1.5rem' }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>

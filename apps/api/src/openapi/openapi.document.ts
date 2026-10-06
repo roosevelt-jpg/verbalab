@@ -2127,6 +2127,40 @@ export const openApiDocument = {
         },
       },
     },
+    '/v1/accents': {
+      get: {
+        summary: 'List accent catalog',
+        operationId: 'listAccents',
+        parameters: [
+          {
+            name: 'language',
+            in: 'query',
+            required: false,
+            schema: { type: 'string' },
+            description: 'Filter by language code',
+          },
+        ],
+        responses: { '200': { description: 'Accent rows' } },
+      },
+    },
+    '/v1/accents/detect': {
+      post: {
+        summary: 'Detect spoken accent cues',
+        operationId: 'detectAccent',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '200': { description: 'Detected accent candidates' } },
+      },
+    },
+    '/v1/accents/{code}': {
+      get: {
+        summary: 'Get accent by code',
+        operationId: 'getAccent',
+        parameters: [
+          { name: 'code', in: 'path', required: true, schema: { type: 'string' } },
+        ],
+        responses: { '200': { description: 'Accent detail' }, '404': { description: 'Not found' } },
+      },
+    },
     '/v1/accents/classify': {
       post: {
         summary: 'Classify spoken accent (ranked candidates)',
@@ -2141,6 +2175,67 @@ export const openApiDocument = {
         operationId: 'getAccentAnalytics',
         security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
         responses: { '200': { description: 'Org accent detect/classify usage' } },
+      },
+    },
+    '/v1/country-packs': {
+      get: {
+        summary: 'List country packs',
+        operationId: 'listCountryPacks',
+        parameters: [
+          {
+            name: 'region',
+            in: 'query',
+            required: false,
+            schema: { type: 'string' },
+          },
+        ],
+        responses: { '200': { description: 'Country pack rows' } },
+      },
+    },
+    '/v1/country-packs/{code}': {
+      get: {
+        summary: 'Get country pack',
+        operationId: 'getCountryPack',
+        parameters: [
+          { name: 'code', in: 'path', required: true, schema: { type: 'string' } },
+          {
+            name: 'includeLocales',
+            in: 'query',
+            required: false,
+            schema: { type: 'boolean' },
+          },
+        ],
+        responses: { '200': { description: 'Country pack detail' } },
+      },
+    },
+    '/v1/dialects': {
+      get: {
+        summary: 'List dialects',
+        operationId: 'listDialects',
+        responses: { '200': { description: 'Dialect catalog' } },
+      },
+    },
+    '/v1/dialects/detect': {
+      post: {
+        summary: 'Detect dialect cues',
+        operationId: 'detectDialect',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '200': { description: 'Dialect candidates' } },
+      },
+    },
+    '/v1/language/products': {
+      get: {
+        summary: 'Language Cloud product catalog',
+        operationId: 'listLanguageProducts',
+        responses: { '200': { description: 'Language Cloud products' } },
+      },
+    },
+    '/v1/language/overview': {
+      get: {
+        summary: 'Language Cloud workspace overview',
+        operationId: 'getLanguageOverview',
+        security: [{ ClerkAuth: [] }],
+        responses: { '200': { description: 'Workspace language overview' } },
       },
     },
     '/v1/emotion/engine': {
