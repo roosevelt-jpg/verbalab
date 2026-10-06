@@ -38,6 +38,8 @@ export function speechRecognitionSupported(): boolean {
 /** Map BCP-47 / ISO language codes to a recognition locale hint. */
 export function recognitionLangFor(code: string): string {
   const map: Record<string, string> = {
+    ak: 'ak-GH',
+    tw: 'ak-GH',
     en: 'en-US',
     sw: 'sw-KE',
     yo: 'en-NG',
@@ -51,6 +53,8 @@ export function recognitionLangFor(code: string): string {
     es: 'es-ES',
     de: 'de-DE',
     hi: 'hi-IN',
+    ga: 'en-GH',
+    ee: 'en-GH',
   };
   if (code.includes('-')) return code;
   return map[code] ?? 'en-US';

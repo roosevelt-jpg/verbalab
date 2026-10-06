@@ -666,6 +666,51 @@ textarea {
   justify-content: center;
 }
 
+.lg-chat-history-brand {
+  font-family: var(--font-display);
+  font-weight: 720;
+  letter-spacing: -0.03em;
+  font-size: 1.15rem;
+  color: var(--brand-navy);
+  padding: 0 0.35rem;
+}
+
+.lg-chat-side-nav {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.lg-chat-side-link {
+  display: block;
+  text-align: left;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 0.45rem 0.65rem;
+  border-radius: 8px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.lg-chat-side-link:hover,
+.lg-chat-side-link.is-active {
+  color: var(--brand-navy);
+  background: rgba(0, 124, 120, 0.08);
+}
+
+.lg-chat-history-label {
+  margin: 0.5rem 0 0;
+  padding: 0 0.65rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
 .lg-chat-history-list {
   list-style: none;
   margin: 0;
@@ -921,6 +966,33 @@ textarea {
   animation: lg-chat-pulse 1.2s ease-in-out infinite;
 }
 
+.lg-chat-live-banner {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.35rem 0 0.15rem;
+  padding: 0.75rem 0.9rem;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 124, 120, 0.22);
+  background: linear-gradient(135deg, rgba(0, 124, 120, 0.08), rgba(16, 38, 77, 0.04));
+}
+
+.lg-chat-live-preview {
+  margin: 0;
+  display: grid;
+  gap: 0.2rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--ink);
+}
+
+.lg-chat-live-preview span {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--action-primary);
+}
+
 @keyframes lg-chat-pulse {
   0%,
   100% {
@@ -1105,7 +1177,25 @@ textarea {
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 0.65rem;
+  gap: 0.85rem;
+}
+
+.lg-chat-plugin-group {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.lg-chat-plugin-group-title {
+  margin: 0;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.lg-chat-plugin-group .lg-chat-plugin-list {
+  gap: 0.55rem;
 }
 
 .lg-chat-plugin {
@@ -1165,6 +1255,7 @@ textarea {
   .lg-chat-bubble,
   .lg-chat-plugins.is-open,
   .lg-chat-listening,
+  .lg-chat-live-banner,
   .lg-chat-mic.is-recording {
     animation: none;
   }

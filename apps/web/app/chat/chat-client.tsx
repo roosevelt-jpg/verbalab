@@ -67,6 +67,12 @@ const CONNECTORS: ConnectorDef[] = [
     href: '/connectors',
   },
   {
+    id: 'teams',
+    name: 'Microsoft Teams',
+    category: 'chat',
+    blurb: 'Meeting captions and channel localization.',
+  },
+  {
     id: 'gmail',
     name: 'Gmail',
     category: 'email',
@@ -108,10 +114,22 @@ const CONNECTORS: ConnectorDef[] = [
     category: 'office',
     blurb: 'Batch glossary + string tables.',
   },
+  {
+    id: 'docs',
+    name: 'Google Docs',
+    category: 'office',
+    blurb: 'Export localized copies of long-form docs.',
+  },
+  {
+    id: 'box',
+    name: 'Box',
+    category: 'storage',
+    blurb: 'Enterprise file sync for localization jobs.',
+  },
 ];
 
 const SUGGESTIONS = [
-  'Translate this greeting into Kiswahili and play it back',
+  'Translate this greeting into Twi and play it back',
   'How do I upload a PDF for document translation?',
   'Explain Africa-first language coverage for speaking agents',
   'Draft a polite Yorùbá support reply about shipping delays',
@@ -229,7 +247,14 @@ export function ChatClient() {
   const [loading, setLoading] = useState(false);
   const [recording, setRecording] = useState(false);
   const [interim, setInterim] = useState('');
+  const [livePreview, setLivePreview] = useState('');
   const [hydrated, setHydrated] = useState(false);
+  const liveTargetRef = useRef(liveTarget);
+  const translatingSegmentRef = useRef(false);
+
+  useEffect(() => {
+    liveTargetRef.current = liveTarget;
+  }, [liveTarget]);
 
   const active = conversations.find((c) => c.id === activeId) ?? null;
   const messages = active?.messages ?? [];
@@ -453,17 +478,63 @@ export function ChatClient() {
   function stopRecording() {
     recognitionRef.current?.stop();
     setRecording(false);
+    setLivePreview('');
+  }
+
+  async function translateFinalSegment(spoken: string) {
+    const text = spoken.trim();
+    if (!text || translatingSegmentRef.current) return;
+    translatingSegmentRef.current = true;
+    const target = liveTargetRef.current;
+    const convId = ensureConversation();
+    const userTurn: ChatTurn = {
+      id: uid(),
+      role: 'user',
+      content: text,
+      kind: 'live',
+      sourceLang: 'auto',
+      targetLang: target,
+    };
+    updateConversation(convId, (conv) => ({
+      ...conv,
+      title: conv.messages.length === 0 ? titleFromText(text) : conv.title,
+      updatedAt: Date.now(),
+      messages: [...conv.messages, userTurn],
+    }));
+    try {
+      const token = await ensureToken();
+      const res = await translateText(token, text, 'auto', target);
+      setLivePreview(res.text);
+      updateConversation(convId, (conv) => ({
+        ...conv,
+        updatedAt: Date.now(),
+        messages: [
+          ...conv.messages,
+          {
+            id: uid(),
+            role: 'assistant',
+            content: res.text,
+            kind: 'live',
+            sourceLang: res.source,
+            targetLang: target,
+          },
+        ],
+      }));
+      void playTranslation(res.text, recognitionLangFor(target));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Live translate failed');
+    } finally {
+      translatingSegmentRef.current = false;
+    }
   }
 
   function toggleRecord() {
     if (recording) {
       stopRecording();
-      const finalText = (liveFinalRef.current || interim || input).trim();
+      const leftover = (liveFinalRef.current || interim).trim();
       liveFinalRef.current = '';
-      if (finalText) {
-        setMode('live');
-        void runLiveTranslate(finalText);
-      }
+      setInterim('');
+      if (leftover) void translateFinalSegment(leftover);
       return;
     }
 
@@ -475,8 +546,11 @@ export function ChatClient() {
 
     setError(null);
     setMode('live');
+    setPluginsOpen(false);
     liveFinalRef.current = '';
     setInterim('');
+    setLivePreview('');
+    ensureConversation();
 
     const recognition = new Ctor();
     recognition.continuous = true;
@@ -484,15 +558,20 @@ export function ChatClient() {
     recognition.lang = recognitionLangFor('en');
     recognition.onresult = (event) => {
       let interimBuf = '';
-      let finalBuf = liveFinalRef.current;
+      let newlyFinal = '';
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const piece = event.results[i]![0].transcript;
-        if (event.results[i]!.isFinal) finalBuf += `${piece} `;
+        if (event.results[i]!.isFinal) newlyFinal += `${piece} `;
         else interimBuf += piece;
       }
-      liveFinalRef.current = finalBuf;
-      setInterim(interimBuf);
-      setInput(`${finalBuf}${interimBuf}`.trim());
+      if (newlyFinal.trim()) {
+        liveFinalRef.current = '';
+        setInput('');
+        void translateFinalSegment(newlyFinal);
+      } else {
+        setInterim(interimBuf);
+        setInput(interimBuf.trim());
+      }
     };
     recognition.onerror = (event) => {
       if (event.error !== 'aborted' && event.error !== 'no-speech') {
@@ -688,10 +767,27 @@ export function ChatClient() {
   return (
     <AppShell>
       <div className="lg-chat-studio">
-        <aside className="lg-chat-history" aria-label="Conversations">
+        <aside className="lg-chat-history" aria-label="Library">
+          <div className="lg-chat-history-brand">Lugemi</div>
           <button type="button" className="vl-btn vl-btn-primary lg-chat-new" onClick={startNewChat}>
             New chat
           </button>
+          <nav className="lg-chat-side-nav" aria-label="Studio sections">
+            <button type="button" className="lg-chat-side-link is-active">
+              Library
+            </button>
+            <button
+              type="button"
+              className={`lg-chat-side-link${pluginsOpen ? ' is-active' : ''}`}
+              onClick={() => setPluginsOpen(true)}
+            >
+              Plugins
+            </button>
+            <Link href="/connectors" className="lg-chat-side-link">
+              Explore
+            </Link>
+          </nav>
+          <p className="lg-chat-history-label">Recents</p>
           <ul className="lg-chat-history-list">
             {conversations.length === 0 ? (
               <li className="lg-chat-history-empty">No chats yet</li>
@@ -722,7 +818,7 @@ export function ChatClient() {
             <div>
               <h1 style={titleStyle}>Chat Studio</h1>
               <p style={ledeStyle}>
-                Lugemi assistant with live voice translate, file upload, and connectors.
+                Record for live translation, upload documents/video/voice, or connect office tools.
               </p>
             </div>
             <div className="lg-chat-toolbar-actions">
@@ -757,8 +853,11 @@ export function ChatClient() {
             {messages.length === 0 ? (
               <div className="lg-chat-empty">
                 <p className="lg-chat-empty-brand">Lugemi</p>
-                <h2>How can language intelligence help today?</h2>
-                <p>Ask in chat, click the mic for instant translation, or upload a document, video, or voice file.</p>
+                <h2>What’s on your mind today?</h2>
+                <p>
+                  Click <strong>Record</strong> for instant live translation, attach a document, video, or
+                  voice file, or open Plugins to connect office, storage, and email tools.
+                </p>
                 <div className="lg-chat-suggestions">
                   {SUGGESTIONS.map((s) => (
                     <button
@@ -806,11 +905,19 @@ export function ChatClient() {
               ))
             )}
             {recording ? (
-              <p className="lg-chat-listening" aria-live="polite">
-                Listening… {interim || 'speak now'}
-              </p>
+              <div className="lg-chat-live-banner" aria-live="polite">
+                <p className="lg-chat-listening">
+                  Listening… {interim || 'speak now — translations appear as you finish each phrase'}
+                </p>
+                {livePreview ? (
+                  <p className="lg-chat-live-preview">
+                    <span>Live → {liveTarget}</span>
+                    {livePreview}
+                  </p>
+                ) : null}
+              </div>
             ) : null}
-            {loading ? <p className="lg-chat-listening">Working…</p> : null}
+            {loading && !recording ? <p className="lg-chat-listening">Working…</p> : null}
             <div ref={bottomRef} />
           </div>
 
@@ -948,16 +1055,17 @@ export function ChatClient() {
               </button>
             </div>
             <p className="lg-chat-composer-hint">
-              Mic uses Web Speech Recognition → Lugemi Translate → play. Upload accepts documents,
-              video, and voice. Enter to send · Shift+Enter for newline.
+              Record translates each finished phrase in realtime. Attach accepts documents, video, and
+              voice. Plugins connect office, storage, and email tools. Enter to send · Shift+Enter for
+              newline.
             </p>
           </form>
         </section>
 
         <aside className={`lg-chat-plugins${pluginsOpen ? ' is-open' : ''}`} aria-label="Connectors and plugins">
           <div className="lg-chat-plugins-head">
-            <h2>Connectors</h2>
-            <p>Office, storage, and email plugins for Chat Studio.</p>
+            <h2>Plugins</h2>
+            <p>Connect office, storage, email, and chat tools to Chat Studio.</p>
             <button
               type="button"
               className="lg-chat-plugins-close"
@@ -968,30 +1076,36 @@ export function ChatClient() {
             </button>
           </div>
           <ul className="lg-chat-plugin-list">
-            {CONNECTORS.map((c) => {
-              const on = Boolean(connected[c.id]);
-              return (
-                <li key={c.id} className="lg-chat-plugin">
-                  <div>
-                    <strong>{c.name}</strong>
-                    <span className="lg-chat-plugin-cat">{c.category}</span>
-                    <p>{c.blurb}</p>
-                    {c.href ? (
-                      <Link href={c.href} className="lg-chat-plugin-link">
-                        Open connector settings
-                      </Link>
-                    ) : null}
-                  </div>
-                  <button
-                    type="button"
-                    className={`vl-btn ${on ? 'vl-btn-secondary' : 'vl-btn-primary'}`}
-                    onClick={() => toggleConnector(c.id)}
-                  >
-                    {on ? 'Connected' : 'Connect'}
-                  </button>
-                </li>
-              );
-            })}
+            {(['office', 'storage', 'email', 'chat'] as const).map((cat) => (
+              <li key={cat} className="lg-chat-plugin-group">
+                <h3 className="lg-chat-plugin-group-title">{cat}</h3>
+                <ul className="lg-chat-plugin-list">
+                  {CONNECTORS.filter((c) => c.category === cat).map((c) => {
+                    const on = Boolean(connected[c.id]);
+                    return (
+                      <li key={c.id} className="lg-chat-plugin">
+                        <div>
+                          <strong>{c.name}</strong>
+                          <p>{c.blurb}</p>
+                          {c.href ? (
+                            <Link href={c.href} className="lg-chat-plugin-link">
+                              Open connector settings
+                            </Link>
+                          ) : null}
+                        </div>
+                        <button
+                          type="button"
+                          className={`vl-btn ${on ? 'vl-btn-secondary' : 'vl-btn-primary'}`}
+                          onClick={() => toggleConnector(c.id)}
+                        >
+                          {on ? 'Connected' : 'Connect'}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </li>
+            ))}
           </ul>
         </aside>
       </div>
