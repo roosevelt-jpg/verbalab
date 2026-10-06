@@ -1,4 +1,8 @@
-import { PORTFOLIO_CORRIDOR_COUNT } from '../portfolio/portfolio.corridors';
+import {
+  PORTFOLIO_CORRIDOR_COUNT,
+  PORTFOLIO_COUNTRIES_COVERED,
+  PORTFOLIO_COUNTRY_PACK_TOTAL,
+} from '../portfolio/portfolio.corridors';
 
 export function liveCatalog() {
   return {
@@ -6,9 +10,10 @@ export function liveCatalog() {
     model_id: 'lugemi-live',
     model_version: 'local-demo-1',
     family: 'Echo + Translate + Voice',
-    note:
-      `Incremental interpretation with learned wait/commit policy and transparent repair. States: receiving → provisional → committed → spoken; repair_required after commitment; cancelled before playback. Spoken audio is immutable. Source/target pickers cover all ${PORTFOLIO_CORRIDOR_COUNT} registry corridors.`,
+    note: `Incremental interpretation with learned wait/commit policy and transparent repair. States: receiving → provisional → committed → spoken; repair_required after commitment; cancelled before playback. Spoken audio is immutable. Source/target pickers cover all ${PORTFOLIO_CORRIDOR_COUNT} country-pack corridors (${PORTFOLIO_COUNTRIES_COVERED}/${PORTFOLIO_COUNTRY_PACK_TOTAL} countries). Evaluation depth varies.`,
     corridor_count: PORTFOLIO_CORRIDOR_COUNT,
+    countries_covered: PORTFOLIO_COUNTRIES_COVERED,
+    country_pack_total: PORTFOLIO_COUNTRY_PACK_TOTAL,
     apis: {
       engine: 'GET /v1/live/engine',
       sessions: 'POST /v1/live/sessions',

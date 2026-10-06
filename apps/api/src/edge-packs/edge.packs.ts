@@ -52,7 +52,7 @@ function hash(value: string) {
 }
 
 function packIdFor(corridor: PortfolioCorridor): string {
-  return `lugemi-edge-${corridor.languageCode}-en`;
+  return `lugemi-edge-${corridor.languageCode}-en-${corridor.countryCode.toLowerCase()}`;
 }
 
 function deviceMeta(code: string, tier: string) {
@@ -111,7 +111,7 @@ export function buildEdgePack(corridor: PortfolioCorridor): EdgePack {
   };
 }
 
-/** Full edge pack catalog: one signed local/demo manifest per registry language ↔ English. */
+/** Full edge pack catalog: one signed local/demo manifest per country-pack corridor. */
 export function buildEdgePackCatalog(): EdgePack[] {
   return PORTFOLIO_CORRIDORS.map(buildEdgePack);
 }

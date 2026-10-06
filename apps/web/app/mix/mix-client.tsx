@@ -43,7 +43,7 @@ export function MixClient() {
         setCorridorOptions(
           res.corridors.map((c) => ({
             value: c.varietyId,
-            label: `${c.label}${c.evaluated ? ' · strategic' : ''}`,
+            label: `${c.label}${c.evaluated ? ' · evaluated' : ''}`,
           })),
         ),
       )
@@ -84,7 +84,7 @@ export function MixClient() {
   return (
     <PortfolioShell
       title="Lugemi Mix"
-      lede="Meaning-preserving mixed-language speech. Shows original and translated text side by side, highlights uncertain spans, and keeps names stable. Full registry catalog of language↔English corridors available via GET /v1/portfolio/corridors."
+      lede="Meaning-preserving mixed-language speech. Shows original and translated text side by side, highlights uncertain spans, and keeps names stable. Full country-pack catalog of language↔English corridors (filterable by country) via GET /v1/portfolio/corridors — evaluation depth varies."
       docsHref="/docs"
     >
       <form onSubmit={onSubmit} className="vl-panel" style={{ padding: '1rem', display: 'grid', gap: '0.75rem' }}>

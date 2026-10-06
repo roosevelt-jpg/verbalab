@@ -133,18 +133,20 @@ export class MixService {
       )?.varietyId ??
       null;
 
-    const evaluated = PORTFOLIO_PILOT_CORRIDORS.filter((c) => c.evaluated).map((c) => c.varietyId);
+    const evaluated = [
+      ...new Set(PORTFOLIO_PILOT_CORRIDORS.filter((c) => c.evaluated).map((c) => c.varietyId)),
+    ];
     const warnings: string[] = [];
     if (variety && !evaluated.includes(variety)) {
       warnings.push(
-        `Variety ${variety} is in the full registry catalog but not on the strategic evaluated list.`,
+        `Variety ${variety} is in the full country-pack catalog but not on the design-partner evaluated list. Evaluation depth varies.`,
       );
     }
     if (spans.some((s) => s.uncertain)) {
       warnings.push('One or more spans are uncertain; review highlighted regions before acting.');
     }
     warnings.push(
-      `Catalog: ${PORTFOLIO_PILOT_CORRIDORS.length} language↔English corridors. Strategic evaluated varieties: ${evaluated.join(', ')}.`,
+      `Catalog: ${PORTFOLIO_PILOT_CORRIDORS.length} country-pack language↔English corridors. Evaluated varieties: ${evaluated.join(', ') || 'none'}.`,
     );
 
     const meta = portfolioMeta({

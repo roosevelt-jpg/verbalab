@@ -1,3 +1,9 @@
+import {
+  PORTFOLIO_CORRIDOR_COUNT,
+  PORTFOLIO_COUNTRIES_COVERED,
+  PORTFOLIO_COUNTRY_PACK_TOTAL,
+} from './portfolio.corridors';
+
 /**
  * Lugemi next-model portfolio — discoverable engine notes.
  * Plain-text capability notes only (no shipped/partial badges, no ADR).
@@ -5,8 +11,10 @@
 export function portfolioCatalog() {
   return {
     product: 'Lugemi Verified Interpreter',
-    note:
-      'Working name for the Mix + Fidelity + Live offering. Meaning-preserving mixed-language speech, verification with clarification, and incremental interpretation with explicit commitment and repair. Pilot corridors: Twi–English and Yoruba–English. Lugemi-owned local adapters run without external keys.',
+    note: `Working name for the Mix + Fidelity + Live offering. Meaning-preserving mixed-language speech, verification with clarification, and incremental interpretation with explicit commitment and repair. Full country-pack catalog: ${PORTFOLIO_CORRIDOR_COUNT} language↔English corridors across ${PORTFOLIO_COUNTRIES_COVERED} of ${PORTFOLIO_COUNTRY_PACK_TOTAL} countries. Evaluation depth varies — design-partner corridors (Twi–English Ghana, Yoruba–English Nigeria) are marked evaluated; others are catalog-available. Lugemi-owned local adapters run without external keys.`,
+    corridor_count: PORTFOLIO_CORRIDOR_COUNT,
+    countries_covered: PORTFOLIO_COUNTRIES_COVERED,
+    country_pack_total: PORTFOLIO_COUNTRY_PACK_TOTAL,
     pillars: [
       {
         id: 'mix',

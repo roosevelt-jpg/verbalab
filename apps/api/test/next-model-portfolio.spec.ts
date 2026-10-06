@@ -132,9 +132,25 @@ describe('Next model portfolio (00–07 contracts)', () => {
     const engine = await request(app.getHttpServer()).get('/v1/portfolio/engine').expect(200);
     expect(engine.body.product).toMatch(/Verified Interpreter/i);
     const corridors = await request(app.getHttpServer()).get('/v1/portfolio/corridors').expect(200);
-    expect(corridors.body.corridors.length).toBeGreaterThanOrEqual(2);
+    expect(corridors.body.corridors.length).toBeGreaterThanOrEqual(100);
+    expect(corridors.body.country_pack_total).toBeGreaterThanOrEqual(195);
+    expect(corridors.body.countries_covered).toBeGreaterThanOrEqual(100);
     expect(corridors.body.corridors.some((c: { id: string }) => c.id === 'twi-english')).toBe(true);
     expect(corridors.body.corridors.some((c: { id: string }) => c.id === 'yoruba-english')).toBe(true);
+    expect(corridors.body.corridors.some((c: { id: string }) => c.id === 'hausa-english')).toBe(true);
+    const hausa = corridors.body.corridors.find((c: { id: string }) => c.id === 'hausa-english');
+    expect(hausa.label).toMatch(/Nigeria/);
+    expect(hausa.evaluated).toBe(false);
+    const byCountry = await request(app.getHttpServer())
+      .get('/v1/portfolio/corridors')
+      .query({ country: 'NG' })
+      .expect(200);
+    expect(byCountry.body.corridors.every((c: { countryCode: string }) => c.countryCode === 'NG')).toBe(
+      true,
+    );
+    expect(byCountry.body.corridors.length).toBeGreaterThanOrEqual(2);
+    expect(engine.body.note).not.toMatch(/Pilot corridors: Twi/);
+    expect(engine.body.note).toMatch(/Evaluation depth varies/i);
   });
 
   it('Mix transcribe-translate returns spans and entity alignment (01)', async () => {

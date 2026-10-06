@@ -1,6 +1,7 @@
 import {
   PORTFOLIO_CORRIDORS,
   PORTFOLIO_CORRIDOR_COUNT,
+  PORTFOLIO_COUNTRIES_COVERED,
 } from '../portfolio/portfolio.corridors';
 import { LANGUAGE_SEEDS, TOTAL_LANGUAGE_COUNT } from '../languages/language-seeds';
 
@@ -10,11 +11,11 @@ export function languageKitsCatalog() {
     model_id: 'lugemi-language-kit',
     model_version: 'local-demo-1',
     family: 'Baobab + Echo + Translate',
-    note:
-      `Evidence-gated onboarding for underserved languages. A registry entry is not a model release. Catalog lists all ${TOTAL_LANGUAGE_COUNT} registry languages for kit drafting. Stages: draft → data_ready → trained → evaluated → preview → released → withdrawn.`,
+    note: `Evidence-gated onboarding for underserved languages. A registry entry is not a model release. Catalog lists all ${TOTAL_LANGUAGE_COUNT} registry languages for kit drafting alongside ${PORTFOLIO_CORRIDOR_COUNT} country-pack corridors (${PORTFOLIO_COUNTRIES_COVERED} countries). Stages: draft → data_ready → trained → evaluated → preview → released → withdrawn.`,
     stages: ['draft', 'data_ready', 'trained', 'evaluated', 'preview', 'released', 'withdrawn'],
     language_count: TOTAL_LANGUAGE_COUNT,
     corridor_count: PORTFOLIO_CORRIDOR_COUNT,
+    countries_covered: PORTFOLIO_COUNTRIES_COVERED,
     languages: LANGUAGE_SEEDS.map((l) => {
       const corridor = PORTFOLIO_CORRIDORS.find((c) => c.languageCode === l.code);
       return {

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { apiFetch } from '@/lib/api';
 import { PortfolioShell } from '@/components/portfolio/portfolio-shell';
@@ -20,6 +20,9 @@ type Engine = {
   product: string;
   note: string;
   pillars: Pillar[];
+  corridor_count?: number;
+  countries_covered?: number;
+  country_pack_total?: number;
 };
 
 type Corridor = {
@@ -27,13 +30,27 @@ type Corridor = {
   label: string;
   varietyId: string;
   languageCode?: string;
+  countryCode?: string;
+  countryName?: string;
+  region?: string;
   evaluated: boolean;
+};
+
+type CountryRow = {
+  code: string;
+  nameEn: string;
+  region: string;
+  corridorCount: number;
 };
 
 export function VerifiedInterpreterClient() {
   const [engine, setEngine] = useState<Engine | null>(null);
   const [corridors, setCorridors] = useState<Corridor[]>([]);
+  const [countries, setCountries] = useState<CountryRow[]>([]);
   const [total, setTotal] = useState(0);
+  const [countriesCovered, setCountriesCovered] = useState(0);
+  const [countryPackTotal, setCountryPackTotal] = useState(0);
+  const [countryFilter, setCountryFilter] = useState('');
   const [selected, setSelected] = useState('');
   const [error, setError] = useState<string | null>(null);
 
@@ -42,13 +59,25 @@ export function VerifiedInterpreterClient() {
       try {
         const [eng, cor] = await Promise.all([
           apiFetch<Engine>('/v1/portfolio/engine'),
-          apiFetch<{ corridors: Corridor[]; total?: number }>('/v1/portfolio/corridors'),
+          apiFetch<{
+            corridors: Corridor[];
+            total?: number;
+            countries?: CountryRow[];
+            countries_covered?: number;
+            country_pack_total?: number;
+            note?: string;
+          }>('/v1/portfolio/corridors'),
         ]);
         setEngine(eng);
         setCorridors(cor.corridors);
+        setCountries(cor.countries ?? []);
         setTotal(cor.total ?? cor.corridors.length);
+        setCountriesCovered(cor.countries_covered ?? eng.countries_covered ?? 0);
+        setCountryPackTotal(cor.country_pack_total ?? eng.country_pack_total ?? 0);
         const preferred =
-          cor.corridors.find((c) => c.varietyId === 'ak-GH-twi') ?? cor.corridors[0];
+          cor.corridors.find((c) => c.varietyId === 'ak-GH-twi') ??
+          cor.corridors.find((c) => c.id === 'twi-english') ??
+          cor.corridors[0];
         if (preferred) setSelected(preferred.id);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load portfolio');
@@ -56,17 +85,43 @@ export function VerifiedInterpreterClient() {
     })();
   }, []);
 
-  const selectedCorridor = corridors.find((c) => c.id === selected) ?? null;
+  const filteredCorridors = useMemo(() => {
+    if (!countryFilter) return corridors;
+    const needle = countryFilter.toLowerCase();
+    return corridors.filter(
+      (c) =>
+        c.countryCode?.toLowerCase() === needle ||
+        c.countryName?.toLowerCase() === needle ||
+        (c.countryName?.toLowerCase().includes(needle) ?? false),
+    );
+  }, [corridors, countryFilter]);
+
+  const selectedCorridor = filteredCorridors.find((c) => c.id === selected) ?? null;
   const listed = selectedCorridor
     ? [selectedCorridor]
-    : corridors.filter((c) => c.evaluated).concat(corridors.filter((c) => !c.evaluated).slice(0, 16));
+    : filteredCorridors
+        .filter((c) => c.evaluated)
+        .concat(filteredCorridors.filter((c) => !c.evaluated).slice(0, 24));
+
+  const countryOptions = useMemo(
+    () => [
+      { value: '', label: 'All countries', keywords: 'worldwide full catalog' },
+      ...countries.map((c) => ({
+        value: c.code,
+        label: `${c.nameEn} (${c.code}) · ${c.corridorCount} corridor${c.corridorCount === 1 ? '' : 's'}`,
+        keywords: `${c.code} ${c.nameEn} ${c.region}`,
+        group: c.region,
+      })),
+    ],
+    [countries],
+  );
 
   return (
     <PortfolioShell
       title={engine?.product ?? 'Lugemi Verified Interpreter'}
       lede={
         engine?.note ??
-        'Mix + Fidelity + Live for meaning-preserving interpretation with verification and repair.'
+        'Mix + Fidelity + Live for meaning-preserving interpretation with verification and repair. Full country-pack catalog available; evaluation depth varies.'
       }
       docsHref="/docs"
     >
@@ -74,17 +129,41 @@ export function VerifiedInterpreterClient() {
 
       <section aria-labelledby="vi-corridors">
         <h2 id="vi-corridors" style={{ fontSize: '1.05rem', color: 'var(--brand-navy)' }}>
-          Corridors ({total || corridors.length} language↔English)
+          Corridors ({total || corridors.length} language↔English · {countriesCovered || countries.length} /{' '}
+          {countryPackTotal || countries.length} countries)
         </h2>
-        <div style={{ marginTop: '0.65rem', maxWidth: '28rem' }}>
+        <p style={{ margin: '0.35rem 0 0', fontSize: '0.85rem', color: 'var(--muted)', lineHeight: 1.45 }}>
+          Full country-pack catalog. Search or filter by country. Evaluation depth varies — only design-partner
+          varieties are marked evaluated.
+        </p>
+        <div
+          style={{
+            marginTop: '0.65rem',
+            display: 'grid',
+            gap: '0.65rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(14rem, 1fr))',
+            maxWidth: '40rem',
+          }}
+        >
+          <SearchableCombobox
+            value={countryFilter}
+            onChange={(v) => {
+              setCountryFilter(v);
+              setSelected('');
+            }}
+            options={countryOptions}
+            placeholder="Filter by country…"
+            emptyLabel="All countries"
+            aria-label="Filter corridors by country"
+          />
           <SearchableCombobox
             value={selected}
             onChange={setSelected}
-            options={corridors.map((c) => ({
+            options={filteredCorridors.map((c) => ({
               value: c.id,
-              label: `${c.label}${c.evaluated ? ' · strategic' : ''}`,
-              keywords: `${c.id} ${c.varietyId} ${c.languageCode ?? ''}`,
-              group: c.evaluated ? 'Strategic' : 'Registry',
+              label: `${c.label}${c.evaluated ? ' · evaluated' : ''}`,
+              keywords: `${c.id} ${c.varietyId} ${c.languageCode ?? ''} ${c.countryCode ?? ''} ${c.countryName ?? ''} ${c.region ?? ''}`,
+              group: c.countryName ?? c.region ?? 'Corridors',
             }))}
             placeholder="Search corridor…"
             emptyLabel="Select corridor…"
@@ -97,11 +176,17 @@ export function VerifiedInterpreterClient() {
               <strong>{c.label}</strong>
               <span style={{ color: 'var(--muted)', marginLeft: '0.5rem', fontSize: '0.85rem' }}>
                 {c.varietyId}
-                {c.evaluated ? ' · strategic' : ' · registry'}
+                {c.evaluated ? ' · evaluated' : ' · catalog (not yet evaluated)'}
               </span>
             </li>
           ))}
         </ul>
+        {filteredCorridors.length === 0 ? (
+          <p style={{ marginTop: '0.75rem', fontSize: '0.85rem', color: 'var(--muted)' }}>
+            No non-English language↔English corridors for this country yet (English working language or no locale
+            packs seeded). The country remains in the full pack catalog.
+          </p>
+        ) : null}
       </section>
 
       <section aria-labelledby="vi-pillars" style={{ marginTop: '1.5rem' }}>

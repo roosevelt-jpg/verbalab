@@ -2,6 +2,8 @@ import { randomUUID } from 'crypto';
 import {
   PORTFOLIO_CORRIDORS,
   PORTFOLIO_CORRIDOR_COUNT,
+  PORTFOLIO_COUNTRIES_COVERED,
+  PORTFOLIO_COUNTRY_PACK_TOTAL,
   type PortfolioCorridor,
 } from './portfolio.corridors';
 
@@ -48,10 +50,15 @@ export function portfolioMeta(input: {
 }
 
 /**
- * Full registry corridors (language ↔ English). Prefer PORTFOLIO_CORRIDORS.
+ * Full country-pack corridors (language ↔ English per country). Prefer PORTFOLIO_CORRIDORS.
  * Alias kept for existing imports.
  */
 export const PORTFOLIO_PILOT_CORRIDORS: readonly PortfolioCorridor[] = PORTFOLIO_CORRIDORS;
 
-export { PORTFOLIO_CORRIDORS, PORTFOLIO_CORRIDOR_COUNT };
+export {
+  PORTFOLIO_CORRIDORS,
+  PORTFOLIO_CORRIDOR_COUNT,
+  PORTFOLIO_COUNTRIES_COVERED,
+  PORTFOLIO_COUNTRY_PACK_TOTAL,
+};
 export type { PortfolioCorridor };
