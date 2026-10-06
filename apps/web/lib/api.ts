@@ -50,6 +50,15 @@ function toBodyInit(body: ApiFetchOptions['body']): BodyInit | null | undefined 
   return JSON.stringify(body);
 }
 
+function isNetworkReachabilityError(err: unknown): boolean {
+  const raw = err instanceof Error ? err.message : String(err);
+  return /load failed|failed to fetch|networkerror|network request failed/i.test(raw);
+}
+
+async function sleep(ms: number) {
+  await new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export async function apiFetch<T>(
   path: string,
   options: ApiFetchOptions = {},
@@ -65,28 +74,44 @@ export async function apiFetch<T>(
       : organizationId ?? (typeof window !== 'undefined' ? getStoredAdminOrgId() : null);
 
   const serialized = toBodyInit(body);
-  let response: Response;
-  try {
-    response = await fetch(`${API_URL}${path}`, {
-      ...rest,
-      body: serialized,
-      headers: {
-        ...(serialized instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        ...(ws ? { 'X-Lugemi-Workspace-Id': ws } : {}),
-        ...(org ? { 'X-Lugemi-Organization-Id': org } : {}),
-        ...headers,
-      },
-    });
-  } catch (err) {
-    const raw = err instanceof Error ? err.message : String(err);
-    // Safari/WebKit: "Load failed"; Chromium: "Failed to fetch"
-    if (/load failed|failed to fetch|networkerror|network request failed/i.test(raw)) {
+  const requestInit: RequestInit = {
+    ...rest,
+    body: serialized,
+    headers: {
+      ...(serialized instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(ws ? { 'X-Lugemi-Workspace-Id': ws } : {}),
+      ...(org ? { 'X-Lugemi-Organization-Id': org } : {}),
+      ...headers,
+    },
+  };
+
+  let response: Response | undefined;
+  let lastNetworkError: unknown;
+  // One short retry covers Nest --watch restarts that briefly drop the socket.
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      response = await fetch(`${API_URL}${path}`, requestInit);
+      lastNetworkError = undefined;
+      break;
+    } catch (err) {
+      lastNetworkError = err;
+      if (!isNetworkReachabilityError(err) || attempt === 1) break;
+      await sleep(350);
+    }
+  }
+
+  if (!response) {
+    const raw =
+      lastNetworkError instanceof Error
+        ? lastNetworkError.message
+        : String(lastNetworkError ?? 'network error');
+    if (isNetworkReachabilityError(lastNetworkError) || /network error/i.test(raw)) {
       throw new Error(
         `Cannot reach API at ${API_URL}${path}. Check NEXT_PUBLIC_API_URL and CORS_ORIGIN.`,
       );
     }
-    throw err instanceof Error ? err : new Error(raw);
+    throw lastNetworkError instanceof Error ? lastNetworkError : new Error(raw);
   }
 
   const payload = (await response.json().catch(() => ({}))) as T & {

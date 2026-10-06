@@ -1,7 +1,8 @@
 import { Controller, Get, Param, Query } from '@nestjs/common';
 import { CountryPacksService } from './country-packs.service';
 
-@Controller('v1/country-packs')
+/** `/v1/countries` is a stable alias for Studio/docs that say "countries". */
+@Controller(['v1/country-packs', 'v1/countries'])
 export class CountryPacksController {
   constructor(private readonly countryPacks: CountryPacksService) {}
 

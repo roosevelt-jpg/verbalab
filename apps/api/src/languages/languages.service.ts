@@ -68,6 +68,21 @@ export class LanguagesService implements OnModuleInit {
   }
 
   list() {
+    if (!this.prisma.isReady()) {
+      return LANGUAGE_SEEDS.map((lang) => ({
+        code: lang.code,
+        nameEn: lang.nameEn,
+        nameNative: lang.nameNative,
+        script: lang.script,
+        familyCode: lang.familyCode,
+        family: null as { code: string; nameEn: string; notes: string | null } | null,
+        rtl: lang.rtl ?? false,
+        tier:
+          lang.tier === 'strategic_african'
+            ? LanguageTier.strategic_african
+            : LanguageTier.vendor,
+      }));
+    }
     return this.prisma.language.findMany({
       orderBy: { code: 'asc' },
       include: { family: true },

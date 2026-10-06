@@ -103,6 +103,22 @@ export class LocalesService implements OnModuleInit {
   }
 
   async list() {
+    if (!this.prisma.isReady()) {
+      return LOCALE_PACK_SEEDS.map((pack) =>
+        this.serialize({
+          languageCode: pack.languageCode,
+          bcp47: pack.bcp47,
+          dateNotes: pack.dateNotes,
+          numberNotes: pack.numberNotes,
+          currencyCode: pack.currencyCode,
+          currencyNotes: pack.currencyNotes,
+          honorifics: pack.honorifics as unknown as Prisma.JsonValue,
+          doNotTranslate: pack.doNotTranslate as unknown as Prisma.JsonValue,
+          culturalNotes: pack.culturalNotes,
+          updatedAt: new Date(0),
+        }),
+      );
+    }
     const rows = await this.prisma.localePack.findMany({
       include: {
         language: {
