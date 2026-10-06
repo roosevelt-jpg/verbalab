@@ -81,13 +81,36 @@ describe('Locale packs', () => {
     expect(formatLocaleCurrency(10, 'sw-TZ', 'TZS')).toMatch(/10|TZS|TSh/i);
   });
 
-  it('GET /v1/locales lists seeded packs including sw/yo/am', async () => {
+  it('GET /v1/locales lists seeded packs for every registry language including ak-GH', async () => {
     const res = await request(app.getHttpServer()).get('/v1/locales').expect(200);
     const codes = res.body.data.map((p: { languageCode: string }) => p.languageCode);
-    expect(codes).toEqual(expect.arrayContaining(['en', 'fr', 'sw', 'yo', 'am']));
+    expect(codes).toEqual(expect.arrayContaining(['en', 'fr', 'sw', 'yo', 'am', 'ak', 'ee', 'pcm']));
+    expect(codes.length).toBeGreaterThanOrEqual(40);
+    const ak = res.body.data.find((p: { languageCode: string; bcp47: string }) => p.languageCode === 'ak');
+    expect(ak.bcp47).toBe('ak-GH');
+    expect(ak.currencyCode).toBe('GHS');
     const sw = res.body.data.find((p: { languageCode: string }) => p.languageCode === 'sw');
     expect(sw.currencyCode).toBe('TZS');
     expect(sw.doNotTranslate).toContain('Nairobi');
+  });
+
+  it('accepts BCP-47 locale codes on translate (ak-GH → ak)', async () => {
+    const org = await seedOrg(prisma, `lbcp_${Date.now()}`);
+    const key = await apiKeys.create({
+      organizationId: org.id,
+      workspaceId: org.workspaces[0].id,
+      userId: org.memberships[0].userId,
+      name: 'locale-bcp47',
+    });
+
+    const res = await request(app.getHttpServer())
+      .post('/v1/translate')
+      .set('Authorization', `Bearer ${key.secret}`)
+      .send({ text: 'Good morning', source: 'en-US', target: 'ak-GH' })
+      .expect(200);
+
+    expect(res.body.source).toBe('en');
+    expect(res.body.target).toBe('ak');
   });
 
   it('GET /v1/locales/:code/examples returns Intl samples', async () => {
