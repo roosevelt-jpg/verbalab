@@ -97,6 +97,15 @@ export class ContextRuntimeService {
             promptContext?: string;
             blocks?: ContextBlock[];
             included?: string[];
+            query?: string | null;
+            compression?: {
+              maxChars: number;
+              beforeChars: number;
+              afterChars: number;
+              truncated: boolean;
+              method: string;
+            };
+            prioritization?: { order: string[]; overrides: Record<string, number> };
           };
           if (typeof value.promptContext === 'string') {
             await this.audit.record({
@@ -108,7 +117,18 @@ export class ContextRuntimeService {
               metadata: { cache: 'hit', chars: value.promptContext.length },
             });
             return {
-              ...value,
+              promptContext: value.promptContext,
+              blocks: value.blocks ?? [],
+              included: value.included ?? [],
+              query: value.query ?? input.query ?? null,
+              compression: value.compression ?? {
+                maxChars,
+                beforeChars: value.promptContext.length,
+                afterChars: value.promptContext.length,
+                truncated: false,
+                method: 'cache_hit',
+              },
+              prioritization: value.prioritization ?? { order: [], overrides: {} },
               assembledAt: new Date().toISOString(),
               organizationId: input.organizationId,
               workspaceId: input.workspaceId,

@@ -15,7 +15,7 @@ export class NestHealthcareIntelligenceCatalogAdapter implements HealthcareIntel
   }
 
   listProducts(): HealthcareIntelligenceProductRow[] {
-    const bundle = this.engine() as { products?: HealthcareIntelligenceProductRow[]; capabilities?: HealthcareIntelligenceProductRow[] };
+    const bundle = this.engine() as unknown as { products?: HealthcareIntelligenceProductRow[]; capabilities?: HealthcareIntelligenceProductRow[] };
     if (Array.isArray(bundle.products)) return bundle.products;
     if (Array.isArray(bundle.capabilities)) {
       return bundle.capabilities.map((c) => ({

@@ -15,7 +15,7 @@ export class NestAfricanKnowledgeGraphCatalogAdapter implements AfricanKnowledge
   }
 
   listProducts(): AfricanKnowledgeGraphProductRow[] {
-    const bundle = this.engine() as { products?: AfricanKnowledgeGraphProductRow[]; capabilities?: AfricanKnowledgeGraphProductRow[] };
+    const bundle = this.engine() as unknown as { products?: AfricanKnowledgeGraphProductRow[]; capabilities?: AfricanKnowledgeGraphProductRow[] };
     if (Array.isArray(bundle.products)) return bundle.products;
     if (Array.isArray(bundle.capabilities)) {
       return bundle.capabilities.map((c) => ({

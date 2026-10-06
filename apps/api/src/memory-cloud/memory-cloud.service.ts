@@ -519,7 +519,7 @@ export class MemoryCloudService {
       erases: analytics.erases,
       gdprExport: engine.honesty.gdprExport,
       gdprErase: engine.honesty.gdprErase,
-      deferred: engine.capabilities.filter((c) => c.status === 'deferred').map((c) => c.id),
+      deferred: engine.capabilities.filter((c) => (c.status as string) === 'deferred').map((c) => c.id),
       note: 'Memory Cloud monitoring snapshot.',
     };
   }

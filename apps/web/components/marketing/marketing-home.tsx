@@ -43,7 +43,6 @@ export function MarketingHome({ content }: { content: CmsDocument }) {
               {hero.media.videoUrl ? (
                 <video src={hero.media.videoUrl} autoPlay muted loop playsInline />
               ) : (
-                // eslint-disable-next-line @next/next/no-img-element
                 <img src={hero.media.imageUrl} alt="" />
               )}
             </div>
@@ -210,7 +209,6 @@ export function MarketingHome({ content }: { content: CmsDocument }) {
                     {creative.media.videoUrl ? (
                       <video src={creative.media.videoUrl} controls playsInline />
                     ) : (
-                      // eslint-disable-next-line @next/next/no-img-element
                       <img src={creative.media.imageUrl} alt={creative.media.alt ?? ''} />
                     )}
                   </div>
@@ -253,7 +251,6 @@ export function MarketingHome({ content }: { content: CmsDocument }) {
                     {agents.media.videoUrl ? (
                       <video src={agents.media.videoUrl} controls playsInline />
                     ) : (
-                      // eslint-disable-next-line @next/next/no-img-element
                       <img src={agents.media.imageUrl} alt={agents.media.alt ?? ''} />
                     )}
                   </div>

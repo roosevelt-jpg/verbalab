@@ -367,7 +367,7 @@ export class IntelligentCacheService {
       honesty: engine.honesty,
       spendSafety: engine.spendSafety,
       deferred: engine.capabilities
-        .filter((c) => c.status === 'deferred')
+        .filter((c) => (c.status as string) === 'deferred')
         .map((c) => c.id),
       note: 'Intelligent Cache monitoring snapshot.',
     };

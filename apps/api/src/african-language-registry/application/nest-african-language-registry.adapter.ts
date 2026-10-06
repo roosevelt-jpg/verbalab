@@ -15,7 +15,7 @@ export class NestAfricanLanguageRegistryCatalogAdapter implements AfricanLanguag
   }
 
   listProducts(): AfricanLanguageRegistryProductRow[] {
-    const bundle = this.engine() as { products?: AfricanLanguageRegistryProductRow[]; capabilities?: AfricanLanguageRegistryProductRow[] };
+    const bundle = this.engine() as unknown as { products?: AfricanLanguageRegistryProductRow[]; capabilities?: AfricanLanguageRegistryProductRow[] };
     if (Array.isArray(bundle.products)) return bundle.products;
     if (Array.isArray(bundle.capabilities)) {
       return bundle.capabilities.map((c) => ({

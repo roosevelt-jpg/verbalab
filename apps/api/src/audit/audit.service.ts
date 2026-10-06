@@ -9,7 +9,7 @@ export type AuditRecordInput = {
   route?: string;
   ip?: string;
   apiKeyPrefix?: string;
-  metadata?: Prisma.InputJsonValue;
+  metadata?: Prisma.InputJsonValue | Record<string, unknown>;
 };
 
 @Injectable()
@@ -25,7 +25,7 @@ export class AuditService {
         route: input.route,
         ip: input.ip,
         apiKeyPrefix: input.apiKeyPrefix,
-        metadata: input.metadata,
+        metadata: input.metadata as Prisma.InputJsonValue | undefined,
       },
     });
   }

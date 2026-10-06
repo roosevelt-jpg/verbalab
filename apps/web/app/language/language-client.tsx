@@ -126,7 +126,7 @@ export function LanguageClient() {
                       </div>
                     </div>
                     {p.console ? (
-                      <Link href={p.console} style={{ color: 'var(--accent)', fontWeight: 550, fontSize: '0.9rem' }}>
+                      <Link href={(p.console) ?? '#'} style={{ color: 'var(--accent)', fontWeight: 550, fontSize: '0.9rem' }}>
                         Open →
                       </Link>
                     ) : null}
@@ -137,40 +137,40 @@ export function LanguageClient() {
           </section>
 
           <section style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-            <Link href={data.links.translate} style={primary}>
+            <Link href={(data.links.translate) ?? '#'} style={primary}>
               Translate
             </Link>
-            <Link href={data.links.dialects} style={secondary}>
+            <Link href={(data.links.dialects) ?? '#'} style={secondary}>
               Dialects
             </Link>
-            <Link href={data.links.accents} style={secondary}>
+            <Link href={(data.links.accents) ?? '#'} style={secondary}>
               Accents
             </Link>
-            <Link href={data.links.grammar} style={secondary}>
+            <Link href={(data.links.grammar) ?? '#'} style={secondary}>
               Grammar
             </Link>
-            <Link href={data.links.style} style={secondary}>
+            <Link href={(data.links.style) ?? '#'} style={secondary}>
               Style
             </Link>
-            <Link href={data.links.countries} style={secondary}>
+            <Link href={(data.links.countries) ?? '#'} style={secondary}>
               Countries
             </Link>
             <Link href={data.links.registry ?? '/registry'} style={secondary}>
               Registry
             </Link>
-            <Link href={data.links.graphql} style={secondary}>
+            <Link href={(data.links.graphql) ?? '#'} style={secondary}>
               GraphQL
             </Link>
-            <Link href={data.links.glossary} style={secondary}>
+            <Link href={(data.links.glossary) ?? '#'} style={secondary}>
               Glossary
             </Link>
-            <Link href={data.links.tm} style={secondary}>
+            <Link href={(data.links.tm) ?? '#'} style={secondary}>
               TM
             </Link>
-            <Link href={data.links.coverage} style={secondary}>
+            <Link href={(data.links.coverage) ?? '#'} style={secondary}>
               Coverage
             </Link>
-            <Link href={data.links.analytics} style={secondary}>
+            <Link href={(data.links.analytics) ?? '#'} style={secondary}>
               Analytics
             </Link>
           </section>

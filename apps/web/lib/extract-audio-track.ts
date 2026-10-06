@@ -42,7 +42,7 @@ function mixToMono(buffer: AudioBuffer): Float32Array {
   for (let c = 0; c < channels; c++) {
     const data = buffer.getChannelData(c);
     for (let i = 0; i < length; i++) {
-      out[i] += (data[i] ?? 0) / channels;
+      out[i] = (out[i] ?? 0) + (data[i] ?? 0) / channels;
     }
   }
   return out;

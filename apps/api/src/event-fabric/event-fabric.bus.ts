@@ -357,7 +357,7 @@ export class EventFabricBus implements OnModuleInit, OnModuleDestroy {
         return rows.map(([id, fields]) => {
           const payloadIdx = fields.indexOf('payload');
           const raw = payloadIdx >= 0 ? fields[payloadIdx + 1] : '{}';
-          const event = JSON.parse(raw) as CloudEvent;
+          const event = JSON.parse(raw ?? '{}') as CloudEvent;
           event.streamId = id;
           return event;
         });
@@ -396,7 +396,7 @@ export class EventFabricBus implements OnModuleInit, OnModuleDestroy {
       const list = this.dlq.get(topic) ?? [];
       const idx = list.findIndex((e) => e.streamId === params.streamId);
       if (idx >= 0) {
-        event = list[idx];
+        event = list[idx] ?? null;
         list.splice(idx, 1);
         this.dlq.set(topic, list);
       }
@@ -436,7 +436,7 @@ export class EventFabricBus implements OnModuleInit, OnModuleDestroy {
         const events = rows.map(([id, fields]) => {
           const payloadIdx = fields.indexOf('payload');
           const raw = payloadIdx >= 0 ? fields[payloadIdx + 1] : '{}';
-          const event = JSON.parse(raw) as CloudEvent;
+          const event = JSON.parse(raw ?? '{}') as CloudEvent;
           event.streamId = id;
           return event;
         });

@@ -340,31 +340,3 @@ export function BillingClient() {
   );
 }
 
-function Stat({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="vl-endpoint-card">
-      <div
-        style={{
-          color: 'var(--muted)',
-          fontSize: '0.8rem',
-          fontWeight: 600,
-          letterSpacing: '0.04em',
-          textTransform: 'uppercase',
-        }}
-      >
-        {label}
-      </div>
-      <div
-        style={{
-          fontFamily: 'var(--font-display)',
-          fontSize: '1.35rem',
-          fontWeight: 700,
-          marginTop: 4,
-          color: 'var(--brand-navy)',
-        }}
-      >
-        {value}
-      </div>
-    </div>
-  );
-}

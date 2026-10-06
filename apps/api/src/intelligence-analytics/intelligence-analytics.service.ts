@@ -70,11 +70,11 @@ export class IntelligenceAnalyticsService {
       if (e.feature === 'chat') {
         chat.requests += 1;
         chat.tokens += e.units;
-        chat.byProvider[e.provider] = (chat.byProvider[e.provider] ?? 0) + e.units;
+        chat.byProvider[e.provider ?? 'unknown'] = (chat.byProvider[e.provider ?? 'unknown'] ?? 0) + e.units;
       } else {
         embeddings.requests += 1;
         embeddings.tokens += e.units;
-        embeddings.byProvider[e.provider] = (embeddings.byProvider[e.provider] ?? 0) + e.units;
+        embeddings.byProvider[e.provider ?? 'unknown'] = (embeddings.byProvider[e.provider ?? 'unknown'] ?? 0) + e.units;
       }
     }
 

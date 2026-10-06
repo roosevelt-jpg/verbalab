@@ -15,7 +15,7 @@ export class NestAfricanIntelligenceCloudCatalogAdapter implements AfricanIntell
   }
 
   listProducts(): AfricanIntelligenceCloudProductRow[] {
-    const bundle = this.engine() as { products?: AfricanIntelligenceCloudProductRow[]; capabilities?: AfricanIntelligenceCloudProductRow[] };
+    const bundle = this.engine() as unknown as { products?: AfricanIntelligenceCloudProductRow[]; capabilities?: AfricanIntelligenceCloudProductRow[] };
     if (Array.isArray(bundle.products)) return bundle.products;
     if (Array.isArray(bundle.capabilities)) {
       return bundle.capabilities.map((c) => ({

@@ -62,13 +62,11 @@ export function globalSchedulerEngineCatalog() {
       schedulesInferenceJobs: true,
       runsInference: false,
       extendsPlatformScheduler: true,
-      executesInference: false,
       regeneratesPriorLayers: false,
       integratesExistingSystems: true,
       controlPlaneManagementLayer: true,
     },
     safety: {
-      executesInference: false,
       executesInference: false,
       note: 'Global Scheduler. Jobs/cron/distributed/workflow/training/inference scheduling control — does not run inference. executesInference=false.',
     },

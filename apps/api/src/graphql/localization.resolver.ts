@@ -24,7 +24,7 @@ type GqlReq = Request & {
 @Resolver()
 export class LocalizationGraphqlResolver {
   constructor(
-    private readonly localize: LocalizeService,
+    private readonly localizeService: LocalizeService,
     private readonly platform: LocalizationPlatformService,
   ) {}
 
@@ -49,9 +49,9 @@ export class LocalizationGraphqlResolver {
     const format = input.format === 'yaml' ? 'yaml' : 'json';
     const content =
       typeof input.content === 'string'
-        ? this.localize.parseContent(format, input.content)
+        ? this.localizeService.parseContent(format, input.content)
         : JSON.parse(input.content);
-    const result = await this.localize.localize({
+    const result = await this.localizeService.localize({
       format,
       content,
       source: input.source,

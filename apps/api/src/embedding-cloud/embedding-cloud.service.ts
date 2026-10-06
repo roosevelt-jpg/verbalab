@@ -106,7 +106,7 @@ export class EmbeddingCloudService {
     const byProvider: Record<string, number> = {};
     for (const e of events) {
       tokens += e.units;
-      byProvider[e.provider] = (byProvider[e.provider] ?? 0) + e.units;
+      byProvider[e.provider ?? 'unknown'] = (byProvider[e.provider ?? 'unknown'] ?? 0) + e.units;
     }
 
     const byModality: Record<string, number> = {};

@@ -129,16 +129,16 @@ export function GatewayClient() {
           </section>
 
           <section style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-            <Link href={data.links.models} style={linkBtn}>
+            <Link href={(data.links.models) ?? '#'} style={linkBtn}>
               Models
             </Link>
-            <Link href={data.links.finetunes} style={linkBtn}>
+            <Link href={(data.links.finetunes) ?? '#'} style={linkBtn}>
               Fine-tunes
             </Link>
-            <Link href={data.links.chat} style={linkBtn}>
+            <Link href={(data.links.chat) ?? '#'} style={linkBtn}>
               Chat
             </Link>
-            <Link href={data.links.audio} style={linkBtn}>
+            <Link href={(data.links.audio) ?? '#'} style={linkBtn}>
               Voice Studio
             </Link>
           </section>

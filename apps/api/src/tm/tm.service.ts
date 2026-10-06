@@ -432,7 +432,7 @@ export class TmService {
     let scored = candidates.map((c) => ({
       ...c,
       score: lexicalSimilarity(text, c.sourceText),
-      match: 'lexical' as const,
+      match: 'lexical' as 'lexical' | 'vector',
     }));
 
     const wantVector = mode === 'vector' || mode === 'auto';

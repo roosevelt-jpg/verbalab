@@ -27,6 +27,7 @@ type IncludeFlags = {
   historical?: boolean;
   knowledgeGraph?: boolean;
   prompt?: boolean;
+  memory?: boolean;
 };
 
 type ContextBlock = {

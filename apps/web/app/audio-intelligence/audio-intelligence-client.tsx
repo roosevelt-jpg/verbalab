@@ -69,7 +69,8 @@ export function AudioIntelligenceClient() {
         for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
         const blob = new Blob([bytes], { type: (body.mimeType as string) || 'audio/wav' });
         setIsolatedUrl(URL.createObjectURL(blob));
-        const { audioBase64: _drop, ...meta } = body as Record<string, unknown>;
+        const meta = { ...(body as Record<string, unknown>) };
+        delete meta.audioBase64;
         setResult(JSON.stringify(meta, null, 2));
       } else {
         setResult(JSON.stringify(body, null, 2));

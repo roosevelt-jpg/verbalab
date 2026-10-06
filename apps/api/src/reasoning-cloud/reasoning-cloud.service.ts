@@ -270,7 +270,7 @@ export class ReasoningCloudService {
 
       if (strategy === 'tool_selection') {
         const match = answer.match(/Selected tools:\s*(.+)/i);
-        selectedTools = match
+        selectedTools = match?.[1]
           ? match[1]
               .split(',')
               .map((s) => s.trim().toLowerCase())
@@ -354,7 +354,7 @@ export class ReasoningCloudService {
       reasonRequests: analytics.reasonRequests,
       customReasonerKernel: engine.honesty.customReasonerKernel,
       agentOs: engine.honesty.agentOs,
-      deferred: engine.capabilities.filter((c) => c.status === 'deferred').map((c) => c.id),
+      deferred: engine.capabilities.filter((c) => (c.status as string) === 'deferred').map((c) => c.id),
       note: 'Reasoning Cloud monitoring snapshot.',
     };
   }

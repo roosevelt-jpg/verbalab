@@ -75,7 +75,7 @@ export class VoiceAnalyticsService {
     };
     for (const e of events) {
       tts.characters += e.units;
-      tts.byProvider[e.provider] = (tts.byProvider[e.provider] ?? 0) + e.units;
+      tts.byProvider[e.provider ?? 'unknown'] = (tts.byProvider[e.provider ?? 'unknown'] ?? 0) + e.units;
     }
 
     const byAction: Record<string, number> = {};

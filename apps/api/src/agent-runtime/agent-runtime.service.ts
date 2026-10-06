@@ -309,7 +309,7 @@ export class AgentRuntimeService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const agents = [];
+    const agents: Array<{ id: string; name: string; permissions: string[] }> = [];
     for (const id of ids.slice(0, 6)) {
       agents.push(await this.requireAgent(input, id));
     }

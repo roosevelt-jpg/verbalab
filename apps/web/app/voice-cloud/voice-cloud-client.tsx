@@ -104,7 +104,7 @@ export function VoiceCloudClient() {
                       </div>
                     </div>
                     {p.console ? (
-                      <Link href={p.console} style={{ color: 'var(--accent)', fontWeight: 550, fontSize: '0.9rem' }}>
+                      <Link href={(p.console) ?? '#'} style={{ color: 'var(--accent)', fontWeight: 550, fontSize: '0.9rem' }}>
                         Open →
                       </Link>
                     ) : null}
@@ -127,7 +127,7 @@ export function VoiceCloudClient() {
             <Link href={data.links.voiceStudio ?? '/voice-studio'} style={secondary}>
               Voice Studio
             </Link>
-            <Link href={data.links.audio} style={secondary}>
+            <Link href={(data.links.audio) ?? '#'} style={secondary}>
               African studio
             </Link>
             <Link href={data.links.voiceBiometrics ?? '/voice-biometrics'} style={secondary}>
@@ -154,13 +154,13 @@ export function VoiceCloudClient() {
             <Link href={data.links.voiceAnalytics ?? '/voice-analytics'} style={secondary}>
               Voice Analytics
             </Link>
-            <Link href={data.links.usage} style={secondary}>
+            <Link href={(data.links.usage) ?? '#'} style={secondary}>
               Usage
             </Link>
-            <Link href={data.links.billing} style={secondary}>
+            <Link href={(data.links.billing) ?? '#'} style={secondary}>
               Billing
             </Link>
-            <Link href={data.links.graphql} style={secondary}>
+            <Link href={(data.links.graphql) ?? '#'} style={secondary}>
               GraphQL
             </Link>
           </section>

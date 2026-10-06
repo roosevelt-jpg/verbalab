@@ -15,7 +15,7 @@ export class NestEducationIntelligenceCatalogAdapter implements EducationIntelli
   }
 
   listProducts(): EducationIntelligenceProductRow[] {
-    const bundle = this.engine() as { products?: EducationIntelligenceProductRow[]; capabilities?: EducationIntelligenceProductRow[] };
+    const bundle = this.engine() as unknown as { products?: EducationIntelligenceProductRow[]; capabilities?: EducationIntelligenceProductRow[] };
     if (Array.isArray(bundle.products)) return bundle.products;
     if (Array.isArray(bundle.capabilities)) {
       return bundle.capabilities.map((c) => ({

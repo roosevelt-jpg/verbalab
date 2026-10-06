@@ -91,6 +91,7 @@ export class DialectsService implements OnModuleInit {
     text: string;
     language?: string;
     organizationId: string;
+    workspaceId?: string;
     userId?: string;
     apiKeyId?: string;
     ip?: string;
@@ -136,6 +137,21 @@ export class DialectsService implements OnModuleInit {
       .sort((a, b) => b.score - a.score);
 
     const best = scored[0];
+    if (!best) {
+      const empty = {
+        language,
+        languageConfidence,
+        languageProvider,
+        dialect: null as string | null,
+        dialectName: null as string | null,
+        confidence: 0,
+        provider: 'cues',
+        candidates: [] as DialectScore[],
+        note: 'No dialect candidates after scoring.',
+      };
+      await this.recordAudit(input, empty);
+      return empty;
+    }
     const second = scored[1]?.score ?? 0;
     const margin = best.score - second;
 

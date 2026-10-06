@@ -102,7 +102,7 @@ export function SpeechClient() {
                       </div>
                     </div>
                     {p.console ? (
-                      <Link href={p.console} style={{ color: 'var(--accent)', fontWeight: 550, fontSize: '0.9rem' }}>
+                      <Link href={(p.console) ?? '#'} style={{ color: 'var(--accent)', fontWeight: 550, fontSize: '0.9rem' }}>
                         Open →
                       </Link>
                     ) : null}
@@ -116,16 +116,16 @@ export function SpeechClient() {
             <Link href={data.links.recognition ?? '/speech-recognition'} style={primary}>
               STT Engine
             </Link>
-            <Link href={data.links.audio} style={secondary}>
+            <Link href={(data.links.audio) ?? '#'} style={secondary}>
               Voice Studio
             </Link>
             <Link href={data.links.speakers ?? '/speaker-intelligence'} style={secondary}>
               Speakers
             </Link>
-            <Link href={data.links.interpret} style={secondary}>
+            <Link href={(data.links.interpret) ?? '#'} style={secondary}>
               Interpreter
             </Link>
-            <Link href={data.links.voice} style={secondary}>
+            <Link href={(data.links.voice) ?? '#'} style={secondary}>
               Voice FAQ
             </Link>
             <Link href={data.links.emotion ?? '/emotion-intelligence'} style={secondary}>
@@ -149,16 +149,16 @@ export function SpeechClient() {
             <Link href={data.links.accentIntelligence ?? '/accent-intelligence'} style={secondary}>
               Accent AI
             </Link>
-            <Link href={data.links.accents} style={secondary}>
+            <Link href={(data.links.accents) ?? '#'} style={secondary}>
               Accents
             </Link>
-            <Link href={data.links.usage} style={secondary}>
+            <Link href={(data.links.usage) ?? '#'} style={secondary}>
               Usage
             </Link>
-            <Link href={data.links.billing} style={secondary}>
+            <Link href={(data.links.billing) ?? '#'} style={secondary}>
               Billing
             </Link>
-            <Link href={data.links.graphql} style={secondary}>
+            <Link href={(data.links.graphql) ?? '#'} style={secondary}>
               GraphQL
             </Link>
           </section>

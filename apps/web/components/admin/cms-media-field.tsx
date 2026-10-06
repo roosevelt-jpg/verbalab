@@ -105,7 +105,6 @@ export function CmsMediaField({ label, value, onChange, uploadLabel, onUploaded 
               style={{ display: 'block', width: '100%', maxHeight: 160, objectFit: 'cover' }}
             />
           ) : value?.imageUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={value.imageUrl}
               alt={value.alt ?? label}

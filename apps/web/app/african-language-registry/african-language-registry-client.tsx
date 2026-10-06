@@ -85,7 +85,7 @@ export function AfricanLanguageRegistryClient() {
         setData({
           ...engine,
           languages: langs.languages,
-          counts: langs.counts ?? engine.counts,
+          counts: ('counts' in langs ? langs.counts : undefined) ?? engine.counts,
         });
       })
       .catch((err: Error) => setError(err.message));

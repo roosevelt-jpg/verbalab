@@ -62,7 +62,6 @@ export function globalConfigurationPlatformEngineCatalog() {
       neverReturnsPlaintextSecrets: true,
       regeneratesPriorLayers: false,
       executesInference: false,
-      regeneratesPriorLayers: false,
       integratesExistingSystems: true,
       controlPlaneManagementLayer: true,
     },

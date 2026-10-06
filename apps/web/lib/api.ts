@@ -26,15 +26,35 @@ export function setStoredAdminOrgId(id: string | null) {
   else window.localStorage.setItem(ADMIN_ORG_STORAGE_KEY, id);
 }
 
+type ApiFetchOptions = Omit<RequestInit, 'body'> & {
+  token?: string;
+  workspaceId?: string | null;
+  organizationId?: string | null;
+  /** JSON-serializable object, FormData, string, or other BodyInit. Objects are stringified. */
+  body?: BodyInit | Record<string, unknown> | unknown[] | object | null;
+};
+
+function toBodyInit(body: ApiFetchOptions['body']): BodyInit | null | undefined {
+  if (body == null) return body;
+  if (
+    typeof body === 'string' ||
+    body instanceof FormData ||
+    body instanceof Blob ||
+    body instanceof ArrayBuffer ||
+    ArrayBuffer.isView(body) ||
+    body instanceof URLSearchParams ||
+    (typeof ReadableStream !== 'undefined' && body instanceof ReadableStream)
+  ) {
+    return body as BodyInit;
+  }
+  return JSON.stringify(body);
+}
+
 export async function apiFetch<T>(
   path: string,
-  options: RequestInit & {
-    token?: string;
-    workspaceId?: string | null;
-    organizationId?: string | null;
-  } = {},
+  options: ApiFetchOptions = {},
 ): Promise<T> {
-  const { token, workspaceId, organizationId, headers, ...rest } = options;
+  const { token, workspaceId, organizationId, headers, body, ...rest } = options;
   const ws =
     workspaceId === null
       ? undefined
@@ -44,10 +64,12 @@ export async function apiFetch<T>(
       ? undefined
       : organizationId ?? (typeof window !== 'undefined' ? getStoredAdminOrgId() : null);
 
+  const serialized = toBodyInit(body);
   const response = await fetch(`${API_URL}${path}`, {
     ...rest,
+    body: serialized,
     headers: {
-      ...(rest.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
+      ...(serialized instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(ws ? { 'X-Lugemi-Workspace-Id': ws } : {}),
       ...(org ? { 'X-Lugemi-Organization-Id': org } : {}),
@@ -55,15 +77,15 @@ export async function apiFetch<T>(
     },
   });
 
-  const body = (await response.json().catch(() => ({}))) as T & {
+  const payload = (await response.json().catch(() => ({}))) as T & {
     error?: { code: string; message: string };
   };
 
   if (!response.ok) {
-    throw new Error(body.error?.message ?? `Request failed (${response.status})`);
+    throw new Error(payload.error?.message ?? `Request failed (${response.status})`);
   }
 
-  return body as T;
+  return payload as T;
 }
 
 export { API_URL };

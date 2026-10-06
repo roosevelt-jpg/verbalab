@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
@@ -194,7 +195,7 @@ export class BatchRuntimeService {
           extendsBullMqJobs: kind === 'translation',
           sandboxLogicalOnly: kind !== 'translation',
           items: scheduled || kind !== 'translation' ? items.slice(0, ceilings.maxItemsPerRun) : undefined,
-        },
+        } as Prisma.InputJsonValue,
       },
     });
 

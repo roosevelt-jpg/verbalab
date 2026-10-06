@@ -104,15 +104,23 @@ export class FineTunesService implements OnModuleInit {
     });
     this.readyByPair.clear();
     for (const row of rows) {
-      if (!isFineTuneArtifactKind(row.artifactKind)) continue;
+      if (
+        !row.artifactKind ||
+        !row.sourceLang ||
+        !row.targetLang ||
+        !row.slug ||
+        !isFineTuneArtifactKind(row.artifactKind)
+      ) {
+        continue;
+      }
       this.readyByPair.set(this.pairMapKey(row.sourceLang, row.targetLang), {
         id: row.id,
         slug: row.slug,
         sourceLang: row.sourceLang,
         targetLang: row.targetLang,
         artifactKind: row.artifactKind,
-        artifactUri: row.artifactUri,
-        baseModel: row.baseModel,
+        artifactUri: row.artifactUri ?? '',
+        baseModel: row.baseModel ?? '',
       });
     }
   }

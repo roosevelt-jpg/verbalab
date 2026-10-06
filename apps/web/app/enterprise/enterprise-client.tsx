@@ -85,7 +85,7 @@ export function EnterpriseClient() {
             {data.platformAdmin ? (
               <p style={{ margin: '0.35rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
                 Platform admin allowlist ·{' '}
-                <Link href={data.links.admin} style={{ color: 'var(--accent)' }}>
+                <Link href={(data.links.admin) ?? '#'} style={{ color: 'var(--accent)' }}>
                   Admin console
                 </Link>
               </p>
@@ -99,7 +99,7 @@ export function EnterpriseClient() {
               {p.security.apiKeysActive} active API keys · ABAC {p.security.abac ? 'on' : 'off'}
             </p>
             <p style={{ margin: '0.65rem 0 0' }}>
-              <Link href={data.links.identity} style={{ color: 'var(--accent)', fontWeight: 550 }}>
+              <Link href={(data.links.identity) ?? '#'} style={{ color: 'var(--accent)', fontWeight: 550 }}>
                 Identity & RBAC →
               </Link>
             </p>
@@ -117,7 +117,7 @@ export function EnterpriseClient() {
               {p.compliance.certificationsProduct ? 'yes' : 'no'}
             </p>
             <p style={{ margin: '0.65rem 0 0' }}>
-              <Link href={data.links.data} style={{ color: 'var(--accent)', fontWeight: 550 }}>
+              <Link href={(data.links.data) ?? '#'} style={{ color: 'var(--accent)', fontWeight: 550 }}>
                 Data settings & residency →
               </Link>
             </p>
@@ -130,7 +130,7 @@ export function EnterpriseClient() {
               {p.billing.characterQuota.toLocaleString()} characters
             </p>
             <p style={{ margin: '0.65rem 0 0' }}>
-              <Link href={data.links.billing} style={{ color: 'var(--accent)', fontWeight: 550 }}>
+              <Link href={(data.links.billing) ?? '#'} style={{ color: 'var(--accent)', fontWeight: 550 }}>
                 Billing →
               </Link>
             </p>
@@ -164,10 +164,10 @@ export function EnterpriseClient() {
           </section>
 
           <section style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
-            <Link href={data.links.audit} style={secondaryLink}>
+            <Link href={(data.links.audit) ?? '#'} style={secondaryLink}>
               Audit log
             </Link>
-            <Link href={data.links.workspaces} style={secondaryLink}>
+            <Link href={(data.links.workspaces) ?? '#'} style={secondaryLink}>
               Dashboard
             </Link>
           </section>

@@ -54,7 +54,7 @@ export class LanguageCloudGraphqlResolver {
   constructor(
     private readonly commands: CommandBus,
     private readonly queries: QueryBus,
-    private readonly countryPacks: CountryPacksService,
+    private readonly countryPacksService: CountryPacksService,
     private readonly languagesService: LanguagesService,
     private readonly dialectsService: DialectsService,
     private readonly localesService: LocalesService,
@@ -63,7 +63,7 @@ export class LanguageCloudGraphqlResolver {
 
   @Query(() => GqlCountryEngine, { name: 'countryEngine' })
   countryEngine(): GqlCountryEngine {
-    const catalog = this.countryPacks.engine();
+    const catalog = this.countryPacksService.engine();
     return {
       product: catalog.product,
       note: catalog.note,

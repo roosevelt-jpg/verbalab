@@ -23,7 +23,7 @@ type GqlReq = Request & {
 @Resolver()
 export class TranslateGraphqlResolver {
   constructor(
-    private readonly translate: TranslateService,
+    private readonly translateService: TranslateService,
     private readonly formats: TranslateFormatsService,
   ) {}
 
@@ -45,7 +45,7 @@ export class TranslateGraphqlResolver {
     @Context('req') req: GqlReq,
   ): Promise<GqlTranslateResult> {
     const auth = req.translateAuth!;
-    const result = await this.translate.translate({
+    const result = await this.translateService.translate({
       text: input.text,
       source: input.source,
       target: input.target,

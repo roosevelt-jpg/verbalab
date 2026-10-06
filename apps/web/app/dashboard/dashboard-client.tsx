@@ -202,7 +202,6 @@ export function DashboardClient() {
               <div className="lg-workspace-profile__row">
                 <label className="lg-workspace-avatar" title="Set profile image">
                   {profile.imageDataUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
                     <img src={profile.imageDataUrl} alt="" />
                   ) : (
                     <span aria-hidden="true">LG</span>

@@ -63,11 +63,11 @@ export class SpeechAnalyticsService {
       if (e.feature === 'stt') {
         stt.requests += 1;
         stt.seconds += e.units;
-        stt.byProvider[e.provider] = (stt.byProvider[e.provider] ?? 0) + e.units;
+        stt.byProvider[e.provider ?? 'unknown'] = (stt.byProvider[e.provider ?? 'unknown'] ?? 0) + e.units;
       } else {
         tts.requests += 1;
         tts.characters += e.units;
-        tts.byProvider[e.provider] = (tts.byProvider[e.provider] ?? 0) + e.units;
+        tts.byProvider[e.provider ?? 'unknown'] = (tts.byProvider[e.provider ?? 'unknown'] ?? 0) + e.units;
       }
     }
 

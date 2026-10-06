@@ -144,33 +144,33 @@ export function LanguageIntegrityClient() {
           <div style={{ display: 'grid', gap: '0.55rem', gridTemplateColumns: 'repeat(auto-fit, minmax(11rem, 1fr))' }}>
             <StatusChip
               label="Watermark on clones"
-              ok={engine.trust.watermarkRequiredOnCloneSpeech}
+              ok={engine.trust.watermarkRequiredOnCloneSpeech === true}
               detail="X-Lugemi-Watermark: required"
             />
             <StatusChip
               label="Consent gate"
-              ok={engine.trust.consentRequiredForClones}
+              ok={engine.trust.consentRequiredForClones === true}
               detail="Enrollment attestation required"
             />
             <StatusChip
               label="Abuse review"
-              ok={engine.trust.abuseReviewRequired}
+              ok={engine.trust.abuseReviewRequired === true}
               detail="pending_review → approve"
             />
             <StatusChip
               label="Human translation review"
-              ok={engine.trust.humanTranslationReview}
+              ok={engine.trust.humanTranslationReview === true}
               detail="/reviews accept · reject"
             />
             <StatusChip
               label="Deepfake detector claim"
-              ok={!engine.trust.deepfakeDetectionClaimed}
+              ok={engine.trust.deepfakeDetectionClaimed !== true}
               detail="Not claimed — metadata only"
               invert
             />
             <StatusChip
               label="Court certification claim"
-              ok={!engine.trust.courtroomCertificationClaimed}
+              ok={engine.trust.courtroomCertificationClaimed !== true}
               detail="Counsel decides admissibility"
               invert
             />

@@ -18,7 +18,6 @@ function GuideCard({ section }: { section: CmsPageSection }) {
           {section.media.videoUrl ? (
             <video src={section.media.videoUrl} controls playsInline />
           ) : (
-            // eslint-disable-next-line @next/next/no-img-element
             <img src={section.media.imageUrl} alt={section.media.alt ?? section.title} />
           )}
         </div>

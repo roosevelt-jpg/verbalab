@@ -173,11 +173,14 @@ function softSandboxTranslate(text: string, target: string): string | null {
 
 export async function GET() {
   return NextResponse.json({
-    pairs: DEMO_PAIRS.map(({ translated: _t, ...meta }) => ({
-      ...meta,
-      // Include translation for demo client so playback works offline of OpenAI
-      translated: DEMO_PAIRS.find((p) => p.id === meta.id)?.translated,
-    })),
+    pairs: DEMO_PAIRS.map((pair) => {
+      const { translated, ...meta } = pair;
+      return {
+        ...meta,
+        // Include translation for demo client so playback works offline of OpenAI
+        translated,
+      };
+    }),
   });
 }
 

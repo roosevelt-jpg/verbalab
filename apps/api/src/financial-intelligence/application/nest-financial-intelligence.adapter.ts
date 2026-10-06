@@ -15,7 +15,7 @@ export class NestFinancialIntelligenceCatalogAdapter implements FinancialIntelli
   }
 
   listProducts(): FinancialIntelligenceProductRow[] {
-    const bundle = this.engine() as { products?: FinancialIntelligenceProductRow[]; capabilities?: FinancialIntelligenceProductRow[] };
+    const bundle = this.engine() as unknown as { products?: FinancialIntelligenceProductRow[]; capabilities?: FinancialIntelligenceProductRow[] };
     if (Array.isArray(bundle.products)) return bundle.products;
     if (Array.isArray(bundle.capabilities)) {
       return bundle.capabilities.map((c) => ({

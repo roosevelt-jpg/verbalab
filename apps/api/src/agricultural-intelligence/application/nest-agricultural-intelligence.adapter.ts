@@ -15,7 +15,7 @@ export class NestAgriculturalIntelligenceCatalogAdapter implements AgriculturalI
   }
 
   listProducts(): AgriculturalIntelligenceProductRow[] {
-    const bundle = this.engine() as { products?: AgriculturalIntelligenceProductRow[]; capabilities?: AgriculturalIntelligenceProductRow[] };
+    const bundle = this.engine() as unknown as { products?: AgriculturalIntelligenceProductRow[]; capabilities?: AgriculturalIntelligenceProductRow[] };
     if (Array.isArray(bundle.products)) return bundle.products;
     if (Array.isArray(bundle.capabilities)) {
       return bundle.capabilities.map((c) => ({

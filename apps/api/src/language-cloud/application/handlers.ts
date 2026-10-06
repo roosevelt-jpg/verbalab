@@ -123,7 +123,7 @@ export class ListCountryPacksHandler implements IQueryHandler<ListCountryPacksQu
 export class ListStyleProfilesHandler implements IQueryHandler<ListStyleProfilesQuery> {
   constructor(@Inject(LANGUAGE_REGISTRY_PORT) private readonly registry: LanguageRegistryPort) {}
 
-  execute() {
+  async execute(_query: ListStyleProfilesQuery) {
     return this.registry.listStyleProfiles();
   }
 }
@@ -133,7 +133,7 @@ export class ListStyleProfilesHandler implements IQueryHandler<ListStyleProfiles
 export class ListLanguageProductsHandler implements IQueryHandler<ListLanguageProductsQuery> {
   constructor(@Inject(LANGUAGE_REGISTRY_PORT) private readonly registry: LanguageRegistryPort) {}
 
-  execute() {
+  async execute(_query: ListLanguageProductsQuery) {
     return this.registry.listLanguageProducts();
   }
 }

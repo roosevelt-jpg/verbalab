@@ -15,7 +15,7 @@ export class NestCulturalIntelligenceCatalogAdapter implements CulturalIntellige
   }
 
   listProducts(): CulturalIntelligenceProductRow[] {
-    const bundle = this.engine() as { products?: CulturalIntelligenceProductRow[]; capabilities?: CulturalIntelligenceProductRow[] };
+    const bundle = this.engine() as unknown as { products?: CulturalIntelligenceProductRow[]; capabilities?: CulturalIntelligenceProductRow[] };
     if (Array.isArray(bundle.products)) return bundle.products;
     if (Array.isArray(bundle.capabilities)) {
       return bundle.capabilities.map((c) => ({

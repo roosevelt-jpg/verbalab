@@ -44,8 +44,8 @@ export class ContinuousLearningService {
     }
     return {
       promoted: true,
-      autoPromote: false,
       ...check,
+      autoPromote: false,
       docs: '/docs/CONTINUOUS_LEARNING.md',
     };
   }

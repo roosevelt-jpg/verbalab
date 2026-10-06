@@ -46,7 +46,6 @@ export function AnamorphicPanel({
         {videoUrl ? (
           <video className="lg-ana__media" src={videoUrl} autoPlay muted loop playsInline />
         ) : imageUrl ? (
-          // eslint-disable-next-line @next/next/no-img-element
           <img className="lg-ana__media" src={imageUrl} alt="" />
         ) : (
           <>

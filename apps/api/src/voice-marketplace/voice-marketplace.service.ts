@@ -318,7 +318,7 @@ export class VoiceMarketplaceService {
         currency: (input.currency ?? 'usd').trim().toLowerCase() || 'usd',
         subscriptionInterval,
         status: 'published',
-        snapshot,
+        snapshot: snapshot as Prisma.InputJsonValue,
       },
       include: { publisherOrg: { select: { name: true } } },
     });

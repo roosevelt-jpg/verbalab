@@ -444,7 +444,7 @@ export class TaxonomyPlatformService {
       ...analytics,
       honesty: engine.honesty,
       deferred: engine.capabilities
-        .filter((c) => c.status === 'deferred')
+        .filter((c) => (c.status as string) === 'deferred')
         .map((c) => c.id),
       links: engine.links,
     };
