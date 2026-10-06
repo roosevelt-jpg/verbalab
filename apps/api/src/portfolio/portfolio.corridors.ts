@@ -1,124 +1,167 @@
-import { LANGUAGE_SEEDS, TOTAL_LANGUAGE_COUNT } from '../languages/language-seeds';
+import { LANGUAGE_SEEDS } from '../languages/language-seeds';
 import { LOCALE_PACK_SEEDS } from '../locales/locale-pack-seeds';
+import {
+  COUNTRY_PACK_COUNT,
+  COUNTRY_PACK_SEEDS,
+  type CountryPackSeed,
+} from '../country-packs/country-pack-seeds';
 
 export type PortfolioCorridor = {
   id: string;
   sourceTags: string[];
   varietyId: string;
+  /** Always includes country name in parentheses, e.g. Hausa–English (Nigeria). */
   label: string;
-  /** Strategic corridors with historical demo calibration. */
+  /** Design-partner corridors with historical demo calibration only. */
   evaluated: boolean;
   languageCode: string;
   nameEn: string;
   nameNative?: string;
   bcp47: string;
   tier: 'vendor' | 'strategic_african';
+  countryCode: string;
+  countryName: string;
+  region: string;
 };
 
-/** Prefer these locale varieties when multiple BCP-47 packs exist for a language. */
+const LANGUAGE_BY_CODE = new Map(LANGUAGE_SEEDS.map((l) => [l.code, l]));
+
 const PREFERRED_VARIETY: Record<string, string> = {
-  ak: 'ak-GH-twi',
-  yo: 'yo-NG',
-  ha: 'ha-NG',
-  sw: 'sw-TZ',
-  ig: 'ig-NG',
-  am: 'am-ET',
-  zu: 'zu-ZA',
-  xh: 'xh-ZA',
-  af: 'af-ZA',
-  ee: 'ee-GH',
-  fr: 'fr-SN',
-  ar: 'ar-EG',
-  pt: 'pt-AO',
-  pcm: 'pcm-NG',
-  bm: 'bm-ML',
-  ff: 'ff-SN',
-  ln: 'ln-CD',
-  lg: 'lg-UG',
-  rw: 'rw-RW',
-  sn: 'sn-ZW',
-  so: 'so-SO',
-  ti: 'ti-ET',
-  wo: 'wo-SN',
-  ny: 'ny-MW',
-  om: 'om-ET',
-  tn: 'tn-BW',
+  'ak-GH': 'ak-GH-twi',
+  'yo-NG': 'yo-NG',
+  'ha-NG': 'ha-NG',
+  'sw-TZ': 'sw-TZ',
+  'sw-KE': 'sw-KE',
+  'ig-NG': 'ig-NG',
+  'am-ET': 'am-ET',
+  'zu-ZA': 'zu-ZA',
+  'ee-GH': 'ee-GH',
+  'pcm-NG': 'pcm-NG',
 };
 
-/** Stable corridor ids for historically published strategic pairs. */
-const STABLE_CORRIDOR_IDS: Record<string, string> = {
-  ak: 'twi-english',
-  yo: 'yoruba-english',
-  ha: 'hausa-english',
-  sw: 'swahili-english',
-  ig: 'igbo-english',
-  am: 'amharic-english',
-  ee: 'ewe-english',
-  zu: 'zulu-english',
+const EVALUATED_VARIETIES = new Set(['ak-GH-twi', 'yo-NG']);
+
+const HISTORICAL_IDS: Record<string, string> = {
+  'ak-GH': 'twi-english',
+  'yo-NG': 'yoruba-english',
+  'ha-NG': 'hausa-english',
 };
 
-/** Corridors with historical demo calibration / design-partner evaluation. */
-const EVALUATED_CODES = new Set(['ak', 'yo', 'sw', 'ha', 'ig', 'am', 'ee', 'zu']);
-
-function primaryBcp47(languageCode: string): string {
-  const preferred = PREFERRED_VARIETY[languageCode];
-  if (preferred) {
-    const base = preferred.split('-').slice(0, 2).join('-');
-    const hit = LOCALE_PACK_SEEDS.find((p) => p.bcp47 === preferred || p.bcp47 === base);
-    if (hit) return preferred.includes('-twi') ? preferred : hit.bcp47;
-    return preferred;
-  }
-  const pack = LOCALE_PACK_SEEDS.find((p) => p.languageCode === languageCode);
-  return pack?.bcp47 ?? languageCode;
+function displayLanguageName(langCode: string, nameEn: string): string {
+  if (langCode === 'ak') return 'Twi';
+  return nameEn;
 }
 
-function corridorSlug(code: string, nameEn: string): string {
+function corridorSlug(nameEn: string, code: string, countryCode: string): string {
+  const historical = HISTORICAL_IDS[`${code}-${countryCode}`];
+  if (historical) return historical;
   const slug = nameEn
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '');
-  return `${slug || code}-english`;
+  return `${slug || code}-english-${countryCode.toLowerCase()}`;
 }
 
-/**
- * Full registry corridors: every non-English language ↔ English.
- * Catalog membership enables selection; evaluated=true only for strategic demos.
- */
+function regionFromBcp47(tag: string): string | null {
+  const parts = tag.split(/[-_]/);
+  for (let i = parts.length - 1; i >= 1; i--) {
+    const p = parts[i]!;
+    if (/^[A-Za-z]{2}$/.test(p)) return p.toUpperCase();
+  }
+  return null;
+}
+
+function languageFromBcp47(tag: string): string {
+  return tag.split(/[-_]/)[0]!.toLowerCase();
+}
+
+function varietyFor(langCode: string, countryCode: string, packTags: string[]): string {
+  const key = `${langCode}-${countryCode}`;
+  const preferred = PREFERRED_VARIETY[key];
+  if (preferred) {
+    if (preferred.includes('-twi')) return preferred;
+    const hit = LOCALE_PACK_SEEDS.find((p) => p.bcp47 === preferred);
+    if (hit) return hit.bcp47;
+    return preferred;
+  }
+  const fromPack = packTags.find((t) => languageFromBcp47(t) === langCode);
+  if (fromPack) return fromPack;
+  const fromLocale = LOCALE_PACK_SEEDS.find(
+    (p) => p.languageCode === langCode && regionFromBcp47(p.bcp47) === countryCode,
+  );
+  if (fromLocale) return fromLocale.bcp47;
+  return `${langCode}-${countryCode}`;
+}
+
+function languagesForCountry(pack: CountryPackSeed): string[] {
+  const codes = new Set<string>();
+  for (const lang of pack.primaryLanguages) {
+    if (lang !== 'en' && LANGUAGE_BY_CODE.has(lang)) codes.add(lang);
+  }
+  for (const tag of pack.bcp47Tags) {
+    const lang = languageFromBcp47(tag);
+    if (lang !== 'en' && LANGUAGE_BY_CODE.has(lang)) codes.add(lang);
+  }
+  return [...codes].sort();
+}
+
 export function buildPortfolioCorridors(): PortfolioCorridor[] {
   const corridors: PortfolioCorridor[] = [];
-  for (const lang of LANGUAGE_SEEDS) {
-    if (lang.code === 'en') continue;
-    const varietyId = primaryBcp47(lang.code);
-    const id = STABLE_CORRIDOR_IDS[lang.code] ?? corridorSlug(lang.code, lang.nameEn);
-    corridors.push({
-      id,
-      sourceTags: [lang.code, 'en'],
-      varietyId,
-      label: `${lang.nameEn}–English`,
-      evaluated: EVALUATED_CODES.has(lang.code),
-      languageCode: lang.code,
-      nameEn: lang.nameEn,
-      nameNative: lang.nameNative,
-      bcp47: varietyId.includes('-twi') ? 'ak-GH' : varietyId,
-      tier: lang.tier,
-    });
+  const seenIds = new Set<string>();
+
+  for (const pack of COUNTRY_PACK_SEEDS) {
+    for (const langCode of languagesForCountry(pack)) {
+      const lang = LANGUAGE_BY_CODE.get(langCode);
+      if (!lang) continue;
+      const varietyId = varietyFor(langCode, pack.code, pack.bcp47Tags);
+      const displayName = displayLanguageName(langCode, lang.nameEn);
+      const id = corridorSlug(displayName, langCode, pack.code);
+      if (seenIds.has(id)) continue;
+      seenIds.add(id);
+      corridors.push({
+        id,
+        sourceTags: [langCode, 'en'],
+        varietyId,
+        label: `${displayName}–English (${pack.nameEn})`,
+        evaluated: EVALUATED_VARIETIES.has(varietyId),
+        languageCode: langCode,
+        nameEn: displayName,
+        nameNative: lang.nameNative,
+        bcp47: varietyId.includes('-twi') ? 'ak-GH' : varietyId,
+        tier: lang.tier,
+        countryCode: pack.code,
+        countryName: pack.nameEn,
+        region: pack.region,
+      });
+    }
   }
+
   return corridors;
 }
 
 export const PORTFOLIO_CORRIDORS: PortfolioCorridor[] = buildPortfolioCorridors();
-
 export const PORTFOLIO_CORRIDOR_COUNT = PORTFOLIO_CORRIDORS.length;
+export const PORTFOLIO_COUNTRIES_COVERED = new Set(PORTFOLIO_CORRIDORS.map((c) => c.countryCode)).size;
+export const PORTFOLIO_COUNTRY_PACK_TOTAL = COUNTRY_PACK_COUNT;
 
-/** Expected: all registry languages except English. */
-export const EXPECTED_CORRIDOR_COUNT = TOTAL_LANGUAGE_COUNT - 1;
+export type PortfolioCountrySummary = {
+  code: string;
+  nameEn: string;
+  region: string;
+  corridorCount: number;
+};
 
-export function assertPortfolioCorridorsComplete() {
-  if (PORTFOLIO_CORRIDOR_COUNT !== EXPECTED_CORRIDOR_COUNT) {
-    throw new Error(
-      `PORTFOLIO_CORRIDORS has ${PORTFOLIO_CORRIDOR_COUNT}; expected ${EXPECTED_CORRIDOR_COUNT}`,
-    );
+export function portfolioCountrySummaries(): PortfolioCountrySummary[] {
+  const counts = new Map<string, number>();
+  for (const c of PORTFOLIO_CORRIDORS) {
+    counts.set(c.countryCode, (counts.get(c.countryCode) ?? 0) + 1);
   }
+  return COUNTRY_PACK_SEEDS.map((pack) => ({
+    code: pack.code,
+    nameEn: pack.nameEn,
+    region: pack.region,
+    corridorCount: counts.get(pack.code) ?? 0,
+  }));
 }
 
 export function findCorridorByLanguage(code: string): PortfolioCorridor | undefined {
@@ -127,7 +170,8 @@ export function findCorridorByLanguage(code: string): PortfolioCorridor | undefi
     (c) =>
       c.languageCode === normalized ||
       c.varietyId.toLowerCase() === normalized ||
-      c.id === normalized,
+      c.id === normalized ||
+      c.countryCode.toLowerCase() === normalized,
   );
 }
 

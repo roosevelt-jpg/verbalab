@@ -1,13 +1,10 @@
 'use client';
 
-import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import { API_URL, apiFetch } from '@/lib/api';
 import { PortfolioShell } from '@/components/portfolio/portfolio-shell';
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
 import { useDemoPlayer } from '@/components/marketing/use-demo-player';
-import { LocaleSelect } from '@/components/language-locale-select';
-import { SearchableCombobox } from '@/components/searchable-combobox';
-import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
 type MixResult = {
   original_transcript: string;
@@ -25,25 +22,15 @@ type MixResult = {
   variety_id: string | null;
 };
 
-type CorridorRow = {
-  id: string;
-  varietyId: string;
-  label: string;
-  languageCode: string;
-  evaluated: boolean;
-};
-
 export function MixClient() {
-  const catalog = useLocaleCatalog();
   const [apiKey, setApiKey] = useState('');
   const [target, setTarget] = useState('en');
-  const [sourcePrimary, setSourcePrimary] = useState('ak');
   const [textHint, setTextHint] = useState(
     'Caller provided name Kwame Mensah, amount five hundred, then corrected to fifty for tomorrow.',
   );
+  const [sourceHints, setSourceHints] = useState('ak,en');
   const [varietyId, setVarietyId] = useState('ak-GH-twi');
-  const [corridors, setCorridors] = useState<CorridorRow[]>([]);
-  const [corridorCount, setCorridorCount] = useState(0);
+  const [corridorOptions, setCorridorOptions] = useState<Array<{ value: string; label: string }>>([]);
   const [file, setFile] = useState<File | null>(null);
   const [result, setResult] = useState<MixResult | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -51,41 +38,17 @@ export function MixClient() {
   const { play, stop, playingId, loadingId } = useDemoPlayer();
 
   useEffect(() => {
-    void apiFetch<{ corridors: CorridorRow[]; total?: number; count?: number }>('/v1/portfolio/corridors')
-      .then((res) => {
-        setCorridors(res.corridors);
-        setCorridorCount(res.total ?? res.count ?? res.corridors.length);
-        const preferred =
-          res.corridors.find((c) => c.varietyId === 'ak-GH-twi') ?? res.corridors[0];
-        if (preferred) {
-          setVarietyId(preferred.varietyId);
-          setSourcePrimary(preferred.languageCode || 'ak');
-        }
-      })
+    void apiFetch<{ corridors: Array<{ varietyId: string; label: string; evaluated: boolean }> }>('/v1/portfolio/corridors')
+      .then((res) =>
+        setCorridorOptions(
+          res.corridors.map((c) => ({
+            value: c.varietyId,
+            label: `${c.label}${c.evaluated ? ' · evaluated' : ''}`,
+          })),
+        ),
+      )
       .catch(() => undefined);
   }, []);
-
-  const sourceHints = useMemo(() => {
-    const primary = sourcePrimary.trim().toLowerCase().split(/[-_]/)[0] || 'ak';
-    return primary === 'en' ? 'en' : `${primary},en`;
-  }, [sourcePrimary]);
-
-  const corridorOptions = useMemo(
-    () =>
-      corridors.map((c) => ({
-        value: c.varietyId,
-        label: `${c.label}${c.evaluated ? ' · strategic' : ''}`,
-        keywords: `${c.id} ${c.varietyId} ${c.languageCode} ${c.label}`,
-        group: c.evaluated ? 'Strategic' : 'Registry',
-      })),
-    [corridors],
-  );
-
-  function onVarietyChange(next: string) {
-    setVarietyId(next);
-    const hit = corridors.find((c) => c.varietyId === next);
-    if (hit?.languageCode) setSourcePrimary(hit.languageCode);
-  }
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -118,12 +81,10 @@ export function MixClient() {
     }
   }
 
-  const ledeCount = corridorCount || corridors.length;
-
   return (
     <PortfolioShell
       title="Lugemi Mix"
-      lede={`Meaning-preserving mixed-language speech. Shows original and translated text side by side, highlights uncertain spans, and keeps names stable. Evaluated varieties: all ${ledeCount || '…'} registry language↔English corridors (not only Twi and Yoruba).`}
+      lede="Meaning-preserving mixed-language speech. Shows original and translated text side by side, highlights uncertain spans, and keeps names stable. Full country-pack catalog of language↔English corridors (filterable by country) via GET /v1/portfolio/corridors — evaluation depth varies."
       docsHref="/docs"
     >
       <form onSubmit={onSubmit} className="vl-panel" style={{ padding: '1rem', display: 'grid', gap: '0.75rem' }}>
@@ -138,44 +99,29 @@ export function MixClient() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
           <label style={{ display: 'grid', gap: '0.25rem' }}>
             <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Target</span>
-            <LocaleSelect
-              className="vl-field"
-              value={target}
-              onChange={setTarget}
-              languages={catalog.languages}
-              locales={catalog.locales}
-              dialects={catalog.dialects}
-              accents={catalog.accents}
-            />
+            <input className="vl-field" value={target} onChange={(e) => setTarget(e.target.value)} />
           </label>
           <label style={{ display: 'grid', gap: '0.25rem' }}>
-            <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>
-              Source language <span style={{ opacity: 0.75 }}>(hints: {sourceHints})</span>
-            </span>
-            <LocaleSelect
-              className="vl-field"
-              value={sourcePrimary}
-              onChange={setSourcePrimary}
-              languages={catalog.languages}
-              locales={catalog.locales}
-              dialects={catalog.dialects}
-              accents={catalog.accents}
-            />
+            <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Source hints</span>
+            <input className="vl-field" value={sourceHints} onChange={(e) => setSourceHints(e.target.value)} />
           </label>
         </div>
         <label style={{ display: 'grid', gap: '0.25rem' }}>
-          <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>
-            Corridor variety ({ledeCount || '…'} available)
-          </span>
-          <SearchableCombobox
+          <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Corridor variety</span>
+          <input
             className="vl-field"
             value={varietyId}
-            onChange={onVarietyChange}
-            options={corridorOptions}
-            placeholder={corridors.length ? 'Search corridor / variety…' : 'Loading corridors…'}
-            emptyLabel={corridors.length ? 'Select corridor…' : 'Loading corridors…'}
-            aria-label="Mix corridor variety"
+            onChange={(e) => setVarietyId(e.target.value)}
+            list="mix-corridor-varieties"
+            placeholder="ak-GH-twi (search / type any registry variety)"
           />
+          <datalist id="mix-corridor-varieties">
+            {corridorOptions.map((c) => (
+              <option key={c.value} value={c.value}>
+                {c.label}
+              </option>
+            ))}
+          </datalist>
         </label>
         <label style={{ display: 'grid', gap: '0.25rem' }}>
           <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Optional audio file</span>
