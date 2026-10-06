@@ -28,6 +28,7 @@ export const metadata: Metadata = {
   applicationName: 'Lugemi',
   icons: {
     icon: '/brand/lugemi-symbol-teal.svg',
+    apple: '/brand/lugemi-symbol-teal.svg',
   },
 };
 
