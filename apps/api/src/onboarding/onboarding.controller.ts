@@ -27,7 +27,7 @@ export class OnboardingController {
       ...result.profile,
       source: result.source,
       destinations: {
-        creative: '/dashboard',
+        creative: '/creative',
         agents: '/chat',
       },
     };
@@ -57,7 +57,7 @@ export class OnboardingController {
       ...result.profile,
       persisted: result.persisted,
       destinations: {
-        creative: '/dashboard',
+        creative: '/creative',
         agents: '/chat',
       },
     };

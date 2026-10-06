@@ -22,6 +22,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'Workspace Console',
     links: [
       { href: '/dashboard', label: 'Dashboard' },
+      { href: '/creative', label: 'LugemiCreative' },
       { href: '/onboarding', label: 'Onboarding' },
       { href: '/identity', label: 'Identity & profile' },
       { href: '/language-integrity', label: 'Language Integrity' },

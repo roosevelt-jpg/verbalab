@@ -412,7 +412,10 @@ export function DashboardClient() {
               and dialect demos in one place.
             </p>
             <div className="lg-workspace-hero__ctas">
-              <Link href="/chat" className="vl-btn vl-btn-primary" style={{ textDecoration: 'none' }}>
+              <Link href="/creative" className="vl-btn vl-btn-primary" style={{ textDecoration: 'none' }}>
+                LugemiCreative
+              </Link>
+              <Link href="/chat" className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none' }}>
                 Live dialect demo
               </Link>
               <Link

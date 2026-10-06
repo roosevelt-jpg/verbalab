@@ -116,5 +116,5 @@ export function saveOnboardingLocal(state: OnboardingState) {
 }
 
 export function destinationForPlatform(platform: OnboardingPlatform | null): string {
-  return platform === 'agents' ? '/chat' : '/dashboard';
+  return platform === 'agents' ? '/chat' : '/creative';
 }
