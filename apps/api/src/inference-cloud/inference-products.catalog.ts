@@ -115,7 +115,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
       status: 'deferred',
       api: null,
       console: null,
-      notes: 'Autoscaling with hard ceilings (+). Fly/platform scale today; no open-ended GPU autoscale.',
+      notes: 'Autoscaling with hard ceilings. Fly/platform scale today; no open-ended GPU autoscale.',
     },
     {
       id: 'multi-region-runtime',

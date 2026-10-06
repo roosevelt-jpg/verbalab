@@ -62,7 +62,7 @@ export function embeddingCloudCatalog() {
         name: 'Voice Embeddings',
         status: 'deferred',
         api: null,
-        notes: 'Speaker/voice biometric vectors ≠ Embedding Cloud; see 176.',
+        notes: 'Speaker/voice biometric vectors ≠ Embedding Cloud; see Voice Biometrics.',
       },
       {
         id: 'image-embeddings',
@@ -90,7 +90,7 @@ export function embeddingCloudCatalog() {
         name: 'Hybrid Embeddings',
         status: 'deferred',
         api: null,
-        notes: 'Dense+sparse hybrid retrieval product deferred (Vector Cloud ).',
+        notes: 'Dense+sparse hybrid retrieval product deferred (Vector Cloud).',
       },
       {
         id: 'analytics',
