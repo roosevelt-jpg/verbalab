@@ -13,6 +13,7 @@ async function bootstrap() {
 
   // Accept comma-separated origins; always allow localhost↔127.0.0.1 twins for local consoles.
   // Production brand hosts are always allowed (Fly app names like lugemi-web ≠ public domain).
+  // Studio local ports (43125) are always allowed so a mis-set CORS_ORIGIN cannot brick the browser.
   const productionCorsOrigins = [
     'https://lugemi.com',
     'https://www.lugemi.com',
@@ -62,6 +63,7 @@ async function bootstrap() {
       }
       callback(null, false);
     },
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
     allowedHeaders: [
       'Content-Type',
       'Authorization',

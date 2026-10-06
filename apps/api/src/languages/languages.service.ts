@@ -68,6 +68,23 @@ export class LanguagesService implements OnModuleInit {
   }
 
   list() {
+    // Soft catalog when Prisma is skipped (Fly first boot / missing DATABASE_URL)
+    // so public coverage and language pickers still return the full 204-code registry.
+    if (!this.prisma.isReady()) {
+      return LANGUAGE_SEEDS.map((lang) => ({
+        code: lang.code,
+        nameEn: lang.nameEn,
+        nameNative: lang.nameNative,
+        script: lang.script,
+        familyCode: lang.familyCode,
+        family: null as { code: string; nameEn: string; notes: string | null } | null,
+        rtl: lang.rtl ?? false,
+        tier:
+          lang.tier === 'strategic_african'
+            ? LanguageTier.strategic_african
+            : LanguageTier.vendor,
+      }));
+    }
     return this.prisma.language.findMany({
       orderBy: { code: 'asc' },
       include: { family: true },

@@ -87,5 +87,10 @@ describe('Coverage + eval harness', () => {
     expect(res.body.focusPairs).toHaveLength(3);
     expect(res.body.focusPairs.every((p: { hasGolden: boolean }) => p.hasGolden)).toBe(true);
     expect(res.body.languages.strategicAfrican).toBeGreaterThanOrEqual(3);
+    // Worldwide live set (regional registry + seeds), Africa-first — not Africa-prefill alone.
+    expect(res.body.languages.total).toBeGreaterThanOrEqual(180);
+    expect(res.body.languages.africaFirst).toBe(true);
+    expect(res.body.source).toBe('live_registry');
+    expect(res.body.languages.codes[0]?.worldRegions).toContain('africa');
   });
 });
