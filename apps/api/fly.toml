@@ -1,0 +1,38 @@
+# verbalab-api (Nest) — Africa-first primary region Johannesburg.
+# Deploy from repo root (build context = monorepo root):
+#   fly deploy -c apps/api/fly.toml --dockerfile apps/api/Dockerfile
+app = 'verbalab-api'
+primary_region = 'jnb'
+
+[build]
+  # Overridden by --dockerfile when deploying from repo root (required for pnpm workspace COPY).
+  dockerfile = 'apps/api/Dockerfile'
+
+[deploy]
+  release_command = 'pnpm --filter @lugemi/api exec prisma migrate deploy'
+
+[env]
+  NODE_ENV = 'production'
+  API_PORT = '3001'
+  PORT = '3001'
+  LUGEMI_REGION = 'af'
+
+[http_service]
+  internal_port = 3001
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ['app']
+
+  [[http_service.checks]]
+    interval = '15s'
+    timeout = '5s'
+    grace_period = '20s'
+    method = 'GET'
+    path = '/health'
+
+[[vm]]
+  memory = '512mb'
+  cpu_kind = 'shared'
+  cpus = 1

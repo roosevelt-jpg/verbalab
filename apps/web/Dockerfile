@@ -1,6 +1,6 @@
-# Build from repo root:
-#   docker build -f apps/web/Dockerfile -t lugemi-web \
-#     --build-arg NEXT_PUBLIC_API_URL=https://api.example.com \
+# Build from repo root (Next.js standalone):
+#   docker build -f apps/web/Dockerfile -t verbalab-web \
+#     --build-arg NEXT_PUBLIC_API_URL=https://verbalab-api.fly.dev \
 #     --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_... .
 FROM node:20-bookworm-slim AS base
 RUN apt-get update \
@@ -33,12 +33,11 @@ ENV NODE_ENV=production
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 WORKDIR /app
-COPY --from=build /app/package.json /app/pnpm-lock.yaml /app/pnpm-workspace.yaml ./
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/packages ./packages
-COPY --from=build /app/apps/web ./apps/web
-WORKDIR /app/apps/web
+# Next standalone traces the monorepo; server entry is under apps/web.
+COPY --from=build /app/apps/web/public ./apps/web/public
+COPY --from=build /app/apps/web/.next/standalone ./
+COPY --from=build /app/apps/web/.next/static ./apps/web/.next/static
 EXPOSE 3000
 HEALTHCHECK --interval=15s --timeout=5s --start-period=25s --retries=3 \
   CMD node -e "fetch('http://127.0.0.1:3000/health').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
-CMD ["pnpm", "exec", "next", "start", "--hostname", "0.0.0.0", "--port", "3000"]
+CMD ["node", "apps/web/server.js"]

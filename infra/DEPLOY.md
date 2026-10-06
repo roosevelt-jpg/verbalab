@@ -14,11 +14,14 @@ Enterprise Language Registry (VL-139), Localization Platform (VL-141), and Langu
 
 | Piece | What |
 | --- | --- |
-| `lugemi-api` | Nest API container (`apps/api/Dockerfile`) |
-| `lugemi-web` | Next console (`apps/web/Dockerfile`) |
+| `verbalab` / `verbalab-api` | Nest API (`Dockerfile` at repo root + `apps/api/Dockerfile`) — Africa default `jnb` |
+| `verbalab-web` | Next console (`apps/web/Dockerfile`, standalone) — `jnb` |
+| `lugemi-api` / `lugemi-web` | Legacy US/EU island names in `infra/fly/*.toml` / `*.eu.toml` |
 | Postgres | Managed DB with **pgvector** (Neon / Supabase / Fly Postgres + `CREATE EXTENSION vector`) via `DATABASE_URL` |
 | Redis | Required for BullMQ + rate limits (`REDIS_URL`). Fly Redis or Upstash. Do **not** set `JOBS_INLINE=1` in production. |
-| Region | Default `iad` in `infra/fly/*.toml` — change `primary_region` for your market |
+| Region | Africa-first: `jnb` (`infra/fly/*.jnb.toml`, root `fly.toml`). US `iad` / EU `ams` remain for residency islands. |
+
+Short verbalab / Fly UI guide: [`docs/fly.md`](../docs/fly.md).
 
 ## First-time setup (manual; needs Fly account)
 
@@ -113,7 +116,8 @@ Each region is a **separate deploy + database** (residency island), not a mesh.
 
 | Island | Fly configs | `LUGEMI_REGION` | Fly `primary_region` |
 | --- | --- | --- | --- |
-| US (default) | `infra/fly/api.toml`, `web.toml` | `us` | `iad` |
+| AF (verbalab default) | root `fly.toml`, `infra/fly/*.jnb.toml`, `apps/*/fly.toml` | `af` | `jnb` |
+| US | `infra/fly/api.toml`, `web.toml` | `us` | `iad` |
 | EU | `infra/fly/api.eu.toml`, `web.eu.toml` | `eu` | `ams` |
 
 ```bash

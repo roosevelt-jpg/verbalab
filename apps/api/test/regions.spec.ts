@@ -70,6 +70,21 @@ describe('Multi-region residency', () => {
     expect(eu).toContain('prisma migrate deploy');
   });
 
+  it('ships Africa jnb Fly configs for verbalab (not a mesh)', () => {
+    expect(existsSync(join(root, 'Dockerfile'))).toBe(true);
+    expect(existsSync(join(root, 'fly.toml'))).toBe(true);
+    expect(existsSync(join(root, 'infra/fly/api.jnb.toml'))).toBe(true);
+    expect(existsSync(join(root, 'infra/fly/web.jnb.toml'))).toBe(true);
+    const af = readFileSync(join(root, 'infra/fly/api.jnb.toml'), 'utf8');
+    expect(af).toContain("app = 'verbalab-api'");
+    expect(af).toContain("primary_region = 'jnb'");
+    expect(af).toContain("LUGEMI_REGION = 'af'");
+    expect(af).toContain('prisma migrate deploy');
+    const rootFly = readFileSync(join(root, 'fly.toml'), 'utf8');
+    expect(rootFly).toContain("app = 'verbalab'");
+    expect(rootFly).toContain("primary_region = 'jnb'");
+  });
+
   it('GET /v1/regions is public and health reports region', async () => {
     const regionsRes = await request(app.getHttpServer()).get('/v1/regions').expect(200);
     expect(regionsRes.body.currentRegion).toBe('us');
@@ -77,6 +92,7 @@ describe('Multi-region residency', () => {
       expect.arrayContaining([
         expect.objectContaining({ code: 'us' }),
         expect.objectContaining({ code: 'eu', flyRegion: 'ams' }),
+        expect.objectContaining({ code: 'af', flyRegion: 'jnb' }),
       ]),
     );
 

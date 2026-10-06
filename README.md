@@ -163,6 +163,7 @@ Without Clerk keys the production site serves `/setup`, same as local.
 - `docs/LANGUAGE_CLOUD.md` — Language Cloud
 - `docs/templates/` — RFC / PRD / Runbook templates
 - `ARCHITECTURE.md` — stack and boundaries
-- `infra/DEPLOY.md` — Fly.io production (US + EU residency islands)
+- `docs/fly.md` — Fly.io / verbalab (`jnb`) Dockerfiles, secrets, dashboard continue
+- `infra/DEPLOY.md` — Fly.io production (AF `jnb` + US/EU residency islands)
 - `PHASE_0_1.md` — Early platform scope
 - `PROGRESS.md` / `ROADMAP.md` — delivery status

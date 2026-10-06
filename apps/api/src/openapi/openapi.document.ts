@@ -1742,7 +1742,7 @@ export const openApiDocument = {
                   dataRegion: {
                     type: 'string',
                     nullable: true,
-                    enum: ['us', 'eu'],
+                    enum: ['us', 'eu', 'af'],
                     description: 'Residency island code, or null to clear the pin',
                   },
                 },

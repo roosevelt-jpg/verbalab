@@ -1,3 +1,8 @@
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 function apiConnectOrigins() {
   const origins = new Set(['http://localhost:3001', 'http://127.0.0.1:3001']);
   const raw = process.env.NEXT_PUBLIC_API_URL;
@@ -13,6 +18,9 @@ function apiConnectOrigins() {
 
 const nextConfig = {
   reactStrictMode: true,
+  // Lean production image for Fly / Docker (apps/web/Dockerfile).
+  output: 'standalone',
+  outputFileTracingRoot: path.join(__dirname, '../..'),
   async headers() {
     return [
       {
