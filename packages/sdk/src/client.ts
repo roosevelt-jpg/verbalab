@@ -2150,6 +2150,35 @@ export class Lugemi {
     return this.requestJson('/v1/african-language-registry/engine', { method: 'GET' });
   }
 
+  async regionalLanguageRegistryEngine(): Promise<{
+    product: string;
+    note: string;
+    honesty: Record<string, unknown>;
+    counts?: Record<string, number>;
+    docs?: string;
+  }> {
+    return this.requestJson('/v1/regional-language-registry/engine', { method: 'GET' });
+  }
+
+  async regionalLanguageRegistryRegions(): Promise<{
+    regions: Array<{ id: string; label: string; shortLabel: string; count?: number }>;
+    counts: Record<string, number>;
+    africaFirst: boolean;
+  }> {
+    return this.requestJson('/v1/regional-language-registry/regions', { method: 'GET' });
+  }
+
+  async regionalLanguageRegistryLanguages(params?: {
+    region?: string;
+    q?: string;
+  }): Promise<{ region: string; languages: unknown[]; count: number; counts?: Record<string, number> }> {
+    const qs = new URLSearchParams();
+    if (params?.region) qs.set('region', params.region);
+    if (params?.q) qs.set('q', params.q);
+    const suffix = qs.toString() ? `?${qs}` : '';
+    return this.requestJson(`/v1/regional-language-registry/languages${suffix}`, { method: 'GET' });
+  }
+
   async culturalIntelligenceEngine(): Promise<{
     product: string;
     note: string;
