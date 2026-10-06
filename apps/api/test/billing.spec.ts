@@ -86,6 +86,17 @@ describe('Billing', () => {
     expect(PLANS.business.workspaceLimit).toBe(3);
   });
 
+  it('normalizes legacy org.plan values in getSummary', async () => {
+    const org = await seedOrg(prisma, 'legacyPlan');
+    await prisma.organization.update({
+      where: { id: org.id },
+      data: { plan: 'starter', characterQuota: PLANS.pro.characterQuota },
+    });
+    const summary = await billing.getSummary(org.id);
+    expect(summary.plan).toBe('pro');
+    expect(summary.planName).toBe('Pro');
+  });
+
   it('defaults new orgs to free plan quota', async () => {
     const org = await seedOrg(prisma, 'freeDefault');
     const summary = await billing.getSummary(org.id);

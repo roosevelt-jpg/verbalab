@@ -11,8 +11,35 @@ async function bootstrap() {
   applyHttpSecurity(app);
   app.useGlobalFilters(new ApiExceptionFilter());
 
-  const corsOrigin = process.env.CORS_ORIGIN ?? 'http://localhost:3000';
-  app.enableCors({ origin: corsOrigin });
+  // Accept comma-separated origins; always allow localhost↔127.0.0.1 twins for local consoles.
+  const corsRaw = process.env.CORS_ORIGIN ?? 'http://localhost:3000';
+  const corsOrigins = new Set(
+    corsRaw
+      .split(',')
+      .map((s) => s.trim())
+      .filter(Boolean),
+  );
+  for (const origin of [...corsOrigins]) {
+    try {
+      const u = new URL(origin);
+      if (u.hostname === 'localhost') {
+        corsOrigins.add(`${u.protocol}//127.0.0.1${u.port ? `:${u.port}` : ''}`);
+      } else if (u.hostname === '127.0.0.1') {
+        corsOrigins.add(`${u.protocol}//localhost${u.port ? `:${u.port}` : ''}`);
+      }
+    } catch {
+      /* ignore malformed CORS_ORIGIN entries */
+    }
+  }
+  app.enableCors({
+    origin: (requestOrigin, callback) => {
+      if (!requestOrigin || corsOrigins.has(requestOrigin)) {
+        callback(null, true);
+        return;
+      }
+      callback(null, false);
+    },
+  });
 
   const port = Number(process.env.PORT ?? process.env.API_PORT ?? 3001);
   await app.listen(port, '0.0.0.0');

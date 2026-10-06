@@ -11,7 +11,7 @@ import {
   StatusRing,
   PipelineStrip,
 } from '@/components/stats/activity-visuals';
-import { FEATURE_LABELS, formatWorkspaceLimit } from '@/data/billing-plans';
+import { FEATURE_LABELS, WEB_BILLING_PLANS, formatWorkspaceLimit, planById } from '@/data/billing-plans';
 import '@/components/stats/stat-charts.css';
 
 type BillingSummary = {
@@ -61,24 +61,36 @@ export function BillingClient() {
   const load = useCallback(async () => {
     const token = await getToken();
     if (!token) throw new Error('Not signed in');
-    const [billing, memberRows] = await Promise.all([
-      apiFetch<BillingSummary>('/v1/billing/summary', { token }),
-      apiFetch<MemberRow[]>('/v1/organization/members', { token }),
-    ]);
-    setSummary(billing);
-    setMembers(memberRows);
-    try {
-      const planRes = await apiFetch<{ plans: PlanCard[] }>('/v1/billing/plans', { token });
-      setPlans(planRes.plans);
-    } catch {
-      const { WEB_BILLING_PLANS } = await import('@/data/billing-plans');
-      setPlans(WEB_BILLING_PLANS);
-    }
+
+    // Always seed the 4-plan catalog first so a summary failure never blanks the page.
+    setPlans(WEB_BILLING_PLANS);
+
+    const planPromise = apiFetch<{ plans: PlanCard[] }>('/v1/billing/plans', { token })
+      .then((planRes) => {
+        if (Array.isArray(planRes.plans) && planRes.plans.length > 0) {
+          setPlans(planRes.plans);
+        }
+      })
+      .catch(() => {
+        /* keep WEB_BILLING_PLANS */
+      });
+
+    const memberPromise = apiFetch<MemberRow[]>('/v1/organization/members', { token })
+      .then((memberRows) => setMembers(memberRows))
+      .catch(() => setMembers([]));
+
+    const billing = await apiFetch<BillingSummary>('/v1/billing/summary', { token });
+    setSummary({
+      ...billing,
+      plan: planById(billing.plan).id,
+      planName: planById(billing.plan).name,
+    });
+    await Promise.all([planPromise, memberPromise]);
   }, [getToken]);
 
   useEffect(() => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load().catch((err: Error) => setError(err.message || 'Billing load failed'));
   }, [isLoaded, load]);
 
   async function startCheckout(planId: string) {
@@ -121,7 +133,8 @@ export function BillingClient() {
     }
   }
 
-  const currentRank = plans.find((p) => p.id === summary?.plan)?.rank ?? 0;
+  const currentPlanId = summary ? planById(summary.plan).id : 'free';
+  const currentRank = plans.find((p) => p.id === currentPlanId)?.rank ?? 0;
 
   return (
     <AppShell>
@@ -142,6 +155,27 @@ export function BillingClient() {
       </p>
 
       {error ? <p style={{ color: 'var(--bad)' }}>{error}</p> : null}
+
+      {plans.length > 0 && !summary && error ? (
+        <div
+          style={{
+            marginTop: '1.5rem',
+            display: 'grid',
+            gap: '1rem',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(15rem, 1fr))',
+          }}
+        >
+          {plans.map((plan) => (
+            <article key={plan.id} className="vl-endpoint-card" style={{ display: 'grid', gap: '0.5rem' }}>
+              <h2 style={{ margin: 0, fontSize: '1.15rem', color: 'var(--brand-navy)' }}>{plan.name}</h2>
+              <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: 720 }}>
+                {plan.priceLabel}
+              </div>
+              <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.9rem' }}>{plan.blurb}</p>
+            </article>
+          ))}
+        </div>
+      ) : null}
 
       {summary ? (
         <div style={{ marginTop: '1.5rem', display: 'grid', gap: '1.25rem' }}>
@@ -207,7 +241,7 @@ export function BillingClient() {
             }}
           >
             {plans.map((plan) => {
-              const isCurrent = plan.id === summary.plan;
+              const isCurrent = plan.id === currentPlanId;
               const isUpgrade = plan.rank > currentRank;
               return (
                 <article

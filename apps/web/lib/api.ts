@@ -65,17 +65,29 @@ export async function apiFetch<T>(
       : organizationId ?? (typeof window !== 'undefined' ? getStoredAdminOrgId() : null);
 
   const serialized = toBodyInit(body);
-  const response = await fetch(`${API_URL}${path}`, {
-    ...rest,
-    body: serialized,
-    headers: {
-      ...(serialized instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(ws ? { 'X-Lugemi-Workspace-Id': ws } : {}),
-      ...(org ? { 'X-Lugemi-Organization-Id': org } : {}),
-      ...headers,
-    },
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${API_URL}${path}`, {
+      ...rest,
+      body: serialized,
+      headers: {
+        ...(serialized instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...(ws ? { 'X-Lugemi-Workspace-Id': ws } : {}),
+        ...(org ? { 'X-Lugemi-Organization-Id': org } : {}),
+        ...headers,
+      },
+    });
+  } catch (err) {
+    const raw = err instanceof Error ? err.message : String(err);
+    // Safari/WebKit: "Load failed"; Chromium: "Failed to fetch"
+    if (/load failed|failed to fetch|networkerror|network request failed/i.test(raw)) {
+      throw new Error(
+        `Cannot reach API at ${API_URL}${path}. Check NEXT_PUBLIC_API_URL and CORS_ORIGIN.`,
+      );
+    }
+    throw err instanceof Error ? err : new Error(raw);
+  }
 
   const payload = (await response.json().catch(() => ({}))) as T & {
     error?: { code: string; message: string };

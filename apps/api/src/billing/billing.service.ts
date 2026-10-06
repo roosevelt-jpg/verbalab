@@ -99,7 +99,8 @@ export class BillingService {
     const plan = planFromId(org.plan);
 
     return {
-      plan: org.plan,
+      // Always return normalized PlanId so clients never match legacy SKUs (starter/creator/scale).
+      plan: plan.id,
       planName: plan.name,
       planRank: plan.rank,
       features: plan.features,
