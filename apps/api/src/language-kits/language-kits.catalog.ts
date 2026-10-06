@@ -16,6 +16,6 @@ export function languageKitsCatalog() {
       advance: 'POST /v1/language-kits/:id/advance',
     },
     console: '/language-kits',
-    docs: '/docs/models/05_LANGUAGE_KIT.md',
+    docs: '/docs/next-model-portfolio/05_LANGUAGE_KIT.md',
   };
 }

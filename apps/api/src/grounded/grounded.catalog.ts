@@ -11,6 +11,6 @@ export function groundedCatalog() {
       interpret: 'POST /v1/grounded/interpret',
     },
     console: '/grounded',
-    docs: '/docs/models/07_GROUNDED.md',
+    docs: '/docs/next-model-portfolio/07_GROUNDED.md',
   };
 }

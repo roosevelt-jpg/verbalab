@@ -16,6 +16,6 @@ export function mixCatalog() {
       transcribeTranslate: 'POST /v1/mix/transcribe-translate',
     },
     console: '/mix',
-    docs: '/docs/models/01_MIX.md',
+    docs: '/docs/next-model-portfolio/01_MIX.md',
   };
 }

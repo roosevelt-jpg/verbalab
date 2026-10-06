@@ -77,6 +77,8 @@ import { PragmaticsModule } from './pragmatics/pragmatics.module';
 import { LanguageKitsModule } from './language-kits/language-kits.module';
 import { EdgeModule } from './edge-packs/edge.module';
 import { GroundedModule } from './grounded/grounded.module';
+import { DataAdvantageModule } from './data-advantage/data-advantage.module';
+import { CorridorBenchmarksModule } from './corridor-benchmarks/corridor-benchmarks.module';
 import { AiFabricModule } from './ai-fabric/ai-fabric.module';
 import { EventFabricModule } from './event-fabric/event-fabric.module';
 import { ContextFabricModule } from './context-fabric/context-fabric.module';
@@ -277,6 +279,8 @@ import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
     LanguageKitsModule,
     EdgeModule,
     GroundedModule,
+    DataAdvantageModule,
+    CorridorBenchmarksModule,
     AiFabricModule,
     EventFabricModule,
     ContextFabricModule,

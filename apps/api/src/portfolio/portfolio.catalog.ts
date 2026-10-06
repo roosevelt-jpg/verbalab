@@ -78,8 +78,28 @@ export function portfolioCatalog() {
         notes:
           'Speech plus selected visual referent. Returns document_evidence, speaker_claim, and translation separately. Assistive document communication only.',
       },
+      {
+        id: 'data_advantage',
+        displayName: 'Lugemi Data Advantage',
+        slug: 'lugemi-data-advantage',
+        family: 'Dataset Cloud + MLOps',
+        api: 'POST /v1/data-advantage/records',
+        console: '/data-advantage',
+        notes:
+          'Rights-aware error acquisition: contributor contracts, permissioned streams, export-denial tests, and offline error loops. Extends existing Dataset Cloud.',
+      },
+      {
+        id: 'corridor_benchmarks',
+        displayName: 'Lugemi Advantage Protocol',
+        slug: 'lugemi-corridor-benchmarks',
+        family: 'Evaluation + Research Cloud',
+        api: 'POST /v1/corridor-benchmarks/studies',
+        console: '/corridor-benchmarks',
+        notes:
+          'Corridor-specific evaluation protocol: comparison matrix, preregistered studies, mandatory integration cases, and claim-format validation. No invented confidence scores.',
+      },
     ],
-    docs: '/docs/models/LUGEMI_NEXT_MODEL_PORTFOLIO.md',
+    docs: '/docs/next-model-portfolio/LUGEMI_NEXT_MODEL_PORTFOLIO.md',
     links: {
       models: '/models',
       verifiedInterpreter: '/verified-interpreter',
@@ -90,6 +110,8 @@ export function portfolioCatalog() {
       languageKits: '/language-kits',
       edge: '/edge',
       grounded: '/grounded',
+      dataAdvantage: '/data-advantage',
+      corridorBenchmarks: '/corridor-benchmarks',
       playground: '/playground',
       openapi: '/v1/openapi.json',
     },

@@ -20,6 +20,6 @@ export function edgeCatalog() {
       run: 'POST /v1/edge/packs/:packId/run',
     },
     console: '/edge',
-    docs: '/docs/models/06_EDGE.md',
+    docs: '/docs/next-model-portfolio/06_EDGE.md',
   };
 }

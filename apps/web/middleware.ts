@@ -28,6 +28,8 @@ const isPublicRoute = createRouteMatcher([
   '/language-kits(.*)',
   '/edge(.*)',
   '/grounded(.*)',
+  '/data-advantage(.*)',
+  '/corridor-benchmarks(.*)',
   '/health(.*)',
   '/p(.*)',
 ]);

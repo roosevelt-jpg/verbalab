@@ -295,6 +295,8 @@ export function defaultHostingForModelSlug(slug: string): ModelHostingSeed {
     'lugemi-language-kit': 'af-west-1',
     'lugemi-edge': 'af-west-1', // edge packs authored near Africa-first hubs
     'lugemi-grounded': 'af-south-1', // Cape Town — docs + vision
+    'lugemi-data-advantage': 'af-west-1', // Accra — rights-aware corpus
+    'lugemi-corridor-benchmarks': 'af-west-1', // Accra — pilot evaluation
   };
 
   if (map[slug]) return hostingFromDataCenter(map[slug]!);
@@ -317,6 +319,8 @@ export function defaultHostingForModelSlug(slug: string): ModelHostingSeed {
   if (slug.startsWith('lugemi-language-kit')) return hostingFromDataCenter('af-west-1');
   if (slug.startsWith('lugemi-edge')) return hostingFromDataCenter('af-west-1');
   if (slug.startsWith('lugemi-grounded')) return hostingFromDataCenter('af-south-1');
+  if (slug.startsWith('lugemi-data-advantage')) return hostingFromDataCenter('af-west-1');
+  if (slug.startsWith('lugemi-corridor-benchmarks')) return hostingFromDataCenter('af-west-1');
   if (slug.startsWith('lugemi-')) return hostingFromDataCenter('af-west-1');
 
   // Legacy adapters — us-east silent fallback host tag (not branded).

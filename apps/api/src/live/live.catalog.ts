@@ -17,6 +17,6 @@ export function liveCatalog() {
     transport:
       'Session negotiation over HTTP; versioned events delivered via SSE (same event schema as the portfolio WebSocket contract). Native WebSocket upgrade mirrors these events when the client requests transport=websocket.',
     console: '/live',
-    docs: '/docs/models/03_LIVE.md',
+    docs: '/docs/next-model-portfolio/03_LIVE.md',
   };
 }

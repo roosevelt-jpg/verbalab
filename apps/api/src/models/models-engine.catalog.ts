@@ -13,7 +13,7 @@ export function modelsEngineCatalog() {
   return {
     product: 'Lugemi Models Engine',
     note:
-      'Live matrix of proprietary Lugemi model families for complex multilingual reasoning, dialect-aware speech, translation, vertical packs, and the next-model portfolio (Mix, Fidelity, Live, Pragmatics, Language Kit, Edge, Grounded). Default inference is Lugemi-owned — optional legacy adapters stay silent. Not MLflow or a training OS.',
+      'Live matrix of proprietary Lugemi model families for complex multilingual reasoning, dialect-aware speech, translation, vertical packs, and the next-model portfolio (Mix through Grounded, Data Advantage, Advantage Protocol). Default inference is Lugemi-owned — optional legacy adapters stay silent. Not MLflow or a training OS.',
     capabilities: [
       {
         id: 'live-matrix',
@@ -63,7 +63,7 @@ export function modelsEngineCatalog() {
         status: 'shipped',
         api: 'GET /v1/portfolio/engine',
         notes:
-          'Mix, Fidelity, Live, Pragmatics, Language Kit, Edge, Grounded — Verified Interpreter wedge. See /docs/models/.',
+          'Mix through Grounded plus Data Advantage and Advantage Protocol. Verified Interpreter wedge. See /docs/next-model-portfolio/.',
       },
       {
         id: 'mlflow',

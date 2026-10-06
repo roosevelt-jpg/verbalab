@@ -22,6 +22,8 @@ export const MODEL_FEATURES = [
   'language_kit',
   'edge',
   'grounded',
+  'data_advantage',
+  'corridor_benchmarks',
 ] as const;
 
 export type ModelFeature = (typeof MODEL_FEATURES)[number];
@@ -388,6 +390,30 @@ export const VENDOR_MODEL_SEEDS: VendorDefaultSeed[] = [
     role: 'primary',
     kind: 'lugemi',
   },
+  {
+    slug: 'lugemi-data-advantage',
+    feature: 'data_advantage',
+    provider: 'lugemi',
+    displayName: 'Lugemi Data Advantage',
+    baseModel: 'lugemi-data-advantage-v1',
+    notes:
+      'Rights-aware corpus workflow: contributor purposes, permissioned ingest, export-denial for withdrawn contributors, and offline error-acquisition loops. Extends Dataset Cloud.',
+    envKey: null,
+    role: 'primary',
+    kind: 'lugemi',
+  },
+  {
+    slug: 'lugemi-corridor-benchmarks',
+    feature: 'corridor_benchmarks',
+    provider: 'lugemi',
+    displayName: 'Lugemi Advantage Protocol',
+    baseModel: 'lugemi-corridor-benchmarks-v1',
+    notes:
+      'Corridor evaluation contract: preregistered studies, comparison matrix, integration harness with concrete expected behaviors, and claim-format validation. No invented confidence.',
+    envKey: null,
+    role: 'primary',
+    kind: 'lugemi',
+  },
   ...echoVoiceIdentityVariantSeeds(),
 ];
 
@@ -412,6 +438,8 @@ export const MODEL_SLUG_ALIASES: Record<string, string> = {
   'lugemi-lang-kit': 'lugemi-language-kit',
   'lugemi-edge-pack': 'lugemi-edge',
   'lugemi-grounded-interpret': 'lugemi-grounded',
+  'lugemi-data': 'lugemi-data-advantage',
+  'lugemi-benchmarks': 'lugemi-corridor-benchmarks',
 };
 
 export function envConfigured(envKey: string | null): boolean {

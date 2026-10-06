@@ -12,7 +12,7 @@ export function fidelityCatalog() {
       clarify: 'POST /v1/fidelity/clarify',
     },
     console: '/fidelity',
-    docs: '/docs/models/02_FIDELITY.md',
+    docs: '/docs/next-model-portfolio/02_FIDELITY.md',
     calibration_version: 'fidelity-cal-pilot-1',
     error_event_definition:
       'Predicted event: critical meaning change between source and target on negation, quantity/unit, identity, obligation, time, or requested action (preregistered).',

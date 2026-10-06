@@ -12,6 +12,6 @@ export function pragmaticsCatalog() {
       translate: 'POST /v1/pragmatics/translate',
     },
     console: '/pragmatics',
-    docs: '/docs/models/04_PRAGMATICS.md',
+    docs: '/docs/next-model-portfolio/04_PRAGMATICS.md',
   };
 }

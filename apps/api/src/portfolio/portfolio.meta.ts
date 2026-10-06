@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto';
 
-/** Shared result contract for next-model portfolio APIs (see docs/models/). */
+/** Shared result contract for next-model portfolio APIs (see docs/next-model-portfolio/). */
 export type CoverageStatus = 'supported' | 'preview' | 'unsupported' | 'unavailable';
 
 export type PortfolioResultMeta = {

@@ -62,6 +62,8 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/language-kits', label: 'Language Kits' },
       { href: '/edge', label: 'Edge packs' },
       { href: '/grounded', label: 'Grounded' },
+      { href: '/data-advantage', label: 'Data Advantage' },
+      { href: '/corridor-benchmarks', label: 'Advantage Protocol' },
       { href: '/translate/formats', label: 'Formats' },
       { href: '/translation-runtime', label: 'Translation runtime' },
       { href: '/localize', label: 'Localize' },

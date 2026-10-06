@@ -757,6 +757,150 @@ export const openApiDocument = {
         },
       },
     },
+    '/v1/data-advantage/engine': {
+      get: {
+        summary: 'Lugemi Data Advantage engine',
+        operationId: 'getDataAdvantageEngine',
+        responses: { '200': { description: 'Data advantage catalog and streams' } },
+      },
+    },
+    '/v1/data-advantage/streams': {
+      get: {
+        summary: 'Dataset acquisition streams',
+        operationId: 'listDataAdvantageStreams',
+        responses: { '200': { description: 'Seven streams for Mix through Grounded' } },
+      },
+    },
+    '/v1/data-advantage/pipeline': {
+      get: {
+        summary: 'Ingest-to-release pipeline stages',
+        operationId: 'getDataAdvantagePipeline',
+        responses: { '200': { description: 'Pipeline and security posture' } },
+      },
+    },
+    '/v1/data-advantage/contributors': {
+      get: {
+        summary: 'List contributors',
+        operationId: 'listDataAdvantageContributors',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '200': { description: 'Contributor contracts' } },
+      },
+      post: {
+        summary: 'Register contributor with permitted purposes',
+        operationId: 'createDataAdvantageContributor',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '201': { description: 'Contributor created' } },
+      },
+    },
+    '/v1/data-advantage/contributors/{id}/withdraw': {
+      post: {
+        summary: 'Withdraw contributor and track remedy',
+        operationId: 'withdrawDataAdvantageContributor',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: { '200': { description: 'Withdrawal and remedy tracking' } },
+      },
+    },
+    '/v1/data-advantage/records': {
+      post: {
+        summary: 'Ingest permissioned corpus record',
+        operationId: 'ingestDataAdvantageRecord',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '201': { description: 'Record with split and rights metadata' } },
+      },
+    },
+    '/v1/data-advantage/records/export-check': {
+      post: {
+        summary: 'Export-denial check for licenses and withdrawals',
+        operationId: 'dataAdvantageExportCheck',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '200': { description: 'Per-record allow/deny with reasons' } },
+      },
+    },
+    '/v1/data-advantage/error-loop/sample': {
+      post: {
+        summary: 'Sample offline error-acquisition loop',
+        operationId: 'dataAdvantageErrorLoopSample',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '200': { description: 'Balanced and random prevalence samples' } },
+      },
+    },
+    '/v1/data-advantage/releases': {
+      post: {
+        summary: 'Freeze pilot dataset release when gates pass',
+        operationId: 'freezeDataAdvantageRelease',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '201': { description: 'Frozen release with split audit' } },
+      },
+    },
+    '/v1/corridor-benchmarks/engine': {
+      get: {
+        summary: 'Lugemi Advantage Protocol engine',
+        operationId: 'getCorridorBenchmarksEngine',
+        responses: { '200': { description: 'Evaluation contract catalog' } },
+      },
+    },
+    '/v1/corridor-benchmarks/comparison-matrix': {
+      get: {
+        summary: 'Task comparison matrix',
+        operationId: 'getCorridorComparisonMatrix',
+        responses: { '200': { description: 'Lugemi baseline vs external comparison rules' } },
+      },
+    },
+    '/v1/corridor-benchmarks/measurements': {
+      get: {
+        summary: 'Measurement definitions and fairness rules',
+        operationId: 'getCorridorMeasurements',
+        responses: { '200': { description: 'Critical error, ASR, streaming, economics definitions' } },
+      },
+    },
+    '/v1/corridor-benchmarks/integration-cases': {
+      get: {
+        summary: 'Mandatory integration cases',
+        operationId: 'listCorridorIntegrationCases',
+        responses: { '200': { description: 'Cases with concrete expected behaviors' } },
+      },
+    },
+    '/v1/corridor-benchmarks/integration-cases/{id}/run': {
+      post: {
+        summary: 'Run integration harness for one case',
+        operationId: 'runCorridorIntegrationCase',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: { '200': { description: 'Pass/fail against expected behavior' } },
+      },
+    },
+    '/v1/corridor-benchmarks/studies': {
+      get: {
+        summary: 'List preregistered studies',
+        operationId: 'listCorridorStudies',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '200': { description: 'Studies' } },
+      },
+      post: {
+        summary: 'Preregister benchmark study',
+        operationId: 'preregisterCorridorStudy',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '201': { description: 'Preregistered study with frozen set IDs' } },
+      },
+    },
+    '/v1/corridor-benchmarks/studies/{id}/score': {
+      post: {
+        summary: 'Record immutable held-out score with denominators',
+        operationId: 'scoreCorridorStudy',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: { '200': { description: 'Scored study; no invented confidence' } },
+      },
+    },
+    '/v1/corridor-benchmarks/claims/validate': {
+      post: {
+        summary: 'Validate superiority claim format',
+        operationId: 'validateCorridorClaim',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '200': { description: 'Valid claim or missing/banned fields' } },
+      },
+    },
     '/v1/training-jobs/launchers': {
       get: {
         summary: 'List training launchers and configuration status',
