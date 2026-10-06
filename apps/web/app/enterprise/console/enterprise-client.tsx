@@ -67,11 +67,11 @@ export function EnterpriseClient() {
           margin: '0 0 0.35rem',
         }}
       >
-        Enterprise
+        Enterprise console
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '40rem' }}>
         Derived controls for this organization — governance, security, billing quotas, and residency.
-        Not a policy engine or Trust Center product.
+        Plan details and sales: <Link href="/enterprise" style={{ color: 'var(--accent)' }}>Enterprise</Link>.
       </p>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}

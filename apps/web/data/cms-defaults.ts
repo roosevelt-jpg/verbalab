@@ -70,6 +70,7 @@ export const CMS_DEFAULTS: CmsDocument = {
       },
       { label: 'Research', href: '/p/research' },
       { label: 'Safety', href: '/p/safety' },
+      { label: 'Enterprise', href: '/enterprise' },
       { label: 'Docs', href: '/docs' },
     ],
     actions: {
@@ -442,7 +443,7 @@ export const CMS_DEFAULTS: CmsDocument = {
           { label: 'OpenAPI explorer', href: '/p/openapi-explorer' },
           { label: 'Playground', href: '/playground' },
           { label: 'Marketplace', href: '/p/marketplace' },
-          { label: 'Enterprise', href: '/p/enterprise' },
+          { label: 'Enterprise', href: '/enterprise' },
           { label: 'Trust Center', href: '/p/trust-center' },
           { label: 'Legal integrity', href: '/p/legal-integrity' },
           { label: 'Coverage', href: '/coverage' },

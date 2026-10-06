@@ -177,7 +177,7 @@ export function BillingClient() {
       const token = await getToken();
       if (!token) throw new Error('Not signed in');
       if (planId === 'enterprise') {
-        window.location.href = '/sign-up';
+        window.location.href = '/enterprise';
         return;
       }
       const res = await apiFetch<{ url: string | null }>('/v1/billing/checkout', {
@@ -344,8 +344,12 @@ export function BillingClient() {
                       Included
                     </button>
                   ) : plan.id === 'enterprise' ? (
-                    <a className="vl-btn vl-btn-secondary" href="/p/about" style={{ textDecoration: 'none', textAlign: 'center' }}>
-                      Talk to sales
+                    <a
+                      className="vl-btn vl-btn-secondary"
+                      href="/enterprise"
+                      style={{ textDecoration: 'none', textAlign: 'center' }}
+                    >
+                      Upgrade Enterprise
                     </a>
                   ) : isCurrent ? (
                     <button type="button" className="vl-btn" disabled>

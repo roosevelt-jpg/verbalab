@@ -126,7 +126,8 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/language-integrity', label: 'Language Integrity' },
       { href: '/admin', label: 'Admin' },
       { href: '/admin/workspaces', label: 'Workspace admin' },
-      { href: '/enterprise', label: 'Enterprise' },
+      { href: '/enterprise/console', label: 'Enterprise console' },
+      { href: '/enterprise', label: 'Enterprise plan' },
     ],
   },
 ];

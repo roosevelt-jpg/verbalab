@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import { AnamorphicPanel } from '@/components/media/anamorphic-panel';
 import { CmsPageDemos } from '@/components/marketing/cms-page-demos';
 import { ProductGuideKit } from '@/components/marketing/product-guide-kit';
@@ -12,6 +12,13 @@ export const dynamic = 'force-dynamic';
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  if (slug === 'enterprise') {
+    return {
+      title: 'Enterprise · Lugemi',
+      description:
+        'Lugemi Enterprise — SSO, dedicated capacity, creative and agent platforms for organizational language AI.',
+    };
+  }
   const page = await getCmsPage(slug);
   if (!page) return { title: 'Lugemi' };
   return {
@@ -22,6 +29,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function CmsMarketingPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  if (slug === 'enterprise') redirect('/enterprise');
   const [doc, page] = await Promise.all([getCmsDocument(), getCmsPage(slug)]);
   if (!page) notFound();
 

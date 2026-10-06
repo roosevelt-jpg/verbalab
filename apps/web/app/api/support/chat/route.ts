@@ -84,7 +84,7 @@ const FAQ: FaqItem[] = [
   {
     keys: ['sso', 'saml', 'enterprise', 'scim'],
     answer:
-      'SSO / dedicated capacity is Enterprise. Open /enterprise for the surface, or escalate so sales can scope a contract.',
+      'SSO / dedicated capacity is Enterprise. Open /enterprise for the plan page, /enterprise/console for org controls, or escalate so sales can scope a contract.',
     escalate: true,
   },
   {
