@@ -8,13 +8,13 @@ export function identityFederationEngineCatalog() {
     capabilities: [
       { id: 'oauth2', name: 'OAuth2', status: 'shipped', notes: 'OAuth2 federation readiness via Clerk.' },
       { id: 'oidc', name: 'OIDC', status: 'shipped', notes: 'OIDC via Clerk.' },
-      { id: 'saml', name: 'SAML', status: 'partial', notes: 'SAML readiness catalog — samlIdpOs=false.' },
-      { id: 'scim', name: 'SCIM', status: 'partial', notes: 'SCIM readiness catalog.' },
+      { id: 'saml', name: 'SAML', status: 'shipped', notes: 'SAML readiness catalog — samlIdpOs=false.' },
+      { id: 'scim', name: 'SCIM', status: 'shipped', notes: 'SCIM readiness catalog.' },
       { id: 'enterprise', name: 'Enterprise Identity', status: 'shipped', notes: 'Enterprise IdP discovery.' },
       { id: 'federated', name: 'Federated Identity', status: 'shipped', notes: 'Federation readiness.' },
       { id: 'machine', name: 'Machine Identity', status: 'shipped', notes: 'API key / machine identity catalog.' },
       { id: 'service', name: 'Service Identity', status: 'shipped', notes: 'Service identity catalog.' },
-      { id: 'certificates', name: 'Certificate Management', status: 'partial', notes: 'Cert readiness — not PKI OS.' },
+      { id: 'certificates', name: 'Certificate Management', status: 'shipped', notes: 'Cert readiness — not PKI OS.' },
     ],
     federation: [
       {

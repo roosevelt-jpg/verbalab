@@ -135,7 +135,7 @@ export function TranslateClient() {
           >
             {engine.capabilities.slice(0, 8).map((c) => (
               <li key={c.id} className="vl-tag" style={{ opacity: c.status === 'deferred' ? 0.55 : 1 }}>
-                {c.name} · {c.status}
+                {c.name}
               </li>
             ))}
           </ul>

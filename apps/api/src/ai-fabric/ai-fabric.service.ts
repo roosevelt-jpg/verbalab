@@ -78,7 +78,7 @@ export class AiFabricService {
         policyFabric: false,
         kafkaHyperscalerOs: true,
         serviceMeshOs: true,
-        regeneratesVolumes1to9: false,
+        regeneratesPriorLayers: false,
       },
       links: {
         aiFabric: '/ai-fabric',

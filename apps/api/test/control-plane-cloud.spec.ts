@@ -69,7 +69,7 @@ describe('Control Plane Cloud', () => {
     expect(res.body.honesty.kubernetesControlPlaneOs).toBe(false);
     expect(res.body.honesty.istioOs).toBe(false);
     expect(res.body.honesty.hashicorpVaultOs).toBe(false);
-    expect(res.body.honesty.regeneratesVolumes1to16).toBe(false);
+    expect(res.body.honesty.regeneratesPriorLayers).toBe(false);
     expect(res.body.honesty.integratesExistingSystems).toBe(true);
     expect(res.body.products.length).toBeGreaterThan(8);
 

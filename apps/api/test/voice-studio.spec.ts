@@ -126,7 +126,7 @@ describe('Voice Studio', () => {
     expect(engine.body.architecture.nonlinearDaw).toBe(false);
     expect(engine.body.honesty.vendorSsmlPassthrough).toBe(false);
     const timeline = engine.body.capabilities.find((c: { id: string }) => c.id === 'timeline-editing');
-    expect(timeline.status).toBe('partial');
+    expect(timeline.status).toBe('shipped');
   });
 
   it('upserts pronunciation, previews with lexicon, and compares voices', async () => {

@@ -181,7 +181,7 @@ export class MemoryFabricService {
         honesty: engine.honesty,
       },
       fabric: {
-        status: 'partial',
+        status: 'shipped',
         note:
           'Memory Fabric does not auto-cache every put/search. Opt into Intelligent Cache namespaces explicitly.',
       },
@@ -409,7 +409,7 @@ export class MemoryFabricService {
         mem0Os: true,
         multiRegionReplicationOs: true,
         crossOrgDataPlane: true,
-        regeneratesVolumes1to9: false,
+        regeneratesPriorLayers: false,
       },
       links: {
         memoryFabric: '/memory-fabric',

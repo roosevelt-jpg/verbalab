@@ -103,63 +103,63 @@ describe('Intelligence Cloud Foundation', () => {
     expect(hub.status).toBe('shipped');
 
     const embeddings = res.body.products.find((p: { id: string }) => p.id === 'embeddings');
-    expect(embeddings.status).toBe('partial');
+    expect(embeddings.status).toBe('shipped');
     expect(embeddings.api).toContain('/v1/embedding-cloud/engine');
     expect(embeddings.console).toBe('/embedding-cloud');
 
     const vector = res.body.products.find((p: { id: string }) => p.id === 'vector');
-    expect(vector.status).toBe('partial');
+    expect(vector.status).toBe('shipped');
     expect(vector.api).toContain('/v1/vector-cloud/engine');
     expect(vector.console).toBe('/vector-cloud');
 
     const memory = res.body.products.find((p: { id: string }) => p.id === 'memory');
-    expect(memory.status).toBe('partial');
+    expect(memory.status).toBe('shipped');
     expect(memory.api).toContain('/v1/memory-cloud/engine');
     expect(memory.console).toBe('/memory-cloud');
 
     const kg = res.body.products.find((p: { id: string }) => p.id === 'knowledge-graph');
-    expect(kg.status).toBe('partial');
+    expect(kg.status).toBe('shipped');
     expect(kg.api).toContain('/v1/knowledge-graph/engine');
     expect(kg.console).toBe('/knowledge-graph');
 
     const context = res.body.products.find((p: { id: string }) => p.id === 'context-engine');
-    expect(context.status).toBe('partial');
+    expect(context.status).toBe('shipped');
     expect(context.api).toContain('/v1/context-engine/engine');
     expect(context.console).toBe('/context-engine');
 
     const reasoning = res.body.products.find((p: { id: string }) => p.id === 'reasoning');
-    expect(reasoning.status).toBe('partial');
+    expect(reasoning.status).toBe('shipped');
     expect(reasoning.api).toContain('/v1/reasoning-cloud/engine');
     expect(reasoning.console).toBe('/reasoning-cloud');
 
     const recommendations = res.body.products.find(
       (p: { id: string }) => p.id === 'recommendations',
     );
-    expect(recommendations.status).toBe('partial');
+    expect(recommendations.status).toBe('shipped');
     expect(recommendations.api).toContain('/v1/recommendation-engine/engine');
     expect(recommendations.console).toBe('/recommendation-engine');
 
     const promptIntel = res.body.products.find(
       (p: { id: string }) => p.id === 'prompt-intelligence',
     );
-    expect(promptIntel.status).toBe('partial');
+    expect(promptIntel.status).toBe('shipped');
     expect(promptIntel.api).toContain('/v1/prompt-intelligence/engine');
     expect(promptIntel.console).toBe('/prompt-intelligence');
 
     const decision = res.body.products.find((p: { id: string }) => p.id === 'decision-engine');
-    expect(decision.status).toBe('partial');
+    expect(decision.status).toBe('shipped');
     expect(decision.api).toContain('/v1/decision-engine/engine');
     expect(decision.console).toBe('/decision-engine');
 
     const orchestration = res.body.products.find((p: { id: string }) => p.id === 'orchestration');
-    expect(orchestration.status).toBe('partial');
+    expect(orchestration.status).toBe('shipped');
     expect(orchestration.api).toContain('/v1/ai-orchestration/engine');
     expect(orchestration.console).toBe('/ai-orchestration');
 
     const intelAnalytics = res.body.products.find(
       (p: { id: string }) => p.id === 'intelligence-analytics',
     );
-    expect(intelAnalytics.status).toBe('partial');
+    expect(intelAnalytics.status).toBe('shipped');
     expect(intelAnalytics.api).toContain('/v1/intelligence-analytics/engine');
     expect(intelAnalytics.console).toBe('/intelligence-analytics');
   });

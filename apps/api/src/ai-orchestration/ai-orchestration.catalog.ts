@@ -18,7 +18,7 @@ export function aiOrchestrationCatalog() {
       {
         id: 'multi-model-execution',
         name: 'Multi Model Execution',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/ai-orchestration/run',
         notes: 'pipeline=model_chain — sequential gateway chat calls. Not cross-vendor mesh.',
       },
@@ -53,7 +53,7 @@ export function aiOrchestrationCatalog() {
       {
         id: 'model-chaining',
         name: 'Model Chaining',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/ai-orchestration/run',
         notes: 'pipeline=model_chain — draft then refine via chat gateway.',
       },
@@ -146,13 +146,13 @@ export const ORCH_PIPELINES = [
     id: 'model_chain',
     name: 'Model chain (draft→refine)',
     steps: ['chat', 'chat'],
-    status: 'partial' as const,
+    status: 'shipped' as const,
   },
   {
     id: 'assemble_chat',
     name: 'Assemble context then chat',
     steps: ['assemble', 'chat'],
-    status: 'partial' as const,
+    status: 'shipped' as const,
   },
   {
     id: 'multi_cloud',

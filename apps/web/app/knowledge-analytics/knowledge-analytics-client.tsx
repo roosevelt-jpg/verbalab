@@ -146,7 +146,7 @@ export function KnowledgeAnalyticsClient() {
           <ul style={{ margin: 0, paddingLeft: '1.2rem', color: 'var(--muted)' }}>
             {engine.capabilities.map((c) => (
               <li key={c.id}>
-                <strong>{c.name}</strong> ({c.status}) — {c.notes}
+                <strong>{c.name}</strong> — {c.notes}
               </li>
             ))}
           </ul>

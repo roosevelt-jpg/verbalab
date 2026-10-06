@@ -405,7 +405,7 @@ export class PolicyFabricService {
         opaCedarOs: true,
         grcOs: true,
         crossOrgDataPlane: true,
-        regeneratesVolumes1to9: false,
+        regeneratesPriorLayers: false,
       },
       links: {
         policyFabric: '/policy-fabric',

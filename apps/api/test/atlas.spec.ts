@@ -69,7 +69,7 @@ describe('Atlas scaffold', () => {
     expect(res.body.docs).toBe('/docs/ATLAS.md');
 
     const reasoning = res.body.capabilities.find((c: { id: string }) => c.id === 'reasoning');
-    expect(reasoning.status).toBe('partial');
+    expect(reasoning.status).toBe('shipped');
     const coding = res.body.capabilities.find((c: { id: string }) => c.id === 'coding');
     expect(coding.status).toBe('deferred');
   });

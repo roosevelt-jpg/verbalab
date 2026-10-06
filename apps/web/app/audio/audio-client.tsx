@@ -728,7 +728,7 @@ export function AudioClient() {
           </div>
           <div style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>
             Isolation status:{' '}
-            <strong style={{ color: 'var(--ink)' }}>shipped</strong> energy VAD ·{' '}
+            energy VAD isolate + multi-band stems ·{' '}
             <strong style={{ color: 'var(--ink)' }}>deferred</strong> neural stem separation
           </div>
           {extractNote ? <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--muted)' }}>{extractNote}</p> : null}

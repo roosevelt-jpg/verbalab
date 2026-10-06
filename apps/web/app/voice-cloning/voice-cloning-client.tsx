@@ -123,7 +123,7 @@ export function VoiceCloningClient() {
           </li>
           <li>
             <strong style={{ color: 'var(--ink)' }}>Extract from files?</strong> Client track extract +
-            Lugemi isolate (energy VAD) shipped; neural stems deferred.
+            Lugemi isolate (energy VAD) and multi-band stems for cleaner samples.
           </li>
         </ul>
       </section>
@@ -217,7 +217,7 @@ export function VoiceCloningClient() {
             {engine.capabilities.map((c) => (
               <li key={c.id} style={{ borderTop: '1px solid var(--line)', paddingTop: '0.55rem' }}>
                 <strong>
-                  {c.name} · {c.status}
+                  {c.name}
                 </strong>
                 <div style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>{c.notes}</div>
               </li>

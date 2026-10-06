@@ -25,7 +25,7 @@ export function voiceStudioEngineCatalog() {
       {
         id: 'voice-editing',
         name: 'Voice Editing',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/voice-studio/profiles',
         notes: 'Saved voice profiles (voice/language/notes). Waveform/timbre editing deferred.',
       },
@@ -60,14 +60,14 @@ export function voiceStudioEngineCatalog() {
       {
         id: 'timeline-editing',
         name: 'Timeline Editing',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/voice-studio/timeline/render',
         notes: 'Ordered speak/pause segments only. Not nonlinear NLE / multi-track DAW.',
       },
       {
         id: 'ssml-editor',
         name: 'SSML Editor',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/voice-studio/ssml/compile',
         notes: 'SSML lite (break/prosody/phoneme/say-as) → plain plan. Vendors do not get SSML markup.',
       },
@@ -109,7 +109,7 @@ export function voiceStudioEngineCatalog() {
       {
         id: 'analytics',
         name: 'Analytics',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/voice-studio/engine/analytics',
         notes: 'Studio action counts. Full Voice Analytics lives in the Voice Analytics hub.',
       },

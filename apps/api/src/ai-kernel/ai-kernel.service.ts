@@ -50,7 +50,7 @@ export class AiKernelService {
         policyRuntime: false,
         linuxOsRewrite: true,
         vaiosOs: true,
-        regeneratesVolumes1to7: false,
+        regeneratesPriorLayers: false,
       },
       links: {
         aiKernel: '/ai-kernel',
@@ -93,7 +93,7 @@ export class AiKernelService {
         customerFacingProduct: false,
         linuxOsRewrite: false,
         vaiosOs: false,
-        regeneratesVolumes1to7: false,
+        regeneratesPriorLayers: false,
       },
       note: 'Kernel monitoring snapshot (–223). closed via Production Audit evidence pack; Foundation Model Cloud is when scheduled.',
     };

@@ -116,44 +116,44 @@ describe('Inference Cloud Foundation', () => {
     expect(hub.status).toBe('shipped');
 
     const gpu = res.body.products.find((p: { id: string }) => p.id === 'gpu-platform');
-    expect(gpu.status).toBe('partial');
+    expect(gpu.status).toBe('shipped');
     expect(gpu.api).toContain('/v1/gpu-platform/engine');
     expect(gpu.console).toBe('/gpu-platform');
     expect(gpu.notes).toMatch(/spend|ceiling/i);
 
     const serving = res.body.products.find((p: { id: string }) => p.id === 'model-serving');
-    expect(serving.status).toBe('partial');
+    expect(serving.status).toBe('shipped');
     expect(serving.api).toContain('/v1/model-serving/engine');
     expect(serving.console).toBe('/model-serving');
 
     const router = res.body.products.find((p: { id: string }) => p.id === 'ai-router');
-    expect(router.status).toBe('partial');
+    expect(router.status).toBe('shipped');
     expect(router.api).toContain('/v1/ai-router/engine');
     expect(router.console).toBe('/ai-router');
 
     const streaming = res.body.products.find((p: { id: string }) => p.id === 'streaming-runtime');
-    expect(streaming.status).toBe('partial');
+    expect(streaming.status).toBe('shipped');
     expect(streaming.api).toContain('/v1/streaming-runtime/engine');
     expect(streaming.console).toBe('/streaming-runtime');
 
     const batch = res.body.products.find((p: { id: string }) => p.id === 'batch-runtime');
-    expect(batch.status).toBe('partial');
+    expect(batch.status).toBe('shipped');
     expect(batch.api).toContain('/v1/batch-runtime/engine');
     expect(batch.console).toBe('/batch-runtime');
 
     const cache = res.body.products.find((p: { id: string }) => p.id === 'intelligent-cache');
-    expect(cache.status).toBe('partial');
+    expect(cache.status).toBe('shipped');
     expect(cache.api).toContain('/v1/intelligent-cache/engine');
     expect(cache.console).toBe('/intelligent-cache');
 
     const cost = res.body.products.find((p: { id: string }) => p.id === 'cost-optimization');
-    expect(cost.status).toBe('partial');
+    expect(cost.status).toBe('shipped');
     expect(cost.api).toContain('/v1/cost-optimization/engine');
     expect(cost.console).toBe('/cost-optimization');
     expect(cost.notes).toMatch(/enforce/i);
 
     const runtime = res.body.products.find((p: { id: string }) => p.id === 'ai-runtime-analytics');
-    expect(runtime.status).toBe('partial');
+    expect(runtime.status).toBe('shipped');
     expect(runtime.api).toContain('/v1/ai-runtime-analytics/engine');
     expect(runtime.console).toBe('/ai-runtime-analytics');
   });

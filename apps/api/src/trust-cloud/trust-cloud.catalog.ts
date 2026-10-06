@@ -144,9 +144,9 @@ export function trustCloudArchitectureNotes(): Record<string, unknown> {
       'open-science-platform',
       'cultural-intelligence',
     ],
-    regeneratesVolumes1to14: false,
+    regeneratesPriorLayers: false,
     platformEngineeringOs: false,
-    deferredToVolume16Plus: ['platform-engineering-cloud'],
+    deferredNext: ['platform-engineering-cloud'],
   };
 }
 
@@ -157,7 +157,7 @@ export function trustCloudHonesty(): Record<string, boolean | string> {
     grcSuiteOs: false,
     certificationOs: false,
     siemOs: false,
-    regeneratesVolumes1to14: false,
+    regeneratesPriorLayers: false,
     integratesExistingSystems: true,
     complianceToolingNotCertification: true,
     notCertifiedCompliant: true,

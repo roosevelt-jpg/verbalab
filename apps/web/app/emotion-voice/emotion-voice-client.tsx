@@ -142,7 +142,7 @@ export function EmotionVoiceClient() {
               .map((c) => (
                 <li key={c.id} style={{ borderTop: '1px solid var(--line)', paddingTop: '0.55rem' }}>
                   <strong>
-                    {c.name} · {c.status}
+                    {c.name}
                   </strong>
                   <div style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>{c.notes}</div>
                 </li>

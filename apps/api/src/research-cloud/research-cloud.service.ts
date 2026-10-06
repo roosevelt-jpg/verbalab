@@ -79,7 +79,7 @@ export class ResearchCloudService {
         mlflowOs: true,
         publicLeaderboardOs: true,
         aiSovereigntyOs: true,
-        regeneratesVolumes1to12: false,
+        regeneratesPriorLayers: false,
       },
       links: {
         researchCloud: '/research-cloud',

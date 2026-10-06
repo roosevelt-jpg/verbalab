@@ -70,7 +70,7 @@ describe('Trust Cloud', () => {
     expect(res.body.honesty.policyRuntimeIntegrated).toBe(true);
     expect(res.body.honesty.traditionalKnowledgeConsentRequired).toBe(true);
     expect(res.body.honesty.humanSignOffRequired).toBe(true);
-    expect(res.body.honesty.regeneratesVolumes1to14).toBe(false);
+    expect(res.body.honesty.regeneratesPriorLayers).toBe(false);
 
   });
 

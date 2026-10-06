@@ -73,11 +73,11 @@ export function aiPublicationPlatformEngineCatalog() {
       style: 'nest_modular_monolith',
       cqrs: true,
       hexagonalRewrite: false,
-      regeneratesVolumes1to12: false,
+      regeneratesPriorLayers: false,
       doiRegistryOs: false,
     },
     honesty: {
-      regeneratesVolumes1to12: false,
+      regeneratesPriorLayers: false,
       doiRegistryOs: false,
       doiFieldOptionalStub: true,
       coverageComplete: false,

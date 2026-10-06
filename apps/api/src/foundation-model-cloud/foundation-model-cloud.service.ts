@@ -69,7 +69,7 @@ export class FoundationModelCloudService {
         modelRegistry: false,
         trainsCompetitiveFoundationWeights: true,
         openAiReplacementOs: true,
-        regeneratesVolumes1to8: false,
+        regeneratesPriorLayers: false,
       },
       links: {
         foundationModelCloud: '/foundation-model-cloud',

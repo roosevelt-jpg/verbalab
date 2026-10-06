@@ -158,7 +158,7 @@ export class ReasoningFabricService {
         honesty: engine.honesty,
       },
       fabric: {
-        status: 'partial',
+        status: 'shipped',
         note:
           'Reasoning Fabric does not auto-cache every reason() call. Opt into Intelligent Cache namespaces explicitly.',
       },
@@ -329,7 +329,7 @@ export class ReasoningFabricService {
         customReasonerOs: true,
         symbolicReasonerOs: true,
         crossOrgDataPlane: true,
-        regeneratesVolumes1to9: false,
+        regeneratesPriorLayers: false,
       },
       links: {
         reasoningFabric: '/reasoning-fabric',

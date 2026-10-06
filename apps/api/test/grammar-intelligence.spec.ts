@@ -69,14 +69,14 @@ describe('Grammar Intelligence Phase 10', () => {
     expect(readFileSync(join(root, 'docs/GRAMMAR.md'), 'utf8')).toContain('/suggest');
   });
 
-  it('exposes intelligence catalog with partial medical/legal', async () => {
+  it('exposes intelligence catalog with wired medical/legal', async () => {
     const res = await request(app.getHttpServer()).get('/v1/grammar/intelligence').expect(200);
     expect(res.body.product).toMatch(/Grammar/i);
     expect(
       res.body.capabilities.some((c: { id: string; status: string }) => c.id === 'spell_checking' && c.status === 'shipped'),
     ).toBe(true);
     expect(
-      res.body.capabilities.some((c: { id: string; status: string }) => c.id === 'medical_writing' && c.status === 'partial'),
+      res.body.capabilities.some((c: { id: string; status: string }) => c.id === 'medical_writing' && c.status === 'shipped'),
     ).toBe(true);
   });
 

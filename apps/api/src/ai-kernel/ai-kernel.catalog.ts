@@ -24,7 +24,7 @@ export function aiKernelRuntimeCatalog(): KernelRuntimeRow[] {
     {
       id: 'memory-runtime',
       name: 'Memory Runtime',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/memory-runtime/engine',
       console: '/memory-runtime',
       notes:
@@ -33,7 +33,7 @@ export function aiKernelRuntimeCatalog(): KernelRuntimeRow[] {
     {
       id: 'prompt-runtime',
       name: 'Prompt Runtime',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/prompt-runtime/engine',
       console: '/prompt-runtime',
       notes:
@@ -42,7 +42,7 @@ export function aiKernelRuntimeCatalog(): KernelRuntimeRow[] {
     {
       id: 'context-runtime',
       name: 'Context Runtime',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/context-runtime/engine',
       console: '/context-runtime',
       notes:
@@ -51,7 +51,7 @@ export function aiKernelRuntimeCatalog(): KernelRuntimeRow[] {
     {
       id: 'reasoning-runtime',
       name: 'Reasoning Runtime',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/reasoning-runtime/engine',
       console: '/reasoning-runtime',
       notes:
@@ -60,7 +60,7 @@ export function aiKernelRuntimeCatalog(): KernelRuntimeRow[] {
     {
       id: 'agent-runtime',
       name: 'Agent Runtime',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/agent-runtime/engine',
       console: '/agent-runtime',
       notes:
@@ -69,7 +69,7 @@ export function aiKernelRuntimeCatalog(): KernelRuntimeRow[] {
     {
       id: 'workflow-runtime',
       name: 'Workflow Runtime',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/workflow-runtime/engine',
       console: '/workflow-runtime',
       notes:
@@ -78,7 +78,7 @@ export function aiKernelRuntimeCatalog(): KernelRuntimeRow[] {
     {
       id: 'plugin-runtime',
       name: 'Plugin Runtime',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/plugin-runtime/engine',
       console: '/plugin-runtime',
       notes:
@@ -87,7 +87,7 @@ export function aiKernelRuntimeCatalog(): KernelRuntimeRow[] {
     {
       id: 'policy-runtime',
       name: 'Policy Runtime',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/policy-runtime/engine',
       console: '/policy-runtime',
       notes:
@@ -96,7 +96,7 @@ export function aiKernelRuntimeCatalog(): KernelRuntimeRow[] {
     {
       id: 'kernel-telemetry',
       name: 'Kernel Telemetry',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/ai-kernel/monitoring',
       console: '/ai-kernel',
       notes: 'Foundation monitoring snapshot — full kernel telemetry deferred with runtimes.',
@@ -124,7 +124,7 @@ export function aiKernelArchitectureNotes() {
     customerFacingProduct: false,
     linuxOsRewrite: false,
     vaiosOs: false,
-    regeneratesVolumes1to7: false,
+    regeneratesPriorLayers: false,
     extendsInferenceCloud: true,
     extendsMemoryCloud: true,
     extendsPromptIntelligence: true,

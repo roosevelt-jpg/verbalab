@@ -7,7 +7,7 @@ import { SITE_CONTENT, type HubCatalogItem } from '@/data/site-content';
 import './media/anamorphic.css';
 
 /**
- * Shared console shell for hub / VL-* surfaces: prefilled catalog + Lugemi 3D panel
+ * Shared console shell for hub surfaces: prefilled catalog + Lugemi 3D panel
  * so pages never look abandoned while waiting on API or keys.
  */
 export function HubConsole({

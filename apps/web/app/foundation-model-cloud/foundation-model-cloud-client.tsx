@@ -158,7 +158,7 @@ export function FoundationModelCloudClient() {
             <ul style={{ margin: 0, paddingLeft: '1.1rem', lineHeight: 1.7 }}>
               {data.products.map((p) => (
                 <li key={p.id}>
-                  <strong>{p.name}</strong> ({p.status} · {p.modality}) — {p.notes}
+                  <strong>{p.name}</strong> ({p.modality}) — {p.notes}
                 </li>
               ))}
             </ul>

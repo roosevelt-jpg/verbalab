@@ -100,7 +100,7 @@ export function contextRuntimeCatalog() {
       {
         id: 'model-context',
         name: 'Model Context',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/context-runtime/assemble',
         notes: 'Sandbox model/provider hint block — not a model-router OS.',
       },
@@ -121,7 +121,7 @@ export function contextRuntimeCatalog() {
       {
         id: 'context-compression',
         name: 'Context Compression',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/context-runtime/compress',
         notes: 'Char-budget truncation — not LLM summarization OS.',
       },
@@ -177,7 +177,7 @@ export function contextRuntimeCatalog() {
       {
         id: 'production-deployment',
         name: 'Production deployment',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/context-runtime/assemble',
         notes: 'Ships with Nest API — not a separate context cluster.',
       },

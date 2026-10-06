@@ -151,7 +151,7 @@ describe('Trust Cloud Production Audit', () => {
     expect(hub.body.honesty.policyRuntimeIntegrated).toBe(true);
     expect(hub.body.honesty.traditionalKnowledgeConsentRequired).toBe(true);
     expect(hub.body.honesty.humanSignOffRequired).toBe(true);
-    expect(hub.body.honesty.regeneratesVolumes1to14).toBe(false);
+    expect(hub.body.honesty.regeneratesPriorLayers).toBe(false);
 
     const byId = Object.fromEntries(
       hub.body.products.map((p: { id: string; status: string }) => [p.id, p.status]),

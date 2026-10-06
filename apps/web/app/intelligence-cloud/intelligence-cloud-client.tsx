@@ -165,7 +165,6 @@ export function IntelligenceCloudClient() {
               {data.products.map((p) => (
                 <li key={p.id} style={{ borderTop: '1px solid var(--line)', padding: '0.55rem 0' }}>
                   <strong>{p.name}</strong>{' '}
-                  <span style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>· {p.status}</span>
                   <div style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>{p.notes}</div>
                   {p.console ? (
                     <Link href={p.console} style={{ fontSize: '0.85rem' }}>

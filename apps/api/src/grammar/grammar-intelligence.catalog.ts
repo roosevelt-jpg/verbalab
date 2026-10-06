@@ -67,21 +67,21 @@ export function grammarIntelligenceCatalog() {
       {
         id: 'medical_writing',
         name: 'Medical writing',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/style/rewrite profile=medical',
         notes: 'Tone profile only — not clinical documentation or medical advice.',
       },
       {
         id: 'legal_writing',
         name: 'Legal writing',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/style/rewrite profile=legal',
         notes: 'Tone profile only — not legal advice or contract drafting.',
       },
       {
         id: 'government_writing',
         name: 'Government writing',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/style/rewrite profile=government',
         notes: 'Plain formal tone — not policy/compliance certification.',
       },
@@ -93,7 +93,7 @@ export function grammarIntelligenceCatalog() {
       graphql: { status: 'shipped', notes: 'checkGrammar + suggestWriting' },
       sdk: { status: 'shipped', package: '@lugemi/sdk' },
       analytics: { status: 'shipped', api: 'GET /v1/grammar/analytics' },
-      monitoring: { status: 'partial', api: 'GET /v1/metrics/translate', notes: 'Shared observability stack' },
+      monitoring: { status: 'shipped', api: 'GET /v1/metrics/translate', notes: 'Shared observability stack' },
     },
     links: {
       dashboard: '/grammar-intelligence',

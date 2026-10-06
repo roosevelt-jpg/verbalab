@@ -150,7 +150,7 @@ describe('Control Plane Cloud Production Audit', () => {
       .expect(200);
     expect(hub.body.honesty.executesInference).toBe(false);
     expect(hub.body.honesty.dataPlaneOs).toBe(false);
-    expect(hub.body.honesty.regeneratesVolumes1to16).toBe(false);
+    expect(hub.body.honesty.regeneratesPriorLayers).toBe(false);
 
     const byId = Object.fromEntries(
       hub.body.products.map((p: { id: string; status: string }) => [p.id, p.status]),

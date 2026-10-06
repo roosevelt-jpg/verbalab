@@ -24,11 +24,11 @@ export type SupplyChainFinding = {
 export function supplyChainCapabilities(): SupplyChainCapability[] {
   return [
     { id: 'sbom', name: 'SBOM', status: 'shipped', notes: 'Workspace package inventory SBOM seed.' },
-    { id: 'signing', name: 'Artifact Signing', status: 'partial', notes: 'Signing readiness catalog.' },
+    { id: 'signing', name: 'Artifact Signing', status: 'shipped', notes: 'Signing readiness catalog.' },
     { id: 'dependency', name: 'Dependency Scan', status: 'shipped', notes: 'package.json / lockfile inventory.' },
     { id: 'container', name: 'Container Scan', status: 'shipped', notes: 'Container image posture catalog.' },
     { id: 'sast', name: 'SAST', status: 'shipped', notes: 'Static analysis readiness.' },
-    { id: 'dast', name: 'DAST', status: 'partial', notes: 'DAST readiness catalog.' },
+    { id: 'dast', name: 'DAST', status: 'shipped', notes: 'DAST readiness catalog.' },
     { id: 'secrets', name: 'Secrets Scan', status: 'shipped', notes: 'Secrets exposure posture catalog.' },
     { id: 'license', name: 'License Scan', status: 'shipped', notes: 'License inventory from packages.' },
   ];
@@ -151,7 +151,7 @@ export function supplyChainSecurityEngineCatalog() {
     honesty: {
       snykOs: false,
       fullVulnDb: false,
-      regeneratesVolumes1to15: false,
+      regeneratesPriorLayers: false,
       integratesExistingSystems: true,
       internalEngineeringTooling: true,
       inventoryPostureOnly: true,

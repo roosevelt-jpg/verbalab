@@ -63,7 +63,6 @@ export function AfricanIntelligenceCloudClient() {
                 <li key={p.id} style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem' }}>
                   <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'baseline', flexWrap: 'wrap' }}>
                     {p.console ? <Link href={p.console}>{p.name}</Link> : <span>{p.name}</span>}
-                    <span style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>{p.status}</span>
                   </div>
                   <p style={{ margin: '0.25rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>{p.notes}</p>
                 </li>

@@ -116,7 +116,7 @@ export function organizationControlEngineCatalog() {
       regeneratesClerk: false,
       extendsIdentity: true,
       executesInference: false,
-      regeneratesVolumes1to16: false,
+      regeneratesPriorLayers: false,
       integratesExistingSystems: true,
       controlPlaneManagementLayer: true,
     },

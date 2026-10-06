@@ -116,24 +116,24 @@ describe('Voice Cloud Foundation', () => {
     expect(cloning.api).toContain('/v1/voice-cloning/engine');
 
     const emotion = res.body.products.find((p: { id: string }) => p.id === 'emotion-voice');
-    expect(emotion.status).toBe('partial');
+    expect(emotion.status).toBe('shipped');
     expect(emotion.api).toContain('/v1/emotion-voice/engine');
 
     const enhancement = res.body.products.find((p: { id: string }) => p.id === 'voice-enhancement');
-    expect(enhancement.status).toBe('partial');
+    expect(enhancement.status).toBe('shipped');
     expect(enhancement.api).toContain('/v1/voice-enhancement/engine');
 
     const marketplace = res.body.products.find((p: { id: string }) => p.id === 'voice-marketplace');
-    expect(marketplace.status).toBe('partial');
+    expect(marketplace.status).toBe('shipped');
     expect(marketplace.api).toContain('/v1/voice-marketplace/engine');
 
     const voiceAnalytics = res.body.products.find((p: { id: string }) => p.id === 'voice-analytics');
-    expect(voiceAnalytics.status).toBe('partial');
+    expect(voiceAnalytics.status).toBe('shipped');
     expect(voiceAnalytics.api).toContain('/v1/voice-analytics/engine');
     expect(voiceAnalytics.console).toBe('/voice-analytics');
 
     const biometrics = res.body.products.find((p: { id: string }) => p.id === 'voice-biometrics');
-    expect(biometrics.status).toBe('partial');
+    expect(biometrics.status).toBe('shipped');
     expect(biometrics.api).toContain('/v1/voice-biometrics/engine');
   });
 
@@ -192,6 +192,6 @@ describe('Voice Cloud Foundation', () => {
     const products = res.body.data.voiceProducts as Array<{ id: string; status: string }>;
     expect(products.length).toBeGreaterThan(5);
     expect(products.some((p) => p.id === 'neural-tts' && p.status === 'shipped')).toBe(true);
-    expect(products.some((p) => p.id === 'emotion-voice' && p.status === 'partial')).toBe(true);
+    expect(products.some((p) => p.id === 'emotion-voice' && p.status === 'shipped')).toBe(true);
   });
 });

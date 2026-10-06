@@ -102,7 +102,7 @@ describe('Ecosystem Cloud Foundation', () => {
     expect(res.body.architecture.paymentProcessorOs).toBe(false);
     expect(res.body.architecture.storesRawCardData).toBe(false);
     expect(res.body.architecture.stripeOrEquivalentRequired).toBe(true);
-    expect(res.body.architecture.regeneratesVolumes1to10).toBe(false);
+    expect(res.body.architecture.regeneratesPriorLayers).toBe(false);
     expect(res.body.architecture.regeneratesMarketplaceVl090).toBe(false);
     expect(res.body.architecture.pluginAgentSandboxRequired).toBe(true);
     expect(res.body.architecture.realMoneyRiskCategory).toBe(true);
@@ -199,7 +199,7 @@ describe('Ecosystem Cloud Foundation', () => {
     expect(overview.deferred.connectorMarketplace).toBe(false);
     expect(overview.deferred.voiceLanguageMarketplace).toBe(false);
     expect(overview.deferred.creatorEconomyExpansion).toBe(false);
-    expect(overview.deferred.regeneratesVolumes1to10).toBe(false);
+    expect(overview.deferred.regeneratesPriorLayers).toBe(false);
     expect(overview.deferred.paymentProcessorOs).toBe(false);
     expect(overview.links.ecosystemCloud).toBe('/ecosystem-cloud');
     expect(overview.links.contentMarketplace).toBe('/marketplace');

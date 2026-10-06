@@ -7,6 +7,7 @@ import {
   analyzeAudioBuffer,
   enhanceAudio,
   isolateVoice,
+  separateStems,
   upscaleAudio,
 } from './audio-dsp';
 
@@ -183,6 +184,46 @@ export class AudioIntelligenceService {
       bytes: result.wav.length,
       speechRatio: result.speechRatio,
       note: result.note,
+    };
+  }
+
+  async stems(input: {
+    file: Express.Multer.File;
+    organizationId: string;
+    workspaceId: string;
+    userId?: string;
+    apiKeyId?: string;
+    ip?: string;
+  }) {
+    this.audio.assertAllowedAudio(input.file);
+    const result = separateStems(input.file.buffer);
+    await this.record(input, 'audio_intelligence.stems', 'POST /v1/audio-intelligence/stems', {
+      speechRatio: result.speechRatio,
+      stemCount: 4,
+    });
+    return {
+      format: 'wav',
+      mimeType: 'audio/wav',
+      speechRatio: result.speechRatio,
+      note: result.note,
+      stems: {
+        voice: {
+          audioBase64: result.voice.toString('base64'),
+          bytes: result.voice.length,
+        },
+        low: {
+          audioBase64: result.low.toString('base64'),
+          bytes: result.low.length,
+        },
+        high: {
+          audioBase64: result.high.toString('base64'),
+          bytes: result.high.length,
+        },
+        residual: {
+          audioBase64: result.residual.toString('base64'),
+          bytes: result.residual.length,
+        },
+      },
     };
   }
 

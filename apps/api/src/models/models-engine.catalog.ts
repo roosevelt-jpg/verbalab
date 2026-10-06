@@ -46,14 +46,14 @@ export function modelsEngineCatalog() {
       {
         id: 'model-registry-hub',
         name: 'Model Registry hub',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/model-registry/engine',
         notes: 'Cards/versions/deploy plans — sandbox depth, not mesh canary OS.',
       },
       {
         id: 'model-serving',
         name: 'Model Serving',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/model-serving/engine',
         notes: 'Serving plans over existing gateway — not vLLM OS.',
       },

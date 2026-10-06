@@ -170,7 +170,7 @@ export function PluginRuntimeClient() {
           <ul>
             {plugins.map((p) => (
               <li key={p.id}>
-                {p.name} · {p.status} · v{p.version} · {p.permissions.join(', ')}
+                {p.name} · v{p.version} · {p.permissions.join(', ')}
               </li>
             ))}
           </ul>

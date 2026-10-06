@@ -168,7 +168,7 @@ export function VoiceBiometricsClient() {
           <ul style={{ margin: '0.75rem 0 0', paddingLeft: '1.1rem' }}>
             {engine.capabilities.map((c) => (
               <li key={c.id} style={{ marginBottom: '0.35rem' }}>
-                <strong>{c.name}</strong> · {c.status}
+                <strong>{c.name}</strong>
                 <div style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>{c.notes}</div>
               </li>
             ))}

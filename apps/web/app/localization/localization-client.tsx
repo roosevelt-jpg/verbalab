@@ -96,7 +96,7 @@ export function LocalizationClient() {
         <ul style={{ listStyle: 'none', padding: 0, margin: '0 0 1.75rem', display: 'grid', gap: '0.4rem' }}>
           {platform.capabilities.map((c) => (
             <li key={c.id} style={{ borderTop: '1px solid var(--line)', paddingTop: '0.4rem', fontSize: '0.92rem' }}>
-              <strong>{c.name}</strong> · {c.status}
+              <strong>{c.name}</strong>
               {c.api ? ` · ${c.api}` : ''}
               <span style={{ display: 'block', color: 'var(--muted)' }}>{c.notes}</span>
             </li>

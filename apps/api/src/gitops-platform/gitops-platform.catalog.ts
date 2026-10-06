@@ -86,7 +86,7 @@ export function gitopsPlatformEngineCatalog() {
       fluxOs: false,
       kubernetesControlPlaneOs: false,
       flySharedPlatform: true,
-      regeneratesVolumes1to15: false,
+      regeneratesPriorLayers: false,
       integratesExistingSystems: true,
       internalEngineeringTooling: true,
     },

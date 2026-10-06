@@ -11,6 +11,10 @@ import {
   FixtureVoiceCloneAdapter,
   type VoiceCloneSample,
 } from './vendor-voice-clone.adapter';
+import {
+  computeVoiceFingerprint,
+  cosineSimilarity,
+} from '../speaker-intelligence/fingerprint';
 
 export const VOICE_CLONE_PREFIX = 'clone:';
 
@@ -383,14 +387,57 @@ export class VoiceClonesService {
         HttpStatus.BAD_REQUEST,
       );
     }
+
+    /** Lugemi-native cross-sample fingerprint consistency (not PAD). */
+    const keys = Array.isArray(row.sampleStorageKeys)
+      ? (row.sampleStorageKeys as string[])
+      : [];
+    const vectors: number[][] = [];
+    for (const key of keys.slice(0, 8)) {
+      try {
+        const buffer = await this.storage.readBuffer(key);
+        const fp = computeVoiceFingerprint(buffer);
+        if (fp.vector?.length) vectors.push(fp.vector);
+      } catch {
+        /* skip unreadable sample */
+      }
+    }
+    let consistencyScore: number | null = null;
+    if (vectors.length >= 2) {
+      let sum = 0;
+      let pairs = 0;
+      for (let i = 0; i < vectors.length; i++) {
+        for (let j = i + 1; j < vectors.length; j++) {
+          sum += cosineSimilarity(vectors[i]!, vectors[j]!);
+          pairs += 1;
+        }
+      }
+      consistencyScore = pairs > 0 ? sum / pairs : null;
+      if (consistencyScore !== null && consistencyScore < 0.55) {
+        throw new ApiException(
+          'validation_error',
+          `Enrollment samples are inconsistent (fingerprint score ${consistencyScore.toFixed(3)} < 0.55). Re-record with the same speaker.`,
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    }
+
+    const autoNotes = [
+      `Sample count ${row.sampleCount} meets ${row.cloneMode} enrollment bar`,
+      'consent present',
+      consistencyScore !== null
+        ? `fingerprint consistency ${consistencyScore.toFixed(3)} across ${vectors.length} samples`
+        : vectors.length === 1
+          ? 'single-sample fingerprint recorded'
+          : 'fingerprint check skipped (samples unavailable)',
+    ].join('; ');
+
     const updated = await this.prisma.voiceClone.update({
       where: { id: row.id },
       data: {
         enrollmentVerified: true,
         enrollmentVerifiedAt: new Date(),
-        enrollmentVerifyNotes:
-          input.notes?.trim() ||
-          `Sample count ${row.sampleCount} meets ${row.cloneMode} enrollment bar; consent present`,
+        enrollmentVerifyNotes: input.notes?.trim() || autoNotes,
       },
     });
     await this.audit.record({
@@ -403,9 +450,19 @@ export class VoiceClonesService {
         voiceCloneId: row.id,
         cloneMode: row.cloneMode,
         sampleCount: row.sampleCount,
+        fingerprintConsistency: consistencyScore,
+        fingerprintSamples: vectors.length,
       },
     });
-    return this.serialize(updated);
+    return {
+      ...this.serialize(updated),
+      voiceVerification: {
+        provider: 'lugemi_fingerprint_v1',
+        consistencyScore,
+        samplesCompared: vectors.length,
+        note: 'Cross-sample fingerprint consistency — not PAD/anti-spoof certification.',
+      },
+    };
   }
 
   private async requireClone(organizationId: string, workspaceId: string, id: string) {

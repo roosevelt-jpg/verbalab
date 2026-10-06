@@ -111,7 +111,7 @@ export function AtlasClient() {
             <ul style={{ margin: 0, paddingLeft: '1.1rem', lineHeight: 1.7 }}>
               {engine.capabilities.map((c) => (
                 <li key={c.id}>
-                  <strong>{c.name}</strong> ({c.status}) — {c.notes}
+                  <strong>{c.name}</strong> — {c.notes}
                 </li>
               ))}
             </ul>

@@ -194,6 +194,36 @@ export class AudioIntelligenceController {
     });
   }
 
+  @Post('stems')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(TranslateAuthGuard, RateLimitGuard)
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: memoryStorage(),
+      limits: { fileSize: audioMaxBytes() },
+    }),
+  )
+  stems(
+    @Req()
+    req: Request & {
+      translateAuth: TranslateAuthContext;
+      sessionAuth?: SessionContext;
+    },
+    @UploadedFile() file: Express.Multer.File | undefined,
+  ) {
+    if (!file) {
+      throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
+    }
+    return this.audioIntel.stems({
+      file,
+      organizationId: req.translateAuth.organizationId,
+      workspaceId: req.translateAuth.workspaceId,
+      apiKeyId: req.translateAuth.apiKeyId,
+      userId: req.sessionAuth?.userId,
+      ip: clientIp(req),
+    });
+  }
+
   @Post('analyze/stream')
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(

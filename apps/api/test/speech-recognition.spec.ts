@@ -125,7 +125,7 @@ describe('Speech Recognition Engine', () => {
       ]),
     );
     const streaming = engine.body.capabilities.find((c: { id: string }) => c.id === 'streaming-stt');
-    expect(streaming.status).toBe('partial');
+    expect(streaming.status).toBe('shipped');
 
     const packs = await request(app.getHttpServer()).get('/v1/speech/vocabulary/packs').expect(200);
     expect(packs.body.packs.map((p: { id: string }) => p.id)).toEqual(

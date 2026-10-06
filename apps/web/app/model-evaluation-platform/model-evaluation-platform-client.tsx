@@ -130,7 +130,7 @@ export function ModelEvaluationPlatformClient() {
             <ul style={{ margin: 0, paddingLeft: '1.1rem', lineHeight: 1.7 }}>
               {engine.suites.map((s) => (
                 <li key={s.id}>
-                  <strong>{s.name}</strong> ({s.status}
+                  <strong>{s.name}</strong> (
                   {s.runnable ? ' · runnable' : ''}) — {s.notes}
                 </li>
               ))}

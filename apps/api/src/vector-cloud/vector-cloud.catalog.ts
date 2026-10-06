@@ -46,7 +46,7 @@ export function vectorCloudCatalog() {
       {
         id: 'metadata-filter',
         name: 'Metadata Search / Filtering',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/vector-cloud/search',
         notes: 'Filter by documentId. Arbitrary JSON metadata filters deferred.',
       },
@@ -60,14 +60,14 @@ export function vectorCloudCatalog() {
       {
         id: 'collections',
         name: 'Collections',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/vector-cloud/collections',
         notes: 'Single knowledge collection per workspace today.',
       },
       {
         id: 'index-management',
         name: 'Index Management',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/vector-cloud/indexes',
         notes: 'HNSW cosine index from migration — create/drop API deferred.',
       },

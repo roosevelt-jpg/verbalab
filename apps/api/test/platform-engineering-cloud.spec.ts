@@ -72,7 +72,7 @@ describe('Platform Engineering Cloud', () => {
     expect(res.body.honesty.snykOs).toBe(false);
     expect(res.body.honesty.datadogOs).toBe(false);
     expect(res.body.honesty.finopsOs).toBe(false);
-    expect(res.body.honesty.regeneratesVolumes1to15).toBe(false);
+    expect(res.body.honesty.regeneratesPriorLayers).toBe(false);
     expect(res.body.honesty.integratesExistingSystems).toBe(true);
     expect(res.body.honesty.internalEngineeringTooling).toBe(true);
 

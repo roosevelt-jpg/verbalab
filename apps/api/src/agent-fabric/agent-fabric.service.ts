@@ -369,7 +369,7 @@ export class AgentFabricService {
         autoGptOs: true,
         openToolExecution: true,
         crossOrgDataPlane: true,
-        regeneratesVolumes1to9: false,
+        regeneratesPriorLayers: false,
       },
       links: {
         agentFabric: '/agent-fabric',

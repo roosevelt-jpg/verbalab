@@ -91,14 +91,14 @@ export function workflowMarketplaceEngineCatalog() {
       {
         id: 'workflow-analytics',
         name: 'Workflow Analytics',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/workflow-marketplace/analytics',
         notes: 'Listing/install/review/run aggregates. Commerce depth deferred to Creator Economy.',
       },
       {
         id: 'workflow-monetization',
         name: 'Workflow Monetization',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/workflow-marketplace/listings/:id/install',
         notes:
           'Paid listings record MarketplaceSale receipts (15% fee). Stripe Connect when configured — not a payment-processor OS.',

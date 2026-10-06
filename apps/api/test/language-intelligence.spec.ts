@@ -89,12 +89,12 @@ describe('Language Intelligence Phase 12', () => {
     expect(analyzeReadability('The cat sat on the mat. It was warm.').score).toBeGreaterThan(0);
   });
 
-  it('exposes catalog with partial intent/sentiment and shipped readability', async () => {
+  it('exposes catalog with wired intent/sentiment and shipped readability', async () => {
     const res = await request(app.getHttpServer()).get('/v1/language-intelligence').expect(200);
     expect(res.body.product).toMatch(/Language Intelligence/i);
     expect(
       res.body.capabilities.some(
-        (c: { id: string; status: string }) => c.id === 'intent' && c.status === 'partial',
+        (c: { id: string; status: string }) => c.id === 'intent' && c.status === 'shipped',
       ),
     ).toBe(true);
     expect(

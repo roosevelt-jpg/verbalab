@@ -63,7 +63,7 @@ export function globalSchedulerEngineCatalog() {
       runsInference: false,
       extendsPlatformScheduler: true,
       executesInference: false,
-      regeneratesVolumes1to16: false,
+      regeneratesPriorLayers: false,
       integratesExistingSystems: true,
       controlPlaneManagementLayer: true,
     },

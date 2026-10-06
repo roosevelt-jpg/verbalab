@@ -81,7 +81,7 @@ describe('AI Kernel Foundation', () => {
     expect(res.body.architecture.customerFacingProduct).toBe(false);
     expect(res.body.architecture.linuxOsRewrite).toBe(false);
     expect(res.body.architecture.vaiosOs).toBe(false);
-    expect(res.body.architecture.regeneratesVolumes1to7).toBe(false);
+    expect(res.body.architecture.regeneratesPriorLayers).toBe(false);
     expect(res.body.architecture.hexagonalRewrite).toBe(false);
     expect(res.body.architecture.cqrs).toBe(true);
     expect(res.body.architecture.agentActionBoundariesRequired).toBe(true);
@@ -114,22 +114,22 @@ describe('AI Kernel Foundation', () => {
     expect(hub.console).toBe('/ai-kernel');
 
     const agent = res.body.products.find((p: { id: string }) => p.id === 'agent-runtime');
-    expect(agent.status).toBe('partial');
+    expect(agent.status).toBe('shipped');
     expect(agent.console).toBe('/agent-runtime');
     expect(agent.notes).toMatch(/sandbox|permission/i);
 
     const workflow = res.body.products.find((p: { id: string }) => p.id === 'workflow-runtime');
-    expect(workflow.status).toBe('partial');
+    expect(workflow.status).toBe('shipped');
     expect(workflow.console).toBe('/workflow-runtime');
     expect(workflow.notes).toMatch(/sandbox|permission/i);
 
     const plugin = res.body.products.find((p: { id: string }) => p.id === 'plugin-runtime');
-    expect(plugin.status).toBe('partial');
+    expect(plugin.status).toBe('shipped');
     expect(plugin.console).toBe('/plugin-runtime');
     expect(plugin.notes).toMatch(/sandbox|permission/i);
 
     const policy = res.body.products.find((p: { id: string }) => p.id === 'policy-runtime');
-    expect(policy.status).toBe('partial');
+    expect(policy.status).toBe('shipped');
     expect(policy.console).toBe('/policy-runtime');
     expect(policy.notes).toMatch(/hard|block|gate/i);
   });
@@ -152,7 +152,7 @@ describe('AI Kernel Foundation', () => {
     expect(overview.deferred.workflowRuntime).toBe(false);
     expect(overview.deferred.pluginRuntime).toBe(false);
     expect(overview.deferred.policyRuntime).toBe(false);
-    expect(overview.deferred.regeneratesVolumes1to7).toBe(false);
+    expect(overview.deferred.regeneratesPriorLayers).toBe(false);
     expect(overview.safety.policyMustHardGate).toBe(true);
     expect(overview.links.aiKernel).toBe('/ai-kernel');
     expect(overview.links.memoryRuntime).toBe('/memory-runtime');
@@ -167,35 +167,35 @@ describe('AI Kernel Foundation', () => {
     expect(overview.architecture.extendsInferenceCloud).toBe(true);
 
     const memory = overview.products.find((p: { id: string }) => p.id === 'memory-runtime');
-    expect(memory?.status).toBe('partial');
+    expect(memory?.status).toBe('shipped');
     expect(memory?.console).toBe('/memory-runtime');
 
     const prompt = overview.products.find((p: { id: string }) => p.id === 'prompt-runtime');
-    expect(prompt?.status).toBe('partial');
+    expect(prompt?.status).toBe('shipped');
     expect(prompt?.console).toBe('/prompt-runtime');
 
     const context = overview.products.find((p: { id: string }) => p.id === 'context-runtime');
-    expect(context?.status).toBe('partial');
+    expect(context?.status).toBe('shipped');
     expect(context?.console).toBe('/context-runtime');
 
     const reasoning = overview.products.find((p: { id: string }) => p.id === 'reasoning-runtime');
-    expect(reasoning?.status).toBe('partial');
+    expect(reasoning?.status).toBe('shipped');
     expect(reasoning?.console).toBe('/reasoning-runtime');
 
     const agent = overview.products.find((p: { id: string }) => p.id === 'agent-runtime');
-    expect(agent?.status).toBe('partial');
+    expect(agent?.status).toBe('shipped');
     expect(agent?.console).toBe('/agent-runtime');
 
     const workflow = overview.products.find((p: { id: string }) => p.id === 'workflow-runtime');
-    expect(workflow?.status).toBe('partial');
+    expect(workflow?.status).toBe('shipped');
     expect(workflow?.console).toBe('/workflow-runtime');
 
     const plugin = overview.products.find((p: { id: string }) => p.id === 'plugin-runtime');
-    expect(plugin?.status).toBe('partial');
+    expect(plugin?.status).toBe('shipped');
     expect(plugin?.console).toBe('/plugin-runtime');
 
     const policy = overview.products.find((p: { id: string }) => p.id === 'policy-runtime');
-    expect(policy?.status).toBe('partial');
+    expect(policy?.status).toBe('shipped');
     expect(policy?.console).toBe('/policy-runtime');
   });
 

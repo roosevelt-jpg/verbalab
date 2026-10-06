@@ -53,11 +53,11 @@ export function governmentIntelligenceEngineCatalog() {
       style: 'nest_modular_monolith',
       cqrs: true,
       hexagonalRewrite: false,
-      regeneratesVolumes1to11: false,
+      regeneratesPriorLayers: false,
       domain: 'government',
     },
     honesty: {
-      regeneratesVolumes1to11: false,
+      regeneratesPriorLayers: false,
       coverageComplete: false,
       verticalOperationsOs: false,
       officialGuidanceMustBeSourced: true,

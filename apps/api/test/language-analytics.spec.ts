@@ -155,17 +155,17 @@ describe('Language Analytics Phase 14', () => {
     expect(readFileSync(join(root, 'docs/ANALYTICS.md'), 'utf8')).toContain('/reports/enterprise');
   });
 
-  it('exposes catalog with partial country/accuracy', async () => {
+  it('exposes catalog with wired country/accuracy', async () => {
     const res = await request(app.getHttpServer()).get('/v1/analytics').expect(200);
     expect(res.body.product).toMatch(/Language Analytics/i);
     expect(
       res.body.capabilities.some(
-        (c: { id: string; status: string }) => c.id === 'country_usage' && c.status === 'partial',
+        (c: { id: string; status: string }) => c.id === 'country_usage' && c.status === 'shipped',
       ),
     ).toBe(true);
     expect(
       res.body.capabilities.some(
-        (c: { id: string; status: string }) => c.id === 'translation_accuracy' && c.status === 'partial',
+        (c: { id: string; status: string }) => c.id === 'translation_accuracy' && c.status === 'shipped',
       ),
     ).toBe(true);
     expect(

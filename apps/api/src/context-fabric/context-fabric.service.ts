@@ -248,7 +248,7 @@ export class ContextFabricService {
         policyFabric: false,
         websocketOs: true,
         infiniteContextWindow: true,
-        regeneratesVolumes1to9: false,
+        regeneratesPriorLayers: false,
       },
       links: {
         contextFabric: '/context-fabric',

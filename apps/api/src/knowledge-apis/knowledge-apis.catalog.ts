@@ -156,7 +156,7 @@ export function knowledgeApisCatalog() {
       {
         id: 'realtime',
         name: 'Realtime',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/knowledge-apis/events/stream',
         notes: 'SSE audit-event tail for knowledge actions. Bidirectional realtime sessions deferred.',
       },
@@ -177,7 +177,7 @@ export function knowledgeApisCatalog() {
       {
         id: 'webhooks',
         name: 'Webhooks',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/knowledge-apis/webhooks',
         notes: 'Event catalog + org signing secret via POST /v1/webhooks/signing-secret. Full knowledge webhook fanout deferred.',
       },

@@ -43,7 +43,7 @@ describe('Enterprise Engineering System Production Audit', () => {
     await app.close();
   });
 
-  it('ships audit pack and ADR-0255', () => {
+  it('ships audit pack ', () => {
     expect(existsSync(join(root, 'docs/adr/0255-enterprise-engineering-system-production-audit.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/ENTERPRISE_ENGINEERING_SYSTEM.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/enterprise-engineering-system-audit/PRODUCTION_READINESS.md'))).toBe(true);

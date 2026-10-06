@@ -128,8 +128,8 @@ export function privacyPlatformEngineCatalog() {
     ],
     honesty: {
       traditionalKnowledgeConsentRequired: true,
-      regeneratesVolume12: false,
-      enforcesVolume12ConsentFields: true,
+      regeneratesPriorLayers: false,
+      enforcesConsentFields: true,
       requiredConsentFields: ['provenance', 'sourceCommunity', 'consentStatus'],
       privacyOsReplacement: false,
     },

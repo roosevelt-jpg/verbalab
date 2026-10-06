@@ -81,14 +81,14 @@ export function pluginMarketplaceEngineCatalog() {
       {
         id: 'plugin-analytics',
         name: 'Plugin Analytics',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/plugin-marketplace/analytics',
         notes: 'Listing/install/review/run aggregates. Full commerce analytics deferred to Creator Economy.',
       },
       {
         id: 'plugin-monetization',
         name: 'Plugin Monetization',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/plugin-marketplace/listings/:id/install',
         notes:
           'Paid listings record MarketplaceSale receipts. Stripe Connect path shared with when configured — not a payment-processor OS.',

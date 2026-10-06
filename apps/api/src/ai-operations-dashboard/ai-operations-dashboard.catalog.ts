@@ -9,7 +9,7 @@ export function aiOperationsDashboardEngineCatalog() {
       inventsTrustCloud: false,
       trustCloudOs: false,
       financeGradeBilling: false,
-      regeneratesVolumes1to13: false,
+      regeneratesPriorLayers: false,
     },
     safety: {
       surfacesPolicyViolations: true,

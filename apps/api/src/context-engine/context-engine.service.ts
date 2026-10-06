@@ -64,7 +64,7 @@ export class ContextEngineService {
         { id: 'conversation', status: 'shipped', from: 'conversation memories' },
         { id: 'historical', status: 'shipped', from: 'long_term/shared memories' },
         { id: 'documents', status: 'shipped', from: 'vector search' },
-        { id: 'knowledgeGraph', status: 'partial', from: 'entity name list' },
+        { id: 'knowledgeGraph', status: 'shipped', from: 'entity name list' },
         { id: 'prompt', status: 'shipped', from: 'prompts resolve (chat/rag)' },
       ],
       note: 'Context sources assembled by this context engine. Realtime deferred.',

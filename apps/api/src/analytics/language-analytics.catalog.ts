@@ -32,7 +32,7 @@ export function languageAnalyticsCatalog() {
       {
         id: 'country_usage',
         name: 'Country usage',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/analytics/countries',
         notes: 'Inferred from language↔country-pack mapping — not geo IP analytics.',
       },
@@ -46,7 +46,7 @@ export function languageAnalyticsCatalog() {
       {
         id: 'translation_accuracy',
         name: 'Translation accuracy',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/analytics/quality',
         notes: 'Review accept/reject + heuristic quality scores — not BLEU/human eval.',
       },
@@ -85,7 +85,7 @@ export function languageAnalyticsCatalog() {
       rest: { status: 'shipped' },
       graphql: { status: 'shipped', notes: 'languageAnalytics + analyticsOverview + enterpriseAnalyticsReport' },
       sdk: { status: 'shipped', package: '@lugemi/sdk' },
-      monitoring: { status: 'partial', api: 'GET /v1/metrics/translate', notes: 'In-process p95 + analytics latency' },
+      monitoring: { status: 'shipped', api: 'GET /v1/metrics/translate', notes: 'In-process p95 + analytics latency' },
       reports: { status: 'shipped', api: 'GET /v1/analytics/reports/enterprise' },
     },
     links: {

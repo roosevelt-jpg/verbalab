@@ -46,14 +46,14 @@ export function recommendationEngineCatalog() {
       {
         id: 'model-recommendation',
         name: 'Model Recommendation',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/recommendation-engine/recommend',
         notes: 'kind=model — embedding model catalog rank. Chat model marketplace deferred.',
       },
       {
         id: 'workflow-recommendation',
         name: 'Workflow Recommendation',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/recommendation-engine/recommend',
         notes: 'kind=workflow — fixed API recipe catalog, not an automation OS.',
       },

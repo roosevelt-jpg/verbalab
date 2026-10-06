@@ -307,7 +307,7 @@ export function enterpriseEngineeringSystemArchitectureNotes(): Record<string, u
     confluenceOs: false,
     sonarqubeOs: false,
     existingAdrCountAtShip: 246,
-    deferredPastVolume20: ['architecture-knowledge-base-os', 'mass-adr-factory', 'mass-prd-library'],
+    deferredNext: ['architecture-knowledge-base-os', 'mass-adr-factory', 'mass-prd-library'],
   };
 }
 

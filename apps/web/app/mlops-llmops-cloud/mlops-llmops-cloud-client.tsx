@@ -62,9 +62,6 @@ export function MlopsLlmopsCloudClient() {
                   ): (
                     <span style={{ fontWeight: 600 }}>{p.name}</span>
                   )}
-                  <span style={{ color: 'var(--muted)', fontSize: '0.8rem', textTransform: 'uppercase' }}>
-                    {p.status}
-                  </span>
                 </div>
                 <p style={{ margin: '0.35rem 0 0', color: 'var(--muted)', fontSize: '0.92rem' }}>{p.notes}</p>
               </li>

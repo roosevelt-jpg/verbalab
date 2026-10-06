@@ -25,14 +25,14 @@ export function speechEngineCatalog() {
       {
         id: 'streaming-stt',
         name: 'Streaming Speech-to-Text',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/speech/stream',
         notes: 'SSE segment stream after Whisper verbose_json. Not live microphone WebSocket.',
       },
       {
         id: 'realtime',
         name: 'Realtime APIs',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/speech/stream',
         notes: 'SSE realtime delivery of segments. Bidirectional realtime sessions deferred.',
       },
@@ -109,7 +109,7 @@ export function speechEngineCatalog() {
       {
         id: 'analytics',
         name: 'Analytics',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/speech/engine/analytics',
         notes: 'STT usage summary for the org. Dedicated Speech Analytics: /v1/speech-analytics.',
       },

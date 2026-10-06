@@ -76,7 +76,7 @@ export function promptFabricCapabilityCatalog(): PromptFabricCapability[] {
     {
       id: 'prompt-policies',
       name: 'Prompt Policies',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/policy-runtime/engine',
       notes:
         'Discovery handoff to Policy Runtime today; fabric-wide hard gate is Policy Fabric.',
@@ -186,7 +186,7 @@ export function promptFabricArchitectureNotes() {
     extendsPromptRuntime: true,
     regeneratesPromptRuntime: false,
     regeneratesPromptIntelligence: false,
-    regeneratesVolumes1to9: false,
+    regeneratesPriorLayers: false,
     customerFacingProduct: false,
     promptMeshOs: false,
     autoPromptResearchLab: false,
@@ -205,7 +205,7 @@ export function promptFabricHonesty() {
     llmAsJudge: false,
     regeneratesPromptRuntime: false,
     regeneratesPromptIntelligence: false,
-    regeneratesVolumes1to9: false,
+    regeneratesPriorLayers: false,
     extendsPromptRuntime: true,
     crossWorkspaceSameOrgOnly: true,
     crossOrgDataPlane: false,

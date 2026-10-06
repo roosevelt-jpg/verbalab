@@ -68,7 +68,7 @@ export function knowledgeMemoryCatalog() {
       {
         id: 'ai-memory',
         name: 'AI Memory',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/knowledge-memory/memories',
         notes: 'scope=ai → workspace/agent row for assistant facts. Full agent memory OS deferred.',
       },

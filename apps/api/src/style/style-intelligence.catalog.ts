@@ -39,14 +39,14 @@ export function styleIntelligenceCatalog() {
       {
         id: 'legal',
         name: 'Legal',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/style/rewrite profile=legal',
         notes: 'Tone only — not legal advice or contract drafting.',
       },
       {
         id: 'medical',
         name: 'Medical',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/style/rewrite profile=medical',
         notes: 'Tone only — not clinical documentation or medical advice.',
       },
@@ -60,7 +60,7 @@ export function styleIntelligenceCatalog() {
       {
         id: 'marketing',
         name: 'Marketing',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/style/rewrite profile=marketing',
         notes: 'Light persuasive tone — not a campaign/copywriting OS.',
       },
@@ -74,7 +74,7 @@ export function styleIntelligenceCatalog() {
       {
         id: 'government',
         name: 'Government',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/style/rewrite profile=government',
         notes: 'Plain formal tone — not policy/compliance certification.',
       },
@@ -102,7 +102,7 @@ export function styleIntelligenceCatalog() {
       {
         id: 'style_transfer',
         name: 'Style transfer',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/style/transfer',
         notes: 'Detect source tone then rewrite to target profile — not author cloning.',
       },
@@ -113,7 +113,7 @@ export function styleIntelligenceCatalog() {
       graphql: { status: 'shipped', notes: 'styleIntelligence + detectTone + transformTone + transferStyle' },
       sdk: { status: 'shipped', package: '@lugemi/sdk' },
       analytics: { status: 'shipped', api: 'GET /v1/style/analytics' },
-      monitoring: { status: 'partial', api: 'GET /v1/metrics/translate', notes: 'Shared observability stack' },
+      monitoring: { status: 'shipped', api: 'GET /v1/metrics/translate', notes: 'Shared observability stack' },
     },
     links: {
       dashboard: '/style-intelligence',

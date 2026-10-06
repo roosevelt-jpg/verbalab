@@ -21,7 +21,7 @@ export function platformEngineeringAnalyticsEngineCatalog() {
       aggregatesSiblingHubs: true,
       controlPlaneOs: false,
       aiCloudOs: false,
-      regeneratesVolumes1to15: false,
+      regeneratesPriorLayers: false,
       integratesExistingSystems: true,
       internalEngineeringTooling: true,
     },

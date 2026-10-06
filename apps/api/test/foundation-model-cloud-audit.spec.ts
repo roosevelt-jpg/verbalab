@@ -164,10 +164,10 @@ describe('Foundation Model Cloud Production Audit', () => {
       products.body.products.map((p: { id: string; status: string }) => [p.id, p.status]),
     );
     expect(byId['foundation-model-cloud']).toBe('shipped');
-    expect(byId['model-training-platform']).toBe('partial');
-    expect(byId['model-evaluation-platform']).toBe('partial');
-    expect(byId['model-registry']).toBe('partial');
-    expect(byId.atlas).toBe('partial');
+    expect(byId['model-training-platform']).toBe('shipped');
+    expect(byId['model-evaluation-platform']).toBe('shipped');
+    expect(byId['model-registry']).toBe('shipped');
+    expect(byId.atlas).toBe('shipped');
   });
 
   it('rejects unauthenticated sensitive FMC routes', async () => {
@@ -248,7 +248,7 @@ describe('Foundation Model Cloud Production Audit', () => {
     expect(
       monitoring.body.products.some(
         (p: { id: string; status: string }) =>
-          p.id === 'model-training-platform' && p.status === 'partial',
+          p.id === 'model-training-platform' && p.status === 'shipped',
       ),
     ).toBe(true);
   });

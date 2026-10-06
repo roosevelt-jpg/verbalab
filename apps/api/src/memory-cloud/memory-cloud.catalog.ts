@@ -46,7 +46,7 @@ export function memoryCloudCatalog() {
       {
         id: 'agent-memory',
         name: 'Agent Memory',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/memory-cloud/memories',
         notes: 'scope=agent + agentId. Full agent OS deferred.',
       },
@@ -74,7 +74,7 @@ export function memoryCloudCatalog() {
       {
         id: 'semantic-memory',
         name: 'Semantic Memory',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/memory-cloud/search',
         notes: 'Text search today. Embedding/NN semantic deferred.',
       },

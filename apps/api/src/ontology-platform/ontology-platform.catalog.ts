@@ -46,7 +46,7 @@ export function ontologyPlatformCatalog() {
       {
         id: 'categories',
         name: 'Categories',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/ontology/concepts',
         notes: 'type=category concepts. Taxonomy platform is .',
       },
@@ -60,7 +60,7 @@ export function ontologyPlatformCatalog() {
       {
         id: 'multilingual',
         name: 'Multilingual labels',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/ontology/concepts/:id/labels',
         notes: 'metadata.labels { lang: string }. Full i18n ontology OS deferred.',
       },

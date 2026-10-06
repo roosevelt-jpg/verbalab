@@ -153,13 +153,13 @@ export function controlPlaneCloudArchitectureNotes(): Record<string, unknown> {
       'release-engineering',
       'ai-fabric',
     ],
-    regeneratesVolumes1to16: false,
+    regeneratesPriorLayers: false,
     executesInference: false,
     dataPlaneOs: false,
     kubernetesControlPlaneOs: false,
     istioOs: false,
     hashicorpVaultOs: false,
-    deferredToVolume18Plus: ['data-plane'],
+    deferredNext: ['data-plane'],
   };
 }
 
@@ -172,7 +172,7 @@ export function controlPlaneCloudHonesty(): Record<string, boolean | string> {
     hashicorpVaultOs: false,
     secondPolicyOs: false,
     secondIdp: false,
-    regeneratesVolumes1to16: false,
+    regeneratesPriorLayers: false,
     integratesExistingSystems: true,
     controlPlaneManagementLayer: true,
     leastPrivilegeRequired: true,

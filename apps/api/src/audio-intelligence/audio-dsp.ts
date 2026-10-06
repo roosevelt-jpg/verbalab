@@ -211,7 +211,6 @@ export function upscaleAudio(buffer: Buffer, targetRate = 32000): { wav: Buffer;
 
 /**
  * Energy VAD voice isolation — attenuate non-speech frames.
- * Not ML background separation / stem-separation OS.
  */
 export function isolateVoice(buffer: Buffer): {
   wav: Buffer;
@@ -234,7 +233,83 @@ export function isolateVoice(buffer: Buffer): {
   return {
     wav: encodeWavPcm16(out, sampleRate),
     speechRatio: analysis.speechRatio,
-    note: 'Energy VAD attenuation of low-energy frames — not neural voice isolation or source separation.',
+    note: 'Energy VAD attenuation of low-energy frames — Lugemi-native isolate path.',
+  };
+}
+
+/** Simple one-pole low-pass (coef from cutoff). */
+function lowPass(samples: Float32Array, sampleRate: number, cutoffHz: number): Float32Array {
+  const rc = 1 / (2 * Math.PI * Math.max(20, cutoffHz));
+  const dt = 1 / Math.max(1, sampleRate);
+  const a = dt / (rc + dt);
+  const out = new Float32Array(samples.length);
+  let y = 0;
+  for (let i = 0; i < samples.length; i++) {
+    y = y + a * ((samples[i] ?? 0) - y);
+    out[i] = y;
+  }
+  return out;
+}
+
+function highPass(samples: Float32Array, sampleRate: number, cutoffHz: number): Float32Array {
+  const lp = lowPass(samples, sampleRate, cutoffHz);
+  const out = new Float32Array(samples.length);
+  for (let i = 0; i < samples.length; i++) {
+    out[i] = (samples[i] ?? 0) - (lp[i] ?? 0);
+  }
+  return out;
+}
+
+function bandPass(
+  samples: Float32Array,
+  sampleRate: number,
+  lowHz: number,
+  highHz: number,
+): Float32Array {
+  return highPass(lowPass(samples, sampleRate, highHz), sampleRate, lowHz);
+}
+
+/**
+ * Lugemi-native multi-band stem split (voice / low / high residual).
+ * Deterministic DSP — not a vendor neural stem model.
+ */
+export function separateStems(buffer: Buffer): {
+  voice: Buffer;
+  low: Buffer;
+  high: Buffer;
+  residual: Buffer;
+  speechRatio: number;
+  note: string;
+} {
+  const { samples, sampleRate } = extractPcmMono(buffer);
+  const analysis = analyzeAudioBuffer(buffer);
+  const voice = bandPass(samples, sampleRate, 300, 3400);
+  const low = lowPass(samples, sampleRate, 250);
+  const high = highPass(samples, sampleRate, 4000);
+  const residual = new Float32Array(samples.length);
+  for (let i = 0; i < samples.length; i++) {
+    residual[i] =
+      (samples[i] ?? 0) - (voice[i] ?? 0) * 0.85 - (low[i] ?? 0) * 0.35 - (high[i] ?? 0) * 0.35;
+  }
+  // Gate residual with energy VAD so "background" is quieter on speech frames
+  const frameSize = Math.max(128, Math.floor(sampleRate * 0.02));
+  const thresh = Math.max(analysis.noiseFloor * 3.5, 0.02);
+  const gatedVoice = new Float32Array(samples.length);
+  for (let i = 0; i < samples.length; i += frameSize) {
+    const end = Math.min(samples.length, i + frameSize);
+    const rms = frameRms(voice, i, end);
+    const keep = rms >= thresh * 0.6;
+    for (let j = i; j < end; j++) {
+      gatedVoice[j] = keep ? (voice[j] ?? 0) : (voice[j] ?? 0) * 0.08;
+    }
+  }
+  return {
+    voice: encodeWavPcm16(gatedVoice, sampleRate),
+    low: encodeWavPcm16(low, sampleRate),
+    high: encodeWavPcm16(high, sampleRate),
+    residual: encodeWavPcm16(residual, sampleRate),
+    speechRatio: analysis.speechRatio,
+    note: 'Lugemi multi-band stem split (voice 300–3400 Hz + VAD gate, low, high, residual) — not a neural demucs-class model.',
   };
 }
 

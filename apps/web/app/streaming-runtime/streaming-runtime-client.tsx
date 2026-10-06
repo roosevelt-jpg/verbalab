@@ -150,7 +150,7 @@ export function StreamingRuntimeClient() {
         <ul style={{ margin: 0, paddingLeft: '1.2rem' }}>
           {surfaces.map((s) => (
             <li key={s.id} style={{ marginBottom: '0.4rem' }}>
-              <strong>{s.name}</strong> · {s.status} · {s.transport}
+              <strong>{s.name}</strong> · {s.transport}
               {s.api ? ` · ${s.api}` : ''}
               {s.existing ? ' (existing)' : ''}
             </li>

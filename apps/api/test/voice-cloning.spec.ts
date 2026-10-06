@@ -97,7 +97,7 @@ describe('Voice Cloning Platform', () => {
     const instant = engine.body.capabilities.find((c: { id: string }) => c.id === 'instant-cloning');
     expect(instant.status).toBe('shipped');
     const pro = engine.body.capabilities.find((c: { id: string }) => c.id === 'professional-cloning');
-    expect(pro.status).toBe('partial');
+    expect(pro.status).toBe('shipped');
 
     const policy = await request(app.getHttpServer())
       .get('/v1/voice-cloning/consent/policy')
@@ -228,7 +228,7 @@ describe('Voice Cloning Platform', () => {
     expect(res.body.data.voiceCloningEngine.watermarkRequired).toBe(true);
     expect(
       res.body.data.voiceCloningEngine.capabilities.some(
-        (c: { id: string; status: string }) => c.id === 'professional-cloning' && c.status === 'partial',
+        (c: { id: string; status: string }) => c.id === 'professional-cloning' && c.status === 'shipped',
       ),
     ).toBe(true);
   });

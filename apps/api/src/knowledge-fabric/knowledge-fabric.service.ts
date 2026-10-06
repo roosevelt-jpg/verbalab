@@ -336,7 +336,7 @@ export class KnowledgeFabricService {
         confluenceSharepointOs: true,
         neo4jFederationOs: true,
         crossOrgDataPlane: true,
-        regeneratesVolumes1to9: false,
+        regeneratesPriorLayers: false,
       },
       links: {
         knowledgeFabric: '/knowledge-fabric',

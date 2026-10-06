@@ -78,7 +78,7 @@ export class PlatformEngineeringCloudService {
         controlPlaneOs: true,
         dataPlaneOs: true,
         aiCloudOs: true,
-        regeneratesVolumes1to15: false,
+        regeneratesPriorLayers: false,
       },
       links: {
         platformEngineeringCloud: '/platform-engineering-cloud',

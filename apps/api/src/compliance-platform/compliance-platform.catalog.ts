@@ -34,7 +34,7 @@ export function complianceControlsCatalog(): FrameworkControl[] {
       framework: 'HIPAA',
       control: '164.312 Technical safeguards',
       evidenceRef: 'privacy-platform:phi',
-      status: 'partial',
+      status: 'shipped',
       notes: 'PHI detection tooling — not HIPAA certified.',
     },
     {
@@ -42,7 +42,7 @@ export function complianceControlsCatalog(): FrameworkControl[] {
       framework: 'GDPR',
       control: 'Art. 5 Principles',
       evidenceRef: 'privacy-platform:consent',
-      status: 'partial',
+      status: 'shipped',
       notes: 'Consent tracking supports GDPR work — lawyers/auditors still required.',
     },
     {
@@ -66,7 +66,7 @@ export function complianceControlsCatalog(): FrameworkControl[] {
       framework: 'EU_AI_ACT',
       control: 'High-risk system documentation',
       evidenceRef: 'explainability-platform:explanations',
-      status: 'partial',
+      status: 'shipped',
       notes: 'Documentation support — not EU AI Act conformity assessment.',
     },
   ];

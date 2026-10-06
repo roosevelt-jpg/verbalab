@@ -96,15 +96,12 @@ export function SpeechClient() {
                     <div>
                       <div style={{ fontWeight: 600 }}>
                         {p.name}{' '}
-                        <span style={{ fontWeight: 500, color: 'var(--muted)', fontSize: '0.85rem' }}>
-                          · {p.status}
-                        </span>
                       </div>
                       <div style={{ color: 'var(--muted)', fontSize: '0.85rem', marginTop: '0.2rem' }}>
                         {p.notes}
                       </div>
                     </div>
-                    {p.console && (p.status === 'shipped' || p.status === 'partial') ? (
+                    {p.console ? (
                       <Link href={p.console} style={{ color: 'var(--accent)', fontWeight: 550, fontSize: '0.9rem' }}>
                         Open →
                       </Link>

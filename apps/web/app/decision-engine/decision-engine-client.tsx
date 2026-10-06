@@ -153,7 +153,7 @@ export function DecisionEngineClient() {
             <ul style={{ margin: 0, paddingLeft: '1.2rem', color: 'var(--muted)' }}>
               {engine.capabilities.map((c) => (
                 <li key={c.id}>
-                  {c.name} — {c.status}
+                  {c.name}
                 </li>
               ))}
             </ul>

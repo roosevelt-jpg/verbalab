@@ -20,7 +20,7 @@ export function controlPlaneAnalyticsEngineCatalog() {
       regeneratesSiblingHubs: false,
       executesInference: false,
       dataPlaneOs: false,
-      regeneratesVolumes1to16: false,
+      regeneratesPriorLayers: false,
       integratesExistingSystems: true,
       controlPlaneManagementLayer: true,
     },

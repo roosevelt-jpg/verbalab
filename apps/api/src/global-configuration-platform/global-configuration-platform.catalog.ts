@@ -60,9 +60,9 @@ export function globalConfigurationPlatformEngineCatalog() {
     honesty: {
       secretsRefsOnly: true,
       neverReturnsPlaintextSecrets: true,
-      regeneratesVolumes1to16: false,
+      regeneratesPriorLayers: false,
       executesInference: false,
-      regeneratesVolumes1to16: false,
+      regeneratesPriorLayers: false,
       integratesExistingSystems: true,
       controlPlaneManagementLayer: true,
     },

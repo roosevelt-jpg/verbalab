@@ -67,7 +67,7 @@ describe('Research Cloud', () => {
     expect(res.body.honesty.aiSovereigntyOs).toBe(false);
     expect(res.body.honesty.syntheticLabelRequired).toBe(true);
     expect(res.body.honesty.traditionalKnowledgeConsentRequired).toBe(true);
-    expect(res.body.honesty.regeneratesVolumes1to12).toBe(false);
+    expect(res.body.honesty.regeneratesPriorLayers).toBe(false);
 
   });
 });

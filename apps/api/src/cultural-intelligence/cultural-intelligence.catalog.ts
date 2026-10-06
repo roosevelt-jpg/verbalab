@@ -143,7 +143,7 @@ export function culturalIntelligenceEngineCatalog() {
       style: 'nest_modular_monolith',
       cqrs: true,
       hexagonalRewrite: false,
-      regeneratesVolumes1to11: false,
+      regeneratesPriorLayers: false,
       traditionalKnowledgeConsentRequired: true,
       extractiveTraditionalKnowledgeScrape: false,
     },
@@ -154,7 +154,7 @@ export function culturalIntelligenceEngineCatalog() {
       sourceCommunityRequired: true,
       consentStatusRequired: true,
       coverageComplete: false,
-      regeneratesVolumes1to11: false,
+      regeneratesPriorLayers: false,
     },
     safety: {
       traditionalKnowledgeConsentRequired: true,

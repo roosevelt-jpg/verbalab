@@ -53,11 +53,11 @@ export function healthcareIntelligenceEngineCatalog() {
       style: 'nest_modular_monolith',
       cqrs: true,
       hexagonalRewrite: false,
-      regeneratesVolumes1to11: false,
+      regeneratesPriorLayers: false,
       domain: 'healthcare',
     },
     honesty: {
-      regeneratesVolumes1to11: false,
+      regeneratesPriorLayers: false,
       coverageComplete: false,
       verticalOperationsOs: false,
       notMedicalAdvice: true,

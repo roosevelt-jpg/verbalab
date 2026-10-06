@@ -125,7 +125,7 @@ export function TranslateFormatsClient() {
             .slice(0, 12)
             .map((c) => (
               <li key={c.id} style={{ borderTop: '1px solid var(--line)', paddingTop: '0.35rem', fontSize: '0.92rem' }}>
-                <strong>{c.name}</strong> · {c.status}
+                <strong>{c.name}</strong>
                 {c.api ? ` · ${c.api}` : ''}
               </li>
             ))}

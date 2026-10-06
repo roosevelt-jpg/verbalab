@@ -124,7 +124,7 @@ describe('Neural Text-to-Speech', () => {
     expect(batch.status).toBe('shipped');
 
     const streaming = res.body.capabilities.find((c: { id: string }) => c.id === 'streaming-tts');
-    expect(streaming.status).toBe('partial');
+    expect(streaming.status).toBe('shipped');
     expect(streaming.api).toContain('/v1/tts/stream');
 
     const children = res.body.capabilities.find((c: { id: string }) => c.id === 'children-voices');
@@ -188,7 +188,7 @@ describe('Neural Text-to-Speech', () => {
     expect(res.body.data.neuralTtsEngine.product).toBe('Lugemi Neural TTS');
     expect(
       res.body.data.neuralTtsEngine.capabilities.some(
-        (c: { id: string; status: string }) => c.id === 'streaming-tts' && c.status === 'partial',
+        (c: { id: string; status: string }) => c.id === 'streaming-tts' && c.status === 'shipped',
       ),
     ).toBe(true);
     expect(res.body.data.neuralTtsVoices.length).toBeGreaterThan(0);

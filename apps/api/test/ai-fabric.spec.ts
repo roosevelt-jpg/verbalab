@@ -100,7 +100,7 @@ describe('AI Fabric Foundation', () => {
     expect(res.body.architecture.customerFacingProduct).toBe(false);
     expect(res.body.architecture.kafkaHyperscalerOs).toBe(false);
     expect(res.body.architecture.serviceMeshOs).toBe(false);
-    expect(res.body.architecture.regeneratesVolumes1to9).toBe(false);
+    expect(res.body.architecture.regeneratesPriorLayers).toBe(false);
     expect(res.body.architecture.fabricWidePolicyHardGateRequired).toBe(true);
     expect(res.body.architecture.policyLogOnlyForbidden).toBe(true);
     expect(res.body.architecture.cqrs).toBe(true);
@@ -144,7 +144,7 @@ describe('AI Fabric Foundation', () => {
     expect(overview.deferred.memoryFabric).toBe(false);
     expect(overview.deferred.agentFabric).toBe(false);
     expect(overview.deferred.policyFabric).toBe(false);
-    expect(overview.deferred.regeneratesVolumes1to9).toBe(false);
+    expect(overview.deferred.regeneratesPriorLayers).toBe(false);
     expect(overview.links.aiFabric).toBe('/ai-fabric');
     expect(overview.safety.policyLogOnlyForbidden).toBe(true);
   });

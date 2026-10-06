@@ -76,7 +76,7 @@ describe('Knowledge Graph Cloud', () => {
     expect(res.body.honesty.ontologyOs).toBe(false);
     expect(res.body.honesty.preferRag).toBe(true);
     const ont = res.body.capabilities.find((c: { id: string }) => c.id === 'ontologies');
-    expect(ont.status).toBe('partial');
+    expect(ont.status).toBe('shipped');
     expect(ont.api).toContain('/v1/ontology/engine');
     const medical = res.body.capabilities.find((c: { id: string }) => c.id === 'medical-graph');
     expect(medical.status).toBe('deferred');

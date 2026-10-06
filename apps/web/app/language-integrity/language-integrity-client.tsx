@@ -219,7 +219,7 @@ export function LanguageIntegrityClient() {
             <datalist id="integrity-clones">
               {library.map((c) => (
                 <option key={c.id} value={c.id}>
-                  {c.name} · {c.status}
+                  {c.name}
                 </option>
               ))}
             </datalist>
@@ -262,7 +262,7 @@ export function LanguageIntegrityClient() {
             {library.map((c) => (
               <li key={c.id} style={{ borderTop: '1px solid var(--line)', paddingTop: '0.55rem' }}>
                 <strong>
-                  {c.name} · {c.status}
+                  {c.name}
                 </strong>
                 <div style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>
                   consent {c.consentAttested ? 'yes' : 'no'} · ownership {c.ownershipAttested ? 'yes' : 'no'} ·
@@ -276,7 +276,7 @@ export function LanguageIntegrityClient() {
 
       {policy?.forbidden ? (
         <section style={panelStyle}>
-          <h2 style={sectionTitle}>Consent policy (shipped)</h2>
+          <h2 style={sectionTitle}>Consent policy</h2>
           <ul style={{ margin: 0, paddingLeft: '1.1rem', color: 'var(--muted)', fontSize: '0.9rem' }}>
             {(policy.forbidden ?? []).slice(0, 4).map((f) => (
               <li key={f}>{f}</li>
@@ -330,7 +330,7 @@ export function LanguageIntegrityClient() {
             {engine.capabilities.map((c) => (
               <li key={c.id} style={{ borderTop: '1px solid var(--line)', paddingTop: '0.55rem' }}>
                 <strong>
-                  {c.name} · {c.status}
+                  {c.name}
                 </strong>
                 <div style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>
                   {c.notes}

@@ -110,7 +110,7 @@ describe('Voice Biometrics', () => {
     expect(engine.body.honesty.nistCertified).toBe(false);
     expect(engine.body.honesty.padCertified).toBe(false);
     const auth = engine.body.capabilities.find((c: { id: string }) => c.id === 'voice-authentication');
-    expect(auth.status).toBe('partial');
+    expect(auth.status).toBe('shipped');
 
     const enc = await request(app.getHttpServer()).get('/v1/voice-biometrics/encryption').expect(200);
     expect(enc.body.algorithm).toBe('aes-256-gcm');

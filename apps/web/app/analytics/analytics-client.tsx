@@ -137,7 +137,7 @@ export function AnalyticsClient() {
         <ul style={{ listStyle: 'none', padding: 0, margin: '1rem 0 0', display: 'grid', gap: '0.25rem' }}>
           {catalog.capabilities.map((c) => (
             <li key={c.id} style={{ fontSize: '0.9rem', color: 'var(--muted)' }}>
-              {c.name} · {c.status}
+              {c.name}
               {c.api ? ` · ${c.api}` : ''}
             </li>
           ))}

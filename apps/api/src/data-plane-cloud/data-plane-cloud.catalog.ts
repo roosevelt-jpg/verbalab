@@ -206,12 +206,12 @@ export function dataPlaneCloudArchitectureNotes(): Record<string, unknown> {
       'gpu-platform',
       'control-plane-cloud',
     ],
-    regeneratesVolumes1to17: false,
+    regeneratesPriorLayers: false,
     managesOrgsPoliciesBilling: false,
     serviceMeshOs: false,
     thinExecutionLayers: true,
     controlPlaneSeparation: true,
-    deferredPastVolume18: ['service-mesh', 'vaios', 'architecture-freeze-os'],
+    deferredNext: ['service-mesh', 'vaios', 'architecture-freeze-os'],
   };
 }
 
@@ -222,7 +222,7 @@ export function dataPlaneCloudHonesty(): Record<string, boolean | string> {
     thinExecutionLayer: true,
     duplicatesProductLogic: false,
     controlPlaneSeparation: true,
-    regeneratesVolumes1to17: false,
+    regeneratesPriorLayers: false,
     integratesExistingSystems: true,
     gpuBudgetLimitsRequired: true,
     note:

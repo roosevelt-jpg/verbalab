@@ -149,7 +149,7 @@ describe('Research Cloud Production Audit', () => {
     expect(hub.body.honesty.aiSovereigntyOs).toBe(false);
     expect(hub.body.honesty.syntheticLabelRequired).toBe(true);
     expect(hub.body.honesty.traditionalKnowledgeConsentRequired).toBe(true);
-    expect(hub.body.honesty.regeneratesVolumes1to12).toBe(false);
+    expect(hub.body.honesty.regeneratesPriorLayers).toBe(false);
 
     const byId = Object.fromEntries(
       hub.body.products.map((p: { id: string; status: string }) => [p.id, p.status]),

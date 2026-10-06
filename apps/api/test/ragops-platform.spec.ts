@@ -63,7 +63,7 @@ describe('RAGOps Platform', () => {
     expect(res.body.product).toBeTruthy();
 
     expect(res.body.honesty.vectorDbOs).toBe(false);
-    expect(res.body.honesty.extendsVolume6Rag).toBe(true);
+    expect(res.body.honesty.extendsRagModule).toBe(true);
   });
 
   it('exposes monitoring', async () => {

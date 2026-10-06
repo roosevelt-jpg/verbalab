@@ -39,21 +39,21 @@ export function languageIntelligenceCatalog() {
       {
         id: 'intent',
         name: 'Intent',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/language-intelligence/intent',
         notes: 'Keyword/heuristic intent labels — not a trained NLU model.',
       },
       {
         id: 'sentiment',
         name: 'Sentiment',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/language-intelligence/sentiment',
         notes: 'Lexicon polarity scoring — not a production sentiment suite.',
       },
       {
         id: 'emotion',
         name: 'Emotion',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/language-intelligence/emotion',
         notes: 'Text cue buckets — not voice emotion recognition.',
       },
@@ -81,7 +81,7 @@ export function languageIntelligenceCatalog() {
       {
         id: 'speech_confidence',
         name: 'Speech confidence',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/language-intelligence/speech-confidence',
         notes: 'Transcript heuristics (+ optional client STT score). Whisper path has no native confidence.',
       },
@@ -91,7 +91,7 @@ export function languageIntelligenceCatalog() {
       rest: { status: 'shipped', api: '/v1/language-intelligence/*' },
       graphql: { status: 'shipped', notes: 'languageIntelligence + analyzeLanguage' },
       sdk: { status: 'shipped', package: '@lugemi/sdk' },
-      monitoring: { status: 'partial', api: 'GET /v1/metrics/translate', notes: 'Shared observability stack' },
+      monitoring: { status: 'shipped', api: 'GET /v1/metrics/translate', notes: 'Shared observability stack' },
       analytics: { status: 'shipped', api: 'GET /v1/language-intelligence/analytics' },
     },
     links: {

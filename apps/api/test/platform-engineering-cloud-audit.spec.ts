@@ -162,7 +162,7 @@ describe('Platform Engineering Cloud Production Audit', () => {
     expect(hub.body.honesty.snykOs).toBe(false);
     expect(hub.body.honesty.datadogOs).toBe(false);
     expect(hub.body.honesty.finopsOs).toBe(false);
-    expect(hub.body.honesty.regeneratesVolumes1to15).toBe(false);
+    expect(hub.body.honesty.regeneratesPriorLayers).toBe(false);
 
     const byId = Object.fromEntries(
       hub.body.products.map((p: { id: string; status: string }) => [p.id, p.status]),

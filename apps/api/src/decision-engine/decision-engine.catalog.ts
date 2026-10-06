@@ -39,14 +39,14 @@ export function decisionEngineCatalog() {
       {
         id: 'confidence-scoring',
         name: 'Confidence Scoring',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/decision-engine/decide',
         notes: 'kind=confidence — heuristic confidence from signals, not calibrated ML.',
       },
       {
         id: 'risk-analysis',
         name: 'Risk Analysis',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/decision-engine/decide',
         notes: 'kind=risk — light risk flags (PII-ish, injection, quota).',
       },
@@ -60,7 +60,7 @@ export function decisionEngineCatalog() {
       {
         id: 'safety-decisions',
         name: 'Safety Decisions',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/decision-engine/decide',
         notes: 'kind=safety — pattern safety gate. Not a full moderation OS.',
       },
@@ -81,7 +81,7 @@ export function decisionEngineCatalog() {
       {
         id: 'cost-optimization',
         name: 'Cost Optimization',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/decision-engine/decide',
         notes: 'kind=cost — prefer cheaper models when quality=economy.',
       },

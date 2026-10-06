@@ -306,7 +306,7 @@ export function vaiosArchitectureNotes(): Record<string, unknown> {
     unifyingOrchestrationLayer: true,
     duplicatesKernelOrFabric: false,
     enterpriseEngineeringSystemOs: false,
-    deferredPastVolume19: ['enterprise-engineering-system', 'service-mesh-os'],
+    deferredNext: ['enterprise-engineering-system', 'service-mesh-os'],
   };
 }
 

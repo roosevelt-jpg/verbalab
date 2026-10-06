@@ -13,7 +13,7 @@ export function audioEngineCatalog() {
   return {
     product: 'Lugemi Audio Intelligence',
     note:
-      'PCM heuristic noise/silence analysis, noise-gate enhancement, linear upsampling, and energy VAD isolation. Not third-party noise-cancellation/enhance/stem-separation parity.',
+      'PCM heuristic noise/silence analysis, noise-gate enhancement, linear upsampling, energy VAD isolation, and Lugemi multi-band stem split. Honest DSP scope — not a vendor neural enhance/demucs OS.',
     capabilities: [
       {
         id: 'noise-detection',
@@ -32,37 +32,44 @@ export function audioEngineCatalog() {
       {
         id: 'noise-removal',
         name: 'Noise Removal',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/audio-intelligence/enhance',
         notes: 'Noise gate + mild high-pass + normalize — not spectral subtraction ML.',
       },
       {
         id: 'audio-enhancement',
         name: 'Audio Enhancement',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/audio-intelligence/enhance',
         notes: 'Same enhance pipeline as noise removal.',
       },
       {
         id: 'audio-upscaling',
         name: 'Audio Upscaling',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/audio-intelligence/upscale',
         notes: 'Linear sample-rate interpolation — not generative bandwidth extension.',
       },
       {
         id: 'voice-isolation',
         name: 'Voice Isolation',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/audio-intelligence/isolate',
         notes: 'Energy VAD attenuation of low-energy frames.',
       },
       {
         id: 'background-separation',
         name: 'Background Separation',
-        status: 'partial',
-        api: 'POST /v1/audio-intelligence/isolate',
-        notes: 'Same VAD isolation — not multi-source stem separation.',
+        status: 'shipped',
+        api: 'POST /v1/audio-intelligence/stems',
+        notes: 'Multi-band stem split returns voice / low / high / residual WAVs.',
+      },
+      {
+        id: 'stem-separation',
+        name: 'Stem Separation',
+        status: 'shipped',
+        api: 'POST /v1/audio-intelligence/stems',
+        notes: 'Lugemi-native band + VAD stems for clone prep and extract workflows.',
       },
       {
         id: 'echo-cancellation',
@@ -74,7 +81,7 @@ export function audioEngineCatalog() {
       {
         id: 'realtime',
         name: 'Realtime APIs',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/audio-intelligence/analyze/stream',
         notes: 'SSE analysis progress — not live AEC stream.',
       },

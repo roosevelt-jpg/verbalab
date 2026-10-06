@@ -53,11 +53,11 @@ export function tourismHeritageIntelligenceEngineCatalog() {
       style: 'nest_modular_monolith',
       cqrs: true,
       hexagonalRewrite: false,
-      regeneratesVolumes1to11: false,
+      regeneratesPriorLayers: false,
       domain: 'tourism_heritage',
     },
     honesty: {
-      regeneratesVolumes1to11: false,
+      regeneratesPriorLayers: false,
       coverageComplete: false,
       verticalOperationsOs: false,
       traditionalKnowledgeConsentRequired: true,

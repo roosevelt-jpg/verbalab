@@ -27,7 +27,7 @@ export function aiRuntimeAnalyticsCatalog() {
       {
         id: 'latency',
         name: 'Latency',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/ai-runtime-analytics/latency',
         notes: 'Router/streaming/batch timing proxies from metadata when present — not full distributed tracing.',
       },
@@ -41,14 +41,14 @@ export function aiRuntimeAnalyticsCatalog() {
       {
         id: 'gpu-usage',
         name: 'GPU Usage',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/ai-runtime-analytics/gpu',
         notes: 'Sandbox GpuAllocation inventory — not cloud GPU telemetry OS.',
       },
       {
         id: 'cpu-usage',
         name: 'CPU Usage',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/ai-runtime-analytics/cpu',
         notes: 'Process/host load snapshot for Nest CPU path — not cluster APM.',
       },
@@ -69,7 +69,7 @@ export function aiRuntimeAnalyticsCatalog() {
       {
         id: 'errors',
         name: 'Errors',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/ai-runtime-analytics/errors',
         notes: 'Failed batch/streaming statuses + selected audit failures — not error-tracking SaaS.',
       },
@@ -83,7 +83,7 @@ export function aiRuntimeAnalyticsCatalog() {
       {
         id: 'customers',
         name: 'Customers',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/ai-runtime-analytics/customers',
         notes: 'Workspace activity counts under the org — not a CRM/customer-data platform.',
       },
@@ -146,7 +146,7 @@ export function aiRuntimeAnalyticsCatalog() {
       {
         id: 'production-deployment',
         name: 'Production deployment',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/ai-runtime-analytics/overview',
         notes: 'Ships with Nest API — not a separate analytics fleet.',
       },

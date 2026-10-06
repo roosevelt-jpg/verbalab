@@ -159,10 +159,10 @@ export function mlopsLlmopsCloudArchitectureNotes() {
     extendsInferenceCloud: true,
     extendsAiKernel: true,
     extendsFoundationModelCloud: true,
-    extendsRagVolume6: true,
+    extendsRag: true,
     extendsAgentRuntime: true,
     extendsPromptRuntime: true,
-    regeneratesVolumes1to13: false,
+    regeneratesPriorLayers: false,
     kubeflowOs: false,
     sageMakerOs: false,
     vertexOs: false,
@@ -178,7 +178,7 @@ export function mlopsLlmopsCloudArchitectureNotes() {
 
 export function mlopsLlmopsCloudHonesty() {
   return {
-    regeneratesVolumes1to13: false,
+    regeneratesPriorLayers: false,
     kubeflowOs: false,
     sageMakerOs: false,
     vertexOs: false,

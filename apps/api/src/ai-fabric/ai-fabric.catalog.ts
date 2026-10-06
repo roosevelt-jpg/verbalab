@@ -100,7 +100,7 @@ export function aiFabricBusCatalog(): FabricBusRow[] {
     {
       id: 'workflow-bus',
       name: 'Workflow Bus',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/workflow-runtime/engine',
       console: '/workflow-runtime',
       notes: 'Discovery link to Workflow Runtime until dedicated fabric bus ships.',
@@ -108,7 +108,7 @@ export function aiFabricBusCatalog(): FabricBusRow[] {
     {
       id: 'identity-bus',
       name: 'Identity Bus',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/ai-fabric/routing',
       console: '/ai-fabric',
       notes: 'Identity propagation via existing Clerk/session + request IDs — not a new IdP.',
@@ -116,7 +116,7 @@ export function aiFabricBusCatalog(): FabricBusRow[] {
     {
       id: 'inference-bus',
       name: 'Inference Bus',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/ai-router/engine',
       console: '/ai-router',
       notes: 'Discovery link to AI Router / Inference Cloud.',
@@ -124,7 +124,7 @@ export function aiFabricBusCatalog(): FabricBusRow[] {
     {
       id: 'telemetry-bus',
       name: 'Telemetry Bus',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/ai-fabric/monitoring',
       console: '/ai-fabric',
       notes: 'Uses existing observability/request IDs — not a new APM OS.',
@@ -132,7 +132,7 @@ export function aiFabricBusCatalog(): FabricBusRow[] {
     {
       id: 'billing-bus',
       name: 'Billing Bus',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/cost-optimization/engine',
       console: '/billing',
       notes: 'Discovery link to billing/cost surfaces — not a ledger rewrite.',
@@ -140,7 +140,7 @@ export function aiFabricBusCatalog(): FabricBusRow[] {
     {
       id: 'plugin-bus',
       name: 'Plugin Bus',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/plugin-runtime/engine',
       console: '/plugin-runtime',
       notes: 'Discovery link to Plugin Runtime (sandboxed).',
@@ -148,7 +148,7 @@ export function aiFabricBusCatalog(): FabricBusRow[] {
     {
       id: 'security-bus',
       name: 'Security Bus',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/policy-runtime/engine',
       console: '/policy-runtime',
       notes: 'Policy Runtime hard-gate today; Policy Fabric extends fabric-wide later.',
@@ -156,7 +156,7 @@ export function aiFabricBusCatalog(): FabricBusRow[] {
     {
       id: 'streaming-bus',
       name: 'Streaming Bus',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/streaming-runtime/engine',
       console: '/streaming-runtime',
       notes: 'Discovery link to Streaming Runtime.',
@@ -164,7 +164,7 @@ export function aiFabricBusCatalog(): FabricBusRow[] {
     {
       id: 'service-discovery',
       name: 'Service Discovery',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/ai-fabric/routing',
       console: '/ai-fabric',
       notes: 'Static catalog of cloud/runtime routes — not Consul/etcd OS.',
@@ -188,7 +188,7 @@ export function aiFabricArchitectureNotes() {
     primaryRegion: 'af-south-1',
     extendsAiKernel: true,
     extendsInferenceCloud: true,
-    regeneratesVolumes1to9: false,
+    regeneratesPriorLayers: false,
     customerFacingProduct: false,
     kafkaHyperscalerOs: false,
     serviceMeshOs: false,
@@ -208,7 +208,7 @@ export function aiFabricHonesty() {
     kafkaHyperscalerOs: false,
     natsClusterOs: false,
     serviceMeshOs: false,
-    regeneratesVolumes1to9: false,
+    regeneratesPriorLayers: false,
     regeneratesAiKernel: false,
     fabricWidePolicyHardGateRequired: true,
     policyLogOnlyForbidden: true,

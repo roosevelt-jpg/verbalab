@@ -77,7 +77,7 @@ export function memoryRuntimeCatalog() {
       {
         id: 'semantic-memory',
         name: 'Semantic Memory',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/memory-runtime/search',
         notes: 'Text contains search — not embedding ANN OS.',
       },
@@ -105,14 +105,14 @@ export function memoryRuntimeCatalog() {
       {
         id: 'agent-memory',
         name: 'Agent Memory',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/memory-runtime/put',
         notes: 'scope=agent + agentId — Agent Runtime writes via /v1/agent-runtime/memory.',
       },
       {
         id: 'context-compression',
         name: 'Context Compression',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/memory-runtime/compress',
         notes: 'Heuristic truncate/summarize stub — not ML compressor OS.',
       },
@@ -126,7 +126,7 @@ export function memoryRuntimeCatalog() {
       {
         id: 'memory-synchronization',
         name: 'Memory Synchronization',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/memory-runtime/sync',
         notes: 'Sandbox sync stamp on kernel rows — not multi-region sync OS.',
       },
@@ -140,7 +140,7 @@ export function memoryRuntimeCatalog() {
       {
         id: 'memory-encryption',
         name: 'Memory Encryption',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/memory-runtime/put',
         notes: 'Optional encrypt=true stores base64 payload tag — not KMS/HSM OS.',
       },
@@ -154,7 +154,7 @@ export function memoryRuntimeCatalog() {
       {
         id: 'memory-snapshots',
         name: 'Memory Snapshots',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/memory-runtime/snapshots',
         notes: 'Sandbox snapshot MemoryRecords (layer=kernel) — not backup appliance OS.',
       },
@@ -203,7 +203,7 @@ export function memoryRuntimeCatalog() {
       {
         id: 'production-deployment',
         name: 'Production deployment',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/memory-runtime/put',
         notes: 'Ships with Nest API — not a separate memory cluster.',
       },

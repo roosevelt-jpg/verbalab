@@ -63,7 +63,7 @@ describe('African Intelligence Cloud', () => {
     expect(res.body.honesty.digitalTwinOs).toBe(false);
     expect(res.body.honesty.globalIntelligenceOs).toBe(false);
     expect(res.body.honesty.traditionalKnowledgeConsentRequired).toBe(true);
-    expect(res.body.honesty.regeneratesVolumes1to11).toBe(false);
+    expect(res.body.honesty.regeneratesPriorLayers).toBe(false);
 
   });
 });

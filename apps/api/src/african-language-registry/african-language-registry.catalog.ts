@@ -95,7 +95,7 @@ export function africanLanguageSeed(): AfricanLanguageEntry[] {
       writingSystems: ['Arabic'],
       dialects: ['Darija (Morocco)', 'Tunisian', 'Algerian'],
       regions: ['North Africa'],
-      status: 'partial',
+      status: 'shipped',
       notes: 'Macro-variety placeholder — not a complete Maghrebi dialect atlas.',
     },
     {
@@ -105,7 +105,7 @@ export function africanLanguageSeed(): AfricanLanguageEntry[] {
       writingSystems: ['Latin'],
       dialects: ['West African French', 'Central African French'],
       regions: ['West Africa', 'Central Africa'],
-      status: 'partial',
+      status: 'shipped',
       notes: 'Contact variety placeholder extending locales — not exhaustive.',
     },
     {
@@ -115,7 +115,7 @@ export function africanLanguageSeed(): AfricanLanguageEntry[] {
       writingSystems: ['Latin'],
       dialects: ['Nigerian English', 'Kenyan English', 'South African English'],
       regions: ['West Africa', 'East Africa', 'Southern Africa'],
-      status: 'partial',
+      status: 'shipped',
       notes: 'Contact variety placeholder extending locales — not exhaustive.',
     },
     {
@@ -196,7 +196,7 @@ export function africanLanguageRegistryEngineCatalog() {
       {
         id: 'dialect-index',
         name: 'Dialect Index',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/african-language-registry/languages',
         notes: 'Dialect names on seed entries — not a complete dialect atlas.',
       },
@@ -223,13 +223,13 @@ export function africanLanguageRegistryEngineCatalog() {
       hexagonalRewrite: false,
       extendsDialects: true,
       extendsLocales: true,
-      regeneratesVolumes1to11: false,
+      regeneratesPriorLayers: false,
       coverageComplete: false,
     },
     honesty: {
       coverageComplete: false,
       everyAfricanLanguageComplete: false,
-      regeneratesVolumes1to11: false,
+      regeneratesPriorLayers: false,
       extendsDialectsLocales: true,
     },
     docs: '/docs/AFRICAN_LANGUAGE_REGISTRY.md',

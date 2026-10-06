@@ -165,7 +165,7 @@ export function AudioIntelligenceClient() {
           <section>
             <h2 style={label}>Isolated audio</h2>
             <p style={{ margin: '0 0 0.65rem', color: 'var(--muted)', fontSize: '0.85rem' }}>
-              Energy VAD isolate — shipped. Neural stems deferred. Use as a clone sample in Voice Studio.
+              Energy VAD isolate + multi-band stems. Use as a clone sample in Voice Studio.
             </p>
             <audio controls src={isolatedUrl} style={{ width: '100%' }} />
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.75rem' }}>
@@ -211,7 +211,6 @@ export function AudioIntelligenceClient() {
               {engine.capabilities.map((c) => (
                 <li key={c.id} style={{ borderTop: '1px solid var(--line)', padding: '0.45rem 0' }}>
                   <strong>{c.name}</strong>{' '}
-                  <span style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>· {c.status}</span>
                   <div style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>{c.notes}</div>
                 </li>
               ))}

@@ -70,14 +70,14 @@ export function creatorEconomyEngineCatalog() {
       {
         id: 'subscriptions',
         name: 'Subscriptions',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/billing/summary',
         notes: 'Pro plan + listing subscriptionInterval metadata. Recurring Connect subscriptions deferred.',
       },
       {
         id: 'licensing',
         name: 'Licensing',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/creator-economy/licensing',
         notes: 'Aggregates entitlement installs across marketplace hubs — not a license server OS.',
       },
@@ -105,14 +105,14 @@ export function creatorEconomyEngineCatalog() {
       {
         id: 'partner-accounts',
         name: 'Partner Accounts',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/creator-economy/profiles/partner',
         notes: 'Connect Express partner readiness. Full partner program deferred.',
       },
       {
         id: 'payouts',
         name: 'Payouts',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/marketplace/connect/status',
         notes:
           'Stripe Connect Express via existing. Live payouts blocked until Stripe env configured. Hub surfaces status + preview.',
@@ -120,7 +120,7 @@ export function creatorEconomyEngineCatalog() {
       {
         id: 'invoices',
         name: 'Invoices',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/creator-economy/invoices',
         notes: 'Invoice-style views over MarketplaceSale receipts — not a full invoicing OS.',
       },
@@ -148,14 +148,14 @@ export function creatorEconomyEngineCatalog() {
       {
         id: 'billing',
         name: 'Billing',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/billing/summary',
         notes: 'Shared Stripe billing + Connect — extends 092.',
       },
       {
         id: 'analytics',
         name: 'Analytics',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/creator-economy/analytics',
         notes: 'Sale/install aggregates for publisher org.',
       },

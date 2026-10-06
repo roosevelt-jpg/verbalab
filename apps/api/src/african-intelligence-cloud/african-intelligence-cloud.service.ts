@@ -82,7 +82,7 @@ export class AfricanIntelligenceCloudService {
         digitalTwinOs: false,
         globalIntelligenceOs: true,
         coverageComplete: true,
-        regeneratesVolumes1to11: false,
+        regeneratesPriorLayers: false,
       },
       links: {
         africanIntelligenceCloud: '/african-intelligence-cloud',

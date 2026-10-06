@@ -43,7 +43,7 @@ describe('Data Plane Cloud Production Audit', () => {
     await app.close();
   });
 
-  it('ships audit pack and ADR-0235', () => {
+  it('ships audit pack ', () => {
     expect(existsSync(join(root, 'docs/adr/0235-data-plane-cloud-production-audit.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/DATA_PLANE_CLOUD.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/data-plane-cloud-audit/PRODUCTION_READINESS.md'))).toBe(true);

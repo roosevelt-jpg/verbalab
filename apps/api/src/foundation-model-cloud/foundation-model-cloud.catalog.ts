@@ -30,7 +30,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
     {
       id: 'atlas',
       name: 'Lugemi Atlas',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/atlas/engine',
       console: '/atlas',
       modality: 'multilingual_reasoning',
@@ -121,7 +121,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
     {
       id: 'model-training-platform',
       name: 'Model Training Platform',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/model-training-platform/engine',
       console: '/model-training-platform',
       modality: 'mlops',
@@ -131,7 +131,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
     {
       id: 'model-evaluation-platform',
       name: 'Model Evaluation Platform',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/model-evaluation-platform/engine',
       console: '/model-evaluation-platform',
       modality: 'mlops',
@@ -141,7 +141,7 @@ export function foundationModelCloudCatalog(): FmcProductRow[] {
     {
       id: 'model-registry',
       name: 'Model Registry',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/model-registry/engine',
       console: '/model-registry',
       modality: 'mlops',
@@ -168,7 +168,7 @@ export function foundationModelCloudArchitectureNotes() {
     primaryRegion: 'af-south-1',
     extendsInferenceCloud: true,
     extendsAiKernel: true,
-    regeneratesVolumes1to8: false,
+    regeneratesPriorLayers: false,
     customerFacingProduct: true,
     trainsCompetitiveFoundationWeights: false,
     openAiReplacementOs: false,
@@ -183,7 +183,7 @@ export function foundationModelCloudHonesty() {
     trainsCompetitiveFoundationWeights: false,
     shipsTrainedAtlasBaobabEtc: false,
     openAiReplacementOs: false,
-    regeneratesVolumes1to8: false,
+    regeneratesPriorLayers: false,
     regeneratesInferenceCloud: false,
     regeneratesAiKernel: false,
     modelFamilyScaffoldCatalog: true,

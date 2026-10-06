@@ -76,7 +76,7 @@ export function explainabilityPlatformEngineCatalog() {
     honesty: {
       shapOs: false,
       limeOs: false,
-      regeneratesVolumes1to14: false,
+      regeneratesPriorLayers: false,
       decisionExplainabilitySurface: true,
     },
     safety: {

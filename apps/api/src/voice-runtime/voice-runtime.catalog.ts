@@ -42,7 +42,7 @@ export function voiceRuntimeEngineCatalog() {
       managesOrgsPoliciesBilling: false,
       serviceMeshOs: false,
       controlPlaneSeparation: true,
-      regeneratesVolumes1to17: false,
+      regeneratesPriorLayers: false,
       integratesExistingSystems: true,
       reimplementsTts: false,
     },

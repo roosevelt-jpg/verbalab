@@ -53,11 +53,11 @@ export function financialIntelligenceEngineCatalog() {
       style: 'nest_modular_monolith',
       cqrs: true,
       hexagonalRewrite: false,
-      regeneratesVolumes1to11: false,
+      regeneratesPriorLayers: false,
       domain: 'financial',
     },
     honesty: {
-      regeneratesVolumes1to11: false,
+      regeneratesPriorLayers: false,
       coverageComplete: false,
       verticalOperationsOs: false,
       notInvestmentAdvice: true,

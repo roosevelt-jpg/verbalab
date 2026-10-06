@@ -170,11 +170,11 @@ export function platformEngineeringCloudArchitectureNotes(): Record<string, unkn
       'event-fabric',
       'policy-fabric',
     ],
-    regeneratesVolumes1to15: false,
+    regeneratesPriorLayers: false,
     controlPlaneOs: false,
     dataPlaneOs: false,
     aiCloudOs: false,
-    deferredToVolume17Plus: ['control-plane', 'data-plane', 'ai-cloud-os'],
+    deferredNext: ['control-plane', 'data-plane', 'ai-cloud-os'],
   };
 }
 
@@ -190,7 +190,7 @@ export function platformEngineeringCloudHonesty(): Record<string, boolean | stri
     snykOs: false,
     datadogOs: false,
     finopsOs: false,
-    regeneratesVolumes1to15: false,
+    regeneratesPriorLayers: false,
     integratesExistingSystems: true,
     internalEngineeringTooling: true,
     internalIdp: true,

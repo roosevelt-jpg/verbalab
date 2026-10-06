@@ -115,14 +115,14 @@ export function agentMarketplaceEngineCatalog() {
       {
         id: 'agent-analytics',
         name: 'Agent Analytics',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/agent-marketplace/analytics',
         notes: 'Listing/install/review/run aggregates. Commerce depth deferred to Creator Economy.',
       },
       {
         id: 'agent-monetization',
         name: 'Agent Monetization',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/agent-marketplace/listings/:id/install',
         notes:
           'Paid listings record MarketplaceSale receipts (15% fee). Stripe Connect when configured — not a payment-processor OS.',

@@ -128,10 +128,10 @@ export function researchAreasCatalog(): Array<{
     {
       id: 'roboticsInterfaces',
       name: 'Robotics Interfaces',
-      status: 'partial',
+      status: 'shipped',
       notes: 'Interface catalog only — not a robotics OS.',
     },
-    { id: 'edgeAi', name: 'Edge AI', status: 'partial', notes: 'Edge deployment research readiness.' },
+    { id: 'edgeAi', name: 'Edge AI', status: 'shipped', notes: 'Edge deployment research readiness.' },
     {
       id: 'quantumAiResearchReadiness',
       name: 'Quantum AI Research Readiness',
@@ -161,7 +161,7 @@ export function researchCloudArchitectureNotes() {
     extendsIntelligenceCloud: true,
     extendsKnowledgeCloud: true,
     extendsFoundationModelCloud: true,
-    regeneratesVolumes1to12: false,
+    regeneratesPriorLayers: false,
     weightsAndBiasesOs: false,
     huggingFaceHubOs: false,
     doiRegistryOs: false,
@@ -175,7 +175,7 @@ export function researchCloudArchitectureNotes() {
 
 export function researchCloudHonesty() {
   return {
-    regeneratesVolumes1to12: false,
+    regeneratesPriorLayers: false,
     weightsAndBiasesOs: false,
     huggingFaceHubOs: false,
     doiRegistryOs: false,

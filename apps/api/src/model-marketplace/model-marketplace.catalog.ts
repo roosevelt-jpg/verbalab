@@ -77,7 +77,7 @@ export function modelMarketplaceEngineCatalog() {
       {
         id: 'commercial-models',
         name: 'Commercial Models',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/model-marketplace/listings/:id/install',
         notes: 'Paid listings record sales; Stripe Connect path shared with Creator Economy.',
       },
@@ -98,7 +98,7 @@ export function modelMarketplaceEngineCatalog() {
       {
         id: 'revenue-sharing',
         name: 'Revenue Sharing',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/model-marketplace/sales',
         notes:
           '15% platform fee recorded on paid installs. Creator Economy deepens payout math — hand-check before live creators.',
@@ -106,7 +106,7 @@ export function modelMarketplaceEngineCatalog() {
       {
         id: 'analytics',
         name: 'Analytics',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/model-marketplace/analytics',
         notes: 'Listing/install/sale/review aggregates.',
       },

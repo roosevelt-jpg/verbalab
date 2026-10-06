@@ -149,7 +149,6 @@ export function SpeechAnalyticsClient() {
               {engine.capabilities.map((c) => (
                 <li key={c.id} style={{ borderTop: '1px solid var(--line)', padding: '0.45rem 0' }}>
                   <strong>{c.name}</strong>{' '}
-                  <span style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>· {c.status}</span>
                   <div style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>{c.notes}</div>
                 </li>
               ))}

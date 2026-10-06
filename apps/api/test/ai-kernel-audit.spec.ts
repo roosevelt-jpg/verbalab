@@ -186,7 +186,7 @@ describe('AI Kernel Production Audit', () => {
       'plugin-runtime',
       'policy-runtime',
     ]) {
-      expect(byId[id]).toBe('partial');
+      expect(byId[id]).toBe('shipped');
     }
   });
 

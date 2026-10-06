@@ -32,7 +32,7 @@ export function enterpriseRagCatalog() {
       {
         id: 'hybrid-search',
         name: 'Hybrid search',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/enterprise-rag/retrieve',
         notes: 'mode=hybrid — light RRF via Enterprise Search. Not BM25 OS.',
       },
@@ -46,7 +46,7 @@ export function enterpriseRagCatalog() {
       {
         id: 'knowledge-ranking',
         name: 'Knowledge ranking',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/enterprise-rag/retrieve',
         notes: 'Score / RRF order + context optimization. Learned rankers deferred.',
       },
@@ -60,7 +60,7 @@ export function enterpriseRagCatalog() {
       {
         id: 'context-optimization',
         name: 'Context optimization',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/enterprise-rag/retrieve',
         notes: 'Dedupe + maxChars truncation before LLM. Advanced compression deferred.',
       },

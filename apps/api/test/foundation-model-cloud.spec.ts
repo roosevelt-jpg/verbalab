@@ -111,7 +111,7 @@ describe('Foundation Model Cloud Foundation', () => {
     expect(res.body.architecture.customerFacingProduct).toBe(true);
     expect(res.body.architecture.trainsCompetitiveFoundationWeights).toBe(false);
     expect(res.body.architecture.openAiReplacementOs).toBe(false);
-    expect(res.body.architecture.regeneratesVolumes1to8).toBe(false);
+    expect(res.body.architecture.regeneratesPriorLayers).toBe(false);
     expect(res.body.architecture.hexagonalRewrite).toBe(false);
     expect(res.body.architecture.cqrs).toBe(true);
     expect(res.body.architecture.terraform).toBe(true);
@@ -152,23 +152,23 @@ describe('Foundation Model Cloud Foundation', () => {
     expect(hub.console).toBe('/foundation-model-cloud');
 
     const atlas = res.body.products.find((p: { id: string }) => p.id === 'atlas');
-    expect(atlas.status).toBe('partial');
+    expect(atlas.status).toBe('shipped');
     expect(atlas.console).toBe('/atlas');
 
     const training = res.body.products.find(
       (p: { id: string }) => p.id === 'model-training-platform',
     );
-    expect(training.status).toBe('partial');
+    expect(training.status).toBe('shipped');
     expect(training.console).toBe('/model-training-platform');
 
     const evaluation = res.body.products.find(
       (p: { id: string }) => p.id === 'model-evaluation-platform',
     );
-    expect(evaluation.status).toBe('partial');
+    expect(evaluation.status).toBe('shipped');
     expect(evaluation.console).toBe('/model-evaluation-platform');
 
     const registry = res.body.products.find((p: { id: string }) => p.id === 'model-registry');
-    expect(registry.status).toBe('partial');
+    expect(registry.status).toBe('shipped');
     expect(registry.console).toBe('/model-registry');
   });
 
@@ -187,7 +187,7 @@ describe('Foundation Model Cloud Foundation', () => {
     expect(overview.deferred.modelTrainingPlatform).toBe(false);
     expect(overview.deferred.modelEvaluationPlatform).toBe(false);
     expect(overview.deferred.modelRegistry).toBe(false);
-    expect(overview.deferred.regeneratesVolumes1to8).toBe(false);
+    expect(overview.deferred.regeneratesPriorLayers).toBe(false);
     expect(overview.honesty.trainsCompetitiveFoundationWeights).toBe(false);
     expect(overview.links.foundationModelCloud).toBe('/foundation-model-cloud');
     expect(overview.links.inferenceCloud).toBe('/inference-cloud');

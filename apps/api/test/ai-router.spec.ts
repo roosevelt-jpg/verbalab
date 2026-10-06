@@ -93,7 +93,7 @@ describe('AI Router', () => {
     expect(res.body.capabilities.some((c: { id: string }) => c.id === 'caching')).toBe(true);
     expect(
       res.body.capabilities.find((c: { id: string }) => c.id === 'caching').status,
-    ).toBe('partial');
+    ).toBe('shipped');
 
     const features = await request(app.getHttpServer()).get('/v1/ai-router/features').expect(200);
     expect(features.body.features.some((f: { feature: string }) => f.feature === 'chat')).toBe(

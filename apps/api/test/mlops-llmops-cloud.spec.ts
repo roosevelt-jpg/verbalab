@@ -75,7 +75,7 @@ describe('MLOps & LLMOps Cloud', () => {
     expect(res.body.honesty.requiresDriftClear).toBe(true);
     expect(res.body.honesty.requiresContinuousEvalPass).toBe(true);
     expect(res.body.honesty.policyViolationsVisible).toBe(true);
-    expect(res.body.honesty.regeneratesVolumes1to13).toBe(false);
+    expect(res.body.honesty.regeneratesPriorLayers).toBe(false);
   });
 
   it('exposes monitoring', async () => {

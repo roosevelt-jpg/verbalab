@@ -39,14 +39,14 @@ export function voiceMarketplaceEngineCatalog() {
       {
         id: 'voice-selling',
         name: 'Voice Selling',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/voice-marketplace/listings/:id/install',
         notes: 'Paid listings record sales; Stripe Connect path shared with patterns when configured.',
       },
       {
         id: 'subscriptions',
         name: 'Subscriptions',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/voice-marketplace/listings',
         notes: 'subscriptionInterval metadata on listings. Recurring Stripe billing deferred.',
       },
@@ -81,7 +81,7 @@ export function voiceMarketplaceEngineCatalog() {
       {
         id: 'enterprise-voices',
         name: 'Enterprise Voices',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/voice-marketplace/listings',
         notes: 'Approved clones with ownership attestation + enterprise license type.',
       },
@@ -95,14 +95,14 @@ export function voiceMarketplaceEngineCatalog() {
       {
         id: 'analytics',
         name: 'Analytics',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/voice-marketplace/analytics',
         notes: 'Listing/install/rating aggregates. Full Voice Analytics lives in the Voice Analytics hub.',
       },
       {
         id: 'billing',
         name: 'Billing',
-        status: 'partial',
+        status: 'shipped',
         api: 'shared Stripe + recorded sales',
         notes: 'Pro gate + recorded paid installs. Live Connect payouts via shared billing.',
       },

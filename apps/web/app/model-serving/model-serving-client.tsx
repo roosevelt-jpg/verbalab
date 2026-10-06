@@ -135,7 +135,7 @@ export function ModelServingClient() {
         <ul style={{ margin: 0, paddingLeft: '1.2rem' }}>
           {kinds.map((k) => (
             <li key={k.id} style={{ marginBottom: '0.45rem' }}>
-              <strong>{k.name}</strong> · {k.status} — {k.notes}
+              <strong>{k.name}</strong> — {k.notes}
             </li>
           ))}
         </ul>

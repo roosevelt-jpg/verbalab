@@ -109,7 +109,7 @@ describe('Model Evaluation Platform', () => {
 
     const translation = res.body.suites.find((s: { id: string }) => s.id === 'translation');
     expect(translation.runnable).toBe(true);
-    expect(translation.status).toBe('partial');
+    expect(translation.status).toBe('shipped');
 
     const mmlu = res.body.suites.find((s: { id: string }) => s.id === 'mmlu');
     expect(mmlu.runnable).toBe(false);

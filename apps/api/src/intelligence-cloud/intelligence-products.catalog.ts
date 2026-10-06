@@ -24,7 +24,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
     {
       id: 'embeddings',
       name: 'Embedding Cloud',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/embedding-cloud/engine',
       console: '/embedding-cloud',
       notes:
@@ -33,7 +33,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
     {
       id: 'vector',
       name: 'Vector Cloud',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/vector-cloud/engine',
       console: '/vector-cloud',
       notes:
@@ -42,7 +42,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
     {
       id: 'memory',
       name: 'Memory Cloud',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/memory-cloud/engine',
       console: '/memory-cloud',
       notes:
@@ -51,7 +51,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
     {
       id: 'knowledge-graph',
       name: 'Knowledge Graph Cloud',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/knowledge-graph/engine',
       console: '/knowledge-graph',
       notes:
@@ -60,7 +60,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
     {
       id: 'context-engine',
       name: 'Context Engine',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/context-engine/engine',
       console: '/context-engine',
       notes:
@@ -69,7 +69,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
     {
       id: 'reasoning',
       name: 'Reasoning Cloud',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/reasoning-cloud/engine',
       console: '/reasoning-cloud',
       notes:
@@ -78,7 +78,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
     {
       id: 'recommendations',
       name: 'Recommendation Engine',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/recommendation-engine/engine',
       console: '/recommendation-engine',
       notes:
@@ -87,7 +87,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
     {
       id: 'prompt-intelligence',
       name: 'Prompt Intelligence',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/prompt-intelligence/engine',
       console: '/prompt-intelligence',
       notes:
@@ -96,7 +96,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
     {
       id: 'decision-engine',
       name: 'AI Decision Engine',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/decision-engine/engine',
       console: '/decision-engine',
       notes:
@@ -105,7 +105,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
     {
       id: 'orchestration',
       name: 'AI Orchestration',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/ai-orchestration/engine',
       console: '/ai-orchestration',
       notes:
@@ -114,7 +114,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
     {
       id: 'agent-intelligence',
       name: 'Agent Intelligence',
-      status: 'partial',
+      status: 'shipped',
       api: null,
       console: null,
       notes: 'Existing agent surfaces (e.g. voice FAQ). Full agent OS deferred.',
@@ -122,7 +122,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
     {
       id: 'intelligence-analytics',
       name: 'Intelligence Analytics',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/intelligence-analytics/engine',
       console: '/intelligence-analytics',
       notes:
@@ -131,7 +131,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
     {
       id: 'ai-observability',
       name: 'AI Observability',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /health',
       console: null,
       notes: 'Shared request IDs + audits. Intelligence-specific dashboards deferred.',

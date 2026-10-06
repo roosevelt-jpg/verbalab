@@ -74,7 +74,7 @@ export function contextEngineCatalog() {
       {
         id: 'context-compression',
         name: 'Context Compression',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/context-engine/assemble',
         notes: 'Char-budget truncation by priority. LLM summarization deferred.',
       },

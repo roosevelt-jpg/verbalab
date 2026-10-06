@@ -77,7 +77,7 @@ export function developerExperiencePlatformEngineCatalog() {
       ideOs: false,
       extendsDeveloperCloud: true,
       regeneratesDeveloperCloud: false,
-      regeneratesVolumes1to15: false,
+      regeneratesPriorLayers: false,
       integratesExistingSystems: true,
       internalEngineeringTooling: true,
     },

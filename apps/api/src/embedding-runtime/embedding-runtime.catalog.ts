@@ -41,7 +41,7 @@ export function embeddingRuntimeEngineCatalog() {
       managesOrgsPoliciesBilling: false,
       serviceMeshOs: false,
       controlPlaneSeparation: true,
-      regeneratesVolumes1to17: false,
+      regeneratesPriorLayers: false,
       integratesExistingSystems: true,
       reimplementsEmbeddingModels: false,
     },

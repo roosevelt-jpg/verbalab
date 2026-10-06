@@ -117,7 +117,7 @@ describe('Emotion Voice Engine', () => {
     expect(engine.body.related.speechEmotionDetection).toContain('EMOTION_INTELLIGENCE');
 
     const synth = engine.body.capabilities.find((c: { id: string }) => c.id === 'emotion-synthesis');
-    expect(synth.status).toBe('partial');
+    expect(synth.status).toBe('shipped');
 
     const profiles = await request(app.getHttpServer()).get('/v1/emotion-voice/profiles').expect(200);
     const ids = profiles.body.profiles.map((p: { id: string }) => p.id);

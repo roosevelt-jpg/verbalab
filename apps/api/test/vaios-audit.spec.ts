@@ -43,7 +43,7 @@ describe('VAIOS Production Audit', () => {
     await app.close();
   });
 
-  it('ships audit pack and ADR-0245', () => {
+  it('ships audit pack ', () => {
     expect(existsSync(join(root, 'docs/adr/0245-vaios-production-audit.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/VAIOS.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/vaios-audit/PRODUCTION_READINESS.md'))).toBe(true);

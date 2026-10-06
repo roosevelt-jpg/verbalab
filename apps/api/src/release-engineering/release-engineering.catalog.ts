@@ -60,7 +60,7 @@ export function releaseEngineeringEngineCatalog() {
     ],
     honesty: {
       spinnakerOs: false,
-      regeneratesVolumes1to15: false,
+      regeneratesPriorLayers: false,
       integratesExistingSystems: true,
       internalEngineeringTooling: true,
     },

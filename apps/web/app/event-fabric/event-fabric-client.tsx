@@ -146,7 +146,7 @@ export function EventFabricClient() {
             <ul style={{ margin: 0, paddingLeft: '1.1rem', lineHeight: 1.7 }}>
               {data.products.map((p) => (
                 <li key={p.id}>
-                  <strong>{p.name}</strong> ({p.status}) — {p.notes}
+                  <strong>{p.name}</strong> — {p.notes}
                 </li>
               ))}
             </ul>

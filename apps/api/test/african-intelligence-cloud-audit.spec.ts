@@ -171,7 +171,7 @@ describe('African Intelligence Cloud Production Audit', () => {
     expect(hub.body.honesty.globalIntelligenceOs).toBe(false);
     expect(hub.body.honesty.worldsLargestScrapeOs).toBe(false);
     expect(hub.body.honesty.traditionalKnowledgeConsentRequired).toBe(true);
-    expect(hub.body.honesty.regeneratesVolumes1to11).toBe(false);
+    expect(hub.body.honesty.regeneratesPriorLayers).toBe(false);
     expect(hub.body.honesty.notMedicalAdvice).toBe(true);
     expect(hub.body.honesty.notInvestmentAdvice).toBe(true);
     expect(hub.body.honesty.officialGuidanceMustBeSourced).toBe(true);

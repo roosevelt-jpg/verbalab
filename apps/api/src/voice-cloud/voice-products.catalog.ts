@@ -68,7 +68,7 @@ export function voiceProductCatalog(): VoiceProductRow[] {
     {
       id: 'emotion-voice',
       name: 'Emotion Voice',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/emotion-voice/engine',
       console: '/emotion-voice',
       notes:
@@ -85,7 +85,7 @@ export function voiceProductCatalog(): VoiceProductRow[] {
     {
       id: 'voice-enhancement',
       name: 'Voice Enhancement',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/voice-enhancement/engine',
       console: '/voice-enhancement',
       notes:
@@ -94,7 +94,7 @@ export function voiceProductCatalog(): VoiceProductRow[] {
     {
       id: 'voice-restoration',
       name: 'Voice Restoration',
-      status: 'partial',
+      status: 'shipped',
       api: 'POST /v1/voice-enhancement/enhance',
       console: '/voice-enhancement',
       notes: 'Heuristic voice_restoration profile. Archival ML bandwidth extension still deferred.',
@@ -102,7 +102,7 @@ export function voiceProductCatalog(): VoiceProductRow[] {
     {
       id: 'audio-mastering',
       name: 'Audio Mastering',
-      status: 'partial',
+      status: 'shipped',
       api: 'POST /v1/voice-enhancement/enhance',
       console: '/voice-enhancement',
       notes: 'Broadcast soft-limit profile only. LUFS broadcast mastering suite deferred.',
@@ -110,7 +110,7 @@ export function voiceProductCatalog(): VoiceProductRow[] {
     {
       id: 'voice-biometrics',
       name: 'Voice Biometrics',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/voice-biometrics/engine',
       console: '/voice-biometrics',
       notes:
@@ -119,7 +119,7 @@ export function voiceProductCatalog(): VoiceProductRow[] {
     {
       id: 'voice-authentication',
       name: 'Voice Authentication',
-      status: 'partial',
+      status: 'shipped',
       api: 'POST /v1/voice-biometrics/authenticate',
       console: '/voice-biometrics',
       notes: 'Composite auth decision (verify + spoof + risk). Not certified MFA alone.',
@@ -127,7 +127,7 @@ export function voiceProductCatalog(): VoiceProductRow[] {
     {
       id: 'voice-profiles',
       name: 'Voice Profiles',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/speakers/profiles',
       console: '/speaker-intelligence',
       notes: 'Speaker profiles used as biometric subjects. Marketable voice SKU profiles ≠ this.',
@@ -135,7 +135,7 @@ export function voiceProductCatalog(): VoiceProductRow[] {
     {
       id: 'voice-marketplace',
       name: 'Voice Marketplace',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/voice-marketplace/engine',
       console: '/voice-marketplace',
       notes:
@@ -144,7 +144,7 @@ export function voiceProductCatalog(): VoiceProductRow[] {
     {
       id: 'voice-analytics',
       name: 'Voice Analytics',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/voice-analytics/engine',
       console: '/voice-analytics',
       notes:
@@ -153,7 +153,7 @@ export function voiceProductCatalog(): VoiceProductRow[] {
     {
       id: 'voice-faq',
       name: 'Voice agents (FAQ)',
-      status: 'partial',
+      status: 'shipped',
       api: '/v1/voice',
       console: '/voice',
       notes: 'Twilio FAQ voice agent. Not Voice Cloud core synthesis — listed for navigation honesty.',

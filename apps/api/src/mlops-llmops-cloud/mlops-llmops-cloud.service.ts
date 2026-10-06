@@ -85,7 +85,7 @@ export class MlopsLlmopsCloudService {
         rayClusterOs: true,
         distributedTrainingOs: true,
         trustCloudOs: true,
-        regeneratesVolumes1to13: false,
+        regeneratesPriorLayers: false,
       },
       links: {
         mlopsLlmopsCloud: '/mlops-llmops-cloud',

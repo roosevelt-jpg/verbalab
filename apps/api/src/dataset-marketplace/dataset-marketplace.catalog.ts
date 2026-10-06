@@ -114,7 +114,7 @@ export function datasetMarketplaceEngineCatalog() {
       {
         id: 'revenue-sharing',
         name: 'Revenue Sharing',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/dataset-marketplace/sales',
         notes:
           '15% platform fee on paid installs. Creator Economy deepens payout math — hand-check before live creators.',

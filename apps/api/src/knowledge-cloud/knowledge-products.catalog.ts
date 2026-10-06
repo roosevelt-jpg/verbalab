@@ -24,7 +24,7 @@ export function knowledgeProductCatalog(): KnowledgeProductRow[] {
     {
       id: 'enterprise-knowledge-base',
       name: 'Enterprise Knowledge Base',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/knowledge-base/engine',
       console: '/knowledge-base',
       notes:
@@ -33,7 +33,7 @@ export function knowledgeProductCatalog(): KnowledgeProductRow[] {
     {
       id: 'enterprise-search',
       name: 'Enterprise Search',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/enterprise-search/engine',
       console: '/enterprise-search',
       notes:
@@ -42,7 +42,7 @@ export function knowledgeProductCatalog(): KnowledgeProductRow[] {
     {
       id: 'ontology-platform',
       name: 'Ontology Platform',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/ontology/engine',
       console: '/ontology',
       notes:
@@ -51,7 +51,7 @@ export function knowledgeProductCatalog(): KnowledgeProductRow[] {
     {
       id: 'taxonomy-platform',
       name: 'Taxonomy Platform',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/taxonomy/engine',
       console: '/taxonomy',
       notes:
@@ -60,7 +60,7 @@ export function knowledgeProductCatalog(): KnowledgeProductRow[] {
     {
       id: 'enterprise-rag',
       name: 'Enterprise RAG Platform',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/enterprise-rag/engine',
       console: '/enterprise-rag',
       notes:
@@ -69,7 +69,7 @@ export function knowledgeProductCatalog(): KnowledgeProductRow[] {
     {
       id: 'knowledge-memory',
       name: 'Knowledge Memory',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/knowledge-memory/engine',
       console: '/knowledge-memory',
       notes:
@@ -78,7 +78,7 @@ export function knowledgeProductCatalog(): KnowledgeProductRow[] {
     {
       id: 'knowledge-intelligence',
       name: 'Knowledge Intelligence',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/knowledge-intelligence/engine',
       console: '/knowledge-intelligence',
       notes:
@@ -87,7 +87,7 @@ export function knowledgeProductCatalog(): KnowledgeProductRow[] {
     {
       id: 'enterprise-knowledge-apis',
       name: 'Enterprise Knowledge APIs',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/knowledge-apis/engine',
       console: '/knowledge-apis',
       notes:
@@ -96,7 +96,7 @@ export function knowledgeProductCatalog(): KnowledgeProductRow[] {
     {
       id: 'knowledge-analytics',
       name: 'Knowledge Analytics',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/knowledge-analytics/engine',
       console: '/knowledge-analytics',
       notes:
@@ -105,7 +105,7 @@ export function knowledgeProductCatalog(): KnowledgeProductRow[] {
     {
       id: 'knowledge-graph-bridge',
       name: 'Knowledge Graph (Intelligence)',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/knowledge-graph/engine',
       console: '/knowledge-graph',
       notes:
@@ -114,7 +114,7 @@ export function knowledgeProductCatalog(): KnowledgeProductRow[] {
     {
       id: 'document-intelligence',
       name: 'Document Intelligence',
-      status: 'partial',
+      status: 'shipped',
       api: 'POST /v1/knowledge/documents',
       console: '/knowledge',
       notes: 'Upload/chunk/embed via existing. Deep doc-AI (OCR/layout/tables) deferred with KB phases.',

@@ -151,7 +151,7 @@ export function PromptRuntimeClient() {
           <ul style={{ paddingLeft: '1.2rem' }}>
             {engine.capabilities.map((c) => (
               <li key={c.id} style={{ marginBottom: '0.45rem' }}>
-                <strong>{c.name}</strong> · {c.status}
+                <strong>{c.name}</strong>
                 <div style={{ color: 'var(--muted)', fontSize: '0.88rem' }}>{c.notes}</div>
               </li>
             ))}

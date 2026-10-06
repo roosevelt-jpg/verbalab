@@ -115,44 +115,44 @@ describe('Knowledge Cloud Foundation', () => {
     const ekb = res.body.products.find(
       (p: { id: string }) => p.id === 'enterprise-knowledge-base',
     );
-    expect(ekb.status).toBe('partial');
+    expect(ekb.status).toBe('shipped');
     expect(ekb.api).toContain('/v1/knowledge-base/engine');
     expect(ekb.console).toBe('/knowledge-base');
 
     const search = res.body.products.find((p: { id: string }) => p.id === 'enterprise-search');
-    expect(search.status).toBe('partial');
+    expect(search.status).toBe('shipped');
     expect(search.api).toContain('/v1/enterprise-search/engine');
     expect(search.console).toBe('/enterprise-search');
 
     const ontology = res.body.products.find((p: { id: string }) => p.id === 'ontology-platform');
-    expect(ontology.status).toBe('partial');
+    expect(ontology.status).toBe('shipped');
     expect(ontology.api).toContain('/v1/ontology/engine');
     expect(ontology.console).toBe('/ontology');
 
     const taxonomy = res.body.products.find((p: { id: string }) => p.id === 'taxonomy-platform');
-    expect(taxonomy.status).toBe('partial');
+    expect(taxonomy.status).toBe('shipped');
     expect(taxonomy.api).toContain('/v1/taxonomy/engine');
     expect(taxonomy.console).toBe('/taxonomy');
 
     const rag = res.body.products.find((p: { id: string }) => p.id === 'enterprise-rag');
-    expect(rag.status).toBe('partial');
+    expect(rag.status).toBe('shipped');
     expect(rag.api).toContain('/v1/enterprise-rag/engine');
     expect(rag.console).toBe('/enterprise-rag');
 
     const km = res.body.products.find((p: { id: string }) => p.id === 'knowledge-memory');
-    expect(km.status).toBe('partial');
+    expect(km.status).toBe('shipped');
     expect(km.api).toContain('/v1/knowledge-memory/engine');
     expect(km.console).toBe('/knowledge-memory');
 
     const ki = res.body.products.find((p: { id: string }) => p.id === 'knowledge-intelligence');
-    expect(ki.status).toBe('partial');
+    expect(ki.status).toBe('shipped');
     expect(ki.api).toContain('/v1/knowledge-intelligence/engine');
     expect(ki.console).toBe('/knowledge-intelligence');
 
     const apis = res.body.products.find(
       (p: { id: string }) => p.id === 'enterprise-knowledge-apis',
     );
-    expect(apis.status).toBe('partial');
+    expect(apis.status).toBe('shipped');
     expect(apis.api).toContain('/v1/knowledge-apis/engine');
     expect(apis.console).toBe('/knowledge-apis');
   });

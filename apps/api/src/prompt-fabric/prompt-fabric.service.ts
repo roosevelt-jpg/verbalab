@@ -172,7 +172,7 @@ export class PromptFabricService {
         honesty: engine.honesty,
       },
       fabric: {
-        status: 'partial',
+        status: 'shipped',
         policyFabricDeferred: false,
         note:
           'Prompt policies use Policy Runtime hard-gates. Fabric-wide Policy Fabric hard-gates distribute planes.',
@@ -371,7 +371,7 @@ export class PromptFabricService {
         promptMeshOs: true,
         autoPromptResearchLab: true,
         crossOrgDataPlane: true,
-        regeneratesVolumes1to9: false,
+        regeneratesPriorLayers: false,
       },
       links: {
         promptFabric: '/prompt-fabric',

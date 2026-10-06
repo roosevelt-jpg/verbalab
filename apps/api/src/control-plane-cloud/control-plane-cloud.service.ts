@@ -74,7 +74,7 @@ export class ControlPlaneCloudService {
       deferred: {
         dataPlaneOs: true,
         executesInference: false,
-        regeneratesVolumes1to16: false,
+        regeneratesPriorLayers: false,
       },
       links: {
         controlPlaneCloud: '/control-plane-cloud',

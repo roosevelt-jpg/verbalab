@@ -97,7 +97,7 @@ describe('Translation Engine Phase 8', () => {
     expect(
       res.body.capabilities.some((c: { id: string; status: string }) => c.id === 'whatsapp' && c.status === 'deferred'),
     ).toBe(true);
-    expect(res.body.engines.translationMemory.status).toBe('partial');
+    expect(res.body.engines.translationMemory.status).toBe('shipped');
   });
 
   it('translates HTML preserving tags', async () => {

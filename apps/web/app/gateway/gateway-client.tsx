@@ -104,8 +104,11 @@ export function GatewayClient() {
                   <div style={{ fontWeight: 600 }}>
                     {p.libraryName}{' '}
                     <span style={{ fontWeight: 500, color: 'var(--muted)', fontSize: '0.85rem' }}>
-                      · {p.status}
-                      {p.status !== 'deferred' ? (p.configured ? ' · configured': ' · not configured'): ''}
+                      {p.status !== 'deferred'
+                        ? p.configured
+                          ? ' · configured'
+                          : ' · not configured'
+                        : ''}
                     </span>
                   </div>
                   <div style={{ color: 'var(--muted)', fontSize: '0.85rem', marginTop: '0.2rem' }}>

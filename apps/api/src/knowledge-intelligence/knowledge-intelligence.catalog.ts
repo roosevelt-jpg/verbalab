@@ -35,7 +35,7 @@ export function knowledgeIntelligenceCatalog() {
       {
         id: 'knowledge-recommendations',
         name: 'Knowledge Recommendations',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/knowledge-intelligence/recommend',
         notes: 'Light rank of ready docs. Not collaborative-filtering / retail recommender OS.',
       },
@@ -49,7 +49,7 @@ export function knowledgeIntelligenceCatalog() {
       {
         id: 'duplicate-detection',
         name: 'Duplicate Detection',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/knowledge-intelligence/duplicates',
         notes: 'Filename + first-chunk prefix overlap. Near-dupe ML deferred.',
       },
@@ -63,7 +63,7 @@ export function knowledgeIntelligenceCatalog() {
       {
         id: 'knowledge-confidence',
         name: 'Knowledge Confidence',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/knowledge-intelligence/confidence',
         notes: 'Heuristic score from status/chunks/tags — not calibrated probabilistic model.',
       },

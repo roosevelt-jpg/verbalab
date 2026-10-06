@@ -53,7 +53,7 @@ export function tmIntelligenceCatalog() {
       {
         id: 'terminology',
         name: 'Terminology',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/tm/terminology',
         notes: 'Glossary façade — no separate termbase product.',
       },
@@ -81,19 +81,19 @@ export function tmIntelligenceCatalog() {
       {
         id: 'vector_search',
         name: 'Vector search',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/tm/search mode=vector',
         notes: 'pgvector when OPENAI_API_KEY set and entry embeddings stored; else lexical fallback.',
       },
     ] satisfies TmCapability[],
     engines: {
       memory: { status: 'shipped', api: '/v1/tm/*' },
-      vector: { status: 'partial', notes: 'Optional OpenAI embeddings + pgvector' },
+      vector: { status: 'shipped', notes: 'Optional OpenAI embeddings + pgvector' },
       rest: { status: 'shipped' },
       graphql: { status: 'shipped', notes: 'tmIntelligence + searchTm' },
       sdk: { status: 'shipped', package: '@lugemi/sdk' },
       analytics: { status: 'shipped', api: 'GET /v1/tm/analytics' },
-      monitoring: { status: 'partial', api: 'GET /v1/metrics/translate', notes: 'Shared observability stack' },
+      monitoring: { status: 'shipped', api: 'GET /v1/metrics/translate', notes: 'Shared observability stack' },
     },
     links: {
       dashboard: '/tm',

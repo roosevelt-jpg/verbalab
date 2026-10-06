@@ -68,7 +68,7 @@ export function serviceCatalogEngineCatalog() {
     ],
     honesty: {
       serviceMeshOs: false,
-      regeneratesVolumes1to15: false,
+      regeneratesPriorLayers: false,
       integratesExistingSystems: true,
       internalEngineeringTooling: true,
     },

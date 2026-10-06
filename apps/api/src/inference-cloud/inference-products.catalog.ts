@@ -24,7 +24,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
     {
       id: 'gpu-platform',
       name: 'GPU Platform',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/gpu-platform/engine',
       console: '/gpu-platform',
       notes:
@@ -33,7 +33,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
     {
       id: 'model-serving',
       name: 'Model Serving',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/model-serving/engine',
       console: '/model-serving',
       notes:
@@ -42,7 +42,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
     {
       id: 'ai-router',
       name: 'AI Router',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/ai-router/engine',
       console: '/ai-router',
       notes:
@@ -51,7 +51,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
     {
       id: 'streaming-runtime',
       name: 'Streaming Runtime',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/streaming-runtime/engine',
       console: '/streaming-runtime',
       notes:
@@ -60,7 +60,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
     {
       id: 'batch-runtime',
       name: 'Batch Runtime',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/batch-runtime/engine',
       console: '/batch-runtime',
       notes:
@@ -69,7 +69,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
     {
       id: 'intelligent-cache',
       name: 'Intelligent Cache',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/intelligent-cache/engine',
       console: '/intelligent-cache',
       notes:
@@ -78,7 +78,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
     {
       id: 'cost-optimization',
       name: 'Cost Optimization Engine',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/cost-optimization/engine',
       console: '/cost-optimization',
       notes:
@@ -87,7 +87,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
     {
       id: 'ai-runtime-analytics',
       name: 'AI Runtime Analytics',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/ai-runtime-analytics/engine',
       console: '/ai-runtime-analytics',
       notes:
@@ -96,7 +96,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
     {
       id: 'cpu-runtime',
       name: 'CPU Runtime',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/gateway/providers',
       console: '/gateway',
       notes: 'CPU path today = Nest API + vendor HTTP adapters. Not a custom CPU cluster OS.',
@@ -104,7 +104,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
     {
       id: 'model-registry-bridge',
       name: 'Model Registry Integration',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/models',
       console: '/models',
       notes: 'Links existing model registry — not regenerated. Full Inference registry deferred.',

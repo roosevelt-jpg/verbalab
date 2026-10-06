@@ -152,7 +152,7 @@ export function ecosystemProductCatalog(): EcosystemProductRow[] {
     {
       id: 'billing-analytics',
       name: 'Ecosystem Billing & Analytics',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/marketplace/sales',
       console: '/billing',
       notes:
@@ -177,7 +177,7 @@ export function ecosystemArchitectureNotes() {
     primaryRegion: 'af-south-1',
     extendsContentMarketplace: true,
     extendsVoiceMarketplace: true,
-    regeneratesVolumes1to10: false,
+    regeneratesPriorLayers: false,
     regeneratesMarketplaceVl090: false,
     paymentProcessorOs: false,
     storesRawCardData: false,
@@ -196,7 +196,7 @@ export function ecosystemHonesty() {
     storesRawCardData: false,
     stripeOrEquivalentRequired: true,
     rollsOwnCardVault: false,
-    regeneratesVolumes1to10: false,
+    regeneratesPriorLayers: false,
     regeneratesMarketplaceVl090: false,
     regeneratesVoiceMarketplace: false,
     pluginAgentSandboxRequired: true,

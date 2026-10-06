@@ -102,7 +102,7 @@ export function africanKnowledgeGraphEngineCatalog() {
       cqrs: true,
       hexagonalRewrite: false,
       neo4jOs: false,
-      regeneratesVolumes1to11: false,
+      regeneratesPriorLayers: false,
       inProcessGraph: true,
     },
     honesty: {
@@ -110,7 +110,7 @@ export function africanKnowledgeGraphEngineCatalog() {
       graphDatabaseOs: false,
       inProcessGraph: true,
       coverageComplete: false,
-      regeneratesVolumes1to11: false,
+      regeneratesPriorLayers: false,
     },
     docs: '/docs/AFRICAN_KNOWLEDGE_GRAPH.md',
   };

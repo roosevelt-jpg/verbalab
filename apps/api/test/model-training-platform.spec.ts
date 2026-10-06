@@ -114,7 +114,7 @@ describe('Model Training Platform', () => {
 
     const lora = res.body.methods.find((m: { id: string }) => m.id === 'lora');
     expect(lora.launchable).toBe(true);
-    expect(lora.status).toBe('partial');
+    expect(lora.status).toBe('shipped');
 
     const rlhf = res.body.methods.find((m: { id: string }) => m.id === 'rlhf');
     expect(rlhf.launchable).toBe(false);

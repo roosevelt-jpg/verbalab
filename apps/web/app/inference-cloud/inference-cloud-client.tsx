@@ -159,7 +159,7 @@ export function InferenceCloudClient() {
             <ul style={{ margin: 0, paddingLeft: '1.2rem' }}>
               {data.products.map((p) => (
                 <li key={p.id} style={{ marginBottom: '0.55rem' }}>
-                  <strong>{p.name}</strong> ({p.status})
+                  <strong>{p.name}</strong>
                   {p.console ? (
                     <>
                       {' '}

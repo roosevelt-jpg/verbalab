@@ -77,7 +77,7 @@ export function reliabilityEngineeringEngineCatalog() {
       datadogOs: false,
       extendsObservability: true,
       regeneratesObservability: false,
-      regeneratesVolumes1to15: false,
+      regeneratesPriorLayers: false,
       integratesExistingSystems: true,
       internalEngineeringTooling: true,
     },

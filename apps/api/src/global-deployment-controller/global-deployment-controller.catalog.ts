@@ -78,7 +78,7 @@ export function globalDeploymentControllerEngineCatalog() {
       regeneratesReleaseEngineering: false,
       spinnakerOs: false,
       executesInference: false,
-      regeneratesVolumes1to16: false,
+      regeneratesPriorLayers: false,
       integratesExistingSystems: true,
       controlPlaneManagementLayer: true,
     },

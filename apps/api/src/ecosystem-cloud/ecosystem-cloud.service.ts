@@ -87,7 +87,7 @@ export class EcosystemCloudService {
         taxHandlingComplete: true,
         disputeChargebackComplete: true,
         paymentProcessorOs: false,
-        regeneratesVolumes1to10: false,
+        regeneratesPriorLayers: false,
       },
       links: {
         ecosystemCloud: '/ecosystem-cloud',

@@ -67,7 +67,7 @@ export function goldenPathPlatformEngineCatalog() {
     ],
     honesty: {
       scaffoldingOs: false,
-      regeneratesVolumes1to15: false,
+      regeneratesPriorLayers: false,
       integratesExistingSystems: true,
       internalEngineeringTooling: true,
     },

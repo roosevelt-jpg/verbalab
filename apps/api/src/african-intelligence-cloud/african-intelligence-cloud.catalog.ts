@@ -119,7 +119,7 @@ export function africanIntelligenceArchitectureNotes() {
     extendsLanguageCloud: true,
     extendsKnowledgeCloud: true,
     extendsIntelligenceCloud: true,
-    regeneratesVolumes1to11: false,
+    regeneratesPriorLayers: false,
     neo4jOs: false,
     worldsLargestScrapeOs: false,
     digitalTwinOs: false,
@@ -132,7 +132,7 @@ export function africanIntelligenceArchitectureNotes() {
 
 export function africanIntelligenceHonesty() {
   return {
-    regeneratesVolumes1to11: false,
+    regeneratesPriorLayers: false,
     neo4jOs: false,
     worldsLargestScrapeOs: false,
     digitalTwinOs: false,

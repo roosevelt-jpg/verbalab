@@ -38,10 +38,10 @@ export function evaluationPlatformEngineCatalog() {
       style: 'nest_modular_monolith',
       cqrs: true,
       hexagonalRewrite: false,
-      regeneratesVolumes1to12: false,
+      regeneratesPriorLayers: false,
     },
     honesty: {
-      regeneratesVolumes1to12: false,
+      regeneratesPriorLayers: false,
       regeneratesModelEvaluationPlatform: false,
       autonomousJudgeOs: false,
       coverageComplete: false,

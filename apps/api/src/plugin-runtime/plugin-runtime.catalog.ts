@@ -103,7 +103,7 @@ export function pluginRuntimeCatalog() {
       {
         id: 'plugin-dependencies',
         name: 'Plugin Dependencies',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/plugin-runtime/plugins',
         notes: 'Declares dependency plugin ids — not a package manager OS.',
       },
@@ -166,7 +166,7 @@ export function pluginRuntimeCatalog() {
       {
         id: 'production-deployment',
         name: 'Production deployment',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/plugin-runtime/invoke',
         notes: 'Ships with Nest API — sandbox by default.',
       },
@@ -179,7 +179,7 @@ export function pluginRuntimeCatalog() {
       browserExtensionOs: false,
       vsCodeExtensionOs: false,
       wasmPluginOs: false,
-      regeneratesVolumes1to7: false,
+      regeneratesPriorLayers: false,
       regeneratesMarketplace: false,
       extendsMarketplace: true,
       scopedPermissionsRequired: true,

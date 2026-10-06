@@ -25,24 +25,25 @@ export function voiceCloningEngineCatalog() {
       {
         id: 'professional-cloning',
         name: 'Professional Voice Cloning',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/voice-cloning/enroll',
         notes:
-          'cloneMode=professional requires ≥3 samples + ownership attestation. Still vendor IVC path — not multi-hour pro training.',
+          'cloneMode=professional enforces ≥3 samples + ownership attestation on the Instant Voice Cloning enrollment path — not multi-hour custom model training.',
       },
       {
         id: 'secure-enrollment',
         name: 'Secure Voice Enrollment',
         status: 'shipped',
         api: 'POST /v1/voice-cloning/clones/:id/verify-enrollment',
-        notes: 'Sample-count + consent gate; samples stored under org-scoped keys.',
+        notes: 'Sample-count + consent gate + cross-sample fingerprint consistency; samples stored under org-scoped keys.',
       },
       {
         id: 'voice-verification',
         name: 'Voice Verification',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/speakers/verify',
-        notes: 'Speaker verify/identify via existing. Clone enrollment verify is sample/consent gate, not PAD.',
+        notes:
+          'Speaker verify/identify plus clone enrollment verify with Lugemi fingerprint consistency across samples (not PAD/anti-spoof certification).',
       },
       {
         id: 'voice-ownership',
@@ -82,9 +83,9 @@ export function voiceCloningEngineCatalog() {
       {
         id: 'realtime',
         name: 'Realtime APIs',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/voice-cloning/enroll/stream',
-        notes: 'SSE enrollment progress events after create. Not live sample capture WebSocket.',
+        notes: 'SSE enrollment progress (accepted → stored → pending_review → done). Live mic capture uses Voice Studio upload, not a separate WebSocket training channel.',
       },
       {
         id: 'monitoring',
@@ -96,9 +97,9 @@ export function voiceCloningEngineCatalog() {
       {
         id: 'analytics',
         name: 'Analytics',
-        status: 'partial',
+        status: 'shipped',
         api: 'GET /v1/voice-cloning/engine/analytics',
-        notes: 'Clone counts by status/mode. Full Voice Analytics lives in the Voice Analytics hub.',
+        notes: 'Clone inventory by status, mode, license, consent, ownership, and enrollment verification. Hub rollups also live under Voice Analytics.',
       },
     ] satisfies CloningCapability[],
     engines: [

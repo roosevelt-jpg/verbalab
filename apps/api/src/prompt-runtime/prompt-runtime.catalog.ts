@@ -76,7 +76,7 @@ export function promptRuntimeCatalog() {
       {
         id: 'prompt-routing',
         name: 'Prompt Routing',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/prompt-runtime/route',
         notes: 'Sandbox feature→key table — not a prompt mesh OS.',
       },
@@ -90,14 +90,14 @@ export function promptRuntimeCatalog() {
       {
         id: 'prompt-optimization',
         name: 'Prompt Optimization',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/prompt-runtime/optimize',
         notes: 'Heuristic trim/tips — not evolutionary optimizer / research lab.',
       },
       {
         id: 'prompt-security',
         name: 'Prompt Security',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/prompt-runtime/security-scan',
         notes: 'Pattern scan via Prompt Intelligence — not red-team harness OS.',
       },
@@ -111,7 +111,7 @@ export function promptRuntimeCatalog() {
       {
         id: 'prompt-cache',
         name: 'Prompt Cache',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/prompt-runtime/execute',
         notes: 'Opt-in Intelligent Cache namespace=prompt — not Redis OS; Gateway not auto-wired.',
       },
@@ -167,7 +167,7 @@ export function promptRuntimeCatalog() {
       {
         id: 'production-deployment',
         name: 'Production deployment',
-        status: 'partial',
+        status: 'shipped',
         api: 'POST /v1/prompt-runtime/execute',
         notes: 'Ships with Nest API — not a separate prompt cluster.',
       },

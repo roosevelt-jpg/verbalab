@@ -147,7 +147,7 @@ export class EventFabricService {
         agentFabric: false,
         policyFabric: false,
         kafkaHyperscalerOs: true,
-        regeneratesVolumes1to9: false,
+        regeneratesPriorLayers: false,
       },
       links: {
         eventFabric: '/event-fabric',

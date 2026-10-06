@@ -34,8 +34,8 @@ export function ragopsPlatformEngineCatalog() {
     ],
     honesty: {
       vectorDbOs: false,
-      regeneratesVolume6Rag: false,
-      extendsVolume6Rag: true,
+      regeneratesRagModule: false,
+      extendsRagModule: true,
     },
     safety: {
       citationRequired: true,

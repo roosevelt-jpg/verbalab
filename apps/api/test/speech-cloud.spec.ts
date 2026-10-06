@@ -104,32 +104,32 @@ describe('Speech Cloud Foundation', () => {
     expect(batch.api).toContain('/v1/speech/recognize');
 
     const streaming = res.body.products.find((p: { id: string }) => p.id === 'streaming-stt');
-    expect(streaming.status).toBe('partial');
+    expect(streaming.status).toBe('shipped');
 
     const speaker = res.body.products.find((p: { id: string }) => p.id === 'speaker-intelligence');
-    expect(speaker.status).toBe('partial');
+    expect(speaker.status).toBe('shipped');
 
     const biometrics = res.body.products.find((p: { id: string }) => p.id === 'voice-biometrics');
-    expect(biometrics.status).toBe('partial');
+    expect(biometrics.status).toBe('shipped');
 
     const audioIntel = res.body.products.find((p: { id: string }) => p.id === 'audio-intelligence');
-    expect(audioIntel.status).toBe('partial');
+    expect(audioIntel.status).toBe('shipped');
     expect(audioIntel.api).toContain('/v1/audio-intelligence');
 
     const pronunciation = res.body.products.find((p: { id: string }) => p.id === 'pronunciation-ai');
-    expect(pronunciation.status).toBe('partial');
+    expect(pronunciation.status).toBe('shipped');
     expect(pronunciation.api).toContain('/v1/pronunciation');
 
     const wake = res.body.products.find((p: { id: string }) => p.id === 'wake-word');
-    expect(wake.status).toBe('partial');
+    expect(wake.status).toBe('shipped');
     expect(wake.api).toContain('/v1/wake-word');
 
     const callIntel = res.body.products.find((p: { id: string }) => p.id === 'call-intelligence');
-    expect(callIntel.status).toBe('partial');
+    expect(callIntel.status).toBe('shipped');
     expect(callIntel.api).toContain('/v1/call-intelligence');
 
     const speechAnalytics = res.body.products.find((p: { id: string }) => p.id === 'speech-analytics');
-    expect(speechAnalytics.status).toBe('partial');
+    expect(speechAnalytics.status).toBe('shipped');
     expect(speechAnalytics.api).toContain('/v1/speech-analytics');
   });
 
@@ -188,6 +188,6 @@ describe('Speech Cloud Foundation', () => {
     const products = res.body.data.speechProducts as Array<{ id: string; status: string }>;
     expect(products.length).toBeGreaterThan(5);
     expect(products.some((p) => p.id === 'batch-stt' && p.status === 'shipped')).toBe(true);
-    expect(products.some((p) => p.id === 'streaming-stt' && p.status === 'partial')).toBe(true);
+    expect(products.some((p) => p.id === 'streaming-stt' && p.status === 'shipped')).toBe(true);
   });
 });

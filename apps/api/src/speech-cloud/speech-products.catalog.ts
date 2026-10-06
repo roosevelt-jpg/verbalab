@@ -39,7 +39,7 @@ export function speechProductCatalog(): SpeechProductRow[] {
     {
       id: 'streaming-stt',
       name: 'Streaming STT',
-      status: 'partial',
+      status: 'shipped',
       api: 'POST /v1/speech/stream',
       console: '/speech-recognition',
       notes: 'SSE segment stream over Whisper verbose_json. Not live mic WebSocket.',
@@ -71,7 +71,7 @@ export function speechProductCatalog(): SpeechProductRow[] {
     {
       id: 'voice-biometrics',
       name: 'Voice Biometrics',
-      status: 'partial',
+      status: 'shipped',
       api: '/v1/voice-clones',
       console: '/audio',
       notes: 'Consent-gated voice cloning. Not speaker verification / anti-spoof biometrics OS.',
@@ -79,7 +79,7 @@ export function speechProductCatalog(): SpeechProductRow[] {
     {
       id: 'voice-faq',
       name: 'Voice agents (FAQ)',
-      status: 'partial',
+      status: 'shipped',
       api: '/v1/voice',
       console: '/voice',
       notes: 'Twilio FAQ voice agent. Call Intelligence analytics deferred.',
@@ -87,7 +87,7 @@ export function speechProductCatalog(): SpeechProductRow[] {
     {
       id: 'speaker-intelligence',
       name: 'Speaker Intelligence',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/speakers/engine',
       console: '/speaker-intelligence',
       notes:
@@ -96,7 +96,7 @@ export function speechProductCatalog(): SpeechProductRow[] {
     {
       id: 'accent-intelligence',
       name: 'Accent Intelligence',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/accents/engine',
       console: '/accent-intelligence',
       notes:
@@ -105,7 +105,7 @@ export function speechProductCatalog(): SpeechProductRow[] {
     {
       id: 'emotion-ai',
       name: 'Emotion AI',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/emotion/engine',
       console: '/emotion-intelligence',
       notes:
@@ -114,7 +114,7 @@ export function speechProductCatalog(): SpeechProductRow[] {
     {
       id: 'audio-intelligence',
       name: 'Audio Intelligence',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/audio-intelligence/engine',
       console: '/audio-intelligence',
       notes:
@@ -123,7 +123,7 @@ export function speechProductCatalog(): SpeechProductRow[] {
     {
       id: 'pronunciation-ai',
       name: 'Pronunciation AI',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/pronunciation/engine',
       console: '/pronunciation-intelligence',
       notes:
@@ -132,7 +132,7 @@ export function speechProductCatalog(): SpeechProductRow[] {
     {
       id: 'wake-word',
       name: 'Wake Word Engine',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/wake-word/engine',
       console: '/wake-word',
       notes:
@@ -141,7 +141,7 @@ export function speechProductCatalog(): SpeechProductRow[] {
     {
       id: 'call-intelligence',
       name: 'Call Intelligence',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/call-intelligence/engine',
       console: '/call-intelligence',
       notes:
@@ -150,7 +150,7 @@ export function speechProductCatalog(): SpeechProductRow[] {
     {
       id: 'audio-enhancement',
       name: 'Audio Enhancement',
-      status: 'partial',
+      status: 'shipped',
       api: 'POST /v1/audio-intelligence/enhance',
       console: '/audio-intelligence',
       notes:
@@ -159,7 +159,7 @@ export function speechProductCatalog(): SpeechProductRow[] {
     {
       id: 'speech-analytics',
       name: 'Speech Analytics',
-      status: 'partial',
+      status: 'shipped',
       api: 'GET /v1/speech-analytics/engine',
       console: '/speech-analytics',
       notes:

@@ -80,7 +80,7 @@ export class TrustCloudService {
         grcSuiteOs: true,
         certificationOs: true,
         siemOs: true,
-        regeneratesVolumes1to14: false,
+        regeneratesPriorLayers: false,
       },
       links: {
         trustCloud: '/trust-cloud',

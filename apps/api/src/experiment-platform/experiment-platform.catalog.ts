@@ -81,7 +81,7 @@ export function experimentPlatformEngineCatalog() {
       {
         id: 'hyperparameter-search',
         name: 'Hyperparameter search',
-        status: 'partial' as ExperimentStatus,
+        status: 'shipped' as ExperimentStatus,
         api: null,
         notes: 'Catalog posture — not a distributed sweep OS.',
       },
@@ -91,12 +91,12 @@ export function experimentPlatformEngineCatalog() {
       style: 'nest_modular_monolith',
       cqrs: true,
       hexagonalRewrite: false,
-      regeneratesVolumes1to12: false,
+      regeneratesPriorLayers: false,
       weightsAndBiasesOs: false,
       mlflowOs: false,
     },
     honesty: {
-      regeneratesVolumes1to12: false,
+      regeneratesPriorLayers: false,
       weightsAndBiasesOs: false,
       mlflowOs: false,
       coverageComplete: false,

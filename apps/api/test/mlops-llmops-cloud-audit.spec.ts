@@ -160,7 +160,7 @@ describe('MLOps & LLMOps Cloud Production Audit', () => {
     expect(hub.body.honesty.requiresDriftClear).toBe(true);
     expect(hub.body.honesty.requiresContinuousEvalPass).toBe(true);
     expect(hub.body.honesty.policyViolationsVisible).toBe(true);
-    expect(hub.body.honesty.regeneratesVolumes1to13).toBe(false);
+    expect(hub.body.honesty.regeneratesPriorLayers).toBe(false);
 
     const byId = Object.fromEntries(
       hub.body.products.map((p: { id: string; status: string }) => [p.id, p.status]),

@@ -97,7 +97,7 @@ describe('Reasoning Cloud', () => {
     expect(res.body.honesty.llmGateway).toBe(true);
     expect(res.body.honesty.toolExecution).toBe(false);
     const tot = res.body.capabilities.find((c: { id: string }) => c.id === 'tree-of-thought');
-    expect(tot.status).toBe('partial');
+    expect(tot.status).toBe('shipped');
 
     const strategies = await request(app.getHttpServer())
       .get('/v1/reasoning-cloud/strategies')
