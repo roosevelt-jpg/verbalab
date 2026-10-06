@@ -4,6 +4,7 @@ import { AgentChatDemo } from '@/components/marketing/agent-chat-demo';
 import { HeroTtsCard } from '@/components/marketing/hero-tts-card';
 import { TranslatePlayDemo } from '@/components/marketing/translate-play-demo';
 import { VoiceChipRow } from '@/components/marketing/voice-chip-row';
+import { VoiceCloneFaqDemo } from '@/components/marketing/voice-clone-faq-demo';
 import { CMS_DEFAULTS } from '@/data/cms-defaults';
 
 const SAMPLE_VOICES = CMS_DEFAULTS.console.sampleVoices.map((v) => ({
@@ -93,6 +94,32 @@ const API_DEMO_SLUGS = new Set([
 
 /** Interactive demos injected on CMS marketing pages by slug. */
 export function CmsPageDemos({ slug }: { slug: string }) {
+  if (slug === 'voice-cloning' || slug === 'voice-isolator') {
+    return (
+      <div className="mkt-page-demos">
+        <VoiceCloneFaqDemo />
+        <div style={{ marginTop: '1.25rem' }}>
+          <HeroTtsCard demo={CMS_DEFAULTS.hero.demo} />
+        </div>
+      </div>
+    );
+  }
+
+  if (slug === 'lugemi-studio' || slug === 'lugemi-voice') {
+    return (
+      <div className="mkt-page-demos">
+        <HeroTtsCard demo={CMS_DEFAULTS.hero.demo} />
+        <div style={{ marginTop: '1.25rem' }}>
+          <p className="mkt-tts-label">Try region voices</p>
+          <VoiceChipRow voices={SAMPLE_VOICES} />
+        </div>
+        <div style={{ marginTop: '1.25rem' }}>
+          <VoiceCloneFaqDemo />
+        </div>
+      </div>
+    );
+  }
+
   if (VOICE_DEMO_SLUGS.has(slug)) {
     return (
       <div className="mkt-page-demos">

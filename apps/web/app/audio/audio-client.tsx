@@ -1,9 +1,19 @@
 'use client';
 
-import { FormEvent, useEffect, useMemo, useState, type CSSProperties } from 'react';
+import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { FormEvent, useEffect, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { API_URL, apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import {
+  NativeAccentVoicePicker,
+  type VoicePickerValue,
+} from '@/components/console/native-accent-voice-picker';
+import { extractAudioTrackClient } from '@/lib/extract-audio-track';
+
+type StudioTab = 'tts' | 'clone' | 'extract' | 'stt' | 'projects';
+const STUDIO_TABS = new Set<StudioTab>(['tts', 'clone', 'extract', 'stt', 'projects']);
 
 type Transcript = {
   text: string;
@@ -25,11 +35,20 @@ type VoiceClone = {
   consentNotes: string;
 };
 
+type IsolateResult = {
+  format: string;
+  mimeType: string;
+  audioBase64: string;
+  bytes: number;
+  speechRatio: number;
+  note: string;
+};
+
 const LANG_PRESETS: { code: string; label: string; sample: string }[] = [
   { code: 'en', label: 'English', sample: 'Hello, welcome to Lugemi.' },
   { code: 'sw', label: 'Swahili', sample: 'Habari, karibu Lugemi.' },
   { code: 'yo', label: 'Yoruba', sample: 'Ẹ n lẹ, ẹ káàbọ̀ sí Lugemi.' },
-  { code: 'am', label: 'Amharic', sample: 'ሰላም፣ ወደ ቬርባላብ እንኳን በደህና መጡ።' },
+  { code: 'am', label: 'Amharic', sample: 'ሰላም፣ ወደ ሉጌሚ እንኳን በደህና መጡ።' },
   { code: 'fr', label: 'French', sample: 'Bonjour, bienvenue chez Lugemi.' },
 ];
 
@@ -49,17 +68,37 @@ function statusBadge(status: string): CSSProperties {
   return { ...base, background: 'var(--bg-soft)', color: 'var(--muted)' };
 }
 
+function base64ToWavFile(base64: string, name: string): File {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return new File([bytes], name, { type: 'audio/wav' });
+}
+
 export function AudioClient() {
   const { getToken, isLoaded } = useAuth();
+  const searchParams = useSearchParams();
+  const initialTab = searchParams.get('tab');
   const [apiKey, setApiKey] = useState('');
-  const [tab, setTab] = useState<'tts' | 'clone' | 'stt'>('tts');
+  const [tab, setTab] = useState<StudioTab>(
+    initialTab && STUDIO_TABS.has(initialTab as StudioTab) ? (initialTab as StudioTab) : 'clone',
+  );
 
   const [language, setLanguage] = useState('sw');
   const [file, setFile] = useState<File | null>(null);
   const [transcript, setTranscript] = useState<Transcript | null>(null);
 
   const [voices, setVoices] = useState<Voice[]>([]);
-  const [voice, setVoice] = useState('alloy');
+  const [voice, setVoice] = useState('own:sw-ke-female');
+  const [picker, setPicker] = useState<VoicePickerValue>({
+    voiceId: 'own:sw-ke-female',
+    gender: 'any',
+    language: 'any',
+    accent: 'any',
+    country: 'any',
+    toneStyle: 'customer_support',
+    emotionProfile: 'customer_support',
+  });
   const [speechText, setSpeechText] = useState(LANG_PRESETS[1]!.sample);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const [watermarkApplied, setWatermarkApplied] = useState(false);
@@ -71,9 +110,20 @@ export function AudioClient() {
   const [sampleFiles, setSampleFiles] = useState<File[]>([]);
   const [samplePreviewUrls, setSamplePreviewUrls] = useState<string[]>([]);
 
+  const [extractFile, setExtractFile] = useState<File | null>(null);
+  const [extractNote, setExtractNote] = useState<string | null>(null);
+  const [isolatedUrl, setIsolatedUrl] = useState<string | null>(null);
+  const [isolatedFile, setIsolatedFile] = useState<File | null>(null);
+  const [speechRatio, setSpeechRatio] = useState<number | null>(null);
+
+  const [recording, setRecording] = useState(false);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const recordChunksRef = useRef<Blob[]>([]);
+
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
   const usableClones = useMemo(() => clones.filter((c) => c.usable), [clones]);
   const stockVoices = useMemo(
@@ -110,7 +160,14 @@ export function AudioClient() {
     void apiFetch<{ data: Voice[] }>('/v1/audio/voices')
       .then((res) => {
         setVoices(res.data);
-        if (res.data[0]) setVoice(res.data[0].id);
+        const preferred =
+          res.data.find((v) => v.id === 'own:sw-ke-female') ??
+          res.data.find((v) => v.id.startsWith('own:')) ??
+          res.data[0];
+        if (preferred) {
+          setVoice(preferred.id);
+          setPicker((p) => ({ ...p, voiceId: preferred.id }));
+        }
       })
       .catch(() => undefined);
   }, []);
@@ -139,17 +196,71 @@ export function AudioClient() {
     };
   }, [samplePreviewUrls]);
 
+  useEffect(() => {
+    return () => {
+      if (isolatedUrl) URL.revokeObjectURL(isolatedUrl);
+    };
+  }, [isolatedUrl]);
+
   function applyLangPreset(code: string) {
     const preset = LANG_PRESETS.find((p) => p.code === code) ?? LANG_PRESETS[0]!;
     setLanguage(preset.code);
     setSpeechText(preset.sample);
   }
 
-  function onSampleFilesChange(list: FileList | null) {
+  function setSamples(files: File[]) {
     for (const url of samplePreviewUrls) URL.revokeObjectURL(url);
-    const files = list ? Array.from(list).slice(0, 5) : [];
-    setSampleFiles(files);
-    setSamplePreviewUrls(files.map((f) => URL.createObjectURL(f)));
+    const next = files.slice(0, 5);
+    setSampleFiles(next);
+    setSamplePreviewUrls(next.map((f) => URL.createObjectURL(f)));
+  }
+
+  function onSampleFilesChange(list: FileList | null) {
+    setSamples(list ? Array.from(list) : []);
+  }
+
+  function addSampleFile(fileToAdd: File) {
+    setSamples([...sampleFiles, fileToAdd].slice(0, 5));
+    setMessage(`Added “${fileToAdd.name}” as a clone sample (${Math.min(sampleFiles.length + 1, 5)}/5).`);
+    setTab('clone');
+  }
+
+  async function startRecording() {
+    setError(null);
+    setMessage(null);
+    if (!navigator.mediaDevices?.getUserMedia) {
+      setError('Microphone recording is not available in this browser');
+      return;
+    }
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const mime = MediaRecorder.isTypeSupported('audio/webm') ? 'audio/webm' : undefined;
+      const recorder = new MediaRecorder(stream, mime ? { mimeType: mime } : undefined);
+      recordChunksRef.current = [];
+      recorder.ondataavailable = (ev) => {
+        if (ev.data.size > 0) recordChunksRef.current.push(ev.data);
+      };
+      recorder.onstop = () => {
+        stream.getTracks().forEach((t) => t.stop());
+        const blob = new Blob(recordChunksRef.current, { type: recorder.mimeType || 'audio/webm' });
+        const recorded = new File([blob], `lugemi-recorded-${Date.now()}.webm`, {
+          type: blob.type || 'audio/webm',
+        });
+        addSampleFile(recorded);
+        setRecording(false);
+        mediaRecorderRef.current = null;
+      };
+      mediaRecorderRef.current = recorder;
+      recorder.start();
+      setRecording(true);
+      setMessage('Recording… speak a clear consent sample, then stop.');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not start microphone');
+    }
+  }
+
+  function stopRecording() {
+    mediaRecorderRef.current?.stop();
   }
 
   async function onTranscribe(event: FormEvent) {
@@ -251,11 +362,13 @@ export function AudioClient() {
       });
       const body = (await res.json()) as VoiceClone & { error?: { message: string } };
       if (!res.ok) throw new Error(body.error?.message ?? 'Create failed (Pro + consent required)');
-      setMessage(`Clone “${body.name}” submitted for abuse review (pending).`);
+      setMessage(
+        `Instant clone “${body.name}” enrolled from short samples and submitted for abuse review (pending). Not live model training.`,
+      );
       setCloneName('');
       setConsentNotes('');
       setConsentAttested(false);
-      onSampleFilesChange(null);
+      setSamples([]);
       await refreshClones(token);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Clone create failed');
@@ -301,14 +414,121 @@ export function AudioClient() {
     }
   }
 
+  async function onExtractClient() {
+    setError(null);
+    setMessage(null);
+    setExtractNote(null);
+    if (!extractFile) {
+      setError('Choose a video or audio file to extract from');
+      return;
+    }
+    setLoading(true);
+    try {
+      const extracted = await extractAudioTrackClient(extractFile);
+      if (isolatedUrl) URL.revokeObjectURL(isolatedUrl);
+      setIsolatedUrl(extracted.blobUrl);
+      setIsolatedFile(extracted.file);
+      setSpeechRatio(null);
+      setExtractNote(extracted.note);
+      setMessage(
+        `Extracted ${extracted.durationSeconds.toFixed(1)}s mono WAV @ ${extracted.sampleRate} Hz. Add it as a clone sample or run Lugemi isolate next.`,
+      );
+    } catch (err) {
+      setError(
+        err instanceof Error
+          ? `${err.message}. Try a WAV/MP3/M4A, or use Lugemi isolate on a supported audio file.`
+          : 'Client extract failed',
+      );
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function onIsolateServer() {
+    setError(null);
+    setMessage(null);
+    setExtractNote(null);
+    const source = isolatedFile ?? extractFile;
+    if (!source) {
+      setError('Choose a file (or extract a track first)');
+      return;
+    }
+    setLoading(true);
+    try {
+      const authorization = await authHeader();
+      const form = new FormData();
+      form.append('file', source);
+      const res = await fetch(`${API_URL}/v1/audio-intelligence/isolate`, {
+        method: 'POST',
+        headers: { Authorization: authorization },
+        body: form,
+      });
+      const body = (await res.json()) as IsolateResult & { error?: { message: string } };
+      if (!res.ok) throw new Error(body.error?.message ?? `Isolate failed (${res.status})`);
+      const wavFile = base64ToWavFile(body.audioBase64, `lugemi-isolated-${Date.now()}.wav`);
+      if (isolatedUrl) URL.revokeObjectURL(isolatedUrl);
+      const url = URL.createObjectURL(wavFile);
+      setIsolatedUrl(url);
+      setIsolatedFile(wavFile);
+      setSpeechRatio(body.speechRatio);
+      setExtractNote(body.note);
+      setMessage(
+        `Voice isolation complete (speech ratio ${(body.speechRatio * 100).toFixed(0)}%). Energy VAD — not neural stem separation.`,
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Isolate failed');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function copyCloneVoice(voiceId: string) {
+    try {
+      await navigator.clipboard.writeText(voiceId);
+      setCopiedId(voiceId);
+      setMessage(`Copied ${voiceId} — use in POST /v1/audio/speech, Studio, Dubbing, MCP/CLI.`);
+    } catch {
+      setError('Could not copy to clipboard');
+    }
+  }
+
   return (
     <AppShell>
       <h1 style={titleStyle}>Voice Studio</h1>
       <p style={ledeStyle}>
-        African-language TTS demos, stock OpenAI voices, rented own-TTS (`own:*`), and consent-gated clones.
-        Vendors + optional rented open-weight under the hood — no in-house clone training. Clones always
-        require watermarking and abuse review.
+        Instant Voice Cloning from short consent samples, TTS with <code className="vl-code">clone:{'{id}'}</code>,
+        track extract / isolation, and project handoff for video & song workflows. Lugemi brand only — no live
+        model training theater.
       </p>
+
+      <section className="vl-panel" style={{ marginTop: '1.25rem', padding: '1.2rem 1.35rem' }} aria-label="Product answers">
+        <h2 style={{ ...sectionH, marginTop: 0 }}>What ships today</h2>
+        <dl style={{ margin: 0, display: 'grid', gap: '0.85rem' }}>
+          <div>
+            <dt style={qStyle}>Realtime clone?</dt>
+            <dd style={aStyle}>
+              <strong>Instant clone</strong> from a short sample after consent — enroll, abuse review, then speak.
+              Not live end-to-end model training over a stream. SSE enrollment progress exists; WebSocket live
+              capture training does not.
+            </dd>
+          </div>
+          <div>
+            <dt style={qStyle}>Upload a recorded voice?</dt>
+            <dd style={aStyle}>
+              Yes — record in-browser or upload 1–5 audio samples with consent attestation (Pro). Approved clones
+              speak as <code className="vl-code">clone:{'{id}'}</code> with watermark required.
+            </dd>
+          </div>
+          <div>
+            <dt style={qStyle}>Extract voice from uploaded files?</dt>
+            <dd style={aStyle}>
+              <strong>Shipped:</strong> client-side audio-track extract from video/audio the browser can decode,
+              plus Lugemi <code className="vl-code">POST /v1/audio-intelligence/isolate</code> (energy VAD).{' '}
+              <strong>Deferred:</strong> neural stem-separation / entertainment isolator OS.
+            </dd>
+          </div>
+        </dl>
+      </section>
 
       <label className="vl-label" style={{ display: 'block', marginTop: '1.5rem' }}>
         API key (optional if signed in)
@@ -323,8 +543,10 @@ export function AudioClient() {
       <div style={{ display: 'flex', gap: '0.5rem', marginTop: '1.25rem', flexWrap: 'wrap' }}>
         {(
           [
+            ['clone', 'Instant clone'],
+            ['extract', 'Extract / isolate'],
             ['tts', 'Speak'],
-            ['clone', 'Clones'],
+            ['projects', 'Use in projects'],
             ['stt', 'Transcribe'],
           ] as const
         ).map(([id, label]) => (
@@ -362,10 +584,32 @@ export function AudioClient() {
             </div>
           </div>
 
+          <div style={{ border: '1px solid var(--line)', borderRadius: '0.5rem', padding: '0.85rem' }}>
+            <div style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '0.55rem' }}>
+              Native accent voice picker
+            </div>
+            <NativeAccentVoicePicker
+              value={picker}
+              onChange={(next) => {
+                setPicker(next);
+                setVoice(next.voiceId);
+              }}
+              preferOwn
+              showEmotionTone
+            />
+          </div>
+
           <label className="vl-label">
-            Voice
-            <select className="vl-field" value={voice} onChange={(e) => setVoice(e.target.value)}>
-              <optgroup label="Stock (OpenAI)">
+            Voice (advanced)
+            <select
+              className="vl-field"
+              value={voice}
+              onChange={(e) => {
+                setVoice(e.target.value);
+                setPicker((p) => ({ ...p, voiceId: e.target.value }));
+              }}
+            >
+              <optgroup label="Stock">
                 {(stockVoices.length
                   ? stockVoices
                   : [{ id: 'alloy', name: 'Alloy', gender: 'neutral' }]
@@ -376,7 +620,7 @@ export function AudioClient() {
                 ))}
               </optgroup>
               {ownVoices.length > 0 ? (
-                <optgroup label="Own TTS (rented / African)">
+                <optgroup label="Own TTS (Africa-first)">
                   {ownVoices.map((v) => (
                     <option key={v.id} value={v.id}>
                       {v.name}
@@ -396,8 +640,9 @@ export function AudioClient() {
             </select>
           </label>
           <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.8rem' }}>
-            Own TTS voices (`own:*`) need <code className="vl-code">OWN_TTS_URL</code> (Modal/open-weight) or fixture
-            mode. OpenAI remains the default stock path.
+            Prefer <code className="vl-code">own:*</code> region voices for native accent metadata. Approved clones
+            use <code className="vl-code">clone:{'{id}'}</code>. Own TTS needs{' '}
+            <code className="vl-code">OWN_TTS_URL</code> or fixture mode.
           </p>
 
           <label className="vl-label">
@@ -448,6 +693,145 @@ export function AudioClient() {
         </form>
       ) : null}
 
+      {tab === 'extract' ? (
+        <div className="vl-panel" style={{ display: 'grid', gap: '1rem', padding: '1.35rem', marginTop: '1rem' }}>
+          <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.9rem' }}>
+            Pull a voice track from an uploaded video/audio file, then optionally run Lugemi isolate (energy VAD)
+            before cloning. Neural stem separation is deferred — status is honest in product.
+          </p>
+          <label className="vl-label">
+            Video or audio file
+            <input
+              className="vl-field"
+              type="file"
+              accept="audio/*,video/*,.mp3,.wav,.m4a,.webm,.ogg,.flac,.mp4,.mov,.mkv"
+              onChange={(e) => setExtractFile(e.target.files?.[0] ?? null)}
+            />
+          </label>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <button type="button" className="vl-btn" disabled={loading || !extractFile} onClick={() => void onExtractClient()}>
+              {loading ? 'Working…' : 'Extract audio track (client)'}
+            </button>
+            <button
+              type="button"
+              className="vl-btn vl-btn-secondary"
+              disabled={loading || (!extractFile && !isolatedFile)}
+              onClick={() => void onIsolateServer()}
+            >
+              {loading ? 'Working…' : 'Isolate voice (Lugemi API)'}
+            </button>
+            {isolatedFile ? (
+              <button type="button" className="vl-btn vl-btn-secondary" onClick={() => addSampleFile(isolatedFile)}>
+                Use as clone sample
+              </button>
+            ) : null}
+          </div>
+          <div style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>
+            Isolation status:{' '}
+            <strong style={{ color: 'var(--ink)' }}>shipped</strong> energy VAD ·{' '}
+            <strong style={{ color: 'var(--ink)' }}>deferred</strong> neural stem separation
+          </div>
+          {extractNote ? <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--muted)' }}>{extractNote}</p> : null}
+          {speechRatio != null ? (
+            <p style={{ margin: 0, fontSize: '0.85rem' }}>Speech ratio: {(speechRatio * 100).toFixed(0)}%</p>
+          ) : null}
+          {isolatedUrl ? (
+            <div>
+              <audio controls src={isolatedUrl} style={{ width: '100%' }} />
+              <a
+                href={isolatedUrl}
+                download={isolatedFile?.name ?? 'lugemi-extracted.wav'}
+                className="vl-btn vl-btn-secondary"
+                style={{ display: 'inline-block', marginTop: '0.75rem', textDecoration: 'none' }}
+              >
+                Download WAV
+              </a>
+            </div>
+          ) : null}
+          <p style={{ margin: 0, fontSize: '0.85rem' }}>
+            Also available in <Link href="/audio-intelligence">Audio Intelligence</Link> and{' '}
+            <Link href="/voice-enhancement">Voice Enhancement</Link>.
+          </p>
+        </div>
+      ) : null}
+
+      {tab === 'projects' ? (
+        <div className="vl-panel" style={{ display: 'grid', gap: '1.1rem', padding: '1.35rem', marginTop: '1rem' }}>
+          <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.9rem' }}>
+            After a clone is approved, drop <code className="vl-code">clone:{'{id}'}</code> into speech, dubbing,
+            Studio, Chat Studio, and developer surfaces.
+          </p>
+          {!usableClones.length ? (
+            <p style={{ margin: 0, color: 'var(--muted)' }}>
+              No approved clones yet — enroll under Instant clone, then approve in review.
+            </p>
+          ) : (
+            <ul style={{ margin: 0, padding: 0, listStyle: 'none', display: 'grid', gap: '0.65rem' }}>
+              {usableClones.map((c) => (
+                <li
+                  key={c.id}
+                  style={{
+                    borderTop: '1px solid var(--line)',
+                    paddingTop: '0.65rem',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '0.5rem',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <div>
+                    <strong>{c.name}</strong>
+                    <div style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>{c.voice}</div>
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap' }}>
+                    <button type="button" className="vl-btn vl-btn-secondary" onClick={() => void copyCloneVoice(c.voice)}>
+                      {copiedId === c.voice ? 'Copied' : 'Copy voice id'}
+                    </button>
+                    <button
+                      type="button"
+                      className="vl-btn"
+                      disabled={loading}
+                      onClick={() => {
+                        setVoice(c.voice);
+                        void speak(speechText || LANG_PRESETS[1]!.sample, c.voice, language);
+                      }}
+                    >
+                      Speak with clone
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+            <Link href="/voice-studio" className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none' }}>
+              Voice Studio (SSML)
+            </Link>
+            <Link href="/chat" className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none' }}>
+              Chat Studio
+            </Link>
+            <Link href="/p/dubbing" className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none' }}>
+              Video dubbing path
+            </Link>
+            <Link href="/p/ai-music-generator" className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none' }}>
+              Song / music path
+            </Link>
+            <Link href="/developers" className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none' }}>
+              MCP / CLI / SDKs
+            </Link>
+            <Link href="/docs" className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none' }}>
+              API docs
+            </Link>
+          </div>
+          <pre className="vl-code" style={{ margin: 0, whiteSpace: 'pre-wrap', fontSize: '0.8rem' }}>
+            {`POST /v1/audio/speech
+{ "text": "…", "voice": "clone:<id>", "language": "sw" }
+→ header X-Lugemi-Watermark: required`}
+          </pre>
+        </div>
+      ) : null}
+
       {tab === 'clone' ? (
         <div style={{ marginTop: '1rem', display: 'grid', gap: '1rem' }}>
           <form
@@ -456,8 +840,8 @@ export function AudioClient() {
             style={{ display: 'grid', gap: '1rem', padding: '1.35rem' }}
           >
             <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.9rem' }}>
-              Requires Pro, speaker consent attestation, and an abuse review before the clone can
-              speak. Watermarking is always required on clone speech.
+              <strong>Instant Voice Cloning</strong> — short samples + consent, then abuse review. Pro required.
+              Watermarking is always required on clone speech. This is not multi-hour professional model training.
             </p>
             <label className="vl-label">
               Display name
@@ -488,7 +872,7 @@ export function AudioClient() {
               I attest I have rights and informed consent from the speaker
             </label>
             <label className="vl-label">
-              Consent samples (1–5)
+              Upload recorded samples (1–5)
               <input
                 className="vl-field"
                 type="file"
@@ -498,15 +882,34 @@ export function AudioClient() {
                 required={sampleFiles.length === 0}
               />
             </label>
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+              {!recording ? (
+                <button type="button" className="vl-btn vl-btn-secondary" onClick={() => void startRecording()}>
+                  Record sample
+                </button>
+              ) : (
+                <button type="button" className="vl-btn vl-btn-danger" onClick={stopRecording}>
+                  Stop recording
+                </button>
+              )}
+              <button type="button" className="vl-btn vl-btn-secondary" onClick={() => setTab('extract')}>
+                Extract from video/audio…
+              </button>
+            </div>
             {samplePreviewUrls.length > 0 ? (
               <div style={{ display: 'grid', gap: '0.5rem' }}>
                 {samplePreviewUrls.map((url, i) => (
-                  <audio key={url} controls src={url} style={{ width: '100%' }} />
+                  <div key={url}>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--muted)', marginBottom: '0.25rem' }}>
+                      {sampleFiles[i]?.name}
+                    </div>
+                    <audio controls src={url} style={{ width: '100%' }} />
+                  </div>
                 ))}
               </div>
             ) : null}
             <button type="submit" className="vl-btn" disabled={loading}>
-              {loading ? 'Submitting…' : 'Submit for review (Pro)'}
+              {loading ? 'Submitting…' : 'Enroll instant clone (Pro)'}
             </button>
           </form>
 
@@ -557,17 +960,22 @@ export function AudioClient() {
                       </>
                     ) : null}
                     {c.usable ? (
-                      <button
-                        type="button"
-                        className="vl-btn vl-btn-secondary"
-                        disabled={loading}
-                        onClick={() => {
-                          setVoice(c.voice);
-                          void speak(speechText || LANG_PRESETS[1]!.sample, c.voice, language);
-                        }}
-                      >
-                        Try clone
-                      </button>
+                      <>
+                        <button
+                          type="button"
+                          className="vl-btn vl-btn-secondary"
+                          disabled={loading}
+                          onClick={() => {
+                            setVoice(c.voice);
+                            void speak(speechText || LANG_PRESETS[1]!.sample, c.voice, language);
+                          }}
+                        >
+                          Try clone
+                        </button>
+                        <button type="button" className="vl-btn vl-btn-secondary" onClick={() => setTab('projects')}>
+                          Use in project
+                        </button>
+                      </>
                     ) : null}
                     {c.status !== 'disabled' && c.status !== 'rejected' ? (
                       <button
@@ -634,4 +1042,24 @@ const ledeStyle: CSSProperties = {
   color: 'var(--muted)',
   margin: '0.5rem 0 0',
   lineHeight: 1.55,
+};
+
+const sectionH: CSSProperties = {
+  fontFamily: 'var(--font-display)',
+  fontSize: '1.1rem',
+  fontWeight: 650,
+  margin: '0 0 0.75rem',
+};
+
+const qStyle: CSSProperties = {
+  fontWeight: 650,
+  fontSize: '0.9rem',
+  marginBottom: '0.2rem',
+};
+
+const aStyle: CSSProperties = {
+  margin: 0,
+  color: 'var(--muted)',
+  fontSize: '0.9rem',
+  lineHeight: 1.5,
 };

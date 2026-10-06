@@ -96,10 +96,37 @@ export function VoiceCloningClient() {
       >
         Voice Cloning
       </h1>
-      <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        Enterprise cloning with explicit consent, ownership attestation, abuse review, licensing,
-        permissions, and required watermarking. Extends existing — does not skip trust gates.
+      <p style={{ color: 'var(--muted)', margin: '0 0 1.25rem', maxWidth: '42rem' }}>
+        Instant Voice Cloning with explicit consent, ownership attestation, abuse review, licensing,
+        permissions, and required watermarking. Not live model training — enroll from short samples,
+        then speak with <code>clone:{'{id}'}</code>.
       </p>
+
+      <section
+        style={{
+          marginBottom: '1.5rem',
+          padding: '1rem 1.15rem',
+          border: '1px solid var(--line)',
+          borderRadius: '0.5rem',
+          maxWidth: '44rem',
+        }}
+      >
+        <h2 style={{ ...label, marginBottom: '0.65rem' }}>Product answers</h2>
+        <ul style={{ margin: 0, paddingLeft: '1.1rem', color: 'var(--muted)', fontSize: '0.9rem' }}>
+          <li>
+            <strong style={{ color: 'var(--ink)' }}>Realtime?</strong> Instant clone after consent —
+            closest honest product. No fake live training.
+          </li>
+          <li>
+            <strong style={{ color: 'var(--ink)' }}>Upload recorded voice?</strong> Yes — multi-file
+            samples + attestation in Voice Studio.
+          </li>
+          <li>
+            <strong style={{ color: 'var(--ink)' }}>Extract from files?</strong> Client track extract +
+            Lugemi isolate (energy VAD) shipped; neural stems deferred.
+          </li>
+        </ul>
+      </section>
 
       <div style={{ marginBottom: '1.25rem' }}>
         <PlanGate feature="voiceClones" currentPlan={planId} allowed={clonesAllowed} />
@@ -118,11 +145,20 @@ export function VoiceCloningClient() {
         <Link href="/audio" style={primary}>
           Enroll in Voice Studio
         </Link>
+        <Link href="/audio?tab=extract" style={secondary}>
+          Extract / isolate
+        </Link>
+        <Link href="/audio?tab=projects" style={secondary}>
+          Use in video / song
+        </Link>
+        <Link href="/p/dubbing" style={secondary}>
+          Dubbing guide
+        </Link>
+        <Link href="/developers" style={secondary}>
+          MCP / CLI
+        </Link>
         <Link href="/voice-cloud" style={secondary}>
           Voice Cloud
-        </Link>
-        <Link href="/neural-tts" style={secondary}>
-          Neural TTS
         </Link>
       </section>
 

@@ -19,6 +19,7 @@ export function AudioIntelligenceClient() {
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [result, setResult] = useState<string | null>(null);
+  const [isolatedUrl, setIsolatedUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -49,6 +50,10 @@ export function AudioIntelligenceClient() {
     setLoading(true);
     setError(null);
     setResult(null);
+    if (isolatedUrl) {
+      URL.revokeObjectURL(isolatedUrl);
+      setIsolatedUrl(null);
+    }
     try {
       const headers = await authHeaders();
       const form = new FormData();
@@ -57,7 +62,17 @@ export function AudioIntelligenceClient() {
       const res = await fetch(`${API_URL}${path}`, { method: 'POST', headers, body: form });
       const body = await res.json();
       if (!res.ok) throw new Error(body?.error?.message ?? `HTTP ${res.status}`);
-      setResult(JSON.stringify(body, null, 2));
+      if (typeof body?.audioBase64 === 'string') {
+        const binary = atob(body.audioBase64 as string);
+        const bytes = new Uint8Array(binary.length);
+        for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+        const blob = new Blob([bytes], { type: (body.mimeType as string) || 'audio/wav' });
+        setIsolatedUrl(URL.createObjectURL(blob));
+        const { audioBase64: _drop, ...meta } = body as Record<string, unknown>;
+        setResult(JSON.stringify(meta, null, 2));
+      } else {
+        setResult(JSON.stringify(body, null, 2));
+      }
       await refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Request failed');
@@ -81,7 +96,8 @@ export function AudioIntelligenceClient() {
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.5rem', maxWidth: '44rem' }}>
         Noise/silence analysis, noise-gate enhancement, linear upscaling, and energy VAD voice
-        isolation. Echo cancellation is deferred. Not third-party denoise or stem-separation OS.{' '}
+        isolation. Echo cancellation is deferred. Not neural stem-separation OS. For Instant Voice
+        Cloning samples, open <Link href="/audio?tab=extract">Voice Studio → Extract</Link>.{' '}
         <Link href="/speech">Speech Cloud</Link>.
       </p>
 
@@ -144,6 +160,28 @@ export function AudioIntelligenceClient() {
             </button>
           </div>
         </section>
+
+        {isolatedUrl ? (
+          <section>
+            <h2 style={label}>Isolated audio</h2>
+            <p style={{ margin: '0 0 0.65rem', color: 'var(--muted)', fontSize: '0.85rem' }}>
+              Energy VAD isolate — shipped. Neural stems deferred. Use as a clone sample in Voice Studio.
+            </p>
+            <audio controls src={isolatedUrl} style={{ width: '100%' }} />
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.75rem' }}>
+              <a
+                href={isolatedUrl}
+                download="lugemi-isolated.wav"
+                style={{ ...secondary, textDecoration: 'none' }}
+              >
+                Download WAV
+              </a>
+              <Link href="/audio?tab=clone" style={{ ...primary, textDecoration: 'none' }}>
+                Open Instant clone
+              </Link>
+            </div>
+          </section>
+        ) : null}
 
         {result ? (
           <section>

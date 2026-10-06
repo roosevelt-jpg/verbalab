@@ -40,8 +40,10 @@ Legacy paths `/v1/voice-clones` remain supported.
 
 ## Honesty
 
-- Primary engine: **Instant Voice Cloning (vendor_clone)**.  
+- Primary engine: **Instant Voice Cloning** (short-sample enroll — not live stream training).  
 - Professional mode is **enrollment rigor**, not a separate trained pro model.  
 - Voice Cloning is **not** a third-party clone marketplace + overdub + NIST biometrics + marketplace combined.
+- **Extract / isolate:** client audio-track extract + `POST /v1/audio-intelligence/isolate` (energy VAD) shipped; neural stem separation deferred.
+- **Product UI:** Voice Studio `/audio` (Instant clone · Extract · Speak · Use in projects). Marketing FAQ on `/p/voice-cloning`, `/p/voice-isolator`, Studio/Voice pages.
 
 See ADR-0083. Hub: [`VOICE_CLOUD.md`](./VOICE_CLOUD.md). Prior: ADR-0042.

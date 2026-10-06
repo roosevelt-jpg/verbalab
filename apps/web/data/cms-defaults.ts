@@ -762,8 +762,8 @@ export const CMS_DEFAULTS: CmsDocument = {
       slug: 'lugemi-studio',
       title: 'Lugemi Studio',
       eyebrow: 'Creative',
-      lead: 'Scripts, voices, localization, and review in one authenticated console — before speech ships.',
-      body: 'Lugemi Studio is where creators and localization teams draft narration, pick registry languages, apply consent-gated clones, and review synthetic disclosure. Open the console after sign-up to generate with own:* voices.',
+      lead: 'Scripts, instant clones, localization, and review — then hand off clone:{id} into video dubbing and song vocals.',
+      body: 'Lugemi Studio is where creators and localization teams draft narration, pick registry languages, enroll consent-gated Instant Voice Clones, extract tracks from uploads, and review synthetic disclosure. Open Voice Studio after sign-up to generate with own:* voices or approved clone:{id}.',
       sections: [
         {
           id: 'scripts',
@@ -777,21 +777,23 @@ export const CMS_DEFAULTS: CmsDocument = {
         },
         {
           id: 'clones',
-          title: 'Consent clones',
-          body: 'Authorization-gated cloning with review, approve, reject, and disable paths.',
+          title: 'Instant clones in projects',
+          body: 'Upload or record consent samples, optional extract/isolate from video, abuse review, then speak with clone:{id} in Dubbing, Chat Studio, MCP/CLI — watermark required. Instant clone ≠ live model training.',
         },
         {
           id: 'guide-studio',
           kind: 'guide',
           title: 'Studio workflow',
-          body: 'From script to reviewable speech before anything ships publicly.',
+          body: 'From script (and optional clone) to reviewable speech before anything ships publicly.',
           steps: [
-            'Sign in and open Voice / Studio with an own:* sample.',
+            'Sign in and open Voice Studio (/audio) — Instant clone, Extract, or Speak.',
             'Localize the script with Translate defaults (English → Twi) or any locale.',
-            'Review disclosure and consent before publishing generative speech.',
+            'Use approved clone:{id} in projects (Dubbing / song vocals / developers) with disclosure on.',
           ],
           links: [
-            { label: 'Voice console', href: '/audio' },
+            { label: 'Voice Studio', href: '/audio' },
+            { label: 'Use in projects', href: '/audio?tab=projects' },
+            { label: 'Dubbing', href: '/p/dubbing' },
             { label: 'Translate', href: '/translate' },
             { label: 'API docs', href: '/docs' },
           ],
@@ -821,8 +823,8 @@ export const CMS_DEFAULTS: CmsDocument = {
       slug: 'lugemi-voice',
       title: 'Lugemi Voice',
       eyebrow: 'Text-to-speech',
-      lead: 'Resonant, region-aware speech and consent-gated cloning for creative work and speaking agents.',
-      body: 'Lugemi Voice is the sound layer of the platform. Generate speech with first-party own:* voices, disclose synthetic output where required, and connect the same voices into Studio and Agents.',
+      lead: 'Region-aware speech, Instant Voice Cloning, and extract/isolate — ready for videos, songs, and agents.',
+      body: 'Lugemi Voice is the sound layer of the platform. Generate with own:* voices, enroll Instant clones from recorded samples (consent + review), extract tracks from uploads, and reuse approved clone:{id} in Studio, Dubbing, and developer tools. Realtime means instant enroll — not live training theater.',
       sections: [
         {
           id: 'tts',
@@ -831,21 +833,22 @@ export const CMS_DEFAULTS: CmsDocument = {
         },
         {
           id: 'cloning',
-          title: 'Voice cloning',
-          body: 'Consent-gated clones with workspace review — authorization is required, not assumed.',
+          title: 'Voice cloning answers',
+          body: 'Upload recorded voice: yes. Extract from files: yes (track extract + energy VAD isolate; neural stems deferred). Realtime: instant clone after consent, then watermarked speak — not live model training.',
         },
         {
           id: 'guide-voice',
           kind: 'guide',
           title: 'Try it in 3 steps',
-          body: 'Generate a sample, pick a region voice, then call the same path from your app.',
+          body: 'Generate a sample, enroll a consented clone, then drop clone:{id} into a project.',
           steps: [
-            'Open the Voice console and play an own:* sample.',
-            'Attach consent samples only when cloning is authorized.',
-            'Call POST /v1/speech/synthesize with an lg_live_ key or use the CLI / MCP SDKs.',
+            'Open Voice Studio and play an own:* sample or Instant clone flow.',
+            'Upload/record consent samples (or Extract / isolate from video) only when authorized.',
+            'Call POST /v1/audio/speech with voice=clone:{id}, or use Studio / Dubbing / MCP / CLI.',
           ],
           links: [
-            { label: 'Voice console', href: '/audio' },
+            { label: 'Voice Studio', href: '/audio' },
+            { label: 'Voice Cloning', href: '/p/voice-cloning' },
             { label: 'Speech API', href: '/docs' },
             { label: 'SDKs & CLI', href: '/developers' },
           ],
