@@ -59,14 +59,13 @@ LUGEMI_BASE_URL=${API_URL}`;
         Lugemi API
       </p>
       <h1 style={{ margin: '0.65rem 0 0', fontFamily: 'var(--font-display)', letterSpacing: '-0.03em', fontSize: '2.35rem', color: 'var(--brand-navy)' }}>
-        API reference
+        Start with three endpoints
       </h1>
       <p style={{ color: 'var(--muted)', lineHeight: 1.65, maxWidth: '40rem' }}>
-        First-party language intelligence API: generate speech, transcribe, and translate. African languages,
-        dialects, accents, and scripts are the investment priority; LATAM, Southeast Asia, the Middle East, and the
-        EU are in scope without claiming every language is live. Authenticate with{' '}
-        <code className="vl-code">Authorization: Bearer lg_live_...</code> or soft-sandbox{' '}
-        <code className="vl-code">lg_test_...</code>. OpenAPI at <code className="vl-code">/v1/openapi.json</code>.
+        Lugemi is a fully built Africa-first language intelligence platform — first-party API and models. Copy a snippet
+        below, paste an API key, and call translate, speech, or detect. Coverage spans African countries and ethnic
+        communities; LATAM, Southeast Asia, the Middle East, and the EU are also in scope. Full OpenAPI at{' '}
+        <code className="vl-code">/v1/openapi.json</code>.
       </p>
 
       <div className="vl-endpoint-card" style={{ marginTop: '1.5rem' }}>

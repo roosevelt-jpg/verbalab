@@ -1,12 +1,12 @@
 # Lugemi public positioning
 
-Site: [https://lugemi.com](https://lugemi.com). Visible identity: **Lugemi**. Historical package name: VerbaLab (npm `@verbalab/*`, env vars, `X-VerbaLab-*` headers, health JSON `verbalab-web` stay as-is).
+Site: [https://lugemi.com](https://lugemi.com). Visible identity: **Lugemi**.
 
 ## Category
 
 Lugemi is a **fully built Africa-first language intelligence platform** with a **first-party API** and **first-party models** — same category as ElevenLabs, not a reseller or wrapper of Google Translate, OpenAI, ElevenLabs, or other vendor APIs.
 
-Product verbs: generate speech, transcribe, translate. Developer entry: Our API (`/v1`, keys `vl_live_` / `vl_test_`).
+Product verbs: generate speech, transcribe, translate. Developer entry: Our API (`/v1`, keys `lg_live_` / `lg_test_`, SDK `@lugemi/sdk`).
 
 ## Geography
 

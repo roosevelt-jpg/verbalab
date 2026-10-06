@@ -4,10 +4,10 @@ import { LanguageTicker } from './language-ticker';
 import { MarketingNav } from './nav';
 import { TtsHeroCard } from './tts-hero-card';
 
-const SDK_SAMPLE = `import { VerbaLab } from '@verbalab/sdk';
+const SDK_SAMPLE = `import { Lugemi } from '@lugemi/sdk';
 
-const client = new VerbaLab({
-  apiKey: process.env.VERBALAB_API_KEY!,
+const client = new Lugemi({
+  apiKey: process.env.LUGEMI_API_KEY!,
 });
 
 const speech = await client.speech({
@@ -83,7 +83,7 @@ export function MarketingHome() {
               <article className="mkt-card">
                 <h3>Developer APIs</h3>
                 <p>
-                  Copy-paste SDKs and REST endpoints. Package name stays <code className="vl-code">@verbalab/sdk</code>.
+                  Copy-paste SDKs and REST endpoints. Install <code className="vl-code">@lugemi/sdk</code> and call the first-party API.
                 </p>
                 <Link href="/docs" className="vl-btn vl-btn-primary">
                   Read the docs
