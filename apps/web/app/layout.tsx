@@ -39,7 +39,28 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${noto.variable} ${notoMono.variable}`}>
       <body>
         <SentryInit />
-        {isClerkConfigured() ? <ClerkProvider>{children}</ClerkProvider> : children}
+        {isClerkConfigured() ? (
+          <ClerkProvider
+            localization={{
+              signIn: {
+                start: {
+                  title: 'Sign in to Lugemi',
+                  subtitle: 'Welcome back — continue to your workspace',
+                },
+              },
+              signUp: {
+                start: {
+                  title: 'Create your Lugemi account',
+                  subtitle: 'Start building with Africa-first language intelligence',
+                },
+              },
+            }}
+          >
+            {children}
+          </ClerkProvider>
+        ) : (
+          children
+        )}
         <SupportChatWidget />
       </body>
     </html>
