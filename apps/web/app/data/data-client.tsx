@@ -4,6 +4,7 @@ import { useAuth } from '@clerk/nextjs';
 import { useCallback, useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { CountrySelect } from '@/components/country-select';
 
 type DataSettings = {
   organizationId: string;
@@ -248,12 +249,22 @@ export function DataClient() {
                 ).map(([key, label]) => (
                   <label key={key} style={{ display: 'grid', gap: '0.3rem' }}>
                     <span style={{ fontSize: '0.85rem' }}>{label}</span>
-                    <input
-                      className="vl-input"
-                      value={branding[key]}
-                      disabled={busy}
-                      onChange={(e) => setBranding({ ...branding, [key]: e.target.value })}
-                    />
+                    {key === 'country' ? (
+                      <CountrySelect
+                        className="vl-input"
+                        value={branding.country}
+                        disabled={busy}
+                        onChange={(code) => setBranding({ ...branding, country: code })}
+                        emptyLabel="Country"
+                      />
+                    ) : (
+                      <input
+                        className="vl-input"
+                        value={branding[key]}
+                        disabled={busy}
+                        onChange={(e) => setBranding({ ...branding, [key]: e.target.value })}
+                      />
+                    )}
                   </label>
                 ))}
                 <button type="button" className="vl-btn vl-btn-primary" disabled={busy} onClick={() => void saveBranding()}>

@@ -32,11 +32,13 @@ describe('Language surface engines (country / language / models / dialect / loca
         (c: { id: string; status: string }) => c.id === 'compose-locales' && c.status === 'shipped',
       ),
     ).toBe(true);
+    expect(res.body.honesty.worldwideCoverage).toBe(true);
     expect(
       res.body.capabilities.some(
-        (c: { id: string; status: string }) => c.id === 'worldwide' && c.status === 'deferred',
+        (c: { id: string; status: string }) => c.id === 'worldwide' && c.status === 'shipped',
       ),
     ).toBe(true);
+    expect(res.body.honesty.cldrOs).toBe(false);
   });
 
   it('exposes Language Engine and Language Cloud hub engine', async () => {

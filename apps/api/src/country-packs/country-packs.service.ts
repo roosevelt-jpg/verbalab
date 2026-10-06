@@ -2,8 +2,9 @@ import { HttpStatus, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiException } from '../common/errors/api-exception';
 import { LocalesService } from '../locales/locales.service';
-import { COUNTRY_PACK_SEEDS } from './country-pack-seeds';
+import { COUNTRY_PACK_COUNT, COUNTRY_PACK_SEEDS } from './country-pack-seeds';
 import { countryEngineCatalog } from './country-engine.catalog';
+import { africaFirstCountrySort, ISO_COUNTRIES } from './iso-countries';
 
 @Injectable()
 export class CountryPacksService implements OnModuleInit {
@@ -24,6 +25,27 @@ export class CountryPacksService implements OnModuleInit {
 
   engine() {
     return countryEngineCatalog();
+  }
+
+  /** Lightweight ISO list for Studio country pickers (residency, branding, admin). */
+  pickerList(region?: string) {
+    const rows = ISO_COUNTRIES.filter((c) =>
+      region ? c.region.toLowerCase().includes(region.trim().toLowerCase()) : true,
+    )
+      .slice()
+      .sort(africaFirstCountrySort)
+      .map((c) => ({
+        code: c.code,
+        nameEn: c.nameEn,
+        region: c.region,
+        currencyCode: c.currencyCode,
+      }));
+    return {
+      data: rows,
+      count: rows.length,
+      total: ISO_COUNTRIES.length,
+      note: 'Full ISO country list for pickers. Africa-first order.',
+    };
   }
 
   async seed() {
@@ -60,20 +82,30 @@ export class CountryPacksService implements OnModuleInit {
       });
     }
     this.logger.log(
-      JSON.stringify({ event: 'country_packs.seeded', count: COUNTRY_PACK_SEEDS.length }),
+      JSON.stringify({ event: 'country_packs.seeded', count: COUNTRY_PACK_COUNT }),
     );
   }
 
   async list(region?: string) {
     const rows = await this.prisma.countryPack.findMany({
       where: region
-        ? { region: { equals: region, mode: 'insensitive' } }
+        ? { region: { contains: region, mode: 'insensitive' } }
         : undefined,
-      orderBy: [{ region: 'asc' }, { code: 'asc' }],
     });
+    const data = rows
+      .map((r) => this.toDto(r))
+      .sort((a, b) =>
+        africaFirstCountrySort(
+          { region: a.region ?? '', code: a.code },
+          { region: b.region ?? '', code: b.code },
+        ),
+      );
     return {
-      data: rows.map((r) => this.toDto(r)),
-      note: 'Curated African-priority country packs. Compose language locale packs — not CLDR/SKU catalog.',
+      data,
+      count: data.length,
+      total: COUNTRY_PACK_COUNT,
+      note:
+        'Full ISO country packs (Africa-first). Compose language locale packs where seeded — not CLDR dialect completeness or billing SKUs.',
     };
   }
 

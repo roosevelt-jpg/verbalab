@@ -5,6 +5,7 @@ import { useAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { apiFetch, setStoredAdminOrgId, setStoredWorkspaceId } from '@/lib/api';
+import { CountrySelect } from '@/components/country-select';
 import { AppShell } from '@/components/app-shell';
 import { LivePulse, Sparkline, StatusRing, UsageMeter } from '@/components/stats/activity-visuals';
 
@@ -504,9 +505,9 @@ export function AdminWorkspacesClient() {
                           </select>
                           <input className="vl-input" type="number" value={editQuota} onChange={(e) => setEditQuota(Number(e.target.value))} aria-label="Quota" />
                           <input className="vl-input" value={editRegion} onChange={(e) => setEditRegion(e.target.value)} placeholder="Deploy pin (us/eu)" aria-label="Deploy region" />
-                          <input className="vl-input" value={editResidencyCountry} onChange={(e) => setEditResidencyCountry(e.target.value.toUpperCase())} placeholder="Residency country" aria-label="Residency country" maxLength={2} />
+                          <CountrySelect className="vl-input" value={editResidencyCountry} onChange={setEditResidencyCountry} emptyLabel="Residency country" aria-label="Residency country" />
                           <input className="vl-input" value={editResidencyRegion} onChange={(e) => setEditResidencyRegion(e.target.value)} placeholder="Residency region" aria-label="Residency region" />
-                          <input className="vl-input" value={editRegisteredFrom} onChange={(e) => setEditRegisteredFrom(e.target.value.toUpperCase())} placeholder="Registered from" aria-label="Registered from" maxLength={2} />
+                          <CountrySelect className="vl-input" value={editRegisteredFrom} onChange={setEditRegisteredFrom} emptyLabel="Registered from" aria-label="Registered from" />
                           <button type="button" className="vl-btn" disabled={busy} onClick={() => void (async () => {
                             const token = await tokenFn();
                             await apiFetch(`/v1/admin/workspaces/${selected.id}`, { method: 'PATCH', token, body: JSON.stringify({ plan: editPlan, characterQuota: editQuota, dataRegion: editRegion || null, residencyCountry: editResidencyCountry || null, residencyRegion: editResidencyRegion || null, registeredFrom: editRegisteredFrom || null }) });
