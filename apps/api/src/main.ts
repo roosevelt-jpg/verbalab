@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import type { NextFunction, Request, Response } from 'express';
 import { AppModule } from './app.module';
 import { ApiExceptionFilter } from './common/errors/api-exception.filter';
 import { initApiSentry } from './observability/sentry';
@@ -50,7 +51,7 @@ async function bootstrap() {
   }
 
   // Chrome Private Network Access: public/less-private pages calling loopback APIs.
-  app.use((req: { headers: Record<string, unknown> }, res: { setHeader: (k: string, v: string) => void }, next: () => void) => {
+  app.use((req: Request, res: Response, next: NextFunction) => {
     if (req.headers['access-control-request-private-network'] === 'true') {
       res.setHeader('Access-Control-Allow-Private-Network', 'true');
     }
