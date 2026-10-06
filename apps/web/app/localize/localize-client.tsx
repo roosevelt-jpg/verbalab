@@ -3,8 +3,11 @@
 import { FormEvent, useState, type CSSProperties } from 'react';
 import { API_URL } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { LocaleSelect } from '@/components/language-locale-select';
+import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
 export function LocalizeClient() {
+  const catalog = useLocaleCatalog();
   const [apiKey, setApiKey] = useState('');
   const [source, setSource] = useState('en');
   const [target, setTarget] = useState('sw');
@@ -79,11 +82,27 @@ export function LocalizeClient() {
           </label>
           <label className="vl-label">
             Source
-            <input className="vl-field" value={source} onChange={(e) => setSource(e.target.value)} />
+            <LocaleSelect
+              className="vl-field"
+              value={source}
+              onChange={setSource}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+            />
           </label>
           <label className="vl-label">
             Target
-            <input className="vl-field" value={target} onChange={(e) => setTarget(e.target.value)} />
+            <LocaleSelect
+              className="vl-field"
+              value={target}
+              onChange={setTarget}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+            />
           </label>
         </div>
         <label className="vl-label">

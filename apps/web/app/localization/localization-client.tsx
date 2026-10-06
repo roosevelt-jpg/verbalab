@@ -4,6 +4,8 @@ import { CSSProperties, useCallback, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { LocaleSelect } from '@/components/language-locale-select';
+import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
 type Platform = {
   product: string;
@@ -26,6 +28,7 @@ type IcuResult = {
 };
 
 export function LocalizationClient() {
+  const catalog = useLocaleCatalog();
   const [platform, setPlatform] = useState<Platform | null>(null);
   const [icuMessage, setIcuMessage] = useState('{count, plural, one {# item} other {# items}}');
   const [icuLocale, setIcuLocale] = useState('en');
@@ -113,7 +116,15 @@ export function LocalizationClient() {
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', marginBottom: '0.5rem' }}>
           <label className="vl-label">
             Locale
-            <input className="vl-field" value={icuLocale} onChange={(e) => setIcuLocale(e.target.value)} />
+            <LocaleSelect
+              className="vl-field"
+              value={icuLocale}
+              onChange={setIcuLocale}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+            />
           </label>
           <label className="vl-label">
             count
@@ -148,7 +159,15 @@ export function LocalizationClient() {
         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'end' }}>
           <label className="vl-label">
             Language
-            <input className="vl-field" value={layoutCode} onChange={(e) => setLayoutCode(e.target.value)} />
+            <LocaleSelect
+              className="vl-field"
+              value={layoutCode}
+              onChange={setLayoutCode}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+            />
           </label>
           <button type="button" className="vl-button" onClick={() => void runLayout().catch((e: Error) => setError(e.message))}>
             Lookup

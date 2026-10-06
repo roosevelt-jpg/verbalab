@@ -1,12 +1,11 @@
 'use client';
 
-import { FormEvent, useEffect, useState, type CSSProperties } from 'react';
+import { FormEvent, useState, type CSSProperties } from 'react';
 import { API_URL, apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
-import { LanguageLocaleSelect } from '@/components/language-locale-select';
+import { LocaleSelect } from '@/components/language-locale-select';
+import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
-type Language = { code: string; name: string; nativeName?: string | null };
-type LocalePack = { languageCode: string; bcp47: string | null };
 type Job = {
   id: string;
   status: string;
@@ -20,27 +19,14 @@ type Job = {
 };
 
 export function DocumentsClient() {
+  const catalog = useLocaleCatalog();
   const [apiKey, setApiKey] = useState('');
-  const [languages, setLanguages] = useState<Language[]>([]);
-  const [locales, setLocales] = useState<LocalePack[]>([]);
   const [source, setSource] = useState('en');
   const [target, setTarget] = useState('ak');
   const [file, setFile] = useState<File | null>(null);
   const [job, setJob] = useState<Job | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    void Promise.all([
-      apiFetch<{ data: Language[] }>('/v1/languages'),
-      apiFetch<{ data: LocalePack[] }>('/v1/locales').catch(() => ({ data: [] as LocalePack[] })),
-    ])
-      .then(([langRes, locRes]) => {
-        setLanguages(langRes.data);
-        setLocales(locRes.data);
-      })
-      .catch((err: Error) => setError(err.message));
-  }, []);
 
   async function onSubmit(event: FormEvent) {
     event.preventDefault();
@@ -104,11 +90,27 @@ export function DocumentsClient() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <label className="vl-label">
             Source
-            <LanguageLocaleSelect value={source} onChange={setSource} languages={languages} locales={locales} className="vl-field" />
+            <LocaleSelect
+              className="vl-field"
+              value={source}
+              onChange={setSource}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+            />
           </label>
           <label className="vl-label">
             Target
-            <LanguageLocaleSelect value={target} onChange={setTarget} languages={languages} locales={locales} className="vl-field" />
+            <LocaleSelect
+              className="vl-field"
+              value={target}
+              onChange={setTarget}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+            />
           </label>
         </div>
         <label className="vl-label">

@@ -4,8 +4,9 @@ import { FormEvent, useEffect, useState, type CSSProperties } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { LocaleSelect } from '@/components/language-locale-select';
+import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
-type Language = { code: string; name: string };
 type Term = {
   id: string;
   sourceLang: string;
@@ -30,7 +31,7 @@ type VerticalPack = {
 
 export function GlossaryClient() {
   const { getToken, isLoaded } = useAuth();
-  const [languages, setLanguages] = useState<Language[]>([]);
+  const catalog = useLocaleCatalog();
   const [terms, setTerms] = useState<Term[]>([]);
   const [packs, setPacks] = useState<VerticalPack[]>([]);
   const [sourceLang, setSourceLang] = useState('en');
@@ -49,12 +50,6 @@ export function GlossaryClient() {
   async function loadPacks(token: string) {
     setPacks(await apiFetch<VerticalPack[]>('/v1/vertical-glossaries', { token }));
   }
-
-  useEffect(() => {
-    void apiFetch<{ data: Language[] }>('/v1/languages')
-      .then((res) => setLanguages(res.data))
-      .catch(() => undefined);
-  }, []);
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -189,23 +184,27 @@ export function GlossaryClient() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <label className="vl-label">
             Source lang
-            <select className="vl-field" value={sourceLang} onChange={(e) => setSourceLang(e.target.value)}>
-              {languages.map((lang) => (
-                <option key={lang.code} value={lang.code}>
-                  {lang.code}
-                </option>
-              ))}
-            </select>
+            <LocaleSelect
+              className="vl-field"
+              value={sourceLang}
+              onChange={setSourceLang}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+            />
           </label>
           <label className="vl-label">
             Target lang
-            <select className="vl-field" value={targetLang} onChange={(e) => setTargetLang(e.target.value)}>
-              {languages.map((lang) => (
-                <option key={lang.code} value={lang.code}>
-                  {lang.code}
-                </option>
-              ))}
-            </select>
+            <LocaleSelect
+              className="vl-field"
+              value={targetLang}
+              onChange={setTargetLang}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+            />
           </label>
         </div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
