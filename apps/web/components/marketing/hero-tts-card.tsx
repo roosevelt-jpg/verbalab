@@ -1,24 +1,15 @@
 'use client';
 
 import { useState } from 'react';
+import type { CmsHeroDemo } from '@/data/cms-types';
 
-const VOICES = [
-  { id: 'abe', label: 'Abe · Lagos' },
-  { id: 'amara', label: 'Amara · Nairobi' },
-  { id: 'thandi', label: 'Thandi · Johannesburg' },
-  { id: 'kwame', label: 'Kwame · Accra' },
-] as const;
-
-const DEFAULT_TEXT =
-  'Lugemi voices carry creative work, customer conversations, and public speech with literacy and presence across African languages.';
-
-export function HeroTtsCard() {
-  const [text, setText] = useState(DEFAULT_TEXT);
-  const [voice, setVoice] = useState<(typeof VOICES)[number]['id']>('abe');
+export function HeroTtsCard({ demo }: { demo: CmsHeroDemo }) {
+  const [text, setText] = useState(demo.defaultText);
+  const [voice, setVoice] = useState(demo.voices[0]?.id ?? '');
   const [status, setStatus] = useState<string | null>(null);
 
   function onPlay() {
-    const selected = VOICES.find((item) => item.id === voice)?.label ?? 'Selected voice';
+    const selected = demo.voices.find((item) => item.id === voice)?.label ?? 'Selected voice';
     setStatus(
       `${selected}: preview audio needs OWN_TTS_URL / console keys. Open Studio to generate speech — this card does not invent audio.`,
     );
@@ -27,8 +18,8 @@ export function HeroTtsCard() {
   return (
     <div className="mkt-tts-card">
       <div className="mkt-tts-card-head">
-        <h2>Text to speech</h2>
-        <span className="mkt-tts-badge">Interactive demo</span>
+        <h2>{demo.title}</h2>
+        <span className="mkt-tts-badge">{demo.badge}</span>
       </div>
       <label className="mkt-tts-label" htmlFor="mkt-tts-text">
         Script
@@ -44,7 +35,7 @@ export function HeroTtsCard() {
       <fieldset className="mkt-tts-voices">
         <legend className="mkt-tts-label">Voice</legend>
         <div className="mkt-voice-chips">
-          {VOICES.map((item) => (
+          {demo.voices.map((item) => (
             <button
               key={item.id}
               type="button"
@@ -65,7 +56,7 @@ export function HeroTtsCard() {
           Play
         </button>
         <p className="mkt-tts-hint" role="status" aria-live="polite">
-          {status ?? 'No autoplay. Play explains the generation path — it does not invent waveforms or audio levels.'}
+          {status ?? demo.playHint}
         </p>
       </div>
     </div>

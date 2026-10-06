@@ -21,11 +21,15 @@ export function AnamorphicPanel({
   size = 'md',
   label,
   className = '',
+  imageUrl,
+  videoUrl,
 }: {
   variant?: Variant;
   size?: Size;
   label?: string;
   className?: string;
+  imageUrl?: string;
+  videoUrl?: string;
 }) {
   const sizeClass =
     size === 'sm' ? 'lg-ana--sm' : size === 'lg' ? 'lg-ana--lg' : size === 'hero' ? 'lg-ana--hero' : '';
@@ -39,12 +43,21 @@ export function AnamorphicPanel({
       aria-label={label}
     >
       <div className="lg-ana__stage">
-        <div className="lg-ana__layer lg-ana__layer--back" />
-        <div className="lg-ana__layer lg-ana__layer--mid" />
-        <div className="lg-ana__layer lg-ana__layer--front" />
-        <div className="lg-ana__orb" />
-        <div className="lg-ana__orb lg-ana__orb--alt" />
-        <div className="lg-ana__beam" />
+        {videoUrl ? (
+          <video className="lg-ana__media" src={videoUrl} autoPlay muted loop playsInline />
+        ) : imageUrl ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img className="lg-ana__media" src={imageUrl} alt="" />
+        ) : (
+          <>
+            <div className="lg-ana__layer lg-ana__layer--back" />
+            <div className="lg-ana__layer lg-ana__layer--mid" />
+            <div className="lg-ana__layer lg-ana__layer--front" />
+            <div className="lg-ana__orb" />
+            <div className="lg-ana__orb lg-ana__orb--alt" />
+            <div className="lg-ana__beam" />
+          </>
+        )}
       </div>
       <span className="lg-ana__label">{label ?? LABELS[variant]}</span>
     </div>

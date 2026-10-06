@@ -1,0 +1,895 @@
+'use client';
+
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import type { CmsDocument, CmsPage } from '@/data/cms-types';
+
+type Tab =
+  | 'hero'
+  | 'nav'
+  | 'products'
+  | 'sections'
+  | 'footer'
+  | 'pages'
+  | 'media'
+  | 'console'
+  | 'raw';
+
+const TABS: { id: Tab; label: string }[] = [
+  { id: 'hero', label: 'Hero' },
+  { id: 'nav', label: 'Nav' },
+  { id: 'products', label: 'Products' },
+  { id: 'sections', label: 'Sections' },
+  { id: 'footer', label: 'Footer' },
+  { id: 'pages', label: 'Pages' },
+  { id: 'media', label: 'Media' },
+  { id: 'console', label: 'Console copy' },
+  { id: 'raw', label: 'Raw JSON' },
+];
+
+function Field({
+  label,
+  value,
+  onChange,
+  multiline,
+  rows,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  multiline?: boolean;
+  rows?: number;
+}) {
+  return (
+    <label style={{ display: 'grid', gap: '0.35rem' }}>
+      <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--muted)' }}>{label}</span>
+      {multiline ? (
+        <textarea
+          className="vl-input"
+          value={value}
+          rows={rows ?? 4}
+          onChange={(e) => onChange(e.target.value)}
+          style={{ fontFamily: 'inherit', resize: 'vertical' }}
+        />
+      ) : (
+        <input className="vl-input" value={value} onChange={(e) => onChange(e.target.value)} />
+      )}
+    </label>
+  );
+}
+
+export function CmsEditor() {
+  const [doc, setDoc] = useState<CmsDocument | null>(null);
+  const [tab, setTab] = useState<Tab>('hero');
+  const [pageSlug, setPageSlug] = useState<string>('');
+  const [raw, setRaw] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [uploadLabel, setUploadLabel] = useState('Homepage media');
+
+  const load = useCallback(async () => {
+    setError(null);
+    const res = await fetch('/api/cms', { cache: 'no-store' });
+    if (!res.ok) throw new Error(`Failed to load CMS (${res.status})`);
+    const data = (await res.json()) as CmsDocument;
+    setDoc(data);
+    setRaw(JSON.stringify(data, null, 2));
+    setPageSlug(data.pages[0]?.slug ?? '');
+  }, []);
+
+  useEffect(() => {
+    void load().catch((err: Error) => setError(err.message));
+  }, [load]);
+
+  const selectedPage: CmsPage | null = useMemo(() => {
+    if (!doc) return null;
+    return doc.pages.find((p) => p.slug === pageSlug) ?? doc.pages[0] ?? null;
+  }, [doc, pageSlug]);
+
+  async function save(next: CmsDocument) {
+    setBusy(true);
+    setError(null);
+    setStatus(null);
+    try {
+      const res = await fetch('/api/cms', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(next),
+      });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        throw new Error(body?.error?.message ?? `Save failed (${res.status})`);
+      }
+      const saved = body as CmsDocument;
+      setDoc(saved);
+      setRaw(JSON.stringify(saved, null, 2));
+      setStatus(`Saved ${new Date(saved.updatedAt).toLocaleString()}`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Save failed');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function onUpload(file: File) {
+    setBusy(true);
+    setError(null);
+    try {
+      const form = new FormData();
+      form.set('file', file);
+      form.set('label', uploadLabel);
+      const res = await fetch('/api/cms/media', { method: 'POST', body: form });
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(body?.error?.message ?? `Upload failed (${res.status})`);
+      await load();
+      setStatus(`Uploaded ${body.url}`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Upload failed');
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function updatePage(mutator: (page: CmsPage) => CmsPage) {
+    if (!doc || !selectedPage) return;
+    const pages = doc.pages.map((p) => (p.slug === selectedPage.slug ? mutator(p) : p));
+    setDoc({ ...doc, pages });
+  }
+
+  if (!doc) {
+    return <p style={{ color: 'var(--muted)' }}>{error ? error : 'Loading CMS…'}</p>;
+  }
+
+  return (
+    <div style={{ display: 'grid', gap: '1rem' }}>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+        {TABS.map((t) => (
+          <button
+            key={t.id}
+            type="button"
+            className="vl-btn"
+            onClick={() => setTab(t.id)}
+            style={{
+              background: tab === t.id ? 'var(--ink)' : undefined,
+              color: tab === t.id ? '#fff' : undefined,
+              border: tab === t.id ? 'none' : undefined,
+            }}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {error ? <p style={{ color: 'var(--bad)', margin: 0 }}>{error}</p> : null}
+      {status ? <p style={{ color: 'var(--muted)', margin: 0 }}>{status}</p> : null}
+
+      <div className="vl-panel" style={{ padding: '1.25rem', display: 'grid', gap: '1rem' }}>
+        {tab === 'hero' ? (
+          <>
+            <Field
+              label="Eyebrow"
+              value={doc.hero.eyebrow}
+              onChange={(v) => setDoc({ ...doc, hero: { ...doc.hero, eyebrow: v } })}
+            />
+            <Field
+              label="Brand"
+              value={doc.hero.brand}
+              onChange={(v) => setDoc({ ...doc, hero: { ...doc.hero, brand: v } })}
+            />
+            <Field
+              label="Headline"
+              value={doc.hero.headline}
+              onChange={(v) => setDoc({ ...doc, hero: { ...doc.hero, headline: v } })}
+            />
+            <Field
+              label="Lead"
+              value={doc.hero.lead}
+              multiline
+              onChange={(v) => setDoc({ ...doc, hero: { ...doc.hero, lead: v } })}
+            />
+            <Field
+              label="Primary CTA label"
+              value={doc.hero.primaryCta.label}
+              onChange={(v) =>
+                setDoc({
+                  ...doc,
+                  hero: { ...doc.hero, primaryCta: { ...doc.hero.primaryCta, label: v } },
+                })
+              }
+            />
+            <Field
+              label="Primary CTA href"
+              value={doc.hero.primaryCta.href}
+              onChange={(v) =>
+                setDoc({
+                  ...doc,
+                  hero: { ...doc.hero, primaryCta: { ...doc.hero.primaryCta, href: v } },
+                })
+              }
+            />
+            <Field
+              label="Secondary CTA label"
+              value={doc.hero.secondaryCta.label}
+              onChange={(v) =>
+                setDoc({
+                  ...doc,
+                  hero: { ...doc.hero, secondaryCta: { ...doc.hero.secondaryCta, label: v } },
+                })
+              }
+            />
+            <Field
+              label="Secondary CTA href"
+              value={doc.hero.secondaryCta.href}
+              onChange={(v) =>
+                setDoc({
+                  ...doc,
+                  hero: { ...doc.hero, secondaryCta: { ...doc.hero.secondaryCta, href: v } },
+                })
+              }
+            />
+            <Field
+              label="Hero image URL"
+              value={doc.hero.media?.imageUrl ?? ''}
+              onChange={(v) =>
+                setDoc({
+                  ...doc,
+                  hero: { ...doc.hero, media: { ...doc.hero.media, imageUrl: v || undefined } },
+                })
+              }
+            />
+            <Field
+              label="Hero video URL"
+              value={doc.hero.media?.videoUrl ?? ''}
+              onChange={(v) =>
+                setDoc({
+                  ...doc,
+                  hero: { ...doc.hero, media: { ...doc.hero.media, videoUrl: v || undefined } },
+                })
+              }
+            />
+            <Field
+              label="Demo title"
+              value={doc.hero.demo.title}
+              onChange={(v) =>
+                setDoc({ ...doc, hero: { ...doc.hero, demo: { ...doc.hero.demo, title: v } } })
+              }
+            />
+            <Field
+              label="Demo default script"
+              value={doc.hero.demo.defaultText}
+              multiline
+              onChange={(v) =>
+                setDoc({
+                  ...doc,
+                  hero: { ...doc.hero, demo: { ...doc.hero.demo, defaultText: v } },
+                })
+              }
+            />
+            <Field
+              label="Demo voices (one per line: id|label)"
+              value={doc.hero.demo.voices.map((v) => `${v.id}|${v.label}`).join('\n')}
+              multiline
+              rows={5}
+              onChange={(v) =>
+                setDoc({
+                  ...doc,
+                  hero: {
+                    ...doc.hero,
+                    demo: {
+                      ...doc.hero.demo,
+                      voices: v
+                        .split('\n')
+                        .map((line) => line.trim())
+                        .filter(Boolean)
+                        .map((line) => {
+                          const parts = line.split('|');
+                          const id = (parts[0] ?? 'voice').trim();
+                          const label = parts.slice(1).join('|').trim() || id;
+                          return { id, label };
+                        }),
+                    },
+                  },
+                })
+              }
+            />
+          </>
+        ) : null}
+
+        {tab === 'nav' ? (
+          <>
+            <Field
+              label="Center links (label|href per line)"
+              value={doc.nav.centerLinks.map((l) => `${l.label}|${l.href}`).join('\n')}
+              multiline
+              rows={8}
+              onChange={(v) =>
+                setDoc({
+                  ...doc,
+                  nav: {
+                    ...doc.nav,
+                    centerLinks: v
+                      .split('\n')
+                      .map((line) => line.trim())
+                      .filter(Boolean)
+                      .map((line) => {
+                        const parts = line.split('|');
+                        const label = (parts[0] ?? 'Link').trim();
+                        const href = (parts[1] ?? '/').trim();
+                        return { label, href };
+                      }),
+                  },
+                })
+              }
+            />
+            <Field
+              label="Console label"
+              value={doc.nav.actions.console.label}
+              onChange={(v) =>
+                setDoc({
+                  ...doc,
+                  nav: {
+                    ...doc.nav,
+                    actions: {
+                      ...doc.nav.actions,
+                      console: { ...doc.nav.actions.console, label: v },
+                    },
+                  },
+                })
+              }
+            />
+            <Field
+              label="Signup label"
+              value={doc.nav.actions.signup.label}
+              onChange={(v) =>
+                setDoc({
+                  ...doc,
+                  nav: {
+                    ...doc.nav,
+                    actions: {
+                      ...doc.nav.actions,
+                      signup: { ...doc.nav.actions.signup, label: v },
+                    },
+                  },
+                })
+              }
+            />
+          </>
+        ) : null}
+
+        {tab === 'products' ? (
+          <>
+            <Field
+              label="Products section title"
+              value={doc.products.title}
+              onChange={(v) => setDoc({ ...doc, products: { ...doc.products, title: v } })}
+            />
+            <Field
+              label="Products lede"
+              value={doc.products.lede}
+              multiline
+              onChange={(v) => setDoc({ ...doc, products: { ...doc.products, lede: v } })}
+            />
+            {doc.products.items.map((item, idx) => (
+              <div
+                key={item.id}
+                style={{
+                  display: 'grid',
+                  gap: '0.65rem',
+                  padding: '0.85rem',
+                  border: '1px solid rgba(16,38,77,0.1)',
+                  borderRadius: 12,
+                }}
+              >
+                <strong>{item.name}</strong>
+                <Field
+                  label="Name"
+                  value={item.name}
+                  onChange={(v) => {
+                    const items = [...doc.products.items];
+                    items[idx] = { ...item, name: v };
+                    setDoc({ ...doc, products: { ...doc.products, items } });
+                  }}
+                />
+                <Field
+                  label="Body"
+                  value={item.body}
+                  multiline
+                  onChange={(v) => {
+                    const items = [...doc.products.items];
+                    items[idx] = { ...item, body: v };
+                    setDoc({ ...doc, products: { ...doc.products, items } });
+                  }}
+                />
+                <Field
+                  label="Href"
+                  value={item.href}
+                  onChange={(v) => {
+                    const items = [...doc.products.items];
+                    items[idx] = { ...item, href: v };
+                    setDoc({ ...doc, products: { ...doc.products, items } });
+                  }}
+                />
+                <Field
+                  label="Image URL"
+                  value={item.media?.imageUrl ?? ''}
+                  onChange={(v) => {
+                    const items = [...doc.products.items];
+                    items[idx] = {
+                      ...item,
+                      media: { ...item.media, imageUrl: v || undefined },
+                    };
+                    setDoc({ ...doc, products: { ...doc.products, items } });
+                  }}
+                />
+                <Field
+                  label="Video URL"
+                  value={item.media?.videoUrl ?? ''}
+                  onChange={(v) => {
+                    const items = [...doc.products.items];
+                    items[idx] = {
+                      ...item,
+                      media: { ...item.media, videoUrl: v || undefined },
+                    };
+                    setDoc({ ...doc, products: { ...doc.products, items } });
+                  }}
+                />
+              </div>
+            ))}
+          </>
+        ) : null}
+
+        {tab === 'sections' ? (
+          <>
+            <Field
+              label="Use cases title"
+              value={doc.useCases.title}
+              onChange={(v) => setDoc({ ...doc, useCases: { ...doc.useCases, title: v } })}
+            />
+            <Field
+              label="Hubs title"
+              value={doc.hubs.title}
+              onChange={(v) => setDoc({ ...doc, hubs: { ...doc.hubs, title: v } })}
+            />
+            <Field
+              label="Creative title"
+              value={doc.creative.title}
+              onChange={(v) => setDoc({ ...doc, creative: { ...doc.creative, title: v } })}
+            />
+            <Field
+              label="Creative module body"
+              value={doc.creative.moduleBody}
+              multiline
+              onChange={(v) => setDoc({ ...doc, creative: { ...doc.creative, moduleBody: v } })}
+            />
+            <Field
+              label="Creative image URL"
+              value={doc.creative.media?.imageUrl ?? ''}
+              onChange={(v) =>
+                setDoc({
+                  ...doc,
+                  creative: {
+                    ...doc.creative,
+                    media: { ...doc.creative.media, imageUrl: v || undefined },
+                  },
+                })
+              }
+            />
+            <Field
+              label="Creative video URL"
+              value={doc.creative.media?.videoUrl ?? ''}
+              onChange={(v) =>
+                setDoc({
+                  ...doc,
+                  creative: {
+                    ...doc.creative,
+                    media: { ...doc.creative.media, videoUrl: v || undefined },
+                  },
+                })
+              }
+            />
+            <Field
+              label="Agents title"
+              value={doc.agents.title}
+              onChange={(v) => setDoc({ ...doc, agents: { ...doc.agents, title: v } })}
+            />
+            <Field
+              label="Agents image URL"
+              value={doc.agents.media?.imageUrl ?? ''}
+              onChange={(v) =>
+                setDoc({
+                  ...doc,
+                  agents: {
+                    ...doc.agents,
+                    media: { ...doc.agents.media, imageUrl: v || undefined },
+                  },
+                })
+              }
+            />
+            <Field
+              label="API title"
+              value={doc.api.title}
+              onChange={(v) => setDoc({ ...doc, api: { ...doc.api, title: v } })}
+            />
+            <Field
+              label="API snippet"
+              value={doc.api.snippet}
+              multiline
+              rows={10}
+              onChange={(v) => setDoc({ ...doc, api: { ...doc.api, snippet: v } })}
+            />
+            <Field
+              label="Banner title"
+              value={doc.banner.title}
+              onChange={(v) => setDoc({ ...doc, banner: { ...doc.banner, title: v } })}
+            />
+            <Field
+              label="Banner body"
+              value={doc.banner.body}
+              multiline
+              onChange={(v) => setDoc({ ...doc, banner: { ...doc.banner, body: v } })}
+            />
+          </>
+        ) : null}
+
+        {tab === 'footer' ? (
+          <>
+            <Field
+              label="Footer mission"
+              value={doc.footer.mission}
+              multiline
+              onChange={(v) => setDoc({ ...doc, footer: { ...doc.footer, mission: v } })}
+            />
+            <Field
+              label="Copyright"
+              value={doc.footer.copyright}
+              onChange={(v) => setDoc({ ...doc, footer: { ...doc.footer, copyright: v } })}
+            />
+            <Field
+              label="Support FAB label"
+              value={doc.footer.supportFab.label}
+              onChange={(v) =>
+                setDoc({
+                  ...doc,
+                  footer: {
+                    ...doc.footer,
+                    supportFab: { ...doc.footer.supportFab, label: v },
+                  },
+                })
+              }
+            />
+            {doc.footer.columns.map((col, cIdx) => (
+              <div key={col.id} style={{ display: 'grid', gap: '0.5rem' }}>
+                <Field
+                  label={`${col.title} column title`}
+                  value={col.title}
+                  onChange={(v) => {
+                    const columns = [...doc.footer.columns];
+                    columns[cIdx] = { ...col, title: v };
+                    setDoc({ ...doc, footer: { ...doc.footer, columns } });
+                  }}
+                />
+                <Field
+                  label={`${col.title} links (label|href)`}
+                  value={col.links.map((l) => `${l.label}|${l.href}`).join('\n')}
+                  multiline
+                  rows={6}
+                  onChange={(v) => {
+                    const columns = [...doc.footer.columns];
+                    columns[cIdx] = {
+                      ...col,
+                      links: v
+                        .split('\n')
+                        .map((line) => line.trim())
+                        .filter(Boolean)
+                        .map((line) => {
+                          const parts = line.split('|');
+                          const label = (parts[0] ?? 'Link').trim();
+                          const href = (parts[1] ?? '/').trim();
+                          return { label, href };
+                        }),
+                    };
+                    setDoc({ ...doc, footer: { ...doc.footer, columns } });
+                  }}
+                />
+              </div>
+            ))}
+          </>
+        ) : null}
+
+        {tab === 'pages' && selectedPage ? (
+          <>
+            <label style={{ display: 'grid', gap: '0.35rem' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--muted)' }}>
+                Select page
+              </span>
+              <select
+                className="vl-input"
+                value={selectedPage.slug}
+                onChange={(e) => setPageSlug(e.target.value)}
+              >
+                {doc.pages.map((p) => (
+                  <option key={p.slug} value={p.slug}>
+                    /p/{p.slug} — {p.title}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <Field
+              label="Title"
+              value={selectedPage.title}
+              onChange={(v) => updatePage((p) => ({ ...p, title: v }))}
+            />
+            <Field
+              label="Eyebrow"
+              value={selectedPage.eyebrow ?? ''}
+              onChange={(v) => updatePage((p) => ({ ...p, eyebrow: v || undefined }))}
+            />
+            <Field
+              label="Lead"
+              value={selectedPage.lead}
+              multiline
+              onChange={(v) => updatePage((p) => ({ ...p, lead: v }))}
+            />
+            <Field
+              label="Body"
+              value={selectedPage.body}
+              multiline
+              rows={6}
+              onChange={(v) => updatePage((p) => ({ ...p, body: v }))}
+            />
+            <Field
+              label="Image URL"
+              value={selectedPage.media?.imageUrl ?? ''}
+              onChange={(v) =>
+                updatePage((p) => ({
+                  ...p,
+                  media: { ...p.media, imageUrl: v || undefined },
+                }))
+              }
+            />
+            <Field
+              label="Video URL"
+              value={selectedPage.media?.videoUrl ?? ''}
+              onChange={(v) =>
+                updatePage((p) => ({
+                  ...p,
+                  media: { ...p.media, videoUrl: v || undefined },
+                }))
+              }
+            />
+            <Field
+              label="Primary CTA label"
+              value={selectedPage.primaryCta?.label ?? ''}
+              onChange={(v) =>
+                updatePage((p) => ({
+                  ...p,
+                  primaryCta: {
+                    label: v,
+                    href: p.primaryCta?.href ?? '/sign-up',
+                  },
+                }))
+              }
+            />
+            <Field
+              label="Primary CTA href"
+              value={selectedPage.primaryCta?.href ?? ''}
+              onChange={(v) =>
+                updatePage((p) => ({
+                  ...p,
+                  primaryCta: {
+                    label: p.primaryCta?.label ?? 'Continue',
+                    href: v,
+                  },
+                }))
+              }
+            />
+            <Field
+              label="Sections (title||body per block, blank line between)"
+              value={(selectedPage.sections ?? [])
+                .map((s) => `${s.title}||${s.body}`)
+                .join('\n\n')}
+              multiline
+              rows={12}
+              onChange={(v) =>
+                updatePage((p) => ({
+                  ...p,
+                  sections: v
+                    .split(/\n\s*\n/)
+                    .map((block) => block.trim())
+                    .filter(Boolean)
+                    .map((block, i) => {
+                      const parts = block.split('||');
+                      const title = (parts[0] ?? 'Section').trim();
+                      const body = parts.slice(1).join('||').trim();
+                      return {
+                        id: p.sections?.[i]?.id ?? `section-${i + 1}`,
+                        title,
+                        body,
+                        media: p.sections?.[i]?.media,
+                      };
+                    }),
+                }))
+              }
+            />
+            <button
+              type="button"
+              className="vl-btn"
+              onClick={() => {
+                const slug = `page-${Date.now().toString(36)}`;
+                const nextPage: CmsPage = {
+                  slug,
+                  title: 'New page',
+                  lead: 'Edit this page in Admin CMS.',
+                  body: 'Add body copy, media, and sections.',
+                  showInFooter: true,
+                  primaryCta: { label: 'Start free', href: '/sign-up' },
+                };
+                setDoc({ ...doc, pages: [...doc.pages, nextPage] });
+                setPageSlug(slug);
+              }}
+            >
+              Add page
+            </button>
+          </>
+        ) : null}
+
+        {tab === 'media' ? (
+          <>
+            <Field label="Upload label" value={uploadLabel} onChange={setUploadLabel} />
+            <label className="vl-btn" style={{ display: 'inline-flex', cursor: 'pointer' }}>
+              Upload image or video
+              <input
+                type="file"
+                accept="image/*,video/*"
+                hidden
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) void onUpload(file);
+                  e.target.value = '';
+                }}
+              />
+            </label>
+            <p style={{ color: 'var(--muted)', margin: 0, fontSize: '0.9rem' }}>
+              Uploads land in <code className="vl-code">/cms-media/</code>. Paste the URL into any
+              image/video field on Hero, Products, Sections, or Pages.
+            </p>
+            <ul style={{ margin: 0, paddingLeft: '1.1rem', display: 'grid', gap: '0.5rem' }}>
+              {doc.mediaLibrary.map((m) => (
+                <li key={m.id}>
+                  <strong>{m.label}</strong> · {m.kind} ·{' '}
+                  <code className="vl-code" style={{ fontSize: '0.75rem' }}>
+                    {m.url}
+                  </code>
+                </li>
+              ))}
+              {doc.mediaLibrary.length === 0 ? (
+                <li style={{ color: 'var(--muted)' }}>No uploads yet.</li>
+              ) : null}
+            </ul>
+          </>
+        ) : null}
+
+        {tab === 'console' ? (
+          <>
+            <Field
+              label="Dashboard welcome title"
+              value={doc.console.dashboardWelcome.title}
+              onChange={(v) =>
+                setDoc({
+                  ...doc,
+                  console: {
+                    ...doc.console,
+                    dashboardWelcome: { ...doc.console.dashboardWelcome, title: v },
+                  },
+                })
+              }
+            />
+            <Field
+              label="Dashboard welcome lead"
+              value={doc.console.dashboardWelcome.lead}
+              multiline
+              onChange={(v) =>
+                setDoc({
+                  ...doc,
+                  console: {
+                    ...doc.console,
+                    dashboardWelcome: { ...doc.console.dashboardWelcome, lead: v },
+                  },
+                })
+              }
+            />
+            <Field
+              label="Docs intro title"
+              value={doc.console.docsIntro.title}
+              onChange={(v) =>
+                setDoc({
+                  ...doc,
+                  console: {
+                    ...doc.console,
+                    docsIntro: { ...doc.console.docsIntro, title: v },
+                  },
+                })
+              }
+            />
+            <Field
+              label="Docs intro lead"
+              value={doc.console.docsIntro.lead}
+              multiline
+              onChange={(v) =>
+                setDoc({
+                  ...doc,
+                  console: {
+                    ...doc.console,
+                    docsIntro: { ...doc.console.docsIntro, lead: v },
+                  },
+                })
+              }
+            />
+            <Field
+              label="Playground default text"
+              value={doc.console.playgroundDefaults.text}
+              multiline
+              onChange={(v) =>
+                setDoc({
+                  ...doc,
+                  console: {
+                    ...doc.console,
+                    playgroundDefaults: { ...doc.console.playgroundDefaults, text: v },
+                  },
+                })
+              }
+            />
+          </>
+        ) : null}
+
+        {tab === 'raw' ? (
+          <textarea
+            className="vl-input"
+            value={raw}
+            rows={24}
+            onChange={(e) => setRaw(e.target.value)}
+            style={{ fontFamily: 'ui-monospace, monospace', fontSize: '0.8rem' }}
+          />
+        ) : null}
+      </div>
+
+      <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+        <button
+          type="button"
+          className="vl-btn vl-btn-primary"
+          disabled={busy}
+          onClick={() => {
+            if (tab === 'raw') {
+              try {
+                const parsed = JSON.parse(raw) as CmsDocument;
+                void save(parsed);
+              } catch {
+                setError('Raw JSON is invalid');
+              }
+              return;
+            }
+            void save(doc);
+          }}
+        >
+          {busy ? 'Saving…' : 'Save CMS'}
+        </button>
+        <button
+          type="button"
+          className="vl-btn"
+          disabled={busy}
+          onClick={() => void load().catch((err: Error) => setError(err.message))}
+        >
+          Reload
+        </button>
+        <a className="vl-btn" href="/" target="_blank" rel="noreferrer">
+          Preview homepage
+        </a>
+        {selectedPage ? (
+          <a className="vl-btn" href={`/p/${selectedPage.slug}`} target="_blank" rel="noreferrer">
+            Preview /p/{selectedPage.slug}
+          </a>
+        ) : null}
+      </div>
+    </div>
+  );
+}

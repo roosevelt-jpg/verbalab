@@ -3,17 +3,9 @@
 import Link from 'next/link';
 import { useState } from 'react';
 import { BrandMark } from '@/components/brand-mark';
+import type { CmsDocument } from '@/data/cms-types';
 
-const CENTER_LINKS = [
-  { href: '#products', label: 'Products' },
-  { href: '#hubs', label: 'Hubs' },
-  { href: '#use-cases', label: 'Use cases' },
-  { href: '#research', label: 'Research' },
-  { href: '#safety', label: 'Safety' },
-  { href: '/docs', label: 'Docs' },
-] as const;
-
-export function MarketingNav() {
+export function MarketingNav({ nav }: { nav: CmsDocument['nav'] }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -22,22 +14,22 @@ export function MarketingNav() {
         <BrandMark />
         <nav className="mkt-nav-desktop" aria-label="Primary">
           <ul className="mkt-nav-links">
-            {CENTER_LINKS.map((item) => (
-              <li key={item.href}>
+            {nav.centerLinks.map((item) => (
+              <li key={`${item.href}-${item.label}`}>
                 <Link href={item.href}>{item.label}</Link>
               </li>
             ))}
           </ul>
         </nav>
         <div className="mkt-nav-actions">
-          <Link href="/dashboard" className="mkt-nav-text">
-            Open console
+          <Link href={nav.actions.console.href} className="mkt-nav-text">
+            {nav.actions.console.label}
           </Link>
-          <Link href="/sign-in" className="mkt-nav-text">
-            Log in
+          <Link href={nav.actions.login.href} className="mkt-nav-text">
+            {nav.actions.login.label}
           </Link>
-          <Link href="/sign-up" className="vl-btn vl-btn-primary mkt-nav-signup">
-            Sign up
+          <Link href={nav.actions.signup.href} className="vl-btn vl-btn-primary mkt-nav-signup">
+            {nav.actions.signup.label}
           </Link>
           <button
             type="button"
@@ -52,26 +44,26 @@ export function MarketingNav() {
       </div>
       <nav id="mkt-mobile-nav" className="mkt-nav-mobile" aria-label="Primary mobile" hidden={!open}>
         <ul className="mkt-nav-links">
-          {CENTER_LINKS.map((item) => (
-            <li key={`m-${item.href}`}>
+          {nav.centerLinks.map((item) => (
+            <li key={`m-${item.href}-${item.label}`}>
               <Link href={item.href} onClick={() => setOpen(false)}>
                 {item.label}
               </Link>
             </li>
           ))}
           <li>
-            <Link href="/dashboard" onClick={() => setOpen(false)}>
-              Open console
+            <Link href={nav.actions.console.href} onClick={() => setOpen(false)}>
+              {nav.actions.console.label}
             </Link>
           </li>
           <li>
-            <Link href="/sign-in" onClick={() => setOpen(false)}>
-              Log in
+            <Link href={nav.actions.login.href} onClick={() => setOpen(false)}>
+              {nav.actions.login.label}
             </Link>
           </li>
           <li>
-            <Link href="/sign-up" onClick={() => setOpen(false)}>
-              Sign up
+            <Link href={nav.actions.signup.href} onClick={() => setOpen(false)}>
+              {nav.actions.signup.label}
             </Link>
           </li>
         </ul>

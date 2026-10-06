@@ -39,6 +39,15 @@
   transform-origin: 50% 60%;
 }
 
+.lg-ana__media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
 .lg-ana__layer {
   position: absolute;
   inset: 8% 6%;

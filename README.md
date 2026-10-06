@@ -32,6 +32,7 @@ pnpm dev
 - Web console: http://localhost:3000
 - API health: http://localhost:3001/health
 - Without Clerk keys: http://localhost:3000/setup
+- Marketing CMS: signed-in **Admin → CMS content** edits homepage, footer, `/p/*` pages, images, and videos (`GET/PUT /api/cms`, uploads to `/cms-media/`)
 
 ## Workspace scripts
 
