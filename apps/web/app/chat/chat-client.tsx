@@ -342,15 +342,45 @@ export function ChatClient() {
   }
 
   async function translateText(token: string, text: string, source: string, target: string) {
-    const res = await apiFetch<{ text: string; source: string; characters: number }>(
-      '/v1/translate',
-      {
+    try {
+      const res = await apiFetch<{ text: string; source: string; characters: number }>(
+        '/v1/translate',
+        {
+          method: 'POST',
+          token,
+          body: JSON.stringify({ text, source, target }),
+        },
+      );
+      return res;
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : '';
+      // Soft-sandbox: when live translate providers are unset, use curated demo translate.
+      if (!/not set|not configured|provider/i.test(msg)) throw err;
+      const demoRes = await fetch('/api/demo/translate', {
         method: 'POST',
-        token,
-        body: JSON.stringify({ text, source, target }),
-      },
-    );
-    return res;
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          text,
+          source: source === 'auto' ? 'en' : source,
+          target,
+        }),
+      });
+      const demo = (await demoRes.json()) as {
+        translated?: string;
+        source?: string;
+        target?: string;
+        error?: { message?: string };
+        mode?: string;
+      };
+      if (!demoRes.ok || !demo.translated) {
+        throw new Error(demo.error?.message ?? (msg || 'Translate failed'));
+      }
+      return {
+        text: demo.translated,
+        source: demo.source ?? (source === 'auto' ? 'en' : source),
+        characters: [...text].length,
+      };
+    }
   }
 
   async function playTranslation(text: string, lang: string) {
@@ -1106,8 +1136,8 @@ export function ChatClient() {
               <button
                 type="button"
                 className="lg-chat-icon-btn"
-                aria-label="Upload document, video, or voice"
-                title="Upload document, video, or voice"
+                aria-label="Attach document, video, or voice"
+                title="Attach document, video, or voice"
                 disabled={loading}
                 onClick={() => fileRef.current?.click()}
               >

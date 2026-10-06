@@ -94,7 +94,82 @@ const DEMO_PAIRS: Array<{
     sourceVoice: 'abe',
     targetVoice: 'abe',
   },
+  {
+    id: 'en-ak',
+    source: 'en',
+    target: 'ak',
+    sourceLabel: 'English',
+    targetLabel: 'Akan (Twi)',
+    text: 'Good morning. Welcome to Lugemi Chat Studio.',
+    translated: 'Maakye. Akwaaba ba Lugemi Chat Studio.',
+    sourceLang: 'en-GH',
+    targetLang: 'ak',
+    sourceVoice: 'kwame',
+    targetVoice: 'kwame',
+  },
 ];
+
+/** Soft-sandbox phrasebook when live providers are unset — keeps Chat Studio realtime useful. */
+const PHRASEBOOK: Record<string, Record<string, string>> = {
+  ak: {
+    hello: 'Hɛlo',
+    hi: 'Hɛlo',
+    'good morning': 'Maakye',
+    'good afternoon': 'Maaha',
+    'good evening': 'Maadwo',
+    'thank you': 'Medaase',
+    thanks: 'Medaase',
+    please: 'Mepa wo kyɛw',
+    yes: 'Aane',
+    no: 'Daabi',
+    welcome: 'Akwaaba',
+    friends: 'nnamfoɔ',
+    'how are you': 'Wo ho te sɛn?',
+  },
+  sw: {
+    hello: 'Habari',
+    hi: 'Habari',
+    'good morning': 'Habari za asubuhi',
+    'thank you': 'Asante',
+    thanks: 'Asante',
+    please: 'Tafadhali',
+    yes: 'Ndiyo',
+    no: 'Hapana',
+    welcome: 'Karibu',
+    friends: 'marafiki',
+  },
+  yo: {
+    hello: 'Báwo',
+    hi: 'Báwo',
+    'good morning': 'Ẹ káàárọ̀',
+    'thank you': 'E ṣe',
+    thanks: 'E ṣe',
+    please: 'Jọ̀wọ́',
+    yes: 'Bẹ́ẹ̀ni',
+    no: 'Rárá',
+    welcome: 'Káàbọ̀',
+  },
+};
+
+function softSandboxTranslate(text: string, target: string): string | null {
+  const book = PHRASEBOOK[target];
+  if (!book) return null;
+  const lower = text.toLowerCase().replace(/[.!?]+$/g, '').trim();
+  if (book[lower]) return book[lower]!;
+
+  // Replace longest phrases first inside free-form speech segments.
+  const keys = Object.keys(book).sort((a, b) => b.length - a.length);
+  let out = text;
+  let hit = false;
+  for (const key of keys) {
+    const re = new RegExp(key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+    if (re.test(out)) {
+      out = out.replace(re, book[key]!);
+      hit = true;
+    }
+  }
+  return hit ? out : null;
+}
 
 export async function GET() {
   return NextResponse.json({
@@ -114,28 +189,32 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: { message: 'Invalid JSON' } }, { status: 400 });
   }
 
+  const requestedTarget = (body.target || 'ak').trim();
+  const requestedSource = (body.source || 'en').trim();
   const pair =
     (body.pairId ? DEMO_PAIRS.find((p) => p.id === body.pairId) : undefined) ??
-    DEMO_PAIRS.find((p) => p.source === body.source && p.target === body.target) ??
+    DEMO_PAIRS.find((p) => p.source === requestedSource && p.target === requestedTarget) ??
+    DEMO_PAIRS.find((p) => p.target === requestedTarget) ??
     DEMO_PAIRS[0]!;
 
   const text = (typeof body.text === 'string' ? body.text.trim() : '') || pair.text;
 
-  // Exact curated match → instant demo translation
-  if (text.toLowerCase() === pair.text.toLowerCase()) {
+  // Exact curated match (any pair) → instant demo translation
+  const exact = DEMO_PAIRS.find((p) => p.text.toLowerCase() === text.toLowerCase());
+  if (exact) {
     return NextResponse.json({
       mode: 'demo',
-      source: pair.source,
-      target: pair.target,
-      sourceLabel: pair.sourceLabel,
-      targetLabel: pair.targetLabel,
-      text: pair.text,
-      translated: pair.translated,
-      sourceLang: pair.sourceLang,
-      targetLang: pair.targetLang,
-      sourceVoice: pair.sourceVoice,
-      targetVoice: pair.targetVoice,
-      pairId: pair.id,
+      source: exact.source,
+      target: exact.target,
+      sourceLabel: exact.sourceLabel,
+      targetLabel: exact.targetLabel,
+      text: exact.text,
+      translated: exact.translated,
+      sourceLang: exact.sourceLang,
+      targetLang: exact.targetLang,
+      sourceVoice: exact.sourceVoice,
+      targetVoice: exact.targetVoice,
+      pairId: exact.id,
     });
   }
 
@@ -184,8 +263,27 @@ export async function POST(request: Request) {
         }
       }
     } catch {
-      // fall through to demo pair
+      // fall through to soft-sandbox / curated pair
     }
+  }
+
+  const soft = softSandboxTranslate(text, requestedTarget) ?? softSandboxTranslate(text, pair.target);
+  if (soft) {
+    return NextResponse.json({
+      mode: 'demo',
+      source: requestedSource === 'auto' ? 'en' : requestedSource,
+      target: requestedTarget,
+      sourceLabel: pair.sourceLabel,
+      targetLabel: pair.targetLabel,
+      text,
+      translated: soft,
+      sourceLang: pair.sourceLang,
+      targetLang: pair.targetLang,
+      sourceVoice: pair.sourceVoice,
+      targetVoice: pair.targetVoice,
+      pairId: pair.id,
+      note: 'Soft-sandbox phrasebook (live translate provider unset).',
+    });
   }
 
   return NextResponse.json({
@@ -194,13 +292,13 @@ export async function POST(request: Request) {
     target: pair.target,
     sourceLabel: pair.sourceLabel,
     targetLabel: pair.targetLabel,
-    text: pair.text,
+    text,
     translated: pair.translated,
     sourceLang: pair.sourceLang,
     targetLang: pair.targetLang,
     sourceVoice: pair.sourceVoice,
     targetVoice: pair.targetVoice,
     pairId: pair.id,
-    note: 'Using curated demo pair. Sign up for live translate API.',
+    note: 'Using curated demo pair. Configure live translate for arbitrary text.',
   });
 }
