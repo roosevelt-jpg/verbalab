@@ -74,9 +74,9 @@ export class LanguagesService implements OnModuleInit {
       return LANGUAGE_SEEDS.map((lang) => ({
         code: lang.code,
         nameEn: lang.nameEn,
-        nameNative: lang.nameNative,
-        script: lang.script,
-        familyCode: lang.familyCode,
+        nameNative: lang.nameNative ?? null,
+        script: lang.script ?? null,
+        familyCode: lang.familyCode ?? null,
         family: null as { code: string; nameEn: string; notes: string | null } | null,
         rtl: lang.rtl ?? false,
         tier:
