@@ -866,7 +866,8 @@ export function ChatClient() {
             <div>
               <h1 style={titleStyle}>Chat Studio</h1>
               <p style={ledeStyle}>
-                Record for live translation, upload documents/video/voice, or connect office tools.
+                Powered by Lugemi Atlas — complex multilingual reasoning and dialect nuance. Record
+                for live Baobab translation, upload documents/video/voice, or connect office tools.
               </p>
             </div>
             <div className="lg-chat-toolbar-actions">

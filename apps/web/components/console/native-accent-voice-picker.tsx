@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { apiFetch } from '@/lib/api';
 import { SITE_CONTENT } from '@/data/site-content';
+import { formatLanguageLabel, formatVariantLabel, regionDisplayName } from '@/lib/locale-catalog';
+import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
 export type AccentVoice = {
   id: string;
@@ -55,6 +57,7 @@ export function NativeAccentVoicePicker({
   showEmotionTone = true,
   emotionProfiles,
 }: Props) {
+  const catalog = useLocaleCatalog();
   const [voices, setVoices] = useState<AccentVoice[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -93,22 +96,40 @@ export function NativeAccentVoicePicker({
   }, []);
 
   const languages = useMemo(() => {
-    const set = new Set<string>();
-    for (const v of voices) for (const lang of v.languages ?? []) set.add(lang);
-    return [...set].sort();
-  }, [voices]);
+    const codes = new Set<string>();
+    for (const l of catalog.languages) codes.add(l.code);
+    for (const v of voices) for (const lang of v.languages ?? []) codes.add(lang);
+    return [...codes].sort((a, b) => a.localeCompare(b));
+  }, [voices, catalog.languages]);
+
+  const languageLabel = useMemo(() => {
+    const map = new Map(catalog.languages.map((l) => [l.code, formatLanguageLabel(l)]));
+    return (code: string) => map.get(code) ?? code;
+  }, [catalog.languages]);
 
   const accents = useMemo(() => {
-    const set = new Set<string>();
-    for (const v of voices) if (v.accent) set.add(v.accent);
-    return [...set].sort();
-  }, [voices]);
+    const rows = catalog.accents.length ? [...catalog.accents] : [];
+    const known = new Set(rows.map((a) => a.code));
+    for (const v of voices) {
+      if (!v.accent || known.has(v.accent)) continue;
+      known.add(v.accent);
+      rows.push({
+        code: v.accent,
+        languageCode: v.languages?.[0] ?? '',
+        nameEn: v.accent,
+        region: v.country ?? v.region ?? null,
+      });
+    }
+    return rows.sort((a, b) => a.nameEn.localeCompare(b.nameEn));
+  }, [voices, catalog.accents]);
 
   const countries = useMemo(() => {
     const set = new Set<string>();
     for (const v of voices) if (v.country) set.add(v.country);
+    for (const a of catalog.accents) if (a.region) set.add(a.region);
+    for (const d of catalog.dialects) if (d.region) set.add(d.region);
     return [...set].sort();
-  }, [voices]);
+  }, [voices, catalog.accents, catalog.dialects]);
 
   const filtered = useMemo(() => {
     return voices.filter((v) => {
@@ -116,7 +137,16 @@ export function NativeAccentVoicePicker({
       if (value.gender && value.gender !== 'any' && v.gender !== value.gender) return false;
       if (value.language && value.language !== 'any' && !(v.languages ?? []).includes(value.language))
         return false;
-      if (value.accent && value.accent !== 'any' && v.accent !== value.accent) return false;
+      if (value.accent && value.accent !== 'any') {
+        const accentRow = catalog.accents.find((a) => a.code === value.accent);
+        const matches =
+          v.accent === value.accent ||
+          (accentRow != null &&
+            (v.accent === accentRow.nameEn ||
+              v.accent === accentRow.code ||
+              (v.region != null && accentRow.region != null && v.region === accentRow.region)));
+        if (!matches) return false;
+      }
       if (value.country && value.country !== 'any' && v.country !== value.country) return false;
       if (
         value.toneStyle &&
@@ -128,7 +158,7 @@ export function NativeAccentVoicePicker({
       }
       return true;
     });
-  }, [voices, value, preferOwn]);
+  }, [voices, value, preferOwn, catalog.accents]);
 
   useEffect(() => {
     if (!filtered.length) return;
@@ -186,7 +216,7 @@ export function NativeAccentVoicePicker({
             <option value="any">Any</option>
             {languages.map((lang) => (
               <option key={lang} value={lang}>
-                {lang}
+                {languageLabel(lang)}
               </option>
             ))}
           </select>
@@ -201,7 +231,7 @@ export function NativeAccentVoicePicker({
             <option value="any">Any</option>
             {countries.map((c) => (
               <option key={c} value={c}>
-                {c}
+                {regionDisplayName(c) ?? c} ({c})
               </option>
             ))}
           </select>
@@ -215,8 +245,8 @@ export function NativeAccentVoicePicker({
           >
             <option value="any">Any</option>
             {accents.map((a) => (
-              <option key={a} value={a}>
-                {a}
+              <option key={a.code} value={a.code}>
+                {formatVariantLabel(a)}
               </option>
             ))}
           </select>
