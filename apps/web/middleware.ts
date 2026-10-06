@@ -19,6 +19,7 @@ const isPublicRoute = createRouteMatcher([
   '/builders(.*)',
   '/language-integrity(.*)',
   '/african-language-registry(.*)',
+  '/accent-identity(.*)',
   '/health(.*)',
   '/p(.*)',
 ]);
