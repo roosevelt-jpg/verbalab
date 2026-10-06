@@ -1,4 +1,4 @@
-/** Application ports for Financial Intelligence (VL-266). */
+/** Application ports for Financial Intelligence. */
 
 export type FinancialIntelligenceProductRow = {
   id: string;

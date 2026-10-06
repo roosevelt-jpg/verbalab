@@ -24,7 +24,7 @@ export class KnowledgeBaseService {
     return {
       kinds: KNOWLEDGE_CONTENT_KINDS.map((id) => ({ id })),
       deferred: ['image', 'video', 'audio', 'powerpoint', 'excel', 'web_crawl'],
-      note: 'Shipped text document kinds for VL-194. Media/Office decks deferred.',
+      note: 'Shipped text document kinds for . Media/Office decks deferred.',
     };
   }
 
@@ -61,7 +61,7 @@ export class KnowledgeBaseService {
       ready,
       failed,
       chunks,
-      note: 'Workspace-scoped Knowledge Base counts (VL-194).',
+      note: 'Workspace-scoped Knowledge Base counts.',
     };
   }
 

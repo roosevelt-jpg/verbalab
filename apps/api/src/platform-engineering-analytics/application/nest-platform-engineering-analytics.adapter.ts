@@ -37,7 +37,7 @@ export class NestPlatformEngineeringAnalyticsCatalogAdapter implements PlatformE
         status: 'shipped',
         api: 'GET /v1/platform-engineering-analytics/engine',
         console: '/platform-engineering-analytics',
-        notes: 'VL-312 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

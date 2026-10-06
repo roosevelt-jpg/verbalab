@@ -102,7 +102,7 @@ export class PluginOperatingSystemService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'PluginOperatingSystem monitoring snapshot (VL-342).',
+      note: 'PluginOperatingSystem monitoring snapshot.',
     };
   }
 }

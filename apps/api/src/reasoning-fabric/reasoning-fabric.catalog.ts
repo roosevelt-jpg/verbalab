@@ -25,7 +25,7 @@ export type ReasoningPipeline = {
 };
 
 /**
- * Library Phase 111 → Reasoning Fabric (VL-244).
+ * Library Phase 111 → Reasoning Fabric.
  * Cross-cloud reasoning routing over Reasoning Runtime — not a custom reasoner OS.
  */
 export function reasoningFabricCapabilityCatalog(): ReasoningFabricCapability[] {
@@ -36,7 +36,7 @@ export function reasoningFabricCapabilityCatalog(): ReasoningFabricCapability[] 
       status: 'shipped',
       api: 'GET /v1/reasoning-fabric/products',
       notes:
-        'Reasoning router hub (VL-244). Extends Reasoning Runtime — does not regenerate VL-218 / VL-186.',
+        'Reasoning router hub. Extends Reasoning Runtime — does not regenerate .',
     },
     {
       id: 'reasoning-router',
@@ -212,7 +212,7 @@ export function reasoningFabricVersions() {
       kind: 'pipeline',
       version: 1,
       status: 'shipped',
-      notes: 'Initial fabric pipeline catalog (VL-244).',
+      notes: 'Initial fabric pipeline catalog.',
     },
     {
       id: 'router-v1',
@@ -257,7 +257,7 @@ export function reasoningFabricArchitectureNotes() {
     fabricWidePolicyHardGateRequired: true,
     policyLogOnlyForbidden: true,
     note:
-      'Reasoning Fabric (VL-244). Router/pipelines/replay/distribution over Reasoning Runtime. Not a custom reasoner, symbolic OS, or tool-execution agent OS.',
+      'Reasoning Fabric. Router/pipelines/replay/distribution over Reasoning Runtime. Not a custom reasoner, symbolic OS, or tool-execution agent OS.',
   };
 }
 

@@ -36,7 +36,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Wake Word Engine (VL-157)', () => {
+describe('Wake Word Engine', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

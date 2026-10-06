@@ -44,7 +44,7 @@ export class AfricanLanguageRegistryService {
       mode: 'registry',
       languageCount: catalog.languages.length,
       honesty: catalog.honesty,
-      note: 'African Language Registry monitoring snapshot (VL-261).',
+      note: 'African Language Registry monitoring snapshot.',
     };
   }
 }

@@ -94,7 +94,7 @@ export class ResourceManagerService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'ResourceManager monitoring snapshot (VL-337).',
+      note: 'ResourceManager monitoring snapshot.',
     };
   }
 }

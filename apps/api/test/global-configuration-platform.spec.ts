@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Global Configuration Platform (VL-316)', () => {
+describe('Global Configuration Platform', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

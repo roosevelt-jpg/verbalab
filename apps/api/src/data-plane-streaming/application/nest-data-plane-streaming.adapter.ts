@@ -37,7 +37,7 @@ export class NestDataPlaneStreamingCatalogAdapter implements DataPlaneStreamingC
         status: 'shipped',
         api: 'GET /v1/data-plane-streaming/engine',
         console: '/data-plane-streaming',
-        notes: 'VL-331 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

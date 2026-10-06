@@ -37,7 +37,7 @@ export class NestFinopsPlatformCatalogAdapter implements FinopsPlatformCatalogPo
         status: 'shipped',
         api: 'GET /v1/finops-platform/engine',
         console: '/finops-platform',
-        notes: 'VL-309 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

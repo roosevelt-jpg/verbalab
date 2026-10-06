@@ -34,7 +34,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Marketplace (VL-090 / VL-091)', () => {
+describe('Marketplace', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;
@@ -231,7 +231,7 @@ describe('Marketplace (VL-090 / VL-091)', () => {
     expect(term?.targetTerm).toBe('bonjour');
   });
 
-  it('publishes and installs prompt listings (VL-091)', async () => {
+  it('publishes and installs prompt listings', async () => {
     const publisher = await seedOrg(prisma, `mprom_${Date.now()}`);
     const buyer = await seedOrg(prisma, `mbprm_${Date.now()}`);
     await billing.applyEntitlementForTests({ organizationId: publisher.id, plan: 'pro' });
@@ -298,7 +298,7 @@ describe('Marketplace (VL-090 / VL-091)', () => {
     expect(rag.body).toBe('MARKETPLACE_RAG_SYSTEM_UNIQUE');
   });
 
-  it('publishes and installs dataset listings from TM (VL-091)', async () => {
+  it('publishes and installs dataset listings from TM', async () => {
     const publisher = await seedOrg(prisma, `mdat_${Date.now()}`);
     const buyer = await seedOrg(prisma, `mbdat_${Date.now()}`);
     await billing.applyEntitlementForTests({ organizationId: publisher.id, plan: 'pro' });
@@ -348,7 +348,7 @@ describe('Marketplace (VL-090 / VL-091)', () => {
     expect(entries[0].targetText).toBe('Kliniki iko wazi');
   });
 
-  it('records a paid install with platform fee when Stripe is offline (VL-092)', async () => {
+  it('records a paid install with platform fee when Stripe is offline', async () => {
     const publisher = await seedOrg(prisma, `mpaid_${Date.now()}`);
     const buyer = await seedOrg(prisma, `mbpaid_${Date.now()}`);
     await billing.applyEntitlementForTests({ organizationId: publisher.id, plan: 'pro' });

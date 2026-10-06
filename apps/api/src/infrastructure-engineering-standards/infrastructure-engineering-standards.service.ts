@@ -114,7 +114,7 @@ export class InfrastructureEngineeringStandardsService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'InfrastructureEngineeringStandards monitoring snapshot (VL-352).',
+      note: 'InfrastructureEngineeringStandards monitoring snapshot.',
     };
   }
 }

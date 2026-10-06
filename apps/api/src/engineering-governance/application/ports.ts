@@ -1,4 +1,4 @@
-/** Application ports for Engineering Governance (VL-345). */
+/** Application ports for Engineering Governance. */
 
 export type EngineeringGovernanceProductRow = {
   id: string;

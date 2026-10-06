@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Developer Experience Platform (VL-311)', () => {
+describe('Developer Experience Platform', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

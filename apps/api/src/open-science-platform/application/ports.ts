@@ -1,4 +1,4 @@
-/** Application ports for Open Science Platform (VL-278). */
+/** Application ports for Open Science Platform. */
 
 export type OpenSciencePlatformProductRow = {
   id: string;

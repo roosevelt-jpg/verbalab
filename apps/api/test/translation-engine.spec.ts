@@ -36,7 +36,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Translation Engine Phase 8 (VL-140)', () => {
+describe('Translation Engine Phase 8', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

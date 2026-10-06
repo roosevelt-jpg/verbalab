@@ -1,4 +1,4 @@
-/** Application ports for Control Plane Cloud (VL-314). */
+/** Application ports for Control Plane Cloud. */
 
 export type ControlPlaneCloudProductRow = {
   id: string;

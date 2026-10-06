@@ -1,4 +1,4 @@
-/** Application ports for Global Scheduler (VL-321). */
+/** Application ports for Global Scheduler. */
 
 export type GlobalSchedulerProductRow = {
   id: string;

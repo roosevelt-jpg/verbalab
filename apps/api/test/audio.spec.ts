@@ -54,7 +54,7 @@ function tinyWav(): Buffer {
   return buffer;
 }
 
-describe('Speech-to-text (VL-041)', () => {
+describe('Speech-to-text', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

@@ -34,7 +34,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Fine-tunes (VL-104)', () => {
+describe('Fine-tunes', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;

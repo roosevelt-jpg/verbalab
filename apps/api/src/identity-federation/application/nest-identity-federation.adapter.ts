@@ -37,7 +37,7 @@ export class NestIdentityFederationCatalogAdapter implements IdentityFederationC
         status: 'shipped',
         api: 'GET /v1/identity-federation/engine',
         console: '/identity-federation',
-        notes: 'VL-299 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

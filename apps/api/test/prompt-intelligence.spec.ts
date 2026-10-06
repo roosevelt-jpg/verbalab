@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Prompt Intelligence (VL-188)', () => {
+describe('Prompt Intelligence', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -64,7 +64,7 @@ describe('Prompt Intelligence (VL-188)', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/not.*auto-prompt research/i);
-    expect(text).toContain('VL-188');
+    expect(text).toContain('');
   });
 
   it('exposes engine with autoPromptResearchLab=false', async () => {

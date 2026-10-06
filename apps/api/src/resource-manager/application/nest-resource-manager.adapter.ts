@@ -37,7 +37,7 @@ export class NestResourceManagerCatalogAdapter implements ResourceManagerCatalog
         status: 'shipped',
         api: 'GET /v1/resource-manager/engine',
         console: '/resource-manager',
-        notes: 'VL-337 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

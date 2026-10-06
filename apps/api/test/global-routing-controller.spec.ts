@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Global Routing Controller (VL-319)', () => {
+describe('Global Routing Controller', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

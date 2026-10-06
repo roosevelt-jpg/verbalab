@@ -37,7 +37,7 @@ export class NestAgentOperatingSystemCatalogAdapter implements AgentOperatingSys
         status: 'shipped',
         api: 'GET /v1/agent-operating-system/engine',
         console: '/agent-operating-system',
-        notes: 'VL-339 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

@@ -14,7 +14,7 @@ export type VoiceCloneCreateResult = {
 };
 
 /**
- * Instant Voice Cloning + TTS (VL-064).
+ * Instant Voice Cloning + TTS.
  * Without VENDOR_VOICE_CLONE_API_KEY (or legacy alias) → provider_not_configured.
  */
 export class VendorVoiceCloneAdapter implements TtsProvider {

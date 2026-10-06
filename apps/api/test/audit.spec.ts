@@ -33,7 +33,7 @@ async function seedOrg(prisma: PrismaService, name: string, role: MembershipRole
   });
 }
 
-describe('Audit log (VL-032)', () => {
+describe('Audit log', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

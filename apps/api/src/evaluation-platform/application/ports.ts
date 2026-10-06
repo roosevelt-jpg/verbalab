@@ -1,4 +1,4 @@
-/** Application ports for Evaluation Platform (VL-275). */
+/** Application ports for Evaluation Platform. */
 
 export type EvaluationPlatformProductRow = {
   id: string;

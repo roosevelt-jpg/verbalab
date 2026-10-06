@@ -48,7 +48,7 @@ export class AiDriftDetectionService {
       driftClear: catalog.driftClear,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'AI Drift Detection monitoring snapshot (VL-288).',
+      note: 'AI Drift Detection monitoring snapshot.',
     };
   }
 }

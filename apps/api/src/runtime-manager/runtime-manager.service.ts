@@ -150,7 +150,7 @@ export class RuntimeManagerService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'RuntimeManager monitoring snapshot (VL-336).',
+      note: 'RuntimeManager monitoring snapshot.',
     };
   }
 }

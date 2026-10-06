@@ -38,7 +38,7 @@ export class AiPublicationPlatformService {
       mode: 'publication',
       publicationCount: catalog.publications.length,
       honesty: catalog.honesty,
-      note: 'AI Publication Platform monitoring snapshot (VL-276).',
+      note: 'AI Publication Platform monitoring snapshot.',
     };
   }
 }

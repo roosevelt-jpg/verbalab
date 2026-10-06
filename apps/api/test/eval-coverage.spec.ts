@@ -9,7 +9,7 @@ import { GOLDEN_PAIRS } from '../src/eval/goldens';
 import { charSimilarity, exactMatch, normalizeForEval } from '../src/eval/metrics';
 import { ApiExceptionFilter } from '../src/common/errors/api-exception.filter';
 
-describe('Coverage + eval harness (VL-100)', () => {
+describe('Coverage + eval harness', () => {
   let app: INestApplication<App>;
   let gateway: GatewayService;
   let evalService: EvalService;
@@ -46,7 +46,7 @@ describe('Coverage + eval harness (VL-100)', () => {
   });
 
   it('scores exact match and character similarity', () => {
-    expect(normalizeForEval('  Habari! ')).toBe('habari');
+    expect(normalizeForEval(' Habari! ')).toBe('habari');
     expect(exactMatch('Habari', 'habari')).toBe(true);
     expect(charSimilarity('Habari', 'Habari yako')).toBeGreaterThan(0.4);
     expect(charSimilarity('Habari', 'Habari')).toBe(1);

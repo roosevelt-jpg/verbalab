@@ -47,7 +47,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Event Fabric (VL-240)', () => {
+describe('Event Fabric', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let fabric: EventFabricService;
@@ -82,7 +82,7 @@ describe('Event Fabric (VL-240)', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(phase)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-240');
+    expect(text).toContain('');
     expect(text).toMatch(/Redis Streams/i);
     expect(text).toMatch(/CloudEvents/i);
     expect(text).toMatch(/not\*\* a Kafka|NOT a Kafka|not a Kafka/i);

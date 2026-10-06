@@ -1,4 +1,4 @@
-/** Application ports for Research Analytics (VL-279). */
+/** Application ports for Research Analytics. */
 
 export type ResearchAnalyticsProductRow = {
   id: string;

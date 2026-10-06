@@ -132,7 +132,7 @@ export class AiEngineeringStandardsService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'AiEngineeringStandards monitoring snapshot (VL-349).',
+      note: 'AiEngineeringStandards monitoring snapshot.',
     };
   }
 }

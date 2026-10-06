@@ -94,7 +94,7 @@ export function PromptRuntimeClient() {
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
         Kernel prompt execution over{' '}
-        <Link href="/prompt-intelligence">Prompt Intelligence</Link> / VL-086 versioned prompts.
+        <Link href="/prompt-intelligence">Prompt Intelligence</Link> / versioned prompts.
         Resolve, variables, validate, opt-in cache — does not call an LLM or invent a research lab.
       </p>
 

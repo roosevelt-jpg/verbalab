@@ -34,7 +34,7 @@ export class NestAgriculturalIntelligenceCatalogAdapter implements AgriculturalI
         status: 'shipped',
         api: 'GET /v1/agricultural-intelligence/engine',
         console: '/agricultural-intelligence',
-        notes: 'VL-268 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

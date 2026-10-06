@@ -37,7 +37,7 @@ export class NestAiSchedulerCatalogAdapter implements AiSchedulerCatalogPort {
         status: 'shipped',
         api: 'GET /v1/ai-scheduler/engine',
         console: '/ai-scheduler',
-        notes: 'VL-335 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

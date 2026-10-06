@@ -237,7 +237,7 @@ export class DatasetMarketplaceService {
         storesRawCardData: false,
         creatorPayoutMathVerifiedLive: false,
       },
-      note: 'Recorded receipts only. Creator Economy (VL-258) expands payout math.',
+      note: 'Recorded receipts only. Creator Economy expands payout math.',
     };
   }
 
@@ -858,7 +858,7 @@ export class DatasetMarketplaceService {
       sales,
       reviews,
       honesty: this.engine().honesty,
-      note: 'Dataset marketplace aggregates. Payout depth deferred to Creator Economy (VL-258).',
+      note: 'Dataset marketplace aggregates. Payout depth deferred to Creator Economy.',
     };
   }
 
@@ -869,7 +869,7 @@ export class DatasetMarketplaceService {
       products: engine.capabilities.map((c) => ({ id: c.id, status: c.status })),
       honesty: engine.honesty,
       safety: engine.safety,
-      note: 'Dataset Marketplace monitoring snapshot (VL-252).',
+      note: 'Dataset Marketplace monitoring snapshot.',
     };
   }
 }

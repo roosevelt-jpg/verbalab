@@ -30,7 +30,7 @@ export class DataPlaneCloudService {
       },
       docs: '/docs/DATA_PLANE_CLOUD.md',
       note:
-        'Data Plane Foundation (VL-324). Executes via thin runtimes — never manages orgs/policies/billing. Not Service Mesh OS.',
+        'Data Plane Foundation. Executes via thin runtimes — never manages orgs/policies/billing. Not Service Mesh OS.',
     };
   }
 
@@ -94,7 +94,7 @@ export class DataPlaneCloudService {
       },
       docs: '/docs/DATA_PLANE_CLOUD.md',
       note:
-        'Data Plane Cloud (VL-324–333). Discovery hub over thin execution runtimes; Production Audit closes the volume.',
+        'Data Plane Cloud (–333). Discovery hub over thin execution runtimes; Production Audit closes the volume.',
     };
   }
 
@@ -106,7 +106,7 @@ export class DataPlaneCloudService {
       runtimeInventory: dataPlaneCloudRuntimeInventory(),
       architecture: dataPlaneCloudArchitectureNotes(),
       honesty: dataPlaneCloudHonesty(),
-      note: 'Data Plane Cloud monitoring snapshot (VL-324).',
+      note: 'Data Plane Cloud monitoring snapshot.',
     };
   }
 }

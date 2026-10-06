@@ -1,4 +1,4 @@
-/** Application ports for Prompt Fabric (VL-243). */
+/** Application ports for Prompt Fabric. */
 
 export type PromptFabricCapabilityRow = {
   id: string;

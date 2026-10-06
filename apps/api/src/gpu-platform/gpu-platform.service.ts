@@ -380,7 +380,7 @@ export class GpuPlatformService {
       released,
       auditsLast30d: audits,
       costs,
-      note: 'GPU Platform analytics (VL-205). ≠ VL-212 AI Runtime Analytics.',
+      note: 'GPU Platform analytics. ≠ AI Runtime Analytics.',
     };
   }
 
@@ -399,7 +399,7 @@ export class GpuPlatformService {
       deferred: engine.capabilities
         .filter((c) => c.status === 'deferred')
         .map((c) => c.id),
-      note: 'GPU Platform monitoring snapshot (VL-205).',
+      note: 'GPU Platform monitoring snapshot.',
     };
   }
 

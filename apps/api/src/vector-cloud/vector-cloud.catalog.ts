@@ -8,12 +8,12 @@ export type VectorCapability = {
   notes: string;
 };
 
-/** Library Phase 49 → Vector Cloud (VL-182). Hub over pgvector Knowledge (VL-062) — not Pinecone. */
+/** Library Phase 49 → Vector Cloud. Hub over pgvector Knowledge — not Pinecone. */
 export function vectorCloudCatalog() {
   return {
     product: 'Lugemi Vector Cloud',
     note:
-      'Enterprise vector search over Postgres pgvector knowledge_chunks (VL-062). Workspace = namespace; collection = knowledge. Not a managed vector DB OS (Pinecone/Weaviate/Qdrant parity deferred).',
+      'Enterprise vector search over Postgres pgvector knowledge_chunks. Workspace = namespace; collection = knowledge. Not a managed vector DB OS (Pinecone/Weaviate/Qdrant parity deferred).',
     capabilities: [
       {
         id: 'vector-storage',
@@ -69,7 +69,7 @@ export function vectorCloudCatalog() {
         name: 'Index Management',
         status: 'partial',
         api: 'GET /v1/vector-cloud/indexes',
-        notes: 'HNSW cosine index from VL-062 migration — create/drop API deferred.',
+        notes: 'HNSW cosine index from migration — create/drop API deferred.',
       },
       {
         id: 'hybrid-search',

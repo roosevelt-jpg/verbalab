@@ -37,7 +37,7 @@ export class NestKnowledgeOperatingSystemCatalogAdapter implements KnowledgeOper
         status: 'shipped',
         api: 'GET /v1/knowledge-operating-system/engine',
         console: '/knowledge-operating-system',
-        notes: 'VL-341 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

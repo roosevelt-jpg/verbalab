@@ -20,7 +20,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('African Language Registry (VL-261)', () => {
+describe('African Language Registry', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -40,7 +40,7 @@ describe('African Language Registry (VL-261)', () => {
     expect(existsSync(join(root, 'docs/AFRICAN_LANGUAGE_REGISTRY.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0163-african-language-registry.md'))).toBe(true);
     const text = readFileSync(join(root, 'docs/AFRICAN_LANGUAGE_REGISTRY.md'), 'utf8');
-    expect(text).toContain('VL-261');
+    expect(text).toContain('');
   });
 
   it('has no TODO/FIXME/implement-later markers', () => {

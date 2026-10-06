@@ -1,4 +1,4 @@
-/** Application ports for Global Configuration Platform (VL-316). */
+/** Application ports for Global Configuration Platform. */
 
 export type GlobalConfigurationPlatformProductRow = {
   id: string;

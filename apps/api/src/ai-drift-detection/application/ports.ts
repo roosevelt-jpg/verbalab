@@ -1,4 +1,4 @@
-/** Application ports for AI Drift Detection (VL-288). */
+/** Application ports for AI Drift Detection. */
 
 export type AiDriftDetectionProductRow = {
   id: string;

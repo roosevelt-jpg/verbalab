@@ -79,14 +79,14 @@ export function cacheNamespaces(): CacheNamespaceRow[] {
 }
 
 /**
- * Library Phase 77 → Intelligent Cache (VL-210).
+ * Library Phase 77 → Intelligent Cache.
  * Org/workspace sandbox entry store — not Redis Cluster / vector / CDN OS.
  */
 export function intelligentCacheCatalog() {
   return {
     product: 'Lugemi Intelligent Cache',
     note:
-      'Intelligent Cache (VL-210). Org/workspace-scoped inference result cache with namespaces for semantic/translation/embedding/speech/voice/document/prompt/context. Lookup is exact-key (or normalized-text hash for semantic). Not a Redis Cluster, vector similarity OS, or CDN. Does not auto-wire Gateway responses — opt-in put/lookup APIs.',
+      'Intelligent Cache. Org/workspace-scoped inference result cache with namespaces for semantic/translation/embedding/speech/voice/document/prompt/context. Lookup is exact-key (or normalized-text hash for semantic). Not a Redis Cluster, vector similarity OS, or CDN. Does not auto-wire Gateway responses — opt-in put/lookup APIs.',
     capabilities: [
       {
         id: 'semantic-cache',
@@ -156,7 +156,7 @@ export function intelligentCacheCatalog() {
         name: 'Analytics',
         status: 'shipped',
         api: 'GET /v1/intelligent-cache/analytics',
-        notes: 'Hit/miss + entry counts — ≠ VL-212.',
+        notes: 'Hit/miss + entry counts — ≠ .',
       },
       {
         id: 'monitoring',

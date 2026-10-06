@@ -117,7 +117,7 @@ export class FineTunesService implements OnModuleInit {
     }
   }
 
-  /** Pairs where VL-100 coverage shows vendor metrics below thresholds. */
+  /** Pairs where coverage shows vendor metrics below thresholds. */
   listCandidates() {
     const snapshot = this.evalService.getSnapshot();
     const focus = new Set(

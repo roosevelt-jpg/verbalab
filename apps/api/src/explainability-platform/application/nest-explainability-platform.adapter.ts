@@ -37,7 +37,7 @@ export class NestExplainabilityPlatformCatalogAdapter implements ExplainabilityP
         status: 'shipped',
         api: 'GET /v1/explainability-platform/engine',
         console: '/explainability-platform',
-        notes: 'VL-295 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

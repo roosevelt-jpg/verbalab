@@ -1,6 +1,6 @@
 /**
- * Library Phase 217 → API Engineering Standards (VL-350).
- * API Engineering Standards (VL-350). REST/GraphQL/gRPC/streaming/versioning/SDK/rate-limit/pagination/errors/idempotency standards reflecting existing OpenAPI/SDK patterns.
+ * Library Phase 217 → API Engineering Standards.
+ * API Engineering Standards. REST/GraphQL/gRPC/streaming/versioning/SDK/rate-limit/pagination/errors/idempotency standards reflecting existing OpenAPI/SDK patterns.
  */
 export function apiEngineeringStandardsEngineCatalog() {
   return {
@@ -10,16 +10,16 @@ export function apiEngineeringStandardsEngineCatalog() {
     architectureKnowledgeBaseOs: false,
     adrFactoryOs: false,
     capabilities: [
-      { id: 'rest', name: 'REST Standards', status: 'shipped', notes: 'VL-350 standards capability — catalog, not a new OS.' },
-      { id: 'graphql', name: 'GraphQL Standards', status: 'shipped', notes: 'VL-350 standards capability — catalog, not a new OS.' },
-      { id: 'grpc', name: 'gRPC Standards', status: 'shipped', notes: 'VL-350 standards capability — catalog, not a new OS.' },
-      { id: 'streaming', name: 'Streaming Standards', status: 'shipped', notes: 'VL-350 standards capability — catalog, not a new OS.' },
-      { id: 'versioning', name: 'API Versioning', status: 'shipped', notes: 'VL-350 standards capability — catalog, not a new OS.' },
-      { id: 'sdk', name: 'SDK Standards', status: 'shipped', notes: 'VL-350 standards capability — catalog, not a new OS.' },
-      { id: 'rate_limiting', name: 'Rate Limiting', status: 'shipped', notes: 'VL-350 standards capability — catalog, not a new OS.' },
-      { id: 'pagination', name: 'Pagination', status: 'shipped', notes: 'VL-350 standards capability — catalog, not a new OS.' },
-      { id: 'errors', name: 'Error Standards', status: 'shipped', notes: 'VL-350 standards capability — catalog, not a new OS.' },
-      { id: 'idempotency', name: 'Idempotency', status: 'shipped', notes: 'VL-350 standards capability — catalog, not a new OS.' }
+      { id: 'rest', name: 'REST Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'graphql', name: 'GraphQL Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'grpc', name: 'gRPC Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'streaming', name: 'Streaming Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'versioning', name: 'API Versioning', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'sdk', name: 'SDK Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'rate_limiting', name: 'Rate Limiting', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'pagination', name: 'Pagination', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'errors', name: 'Error Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'idempotency', name: 'Idempotency', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' }
     ],
     routes: [
       {
@@ -81,9 +81,9 @@ export function apiEngineeringStandardsEngineCatalog() {
       customerFacingProductCloud: false,
       architectureKnowledgeBaseOs: false,
       adrFactoryOs: false,
-      note: 'API Engineering Standards (VL-350). REST/GraphQL/gRPC/streaming/versioning/SDK/rate-limit/pagination/errors/idempotency standards reflecting existing OpenAPI/SDK patterns.',
+      note: 'API Engineering Standards. REST/GraphQL/gRPC/streaming/versioning/SDK/rate-limit/pagination/errors/idempotency standards reflecting existing OpenAPI/SDK patterns.',
     },
     docs: '/docs/API_ENGINEERING_STANDARDS.md',
-    note: 'API Engineering Standards (VL-350). REST/GraphQL/gRPC/streaming/versioning/SDK/rate-limit/pagination/errors/idempotency standards reflecting existing OpenAPI/SDK patterns.',
+    note: 'API Engineering Standards. REST/GraphQL/gRPC/streaming/versioning/SDK/rate-limit/pagination/errors/idempotency standards reflecting existing OpenAPI/SDK patterns.',
   };
 }

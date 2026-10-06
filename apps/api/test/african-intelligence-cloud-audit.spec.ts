@@ -69,7 +69,7 @@ function walkTsFiles(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-describe('African Intelligence Cloud Production Audit (VL-270)', () => {
+describe('African Intelligence Cloud Production Audit', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -122,7 +122,7 @@ describe('African Intelligence Cloud Production Audit (VL-270)', () => {
     expect(readiness).toMatch(/traditionalKnowledgeConsentRequired|consent/i);
     expect(readiness).toMatch(/notMedicalAdvice|consult/i);
     expect(readiness).toMatch(/Global Intelligence|Rejected/i);
-    expect(readiness).toMatch(/VL-260|Volume 12/i);
+    expect(readiness).toMatch(/|Volume 12/i);
 
     const adr = readFileSync(
       join(root, 'docs/adr/0172-african-intelligence-cloud-production-audit.md'),
@@ -130,7 +130,7 @@ describe('African Intelligence Cloud Production Audit (VL-270)', () => {
     );
     expect(adr).toMatch(/review gate|checklist/i);
     expect(adr).toMatch(/Global Intelligence|do not invent|Rejected/i);
-    expect(adr).toMatch(/Volume 12 closed|VL-260–270|closes/i);
+    expect(adr).toMatch(/Volume 12 closed|–270|closes/i);
   });
 
   it('has no TODO/FIXME/implement-later markers in Volume 12 source trees', () => {

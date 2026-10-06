@@ -34,7 +34,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Training jobs (VL-111)', () => {
+describe('Training jobs', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;

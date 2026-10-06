@@ -22,7 +22,7 @@ function t(sourceTerm: string, targetTerm: string): GlossarySnapshotTerm {
   };
 }
 
-/** Platform starter packs — curated EN→sw domain terms (VL-103). */
+/** Platform starter packs — curated EN→sw domain terms. */
 export const VERTICAL_GLOSSARY_PACKS: VerticalGlossaryPack[] = [
   {
     id: 'public-sector-en-sw',

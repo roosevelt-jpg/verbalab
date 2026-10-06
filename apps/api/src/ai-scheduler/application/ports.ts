@@ -1,4 +1,4 @@
-/** Application ports for AI Scheduler (VL-335). */
+/** Application ports for AI Scheduler. */
 
 export type AiSchedulerProductRow = {
   id: string;

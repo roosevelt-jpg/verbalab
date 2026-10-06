@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Architecture Governance (VL-346)', () => {
+describe('Architecture Governance', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

@@ -32,7 +32,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Observability (VL-070)', () => {
+describe('Observability', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

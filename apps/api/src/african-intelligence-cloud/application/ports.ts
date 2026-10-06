@@ -1,4 +1,4 @@
-/** Application ports for African Intelligence Cloud (VL-260). */
+/** Application ports for African Intelligence Cloud. */
 
 export type AfricanIntelligenceCloudProductRow = {
   id: string;

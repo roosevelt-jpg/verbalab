@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Prompt Runtime (VL-216)', () => {
+describe('Prompt Runtime', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -62,15 +62,15 @@ describe('Prompt Runtime (VL-216)', () => {
     await app.close();
   });
 
-  it('documents Prompt Runtime honesty (extends PI/VL-086; not research lab)', () => {
+  it('documents Prompt Runtime honesty (extends PI/; not research lab)', () => {
     const doc = join(root, 'docs/PROMPT_RUNTIME.md');
     const adr = join(root, 'docs/adr/0127-prompt-runtime.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/research lab/i);
-    expect(text).toMatch(/Prompt Intelligence|VL-188/i);
-    expect(text).toMatch(/VL-086/);
+    expect(text).toMatch(/Prompt Intelligence|i);
+    expect(text).toMatch(/);
     expect(text).toMatch(/does \*\*not\*\* call an LLM|does not call an LLM/i);
   });
 

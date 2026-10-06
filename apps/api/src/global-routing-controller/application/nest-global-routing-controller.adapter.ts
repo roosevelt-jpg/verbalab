@@ -37,7 +37,7 @@ export class NestGlobalRoutingControllerCatalogAdapter implements GlobalRoutingC
         status: 'shipped',
         api: 'GET /v1/global-routing-controller/engine',
         console: '/global-routing-controller',
-        notes: 'VL-319 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

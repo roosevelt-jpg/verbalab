@@ -65,7 +65,7 @@ export function CountriesClient() {
         Country packs
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.5rem', maxWidth: '42rem' }}>
-        ISO country guidance that composes VL-102 language locale packs. Curated African-priority set — not a CLDR dump
+        ISO country guidance that composes language locale packs. Curated African-priority set — not a CLDR dump
         or billing SKU catalog.
       </p>
 

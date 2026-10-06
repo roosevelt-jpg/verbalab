@@ -1,4 +1,4 @@
-/** Application ports for Global Deployment Controller (VL-318). */
+/** Application ports for Global Deployment Controller. */
 
 export type GlobalDeploymentControllerProductRow = {
   id: string;

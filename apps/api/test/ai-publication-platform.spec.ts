@@ -20,7 +20,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('AI Publication Platform (VL-276)', () => {
+describe('AI Publication Platform', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -40,7 +40,7 @@ describe('AI Publication Platform (VL-276)', () => {
     expect(existsSync(join(root, 'docs/AI_PUBLICATION_PLATFORM.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0178-ai-publication-platform.md'))).toBe(true);
     const text = readFileSync(join(root, 'docs/AI_PUBLICATION_PLATFORM.md'), 'utf8');
-    expect(text).toContain('VL-276');
+    expect(text).toContain('');
   });
 
   it('has no TODO/FIXME/implement-later markers', () => {

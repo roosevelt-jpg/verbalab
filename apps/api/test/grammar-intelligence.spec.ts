@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Grammar Intelligence Phase 10 (VL-142)', () => {
+describe('Grammar Intelligence Phase 10', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Multi-region residency (VL-075)', () => {
+describe('Multi-region residency', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let regions: RegionsService;

@@ -1,4 +1,4 @@
-/** Application ports for Synthetic Data Platform (VL-273). */
+/** Application ports for Synthetic Data Platform. */
 
 export type SyntheticDataPlatformProductRow = {
   id: string;

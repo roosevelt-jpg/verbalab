@@ -76,7 +76,7 @@ export function CreatorEconomyClient() {
         Creator Economy
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        Royalty math and Connect payouts over VL-092 — Stripe-only, never a card vault.
+        Royalty math and Connect payouts over existing — Stripe-only, never a card vault.
       </p>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}

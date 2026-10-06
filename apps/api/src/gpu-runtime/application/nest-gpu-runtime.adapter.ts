@@ -37,7 +37,7 @@ export class NestGpuRuntimeCatalogAdapter implements GpuRuntimeCatalogPort {
         status: 'shipped',
         api: 'GET /v1/gpu-runtime/engine',
         console: '/gpu-runtime',
-        notes: 'VL-332 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

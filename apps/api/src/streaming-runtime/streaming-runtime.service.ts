@@ -330,7 +330,7 @@ export class StreamingRuntimeService {
       closed,
       chunksTotal: chunks._sum.chunkCount ?? 0,
       auditsLast30d: audits,
-      note: 'Streaming Runtime analytics (VL-208). ≠ VL-212 AI Runtime Analytics.',
+      note: 'Streaming Runtime analytics. ≠ AI Runtime Analytics.',
     };
   }
 
@@ -348,7 +348,7 @@ export class StreamingRuntimeService {
       deferred: engine.capabilities
         .filter((c) => c.status === 'deferred')
         .map((c) => c.id),
-      note: 'Streaming Runtime monitoring snapshot (VL-208).',
+      note: 'Streaming Runtime monitoring snapshot.',
     };
   }
 

@@ -149,7 +149,7 @@ export class CreatorEconomyService {
         };
       }),
       honesty: this.engine().honesty,
-      note: 'Aggregated MarketplaceSale receipts (VL-092 + Volume 11 hubs). Not a payment ledger OS.',
+      note: 'Aggregated MarketplaceSale receipts ( + Volume 11 hubs). Not a payment ledger OS.',
     };
   }
 
@@ -277,7 +277,7 @@ export class CreatorEconomyService {
         liveConnectBlockedWithoutStripeEnv: !connect.onboardingConfigured,
       },
       note:
-        'Partner readiness is Stripe Connect Express (VL-092). Full partner program / multi-tier accounts deferred.',
+        'Partner readiness is Stripe Connect Express. Full partner program / multi-tier accounts deferred.',
     };
   }
 
@@ -382,7 +382,7 @@ export class CreatorEconomyService {
       royaltyHandChecksPassed: scenarios.allHandChecksPassed,
       honesty: engine.honesty,
       safety: engine.safety,
-      note: 'Creator Economy monitoring snapshot (VL-258).',
+      note: 'Creator Economy monitoring snapshot.',
     };
   }
 }

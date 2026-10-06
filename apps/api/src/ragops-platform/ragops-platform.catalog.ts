@@ -1,5 +1,5 @@
 /**
- * Library Phase 153 → RAGOps Platform (VL-286).
+ * Library Phase 153 → RAGOps Platform.
  * Over Volume 6 RAG. Not vector-DB OS.
  */
 export function ragopsPlatformEngineCatalog() {
@@ -42,6 +42,6 @@ export function ragopsPlatformEngineCatalog() {
       note: 'Citation and freshness monitored for RAG promote readiness.',
     },
     docs: '/docs/RAGOPS_PLATFORM.md',
-    note: 'RAGOps Platform (VL-286). Chunking/indexing/embedding-refresh/sync/retrieval-quality/citation/freshness.',
+    note: 'RAGOps Platform. Chunking/indexing/embedding-refresh/sync/retrieval-quality/citation/freshness.',
   };
 }

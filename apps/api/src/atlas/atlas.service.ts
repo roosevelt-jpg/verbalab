@@ -74,7 +74,7 @@ export class AtlasService {
       },
       docs: '/docs/ATLAS.md',
       note:
-        'Atlas scaffold (VL-225). Capability map + MLOps handoffs — not trained competitive weights.',
+        'Atlas scaffold. Capability map + MLOps handoffs — not trained competitive weights.',
     };
   }
 
@@ -87,7 +87,7 @@ export class AtlasService {
       })),
       honesty: atlasHonesty(),
       note:
-        'Atlas monitoring (VL-225). Scaffold shipped; trained weights and domain specialists deferred.',
+        'Atlas monitoring. Scaffold shipped; trained weights and domain specialists deferred.',
     };
   }
 }

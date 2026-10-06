@@ -1,4 +1,4 @@
-/** Application ports for Connector Marketplace (VL-256). */
+/** Application ports for Connector Marketplace. */
 
 export type ConnectorMarketplaceEngineBundle = ReturnType<
   import('../connector-marketplace.service').ConnectorMarketplaceService['engine']

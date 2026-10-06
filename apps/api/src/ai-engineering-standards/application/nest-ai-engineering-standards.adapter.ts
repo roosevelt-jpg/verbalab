@@ -37,7 +37,7 @@ export class NestAiEngineeringStandardsCatalogAdapter implements AiEngineeringSt
         status: 'shipped',
         api: 'GET /v1/ai-engineering-standards/engine',
         console: '/ai-engineering-standards',
-        notes: 'VL-349 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

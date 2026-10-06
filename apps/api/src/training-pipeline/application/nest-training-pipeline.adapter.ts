@@ -37,7 +37,7 @@ export class NestTrainingPipelineCatalogAdapter implements TrainingPipelineCatal
         status: 'shipped',
         api: 'GET /v1/training-pipeline/engine',
         console: '/training-pipeline',
-        notes: 'VL-283 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

@@ -1,4 +1,4 @@
-/** Application ports for Risk Intelligence (VL-298). */
+/** Application ports for Risk Intelligence. */
 
 export type RiskIntelligenceProductRow = {
   id: string;

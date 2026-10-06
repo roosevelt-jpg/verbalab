@@ -1,4 +1,4 @@
-/** Application ports for Inference Cloud (VL-204). Implemented by Nest adapters. */
+/** Application ports for Inference Cloud. Implemented by Nest adapters. */
 
 export type InferenceProductRow = {
   id: string;

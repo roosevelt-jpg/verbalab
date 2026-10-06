@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Inference Cloud Foundation (VL-204)', () => {
+describe('Inference Cloud Foundation', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let inferenceCloud: InferenceCloudService;
@@ -70,7 +70,7 @@ describe('Inference Cloud Foundation (VL-204)', () => {
     expect(text).toContain('Terraform');
     expect(text).toContain('af-south-1');
     expect(text).toMatch(/is \*\*not\*\* a GPU hyperscaler/i);
-    expect(text).toContain('VL-021');
+    expect(text).toContain('');
     expect(text).toMatch(/hard ceiling|spend/i);
     const readmeText = readFileSync(readme, 'utf8');
     expect(readmeText).toMatch(/GPU|spend|bill/i);

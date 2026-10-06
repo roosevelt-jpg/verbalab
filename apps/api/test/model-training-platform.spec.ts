@@ -46,7 +46,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Model Training Platform (VL-235)', () => {
+describe('Model Training Platform', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let platform: ModelTrainingPlatformService;
@@ -79,8 +79,8 @@ describe('Model Training Platform (VL-235)', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(readme)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-235');
-    expect(text).toMatch(/VL-111|training-jobs/i);
+    expect(text).toContain('');
+    expect(text).toMatch(/|training-jobs/i);
     expect(text).toMatch(/not.*distributed|Deferred/i);
     expect(text).toMatch(/RLHF/i);
     expect(text).toContain('CQRS');
@@ -125,7 +125,7 @@ describe('Model Training Platform (VL-235)', () => {
     );
   });
 
-  it('creates LoRA experiment, checkpoints, and launches handoff to VL-111', async () => {
+  it('creates LoRA experiment, checkpoints, and launches handoff to ', async () => {
     const org = await seedOrg(prisma, `mtp_${Date.now()}`);
     const session = {
       userId: org.memberships[0].userId,

@@ -37,7 +37,7 @@ export class NestTranslationRuntimeCatalogAdapter implements TranslationRuntimeC
         status: 'shipped',
         api: 'GET /v1/translation-runtime/engine',
         console: '/translation-runtime',
-        notes: 'VL-325 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

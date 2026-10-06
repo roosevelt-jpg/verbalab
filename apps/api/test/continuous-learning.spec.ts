@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Continuous Learning (VL-289)', () => {
+describe('Continuous Learning', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

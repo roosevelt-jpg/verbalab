@@ -41,7 +41,7 @@ export class RagopsPlatformService {
       pipelineCount: catalog.pipelines.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'RAGOps Platform monitoring snapshot (VL-286).',
+      note: 'RAGOps Platform monitoring snapshot.',
     };
   }
 }

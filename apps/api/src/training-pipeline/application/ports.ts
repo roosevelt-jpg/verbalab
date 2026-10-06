@@ -1,4 +1,4 @@
-/** Application ports for Training Pipeline (VL-283). */
+/** Application ports for Training Pipeline. */
 
 export type TrainingPipelineProductRow = {
   id: string;

@@ -1,4 +1,4 @@
-/** Application ports for Reliability Engineering (VL-308). */
+/** Application ports for Reliability Engineering. */
 
 export type ReliabilityEngineeringProductRow = {
   id: string;

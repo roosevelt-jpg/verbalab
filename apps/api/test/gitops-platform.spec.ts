@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('GitOps Platform (VL-306)', () => {
+describe('GitOps Platform', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

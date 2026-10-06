@@ -1,6 +1,6 @@
 /**
- * Library Phase 195 → Vision Runtime (VL-328).
- * Vision Runtime (VL-328). Thin layer over ocr / documents — routes OCR/document vision; does not invent a new OCR engine.
+ * Library Phase 195 → Vision Runtime.
+ * Vision Runtime. Thin layer over ocr / documents — routes OCR/document vision; does not invent a new OCR engine.
  */
 export function visionRuntimeEngineCatalog() {
   return {
@@ -8,10 +8,10 @@ export function visionRuntimeEngineCatalog() {
     thinExecutionLayer: true,
     duplicatesProductLogic: false,
     capabilities: [
-      { id: 'ocr', name: 'OCR Routing', status: 'shipped', notes: 'VL-328 routing capability — not a new engine.' },
-      { id: 'documents', name: 'Document Vision Routing', status: 'shipped', notes: 'VL-328 routing capability — not a new engine.' },
-      { id: 'batch', name: 'Batch Vision Routing', status: 'shipped', notes: 'VL-328 routing capability — not a new engine.' },
-      { id: 'layout', name: 'Layout Analysis Routing', status: 'shipped', notes: 'VL-328 routing capability — not a new engine.' }
+      { id: 'ocr', name: 'OCR Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
+      { id: 'documents', name: 'Document Vision Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
+      { id: 'batch', name: 'Batch Vision Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
+      { id: 'layout', name: 'Layout Analysis Routing', status: 'shipped', notes: ' routing capability — not a new engine.' }
     ],
     routes: [
       {
@@ -50,9 +50,9 @@ export function visionRuntimeEngineCatalog() {
       duplicatesProductLogic: false,
       managesOrgsPoliciesBilling: false,
       serviceMeshOs: false,
-      note: 'Vision Runtime (VL-328). Thin layer over ocr / documents — routes OCR/document vision; does not invent a new OCR engine.',
+      note: 'Vision Runtime. Thin layer over ocr / documents — routes OCR/document vision; does not invent a new OCR engine.',
     },
     docs: '/docs/VISION_RUNTIME.md',
-    note: 'Vision Runtime (VL-328). Thin layer over ocr / documents — routes OCR/document vision; does not invent a new OCR engine.',
+    note: 'Vision Runtime. Thin layer over ocr / documents — routes OCR/document vision; does not invent a new OCR engine.',
   };
 }

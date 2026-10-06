@@ -1,4 +1,4 @@
-/** Application ports for Platform Engineering Analytics (VL-312). */
+/** Application ports for Platform Engineering Analytics. */
 
 export type PlatformEngineeringAnalyticsProductRow = {
   id: string;

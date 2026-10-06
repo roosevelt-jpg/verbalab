@@ -98,7 +98,7 @@ export class DatabaseEngineeringStandardsService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'DatabaseEngineeringStandards monitoring snapshot (VL-351).',
+      note: 'DatabaseEngineeringStandards monitoring snapshot.',
     };
   }
 }

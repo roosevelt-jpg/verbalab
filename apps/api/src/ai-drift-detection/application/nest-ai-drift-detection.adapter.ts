@@ -37,7 +37,7 @@ export class NestAiDriftDetectionCatalogAdapter implements AiDriftDetectionCatal
         status: 'shipped',
         api: 'GET /v1/ai-drift-detection/engine',
         console: '/ai-drift-detection',
-        notes: 'VL-288 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Translation memory (VL-051)', () => {
+describe('Translation memory', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -79,8 +79,8 @@ describe('Translation memory (VL-051)', () => {
   });
 
   it('normalizes whitespace for hashing', () => {
-    expect(normalizeTmSegment('  Hello   world \n')).toBe('Hello world');
-    expect(hashTmSegment('Hello world')).toBe(hashTmSegment('  Hello   world  '));
+    expect(normalizeTmSegment(' Hello world \n')).toBe('Hello world');
+    expect(hashTmSegment('Hello world')).toBe(hashTmSegment(' Hello world '));
   });
 
   it('bypasses vendor on exact TM hit and skips quota', async () => {

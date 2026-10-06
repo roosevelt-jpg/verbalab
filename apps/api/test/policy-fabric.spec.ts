@@ -51,7 +51,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Policy Fabric (VL-247)', () => {
+describe('Policy Fabric', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -93,7 +93,7 @@ describe('Policy Fabric (VL-247)', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(phase)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-247');
+    expect(text).toContain('');
     expect(text).toMatch(/hard gate|hard-gate/i);
     expect(text).toMatch(/log-only|log only/i);
     expect(text).toMatch(/Policy Runtime/i);

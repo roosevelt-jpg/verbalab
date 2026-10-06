@@ -41,7 +41,7 @@ export class InternalDeveloperPortalService {
       count: (catalog as { portal: unknown[] }).portal.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'InternalDeveloperPortal monitoring snapshot (VL-303).',
+      note: 'InternalDeveloperPortal monitoring snapshot.',
     };
   }
 }

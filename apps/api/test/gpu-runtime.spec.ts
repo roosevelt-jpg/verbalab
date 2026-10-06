@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('GPU Runtime (VL-332)', () => {
+describe('GPU Runtime', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

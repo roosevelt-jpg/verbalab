@@ -33,7 +33,7 @@ export class PlatformEngineeringCloudService {
       },
       docs: '/docs/PLATFORM_ENGINEERING_CLOUD.md',
       note:
-        'Platform Engineering Foundation (VL-302). Internal IDP over existing systems. Not Backstage/Argo/K8s/Snyk/Datadog/AI Cloud OS.',
+        'Platform Engineering Foundation. Internal IDP over existing systems. Not Backstage/Argo/K8s/Snyk/Datadog/AI Cloud OS.',
     };
   }
 
@@ -98,7 +98,7 @@ export class PlatformEngineeringCloudService {
       },
       docs: '/docs/PLATFORM_ENGINEERING_CLOUD.md',
       note:
-        'Platform Engineering Cloud (VL-302–313). Discovery hub over portal/catalog/golden-paths/gitops/release/reliability/finops/supply-chain/devex/analytics; Production Audit closes the volume.',
+        'Platform Engineering Cloud (–313). Discovery hub over portal/catalog/golden-paths/gitops/release/reliability/finops/supply-chain/devex/analytics; Production Audit closes the volume.',
     };
   }
 
@@ -109,7 +109,7 @@ export class PlatformEngineeringCloudService {
       products: products.map((p) => ({ id: p.id, status: p.status })),
       architecture: platformEngineeringCloudArchitectureNotes(),
       honesty: platformEngineeringCloudHonesty(),
-      note: 'Platform Engineering Cloud monitoring snapshot (VL-302).',
+      note: 'Platform Engineering Cloud monitoring snapshot.',
     };
   }
 }

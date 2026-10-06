@@ -54,14 +54,14 @@ export function costCeilings() {
 }
 
 /**
- * Library Phase 78 → Cost Optimization Engine (VL-211).
+ * Library Phase 78 → Cost Optimization Engine.
  * Enforces spend caps — does not invent FinOps / Spot / reserved cloud OS.
  */
 export function costOptimizationCatalog() {
   return {
     product: 'Lugemi Cost Optimization Engine',
     note:
-      'Cost Optimization (VL-211). Org/workspace daily/monthly spend caps with hard enforce on record/check and AI Router resolve. Dynamic routing prefers cheaper Gateway candidates; GPU cost views reuse VL-205 ceilings; spot/reserved are sandbox planning only. Not a cloud FinOps OS, Spot marketplace, or reserved-instance broker.',
+      'Cost Optimization. Org/workspace daily/monthly spend caps with hard enforce on record/check and AI Router resolve. Dynamic routing prefers cheaper Gateway candidates; GPU cost views reuse ceilings; spot/reserved are sandbox planning only. Not a cloud FinOps OS, Spot marketplace, or reserved-instance broker.',
     capabilities: [
       {
         id: 'dynamic-routing',
@@ -75,7 +75,7 @@ export function costOptimizationCatalog() {
         name: 'GPU Cost Optimization',
         status: 'partial',
         api: 'GET /v1/cost-optimization/gpu',
-        notes: 'Surfaces GPU Platform ceilings + estimated spend; hard GPU caps remain VL-205.',
+        notes: 'Surfaces GPU Platform ceilings + estimated spend; hard GPU caps remain .',
       },
       {
         id: 'provider-cost-optimization',

@@ -103,7 +103,7 @@ export function PolicyRuntimeClient() {
   return (
     <AppShell>
       <main style={{ maxWidth: 720, margin: '0 auto', padding: '2rem 1.25rem 4rem' }}>
-        <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.85rem' }}>AI Kernel · VL-222</p>
+        <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.85rem' }}>AI Kernel</p>
         <h1 style={{ margin: '0.35rem 0 0.5rem', fontSize: '1.75rem' }}>Policy Runtime</h1>
         <p style={{ color: 'var(--muted)', lineHeight: 1.55 }}>
           Hard-gate enforcement for Agent / Workflow / Plugin. Denies return 403 — not log-only.

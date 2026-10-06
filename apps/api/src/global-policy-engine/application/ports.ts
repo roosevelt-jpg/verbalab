@@ -1,4 +1,4 @@
-/** Application ports for Global Policy Engine (VL-317). */
+/** Application ports for Global Policy Engine. */
 
 export type GlobalPolicyEngineProductRow = {
   id: string;

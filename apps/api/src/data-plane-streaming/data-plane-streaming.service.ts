@@ -77,7 +77,7 @@ export class DataPlaneStreamingService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'DataPlaneStreaming monitoring snapshot (VL-331).',
+      note: 'DataPlaneStreaming monitoring snapshot.',
     };
   }
 }

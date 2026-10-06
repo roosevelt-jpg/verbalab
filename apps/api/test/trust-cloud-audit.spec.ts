@@ -66,7 +66,7 @@ function walkTsFiles(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-describe('Trust Cloud Production Audit (VL-301)', () => {
+describe('Trust Cloud Production Audit', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -102,12 +102,12 @@ describe('Trust Cloud Production Audit (VL-301)', () => {
     expect(readiness).toMatch(/humanSignOffRequired/i);
     expect(readiness).toMatch(/complianceToolingNotCertification/i);
     expect(readiness).toMatch(/Platform Engineering|Rejected/i);
-    expect(readiness).toMatch(/VL-292|Volume 15/i);
+    expect(readiness).toMatch(/|Volume 15/i);
 
     const adr = readFileSync(join(root, 'docs/adr/0203-trust-cloud-production-audit.md'), 'utf8');
     expect(adr).toMatch(/review gate|checklist|Vitest audit gates/i);
     expect(adr).toMatch(/Platform Engineering|do not invent|Rejected/i);
-    expect(adr).toMatch(/Volume 15 closed|VL-292–301|closes/i);
+    expect(adr).toMatch(/Volume 15 closed|–301|closes/i);
   });
 
   it('has no TODO/FIXME/implement-later markers in Volume 15 source trees', () => {

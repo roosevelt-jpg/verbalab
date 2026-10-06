@@ -57,7 +57,7 @@ function speechishWav(seconds = 1.5): Buffer {
   return encodeWavPcm16(samples, sampleRate);
 }
 
-describe('Voice Biometrics (VL-176)', () => {
+describe('Voice Biometrics', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

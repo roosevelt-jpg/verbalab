@@ -40,7 +40,7 @@ export class FinancialIntelligenceService {
       termCount: catalog.terms.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Financial Intelligence monitoring snapshot (VL-266).',
+      note: 'Financial Intelligence monitoring snapshot.',
     };
   }
 }

@@ -42,7 +42,7 @@ function fakeEmbedding(seed: number): number[] {
   return Array.from({ length: 1536 }, (_, i) => Math.sin((seed + 1) * (i + 1) * 0.01) * 0.1);
 }
 
-describe('Context Engine (VL-185)', () => {
+describe('Context Engine', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

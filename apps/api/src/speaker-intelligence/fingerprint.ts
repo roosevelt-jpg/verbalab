@@ -1,5 +1,5 @@
 /**
- * Lightweight acoustic fingerprint for enrollment / verification (VL-152).
+ * Lightweight acoustic fingerprint for enrollment / verification.
  * Not a NIST-grade biometric template — energy + spectral envelope features only.
  */
 

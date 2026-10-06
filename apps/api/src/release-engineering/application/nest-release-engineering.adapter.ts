@@ -37,7 +37,7 @@ export class NestReleaseEngineeringCatalogAdapter implements ReleaseEngineeringC
         status: 'shipped',
         api: 'GET /v1/release-engineering/engine',
         console: '/release-engineering',
-        notes: 'VL-307 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

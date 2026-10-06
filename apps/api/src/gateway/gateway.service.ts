@@ -38,7 +38,7 @@ export class GatewayService {
   private sttProvider: SttProvider;
   /** Default / stock TTS (OpenAI). Overridable in tests via setTtsProviderForTests. */
   private ttsProvider: TtsProvider;
-  /** Rented open-weight TTS (VL-121). */
+  /** Rented open-weight TTS. */
   private ownTtsProvider: TtsProvider;
   private ocrProvider: OcrProvider;
   private detectPrimary: LanguageDetectProvider;

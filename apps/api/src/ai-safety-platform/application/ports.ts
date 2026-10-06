@@ -1,4 +1,4 @@
-/** Application ports for AI Safety Platform (VL-293). */
+/** Application ports for AI Safety Platform. */
 
 export type AiSafetyPlatformProductRow = {
   id: string;

@@ -43,7 +43,7 @@ export class SpeakerIntelligenceService {
     });
     return {
       data: rows.map((r) => this.profileDto(r)),
-      note: 'Workspace speaker profiles — local fingerprints only (VL-152).',
+      note: 'Workspace speaker profiles — local fingerprints only.',
     };
   }
 
@@ -111,7 +111,7 @@ export class SpeakerIntelligenceService {
     file: Express.Multer.File;
     userId?: string;
     ip?: string;
-    /** VL-176: store fingerprint AES-GCM encrypted at rest. */
+    /** : store fingerprint AES-GCM encrypted at rest. */
     encryptAtRest?: boolean;
   }) {
     this.audio.assertAllowedAudio(input.file);

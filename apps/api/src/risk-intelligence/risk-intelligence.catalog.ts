@@ -1,5 +1,5 @@
 /**
- * Library Phase 165 → Risk Intelligence (VL-298).
+ * Library Phase 165 → Risk Intelligence.
  * Scoring seed + analytics — not GRC suite OS.
  */
 export type RiskScore = {
@@ -60,6 +60,6 @@ export function riskIntelligenceEngineCatalog() {
       note: 'Risk scoring seed and analytics over Trust Cloud signals — not a full GRC suite OS.',
     },
     docs: '/docs/RISK_INTELLIGENCE.md',
-    note: 'Risk Intelligence (VL-298). Operational/model/security/compliance/data/supply-chain/third-party scoring.',
+    note: 'Risk Intelligence. Operational/model/security/compliance/data/supply-chain/third-party scoring.',
   };
 }

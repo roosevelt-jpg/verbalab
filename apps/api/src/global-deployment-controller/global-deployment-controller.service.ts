@@ -101,7 +101,7 @@ export class GlobalDeploymentControllerService {
       rollbackCount: catalog.rollbackCatalog.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Global Deployment Controller monitoring snapshot (VL-318).',
+      note: 'Global Deployment Controller monitoring snapshot.',
     };
   }
 }

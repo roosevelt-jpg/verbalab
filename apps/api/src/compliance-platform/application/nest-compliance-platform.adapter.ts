@@ -37,7 +37,7 @@ export class NestCompliancePlatformCatalogAdapter implements CompliancePlatformC
         status: 'shipped',
         api: 'GET /v1/compliance-platform/engine',
         console: '/compliance-platform',
-        notes: 'VL-297 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

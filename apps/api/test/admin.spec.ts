@@ -36,7 +36,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Admin + customer portal (VL-081)', () => {
+describe('Admin + customer portal', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

@@ -1,5 +1,5 @@
 /**
- * Library Phase 176 → FinOps Platform (VL-309).
+ * Library Phase 176 → FinOps Platform.
  * Pairs with Volume 7 GPU/Inference cost surfaces. Catalog/dashboard — not cloud-billing OS.
  */
 export type FinOpsBudget = {
@@ -173,6 +173,6 @@ export function finopsPlatformEngineCatalog() {
     },
     docs: '/docs/FINOPS_PLATFORM.md',
     note:
-      'FinOps Platform (VL-309). Cloud/GPU/model/storage/bandwidth + chargeback/showback/forecast/budgets. gpuBudgetAlertsEnabled=true; finopsOs=false.',
+      'FinOps Platform. Cloud/GPU/model/storage/bandwidth + chargeback/showback/forecast/budgets. gpuBudgetAlertsEnabled=true; finopsOs=false.',
   };
 }

@@ -37,7 +37,7 @@ export class NestExperimentPlatformCatalogAdapter implements ExperimentPlatformC
         status: 'shipped',
         api: 'GET /v1/experiment-platform/engine',
         console: '/experiment-platform',
-        notes: 'VL-272 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

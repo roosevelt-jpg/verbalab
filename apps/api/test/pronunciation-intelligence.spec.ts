@@ -37,7 +37,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Pronunciation Intelligence (VL-156)', () => {
+describe('Pronunciation Intelligence', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

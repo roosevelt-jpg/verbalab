@@ -1,5 +1,5 @@
 /**
- * Library Phase 155 → AI Drift Detection (VL-288).
+ * Library Phase 155 → AI Drift Detection.
  * Exposes driftClear for Continuous Learning promote gate.
  */
 export type DriftSignal = {
@@ -71,7 +71,7 @@ export function driftClearStatus() {
       usedAsContinuousLearningPromoteGate: true,
       inventsTrustCloud: false,
     },
-    note: 'Drift clear status for Continuous Learning promote (VL-288).',
+    note: 'Drift clear status for Continuous Learning promote.',
   };
 }
 
@@ -100,6 +100,6 @@ export function aiDriftDetectionEngineCatalog() {
       note: 'Alert-severity drift blocks Continuous Learning promote.',
     },
     docs: '/docs/AI_DRIFT_DETECTION.md',
-    note: 'AI Drift Detection (VL-288). Model/data/embedding/prompt/concept/knowledge signals + driftClear for promote.',
+    note: 'AI Drift Detection. Model/data/embedding/prompt/concept/knowledge signals + driftClear for promote.',
   };
 }

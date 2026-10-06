@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { signSlackRequest, verifySlackSignature } from '../src/connectors/slack-signature';
 
-describe('Slack signature (VL-082)', () => {
+describe('Slack signature', () => {
   it('accepts a valid signature within the time window', () => {
     const secret = 'test_signing_secret';
     const timestamp = '1710000000';

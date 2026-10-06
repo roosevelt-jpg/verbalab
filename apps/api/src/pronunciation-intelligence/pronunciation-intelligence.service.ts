@@ -129,7 +129,7 @@ export class PronunciationIntelligenceService {
       scores: full.scores,
       coaching: full.coaching,
       language: full.language,
-      note: 'Rule/tip coaching from mismatches — not acoustic accent models (VL-156).',
+      note: 'Rule/tip coaching from mismatches — not acoustic accent models.',
     };
   }
 
@@ -143,7 +143,7 @@ export class PronunciationIntelligenceService {
     return {
       language,
       words,
-      note: 'Dictionary + grapheme→phoneme heuristics — not forced-alignment phoneme ASR (VL-156).',
+      note: 'Dictionary + grapheme→phoneme heuristics — not forced-alignment phoneme ASR.',
     };
   }
 
@@ -206,7 +206,7 @@ export class PronunciationIntelligenceService {
       speechRatio: analysis.speechRatio,
       durationSeconds: analysis.durationSeconds,
       transcript,
-      note: 'Fluency from speaking rate + silence proxies — not prosody ML (VL-156).',
+      note: 'Fluency from speaking rate + silence proxies — not prosody ML.',
     };
   }
 
@@ -388,7 +388,7 @@ export class PronunciationIntelligenceService {
         durationSeconds: Number(duration.toFixed(3)),
       },
       coaching,
-      note: 'Word alignment + fluency/stress heuristics — not ELSA/SpeechAce or forced-alignment phonemes (VL-156).',
+      note: 'Word alignment + fluency/stress heuristics — not ELSA/SpeechAce or forced-alignment phonemes.',
     };
   }
 

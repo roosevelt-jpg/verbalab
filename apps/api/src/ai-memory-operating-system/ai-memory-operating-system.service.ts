@@ -102,7 +102,7 @@ export class AiMemoryOperatingSystemService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'AiMemoryOperatingSystem monitoring snapshot (VL-340).',
+      note: 'AiMemoryOperatingSystem monitoring snapshot.',
     };
   }
 }

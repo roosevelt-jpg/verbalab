@@ -37,7 +37,7 @@ export class NestArchitectureGovernanceCatalogAdapter implements ArchitectureGov
         status: 'shipped',
         api: 'GET /v1/architecture-governance/engine',
         console: '/architecture-governance',
-        notes: 'VL-346 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

@@ -50,7 +50,7 @@ export class CulturalIntelligenceService {
       entryCount: catalog.entries.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Cultural Intelligence monitoring snapshot (VL-262).',
+      note: 'Cultural Intelligence monitoring snapshot.',
     };
   }
 }

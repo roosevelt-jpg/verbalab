@@ -40,7 +40,7 @@ export class GovernmentIntelligenceService {
       termCount: catalog.terms.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Government Intelligence monitoring snapshot (VL-264).',
+      note: 'Government Intelligence monitoring snapshot.',
     };
   }
 }

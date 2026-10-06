@@ -10,7 +10,7 @@ export type LinguisticRuleSeed = {
 };
 
 /**
- * Curated rule catalog (VL-139). Supports every *registered* rule kind —
+ * Curated rule catalog. Supports every *registered* rule kind —
  * not a complete linguistics OS for every language on Earth.
  */
 export const LINGUISTIC_RULE_SEEDS: LinguisticRuleSeed[] = [

@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Continuous Evaluation (VL-284)', () => {
+describe('Continuous Evaluation', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

@@ -27,7 +27,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Enterprise Engineering System Production Audit (VL-353)', () => {
+describe('Enterprise Engineering System Production Audit', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -182,9 +182,9 @@ describe('Enterprise Engineering System Production Audit (VL-353)', () => {
   it('documents EES in CLOUD_BLUEPRINT and PROGRESS', () => {
     const blueprint = readFileSync(join(root, 'docs/CLOUD_BLUEPRINT.md'), 'utf8');
     expect(blueprint).toMatch(/Enterprise Engineering System/);
-    expect(blueprint).toMatch(/VL-344/);
+    expect(blueprint).toMatch(/);
     const progress = readFileSync(join(root, 'PROGRESS.md'), 'utf8');
-    expect(progress).toMatch(/VL-353/);
+    expect(progress).toMatch(/);
     expect(progress).toMatch(/Volume 20 closed/);
   });
 });

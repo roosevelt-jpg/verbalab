@@ -7,7 +7,7 @@ import { CurrentSession } from '../common/decorators/auth.decorators';
 import { ApiException } from '../common/errors/api-exception';
 
 /**
- * VL-111 surface for rented-GPU training jobs (same `fine_tune_jobs` table as VL-104).
+ * surface for rented-GPU training jobs (same `fine_tune_jobs` table as ).
  */
 @Controller('v1/training-jobs')
 export class TrainingJobsController {

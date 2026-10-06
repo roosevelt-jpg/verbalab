@@ -1,4 +1,4 @@
-/** Application ports for Runtime Manager (VL-336). */
+/** Application ports for Runtime Manager. */
 
 export type RuntimeManagerProductRow = {
   id: string;

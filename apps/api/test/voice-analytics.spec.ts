@@ -36,7 +36,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Voice Analytics (VL-178)', () => {
+describe('Voice Analytics', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

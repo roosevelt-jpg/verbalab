@@ -8,7 +8,7 @@ import {
 } from './workflow-runtime.catalog';
 
 /**
- * Local allowlist + Policy Runtime hard gate (VL-220 / VL-222).
+ * Local allowlist + Policy Runtime hard gate.
  */
 @Injectable()
 export class WorkflowPolicyGate {

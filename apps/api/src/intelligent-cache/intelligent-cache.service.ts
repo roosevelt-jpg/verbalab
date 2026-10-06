@@ -34,7 +34,7 @@ export class IntelligentCacheService {
       spendSafety: {
         hardSpendCeilingsRequired: true,
         note:
-          'Intelligent Cache stores sandbox entry payloads in Postgres. It does not provision Redis Cluster or auto-cache every Gateway call. Cost Optimization (VL-211) still owns spend caps.',
+          'Intelligent Cache stores sandbox entry payloads in Postgres. It does not provision Redis Cluster or auto-cache every Gateway call. Cost Optimization still owns spend caps.',
       },
     };
   }
@@ -351,7 +351,7 @@ export class IntelligentCacheService {
         hits: r._sum.hits ?? 0,
       })),
       auditsLast30d: audits,
-      note: 'Intelligent Cache analytics (VL-210). ≠ VL-212 AI Runtime Analytics.',
+      note: 'Intelligent Cache analytics. ≠ AI Runtime Analytics.',
     };
   }
 
@@ -369,7 +369,7 @@ export class IntelligentCacheService {
       deferred: engine.capabilities
         .filter((c) => c.status === 'deferred')
         .map((c) => c.id),
-      note: 'Intelligent Cache monitoring snapshot (VL-210).',
+      note: 'Intelligent Cache monitoring snapshot.',
     };
   }
 

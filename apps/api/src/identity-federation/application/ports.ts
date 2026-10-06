@@ -1,4 +1,4 @@
-/** Application ports for Identity Federation (VL-299). */
+/** Application ports for Identity Federation. */
 
 export type IdentityFederationProductRow = {
   id: string;

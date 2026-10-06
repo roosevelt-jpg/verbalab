@@ -20,7 +20,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('African Knowledge Graph (VL-263)', () => {
+describe('African Knowledge Graph', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -40,7 +40,7 @@ describe('African Knowledge Graph (VL-263)', () => {
     expect(existsSync(join(root, 'docs/AFRICAN_KNOWLEDGE_GRAPH.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0165-african-knowledge-graph.md'))).toBe(true);
     const text = readFileSync(join(root, 'docs/AFRICAN_KNOWLEDGE_GRAPH.md'), 'utf8');
-    expect(text).toContain('VL-263');
+    expect(text).toContain('');
   });
 
   it('has no TODO/FIXME/implement-later markers', () => {

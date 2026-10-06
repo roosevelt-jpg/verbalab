@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Translation Runtime (VL-325)', () => {
+describe('Translation Runtime', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

@@ -41,7 +41,7 @@ export class TrainingPipelineService {
       jobCount: catalog.jobs.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Training Pipeline monitoring snapshot (VL-283).',
+      note: 'Training Pipeline monitoring snapshot.',
     };
   }
 }

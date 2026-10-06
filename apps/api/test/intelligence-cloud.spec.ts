@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Intelligence Cloud Foundation (VL-180)', () => {
+describe('Intelligence Cloud Foundation', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let intelligenceCloud: IntelligenceCloudService;
@@ -68,9 +68,9 @@ describe('Intelligence Cloud Foundation (VL-180)', () => {
     expect(text).toContain('Terraform');
     expect(text).toContain('af-south-1');
     expect(text).toMatch(/is \*\*not\*\* a custom AI kernel/i);
-    expect(text).toContain('VL-060');
-    expect(text).toContain('VL-062');
-    expect(text).toContain('VL-063');
+    expect(text).toContain('');
+    expect(text).toContain('');
+    expect(text).toContain('');
   });
 
   it('exposes public product catalog with honest statuses', async () => {

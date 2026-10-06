@@ -35,7 +35,7 @@ export class EnterpriseEngineeringSystemService {
       },
       docs: '/docs/ENTERPRISE_ENGINEERING_SYSTEM.md',
       note:
-        'Enterprise Engineering System Foundation (VL-344). Engineering OS for humans+Cursor. architectureKnowledgeBaseOs=false; adrFactoryOs=false.',
+        'Enterprise Engineering System Foundation. Engineering OS for humans+Cursor. architectureKnowledgeBaseOs=false; adrFactoryOs=false.',
     };
   }
 
@@ -102,7 +102,7 @@ export class EnterpriseEngineeringSystemService {
       },
       docs: '/docs/ENTERPRISE_ENGINEERING_SYSTEM.md',
       note:
-        'Enterprise Engineering System (VL-344–353). Discovery hub for standards/governance catalogs; Production Audit closes the volume.',
+        'Enterprise Engineering System (–353). Discovery hub for standards/governance catalogs; Production Audit closes the volume.',
     };
   }
 
@@ -115,7 +115,7 @@ export class EnterpriseEngineeringSystemService {
       extendsSurfaces: enterpriseEngineeringSystemExtends(),
       architecture: enterpriseEngineeringSystemArchitectureNotes(),
       honesty: enterpriseEngineeringSystemHonesty(),
-      note: 'EES monitoring snapshot (VL-344).',
+      note: 'EES monitoring snapshot.',
     };
   }
 }

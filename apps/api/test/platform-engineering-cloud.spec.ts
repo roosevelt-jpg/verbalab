@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Platform Engineering Cloud (VL-302)', () => {
+describe('Platform Engineering Cloud', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

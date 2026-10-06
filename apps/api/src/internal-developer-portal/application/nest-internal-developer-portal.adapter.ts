@@ -37,7 +37,7 @@ export class NestInternalDeveloperPortalCatalogAdapter implements InternalDevelo
         status: 'shipped',
         api: 'GET /v1/internal-developer-portal/engine',
         console: '/internal-developer-portal',
-        notes: 'VL-303 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

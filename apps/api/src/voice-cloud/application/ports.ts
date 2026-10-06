@@ -1,4 +1,4 @@
-/** Application ports for Voice Cloud (VL-170). Implemented by Nest adapters. */
+/** Application ports for Voice Cloud. Implemented by Nest adapters. */
 
 export type VoiceProductRow = {
   id: string;

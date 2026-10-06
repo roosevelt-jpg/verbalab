@@ -9,7 +9,7 @@ export type LanguageProductRow = {
   notes: string;
 };
 
-/** Library Phase 6 product map (VL-130). */
+/** Library Phase 6 product map. */
 export function languageProductCatalog(): LanguageProductRow[] {
   return [
     {
@@ -18,7 +18,7 @@ export function languageProductCatalog(): LanguageProductRow[] {
       status: 'shipped',
       api: 'POST /v1/translate',
       console: '/translate',
-      notes: 'Google MT via gateway; glossary/TM/locale DNT; formats + SSE (VL-140).',
+      notes: 'Google MT via gateway; glossary/TM/locale DNT; formats + SSE.',
     },
     {
       id: 'detect',
@@ -34,7 +34,7 @@ export function languageProductCatalog(): LanguageProductRow[] {
       status: 'shipped',
       api: 'POST /v1/dialects/detect',
       console: '/dialects',
-      notes: 'Curated registry + cue scoring (VL-131). Optional LLM assist. Not accent detection.',
+      notes: 'Curated registry + cue scoring. Optional LLM assist. Not accent detection.',
     },
     {
       id: 'accent',
@@ -43,7 +43,7 @@ export function languageProductCatalog(): LanguageProductRow[] {
       api: 'POST /v1/accents/detect',
       console: '/accents',
       notes:
-        'Spoken accent profiles + STT/text cue scoring (VL-132). Not acoustic phonetics ID.',
+        'Spoken accent profiles + STT/text cue scoring. Not acoustic phonetics ID.',
     },
     {
       id: 'grammar',
@@ -51,7 +51,7 @@ export function languageProductCatalog(): LanguageProductRow[] {
       status: 'shipped',
       api: 'POST /v1/grammar/check',
       console: '/grammar',
-      notes: 'Rules + optional LLM; spell/correct/suggest (VL-133/142). Not Grammarly parity.',
+      notes: 'Rules + optional LLM; spell/correct/suggest. Not Grammarly parity.',
     },
     {
       id: 'style',
@@ -59,7 +59,7 @@ export function languageProductCatalog(): LanguageProductRow[] {
       status: 'shipped',
       api: 'POST /v1/style/rewrite',
       console: '/style',
-      notes: 'Bounded profiles + rules/LLM rewrite (VL-134/143). Not legal/medical style OS.',
+      notes: 'Bounded profiles + rules/LLM rewrite. Not legal/medical style OS.',
     },
     {
       id: 'language-intelligence',
@@ -68,7 +68,7 @@ export function languageProductCatalog(): LanguageProductRow[] {
       api: 'POST /v1/language-intelligence/analyze',
       console: '/language-intelligence',
       notes:
-        'Detect + dialect/accent façade + heuristic intent/sentiment/emotion/readability/complexity/confidence (VL-144). Not NLP research OS.',
+        'Detect + dialect/accent façade + heuristic intent/sentiment/emotion/readability/complexity/confidence. Not NLP research OS.',
     },
     {
       id: 'localize',
@@ -85,7 +85,7 @@ export function languageProductCatalog(): LanguageProductRow[] {
       api: '/v1/tm',
       console: '/tm',
       notes:
-        'Scoped TM + similarity/versioning (VL-051/145). Exact hit on translate; not Phrase/MemoQ.',
+        'Scoped TM + similarity/versioning. Exact hit on translate; not Phrase/MemoQ.',
     },
     {
       id: 'glossary',
@@ -102,7 +102,7 @@ export function languageProductCatalog(): LanguageProductRow[] {
       api: 'GET /v1/analytics',
       console: '/analytics',
       notes:
-        'Usage, quality, latency, costs, dialect/country reports (VL-085/146). Not a BI cloud.',
+        'Usage, quality, latency, costs, dialect/country reports. Not a BI cloud.',
     },
     {
       id: 'quality',
@@ -126,7 +126,7 @@ export function languageProductCatalog(): LanguageProductRow[] {
       status: 'shipped',
       api: 'GET /v1/country-packs',
       console: '/countries',
-      notes: 'ISO country guidance composing locale packs (VL-135). Not billing SKUs.',
+      notes: 'ISO country guidance composing locale packs. Not billing SKUs.',
     },
     {
       id: 'registry',
@@ -135,7 +135,7 @@ export function languageProductCatalog(): LanguageProductRow[] {
       api: 'GET /v1/registry',
       console: '/registry',
       notes:
-        'Enterprise catalog: languages, families, scripts/alphabets, locales, rule kinds (VL-139). Curated — not Ethnologue.',
+        'Enterprise catalog: languages, families, scripts/alphabets, locales, rule kinds. Curated — not Ethnologue.',
     },
     {
       id: 'coverage',

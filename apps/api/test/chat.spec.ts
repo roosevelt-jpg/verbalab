@@ -32,7 +32,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('AI Chat (VL-060)', () => {
+describe('AI Chat', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

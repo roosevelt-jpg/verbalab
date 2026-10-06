@@ -40,7 +40,7 @@ export class PatentInnovationPlatformService {
       portfolioCount: catalog.portfolio.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Patent & Innovation Platform monitoring snapshot (VL-277).',
+      note: 'Patent & Innovation Platform monitoring snapshot.',
     };
   }
 }

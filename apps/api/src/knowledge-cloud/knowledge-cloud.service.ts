@@ -94,7 +94,7 @@ export class KnowledgeCloudService {
         playground: '/playground',
       },
       docs: '/docs/KNOWLEDGE_CLOUD.md',
-      note: 'Hub over VL-062 RAG + Intelligence knowledge surfaces. Not an enterprise knowledge OS / ontology platform.',
+      note: 'Hub over existing RAG + Intelligence knowledge surfaces. Not an enterprise knowledge OS / ontology platform.',
     };
   }
 }

@@ -1,4 +1,4 @@
-/** Application ports for Agent Fabric (VL-246). */
+/** Application ports for Agent Fabric. */
 
 export type AgentFabricCapabilityRow = {
   id: string;

@@ -1,4 +1,4 @@
-/** Application ports for API Engineering Standards (VL-350). */
+/** Application ports for API Engineering Standards. */
 
 export type ApiEngineeringStandardsProductRow = {
   id: string;

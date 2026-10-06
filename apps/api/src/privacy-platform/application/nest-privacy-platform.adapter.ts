@@ -37,7 +37,7 @@ export class NestPrivacyPlatformCatalogAdapter implements PrivacyPlatformCatalog
         status: 'shipped',
         api: 'GET /v1/privacy-platform/engine',
         console: '/privacy-platform',
-        notes: 'VL-296 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

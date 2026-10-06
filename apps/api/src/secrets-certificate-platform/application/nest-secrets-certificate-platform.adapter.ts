@@ -37,7 +37,7 @@ export class NestSecretsCertificatePlatformCatalogAdapter implements SecretsCert
         status: 'shipped',
         api: 'GET /v1/secrets-certificate-platform/engine',
         console: '/secrets-certificate-platform',
-        notes: 'VL-320 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

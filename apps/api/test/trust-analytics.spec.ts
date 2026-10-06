@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Trust Analytics (VL-300)', () => {
+describe('Trust Analytics', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

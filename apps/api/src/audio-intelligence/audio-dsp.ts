@@ -31,7 +31,7 @@ function frameRms(samples: Float32Array, start: number, end: number): number {
   return Math.sqrt(e / n);
 }
 
-/** Analyze PCM for noise/silence metrics (VL-155). */
+/** Analyze PCM for noise/silence metrics. */
 export function analyzeAudioBuffer(buffer: Buffer): AudioAnalysis {
   const { samples, sampleRate } = extractPcmMono(buffer);
   const durationSeconds = sampleRate > 0 ? samples.length / sampleRate : 0.1;
@@ -124,7 +124,7 @@ export function analyzeAudioBuffer(buffer: Buffer): AudioAnalysis {
     silenceRatio: Number(silenceRatio.toFixed(3)),
     silenceRegions,
     speechRatio: Number(speechRatio.toFixed(3)),
-    note: 'Heuristic energy analysis on PCM — not a learned noise classifier (VL-155).',
+    note: 'Heuristic energy analysis on PCM — not a learned noise classifier.',
   };
 }
 

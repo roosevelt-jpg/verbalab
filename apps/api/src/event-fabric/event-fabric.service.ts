@@ -28,11 +28,11 @@ export class EventFabricService {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric (VL-247) must hard-gate across fabric buses when shipped — not log-only.',
+          'Policy Fabric must hard-gate across fabric buses when shipped — not log-only.',
       },
       docs: '/docs/EVENT_FABRIC.md',
       note:
-        'Event Fabric (VL-240). Redis Streams + CloudEvents active; Kafka/NATS/RabbitMQ adapters deferred. Not a message-broker hyperscaler OS.',
+        'Event Fabric. Redis Streams + CloudEvents active; Kafka/NATS/RabbitMQ adapters deferred. Not a message-broker hyperscaler OS.',
     };
   }
 
@@ -106,7 +106,7 @@ export class EventFabricService {
       })),
       honesty: eventFabricHonesty(),
       note:
-        'Event Fabric monitoring (VL-240). Redis Streams path active when REDIS_URL reachable; memory fallback otherwise.',
+        'Event Fabric monitoring. Redis Streams path active when REDIS_URL reachable; memory fallback otherwise.',
     };
   }
 
@@ -133,7 +133,7 @@ export class EventFabricService {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric (VL-247) must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
+          'Policy Fabric must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
       },
       deferred: {
         kafkaAdapter: true,
@@ -160,7 +160,7 @@ export class EventFabricService {
       },
       docs: '/docs/EVENT_FABRIC.md',
       note:
-        'Event Fabric (VL-240). CloudEvents over Redis Streams with DLQ/retries/replay/snapshots. Kafka/NATS/Rabbit deferred.',
+        'Event Fabric. CloudEvents over Redis Streams with DLQ/retries/replay/snapshots. Kafka/NATS/Rabbit deferred.',
     };
   }
 }

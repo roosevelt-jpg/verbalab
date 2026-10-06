@@ -32,7 +32,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Language detection (VL-054)', () => {
+describe('Language detection', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

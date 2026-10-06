@@ -37,7 +37,7 @@ export class NestGlobalConfigurationPlatformCatalogAdapter implements GlobalConf
         status: 'shipped',
         api: 'GET /v1/global-configuration-platform/engine',
         console: '/global-configuration-platform',
-        notes: 'VL-316 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

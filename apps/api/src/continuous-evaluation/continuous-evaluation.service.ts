@@ -50,7 +50,7 @@ export class ContinuousEvaluationService {
       continuousEvalPass: catalog.continuousEvalPass,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Continuous Evaluation monitoring snapshot (VL-284).',
+      note: 'Continuous Evaluation monitoring snapshot.',
     };
   }
 }

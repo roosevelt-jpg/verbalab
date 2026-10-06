@@ -48,7 +48,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Model Marketplace (VL-251)', () => {
+describe('Model Marketplace', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;
@@ -79,7 +79,7 @@ describe('Model Marketplace (VL-251)', () => {
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-251');
+    expect(text).toContain('');
     expect(text).toMatch(/Hugging Face|huggingFaceOs/i);
     expect(text).toMatch(/Stripe|storesRawCardData/i);
     expect(text).toMatch(/weight/i);

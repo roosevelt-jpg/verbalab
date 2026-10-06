@@ -1,4 +1,4 @@
-/** Application ports for Reasoning Fabric (VL-244). */
+/** Application ports for Reasoning Fabric. */
 
 export type ReasoningFabricCapabilityRow = {
   id: string;

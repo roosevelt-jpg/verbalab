@@ -34,7 +34,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Slack connector (VL-082)', () => {
+describe('Slack connector', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let slack: SlackConnectorService;

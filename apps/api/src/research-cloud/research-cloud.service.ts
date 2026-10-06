@@ -29,7 +29,7 @@ export class ResearchCloudService {
       },
       docs: '/docs/RESEARCH_CLOUD.md',
       note:
-        'Research Cloud Foundation (VL-271). Extends Intelligence/Knowledge/Foundation Model clouds. Not W&B, Hugging Face hub, DOI registry, USPTO, or MLflow OS. AI Sovereignty OS deferred.',
+        'Research Cloud Foundation. Extends Intelligence/Knowledge/Foundation Model clouds. Not W&B, Hugging Face hub, DOI registry, USPTO, or MLflow OS. AI Sovereignty OS deferred.',
     };
   }
 
@@ -97,7 +97,7 @@ export class ResearchCloudService {
       },
       docs: '/docs/RESEARCH_CLOUD.md',
       note:
-        'Research Cloud (VL-271–280). Discovery hub over experiment/synthetic/benchmark/evaluation/publication/patent/open-science/analytics; Production Audit closes the volume.',
+        'Research Cloud (–280). Discovery hub over experiment/synthetic/benchmark/evaluation/publication/patent/open-science/analytics; Production Audit closes the volume.',
     };
   }
 
@@ -109,7 +109,7 @@ export class ResearchCloudService {
       researchAreas: researchAreasCatalog().map((a) => ({ id: a.id, status: a.status })),
       architecture: researchCloudArchitectureNotes(),
       honesty: researchCloudHonesty(),
-      note: 'Research Cloud monitoring snapshot (VL-271).',
+      note: 'Research Cloud monitoring snapshot.',
     };
   }
 }

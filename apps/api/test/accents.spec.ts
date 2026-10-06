@@ -51,7 +51,7 @@ function tinyWav(): Buffer {
   return buffer;
 }
 
-describe('Accent detection (VL-132)', () => {
+describe('Accent detection', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

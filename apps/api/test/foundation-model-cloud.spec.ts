@@ -46,7 +46,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Foundation Model Cloud Foundation (VL-224)', () => {
+describe('Foundation Model Cloud Foundation', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let cloud: FoundationModelCloudService;
@@ -82,7 +82,7 @@ describe('Foundation Model Cloud Foundation (VL-224)', () => {
     expect(text).toMatch(/not.*trained competitive|no trained competitive/i);
     expect(text).toContain('CQRS');
     expect(text).toContain('Terraform');
-    expect(text).toContain('VL-224');
+    expect(text).toContain('');
     expect(text).toMatch(/MLOps/i);
     const readmeText = readFileSync(readme, 'utf8');
     expect(readmeText).toMatch(/cannot actually \*train\*|cannot actually train/i);

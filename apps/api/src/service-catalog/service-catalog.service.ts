@@ -41,7 +41,7 @@ export class ServiceCatalogService {
       count: (catalog as { services: unknown[] }).services.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'ServiceCatalog monitoring snapshot (VL-304).',
+      note: 'ServiceCatalog monitoring snapshot.',
     };
   }
 }

@@ -1,5 +1,5 @@
 /**
- * Library Phase 160 → AI Safety Platform (VL-293).
+ * Library Phase 160 → AI Safety Platform.
  * Wires to Policy Runtime / Policy Fabric — does not invent a second policy OS.
  */
 export type SafetyDetection = {
@@ -182,6 +182,6 @@ export function aiSafetyPlatformEngineCatalog() {
         'Safety detections consult Policy Runtime / Policy Fabric posture. Block is default for critical classes — not log-only.',
     },
     docs: '/docs/AI_SAFETY_PLATFORM.md',
-    note: 'AI Safety Platform (VL-293). Safety engine over Policy Runtime — does not regenerate Volumes 1–14.',
+    note: 'AI Safety Platform. Safety engine over Policy Runtime — does not regenerate Volumes 1–14.',
   };
 }

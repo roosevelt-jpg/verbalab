@@ -85,7 +85,7 @@ export class AiGovernancePlatformService {
       humanSignOffRequired: true,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'AI Governance Platform monitoring snapshot (VL-294) — human sign-off required.',
+      note: 'AI Governance Platform monitoring snapshot — human sign-off required.',
     };
   }
 }

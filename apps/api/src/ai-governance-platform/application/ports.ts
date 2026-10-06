@@ -1,4 +1,4 @@
-/** Application ports for AI Governance Platform (VL-294). */
+/** Application ports for AI Governance Platform. */
 
 export type AiGovernancePlatformProductRow = {
   id: string;

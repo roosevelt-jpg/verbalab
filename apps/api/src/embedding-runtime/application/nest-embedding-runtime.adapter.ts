@@ -37,7 +37,7 @@ export class NestEmbeddingRuntimeCatalogAdapter implements EmbeddingRuntimeCatal
         status: 'shipped',
         api: 'GET /v1/embedding-runtime/engine',
         console: '/embedding-runtime',
-        notes: 'VL-330 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

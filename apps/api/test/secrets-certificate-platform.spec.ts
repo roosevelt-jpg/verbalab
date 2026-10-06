@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Secrets & Certificate Platform (VL-320)', () => {
+describe('Secrets & Certificate Platform', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('PromptOps Platform (VL-285)', () => {
+describe('PromptOps Platform', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

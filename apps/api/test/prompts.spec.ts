@@ -34,7 +34,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Prompt management (VL-086)', () => {
+describe('Prompt management', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

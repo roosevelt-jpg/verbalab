@@ -30,7 +30,7 @@ describe('quality-estimate', () => {
   it('flags empty targets', () => {
     const q = estimateTranslationQuality({
       sourceText: 'Hello',
-      targetText: '   ',
+      targetText: ' ',
       sourceLang: 'en',
       targetLang: 'yo',
       provider: 'fixture',

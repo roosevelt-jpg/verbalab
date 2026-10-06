@@ -105,7 +105,7 @@ export class TmService {
     return {
       data: terms,
       count: terms.length,
-      note: 'Terminology is the workspace glossary façade (VL-050/145) — not a separate termbase product.',
+      note: 'Terminology is the workspace glossary façade — not a separate termbase product.',
       api: '/v1/glossary/terms',
     };
   }
@@ -148,7 +148,7 @@ export class TmService {
     return {
       versions,
       audits,
-      note: 'TM version snapshots + recent TM audit events (VL-145).',
+      note: 'TM version snapshots + recent TM audit events.',
     };
   }
 
@@ -511,8 +511,8 @@ export class TmService {
       resultCount: results.length,
       note:
         provider === 'lexical'
-          ? 'Lexical bigram similarity (VL-145). Set OPENAI_API_KEY for optional vector re-rank.'
-          : 'Similarity search with optional pgvector re-rank (VL-145). Not a CAT fuzzy-match product.',
+          ? 'Lexical bigram similarity. Set OPENAI_API_KEY for optional vector re-rank.'
+          : 'Similarity search with optional pgvector re-rank. Not a CAT fuzzy-match product.',
     };
   }
 

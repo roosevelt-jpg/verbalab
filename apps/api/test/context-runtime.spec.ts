@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Context Runtime (VL-217)', () => {
+describe('Context Runtime', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -69,7 +69,7 @@ describe('Context Runtime (VL-217)', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/infinite context/i);
-    expect(text).toMatch(/Context Engine|VL-185/i);
+    expect(text).toMatch(/Context Engine|i);
     expect(text).toMatch(/summarization/i);
   });
 

@@ -38,7 +38,7 @@ export class MemoryRuntimeService {
       safety: {
         agentActionBoundariesRequired: true,
         note:
-          'Kernel memory is org/workspace-scoped. Agent memory writes require agentId; Agent Runtime VL-219 writes via /v1/agent-runtime/memory.',
+          'Kernel memory is org/workspace-scoped. Agent memory writes require agentId; Agent Runtime writes via /v1/agent-runtime/memory.',
       },
     };
   }
@@ -48,7 +48,7 @@ export class MemoryRuntimeService {
       scopes: KERNEL_MEMORY_SCOPES.map((id) => ({ id })),
       kinds: KERNEL_MEMORY_KINDS.map((id) => ({ id })),
       layer: KERNEL_MEMORY_LAYER,
-      note: 'Memory Runtime scopes map onto VL-183 Memory Cloud storage.',
+      note: 'Memory Runtime scopes map onto Memory Cloud storage.',
       honesty: memoryRuntimeCatalog().honesty,
     };
   }

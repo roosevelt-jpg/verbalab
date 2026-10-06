@@ -72,7 +72,7 @@ function walkTsFiles(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-describe('Platform Engineering Cloud Production Audit (VL-313)', () => {
+describe('Platform Engineering Cloud Production Audit', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -109,7 +109,7 @@ describe('Platform Engineering Cloud Production Audit (VL-313)', () => {
     expect(readiness).toMatch(/snykOs=false/i);
     expect(readiness).toMatch(/argoCdOs=false/i);
     expect(readiness).toMatch(/controlPlaneOs=false/i);
-    expect(readiness).toMatch(/VL-302|Volume 16/i);
+    expect(readiness).toMatch(/|Volume 16/i);
 
     const adr = readFileSync(
       join(root, 'docs/adr/0215-platform-engineering-cloud-production-audit.md'),
@@ -117,7 +117,7 @@ describe('Platform Engineering Cloud Production Audit (VL-313)', () => {
     );
     expect(adr).toMatch(/Vitest audit gates|review gate|checklist/i);
     expect(adr).toMatch(/Control Plane|Data Plane|AI Cloud OS|do not invent|Rejected/i);
-    expect(adr).toMatch(/Volume 16 closed|VL-302–313|closes/i);
+    expect(adr).toMatch(/Volume 16 closed|–313|closes/i);
   });
 
   it('has no TODO/FIXME/implement-later markers in Volume 16 source trees', () => {

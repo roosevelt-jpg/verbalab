@@ -89,7 +89,7 @@ export class PolicyFabricService {
       },
       docs: '/docs/POLICY_FABRIC.md',
       note:
-        'Policy Fabric (VL-247). Fabric-wide hard gate over Policy Runtime. Not OPA/Cedar/GRC OS.',
+        'Policy Fabric. Fabric-wide hard gate over Policy Runtime. Not OPA/Cedar/GRC OS.',
     };
   }
 
@@ -359,7 +359,7 @@ export class PolicyFabricService {
         status: p.status,
       })),
       honesty: policyFabricHonesty(),
-      note: 'Policy Fabric monitoring (VL-247).',
+      note: 'Policy Fabric monitoring.',
     };
   }
 
@@ -417,7 +417,7 @@ export class PolicyFabricService {
       },
       docs: '/docs/POLICY_FABRIC.md',
       note:
-        'Policy Fabric (VL-247). Hard-gate engine + router over Policy Runtime; same-org sync/distribute.',
+        'Policy Fabric. Hard-gate engine + router over Policy Runtime; same-org sync/distribute.',
     };
   }
 }

@@ -36,7 +36,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Workflow Runtime (VL-220)', () => {
+describe('Workflow Runtime', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -172,7 +172,7 @@ describe('Workflow Runtime (VL-220)', () => {
         workflowId: denied.body.workflow.id,
       })
       .expect(200);
-    // default step becomes reason.plan when only invalid steps were provided... 
+    // default step becomes reason.plan when only invalid steps were provided...
     // Actually steps with shell.exec remain in the definition - run will deny
     expect(badRun.body.run.sandbox).toBe(true);
 

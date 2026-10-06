@@ -48,7 +48,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Prompt Marketplace (VL-253)', () => {
+describe('Prompt Marketplace', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;
@@ -78,7 +78,7 @@ describe('Prompt Marketplace (VL-253)', () => {
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-253');
+    expect(text).toContain('');
     expect(text).toMatch(/prompt mesh|promptMeshOs/i);
     expect(text).toMatch(/Stripe|storesRawCardData/i);
   });

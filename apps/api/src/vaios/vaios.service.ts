@@ -34,7 +34,7 @@ export class VaiosService {
       },
       docs: '/docs/VAIOS.md',
       note:
-        'VAIOS Foundation (VL-334). Unifying orchestration over Kernel + Fabric + Data Plane. notLinux/notKubernetes; enterpriseEngineeringSystemOs=false.',
+        'VAIOS Foundation. Unifying orchestration over Kernel + Fabric + Data Plane. notLinux/notKubernetes; enterpriseEngineeringSystemOs=false.',
     };
   }
 
@@ -101,7 +101,7 @@ export class VaiosService {
       },
       docs: '/docs/VAIOS.md',
       note:
-        'VAIOS (VL-334–343). Discovery hub over unifying orchestration façades; Production Audit closes the volume.',
+        'VAIOS (–343). Discovery hub over unifying orchestration façades; Production Audit closes the volume.',
     };
   }
 
@@ -114,7 +114,7 @@ export class VaiosService {
       unifiedSurfaces: vaiosUnifiedSurfaces(),
       architecture: vaiosArchitectureNotes(),
       honesty: vaiosHonesty(),
-      note: 'VAIOS monitoring snapshot (VL-334).',
+      note: 'VAIOS monitoring snapshot.',
     };
   }
 }

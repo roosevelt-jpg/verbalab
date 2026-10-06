@@ -32,7 +32,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Localize files (VL-053)', () => {
+describe('Localize files', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

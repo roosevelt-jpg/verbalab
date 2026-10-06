@@ -37,7 +37,7 @@ export class NestDatasetPipelineCatalogAdapter implements DatasetPipelineCatalog
         status: 'shipped',
         api: 'GET /v1/dataset-pipeline/engine',
         console: '/dataset-pipeline',
-        notes: 'VL-282 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

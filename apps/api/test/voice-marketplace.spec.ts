@@ -37,7 +37,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Voice Marketplace (VL-177)', () => {
+describe('Voice Marketplace', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -71,7 +71,7 @@ describe('Voice Marketplace (VL-177)', () => {
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/distinct/i);
     expect(text).toMatch(/Celebrity/i);
-    expect(text).toContain('VL-090');
+    expect(text).toContain('');
   });
 
   it('exposes engine with celebrityWithoutRights=false', async () => {

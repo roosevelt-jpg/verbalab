@@ -9,14 +9,14 @@ export type AtlasCapability = {
 };
 
 /**
- * Library Phase 92 → Atlas (VL-225).
+ * Library Phase 92 → Atlas.
  * Large multilingual reasoning family scaffold — not trained competitive weights.
  */
 export function atlasCatalog() {
   return {
     product: 'Lugemi Atlas',
     note:
-      'Atlas (VL-225). Interface scaffold for a large multilingual reasoning family. Capabilities map to existing Gateway/Reasoning Runtime/MLOps hubs. Does not ship trained Atlas weights, OpenAI replacement, or frontier-lab compute (Volume 9 README).',
+      'Atlas. Interface scaffold for a large multilingual reasoning family. Capabilities map to existing Gateway/Reasoning Runtime/MLOps hubs. Does not ship trained Atlas weights, OpenAI replacement, or frontier-lab compute (Volume 9 README).',
     capabilities: [
       {
         id: 'reasoning',
@@ -114,7 +114,7 @@ export function atlasCatalog() {
         name: 'Training Pipeline',
         status: 'partial',
         api: 'POST /v1/model-training-platform/experiments',
-        notes: 'Handoff to Model Training Platform / VL-111.',
+        notes: 'Handoff to Model Training Platform / .',
       },
       {
         id: 'inference',

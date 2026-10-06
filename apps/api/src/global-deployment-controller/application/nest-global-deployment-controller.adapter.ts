@@ -37,7 +37,7 @@ export class NestGlobalDeploymentControllerCatalogAdapter implements GlobalDeplo
         status: 'shipped',
         api: 'GET /v1/global-deployment-controller/engine',
         console: '/global-deployment-controller',
-        notes: 'VL-318 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

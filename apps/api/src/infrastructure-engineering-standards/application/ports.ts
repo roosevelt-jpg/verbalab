@@ -1,4 +1,4 @@
-/** Application ports for Infrastructure Engineering Standards (VL-352). */
+/** Application ports for Infrastructure Engineering Standards. */
 
 export type InfrastructureEngineeringStandardsProductRow = {
   id: string;

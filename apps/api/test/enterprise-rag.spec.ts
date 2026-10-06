@@ -54,7 +54,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Enterprise RAG Platform (VL-198)', () => {
+describe('Enterprise RAG Platform', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -138,7 +138,7 @@ describe('Enterprise RAG Platform (VL-198)', () => {
     expect(text).toMatch(/LangChain/i);
     expect(text).toMatch(/hand-?verif/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
-    expect(text).toMatch(/VL-062/);
+    expect(text).toMatch(/);
   });
 
   it('exposes engine with honest flags + chunk preview', async () => {

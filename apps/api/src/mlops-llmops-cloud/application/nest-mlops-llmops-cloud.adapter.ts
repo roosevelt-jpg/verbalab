@@ -37,7 +37,7 @@ export class NestMlopsLlmopsCloudCatalogAdapter implements MlopsLlmopsCloudCatal
         status: 'shipped',
         api: 'GET /v1/mlops-llmops-cloud/engine',
         console: '/mlops-llmops-cloud',
-        notes: 'VL-281 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

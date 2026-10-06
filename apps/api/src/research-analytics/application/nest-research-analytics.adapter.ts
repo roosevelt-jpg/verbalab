@@ -37,7 +37,7 @@ export class NestResearchAnalyticsCatalogAdapter implements ResearchAnalyticsCat
         status: 'shipped',
         api: 'GET /v1/research-analytics/engine',
         console: '/research-analytics',
-        notes: 'VL-279 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

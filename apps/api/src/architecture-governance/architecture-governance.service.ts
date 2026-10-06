@@ -100,7 +100,7 @@ export class ArchitectureGovernanceService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'ArchitectureGovernance monitoring snapshot (VL-346).',
+      note: 'ArchitectureGovernance monitoring snapshot.',
     };
   }
 }

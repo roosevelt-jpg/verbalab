@@ -37,7 +37,7 @@ export class NestGitopsPlatformCatalogAdapter implements GitopsPlatformCatalogPo
         status: 'shipped',
         api: 'GET /v1/gitops-platform/engine',
         console: '/gitops-platform',
-        notes: 'VL-306 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

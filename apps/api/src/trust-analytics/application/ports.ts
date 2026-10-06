@@ -1,4 +1,4 @@
-/** Application ports for Trust Analytics (VL-300). */
+/** Application ports for Trust Analytics. */
 
 export type TrustAnalyticsProductRow = {
   id: string;

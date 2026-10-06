@@ -38,7 +38,7 @@ export class ExperimentPlatformService {
       mode: 'experiment',
       runCount: catalog.runs.length,
       honesty: catalog.honesty,
-      note: 'Experiment Platform monitoring snapshot (VL-272).',
+      note: 'Experiment Platform monitoring snapshot.',
     };
   }
 }

@@ -8,12 +8,12 @@ export type ContextCapability = {
   notes: string;
 };
 
-/** Library Phase 52 → Context Engine (VL-185). Assemble retrieval + memory + prompt — not infinite context. */
+/** Library Phase 52 → Context Engine. Assemble retrieval + memory + prompt — not infinite context. */
 export function contextEngineCatalog() {
   return {
     product: 'Lugemi Context Engine',
     note:
-      'Assembles workspace/language/user/org/project/conversation/document/historical/KG context for AI requests (VL-185). Compression is char-budget truncation, not LLM summarization. Not an infinite context window product. Realtime push deferred.',
+      'Assembles workspace/language/user/org/project/conversation/document/historical/KG context for AI requests. Compression is char-budget truncation, not LLM summarization. Not an infinite context window product. Realtime push deferred.',
     capabilities: [
       {
         id: 'conversation-context',

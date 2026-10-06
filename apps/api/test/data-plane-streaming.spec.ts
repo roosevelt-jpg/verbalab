@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Data Plane Streaming (VL-331)', () => {
+describe('Data Plane Streaming', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

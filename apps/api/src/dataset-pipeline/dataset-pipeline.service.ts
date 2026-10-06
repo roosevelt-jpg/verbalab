@@ -41,7 +41,7 @@ export class DatasetPipelineService {
       runCount: catalog.pipelineRuns.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Dataset Pipeline monitoring snapshot (VL-282).',
+      note: 'Dataset Pipeline monitoring snapshot.',
     };
   }
 }

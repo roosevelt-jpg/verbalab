@@ -1,4 +1,4 @@
-/** Application ports for AI Publication Platform (VL-276). */
+/** Application ports for AI Publication Platform. */
 
 export type AiPublicationPlatformProductRow = {
   id: string;

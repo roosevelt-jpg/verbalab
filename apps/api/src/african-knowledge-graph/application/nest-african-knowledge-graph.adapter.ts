@@ -34,7 +34,7 @@ export class NestAfricanKnowledgeGraphCatalogAdapter implements AfricanKnowledge
         status: 'shipped',
         api: 'GET /v1/african-knowledge-graph/engine',
         console: '/african-knowledge-graph',
-        notes: 'VL-263 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

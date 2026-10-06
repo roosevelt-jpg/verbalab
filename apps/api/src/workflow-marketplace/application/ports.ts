@@ -1,4 +1,4 @@
-/** Application ports for Workflow Marketplace (VL-255). */
+/** Application ports for Workflow Marketplace. */
 
 export type WorkflowMarketplaceEngineBundle = ReturnType<
   import('../workflow-marketplace.service').WorkflowMarketplaceService['engine']

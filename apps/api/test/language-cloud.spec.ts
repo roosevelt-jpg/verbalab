@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Language Cloud Foundation (VL-130)', () => {
+describe('Language Cloud Foundation', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let languageCloud: LanguageCloudService;

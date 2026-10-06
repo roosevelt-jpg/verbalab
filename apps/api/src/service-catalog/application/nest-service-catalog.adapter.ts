@@ -37,7 +37,7 @@ export class NestServiceCatalogCatalogAdapter implements ServiceCatalogCatalogPo
         status: 'shipped',
         api: 'GET /v1/service-catalog/engine',
         console: '/service-catalog',
-        notes: 'VL-304 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

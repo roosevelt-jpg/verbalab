@@ -57,7 +57,7 @@ async function waitForJob(
   throw new Error(`Job ${jobId} did not finish in time`);
 }
 
-describe('Jobs + webhooks (VL-044)', () => {
+describe('Jobs + webhooks', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

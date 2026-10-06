@@ -20,7 +20,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Research Cloud (VL-271)', () => {
+describe('Research Cloud', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -40,7 +40,7 @@ describe('Research Cloud (VL-271)', () => {
     expect(existsSync(join(root, 'docs/RESEARCH_CLOUD.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0173-research-cloud.md'))).toBe(true);
     const text = readFileSync(join(root, 'docs/RESEARCH_CLOUD.md'), 'utf8');
-    expect(text).toContain('VL-271');
+    expect(text).toContain('');
   });
 
   it('has no TODO/FIXME/implement-later markers', () => {

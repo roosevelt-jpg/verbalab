@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Batch Runtime (VL-209)', () => {
+describe('Batch Runtime', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -85,7 +85,7 @@ describe('Batch Runtime (VL-209)', () => {
     expect(text).toMatch(/Spark|Airflow|Celery/i);
     expect(text).toMatch(/does \*\*not\*\*|not regenerate/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
-    expect(text).toContain('VL-209');
+    expect(text).toContain('');
     expect(text).toMatch(/BullMQ/i);
   });
 

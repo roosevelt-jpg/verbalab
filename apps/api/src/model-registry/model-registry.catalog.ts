@@ -11,28 +11,28 @@ export type MrCapability = {
 export type MrDeployStrategy = 'direct' | 'canary' | 'shadow' | 'blue_green';
 
 /**
- * Library Phase 104 → Model Registry (VL-237).
- * Hub over VL-110 `model_registry` — not MLflow / SageMaker Model Registry OS.
+ * Library Phase 104 → Model Registry.
+ * Hub over existing `model_registry` — not MLflow / SageMaker Model Registry OS.
  */
 export function modelRegistryCatalog() {
   return {
     product: 'Lugemi Model Registry',
     note:
-      'Model Registry (VL-237). Extends VL-110 live matrix with model cards, sandbox versions/approvals/rollbacks, and deployment strategy plans. Does not invent MLflow, automatic weight deploy, or traffic-mesh canary OS. Links Model Serving for real deployments.',
+      'Model Registry. Extends existing live matrix with model cards, sandbox versions/approvals/rollbacks, and deployment strategy plans. Does not invent MLflow, automatic weight deploy, or traffic-mesh canary OS. Links Model Serving for real deployments.',
     capabilities: [
       {
         id: 'registry-hub',
         name: 'Registry Hub',
         status: 'partial',
         api: 'GET /v1/model-registry/engine',
-        notes: 'Catalog + live matrix bridge to VL-110.',
+        notes: 'Catalog + live matrix bridge to .',
       },
       {
         id: 'model-cards',
         name: 'Model Cards',
         status: 'partial',
         api: 'GET /v1/model-registry/cards',
-        notes: 'Cards derived from VL-110 entries + honesty notes.',
+        notes: 'Cards derived from entries + honesty notes.',
       },
       {
         id: 'versions',
@@ -117,7 +117,7 @@ export function modelRegistryArchitectureNotes() {
     trainsCompetitiveFoundationWeights: false,
     customerFacingProduct: true,
     note:
-      'Volume 9 Phase 104: registry governance hub over VL-110. Canary/shadow/blue-green are plan metadata, not mesh control.',
+      'Volume 9 Phase 104: registry governance hub over existing. Canary/shadow/blue-green are plan metadata, not mesh control.',
   };
 }
 
@@ -143,7 +143,7 @@ export function modelRegistryCeilings() {
     maxCanaryPercent: 50,
     mode: 'sandbox',
     note:
-      'Sandbox ceilings for version/deploy plans. Live adapter matrix remains VL-110; serving remains Model Serving.',
+      'Sandbox ceilings for version/deploy plans. Live adapter matrix remains ; serving remains Model Serving.',
   };
 }
 

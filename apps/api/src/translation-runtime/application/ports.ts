@@ -1,4 +1,4 @@
-/** Application ports for Translation Runtime (VL-325). */
+/** Application ports for Translation Runtime. */
 
 export type TranslationRuntimeProductRow = {
   id: string;

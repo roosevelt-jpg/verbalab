@@ -1,4 +1,4 @@
-/** Application ports for Compliance Platform (VL-297). */
+/** Application ports for Compliance Platform. */
 
 export type CompliancePlatformProductRow = {
   id: string;

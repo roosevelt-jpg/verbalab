@@ -8,12 +8,12 @@ export type StudioCapability = {
   notes: string;
 };
 
-/** Library Phase 31 → Voice Studio (VL-174). Extends VL-120 `/audio` — not a DAW. */
+/** Library Phase 31 → Voice Studio. Extends existing `/audio` — not a DAW. */
 export function voiceStudioEngineCatalog() {
   return {
     product: 'Lugemi Voice Studio',
     note:
-      'Professional Voice Studio hub over Neural TTS, clones, and VL-120 African studio UX. Linear timeline + SSML lite + pronunciation lexicon + voice comparison — not a nonlinear DAW / Premiere / Descript parity product.',
+      'Professional Voice Studio hub over Neural TTS, clones, and African studio UX. Linear timeline + SSML lite + pronunciation lexicon + voice comparison — not a nonlinear DAW / Premiere / Descript parity product.',
     capabilities: [
       {
         id: 'voice-library',
@@ -34,7 +34,7 @@ export function voiceStudioEngineCatalog() {
         name: 'Pronunciation Editor',
         status: 'shipped',
         api: 'GET|POST /v1/voice-studio/pronunciation',
-        notes: 'Workspace grapheme→alias lexicon before TTS. Distinct from VL-156 assess/coach.',
+        notes: 'Workspace grapheme→alias lexicon before TTS. Distinct from assess/coach.',
       },
       {
         id: 'voice-profiles',

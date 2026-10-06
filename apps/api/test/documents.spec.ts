@@ -47,7 +47,7 @@ async function waitForJob(jobs: JobsService, organizationId: string, jobId: stri
   throw new Error(`Job ${jobId} timed out`);
 }
 
-describe('Document translation (VL-040)', () => {
+describe('Document translation', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

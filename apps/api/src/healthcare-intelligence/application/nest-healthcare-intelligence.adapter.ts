@@ -34,7 +34,7 @@ export class NestHealthcareIntelligenceCatalogAdapter implements HealthcareIntel
         status: 'shipped',
         api: 'GET /v1/healthcare-intelligence/engine',
         console: '/healthcare-intelligence',
-        notes: 'VL-265 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

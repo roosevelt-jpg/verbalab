@@ -26,15 +26,15 @@ export const PROMPT_MARKETPLACE_LICENSE_TYPES = [
 ] as const;
 
 /**
- * Library Phase 120 → Prompt Marketplace (VL-253).
- * Extends VL-091 prompt listings + Prompt Fabric / Prompt Runtime — not a prompt mesh OS.
+ * Library Phase 120 → Prompt Marketplace.
+ * Extends existing prompt listings + Prompt Fabric / Prompt Runtime — not a prompt mesh OS.
  * Volume 11 README: real-money honesty — Stripe (or equivalent); never store raw cards.
  */
 export function promptMarketplaceEngineCatalog() {
   return {
     product: 'Lugemi Prompt Marketplace',
     note:
-      'Prompt Marketplace (VL-253). Publish/license prompt packs over content-marketplace prompt kind + Prompt Fabric (VL-243). Install copies managed prompt versions into buyer workspaces — not a prompt mesh OS or auto-prompt research lab.',
+      'Prompt Marketplace. Publish/license prompt packs over content-marketplace prompt kind + Prompt Fabric. Install copies managed prompt versions into buyer workspaces — not a prompt mesh OS or auto-prompt research lab.',
     capabilities: [
       {
         id: 'prompt-packs',
@@ -98,7 +98,7 @@ export function promptMarketplaceEngineCatalog() {
         status: 'partial',
         api: 'GET /v1/prompt-marketplace/sales',
         notes:
-          '15% platform fee on paid installs. Creator Economy (VL-258) deepens payout math — hand-check before live creators.',
+          '15% platform fee on paid installs. Creator Economy deepens payout math — hand-check before live creators.',
       },
     ] satisfies PromptMarketplaceCapability[],
     categories: PROMPT_MARKETPLACE_CATEGORIES.map((id) => ({ id })),

@@ -1,4 +1,4 @@
-/** Application ports for Data Plane Cloud (VL-324). */
+/** Application ports for Data Plane Cloud. */
 
 export type DataPlaneCloudProductRow = {
   id: string;

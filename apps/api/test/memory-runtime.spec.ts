@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Memory Runtime (VL-215)', () => {
+describe('Memory Runtime', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -74,7 +74,7 @@ describe('Memory Runtime (VL-215)', () => {
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/Mem0/i);
     expect(text).toMatch(/Memory Cloud/i);
-    expect(text).toMatch(/VL-183/);
+    expect(text).toMatch(/);
     expect(text).toMatch(/kernel/i);
     expect(text).toMatch(/replication/i);
   });

@@ -37,7 +37,7 @@ export class NestOpenSciencePlatformCatalogAdapter implements OpenSciencePlatfor
         status: 'shipped',
         api: 'GET /v1/open-science-platform/engine',
         console: '/open-science-platform',
-        notes: 'VL-278 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

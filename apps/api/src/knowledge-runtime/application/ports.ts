@@ -1,4 +1,4 @@
-/** Application ports for Knowledge Runtime (VL-329). */
+/** Application ports for Knowledge Runtime. */
 
 export type KnowledgeRuntimeProductRow = {
   id: string;

@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('AI Governance Platform (VL-294)', () => {
+describe('AI Governance Platform', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

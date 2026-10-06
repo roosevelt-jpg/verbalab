@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('AI Drift Detection (VL-288)', () => {
+describe('AI Drift Detection', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

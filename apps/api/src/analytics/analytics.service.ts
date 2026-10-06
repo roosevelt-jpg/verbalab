@@ -192,7 +192,7 @@ export class AnalyticsService {
         characters: Number(r.characters),
         avgLatencyMs: r.avg_latency == null ? null : Math.round(r.avg_latency),
       })),
-      note: 'Translation usage from translation_requests (VL-146).',
+      note: 'Translation usage from translation_requests.',
     };
   }
 
@@ -234,7 +234,7 @@ export class AnalyticsService {
         requests: Number(r.requests),
         characters: Number(r.characters),
       })),
-      note: 'Language usage aggregates from translation_requests (VL-146).',
+      note: 'Language usage aggregates from translation_requests.',
     };
   }
 
@@ -279,7 +279,7 @@ export class AnalyticsService {
       periodStart: languages.periodStart,
       periodEnd: languages.periodEnd,
       byCountry,
-      note: 'Inferred country interest from language↔country-pack mapping (VL-146) — not geo-IP or visit analytics.',
+      note: 'Inferred country interest from language↔country-pack mapping — not geo-IP or visit analytics.',
     };
   }
 
@@ -326,7 +326,7 @@ export class AnalyticsService {
       accentDetects,
       byDialect: toRows(dialectCounts),
       byAccent: toRows(accentCounts),
-      note: 'Dialect/accent usage from audit events (VL-131/132/146).',
+      note: 'Dialect/accent usage from audit events.',
     };
   }
 
@@ -376,7 +376,7 @@ export class AnalyticsService {
       averageQualityScore: avgScore,
       scoreBuckets: buckets,
       translationAccuracyProxy: accuracyProxy,
-      note: 'Heuristic quality scores + review outcomes (VL-146). Accuracy proxy is accept/(accept+reject) — not BLEU or human evaluation.',
+      note: 'Heuristic quality scores + review outcomes. Accuracy proxy is accept/(accept+reject) — not BLEU or human evaluation.',
     };
   }
 
@@ -423,7 +423,7 @@ export class AnalyticsService {
         inProcess: 'GET /v1/metrics/translate',
         note: 'In-process percentiles are single-instance only.',
       },
-      note: 'Org translation latency from persisted translation_requests (VL-146).',
+      note: 'Org translation latency from persisted translation_requests.',
     };
   }
 
@@ -466,7 +466,7 @@ export class AnalyticsService {
         metricsTranslate: '/v1/metrics/translate',
         overview: '/v1/analytics/overview',
       },
-      note: 'Language Analytics monitoring snapshot (VL-146) — not a metrics SaaS.',
+      note: 'Language Analytics monitoring snapshot — not a metrics SaaS.',
     };
   }
 
@@ -504,7 +504,7 @@ export class AnalyticsService {
       quality,
       latency,
       costs,
-      note: 'Bundled enterprise report JSON (VL-146). Not a scheduled BI export product.',
+      note: 'Bundled enterprise report JSON. Not a scheduled BI export product.',
     };
   }
 

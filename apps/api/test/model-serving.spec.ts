@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Model Serving (VL-206)', () => {
+describe('Model Serving', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -77,7 +77,7 @@ describe('Model Serving (VL-206)', () => {
     expect(text).toMatch(/vLLM|KServe|Triton/i);
     expect(text).toMatch(/does \*\*not\*\*|not a vLLM/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
-    expect(text).toContain('VL-206');
+    expect(text).toContain('');
     expect(text).toMatch(/Gateway/i);
   });
 

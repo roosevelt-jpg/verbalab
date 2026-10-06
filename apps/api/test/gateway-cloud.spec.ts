@@ -14,7 +14,7 @@ import type { ChatProvider } from '../src/gateway/chat-provider';
 
 const root = join(__dirname, '../../..');
 
-describe('AI Gateway Cloud Foundation (VL-129)', () => {
+describe('AI Gateway Cloud Foundation', () => {
   let app: INestApplication<App>;
   let gateway: GatewayService;
   let gatewayCloud: GatewayCloudService;

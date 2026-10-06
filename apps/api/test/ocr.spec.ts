@@ -42,7 +42,7 @@ function tinyPng(): Buffer {
   );
 }
 
-describe('OCR (VL-043)', () => {
+describe('OCR', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

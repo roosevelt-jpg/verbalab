@@ -1,4 +1,4 @@
-/** Application ports for Agent Operating System (VL-339). */
+/** Application ports for Agent Operating System. */
 
 export type AgentOperatingSystemProductRow = {
   id: string;

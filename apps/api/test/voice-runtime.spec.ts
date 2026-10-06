@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Voice Runtime (VL-327)', () => {
+describe('Voice Runtime', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

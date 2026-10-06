@@ -1,4 +1,4 @@
-/** Application ports for Education Intelligence (VL-267). */
+/** Application ports for Education Intelligence. */
 
 export type EducationIntelligenceProductRow = {
   id: string;

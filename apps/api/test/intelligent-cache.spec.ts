@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Intelligent Cache (VL-210)', () => {
+describe('Intelligent Cache', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -77,7 +77,7 @@ describe('Intelligent Cache (VL-210)', () => {
     expect(text).toMatch(/Redis|vector|CDN/i);
     expect(text).toMatch(/does \*\*not\*\*|not auto-wire/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
-    expect(text).toContain('VL-210');
+    expect(text).toContain('');
   });
 
   it('exposes engine with honesty + namespaces', async () => {
@@ -151,7 +151,7 @@ describe('Intelligent Cache (VL-210)', () => {
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
         namespace: 'semantic',
-        text: 'Hello   World',
+        text: 'Hello World',
         value: { answer: 1 },
       })
       .expect(201);

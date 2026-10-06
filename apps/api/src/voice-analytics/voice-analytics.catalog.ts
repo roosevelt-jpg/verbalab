@@ -8,7 +8,7 @@ export type VoiceAnalyticsCapability = {
   notes: string;
 };
 
-/** Library Phase 35 → Voice Analytics (VL-178). Distinct from Speech Analytics (VL-159). */
+/** Library Phase 35 → Voice Analytics. Distinct from Speech Analytics. */
 export function voiceAnalyticsCatalog() {
   return {
     product: 'Lugemi Voice Analytics',
@@ -83,7 +83,7 @@ export function voiceAnalyticsCatalog() {
         name: 'Marketplace',
         status: 'shipped',
         api: 'GET /v1/voice-analytics/marketplace',
-        notes: 'Listing/install/review/sale aggregates (VL-177).',
+        notes: 'Listing/install/review/sale aggregates.',
       },
       {
         id: 'reports',

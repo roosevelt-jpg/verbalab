@@ -67,7 +67,7 @@ export class AgentRuntimeService {
         openToolExecutionForbidden: true,
         policyMustHardGate: true,
         note:
-          'Every agent action passes AgentPolicyGate (local hard allowlist). Policy Runtime (VL-222) will harden further — Agent already blocks missing permissions and denied actions.',
+          'Every agent action passes AgentPolicyGate (local hard allowlist). Policy Runtime will harden further — Agent already blocks missing permissions and denied actions.',
       },
     };
   }
@@ -439,7 +439,7 @@ export class AgentRuntimeService {
       published,
       api: 'GET /v1/marketplace?kind=agent',
       console: '/marketplace',
-      note: 'Agent marketplace via existing listings when present (VL-219).',
+      note: 'Agent marketplace via existing listings when present.',
     };
   }
 

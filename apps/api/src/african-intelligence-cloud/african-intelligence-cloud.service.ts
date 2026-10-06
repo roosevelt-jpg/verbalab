@@ -31,7 +31,7 @@ export class AfricanIntelligenceCloudService {
       },
       docs: '/docs/AFRICAN_INTELLIGENCE_CLOUD.md',
       note:
-        'African Intelligence Cloud Foundation (VL-260). Extends Language/Knowledge/Intelligence clouds. Not Neo4j OS, Digital Twin OS, extractive scrape OS, or Global Intelligence OS.',
+        'African Intelligence Cloud Foundation. Extends Language/Knowledge/Intelligence clouds. Not Neo4j OS, Digital Twin OS, extractive scrape OS, or Global Intelligence OS.',
     };
   }
 
@@ -103,7 +103,7 @@ export class AfricanIntelligenceCloudService {
       },
       docs: '/docs/AFRICAN_INTELLIGENCE_CLOUD.md',
       note:
-        'African Intelligence Cloud (VL-260–270). Discovery hub over language/culture/graph/domain engines; Production Audit closes the volume.',
+        'African Intelligence Cloud (–270). Discovery hub over language/culture/graph/domain engines; Production Audit closes the volume.',
     };
   }
 
@@ -114,7 +114,7 @@ export class AfricanIntelligenceCloudService {
       products: products.map((p) => ({ id: p.id, status: p.status })),
       architecture: africanIntelligenceArchitectureNotes(),
       honesty: africanIntelligenceHonesty(),
-      note: 'African Intelligence Cloud monitoring snapshot (VL-260).',
+      note: 'African Intelligence Cloud monitoring snapshot.',
     };
   }
 }

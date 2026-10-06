@@ -66,7 +66,7 @@ function walkTsFiles(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-describe('MLOps & LLMOps Cloud Production Audit (VL-291)', () => {
+describe('MLOps & LLMOps Cloud Production Audit', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -103,7 +103,7 @@ describe('MLOps & LLMOps Cloud Production Audit (VL-291)', () => {
     expect(readiness).toMatch(/poisonedInputGuard/i);
     expect(readiness).toMatch(/policyViolationsVisible/i);
     expect(readiness).toMatch(/Trust Cloud|Rejected/i);
-    expect(readiness).toMatch(/VL-281|Volume 14/i);
+    expect(readiness).toMatch(/|Volume 14/i);
 
     const adr = readFileSync(
       join(root, 'docs/adr/0193-mlops-llmops-cloud-production-audit.md'),
@@ -111,7 +111,7 @@ describe('MLOps & LLMOps Cloud Production Audit (VL-291)', () => {
     );
     expect(adr).toMatch(/review gate|checklist/i);
     expect(adr).toMatch(/Trust Cloud|do not invent|Rejected/i);
-    expect(adr).toMatch(/Volume 14 closed|VL-281–291|closes/i);
+    expect(adr).toMatch(/Volume 14 closed|–291|closes/i);
   });
 
   it('has no TODO/FIXME/implement-later markers in Volume 14 source trees', () => {

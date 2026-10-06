@@ -1,5 +1,5 @@
 /**
- * Library Phase 182 → Organization Control (VL-315).
+ * Library Phase 182 → Organization Control.
  * Orgs/BUs/departments/teams/projects/environments/quotas/policies with least-privilege roles.
  * Extends identity/org surfaces — does not regenerate Clerk.
  */
@@ -41,14 +41,14 @@ export function organizationControlEngineCatalog() {
   return {
     product: 'Lugemi Organization Control',
     capabilities: [
-      { id: 'organizations', name: 'Organizations', status: 'shipped', notes: 'VL-315.' },
-      { id: 'business_units', name: 'Business Units', status: 'shipped', notes: 'VL-315.' },
-      { id: 'departments', name: 'Departments', status: 'shipped', notes: 'VL-315.' },
-      { id: 'teams', name: 'Teams', status: 'shipped', notes: 'VL-315.' },
-      { id: 'projects', name: 'Projects', status: 'shipped', notes: 'VL-315.' },
-      { id: 'environments', name: 'Environments', status: 'shipped', notes: 'VL-315.' },
-      { id: 'quotas', name: 'Quotas', status: 'shipped', notes: 'VL-315.' },
-      { id: 'policies', name: 'Org Policies', status: 'shipped', notes: 'VL-315.' },
+      { id: 'organizations', name: 'Organizations', status: 'shipped', notes: '.' },
+      { id: 'business_units', name: 'Business Units', status: 'shipped', notes: '.' },
+      { id: 'departments', name: 'Departments', status: 'shipped', notes: '.' },
+      { id: 'teams', name: 'Teams', status: 'shipped', notes: '.' },
+      { id: 'projects', name: 'Projects', status: 'shipped', notes: '.' },
+      { id: 'environments', name: 'Environments', status: 'shipped', notes: '.' },
+      { id: 'quotas', name: 'Quotas', status: 'shipped', notes: '.' },
+      { id: 'policies', name: 'Org Policies', status: 'shipped', notes: '.' },
       { id: 'roles', name: 'Role Catalog', status: 'shipped', notes: 'admin vs operator vs viewer.' },
     ],
     organizations: [
@@ -128,6 +128,6 @@ export function organizationControlEngineCatalog() {
     },
     docs: '/docs/ORGANIZATION_CONTROL.md',
     note:
-      'Organization Control (VL-315). Orgs/BUs/departments/teams/projects/environments/quotas/policies with least-privilege roles. Does not regenerate Clerk.',
+      'Organization Control. Orgs/BUs/departments/teams/projects/environments/quotas/policies with least-privilege roles. Does not regenerate Clerk.',
   };
 }

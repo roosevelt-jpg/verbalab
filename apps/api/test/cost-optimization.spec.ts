@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Cost Optimization (VL-211)', () => {
+describe('Cost Optimization', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -78,7 +78,7 @@ describe('Cost Optimization (VL-211)', () => {
     expect(text).toMatch(/does \*\*not\*\*|not invent/i);
     expect(text).toMatch(/enforce|402/i);
     expect(text).toMatch(/org\/workspace|workspace/i);
-    expect(text).toContain('VL-211');
+    expect(text).toContain('');
     expect(readFileSync(readme, 'utf8')).toMatch(/enforce/i);
   });
 

@@ -37,7 +37,7 @@ export class NestGlobalSchedulerCatalogAdapter implements GlobalSchedulerCatalog
         status: 'shipped',
         api: 'GET /v1/global-scheduler/engine',
         console: '/global-scheduler',
-        notes: 'VL-321 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

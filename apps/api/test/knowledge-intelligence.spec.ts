@@ -42,7 +42,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Knowledge Intelligence (VL-200)', () => {
+describe('Knowledge Intelligence', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

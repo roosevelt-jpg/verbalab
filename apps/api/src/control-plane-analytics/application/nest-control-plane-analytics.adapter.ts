@@ -37,7 +37,7 @@ export class NestControlPlaneAnalyticsCatalogAdapter implements ControlPlaneAnal
         status: 'shipped',
         api: 'GET /v1/control-plane-analytics/engine',
         console: '/control-plane-analytics',
-        notes: 'VL-322 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

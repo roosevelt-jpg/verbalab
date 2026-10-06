@@ -81,11 +81,11 @@ export class KnowledgeFabricService {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric (VL-247) must hard-gate across fabric buses when shipped — not log-only.',
+          'Policy Fabric must hard-gate across fabric buses when shipped — not log-only.',
       },
       docs: '/docs/KNOWLEDGE_FABRIC.md',
       note:
-        'Knowledge Fabric (VL-242). Cross-cloud knowledge router over Knowledge Cloud. Not Confluence/Neo4j federation OS.',
+        'Knowledge Fabric. Cross-cloud knowledge router over Knowledge Cloud. Not Confluence/Neo4j federation OS.',
     };
   }
 
@@ -282,7 +282,7 @@ export class KnowledgeFabricService {
         status: p.status,
       })),
       honesty: knowledgeFabricHonesty(),
-      note: 'Knowledge Fabric monitoring (VL-242).',
+      note: 'Knowledge Fabric monitoring.',
     };
   }
 
@@ -325,7 +325,7 @@ export class KnowledgeFabricService {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric (VL-247) must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
+          'Policy Fabric must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
       },
       deferred: {
         promptFabric: false,
@@ -352,7 +352,7 @@ export class KnowledgeFabricService {
       },
       docs: '/docs/KNOWLEDGE_FABRIC.md',
       note:
-        'Knowledge Fabric (VL-242). Router + same-org distribute/sync plans over Knowledge Cloud.',
+        'Knowledge Fabric. Router + same-org distribute/sync plans over Knowledge Cloud.',
     };
   }
 }

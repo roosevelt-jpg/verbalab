@@ -40,7 +40,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Enterprise Translation Memory Phase 13 (VL-145)', () => {
+describe('Enterprise Translation Memory Phase 13', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

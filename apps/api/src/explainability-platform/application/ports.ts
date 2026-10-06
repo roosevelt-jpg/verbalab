@@ -1,4 +1,4 @@
-/** Application ports for Explainability Platform (VL-295). */
+/** Application ports for Explainability Platform. */
 
 export type ExplainabilityPlatformProductRow = {
   id: string;

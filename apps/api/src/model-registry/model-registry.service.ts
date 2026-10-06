@@ -69,13 +69,13 @@ export class ModelRegistryService {
       liveSummary: {
         asOf: live.asOf,
         featureCount: live.features.length,
-        note: 'Live matrix from VL-110 — not regenerated here.',
+        note: 'Live matrix from — not regenerated here.',
       },
       safety: {
         noFakeConfiguredFlags: true,
         trafficMeshForbidden: true,
         note:
-          'Configured flags come from VL-110 env/artifact checks. Canary/shadow/blue-green are plan metadata only.',
+          'Configured flags come from env/artifact checks. Canary/shadow/blue-green are plan metadata only.',
       },
     };
   }
@@ -123,7 +123,7 @@ export class ModelRegistryService {
       },
       docs: '/docs/MODEL_REGISTRY.md',
       note:
-        'Model Registry (VL-237). Cards/versions/approvals over VL-110 — not MLflow or traffic-mesh canary OS.',
+        'Model Registry. Cards/versions/approvals over existing — not MLflow or traffic-mesh canary OS.',
     };
   }
 
@@ -153,7 +153,7 @@ export class ModelRegistryService {
     return {
       cards,
       honesty: modelRegistryHonesty(),
-      note: 'Model cards from VL-110 entries — lightweight metadata, not academic Model Cards OS.',
+      note: 'Model cards from entries — lightweight metadata, not academic Model Cards OS.',
       docs: '/docs/MODEL_REGISTRY.md',
     };
   }
@@ -162,7 +162,7 @@ export class ModelRegistryService {
     return {
       versions: this.listVersionsForOrg(session.organizationId),
       ceilings: modelRegistryCeilings(),
-      note: 'Org-scoped sandbox versions (VL-237).',
+      note: 'Org-scoped sandbox versions.',
     };
   }
 
@@ -257,7 +257,7 @@ export class ModelRegistryService {
     return {
       rolledBack: version,
       active: previous,
-      note: 'Sandbox rollback only — does not mutate VL-110 status or cluster traffic.',
+      note: 'Sandbox rollback only — does not mutate status or cluster traffic.',
     };
   }
 
@@ -265,7 +265,7 @@ export class ModelRegistryService {
     return {
       deployments: this.listDeploymentsForOrg(session.organizationId),
       ceilings: modelRegistryCeilings(),
-      note: 'Org-scoped sandbox deployment plans (VL-237).',
+      note: 'Org-scoped sandbox deployment plans.',
     };
   }
 
@@ -364,7 +364,7 @@ export class ModelRegistryService {
       byStrategy,
       honesty: modelRegistryHonesty(),
       note:
-        'Model Registry monitoring (VL-237). Sandbox governance over VL-110; mesh strategies deferred as metadata-only.',
+        'Model Registry monitoring. Sandbox governance over existing; mesh strategies deferred as metadata-only.',
     };
   }
 

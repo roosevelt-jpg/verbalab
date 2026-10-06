@@ -33,7 +33,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Voice cloning (VL-064)', () => {
+describe('Voice cloning', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;

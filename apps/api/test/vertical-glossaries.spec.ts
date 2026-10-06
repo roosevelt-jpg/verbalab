@@ -32,7 +32,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Vertical glossaries (VL-103)', () => {
+describe('Vertical glossaries', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;

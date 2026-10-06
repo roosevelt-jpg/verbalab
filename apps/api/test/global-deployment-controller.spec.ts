@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Global Deployment Controller (VL-318)', () => {
+describe('Global Deployment Controller', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

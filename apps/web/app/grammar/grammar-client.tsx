@@ -27,7 +27,7 @@ type CheckResult = {
 
 export function GrammarClient() {
   const { getToken, isLoaded } = useAuth();
-  const [text, setText] = useState('i has went to teh store  store');
+  const [text, setText] = useState('i has went to teh store store');
   const [language, setLanguage] = useState('en');
   const [result, setResult] = useState<CheckResult | null>(null);
   const [error, setError] = useState<string | null>(null);

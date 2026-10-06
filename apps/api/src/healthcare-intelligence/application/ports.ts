@@ -1,4 +1,4 @@
-/** Application ports for Healthcare Intelligence (VL-265). */
+/** Application ports for Healthcare Intelligence. */
 
 export type HealthcareIntelligenceProductRow = {
   id: string;

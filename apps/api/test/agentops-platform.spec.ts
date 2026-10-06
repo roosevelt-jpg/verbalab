@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('AgentOps Platform (VL-287)', () => {
+describe('AgentOps Platform', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

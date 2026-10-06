@@ -1,4 +1,4 @@
-/** Application ports for Trust Cloud (VL-292). */
+/** Application ports for Trust Cloud. */
 
 export type TrustCloudProductRow = {
   id: string;

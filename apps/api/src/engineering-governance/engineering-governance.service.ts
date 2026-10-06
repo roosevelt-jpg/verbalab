@@ -106,7 +106,7 @@ export class EngineeringGovernanceService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'EngineeringGovernance monitoring snapshot (VL-345).',
+      note: 'EngineeringGovernance monitoring snapshot.',
     };
   }
 }

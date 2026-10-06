@@ -70,7 +70,7 @@ export class AccentsService implements OnModuleInit {
     });
     return {
       data: rows.map((r) => this.toDto(r)),
-      note: 'Curated spoken accent profiles — not acoustic phonetics ID (VL-132 / ADR-0053).',
+      note: 'Curated spoken accent profiles — not acoustic phonetics ID.',
     };
   }
 
@@ -166,8 +166,8 @@ export class AccentsService implements OnModuleInit {
       product: 'Accent Intelligence',
       note:
         band === 'none'
-          ? 'No accent classified above threshold — cue scoring only (VL-153). Not acoustic classification.'
-          : `Accent classified with ${band} confidence via cue scoring (VL-153). Not acoustic regional models.`,
+          ? 'No accent classified above threshold — cue scoring only. Not acoustic classification.'
+          : `Accent classified with ${band} confidence via cue scoring. Not acoustic regional models.`,
     };
 
     await this.recordAudit(

@@ -37,7 +37,7 @@ export class NestEvaluationPlatformCatalogAdapter implements EvaluationPlatformC
         status: 'shipped',
         api: 'GET /v1/evaluation-platform/engine',
         console: '/evaluation-platform',
-        notes: 'VL-275 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

@@ -41,7 +41,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Language Intelligence Phase 12 (VL-144)', () => {
+describe('Language Intelligence Phase 12', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

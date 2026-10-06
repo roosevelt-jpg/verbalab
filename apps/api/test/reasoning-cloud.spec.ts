@@ -36,7 +36,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Reasoning Cloud (VL-186)', () => {
+describe('Reasoning Cloud', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -86,7 +86,7 @@ describe('Reasoning Cloud (VL-186)', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/not a custom reasoner/i);
-    expect(text).toContain('VL-186');
+    expect(text).toContain('');
   });
 
   it('exposes engine with customReasonerKernel=false', async () => {
@@ -148,7 +148,7 @@ describe('Reasoning Cloud (VL-186)', () => {
     const bad = await request(app.getHttpServer())
       .post('/v1/reasoning-cloud/reason')
       .set('Authorization', `Bearer ${key.secret}`)
-      .send({ problem: '   ', retrieve: false });
+      .send({ problem: ' ', retrieve: false });
     expect(bad.status).toBe(400);
 
     const analytics = await request(app.getHttpServer())

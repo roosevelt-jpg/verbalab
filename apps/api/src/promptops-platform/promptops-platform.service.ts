@@ -41,7 +41,7 @@ export class PromptopsPlatformService {
       promptCount: catalog.prompts.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'PromptOps Platform monitoring snapshot (VL-285).',
+      note: 'PromptOps Platform monitoring snapshot.',
     };
   }
 }

@@ -77,7 +77,7 @@ export class VoiceRuntimeService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'VoiceRuntime monitoring snapshot (VL-327).',
+      note: 'VoiceRuntime monitoring snapshot.',
     };
   }
 }

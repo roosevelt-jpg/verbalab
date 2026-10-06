@@ -15,14 +15,14 @@ export function aiRuntimeAnalyticsMode(): 'disabled' | 'sandbox' {
 }
 
 /**
- * Library Phase 79 → AI Runtime Analytics (VL-212).
+ * Library Phase 79 → AI Runtime Analytics.
  * Inference Cloud aggregates — ≠ Intelligence/Knowledge/Language analytics; not BI OS.
  */
 export function aiRuntimeAnalyticsCatalog() {
   return {
     product: 'Lugemi AI Runtime Analytics',
     note:
-      'AI Runtime Analytics (VL-212). Org/workspace aggregates for Inference Cloud latency/throughput/GPU/CPU/cache/requests/errors/cost/customers/models/streaming. Reads GPU Platform, AI Router, Streaming, Batch, Cache, Cost Optimization, Model Serving, and usage_events. Not a BI dashboard OS, APM suite, or regenerate of Intelligence Analytics (VL-191) / Knowledge Analytics (VL-202).',
+      'AI Runtime Analytics. Org/workspace aggregates for Inference Cloud latency/throughput/GPU/CPU/cache/requests/errors/cost/customers/models/streaming. Reads GPU Platform, AI Router, Streaming, Batch, Cache, Cost Optimization, Model Serving, and usage_events. Not a BI dashboard OS, APM suite, or regenerate of Intelligence Analytics / Knowledge Analytics.',
     capabilities: [
       {
         id: 'latency',
@@ -78,7 +78,7 @@ export function aiRuntimeAnalyticsCatalog() {
         name: 'Cost',
         status: 'shipped',
         api: 'GET /v1/ai-runtime-analytics/cost',
-        notes: 'CostSpendEvent ledger + GPU hourly estimates — ≠ Stripe invoices; enforce remains VL-211.',
+        notes: 'CostSpendEvent ledger + GPU hourly estimates — ≠ Stripe invoices; enforce remains .',
       },
       {
         id: 'customers',

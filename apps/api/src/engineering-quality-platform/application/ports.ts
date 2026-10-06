@@ -1,4 +1,4 @@
-/** Application ports for Engineering Quality Platform (VL-348). */
+/** Application ports for Engineering Quality Platform. */
 
 export type EngineeringQualityPlatformProductRow = {
   id: string;

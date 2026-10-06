@@ -281,7 +281,7 @@ export class WorkflowMarketplaceService {
         storesRawCardData: false,
         creatorPayoutMathVerifiedLive: false,
       },
-      note: 'Recorded receipts only. Creator Economy (VL-258) expands payout math.',
+      note: 'Recorded receipts only. Creator Economy expands payout math.',
     };
   }
 
@@ -1006,7 +1006,7 @@ export class WorkflowMarketplaceService {
       reviews,
       runs,
       honesty: this.engine().honesty,
-      note: 'Workflow marketplace aggregates. Payout depth deferred to Creator Economy (VL-258).',
+      note: 'Workflow marketplace aggregates. Payout depth deferred to Creator Economy.',
     };
   }
 
@@ -1017,7 +1017,7 @@ export class WorkflowMarketplaceService {
       products: engine.capabilities.map((c) => ({ id: c.id, status: c.status })),
       honesty: engine.honesty,
       safety: engine.safety,
-      note: 'Workflow Marketplace monitoring snapshot (VL-255).',
+      note: 'Workflow Marketplace monitoring snapshot.',
     };
   }
 }

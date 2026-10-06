@@ -229,7 +229,7 @@ export class PromptMarketplaceService {
         storesRawCardData: false,
         creatorPayoutMathVerifiedLive: false,
       },
-      note: 'Recorded receipts only. Creator Economy (VL-258) expands payout math.',
+      note: 'Recorded receipts only. Creator Economy expands payout math.',
     };
   }
 
@@ -829,7 +829,7 @@ export class PromptMarketplaceService {
       sales,
       reviews,
       honesty: this.engine().honesty,
-      note: 'Prompt marketplace aggregates. Payout depth deferred to Creator Economy (VL-258).',
+      note: 'Prompt marketplace aggregates. Payout depth deferred to Creator Economy.',
     };
   }
 
@@ -840,7 +840,7 @@ export class PromptMarketplaceService {
       products: engine.capabilities.map((c) => ({ id: c.id, status: c.status })),
       honesty: engine.honesty,
       safety: engine.safety,
-      note: 'Prompt Marketplace monitoring snapshot (VL-253).',
+      note: 'Prompt Marketplace monitoring snapshot.',
     };
   }
 }

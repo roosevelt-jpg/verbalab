@@ -31,7 +31,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('GraphQL Language Cloud (VL-136)', () => {
+describe('GraphQL Language Cloud', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

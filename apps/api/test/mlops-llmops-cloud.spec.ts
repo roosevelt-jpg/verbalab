@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('MLOps & LLMOps Cloud (VL-281)', () => {
+describe('MLOps & LLMOps Cloud', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

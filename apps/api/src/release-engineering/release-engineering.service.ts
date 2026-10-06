@@ -41,7 +41,7 @@ export class ReleaseEngineeringService {
       count: (catalog as { releases: unknown[] }).releases.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'ReleaseEngineering monitoring snapshot (VL-307).',
+      note: 'ReleaseEngineering monitoring snapshot.',
     };
   }
 }

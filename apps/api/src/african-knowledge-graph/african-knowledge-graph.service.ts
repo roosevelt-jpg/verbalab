@@ -60,7 +60,7 @@ export class AfricanKnowledgeGraphService {
       mode: 'graph',
       stats: catalog.stats,
       honesty: catalog.honesty,
-      note: 'African Knowledge Graph monitoring snapshot (VL-263).',
+      note: 'African Knowledge Graph monitoring snapshot.',
     };
   }
 }

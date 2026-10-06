@@ -40,7 +40,7 @@ export class BenchmarkPlatformService {
       suiteCount: catalog.suites.length,
       leaderboardCount: catalog.leaderboard.length,
       honesty: catalog.honesty,
-      note: 'Benchmark Platform monitoring snapshot (VL-274).',
+      note: 'Benchmark Platform monitoring snapshot.',
     };
   }
 }

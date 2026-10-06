@@ -1,4 +1,4 @@
-/** Application ports for AI Memory Operating System (VL-340). */
+/** Application ports for AI Memory Operating System. */
 
 export type AiMemoryOperatingSystemProductRow = {
   id: string;

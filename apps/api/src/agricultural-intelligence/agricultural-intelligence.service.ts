@@ -40,7 +40,7 @@ export class AgriculturalIntelligenceService {
       termCount: catalog.terms.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Agricultural Intelligence monitoring snapshot (VL-268).',
+      note: 'Agricultural Intelligence monitoring snapshot.',
     };
   }
 }

@@ -1,4 +1,4 @@
-/** Application ports for RAGOps Platform (VL-286). */
+/** Application ports for RAGOps Platform. */
 
 export type RagopsPlatformProductRow = {
   id: string;

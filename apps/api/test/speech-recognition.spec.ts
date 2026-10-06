@@ -56,7 +56,7 @@ function tinyWav(): Buffer {
   return buffer;
 }
 
-describe('Speech Recognition Engine (VL-151)', () => {
+describe('Speech Recognition Engine', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

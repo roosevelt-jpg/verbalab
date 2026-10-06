@@ -9,7 +9,7 @@ export type IntelligenceProductRow = {
   notes: string;
 };
 
-/** Library Phase 47 product map (VL-180). Hub only — maps onto LLM gateway + embeddings + RAG. */
+/** Library Phase 47 product map. Hub only — maps onto LLM gateway + embeddings + RAG. */
 export function intelligenceProductCatalog(): IntelligenceProductRow[] {
   return [
     {
@@ -19,7 +19,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
       api: 'GET /v1/intelligence-cloud/products',
       console: '/intelligence-cloud',
       notes:
-        'Intelligence Cloud parent hub (VL-180). Shared reasoning/memory/orchestration layer over LLM gateway — not a custom AI kernel.',
+        'Intelligence Cloud parent hub. Shared reasoning/memory/orchestration layer over LLM gateway — not a custom AI kernel.',
     },
     {
       id: 'embeddings',
@@ -28,7 +28,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
       api: 'GET /v1/embedding-cloud/engine',
       console: '/embedding-cloud',
       notes:
-        'Text/document/code via VL-181 hub over VL-063. Speech/image/video/cross-modal deferred.',
+        'Text/document/code via existing hub over existing. Speech/image/video/cross-modal deferred.',
     },
     {
       id: 'vector',
@@ -37,7 +37,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
       api: 'GET /v1/vector-cloud/engine',
       console: '/vector-cloud',
       notes:
-        'pgvector hub VL-182 over VL-062 knowledge_chunks. Hybrid/sharding/Pinecone OS deferred.',
+        'pgvector hub over existing knowledge_chunks. Hybrid/sharding/Pinecone OS deferred.',
     },
     {
       id: 'memory',
@@ -46,7 +46,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
       api: 'GET /v1/memory-cloud/engine',
       console: '/memory-cloud',
       notes:
-        'Persistent memory + GDPR export/erase (VL-183). Vector semantic memory + retention sweeper deferred.',
+        'Persistent memory + GDPR export/erase. Vector semantic memory + retention sweeper deferred.',
     },
     {
       id: 'knowledge-graph',
@@ -55,7 +55,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
       api: 'GET /v1/knowledge-graph/engine',
       console: '/knowledge-graph',
       notes:
-        'Bounded Postgres ER layer (VL-184). Prefer RAG. Neo4j/ontology/vertical packs deferred.',
+        'Bounded Postgres ER layer. Prefer RAG. Neo4j/ontology/vertical packs deferred.',
     },
     {
       id: 'context-engine',
@@ -64,7 +64,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
       api: 'GET /v1/context-engine/engine',
       console: '/context-engine',
       notes:
-        'Assembles retrieval + memory + prompt (VL-185). Char-budget compression; infinite window/realtime deferred.',
+        'Assembles retrieval + memory + prompt. Char-budget compression; infinite window/realtime deferred.',
     },
     {
       id: 'reasoning',
@@ -73,7 +73,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
       api: 'GET /v1/reasoning-cloud/engine',
       console: '/reasoning-cloud',
       notes:
-        'LLM-gateway strategies (VL-186). Not a custom reasoner kernel; shallow ToT; no tool execution.',
+        'LLM-gateway strategies. Not a custom reasoner kernel; shallow ToT; no tool execution.',
     },
     {
       id: 'recommendations',
@@ -82,7 +82,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
       api: 'GET /v1/recommendation-engine/engine',
       console: '/recommendation-engine',
       notes:
-        'Light rankers over languages/voices/knowledge (VL-187). Not a retail recommender OS.',
+        'Light rankers over languages/voices/knowledge. Not a retail recommender OS.',
     },
     {
       id: 'prompt-intelligence',
@@ -91,7 +91,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
       api: 'GET /v1/prompt-intelligence/engine',
       console: '/prompt-intelligence',
       notes:
-        'Hub over VL-086 versioned prompts (VL-188). Heuristic eval/security; not an auto-prompt research lab.',
+        'Hub over existing versioned prompts. Heuristic eval/security; not an auto-prompt research lab.',
     },
     {
       id: 'decision-engine',
@@ -100,7 +100,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
       api: 'GET /v1/decision-engine/engine',
       console: '/decision-engine',
       notes:
-        'Bounded policy/routing helpers (VL-189). Light rules — not Drools/Pega BRMS.',
+        'Bounded policy/routing helpers. Light rules — not Drools/Pega BRMS.',
     },
     {
       id: 'orchestration',
@@ -109,7 +109,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
       api: 'GET /v1/ai-orchestration/engine',
       console: '/ai-orchestration',
       notes:
-        'Load-bearing e2e pipelines over gateway/engines (VL-190). Not a multi-cloud agent OS.',
+        'Load-bearing e2e pipelines over gateway/engines. Not a multi-cloud agent OS.',
     },
     {
       id: 'agent-intelligence',
@@ -126,7 +126,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
       api: 'GET /v1/intelligence-analytics/engine',
       console: '/intelligence-analytics',
       notes:
-        'Usage/quality aggregates for Intelligence Cloud (VL-191). Not Language/Speech/Voice analytics or BI OS.',
+        'Usage/quality aggregates for Intelligence Cloud. Not Language/Speech/Voice analytics or BI OS.',
     },
     {
       id: 'ai-observability',
@@ -134,7 +134,7 @@ export function intelligenceProductCatalog(): IntelligenceProductRow[] {
       status: 'partial',
       api: 'GET /health',
       console: null,
-      notes: 'Shared request IDs + audits (VL-070). Intelligence-specific dashboards deferred.',
+      notes: 'Shared request IDs + audits. Intelligence-specific dashboards deferred.',
     },
   ];
 }

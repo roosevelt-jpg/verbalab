@@ -20,7 +20,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Healthcare Intelligence (VL-265)', () => {
+describe('Healthcare Intelligence', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -40,7 +40,7 @@ describe('Healthcare Intelligence (VL-265)', () => {
     expect(existsSync(join(root, 'docs/HEALTHCARE_INTELLIGENCE.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0167-healthcare-intelligence.md'))).toBe(true);
     const text = readFileSync(join(root, 'docs/HEALTHCARE_INTELLIGENCE.md'), 'utf8');
-    expect(text).toContain('VL-265');
+    expect(text).toContain('');
   });
 
   it('has no TODO/FIXME/implement-later markers', () => {

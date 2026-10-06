@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Global Policy Engine (VL-317)', () => {
+describe('Global Policy Engine', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

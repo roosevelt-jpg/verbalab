@@ -34,7 +34,7 @@ export class NestAfricanLanguageRegistryCatalogAdapter implements AfricanLanguag
         status: 'shipped',
         api: 'GET /v1/african-language-registry/engine',
         console: '/african-language-registry',
-        notes: 'VL-261 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

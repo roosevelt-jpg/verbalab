@@ -13,7 +13,7 @@ export type AfricanLanguageEntry = {
 };
 
 /**
- * Library Phase 128 → African Language Registry (VL-261).
+ * Library Phase 128 → African Language Registry.
  * Representative seed — Expanded seed aligned with marketing catalog; full country directory lives in the web Africa catalog.
  */
 export function africanLanguageSeed(): AfricanLanguageEntry[] {
@@ -184,7 +184,7 @@ export function africanLanguageRegistryEngineCatalog() {
   return {
     product: 'Lugemi African Language Registry',
     note:
-      'African Language Registry (VL-261). Representative language/dialect/writing-system seed extending dialects/locales. Expanded seed; web Africa catalog documents full country/community directory.',
+      'African Language Registry. Representative language/dialect/writing-system seed extending dialects/locales. Expanded seed; web Africa catalog documents full country/community directory.',
     capabilities: [
       {
         id: 'language-catalog',

@@ -1,4 +1,4 @@
-/** Application ports for MLOps & LLMOps Cloud (VL-281). */
+/** Application ports for MLOps & LLMOps Cloud. */
 
 export type MlopsLlmopsCloudProductRow = {
   id: string;

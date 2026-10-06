@@ -49,7 +49,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Speech Cloud Production Audit (VL-160)', () => {
+describe('Speech Cloud Production Audit', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

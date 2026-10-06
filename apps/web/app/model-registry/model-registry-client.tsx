@@ -102,7 +102,7 @@ export function ModelRegistryClient() {
         Model Registry
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.5rem', maxWidth: '44rem' }}>
-        Cards, versions, approvals, and deploy plans over VL-110 — not MLflow or a traffic-mesh
+        Cards, versions, approvals, and deploy plans over existing — not MLflow or a traffic-mesh
         canary OS. <Link href="/models">Live models</Link> ·{' '}
         <Link href="/foundation-model-cloud">Foundation Model Cloud</Link>.
       </p>
@@ -126,7 +126,7 @@ export function ModelRegistryClient() {
               <li>trafficMeshOs: {String(engine.honesty.trafficMeshOs)}</li>
               <li>automaticWeightDeploy: {String(engine.honesty.automaticWeightDeploy)}</li>
               <li>regeneratesVl110: {String(engine.honesty.regeneratesVl110)}</li>
-              <li>VL-110 features in live matrix: {engine.liveSummary.featureCount}</li>
+              <li> features in live matrix: {engine.liveSummary.featureCount}</li>
             </ul>
           </section>
 

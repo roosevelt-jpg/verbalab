@@ -105,11 +105,11 @@ export class MemoryFabricService {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric (VL-247) must hard-gate across fabric buses when shipped — not log-only.',
+          'Policy Fabric must hard-gate across fabric buses when shipped — not log-only.',
       },
       docs: '/docs/MEMORY_FABRIC.md',
       note:
-        'Memory Fabric (VL-245). Cross-cloud memory router over Memory Runtime. Not Mem0 or multi-region replication OS.',
+        'Memory Fabric. Cross-cloud memory router over Memory Runtime. Not Mem0 or multi-region replication OS.',
     };
   }
 
@@ -364,7 +364,7 @@ export class MemoryFabricService {
         status: p.status,
       })),
       honesty: memoryFabricHonesty(),
-      note: 'Memory Fabric monitoring (VL-245).',
+      note: 'Memory Fabric monitoring.',
     };
   }
 
@@ -401,7 +401,7 @@ export class MemoryFabricService {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric (VL-247) must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
+          'Policy Fabric must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
       },
       deferred: {
         agentFabric: false,
@@ -427,7 +427,7 @@ export class MemoryFabricService {
       },
       docs: '/docs/MEMORY_FABRIC.md',
       note:
-        'Memory Fabric (VL-245). Router + sync/distribute/federation over Memory Runtime; same-org plans only.',
+        'Memory Fabric. Router + sync/distribute/federation over Memory Runtime; same-org plans only.',
     };
   }
 }

@@ -1,17 +1,17 @@
 /**
- * Library Phase 183 → Global Configuration Platform (VL-316).
- * Global Configuration Platform (VL-316). Versioning/env/regional config/secrets refs/feature flags/validation. Secrets refs only — never plaintext secret values.
+ * Library Phase 183 → Global Configuration Platform.
+ * Global Configuration Platform. Versioning/env/regional config/secrets refs/feature flags/validation. Secrets refs only — never plaintext secret values.
  */
 export function globalConfigurationPlatformEngineCatalog() {
   return {
     product: 'Lugemi Global Configuration Platform',
     capabilities: [
-      { id: 'versioning', name: 'Configuration Versioning', status: 'shipped', notes: 'VL-316 capability.' },
-      { id: 'environment', name: 'Environment Configuration', status: 'shipped', notes: 'VL-316 capability.' },
-      { id: 'regional', name: 'Regional Configuration', status: 'shipped', notes: 'VL-316 capability.' },
-      { id: 'secrets_refs', name: 'Secrets References', status: 'shipped', notes: 'VL-316 capability.' },
-      { id: 'feature_flags', name: 'Feature Flags', status: 'shipped', notes: 'VL-316 capability.' },
-      { id: 'validation', name: 'Configuration Validation', status: 'shipped', notes: 'VL-316 capability.' }
+      { id: 'versioning', name: 'Configuration Versioning', status: 'shipped', notes: ' capability.' },
+      { id: 'environment', name: 'Environment Configuration', status: 'shipped', notes: ' capability.' },
+      { id: 'regional', name: 'Regional Configuration', status: 'shipped', notes: ' capability.' },
+      { id: 'secrets_refs', name: 'Secrets References', status: 'shipped', notes: ' capability.' },
+      { id: 'feature_flags', name: 'Feature Flags', status: 'shipped', notes: ' capability.' },
+      { id: 'validation', name: 'Configuration Validation', status: 'shipped', notes: ' capability.' }
     ],
     configurations: [
       {
@@ -69,9 +69,9 @@ export function globalConfigurationPlatformEngineCatalog() {
     safety: {
       secretsRefsOnly: true,
       executesInference: false,
-      note: 'Global Configuration Platform (VL-316). Versioning/env/regional config/secrets refs/feature flags/validation. Secrets refs only — never plaintext secret values.',
+      note: 'Global Configuration Platform. Versioning/env/regional config/secrets refs/feature flags/validation. Secrets refs only — never plaintext secret values.',
     },
     docs: '/docs/GLOBAL_CONFIGURATION_PLATFORM.md',
-    note: 'Global Configuration Platform (VL-316). Versioning/env/regional config/secrets refs/feature flags/validation. Secrets refs only — never plaintext secret values.',
+    note: 'Global Configuration Platform. Versioning/env/regional config/secrets refs/feature flags/validation. Secrets refs only — never plaintext secret values.',
   };
 }

@@ -1,4 +1,4 @@
-/** Application ports for Voice & Language Marketplace (VL-257). */
+/** Application ports for Voice & Language Marketplace. */
 
 export type VoiceLanguageMarketplaceEngineBundle = ReturnType<
   import('../voice-language-marketplace.service').VoiceLanguageMarketplaceService['engine']

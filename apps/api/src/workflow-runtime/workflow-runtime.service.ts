@@ -73,7 +73,7 @@ export class WorkflowRuntimeService {
         liveStepExecutionForbidden: true,
         policyMustHardGate: true,
         note:
-          'Every workflow step passes WorkflowPolicyGate (local hard allowlist). Policy Runtime (VL-222) will harden further. Extends /v1/workflows — not Temporal/Airflow.',
+          'Every workflow step passes WorkflowPolicyGate (local hard allowlist). Policy Runtime will harden further. Extends /v1/workflows — not Temporal/Airflow.',
       },
     };
   }

@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('VAIOS Foundation (VL-334)', () => {
+describe('VAIOS Foundation', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

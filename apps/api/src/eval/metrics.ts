@@ -1,4 +1,4 @@
-/** Reference-based MT metrics for the VL-100 harness (not heuristic QE). */
+/** Reference-based MT metrics for the harness (not heuristic QE). */
 
 export function normalizeForEval(text: string): string {
   return text

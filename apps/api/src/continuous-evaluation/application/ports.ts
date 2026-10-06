@@ -1,4 +1,4 @@
-/** Application ports for Continuous Evaluation (VL-284). */
+/** Application ports for Continuous Evaluation. */
 
 export type ContinuousEvaluationProductRow = {
   id: string;

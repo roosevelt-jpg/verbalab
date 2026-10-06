@@ -51,7 +51,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Foundation Model Cloud Production Audit (VL-238)', () => {
+describe('Foundation Model Cloud Production Audit', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let training: ModelTrainingPlatformService;

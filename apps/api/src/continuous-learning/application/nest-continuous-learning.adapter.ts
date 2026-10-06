@@ -37,7 +37,7 @@ export class NestContinuousLearningCatalogAdapter implements ContinuousLearningC
         status: 'shipped',
         api: 'GET /v1/continuous-learning/engine',
         console: '/continuous-learning',
-        notes: 'VL-289 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

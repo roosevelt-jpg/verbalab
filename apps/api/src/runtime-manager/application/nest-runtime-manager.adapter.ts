@@ -37,7 +37,7 @@ export class NestRuntimeManagerCatalogAdapter implements RuntimeManagerCatalogPo
         status: 'shipped',
         api: 'GET /v1/runtime-manager/engine',
         console: '/runtime-manager',
-        notes: 'VL-336 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

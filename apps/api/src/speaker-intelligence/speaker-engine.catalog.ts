@@ -8,7 +8,7 @@ export type SpeakerCapability = {
   notes: string;
 };
 
-/** Library Phase 18 → Speaker Intelligence (VL-152). */
+/** Library Phase 18 → Speaker Intelligence. */
 export function speakerEngineCatalog() {
   return {
     product: 'Lugemi Speaker Intelligence',

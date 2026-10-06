@@ -41,7 +41,7 @@ export class RiskIntelligenceService {
       count: (catalog as { scores: unknown[] }).scores.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'RiskIntelligence monitoring snapshot (VL-298).',
+      note: 'RiskIntelligence monitoring snapshot.',
     };
   }
 }

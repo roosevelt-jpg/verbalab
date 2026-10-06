@@ -1,4 +1,4 @@
-/** Application ports for Speech Runtime (VL-326). */
+/** Application ports for Speech Runtime. */
 
 export type SpeechRuntimeProductRow = {
   id: string;

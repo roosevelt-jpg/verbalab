@@ -22,7 +22,7 @@ export const AGENT_PERMISSIONS = [
 
 export type AgentPermission = (typeof AGENT_PERMISSIONS)[number];
 
-/** Always denied — never grantable in VL-219. */
+/** Always denied — never grantable in . */
 export const AGENT_DENIED_ACTIONS = [
   'external.execute',
   'billing.charge',
@@ -50,19 +50,19 @@ export function agentRuntimeCeilings() {
     ),
     mode: agentRuntimeMode(),
     liveToolExecution: false,
-    note: 'Sandbox agent runtime. Live open tool execution is forbidden in VL-219.',
+    note: 'Sandbox agent runtime. Live open tool execution is forbidden in .',
   };
 }
 
 /**
- * Library Phase 86 → Agent Runtime (VL-219).
+ * Library Phase 86 → Agent Runtime.
  * Scoped permissions + sandbox required. Not open tool execution.
  */
 export function agentRuntimeCatalog() {
   return {
     product: 'Lugemi Agent Runtime',
     note:
-      'Agent Runtime (VL-219). Single/multi-agent sandbox with hard permission allowlists, lifecycle, scheduling stubs, agent memory via Memory Runtime, and marketplace listing counts. Actions are sandboxed — not open function calls against real accounts/data. Policy Runtime (VL-222) is wired as a hard gate via AgentPolicyGate. Not a LangGraph/AutoGPT OS.',
+      'Agent Runtime. Single/multi-agent sandbox with hard permission allowlists, lifecycle, scheduling stubs, agent memory via Memory Runtime, and marketplace listing counts. Actions are sandboxed — not open function calls against real accounts/data. Policy Runtime is wired as a hard gate via AgentPolicyGate. Not a LangGraph/AutoGPT OS.',
     capabilities: [
       {
         id: 'single-agents',
@@ -111,7 +111,7 @@ export function agentRuntimeCatalog() {
         name: 'Agent Workflows',
         status: 'partial',
         api: 'POST /v1/agent-runtime/run',
-        notes: 'Sandbox step plans; dedicated Workflow Runtime is VL-220 (/workflow-runtime).',
+        notes: 'Sandbox step plans; dedicated Workflow Runtime is (/workflow-runtime).',
       },
       {
         id: 'agent-lifecycle',

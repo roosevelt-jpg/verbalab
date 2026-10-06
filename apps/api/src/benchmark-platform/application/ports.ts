@@ -1,4 +1,4 @@
-/** Application ports for Benchmark Platform (VL-274). */
+/** Application ports for Benchmark Platform. */
 
 export type BenchmarkPlatformProductRow = {
   id: string;

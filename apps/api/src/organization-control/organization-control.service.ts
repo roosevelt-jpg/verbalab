@@ -50,7 +50,7 @@ export class OrganizationControlService {
       roleCount: catalog.roles.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Organization Control monitoring snapshot (VL-315).',
+      note: 'Organization Control monitoring snapshot.',
     };
   }
 }

@@ -40,7 +40,7 @@ export class TourismHeritageIntelligenceService {
       termCount: catalog.terms.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Tourism & Heritage Intelligence monitoring snapshot (VL-269).',
+      note: 'Tourism & Heritage Intelligence monitoring snapshot.',
     };
   }
 }

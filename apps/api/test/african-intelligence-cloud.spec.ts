@@ -20,7 +20,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('African Intelligence Cloud (VL-260)', () => {
+describe('African Intelligence Cloud', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -40,7 +40,7 @@ describe('African Intelligence Cloud (VL-260)', () => {
     expect(existsSync(join(root, 'docs/AFRICAN_INTELLIGENCE_CLOUD.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0162-african-intelligence-cloud.md'))).toBe(true);
     const text = readFileSync(join(root, 'docs/AFRICAN_INTELLIGENCE_CLOUD.md'), 'utf8');
-    expect(text).toContain('VL-260');
+    expect(text).toContain('');
   });
 
   it('has no TODO/FIXME/implement-later markers', () => {

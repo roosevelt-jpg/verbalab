@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Compliance Platform (VL-297)', () => {
+describe('Compliance Platform', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

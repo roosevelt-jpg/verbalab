@@ -53,7 +53,7 @@ export class InferenceCloudService {
         openEndedGpuAutoscale: false,
         sandboxBeforeRealCloudBill: true,
         note:
-          'GPU Platform (VL-205) must not run against a production billing account without spend limits. Cost Optimization (VL-211) must enforce caps, not only report.',
+          'GPU Platform must not run against a production billing account without spend limits. Cost Optimization must enforce caps, not only report.',
       },
       links: {
         inferenceCloud: '/inference-cloud',

@@ -67,7 +67,7 @@ function toneWav(freq: number, seconds = 0.4): Buffer {
   return buffer;
 }
 
-describe('Speaker Intelligence (VL-152)', () => {
+describe('Speaker Intelligence', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

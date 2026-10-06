@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('AI Scheduler (VL-335)', () => {
+describe('AI Scheduler', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

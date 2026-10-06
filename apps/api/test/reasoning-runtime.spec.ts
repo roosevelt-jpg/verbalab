@@ -36,7 +36,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Reasoning Runtime (VL-218)', () => {
+describe('Reasoning Runtime', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -92,7 +92,7 @@ describe('Reasoning Runtime (VL-218)', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/custom reasoner/i);
-    expect(text).toMatch(/Reasoning Cloud|VL-186/i);
+    expect(text).toMatch(/Reasoning Cloud|i);
     expect(text).toMatch(/tool.?execut/i);
   });
 

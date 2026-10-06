@@ -45,7 +45,7 @@ export class VectorCloudService {
           searchApi: 'POST /v1/vector-cloud/search',
         },
       ],
-      note: 'One knowledge collection per workspace (VL-182). Multi-collection product deferred.',
+      note: 'One knowledge collection per workspace. Multi-collection product deferred.',
     };
   }
 
@@ -63,7 +63,7 @@ export class VectorCloudService {
           collection: 'knowledge',
         },
       ],
-      note: 'Workspace id is the vector namespace for tenant isolation (VL-182).',
+      note: 'Workspace id is the vector namespace for tenant isolation.',
     };
   }
 
@@ -78,10 +78,10 @@ export class VectorCloudService {
           dimensions: 1536,
           managed: false,
           status: 'shipped',
-          notes: 'Created by VL-062 migration on knowledge_chunks.embedding.',
+          notes: 'Created by migration on knowledge_chunks.embedding.',
         },
       ],
-      note: 'Index create/drop/rebuild APIs deferred — migration-managed HNSW only (VL-182).',
+      note: 'Index create/drop/rebuild APIs deferred — migration-managed HNSW only.',
     };
   }
 
@@ -101,7 +101,7 @@ export class VectorCloudService {
       vectors: chunks,
       dimensions: 1536,
       backend: 'pgvector',
-      note: 'Inventory stats for workspace knowledge vectors (VL-182).',
+      note: 'Inventory stats for workspace knowledge vectors.',
     };
   }
 
@@ -140,7 +140,7 @@ export class VectorCloudService {
       searchRequests: searches,
       vectors: stats.vectors,
       readyDocuments: stats.readyDocuments,
-      note: 'Vector Cloud analytics from search audits + inventory (VL-182).',
+      note: 'Vector Cloud analytics from search audits + inventory.',
     };
   }
 
@@ -155,7 +155,7 @@ export class VectorCloudService {
       searchRequests: analytics.searchRequests,
       vectors: analytics.vectors,
       deferred: engine.capabilities.filter((c) => c.status === 'deferred').map((c) => c.id),
-      note: 'Vector Cloud monitoring snapshot (VL-182).',
+      note: 'Vector Cloud monitoring snapshot.',
     };
   }
 }

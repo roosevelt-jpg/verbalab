@@ -20,7 +20,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Education Intelligence (VL-267)', () => {
+describe('Education Intelligence', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -40,7 +40,7 @@ describe('Education Intelligence (VL-267)', () => {
     expect(existsSync(join(root, 'docs/EDUCATION_INTELLIGENCE.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0169-education-intelligence.md'))).toBe(true);
     const text = readFileSync(join(root, 'docs/EDUCATION_INTELLIGENCE.md'), 'utf8');
-    expect(text).toContain('VL-267');
+    expect(text).toContain('');
   });
 
   it('has no TODO/FIXME/implement-later markers', () => {

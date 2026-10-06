@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Engineering Governance (VL-345)', () => {
+describe('Engineering Governance', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

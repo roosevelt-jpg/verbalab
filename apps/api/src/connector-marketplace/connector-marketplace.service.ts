@@ -219,7 +219,7 @@ export class ConnectorMarketplaceService {
         liveConnectorExecution: false,
         ipaasOs: false,
       },
-      note: 'Recorded receipts only. Creator Economy (VL-258) expands payout math — hand-check before live creators.',
+      note: 'Recorded receipts only. Creator Economy expands payout math — hand-check before live creators.',
     };
   }
 
@@ -740,7 +740,7 @@ export class ConnectorMarketplaceService {
       sales,
       reviews,
       honesty: this.engine().honesty,
-      note: 'Connector marketplace aggregates. Payout depth deferred to Creator Economy (VL-258).',
+      note: 'Connector marketplace aggregates. Payout depth deferred to Creator Economy.',
     };
   }
 
@@ -751,7 +751,7 @@ export class ConnectorMarketplaceService {
       products: engine.capabilities.map((c) => ({ id: c.id, status: c.status })),
       honesty: engine.honesty,
       safety: engine.safety,
-      note: 'Connector Marketplace monitoring snapshot (VL-256).',
+      note: 'Connector Marketplace monitoring snapshot.',
     };
   }
 }

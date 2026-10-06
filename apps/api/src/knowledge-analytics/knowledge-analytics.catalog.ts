@@ -8,7 +8,7 @@ export type KnowledgeAnalyticsCapability = {
   notes: string;
 };
 
-/** Knowledge Cloud audit action groups for surface usage (VL-202). */
+/** Knowledge Cloud audit action groups for surface usage. */
 export const KNOWLEDGE_SURFACE_ACTIONS: Record<string, string[]> = {
   knowledge: ['knowledge.document_ready', 'knowledge.queried'],
   knowledge_base: ['knowledge_base.document_revise_meta'],
@@ -62,14 +62,14 @@ export const KNOWLEDGE_AUDIT_PREFIXES = [
 ] as const;
 
 /**
- * Library Phase 69 → Knowledge Analytics (VL-202).
+ * Library Phase 69 → Knowledge Analytics.
  * Aggregates for Knowledge Cloud — not Language/Speech/Voice/Intelligence analytics or BI OS.
  */
 export function knowledgeAnalyticsCatalog() {
   return {
     product: 'Lugemi Knowledge Analytics',
     note:
-      'Usage/quality aggregates for Knowledge Cloud (VL-202): growth, usage, quality, search success, gaps, confidence, relationships. Distinct from Language/Speech/Voice/Intelligence analytics. Not a BI dashboard OS or enterprise reporting suite.',
+      'Usage/quality aggregates for Knowledge Cloud: growth, usage, quality, search success, gaps, confidence, relationships. Distinct from Language/Speech/Voice/Intelligence analytics. Not a BI dashboard OS or enterprise reporting suite.',
     capabilities: [
       {
         id: 'knowledge-growth',

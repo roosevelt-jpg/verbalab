@@ -1,6 +1,6 @@
 /**
  * Protect ICU placeholders / plural blocks so MT does not corrupt them.
- * Restores after translation. Also validates/formats for Localization Platform (VL-141).
+ * Restores after translation. Also validates/formats for Localization Platform.
  */
 
 const ICU_BLOCK =

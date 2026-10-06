@@ -37,7 +37,7 @@ export class NestDatabaseEngineeringStandardsCatalogAdapter implements DatabaseE
         status: 'shipped',
         api: 'GET /v1/database-engineering-standards/engine',
         console: '/database-engineering-standards',
-        notes: 'VL-351 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

@@ -1,4 +1,4 @@
-/** Application ports for Policy Fabric (VL-247). */
+/** Application ports for Policy Fabric. */
 
 export type PolicyFabricCapabilityRow = {
   id: string;

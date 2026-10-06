@@ -17,7 +17,7 @@ export type EventFabricBroker = {
 };
 
 /**
- * Library Phase 107 → Event Fabric (VL-240).
+ * Library Phase 107 → Event Fabric.
  * Enterprise event bus over Redis Streams (active) + CloudEvents.
  * Kafka/NATS/RabbitMQ are catalogued adapters — not provisioned clusters.
  */
@@ -28,7 +28,7 @@ export function eventFabricCapabilityCatalog(): EventFabricCapability[] {
       name: 'Event Platform',
       status: 'shipped',
       api: 'GET /v1/event-fabric/products',
-      notes: 'Internal event bus hub (VL-240). Extends AI Fabric — not a Kafka hyperscaler OS.',
+      notes: 'Internal event bus hub. Extends AI Fabric — not a Kafka hyperscaler OS.',
     },
     {
       id: 'redis-streams',
@@ -178,7 +178,7 @@ export function eventFabricArchitectureNotes() {
     natsAdapterDeferred: true,
     rabbitmqAdapterDeferred: true,
     note:
-      'Event Fabric (VL-240). Real Redis Streams publish/consume with CloudEvents, versioning, DLQ, retries, replay, snapshots. Kafka/NATS/RabbitMQ remain deferred adapters — not fake-ready clusters.',
+      'Event Fabric. Real Redis Streams publish/consume with CloudEvents, versioning, DLQ, retries, replay, snapshots. Kafka/NATS/RabbitMQ remain deferred adapters — not fake-ready clusters.',
   };
 }
 

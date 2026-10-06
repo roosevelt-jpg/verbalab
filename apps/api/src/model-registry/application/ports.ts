@@ -1,4 +1,4 @@
-/** Application ports for Model Registry hub (VL-237). */
+/** Application ports for Model Registry hub. */
 
 export type MrCapabilityRow = {
   id: string;

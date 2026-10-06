@@ -32,7 +32,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Grammar AI (VL-133)', () => {
+describe('Grammar AI', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -79,7 +79,7 @@ describe('Grammar AI (VL-133)', () => {
     const res = await request(app.getHttpServer())
       .post('/v1/grammar/check')
       .set('Authorization', `Bearer ${key.secret}`)
-      .send({ text: 'i has went to teh store  store', language: 'en' })
+      .send({ text: 'i has went to teh store store', language: 'en' })
       .expect(200);
 
     expect(res.body.provider).toBe('rules');

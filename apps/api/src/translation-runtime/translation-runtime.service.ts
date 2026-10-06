@@ -77,7 +77,7 @@ export class TranslationRuntimeService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'TranslationRuntime monitoring snapshot (VL-325).',
+      note: 'TranslationRuntime monitoring snapshot.',
     };
   }
 }

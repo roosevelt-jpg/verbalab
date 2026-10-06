@@ -26,7 +26,7 @@ export class AiFabricService {
       },
       docs: '/docs/AI_FABRIC.md',
       note:
-        'AI Fabric hub (VL-239). Internal communication layer connecting Lugemi clouds. Not a Kafka hyperscaler or customer-facing mesh product. Event Fabric (VL-240) provides Redis Streams + CloudEvents.',
+        'AI Fabric hub. Internal communication layer connecting Lugemi clouds. Not a Kafka hyperscaler or customer-facing mesh product. Event Fabric provides Redis Streams + CloudEvents.',
     };
   }
 
@@ -65,7 +65,7 @@ export class AiFabricService {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric (VL-247) must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
+          'Policy Fabric must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
       },
       deferred: {
         eventFabric: false,
@@ -101,7 +101,7 @@ export class AiFabricService {
       },
       docs: '/docs/AI_FABRIC.md',
       note:
-        'AI Fabric Foundation (VL-239). Discovery + routing hub. Event through Policy Fabric (VL-240–247) shipped with fabric-wide hard gate.',
+        'AI Fabric Foundation. Discovery + routing hub. Event through Policy Fabric (–247) shipped with fabric-wide hard gate.',
     };
   }
 
@@ -113,7 +113,7 @@ export class AiFabricService {
       architecture: aiFabricArchitectureNotes(),
       honesty: aiFabricHonesty(),
       note:
-        'AI Fabric monitoring snapshot (VL-239). Hub through Policy Fabric shipped; production audit remains.',
+        'AI Fabric monitoring snapshot. Hub through Policy Fabric shipped; production audit remains.',
     };
   }
 }

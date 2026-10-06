@@ -53,7 +53,7 @@ function toneWav(freq = 440, seconds = 0.5): Buffer {
   return encodeWavPcm16(samples, sampleRate);
 }
 
-describe('Audio Intelligence (VL-155)', () => {
+describe('Audio Intelligence', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

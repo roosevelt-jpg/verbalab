@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Explainability Platform (VL-295)', () => {
+describe('Explainability Platform', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

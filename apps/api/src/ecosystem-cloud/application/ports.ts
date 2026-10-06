@@ -1,4 +1,4 @@
-/** Application ports for Ecosystem Cloud Foundation (VL-249). */
+/** Application ports for Ecosystem Cloud Foundation. */
 
 export type EcosystemProductRow = {
   id: string;

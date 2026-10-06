@@ -1,4 +1,4 @@
-/** Application ports for Model Evaluation Platform (VL-236). */
+/** Application ports for Model Evaluation Platform. */
 
 export type MepSuiteRow = {
   id: string;

@@ -102,7 +102,7 @@ export class KnowledgeOperatingSystemService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'KnowledgeOperatingSystem monitoring snapshot (VL-341).',
+      note: 'KnowledgeOperatingSystem monitoring snapshot.',
     };
   }
 }

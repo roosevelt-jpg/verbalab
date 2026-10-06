@@ -47,7 +47,7 @@ function sample(n: number): Express.Multer.File[] {
   })) as Express.Multer.File[];
 }
 
-describe('Voice Cloning Platform (VL-172)', () => {
+describe('Voice Cloning Platform', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;

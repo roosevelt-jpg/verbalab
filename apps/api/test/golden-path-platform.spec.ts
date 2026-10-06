@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Golden Path Platform (VL-305)', () => {
+describe('Golden Path Platform', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

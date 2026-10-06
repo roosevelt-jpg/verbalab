@@ -1,4 +1,4 @@
-/** Application ports for AI Operations Dashboard (VL-290). */
+/** Application ports for AI Operations Dashboard. */
 
 export type AiOperationsDashboardProductRow = {
   id: string;

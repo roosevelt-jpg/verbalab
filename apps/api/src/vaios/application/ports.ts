@@ -1,4 +1,4 @@
-/** Application ports for VAIOS Foundation (VL-334). */
+/** Application ports for VAIOS Foundation. */
 
 export type VaiosProductRow = {
   id: string;

@@ -1,4 +1,4 @@
-/** Application ports for Memory Fabric (VL-245). */
+/** Application ports for Memory Fabric. */
 
 export type MemoryFabricCapabilityRow = {
   id: string;

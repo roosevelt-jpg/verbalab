@@ -8,7 +8,7 @@ export type CallCapability = {
   notes: string;
 };
 
-/** Library Phase 24 → Call Intelligence (VL-158). */
+/** Library Phase 24 → Call Intelligence. */
 export function callIntelligenceEngineCatalog() {
   return {
     product: 'Lugemi Call Intelligence',
@@ -62,7 +62,7 @@ export function callIntelligenceEngineCatalog() {
         name: 'Emotion',
         status: 'partial',
         api: 'analyze',
-        notes: 'Speech emotion cue labels (VL-154 signals) — not SER lab.',
+        notes: 'Speech emotion cue labels ( signals) — not SER lab.',
       },
       {
         id: 'compliance-detection',

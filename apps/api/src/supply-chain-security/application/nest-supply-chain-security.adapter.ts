@@ -37,7 +37,7 @@ export class NestSupplyChainSecurityCatalogAdapter implements SupplyChainSecurit
         status: 'shipped',
         api: 'GET /v1/supply-chain-security/engine',
         console: '/supply-chain-security',
-        notes: 'VL-310 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

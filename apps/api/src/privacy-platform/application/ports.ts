@@ -1,4 +1,4 @@
-/** Application ports for Privacy Platform (VL-296). */
+/** Application ports for Privacy Platform. */
 
 export type PrivacyPlatformProductRow = {
   id: string;

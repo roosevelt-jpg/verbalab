@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Service Catalog (VL-304)', () => {
+describe('Service Catalog', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

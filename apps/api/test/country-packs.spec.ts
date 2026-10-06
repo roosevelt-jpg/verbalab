@@ -5,7 +5,7 @@ import { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
 import { ApiExceptionFilter } from '../src/common/errors/api-exception.filter';
 
-describe('Country packs (VL-135)', () => {
+describe('Country packs', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

@@ -45,7 +45,7 @@ export class AgentopsPlatformService {
       policyViolationsVisible: true,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'AgentOps Platform monitoring snapshot (VL-287) — policy violations visible to humans.',
+      note: 'AgentOps Platform monitoring snapshot — policy violations visible to humans.',
     };
   }
 }

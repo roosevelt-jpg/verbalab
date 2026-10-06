@@ -202,7 +202,7 @@ export class WakeWordService {
       hits,
       inputMode: stt ? ('audio' as const) : ('text' as const),
       stt,
-      note: 'Transcript wake spotting — not on-device Porcupine DNN (VL-157).',
+      note: 'Transcript wake spotting — not on-device Porcupine DNN.',
     };
     if (!input.skipAudit) {
       await this.record(input, 'wake_word.detect', 'POST /v1/wake-word/detect', {
@@ -242,7 +242,7 @@ export class WakeWordService {
       hitCount: hits.length,
       inputMode: stt ? ('audio' as const) : ('text' as const),
       stt,
-      note: 'Text/STT keyword spotting — not acoustic KWS DNN (VL-157).',
+      note: 'Text/STT keyword spotting — not acoustic KWS DNN.',
     };
     await this.record(input, 'wake_word.spot', 'POST /v1/wake-word/spot', {
       hitCount: hits.length,
@@ -285,7 +285,7 @@ export class WakeWordService {
       fired,
       inputMode: stt ? ('audio' as const) : ('text' as const),
       stt,
-      note: 'Trigger phrase hits + audit only — not a workflow orchestration engine (VL-157).',
+      note: 'Trigger phrase hits + audit only — not a workflow orchestration engine.',
     };
   }
 

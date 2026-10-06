@@ -38,7 +38,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Enterprise Cloud Foundation (VL-128)', () => {
+describe('Enterprise Cloud Foundation', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let enterprise: EnterpriseCloudService;

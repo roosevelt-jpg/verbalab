@@ -1,4 +1,4 @@
-/** Application ports for Vision Runtime (VL-328). */
+/** Application ports for Vision Runtime. */
 
 export type VisionRuntimeProductRow = {
   id: string;

@@ -42,7 +42,7 @@ export class SpeechAnalyticsService {
       },
       productActivity: productActivity.byAction.slice(0, 12),
       estimatedCostUsd: costs.estimatedUsd,
-      note: 'Speech Analytics overview (VL-159) — not a BI dashboard product.',
+      note: 'Speech Analytics overview — not a BI dashboard product.',
     };
   }
 
@@ -79,7 +79,7 @@ export class SpeechAnalyticsService {
         minutes: Math.round((stt.seconds / 60) * 1000) / 1000,
       },
       tts,
-      note: 'From usage_events feature=stt|tts (VL-159).',
+      note: 'From usage_events feature=stt|tts.',
     };
   }
 
@@ -123,7 +123,7 @@ export class SpeechAnalyticsService {
       byLanguage: Object.entries(byLanguage)
         .map(([language, count]) => ({ language, count }))
         .sort((a, b) => b.count - a.count),
-      note: 'Speech language tags from STT audits + call records (VL-159).',
+      note: 'Speech language tags from STT audits + call records.',
     };
   }
 
@@ -162,7 +162,7 @@ export class SpeechAnalyticsService {
         .map(([label, count]) => ({ label, count }))
         .sort((a, b) => b.count - a.count)
         .slice(0, 40),
-      note: 'Dialect/accent detect audits — Speech Analytics view (VL-159).',
+      note: 'Dialect/accent detect audits — Speech Analytics view.',
     };
   }
 
@@ -237,7 +237,7 @@ export class SpeechAnalyticsService {
         samples: qaScores.length,
         average: avg(qaScores),
       },
-      note: 'Accuracy proxies only — not golden-set WER / NIST eval (VL-159).',
+      note: 'Accuracy proxies only — not golden-set WER / NIST eval.',
     };
   }
 
@@ -280,7 +280,7 @@ export class SpeechAnalyticsService {
           ? Number((durations.reduce((s, v) => s + v, 0) / durations.length).toFixed(3))
           : null,
       },
-      note: 'Audio duration from STT audits — not HTTP request latency p95 (VL-159).',
+      note: 'Audio duration from STT audits — not HTTP request latency p95.',
     };
   }
 
@@ -319,7 +319,7 @@ export class SpeechAnalyticsService {
       failedJobsInPeriod: failedJobs,
       errorAuditEvents: errorAudits.length,
       byAction,
-      note: 'Partial speech error surface — STT HTTP failures often lack audit rows; job failures are org-wide (VL-159).',
+      note: 'Partial speech error surface — STT HTTP failures often lack audit rows; job failures are org-wide.',
     };
   }
 
@@ -357,7 +357,7 @@ export class SpeechAnalyticsService {
         sttPerMinute: rates.sttPerMinute,
         ttsPer1kChars: rates.ttsPer1kChars,
       },
-      note: 'Estimated STT/TTS cost — not Stripe invoices (VL-159).',
+      note: 'Estimated STT/TTS cost — not Stripe invoices.',
     };
   }
 
@@ -388,7 +388,7 @@ export class SpeechAnalyticsService {
         .map(([apiKeyPrefix, events]) => ({ apiKeyPrefix, events }))
         .sort((a, b) => b.events - a.events)
         .slice(0, 50),
-      note: 'API key prefixes with speech product audits — not CRM customers (VL-159).',
+      note: 'API key prefixes with speech product audits — not CRM customers.',
     };
   }
 
@@ -423,7 +423,7 @@ export class SpeechAnalyticsService {
       byIndustryPack: Object.entries(byPack)
         .map(([pack, count]) => ({ pack, count }))
         .sort((a, b) => b.count - a.count),
-      note: 'Industry vocabulary packs applied on STT — not firmographic industry taxonomy (VL-159).',
+      note: 'Industry vocabulary packs applied on STT — not firmographic industry taxonomy.',
     };
   }
 
@@ -442,7 +442,7 @@ export class SpeechAnalyticsService {
       failedJobsInPeriod: errors.failedJobsInPeriod,
       sttAudioDurationP95: latency.audioDurationSeconds.p95,
       averageSttConfidence: accuracy.sttConfidence.average,
-      note: 'Speech Analytics monitoring snapshot + shared request IDs (VL-159).',
+      note: 'Speech Analytics monitoring snapshot + shared request IDs.',
     };
   }
 
@@ -476,7 +476,7 @@ export class SpeechAnalyticsService {
       costs,
       customers,
       industries,
-      note: 'Bundled Speech Analytics report (VL-159). Not a scheduled BI export product.',
+      note: 'Bundled Speech Analytics report. Not a scheduled BI export product.',
     };
   }
 

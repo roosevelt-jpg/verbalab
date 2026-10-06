@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Runtime Manager (VL-336)', () => {
+describe('Runtime Manager', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

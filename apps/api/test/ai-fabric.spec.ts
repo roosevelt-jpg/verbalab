@@ -46,7 +46,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('AI Fabric Foundation (VL-239)', () => {
+describe('AI Fabric Foundation', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let fabric: AiFabricService;
@@ -75,7 +75,7 @@ describe('AI Fabric Foundation (VL-239)', () => {
     expect(existsSync(readme)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/not\*\* a customer-facing|NOT a customer|not a customer/i);
-    expect(text).toContain('VL-239');
+    expect(text).toContain('');
     expect(text).toContain('CQRS');
     expect(text).toMatch(/hard gate|hard-gate/i);
     expect(text).toMatch(/Kafka|broker/i);

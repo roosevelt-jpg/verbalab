@@ -34,7 +34,7 @@ export class NestAfricanIntelligenceCloudCatalogAdapter implements AfricanIntell
         status: 'shipped',
         api: 'GET /v1/african-intelligence-cloud/engine',
         console: '/african-intelligence-cloud',
-        notes: 'VL-260 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

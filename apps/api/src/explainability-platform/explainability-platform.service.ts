@@ -41,7 +41,7 @@ export class ExplainabilityPlatformService {
       count: (catalog as { explanations: unknown[] }).explanations.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'ExplainabilityPlatform monitoring snapshot (VL-295).',
+      note: 'ExplainabilityPlatform monitoring snapshot.',
     };
   }
 }

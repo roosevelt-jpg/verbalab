@@ -41,7 +41,7 @@ export class GlobalSchedulerService {
       count: (catalog as { schedules: unknown[] }).schedules.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'GlobalScheduler monitoring snapshot (VL-321).',
+      note: 'GlobalScheduler monitoring snapshot.',
     };
   }
 }

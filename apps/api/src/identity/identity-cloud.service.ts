@@ -81,7 +81,7 @@ export class IdentityCloudService {
       teams: {
         supported: false,
         useInstead: 'workspaces',
-        note: 'No Team entity — project isolation is workspaces (VL-012/125).',
+        note: 'No Team entity — project isolation is workspaces.',
       },
       provider: {
         humanIdp: 'clerk',

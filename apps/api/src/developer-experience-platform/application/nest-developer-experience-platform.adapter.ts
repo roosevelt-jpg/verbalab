@@ -37,7 +37,7 @@ export class NestDeveloperExperiencePlatformCatalogAdapter implements DeveloperE
         status: 'shipped',
         api: 'GET /v1/developer-experience-platform/engine',
         console: '/developer-experience-platform',
-        notes: 'VL-311 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

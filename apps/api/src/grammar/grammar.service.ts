@@ -102,7 +102,7 @@ export class GrammarService {
       issueCount: full.issueCount,
       provider: full.provider,
       model: full.model,
-      note: 'Sentence correction via grammar pipeline (VL-142).',
+      note: 'Sentence correction via grammar pipeline.',
     };
   }
 
@@ -163,7 +163,7 @@ export class GrammarService {
       suggestions,
       suggestionCount: suggestions.length,
       providers: { grammar: grammar.provider, style: style.provider },
-      note: 'Combined grammar + style writing suggestions (VL-142). Domain profiles are tone-only.',
+      note: 'Combined grammar + style writing suggestions. Domain profiles are tone-only.',
     };
   }
 

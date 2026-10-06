@@ -4,7 +4,7 @@ import { join } from 'path';
 
 const root = join(__dirname, '../../..');
 
-describe('Production deploy config (VL-074)', () => {
+describe('Production deploy config', () => {
   it('ships API and web Dockerfiles', () => {
     expect(existsSync(join(root, 'apps/api/Dockerfile'))).toBe(true);
     expect(existsSync(join(root, 'apps/web/Dockerfile'))).toBe(true);
@@ -25,7 +25,7 @@ describe('Production deploy config (VL-074)', () => {
     expect(yml).toContain('infra/fly/api.toml');
   });
 
-  it('ships EU residency island configs (VL-075)', () => {
+  it('ships EU residency island configs', () => {
     const eu = readFileSync(join(root, 'infra/fly/api.eu.toml'), 'utf8');
     expect(eu).toContain("app = 'lugemi-api-eu'");
     expect(eu).toContain("primary_region = 'ams'");

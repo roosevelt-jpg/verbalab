@@ -25,7 +25,7 @@ export type MemoryPipeline = {
 };
 
 /**
- * Library Phase 112 → Memory Fabric (VL-245).
+ * Library Phase 112 → Memory Fabric.
  * Cross-cloud memory routing over Memory Runtime — not Mem0 / multi-region replication OS.
  */
 export function memoryFabricCapabilityCatalog(): MemoryFabricCapability[] {
@@ -36,7 +36,7 @@ export function memoryFabricCapabilityCatalog(): MemoryFabricCapability[] {
       status: 'shipped',
       api: 'GET /v1/memory-fabric/products',
       notes:
-        'Memory router hub (VL-245). Extends Memory Runtime — does not regenerate VL-215 / VL-183.',
+        'Memory router hub. Extends Memory Runtime — does not regenerate .',
     },
     {
       id: 'memory-router',
@@ -203,7 +203,7 @@ export function memoryFabricVersions() {
       kind: 'router',
       version: 1,
       status: 'shipped',
-      notes: 'Initial memory intent → Runtime route table (VL-245).',
+      notes: 'Initial memory intent → Runtime route table.',
     },
     {
       id: 'pipeline-v1',
@@ -248,7 +248,7 @@ export function memoryFabricArchitectureNotes() {
     fabricWidePolicyHardGateRequired: true,
     policyLogOnlyForbidden: true,
     note:
-      'Memory Fabric (VL-245). Router/sync/distribute/federation over Memory Runtime. Not Mem0, multi-region replication, or infinite personalization OS.',
+      'Memory Fabric. Router/sync/distribute/federation over Memory Runtime. Not Mem0, multi-region replication, or infinite personalization OS.',
   };
 }
 

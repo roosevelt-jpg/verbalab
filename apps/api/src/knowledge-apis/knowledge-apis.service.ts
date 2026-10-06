@@ -21,7 +21,7 @@ export class KnowledgeApisService {
   surfaces() {
     return {
       surfaces: knowledgeApiSurfaces(),
-      note: 'Knowledge Cloud REST/GraphQL/console surfaces (VL-201).',
+      note: 'Knowledge Cloud REST/GraphQL/console surfaces.',
       honesty: this.engine().honesty,
     };
   }
@@ -120,7 +120,7 @@ export class KnowledgeApisService {
       playground: '/playground',
       docs: '/docs/KNOWLEDGE_APIS.md',
       overviewApi: 'GET /v1/developer/overview',
-      note: 'Extends VL-127 Developer Cloud — does not regenerate OAuth/sandbox clusters.',
+      note: 'Extends existing Developer Cloud — does not regenerate OAuth/sandbox clusters.',
       honesty: { regeneratesDeveloperCloud: false },
     };
   }
@@ -183,7 +183,7 @@ export class KnowledgeApisService {
       streamTailsLast30d: streamTails,
       recentEventCount: events.events.length,
       surfaceCount: knowledgeApiSurfaces().length,
-      note: 'Knowledge APIs pack analytics (VL-201). ≠ VL-202 Knowledge Analytics.',
+      note: 'Knowledge APIs pack analytics. ≠ Knowledge Analytics.',
     };
   }
 

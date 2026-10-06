@@ -10,7 +10,7 @@ export type DataPlaneCloudProductRow = {
 };
 
 /**
- * Library Phase 191 → Data Plane Cloud Foundation (VL-324).
+ * Library Phase 191 → Data Plane Cloud Foundation.
  * Execution layer — never manages orgs/policies/billing.
  * Not Service Mesh / VAIOS / architecture-freeze OS.
  */
@@ -23,7 +23,7 @@ export function dataPlaneCloudProductCatalog(): DataPlaneCloudProductRow[] {
       api: 'GET /v1/data-plane-cloud/products',
       console: '/data-plane-cloud',
       notes:
-        'Foundation hub (VL-324). managesOrgsPoliciesBilling=false; serviceMeshOs=false.',
+        'Foundation hub. managesOrgsPoliciesBilling=false; serviceMeshOs=false.',
     },
     {
       id: 'translation-runtime',
@@ -32,7 +32,7 @@ export function dataPlaneCloudProductCatalog(): DataPlaneCloudProductRow[] {
       api: 'GET /v1/translation-runtime/engine',
       console: '/translation-runtime',
       notes:
-        'VL-325. Thin over translate; thinExecutionLayer=true.',
+        '. Thin over translate; thinExecutionLayer=true.',
     },
     {
       id: 'speech-runtime',
@@ -41,7 +41,7 @@ export function dataPlaneCloudProductCatalog(): DataPlaneCloudProductRow[] {
       api: 'GET /v1/speech-runtime/engine',
       console: '/speech-runtime',
       notes:
-        'VL-326. Thin over speech-cloud / speech-recognition.',
+        '. Thin over speech-cloud / speech-recognition.',
     },
     {
       id: 'voice-runtime',
@@ -50,7 +50,7 @@ export function dataPlaneCloudProductCatalog(): DataPlaneCloudProductRow[] {
       api: 'GET /v1/voice-runtime/engine',
       console: '/voice-runtime',
       notes:
-        'VL-327. Thin over voice-cloud / voice.',
+        '. Thin over voice-cloud / voice.',
     },
     {
       id: 'vision-runtime',
@@ -59,7 +59,7 @@ export function dataPlaneCloudProductCatalog(): DataPlaneCloudProductRow[] {
       api: 'GET /v1/vision-runtime/engine',
       console: '/vision-runtime',
       notes:
-        'VL-328. Thin over ocr / documents.',
+        '. Thin over ocr / documents.',
     },
     {
       id: 'knowledge-runtime',
@@ -68,7 +68,7 @@ export function dataPlaneCloudProductCatalog(): DataPlaneCloudProductRow[] {
       api: 'GET /v1/knowledge-runtime/engine',
       console: '/knowledge-runtime',
       notes:
-        'VL-329. Thin over knowledge-cloud / knowledge / knowledge-fabric.',
+        '. Thin over knowledge-cloud / knowledge / knowledge-fabric.',
     },
     {
       id: 'embedding-runtime',
@@ -77,7 +77,7 @@ export function dataPlaneCloudProductCatalog(): DataPlaneCloudProductRow[] {
       api: 'GET /v1/embedding-runtime/engine',
       console: '/embedding-runtime',
       notes:
-        'VL-330. Thin over embeddings / embedding-cloud.',
+        '. Thin over embeddings / embedding-cloud.',
     },
     {
       id: 'data-plane-streaming',
@@ -86,7 +86,7 @@ export function dataPlaneCloudProductCatalog(): DataPlaneCloudProductRow[] {
       api: 'GET /v1/data-plane-streaming/engine',
       console: '/data-plane-streaming',
       notes:
-        'VL-331. Façade over streaming-runtime; extendsStreamingRuntime=true.',
+        '. Façade over streaming-runtime; extendsStreamingRuntime=true.',
     },
     {
       id: 'gpu-runtime',
@@ -95,7 +95,7 @@ export function dataPlaneCloudProductCatalog(): DataPlaneCloudProductRow[] {
       api: 'GET /v1/gpu-runtime/engine',
       console: '/gpu-runtime',
       notes:
-        'VL-332. Thin over gpu-platform; gpuBudgetLimitsRequired=true.',
+        '. Thin over gpu-platform; gpuBudgetLimitsRequired=true.',
     },
     {
       id: 'api-runtime',

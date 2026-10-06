@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Vision Runtime (VL-328)', () => {
+describe('Vision Runtime', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

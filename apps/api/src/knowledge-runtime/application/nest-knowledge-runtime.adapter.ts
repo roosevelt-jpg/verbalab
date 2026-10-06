@@ -37,7 +37,7 @@ export class NestKnowledgeRuntimeCatalogAdapter implements KnowledgeRuntimeCatal
         status: 'shipped',
         api: 'GET /v1/knowledge-runtime/engine',
         console: '/knowledge-runtime',
-        notes: 'VL-329 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

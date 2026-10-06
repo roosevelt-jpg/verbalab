@@ -96,14 +96,14 @@ export function gpuVendors() {
 }
 
 /**
- * Library Phase 72 → GPU Platform (VL-205).
+ * Library Phase 72 → GPU Platform.
  * Sandbox scheduler + hard ceilings — not a GPU hyperscaler OS.
  */
 export function gpuPlatformCatalog() {
   return {
     product: 'Lugemi GPU Platform',
     note:
-      'Sandbox GPU pools/scheduling/quotas/autoscaling with hard instance and spend ceilings (VL-205). Logical allocations only — does not call AWS/GCP/Azure GPU APIs. Not a hyperscaler GPU OS, MIG sharing suite, or distributed training fabric.',
+      'Sandbox GPU pools/scheduling/quotas/autoscaling with hard instance and spend ceilings. Logical allocations only — does not call AWS/GCP/Azure GPU APIs. Not a hyperscaler GPU OS, MIG sharing suite, or distributed training fabric.',
     capabilities: [
       {
         id: 'nvidia',

@@ -1,4 +1,4 @@
-/** Application ports for Intelligence Cloud (VL-180). Implemented by Nest adapters. */
+/** Application ports for Intelligence Cloud. Implemented by Nest adapters. */
 
 export type IntelligenceProductRow = {
   id: string;

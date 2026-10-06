@@ -37,7 +37,7 @@ export class NestEngineeringQualityPlatformCatalogAdapter implements Engineering
         status: 'shipped',
         api: 'GET /v1/engineering-quality-platform/engine',
         console: '/engineering-quality-platform',
-        notes: 'VL-348 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

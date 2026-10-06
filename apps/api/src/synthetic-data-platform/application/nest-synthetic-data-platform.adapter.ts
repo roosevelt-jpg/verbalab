@@ -37,7 +37,7 @@ export class NestSyntheticDataPlatformCatalogAdapter implements SyntheticDataPla
         status: 'shipped',
         api: 'GET /v1/synthetic-data-platform/engine',
         console: '/synthetic-data-platform',
-        notes: 'VL-273 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

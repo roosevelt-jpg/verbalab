@@ -8,7 +8,7 @@ import {
 } from './agent-runtime.catalog';
 
 /**
- * Local allowlist + Policy Runtime hard gate (VL-219 / VL-222).
+ * Local allowlist + Policy Runtime hard gate.
  */
 @Injectable()
 export class AgentPolicyGate {
@@ -59,7 +59,7 @@ export class AgentPolicyGate {
       );
     }
 
-    // Shared Policy Runtime hard gate (VL-222) — blocks, does not only log.
+    // Shared Policy Runtime hard gate — blocks, does not only log.
     await this.policyRuntime.assertHardGate({
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,

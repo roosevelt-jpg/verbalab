@@ -70,7 +70,7 @@ export class SpeechRecognitionService {
       periodStart: summary.periodStart,
       stt: summary.stt,
       product: 'Lugemi Speech',
-      note: 'Usage metering for STT. Full Speech Analytics: GET /v1/speech-analytics/* (VL-159).',
+      note: 'Usage metering for STT. Full Speech Analytics: GET /v1/speech-analytics/*.',
       docs: '/docs/SPEECH_ANALYTICS.md',
     };
   }

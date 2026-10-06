@@ -124,7 +124,7 @@ export class AiSafetyPlatformService {
       policyRuntimeIntegrated: true,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'AI Safety Platform monitoring snapshot (VL-293) — Policy Runtime integrated.',
+      note: 'AI Safety Platform monitoring snapshot — Policy Runtime integrated.',
     };
   }
 }

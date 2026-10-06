@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Workflow Operating System (VL-338)', () => {
+describe('Workflow Operating System', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

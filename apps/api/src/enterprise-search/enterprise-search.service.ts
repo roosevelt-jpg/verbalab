@@ -44,11 +44,11 @@ export class EnterpriseSearchService {
           id === 'hybrid'
             ? 'Light RRF of keyword + semantic — not BM25/Elastic hybrid OS.'
             : id === 'semantic'
-              ? 'pgvector cosine via VL-182 / VL-062.'
+              ? 'pgvector cosine via existing.'
               : 'ILIKE substring match on chunk content.',
       })),
       deferred: ['image', 'voice', 'translation_os', 'bm25_parity'],
-      note: 'Enterprise Search modes for VL-195.',
+      note: 'Enterprise Search modes for .',
     };
   }
 
@@ -297,9 +297,9 @@ export class EnterpriseSearchService {
       honesty: this.engine().honesty,
       note:
         mode === 'hybrid'
-          ? 'Light hybrid RRF over keyword + pgvector semantic (VL-195). Not Elastic/BM25 OS.'
+          ? 'Light hybrid RRF over keyword + pgvector semantic. Not Elastic/BM25 OS.'
           : mode === 'semantic'
-            ? 'Semantic search via VL-182 pgvector over VL-062 chunks.'
+            ? 'Semantic search via existing pgvector over existing chunks.'
             : 'Keyword ILIKE search over workspace knowledge chunks.',
     };
   }
@@ -373,7 +373,7 @@ export class EnterpriseSearchService {
       documents,
       chunks,
       searchesLast30d: searches,
-      note: 'Workspace-scoped Enterprise Search analytics (VL-195).',
+      note: 'Workspace-scoped Enterprise Search analytics.',
     };
   }
 

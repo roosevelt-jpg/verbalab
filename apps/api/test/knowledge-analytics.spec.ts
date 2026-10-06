@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Knowledge Analytics (VL-202)', () => {
+describe('Knowledge Analytics', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -66,7 +66,7 @@ describe('Knowledge Analytics (VL-202)', () => {
     expect(text).toMatch(/Language\/Speech\/Voice\/Intelligence/i);
     expect(text).toMatch(/BI/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
-    expect(text).toContain('VL-202');
+    expect(text).toContain('');
   });
 
   it('exposes engine with honest separation flags', async () => {

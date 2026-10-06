@@ -38,7 +38,7 @@ async function seedOrg(prisma: PrismaService, name: string, plan: string = 'free
   });
 }
 
-describe('Cloud Platform Foundation (VL-125)', () => {
+describe('Cloud Platform Foundation', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let workspaces: WorkspacesService;

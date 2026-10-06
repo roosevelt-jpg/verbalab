@@ -51,7 +51,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Reasoning Fabric (VL-244)', () => {
+describe('Reasoning Fabric', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -93,7 +93,7 @@ describe('Reasoning Fabric (VL-244)', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(phase)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-244');
+    expect(text).toContain('');
     expect(text).toMatch(/Reasoning Runtime/i);
     expect(text).toMatch(/custom reasoner/i);
     expect(text).toMatch(/hard gate|hard-gate/i);

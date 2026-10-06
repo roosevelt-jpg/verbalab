@@ -6,7 +6,7 @@ import { AppModule } from '../src/app.module';
 import { ApiExceptionFilter } from '../src/common/errors/api-exception.filter';
 import { openApiDocument } from '../src/openapi/openapi.document';
 
-describe('OpenAPI (VL-030)', () => {
+describe('OpenAPI', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

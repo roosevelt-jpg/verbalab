@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('AI Safety Platform (VL-293)', () => {
+describe('AI Safety Platform', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

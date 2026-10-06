@@ -26,7 +26,7 @@ export class AiRuntimeAnalyticsService {
       spendSafety: {
         hardSpendCeilingsRequired: true,
         note:
-          'Analytics is report-only. Spend enforcement remains Cost Optimization (VL-211) + GPU ceilings (VL-205).',
+          'Analytics is report-only. Spend enforcement remains Cost Optimization + GPU ceilings.',
       },
     };
   }
@@ -64,7 +64,7 @@ export class AiRuntimeAnalyticsService {
       models: { distinctSelected: models.distinctSelected, deployments: models.deployments },
       streaming: { sessions: streaming.sessions, chunks: streaming.chunks },
       honesty: aiRuntimeAnalyticsCatalog().honesty,
-      note: 'AI Runtime Analytics overview (VL-212) — Inference Cloud aggregates only.',
+      note: 'AI Runtime Analytics overview — Inference Cloud aggregates only.',
     };
   }
 
@@ -279,7 +279,7 @@ export class AiRuntimeAnalyticsService {
         namespace,
         ...v,
       })),
-      note: 'Intelligent Cache (VL-210) hit/miss aggregates.',
+      note: 'Intelligent Cache hit/miss aggregates.',
     };
   }
 
@@ -420,7 +420,7 @@ export class AiRuntimeAnalyticsService {
         events: c._count,
       })),
       gpuHourlyUsd,
-      note: 'Cost ledger (VL-211) + GPU hourly estimates — report-only here; enforce on Cost Optimization.',
+      note: 'Cost ledger + GPU hourly estimates — report-only here; enforce on Cost Optimization.',
       honesty: { reportOnly: true, enforcesSpendCaps: false },
     };
   }
@@ -538,7 +538,7 @@ export class AiRuntimeAnalyticsService {
       chunks,
       byKind: Object.entries(byKind).map(([kind, count]) => ({ kind, count })),
       byStatus: Object.entries(byStatus).map(([status, count]) => ({ status, count })),
-      note: 'Streaming Runtime (VL-208) session aggregates — not WebSocket/video OS.',
+      note: 'Streaming Runtime session aggregates — not WebSocket/video OS.',
     };
   }
 
@@ -586,7 +586,7 @@ export class AiRuntimeAnalyticsService {
       models,
       streaming,
       honesty: aiRuntimeAnalyticsCatalog().honesty,
-      note: 'Bundled Inference Cloud runtime report (VL-212) — not enterprise BI/PDF suite.',
+      note: 'Bundled Inference Cloud runtime report — not enterprise BI/PDF suite.',
     };
   }
 

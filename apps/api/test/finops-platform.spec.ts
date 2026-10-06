@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('FinOps Platform (VL-309)', () => {
+describe('FinOps Platform', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

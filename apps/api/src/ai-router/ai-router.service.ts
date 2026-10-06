@@ -41,7 +41,7 @@ export class AiRouterService {
         enforcesSpendCaps: true,
         costOptimizationApi: 'GET /v1/cost-optimization/engine',
         note:
-          'Resolve gates via Cost Optimization (VL-211) hard daily/monthly caps (402 when over). Router honesty.enforcesSpendCaps remains false (ledger lives in Cost Opt). GPU ceilings remain on GPU Platform (VL-205).',
+          'Resolve gates via Cost Optimization hard daily/monthly caps (402 when over). Router honesty.enforcesSpendCaps remains false (ledger lives in Cost Opt). GPU ceilings remain on GPU Platform.',
       },
     };
   }
@@ -276,7 +276,7 @@ export class AiRouterService {
       ...c,
     }));
 
-    // Hard spend gate via Cost Optimization (VL-211) — refuse when already over caps.
+    // Hard spend gate via Cost Optimization — refuse when already over caps.
     const spendGate = await this.cost.assertWithinCaps({
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,
@@ -307,19 +307,19 @@ export class AiRouterService {
         requested: Boolean(input.streaming ?? policy.streamingPreferred),
         capable: STREAMING_FEATURES.has(feature),
         note: STREAMING_FEATURES.has(feature)
-          ? 'Feature supports SSE where wired; dedicated Streaming Runtime is VL-208.'
+          ? 'Feature supports SSE where wired; dedicated Streaming Runtime is .'
           : 'Feature is request/response today.',
       },
       caching: {
         enabled: false,
-        note: 'Opt-in via Intelligent Cache (VL-210) — resolve does not auto-cache.',
+        note: 'Opt-in via Intelligent Cache — resolve does not auto-cache.',
         api: 'GET /v1/intelligent-cache/engine',
       },
       spendGate: {
         allowed: spendGate.allowed,
         enforce: spendGate.enforce,
         api: 'GET /v1/cost-optimization/engine',
-        note: 'Hard caps enforced by Cost Optimization (VL-211).',
+        note: 'Hard caps enforced by Cost Optimization.',
       },
       loadBalancing: {
         strategy: 'weighted_static',
@@ -332,7 +332,7 @@ export class AiRouterService {
       },
       dryRun: input.dryRun !== false,
       honesty: aiRouterCatalog().honesty,
-      note: 'Dry-run route plan — does not invoke the provider. Call Gateway APIs to execute. Spend caps enforced via VL-211.',
+      note: 'Dry-run route plan — does not invoke the provider. Call Gateway APIs to execute. Spend caps enforced via existing.',
     };
 
     const row = await this.prisma.aiRouterDecision.create({
@@ -435,7 +435,7 @@ export class AiRouterService {
         count: r._count,
       })),
       auditsLast30d: audits,
-      note: 'AI Router analytics (VL-207). ≠ VL-212 AI Runtime Analytics.',
+      note: 'AI Router analytics. ≠ AI Runtime Analytics.',
     };
   }
 
@@ -455,7 +455,7 @@ export class AiRouterService {
       deferred: engine.capabilities
         .filter((c) => c.status === 'deferred')
         .map((c) => c.id),
-      note: 'AI Router monitoring snapshot (VL-207).',
+      note: 'AI Router monitoring snapshot.',
     };
   }
 

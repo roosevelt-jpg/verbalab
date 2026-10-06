@@ -1,4 +1,4 @@
-/** Application ports for GitOps Platform (VL-306). */
+/** Application ports for GitOps Platform. */
 
 export type GitopsPlatformProductRow = {
   id: string;

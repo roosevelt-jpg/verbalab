@@ -42,7 +42,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Taxonomy Platform (VL-197)', () => {
+describe('Taxonomy Platform', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

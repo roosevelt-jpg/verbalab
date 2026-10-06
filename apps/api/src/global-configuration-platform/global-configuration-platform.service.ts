@@ -41,7 +41,7 @@ export class GlobalConfigurationPlatformService {
       count: (catalog as { configurations: unknown[] }).configurations.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'GlobalConfigurationPlatform monitoring snapshot (VL-316).',
+      note: 'GlobalConfigurationPlatform monitoring snapshot.',
     };
   }
 }

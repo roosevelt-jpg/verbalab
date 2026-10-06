@@ -800,7 +800,7 @@ export class PluginMarketplaceService {
       sales,
       runs,
       honesty: this.engine().honesty,
-      note: 'Plugin marketplace aggregates. Commerce depth deferred to Creator Economy (VL-258).',
+      note: 'Plugin marketplace aggregates. Commerce depth deferred to Creator Economy.',
     };
   }
 
@@ -811,7 +811,7 @@ export class PluginMarketplaceService {
       products: engine.capabilities.map((c) => ({ id: c.id, status: c.status })),
       honesty: engine.honesty,
       safety: engine.safety,
-      note: 'Plugin Marketplace monitoring snapshot (VL-250).',
+      note: 'Plugin Marketplace monitoring snapshot.',
     };
   }
 }

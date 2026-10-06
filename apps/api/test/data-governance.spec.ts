@@ -37,7 +37,7 @@ async function seedOrg(prisma: PrismaService, name: string, role: MembershipRole
   });
 }
 
-describe('Data governance (VL-073)', () => {
+describe('Data governance', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let governance: GovernanceService;

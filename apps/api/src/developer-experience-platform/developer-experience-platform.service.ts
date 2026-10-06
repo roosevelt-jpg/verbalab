@@ -41,7 +41,7 @@ export class DeveloperExperiencePlatformService {
       count: (catalog as { devex: unknown[] }).devex.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'DeveloperExperiencePlatform monitoring snapshot (VL-311).',
+      note: 'DeveloperExperiencePlatform monitoring snapshot.',
     };
   }
 }

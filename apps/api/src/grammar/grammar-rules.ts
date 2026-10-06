@@ -45,7 +45,7 @@ export function listCommonMisspellings(): Record<string, string> {
   return { ...COMMON_MISSPELLINGS };
 }
 
-/** Spell-only pass (VL-142). */
+/** Spell-only pass. */
 export function applySpellRules(text: string): {
   corrected: string;
   issues: GrammarIssue[];
@@ -115,7 +115,7 @@ function collectMatches(text: string, re: RegExp): RegExpExecArray[] {
 }
 
 /**
- * Deterministic grammar/spelling heuristics (VL-133).
+ * Deterministic grammar/spelling heuristics.
  * English-leaning; not a full grammar engine.
  */
 export function applyGrammarRules(text: string): {

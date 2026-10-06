@@ -43,7 +43,7 @@ export class SyntheticDataPlatformService {
       artifactCount: catalog.artifacts.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Synthetic Data Platform monitoring snapshot (VL-273).',
+      note: 'Synthetic Data Platform monitoring snapshot.',
     };
   }
 }

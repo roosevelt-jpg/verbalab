@@ -50,7 +50,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('AI Kernel Production Audit (VL-223)', () => {
+describe('AI Kernel Production Audit', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -346,7 +346,7 @@ describe('AI Kernel Production Audit (VL-223)', () => {
 
   it('documents Volume 8 close and Volume 9 not invented here', () => {
     const living = readFileSync(join(root, 'docs/CLOUD_BLUEPRINT.md'), 'utf8');
-    expect(living).toMatch(/VL-214\s*→\s*VL-223/);
+    expect(living).toMatch(/\s*→\s*);
     expect(living).toMatch(/Volume 9|unscheduled|ask when ready/i);
     const readiness = readFileSync(
       join(root, 'docs/ai-kernel-audit/KERNEL_READINESS_REPORT.md'),

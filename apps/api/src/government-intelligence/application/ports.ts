@@ -1,4 +1,4 @@
-/** Application ports for Government Intelligence (VL-264). */
+/** Application ports for Government Intelligence. */
 
 export type GovernmentIntelligenceProductRow = {
   id: string;

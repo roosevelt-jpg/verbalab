@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Risk Intelligence (VL-298)', () => {
+describe('Risk Intelligence', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

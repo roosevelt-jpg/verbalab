@@ -77,7 +77,7 @@ export class SecretsCertificatePlatformService {
       auditCount: catalog.accessAudit.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Secrets & Certificate Platform monitoring snapshot (VL-320).',
+      note: 'Secrets & Certificate Platform monitoring snapshot.',
     };
   }
 }

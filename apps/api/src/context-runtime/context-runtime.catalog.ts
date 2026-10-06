@@ -46,14 +46,14 @@ export const CONTEXT_RUNTIME_PRIORITIES: Array<{ kind: string; priority: number 
 ];
 
 /**
- * Library Phase 84 → Context Runtime (VL-217).
- * Kernel assembly over VL-185 Context Engine — not infinite-context OS.
+ * Library Phase 84 → Context Runtime.
+ * Kernel assembly over existing Context Engine — not infinite-context OS.
  */
 export function contextRuntimeCatalog() {
   return {
     product: 'Lugemi Context Runtime',
     note:
-      'Context Runtime (VL-217). Kernel assembly over VL-185 Context Engine (conversation/workspace/org/project/language/user/knowledge/model blocks, prioritization, char-budget compression, retrieval). Optional Intelligent Cache namespace=context. Not an infinite context window, not LLM summarization OS, not realtime push. Does not regenerate Context Engine.',
+      'Context Runtime. Kernel assembly over existing Context Engine (conversation/workspace/org/project/language/user/knowledge/model blocks, prioritization, char-budget compression, retrieval). Optional Intelligent Cache namespace=context. Not an infinite context window, not LLM summarization OS, not realtime push. Does not regenerate Context Engine.',
     capabilities: [
       {
         id: 'conversation-context',

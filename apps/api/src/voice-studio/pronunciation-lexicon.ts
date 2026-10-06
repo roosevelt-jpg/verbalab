@@ -1,5 +1,5 @@
 /**
- * Workspace pronunciation lexicon for Voice Studio (VL-174).
+ * Workspace pronunciation lexicon for Voice Studio.
  * Grapheme → spoken alias applied before TTS. Not forced alignment / IPA engines.
  */
 

@@ -50,7 +50,7 @@ function applyProsodyHints(text: string, rate?: string, pitch?: string): string 
   if (!out) return out;
   const r = (rate ?? '').toLowerCase();
   if (r.includes('slow') || r.includes('x-slow') || r.includes('-')) {
-    out = out.replace(/([.!?])\s*/g, '$1  ').replace(/,/g, ', ');
+    out = out.replace(/([.!?])\s*/g, '$1 ').replace(/,/g, ', ');
   }
   if (r.includes('fast') || r.includes('x-fast') || r.includes('+')) {
     out = out.replace(/\s+/g, ' ');

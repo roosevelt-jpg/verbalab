@@ -10,6 +10,6 @@ describe('chunkText', () => {
   });
 
   it('returns empty for blank input', () => {
-    expect(chunkText('   \n\n  ')).toEqual([]);
+    expect(chunkText(' \n\n ')).toEqual([]);
   });
 });

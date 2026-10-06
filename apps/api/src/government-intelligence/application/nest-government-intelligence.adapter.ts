@@ -34,7 +34,7 @@ export class NestGovernmentIntelligenceCatalogAdapter implements GovernmentIntel
         status: 'shipped',
         api: 'GET /v1/government-intelligence/engine',
         console: '/government-intelligence',
-        notes: 'VL-264 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

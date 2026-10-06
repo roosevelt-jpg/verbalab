@@ -1,4 +1,4 @@
-/** Application ports for PromptOps Platform (VL-285). */
+/** Application ports for PromptOps Platform. */
 
 export type PromptopsPlatformProductRow = {
   id: string;

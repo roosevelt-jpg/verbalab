@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Plugin Operating System (VL-342)', () => {
+describe('Plugin Operating System', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

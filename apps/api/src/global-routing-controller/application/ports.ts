@@ -1,4 +1,4 @@
-/** Application ports for Global Routing Controller (VL-319). */
+/** Application ports for Global Routing Controller. */
 
 export type GlobalRoutingControllerProductRow = {
   id: string;

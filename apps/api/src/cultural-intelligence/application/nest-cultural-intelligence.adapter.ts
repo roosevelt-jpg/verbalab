@@ -34,7 +34,7 @@ export class NestCulturalIntelligenceCatalogAdapter implements CulturalIntellige
         status: 'shipped',
         api: 'GET /v1/cultural-intelligence/engine',
         console: '/cultural-intelligence',
-        notes: 'VL-262 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

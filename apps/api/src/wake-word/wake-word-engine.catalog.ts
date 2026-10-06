@@ -10,7 +10,7 @@ export type WakeCapability = {
 
 export const DEFAULT_WAKE_PHRASES = ['hey lugemi', 'ok lugemi', 'lugemi'] as const;
 
-/** Library Phase 23 → Wake Word & Keyword Intelligence (VL-157). */
+/** Library Phase 23 → Wake Word & Keyword Intelligence. */
 export function wakeWordEngineCatalog() {
   return {
     product: 'Lugemi Wake Word Engine',

@@ -37,7 +37,7 @@ export class NestRepositoryStandardsCatalogAdapter implements RepositoryStandard
         status: 'shipped',
         api: 'GET /v1/repository-standards/engine',
         console: '/repository-standards',
-        notes: 'VL-347 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

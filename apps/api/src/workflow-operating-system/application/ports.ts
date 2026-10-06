@@ -1,4 +1,4 @@
-/** Application ports for Workflow Operating System (VL-338). */
+/** Application ports for Workflow Operating System. */
 
 export type WorkflowOperatingSystemProductRow = {
   id: string;

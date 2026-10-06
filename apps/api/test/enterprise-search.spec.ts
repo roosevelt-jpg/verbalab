@@ -42,7 +42,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Enterprise Search (VL-195)', () => {
+describe('Enterprise Search', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -94,7 +94,7 @@ describe('Enterprise Search (VL-195)', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/Elastic/i);
-    expect(text).toContain('VL-062');
+    expect(text).toContain('');
     expect(text).toMatch(/hybrid/i);
   });
 

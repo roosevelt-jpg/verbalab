@@ -87,7 +87,7 @@ export class TrustAnalyticsService {
       shippedProducts: trustCloudProductCatalog().filter((p) => p.status === 'shipped').length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Trust Analytics monitoring snapshot (VL-300).',
+      note: 'Trust Analytics monitoring snapshot.',
     };
   }
 }

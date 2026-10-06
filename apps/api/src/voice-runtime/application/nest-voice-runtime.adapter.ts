@@ -37,7 +37,7 @@ export class NestVoiceRuntimeCatalogAdapter implements VoiceRuntimeCatalogPort {
         status: 'shipped',
         api: 'GET /v1/voice-runtime/engine',
         console: '/voice-runtime',
-        notes: 'VL-327 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

@@ -1,4 +1,4 @@
-/** Application ports for Secrets & Certificate Platform (VL-320). */
+/** Application ports for Secrets & Certificate Platform. */
 
 export type SecretsCertificatePlatformProductRow = {
   id: string;

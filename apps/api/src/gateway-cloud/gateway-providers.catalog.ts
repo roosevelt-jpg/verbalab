@@ -21,7 +21,7 @@ function envSet(key: string | null): boolean {
   return Boolean(process.env[key]?.trim());
 }
 
-/** Library Phase 5 provider map — honest configured flags (VL-129). */
+/** Library Phase 5 provider map — honest configured flags. */
 export function gatewayProviderCatalog(): GatewayProviderRow[] {
   const rows: Array<Omit<GatewayProviderRow, 'configured'> & { envKey: string | null }> = [
     {
@@ -62,7 +62,7 @@ export function gatewayProviderCatalog(): GatewayProviderRow[] {
       status: 'optional',
       features: ['chat'],
       envKey: 'OPENROUTER_API_KEY',
-      notes: 'Optional OpenAI-compatible chat fallback (VL-129).',
+      notes: 'Optional OpenAI-compatible chat fallback.',
     },
     {
       id: 'own_tts',
@@ -70,7 +70,7 @@ export function gatewayProviderCatalog(): GatewayProviderRow[] {
       status: 'optional',
       features: ['tts'],
       envKey: 'OWN_TTS_URL',
-      notes: 'own:* voices (VL-121).',
+      notes: 'own:* voices.',
     },
     {
       id: 'vendor_clone',
@@ -78,7 +78,7 @@ export function gatewayProviderCatalog(): GatewayProviderRow[] {
       status: 'optional',
       features: ['tts'],
       envKey: 'VENDOR_VOICE_CLONE_API_KEY',
-      notes: 'Voice clones (VL-064). Legacy ELEVENLABS_API_KEY still accepted.',
+      notes: 'Voice clones. Legacy ELEVENLABS_API_KEY still accepted.',
     },
     {
       id: 'claude',

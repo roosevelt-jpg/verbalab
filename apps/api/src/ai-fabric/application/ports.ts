@@ -1,4 +1,4 @@
-/** Application ports for AI Fabric Foundation (VL-239). */
+/** Application ports for AI Fabric Foundation. */
 
 export type FabricBusRow = {
   id: string;

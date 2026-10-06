@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Identity Federation (VL-299)', () => {
+describe('Identity Federation', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

@@ -41,7 +41,7 @@ export class OntologyPlatformService {
             ? 'Domain tag allowed on concepts; certified vertical ontology pack deferred.'
             : 'Default workspace ontology domain.',
       })),
-      note: 'Vertical packs are tags, not OWL/SNOMED/FIBO OS (VL-196).',
+      note: 'Vertical packs are tags, not OWL/SNOMED/FIBO OS.',
     };
   }
 
@@ -352,7 +352,7 @@ export class OntologyPlatformService {
       categories,
       hierarchyEdges: isA,
       synonymEdges: synonyms,
-      note: 'Workspace-scoped Ontology analytics (VL-196).',
+      note: 'Workspace-scoped Ontology analytics.',
     };
   }
 

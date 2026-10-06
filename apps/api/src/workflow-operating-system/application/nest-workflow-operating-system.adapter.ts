@@ -37,7 +37,7 @@ export class NestWorkflowOperatingSystemCatalogAdapter implements WorkflowOperat
         status: 'shipped',
         api: 'GET /v1/workflow-operating-system/engine',
         console: '/workflow-operating-system',
-        notes: 'VL-338 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

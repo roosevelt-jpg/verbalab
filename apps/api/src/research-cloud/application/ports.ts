@@ -1,4 +1,4 @@
-/** Application ports for Research Cloud (VL-271). */
+/** Application ports for Research Cloud. */
 
 export type ResearchCloudProductRow = {
   id: string;

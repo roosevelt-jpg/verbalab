@@ -206,7 +206,7 @@ export class ModelMarketplaceService {
         storesRawCardData: false,
         creatorPayoutMathVerifiedLive: false,
       },
-      note: 'Recorded receipts only. Creator Economy (VL-258) expands payout math — hand-check before live creators.',
+      note: 'Recorded receipts only. Creator Economy expands payout math — hand-check before live creators.',
     };
   }
 
@@ -247,7 +247,7 @@ export class ModelMarketplaceService {
     if (!card) {
       throw new ApiException(
         'not_found',
-        `Model slug "${slug}" not found in Model Registry / VL-110 cards`,
+        `Model slug "${slug}" not found in Model Registry / cards`,
         HttpStatus.NOT_FOUND,
       );
     }
@@ -701,7 +701,7 @@ export class ModelMarketplaceService {
       sales,
       reviews,
       honesty: this.engine().honesty,
-      note: 'Model marketplace aggregates. Payout depth deferred to Creator Economy (VL-258).',
+      note: 'Model marketplace aggregates. Payout depth deferred to Creator Economy.',
     };
   }
 
@@ -712,7 +712,7 @@ export class ModelMarketplaceService {
       products: engine.capabilities.map((c) => ({ id: c.id, status: c.status })),
       honesty: engine.honesty,
       safety: engine.safety,
-      note: 'Model Marketplace monitoring snapshot (VL-251).',
+      note: 'Model Marketplace monitoring snapshot.',
     };
   }
 }

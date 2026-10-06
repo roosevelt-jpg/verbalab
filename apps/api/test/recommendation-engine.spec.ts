@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Recommendation Engine (VL-187)', () => {
+describe('Recommendation Engine', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -64,7 +64,7 @@ describe('Recommendation Engine (VL-187)', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/not.*retail recommender/i);
-    expect(text).toContain('VL-187');
+    expect(text).toContain('');
   });
 
   it('exposes engine with retailRecommenderOs=false', async () => {

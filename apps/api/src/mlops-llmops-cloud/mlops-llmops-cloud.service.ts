@@ -32,7 +32,7 @@ export class MlopsLlmopsCloudService {
       },
       docs: '/docs/MLOPS_LLMOPS_CLOUD.md',
       note:
-        'MLOps & LLMOps Cloud Foundation (VL-281). Extends Inference/Kernel/Foundation/RAG/Agent/Prompt. Not Kubeflow/SageMaker/Vertex/W&B/MLflow/LangSmith/Ray OS. Trust Cloud deferred.',
+        'MLOps & LLMOps Cloud Foundation. Extends Inference/Kernel/Foundation/RAG/Agent/Prompt. Not Kubeflow/SageMaker/Vertex/W&B/MLflow/LangSmith/Ray OS. Trust Cloud deferred.',
     };
   }
 
@@ -105,7 +105,7 @@ export class MlopsLlmopsCloudService {
       },
       docs: '/docs/MLOPS_LLMOPS_CLOUD.md',
       note:
-        'MLOps & LLMOps Cloud (VL-281–291). Discovery hub over dataset/training/eval/prompt/rag/agent/drift/learning/dashboard; Production Audit closes the volume.',
+        'MLOps & LLMOps Cloud (–291). Discovery hub over dataset/training/eval/prompt/rag/agent/drift/learning/dashboard; Production Audit closes the volume.',
     };
   }
 
@@ -117,7 +117,7 @@ export class MlopsLlmopsCloudService {
       assetTypes: mlopsAssetTypesCatalog().map((a) => ({ id: a.id, status: a.status })),
       architecture: mlopsLlmopsCloudArchitectureNotes(),
       honesty: mlopsLlmopsCloudHonesty(),
-      note: 'MLOps & LLMOps Cloud monitoring snapshot (VL-281).',
+      note: 'MLOps & LLMOps Cloud monitoring snapshot.',
     };
   }
 }

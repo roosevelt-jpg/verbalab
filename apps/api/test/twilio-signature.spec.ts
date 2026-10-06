@@ -1,6 +1,6 @@
 import { signTwilioRequest, verifyTwilioSignature, parseFormBody } from '../src/voice/twilio-signature';
 
-describe('Twilio signature (VL-084)', () => {
+describe('Twilio signature', () => {
   const token = 'test_auth_token';
   const url = 'https://api.example.com/v1/voice/twilio/inbound';
 

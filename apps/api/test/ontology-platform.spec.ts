@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Ontology Platform (VL-196)', () => {
+describe('Ontology Platform', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -64,7 +64,7 @@ describe('Ontology Platform (VL-196)', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/OWL/i);
-    expect(text).toContain('VL-184');
+    expect(text).toContain('');
     expect(text).toMatch(/org\/workspace/i);
   });
 

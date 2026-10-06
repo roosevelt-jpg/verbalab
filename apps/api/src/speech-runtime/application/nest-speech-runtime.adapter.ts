@@ -37,7 +37,7 @@ export class NestSpeechRuntimeCatalogAdapter implements SpeechRuntimeCatalogPort
         status: 'shipped',
         api: 'GET /v1/speech-runtime/engine',
         console: '/speech-runtime',
-        notes: 'VL-326 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

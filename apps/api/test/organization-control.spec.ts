@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Organization Control (VL-315)', () => {
+describe('Organization Control', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

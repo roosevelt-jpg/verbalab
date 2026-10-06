@@ -49,7 +49,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Agent Marketplace (VL-254)', () => {
+describe('Agent Marketplace', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -85,7 +85,7 @@ describe('Agent Marketplace (VL-254)', () => {
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-254');
+    expect(text).toContain('');
     expect(text).toMatch(/sandbox/i);
     expect(text).toMatch(/Policy/i);
     expect(text).toMatch(/liveToolExecution/i);

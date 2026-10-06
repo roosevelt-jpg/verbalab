@@ -8,12 +8,12 @@ export type SpeechCapability = {
   notes: string;
 };
 
-/** Library Phase 17 → Lugemi Speech Recognition Engine (VL-151). */
+/** Library Phase 17 → Lugemi Speech Recognition Engine. */
 export function speechEngineCatalog() {
   return {
     product: 'Lugemi Speech',
     note:
-      'Recognition engine over OpenAI Whisper (batch + segment SSE). Not Deepgram/AssemblyAI parity. True low-latency vendor WebSocket streaming remains buy/VL-122 depth.',
+      'Recognition engine over OpenAI Whisper (batch + segment SSE). Not Deepgram/AssemblyAI parity. True low-latency vendor WebSocket streaming remains buy/ depth.',
     capabilities: [
       {
         id: 'batch-stt',
@@ -111,7 +111,7 @@ export function speechEngineCatalog() {
         name: 'Analytics',
         status: 'partial',
         api: 'GET /v1/speech/engine/analytics',
-        notes: 'STT usage summary for the org. Dedicated Speech Analytics: /v1/speech-analytics (VL-159).',
+        notes: 'STT usage summary for the org. Dedicated Speech Analytics: /v1/speech-analytics.',
       },
     ] satisfies SpeechCapability[],
     engines: [

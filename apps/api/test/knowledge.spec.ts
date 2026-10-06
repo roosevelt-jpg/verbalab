@@ -40,7 +40,7 @@ function fakeEmbedding(seed: number): number[] {
   return Array.from({ length: 1536 }, (_, i) => Math.sin((seed + 1) * (i + 1) * 0.01) * 0.1);
 }
 
-describe('Knowledge + RAG (VL-062)', () => {
+describe('Knowledge + RAG', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

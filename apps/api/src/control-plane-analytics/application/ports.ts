@@ -1,4 +1,4 @@
-/** Application ports for Control Plane Analytics (VL-322). */
+/** Application ports for Control Plane Analytics. */
 
 export type ControlPlaneAnalyticsProductRow = {
   id: string;

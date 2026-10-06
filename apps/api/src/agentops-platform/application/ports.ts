@@ -1,4 +1,4 @@
-/** Application ports for AgentOps Platform (VL-287). */
+/** Application ports for AgentOps Platform. */
 
 export type AgentopsPlatformProductRow = {
   id: string;

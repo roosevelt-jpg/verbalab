@@ -37,7 +37,7 @@ export class NestBenchmarkPlatformCatalogAdapter implements BenchmarkPlatformCat
         status: 'shipped',
         api: 'GET /v1/benchmark-platform/engine',
         console: '/benchmark-platform',
-        notes: 'VL-274 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

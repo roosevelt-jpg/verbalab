@@ -47,7 +47,7 @@ function fakeFile(name: string, text: string): Express.Multer.File {
   };
 }
 
-describe('Dataset program (VL-101)', () => {
+describe('Dataset program', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let datasets: DatasetsService;
@@ -92,7 +92,7 @@ describe('Dataset program (VL-101)', () => {
         role: 'owner',
         title: 'Pack',
         licenseTag: 'cc-by-4.0',
-        consentNotes: '   ',
+        consentNotes: ' ',
         file: fakeFile('a.txt', 'hello'),
       }),
     ).rejects.toMatchObject({ code: 'validation_error' });

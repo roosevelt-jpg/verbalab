@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Resource Manager (VL-337)', () => {
+describe('Resource Manager', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

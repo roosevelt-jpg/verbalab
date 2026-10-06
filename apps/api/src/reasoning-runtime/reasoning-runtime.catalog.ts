@@ -26,14 +26,14 @@ export function reasoningRuntimeCeilings() {
 }
 
 /**
- * Library Phase 85 → Reasoning Runtime (VL-218).
- * Kernel execution over VL-186 Reasoning Cloud — not a custom reasoner OS.
+ * Library Phase 85 → Reasoning Runtime.
+ * Kernel execution over existing Reasoning Cloud — not a custom reasoner OS.
  */
 export function reasoningRuntimeCatalog() {
   return {
     product: 'Lugemi Reasoning Runtime',
     note:
-      'Reasoning Runtime (VL-218). Kernel execution over VL-186 Reasoning Cloud (graphs/ToT/planning/tool+model selection) plus reflection, self-eval, confidence, decision-tree façade, history/replay via kernel MemoryRecords. Not a custom reasoner kernel, not symbolic reasoner OS, not tool-execution agent OS. Does not regenerate Reasoning Cloud.',
+      'Reasoning Runtime. Kernel execution over existing Reasoning Cloud (graphs/ToT/planning/tool+model selection) plus reflection, self-eval, confidence, decision-tree façade, history/replay via kernel MemoryRecords. Not a custom reasoner kernel, not symbolic reasoner OS, not tool-execution agent OS. Does not regenerate Reasoning Cloud.',
     capabilities: [
       {
         id: 'reasoning-graphs',

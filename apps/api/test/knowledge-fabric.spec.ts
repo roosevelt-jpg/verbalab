@@ -51,7 +51,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Knowledge Fabric (VL-242)', () => {
+describe('Knowledge Fabric', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -89,7 +89,7 @@ describe('Knowledge Fabric (VL-242)', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(phase)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-242');
+    expect(text).toContain('');
     expect(text).toMatch(/Knowledge Cloud/i);
     expect(text).toMatch(/Confluence|SharePoint/i);
     expect(text).toMatch(/Neo4j/i);

@@ -37,7 +37,7 @@ export class NestReliabilityEngineeringCatalogAdapter implements ReliabilityEngi
         status: 'shipped',
         api: 'GET /v1/reliability-engineering/engine',
         console: '/reliability-engineering',
-        notes: 'VL-308 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

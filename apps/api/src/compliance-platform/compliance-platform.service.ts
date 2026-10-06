@@ -41,7 +41,7 @@ export class CompliancePlatformService {
       count: (catalog as { controls: unknown[] }).controls.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'CompliancePlatform monitoring snapshot (VL-297).',
+      note: 'CompliancePlatform monitoring snapshot.',
     };
   }
 }

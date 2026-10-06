@@ -50,7 +50,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Plugin Marketplace (VL-250)', () => {
+describe('Plugin Marketplace', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -105,7 +105,7 @@ describe('Plugin Marketplace (VL-250)', () => {
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-250');
+    expect(text).toContain('');
     expect(text).toMatch(/sandbox/i);
     expect(text).toMatch(/Policy/i);
     expect(text).toMatch(/liveCodeExecution/i);

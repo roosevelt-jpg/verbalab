@@ -1,4 +1,4 @@
-/** Application ports for Service Catalog (VL-304). */
+/** Application ports for Service Catalog. */
 
 export type ServiceCatalogProductRow = {
   id: string;

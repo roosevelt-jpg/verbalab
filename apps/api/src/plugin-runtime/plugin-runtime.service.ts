@@ -70,7 +70,7 @@ export class PluginRuntimeService {
         liveCodeExecutionForbidden: true,
         policyMustHardGate: true,
         note:
-          'Every plugin action passes PluginPolicyGate (local hard allowlist). Policy Runtime (VL-222) will harden further. Not a browser/VS Code extension OS.',
+          'Every plugin action passes PluginPolicyGate (local hard allowlist). Policy Runtime will harden further. Not a browser/VS Code extension OS.',
       },
     };
   }
@@ -368,7 +368,7 @@ export class PluginRuntimeService {
       console: '/plugin-marketplace',
       honesty: { regeneratesMarketplace: false, extendsMarketplace: true },
       note:
-        'Listing counts for kind=plugin. Full publish/install/run lives at /v1/plugin-marketplace (VL-250) with sandbox + Policy gates.',
+        'Listing counts for kind=plugin. Full publish/install/run lives at /v1/plugin-marketplace with sandbox + Policy gates.',
     };
   }
 

@@ -41,7 +41,7 @@ export class ReliabilityEngineeringService {
       count: (catalog as { reliability: unknown[] }).reliability.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'ReliabilityEngineering monitoring snapshot (VL-308).',
+      note: 'ReliabilityEngineering monitoring snapshot.',
     };
   }
 }

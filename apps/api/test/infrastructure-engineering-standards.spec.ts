@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Infrastructure Engineering Standards (VL-352)', () => {
+describe('Infrastructure Engineering Standards', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

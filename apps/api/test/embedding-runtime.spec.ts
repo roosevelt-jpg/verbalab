@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Embedding Runtime (VL-330)', () => {
+describe('Embedding Runtime', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

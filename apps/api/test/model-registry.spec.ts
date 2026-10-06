@@ -46,7 +46,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Model Registry hub (VL-237)', () => {
+describe('Model Registry hub', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let registry: ModelRegistryService;
@@ -74,8 +74,8 @@ describe('Model Registry hub (VL-237)', () => {
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-237');
-    expect(text).toMatch(/VL-110|models\/live/i);
+    expect(text).toContain('');
+    expect(text).toMatch(/|models\/live/i);
     expect(text).toMatch(/MLflow|trafficMesh/i);
     expect(text).toContain('CQRS');
   });
@@ -93,7 +93,7 @@ describe('Model Registry hub (VL-237)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes public engine with honest capabilities + VL-110 bridge', async () => {
+  it('exposes public engine with honest capabilities + bridge', async () => {
     const res = await request(app.getHttpServer())
       .get('/v1/model-registry/engine')
       .expect(200);

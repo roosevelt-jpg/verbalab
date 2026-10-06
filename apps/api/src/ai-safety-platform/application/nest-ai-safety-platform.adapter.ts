@@ -37,7 +37,7 @@ export class NestAiSafetyPlatformCatalogAdapter implements AiSafetyPlatformCatal
         status: 'shipped',
         api: 'GET /v1/ai-safety-platform/engine',
         console: '/ai-safety-platform',
-        notes: 'VL-293 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

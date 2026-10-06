@@ -37,7 +37,7 @@ export class NestAgentopsPlatformCatalogAdapter implements AgentopsPlatformCatal
         status: 'shipped',
         api: 'GET /v1/agentops-platform/engine',
         console: '/agentops-platform',
-        notes: 'VL-287 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

@@ -1,4 +1,4 @@
-/** Application ports for Model Marketplace (VL-251). */
+/** Application ports for Model Marketplace. */
 
 export type ModelMarketplaceEngineBundle = ReturnType<
   import('../model-marketplace.service').ModelMarketplaceService['engine']

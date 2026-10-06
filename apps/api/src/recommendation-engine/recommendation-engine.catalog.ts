@@ -8,12 +8,12 @@ export type RecCapability = {
   notes: string;
 };
 
-/** Library Phase 54 → Recommendation Engine (VL-187). Light rankers — not a retail recommender OS. */
+/** Library Phase 54 → Recommendation Engine. Light rankers — not a retail recommender OS. */
 export function recommendationEngineCatalog() {
   return {
     product: 'Lugemi Recommendation Engine',
     note:
-      'Light rankers over languages, voices, knowledge/content, translation pairs, models, and workflow APIs (VL-187). Uses registry/TTS/Vector/Memory catalogs + optional memory text signals. Not a collaborative-filtering / retail recommender OS.',
+      'Light rankers over languages, voices, knowledge/content, translation pairs, models, and workflow APIs. Uses registry/TTS/Vector/Memory catalogs + optional memory text signals. Not a collaborative-filtering / retail recommender OS.',
     capabilities: [
       {
         id: 'content-recommendation',

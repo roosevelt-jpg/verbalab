@@ -37,7 +37,7 @@ export class NestAiOperationsDashboardCatalogAdapter implements AiOperationsDash
         status: 'shipped',
         api: 'GET /v1/ai-operations-dashboard/engine',
         console: '/ai-operations-dashboard',
-        notes: 'VL-290 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

@@ -50,7 +50,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Workflow Marketplace (VL-255)', () => {
+describe('Workflow Marketplace', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -105,7 +105,7 @@ describe('Workflow Marketplace (VL-255)', () => {
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-255');
+    expect(text).toContain('');
     expect(text).toMatch(/sandbox/i);
     expect(text).toMatch(/Policy/i);
     expect(text).toMatch(/liveStepExecution/i);

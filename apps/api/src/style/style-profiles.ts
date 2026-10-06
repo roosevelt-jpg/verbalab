@@ -222,7 +222,7 @@ function countMatches(text: string, re: RegExp): number {
 }
 
 /**
- * Heuristic tone detection (VL-143). Cue scoring — not a trained classifier.
+ * Heuristic tone detection. Cue scoring — not a trained classifier.
  */
 export function detectTone(text: string): ToneDetectResult {
   const scores: Record<StyleProfileId, number> = {
@@ -300,12 +300,12 @@ export function detectTone(text: string): ToneDetectResult {
     scores,
     signals: signals.slice(0, 24),
     suggestedProfile: detectedTone,
-    note: 'Heuristic cue scoring (VL-143) — not a trained tone classifier or author-style model.',
+    note: 'Heuristic cue scoring — not a trained tone classifier or author-style model.',
   };
 }
 
 /**
- * Deterministic style transforms (VL-134 / VL-142 / VL-143). English-leaning; not a style OS.
+ * Deterministic style transforms. English-leaning; not a style OS.
  */
 export function applyStyleRules(
   text: string,

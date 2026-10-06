@@ -37,7 +37,7 @@ export class NestAiMemoryOperatingSystemCatalogAdapter implements AiMemoryOperat
         status: 'shipped',
         api: 'GET /v1/ai-memory-operating-system/engine',
         console: '/ai-memory-operating-system',
-        notes: 'VL-340 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

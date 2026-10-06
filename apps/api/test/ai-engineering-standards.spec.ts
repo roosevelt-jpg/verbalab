@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('AI Engineering Standards (VL-349)', () => {
+describe('AI Engineering Standards', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

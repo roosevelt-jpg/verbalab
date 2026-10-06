@@ -8,7 +8,7 @@ export type LocalizationCapability = {
   notes: string;
 };
 
-/** Library Phase 9 → Lugemi Localization Platform (VL-141). */
+/** Library Phase 9 → Lugemi Localization Platform. */
 export function localizationPlatformCatalog() {
   return {
     product: 'Enterprise Localization Platform',
@@ -48,7 +48,7 @@ export function localizationPlatformCatalog() {
         name: 'Timezone',
         status: 'shipped',
         api: 'POST /v1/locales/format',
-        notes: 'IANA timeZone on Intl.DateTimeFormat (VL-141).',
+        notes: 'IANA timeZone on Intl.DateTimeFormat.',
       },
       {
         id: 'date_formats',
@@ -127,7 +127,7 @@ export function localizationPlatformCatalog() {
       localePacks: { status: 'shipped', api: '/v1/locales' },
       qa: { status: 'shipped', api: 'POST /v1/localize/qa' },
       rest: { status: 'shipped' },
-      graphql: { status: 'shipped', notes: 'localize + ICU ops (VL-141)' },
+      graphql: { status: 'shipped', notes: 'localize + ICU ops' },
       sdk: { status: 'shipped', package: '@lugemi/sdk' },
       analytics: { status: 'partial', api: 'GET /v1/analytics/overview', notes: 'Org translate analytics' },
       monitoring: { status: 'partial', api: 'GET /v1/metrics/translate' },

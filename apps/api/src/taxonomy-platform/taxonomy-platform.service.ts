@@ -433,7 +433,7 @@ export class TaxonomyPlatformService {
       tags,
       contentTypes,
       assignments,
-      note: 'Workspace-scoped Taxonomy analytics (VL-197).',
+      note: 'Workspace-scoped Taxonomy analytics.',
     };
   }
 

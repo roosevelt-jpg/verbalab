@@ -78,7 +78,7 @@ export class SupplyChainSecurityService {
       packageCount: catalog.packages.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Supply Chain Security monitoring snapshot (VL-310).',
+      note: 'Supply Chain Security monitoring snapshot.',
     };
   }
 }

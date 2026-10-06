@@ -30,7 +30,7 @@ export class TrustCloudService {
       },
       docs: '/docs/TRUST_CLOUD.md',
       note:
-        'Trust Cloud Foundation (VL-292). Enforcement/governance layer over existing systems. Not Okta/GRC/certification/SIEM/Platform Engineering OS.',
+        'Trust Cloud Foundation. Enforcement/governance layer over existing systems. Not Okta/GRC/certification/SIEM/Platform Engineering OS.',
     };
   }
 
@@ -100,7 +100,7 @@ export class TrustCloudService {
       },
       docs: '/docs/TRUST_CLOUD.md',
       note:
-        'Trust Cloud (VL-292–301). Discovery hub over safety/governance/explainability/privacy/compliance/risk/identity/analytics; Production Audit closes the volume.',
+        'Trust Cloud (–301). Discovery hub over safety/governance/explainability/privacy/compliance/risk/identity/analytics; Production Audit closes the volume.',
     };
   }
 
@@ -111,7 +111,7 @@ export class TrustCloudService {
       products: products.map((p) => ({ id: p.id, status: p.status })),
       architecture: trustCloudArchitectureNotes(),
       honesty: trustCloudHonesty(),
-      note: 'Trust Cloud monitoring snapshot (VL-292).',
+      note: 'Trust Cloud monitoring snapshot.',
     };
   }
 }

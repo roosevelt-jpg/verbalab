@@ -49,7 +49,7 @@ export class IntelligenceAnalyticsService {
         avgPromptEvalScore: quality.avgPromptEvalScore,
         samples: quality.samples,
       },
-      note: 'Intelligence Analytics overview (VL-191) — not Language/Speech/Voice analytics.',
+      note: 'Intelligence Analytics overview — not Language/Speech/Voice analytics.',
     };
   }
 
@@ -83,7 +83,7 @@ export class IntelligenceAnalyticsService {
       periodEnd: periodEnd.toISOString(),
       chat,
       embeddings,
-      note: 'From usage_events feature=chat|embeddings (VL-191).',
+      note: 'From usage_events feature=chat|embeddings.',
     };
   }
 
@@ -119,7 +119,7 @@ export class IntelligenceAnalyticsService {
         .map(([action, count]) => ({ action, count }))
         .sort((a, b) => b.count - a.count)
         .slice(0, 40),
-      note: 'Intelligence Cloud surface audit aggregates (VL-191).',
+      note: 'Intelligence Cloud surface audit aggregates.',
     };
   }
 
@@ -174,7 +174,7 @@ export class IntelligenceAnalyticsService {
           ];
         }),
       ),
-      note: 'Partial latency from audit metadata latencyMs — not full distributed tracing (VL-191).',
+      note: 'Partial latency from audit metadata latencyMs — not full distributed tracing.',
     };
   }
 
@@ -225,7 +225,7 @@ export class IntelligenceAnalyticsService {
       decisionSamples: decisionConfidence.length,
       avgRecommendItemCount: avg(recommendCounts),
       recommendSamples: recommendCounts.length,
-      note: 'Heuristic quality/confidence proxies — not a human eval lab (VL-191).',
+      note: 'Heuristic quality/confidence proxies — not a human eval lab.',
     };
   }
 
@@ -262,7 +262,7 @@ export class IntelligenceAnalyticsService {
         .map(([key, count]) => ({ key, count }))
         .sort((a, b) => b.count - a.count)
         .slice(0, 20),
-      note: 'Model/routing decisions from Decision Engine audits (VL-191).',
+      note: 'Model/routing decisions from Decision Engine audits.',
     };
   }
 
@@ -300,7 +300,7 @@ export class IntelligenceAnalyticsService {
         chatPer1kTokens: rates.chatPer1kTokens,
         embeddingsPer1kTokens: rates.embeddingsPer1kTokens,
       },
-      note: 'Estimated USD from usage_events — not Stripe invoices (VL-191).',
+      note: 'Estimated USD from usage_events — not Stripe invoices.',
     };
   }
 
@@ -324,7 +324,7 @@ export class IntelligenceAnalyticsService {
       routing,
       costs,
       honesty: intelligenceAnalyticsCatalog().honesty,
-      note: 'Bundled Intelligence Analytics report (VL-191).',
+      note: 'Bundled Intelligence Analytics report.',
     };
   }
 
@@ -348,7 +348,7 @@ export class IntelligenceAnalyticsService {
       eventsLast24h: recent,
       regeneratesSpeechAnalytics: engine.honesty.regeneratesSpeechAnalytics,
       deferred: engine.capabilities.filter((c) => c.status === 'deferred').map((c) => c.id),
-      note: 'Intelligence Analytics monitoring snapshot (VL-191).',
+      note: 'Intelligence Analytics monitoring snapshot.',
     };
   }
 

@@ -37,7 +37,7 @@ export class NestAiGovernancePlatformCatalogAdapter implements AiGovernancePlatf
         status: 'shipped',
         api: 'GET /v1/ai-governance-platform/engine',
         console: '/ai-governance-platform',
-        notes: 'VL-294 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Privacy Platform (VL-296)', () => {
+describe('Privacy Platform', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

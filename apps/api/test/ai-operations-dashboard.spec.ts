@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('AI Operations Dashboard (VL-290)', () => {
+describe('AI Operations Dashboard', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

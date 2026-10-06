@@ -53,7 +53,7 @@ export class RecommendationEngineService {
     return {
       kinds: RECOMMEND_KINDS.map((id) => ({ id })),
       deferred: ['enterprise'],
-      note: 'Recommendable kinds for VL-187 light rankers.',
+      note: 'Recommendable kinds for light rankers.',
     };
   }
 
@@ -63,7 +63,7 @@ export class RecommendationEngineService {
       if (kind === ('enterprise' as RecommendKind)) {
         throw new ApiException(
           'validation_error',
-          'kind=enterprise is deferred — not a retail recommender OS (VL-187)',
+          'kind=enterprise is deferred — not a retail recommender OS',
           HttpStatus.BAD_REQUEST,
         );
       }
@@ -371,7 +371,7 @@ export class RecommendationEngineService {
         collaborativeFiltering: false,
         trainsRankingModels: false,
       },
-      note: 'Light rankers over existing catalogs (VL-187). Not a retail recommender OS.',
+      note: 'Light rankers over existing catalogs. Not a retail recommender OS.',
     };
   }
 
@@ -390,7 +390,7 @@ export class RecommendationEngineService {
       periodStart: start.toISOString(),
       requests,
       workspaceId,
-      note: 'Recommendation Engine analytics (VL-187).',
+      note: 'Recommendation Engine analytics.',
     };
   }
 
@@ -405,7 +405,7 @@ export class RecommendationEngineService {
       requests: analytics.requests,
       retailRecommenderOs: engine.honesty.retailRecommenderOs,
       deferred: engine.capabilities.filter((c) => c.status === 'deferred').map((c) => c.id),
-      note: 'Recommendation Engine monitoring snapshot (VL-187).',
+      note: 'Recommendation Engine monitoring snapshot.',
     };
   }
 }

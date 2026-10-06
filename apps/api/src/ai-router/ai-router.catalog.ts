@@ -73,7 +73,7 @@ export function routerFeatureRoutes(): FeatureRouteDef[] {
           region: 'af-south-1',
           weight: 20,
           envKey: 'OPENROUTER_API_KEY',
-          notes: 'Optional OpenAI-compatible fallback (VL-129).',
+          notes: 'Optional OpenAI-compatible fallback.',
         },
       ],
     },
@@ -223,14 +223,14 @@ export function hydrateCandidates(
 }
 
 /**
- * Library Phase 74 → AI Router (VL-207).
+ * Library Phase 74 → AI Router.
  * Extends Gateway routing — not a service mesh / multi-cloud router OS.
  */
 export function aiRouterCatalog() {
   return {
     product: 'Lugemi AI Router',
     note:
-      'AI Router (VL-207). Dry-run model/provider/inference selection over AI Gateway adapters with latency/cost/balanced strategies, fallbacks, retries, regional preference, and light load-balancing weights. Not a service mesh, multi-cloud router OS, or Gateway regenerate. Caching via Intelligent Cache (VL-210); spend caps enforced by Cost Optimization (VL-211) on resolve.',
+      'AI Router. Dry-run model/provider/inference selection over AI Gateway adapters with latency/cost/balanced strategies, fallbacks, retries, regional preference, and light load-balancing weights. Not a service mesh, multi-cloud router OS, or Gateway regenerate. Caching via Intelligent Cache; spend caps enforced by Cost Optimization on resolve.',
     capabilities: [
       {
         id: 'model-selection',
@@ -265,7 +265,7 @@ export function aiRouterCatalog() {
         name: 'Cost Optimization',
         status: 'partial',
         api: 'GET /v1/cost-optimization/engine',
-        notes: 'optimize=cost sorts by estimated USD; hard daily/monthly enforce via VL-211 on resolve.',
+        notes: 'optimize=cost sorts by estimated USD; hard daily/monthly enforce via existing on resolve.',
       },
       {
         id: 'regional-routing',
@@ -293,14 +293,14 @@ export function aiRouterCatalog() {
         name: 'Caching',
         status: 'partial',
         api: 'GET /v1/intelligent-cache/engine',
-        notes: 'Opt-in via Intelligent Cache (VL-210) — Router does not auto-cache resolves.',
+        notes: 'Opt-in via Intelligent Cache — Router does not auto-cache resolves.',
       },
       {
         id: 'streaming',
         name: 'Streaming',
         status: 'partial',
         api: 'POST /v1/ai-router/resolve',
-        notes: 'Flags streamingCapable when feature supports SSE — runtime is VL-208.',
+        notes: 'Flags streamingCapable when feature supports SSE — runtime is .',
       },
       {
         id: 'load-balancing',
@@ -321,7 +321,7 @@ export function aiRouterCatalog() {
         name: 'Analytics',
         status: 'shipped',
         api: 'GET /v1/ai-router/analytics',
-        notes: 'Route decision counts — ≠ VL-212.',
+        notes: 'Route decision counts — ≠ .',
       },
       {
         id: 'rest',

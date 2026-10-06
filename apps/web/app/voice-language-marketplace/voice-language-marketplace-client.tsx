@@ -70,7 +70,7 @@ export function VoiceLanguageMarketplaceClient() {
         Voice & Language Marketplace
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        License voice and language pack SKUs over VL-177 + Volume 1 — not third-party TTS or a voice CDN.
+        License voice and language pack SKUs over Volume 1 — not third-party TTS or a voice CDN.
       </p>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}

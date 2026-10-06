@@ -41,7 +41,7 @@ export class IdentityFederationService {
       count: (catalog as { federation: unknown[] }).federation.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'IdentityFederation monitoring snapshot (VL-299).',
+      note: 'IdentityFederation monitoring snapshot.',
     };
   }
 }

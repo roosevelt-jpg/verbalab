@@ -10,7 +10,7 @@ export type ControlPlaneCloudProductRow = {
 };
 
 /**
- * Library Phase 181 → Control Plane Cloud Foundation (VL-314).
+ * Library Phase 181 → Control Plane Cloud Foundation.
  * Highest-privilege management layer — never executes inference.
  * Not Kubernetes/Istio/Vault/Data Plane OS.
  */
@@ -23,7 +23,7 @@ export function controlPlaneCloudProductCatalog(): ControlPlaneCloudProductRow[]
       api: 'GET /v1/control-plane-cloud/products',
       console: '/control-plane-cloud',
       notes:
-        'Foundation hub (VL-314). executesInference=false; dataPlaneOs=false.',
+        'Foundation hub. executesInference=false; dataPlaneOs=false.',
     },
     {
       id: 'organization-control',
@@ -32,7 +32,7 @@ export function controlPlaneCloudProductCatalog(): ControlPlaneCloudProductRow[]
       api: 'GET /v1/organization-control/engine',
       console: '/organization-control',
       notes:
-        'VL-315. leastPrivilegeRequired; controlPlaneAdminNotDefault.',
+        '. leastPrivilegeRequired; controlPlaneAdminNotDefault.',
     },
     {
       id: 'global-configuration-platform',
@@ -41,7 +41,7 @@ export function controlPlaneCloudProductCatalog(): ControlPlaneCloudProductRow[]
       api: 'GET /v1/global-configuration-platform/engine',
       console: '/global-configuration-platform',
       notes:
-        'VL-316. Secrets refs only.',
+        '. Secrets refs only.',
     },
     {
       id: 'global-policy-engine',
@@ -50,7 +50,7 @@ export function controlPlaneCloudProductCatalog(): ControlPlaneCloudProductRow[]
       api: 'GET /v1/global-policy-engine/engine',
       console: '/global-policy-engine',
       notes:
-        'VL-317. policyRuntimeIntegrated=true.',
+        '. policyRuntimeIntegrated=true.',
     },
     {
       id: 'global-deployment-controller',
@@ -59,7 +59,7 @@ export function controlPlaneCloudProductCatalog(): ControlPlaneCloudProductRow[]
       api: 'GET /v1/global-deployment-controller/engine',
       console: '/global-deployment-controller',
       notes:
-        'VL-318. productionDeployRequiresAuthorization; rollbackPath.',
+        '. productionDeployRequiresAuthorization; rollbackPath.',
     },
     {
       id: 'global-routing-controller',
@@ -68,7 +68,7 @@ export function controlPlaneCloudProductCatalog(): ControlPlaneCloudProductRow[]
       api: 'GET /v1/global-routing-controller/engine',
       console: '/global-routing-controller',
       notes:
-        'VL-319. istioOs=false.',
+        '. istioOs=false.',
     },
     {
       id: 'secrets-certificate-platform',
@@ -77,7 +77,7 @@ export function controlPlaneCloudProductCatalog(): ControlPlaneCloudProductRow[]
       api: 'GET /v1/secrets-certificate-platform/engine',
       console: '/secrets-certificate-platform',
       notes:
-        'VL-320. Envelope encryption + audit; metadata only.',
+        '. Envelope encryption + audit; metadata only.',
     },
     {
       id: 'global-scheduler',
@@ -86,7 +86,7 @@ export function controlPlaneCloudProductCatalog(): ControlPlaneCloudProductRow[]
       api: 'GET /v1/global-scheduler/engine',
       console: '/global-scheduler',
       notes:
-        'VL-321. Scheduling control; executesInference=false.',
+        '. Scheduling control; executesInference=false.',
     },
     {
       id: 'control-plane-analytics',
@@ -95,7 +95,7 @@ export function controlPlaneCloudProductCatalog(): ControlPlaneCloudProductRow[]
       api: 'GET /v1/control-plane-analytics/engine',
       console: '/control-plane-analytics',
       notes:
-        'VL-322. Sibling aggregation.',
+        '. Sibling aggregation.',
     },
     {
       id: 'identity',

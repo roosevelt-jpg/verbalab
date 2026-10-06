@@ -37,7 +37,7 @@ export class NestApiEngineeringStandardsCatalogAdapter implements ApiEngineering
         status: 'shipped',
         api: 'GET /v1/api-engineering-standards/engine',
         console: '/api-engineering-standards',
-        notes: 'VL-350 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

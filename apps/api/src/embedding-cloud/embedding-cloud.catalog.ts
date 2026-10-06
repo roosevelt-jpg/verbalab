@@ -15,7 +15,7 @@ export type EmbeddingModality = {
   notes: string;
 };
 
-/** Library Phase 48 → Embedding Cloud (VL-181). Extends VL-063 — not a multimodal embedding OS. */
+/** Library Phase 48 → Embedding Cloud. Extends existing — not a multimodal embedding OS. */
 export function embeddingCloudCatalog() {
   return {
     product: 'Lugemi Embedding Cloud',
@@ -27,14 +27,14 @@ export function embeddingCloudCatalog() {
         name: 'Text Embeddings',
         status: 'shipped',
         api: 'POST /v1/embeddings',
-        notes: 'OpenAI-shaped string | string[] input (VL-063 / VL-181).',
+        notes: 'OpenAI-shaped string | string[] input.',
       },
       {
         id: 'document-embeddings',
         name: 'Document Embeddings',
         status: 'partial',
         api: 'POST /v1/embeddings',
-        notes: 'Same text path + Knowledge RAG chunk embeds (VL-062). No separate doc encoder.',
+        notes: 'Same text path + Knowledge RAG chunk embeds. No separate doc encoder.',
       },
       {
         id: 'code-embeddings',
@@ -62,7 +62,7 @@ export function embeddingCloudCatalog() {
         name: 'Voice Embeddings',
         status: 'deferred',
         api: null,
-        notes: 'Speaker/voice biometric vectors ≠ Embedding Cloud; see VL-152/176.',
+        notes: 'Speaker/voice biometric vectors ≠ Embedding Cloud; see 176.',
       },
       {
         id: 'image-embeddings',
@@ -90,7 +90,7 @@ export function embeddingCloudCatalog() {
         name: 'Hybrid Embeddings',
         status: 'deferred',
         api: null,
-        notes: 'Dense+sparse hybrid retrieval product deferred (Vector Cloud VL-182).',
+        notes: 'Dense+sparse hybrid retrieval product deferred (Vector Cloud ).',
       },
       {
         id: 'analytics',
@@ -160,7 +160,7 @@ export function embeddingModelsCatalog() {
         dimensions: defaultModel.includes('large') ? 3072 : 1536,
         default: true,
         status: 'shipped' as const,
-        notes: 'Gateway OpenAI embeddings (VL-063). Live path needs OPENAI_API_KEY.',
+        notes: 'Gateway OpenAI embeddings. Live path needs OPENAI_API_KEY.',
       },
       {
         id: 'text-embedding-3-large',
@@ -172,6 +172,6 @@ export function embeddingModelsCatalog() {
         notes: 'Optional via model= on POST /v1/embeddings.',
       },
     ],
-    note: 'Buy embeddings — Lugemi does not train embedding models (VL-181).',
+    note: 'Buy embeddings — Lugemi does not train embedding models.',
   };
 }

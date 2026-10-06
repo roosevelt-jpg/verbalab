@@ -1,4 +1,4 @@
-/** Application ports for Developer Experience Platform (VL-311). */
+/** Application ports for Developer Experience Platform. */
 
 export type DeveloperExperiencePlatformProductRow = {
   id: string;

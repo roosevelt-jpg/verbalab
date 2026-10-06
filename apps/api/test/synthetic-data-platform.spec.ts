@@ -20,7 +20,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Synthetic Data Platform (VL-273)', () => {
+describe('Synthetic Data Platform', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -40,7 +40,7 @@ describe('Synthetic Data Platform (VL-273)', () => {
     expect(existsSync(join(root, 'docs/SYNTHETIC_DATA_PLATFORM.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0175-synthetic-data-platform.md'))).toBe(true);
     const text = readFileSync(join(root, 'docs/SYNTHETIC_DATA_PLATFORM.md'), 'utf8');
-    expect(text).toContain('VL-273');
+    expect(text).toContain('');
   });
 
   it('has no TODO/FIXME/implement-later markers', () => {

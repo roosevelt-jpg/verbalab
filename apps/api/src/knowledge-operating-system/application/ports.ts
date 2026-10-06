@@ -1,4 +1,4 @@
-/** Application ports for Knowledge Operating System (VL-341). */
+/** Application ports for Knowledge Operating System. */
 
 export type KnowledgeOperatingSystemProductRow = {
   id: string;

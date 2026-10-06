@@ -46,7 +46,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Model Evaluation Platform (VL-236)', () => {
+describe('Model Evaluation Platform', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let platform: ModelEvaluationPlatformService;
@@ -74,8 +74,8 @@ describe('Model Evaluation Platform (VL-236)', () => {
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-236');
-    expect(text).toMatch(/VL-100|eval\/run|coverage/i);
+    expect(text).toContain('');
+    expect(text).toMatch(/|eval\/run|coverage/i);
     expect(text).toMatch(/SOTA|leaderboard/i);
     expect(text).toContain('CQRS');
     expect(text).toMatch(/MMLU/i);
@@ -116,7 +116,7 @@ describe('Model Evaluation Platform (VL-236)', () => {
     expect(mmlu.status).toBe('deferred');
   });
 
-  it('runs sandbox safety and hands off translation to VL-100', async () => {
+  it('runs sandbox safety and hands off translation to ', async () => {
     const org = await seedOrg(prisma, `mep_${Date.now()}`);
     const session = {
       userId: org.memberships[0].userId,

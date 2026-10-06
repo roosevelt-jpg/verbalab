@@ -120,7 +120,7 @@ export function EnterpriseRagClient() {
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
         Grounded answers over the{' '}
         <Link href="/knowledge-base">Knowledge Base</Link> with citations and hybrid retrieval.
-        Extends VL-062. Not a LangChain / agentic RAG OS — hand-check retrieved context on real
+        Extends existing. Not a LangChain / agentic RAG OS — hand-check retrieved context on real
         docs.
       </p>
 
@@ -221,7 +221,7 @@ export function EnterpriseRagClient() {
         {' · '}
         <Link href="/enterprise-search">Enterprise Search</Link>
         {' · '}
-        <Link href="/knowledge">VL-062 Knowledge</Link>
+        <Link href="/knowledge"> Knowledge</Link>
       </p>
     </AppShell>
   );

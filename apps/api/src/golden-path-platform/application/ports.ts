@@ -1,4 +1,4 @@
-/** Application ports for Golden Path Platform (VL-305). */
+/** Application ports for Golden Path Platform. */
 
 export type GoldenPathPlatformProductRow = {
   id: string;

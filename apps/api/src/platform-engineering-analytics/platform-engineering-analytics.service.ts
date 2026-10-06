@@ -93,7 +93,7 @@ export class PlatformEngineeringAnalyticsService {
         .length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Platform Engineering Analytics monitoring snapshot (VL-312).',
+      note: 'Platform Engineering Analytics monitoring snapshot.',
     };
   }
 }

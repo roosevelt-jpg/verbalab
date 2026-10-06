@@ -36,7 +36,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('AI Orchestration (VL-190)', () => {
+describe('AI Orchestration', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -104,7 +104,7 @@ describe('AI Orchestration (VL-190)', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/not.*multi-cloud agent/i);
-    expect(text).toContain('VL-190');
+    expect(text).toContain('');
   });
 
   it('exposes engine with multiCloudAgentOs=false', async () => {

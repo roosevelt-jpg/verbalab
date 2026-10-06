@@ -1,4 +1,4 @@
-/** Application ports for Agricultural Intelligence (VL-268). */
+/** Application ports for Agricultural Intelligence. */
 
 export type AgriculturalIntelligenceProductRow = {
   id: string;

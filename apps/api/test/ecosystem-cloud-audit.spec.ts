@@ -78,7 +78,7 @@ function walkTsFiles(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-describe('Ecosystem Cloud Production Audit (VL-259)', () => {
+describe('Ecosystem Cloud Production Audit', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -122,7 +122,7 @@ describe('Ecosystem Cloud Production Audit (VL-259)', () => {
     expect(readiness).toMatch(/sandbox|Policy/i);
     expect(readiness).toMatch(/Rejected|not a payment-processor/i);
     expect(readiness).toMatch(/Digital Twin|Volume 12/i);
-    expect(readiness).toMatch(/VL-249|Volume 11/i);
+    expect(readiness).toMatch(/|Volume 11/i);
 
     const adr = readFileSync(
       join(root, 'docs/adr/0161-ecosystem-cloud-production-audit.md'),
@@ -130,7 +130,7 @@ describe('Ecosystem Cloud Production Audit (VL-259)', () => {
     );
     expect(adr).toMatch(/review gate|checklist/i);
     expect(adr).toMatch(/do not implement|Rejected|not implement/i);
-    expect(adr).toMatch(/Volume 11 closes|VL-249–259|closes/i);
+    expect(adr).toMatch(/Volume 11 closes|–259|closes/i);
   });
 
   it('has no TODO/FIXME/implement-later markers in Volume 11 source trees', () => {

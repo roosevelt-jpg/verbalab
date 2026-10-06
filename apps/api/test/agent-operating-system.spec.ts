@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Agent Operating System (VL-339)', () => {
+describe('Agent Operating System', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

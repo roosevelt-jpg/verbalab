@@ -40,7 +40,7 @@ export class EducationIntelligenceService {
       termCount: catalog.terms.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Education Intelligence monitoring snapshot (VL-267).',
+      note: 'Education Intelligence monitoring snapshot.',
     };
   }
 }

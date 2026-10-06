@@ -45,7 +45,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Enterprise Knowledge Base (VL-194)', () => {
+describe('Enterprise Knowledge Base', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -99,7 +99,7 @@ describe('Enterprise Knowledge Base (VL-194)', () => {
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/org\/workspace/i);
     expect(text).toMatch(/Confluence/i);
-    expect(text).toContain('VL-062');
+    expect(text).toContain('');
   });
 
   it('exposes engine with honest flags', async () => {

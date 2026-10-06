@@ -34,7 +34,7 @@ export class NestTourismHeritageIntelligenceCatalogAdapter implements TourismHer
         status: 'shipped',
         api: 'GET /v1/tourism-heritage-intelligence/engine',
         console: '/tourism-heritage-intelligence',
-        notes: 'VL-269 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

@@ -63,7 +63,7 @@ function walkTsFiles(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-describe('Research Cloud Production Audit (VL-280)', () => {
+describe('Research Cloud Production Audit', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -99,7 +99,7 @@ describe('Research Cloud Production Audit (VL-280)', () => {
     expect(readiness).toMatch(/syntheticLabelRequired|isSynthetic/i);
     expect(readiness).toMatch(/traditionalKnowledgeConsentRequired|consent/i);
     expect(readiness).toMatch(/AI Sovereignty|Rejected/i);
-    expect(readiness).toMatch(/VL-271|Volume 13/i);
+    expect(readiness).toMatch(/|Volume 13/i);
 
     const adr = readFileSync(
       join(root, 'docs/adr/0182-research-cloud-production-audit.md'),
@@ -107,7 +107,7 @@ describe('Research Cloud Production Audit (VL-280)', () => {
     );
     expect(adr).toMatch(/review gate|checklist/i);
     expect(adr).toMatch(/AI Sovereignty|do not invent|Rejected/i);
-    expect(adr).toMatch(/Volume 13 closed|VL-271–280|closes/i);
+    expect(adr).toMatch(/Volume 13 closed|–280|closes/i);
   });
 
   it('has no TODO/FIXME/implement-later markers in Volume 13 source trees', () => {

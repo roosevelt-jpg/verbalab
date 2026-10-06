@@ -1,4 +1,4 @@
-/** Application ports for Patent & Innovation Platform (VL-277). */
+/** Application ports for Patent & Innovation Platform. */
 
 export type PatentInnovationPlatformProductRow = {
   id: string;

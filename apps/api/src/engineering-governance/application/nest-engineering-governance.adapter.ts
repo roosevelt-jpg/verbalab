@@ -37,7 +37,7 @@ export class NestEngineeringGovernanceCatalogAdapter implements EngineeringGover
         status: 'shipped',
         api: 'GET /v1/engineering-governance/engine',
         console: '/engineering-governance',
-        notes: 'VL-345 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

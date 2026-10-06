@@ -121,7 +121,7 @@ export class KnowledgeIntelligenceService {
       ontologyConcepts: concepts,
       memoryRows: memories,
       knowledgeMemories,
-      note: 'Knowledge Intelligence insight snapshot (VL-200).',
+      note: 'Knowledge Intelligence insight snapshot.',
       honesty: this.engine().honesty,
     };
   }
@@ -593,7 +593,7 @@ export class KnowledgeIntelligenceService {
     return {
       ...insight,
       auditsLast30d: Object.fromEntries(actions.map((a, i) => [a.split('.').pop()!, counts[i]])),
-      note: 'Knowledge Intelligence analytics (VL-200). ≠ VL-202 Knowledge Analytics pack.',
+      note: 'Knowledge Intelligence analytics. ≠ Knowledge Analytics pack.',
     };
   }
 

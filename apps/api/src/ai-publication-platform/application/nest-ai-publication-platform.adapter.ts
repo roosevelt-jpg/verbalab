@@ -37,7 +37,7 @@ export class NestAiPublicationPlatformCatalogAdapter implements AiPublicationPla
         status: 'shipped',
         api: 'GET /v1/ai-publication-platform/engine',
         console: '/ai-publication-platform',
-        notes: 'VL-276 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

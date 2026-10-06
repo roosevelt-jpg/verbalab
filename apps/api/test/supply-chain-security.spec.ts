@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Supply Chain Security (VL-310)', () => {
+describe('Supply Chain Security', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

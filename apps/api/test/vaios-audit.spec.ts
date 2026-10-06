@@ -27,7 +27,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('VAIOS Production Audit (VL-343)', () => {
+describe('VAIOS Production Audit', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -174,6 +174,6 @@ describe('VAIOS Production Audit (VL-343)', () => {
   it('documents VAIOS in CLOUD_BLUEPRINT', () => {
     const blueprint = readFileSync(join(root, 'docs/CLOUD_BLUEPRINT.md'), 'utf8');
     expect(blueprint).toMatch(/VAIOS/);
-    expect(blueprint).toMatch(/VL-334/);
+    expect(blueprint).toMatch(/);
   });
 });

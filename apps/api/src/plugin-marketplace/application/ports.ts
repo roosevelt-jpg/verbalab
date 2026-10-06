@@ -1,4 +1,4 @@
-/** Application ports for Plugin Marketplace (VL-250). */
+/** Application ports for Plugin Marketplace. */
 
 export type PluginMarketplaceEngineBundle = ReturnType<
   import('../plugin-marketplace.service').PluginMarketplaceService['engine']

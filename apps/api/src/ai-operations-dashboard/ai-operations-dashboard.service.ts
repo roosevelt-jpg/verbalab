@@ -88,7 +88,7 @@ export class AiOperationsDashboardService {
       shippedProducts: mlopsLlmopsCloudProductCatalog().filter((p) => p.status === 'shipped').length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'AI Operations Dashboard monitoring snapshot (VL-290).',
+      note: 'AI Operations Dashboard monitoring snapshot.',
     };
   }
 }

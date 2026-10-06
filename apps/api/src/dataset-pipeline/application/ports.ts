@@ -1,4 +1,4 @@
-/** Application ports for Dataset Pipeline (VL-282). */
+/** Application ports for Dataset Pipeline. */
 
 export type DatasetPipelineProductRow = {
   id: string;

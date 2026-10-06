@@ -40,7 +40,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Identity Cloud (VL-126)', () => {
+describe('Identity Cloud', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let governance: GovernanceService;

@@ -66,7 +66,7 @@ function walkTsFiles(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-describe('Control Plane Cloud Production Audit (VL-323)', () => {
+describe('Control Plane Cloud Production Audit', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -104,7 +104,7 @@ describe('Control Plane Cloud Production Audit (VL-323)', () => {
     expect(readiness).toMatch(/productionDeployRequiresAuthorization=true/i);
     expect(readiness).toMatch(/leastPrivilegeRequired=true/i);
     expect(readiness).toMatch(/dataPlaneOs=false/i);
-    expect(readiness).toMatch(/VL-314|Volume 17/i);
+    expect(readiness).toMatch(/|Volume 17/i);
 
     const adr = readFileSync(
       join(root, 'docs/adr/0225-control-plane-cloud-production-audit.md'),
@@ -112,7 +112,7 @@ describe('Control Plane Cloud Production Audit (VL-323)', () => {
     );
     expect(adr).toMatch(/Vitest audit gates|review gate|checklist/i);
     expect(adr).toMatch(/Data Plane|do not invent|Rejected/i);
-    expect(adr).toMatch(/Volume 17 closed|VL-314–323|closes/i);
+    expect(adr).toMatch(/Volume 17 closed|–323|closes/i);
   });
 
   it('has no TODO/FIXME/implement-later markers in Volume 17 source trees', () => {

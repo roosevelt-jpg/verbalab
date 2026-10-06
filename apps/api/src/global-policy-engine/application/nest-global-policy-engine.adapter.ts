@@ -37,7 +37,7 @@ export class NestGlobalPolicyEngineCatalogAdapter implements GlobalPolicyEngineC
         status: 'shipped',
         api: 'GET /v1/global-policy-engine/engine',
         console: '/global-policy-engine',
-        notes: 'VL-317 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

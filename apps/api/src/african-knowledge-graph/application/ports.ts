@@ -1,4 +1,4 @@
-/** Application ports for African Knowledge Graph (VL-263). */
+/** Application ports for African Knowledge Graph. */
 
 export type AfricanKnowledgeGraphProductRow = {
   id: string;

@@ -1,4 +1,4 @@
-/** Application ports for Release Engineering (VL-307). */
+/** Application ports for Release Engineering. */
 
 export type ReleaseEngineeringProductRow = {
   id: string;

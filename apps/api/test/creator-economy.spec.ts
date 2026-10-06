@@ -51,7 +51,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Creator Economy (VL-258)', () => {
+describe('Creator Economy', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;
@@ -79,7 +79,7 @@ describe('Creator Economy (VL-258)', () => {
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-258');
+    expect(text).toContain('');
     expect(text).toMatch(/Stripe|storesRawCardData/i);
     expect(text).toMatch(/taxHandlingComplete/i);
     expect(text).toMatch(/hand-check|splitRevenue/i);

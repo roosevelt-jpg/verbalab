@@ -1,6 +1,6 @@
 /**
- * Library Phase 213 → Architecture Governance (VL-346).
- * Architecture Governance (VL-346). ADR/RFC/design-review/tech-radar/dependency/compliance catalogs pointing at existing docs/adr — adrFactoryOs=false; no mass ADR generation.
+ * Library Phase 213 → Architecture Governance.
+ * Architecture Governance. ADR/RFC/design-review/tech-radar/dependency/compliance catalogs pointing at existing docs/adr — adrFactoryOs=false; no mass ADR generation.
  */
 export function architectureGovernanceEngineCatalog() {
   return {
@@ -10,13 +10,13 @@ export function architectureGovernanceEngineCatalog() {
     architectureKnowledgeBaseOs: false,
     adrFactoryOs: false,
     capabilities: [
-      { id: 'architecture_reviews', name: 'Architecture Reviews', status: 'shipped', notes: 'VL-346 standards capability — catalog, not a new OS.' },
-      { id: 'adr_workflow', name: 'ADR Workflow Catalog', status: 'shipped', notes: 'VL-346 standards capability — catalog, not a new OS.' },
-      { id: 'rfc_workflow', name: 'RFC Workflow Catalog', status: 'shipped', notes: 'VL-346 standards capability — catalog, not a new OS.' },
-      { id: 'design_reviews', name: 'Design Reviews', status: 'shipped', notes: 'VL-346 standards capability — catalog, not a new OS.' },
-      { id: 'tech_radar', name: 'Technology Radar', status: 'shipped', notes: 'VL-346 standards capability — catalog, not a new OS.' },
-      { id: 'dependency_governance', name: 'Dependency Governance', status: 'shipped', notes: 'VL-346 standards capability — catalog, not a new OS.' },
-      { id: 'architecture_compliance', name: 'Architecture Compliance', status: 'shipped', notes: 'VL-346 standards capability — catalog, not a new OS.' }
+      { id: 'architecture_reviews', name: 'Architecture Reviews', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'adr_workflow', name: 'ADR Workflow Catalog', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'rfc_workflow', name: 'RFC Workflow Catalog', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'design_reviews', name: 'Design Reviews', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'tech_radar', name: 'Technology Radar', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'dependency_governance', name: 'Dependency Governance', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'architecture_compliance', name: 'Architecture Compliance', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' }
     ],
     routes: [
       {
@@ -96,9 +96,9 @@ export function architectureGovernanceEngineCatalog() {
       customerFacingProductCloud: false,
       architectureKnowledgeBaseOs: false,
       adrFactoryOs: false,
-      note: 'Architecture Governance (VL-346). ADR/RFC/design-review/tech-radar/dependency/compliance catalogs pointing at existing docs/adr — adrFactoryOs=false; no mass ADR generation.',
+      note: 'Architecture Governance. ADR/RFC/design-review/tech-radar/dependency/compliance catalogs pointing at existing docs/adr — adrFactoryOs=false; no mass ADR generation.',
     },
     docs: '/docs/ARCHITECTURE_GOVERNANCE.md',
-    note: 'Architecture Governance (VL-346). ADR/RFC/design-review/tech-radar/dependency/compliance catalogs pointing at existing docs/adr — adrFactoryOs=false; no mass ADR generation.',
+    note: 'Architecture Governance. ADR/RFC/design-review/tech-radar/dependency/compliance catalogs pointing at existing docs/adr — adrFactoryOs=false; no mass ADR generation.',
   };
 }

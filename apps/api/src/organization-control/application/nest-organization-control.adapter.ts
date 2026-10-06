@@ -37,7 +37,7 @@ export class NestOrganizationControlCatalogAdapter implements OrganizationContro
         status: 'shipped',
         api: 'GET /v1/organization-control/engine',
         console: '/organization-control',
-        notes: 'VL-315 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

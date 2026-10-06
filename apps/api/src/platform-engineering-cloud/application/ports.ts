@@ -1,4 +1,4 @@
-/** Application ports for Platform Engineering Cloud (VL-302). */
+/** Application ports for Platform Engineering Cloud. */
 
 export type PlatformEngineeringCloudProductRow = {
   id: string;

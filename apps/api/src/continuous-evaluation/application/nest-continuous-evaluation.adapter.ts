@@ -37,7 +37,7 @@ export class NestContinuousEvaluationCatalogAdapter implements ContinuousEvaluat
         status: 'shipped',
         api: 'GET /v1/continuous-evaluation/engine',
         console: '/continuous-evaluation',
-        notes: 'VL-284 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

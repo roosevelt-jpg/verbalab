@@ -9,7 +9,7 @@ export type PluginMarketplaceCapability = {
 };
 
 /**
- * Library Phase 117 → Plugin Marketplace (VL-250).
+ * Library Phase 117 → Plugin Marketplace.
  * Buy/sell/publish sandboxed plugins over Plugin Runtime — not a browser/VS Code extension OS.
  * Volume 11 README: enforce Volume 8 sandbox + Policy gate before third-party plugins run.
  */
@@ -17,7 +17,7 @@ export function pluginMarketplaceEngineCatalog() {
   return {
     product: 'Lugemi Plugin Marketplace',
     note:
-      'Plugin Marketplace (VL-250). Publish/install/version/review sandboxed plugins. Execution always goes through Plugin Runtime invoke + PluginPolicyGate (hard allowlist) and Policy Fabric hard gate — never live arbitrary code. Extends VL-221 / VL-090 listings kind=plugin. Not a browser/VS Code extension store OS.',
+      'Plugin Marketplace. Publish/install/version/review sandboxed plugins. Execution always goes through Plugin Runtime invoke + PluginPolicyGate (hard allowlist) and Policy Fabric hard gate — never live arbitrary code. Extends existing listings kind=plugin. Not a browser/VS Code extension store OS.',
     capabilities: [
       {
         id: 'plugin-publishing',
@@ -91,7 +91,7 @@ export function pluginMarketplaceEngineCatalog() {
         status: 'partial',
         api: 'POST /v1/plugin-marketplace/listings/:id/install',
         notes:
-          'Paid listings record MarketplaceSale receipts. Stripe Connect path shared with VL-092 when configured — not a payment-processor OS.',
+          'Paid listings record MarketplaceSale receipts. Stripe Connect path shared with when configured — not a payment-processor OS.',
       },
     ] satisfies PluginMarketplaceCapability[],
     architecture: {

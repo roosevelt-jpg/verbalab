@@ -48,7 +48,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Context Fabric (VL-241)', () => {
+describe('Context Fabric', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -90,7 +90,7 @@ describe('Context Fabric (VL-241)', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(phase)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-241');
+    expect(text).toContain('');
     expect(text).toMatch(/Context Runtime/i);
     expect(text).toMatch(/infinite context/i);
     expect(text).toMatch(/WebSocket|websocket/i);

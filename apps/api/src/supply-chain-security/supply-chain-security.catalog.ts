@@ -1,5 +1,5 @@
 /**
- * Library Phase 177 → Supply Chain Security (VL-310).
+ * Library Phase 177 → Supply Chain Security.
  * SBOM/dependency/container/secrets/license catalog + real workspace inventory posture.
  * Not a full vulnerability database / Snyk OS.
  */
@@ -164,6 +164,6 @@ export function supplyChainSecurityEngineCatalog() {
     },
     docs: '/docs/SUPPLY_CHAIN_SECURITY.md',
     note:
-      'Supply Chain Security (VL-310). SBOM/signing/dependency/container/SAST/DAST/secrets/license catalog with scan/findings path. snykOs=false.',
+      'Supply Chain Security. SBOM/signing/dependency/container/SAST/DAST/secrets/license catalog with scan/findings path. snykOs=false.',
   };
 }

@@ -1,4 +1,4 @@
-/** Application ports for Resource Manager (VL-337). */
+/** Application ports for Resource Manager. */
 
 export type ResourceManagerProductRow = {
   id: string;

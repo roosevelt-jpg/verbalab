@@ -9,7 +9,7 @@ export type DialectSeed = {
 };
 
 /**
- * Curated dialect seeds (VL-131) — priority African + related varieties.
+ * Curated dialect seeds — priority African + related varieties.
  * Not an exhaustive linguistics catalog.
  */
 export const DIALECT_SEEDS: DialectSeed[] = [

@@ -40,7 +40,7 @@ export class HealthcareIntelligenceService {
       termCount: catalog.terms.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Healthcare Intelligence monitoring snapshot (VL-265).',
+      note: 'Healthcare Intelligence monitoring snapshot.',
     };
   }
 }

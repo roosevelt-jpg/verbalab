@@ -37,7 +37,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Own TTS path (VL-121)', () => {
+describe('Own TTS path', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

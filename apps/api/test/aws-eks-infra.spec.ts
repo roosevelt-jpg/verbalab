@@ -4,7 +4,7 @@ import { describe, expect, it } from 'vitest';
 
 const root = join(__dirname, '../../..');
 
-describe('AWS EKS infra (VL-138)', () => {
+describe('AWS EKS infra', () => {
   it('ships Terraform for af-south-1 and K8s manifests', () => {
     const tfMain = join(root, 'infra/terraform/aws-eks/main.tf');
     const tfVars = join(root, 'infra/terraform/aws-eks/terraform.tfvars.example');

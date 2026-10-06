@@ -1,4 +1,4 @@
-/** Application ports for Repository Standards (VL-347). */
+/** Application ports for Repository Standards. */
 
 export type RepositoryStandardsProductRow = {
   id: string;

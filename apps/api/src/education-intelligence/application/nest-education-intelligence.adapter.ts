@@ -34,7 +34,7 @@ export class NestEducationIntelligenceCatalogAdapter implements EducationIntelli
         status: 'shipped',
         api: 'GET /v1/education-intelligence/engine',
         console: '/education-intelligence',
-        notes: 'VL-267 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

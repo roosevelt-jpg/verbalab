@@ -76,7 +76,7 @@ export class SlackConnectorService {
     if (!trimmed) {
       throw new ApiException(
         'validation_error',
-        'Usage: /lugemi <targetLang> <text>  e.g. /lugemi sw Hello',
+        'Usage: /lugemi <targetLang> <text> e.g. /lugemi sw Hello',
         HttpStatus.BAD_REQUEST,
       );
     }

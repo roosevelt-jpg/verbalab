@@ -1,4 +1,4 @@
-/** Application ports for GPU Runtime (VL-332). */
+/** Application ports for GPU Runtime. */
 
 export type GpuRuntimeProductRow = {
   id: string;

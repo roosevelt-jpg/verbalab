@@ -10,7 +10,7 @@ export type VaiosProductRow = {
 };
 
 /**
- * Library Phase 201 → VAIOS Foundation (VL-334).
+ * Library Phase 201 → VAIOS Foundation.
  * Unifying orchestration layer over Kernel + Fabric + Data Plane.
  * Not Linux / not Kubernetes / not a third parallel OS.
  */
@@ -23,7 +23,7 @@ export function vaiosProductCatalog(): VaiosProductRow[] {
       api: 'GET /v1/vaios/products',
       console: '/vaios',
       notes:
-        'VL-334. Unifying orchestration layer; notLinux/notKubernetes.',
+        '. Unifying orchestration layer; notLinux/notKubernetes.',
     },
     {
       id: 'ai-scheduler',
@@ -32,7 +32,7 @@ export function vaiosProductCatalog(): VaiosProductRow[] {
       api: 'GET /v1/ai-scheduler/engine',
       console: '/ai-scheduler',
       notes:
-        'VL-335. Unifies scheduling over global-scheduler/GPU/workflow/agent queues.',
+        '. Unifies scheduling over global-scheduler/GPU/workflow/agent queues.',
     },
     {
       id: 'runtime-manager',
@@ -41,7 +41,7 @@ export function vaiosProductCatalog(): VaiosProductRow[] {
       api: 'GET /v1/runtime-manager/engine',
       console: '/runtime-manager',
       notes:
-        'VL-336. Lifecycle catalog over Kernel + Data Plane runtimes.',
+        '. Lifecycle catalog over Kernel + Data Plane runtimes.',
     },
     {
       id: 'resource-manager',
@@ -50,7 +50,7 @@ export function vaiosProductCatalog(): VaiosProductRow[] {
       api: 'GET /v1/resource-manager/engine',
       console: '/resource-manager',
       notes:
-        'VL-337. Resource allocation catalog; gpuBudgetLimitsRequired=true.',
+        '. Resource allocation catalog; gpuBudgetLimitsRequired=true.',
     },
     {
       id: 'workflow-operating-system',
@@ -59,7 +59,7 @@ export function vaiosProductCatalog(): VaiosProductRow[] {
       api: 'GET /v1/workflow-operating-system/engine',
       console: '/workflow-operating-system',
       notes:
-        'VL-338. Façade over workflow-runtime + marketplace.',
+        '. Façade over workflow-runtime + marketplace.',
     },
     {
       id: 'agent-operating-system',
@@ -68,7 +68,7 @@ export function vaiosProductCatalog(): VaiosProductRow[] {
       api: 'GET /v1/agent-operating-system/engine',
       console: '/agent-operating-system',
       notes:
-        'VL-339. Façade over agent-runtime + fabric + marketplace.',
+        '. Façade over agent-runtime + fabric + marketplace.',
     },
     {
       id: 'ai-memory-operating-system',
@@ -77,7 +77,7 @@ export function vaiosProductCatalog(): VaiosProductRow[] {
       api: 'GET /v1/ai-memory-operating-system/engine',
       console: '/ai-memory-operating-system',
       notes:
-        'VL-340. Façade over memory-runtime + fabric + knowledge-memory.',
+        '. Façade over memory-runtime + fabric + knowledge-memory.',
     },
     {
       id: 'knowledge-operating-system',
@@ -86,7 +86,7 @@ export function vaiosProductCatalog(): VaiosProductRow[] {
       api: 'GET /v1/knowledge-operating-system/engine',
       console: '/knowledge-operating-system',
       notes:
-        'VL-341. Façade over knowledge-runtime/fabric/cloud + AKG.',
+        '. Façade over knowledge-runtime/fabric/cloud + AKG.',
     },
     {
       id: 'plugin-operating-system',
@@ -95,7 +95,7 @@ export function vaiosProductCatalog(): VaiosProductRow[] {
       api: 'GET /v1/plugin-operating-system/engine',
       console: '/plugin-operating-system',
       notes:
-        'VL-342. Façade over plugin-runtime + marketplace; existing policy gates.',
+        '. Façade over plugin-runtime + marketplace; existing policy gates.',
     },
     {
       id: 'ai-kernel',

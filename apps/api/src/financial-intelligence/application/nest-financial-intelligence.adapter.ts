@@ -34,7 +34,7 @@ export class NestFinancialIntelligenceCatalogAdapter implements FinancialIntelli
         status: 'shipped',
         api: 'GET /v1/financial-intelligence/engine',
         console: '/financial-intelligence',
-        notes: 'VL-266 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

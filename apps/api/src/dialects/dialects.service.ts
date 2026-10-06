@@ -66,7 +66,7 @@ export class DialectsService implements OnModuleInit {
     });
     return {
       data: rows.map((r) => this.toDto(r)),
-      note: 'Curated registry — not unlimited dialect coverage (VL-131 / ADR-0052).',
+      note: 'Curated registry — not unlimited dialect coverage.',
     };
   }
 

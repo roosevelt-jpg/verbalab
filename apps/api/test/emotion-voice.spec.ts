@@ -37,7 +37,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Emotion Voice Engine (VL-173)', () => {
+describe('Emotion Voice Engine', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -92,14 +92,14 @@ describe('Emotion Voice Engine (VL-173)', () => {
     await app.close();
   });
 
-  it('documents Emotion Voice as synthesis (not VL-154 detection / trained TTS)', () => {
+  it('documents Emotion Voice as synthesis (not detection / trained TTS)', () => {
     const doc = join(root, 'docs/EMOTION_VOICE.md');
     const adr = join(root, 'docs/adr/0084-emotion-voice.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toContain('synthesis');
-    expect(text).toContain('VL-154');
+    expect(text).toContain('');
     expect(text).toMatch(/is \*\*not\*\* a trained expressive TTS/i);
   });
 

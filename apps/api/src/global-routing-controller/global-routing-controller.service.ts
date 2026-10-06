@@ -41,7 +41,7 @@ export class GlobalRoutingControllerService {
       count: (catalog as { routes: unknown[] }).routes.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'GlobalRoutingController monitoring snapshot (VL-319).',
+      note: 'GlobalRoutingController monitoring snapshot.',
     };
   }
 }

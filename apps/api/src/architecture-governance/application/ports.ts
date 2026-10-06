@@ -1,4 +1,4 @@
-/** Application ports for Architecture Governance (VL-346). */
+/** Application ports for Architecture Governance. */
 
 export type ArchitectureGovernanceProductRow = {
   id: string;

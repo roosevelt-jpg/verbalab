@@ -37,7 +37,7 @@ export class NestInfrastructureEngineeringStandardsCatalogAdapter implements Inf
         status: 'shipped',
         api: 'GET /v1/infrastructure-engineering-standards/engine',
         console: '/infrastructure-engineering-standards',
-        notes: 'VL-352 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

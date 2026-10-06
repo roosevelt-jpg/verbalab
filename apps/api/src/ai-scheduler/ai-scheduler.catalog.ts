@@ -1,6 +1,6 @@
 /**
- * Library Phase 202 → AI Scheduler (VL-335).
- * AI Scheduler (VL-335). Unifies scheduling over global-scheduler, gpu-runtime/gpu-platform, workflow-runtime, agent-runtime queues — not a new cron OS.
+ * Library Phase 202 → AI Scheduler.
+ * AI Scheduler. Unifies scheduling over global-scheduler, gpu-runtime/gpu-platform, workflow-runtime, agent-runtime queues — not a new cron OS.
  */
 export function aiSchedulerEngineCatalog() {
   return {
@@ -11,13 +11,13 @@ export function aiSchedulerEngineCatalog() {
     notKubernetes: true,
     literalOsKernel: false,
     capabilities: [
-      { id: 'ai_scheduling', name: 'AI Scheduling Catalog', status: 'shipped', notes: 'VL-335 routed capability — not a new engine.' },
-      { id: 'gpu_scheduling', name: 'GPU Scheduling Routing', status: 'shipped', notes: 'VL-335 routed capability — not a new engine.' },
-      { id: 'workflow_scheduling', name: 'Workflow Scheduling Routing', status: 'shipped', notes: 'VL-335 routed capability — not a new engine.' },
-      { id: 'agent_scheduling', name: 'Agent Scheduling Routing', status: 'shipped', notes: 'VL-335 routed capability — not a new engine.' },
-      { id: 'queue_scheduling', name: 'Queue Scheduling Routing', status: 'shipped', notes: 'VL-335 routed capability — not a new engine.' },
-      { id: 'priority_scheduling', name: 'Priority Scheduling Catalog', status: 'shipped', notes: 'VL-335 routed capability — not a new engine.' },
-      { id: 'distributed_scheduling', name: 'Distributed Scheduling Catalog', status: 'shipped', notes: 'VL-335 routed capability — not a new engine.' }
+      { id: 'ai_scheduling', name: 'AI Scheduling Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'gpu_scheduling', name: 'GPU Scheduling Routing', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'workflow_scheduling', name: 'Workflow Scheduling Routing', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'agent_scheduling', name: 'Agent Scheduling Routing', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'queue_scheduling', name: 'Queue Scheduling Routing', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'priority_scheduling', name: 'Priority Scheduling Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'distributed_scheduling', name: 'Distributed Scheduling Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' }
     ],
     routes: [
       {
@@ -86,9 +86,9 @@ export function aiSchedulerEngineCatalog() {
       notKubernetes: true,
       literalOsKernel: false,
       enterpriseEngineeringSystemOs: false,
-      note: 'AI Scheduler (VL-335). Unifies scheduling over global-scheduler, gpu-runtime/gpu-platform, workflow-runtime, agent-runtime queues — not a new cron OS.',
+      note: 'AI Scheduler. Unifies scheduling over global-scheduler, gpu-runtime/gpu-platform, workflow-runtime, agent-runtime queues — not a new cron OS.',
     },
     docs: '/docs/AI_SCHEDULER.md',
-    note: 'AI Scheduler (VL-335). Unifies scheduling over global-scheduler, gpu-runtime/gpu-platform, workflow-runtime, agent-runtime queues — not a new cron OS.',
+    note: 'AI Scheduler. Unifies scheduling over global-scheduler, gpu-runtime/gpu-platform, workflow-runtime, agent-runtime queues — not a new cron OS.',
   };
 }

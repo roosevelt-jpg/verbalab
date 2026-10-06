@@ -38,7 +38,7 @@ export class BatchRuntimeService {
       spendSafety: {
         hardSpendCeilingsRequired: true,
         note:
-          'Batch Runtime does not open-ended autoscale GPU workers. Translation delegates to existing BullMQ. Cost Optimization (VL-211) must enforce spend caps.',
+          'Batch Runtime does not open-ended autoscale GPU workers. Translation delegates to existing BullMQ. Cost Optimization must enforce spend caps.',
       },
     };
   }
@@ -455,7 +455,7 @@ export class BatchRuntimeService {
       failed,
       scheduled,
       auditsLast30d: audits,
-      note: 'Batch Runtime analytics (VL-209). ≠ VL-212 AI Runtime Analytics.',
+      note: 'Batch Runtime analytics. ≠ AI Runtime Analytics.',
     };
   }
 
@@ -473,7 +473,7 @@ export class BatchRuntimeService {
       deferred: engine.capabilities
         .filter((c) => c.status === 'deferred')
         .map((c) => c.id),
-      note: 'Batch Runtime monitoring snapshot (VL-209).',
+      note: 'Batch Runtime monitoring snapshot.',
     };
   }
 

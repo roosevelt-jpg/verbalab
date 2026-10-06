@@ -1,4 +1,4 @@
-/** Application ports for Atlas scaffold (VL-225). */
+/** Application ports for Atlas scaffold. */
 
 export type AtlasCapabilityRow = {
   id: string;

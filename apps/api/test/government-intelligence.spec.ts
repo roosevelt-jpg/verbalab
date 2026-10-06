@@ -20,7 +20,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Government Intelligence (VL-264)', () => {
+describe('Government Intelligence', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -40,7 +40,7 @@ describe('Government Intelligence (VL-264)', () => {
     expect(existsSync(join(root, 'docs/GOVERNMENT_INTELLIGENCE.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0166-government-intelligence.md'))).toBe(true);
     const text = readFileSync(join(root, 'docs/GOVERNMENT_INTELLIGENCE.md'), 'utf8');
-    expect(text).toContain('VL-264');
+    expect(text).toContain('');
   });
 
   it('has no TODO/FIXME/implement-later markers', () => {

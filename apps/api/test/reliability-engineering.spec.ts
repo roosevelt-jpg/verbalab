@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Reliability Engineering (VL-308)', () => {
+describe('Reliability Engineering', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

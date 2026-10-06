@@ -1,4 +1,4 @@
-/** Application ports for Knowledge Fabric (VL-242). */
+/** Application ports for Knowledge Fabric. */
 
 export type KnowledgeFabricCapabilityRow = {
   id: string;

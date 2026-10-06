@@ -37,7 +37,7 @@ export class NestTrustAnalyticsCatalogAdapter implements TrustAnalyticsCatalogPo
         status: 'shipped',
         api: 'GET /v1/trust-analytics/engine',
         console: '/trust-analytics',
-        notes: 'VL-300 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

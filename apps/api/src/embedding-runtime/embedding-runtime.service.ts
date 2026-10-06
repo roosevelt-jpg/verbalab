@@ -77,7 +77,7 @@ export class EmbeddingRuntimeService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'EmbeddingRuntime monitoring snapshot (VL-330).',
+      note: 'EmbeddingRuntime monitoring snapshot.',
     };
   }
 }

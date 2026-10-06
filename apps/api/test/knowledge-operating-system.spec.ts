@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Knowledge Operating System (VL-341)', () => {
+describe('Knowledge Operating System', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

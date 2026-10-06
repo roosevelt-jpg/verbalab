@@ -5,8 +5,8 @@ import { expect, test } from '@playwright/test';
  * Skips unless a real Clerk test user is configured — we do not fake auth.
  *
  * Required:
- *   E2E_CLERK_USER_EMAIL
- *   E2E_CLERK_USER_PASSWORD
+ * E2E_CLERK_USER_EMAIL
+ * E2E_CLERK_USER_PASSWORD
  * Plus Clerk keys on the running web app and Google MT (or fixture) on the API.
  */
 const email = process.env.E2E_CLERK_USER_EMAIL?.trim();

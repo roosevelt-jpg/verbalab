@@ -37,7 +37,7 @@ export class NestGoldenPathPlatformCatalogAdapter implements GoldenPathPlatformC
         status: 'shipped',
         api: 'GET /v1/golden-path-platform/engine',
         console: '/golden-path-platform',
-        notes: 'VL-305 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

@@ -50,7 +50,7 @@ export class KnowledgeMemoryService {
               : `memory-cloud scope=${id}`,
       })),
       layer: KNOWLEDGE_MEMORY_LAYER,
-      note: 'Knowledge Memory scopes (VL-199) map onto VL-183 Memory Cloud storage.',
+      note: 'Knowledge Memory scopes map onto Memory Cloud storage.',
     };
   }
 
@@ -464,7 +464,7 @@ export class KnowledgeMemoryService {
       withDocument,
       evolved,
       byScope: [...byScope.entries()].map(([scope, count]) => ({ scope, count })),
-      note: 'Workspace-scoped Knowledge Memory analytics (VL-199).',
+      note: 'Workspace-scoped Knowledge Memory analytics.',
     };
   }
 

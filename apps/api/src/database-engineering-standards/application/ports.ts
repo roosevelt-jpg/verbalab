@@ -1,4 +1,4 @@
-/** Application ports for Database Engineering Standards (VL-351). */
+/** Application ports for Database Engineering Standards. */
 
 export type DatabaseEngineeringStandardsProductRow = {
   id: string;

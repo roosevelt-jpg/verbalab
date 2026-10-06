@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('AI Memory Operating System (VL-340)', () => {
+describe('AI Memory Operating System', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

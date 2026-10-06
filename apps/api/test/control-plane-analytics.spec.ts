@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Control Plane Analytics (VL-322)', () => {
+describe('Control Plane Analytics', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

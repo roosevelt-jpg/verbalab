@@ -100,7 +100,7 @@ export class VoiceStudioService {
         language: r.language,
         notes: r.notes,
       })),
-      note: 'Grapheme→alias before TTS. Not VL-156 pronunciation assessment.',
+      note: 'Grapheme→alias before TTS. Not pronunciation assessment.',
     };
   }
 

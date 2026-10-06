@@ -1,6 +1,6 @@
 /**
- * Library Phase 203 → Runtime Manager (VL-336).
- * Runtime Manager (VL-336). Lifecycle/allocation/health/recovery/scaling catalog over existing Kernel + Data Plane runtimes — routes to ai-kernel inventory.
+ * Library Phase 203 → Runtime Manager.
+ * Runtime Manager. Lifecycle/allocation/health/recovery/scaling catalog over existing Kernel + Data Plane runtimes — routes to ai-kernel inventory.
  */
 export function runtimeManagerEngineCatalog() {
   return {
@@ -11,11 +11,11 @@ export function runtimeManagerEngineCatalog() {
     notKubernetes: true,
     literalOsKernel: false,
     capabilities: [
-      { id: 'lifecycle', name: 'Runtime Lifecycle Catalog', status: 'shipped', notes: 'VL-336 routed capability — not a new engine.' },
-      { id: 'allocation', name: 'Runtime Allocation Catalog', status: 'shipped', notes: 'VL-336 routed capability — not a new engine.' },
-      { id: 'health', name: 'Runtime Health Catalog', status: 'shipped', notes: 'VL-336 routed capability — not a new engine.' },
-      { id: 'recovery', name: 'Runtime Recovery Catalog', status: 'shipped', notes: 'VL-336 routed capability — not a new engine.' },
-      { id: 'scaling', name: 'Runtime Scaling Catalog', status: 'shipped', notes: 'VL-336 routed capability — not a new engine.' }
+      { id: 'lifecycle', name: 'Runtime Lifecycle Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'allocation', name: 'Runtime Allocation Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'health', name: 'Runtime Health Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'recovery', name: 'Runtime Recovery Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'scaling', name: 'Runtime Scaling Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' }
     ],
     routes: [
       {
@@ -128,9 +128,9 @@ export function runtimeManagerEngineCatalog() {
       notKubernetes: true,
       literalOsKernel: false,
       enterpriseEngineeringSystemOs: false,
-      note: 'Runtime Manager (VL-336). Lifecycle/allocation/health/recovery/scaling catalog over existing Kernel + Data Plane runtimes — routes to ai-kernel inventory.',
+      note: 'Runtime Manager. Lifecycle/allocation/health/recovery/scaling catalog over existing Kernel + Data Plane runtimes — routes to ai-kernel inventory.',
     },
     docs: '/docs/RUNTIME_MANAGER.md',
-    note: 'Runtime Manager (VL-336). Lifecycle/allocation/health/recovery/scaling catalog over existing Kernel + Data Plane runtimes — routes to ai-kernel inventory.',
+    note: 'Runtime Manager. Lifecycle/allocation/health/recovery/scaling catalog over existing Kernel + Data Plane runtimes — routes to ai-kernel inventory.',
   };
 }

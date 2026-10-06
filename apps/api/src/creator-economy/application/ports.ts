@@ -1,4 +1,4 @@
-/** Application ports for Creator Economy (VL-258). */
+/** Application ports for Creator Economy. */
 
 export type CreatorEconomyEngineBundle = ReturnType<
   import('../creator-economy.service').CreatorEconomyService['engine']

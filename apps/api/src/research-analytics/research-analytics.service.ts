@@ -70,7 +70,7 @@ export class ResearchAnalyticsService {
       mode: 'analytics',
       shippedProducts: researchCloudProductCatalog().filter((p) => p.status === 'shipped').length,
       honesty: catalog.honesty,
-      note: 'Research Analytics monitoring snapshot (VL-279).',
+      note: 'Research Analytics monitoring snapshot.',
     };
   }
 }

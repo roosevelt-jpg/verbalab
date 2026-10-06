@@ -110,7 +110,7 @@ export class ModelTrainingPlatformService {
       },
       docs: '/docs/MODEL_TRAINING_PLATFORM.md',
       note:
-        'Model Training Platform (VL-235). Orchestrates experiment plans over VL-111 — not a distributed training OS.',
+        'Model Training Platform. Orchestrates experiment plans over existing — not a distributed training OS.',
     };
   }
 
@@ -118,7 +118,7 @@ export class ModelTrainingPlatformService {
     return {
       experiments: this.listExperimentsForOrg(session.organizationId),
       ceilings: modelTrainingCeilings(),
-      note: 'Org-scoped sandbox experiment plans (VL-235).',
+      note: 'Org-scoped sandbox experiment plans.',
     };
   }
 
@@ -185,7 +185,7 @@ export class ModelTrainingPlatformService {
     if (!LAUNCHABLE.includes(experiment.method)) {
       throw new ApiException(
         'validation_error',
-        `Method ${experiment.method} is not launchable in VL-235 (deferred / non-GPU path)`,
+        `Method ${experiment.method} is not launchable in (deferred / non-GPU path)`,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -212,7 +212,7 @@ export class ModelTrainingPlatformService {
       ],
       launchers: this.finetunes.launcherStatus(),
       note:
-        'Handoff only — Model Training Platform does not regenerate VL-111 or invent GPU completion. Manual is the honest default when Modal/Vertex URLs are unset.',
+        'Handoff only — Model Training Platform does not regenerate or invent GPU completion. Manual is the honest default when Modal/Vertex URLs are unset.',
     };
 
     experiment.status = 'handed_off';
@@ -283,7 +283,7 @@ export class ModelTrainingPlatformService {
       launchers: this.finetunes.launcherStatus(),
       honesty: modelTrainingPlatformHonesty(),
       note:
-        'Model Training Platform monitoring (VL-235). Hub partial; distributed/RLHF/DPO deferred.',
+        'Model Training Platform monitoring. Hub partial; distributed/RLHF/DPO deferred.',
     };
   }
 

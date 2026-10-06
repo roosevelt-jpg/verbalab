@@ -37,7 +37,7 @@ export class NestVisionRuntimeCatalogAdapter implements VisionRuntimeCatalogPort
         status: 'shipped',
         api: 'GET /v1/vision-runtime/engine',
         console: '/vision-runtime',
-        notes: 'VL-328 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

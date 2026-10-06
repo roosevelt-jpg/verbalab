@@ -1,4 +1,4 @@
-/** Application ports for Tourism & Heritage Intelligence (VL-269). */
+/** Application ports for Tourism & Heritage Intelligence. */
 
 export type TourismHeritageIntelligenceProductRow = {
   id: string;

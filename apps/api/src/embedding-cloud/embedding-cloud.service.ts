@@ -134,7 +134,7 @@ export class EmbeddingCloudService {
       averageLatencyMs: latencySamples
         ? Number((latencySum / latencySamples).toFixed(1))
         : null,
-      note: 'Embedding Cloud analytics from usage_events + audits (VL-181).',
+      note: 'Embedding Cloud analytics from usage_events + audits.',
     };
   }
 
@@ -148,7 +148,7 @@ export class EmbeddingCloudService {
       tokens: analytics.tokens,
       averageLatencyMs: analytics.averageLatencyMs,
       deferredModalities: engine.modalities.filter((m) => m.status === 'deferred').map((m) => m.id),
-      note: 'Embedding Cloud monitoring snapshot (VL-181).',
+      note: 'Embedding Cloud monitoring snapshot.',
     };
   }
 
@@ -168,7 +168,7 @@ export class EmbeddingCloudService {
     ) {
       throw new ApiException(
         'validation_error',
-        `modality '${modality}' is deferred — Embedding Cloud ships text/document/code only (VL-181)`,
+        `modality '${modality}' is deferred — Embedding Cloud ships text/document/code only`,
         HttpStatus.BAD_REQUEST,
       );
     }

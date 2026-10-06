@@ -1,4 +1,4 @@
-/** Application ports for Plugin Operating System (VL-342). */
+/** Application ports for Plugin Operating System. */
 
 export type PluginOperatingSystemProductRow = {
   id: string;

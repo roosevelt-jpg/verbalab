@@ -1,4 +1,4 @@
-/** Application ports for Language Cloud (VL-137). Implemented by Nest service adapters. */
+/** Application ports for Language Cloud. Implemented by Nest service adapters. */
 
 export type AuthContext = {
   organizationId: string;

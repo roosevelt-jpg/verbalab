@@ -51,7 +51,7 @@ export class ModelEvaluationPlatformService {
         sotaClaimsForbidden: true,
         noFakeMmluScores: true,
         note:
-          'Leaderboards are org-scoped from local runs. Translation scores come from VL-100 reference metrics — not market leadership.',
+          'Leaderboards are org-scoped from local runs. Translation scores come from reference metrics — not market leadership.',
       },
     };
   }
@@ -100,7 +100,7 @@ export class ModelEvaluationPlatformService {
       },
       docs: '/docs/MODEL_EVALUATION_PLATFORM.md',
       note:
-        'Model Evaluation Platform (VL-236). Translation via VL-100; sandbox bias/safety/latency. Not a global LLM leaderboard.',
+        'Model Evaluation Platform. Translation via existing; sandbox bias/safety/latency. Not a global LLM leaderboard.',
     };
   }
 
@@ -108,7 +108,7 @@ export class ModelEvaluationPlatformService {
     return {
       runs: this.listRunsForOrg(session.organizationId),
       ceilings: modelEvaluationCeilings(),
-      note: 'Org-scoped sandbox evaluation runs (VL-236).',
+      note: 'Org-scoped sandbox evaluation runs.',
     };
   }
 
@@ -181,7 +181,7 @@ export class ModelEvaluationPlatformService {
     if (!RUNNABLE.includes(run.suite)) {
       throw new ApiException(
         'validation_error',
-        `Suite ${run.suite} is not runnable in VL-236 (deferred)`,
+        `Suite ${run.suite} is not runnable in (deferred)`,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -196,7 +196,7 @@ export class ModelEvaluationPlatformService {
       };
       run.score = snapshot?.pairs[0]?.exactMatchRate ?? null;
       run.report =
-        'Handoff to VL-100. Owner/admin: POST /v1/eval/run?mode=fixture|live|reference_oracle. Platform does not regenerate the harness or invent leadership scores.';
+        'Handoff to . Owner/admin: POST /v1/eval/run?mode=fixture|live|reference_oracle. Platform does not regenerate the harness or invent leadership scores.';
       run.updatedAt = new Date().toISOString();
       this.runs.set(run.id, run);
       return {
@@ -275,7 +275,7 @@ export class ModelEvaluationPlatformService {
       })),
       honesty: modelEvaluationPlatformHonesty(),
       note:
-        'Model Evaluation Platform monitoring (VL-236). Translation handoff + sandbox suites; MMLU/HumanEval deferred.',
+        'Model Evaluation Platform monitoring. Translation handoff + sandbox suites; MMLU/HumanEval deferred.',
     };
   }
 

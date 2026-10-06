@@ -1,4 +1,4 @@
-/** Application ports for Context Fabric (VL-241). */
+/** Application ports for Context Fabric. */
 
 export type ContextFabricCapabilityRow = {
   id: string;

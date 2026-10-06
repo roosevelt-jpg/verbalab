@@ -35,7 +35,7 @@ export class ModelServingService {
       spendSafety: {
         hardSpendCeilingsRequired: true,
         note:
-          'Model Serving does not provision GPUs. GPU spend ceilings live on GPU Platform (VL-205). Cost Optimization (VL-211) must enforce caps.',
+          'Model Serving does not provision GPUs. GPU spend ceilings live on GPU Platform. Cost Optimization must enforce caps.',
       },
     };
   }
@@ -584,7 +584,7 @@ export class ModelServingService {
       canary,
       released,
       auditsLast30d: audits,
-      note: 'Model Serving analytics (VL-206). ≠ VL-212 AI Runtime Analytics.',
+      note: 'Model Serving analytics. ≠ AI Runtime Analytics.',
     };
   }
 
@@ -603,7 +603,7 @@ export class ModelServingService {
       deferred: engine.capabilities
         .filter((c) => c.status === 'deferred')
         .map((c) => c.id),
-      note: 'Model Serving monitoring snapshot (VL-206).',
+      note: 'Model Serving monitoring snapshot.',
     };
   }
 

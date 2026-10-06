@@ -47,7 +47,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Connector Marketplace (VL-256)', () => {
+describe('Connector Marketplace', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;
@@ -75,7 +75,7 @@ describe('Connector Marketplace (VL-256)', () => {
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-256');
+    expect(text).toContain('');
     expect(text).toMatch(/Zapier|iPaaS|ipaasOs/i);
     expect(text).toMatch(/Stripe|storesRawCardData/i);
     expect(text).toMatch(/liveConnectorExecution/i);

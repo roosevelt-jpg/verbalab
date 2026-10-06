@@ -113,7 +113,7 @@ export class CallIntelligenceService {
       complianceFlagCount: complianceFlags,
       averageQaScore: qaCount ? Number((qaSum / qaCount).toFixed(1)) : null,
       recent: rows.slice(0, 10).map((r) => this.serialize(r)),
-      note: 'Workspace Call Intelligence report (VL-158) — heuristic aggregates.',
+      note: 'Workspace Call Intelligence report — heuristic aggregates.',
     };
   }
 
@@ -338,7 +338,7 @@ export class CallIntelligenceService {
       if (sentiment) yield { event: 'sentiment', label: sentiment };
       yield {
         event: 'done',
-        note: 'Call Intelligence stream complete (VL-158).',
+        note: 'Call Intelligence stream complete.',
       };
     } catch (err) {
       yield {

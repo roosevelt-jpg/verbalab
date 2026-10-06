@@ -67,7 +67,7 @@ export class ContextRuntimeService {
     return {
       scopes: CONTEXT_RUNTIME_PRIORITIES.map((p) => ({ id: p.kind, priority: p.priority })),
       layer: 'kernel',
-      note: 'Context Runtime scopes map onto VL-185 Context Engine sources + model block.',
+      note: 'Context Runtime scopes map onto Context Engine sources + model block.',
       honesty: contextRuntimeCatalog().honesty,
     };
   }
@@ -252,7 +252,7 @@ export class ContextRuntimeService {
       promptContext: assembled.promptContext,
       compression: assembled.compression,
       honesty: assembled.honesty,
-      note: 'Retrieval façade over assemble (VL-217).',
+      note: 'Retrieval façade over assemble.',
     };
   }
 
@@ -362,7 +362,7 @@ export class ContextRuntimeService {
       workspaceId: input.workspaceId,
       assemblies,
       honesty: contextRuntimeCatalog().honesty,
-      note: 'Context Runtime analytics (VL-217).',
+      note: 'Context Runtime analytics.',
     };
   }
 
@@ -378,7 +378,7 @@ export class ContextRuntimeService {
       honesty: engine.honesty,
       safety: {
         agentActionBoundariesRequired: true,
-        note: 'Context Runtime assembles text only; Agent/Workflow action gates remain VL-219–222.',
+        note: 'Context Runtime assembles text only; Agent/Workflow action gates remain –222.',
       },
     };
   }

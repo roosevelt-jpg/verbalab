@@ -1,4 +1,4 @@
-/** Application ports for Dataset Marketplace (VL-252). */
+/** Application ports for Dataset Marketplace. */
 
 export type DatasetMarketplaceEngineBundle = ReturnType<
   import('../dataset-marketplace.service').DatasetMarketplaceService['engine']

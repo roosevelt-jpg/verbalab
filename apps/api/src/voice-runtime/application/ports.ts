@@ -1,4 +1,4 @@
-/** Application ports for Voice Runtime (VL-327). */
+/** Application ports for Voice Runtime. */
 
 export type VoiceRuntimeProductRow = {
   id: string;

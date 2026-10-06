@@ -64,7 +64,7 @@ export class CountryPacksService implements OnModuleInit {
     });
     return {
       data: rows.map((r) => this.toDto(r)),
-      note: 'Curated African-priority country packs (VL-135). Compose language locale packs — not CLDR/SKU catalog.',
+      note: 'Curated African-priority country packs. Compose language locale packs — not CLDR/SKU catalog.',
     };
   }
 
@@ -84,13 +84,13 @@ export class CountryPacksService implements OnModuleInit {
       try {
         localePacks.push(await this.locales.get(lang));
       } catch {
-        // Language may lack a VL-102 pack — skip honestly.
+        // Language may lack a pack — skip honestly.
       }
     }
     return {
       ...dto,
       localePacks,
-      note: 'Includes linked VL-102 language locale packs where seeded.',
+      note: 'Includes linked language locale packs where seeded.',
     };
   }
 

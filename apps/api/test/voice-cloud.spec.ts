@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Voice Cloud Foundation (VL-170)', () => {
+describe('Voice Cloud Foundation', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let voiceCloud: VoiceCloudService;

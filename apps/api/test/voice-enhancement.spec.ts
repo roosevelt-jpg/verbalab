@@ -49,7 +49,7 @@ function toneWav(freq = 440, seconds = 0.5): Buffer {
   return encodeWavPcm16(samples, sampleRate);
 }
 
-describe('Voice Enhancement Platform (VL-175)', () => {
+describe('Voice Enhancement Platform', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

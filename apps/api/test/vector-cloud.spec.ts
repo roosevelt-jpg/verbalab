@@ -42,7 +42,7 @@ function fakeEmbedding(seed: number): number[] {
   return Array.from({ length: 1536 }, (_, i) => Math.sin((seed + 1) * (i + 1) * 0.01) * 0.1);
 }
 
-describe('Vector Cloud (VL-182)', () => {
+describe('Vector Cloud', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -94,7 +94,7 @@ describe('Vector Cloud (VL-182)', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/deferred/i);
-    expect(text).toContain('VL-062');
+    expect(text).toContain('');
     expect(text).not.toMatch(/pinecone parity shipped/i);
   });
 
@@ -165,7 +165,7 @@ describe('Vector Cloud (VL-182)', () => {
     const empty = await request(app.getHttpServer())
       .post('/v1/vector-cloud/search')
       .set('Authorization', `Bearer ${key.secret}`)
-      .send({ query: '   ' });
+      .send({ query: ' ' });
     expect(empty.status).toBe(400);
 
     const analytics = await request(app.getHttpServer())

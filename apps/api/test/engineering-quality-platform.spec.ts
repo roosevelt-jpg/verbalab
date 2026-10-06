@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Engineering Quality Platform (VL-348)', () => {
+describe('Engineering Quality Platform', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

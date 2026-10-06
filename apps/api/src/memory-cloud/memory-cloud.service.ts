@@ -43,7 +43,7 @@ export class MemoryCloudService {
               : undefined,
       })),
       kinds: MEMORY_KINDS.map((id) => ({ id })),
-      note: 'Memory scopes and kinds for VL-183 writes.',
+      note: 'Memory scopes and kinds for writes.',
     };
   }
 
@@ -325,7 +325,7 @@ export class MemoryCloudService {
     return {
       query,
       hits: rows.map((r) => this.serialize(r)),
-      note: 'Text contains search (VL-183). Embedding/NN semantic memory deferred.',
+      note: 'Text contains search. Embedding/NN semantic memory deferred.',
     };
   }
 
@@ -362,7 +362,7 @@ export class MemoryCloudService {
       subjectUserId: input.subjectUserId ?? null,
       count: rows.length,
       memories: rows.map((r) => this.serialize(r)),
-      note: 'GDPR-style memory export (VL-183). Includes soft-active rows only.',
+      note: 'GDPR-style memory export. Includes soft-active rows only.',
     };
   }
 
@@ -420,7 +420,7 @@ export class MemoryCloudService {
       count: matching.length,
       subjectUserId: input.subjectUserId ?? null,
       hard: input.hard !== false,
-      note: 'GDPR right-to-be-forgotten for Memory Cloud (VL-183).',
+      note: 'GDPR right-to-be-forgotten for Memory Cloud.',
     };
   }
 
@@ -501,7 +501,7 @@ export class MemoryCloudService {
       writes,
       exports,
       erases,
-      note: 'Memory Cloud analytics (VL-183). Retention sweeper not automated.',
+      note: 'Memory Cloud analytics. Retention sweeper not automated.',
     };
   }
 
@@ -520,7 +520,7 @@ export class MemoryCloudService {
       gdprExport: engine.honesty.gdprExport,
       gdprErase: engine.honesty.gdprErase,
       deferred: engine.capabilities.filter((c) => c.status === 'deferred').map((c) => c.id),
-      note: 'Memory Cloud monitoring snapshot (VL-183).',
+      note: 'Memory Cloud monitoring snapshot.',
     };
   }
 

@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Database Engineering Standards (VL-351)', () => {
+describe('Database Engineering Standards', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

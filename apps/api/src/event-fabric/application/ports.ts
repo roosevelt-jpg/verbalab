@@ -1,4 +1,4 @@
-/** Application ports for Event Fabric (VL-240). */
+/** Application ports for Event Fabric. */
 
 export type EventFabricCapabilityRow = {
   id: string;

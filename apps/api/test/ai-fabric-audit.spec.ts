@@ -64,7 +64,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('AI Fabric Production Audit (VL-248)', () => {
+describe('AI Fabric Production Audit', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

@@ -146,7 +146,7 @@ export class LanguageIntelligenceService {
       emotion: { label: emotion.label, confidence: emotion.confidence },
       readability: { score: readability.score, level: readability.level },
       complexity: { score: complexity.score, level: complexity.level },
-      note: 'Language Intelligence analyze (VL-144). Intent/sentiment/emotion are heuristic; dialect/accent reuse VL-131/132.',
+      note: 'Language Intelligence analyze. Intent/sentiment/emotion are heuristic; dialect/accent reuse 132.',
     };
 
     await this.recordAudit(input, 'language_intelligence.analyze', 'POST /v1/language-intelligence/analyze', {
@@ -238,7 +238,7 @@ export class LanguageIntelligenceService {
       streamed: true,
     });
 
-    yield { event: 'done', data: { note: 'SSE Language Intelligence stream (VL-144).' } };
+    yield { event: 'done', data: { note: 'SSE Language Intelligence stream.' } };
   }
 
   async sentiment(input: AuthTextInput) {
@@ -325,7 +325,7 @@ export class LanguageIntelligenceService {
       confidence,
       needsReview: estimate.needsReview,
       reasons: estimate.reasons,
-      note: 'Heuristic translation confidence (VL-144 / quality-estimate) — not a trained QE model.',
+      note: 'Heuristic translation confidence — not a trained QE model.',
     };
   }
 

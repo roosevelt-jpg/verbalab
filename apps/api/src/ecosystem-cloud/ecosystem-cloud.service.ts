@@ -28,7 +28,7 @@ export class EcosystemCloudService {
       },
       docs: '/docs/ECOSYSTEM_CLOUD.md',
       note:
-        'Ecosystem Foundation hub (VL-249). Extends VL-090+ content marketplace and voice marketplace. Not a payment-processor OS or regenerate of Volumes 1–10.',
+        'Ecosystem Foundation hub. Extends existing+ content marketplace and voice marketplace. Not a payment-processor OS or regenerate of Volumes 1–10.',
     };
   }
 
@@ -69,7 +69,7 @@ export class EcosystemCloudService {
         pluginAgentSandboxRequired: true,
         realMoneyRiskCategory: true,
         note:
-          'Real-money volume. Stripe Connect backs VL-092/VL-258 creator payouts. Tax/dispute/1099 flows remain documented gaps (taxHandlingComplete=false). Plugin/Agent listings must stay sandboxed.',
+          'Real-money volume. Stripe Connect backs creator payouts. Tax/dispute/1099 flows remain documented gaps (taxHandlingComplete=false). Plugin/Agent listings must stay sandboxed.',
       },
       deferred: {
         pluginMarketplace: false,
@@ -113,7 +113,7 @@ export class EcosystemCloudService {
       },
       docs: '/docs/ECOSYSTEM_CLOUD.md',
       note:
-        'Ecosystem Cloud (VL-249–259). Discovery hub over marketplaces + Creator Economy; Production Audit closed — see docs/ecosystem-cloud-audit/.',
+        'Ecosystem Cloud (–259). Discovery hub over marketplaces + Creator Economy; Production Audit closed — see docs/ecosystem-cloud-audit/.',
     };
   }
 
@@ -125,7 +125,7 @@ export class EcosystemCloudService {
       architecture: ecosystemArchitectureNotes(),
       honesty: ecosystemHonesty(),
       note:
-        'Ecosystem Cloud monitoring snapshot (VL-249). Foundation hub shipped; marketplace phases and production audit remain.',
+        'Ecosystem Cloud monitoring snapshot. Foundation hub shipped; marketplace phases and production audit remain.',
     };
   }
 }

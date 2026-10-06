@@ -77,7 +77,7 @@ export class KnowledgeRuntimeService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'KnowledgeRuntime monitoring snapshot (VL-329).',
+      note: 'KnowledgeRuntime monitoring snapshot.',
     };
   }
 }

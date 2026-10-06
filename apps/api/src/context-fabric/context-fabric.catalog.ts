@@ -18,7 +18,7 @@ export type ContextFabricRoute = {
 };
 
 /**
- * Library Phase 108 → Context Fabric (VL-241).
+ * Library Phase 108 → Context Fabric.
  * Cross-cloud context routing over Context Runtime — not infinite-context OS.
  */
 export function contextFabricCapabilityCatalog(): ContextFabricCapability[] {
@@ -29,7 +29,7 @@ export function contextFabricCapabilityCatalog(): ContextFabricCapability[] {
       status: 'shipped',
       api: 'GET /v1/context-fabric/products',
       notes:
-        'Cross-cloud context router (VL-241). Extends Context Runtime — does not regenerate VL-217/VL-185.',
+        'Cross-cloud context router. Extends Context Runtime — does not regenerate .',
     },
     {
       id: 'context-router',
@@ -64,7 +64,7 @@ export function contextFabricCapabilityCatalog(): ContextFabricCapability[] {
       name: 'Agent Context',
       status: 'partial',
       api: 'GET /v1/context-fabric/routes',
-      notes: 'Discovery link to Agent Runtime; sandboxed + Policy-gated. Full agent fabric later (VL-246).',
+      notes: 'Discovery link to Agent Runtime; sandboxed + Policy-gated. Full agent fabric later.',
     },
     {
       id: 'language-context',
@@ -143,7 +143,7 @@ export function contextFabricRoutingTable(): ContextFabricRoute[] {
       target: 'agent-runtime',
       api: 'GET /v1/agent-runtime/engine',
       cloud: 'ai-kernel',
-      notes: 'Handoff discovery; Agent Fabric (VL-246) coordinates later.',
+      notes: 'Handoff discovery; Agent Fabric coordinates later.',
     },
     {
       kind: 'language',
@@ -204,7 +204,7 @@ export function contextFabricArchitectureNotes() {
     fabricWidePolicyHardGateRequired: true,
     policyLogOnlyForbidden: true,
     note:
-      'Context Fabric (VL-241). Cross-cloud router over Context Runtime assemble/retrieve. Optional Event Fabric propagation. Not infinite-context or WebSocket OS.',
+      'Context Fabric. Cross-cloud router over Context Runtime assemble/retrieve. Optional Event Fabric propagation. Not infinite-context or WebSocket OS.',
   };
 }
 

@@ -63,11 +63,11 @@ export class ContextEngineService {
         { id: 'project', status: 'shipped', from: 'project memories' },
         { id: 'conversation', status: 'shipped', from: 'conversation memories' },
         { id: 'historical', status: 'shipped', from: 'long_term/shared memories' },
-        { id: 'documents', status: 'shipped', from: 'vector search (VL-182)' },
-        { id: 'knowledgeGraph', status: 'partial', from: 'entity name list (VL-184)' },
+        { id: 'documents', status: 'shipped', from: 'vector search' },
+        { id: 'knowledgeGraph', status: 'partial', from: 'entity name list' },
         { id: 'prompt', status: 'shipped', from: 'prompts resolve (chat/rag)' },
       ],
-      note: 'Context sources assembled by VL-185. Realtime deferred.',
+      note: 'Context sources assembled by . Realtime deferred.',
     };
   }
 
@@ -368,7 +368,7 @@ export class ContextEngineService {
         truncated: compressed.truncated,
         method: 'priority_char_budget',
       },
-      note: 'Assembled context for AI requests (VL-185). Not an infinite context window; LLM summarization deferred.',
+      note: 'Assembled context for AI requests. Not an infinite context window; LLM summarization deferred.',
     };
   }
 
@@ -387,7 +387,7 @@ export class ContextEngineService {
       periodStart: start.toISOString(),
       assemblies,
       workspaceId,
-      note: 'Context Engine analytics from assemble audits (VL-185).',
+      note: 'Context Engine analytics from assemble audits.',
     };
   }
 
@@ -403,7 +403,7 @@ export class ContextEngineService {
       infiniteContextWindow: engine.honesty.infiniteContextWindow,
       realtimePush: engine.honesty.realtimePush,
       deferred: engine.capabilities.filter((c) => c.status === 'deferred').map((c) => c.id),
-      note: 'Context Engine monitoring snapshot (VL-185).',
+      note: 'Context Engine monitoring snapshot.',
     };
   }
 }

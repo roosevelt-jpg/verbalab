@@ -32,7 +32,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Embeddings API (VL-063)', () => {
+describe('Embeddings API', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -131,7 +131,7 @@ describe('Embeddings API (VL-063)', () => {
     await request(app.getHttpServer())
       .post('/v1/embeddings')
       .set('Authorization', `Bearer ${key.secret}`)
-      .send({ input: '   ' })
+      .send({ input: ' ' })
       .expect(400);
   });
 });

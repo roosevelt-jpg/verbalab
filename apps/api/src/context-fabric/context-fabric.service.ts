@@ -48,11 +48,11 @@ export class ContextFabricService {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric (VL-247) must hard-gate across fabric buses when shipped — not log-only.',
+          'Policy Fabric must hard-gate across fabric buses when shipped — not log-only.',
       },
       docs: '/docs/CONTEXT_FABRIC.md',
       note:
-        'Context Fabric (VL-241). Cross-cloud context router over Context Runtime. Not infinite-context or WebSocket OS.',
+        'Context Fabric. Cross-cloud context router over Context Runtime. Not infinite-context or WebSocket OS.',
     };
   }
 
@@ -207,7 +207,7 @@ export class ContextFabricService {
         status: p.status,
       })),
       honesty: contextFabricHonesty(),
-      note: 'Context Fabric monitoring (VL-241). Router + propagate counters.',
+      note: 'Context Fabric monitoring. Router + propagate counters.',
     };
   }
 
@@ -237,7 +237,7 @@ export class ContextFabricService {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric (VL-247) must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
+          'Policy Fabric must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
       },
       deferred: {
         knowledgeFabric: false,
@@ -262,7 +262,7 @@ export class ContextFabricService {
       },
       docs: '/docs/CONTEXT_FABRIC.md',
       note:
-        'Context Fabric (VL-241). Cross-cloud router over Context Runtime; optional Event Fabric propagation.',
+        'Context Fabric. Cross-cloud router over Context Runtime; optional Event Fabric propagation.',
     };
   }
 }

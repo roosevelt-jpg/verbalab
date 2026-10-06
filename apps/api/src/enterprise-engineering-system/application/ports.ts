@@ -1,4 +1,4 @@
-/** Application ports for Enterprise Engineering System (VL-344). */
+/** Application ports for Enterprise Engineering System. */
 
 export type EnterpriseEngineeringSystemProductRow = {
   id: string;

@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('API Engineering Standards (VL-350)', () => {
+describe('API Engineering Standards', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

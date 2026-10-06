@@ -36,7 +36,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Agent Runtime (VL-219)', () => {
+describe('Agent Runtime', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -187,7 +187,7 @@ describe('Agent Runtime (VL-219)', () => {
     const mem = await request(app.getHttpServer())
       .post('/v1/agent-runtime/memory')
       .set(auth)
-      .send({ agentId, content: 'agent note from VL-219' })
+      .send({ agentId, content: 'agent note from ' })
       .expect(201);
     expect(mem.body.memory.content).toContain('agent note');
     expect(mem.body.memory.scope).toBe('agent');

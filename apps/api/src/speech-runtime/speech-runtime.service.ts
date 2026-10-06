@@ -77,7 +77,7 @@ export class SpeechRuntimeService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'SpeechRuntime monitoring snapshot (VL-326).',
+      note: 'SpeechRuntime monitoring snapshot.',
     };
   }
 }

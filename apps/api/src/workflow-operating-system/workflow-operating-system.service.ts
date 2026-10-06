@@ -94,7 +94,7 @@ export class WorkflowOperatingSystemService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'WorkflowOperatingSystem monitoring snapshot (VL-338).',
+      note: 'WorkflowOperatingSystem monitoring snapshot.',
     };
   }
 }

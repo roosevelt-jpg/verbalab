@@ -35,7 +35,7 @@ export class GlobalPolicyEngineService {
       count: catalog.policies.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Global Policy Engine monitoring snapshot (VL-317).',
+      note: 'Global Policy Engine monitoring snapshot.',
     };
   }
 }

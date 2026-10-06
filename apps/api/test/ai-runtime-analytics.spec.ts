@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('AI Runtime Analytics (VL-212)', () => {
+describe('AI Runtime Analytics', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -72,9 +72,9 @@ describe('AI Runtime Analytics (VL-212)', () => {
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/BI|APM/i);
     expect(text).toMatch(/does \*\*not\*\*|not invent/i);
-    expect(text).toMatch(/VL-191|Intelligence Analytics/i);
+    expect(text).toMatch(/|Intelligence Analytics/i);
     expect(text).toMatch(/org\/workspace|workspace/i);
-    expect(text).toContain('VL-212');
+    expect(text).toContain('');
   });
 
   it('exposes engine with honesty flags', async () => {

@@ -37,7 +37,7 @@ export class NestResearchCloudCatalogAdapter implements ResearchCloudCatalogPort
         status: 'shipped',
         api: 'GET /v1/research-cloud/engine',
         console: '/research-cloud',
-        notes: 'VL-271 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

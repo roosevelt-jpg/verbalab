@@ -37,7 +37,7 @@ export class NestRagopsPlatformCatalogAdapter implements RagopsPlatformCatalogPo
         status: 'shipped',
         api: 'GET /v1/ragops-platform/engine',
         console: '/ragops-platform',
-        notes: 'VL-286 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

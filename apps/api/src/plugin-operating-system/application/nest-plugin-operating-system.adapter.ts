@@ -37,7 +37,7 @@ export class NestPluginOperatingSystemCatalogAdapter implements PluginOperatingS
         status: 'shipped',
         api: 'GET /v1/plugin-operating-system/engine',
         console: '/plugin-operating-system',
-        notes: 'VL-342 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

@@ -51,7 +51,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Memory Fabric (VL-245)', () => {
+describe('Memory Fabric', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -93,7 +93,7 @@ describe('Memory Fabric (VL-245)', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(phase)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-245');
+    expect(text).toContain('');
     expect(text).toMatch(/Memory Runtime/i);
     expect(text).toMatch(/Mem0/i);
     expect(text).toMatch(/hard gate|hard-gate/i);

@@ -35,7 +35,7 @@ export class StyleService {
     return {
       data: STYLE_PROFILES,
       note:
-        'Bounded style profiles (VL-134 / VL-142 / VL-143). Domain tones include disclaimers — not certified vertical writing products.',
+        'Bounded style profiles. Domain tones include disclaimers — not certified vertical writing products.',
     };
   }
 

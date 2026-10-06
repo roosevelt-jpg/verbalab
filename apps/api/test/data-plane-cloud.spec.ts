@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Data Plane Cloud (VL-324)', () => {
+describe('Data Plane Cloud', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

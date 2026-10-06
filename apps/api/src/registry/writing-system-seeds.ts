@@ -7,7 +7,7 @@ export type WritingSystemSeed = {
   notes?: string;
 };
 
-/** ISO 15924 writing systems / scripts / alphabets used by the registry (VL-139). */
+/** ISO 15924 writing systems / scripts / alphabets used by the registry. */
 export const WRITING_SYSTEM_SEEDS: WritingSystemSeed[] = [
   {
     code: 'Latn',

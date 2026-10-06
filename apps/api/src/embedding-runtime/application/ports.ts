@@ -1,4 +1,4 @@
-/** Application ports for Embedding Runtime (VL-330). */
+/** Application ports for Embedding Runtime. */
 
 export type EmbeddingRuntimeProductRow = {
   id: string;

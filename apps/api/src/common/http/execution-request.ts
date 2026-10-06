@@ -2,7 +2,7 @@ import { ExecutionContext } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import type { Request, Response } from 'express';
 
-/** Resolve Express req/res for HTTP and GraphQL contexts (VL-136). */
+/** Resolve Express req/res for HTTP and GraphQL contexts. */
 export function getHttpPair(context: ExecutionContext): {
   req: Request;
   res?: Response;

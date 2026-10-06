@@ -1,4 +1,4 @@
-/** Application ports for Internal Developer Portal (VL-303). */
+/** Application ports for Internal Developer Portal. */
 
 export type InternalDeveloperPortalProductRow = {
   id: string;

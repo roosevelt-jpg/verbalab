@@ -8,7 +8,7 @@ export type CloningCapability = {
   notes: string;
 };
 
-/** Library Phase 29 → Enterprise Voice Cloning Platform (VL-172). */
+/** Library Phase 29 → Enterprise Voice Cloning Platform. */
 export function voiceCloningEngineCatalog() {
   return {
     product: 'Lugemi Voice Cloning',
@@ -42,7 +42,7 @@ export function voiceCloningEngineCatalog() {
         name: 'Voice Verification',
         status: 'partial',
         api: 'POST /v1/speakers/verify',
-        notes: 'Speaker verify/identify via VL-152. Clone enrollment verify is sample/consent gate, not PAD.',
+        notes: 'Speaker verify/identify via existing. Clone enrollment verify is sample/consent gate, not PAD.',
       },
       {
         id: 'voice-ownership',

@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Knowledge Runtime (VL-329)', () => {
+describe('Knowledge Runtime', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

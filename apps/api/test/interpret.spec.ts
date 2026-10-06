@@ -51,7 +51,7 @@ function tinyWav(): Buffer {
   return buffer;
 }
 
-describe('Live interpreter (VL-061)', () => {
+describe('Live interpreter', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

@@ -62,7 +62,7 @@ export class ContinuousLearningService {
       candidateCount: catalog.candidates.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Continuous Learning monitoring snapshot (VL-289) — promote never automatic.',
+      note: 'Continuous Learning monitoring snapshot — promote never automatic.',
     };
   }
 }

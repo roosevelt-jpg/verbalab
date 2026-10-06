@@ -37,7 +37,7 @@ export class NestPatentInnovationPlatformCatalogAdapter implements PatentInnovat
         status: 'shipped',
         api: 'GET /v1/patent-innovation-platform/engine',
         console: '/patent-innovation-platform',
-        notes: 'VL-277 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

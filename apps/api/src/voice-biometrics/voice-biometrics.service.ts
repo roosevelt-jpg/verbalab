@@ -90,7 +90,7 @@ export class VoiceBiometricsService {
       ...result,
       product: 'Voice Biometrics',
       encryptionAtRest: true,
-      note: 'Encrypted enrollment via VL-176. Not a commercial biometric template / NIST enrollment.',
+      note: 'Encrypted enrollment via existing. Not a commercial biometric template / NIST enrollment.',
     };
   }
 

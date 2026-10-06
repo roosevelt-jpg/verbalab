@@ -1,4 +1,4 @@
-/** Application ports for African Language Registry (VL-261). */
+/** Application ports for African Language Registry. */
 
 export type AfricanLanguageRegistryProductRow = {
   id: string;

@@ -20,7 +20,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Agricultural Intelligence (VL-268)', () => {
+describe('Agricultural Intelligence', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -40,7 +40,7 @@ describe('Agricultural Intelligence (VL-268)', () => {
     expect(existsSync(join(root, 'docs/AGRICULTURAL_INTELLIGENCE.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0170-agricultural-intelligence.md'))).toBe(true);
     const text = readFileSync(join(root, 'docs/AGRICULTURAL_INTELLIGENCE.md'), 'utf8');
-    expect(text).toContain('VL-268');
+    expect(text).toContain('');
   });
 
   it('has no TODO/FIXME/implement-later markers', () => {

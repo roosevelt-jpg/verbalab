@@ -1,4 +1,4 @@
-/** Application ports for Model Training Platform (VL-235). */
+/** Application ports for Model Training Platform. */
 
 export type MtpMethodRow = {
   id: string;

@@ -79,7 +79,7 @@ export class PrivacyPlatformService {
       traditionalKnowledgeConsentRequired: true,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Privacy Platform monitoring snapshot (VL-296) — TK consent enforced.',
+      note: 'Privacy Platform monitoring snapshot — TK consent enforced.',
     };
   }
 }

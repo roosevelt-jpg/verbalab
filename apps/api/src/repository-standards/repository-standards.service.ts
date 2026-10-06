@@ -98,7 +98,7 @@ export class RepositoryStandardsService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'RepositoryStandards monitoring snapshot (VL-347).',
+      note: 'RepositoryStandards monitoring snapshot.',
     };
   }
 }

@@ -67,14 +67,14 @@ export function policyRuntimeCeilings() {
 }
 
 /**
- * Library Phase 89 → Policy Runtime (VL-222).
+ * Library Phase 89 → Policy Runtime.
  * Must hard-gate Agent/Workflow/Plugin — not log/flag decoration.
  */
 export function policyRuntimeCatalog() {
   return {
     product: 'Lugemi Policy Runtime',
     note:
-      'Policy Runtime (VL-222). Shared hard-gate enforcement for Agent/Workflow/Plugin Runtimes. Org policies (deny rules) and global denies block actions with 403 — not log-only. Extends local runtime allowlists; does not invent OPA/Cedar enterprise policy OS. Wired into AgentPolicyGate / WorkflowPolicyGate / PluginPolicyGate.',
+      'Policy Runtime. Shared hard-gate enforcement for Agent/Workflow/Plugin Runtimes. Org policies (deny rules) and global denies block actions with 403 — not log-only. Extends local runtime allowlists; does not invent OPA/Cedar enterprise policy OS. Wired into AgentPolicyGate / WorkflowPolicyGate / PluginPolicyGate.',
     capabilities: [
       {
         id: 'security-policies',

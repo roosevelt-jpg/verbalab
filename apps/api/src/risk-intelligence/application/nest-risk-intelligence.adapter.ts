@@ -37,7 +37,7 @@ export class NestRiskIntelligenceCatalogAdapter implements RiskIntelligenceCatal
         status: 'shipped',
         api: 'GET /v1/risk-intelligence/engine',
         console: '/risk-intelligence',
-        notes: 'VL-298 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

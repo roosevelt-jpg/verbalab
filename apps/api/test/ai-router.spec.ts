@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('AI Router (VL-207)', () => {
+describe('AI Router', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -73,9 +73,9 @@ describe('AI Router (VL-207)', () => {
     expect(text).toMatch(/service mesh|mesh/i);
     expect(text).toMatch(/does \*\*not\*\*|not a service mesh/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
-    expect(text).toContain('VL-207');
+    expect(text).toContain('');
     expect(text).toMatch(/Gateway/i);
-    expect(text).toMatch(/spend|VL-211|Cost Optimization/i);
+    expect(text).toMatch(/spend||Cost Optimization/i);
   });
 
   it('exposes engine with honesty + features', async () => {

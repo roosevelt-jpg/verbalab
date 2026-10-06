@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('RAGOps Platform (VL-286)', () => {
+describe('RAGOps Platform', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

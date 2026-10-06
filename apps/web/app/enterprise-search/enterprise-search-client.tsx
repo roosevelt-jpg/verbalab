@@ -145,8 +145,8 @@ export function EnterpriseSearchClient() {
           <section>
             <h2 style={label}>Honesty</h2>
             <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.55 }}>
-              Org/workspace scoped {engine.honesty.orgWorkspaceScoped ? 'yes' : 'no'} · Extends
-              VL-062 {engine.honesty.extendsVl062 ? 'yes' : 'no'} · Elastic OS{' '}
+              Org/workspace scoped {engine.honesty.orgWorkspaceScoped ? 'yes' : 'no'} · Extends prior
+               {engine.honesty.extendsVl062 ? 'yes' : 'no'} · Elastic OS{' '}
               {engine.honesty.elasticOs ? 'yes' : 'no'} · BM25 parity{' '}
               {engine.honesty.bm25Parity ? 'yes' : 'no'} · Image{' '}
               {engine.honesty.imageSearch ? 'yes' : 'no'} · Voice{' '}

@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Global Scheduler (VL-321)', () => {
+describe('Global Scheduler', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

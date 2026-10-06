@@ -50,7 +50,7 @@ export class ReasoningCloudService {
             : 'shipped',
       })),
       tools: REASONING_TOOL_CATALOG,
-      note: 'Prompt strategies over LLM gateway (VL-186). Not a custom reasoner kernel.',
+      note: 'Prompt strategies over LLM gateway. Not a custom reasoner kernel.',
     };
   }
 
@@ -316,7 +316,7 @@ export class ReasoningCloudService {
         toolExecution: false,
         fullTreeOfThought: strategy === 'tree_of_thought' ? false : undefined,
       },
-      note: 'LLM-gateway reasoning (VL-186). Not a proprietary symbolic reasoner OS.',
+      note: 'LLM-gateway reasoning. Not a proprietary symbolic reasoner OS.',
     };
   }
 
@@ -339,7 +339,7 @@ export class ReasoningCloudService {
       reasonRequests: reasons,
       chatTokens: chatUsage.chat.tokens,
       workspaceId,
-      note: 'Reasoning Cloud analytics (VL-186). Tokens shared with chat metering.',
+      note: 'Reasoning Cloud analytics. Tokens shared with chat metering.',
     };
   }
 
@@ -355,7 +355,7 @@ export class ReasoningCloudService {
       customReasonerKernel: engine.honesty.customReasonerKernel,
       agentOs: engine.honesty.agentOs,
       deferred: engine.capabilities.filter((c) => c.status === 'deferred').map((c) => c.id),
-      note: 'Reasoning Cloud monitoring snapshot (VL-186).',
+      note: 'Reasoning Cloud monitoring snapshot.',
     };
   }
 }

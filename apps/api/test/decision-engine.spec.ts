@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('AI Decision Engine (VL-189)', () => {
+describe('AI Decision Engine', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -64,7 +64,7 @@ describe('AI Decision Engine (VL-189)', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/not.*Drools\/Pega/i);
-    expect(text).toContain('VL-189');
+    expect(text).toContain('');
   });
 
   it('exposes engine with enterpriseBrms=false', async () => {

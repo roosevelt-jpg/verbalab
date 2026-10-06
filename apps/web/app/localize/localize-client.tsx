@@ -9,7 +9,7 @@ export function LocalizeClient() {
   const [source, setSource] = useState('en');
   const [target, setTarget] = useState('sw');
   const [format, setFormat] = useState<'json' | 'yaml'>('json');
-  const [input, setInput] = useState('{\n  "app": {\n    "title": "Welcome"\n  }\n}');
+  const [input, setInput] = useState('{\n "app": {\n "title": "Welcome"\n }\n}');
   const [output, setOutput] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);

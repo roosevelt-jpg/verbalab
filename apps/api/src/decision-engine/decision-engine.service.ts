@@ -46,7 +46,7 @@ export class DecisionEngineService {
     return {
       kinds: DECISION_KINDS.map((id) => ({ id })),
       deferred: ['enterprise_brms'],
-      note: 'Decision kinds for VL-189 light rules helpers.',
+      note: 'Decision kinds for light rules helpers.',
     };
   }
 
@@ -56,7 +56,7 @@ export class DecisionEngineService {
       if (kind === ('enterprise_brms' as DecisionKind)) {
         throw new ApiException(
           'validation_error',
-          'kind=enterprise_brms is deferred — not Drools/Pega BRMS (VL-189)',
+          'kind=enterprise_brms is deferred — not Drools/Pega BRMS',
           HttpStatus.BAD_REQUEST,
         );
       }
@@ -467,7 +467,7 @@ export class DecisionEngineService {
         trainsDecisionModels: false,
         executesTools: false,
       },
-      note: 'Light rules decision helper (VL-189). Not an enterprise BRMS.',
+      note: 'Light rules decision helper. Not an enterprise BRMS.',
     };
   }
 
@@ -486,7 +486,7 @@ export class DecisionEngineService {
       periodStart: start.toISOString(),
       decisions,
       workspaceId,
-      note: 'Decision Engine analytics (VL-189).',
+      note: 'Decision Engine analytics.',
     };
   }
 
@@ -501,7 +501,7 @@ export class DecisionEngineService {
       decisions: analytics.decisions,
       enterpriseBrms: engine.honesty.enterpriseBrms,
       deferred: engine.capabilities.filter((c) => c.status === 'deferred').map((c) => c.id),
-      note: 'Decision Engine monitoring snapshot (VL-189).',
+      note: 'Decision Engine monitoring snapshot.',
     };
   }
 }

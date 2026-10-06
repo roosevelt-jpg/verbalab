@@ -1,4 +1,4 @@
-/** Application ports for Agent Marketplace (VL-254). */
+/** Application ports for Agent Marketplace. */
 
 export type AgentMarketplaceEngineBundle = ReturnType<
   import('../agent-marketplace.service').AgentMarketplaceService['engine']

@@ -43,7 +43,7 @@ export class VoiceEnhancementService {
         echoCancellation: p.echoCancellation,
       })),
       note:
-        'Profiles chain VL-155 PCM heuristics. Not Krisp / Adobe Enhance / Demucs / live AEC.',
+        'Profiles chain PCM heuristics. Not Krisp / Adobe Enhance / Demucs / live AEC.',
       docs: '/docs/VOICE_ENHANCEMENT.md',
     };
   }
@@ -54,7 +54,7 @@ export class VoiceEnhancementService {
       status: 'deferred',
       capability: 'echo-cancellation',
       note:
-        'Echo cancellation requires an AEC reference path or vendor SDK — deferred in VL-175 (same honesty as VL-155). See ADR-0086.',
+        'Echo cancellation requires an AEC reference path or vendor SDK — deferred in (same honesty as ). See ADR-0086.',
       docs: '/docs/VOICE_ENHANCEMENT.md',
     };
   }

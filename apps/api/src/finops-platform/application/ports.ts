@@ -1,4 +1,4 @@
-/** Application ports for FinOps Platform (VL-309). */
+/** Application ports for FinOps Platform. */
 
 export type FinopsPlatformProductRow = {
   id: string;

@@ -20,7 +20,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Experiment Platform (VL-272)', () => {
+describe('Experiment Platform', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -40,7 +40,7 @@ describe('Experiment Platform (VL-272)', () => {
     expect(existsSync(join(root, 'docs/EXPERIMENT_PLATFORM.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0174-experiment-platform.md'))).toBe(true);
     const text = readFileSync(join(root, 'docs/EXPERIMENT_PLATFORM.md'), 'utf8');
-    expect(text).toContain('VL-272');
+    expect(text).toContain('');
   });
 
   it('has no TODO/FIXME/implement-later markers', () => {

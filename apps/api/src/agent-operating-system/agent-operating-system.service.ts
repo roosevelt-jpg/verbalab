@@ -110,7 +110,7 @@ export class AgentOperatingSystemService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'AgentOperatingSystem monitoring snapshot (VL-339).',
+      note: 'AgentOperatingSystem monitoring snapshot.',
     };
   }
 }

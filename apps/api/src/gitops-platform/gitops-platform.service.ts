@@ -41,7 +41,7 @@ export class GitopsPlatformService {
       count: (catalog as { readiness: unknown[] }).readiness.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'GitopsPlatform monitoring snapshot (VL-306).',
+      note: 'GitopsPlatform monitoring snapshot.',
     };
   }
 }

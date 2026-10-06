@@ -244,7 +244,7 @@ export class AgentMarketplaceService {
         storesRawCardData: false,
         creatorPayoutMathVerifiedLive: false,
       },
-      note: 'Recorded receipts only. Creator Economy (VL-258) expands payout math.',
+      note: 'Recorded receipts only. Creator Economy expands payout math.',
     };
   }
 
@@ -897,7 +897,7 @@ export class AgentMarketplaceService {
       reviews,
       runs,
       honesty: this.engine().honesty,
-      note: 'Agent marketplace aggregates. Payout depth deferred to Creator Economy (VL-258).',
+      note: 'Agent marketplace aggregates. Payout depth deferred to Creator Economy.',
     };
   }
 
@@ -908,7 +908,7 @@ export class AgentMarketplaceService {
       products: engine.capabilities.map((c) => ({ id: c.id, status: c.status })),
       honesty: engine.honesty,
       safety: engine.safety,
-      note: 'Agent Marketplace monitoring snapshot (VL-254).',
+      note: 'Agent Marketplace monitoring snapshot.',
     };
   }
 }

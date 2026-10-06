@@ -37,7 +37,7 @@ export class NestPromptopsPlatformCatalogAdapter implements PromptopsPlatformCat
         status: 'shipped',
         api: 'GET /v1/promptops-platform/engine',
         console: '/promptops-platform',
-        notes: 'VL-285 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

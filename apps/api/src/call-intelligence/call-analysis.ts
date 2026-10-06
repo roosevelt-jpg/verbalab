@@ -82,7 +82,7 @@ function extractiveSummary(text: string): string {
   return [first, mid, last].filter(Boolean).join(' ').slice(0, 600);
 }
 
-/** Heuristic call analysis (VL-158). */
+/** Heuristic call analysis. */
 export function analyzeCallTranscript(transcript: string): CallAnalysis {
   const text = transcript.trim();
   const sentiment = analyzeSentiment(text);
@@ -198,6 +198,6 @@ export function analyzeCallTranscript(transcript: string): CallAnalysis {
         },
       ],
     },
-    note: 'Heuristic Call Intelligence analysis (VL-158) — not Gong/Chorus or certified compliance.',
+    note: 'Heuristic Call Intelligence analysis — not Gong/Chorus or certified compliance.',
   };
 }

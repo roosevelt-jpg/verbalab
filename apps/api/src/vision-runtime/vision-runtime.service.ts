@@ -85,7 +85,7 @@ export class VisionRuntimeService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'VisionRuntime monitoring snapshot (VL-328).',
+      note: 'VisionRuntime monitoring snapshot.',
     };
   }
 }

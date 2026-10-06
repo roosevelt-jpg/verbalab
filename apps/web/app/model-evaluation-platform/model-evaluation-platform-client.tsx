@@ -90,7 +90,7 @@ export function ModelEvaluationPlatformClient() {
         Model Evaluation Platform
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.5rem', maxWidth: '44rem' }}>
-        Translation goldens via VL-100 plus sandbox bias/safety/latency — not a global LLM
+        Translation goldens via existing plus sandbox bias/safety/latency — not a global LLM
         leaderboard.{' '}
         <Link href="/coverage">Coverage</Link> ·{' '}
         <Link href="/foundation-model-cloud">Foundation Model Cloud</Link>.

@@ -33,7 +33,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Glossary (VL-050)', () => {
+describe('Glossary', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

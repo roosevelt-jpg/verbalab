@@ -1,4 +1,4 @@
-/** Small English dictionary + grapheme heuristics (VL-156). Not ARPAbet ASR. */
+/** Small English dictionary + grapheme heuristics. Not ARPAbet ASR. */
 
 const EN_DICT: Record<string, string[]> = {
   the: ['DH', 'AH'],

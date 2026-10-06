@@ -139,7 +139,7 @@ export function findConnectorCatalogEntry(key: string): ConnectorCatalogEntry | 
 }
 
 /**
- * Library Phase 123 → Connector Marketplace (VL-256).
+ * Library Phase 123 → Connector Marketplace.
  * Buy/sell/publish connector entitlements — not Zapier/iPaaS OS.
  * Extends Slack connector (ADR-0026). Volume 11: Stripe-only; never store raw cards.
  */
@@ -147,7 +147,7 @@ export function connectorMarketplaceEngineCatalog() {
   return {
     product: 'Lugemi Connector Marketplace',
     note:
-      'Connector Marketplace (VL-256). Publish/license connector SKUs over the built-in connector catalog + existing Slack connector. Install grants workspace entitlements — not live arbitrary outbound, Zapier, or iPaaS OS. Monetization records MarketplaceSale receipts; Stripe Connect via VL-092.',
+      'Connector Marketplace. Publish/license connector SKUs over the built-in connector catalog + existing Slack connector. Install grants workspace entitlements — not live arbitrary outbound, Zapier, or iPaaS OS. Monetization records MarketplaceSale receipts; Stripe Connect via existing.',
     capabilities: [
       {
         id: 'crm-connectors',

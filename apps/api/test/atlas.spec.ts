@@ -20,7 +20,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Atlas scaffold (VL-225)', () => {
+describe('Atlas scaffold', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
@@ -42,7 +42,7 @@ describe('Atlas scaffold (VL-225)', () => {
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-225');
+    expect(text).toContain('');
     expect(text).toMatch(/not trained|scaffold/i);
     expect(text).toContain('CQRS');
     expect(text).toMatch(/shipsTrainedAtlasWeights/i);

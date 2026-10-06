@@ -8,19 +8,19 @@ export type BioCapability = {
   notes: string;
 };
 
-/** Library Phase 33 → Enterprise Voice Biometrics (VL-176). Extends VL-152. */
+/** Library Phase 33 → Enterprise Voice Biometrics. Extends existing. */
 export function voiceBiometricsEngineCatalog() {
   return {
     product: 'Lugemi Voice Biometrics',
     note:
-      'Enterprise voice auth governance over Speaker Intelligence fingerprints (VL-152): encrypt-at-rest templates, deletion path, heuristic anti-spoof/liveness/risk. Not NIST/PAD/ASVspoof certified. Prefer specialist vendor for regulated auth.',
+      'Enterprise voice auth governance over Speaker Intelligence fingerprints: encrypt-at-rest templates, deletion path, heuristic anti-spoof/liveness/risk. Not NIST/PAD/ASVspoof certified. Prefer specialist vendor for regulated auth.',
     capabilities: [
       {
         id: 'biometric-engine',
         name: 'Biometric Engine',
         status: 'shipped',
         api: 'GET /v1/voice-biometrics/engine',
-        notes: 'Catalog + honesty flags over VL-152.',
+        notes: 'Catalog + honesty flags over existing.',
       },
       {
         id: 'voice-authentication',
@@ -34,14 +34,14 @@ export function voiceBiometricsEngineCatalog() {
         name: 'Speaker Verification',
         status: 'partial',
         api: 'POST /v1/voice-biometrics/verify',
-        notes: 'Delegates to VL-152 cosine verify (decrypts encrypted templates).',
+        notes: 'Delegates to cosine verify (decrypts encrypted templates).',
       },
       {
         id: 'speaker-identification',
         name: 'Speaker Identification',
         status: 'partial',
         api: 'POST /v1/voice-biometrics/identify',
-        notes: 'Delegates to VL-152 1:N identify.',
+        notes: 'Delegates to 1:N identify.',
       },
       {
         id: 'fraud-detection',

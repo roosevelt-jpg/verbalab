@@ -1,4 +1,4 @@
-/** Application ports for AI Engineering Standards (VL-349). */
+/** Application ports for AI Engineering Standards. */
 
 export type AiEngineeringStandardsProductRow = {
   id: string;

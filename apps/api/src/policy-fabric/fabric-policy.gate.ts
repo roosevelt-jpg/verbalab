@@ -6,7 +6,7 @@ import { FABRIC_BUSES, FABRIC_GLOBAL_DENIES } from './policy-fabric.catalog';
 export type FabricBus = (typeof FABRIC_BUSES)[number];
 
 /**
- * Fabric-wide hard gate (VL-247).
+ * Fabric-wide hard gate.
  * Blocks denied fabric actions with 403 — never log-only.
  */
 @Injectable()

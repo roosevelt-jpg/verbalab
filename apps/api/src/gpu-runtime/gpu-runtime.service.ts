@@ -77,7 +77,7 @@ export class GpuRuntimeService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'GpuRuntime monitoring snapshot (VL-332).',
+      note: 'GpuRuntime monitoring snapshot.',
     };
   }
 }

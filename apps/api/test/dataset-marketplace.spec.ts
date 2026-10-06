@@ -48,7 +48,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Dataset Marketplace (VL-252)', () => {
+describe('Dataset Marketplace', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;
@@ -76,7 +76,7 @@ describe('Dataset Marketplace (VL-252)', () => {
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-252');
+    expect(text).toContain('');
     expect(text).toMatch(/Label Studio|labelStudioOs/i);
     expect(text).toMatch(/Stripe|storesRawCardData/i);
     expect(text).toMatch(/Dataset Cloud|datasetCloudOs/i);

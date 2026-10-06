@@ -8,7 +8,7 @@ import { ModelsService } from '../src/models/models.service';
 import { VENDOR_MODEL_SEEDS } from '../src/models/model-registry.seeds';
 import { ApiExceptionFilter } from '../src/common/errors/api-exception.filter';
 
-describe('Model registry (VL-110)', () => {
+describe('Model registry', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let models: ModelsService;

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { applyStyleRules, detectTone } from '../src/style/style-profiles';
 
-describe('style rules (VL-134)', () => {
+describe('style rules', () => {
   it('professional expands informal wording and contractions', () => {
     const { rewritten, changes } = applyStyleRules("I'm gonna finish this ASAP, yeah?", 'professional');
     expect(rewritten).toContain('I am');

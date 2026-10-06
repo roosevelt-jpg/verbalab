@@ -101,7 +101,7 @@ export class ControlPlaneAnalyticsService {
         .length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Control Plane Analytics monitoring snapshot (VL-322).',
+      note: 'Control Plane Analytics monitoring snapshot.',
     };
   }
 }

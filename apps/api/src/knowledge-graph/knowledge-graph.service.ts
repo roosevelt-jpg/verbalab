@@ -27,7 +27,7 @@ export class KnowledgeGraphService {
   domains() {
     return {
       domains: KG_DOMAINS,
-      note: 'Vertical domain packs deferred except general workspace graph (VL-184).',
+      note: 'Vertical domain packs deferred except general workspace graph.',
     };
   }
 
@@ -101,7 +101,7 @@ export class KnowledgeGraphService {
     if (known.status === 'deferred') {
       throw new ApiException(
         'validation_error',
-        `domain "${domain}" pack is deferred — use domain=general (VL-184)`,
+        `domain "${domain}" pack is deferred — use domain=general`,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -326,7 +326,7 @@ export class KnowledgeGraphService {
       entity: this.serializeEntity(entity),
       relationships: edges.map((e) => this.serializeRel(e)),
       neighbors: neighbors.map((n) => this.serializeEntity(n)),
-      note: '1-hop neighborhood (VL-184). Multi-hop / Cypher deferred.',
+      note: '1-hop neighborhood. Multi-hop / Cypher deferred.',
     };
   }
 
@@ -360,7 +360,7 @@ export class KnowledgeGraphService {
       relationships,
       entityWrites,
       relationshipWrites: relWrites,
-      note: 'Knowledge Graph analytics (VL-184). Prefer RAG for retrieval quality.',
+      note: 'Knowledge Graph analytics. Prefer RAG for retrieval quality.',
     };
   }
 
@@ -377,7 +377,7 @@ export class KnowledgeGraphService {
       neo4jParity: engine.honesty.neo4jParity,
       ontologyPlatform: engine.honesty.ontologyPlatform,
       deferred: engine.capabilities.filter((c) => c.status === 'deferred').map((c) => c.id),
-      note: 'Knowledge Graph monitoring snapshot (VL-184).',
+      note: 'Knowledge Graph monitoring snapshot.',
     };
   }
 }

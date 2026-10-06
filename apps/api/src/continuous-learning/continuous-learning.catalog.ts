@@ -1,5 +1,5 @@
 /**
- * Library Phase 156 → Continuous Learning (VL-289).
+ * Library Phase 156 → Continuous Learning.
  * CRITICAL: never auto-promote. Requires humanApproval + drift clear + continuous eval pass + vetted feedback.
  */
 import { continuousEvalGateStatus } from '../continuous-evaluation/continuous-evaluation.catalog';
@@ -210,6 +210,6 @@ export function continuousLearningEngineCatalog() {
         'Never auto-promote. Promote requires human approval + drift clear + continuous eval pass + vetted non-poisoned feedback.',
     },
     docs: '/docs/CONTINUOUS_LEARNING.md',
-    note: 'Continuous Learning (VL-289). Feedback/review/retrain/synthetic/knowledge/model/prompt updates with hard promote gates.',
+    note: 'Continuous Learning. Feedback/review/retrain/synthetic/knowledge/model/prompt updates with hard promote gates.',
   };
 }

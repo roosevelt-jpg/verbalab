@@ -7,7 +7,7 @@ export type SpeechVocabPack = {
   phrases: string[];
 };
 
-/** Industry vocabulary packs for Whisper prompt priming (VL-151). */
+/** Industry vocabulary packs for Whisper prompt priming. */
 export function speechIndustryVocabularyPacks(): SpeechVocabPack[] {
   return [
     {

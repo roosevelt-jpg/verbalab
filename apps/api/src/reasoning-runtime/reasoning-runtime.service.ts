@@ -276,7 +276,7 @@ export class ReasoningRuntimeService {
       selectedTools,
       catalog: REASONING_TOOL_CATALOG,
       honesty: { toolExecution: false },
-      note: 'Tool ids suggested only — Reasoning Runtime does not execute tools (VL-218 / VL-219).',
+      note: 'Tool ids suggested only — Reasoning Runtime does not execute tools.',
     };
   }
 
@@ -538,7 +538,7 @@ export class ReasoningRuntimeService {
       byAction: Object.fromEntries(counts.map((c) => [c.action, c.count])),
       historyCount,
       honesty: reasoningRuntimeCatalog().honesty,
-      note: 'Reasoning Runtime analytics (VL-218).',
+      note: 'Reasoning Runtime analytics.',
     };
   }
 
@@ -555,7 +555,7 @@ export class ReasoningRuntimeService {
       safety: {
         agentActionBoundariesRequired: true,
         toolExecutionForbiddenHere: true,
-        note: 'Reasoning Runtime must not execute tools; Agent Runtime (VL-219) requires sandbox + scoped permissions.',
+        note: 'Reasoning Runtime must not execute tools; Agent Runtime requires sandbox + scoped permissions.',
       },
     };
   }

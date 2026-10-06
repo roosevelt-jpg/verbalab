@@ -37,7 +37,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Developer Cloud Foundation (VL-127)', () => {
+describe('Developer Cloud Foundation', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;

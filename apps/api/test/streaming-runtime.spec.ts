@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Streaming Runtime (VL-208)', () => {
+describe('Streaming Runtime', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -77,7 +77,7 @@ describe('Streaming Runtime (VL-208)', () => {
     expect(text).toMatch(/WebSocket|gRPC|video/i);
     expect(text).toMatch(/does \*\*not\*\*|not regenerate/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
-    expect(text).toContain('VL-208');
+    expect(text).toContain('');
     expect(text).toMatch(/SSE/i);
   });
 

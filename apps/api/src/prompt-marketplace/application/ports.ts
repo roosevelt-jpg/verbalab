@@ -1,4 +1,4 @@
-/** Application ports for Prompt Marketplace (VL-253). */
+/** Application ports for Prompt Marketplace. */
 
 export type PromptMarketplaceEngineBundle = ReturnType<
   import('../prompt-marketplace.service').PromptMarketplaceService['engine']

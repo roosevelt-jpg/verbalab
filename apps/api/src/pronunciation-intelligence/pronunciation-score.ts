@@ -1,4 +1,4 @@
-/** Normalize tokens for pronunciation alignment (VL-156). */
+/** Normalize tokens for pronunciation alignment. */
 export function tokenize(text: string): string[] {
   return text
     .toLowerCase()

@@ -38,7 +38,7 @@ export class EvaluationPlatformService {
       mode: 'evaluation',
       capabilityCount: catalog.capabilities.length,
       honesty: catalog.honesty,
-      note: 'Evaluation Platform monitoring snapshot (VL-275).',
+      note: 'Evaluation Platform monitoring snapshot.',
     };
   }
 }

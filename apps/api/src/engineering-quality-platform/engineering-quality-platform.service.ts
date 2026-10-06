@@ -98,7 +98,7 @@ export class EngineeringQualityPlatformService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'EngineeringQualityPlatform monitoring snapshot (VL-348).',
+      note: 'EngineeringQualityPlatform monitoring snapshot.',
     };
   }
 }

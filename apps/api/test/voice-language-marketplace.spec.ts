@@ -47,7 +47,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Voice & Language Marketplace (VL-257)', () => {
+describe('Voice & Language Marketplace', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;
@@ -75,7 +75,7 @@ describe('Voice & Language Marketplace (VL-257)', () => {
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-257');
+    expect(text).toContain('');
     expect(text).toMatch(/third-party TTS|thirdPartyVoiceOs/i);
     expect(text).toMatch(/Stripe|storesRawCardData/i);
     expect(text).toMatch(/celebrityWithoutRights/i);

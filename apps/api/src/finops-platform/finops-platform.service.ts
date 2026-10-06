@@ -67,7 +67,7 @@ export class FinopsPlatformService {
       gpuBudgetAlertsEnabled: true,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'FinOps Platform monitoring snapshot (VL-309).',
+      note: 'FinOps Platform monitoring snapshot.',
     };
   }
 }

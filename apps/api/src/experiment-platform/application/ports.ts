@@ -1,4 +1,4 @@
-/** Application ports for Experiment Platform (VL-272). */
+/** Application ports for Experiment Platform. */
 
 export type ExperimentPlatformProductRow = {
   id: string;

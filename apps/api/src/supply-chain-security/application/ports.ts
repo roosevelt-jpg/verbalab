@@ -1,4 +1,4 @@
-/** Application ports for Supply Chain Security (VL-310). */
+/** Application ports for Supply Chain Security. */
 
 export type SupplyChainSecurityProductRow = {
   id: string;

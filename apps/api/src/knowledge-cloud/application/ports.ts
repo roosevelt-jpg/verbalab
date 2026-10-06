@@ -1,4 +1,4 @@
-/** Application ports for Knowledge Cloud (VL-193). Implemented by Nest adapters. */
+/** Application ports for Knowledge Cloud. Implemented by Nest adapters. */
 
 export type KnowledgeProductRow = {
   id: string;

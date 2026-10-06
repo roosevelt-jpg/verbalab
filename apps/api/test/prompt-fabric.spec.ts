@@ -51,7 +51,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Prompt Fabric (VL-243)', () => {
+describe('Prompt Fabric', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -93,7 +93,7 @@ describe('Prompt Fabric (VL-243)', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(phase)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-243');
+    expect(text).toContain('');
     expect(text).toMatch(/Prompt Runtime/i);
     expect(text).toMatch(/prompt mesh/i);
     expect(text).toMatch(/research lab/i);

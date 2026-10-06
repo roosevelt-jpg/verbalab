@@ -90,7 +90,7 @@ export class ApiEngineeringStandardsService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'ApiEngineeringStandards monitoring snapshot (VL-350).',
+      note: 'ApiEngineeringStandards monitoring snapshot.',
     };
   }
 }

@@ -9,7 +9,7 @@ import { ApiExceptionFilter } from '../src/common/errors/api-exception.filter';
 
 const root = join(__dirname, '../../..');
 
-describe('Enterprise Language Registry (VL-139)', () => {
+describe('Enterprise Language Registry', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {

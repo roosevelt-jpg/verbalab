@@ -1,4 +1,4 @@
-/** Application ports for Data Plane Streaming (VL-331). */
+/** Application ports for Data Plane Streaming. */
 
 export type DataPlaneStreamingProductRow = {
   id: string;

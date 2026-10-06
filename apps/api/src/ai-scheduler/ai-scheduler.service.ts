@@ -110,7 +110,7 @@ export class AiSchedulerService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'AiScheduler monitoring snapshot (VL-335).',
+      note: 'AiScheduler monitoring snapshot.',
     };
   }
 }

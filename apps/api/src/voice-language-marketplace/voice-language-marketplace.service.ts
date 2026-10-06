@@ -221,7 +221,7 @@ export class VoiceLanguageMarketplaceService {
         celebrityWithoutRights: false,
         voiceCdnHosted: false,
       },
-      note: 'Recorded receipts only. Creator Economy (VL-258) expands payout math — hand-check before live creators.',
+      note: 'Recorded receipts only. Creator Economy expands payout math — hand-check before live creators.',
     };
   }
 
@@ -351,7 +351,7 @@ export class VoiceLanguageMarketplaceService {
       listing: this.serialize(listing),
       honesty: this.engine().honesty,
       note:
-        'Voice/language pack listing published as an entitlement SKU over VL-177 + Volume 1 surfaces. Install grants entitlement — not voice CDN hosting.',
+        'Voice/language pack listing published as an entitlement SKU over Volume 1 surfaces. Install grants entitlement — not voice CDN hosting.',
     };
   }
 
@@ -552,7 +552,7 @@ export class VoiceLanguageMarketplaceService {
         crossTenantCloneSynthesis: false,
         storesRawCardData: false,
         note:
-          'Pack entitlement only — voice synthesis stays on VL-177 / Voice Cloud paths; language packs extend Volume 1 surfaces.',
+          'Pack entitlement only — voice synthesis stays on Voice Cloud paths; language packs extend Volume 1 surfaces.',
       },
       sale,
       honesty: this.engine().honesty,
@@ -751,7 +751,7 @@ export class VoiceLanguageMarketplaceService {
       sales,
       reviews,
       honesty: this.engine().honesty,
-      note: 'Voice & language marketplace aggregates. Payout depth deferred to Creator Economy (VL-258).',
+      note: 'Voice & language marketplace aggregates. Payout depth deferred to Creator Economy.',
     };
   }
 
@@ -762,7 +762,7 @@ export class VoiceLanguageMarketplaceService {
       products: engine.capabilities.map((c) => ({ id: c.id, status: c.status })),
       honesty: engine.honesty,
       safety: engine.safety,
-      note: 'Voice & Language Marketplace monitoring snapshot (VL-257).',
+      note: 'Voice & Language Marketplace monitoring snapshot.',
     };
   }
 }

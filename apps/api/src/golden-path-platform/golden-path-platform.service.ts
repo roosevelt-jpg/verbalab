@@ -41,7 +41,7 @@ export class GoldenPathPlatformService {
       count: (catalog as { templates: unknown[] }).templates.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'GoldenPathPlatform monitoring snapshot (VL-305).',
+      note: 'GoldenPathPlatform monitoring snapshot.',
     };
   }
 }

@@ -46,7 +46,7 @@ export class NeuralTtsService {
       periodStart: summary.periodStart,
       tts: summary.tts,
       product: 'Lugemi Neural TTS',
-      note: 'Usage metering for TTS characters. Full Voice Analytics = VL-178 /voice-analytics.',
+      note: 'Usage metering for TTS characters. Full Voice Analytics = voice-analytics.',
       docs: '/docs/NEURAL_TTS.md',
     };
   }

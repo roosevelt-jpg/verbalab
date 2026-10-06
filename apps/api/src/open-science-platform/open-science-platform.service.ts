@@ -83,7 +83,7 @@ export class OpenSciencePlatformService {
       blockedCount: gated.filter((g) => !g.allowed).length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Open Science Platform monitoring snapshot (VL-278).',
+      note: 'Open Science Platform monitoring snapshot.',
     };
   }
 }

@@ -51,7 +51,7 @@ export class PromptRuntimeService {
     return {
       keys: PROMPT_KEYS.map((id) => ({ id })),
       layer: 'kernel',
-      note: 'Prompt Runtime keys map onto VL-086 managed prompts.',
+      note: 'Prompt Runtime keys map onto managed prompts.',
       honesty: promptRuntimeCatalog().honesty,
     };
   }
@@ -61,7 +61,7 @@ export class PromptRuntimeService {
     const reg = await this.promptIntel.registry(input.organizationId, input.workspaceId);
     return {
       ...reg,
-      note: 'Prompt Runtime registry façade over VL-188 / VL-086.',
+      note: 'Prompt Runtime registry façade over existing.',
     };
   }
 
@@ -476,7 +476,7 @@ export class PromptRuntimeService {
       events: counts.reduce((s, c) => s + c.count, 0),
       byAction: Object.fromEntries(counts.map((c) => [c.action, c.count])),
       honesty: promptRuntimeCatalog().honesty,
-      note: 'Prompt Runtime analytics (VL-216).',
+      note: 'Prompt Runtime analytics.',
     };
   }
 
@@ -494,7 +494,7 @@ export class PromptRuntimeService {
       honesty: engine.honesty,
       safety: {
         agentActionBoundariesRequired: true,
-        note: 'Prompt Runtime prepares text only; Agent/Workflow action gates remain VL-219–222.',
+        note: 'Prompt Runtime prepares text only; Agent/Workflow action gates remain –222.',
       },
     };
   }

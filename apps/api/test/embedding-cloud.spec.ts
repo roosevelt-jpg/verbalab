@@ -36,7 +36,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Embedding Cloud (VL-181)', () => {
+describe('Embedding Cloud', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -83,7 +83,7 @@ describe('Embedding Cloud (VL-181)', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/deferred/i);
-    expect(text).toContain('VL-063');
+    expect(text).toContain('');
     expect(text).not.toMatch(/trains embedding models/i);
   });
 

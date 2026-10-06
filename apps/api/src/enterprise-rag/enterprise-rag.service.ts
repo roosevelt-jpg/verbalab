@@ -63,7 +63,7 @@ export class EnterpriseRagService {
     return mode;
   }
 
-  /** Preview VL-062 chunk windows — does not persist. */
+  /** Preview chunk windows — does not persist. */
   chunk(input: { text?: string; size?: number; overlap?: number }) {
     const text = input.text ?? '';
     if (!text.trim()) {
@@ -88,7 +88,7 @@ export class EnterpriseRagService {
         preview: content.slice(0, 160),
         content,
       })),
-      note: 'Same overlapping character windows as VL-062 ingest. Preview only — not stored.',
+      note: 'Same overlapping character windows as ingest. Preview only — not stored.',
     };
   }
 
@@ -248,7 +248,7 @@ export class EnterpriseRagService {
         totalChars: optimized.passages.reduce((s, p) => s + p.content.length, 0),
       },
       honesty: this.engine().honesty,
-      note: 'Retrieval + citation + context optimization for Enterprise RAG (VL-198). Not LangChain OS.',
+      note: 'Retrieval + citation + context optimization for Enterprise RAG. Not LangChain OS.',
     };
   }
 
@@ -378,7 +378,7 @@ export class EnterpriseRagService {
         total_tokens: chat.totalTokens,
       },
       honesty: this.engine().honesty,
-      note: 'Grounded answer from retrieved workspace passages only (VL-198). Extends VL-062; not agentic RAG OS.',
+      note: 'Grounded answer from retrieved workspace passages only. Extends existing; not agentic RAG OS.',
     };
   }
 
@@ -408,7 +408,7 @@ export class EnterpriseRagService {
       chunks,
       retrievesLast30d: retrieves,
       queriesLast30d: queries,
-      note: 'Workspace-scoped Enterprise RAG analytics (VL-198).',
+      note: 'Workspace-scoped Enterprise RAG analytics.',
     };
   }
 

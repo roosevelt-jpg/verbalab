@@ -1,4 +1,4 @@
-/** Application ports for Organization Control (VL-315). */
+/** Application ports for Organization Control. */
 
 export type OrganizationControlProductRow = {
   id: string;

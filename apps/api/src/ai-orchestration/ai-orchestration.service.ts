@@ -58,9 +58,9 @@ export class AiOrchestrationService {
       related: {
         workflowsApi: '/v1/workflows',
         workflowsConsole: '/workflows',
-        note: 'VL-083 JSON job workflows remain available for transcribe→translate→notify.',
+        note: ' JSON job workflows remain available for transcribe→translate→notify.',
       },
-      note: 'Named e2e pipelines for VL-190. Multi-cloud deferred.',
+      note: 'Named e2e pipelines for . Multi-cloud deferred.',
     };
   }
 
@@ -77,7 +77,7 @@ export class AiOrchestrationService {
     if (found.status === 'deferred') {
       throw new ApiException(
         'validation_error',
-        `pipeline=${id} is deferred — not a multi-cloud agent OS (VL-190)`,
+        `pipeline=${id} is deferred — not a multi-cloud agent OS`,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -380,7 +380,7 @@ export class AiOrchestrationService {
         loadBearingE2e: true,
         executesRealRequests: true,
       },
-      note: 'Load-bearing e2e orchestration via gateway/engines (VL-190). Not a multi-cloud agent OS.',
+      note: 'Load-bearing e2e orchestration via gateway/engines. Not a multi-cloud agent OS.',
     };
   }
 
@@ -399,7 +399,7 @@ export class AiOrchestrationService {
       periodStart: start.toISOString(),
       runs,
       workspaceId,
-      note: 'AI Orchestration analytics (VL-190).',
+      note: 'AI Orchestration analytics.',
     };
   }
 
@@ -414,7 +414,7 @@ export class AiOrchestrationService {
       runs: analytics.runs,
       multiCloudAgentOs: engine.honesty.multiCloudAgentOs,
       deferred: engine.capabilities.filter((c) => c.status === 'deferred').map((c) => c.id),
-      note: 'AI Orchestration monitoring snapshot (VL-190).',
+      note: 'AI Orchestration monitoring snapshot.',
     };
   }
 }

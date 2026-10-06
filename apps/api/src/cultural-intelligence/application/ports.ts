@@ -1,4 +1,4 @@
-/** Application ports for Cultural Intelligence (VL-262). */
+/** Application ports for Cultural Intelligence. */
 
 export type CulturalIntelligenceProductRow = {
   id: string;

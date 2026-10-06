@@ -50,7 +50,7 @@ export class VoiceAnalyticsService {
         sales: marketplace.sales,
       },
       estimatedCostUsd: costs.estimatedUsd,
-      note: 'Voice Analytics overview (VL-178) — not a BI dashboard product. Distinct from Speech Analytics.',
+      note: 'Voice Analytics overview — not a BI dashboard product. Distinct from Speech Analytics.',
     };
   }
 
@@ -94,7 +94,7 @@ export class VoiceAnalyticsService {
           .sort((a, b) => b.count - a.count)
           .slice(0, 40),
       },
-      note: 'From usage_events feature=tts + Voice Cloud audits (VL-178). STT stays in Speech Analytics.',
+      note: 'From usage_events feature=tts + Voice Cloud audits. STT stays in Speech Analytics.',
     };
   }
 
@@ -137,7 +137,7 @@ export class VoiceAnalyticsService {
       byLanguage: Object.entries(byLanguage)
         .map(([language, count]) => ({ language, count }))
         .sort((a, b) => b.count - a.count),
-      note: 'Voice synthesis language tags / voice id prefixes (VL-178).',
+      note: 'Voice synthesis language tags / voice id prefixes.',
     };
   }
 
@@ -191,7 +191,7 @@ export class VoiceAnalyticsService {
         status: c.status,
         count: c._count._all,
       })),
-      note: 'Voice id frequency from synthesis audits + clone inventory (VL-178).',
+      note: 'Voice id frequency from synthesis audits + clone inventory.',
     };
   }
 
@@ -214,7 +214,7 @@ export class VoiceAnalyticsService {
         .map(([apiKeyPrefix, events]) => ({ apiKeyPrefix, events }))
         .sort((a, b) => b.events - a.events)
         .slice(0, 50),
-      note: 'API key prefixes with Voice Cloud audits — not CRM customers (VL-178).',
+      note: 'API key prefixes with Voice Cloud audits — not CRM customers.',
     };
   }
 
@@ -245,7 +245,7 @@ export class VoiceAnalyticsService {
         currency,
         amountCents,
       })),
-      note: 'Publisher-side Voice Marketplace sales — not Stripe invoices (VL-178).',
+      note: 'Publisher-side Voice Marketplace sales — not Stripe invoices.',
     };
   }
 
@@ -298,7 +298,7 @@ export class VoiceAnalyticsService {
           ? Number((samples.reduce((s, v) => s + v, 0) / samples.length).toFixed(1))
           : null,
       },
-      note: 'Partial — only when audits carry latencyMs/durationMs. Not full HTTP request p95 (VL-178).',
+      note: 'Partial — only when audits carry latencyMs/durationMs. Not full HTTP request p95.',
     };
   }
 
@@ -396,7 +396,7 @@ export class VoiceAnalyticsService {
         ? Number((ratingSum / ratingWeight).toFixed(2))
         : null,
       marketplaceRatingCount: ratingWeight,
-      note: 'Quality proxies only — not MOS lab or golden-set voice eval (VL-178).',
+      note: 'Quality proxies only — not MOS lab or golden-set voice eval.',
     };
   }
 
@@ -429,7 +429,7 @@ export class VoiceAnalyticsService {
       byAction,
       totalChunks,
       totalBytes,
-      note: 'Chunk SSE after full synthesis — not vendor token streaming (VL-178 / VL-171).',
+      note: 'Chunk SSE after full synthesis — not vendor token streaming.',
     };
   }
 
@@ -470,7 +470,7 @@ export class VoiceAnalyticsService {
       deliveries,
       totalBytes,
       byAction,
-      note: 'Audio delivery proxy from synthesis/enhancement audits — not a CDN download product (VL-178).',
+      note: 'Audio delivery proxy from synthesis/enhancement audits — not a CDN download product.',
     };
   }
 
@@ -541,7 +541,7 @@ export class VoiceAnalyticsService {
       sales: salesAgg._count._all,
       salesAmountCents: salesAgg._sum.amountCents ?? 0,
       byAction,
-      note: 'Voice Marketplace aggregates (VL-177) via Voice Analytics (VL-178). ≠ localization marketplace.',
+      note: 'Voice Marketplace aggregates via Voice Analytics. ≠ localization marketplace.',
     };
   }
 
@@ -573,7 +573,7 @@ export class VoiceAnalyticsService {
         },
       ],
       rates: { ttsPer1kChars: rates.ttsPer1kChars },
-      note: 'Estimated TTS cost only — not Stripe invoices; STT cost stays in Speech Analytics (VL-178).',
+      note: 'Estimated TTS cost only — not Stripe invoices; STT cost stays in Speech Analytics.',
     };
   }
 
@@ -594,7 +594,7 @@ export class VoiceAnalyticsService {
       latencyMsP95: latency.latencyMs.p95,
       watermarkRate: quality.watermark.rate,
       streamEvents: streaming.streamEvents,
-      note: 'Voice Analytics monitoring snapshot + shared request IDs (VL-178).',
+      note: 'Voice Analytics monitoring snapshot + shared request IDs.',
     };
   }
 
@@ -644,7 +644,7 @@ export class VoiceAnalyticsService {
       downloads,
       marketplace,
       costs,
-      note: 'Bundled Voice Analytics report (VL-178). Not a scheduled BI export. Distinct from Speech Analytics.',
+      note: 'Bundled Voice Analytics report. Not a scheduled BI export. Distinct from Speech Analytics.',
     };
   }
 

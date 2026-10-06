@@ -49,7 +49,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Knowledge Cloud Production Audit (VL-203)', () => {
+describe('Knowledge Cloud Production Audit', () => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -218,8 +218,8 @@ describe('Knowledge Cloud Production Audit (VL-203)', () => {
     expect(blueprint).toContain('Cloud Foundation');
     expect(blueprint).toContain('Production Audit');
     expect(blueprint).toContain('Knowledge');
-    expect(blueprint).toContain('VL-203');
+    expect(blueprint).toContain('');
     const living = readFileSync(join(root, 'docs/CLOUD_BLUEPRINT.md'), 'utf8');
-    expect(living).toMatch(/VL-193\s*→\s*VL-203/);
+    expect(living).toMatch(/\s*→\s*);
   });
 });

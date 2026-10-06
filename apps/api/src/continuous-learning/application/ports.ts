@@ -1,4 +1,4 @@
-/** Application ports for Continuous Learning (VL-289). */
+/** Application ports for Continuous Learning. */
 
 export type ContinuousLearningProductRow = {
   id: string;

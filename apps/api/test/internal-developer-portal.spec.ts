@@ -24,7 +24,7 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Internal Developer Portal (VL-303)', () => {
+describe('Internal Developer Portal', () => {
   let app: INestApplication<App>;
 
   beforeAll(async () => {
