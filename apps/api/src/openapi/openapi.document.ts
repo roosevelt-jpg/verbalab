@@ -3915,7 +3915,7 @@ export const openApiDocument = {
         responses: {
           '200': {
             description:
-              'Voice/language pack capabilities, Stripe honesty, ElevenLabs / celebrity / CDN denials',
+              'Voice/language pack capabilities, Stripe honesty, third-party TTS / celebrity / CDN denials',
           },
         },
       },
@@ -9804,13 +9804,13 @@ export const openApiDocument = {
     },
     '/v1/voice-clones/{id}/review': {
       post: {
-        summary: 'Abuse-review approve/reject (Pro). Approve calls ElevenLabs (or fixture).',
+        summary: 'Abuse-review approve/reject (Pro). Approve calls clone provider (or fixture).',
         operationId: 'reviewVoiceClone',
         security: [{ ClerkAuth: [] }],
         parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
         responses: {
           '200': { description: 'Updated' },
-          '503': { description: 'ElevenLabs not configured' },
+          '503': { description: 'Clone provider not configured' },
         },
       },
     },

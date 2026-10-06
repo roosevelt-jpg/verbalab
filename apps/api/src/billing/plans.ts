@@ -22,7 +22,7 @@ export type PlanDefinition = {
   rateLimitPerKey: number;
   rateLimitPerOrg: number;
   /**
-   * Max workspaces per org (ElevenLabs-style seat/workspace packaging).
+   * Max workspaces per org (tiered seat/workspace packaging).
    * Use -1 for unlimited (Enterprise).
    */
   workspaceLimit: number;
@@ -121,7 +121,7 @@ function scalePlan(): PlanDefinition {
     characterQuota: envQuota('BILLING_SCALE_CHARACTER_QUOTA', 11_000_000),
     rateLimitPerKey: Number(process.env.RATE_LIMIT_SCALE_PER_KEY ?? 600),
     rateLimitPerOrg: Number(process.env.RATE_LIMIT_SCALE_PER_ORG ?? 3_000),
-    /** ElevenLabs Scale: 3 workspace seats for team collaboration. */
+    /** Scale includes 3 workspaces for team collaboration. */
     workspaceLimit: 3,
     priceLabel: '$1,320',
     priceMonthlyUsd: 1320,

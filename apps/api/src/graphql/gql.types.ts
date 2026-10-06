@@ -900,7 +900,7 @@ export class GqlVoiceLanguageMarketplaceEngine {
   capabilities!: GqlVoiceLanguageMarketplaceCapability[];
 
   @Field()
-  elevenLabsOs!: boolean;
+  thirdPartyVoiceOs!: boolean;
 
   @Field()
   voiceCdnOs!: boolean;

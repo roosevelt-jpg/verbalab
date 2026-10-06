@@ -88,7 +88,7 @@ export const VENDOR_MODEL_SEEDS: VendorDefaultSeed[] = [
     displayName: 'Lugemi Voice (own:*)',
     baseModel: 'lugemi-tts-africa-v1',
     notes:
-      'Production African voice catalog via OWN_TTS_URL (own:* voices). Lugemi’s speech model — not ElevenLabs OS.',
+      'Production African voice catalog via OWN_TTS_URL (own:* voices). Lugemi’s speech model — not a third-party voice OS.',
     envKey: 'OWN_TTS_URL',
     role: 'primary',
     kind: 'lugemi',
@@ -107,7 +107,7 @@ export const VENDOR_MODEL_SEEDS: VendorDefaultSeed[] = [
     slug: 'vendor-tts-elevenlabs-clone',
     feature: 'tts',
     provider: 'elevenlabs',
-    displayName: 'ElevenLabs voice cloning',
+    displayName: 'Legacy voice cloning adapter',
     baseModel: 'eleven_multilingual_v2',
     notes: 'Optional cloned voices (VL-064). Consent + abuse review required; watermark always on.',
     envKey: 'ELEVENLABS_API_KEY',

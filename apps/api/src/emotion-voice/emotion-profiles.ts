@@ -22,8 +22,8 @@ export type EmotionVoiceProfile = {
   preferredVoice: string;
   /** Soft prosody transform mode — never injects spoken stage directions. */
   prosody: 'bright' | 'soft' | 'sharp' | 'tense' | 'energetic' | 'formal' | 'steady' | 'urgent' | 'warm';
-  /** ElevenLabs voice_settings when synthesizing clone:{id} (partial expressive control). */
-  elevenLabs?: {
+  /** third-party TTS voice_settings when synthesizing clone:{id} (partial expressive control). */
+  cloneStyle?: {
     stability: number;
     similarity_boost: number;
     style: number;
@@ -38,7 +38,7 @@ export const EMOTION_VOICE_PROFILES: EmotionVoiceProfile[] = [
     description: 'Upbeat, warm delivery',
     preferredVoice: 'nova',
     prosody: 'bright',
-    elevenLabs: { stability: 0.35, similarity_boost: 0.7, style: 0.55 },
+    cloneStyle: { stability: 0.35, similarity_boost: 0.7, style: 0.55 },
   },
   {
     id: 'sad',
@@ -47,7 +47,7 @@ export const EMOTION_VOICE_PROFILES: EmotionVoiceProfile[] = [
     description: 'Softer, slower cadence cues',
     preferredVoice: 'shimmer',
     prosody: 'soft',
-    elevenLabs: { stability: 0.65, similarity_boost: 0.65, style: 0.25 },
+    cloneStyle: { stability: 0.65, similarity_boost: 0.65, style: 0.25 },
   },
   {
     id: 'angry',
@@ -56,7 +56,7 @@ export const EMOTION_VOICE_PROFILES: EmotionVoiceProfile[] = [
     description: 'Sharper phrasing cues',
     preferredVoice: 'onyx',
     prosody: 'sharp',
-    elevenLabs: { stability: 0.3, similarity_boost: 0.75, style: 0.7 },
+    cloneStyle: { stability: 0.3, similarity_boost: 0.75, style: 0.7 },
   },
   {
     id: 'fear',
@@ -65,7 +65,7 @@ export const EMOTION_VOICE_PROFILES: EmotionVoiceProfile[] = [
     description: 'Tense, cautious cadence',
     preferredVoice: 'fable',
     prosody: 'tense',
-    elevenLabs: { stability: 0.4, similarity_boost: 0.7, style: 0.45 },
+    cloneStyle: { stability: 0.4, similarity_boost: 0.7, style: 0.45 },
   },
   {
     id: 'excited',
@@ -74,7 +74,7 @@ export const EMOTION_VOICE_PROFILES: EmotionVoiceProfile[] = [
     description: 'Energetic emphasis',
     preferredVoice: 'alloy',
     prosody: 'energetic',
-    elevenLabs: { stability: 0.25, similarity_boost: 0.7, style: 0.75 },
+    cloneStyle: { stability: 0.25, similarity_boost: 0.7, style: 0.75 },
   },
   {
     id: 'professional',
@@ -83,7 +83,7 @@ export const EMOTION_VOICE_PROFILES: EmotionVoiceProfile[] = [
     description: 'Neutral business tone',
     preferredVoice: 'echo',
     prosody: 'formal',
-    elevenLabs: { stability: 0.55, similarity_boost: 0.75, style: 0.15 },
+    cloneStyle: { stability: 0.55, similarity_boost: 0.75, style: 0.15 },
   },
   {
     id: 'calm',
@@ -92,7 +92,7 @@ export const EMOTION_VOICE_PROFILES: EmotionVoiceProfile[] = [
     description: 'Steady, measured delivery',
     preferredVoice: 'shimmer',
     prosody: 'steady',
-    elevenLabs: { stability: 0.7, similarity_boost: 0.65, style: 0.1 },
+    cloneStyle: { stability: 0.7, similarity_boost: 0.65, style: 0.1 },
   },
   {
     id: 'urgent',
@@ -101,7 +101,7 @@ export const EMOTION_VOICE_PROFILES: EmotionVoiceProfile[] = [
     description: 'Direct, time-sensitive cues',
     preferredVoice: 'onyx',
     prosody: 'urgent',
-    elevenLabs: { stability: 0.35, similarity_boost: 0.8, style: 0.5 },
+    cloneStyle: { stability: 0.35, similarity_boost: 0.8, style: 0.5 },
   },
   {
     id: 'empathetic',
@@ -110,7 +110,7 @@ export const EMOTION_VOICE_PROFILES: EmotionVoiceProfile[] = [
     description: 'Warm, supportive tone',
     preferredVoice: 'nova',
     prosody: 'warm',
-    elevenLabs: { stability: 0.55, similarity_boost: 0.7, style: 0.35 },
+    cloneStyle: { stability: 0.55, similarity_boost: 0.7, style: 0.35 },
   },
   {
     id: 'medical',
@@ -119,7 +119,7 @@ export const EMOTION_VOICE_PROFILES: EmotionVoiceProfile[] = [
     description: 'Clear clinical register (disclaimer: not medical advice)',
     preferredVoice: 'echo',
     prosody: 'formal',
-    elevenLabs: { stability: 0.6, similarity_boost: 0.8, style: 0.1 },
+    cloneStyle: { stability: 0.6, similarity_boost: 0.8, style: 0.1 },
   },
   {
     id: 'legal',
@@ -128,7 +128,7 @@ export const EMOTION_VOICE_PROFILES: EmotionVoiceProfile[] = [
     description: 'Precise formal register',
     preferredVoice: 'onyx',
     prosody: 'formal',
-    elevenLabs: { stability: 0.65, similarity_boost: 0.8, style: 0.05 },
+    cloneStyle: { stability: 0.65, similarity_boost: 0.8, style: 0.05 },
   },
   {
     id: 'sales',
@@ -137,7 +137,7 @@ export const EMOTION_VOICE_PROFILES: EmotionVoiceProfile[] = [
     description: 'Persuasive, energetic commercial tone',
     preferredVoice: 'alloy',
     prosody: 'energetic',
-    elevenLabs: { stability: 0.4, similarity_boost: 0.7, style: 0.55 },
+    cloneStyle: { stability: 0.4, similarity_boost: 0.7, style: 0.55 },
   },
   {
     id: 'customer_support',
@@ -146,7 +146,7 @@ export const EMOTION_VOICE_PROFILES: EmotionVoiceProfile[] = [
     description: 'Helpful, calm service tone',
     preferredVoice: 'nova',
     prosody: 'warm',
-    elevenLabs: { stability: 0.5, similarity_boost: 0.75, style: 0.3 },
+    cloneStyle: { stability: 0.5, similarity_boost: 0.75, style: 0.3 },
   },
 ];
 

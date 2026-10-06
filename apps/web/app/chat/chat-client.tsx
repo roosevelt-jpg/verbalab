@@ -722,7 +722,7 @@ export function ChatClient() {
             <div>
               <h1 style={titleStyle}>Chat Studio</h1>
               <p style={ledeStyle}>
-                ChatGPT-style assistant with live voice translate, file upload, and connectors.
+                Lugemi assistant with live voice translate, file upload, and connectors.
               </p>
             </div>
             <div className="lg-chat-toolbar-actions">

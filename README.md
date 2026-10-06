@@ -2,13 +2,13 @@
 
 First-party **language intelligence infrastructure**. Site: [lugemi.com](https://lugemi.com).
 
-Lugemi is in the same category as ElevenLabs: **our API** and **our models** — generate speech, transcribe, and translate. We do not position the product as a wrapper around Google Translate, OpenAI, ElevenLabs, or other vendor APIs.
+Lugemi is in the a first-party speech and language API platform: **our API** and **our models** — generate speech, transcribe, and translate. We do not position the product as a wrapper around Google Translate, OpenAI, or other vendor APIs.
 
 **Africa first:** Lugemi is a fully built Africa-first language intelligence platform covering languages and dialects across **all African countries and ethnic communities**. We also support **Latin America, Southeast Asia, the Middle East, the EU**, and other global markets. The Africa language catalog documents product scope; live API seed and eval pairs publish gateway availability. Do not treat Africa as one culture or use flags as language selectors.
 
 Visible brand, packages, env vars, `X-Lugemi-*` headers, and health JSON (`lugemi-web` / `lugemi-api`) are **Lugemi**. Legacy API key prefixes `vl_live_` / `vl_test_` are still accepted for one release; new keys use `lg_live_` / `lg_test_`. See `docs/brand/LUGEMI_BRAND_GUIDELINES.md` and `docs/brand/PUBLIC_POSITIONING.md`.
 
-Vendor adapters in `apps/api/src/gateway/` (Google, OpenAI, ElevenLabs) are **historical scaffolding** for local/legacy fallbacks — not the public product. Intended production speech uses `OWN_TTS_URL` (`own:*` voices). Do not treat fixtures as live GPU.
+Vendor adapters in `apps/api/src/gateway/` are **historical scaffolding** for local/legacy fallbacks — not the public product. Intended production speech uses `OWN_TTS_URL` (`own:*` voices). Do not treat fixtures as live GPU.
 
 ## Prerequisites
 
@@ -49,7 +49,7 @@ pnpm dev
 
 ## Stripe billing (VL-031)
 
-Plans mirror ElevenLabs-style packaging: **Free → Starter → Creator → Pro → Scale → Enterprise**.
+Plans mirror tiered packaging: **Free → Starter → Creator → Pro → Scale → Enterprise**.
 Each organization workspace inherits the subscribed features (speech, commercial use, voice clones, marketplace, SSO, …).
 Workspace seats: Free–Pro = 1, Scale = 3, Enterprise = unlimited. Extra creates return `plan_required`.
 

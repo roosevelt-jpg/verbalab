@@ -15,7 +15,7 @@ export function emotionVoiceEngineCatalog() {
   return {
     product: 'Lugemi Emotion Voice',
     note:
-      'Emotion-conditioned synthesis façade over Neural TTS (VL-171). Soft prosody + voice recommendations for OpenAI/own voices; partial ElevenLabs style settings on clone:{id}. Not trained expressive TTS / Hume / Azure Neural Emotion. Distinct from Speech Emotion Intelligence detection (VL-154).',
+      'Emotion-conditioned synthesis façade over Neural TTS (VL-171). Soft prosody + voice recommendations for OpenAI/own voices; partial clone provider style settings on clone:{id}. Not trained expressive TTS / Hume / Azure Neural Emotion. Distinct from Speech Emotion Intelligence detection (VL-154).',
     capabilities: [
       {
         id: 'emotion-profiles',
@@ -30,7 +30,7 @@ export function emotionVoiceEngineCatalog() {
         status: 'partial',
         api: 'POST /v1/emotion-voice/synthesize',
         notes:
-          'Applies soft prosody + preferred voice; clone voices may pass ElevenLabs style settings. Not native emotion-conditioned models for OpenAI stock.',
+          'Applies soft prosody + preferred voice; clone voices may pass clone provider style settings. Not native emotion-conditioned models for OpenAI stock.',
       },
       {
         id: 'streaming',

@@ -1,4 +1,4 @@
-/** Client-side plan catalog mirroring apps/api billing plans (ElevenLabs-style). */
+/** Client-side plan catalog mirroring apps/api billing plans (tiered). */
 export type WebPlanId = 'free' | 'starter' | 'creator' | 'pro' | 'scale' | 'enterprise';
 
 export type WebPlan = {

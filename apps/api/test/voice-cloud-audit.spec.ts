@@ -114,7 +114,7 @@ describe('Voice Cloud Production Audit (VL-179)', () => {
     expect(existsSync(join(root, 'docs/voice-cloud-audit/COVERAGE_REPORT.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/voice-cloud-audit/DEPLOYMENT_GUIDE.md'))).toBe(true);
     const readiness = readFileSync(join(root, 'docs/voice-cloud-audit/PRODUCTION_READINESS.md'), 'utf8');
-    expect(readiness).toMatch(/not.*ElevenLabs|Rejected/i);
+    expect(readiness).toMatch(/not.*third-party TTS|Rejected/i);
     expect(readiness).toContain('bounded');
   });
 

@@ -69,7 +69,7 @@ describe('Voice Cloud Foundation (VL-170)', () => {
     expect(text).toContain('Terraform');
     expect(text).toContain('af-south-1');
     expect(text).toContain('consent');
-    expect(text).toMatch(/is \*\*not\*\* ElevenLabs/i);
+    expect(text).toMatch(/is \*\*not\*\* third-party TTS/i);
   });
 
   it('exposes public product catalog with honest statuses', async () => {

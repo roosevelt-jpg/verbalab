@@ -131,7 +131,7 @@ export function BillingClient() {
         Billing & plans
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0', lineHeight: 1.6, maxWidth: '42rem' }}>
-        Each workspace inherits your subscription. Plans mirror ElevenLabs-style tiers:
+        Each workspace inherits your subscription. Plans mirror tiered tiers:
         Free → Starter → Creator → Pro → Scale → Enterprise. Features and workspace seats unlock with your plan.
       </p>
 

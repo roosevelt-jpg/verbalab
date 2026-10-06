@@ -13,7 +13,7 @@ export function neuralTtsEngineCatalog() {
   return {
     product: 'Lugemi Neural TTS',
     note:
-      'Neural TTS engine over OpenAI TTS + own rented voices + clone:{id}. Batch synthesize shipped; streaming is chunk SSE after full synthesis — not vendor low-latency token streaming. Not ElevenLabs/Polly/Azure Speech parity.',
+      'Neural TTS engine over OpenAI TTS + own rented voices + clone:{id}. Batch synthesize shipped; streaming is chunk SSE after full synthesis — not vendor low-latency token streaming. Not third-party TTS platform parity.',
     capabilities: [
       {
         id: 'batch-tts',
@@ -129,7 +129,7 @@ export function neuralTtsEngineCatalog() {
       },
       {
         id: 'elevenlabs_clone',
-        name: 'ElevenLabs Instant Voice Cloning',
+        name: 'Instant Voice Cloning',
         role: 'clone',
         modes: ['batch', 'chunk_sse'],
       },

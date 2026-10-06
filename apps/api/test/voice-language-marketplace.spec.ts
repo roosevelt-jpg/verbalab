@@ -69,14 +69,14 @@ describe('Voice & Language Marketplace (VL-257)', () => {
     await app.close();
   });
 
-  it('documents Voice & Language Marketplace honesty (not ElevenLabs OS; Stripe-only)', () => {
+  it('documents Voice & Language Marketplace honesty (not a third-party voice OS; Stripe-only)', () => {
     const doc = join(root, 'docs/VOICE_LANGUAGE_MARKETPLACE.md');
     const adr = join(root, 'docs/adr/0159-voice-language-marketplace.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toContain('VL-257');
-    expect(text).toMatch(/ElevenLabs|elevenLabsOs/i);
+    expect(text).toMatch(/third-party TTS|thirdPartyVoiceOs/i);
     expect(text).toMatch(/Stripe|storesRawCardData/i);
     expect(text).toMatch(/celebrityWithoutRights/i);
   });
@@ -96,7 +96,7 @@ describe('Voice & Language Marketplace (VL-257)', () => {
       .get('/v1/voice-language-marketplace/engine')
       .expect(200);
     expect(res.body.product).toBe('Lugemi Voice & Language Marketplace');
-    expect(res.body.honesty.elevenLabsOs).toBe(false);
+    expect(res.body.honesty.thirdPartyVoiceOs).toBe(false);
     expect(res.body.honesty.voiceCdnOs).toBe(false);
     expect(res.body.honesty.celebrityWithoutRights).toBe(false);
     expect(res.body.honesty.crossTenantCloneSynthesis).toBe(false);
@@ -114,14 +114,14 @@ describe('Voice & Language Marketplace (VL-257)', () => {
       .post('/graphql')
       .send({
         query:
-          '{ voiceLanguageMarketplaceEngine { product elevenLabsOs voiceCdnOs celebrityWithoutRights crossTenantCloneSynthesis storesRawCardData stripeOrEquivalentRequired capabilities { id status } } }',
+          '{ voiceLanguageMarketplaceEngine { product thirdPartyVoiceOs voiceCdnOs celebrityWithoutRights crossTenantCloneSynthesis storesRawCardData stripeOrEquivalentRequired capabilities { id status } } }',
       })
       .expect(200);
     expect(res.body.errors).toBeUndefined();
     expect(res.body.data.voiceLanguageMarketplaceEngine.product).toContain(
       'Voice & Language Marketplace',
     );
-    expect(res.body.data.voiceLanguageMarketplaceEngine.elevenLabsOs).toBe(false);
+    expect(res.body.data.voiceLanguageMarketplaceEngine.thirdPartyVoiceOs).toBe(false);
     expect(res.body.data.voiceLanguageMarketplaceEngine.voiceCdnOs).toBe(false);
     expect(res.body.data.voiceLanguageMarketplaceEngine.celebrityWithoutRights).toBe(false);
     expect(res.body.data.voiceLanguageMarketplaceEngine.crossTenantCloneSynthesis).toBe(false);

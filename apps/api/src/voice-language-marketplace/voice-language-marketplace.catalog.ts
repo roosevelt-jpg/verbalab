@@ -120,7 +120,7 @@ export function findVoiceLanguagePackEntry(key: string): VoiceLanguageCatalogEnt
 
 /**
  * Library Phase 124 → Voice & Language Marketplace (VL-257).
- * Buy/sell/publish voice + language pack entitlements — not ElevenLabs / voice CDN OS.
+ * Buy/sell/publish voice + language pack entitlements — not a third-party voice CDN OS.
  * Extends VL-177 voice marketplace + Volume 1 language packs. Volume 11: Stripe-only.
  */
 export function voiceLanguageMarketplaceEngineCatalog() {
@@ -237,7 +237,7 @@ export function voiceLanguageMarketplaceEngineCatalog() {
       extendsVolume1LanguagePacks: true,
       regeneratesVoiceCloud: false,
       regeneratesVoiceMarketplace: false,
-      elevenLabsOs: false,
+      thirdPartyVoiceOs: false,
       voiceCdnOs: false,
       celebrityWithoutRights: false,
       crossTenantCloneSynthesis: false,
@@ -247,7 +247,7 @@ export function voiceLanguageMarketplaceEngineCatalog() {
       realMoneyRiskCategory: true,
     },
     honesty: {
-      elevenLabsOs: false,
+      thirdPartyVoiceOs: false,
       voiceCdnOs: false,
       celebrityWithoutRights: false,
       crossTenantCloneSynthesis: false,
@@ -267,7 +267,7 @@ export function voiceLanguageMarketplaceEngineCatalog() {
       stripeOrEquivalentRequired: true,
       storesRawCardData: false,
       note:
-        'Volume 11 real-money volume. Pack listings are entitlements over VL-177 + Volume 1 surfaces — not voice CDN hosting or celebrity without rights. Use Stripe (or equivalent); never store raw card data. Not ElevenLabs OS.',
+        'Volume 11 real-money volume. Pack listings are entitlements over VL-177 + Volume 1 surfaces — not voice CDN hosting or celebrity without rights. Use Stripe (or equivalent); never store raw card data. Not a third-party voice OS.',
     },
     docs: '/docs/VOICE_LANGUAGE_MARKETPLACE.md',
   };

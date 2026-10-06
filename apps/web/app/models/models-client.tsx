@@ -109,7 +109,7 @@ export function ModelsClient() {
     <AppShell>
       <h1 style={titleStyle}>Lugemi models</h1>
       <p style={ledeStyle}>
-        Like Grok, Claude, and ChatGPT — Lugemi ships its own Language Intelligence models for voice,
+        Lugemi ships its own Language Intelligence models for voice,
         video, chat, security, law, government, insurance, and compliance. Infrastructure for African
         languages, accents, culture, and routines — not just another translation wrapper.
       </p>

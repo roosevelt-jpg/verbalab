@@ -107,7 +107,7 @@ describe('Neural Text-to-Speech (VL-171)', () => {
     expect(text).toContain('Batch TTS');
     expect(text).toContain('chunk SSE');
     expect(text).toMatch(/Children voices[\s\S]*Deferred/i);
-    expect(text).toMatch(/is \*\*not\*\* ElevenLabs/i);
+    expect(text).toMatch(/is \*\*not\*\* third-party TTS/i);
   });
 
   it('exposes engine catalog with honest streaming/children statuses', async () => {

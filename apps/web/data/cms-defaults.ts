@@ -315,7 +315,7 @@ export const CMS_DEFAULTS: CmsDocument = {
       },
       {
         title: 'First-party positioning',
-        body: 'Product copy states Lugemi owns the API and models — not Google, OpenAI, or ElevenLabs wrappers.',
+        body: 'Product copy states Lugemi owns the API and models — not Google, OpenAI,  wrappers.',
       },
       {
         title: 'Speaking agents',

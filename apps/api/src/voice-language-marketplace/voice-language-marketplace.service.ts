@@ -556,7 +556,7 @@ export class VoiceLanguageMarketplaceService {
       },
       sale,
       honesty: this.engine().honesty,
-      note: 'Installed voice/language pack entitlement. Not ElevenLabs OS or voice CDN hosting.',
+      note: 'Installed voice/language pack entitlement. Not a third-party voice OS or voice CDN hosting.',
     };
   }
 

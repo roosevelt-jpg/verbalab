@@ -18,7 +18,7 @@ const FAQ: Array<{ keys: string[]; answer: string; escalate?: boolean }> = [
   {
     keys: ['billing', 'stripe', 'invoice', 'upgrade', 'plan', 'price', 'workspace'],
     answer:
-      'Plans: Free → Starter → Creator → Pro → Scale → Enterprise (ElevenLabs-style). Free–Pro include 1 workspace; Scale includes 3; Enterprise is unlimited. Features unlock with your plan and apply to every workspace under the org. Open /billing to upgrade.',
+      'Plans: Free → Starter → Creator → Pro → Scale → Enterprise (tiered). Free–Pro include 1 workspace; Scale includes 3; Enterprise is unlimited. Features unlock with your plan and apply to every workspace under the org. Open /billing to upgrade.',
   },
   {
     keys: ['seat', 'workspaces', 'extra workspace', 'create workspace'],

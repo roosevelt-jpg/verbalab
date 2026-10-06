@@ -618,7 +618,7 @@ textarea {
   }
 }
 
-/* —— Chat Studio (ChatGPT-inspired) —— */
+/* —— Chat Studio (conversation) —— */
 .vl-console-main--chat {
   max-width: none;
   margin: 0;

@@ -25,7 +25,7 @@ type Engine = {
   note: string;
   safety: { note: string; storesRawCardData: boolean; stripeOrEquivalentRequired: boolean };
   honesty: {
-    elevenLabsOs: boolean;
+    thirdPartyVoiceOs: boolean;
     voiceCdnOs: boolean;
     celebrityWithoutRights: boolean;
     crossTenantCloneSynthesis: boolean;
@@ -70,7 +70,7 @@ export function VoiceLanguageMarketplaceClient() {
         Voice & Language Marketplace
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        License voice and language pack SKUs over VL-177 + Volume 1 — not ElevenLabs or a voice CDN.
+        License voice and language pack SKUs over VL-177 + Volume 1 — not third-party TTS or a voice CDN.
       </p>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
@@ -91,7 +91,7 @@ export function VoiceLanguageMarketplaceClient() {
                 {String(engine.honesty.stripeOrEquivalentRequired)}
               </li>
               <li>storesRawCardData: {String(engine.honesty.storesRawCardData)}</li>
-              <li>elevenLabsOs: {String(engine.honesty.elevenLabsOs)}</li>
+              <li>thirdPartyVoiceOs: {String(engine.honesty.thirdPartyVoiceOs)}</li>
               <li>voiceCdnOs: {String(engine.honesty.voiceCdnOs)}</li>
               <li>celebrityWithoutRights: {String(engine.honesty.celebrityWithoutRights)}</li>
               <li>

@@ -209,7 +209,7 @@ describe('Ecosystem Cloud Production Audit (VL-259)', () => {
     const voiceLang = await request(app.getHttpServer())
       .get('/v1/voice-language-marketplace/engine')
       .expect(200);
-    expect(voiceLang.body.honesty.elevenLabsOs).toBe(false);
+    expect(voiceLang.body.honesty.thirdPartyVoiceOs).toBe(false);
     expect(voiceLang.body.honesty.celebrityWithoutRights).toBe(false);
   });
 

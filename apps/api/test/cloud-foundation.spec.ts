@@ -114,7 +114,7 @@ describe('Cloud Platform Foundation (VL-125)', () => {
     expect(again.data).toHaveLength(2);
   });
 
-  it('rejects extra workspaces on Free plan (ElevenLabs-style limit)', async () => {
+  it('rejects extra workspaces on Free plan (tiered limit)', async () => {
     const org = await seedOrg(prisma, `cf_ws_limit_${Date.now()}`, 'free');
     await expect(
       workspaces.create({

@@ -14,10 +14,10 @@ export type VoiceCloneCreateResult = {
 };
 
 /**
- * ElevenLabs Instant Voice Cloning + TTS (VL-064).
+ * Instant Voice Cloning + TTS (VL-064).
  * Without ELEVENLABS_API_KEY → provider_not_configured (no fake clone).
  */
-export class ElevenLabsVoiceCloneAdapter implements TtsProvider {
+export class VendorVoiceCloneAdapter implements TtsProvider {
   readonly name = 'elevenlabs';
 
   constructor(
@@ -79,7 +79,7 @@ export class ElevenLabsVoiceCloneAdapter implements TtsProvider {
       const message =
         typeof json.detail === 'string'
           ? json.detail
-          : json.detail?.message ?? `ElevenLabs HTTP ${response.status}`;
+          : json.detail?.message ?? `vendor HTTP ${response.status}`;
       throw new ApiException(
         response.status === 401 || response.status === 403
           ? 'provider_error'
@@ -92,7 +92,7 @@ export class ElevenLabsVoiceCloneAdapter implements TtsProvider {
     if (!json.voice_id) {
       throw new ApiException(
         'provider_error',
-        'ElevenLabs returned no voice_id',
+        'Vendor clone returned no voice_id',
         HttpStatus.BAD_GATEWAY,
       );
     }
@@ -150,7 +150,7 @@ export class ElevenLabsVoiceCloneAdapter implements TtsProvider {
       const message = await response.text();
       throw new ApiException(
         'provider_unavailable',
-        message || `ElevenLabs TTS HTTP ${response.status}`,
+        message || `vendor TTS HTTP ${response.status}`,
         HttpStatus.BAD_GATEWAY,
       );
     }
@@ -168,7 +168,7 @@ export class ElevenLabsVoiceCloneAdapter implements TtsProvider {
   }
 }
 
-/** CI fixture — never calls ElevenLabs. */
+/** CI fixture — never calls the vendor clone API. */
 export class FixtureVoiceCloneAdapter {
   readonly name = 'fixture_elevenlabs';
 

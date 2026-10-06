@@ -4,7 +4,7 @@ Site: [https://lugemi.com](https://lugemi.com). Visible identity: **Lugemi**.
 
 ## Category
 
-Lugemi is a **fully built Africa-first language intelligence platform** with a **first-party API** and **first-party models** — same category as ElevenLabs, not a reseller or wrapper of Google Translate, OpenAI, ElevenLabs, or other vendor APIs.
+Lugemi is a **fully built Africa-first language intelligence platform** with a **first-party API** and **first-party models** — a first-party speech and language API platform, not a reseller or wrapper of Google Translate, OpenAI, or other vendor APIs.
 
 Product verbs: generate speech, transcribe, translate. Developer entry: Our API (`/v1`, keys `lg_live_` / `lg_test_`, SDK `@lugemi/sdk`).
 
@@ -17,8 +17,8 @@ Product verbs: generate speech, transcribe, translate. Developer entry: Our API 
 
 ## Tone
 
-Capable, concrete, and user-friendly (ElevenLabs-like). Prefer clear CTAs, short explanations, and fewer jargon walls. Avoid inventing SOC2 badges, customer logos, or clinical/legal suitability claims.
+Capable, concrete, and user-friendly. Prefer clear CTAs, short explanations, and fewer jargon walls. Avoid inventing SOC2 badges, customer logos, or clinical/legal suitability claims.
 
 ## Historical code (not the public story)
 
-Google, OpenAI, and ElevenLabs adapters under `apps/api/src/gateway/` are legacy/internal scaffolding. `OWN_TTS_URL` is the intended production speech path (`own:*`). Fixtures are not live GPU.
+Google, OpenAI, and third-party TTS adapters under `apps/api/src/gateway/` are legacy/internal scaffolding. `OWN_TTS_URL` is the intended production speech path (`own:*`). Fixtures are not live GPU.

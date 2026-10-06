@@ -49,7 +49,7 @@ export class EmotionVoiceService {
         description: p.description,
         preferredVoice: p.preferredVoice,
         prosody: p.prosody,
-        expressiveCloneControl: Boolean(p.elevenLabs),
+        expressiveCloneControl: Boolean(p.cloneStyle),
       })),
       note:
         'Profiles drive soft prosody + voice defaults. Trained emotion TTS models are not claimed. Distinct from /v1/emotion detect (VL-154).',
@@ -97,12 +97,12 @@ export class EmotionVoiceService {
     }
     const renderedText = applySoftProsody(input.text, profile.prosody);
     const voice = input.voice?.trim() || profile.preferredVoice;
-    const cloneExpressive = Boolean(voiceCloneIdFromVoice(voice) && profile.elevenLabs);
+    const cloneExpressive = Boolean(voiceCloneIdFromVoice(voice) && profile.cloneStyle);
     return {
       profile,
       renderedText,
       voice,
-      expressiveSettings: cloneExpressive ? profile.elevenLabs : undefined,
+      expressiveSettings: cloneExpressive ? profile.cloneStyle : undefined,
       mode: cloneExpressive ? 'clone_style_settings' : 'soft_prosody_voice_pick',
     };
   }
@@ -159,7 +159,7 @@ export class EmotionVoiceService {
         mode: plan.mode,
         renderedText: plan.renderedText,
         note:
-          'Emotion Voice uses soft prosody + voice pick; clone voices may apply ElevenLabs style settings. Not trained expressive TTS.',
+          'Emotion Voice uses soft prosody + voice pick; clone voices may apply clone provider style settings. Not trained expressive TTS.',
       };
 
       const result = await this.audio.speak({

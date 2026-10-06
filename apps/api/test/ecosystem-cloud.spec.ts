@@ -165,7 +165,7 @@ describe('Ecosystem Cloud Foundation (VL-249)', () => {
     );
     expect(voiceLang.status).toBe('shipped');
     expect(voiceLang.console).toBe('/voice-language-marketplace');
-    expect(voiceLang.notes).toMatch(/ElevenLabs|voice CDN|VL-177|Stripe/i);
+    expect(voiceLang.notes).toMatch(/third-party TTS|voice CDN|VL-177|Stripe/i);
 
     const creator = res.body.products.find((p: { id: string }) => p.id === 'creator-economy');
     expect(creator.status).toBe('shipped');

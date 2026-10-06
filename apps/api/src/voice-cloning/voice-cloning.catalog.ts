@@ -13,7 +13,7 @@ export function voiceCloningEngineCatalog() {
   return {
     product: 'Lugemi Voice Cloning',
     note:
-      'Enterprise cloning over ElevenLabs Instant Voice Cloning with mandatory consent, ownership, abuse review, and watermark (ADR-0042/0083). Professional mode = stricter enrollment on the same vendor path — not a separate trained pro model. NIST voice biometrics deferred to Phase 33.',
+      'Enterprise cloning over Instant Voice Cloning with mandatory consent, ownership, abuse review, and watermark (ADR-0042/0083). Professional mode = stricter enrollment on the same vendor path — not a separate trained pro model. NIST voice biometrics deferred to Phase 33.',
     capabilities: [
       {
         id: 'instant-cloning',
@@ -28,7 +28,7 @@ export function voiceCloningEngineCatalog() {
         status: 'partial',
         api: 'POST /v1/voice-cloning/enroll',
         notes:
-          'cloneMode=professional requires ≥3 samples + ownership attestation. Still ElevenLabs IVC — not multi-hour pro training.',
+          'cloneMode=professional requires ≥3 samples + ownership attestation. Still vendor IVC path — not multi-hour pro training.',
       },
       {
         id: 'secure-enrollment',
@@ -104,7 +104,7 @@ export function voiceCloningEngineCatalog() {
     engines: [
       {
         id: 'elevenlabs_ivc',
-        name: 'ElevenLabs Instant Voice Cloning',
+        name: 'Instant Voice Cloning',
         role: 'primary',
         modes: ['instant', 'professional_enrollment'],
       },

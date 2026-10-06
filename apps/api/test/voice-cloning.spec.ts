@@ -9,7 +9,7 @@ import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { BillingService } from '../src/billing/billing.service';
 import { VoiceClonesService } from '../src/voice-clones/voice-clones.service';
-import { FixtureVoiceCloneAdapter } from '../src/voice-clones/elevenlabs-voice-clone.adapter';
+import { FixtureVoiceCloneAdapter } from '../src/voice-clones/vendor-voice-clone.adapter';
 import { VoiceCloningService } from '../src/voice-cloning/voice-cloning.service';
 import { ApiExceptionFilter } from '../src/common/errors/api-exception.filter';
 

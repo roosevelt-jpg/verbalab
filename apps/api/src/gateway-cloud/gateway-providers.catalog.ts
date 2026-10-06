@@ -74,7 +74,7 @@ export function gatewayProviderCatalog(): GatewayProviderRow[] {
     },
     {
       id: 'elevenlabs',
-      libraryName: 'ElevenLabs',
+      libraryName: 'third-party TTS',
       status: 'optional',
       features: ['tts'],
       envKey: 'ELEVENLABS_API_KEY',

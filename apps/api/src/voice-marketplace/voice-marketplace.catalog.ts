@@ -13,7 +13,7 @@ export function voiceMarketplaceEngineCatalog() {
   return {
     product: 'Lugemi Voice Marketplace',
     note:
-      'Publish/license/sell voice SKUs with ratings — distinct from localization Marketplace (VL-090). Consent/rights attestation required for clones. Celebrity SKUs without a rights chain are forbidden. Not ElevenLabs Voice Library / Soundraw parity.',
+      'Publish/license/sell voice SKUs with ratings — distinct from localization Marketplace (VL-090). Consent/rights attestation required for clones. Celebrity SKUs without a rights chain are forbidden. Not third-party voice library / Soundraw parity.',
     capabilities: [
       {
         id: 'marketplace',

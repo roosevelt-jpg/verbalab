@@ -1098,7 +1098,7 @@ model VoiceStudioProfile {
 }
 
 /**
- * Vendor voice clone (ElevenLabs) with consent + abuse review (VL-064).
+ * Vendor voice clone with consent + abuse review (VL-064).
  * Do not train cloning models in-house.
  */
 model VoiceClone {
@@ -1107,7 +1107,7 @@ model VoiceClone {
   workspaceId        String    @map("workspace_id")
   name               String
   status             String    @default("pending_review")
-  /// instant = ElevenLabs IVC (VL-064/171); professional = stricter enrollment (same vendor path today)
+  /// instant = Instant Voice Cloning (VL-064/171); professional = stricter enrollment (same vendor path today)
   cloneMode          String    @default("instant") @map("clone_mode")
   consentAttested    Boolean   @map("consent_attested")
   consentNotes       String    @map("consent_notes")

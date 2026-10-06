@@ -17,7 +17,7 @@ export class VoiceLanguageMarketplaceGraphqlResolver {
       product: catalog.product,
       note: catalog.note,
       capabilities: catalog.capabilities as GqlVoiceLanguageMarketplaceCapability[],
-      elevenLabsOs: catalog.honesty.elevenLabsOs,
+      thirdPartyVoiceOs: catalog.honesty.thirdPartyVoiceOs,
       voiceCdnOs: catalog.honesty.voiceCdnOs,
       celebrityWithoutRights: catalog.honesty.celebrityWithoutRights,
       crossTenantCloneSynthesis: catalog.honesty.crossTenantCloneSynthesis,

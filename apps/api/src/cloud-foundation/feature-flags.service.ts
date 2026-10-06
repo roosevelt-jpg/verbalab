@@ -41,7 +41,7 @@ export class FeatureFlagsService {
         voiceAgent: process.env.VOICE_AGENT_DISABLED !== '1',
         billingCheckout: Boolean(process.env.STRIPE_SECRET_KEY?.trim()),
       },
-      /** Workspace inherits org subscription — ElevenLabs-style entitlement packaging. */
+      /** Workspace inherits org subscription — tiered entitlement packaging. */
       entitlements: {
         characterQuotaDefault: plan.characterQuota,
         name: plan.name,

@@ -114,7 +114,7 @@ export function ecosystemProductCatalog(): EcosystemProductRow[] {
       api: 'GET /v1/voice-language-marketplace/engine',
       console: '/voice-language-marketplace',
       notes:
-        'VL-257 / Phase 124. Entitlement SKUs over VL-177 voice marketplace + Volume 1 packs; FabricPolicyGate + Stripe honesty. Not ElevenLabs / voice CDN OS.',
+        'VL-257 / Phase 124. Entitlement SKUs over VL-177 voice marketplace + Volume 1 packs; FabricPolicyGate + Stripe honesty. Not a third-party voice CDN OS.',
     },
     {
       id: 'creator-economy',

@@ -7,10 +7,10 @@ import { AuditService } from '../audit/audit.service';
 import { BillingService } from '../billing/billing.service';
 import { LocalStorageService } from '../documents/local-storage.service';
 import {
-  ElevenLabsVoiceCloneAdapter,
+  VendorVoiceCloneAdapter,
   FixtureVoiceCloneAdapter,
   type VoiceCloneSample,
-} from './elevenlabs-voice-clone.adapter';
+} from './vendor-voice-clone.adapter';
 
 export const VOICE_CLONE_PREFIX = 'clone:';
 
@@ -47,7 +47,7 @@ export class VoiceClonesService {
   private provider() {
     if (this.fixtureOverride) return this.fixtureOverride;
     if (process.env.VOICE_CLONE_FIXTURE === '1') return new FixtureVoiceCloneAdapter();
-    return new ElevenLabsVoiceCloneAdapter(process.env.ELEVENLABS_API_KEY ?? '');
+    return new VendorVoiceCloneAdapter(process.env.ELEVENLABS_API_KEY ?? '');
   }
 
   serialize(row: {

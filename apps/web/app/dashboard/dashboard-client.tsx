@@ -244,7 +244,7 @@ export function DashboardClient() {
             </h2>
             <p style={{ margin: '0 0 0.75rem', color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.5 }}>
               This workspace inherits your {data.billing.planName} subscription — features unlock with the plan,
-              ElevenLabs-style.
+              tiered.
             </p>
             <ul
               style={{
