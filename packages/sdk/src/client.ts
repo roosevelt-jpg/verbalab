@@ -2076,6 +2076,36 @@ export class Lugemi {
     return this.requestJson('/v1/government-intelligence/engine', { method: 'GET' });
   }
 
+  async languageIntegrityEngine(): Promise<{
+    product: string;
+    note: string;
+    honesty: Record<string, unknown>;
+    trust?: Record<string, unknown>;
+    safety?: Record<string, unknown>;
+    docs?: string;
+  }> {
+    return this.requestJson('/v1/language-integrity/engine', { method: 'GET' });
+  }
+
+  async languageIntegrityProtocol(): Promise<Record<string, unknown>> {
+    return this.requestJson('/v1/language-integrity/protocol', { method: 'GET' });
+  }
+
+  async languageIntegrityVerify(body: {
+    claimType?: string;
+    cloneId?: string;
+    watermarkHeader?: string;
+    consentAttested?: boolean;
+    ownershipAttested?: boolean;
+    audioClaimText?: string;
+    attestationNotes?: string;
+  }): Promise<Record<string, unknown>> {
+    return this.requestJson('/v1/language-integrity/verify', {
+      method: 'POST',
+      body: JSON.stringify(body ?? {}),
+    });
+  }
+
   async healthcareIntelligenceEngine(): Promise<{
     product: string;
     note: string;

@@ -168,6 +168,7 @@ import { EducationIntelligenceModule } from './education-intelligence/education-
 import { FinancialIntelligenceModule } from './financial-intelligence/financial-intelligence.module';
 import { HealthcareIntelligenceModule } from './healthcare-intelligence/healthcare-intelligence.module';
 import { GovernmentIntelligenceModule } from './government-intelligence/government-intelligence.module';
+import { LanguageIntegrityModule } from './language-integrity/language-integrity.module';
 import { AfricanKnowledgeGraphModule } from './african-knowledge-graph/african-knowledge-graph.module';
 import { CulturalIntelligenceModule } from './cultural-intelligence/cultural-intelligence.module';
 import { AfricanLanguageRegistryModule } from './african-language-registry/african-language-registry.module';
@@ -358,6 +359,7 @@ import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
     FinancialIntelligenceModule,
     HealthcareIntelligenceModule,
     GovernmentIntelligenceModule,
+    LanguageIntegrityModule,
     AfricanKnowledgeGraphModule,
     CulturalIntelligenceModule,
     AfricanLanguageRegistryModule,

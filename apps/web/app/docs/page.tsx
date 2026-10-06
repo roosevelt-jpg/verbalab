@@ -98,9 +98,34 @@ LUGEMI_BASE_URL=${API_URL}`;
         <Endpoint method="POST" title="/v1/voice-clones/{id}/review" body="Approve/reject pending_review (clone pipeline or fixture)." />
         <Endpoint method="POST" title="/v1/voice-clones/{id}/disable" body="Disable clone for abuse/policy." />
         <Endpoint
+          method="GET"
+          title="/v1/voice-cloning/consent/policy"
+          body="Required consent fields, ownership bars, watermark policy for clones."
+        />
+        <Endpoint
+          method="GET"
+          title="/v1/language-integrity/engine"
+          body="Language Integrity catalog: watermark disclosure, consent, audit, translation review — honesty flags included."
+        />
+        <Endpoint
+          method="GET"
+          title="/v1/language-integrity/protocol"
+          body="Government adoption protocol: require Lugemi attestation for synthetic media; human review for official bilingual filings."
+        />
+        <Endpoint
+          method="POST"
+          title="/v1/language-integrity/verify"
+          body="Verify provenance claim (watermarkHeader, consentAttested, cloneId, notes). Metadata check — not universal deepfake detection."
+        />
+        <Endpoint
+          method="POST"
+          title="/v1/language-integrity/verify/workspace"
+          body="Clerk: same verify with workspace clone library lookup."
+        />
+        <Endpoint
           method="POST"
           title="/v1/audio/speech"
-          body="Generate speech. Intended production: own:* via OWN_TTS_URL. Also stock catalog or voice=clone:{id} (watermark)."
+          body="Generate speech. Intended production: own:* via OWN_TTS_URL. Also stock catalog or voice=clone:{id} (watermark → X-Lugemi-Watermark: required)."
         />
         <Endpoint method="GET/POST" title="/v1/workflows" body="List/create saved workflow definitions (Clerk)." />
         <Endpoint method="POST" title="/v1/workflows/{id}/run" body="Enqueue workflow job from saved definition (API key)." />
@@ -136,14 +161,14 @@ LUGEMI_BASE_URL=${API_URL}`;
         <Endpoint method="GET" title="/v1/models/live" body="Live Lugemi Language Intelligence model matrix (voice, video, chat, verticals)." />
         <Endpoint method="GET/POST" title="/v1/glossary/terms" body="Workspace terminology (Clerk); applied on translate." />
         <Endpoint method="GET/POST" title="/v1/tm/entries" body="Approved translation memory; exact match bypasses MT." />
-        <Endpoint method="GET" title="/v1/reviews" body="Quality reviews; accept/reject (accept can upsert TM)." />
+        <Endpoint method="GET" title="/v1/reviews" body="Quality reviews; accept/reject (accept can upsert TM). Human review path for official bilingual filings." />
         <Endpoint method="POST" title="/v1/localize" body="Translate JSON/YAML i18n trees (ICU passthrough)." />
         <Endpoint method="POST" title="/v1/ocr" body="Image OCR (optional source/target to translate)." />
         <Endpoint method="POST" title="/v1/audio/transcriptions" body="Speech-to-text (multipart audio; usage in minutes)." />
         <Endpoint method="POST" title="/v1/documents/translate" body="Upload DOCX/PDF; returns a document_translate job." />
         <Endpoint method="POST" title="/v1/jobs" body="Enqueue batch_translate, document_translate, or workflow (API key)." />
         <Endpoint method="GET" title="/v1/jobs/{id}" body="Poll job status and result." />
-        <Endpoint method="GET" title="/v1/audit-events" body="Org audit trail (Clerk session; owners/admins)." />
+        <Endpoint method="GET" title="/v1/audit-events" body="Org audit trail (Clerk session; owners/admins). Includes voice_clone.* integrity events." />
         <Endpoint method="GET" title="/v1/openapi.json" body="This OpenAPI 3.1 document." />
         <Endpoint method="POST" title="/v1/api-keys" body="Create a key (Clerk session). Secret returned once." />
         <Endpoint method="GET" title="/v1/usage/summary" body="Month-to-date characters and request counts." />

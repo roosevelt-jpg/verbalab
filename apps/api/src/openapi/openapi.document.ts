@@ -4451,6 +4451,52 @@ export const openApiDocument = {
         responses: { '200': { description: 'Filtered domain terms' } },
       },
     },
+    '/v1/language-integrity/engine': {
+      get: {
+        summary: 'Language Integrity engine catalog',
+        operationId: 'getLanguageIntegrityEngine',
+        responses: {
+          '200': {
+            description:
+              'Provenance, watermark, consent, audit, translation review catalog — not deepfake certification',
+          },
+        },
+      },
+    },
+    '/v1/language-integrity/protocol': {
+      get: {
+        summary: 'Government Language Integrity adoption protocol',
+        operationId: 'getLanguageIntegrityProtocol',
+        responses: {
+          '200': {
+            description:
+              'Requirements for attested synthetic media and human-reviewed official translations',
+          },
+        },
+      },
+    },
+    '/v1/language-integrity/verify': {
+      post: {
+        summary: 'Verify Lugemi provenance claim (metadata)',
+        operationId: 'verifyLanguageIntegrityClaim',
+        responses: {
+          '200': {
+            description:
+              'Verdict + findings for watermark/consent claims. Not universal deepfake detection.',
+          },
+        },
+      },
+    },
+    '/v1/language-integrity/verify/workspace': {
+      post: {
+        summary: 'Verify claim against workspace clone library',
+        operationId: 'verifyLanguageIntegrityWorkspace',
+        security: [{ ClerkAuth: [] }],
+        responses: {
+          '200': { description: 'Workspace-bound provenance verify including clone lookup' },
+        },
+      },
+    },
     '/v1/healthcare-intelligence/engine': {
       get: {
         summary: 'Healthcare Intelligence engine catalog',

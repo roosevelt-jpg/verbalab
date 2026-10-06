@@ -61,14 +61,14 @@ const VERTICALS = [
   {
     id: 'law',
     title: 'Law',
-    body: 'Legal language packs and jurisdiction-aware glossaries.',
-    href: '/models',
+    body: 'Legal language packs, jurisdiction glossaries, and provenance for synthetic speech in filings.',
+    href: '/p/legal-integrity',
   },
   {
     id: 'government',
     title: 'Government',
-    body: 'Citizen-service bilingual notices and public-sector forms.',
-    href: '/models',
+    body: 'Citizen-service bilingual notices, public-sector forms, and Language Integrity for attested speech.',
+    href: '/p/legal-integrity',
   },
   {
     id: 'insurance',

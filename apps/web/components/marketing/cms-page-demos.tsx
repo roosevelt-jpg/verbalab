@@ -2,6 +2,7 @@
 
 import { AgentChatDemo } from '@/components/marketing/agent-chat-demo';
 import { HeroTtsCard } from '@/components/marketing/hero-tts-card';
+import { IntegrityVerifyDemo } from '@/components/marketing/integrity-verify-demo';
 import { TranslatePlayDemo } from '@/components/marketing/translate-play-demo';
 import { VoiceChipRow } from '@/components/marketing/voice-chip-row';
 import { VoiceCloneFaqDemo } from '@/components/marketing/voice-clone-faq-demo';
@@ -187,6 +188,10 @@ export function CmsPageDemos({ slug }: { slug: string }) {
         </div>
       </div>
     );
+  }
+
+  if (slug === 'legal-integrity' || slug === 'government-integrity') {
+    return <IntegrityVerifyDemo />;
   }
 
   if (slug === 'safety' || slug === 'policies') {

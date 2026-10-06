@@ -23,6 +23,7 @@ const NAV_GROUPS: NavGroup[] = [
     links: [
       { href: '/dashboard', label: 'Dashboard' },
       { href: '/identity', label: 'Identity & profile' },
+      { href: '/language-integrity', label: 'Language Integrity' },
       { href: '/keys', label: 'API keys' },
       { href: '/chat', label: 'Chat Studio' },
       { href: '/models', label: 'Models' },
@@ -41,6 +42,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/voice-cloud', label: 'Voice Cloud' },
       { href: '/neural-tts', label: 'Neural TTS' },
       { href: '/voice-cloning', label: 'Voice cloning' },
+      { href: '/language-integrity', label: 'Language Integrity' },
       { href: '/speech-recognition', label: 'Speech recognition' },
       { href: '/voice-marketplace', label: 'Voice marketplace' },
       { href: '/interpret', label: 'Interpreter' },
@@ -109,6 +111,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'Admin & enterprise',
     links: [
       { href: '/audit', label: 'Audit' },
+      { href: '/language-integrity', label: 'Language Integrity' },
       { href: '/admin', label: 'Admin' },
       { href: '/enterprise', label: 'Enterprise' },
     ],

@@ -16,6 +16,7 @@ const isPublicRoute = createRouteMatcher([
   '/coverage(.*)',
   '/models(.*)',
   '/developers(.*)',
+  '/language-integrity(.*)',
   '/health(.*)',
   '/p(.*)',
 ]);

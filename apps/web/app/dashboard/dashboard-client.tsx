@@ -55,6 +55,7 @@ type Overview = {
 
 const COMMAND_LINKS = [
   { href: '/identity', label: 'Identity', hint: 'Profile & team' },
+  { href: '/language-integrity', label: 'Integrity', hint: 'Auth authenticity' },
   { href: '/keys', label: 'API keys', hint: 'lg_live_ / lg_test_' },
   { href: '/chat', label: 'Chat Studio', hint: 'Live dialect chat' },
   { href: '/models', label: 'Models', hint: 'Engine selection' },
