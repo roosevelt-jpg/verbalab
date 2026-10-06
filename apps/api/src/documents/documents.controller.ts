@@ -7,6 +7,7 @@ import {
   HttpStatus,
   Param,
   Post,
+  Req,
   Res,
   UploadedFile,
   UseGuards,
@@ -17,10 +18,10 @@ import { memoryStorage } from 'multer';
 import type { Response } from 'express';
 import { DocumentsService } from './documents.service';
 import { JobsService } from '../jobs/jobs.service';
-import { ApiKeyGuard, ApiKeyContext } from '../common/guards/api-key.guard';
-import { CurrentApiKey } from '../common/decorators/auth.decorators';
+import { TranslateAuthGuard, TranslateAuthContext } from '../common/guards/translate-auth.guard';
 import { ApiException } from '../common/errors/api-exception';
 import { documentMaxBytes } from '../jobs/job.types';
+import { Request } from 'express';
 
 @Controller('v1/documents')
 export class DocumentsController {
@@ -31,7 +32,7 @@ export class DocumentsController {
 
   @Post('translate')
   @HttpCode(HttpStatus.CREATED)
-  @UseGuards(ApiKeyGuard)
+  @UseGuards(TranslateAuthGuard)
   @UseInterceptors(
     FileInterceptor('file', {
       storage: memoryStorage(),
@@ -39,7 +40,7 @@ export class DocumentsController {
     }),
   )
   async translate(
-    @CurrentApiKey() auth: ApiKeyContext,
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
     @UploadedFile() file: Express.Multer.File | undefined,
     @Body() body: { source?: string; target?: string; webhookUrl?: string },
   ) {
@@ -50,6 +51,7 @@ export class DocumentsController {
       throw new ApiException('validation_error', 'source and target are required', HttpStatus.BAD_REQUEST);
     }
 
+    const auth = req.translateAuth;
     const doc = await this.documents.storeSource({
       organizationId: auth.organizationId,
       workspaceId: auth.workspaceId,
@@ -75,13 +77,13 @@ export class DocumentsController {
   }
 
   @Get(':id/content')
-  @UseGuards(ApiKeyGuard)
+  @UseGuards(TranslateAuthGuard)
   async content(
-    @CurrentApiKey() auth: ApiKeyContext,
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
     @Param('id') id: string,
     @Res() res: Response,
   ) {
-    const doc = await this.documents.getOwned(auth.organizationId, id);
+    const doc = await this.documents.getOwned(req.translateAuth.organizationId, id);
     res.setHeader('Content-Type', doc.mimeType);
     res.setHeader('Content-Disposition', `attachment; filename="${doc.filename.replace(/"/g, '')}"`);
     res.setHeader('Content-Length', String(doc.sizeBytes));
@@ -89,10 +91,10 @@ export class DocumentsController {
   }
 
   @Get(':id')
-  @UseGuards(ApiKeyGuard)
+  @UseGuards(TranslateAuthGuard)
   @Header('Cache-Control', 'no-store')
-  async meta(@CurrentApiKey() auth: ApiKeyContext, @Param('id') id: string) {
-    const doc = await this.documents.getOwned(auth.organizationId, id);
+  async meta(@Req() req: Request & { translateAuth: TranslateAuthContext }, @Param('id') id: string) {
+    const doc = await this.documents.getOwned(req.translateAuth.organizationId, id);
     return {
       id: doc.id,
       kind: doc.kind,

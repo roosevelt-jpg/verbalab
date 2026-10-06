@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
 import { ProgressRing } from '@/components/stats/stat-charts';
+import { FEATURE_LABELS, formatWorkspaceLimit } from '@/data/billing-plans';
 import '@/components/stats/stat-charts.css';
 
 type BillingSummary = {
@@ -18,6 +19,8 @@ type BillingSummary = {
   requests: number;
   stripeConfigured: boolean;
   hasCustomer: boolean;
+  features?: string[];
+  workspaceLimit?: number;
 };
 
 type PlanCard = {
@@ -25,6 +28,7 @@ type PlanCard = {
   name: string;
   rank: number;
   characterQuota: number;
+  workspaceLimit?: number;
   priceLabel: string;
   priceMonthlyUsd: number | null;
   blurb: string;
@@ -38,20 +42,6 @@ type MemberRow = {
   role: string;
   createdAt: string;
   user: { id: string; email: string | null; name: string | null };
-};
-
-const FEATURE_LABELS: Record<string, string> = {
-  speech: 'Speech & TTS',
-  translate: 'Translate',
-  playground: 'Playground',
-  commercial: 'Commercial use',
-  voiceClones: 'Voice clones',
-  marketplace: 'Marketplace',
-  fineTunes: 'Fine-tunes',
-  prioritySupport: 'Priority support',
-  workspacesExtra: 'Extra workspaces',
-  sso: 'SSO',
-  dedicated: 'Dedicated capacity',
 };
 
 export function BillingClient() {
@@ -141,8 +131,8 @@ export function BillingClient() {
         Billing & plans
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0', lineHeight: 1.6, maxWidth: '42rem' }}>
-        Workspace entitlements mirror ElevenLabs-style tiers: Free → Starter → Creator → Pro → Scale → Enterprise.
-        Features unlock with your plan; Stripe keeps cards on file.
+        Each workspace inherits your subscription. Plans mirror ElevenLabs-style tiers:
+        Free → Starter → Creator → Pro → Scale → Enterprise. Features and workspace seats unlock with your plan.
       </p>
 
       {error ? <p style={{ color: 'var(--bad)' }}>{error}</p> : null}
@@ -204,6 +194,10 @@ export function BillingClient() {
                   <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.5 }}>{plan.blurb}</p>
                   <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: 600 }}>
                     {plan.characterQuota.toLocaleString()} characters / mo
+                  </p>
+                  <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--muted)' }}>
+                    {formatWorkspaceLimit(plan.workspaceLimit ?? 1)} workspace
+                    {(plan.workspaceLimit ?? 1) === 1 ? '' : 's'}
                   </p>
                   <ul style={{ margin: 0, paddingLeft: '1.1rem', color: 'var(--muted)', fontSize: '0.85rem' }}>
                     {plan.features.map((f) => (

@@ -16,9 +16,14 @@ const FAQ: Array<{ keys: string[]; answer: string; escalate?: boolean }> = [
       'Monthly character quota is on Billing. Free starts at 50k; Starter/Creator/Pro/Scale raise limits. When you hit the cap, translate/speech return 402 quota_exceeded — upgrade or wait for the period reset.',
   },
   {
-    keys: ['billing', 'stripe', 'invoice', 'upgrade', 'plan', 'price'],
+    keys: ['billing', 'stripe', 'invoice', 'upgrade', 'plan', 'price', 'workspace'],
     answer:
-      'Plans: Free → Starter → Creator → Pro → Scale → Enterprise. Open /billing to upgrade (Stripe Checkout) or manage payment methods. Enterprise is custom — ask to escalate for sales.',
+      'Plans: Free → Starter → Creator → Pro → Scale → Enterprise (ElevenLabs-style). Free–Pro include 1 workspace; Scale includes 3; Enterprise is unlimited. Features unlock with your plan and apply to every workspace under the org. Open /billing to upgrade.',
+  },
+  {
+    keys: ['seat', 'workspaces', 'extra workspace', 'create workspace'],
+    answer:
+      'Workspace limits follow your plan: 1 on Free–Pro, 3 on Scale, unlimited on Enterprise. Creating beyond the limit returns plan_required — upgrade under Billing. Your workspace inherits subscribed features (clones, marketplace, SSO, etc.).',
   },
   {
     keys: ['voice', 'tts', 'clone', 'speech', 'own:'],

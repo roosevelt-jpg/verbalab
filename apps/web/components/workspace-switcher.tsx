@@ -1,9 +1,11 @@
 'use client';
 
 import { useAuth } from '@clerk/nextjs';
+import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { apiFetch, getStoredWorkspaceId, setStoredWorkspaceId } from '@/lib/api';
 import { isClerkConfigured } from '@/lib/clerk-config';
+import { formatWorkspaceLimit } from '@/data/billing-plans';
 
 type WorkspaceRow = {
   id: string;
@@ -13,9 +15,21 @@ type WorkspaceRow = {
   defaultTargetLang: string;
 };
 
+type WorkspaceEntitlements = {
+  plan: string;
+  planName: string;
+  features: string[];
+  workspaceLimit: number;
+  workspaceUsed: number;
+  workspaceRemaining: number | null;
+  canCreate: boolean;
+  unlimited: boolean;
+};
+
 export function WorkspaceSwitcher() {
   const { getToken, isLoaded } = useAuth();
   const [workspaces, setWorkspaces] = useState<WorkspaceRow[]>([]);
+  const [entitlements, setEntitlements] = useState<WorkspaceEntitlements | null>(null);
   const [selected, setSelected] = useState<string>('');
   const [creating, setCreating] = useState(false);
 
@@ -23,8 +37,12 @@ export function WorkspaceSwitcher() {
     if (!isClerkConfigured()) return;
     const token = await getToken();
     if (!token) return;
-    const res = await apiFetch<{ data: WorkspaceRow[] }>('/v1/workspaces', { token });
+    const res = await apiFetch<{ data: WorkspaceRow[]; entitlements?: WorkspaceEntitlements }>(
+      '/v1/workspaces',
+      { token },
+    );
     setWorkspaces(res.data);
+    if (res.entitlements) setEntitlements(res.entitlements);
     const stored = getStoredWorkspaceId();
     const current =
       res.data.find((w) => w.id === stored)?.id ??
@@ -53,6 +71,12 @@ export function WorkspaceSwitcher() {
   }
 
   async function createWorkspace() {
+    if (entitlements && !entitlements.canCreate) {
+      window.alert(
+        `Your ${entitlements.planName} plan includes ${formatWorkspaceLimit(entitlements.workspaceLimit)} workspace${entitlements.workspaceLimit === 1 ? '' : 's'}. Upgrade under Billing for more.`,
+      );
+      return;
+    }
     const name = window.prompt('New workspace name');
     if (!name?.trim()) return;
     setCreating(true);
@@ -71,6 +95,11 @@ export function WorkspaceSwitcher() {
       setCreating(false);
     }
   }
+
+  const atLimit = entitlements ? !entitlements.canCreate : false;
+  const limitHint = entitlements
+    ? `${entitlements.workspaceUsed}/${formatWorkspaceLimit(entitlements.workspaceLimit)}`
+    : null;
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
@@ -101,19 +130,34 @@ export function WorkspaceSwitcher() {
         type="button"
         onClick={() => void createWorkspace()}
         disabled={creating}
-        title="Create workspace"
+        title={
+          atLimit
+            ? `Plan limit reached (${limitHint}). Upgrade for more workspaces.`
+            : limitHint
+              ? `Create workspace (${limitHint})`
+              : 'Create workspace'
+        }
         style={{
           fontSize: '0.85rem',
           padding: '0.3rem 0.5rem',
           borderRadius: '0.4rem',
           border: '1px solid var(--line)',
           background: 'transparent',
-          color: 'var(--muted)',
-          cursor: creating ? 'wait' : 'pointer',
+          color: atLimit ? 'var(--muted)' : 'var(--muted)',
+          cursor: creating ? 'wait' : atLimit ? 'not-allowed' : 'pointer',
+          opacity: atLimit ? 0.55 : 1,
         }}
       >
         +
       </button>
+      {atLimit ? (
+        <Link
+          href="/billing"
+          style={{ fontSize: '0.7rem', color: 'var(--action-primary)', fontWeight: 600, whiteSpace: 'nowrap' }}
+        >
+          Upgrade
+        </Link>
+      ) : null}
     </div>
   );
 }

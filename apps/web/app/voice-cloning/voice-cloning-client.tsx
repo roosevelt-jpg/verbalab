@@ -5,6 +5,8 @@ import { useAuth } from '@clerk/nextjs';
 import { useCallback, useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { PlanGate } from '@/components/billing/plan-gate';
+import { planHasFeature } from '@/data/billing-plans';
 
 type Capability = { id: string; name: string; status: string; notes: string };
 type Engine = {
@@ -49,11 +51,21 @@ export function VoiceCloningClient() {
   const [policy, setPolicy] = useState<Policy | null>(null);
   const [library, setLibrary] = useState<Clone[]>([]);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
+  const [planId, setPlanId] = useState<string | null>(null);
+  const [clonesAllowed, setClonesAllowed] = useState<boolean | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const load = useCallback(async () => {
     const token = await getToken();
     if (!token) throw new Error('Not signed in');
+    const overview = await apiFetch<{
+      organization: { plan: string };
+      featureFlags: Record<string, boolean>;
+    }>('/v1/cloud/overview', { token }).catch(() => null);
+    if (overview) {
+      setPlanId(overview.organization.plan);
+      setClonesAllowed(overview.featureFlags.voiceClones ?? planHasFeature(overview.organization.plan, 'voiceClones'));
+    }
     const [eng, pol, lib, stats] = await Promise.all([
       apiFetch<Engine>('/v1/voice-cloning/engine', { token }),
       apiFetch<Policy>('/v1/voice-cloning/consent/policy', { token }),
@@ -88,6 +100,10 @@ export function VoiceCloningClient() {
         Enterprise cloning with explicit consent, ownership attestation, abuse review, licensing,
         permissions, and required watermarking. Extends VL-064 — does not skip trust gates.
       </p>
+
+      <div style={{ marginBottom: '1.25rem' }}>
+        <PlanGate feature="voiceClones" currentPlan={planId} allowed={clonesAllowed} />
+      </div>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
 

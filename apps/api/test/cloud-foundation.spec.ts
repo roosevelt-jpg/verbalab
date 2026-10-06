@@ -80,11 +80,13 @@ describe('Cloud Platform Foundation (VL-125)', () => {
     expect(text).toContain('Not built');
   });
 
-  it('lists, creates, and patches workspaces', async () => {
-    const org = await seedOrg(prisma, `cf_ws_${Date.now()}`);
+  it('lists, creates, and patches workspaces within Scale plan limit', async () => {
+    const org = await seedOrg(prisma, `cf_ws_${Date.now()}`, 'scale');
     const listed = await workspaces.list(org.id, org.workspaces[0].id);
     expect(listed.data).toHaveLength(1);
     expect(listed.data[0].isCurrent).toBe(true);
+    expect(listed.entitlements.workspaceLimit).toBe(3);
+    expect(listed.entitlements.canCreate).toBe(true);
 
     const created = await workspaces.create({
       organizationId: org.id,
@@ -110,6 +112,18 @@ describe('Cloud Platform Foundation (VL-125)', () => {
 
     const again = await workspaces.list(org.id, org.workspaces[0].id);
     expect(again.data).toHaveLength(2);
+  });
+
+  it('rejects extra workspaces on Free plan (ElevenLabs-style limit)', async () => {
+    const org = await seedOrg(prisma, `cf_ws_limit_${Date.now()}`, 'free');
+    await expect(
+      workspaces.create({
+        organizationId: org.id,
+        userId: org.memberships[0].userId,
+        role: 'owner',
+        name: 'Second',
+      }),
+    ).rejects.toMatchObject({ code: 'plan_required' });
   });
 
   it('rejects workspace create for members', async () => {
@@ -163,6 +177,8 @@ describe('Cloud Platform Foundation (VL-125)', () => {
     const freeFlags = await flags.forOrganization(free.id);
     expect(freeFlags.flags.pro).toBe(false);
     expect(freeFlags.flags.marketplace).toBe(false);
+    expect(freeFlags.entitlements.workspaceLimit).toBe(1);
+    expect(freeFlags.entitlements.canCreateWorkspace).toBe(false);
 
     const pro = await seedOrg(prisma, `cf_pro_${Date.now()}`, 'pro');
     const proFlags = await flags.forOrganization(pro.id);
@@ -180,6 +196,8 @@ describe('Cloud Platform Foundation (VL-125)', () => {
     expect(ov.workspace?.id).toBe(pro.workspaces[0].id);
     expect(ov.billing.plan).toBe('pro');
     expect(ov.featureFlags.pro).toBe(true);
+    expect(ov.entitlements.features).toContain('marketplace');
+    expect(ov.workspaceEntitlements.workspaceLimit).toBe(1);
     expect(ov.foundation.projectsMappedTo).toBe('workspaces');
     expect(ov.foundation.availabilityZones).toBe(false);
     expect(ov.foundation.serviceDiscovery).toBe(false);

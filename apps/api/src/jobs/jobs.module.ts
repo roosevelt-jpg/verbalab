@@ -9,6 +9,7 @@ import { AuditCoreModule } from '../audit/audit-core.module';
 import { DocumentsModule } from '../documents/documents.module';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { WorkflowsModule } from '../workflows/workflows.module';
+import { TranslateAuthGuard } from '../common/guards/translate-auth.guard';
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { WorkflowsModule } from '../workflows/workflows.module';
     forwardRef(() => WorkflowsModule),
   ],
   controllers: [JobsController],
-  providers: [JobsService, WebhookService],
+  providers: [JobsService, WebhookService, TranslateAuthGuard],
   exports: [JobsService, WebhookService],
 })
 export class JobsModule {}

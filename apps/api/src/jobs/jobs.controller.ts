@@ -1,7 +1,9 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
+import { Request } from 'express';
 import { JobsService } from './jobs.service';
 import { ApiKeyGuard, ApiKeyContext } from '../common/guards/api-key.guard';
 import { CurrentApiKey, CurrentSession } from '../common/decorators/auth.decorators';
+import { TranslateAuthGuard, TranslateAuthContext } from '../common/guards/translate-auth.guard';
 import { ApiException } from '../common/errors/api-exception';
 import { JobType } from './job.types';
 import { ClerkAuthGuard, SessionContext } from '../common/guards/clerk-auth.guard';
@@ -44,16 +46,19 @@ export class JobsController {
   }
 
   @Get('v1/jobs')
-  @UseGuards(ApiKeyGuard)
-  list(@CurrentApiKey() auth: ApiKeyContext, @Query('limit') limitRaw?: string) {
+  @UseGuards(TranslateAuthGuard)
+  list(
+    @Req() req: Request & { translateAuth: TranslateAuthContext },
+    @Query('limit') limitRaw?: string,
+  ) {
     const limit = limitRaw ? Number(limitRaw) : 50;
-    return this.jobs.list(auth.organizationId, Number.isFinite(limit) ? limit : 50);
+    return this.jobs.list(req.translateAuth.organizationId, Number.isFinite(limit) ? limit : 50);
   }
 
   @Get('v1/jobs/:id')
-  @UseGuards(ApiKeyGuard)
-  get(@CurrentApiKey() auth: ApiKeyContext, @Param('id') id: string) {
-    return this.jobs.get(auth.organizationId, id);
+  @UseGuards(TranslateAuthGuard)
+  get(@Req() req: Request & { translateAuth: TranslateAuthContext }, @Param('id') id: string) {
+    return this.jobs.get(req.translateAuth.organizationId, id);
   }
 
   /** Reveal/create the org webhook signing secret (console session). */

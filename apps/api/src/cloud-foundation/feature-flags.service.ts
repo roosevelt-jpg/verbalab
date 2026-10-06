@@ -15,6 +15,7 @@ export class FeatureFlagsService {
     const plan = planFromId(org.plan);
     const orgEnabled = !org.disabledAt;
     const proPlus = isProOrAbove(org.plan);
+    const workspaceUsed = await this.prisma.workspace.count({ where: { organizationId } });
 
     return {
       organizationId,
@@ -32,6 +33,7 @@ export class FeatureFlagsService {
         fineTunes: planHasFeature(org.plan, 'fineTunes') && process.env.FINE_TUNES_DISABLED !== '1',
         prioritySupport: planHasFeature(org.plan, 'prioritySupport'),
         sso: planHasFeature(org.plan, 'sso'),
+        dedicated: planHasFeature(org.plan, 'dedicated'),
         workspacesExtra: planHasFeature(org.plan, 'workspacesExtra'),
         ownTts: ownTtsConfigured(),
         notifications: process.env.NOTIFICATIONS_DISABLED !== '1',
@@ -39,11 +41,17 @@ export class FeatureFlagsService {
         voiceAgent: process.env.VOICE_AGENT_DISABLED !== '1',
         billingCheckout: Boolean(process.env.STRIPE_SECRET_KEY?.trim()),
       },
+      /** Workspace inherits org subscription — ElevenLabs-style entitlement packaging. */
       entitlements: {
         characterQuotaDefault: plan.characterQuota,
         name: plan.name,
         rank: plan.rank,
         features: plan.features,
+        workspaceLimit: plan.workspaceLimit,
+        workspaceUsed,
+        workspaceRemaining:
+          plan.workspaceLimit < 0 ? null : Math.max(0, plan.workspaceLimit - workspaceUsed),
+        canCreateWorkspace: plan.workspaceLimit < 0 || workspaceUsed < plan.workspaceLimit,
       },
     };
   }

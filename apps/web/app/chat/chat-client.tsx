@@ -1,149 +1,1000 @@
 'use client';
 
-import { FormEvent, useEffect, useRef, useState, type CSSProperties } from 'react';
+import {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+  type CSSProperties,
+} from 'react';
+import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
-import { apiFetch } from '@/lib/api';
+import { API_URL, apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { playDemoSpeech, stopDemoSpeech } from '@/lib/demo-speech';
+import {
+  getSpeechRecognitionCtor,
+  recognitionLangFor,
+  speechRecognitionSupported,
+  type SpeechRecognitionLike,
+} from '@/lib/speech-recognition';
 
 type Language = { code: string; name: string };
-type ChatTurn = { role: 'user' | 'assistant'; content: string };
+
+type ChatTurn = {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  kind?: 'chat' | 'live' | 'upload' | 'system';
+  fileName?: string;
+  sourceLang?: string;
+  targetLang?: string;
+  playing?: boolean;
+};
+
+type Conversation = {
+  id: string;
+  title: string;
+  updatedAt: number;
+  messages: ChatTurn[];
+};
 
 type ChatCompletion = {
   choices: Array<{ message: { role: string; content: string } }>;
   translated?: boolean;
   translateReplyTo?: string | null;
-  provider?: string;
-  model?: string;
 };
+
+type ConnectorDef = {
+  id: string;
+  name: string;
+  category: 'office' | 'storage' | 'email' | 'chat';
+  blurb: string;
+  href?: string;
+};
+
+const STORAGE_KEY = 'lugemi_chat_studio_v1';
+const CONNECTOR_KEY = 'lugemi_chat_connectors_v1';
+
+const CONNECTORS: ConnectorDef[] = [
+  {
+    id: 'slack',
+    name: 'Slack',
+    category: 'chat',
+    blurb: 'Slash-command translate in channels.',
+    href: '/connectors',
+  },
+  {
+    id: 'gmail',
+    name: 'Gmail',
+    category: 'email',
+    blurb: 'Draft replies in the recipient’s language.',
+  },
+  {
+    id: 'outlook',
+    name: 'Outlook',
+    category: 'email',
+    blurb: 'Office 365 mail + calendar phrasing.',
+  },
+  {
+    id: 'gdrive',
+    name: 'Google Drive',
+    category: 'storage',
+    blurb: 'Pull docs into Chat Studio for translate.',
+  },
+  {
+    id: 'onedrive',
+    name: 'OneDrive',
+    category: 'storage',
+    blurb: 'Sync Word/PDF folders for localization.',
+  },
+  {
+    id: 'dropbox',
+    name: 'Dropbox',
+    category: 'storage',
+    blurb: 'Watch shared folders for new assets.',
+  },
+  {
+    id: 'notion',
+    name: 'Notion',
+    category: 'office',
+    blurb: 'Translate pages and knowledge bases.',
+  },
+  {
+    id: 'sheets',
+    name: 'Google Sheets',
+    category: 'office',
+    blurb: 'Batch glossary + string tables.',
+  },
+];
+
+const SUGGESTIONS = [
+  'Translate this greeting into Kiswahili and play it back',
+  'How do I upload a PDF for document translation?',
+  'Explain Africa-first language coverage for speaking agents',
+  'Draft a polite Yorùbá support reply about shipping delays',
+];
+
+function uid() {
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+function loadConversations(): Conversation[] {
+  if (typeof window === 'undefined') return [];
+  try {
+    const raw = window.localStorage.getItem(STORAGE_KEY);
+    if (!raw) return [];
+    const parsed = JSON.parse(raw) as Conversation[];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveConversations(rows: Conversation[]) {
+  if (typeof window === 'undefined') return;
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(rows.slice(0, 40)));
+}
+
+function loadConnected(): Record<string, boolean> {
+  if (typeof window === 'undefined') return {};
+  try {
+    const raw = window.localStorage.getItem(CONNECTOR_KEY);
+    return raw ? (JSON.parse(raw) as Record<string, boolean>) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveConnected(map: Record<string, boolean>) {
+  if (typeof window === 'undefined') return;
+  window.localStorage.setItem(CONNECTOR_KEY, JSON.stringify(map));
+}
+
+function isTextLike(file: File) {
+  const n = file.name.toLowerCase();
+  return (
+    file.type.startsWith('text/') ||
+    n.endsWith('.txt') ||
+    n.endsWith('.md') ||
+    n.endsWith('.csv') ||
+    n.endsWith('.json') ||
+    n.endsWith('.srt') ||
+    n.endsWith('.vtt')
+  );
+}
+
+function isAudioLike(file: File) {
+  const n = file.name.toLowerCase();
+  return (
+    file.type.startsWith('audio/') ||
+    n.endsWith('.mp3') ||
+    n.endsWith('.wav') ||
+    n.endsWith('.m4a') ||
+    n.endsWith('.ogg') ||
+    n.endsWith('.webm') ||
+    n.endsWith('.flac')
+  );
+}
+
+function isVideoLike(file: File) {
+  const n = file.name.toLowerCase();
+  return (
+    file.type.startsWith('video/') ||
+    n.endsWith('.mp4') ||
+    n.endsWith('.mov') ||
+    n.endsWith('.mkv') ||
+    n.endsWith('.webm')
+  );
+}
+
+function isDocumentLike(file: File) {
+  const n = file.name.toLowerCase();
+  return (
+    n.endsWith('.pdf') ||
+    n.endsWith('.docx') ||
+    file.type === 'application/pdf' ||
+    file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  );
+}
+
+function titleFromText(text: string) {
+  const t = text.trim().replace(/\s+/g, ' ');
+  return t.length > 42 ? `${t.slice(0, 42)}…` : t || 'New chat';
+}
 
 export function ChatClient() {
   const { getToken, isLoaded } = useAuth();
+  const fileInputId = useId();
+  const fileRef = useRef<HTMLInputElement | null>(null);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
+  const liveFinalRef = useRef('');
+  const activeIdRef = useRef<string | null>(null);
+
   const [languages, setLanguages] = useState<Language[]>([]);
-  const [messages, setMessages] = useState<ChatTurn[]>([]);
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [activeId, setActiveId] = useState<string | null>(null);
   const [input, setInput] = useState('');
-  const [translateReplyTo, setTranslateReplyTo] = useState('');
+  const [translateReplyTo, setTranslateReplyTo] = useState('sw');
+  const [liveTarget, setLiveTarget] = useState('sw');
+  const [uploadSource, setUploadSource] = useState('auto');
+  const [uploadTarget, setUploadTarget] = useState('sw');
+  const [mode, setMode] = useState<'chat' | 'live'>('chat');
+  const [pluginsOpen, setPluginsOpen] = useState(false);
+  const [connected, setConnected] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const bottomRef = useRef<HTMLDivElement | null>(null);
+  const [recording, setRecording] = useState(false);
+  const [interim, setInterim] = useState('');
+  const [hydrated, setHydrated] = useState(false);
+
+  const active = conversations.find((c) => c.id === activeId) ?? null;
+  const messages = active?.messages ?? [];
 
   useEffect(() => {
+    activeIdRef.current = activeId;
+  }, [activeId]);
+
+  useEffect(() => {
+    const rows = loadConversations();
+    setConversations(rows);
+    setActiveId(rows[0]?.id ?? null);
+    activeIdRef.current = rows[0]?.id ?? null;
+    setConnected(loadConnected());
+    setHydrated(true);
     void apiFetch<{ data: Language[] }>('/v1/languages')
       .then((res) => setLanguages(res.data))
       .catch(() => undefined);
   }, []);
 
   useEffect(() => {
+    if (!hydrated) return;
+    saveConversations(conversations);
+  }, [conversations, hydrated]);
+
+  useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages, loading]);
+  }, [activeId, conversations, loading, interim, recording]);
 
-  async function onSubmit(event: FormEvent) {
-    event.preventDefault();
-    const text = input.trim();
-    if (!text || loading) return;
+  useEffect(() => {
+    return () => {
+      recognitionRef.current?.abort();
+      stopDemoSpeech();
+    };
+  }, []);
 
+  const ensureConversation = useCallback((): string => {
+    if (activeIdRef.current) return activeIdRef.current;
+    const id = uid();
+    const fresh: Conversation = {
+      id,
+      title: 'New chat',
+      updatedAt: Date.now(),
+      messages: [],
+    };
+    activeIdRef.current = id;
+    setActiveId(id);
+    setConversations((prev) => [fresh, ...prev]);
+    return id;
+  }, []);
+
+  const updateConversation = useCallback((id: string, updater: (prev: Conversation) => Conversation) => {
+    setConversations((prev) => {
+      const list = [...prev];
+      const idx = list.findIndex((c) => c.id === id);
+      if (idx < 0) return prev;
+      list[idx] = updater(list[idx]!);
+      return list;
+    });
+  }, []);
+
+  function startNewChat() {
+    const fresh: Conversation = {
+      id: uid(),
+      title: 'New chat',
+      updatedAt: Date.now(),
+      messages: [],
+    };
+    activeIdRef.current = fresh.id;
+    setConversations((prev) => [fresh, ...prev]);
+    setActiveId(fresh.id);
+    setInput('');
+    setError(null);
+    setInterim('');
+  }
+
+  async function ensureToken() {
+    const token = await getToken();
+    if (!token) throw new Error('Not signed in');
+    return token;
+  }
+
+  async function translateText(token: string, text: string, source: string, target: string) {
+    const res = await apiFetch<{ text: string; source: string; characters: number }>(
+      '/v1/translate',
+      {
+        method: 'POST',
+        token,
+        body: JSON.stringify({ text, source, target }),
+      },
+    );
+    return res;
+  }
+
+  async function playTranslation(text: string, lang: string) {
+    try {
+      await playDemoSpeech({ text, lang, voiceId: lang.startsWith('sw') ? 'amara' : 'abe' });
+    } catch {
+      /* playback optional */
+    }
+  }
+
+  async function sendChat(text: string) {
     setError(null);
     setLoading(true);
-    const nextMessages: ChatTurn[] = [...messages, { role: 'user', content: text }];
-    setMessages(nextMessages);
+    const convId = ensureConversation();
+    const userTurn: ChatTurn = { id: uid(), role: 'user', content: text, kind: 'chat' };
+    const prior = conversations.find((c) => c.id === convId)?.messages ?? [];
+
+    updateConversation(convId, (conv) => ({
+      ...conv,
+      title: conv.messages.length === 0 ? titleFromText(text) : conv.title,
+      updatedAt: Date.now(),
+      messages: [...conv.messages, userTurn],
+    }));
     setInput('');
 
     try {
-      const token = await getToken();
-      if (!token) throw new Error('Not signed in');
+      const token = await ensureToken();
+      const history = [...prior, userTurn].map((m) => ({
+        role: m.role,
+        content: m.content,
+      }));
       const res = await apiFetch<ChatCompletion>('/v1/chat/completions', {
         method: 'POST',
         token,
         body: JSON.stringify({
-          messages: nextMessages,
+          messages: history,
           ...(translateReplyTo ? { translateReplyTo } : {}),
         }),
       });
       const reply = res.choices?.[0]?.message?.content ?? '';
-      setMessages((prev) => [...prev, { role: 'assistant', content: reply }]);
+      updateConversation(convId, (conv) => ({
+        ...conv,
+        updatedAt: Date.now(),
+        messages: [
+          ...conv.messages,
+          {
+            id: uid(),
+            role: 'assistant',
+            content: reply,
+            kind: 'chat',
+            targetLang: translateReplyTo || undefined,
+          },
+        ],
+      }));
+      if (translateReplyTo && reply) {
+        void playTranslation(reply, recognitionLangFor(translateReplyTo));
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Chat failed');
-      setMessages((prev) => prev.slice(0, -1));
+      updateConversation(convId, (conv) => ({
+        ...conv,
+        messages: conv.messages.filter((m) => m.id !== userTurn.id),
+      }));
       setInput(text);
     } finally {
       setLoading(false);
     }
   }
 
-  if (!isLoaded) {
+  async function onSubmit(event: FormEvent) {
+    event.preventDefault();
+    const text = input.trim();
+    if (!text || loading || recording) return;
+    if (mode === 'live') {
+      await runLiveTranslate(text);
+      return;
+    }
+    await sendChat(text);
+  }
+
+  async function runLiveTranslate(spoken: string) {
+    const text = spoken.trim();
+    if (!text) return;
+    setLoading(true);
+    setError(null);
+    setInput('');
+    setInterim('');
+
+    const convId = ensureConversation();
+    const userTurn: ChatTurn = {
+      id: uid(),
+      role: 'user',
+      content: text,
+      kind: 'live',
+      sourceLang: 'auto',
+      targetLang: liveTarget,
+    };
+    updateConversation(convId, (conv) => ({
+      ...conv,
+      title: conv.messages.length === 0 ? titleFromText(text) : conv.title,
+      updatedAt: Date.now(),
+      messages: [...conv.messages, userTurn],
+    }));
+
+    try {
+      const token = await ensureToken();
+      const res = await translateText(token, text, 'auto', liveTarget);
+      const assistant: ChatTurn = {
+        id: uid(),
+        role: 'assistant',
+        content: res.text,
+        kind: 'live',
+        sourceLang: res.source,
+        targetLang: liveTarget,
+      };
+      updateConversation(convId, (conv) => ({
+        ...conv,
+        updatedAt: Date.now(),
+        messages: [...conv.messages, assistant],
+      }));
+      await playTranslation(res.text, recognitionLangFor(liveTarget));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Live translate failed');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  function stopRecording() {
+    recognitionRef.current?.stop();
+    setRecording(false);
+  }
+
+  function toggleRecord() {
+    if (recording) {
+      stopRecording();
+      const finalText = (liveFinalRef.current || interim || input).trim();
+      liveFinalRef.current = '';
+      if (finalText) {
+        setMode('live');
+        void runLiveTranslate(finalText);
+      }
+      return;
+    }
+
+    const Ctor = getSpeechRecognitionCtor();
+    if (!Ctor) {
+      setError('Speech recognition is not supported in this browser. Type instead, or upload audio.');
+      return;
+    }
+
+    setError(null);
+    setMode('live');
+    liveFinalRef.current = '';
+    setInterim('');
+
+    const recognition = new Ctor();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = recognitionLangFor('en');
+    recognition.onresult = (event) => {
+      let interimBuf = '';
+      let finalBuf = liveFinalRef.current;
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const piece = event.results[i]![0].transcript;
+        if (event.results[i]!.isFinal) finalBuf += `${piece} `;
+        else interimBuf += piece;
+      }
+      liveFinalRef.current = finalBuf;
+      setInterim(interimBuf);
+      setInput(`${finalBuf}${interimBuf}`.trim());
+    };
+    recognition.onerror = (event) => {
+      if (event.error !== 'aborted' && event.error !== 'no-speech') {
+        setError(`Microphone error: ${event.error}`);
+      }
+      setRecording(false);
+    };
+    recognition.onend = () => {
+      setRecording(false);
+    };
+
+    recognitionRef.current = recognition;
+    try {
+      recognition.start();
+      setRecording(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not start microphone');
+      setRecording(false);
+    }
+  }
+
+  async function transcribeFile(token: string, file: File) {
+    const form = new FormData();
+    form.append('file', file);
+    const res = await fetch(`${API_URL}/v1/speech/recognize`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: form,
+    });
+    const body = (await res.json()) as { text?: string; error?: { message: string } };
+    if (!res.ok) throw new Error(body.error?.message ?? `STT failed (${res.status})`);
+    return (body.text ?? '').trim();
+  }
+
+  async function translateDocumentJob(token: string, file: File, source: string, target: string) {
+    const form = new FormData();
+    form.append('file', file);
+    form.append('source', source === 'auto' ? 'en' : source);
+    form.append('target', target);
+    const createRes = await fetch(`${API_URL}/v1/documents/translate`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: form,
+    });
+    const created = (await createRes.json()) as {
+      id?: string;
+      status?: string;
+      error?: { message: string };
+      result?: { preview?: string; downloadPath?: string };
+    };
+    if (!createRes.ok) {
+      throw new Error(created.error?.message ?? `Document upload failed (${createRes.status})`);
+    }
+
+    let current = created;
+    for (let i = 0; i < 60; i++) {
+      if (current.status === 'succeeded' || current.status === 'failed') break;
+      await new Promise((r) => setTimeout(r, 400));
+      current = await apiFetch<typeof created>(`/v1/jobs/${created.id}`, { token });
+    }
+    if (current.status === 'failed') {
+      throw new Error('Document translation job failed');
+    }
+    return current;
+  }
+
+  async function onUploadFile(file: File | null) {
+    if (!file || loading) return;
+    setLoading(true);
+    setError(null);
+
+    const convId = ensureConversation();
+    const userTurn: ChatTurn = {
+      id: uid(),
+      role: 'user',
+      content: `Translate uploaded file: ${file.name}`,
+      kind: 'upload',
+      fileName: file.name,
+      sourceLang: uploadSource,
+      targetLang: uploadTarget,
+    };
+    updateConversation(convId, (conv) => ({
+      ...conv,
+      title: conv.messages.length === 0 ? `Upload · ${file.name}` : conv.title,
+      updatedAt: Date.now(),
+      messages: [...conv.messages, userTurn],
+    }));
+
+    try {
+      const token = await ensureToken();
+      let sourceText = '';
+      let note = '';
+
+      if (isTextLike(file)) {
+        sourceText = (await file.text()).slice(0, 12000);
+        note = 'Text file';
+      } else if (isAudioLike(file) || isVideoLike(file)) {
+        sourceText = await transcribeFile(token, file);
+        note = isVideoLike(file) ? 'Video → speech recognition' : 'Voice → speech recognition';
+        if (!sourceText) throw new Error('No speech detected in the upload');
+      } else if (isDocumentLike(file)) {
+        const job = await translateDocumentJob(token, file, uploadSource, uploadTarget);
+        const preview = job.result?.preview?.trim() || 'Document translated.';
+        const download = job.result?.downloadPath
+          ? `\n\nDownload: ${API_URL}${job.result.downloadPath}`
+          : '';
+        updateConversation(convId, (conv) => ({
+          ...conv,
+          updatedAt: Date.now(),
+          messages: [
+            ...conv.messages,
+            {
+              id: uid(),
+              role: 'assistant',
+              content: `${preview}${download}`,
+              kind: 'upload',
+              fileName: file.name,
+              sourceLang: uploadSource,
+              targetLang: uploadTarget,
+            },
+          ],
+        }));
+        if (job.result?.preview) {
+          await playTranslation(job.result.preview.slice(0, 400), recognitionLangFor(uploadTarget));
+        }
+        return;
+      } else {
+        throw new Error('Unsupported file. Upload text, PDF/DOCX, audio, or video.');
+      }
+
+      const translated = await translateText(
+        token,
+        sourceText,
+        uploadSource === 'auto' ? 'auto' : uploadSource,
+        uploadTarget,
+      );
+
+      updateConversation(convId, (conv) => ({
+        ...conv,
+        updatedAt: Date.now(),
+        messages: [
+          ...conv.messages,
+          {
+            id: uid(),
+            role: 'assistant',
+            content: `${note}\n\nSource (${translated.source}):\n${sourceText.slice(0, 1500)}${
+              sourceText.length > 1500 ? '…' : ''
+            }\n\nTranslation (${uploadTarget}):\n${translated.text}`,
+            kind: 'upload',
+            fileName: file.name,
+            sourceLang: translated.source,
+            targetLang: uploadTarget,
+          },
+        ],
+      }));
+      await playTranslation(translated.text.slice(0, 500), recognitionLangFor(uploadTarget));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Upload translate failed');
+      updateConversation(convId, (conv) => ({
+        ...conv,
+        messages: [
+          ...conv.messages,
+          {
+            id: uid(),
+            role: 'assistant',
+            content: err instanceof Error ? err.message : 'Upload translate failed',
+            kind: 'system',
+          },
+        ],
+      }));
+    } finally {
+      setLoading(false);
+      if (fileRef.current) fileRef.current.value = '';
+    }
+  }
+
+  function toggleConnector(id: string) {
+    setConnected((prev) => {
+      const next = { ...prev, [id]: !prev[id] };
+      saveConnected(next);
+      return next;
+    });
+  }
+
+  if (!isLoaded || !hydrated) {
     return (
       <AppShell>
-        <p style={{ color: 'var(--muted)' }}>Loading…</p>
+        <p style={{ color: 'var(--muted)' }}>Loading Chat Studio…</p>
       </AppShell>
     );
   }
 
   return (
     <AppShell>
-      <h1 style={titleStyle}>Chat</h1>
-      <p style={ledeStyle}>Language-intelligence assistant. Optional: translate the reply into another language.</p>
+      <div className="lg-chat-studio">
+        <aside className="lg-chat-history" aria-label="Conversations">
+          <button type="button" className="vl-btn vl-btn-primary lg-chat-new" onClick={startNewChat}>
+            New chat
+          </button>
+          <ul className="lg-chat-history-list">
+            {conversations.length === 0 ? (
+              <li className="lg-chat-history-empty">No chats yet</li>
+            ) : (
+              conversations.map((c) => (
+                <li key={c.id}>
+                  <button
+                    type="button"
+                    className={`lg-chat-history-item${c.id === activeId ? ' is-active' : ''}`}
+                    onClick={() => {
+                      activeIdRef.current = c.id;
+                      setActiveId(c.id);
+                    }}
+                  >
+                    <span>{c.title}</span>
+                    <time dateTime={new Date(c.updatedAt).toISOString()}>
+                      {new Date(c.updatedAt).toLocaleDateString()}
+                    </time>
+                  </button>
+                </li>
+              ))
+            )}
+          </ul>
+        </aside>
 
-      <div className="vl-panel" style={{ marginTop: '1.5rem', padding: '1.25rem', display: 'grid', gap: '1rem', minHeight: '28rem' }}>
-        <div style={{ display: 'grid', gap: '0.85rem', flex: 1, maxHeight: '22rem', overflowY: 'auto' }}>
-          {messages.length === 0 ? (
-            <p style={{ color: 'var(--muted)', margin: 0 }}>
-              Ask about glossaries, localization, or how to translate a phrase.
-            </p>
-          ) : (
-            messages.map((msg, i) => (
-              <div
-                key={`${msg.role}-${i}`}
-                style={{
-                  justifySelf: msg.role === 'user' ? 'end' : 'start',
-                  maxWidth: '85%',
-                  padding: '0.75rem 1rem',
-                  borderRadius: 14,
-                  background: msg.role === 'user' ? 'var(--ink)' : 'var(--bg-soft)',
-                  color: msg.role === 'user' ? '#fff' : 'var(--ink)',
-                  whiteSpace: 'pre-wrap',
-                  lineHeight: 1.55,
-                }}
-              >
-                {msg.content}
+        <section className="lg-chat-main" aria-label="Chat">
+          <header className="lg-chat-toolbar">
+            <div>
+              <h1 style={titleStyle}>Chat Studio</h1>
+              <p style={ledeStyle}>
+                ChatGPT-style assistant with live voice translate, file upload, and connectors.
+              </p>
+            </div>
+            <div className="lg-chat-toolbar-actions">
+              <div className="lg-chat-mode" role="group" aria-label="Mode">
+                <button
+                  type="button"
+                  className={mode === 'chat' ? 'is-active' : ''}
+                  onClick={() => setMode('chat')}
+                >
+                  Chat
+                </button>
+                <button
+                  type="button"
+                  className={mode === 'live' ? 'is-active' : ''}
+                  onClick={() => setMode('live')}
+                >
+                  Live translate
+                </button>
               </div>
-            ))
-          )}
-          {loading ? <p style={{ color: 'var(--muted)', margin: 0 }}>Thinking…</p> : null}
-          <div ref={bottomRef} />
-        </div>
+              <button
+                type="button"
+                className={`vl-btn vl-btn-secondary${pluginsOpen ? ' is-pressed' : ''}`}
+                aria-expanded={pluginsOpen}
+                onClick={() => setPluginsOpen((v) => !v)}
+              >
+                Plugins
+              </button>
+            </div>
+          </header>
 
-        <form onSubmit={onSubmit} style={{ display: 'grid', gap: '0.75rem' }}>
-          <label className="vl-label">
-            Translate reply to (optional)
-            <select
-              className="vl-field"
-              value={translateReplyTo}
-              onChange={(e) => setTranslateReplyTo(e.target.value)}
+          <div className="lg-chat-thread">
+            {messages.length === 0 ? (
+              <div className="lg-chat-empty">
+                <p className="lg-chat-empty-brand">Lugemi</p>
+                <h2>How can language intelligence help today?</h2>
+                <p>Ask in chat, click the mic for instant translation, or upload a document, video, or voice file.</p>
+                <div className="lg-chat-suggestions">
+                  {SUGGESTIONS.map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      className="lg-chat-suggestion"
+                      onClick={() => {
+                        setMode('chat');
+                        setInput(s);
+                      }}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              messages.map((msg) => (
+                <article
+                  key={msg.id}
+                  className={`lg-chat-bubble lg-chat-bubble--${msg.role}${msg.kind ? ` lg-chat-bubble--${msg.kind}` : ''}`}
+                >
+                  <div className="lg-chat-bubble-meta">
+                    <span>{msg.role === 'user' ? 'You' : 'Lugemi'}</span>
+                    {msg.kind === 'live' ? <span className="lg-chat-pill">Live</span> : null}
+                    {msg.kind === 'upload' ? <span className="lg-chat-pill">Upload</span> : null}
+                    {msg.fileName ? <span className="lg-chat-pill">{msg.fileName}</span> : null}
+                    {msg.targetLang ? (
+                      <span className="lg-chat-pill">→ {msg.targetLang}</span>
+                    ) : null}
+                  </div>
+                  <div className="lg-chat-bubble-body">{msg.content}</div>
+                  {msg.role === 'assistant' && msg.kind === 'live' ? (
+                    <button
+                      type="button"
+                      className="lg-chat-replay"
+                      onClick={() =>
+                        void playTranslation(msg.content, recognitionLangFor(msg.targetLang ?? 'en'))
+                      }
+                    >
+                      Play translation
+                    </button>
+                  ) : null}
+                </article>
+              ))
+            )}
+            {recording ? (
+              <p className="lg-chat-listening" aria-live="polite">
+                Listening… {interim || 'speak now'}
+              </p>
+            ) : null}
+            {loading ? <p className="lg-chat-listening">Working…</p> : null}
+            <div ref={bottomRef} />
+          </div>
+
+          {error ? (
+            <p className="lg-chat-error" role="alert">
+              {error}
+            </p>
+          ) : null}
+
+          <form className="lg-chat-composer" onSubmit={onSubmit}>
+            <div className="lg-chat-composer-row lg-chat-composer-langs">
+              {mode === 'chat' ? (
+                <label className="vl-label lg-chat-inline-label">
+                  Translate reply
+                  <select
+                    className="vl-field"
+                    value={translateReplyTo}
+                    onChange={(e) => setTranslateReplyTo(e.target.value)}
+                  >
+                    <option value="">Off</option>
+                    {languages.map((lang) => (
+                      <option key={lang.code} value={lang.code}>
+                        {lang.name} ({lang.code})
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              ) : (
+                <label className="vl-label lg-chat-inline-label">
+                  Live target
+                  <select
+                    className="vl-field"
+                    value={liveTarget}
+                    onChange={(e) => setLiveTarget(e.target.value)}
+                  >
+                    {languages.map((lang) => (
+                      <option key={lang.code} value={lang.code}>
+                        {lang.name} ({lang.code})
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              )}
+              <label className="vl-label lg-chat-inline-label">
+                Upload source
+                <select
+                  className="vl-field"
+                  value={uploadSource}
+                  onChange={(e) => setUploadSource(e.target.value)}
+                >
+                  <option value="auto">Auto</option>
+                  {languages.map((lang) => (
+                    <option key={lang.code} value={lang.code}>
+                      {lang.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <label className="vl-label lg-chat-inline-label">
+                Upload target
+                <select
+                  className="vl-field"
+                  value={uploadTarget}
+                  onChange={(e) => setUploadTarget(e.target.value)}
+                >
+                  {languages.map((lang) => (
+                    <option key={lang.code} value={lang.code}>
+                      {lang.name}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+
+            <div className="lg-chat-composer-box">
+              <input
+                ref={fileRef}
+                id={fileInputId}
+                type="file"
+                className="lg-chat-file-input"
+                accept=".txt,.md,.csv,.json,.srt,.vtt,.pdf,.docx,audio/*,video/*,.mp3,.wav,.m4a,.mp4,.mov,.webm"
+                onChange={(e) => void onUploadFile(e.target.files?.[0] ?? null)}
+              />
+              <button
+                type="button"
+                className="lg-chat-icon-btn"
+                aria-label="Upload document, video, or voice"
+                title="Upload document, video, or voice"
+                disabled={loading}
+                onClick={() => fileRef.current?.click()}
+              >
+                Attach
+              </button>
+              <textarea
+                className="lg-chat-input"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder={
+                  mode === 'live'
+                    ? 'Speak or type — translation plays instantly…'
+                    : 'Message Lugemi…'
+                }
+                rows={1}
+                disabled={loading}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    void onSubmit(e as unknown as FormEvent);
+                  }
+                }}
+              />
+              <button
+                type="button"
+                className={`lg-chat-icon-btn lg-chat-mic${recording ? ' is-recording' : ''}`}
+                aria-pressed={recording}
+                aria-label={recording ? 'Stop recording and translate' : 'Click to record'}
+                title={
+                  speechRecognitionSupported()
+                    ? recording
+                      ? 'Stop & translate'
+                      : 'Click to record'
+                    : 'Speech recognition unavailable'
+                }
+                disabled={loading}
+                onClick={toggleRecord}
+              >
+                {recording ? 'Stop' : 'Record'}
+              </button>
+              <button
+                type="submit"
+                className="vl-btn vl-btn-primary lg-chat-send"
+                disabled={loading || !input.trim()}
+              >
+                {mode === 'live' ? 'Translate' : 'Send'}
+              </button>
+            </div>
+            <p className="lg-chat-composer-hint">
+              Mic uses Web Speech Recognition → Lugemi Translate → play. Upload accepts documents,
+              video, and voice. Enter to send · Shift+Enter for newline.
+            </p>
+          </form>
+        </section>
+
+        <aside className={`lg-chat-plugins${pluginsOpen ? ' is-open' : ''}`} aria-label="Connectors and plugins">
+          <div className="lg-chat-plugins-head">
+            <h2>Connectors</h2>
+            <p>Office, storage, and email plugins for Chat Studio.</p>
+            <button
+              type="button"
+              className="lg-chat-plugins-close"
+              aria-label="Close plugins"
+              onClick={() => setPluginsOpen(false)}
             >
-              <option value="">No translation</option>
-              {languages.map((lang) => (
-                <option key={lang.code} value={lang.code}>
-                  {lang.name} ({lang.code})
-                </option>
-              ))}
-            </select>
-          </label>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '0.75rem' }}>
-            <input
-              className="vl-field"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder="Message Lugemi…"
-              disabled={loading}
-              required
-            />
-            <button type="submit" disabled={loading} className="vl-btn vl-btn-primary">
-              {loading ? 'Sending…' : 'Send'}
+              ×
             </button>
           </div>
-        </form>
+          <ul className="lg-chat-plugin-list">
+            {CONNECTORS.map((c) => {
+              const on = Boolean(connected[c.id]);
+              return (
+                <li key={c.id} className="lg-chat-plugin">
+                  <div>
+                    <strong>{c.name}</strong>
+                    <span className="lg-chat-plugin-cat">{c.category}</span>
+                    <p>{c.blurb}</p>
+                    {c.href ? (
+                      <Link href={c.href} className="lg-chat-plugin-link">
+                        Open connector settings
+                      </Link>
+                    ) : null}
+                  </div>
+                  <button
+                    type="button"
+                    className={`vl-btn ${on ? 'vl-btn-secondary' : 'vl-btn-primary'}`}
+                    onClick={() => toggleConnector(c.id)}
+                  >
+                    {on ? 'Connected' : 'Connect'}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </aside>
       </div>
-
-      {error ? <p style={{ color: 'var(--bad)' }}>{error}</p> : null}
     </AppShell>
   );
 }
@@ -152,7 +1003,12 @@ const titleStyle: CSSProperties = {
   margin: 0,
   fontFamily: 'var(--font-display)',
   letterSpacing: '-0.03em',
-  fontSize: '2rem',
+  fontSize: '1.55rem',
 };
 
-const ledeStyle: CSSProperties = { color: 'var(--muted)', margin: '0.5rem 0 0' };
+const ledeStyle: CSSProperties = {
+  color: 'var(--muted)',
+  margin: '0.35rem 0 0',
+  fontSize: '0.92rem',
+  lineHeight: 1.45,
+};

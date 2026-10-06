@@ -46,9 +46,11 @@ export class CloudOverviewService {
       },
       workspace: currentWorkspace,
       workspaces: workspaces.data,
+      workspaceEntitlements: workspaces.entitlements,
       billing,
       residency,
       featureFlags: featureFlags.flags,
+      entitlements: featureFlags.entitlements,
       foundation: {
         projectsMappedTo: 'workspaces',
         availabilityZones: false,

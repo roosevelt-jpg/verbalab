@@ -49,17 +49,21 @@ pnpm dev
 
 ## Stripe billing (VL-031)
 
+Plans mirror ElevenLabs-style packaging: **Free → Starter → Creator → Pro → Scale → Enterprise**.
+Each organization workspace inherits the subscribed features (speech, commercial use, voice clones, marketplace, SSO, …).
+Workspace seats: Free–Pro = 1, Scale = 3, Enterprise = unlimited. Extra creates return `plan_required`.
+
 Add to `apps/api/.env`:
 
 | Variable | Purpose |
 | --- | --- |
 | `STRIPE_SECRET_KEY` | API secret |
 | `STRIPE_WEBHOOK_SECRET` | Webhook signing (`stripe listen --forward-to localhost:3001/v1/billing/webhook`) |
-| `STRIPE_PRICE_ID_PRO` | Recurring Price ID for Pro |
+| `STRIPE_PRICE_ID_STARTER` / `_CREATOR` / `_PRO` / `_SCALE` | Recurring Price IDs |
 | `BILLING_SUCCESS_URL` / `BILLING_CANCEL_URL` | Checkout redirects |
 | `BILLING_PORTAL_RETURN_URL` | Customer portal return |
 
-Create a Pro product/price in Stripe Dashboard, then map `STRIPE_PRICE_ID_PRO`.
+Create products/prices in Stripe Dashboard, then map the `STRIPE_PRICE_ID_*` env vars.
 
 ## TypeScript SDK
 

@@ -58,7 +58,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/knowledge', label: 'Knowledge' },
       { href: '/knowledge-cloud', label: 'Knowledge Cloud' },
       { href: '/knowledge-base', label: 'Knowledge base' },
-      { href: '/chat', label: 'Chat' },
+      { href: '/chat', label: 'Chat Studio' },
       { href: '/prompts', label: 'Prompts' },
       { href: '/datasets', label: 'Datasets' },
       { href: '/models', label: 'Models' },
@@ -206,7 +206,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           />
         ) : null}
 
-        <main className="vl-console-main vl-fade-up">{children}</main>
+        <main
+          className={`vl-console-main vl-fade-up${pathname === '/chat' || pathname.startsWith('/chat/') ? ' vl-console-main--chat' : ''}`}
+        >
+          {children}
+        </main>
       </div>
       <SupportChatWidget />
     </div>

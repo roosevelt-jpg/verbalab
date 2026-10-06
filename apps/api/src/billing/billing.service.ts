@@ -43,6 +43,7 @@ export class BillingService {
       name: p.name,
       rank: p.rank,
       characterQuota: p.characterQuota,
+      workspaceLimit: p.workspaceLimit,
       priceLabel: p.priceLabel,
       priceMonthlyUsd: p.priceMonthlyUsd,
       blurb: p.blurb,
@@ -103,6 +104,9 @@ export class BillingService {
     return {
       plan: org.plan,
       planName: plan.name,
+      planRank: plan.rank,
+      features: plan.features,
+      workspaceLimit: plan.workspaceLimit,
       billingStatus: org.billingStatus,
       characterQuota: org.characterQuota,
       charactersUsed: usage.characters,

@@ -147,7 +147,11 @@ export class VoiceClonesService {
     route?: string;
   }) {
     this.assertOwnerOrAdmin(input.role);
-    await this.billing.assertPro(input.organizationId);
+    await this.billing.assertFeature(
+      input.organizationId,
+      'voiceClones',
+      'Voice clones require Creator plan or higher. Upgrade under Billing.',
+    );
 
     if (!input.consentAttested) {
       throw new ApiException(
@@ -425,7 +429,11 @@ export class VoiceClonesService {
     ip?: string;
   }) {
     this.assertOwnerOrAdmin(input.role);
-    await this.billing.assertPro(input.organizationId);
+    await this.billing.assertFeature(
+      input.organizationId,
+      'voiceClones',
+      'Voice clones require Creator plan or higher. Upgrade under Billing.',
+    );
 
     const row = await this.prisma.voiceClone.findFirst({
       where: {

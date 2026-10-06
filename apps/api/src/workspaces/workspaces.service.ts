@@ -2,6 +2,11 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiException } from '../common/errors/api-exception';
 import { AuditService } from '../audit/audit.service';
+import {
+  planAllowsAnotherWorkspace,
+  planFromId,
+  planWorkspaceLimit,
+} from '../billing/plans';
 
 @Injectable()
 export class WorkspacesService {
@@ -31,12 +36,38 @@ export class WorkspacesService {
     };
   }
 
-  async list(organizationId: string, currentWorkspaceId?: string) {
-    const rows = await this.prisma.workspace.findMany({
-      where: { organizationId },
-      orderBy: { createdAt: 'asc' },
+  async entitlements(organizationId: string) {
+    const org = await this.prisma.organization.findUniqueOrThrow({
+      where: { id: organizationId },
+      select: { plan: true },
     });
-    return { data: rows.map((r) => this.toDto(r, currentWorkspaceId)) };
+    const plan = planFromId(org.plan);
+    const used = await this.prisma.workspace.count({ where: { organizationId } });
+    const limit = plan.workspaceLimit;
+    return {
+      plan: org.plan,
+      planName: plan.name,
+      features: plan.features,
+      workspaceLimit: limit,
+      workspaceUsed: used,
+      workspaceRemaining: limit < 0 ? null : Math.max(0, limit - used),
+      canCreate: planAllowsAnotherWorkspace(org.plan, used),
+      unlimited: limit < 0,
+    };
+  }
+
+  async list(organizationId: string, currentWorkspaceId?: string) {
+    const [rows, entitlements] = await Promise.all([
+      this.prisma.workspace.findMany({
+        where: { organizationId },
+        orderBy: { createdAt: 'asc' },
+      }),
+      this.entitlements(organizationId),
+    ]);
+    return {
+      data: rows.map((r) => this.toDto(r, currentWorkspaceId)),
+      entitlements,
+    };
   }
 
   async get(organizationId: string, id: string, currentWorkspaceId?: string) {
@@ -69,6 +100,24 @@ export class WorkspacesService {
     if (!name) {
       throw new ApiException('validation_error', 'name is required', HttpStatus.BAD_REQUEST);
     }
+
+    const org = await this.prisma.organization.findUniqueOrThrow({
+      where: { id: input.organizationId },
+      select: { plan: true },
+    });
+    const used = await this.prisma.workspace.count({
+      where: { organizationId: input.organizationId },
+    });
+    const limit = planWorkspaceLimit(org.plan);
+    if (!planAllowsAnotherWorkspace(org.plan, used)) {
+      const plan = planFromId(org.plan);
+      throw new ApiException(
+        'plan_required',
+        `Your ${plan.name} plan includes ${limit} workspace${limit === 1 ? '' : 's'}. Upgrade to Scale or Enterprise for more workspaces.`,
+        HttpStatus.PAYMENT_REQUIRED,
+      );
+    }
+
     const row = await this.prisma.workspace.create({
       data: {
         organizationId: input.organizationId,

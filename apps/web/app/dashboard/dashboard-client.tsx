@@ -8,6 +8,8 @@ import { AppShell } from '@/components/app-shell';
 import { AnamorphicPanel } from '@/components/media/anamorphic-panel';
 import { SITE_CONTENT } from '@/data/site-content';
 import { BarChart, LineChart, ProgressRing, seedUsageSeries } from '@/components/stats/stat-charts';
+import { FEATURE_LABELS, formatWorkspaceLimit, WEB_BILLING_PLANS } from '@/data/billing-plans';
+import { PlanGate } from '@/components/billing/plan-gate';
 import '@/components/media/anamorphic.css';
 import '@/components/stats/stat-charts.css';
 
@@ -15,6 +17,12 @@ type Overview = {
   organization: { id: string; name: string; plan: string; billingStatus: string };
   workspace: { id: string; name: string; defaultSourceLang: string; defaultTargetLang: string } | null;
   workspaces: { id: string; name: string }[];
+  workspaceEntitlements?: {
+    workspaceLimit: number;
+    workspaceUsed: number;
+    canCreate: boolean;
+    unlimited: boolean;
+  };
   billing: {
     planName: string;
     charactersUsed: number;
@@ -28,6 +36,14 @@ type Overview = {
     currentDeploy: { code: string; name: string; residencyLabel: string };
   };
   featureFlags: Record<string, boolean>;
+  entitlements?: {
+    name: string;
+    rank: number;
+    features: string[];
+    workspaceLimit: number;
+    workspaceUsed: number;
+    canCreateWorkspace: boolean;
+  };
   account: { role: string };
 };
 
@@ -150,7 +166,9 @@ export function DashboardClient() {
               </p>
               <p style={{ margin: '0.25rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
                 Defaults {data.workspace?.defaultSourceLang ?? '—'} → {data.workspace?.defaultTargetLang ?? '—'} ·{' '}
-                {data.workspaces.length} workspace{data.workspaces.length === 1 ? '' : 's'}
+                {data.workspaceEntitlements
+                  ? `${data.workspaceEntitlements.workspaceUsed}/${formatWorkspaceLimit(data.workspaceEntitlements.workspaceLimit)} workspaces`
+                  : `${data.workspaces.length} workspace${data.workspaces.length === 1 ? '' : 's'}`}
               </p>
             </section>
 
@@ -216,6 +234,57 @@ export function DashboardClient() {
                   { label: 'Agents', value: Math.max(4, Math.round(data.billing.requests * 0.15)) },
                   { label: 'Studio', value: Math.max(3, Math.round(data.billing.requests * 0.1)) },
                 ]}
+              />
+            </div>
+          </section>
+
+          <section className="vl-endpoint-card" aria-labelledby="dash-entitlements">
+            <h2 id="dash-entitlements" style={sectionLabel}>
+              Workspace entitlements
+            </h2>
+            <p style={{ margin: '0 0 0.75rem', color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.5 }}>
+              This workspace inherits your {data.billing.planName} subscription — features unlock with the plan,
+              ElevenLabs-style.
+            </p>
+            <ul
+              style={{
+                margin: 0,
+                padding: 0,
+                listStyle: 'none',
+                display: 'grid',
+                gap: '0.45rem',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(11rem, 1fr))',
+              }}
+            >
+              {WEB_BILLING_PLANS.flatMap((p) => p.features)
+                .filter((f, i, arr) => arr.indexOf(f) === i)
+                .map((feature) => {
+                  const on =
+                    data.entitlements?.features.includes(feature) ??
+                    Boolean(data.featureFlags[feature]);
+                  return (
+                    <li
+                      key={feature}
+                      className="vl-tag"
+                      style={{
+                        opacity: on ? 1 : 0.5,
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        gap: '0.5rem',
+                      }}
+                    >
+                      <span>{FEATURE_LABELS[feature] ?? feature}</span>
+                      <span style={{ fontWeight: 700 }}>{on ? 'On' : 'Locked'}</span>
+                    </li>
+                  );
+                })}
+            </ul>
+            <div style={{ marginTop: '0.85rem' }}>
+              <PlanGate
+                feature="marketplace"
+                currentPlan={data.organization.plan}
+                allowed={data.featureFlags.marketplace}
+                compact
               />
             </div>
           </section>

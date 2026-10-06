@@ -21,6 +21,11 @@ export type PlanDefinition = {
   characterQuota: number;
   rateLimitPerKey: number;
   rateLimitPerOrg: number;
+  /**
+   * Max workspaces per org (ElevenLabs-style seat/workspace packaging).
+   * Use -1 for unlimited (Enterprise).
+   */
+  workspaceLimit: number;
   priceLabel: string;
   priceMonthlyUsd: number | null;
   blurb: string;
@@ -48,6 +53,7 @@ function freePlan(): PlanDefinition {
     characterQuota: envQuota('BILLING_FREE_CHARACTER_QUOTA', 50_000),
     rateLimitPerKey: Number(process.env.RATE_LIMIT_FREE_PER_KEY ?? 60),
     rateLimitPerOrg: Number(process.env.RATE_LIMIT_FREE_PER_ORG ?? 120),
+    workspaceLimit: 1,
     priceLabel: '$0',
     priceMonthlyUsd: 0,
     blurb: 'Explore Lugemi speech, translate, and playground with a monthly character quota.',
@@ -63,6 +69,7 @@ function starterPlan(): PlanDefinition {
     characterQuota: envQuota('BILLING_STARTER_CHARACTER_QUOTA', 200_000),
     rateLimitPerKey: Number(process.env.RATE_LIMIT_STARTER_PER_KEY ?? 120),
     rateLimitPerOrg: Number(process.env.RATE_LIMIT_STARTER_PER_ORG ?? 300),
+    workspaceLimit: 1,
     priceLabel: '$22',
     priceMonthlyUsd: 22,
     blurb: 'Indie builders shipping first African-language agents and product voice.',
@@ -79,6 +86,7 @@ function creatorPlan(): PlanDefinition {
     characterQuota: envQuota('BILLING_CREATOR_CHARACTER_QUOTA', 500_000),
     rateLimitPerKey: Number(process.env.RATE_LIMIT_CREATOR_PER_KEY ?? 200),
     rateLimitPerOrg: Number(process.env.RATE_LIMIT_CREATOR_PER_ORG ?? 600),
+    workspaceLimit: 1,
     priceLabel: '$99',
     priceMonthlyUsd: 99,
     blurb: 'Studios and agencies — commercial use plus consent-gated voice clones.',
@@ -96,6 +104,7 @@ function proPlan(): PlanDefinition {
     characterQuota: envQuota('BILLING_PRO_CHARACTER_QUOTA', 2_000_000),
     rateLimitPerKey: Number(process.env.RATE_LIMIT_PRO_PER_KEY ?? 300),
     rateLimitPerOrg: Number(process.env.RATE_LIMIT_PRO_PER_ORG ?? 1_000),
+    workspaceLimit: 1,
     priceLabel: '$330',
     priceMonthlyUsd: 330,
     blurb: 'Production teams — marketplace, fine-tunes, higher quotas, and priority paths.',
@@ -112,6 +121,8 @@ function scalePlan(): PlanDefinition {
     characterQuota: envQuota('BILLING_SCALE_CHARACTER_QUOTA', 11_000_000),
     rateLimitPerKey: Number(process.env.RATE_LIMIT_SCALE_PER_KEY ?? 600),
     rateLimitPerOrg: Number(process.env.RATE_LIMIT_SCALE_PER_ORG ?? 3_000),
+    /** ElevenLabs Scale: 3 workspace seats for team collaboration. */
+    workspaceLimit: 3,
     priceLabel: '$1,320',
     priceMonthlyUsd: 1320,
     blurb: 'High-volume workspaces across regions with extra seats and headroom.',
@@ -136,6 +147,7 @@ function enterprisePlan(): PlanDefinition {
     characterQuota: envQuota('BILLING_ENTERPRISE_CHARACTER_QUOTA', 50_000_000),
     rateLimitPerKey: Number(process.env.RATE_LIMIT_ENTERPRISE_PER_KEY ?? 2_000),
     rateLimitPerOrg: Number(process.env.RATE_LIMIT_ENTERPRISE_PER_ORG ?? 10_000),
+    workspaceLimit: -1,
     priceLabel: 'Custom',
     priceMonthlyUsd: null,
     blurb: 'SSO, dedicated capacity, custom contracts, and Africa-first SLA packaging.',
@@ -204,6 +216,17 @@ export function isProOrAbove(orgPlanId: string): boolean {
 
 export function planHasFeature(orgPlanId: string, feature: PlanFeature): boolean {
   return planFromId(orgPlanId).features.includes(feature);
+}
+
+/** Workspace cap for a plan; -1 means unlimited. */
+export function planWorkspaceLimit(orgPlanId: string): number {
+  return planFromId(orgPlanId).workspaceLimit;
+}
+
+export function planAllowsAnotherWorkspace(orgPlanId: string, currentCount: number): boolean {
+  const limit = planWorkspaceLimit(orgPlanId);
+  if (limit < 0) return true;
+  return currentCount < limit;
 }
 
 export function rateLimitWindowSec(): number {
