@@ -95,6 +95,7 @@ export class RegistryService implements OnModuleInit, OnApplicationBootstrap {
         accents: '/v1/accents',
         locales: '/v1/locales',
         countries: '/v1/countries',
+        countryPacks: '/v1/country-packs',
         rules: '/v1/registry/rules',
         validate: '/v1/registry/validate',
         analytics: '/v1/registry/analytics',

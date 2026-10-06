@@ -87,6 +87,29 @@ export class CountryPacksService implements OnModuleInit {
   }
 
   async list(region?: string) {
+    if (!this.prisma.isReady()) {
+      const rows = COUNTRY_PACK_SEEDS.filter((p) =>
+        region ? p.region.toLowerCase() === region.toLowerCase() : true,
+      );
+      return {
+        data: rows.map((p) => ({
+          id: `seed-${p.code}`,
+          code: p.code,
+          nameEn: p.nameEn,
+          region: p.region,
+          currencyCode: p.currencyCode,
+          primaryLanguages: p.primaryLanguages,
+          bcp47Tags: p.bcp47Tags,
+          relatedDialectCodes: p.relatedDialectCodes ?? [],
+          relatedAccentCodes: p.relatedAccentCodes ?? [],
+          dateNotes: p.dateNotes,
+          numberNotes: p.numberNotes,
+          currencyNotes: p.currencyNotes,
+          culturalNotes: p.culturalNotes,
+        })),
+        note: 'Seed catalog (database unavailable).',
+      };
+    }
     const rows = await this.prisma.countryPack.findMany({
       where: region
         ? { region: { contains: region, mode: 'insensitive' } }
@@ -110,8 +133,31 @@ export class CountryPacksService implements OnModuleInit {
   }
 
   async get(code: string, opts?: { includeLocales?: boolean }) {
+    const normalized = code.trim().toUpperCase();
+    if (!this.prisma.isReady()) {
+      const seed = COUNTRY_PACK_SEEDS.find((p) => p.code === normalized);
+      if (!seed) {
+        throw new ApiException('not_found', 'Country pack not found', HttpStatus.NOT_FOUND);
+      }
+      return {
+        id: `seed-${seed.code}`,
+        code: seed.code,
+        nameEn: seed.nameEn,
+        region: seed.region,
+        currencyCode: seed.currencyCode,
+        primaryLanguages: seed.primaryLanguages,
+        bcp47Tags: seed.bcp47Tags,
+        relatedDialectCodes: seed.relatedDialectCodes ?? [],
+        relatedAccentCodes: seed.relatedAccentCodes ?? [],
+        dateNotes: seed.dateNotes,
+        numberNotes: seed.numberNotes,
+        currencyNotes: seed.currencyNotes,
+        culturalNotes: seed.culturalNotes,
+        ...(opts?.includeLocales ? { localePacks: [], note: 'Seed catalog (database unavailable).' } : {}),
+      };
+    }
     const row = await this.prisma.countryPack.findUnique({
-      where: { code: code.trim().toUpperCase() },
+      where: { code: normalized },
     });
     if (!row) {
       throw new ApiException('not_found', 'Country pack not found', HttpStatus.NOT_FOUND);
