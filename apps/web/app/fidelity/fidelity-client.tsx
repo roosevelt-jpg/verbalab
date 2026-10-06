@@ -3,6 +3,8 @@
 import { FormEvent, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { PortfolioShell } from '@/components/portfolio/portfolio-shell';
+import { LocaleSelect } from '@/components/language-locale-select';
+import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
 type VerifyResult = {
   decision: string;
@@ -21,6 +23,7 @@ type ClarifyResult = {
 };
 
 export function FidelityClient() {
+  const catalog = useLocaleCatalog();
   const [apiKey, setApiKey] = useState('');
   const [source, setSource] = useState('I did not approve the transfer of 500');
   const [target, setTarget] = useState('I approved the transfer of 5,000');
@@ -93,18 +96,29 @@ export function FidelityClient() {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
           <label style={{ display: 'grid', gap: '0.25rem' }}>
             <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Source language</span>
-            <input className="vl-field" value={sourceLanguage} onChange={(e) => setSourceLanguage(e.target.value)} list="fid-langs" />
+            <LocaleSelect
+              className="vl-field"
+              value={sourceLanguage}
+              onChange={setSourceLanguage}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+            />
           </label>
           <label style={{ display: 'grid', gap: '0.25rem' }}>
             <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Target language</span>
-            <input className="vl-field" value={targetLanguage} onChange={(e) => setTargetLanguage(e.target.value)} list="fid-langs" />
+            <LocaleSelect
+              className="vl-field"
+              value={targetLanguage}
+              onChange={setTargetLanguage}
+              languages={catalog.languages}
+              locales={catalog.locales}
+              dialects={catalog.dialects}
+              accents={catalog.accents}
+            />
           </label>
         </div>
-        <datalist id="fid-langs">
-          {['en','ak','yo','sw','ha','ig','am','ee','zu','fr','ar','pt'].map((c) => (
-            <option key={c} value={c} />
-          ))}
-        </datalist>
         <label style={{ display: 'grid', gap: '0.25rem' }}>
           <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Source</span>
           <textarea className="vl-field" rows={2} value={source} onChange={(e) => setSource(e.target.value)} />
