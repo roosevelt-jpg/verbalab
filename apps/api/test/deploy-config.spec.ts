@@ -14,7 +14,7 @@ describe('Production deploy config', () => {
   it('configures Fly API release migrate and health check', () => {
     const toml = readFileSync(join(root, 'infra/fly/api.toml'), 'utf8');
     expect(toml).toContain("app = 'lugemi-api'");
-    expect(toml).toContain('prisma migrate deploy');
+    expect(toml).toContain('fly-migrate.sh');
     expect(toml).toContain("path = '/health'");
   });
 

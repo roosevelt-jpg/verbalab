@@ -59,7 +59,7 @@ fly deploy -c infra/fly/web.toml --dockerfile apps/web/Dockerfile \
   --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_...
 ```
 
-API **release_command** runs `pnpm db:migrate` (`prisma migrate deploy`) before each new release replaces machines.
+API **release_command** runs `/bin/sh /app/apps/api/scripts/fly-migrate.sh` (`prisma migrate deploy` when `DATABASE_URL` is set; soft-skips when unset). See `docs/fly.md`.
 
 ## Migrations
 

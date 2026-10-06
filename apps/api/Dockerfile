@@ -27,8 +27,11 @@ COPY --from=build /app/package.json /app/pnpm-lock.yaml /app/pnpm-workspace.yaml
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/packages ./packages
 COPY --from=build /app/apps/api ./apps/api
+RUN chmod +x /app/apps/api/scripts/docker-entrypoint.sh /app/apps/api/scripts/fly-migrate.sh
 WORKDIR /app
 EXPOSE 3001
 HEALTHCHECK --interval=15s --timeout=5s --start-period=20s --retries=3 \
-  CMD node -e "fetch('http://127.0.0.1:3001/health').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+  CMD node -e "const p=process.env.PORT||process.env.API_PORT||3001;fetch('http://127.0.0.1:'+p+'/health').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+ENTRYPOINT ["/app/apps/api/scripts/docker-entrypoint.sh"]
+# Nest binds 0.0.0.0:$PORT (see apps/api/src/main.ts); Fly sets PORT (default 3001 here).
 CMD ["node", "apps/api/dist/main.js"]

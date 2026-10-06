@@ -14,54 +14,22 @@ Fly dashboard launch of a single app named **verbalab** failed with “Could not
 
 - **Primary region:** `jnb` (Johannesburg)
 - Health checks: `GET /health` on both services
+- Nest listens on `0.0.0.0:$PORT` (`PORT` / `API_PORT`, default **3001** in Fly `[env]`)
 - Legacy US/EU islands remain in `infra/fly/api.toml`, `web.toml`, `*.eu.toml` (`lugemi-*` app names)
 
-## What to do in the Fly UI (existing `verbalab` app)
+## Required secrets before a healthy API
 
-1. Pull / reconnect the GitHub repo so Fly sees the new root **`Dockerfile`** and **`fly.toml`**.
-2. If the empty Dockerfile editor is still open: leave it empty or paste the root `Dockerfile`, then click **“Dockerfile ready, lets go!”** — Fly should now detect the root Dockerfile from git.
-3. After the first successful API deploy, create the second app for the console (recommended):
+Set these **before** expecting migrations or DB-backed routes to work. A deploy can still succeed without `DATABASE_URL` (migrate soft-skips); the process will boot, but Prisma-backed handlers will fail until Postgres is configured.
 
-```bash
-fly apps create verbalab-api   # or rename/reuse verbalab as the API
-fly apps create verbalab-web
-```
-
-If you keep the single dashboard app `verbalab`, it runs the **API** on port **3001**. Deploy web separately as `verbalab-web`.
-
-## CLI deploy (preferred two apps)
-
-From the **repository root** (pnpm lockfile + workspace packages must be in the build context):
+### API (`verbalab` or `verbalab-api`) — set first
 
 ```bash
-fly auth login
+# Minimum for migrate + schema:
+fly secrets set -a verbalab \
+  DATABASE_URL='postgresql://USER:PASS@HOST:5432/DB?sslmode=require'
 
-fly apps create verbalab-api
-fly apps create verbalab-web
-
-# API
-fly deploy -c infra/fly/api.jnb.toml --dockerfile apps/api/Dockerfile
-
-# Web (bake public env at build time)
-fly deploy -c infra/fly/web.jnb.toml --dockerfile apps/web/Dockerfile \
-  --build-arg NEXT_PUBLIC_API_URL=https://verbalab-api.fly.dev \
-  --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_...
-```
-
-Equivalent configs: `apps/api/fly.toml` / `apps/web/fly.toml` (pass `--dockerfile apps/.../Dockerfile` from repo root).
-
-Single-app dashboard path:
-
-```bash
-fly deploy -c fly.toml
-```
-
-## Secrets
-
-### API (`verbalab` or `verbalab-api`)
-
-```bash
-fly secrets set -a verbalab-api \
+# Recommended production set:
+fly secrets set -a verbalab \
   DATABASE_URL='postgresql://...' \
   REDIS_URL='redis://...' \
   CORS_ORIGIN='https://verbalab-web.fly.dev' \
@@ -74,9 +42,29 @@ fly secrets set -a verbalab-api \
   BILLING_PORTAL_RETURN_URL='https://verbalab-web.fly.dev/billing'
 ```
 
+Use `-a verbalab-api` when deploying the preferred two-app layout.
+
+Optional: `MIGRATE_STRICT=1` makes migrate failures abort release/boot (default is soft-fail so a bad DB URL does not brick the Fly release step).
+
 Also set any legacy adapter keys you use (`GOOGLE_TRANSLATE_API_KEY`, `OPENAI_API_KEY`, `OWN_TTS_URL`, …). Full list: `.env.example`.
 
-`release_command` runs `prisma migrate deploy` before machines swap.
+### What `release_command` does
+
+Fly runs **before** swapping machines:
+
+```text
+/bin/sh /app/apps/api/scripts/fly-migrate.sh
+```
+
+Behavior (`apps/api/scripts/fly-migrate.sh`):
+
+1. If **`DATABASE_URL` is unset** → logs a clear skip message and **exits 0** (first boot without Postgres still deploys).
+2. If set → runs the image’s `prisma` CLI: `prisma migrate deploy --schema=/app/apps/api/prisma/schema.prisma`.
+3. On migrate failure → **soft-fails (exit 0)** unless `MIGRATE_STRICT=1`.
+
+The same script runs again from the Docker **entrypoint** before `node apps/api/dist/main.js`, so machines that skip release still attempt migrate on boot.
+
+`prisma` is a **production** dependency of `@lugemi/api` so `NODE_ENV=production` can still resolve the CLI (the old `pnpm --filter … exec prisma` release command failed when the CLI was only a devDependency).
 
 ### Web (`verbalab-web`)
 
@@ -93,12 +81,58 @@ Browser-visible values are **build args** (not secrets):
 
 Point the web app at the API hostname — do **not** use localhost in production.
 
+## What to do in the Fly UI (existing `verbalab` app)
+
+1. Set **`DATABASE_URL`** (and other secrets above) on the app.
+2. Pull / reconnect the GitHub repo so Fly sees the latest root **`Dockerfile`** and **`fly.toml`**.
+3. Use **Retry from latest commit (main)** after this fix lands on `main`.
+4. After the first successful API deploy, create the second app for the console (recommended):
+
+```bash
+fly apps create verbalab-api   # or rename/reuse verbalab as the API
+fly apps create verbalab-web
+```
+
+If you keep the single dashboard app `verbalab`, it runs the **API** on port **3001**. Deploy web separately as `verbalab-web`.
+
+If the Fly account shows **Suspended**, unsuspend/billing must be fixed on Fly’s side before any retry succeeds — configs here only fix the release_command / migrate path.
+
+## CLI deploy (preferred two apps)
+
+From the **repository root** (pnpm lockfile + workspace packages must be in the build context):
+
+```bash
+fly auth login
+
+fly apps create verbalab-api
+fly apps create verbalab-web
+
+# API — set DATABASE_URL first (see secrets above)
+fly deploy -c infra/fly/api.jnb.toml --dockerfile apps/api/Dockerfile
+
+# Web (bake public env at build time)
+fly deploy -c infra/fly/web.jnb.toml --dockerfile apps/web/Dockerfile \
+  --build-arg NEXT_PUBLIC_API_URL=https://verbalab-api.fly.dev \
+  --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_...
+```
+
+Equivalent configs: `apps/api/fly.toml` / `apps/web/fly.toml` (pass `--dockerfile apps/.../Dockerfile` from repo root).
+
+Single-app dashboard path:
+
+```bash
+fly deploy -c fly.toml
+```
+
 ## Local Docker dry-run
 
 ```bash
 docker build -t verbalab-api .
 docker build -f apps/web/Dockerfile -t verbalab-web \
   --build-arg NEXT_PUBLIC_API_URL=http://localhost:3001 .
+
+# Migrate soft-skips without DATABASE_URL; Nest still starts on 0.0.0.0:3001
+docker run --rm -e PORT=3001 -p 3001:3001 verbalab-api
 ```
 
 ## Why monorepo Dockerfiles copy the workspace

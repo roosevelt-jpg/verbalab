@@ -8,7 +8,8 @@ primary_region = 'ams'
   dockerfile = 'apps/api/Dockerfile'
 
 [deploy]
-  release_command = 'pnpm --filter @lugemi/api exec prisma migrate deploy'
+  # Soft-skips when DATABASE_URL unset; applies prisma migrate deploy when set.
+  release_command = '/bin/sh /app/apps/api/scripts/fly-migrate.sh'
 
 [env]
   NODE_ENV = 'production'

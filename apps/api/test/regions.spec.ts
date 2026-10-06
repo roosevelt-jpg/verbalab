@@ -67,7 +67,7 @@ describe('Multi-region residency', () => {
     expect(eu).toContain("app = 'lugemi-api-eu'");
     expect(eu).toContain("primary_region = 'ams'");
     expect(eu).toContain("LUGEMI_REGION = 'eu'");
-    expect(eu).toContain('prisma migrate deploy');
+    expect(eu).toContain('fly-migrate.sh');
   });
 
   it('ships Africa jnb Fly configs for verbalab (not a mesh)', () => {
@@ -79,10 +79,12 @@ describe('Multi-region residency', () => {
     expect(af).toContain("app = 'verbalab-api'");
     expect(af).toContain("primary_region = 'jnb'");
     expect(af).toContain("LUGEMI_REGION = 'af'");
-    expect(af).toContain('prisma migrate deploy');
+    expect(af).toContain('fly-migrate.sh');
     const rootFly = readFileSync(join(root, 'fly.toml'), 'utf8');
     expect(rootFly).toContain("app = 'verbalab'");
     expect(rootFly).toContain("primary_region = 'jnb'");
+    expect(rootFly).toContain('fly-migrate.sh');
+    expect(existsSync(join(root, 'apps/api/scripts/fly-migrate.sh'))).toBe(true);
   });
 
   it('GET /v1/regions is public and health reports region', async () => {
