@@ -1,4 +1,8 @@
 import { EDGE_PACK_COUNT } from './edge.packs';
+import {
+  PORTFOLIO_COUNTRIES_COVERED,
+  PORTFOLIO_COUNTRY_PACK_TOTAL,
+} from '../portfolio/portfolio.corridors';
 
 export function edgeCatalog() {
   return {
@@ -8,10 +12,11 @@ export function edgeCatalog() {
     family: 'Edge + Echo + Translate + Voice',
     note:
       'Verified offline speech-translation packs for declared device classes. Modes: local | cloud_allowed | cloud_forbidden. No silent cloud fallback when cloud is forbidden.',
-    catalog_note:
-      `Full registry catalog (${EDGE_PACK_COUNT} language↔English packs). Packs are local/demo signed manifests until real on-device weights ship. Peak RAM is a measured budget subject to quality review.`,
+    catalog_note: `Full country-pack corridor catalog (${EDGE_PACK_COUNT} packs across ${PORTFOLIO_COUNTRIES_COVERED} of ${PORTFOLIO_COUNTRY_PACK_TOTAL} countries). Packs are local/demo signed manifests until real on-device weights ship. Peak RAM is a measured budget subject to quality review — not a claim that every corridor is production-evaluated.`,
     modes: ['local', 'cloud_allowed', 'cloud_forbidden'],
     pack_count: EDGE_PACK_COUNT,
+    countries_covered: PORTFOLIO_COUNTRIES_COVERED,
+    country_pack_total: PORTFOLIO_COUNTRY_PACK_TOTAL,
     device_scope: {
       classes: ['android-4gb', 'android-6gb', 'ios-4gb'],
       peak_ram_budget_mb: 2048,

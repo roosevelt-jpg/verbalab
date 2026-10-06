@@ -143,7 +143,7 @@ export class CorridorBenchmarksService {
       pilot_corridors: PORTFOLIO_PILOT_CORRIDORS,
       corridor_count: PORTFOLIO_PILOT_CORRIDORS.length,
       note_corridors:
-        'Full registry language↔English corridors. Strategic evaluated varieties are marked; catalog membership enables selection.',
+        'Full country-pack language↔English corridors. Evaluation depth varies — only design-partner varieties are marked evaluated; catalog membership enables selection.',
     };
   }
 

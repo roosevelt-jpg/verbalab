@@ -55,9 +55,9 @@ const CURATED_OVERRIDES: Record<string, CuratedOverride> = {
       'Coastal Swahili norms; respectful address (Mheshimiwa) in public-sector copy.',
   },
   NG: {
-    primaryLanguages: ['en', 'yo', 'ha'],
-    bcp47Tags: ['en-NG', 'yo-NG', 'ha-NG'],
-    relatedDialectCodes: ['en-ng', 'yo-ng', 'ha-ng'],
+    primaryLanguages: ['en', 'yo', 'ha', 'ig', 'pcm'],
+    bcp47Tags: ['en-NG', 'yo-NG', 'ha-NG', 'ig-NG', 'pcm-NG'],
+    relatedDialectCodes: ['en-ng', 'yo-ng', 'ha-ng', 'ig-ng'],
     relatedAccentCodes: ['en-ng', 'ha-ng'],
     dateNotes: 'DMY common in administration.',
     numberNotes: 'Arabic digits; naira amounts often use ₦.',
@@ -66,15 +66,15 @@ const CURATED_OVERRIDES: Record<string, CuratedOverride> = {
       'Multilingual federation; tone marks matter in formal Yoruba; English is a bridge language.',
   },
   GH: {
-    primaryLanguages: ['en'],
-    bcp47Tags: ['en-GH'],
+    primaryLanguages: ['en', 'ak', 'ee'],
+    bcp47Tags: ['en-GH', 'ak-GH-twi', 'ee-GH'],
     relatedDialectCodes: [],
     relatedAccentCodes: ['en-gh'],
     dateNotes: 'DMY common.',
     numberNotes: 'Arabic digits.',
     currencyNotes: 'Ghanaian cedi (GH₵ / GHS).',
     culturalNotes:
-      'English official; local languages appear in community contexts — keep brand names stable.',
+      'English official; Akan (Twi), Ewe, and other local languages appear in community contexts — keep brand names stable.',
   },
   ZA: {
     primaryLanguages: ['en', 'zu', 'af'],
@@ -183,16 +183,22 @@ function composePack(country: IsoCountryDef, localeIndex: Map<string, LocaleInde
   const fromLocales = locale ? [...locale.languages].filter((c) => LANGUAGE_CODES.has(c)) : [];
   const fromOfficial = country.officialLanguages.filter((c) => LANGUAGE_CODES.has(c));
 
-  let primaryLanguages =
+  // Curated overrides keep priority ordering; always union locale/official languages
+  // so country↔corridor catalogs are not truncated by thin curated lists.
+  const baseLanguages =
     override?.primaryLanguages ??
     (fromOfficial.length > 0 ? fromOfficial : fromLocales.slice(0, 6));
+  let primaryLanguages = [
+    ...new Set([...baseLanguages, ...fromOfficial, ...fromLocales]),
+  ].filter((c) => LANGUAGE_CODES.has(c));
 
   const bcp47FromLocales = locale ? [...locale.tags].sort() : [];
-  let bcp47Tags =
+  const baseTags =
     override?.bcp47Tags ??
     (bcp47FromLocales.length > 0
       ? bcp47FromLocales
       : primaryLanguages.map((lang) => `${lang}-${country.code}`));
+  let bcp47Tags = [...new Set([...baseTags, ...bcp47FromLocales])];
 
   if (primaryLanguages.length === 0 && bcp47Tags.length === 0) {
     primaryLanguages = [];

@@ -3,7 +3,10 @@ import { portfolioCatalog } from './portfolio.catalog';
 import {
   PORTFOLIO_CORRIDORS,
   PORTFOLIO_CORRIDOR_COUNT,
-} from './portfolio.meta';
+  PORTFOLIO_COUNTRIES_COVERED,
+  PORTFOLIO_COUNTRY_PACK_TOTAL,
+  portfolioCountrySummaries,
+} from './portfolio.corridors';
 
 @Controller('v1/portfolio')
 export class PortfolioController {
@@ -13,23 +16,66 @@ export class PortfolioController {
   }
 
   @Get('corridors')
-  corridors(@Query('q') q?: string) {
+  corridors(
+    @Query('q') q?: string,
+    @Query('country') country?: string,
+    @Query('region') region?: string,
+  ) {
     const needle = q?.trim().toLowerCase();
-    const corridors = needle
-      ? PORTFOLIO_CORRIDORS.filter(
-          (c) =>
-            c.id.includes(needle) ||
-            c.label.toLowerCase().includes(needle) ||
-            c.languageCode.includes(needle) ||
-            c.varietyId.toLowerCase().includes(needle) ||
-            (c.nameNative?.toLowerCase().includes(needle) ?? false),
-        )
-      : PORTFOLIO_CORRIDORS;
+    const countryNeedle = country?.trim().toLowerCase();
+    const regionNeedle = region?.trim().toLowerCase();
+
+    let corridors = PORTFOLIO_CORRIDORS;
+    if (countryNeedle) {
+      corridors = corridors.filter(
+        (c) =>
+          c.countryCode.toLowerCase() === countryNeedle ||
+          c.countryName.toLowerCase().includes(countryNeedle),
+      );
+    }
+    if (regionNeedle) {
+      corridors = corridors.filter((c) => c.region.toLowerCase().includes(regionNeedle));
+    }
+    if (needle) {
+      corridors = corridors.filter(
+        (c) =>
+          c.id.includes(needle) ||
+          c.label.toLowerCase().includes(needle) ||
+          c.languageCode.includes(needle) ||
+          c.varietyId.toLowerCase().includes(needle) ||
+          c.countryCode.toLowerCase().includes(needle) ||
+          c.countryName.toLowerCase().includes(needle) ||
+          c.region.toLowerCase().includes(needle) ||
+          (c.nameNative?.toLowerCase().includes(needle) ?? false),
+      );
+    }
+
+    const countries = portfolioCountrySummaries().filter((row) => {
+      if (countryNeedle) {
+        return (
+          row.code.toLowerCase() === countryNeedle ||
+          row.nameEn.toLowerCase().includes(countryNeedle)
+        );
+      }
+      if (regionNeedle) return row.region.toLowerCase().includes(regionNeedle);
+      if (needle) {
+        return (
+          row.code.toLowerCase().includes(needle) ||
+          row.nameEn.toLowerCase().includes(needle) ||
+          row.region.toLowerCase().includes(needle)
+        );
+      }
+      return true;
+    });
+
     return {
       corridors,
       count: corridors.length,
       total: PORTFOLIO_CORRIDOR_COUNT,
-      note: `Full registry corridors (${PORTFOLIO_CORRIDOR_COUNT} language↔English). Strategic varieties are marked evaluated; catalog membership enables selection — not a claim of production on-device quality.`,
+      countries,
+      countries_covered: PORTFOLIO_COUNTRIES_COVERED,
+      country_pack_total: PORTFOLIO_COUNTRY_PACK_TOTAL,
+      note: `Full country-pack catalog: ${PORTFOLIO_CORRIDOR_COUNT} language↔English corridors across ${PORTFOLIO_COUNTRIES_COVERED} of ${PORTFOLIO_COUNTRY_PACK_TOTAL} countries. Filter with ?country= or ?q=. Evaluation depth varies — only design-partner varieties are marked evaluated; catalog membership is not a claim that every corridor is evaluated.`,
     };
   }
 }

@@ -568,9 +568,37 @@ export const openApiDocument = {
     },
     '/v1/portfolio/corridors': {
       get: {
-        summary: 'Pilot corridors for Verified Interpreter',
+        summary: 'Country-pack language↔English corridors for Verified Interpreter',
         operationId: 'getPortfolioCorridors',
-        responses: { '200': { description: 'Corridor list' } },
+        parameters: [
+          {
+            name: 'q',
+            in: 'query',
+            required: false,
+            schema: { type: 'string' },
+            description: 'Search label, language, variety, or country',
+          },
+          {
+            name: 'country',
+            in: 'query',
+            required: false,
+            schema: { type: 'string' },
+            description: 'ISO country code or country name filter',
+          },
+          {
+            name: 'region',
+            in: 'query',
+            required: false,
+            schema: { type: 'string' },
+            description: 'Region substring filter',
+          },
+        ],
+        responses: {
+          '200': {
+            description:
+              'Full country-pack corridor list (evaluation depth varies; not all corridors are evaluated)',
+          },
+        },
       },
     },
     '/v1/mix/engine': {
