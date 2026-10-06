@@ -1,6 +1,8 @@
-# VerbaLab AI
+# Lugemi
 
-Enterprise language-intelligence platform. See `ROADMAP.md` and `PROGRESS.md` for phase gating.
+Africa-first language intelligence platform (public brand). Site: [lugemi.com](https://lugemi.com).
+
+The repository and APIs still use the historical VerbaLab package names. See `docs/brand/LUGEMI_BRAND_GUIDELINES.md`.
 
 ## Prerequisites
 
@@ -90,7 +92,7 @@ Playwright signed-in translate (optional): set `E2E_CLERK_USER_EMAIL` + `E2E_CLE
 
 ## Vercel (web console)
 
-The Next.js console (`apps/web`) is configured for Vercel. The Nest API stays on Fly / Docker — do not set this repo’s Root Directory to `apps/api`.
+Production hostname: **lugemi.com**. The Next.js console (`apps/web`) is configured for Vercel. The Nest API stays on Fly / Docker — do not set this repo’s Root Directory to `apps/api`.
 
 1. Open [Import Git Repository](https://vercel.com/new/import) and select `roosevelt-jpg/verbalab` (the Vercel GitHub App is already installed on the account).
 2. Confirm **Root Directory** is `apps/web` (also set in root `vercel.json`).

@@ -56,7 +56,7 @@ export function DevelopersClient() {
         Developers
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '40rem' }}>
-        Integrate VerbaLab with API keys, the TypeScript SDK, CLI, OpenAPI, and the playground. Soft{' '}
+        Integrate Lugemi with API keys, the TypeScript SDK, CLI, OpenAPI, and the playground. Soft{' '}
         <code className="vl-code">vl_test_</code> keys share this cluster and quota — not a separate sandbox plane.
       </p>
 

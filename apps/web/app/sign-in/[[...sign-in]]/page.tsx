@@ -11,7 +11,7 @@ export default function SignInPage() {
       <SignIn />
       <p style={{ color: 'var(--muted)', fontSize: '0.9rem' }}>
         Stuck on email OTP?{' '}
-        <Link href="/dev-login" style={{ color: '#0f766e', fontWeight: 650 }}>
+        <Link href="/dev-login" style={{ color: 'var(--action-primary)', fontWeight: 650 }}>
           Use local password/ticket login
         </Link>
       </p>

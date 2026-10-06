@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { API_URL } from '@/lib/api';
+import { BrandMark } from '@/components/brand-mark';
 
 export default function DocsPage() {
   const [specUrl, setSpecUrl] = useState(`${API_URL}/v1/openapi.json`);
@@ -23,9 +24,7 @@ export default function DocsPage() {
   return (
     <div className="vl-fade-up" style={{ maxWidth: '56rem', margin: '0 auto', padding: '2.25rem 1.5rem 4rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
-        <Link href="/" style={{ fontFamily: 'var(--font-display)', fontWeight: 760, textDecoration: 'none', fontSize: '1.15rem' }}>
-          VerbaLab
-        </Link>
+        <BrandMark href="/" />
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
           <Link href="/playground" style={{ color: 'var(--muted)', textDecoration: 'none' }}>
             Playground
@@ -43,7 +42,7 @@ export default function DocsPage() {
         API documentation
       </h1>
       <p style={{ color: 'var(--muted)', lineHeight: 1.65, maxWidth: '38rem' }}>
-        Machine-readable OpenAPI for the VerbaLab API (translate, media, jobs, knowledge, and more). Authenticate
+        Machine-readable OpenAPI for the Lugemi API (translate, media, jobs, knowledge, and more). Authenticate
         product calls with <code className="vl-code">Authorization: Bearer vl_live_...</code> or soft-sandbox{' '}
         <code className="vl-code">vl_test_...</code>. Hub: <Link href="/developers">/developers</Link>.
       </p>

@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { UserButton } from '@clerk/nextjs';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { WorkspaceSwitcher } from '@/components/workspace-switcher';
+import { BrandMark } from '@/components/brand-mark';
 
 const links = [
   { href: '/dashboard', label: 'Dashboard' },
@@ -246,18 +247,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '1.75rem' }}>
-          <Link
-            href="/dashboard"
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontWeight: 760,
-              fontSize: '1.15rem',
-              textDecoration: 'none',
-              letterSpacing: '-0.02em',
-            }}
-          >
-            VerbaLab
-          </Link>
+          <BrandMark href="/dashboard" />
           <nav style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap' }}>
             {links.map((link) => {
               const active = pathname === link.href || pathname.startsWith(`${link.href}/`);

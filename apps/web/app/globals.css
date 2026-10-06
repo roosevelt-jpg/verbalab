@@ -1,24 +1,47 @@
 @import 'tailwindcss';
 
 :root {
-  --bg: #ffffff;
-  --bg-soft: #f7f7f8;
-  --bg-elevated: #ffffff;
-  --ink: #0a0a0a;
-  --muted: #6b6b76;
-  --line: #ebebef;
-  --line-strong: #d8d8de;
-  --accent: #0a0a0a;
-  --accent-fg: #ffffff;
-  --brand: #1a6b52;
-  --brand-soft: rgba(26, 107, 82, 0.08);
-  --ok: #1a6b52;
-  --bad: #c23b2e;
-  --shadow: 0 1px 2px rgba(10, 10, 10, 0.04), 0 12px 40px rgba(10, 10, 10, 0.06);
-  --radius: 14px;
-  --radius-lg: 22px;
-  --font-display: var(--font-display), 'Avenir Next', sans-serif;
-  --font-body: var(--font-body), 'Avenir Next', sans-serif;
+  --brand-navy: #10264d;
+  --brand-teal: #00b8ae;
+  --action-primary: #007c78;
+  --on-action-primary: #ffffff;
+  --text-primary: #172b4d;
+  --text-secondary: #52647a;
+  --surface-canvas: #ffffff;
+  --surface-muted: #f4f8fa;
+  --border-subtle: #cbd5e1;
+  --radius-control: 8px;
+  --radius-card: 12px;
+  --font-ui: var(--font-noto), 'Noto Sans', system-ui, sans-serif;
+  --font-mono: var(--font-noto-mono), 'Noto Sans Mono', ui-monospace, monospace;
+
+  --bg: var(--surface-canvas);
+  --bg-soft: var(--surface-muted);
+  --bg-elevated: var(--surface-canvas);
+  --ink: var(--text-primary);
+  --muted: var(--text-secondary);
+  --line: var(--border-subtle);
+  --line-strong: #94a3b8;
+  --accent: var(--action-primary);
+  --accent-fg: var(--on-action-primary);
+  --brand: var(--brand-teal);
+  --brand-soft: rgba(0, 184, 174, 0.12);
+  --ok: #16794a;
+  --bad: #b42318;
+  --shadow: 0 1px 2px rgba(16, 38, 77, 0.04), 0 12px 40px rgba(16, 38, 77, 0.08);
+  --radius: var(--radius-card);
+  --radius-lg: 12px;
+  --font-display: var(--font-ui);
+  --font-body: var(--font-ui);
+}
+
+[data-theme='dark'] {
+  --action-primary: #00b8ae;
+  --on-action-primary: #10264d;
+  --text-primary: #f7fafc;
+  --text-secondary: #b6c3d5;
+  --surface-canvas: #0b1426;
+  --surface-muted: #12213a;
 }
 
 * {
@@ -32,11 +55,11 @@ body {
 }
 
 body {
-  font-family: var(--font-body);
-  color: var(--ink);
+  font-family: var(--font-ui);
+  color: var(--text-primary);
   background:
-    radial-gradient(ellipse 70% 45% at 50% -20%, rgba(26, 107, 82, 0.07), transparent 55%),
-    var(--bg);
+    radial-gradient(ellipse 70% 45% at 50% -20%, rgba(0, 184, 174, 0.1), transparent 55%),
+    var(--surface-canvas);
   -webkit-font-smoothing: antialiased;
 }
 
@@ -52,7 +75,7 @@ textarea {
 }
 
 ::selection {
-  background: rgba(26, 107, 82, 0.18);
+  background: rgba(0, 124, 120, 0.18);
 }
 
 @keyframes vl-fade-up {
@@ -76,12 +99,19 @@ textarea {
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .vl-fade-up,
+  .vl-fade-up-delay {
+    animation: none;
+  }
+}
+
 .vl-fade-up {
-  animation: vl-fade-up 0.55s ease both;
+  animation: vl-fade-up 0.2s ease-out both;
 }
 
 .vl-fade-up-delay {
-  animation: vl-fade-up 0.65s ease 0.08s both;
+  animation: vl-fade-up 0.24s ease-out 0.08s both;
 }
 
 .vl-btn {
@@ -91,68 +121,69 @@ textarea {
   gap: 0.4rem;
   border: none;
   cursor: pointer;
-  border-radius: 999px;
+  border-radius: var(--radius-control);
   padding: 0.7rem 1.15rem;
+  min-height: 44px;
   font-weight: 600;
   font-size: 0.925rem;
-  transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+  transition: background 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
 }
 
-.vl-btn:hover {
-  transform: translateY(-1px);
+.vl-btn:focus-visible {
+  outline: 2px solid var(--action-primary);
+  outline-offset: 2px;
 }
 
 .vl-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  transform: none;
 }
 
 .vl-btn-primary {
-  background: var(--accent);
-  color: var(--accent-fg);
+  background: var(--action-primary);
+  color: var(--on-action-primary);
 }
 
 .vl-btn-primary:hover {
-  background: #222;
+  background: #006863;
 }
 
 .vl-btn-secondary {
-  background: var(--bg);
-  color: var(--ink);
-  border: 1px solid var(--line-strong);
+  background: var(--surface-canvas);
+  color: var(--brand-navy);
+  border: 1px solid var(--border-subtle);
 }
 
 .vl-btn-secondary:hover {
-  background: var(--bg-soft);
+  background: var(--surface-muted);
 }
 
 .vl-btn-danger {
   background: transparent;
   color: var(--bad);
-  border: 1px solid var(--line);
+  border: 1px solid var(--border-subtle);
 }
 
 .vl-field {
   width: 100%;
   padding: 0.8rem 0.95rem;
-  border-radius: 12px;
-  border: 1px solid var(--line);
-  background: var(--bg);
-  color: var(--ink);
+  border-radius: var(--radius-control);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-canvas);
+  color: var(--text-primary);
   outline: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .vl-field:focus {
-  border-color: #b8b8c0;
-  box-shadow: 0 0 0 3px rgba(10, 10, 10, 0.06);
+  border-color: var(--action-primary);
+  box-shadow: 0 0 0 3px rgba(0, 124, 120, 0.18);
 }
 
 .vl-panel {
   background: var(--bg-elevated);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-card);
   box-shadow: var(--shadow);
 }
 
@@ -160,12 +191,23 @@ textarea {
   display: grid;
   gap: 0.4rem;
   font-size: 0.85rem;
-  color: var(--muted);
+  color: var(--text-secondary);
 }
 
 .vl-code {
-  font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+  font-family: var(--font-mono);
   font-size: 0.85rem;
+}
+
+.vl-tag {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: var(--brand-soft);
+  color: var(--brand-navy);
 }
 
 @media (max-width: 800px) {

@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { FormEvent, useEffect, useState } from 'react';
 import { API_URL, apiFetch } from '@/lib/api';
+import { BrandMark } from '@/components/brand-mark';
 
 type Language = { code: string; name: string };
 type Mode = 'translate' | 'detect' | 'languages';
@@ -182,9 +183,7 @@ export function PlaygroundClient() {
 function PublicHeader() {
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
-      <Link href="/" style={{ fontFamily: 'var(--font-display)', fontWeight: 760, textDecoration: 'none', fontSize: '1.15rem' }}>
-        VerbaLab
-      </Link>
+      <BrandMark href="/" />
       <div style={{ display: 'flex', gap: '0.75rem' }}>
         <Link href="/docs" style={{ color: 'var(--muted)', textDecoration: 'none' }}>
           Docs

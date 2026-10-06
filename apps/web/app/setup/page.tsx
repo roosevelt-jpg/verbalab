@@ -2,7 +2,7 @@ export default function SetupPage() {
   return (
     <main style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', padding: '2rem' }}>
       <div className="vl-panel vl-fade-up" style={{ maxWidth: '40rem', padding: '2rem' }}>
-        <p style={{ margin: 0, color: 'var(--brand)', fontWeight: 600, fontSize: '0.8rem', letterSpacing: '0.08em' }}>
+        <p style={{ margin: 0, color: 'var(--action-primary)', fontWeight: 600, fontSize: '0.8rem', letterSpacing: '0.08em' }}>
           SETUP
         </p>
         <h1 style={{ fontFamily: 'var(--font-display)', letterSpacing: '-0.03em', margin: '0.5rem 0 0.75rem' }}>
