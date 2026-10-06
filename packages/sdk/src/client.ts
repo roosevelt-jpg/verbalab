@@ -101,6 +101,35 @@ type ErrorBody = {
   error?: { code?: string; message?: string; request_id?: string };
 };
 
+type FetchBody =
+  | string
+  | Blob
+  | FormData
+  | ArrayBuffer
+  | URLSearchParams
+  | ReadableStream<Uint8Array>;
+
+/** RequestInit with JSON-serializable body objects (mirrors web apiFetch). */
+type JsonRequestInit = Omit<RequestInit, 'body'> & {
+  body?: FetchBody | Record<string, unknown> | unknown[] | null;
+};
+
+function serializeJsonBody(body: JsonRequestInit['body']): FetchBody | undefined {
+  if (body == null) return undefined;
+  if (
+    typeof body === 'string' ||
+    body instanceof Blob ||
+    body instanceof FormData ||
+    body instanceof ArrayBuffer ||
+    ArrayBuffer.isView(body) ||
+    body instanceof URLSearchParams ||
+    (typeof ReadableStream !== 'undefined' && body instanceof ReadableStream)
+  ) {
+    return body;
+  }
+  return JSON.stringify(body);
+}
+
 function toBlob(file: UploadFile): Blob {
   if (file.data instanceof Blob) {
     return file.contentType && file.data.type !== file.contentType
@@ -5170,14 +5199,16 @@ export class Lugemi {
     return this.requestForm<InterpretResponse>('/v1/interpret', form);
   }
 
-  private async requestJson<T>(path: string, init: RequestInit): Promise<T> {
+  private async requestJson<T>(path: string, init: JsonRequestInit = {}): Promise<T> {
+    const { body, headers, ...rest } = init;
     const response = await this.fetchImpl(`${this.baseUrl}${path}`, {
-      ...init,
+      ...rest,
+      body: serializeJsonBody(body),
       headers: {
         Authorization: `Bearer ${this.apiKey}`,
         'Content-Type': 'application/json',
         Accept: 'application/json',
-        ...(init.headers ?? {}),
+        ...(headers ?? {}),
       },
     });
     return this.parseJsonResponse<T>(response);
