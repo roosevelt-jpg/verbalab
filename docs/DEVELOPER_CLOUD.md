@@ -1,7 +1,7 @@
 # Lugemi Developer Cloud Foundation
 
-**Status:** Accepted (VL-127)  
-**Rule:** Extend the existing developer portal (VL-030/033). Do not regenerate Clerk, Stripe, or invent OAuth clients / sandbox clusters.
+**Status:** Accepted
+**Rule:** Extend the existing developer portal. Do not regenerate Clerk, Stripe, or invent OAuth clients / sandbox clusters.
 
 ---
 
@@ -25,7 +25,7 @@
 
 ---
 
-## APIs (VL-127)
+## APIs
 
 | Method | Path | Auth | Purpose |
 | --- | --- | --- | --- |
@@ -51,4 +51,3 @@
 - Multi-language SDK factory / public npm release ceremony  
 - Full Postman clone  
 
-See ADR-0048.

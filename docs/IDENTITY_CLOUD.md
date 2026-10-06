@@ -1,6 +1,6 @@
 # Lugemi Identity Cloud
 
-**Status:** Accepted (VL-126)  
+**Status:** Accepted
 **Rule:** Clerk is the human IdP. Lugemi owns tenant RBAC, API keys (machine identity), and audit. Do not regenerate auth or invent SAML/SCIM/ABAC.
 
 ---
@@ -25,7 +25,7 @@
 
 ---
 
-## APIs (VL-126 additions)
+## APIs
 
 | Method | Path | Purpose |
 | --- | --- | --- |
@@ -53,4 +53,3 @@ Machine auth: Bearer API key updates `lastUsedAt`.
 - Team/group hierarchy separate from workspaces  
 - Replacing Clerk with a custom OAuth2 authorization server  
 
-See ADR-0047.
