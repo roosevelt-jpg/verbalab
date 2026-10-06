@@ -156,6 +156,7 @@ describe('Next model portfolio (00–07 contracts)', () => {
     expect(mixEngine.body.evaluated_varieties).toEqual(
       expect.arrayContaining(['ak-GH-twi', 'yo-NG']),
     );
+  });
 
   it('Mix transcribe-translate returns spans and entity alignment (01)', async () => {
     const org = await seedOrg(prisma, 'mix');
