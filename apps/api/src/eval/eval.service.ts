@@ -1,8 +1,14 @@
 import { Injectable } from '@nestjs/common';
+import { LanguageTier } from '@prisma/client';
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'fs';
 import { dirname, join } from 'path';
 import { GatewayService } from '../gateway/gateway.service';
 import { LanguagesService } from '../languages/languages.service';
+import { LANGUAGE_SEEDS } from '../languages/language-seeds';
+import {
+  allRegionalLanguageEntries,
+  regionalCountsByRegion,
+} from '../regional-language-registry/region-catalogs';
 import { GOLDEN_PAIRS, pairKey, type GoldenPair } from './goldens';
 import { scorePair, type PairScoreSummary } from './metrics';
 
@@ -135,8 +141,71 @@ export class EvalService {
   }
 
   async coverageMatrix() {
-    const langs = await this.languages.list();
-    const codes = new Set(langs.map((l) => l.code));
+    // Prefer DB/seed registry; never fail the public matrix if Prisma is soft-skipped or empty.
+    let langs: Array<{
+      code: string;
+      nameEn: string;
+      tier: LanguageTier | string;
+      script: string | null | undefined;
+    }> = [];
+    try {
+      langs = await this.languages.list();
+    } catch {
+      langs = [];
+    }
+    if (!langs.length) {
+      langs = LANGUAGE_SEEDS.map((lang) => ({
+        code: lang.code,
+        nameEn: lang.nameEn,
+        tier:
+          lang.tier === 'strategic_african'
+            ? LanguageTier.strategic_african
+            : LanguageTier.vendor,
+        script: lang.script ?? null,
+      }));
+    }
+
+    const tierByCode = new Map(langs.map((l) => [l.code, l]));
+    const regional = allRegionalLanguageEntries();
+    const regionalCounts = regionalCountsByRegion();
+
+    // Worldwide live set: regional registry (Africa-first sort) merged with core seed tiers.
+    // Regional entries cover Africa + SEA/MENA/EU/UK/LATAM/NA; seeds fill any remaining codes.
+    const seen = new Set<string>();
+    const codes: Array<{
+      code: string;
+      name: string;
+      tier: string;
+      script: string | null;
+      worldRegions: string[];
+    }> = [];
+
+    for (const row of regional) {
+      seen.add(row.code);
+      const seeded = tierByCode.get(row.code);
+      codes.push({
+        code: row.code,
+        name: row.name,
+        tier: String(seeded?.tier ?? (row.worldRegions.includes('africa') ? 'strategic_african' : 'vendor')),
+        script: seeded?.script ?? row.writingSystems[0] ?? null,
+        worldRegions: row.worldRegions,
+      });
+    }
+    for (const lang of langs) {
+      if (seen.has(lang.code)) continue;
+      seen.add(lang.code);
+      codes.push({
+        code: lang.code,
+        name: lang.nameEn,
+        tier: String(lang.tier),
+        script: lang.script ?? null,
+        worldRegions: lang.tier === LanguageTier.strategic_african || lang.tier === 'strategic_african'
+          ? ['africa', 'global']
+          : ['global'],
+      });
+    }
+
+    const registryCodes = new Set(codes.map((c) => c.code));
     const snapshot = this.getSnapshot();
     const evaluated = new Map(
       (snapshot?.pairs ?? []).map((p) => [pairKey(p.sourceLang, p.targetLang), p]),
@@ -148,7 +217,7 @@ export class EvalService {
       return {
         sourceLang: pair.sourceLang,
         targetLang: pair.targetLang,
-        inRegistry: codes.has(pair.sourceLang) && codes.has(pair.targetLang),
+        inRegistry: registryCodes.has(pair.sourceLang) && registryCodes.has(pair.targetLang),
         hasGolden: true,
         evalStatus: scored ? ('evaluated' as const) : ('unevaluated' as const),
         segmentCount: scored?.segmentCount ?? pair.segments.length,
@@ -159,7 +228,9 @@ export class EvalService {
       } satisfies CoveragePairRow;
     });
 
-    const strategic = langs.filter((l) => l.tier === 'strategic_african');
+    const strategicAfrican = codes.filter(
+      (l) => l.tier === 'strategic_african' || l.worldRegions.includes('africa'),
+    ).length;
 
     return {
       disclaimer: DISCLAIMER,
@@ -167,17 +238,15 @@ export class EvalService {
       lastEvalMode: snapshot?.mode ?? null,
       focusPairs: focus,
       languages: {
-        total: langs.length,
-        strategicAfrican: strategic.length,
-        codes: langs.map((l) => ({
-          code: l.code,
-          name: l.nameEn,
-          tier: l.tier,
-          script: l.script,
-        })),
+        total: codes.length,
+        strategicAfrican,
+        africaFirst: true,
+        regionalCounts,
+        codes,
       },
+      source: 'live_registry',
       note:
-        'Translate is available for registry languages via the vendor gateway. Only focusPairs currently have golden sets and scored runs.',
+        'Worldwide live registry (Africa-first) spanning Africa, SEA, MENA, EU, UK, LATAM, and NA. Translate is available for registry languages via the vendor gateway. Only focusPairs currently have golden sets and scored runs.',
     };
   }
 }
