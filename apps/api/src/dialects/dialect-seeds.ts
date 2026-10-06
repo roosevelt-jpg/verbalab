@@ -991,7 +991,7 @@ export const DIALECT_SEEDS: DialectSeed[] = [
     cueTerms: ["standard"],
     notes: 'Ethnic/locale variety from Africa catalog — South Africa.',
   },
-,
+
   {
     code: 'th-th-central',
     languageCode: 'th',
