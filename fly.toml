@@ -1,34 +1,22 @@
-# Default Fly app when launching from the Fly dashboard / GitHub (single app "lugemi").
-# Prefer two apps for production: lugemi-api + lugemi-web — see docs/fly.md
+# fly.toml app configuration file generated for verbalab on 2026-10-06T18:55:46Z
 #
-# If an existing Fly app is still named verbalab / verbalab-api / verbalab-web:
-#   fly apps rename verbalab lugemi
-#   fly apps rename verbalab-api lugemi-api
-#   fly apps rename verbalab-web lugemi-web
-# Or create new lugemi* apps and update DNS/certs — do not break an in-flight deploy.
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
-# Deploy API (this config):
-#   fly deploy -c fly.toml
-# Deploy preferred pair:
-#   fly deploy -c infra/fly/api.jnb.toml --dockerfile apps/api/Dockerfile
-#   fly deploy -c infra/fly/web.jnb.toml --dockerfile apps/web/Dockerfile \
-#     --build-arg NEXT_PUBLIC_API_URL=https://api.lugemi.com
-app = 'lugemi'
+
+app = 'verbalab'
 primary_region = 'jnb'
 
 [build]
   dockerfile = 'Dockerfile'
 
 [deploy]
-  # Soft-skips when DATABASE_URL unset; applies prisma migrate deploy when set.
-  # See apps/api/scripts/fly-migrate.sh and docs/fly.md.
   release_command = '/bin/sh /app/apps/api/scripts/fly-migrate.sh'
 
 [env]
-  NODE_ENV = 'production'
   API_PORT = '3001'
-  PORT = '3001'
   LUGEMI_REGION = 'af'
+  NODE_ENV = 'production'
+  PORT = '3001'
 
 [http_service]
   internal_port = 3001
@@ -49,3 +37,4 @@ primary_region = 'jnb'
   memory = '512mb'
   cpu_kind = 'shared'
   cpus = 1
+  memory_mb = 512
