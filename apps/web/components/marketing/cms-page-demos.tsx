@@ -68,6 +68,8 @@ const AGENT_DEMO_SLUGS = new Set([
   'integrations',
 ]);
 
+const BUILDERS_DEMO_SLUGS = new Set(['builders', 'infrastructure']);
+
 const TRANSLATE_DEMO_SLUGS = new Set([
   'lugemi-translate',
   'education',
@@ -95,6 +97,27 @@ const API_DEMO_SLUGS = new Set([
 
 /** Interactive demos injected on CMS marketing pages by slug. */
 export function CmsPageDemos({ slug }: { slug: string }) {
+  if (BUILDERS_DEMO_SLUGS.has(slug)) {
+    return (
+      <div className="mkt-page-demos">
+        <p className="mkt-tts-label">Native voices builders ship with</p>
+        <VoiceChipRow voices={SAMPLE_VOICES} />
+        <div style={{ marginTop: '1.25rem' }}>
+          <AgentChatDemo
+            title="Agent transcript · builder product desk"
+            userText="Can my agent greet customers in Twi and Kiswahili?"
+            agentText="Aane — and karibu. Lugemi own:* voices carry both languages with local accent and cultural context."
+            userVoiceId="user"
+            agentVoiceId="abe"
+          />
+        </div>
+        <div style={{ marginTop: '1.25rem' }}>
+          <TranslatePlayDemo compact />
+        </div>
+      </div>
+    );
+  }
+
   if (slug === 'voice-cloning' || slug === 'voice-isolator') {
     return (
       <div className="mkt-page-demos">

@@ -49,6 +49,7 @@ export const CMS_DEFAULTS: CmsDocument = {
         children: [
           { label: 'Creative · Studio', href: '/p/lugemi-studio' },
           { label: 'Agents', href: '/p/lugemi-agents' },
+          { label: 'Builders · Infrastructure', href: '/p/builders' },
           { label: 'API', href: '/p/lugemi-api' },
           { label: 'Developers', href: '/developers' },
         ],
@@ -195,8 +196,8 @@ export const CMS_DEFAULTS: CmsDocument = {
   },
   hubs: {
     kicker: 'Hubs',
-    title: 'Three ways to ship',
-    lede: 'Creative studio, conversational agents, or raw API — pick the surface that matches your stack.',
+    title: 'Ways to ship',
+    lede: 'Creative studio, conversational agents, builders infrastructure, or raw API — pick the surface that matches your stack.',
     items: [
       {
         title: 'Creative',
@@ -209,6 +210,12 @@ export const CMS_DEFAULTS: CmsDocument = {
         body: 'First-party speaking agents that listen, reason, and reply aloud with cultural context.',
         tags: ['Voice agents', 'Support', 'Hotlines', 'FAQ'],
         href: '/p/lugemi-agents',
+      },
+      {
+        title: 'Builders',
+        body: 'Language Intelligence infrastructure for agent builders and video creators — native voices that sound human.',
+        tags: ['Agents', 'Video', 'SDK', 'MCP', 'Keys'],
+        href: '/p/builders',
       },
       {
         title: 'API',
@@ -412,6 +419,7 @@ export const CMS_DEFAULTS: CmsDocument = {
         title: 'LugemiAPI',
         links: [
           { label: 'API Reference', href: '/docs' },
+          { label: 'Infrastructure', href: '/p/infrastructure' },
           { label: 'Agents API', href: '/p/agents-api' },
           { label: 'Speech Engine', href: '/p/speech-engine' },
           { label: 'Dubbing API', href: '/p/dubbing-api' },
@@ -430,6 +438,7 @@ export const CMS_DEFAULTS: CmsDocument = {
         title: 'Resources',
         links: [
           { label: 'Docs', href: '/docs' },
+          { label: 'Builders', href: '/p/builders' },
           { label: 'OpenAPI explorer', href: '/p/openapi-explorer' },
           { label: 'Playground', href: '/playground' },
           { label: 'Marketplace', href: '/p/marketplace' },
@@ -537,8 +546,8 @@ export const CMS_DEFAULTS: CmsDocument = {
       slug: 'hubs',
       title: 'Hubs',
       eyebrow: 'Ship ways',
-      lead: 'Three ways to ship Lugemi — Creative studio, conversational Agents, or raw API — each with demos and full guides.',
-      body: 'Pick the surface that matches your stack. Creative hubs localize and review before publish. Agents hubs listen, reason, and reply aloud with cultural context. API hubs expose the same own:* voices and translate paths under lg_live_ keys, SDKs, and OpenAPI.',
+      lead: 'Ways to ship Lugemi — Creative studio, conversational Agents, Builders infrastructure, or raw API — each with demos and full guides.',
+      body: 'Pick the surface that matches your stack. Creative hubs localize and review before publish. Agents hubs listen, reason, and reply aloud with cultural context. Builders is the Language Intelligence infrastructure path for agent and video product teams. API hubs expose the same own:* voices and translate paths under lg_live_ keys, SDKs, and OpenAPI.',
       sections: [
         {
           id: 'creative-hub',
@@ -549,6 +558,11 @@ export const CMS_DEFAULTS: CmsDocument = {
           id: 'agents-hub',
           title: 'Agents',
           body: 'First-party speaking agents for support, hotlines, trade desks, and FAQ.',
+        },
+        {
+          id: 'builders-hub',
+          title: 'Builders',
+          body: 'Go-to voice infrastructure for people launching agents, video, and apps that must sound human in native languages.',
         },
         {
           id: 'api-hub',
@@ -563,11 +577,13 @@ export const CMS_DEFAULTS: CmsDocument = {
           steps: [
             'Creative teams start in Studio and Voice console paths.',
             'Product and CX teams pilot Agents with bilingual transcript demos.',
+            'Agent and video builders open Builders for native voices, connectors, and keys.',
             'Platform teams go straight to API docs, playground, and keys.',
           ],
           links: [
             { label: 'Studio hub', href: '/p/lugemi-studio' },
             { label: 'Agents hub', href: '/p/lugemi-agents' },
+            { label: 'Builders', href: '/p/builders' },
             { label: 'API hub', href: '/p/lugemi-api' },
             { label: 'Developers', href: '/developers' },
           ],
@@ -576,7 +592,7 @@ export const CMS_DEFAULTS: CmsDocument = {
           id: 'api-hubs',
           kind: 'api',
           title: 'Hub → API mapping',
-          body: 'Studio and Agents share the same /v1 speech and translate contracts as the API hub.',
+          body: 'Studio, Agents, and Builders share the same /v1 speech and translate contracts as the API hub.',
           steps: [
             'Authenticate with lg_live_ / lg_test_ workspace keys.',
             'Call speech synthesize, recognize, translate, or voice simulate.',
@@ -586,10 +602,11 @@ export const CMS_DEFAULTS: CmsDocument = {
             { label: 'OpenAPI docs', href: '/docs' },
             { label: 'Playground', href: '/playground' },
             { label: 'API keys', href: '/keys' },
+            { label: 'Builders console', href: '/builders' },
           ],
         },
       ],
-      primaryCta: { label: 'Open Studio', href: '/p/lugemi-studio' },
+      primaryCta: { label: 'Open Builders', href: '/p/builders' },
       secondaryCta: { label: 'Open Agents', href: '/p/lugemi-agents' },
       showInFooter: false,
     }),
@@ -1677,6 +1694,11 @@ export const CMS_DEFAULTS: CmsDocument = {
       title: 'Language Intelligence operator home',
       lead: 'Africa-first Workspace Console — manage identity, profile, API keys, Chat Studio, model selection, live dialect demos, and platform connectors. Trade, negotiate, and educate with real live dialect translations; Lugemi voice/video sync stays clean without external audio noise.',
       starterCards: [
+        {
+          title: 'Builders hub',
+          body: 'Launch agents and video with native voices — Paths A/B/C for Agents, Voice Studio, and API keys.',
+          href: '/builders',
+        },
         {
           title: 'Trade in dialect',
           body: 'Translate contracts and market terms English → Twi, Yorùbá, or Kiswahili with cultural context.',

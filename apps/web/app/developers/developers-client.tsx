@@ -60,11 +60,20 @@ export function DevelopersClient() {
       >
         Developers
       </h1>
-      <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '40rem', lineHeight: 1.6 }}>
+      <p style={{ color: 'var(--muted)', margin: '0 0 1rem', maxWidth: '40rem', lineHeight: 1.6 }}>
         Build speaking agents with Lugemi: create an API key, install <code className="vl-code">@lugemi/sdk</code>, and
         call speech, translate, detect, or voice simulate. Africa-first languages, accents, and cultural context; LATAM,
         Southeast Asia, the Middle East, and the EU in scope. Soft <code className="vl-code">lg_test_</code> keys share
         this cluster — not a separate sandbox plane.
+      </p>
+      <p style={{ margin: '0 0 1.75rem' }}>
+        <Link href="/builders" style={{ color: 'var(--action-primary)', fontWeight: 550 }}>
+          Open Builders hub →
+        </Link>
+        <span style={{ color: 'var(--muted)', margin: '0 0.5rem' }}>·</span>
+        <Link href="/p/builders" style={{ color: 'var(--action-primary)', fontWeight: 550 }}>
+          Infrastructure positioning
+        </Link>
       </p>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}

@@ -96,6 +96,7 @@ const NAV_GROUPS: NavGroup[] = [
     id: 'developer',
     label: 'Developer tools',
     links: [
+      { href: '/builders', label: 'Builders' },
       { href: '/developers', label: 'Developers' },
       { href: '/playground', label: 'Playground' },
       { href: '/docs', label: 'Docs' },

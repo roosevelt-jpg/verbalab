@@ -1572,6 +1572,126 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
     secondaryCta: { label: 'Agents', href: '/p/voice-agents' },
     footerColumn: 'resources',
   }),
+
+  // ── Builders / Infrastructure ───────────────────────────────────
+  page({
+    slug: 'builders',
+    title: 'Builders',
+    eyebrow: 'Language Intelligence Infrastructure',
+    lead:
+      'The go-to voice layer for people launching agents, video products, and apps that must sound human — in native languages, Africa-first.',
+    body:
+      'Builders are shipping AI agents, video pipelines, and creator tools that need speech that carries real accents, dialects, and cultural density — not a thin TTS gadget. Lugemi is Language Intelligence infrastructure: first-party own:* voices, speech synthesize, translate, speaking agents, connectors, MCP/CLI, and metered /v1 APIs under one workspace. Pick a native voice, wire keys, and launch products that sound like people.',
+    sections: [
+      content(
+        'agents',
+        'Voice agents that sound local',
+        'Ship STT → reason → TTS agents with NativeAccentVoicePicker controls: gender, tone/emotion, language, and country/region accent from the Africa-first own:* registry. Cultural metadata stays on every pick.',
+      ),
+      content(
+        'video',
+        'Video & dubbing voice',
+        'Narration and dubbed takes for product videos, training films, and creator pipelines — synthesize with speech, localize with Translate, route through Connectors or MCP/CLI without stacking noisy vendor audio.',
+      ),
+      content(
+        'catalog',
+        'Human-sounding native catalog',
+        'own:* voices across Kiswahili, Yorùbá, Amharic, isiZulu, Twi, Hausa, Arabic, French, and more — with region and ethnic context, not generic accent placeholders.',
+      ),
+      content(
+        'infra',
+        'Infrastructure, not a toy',
+        'API keys, Playground, Docs, OpenAPI, @lugemi/sdk, CLI, MCP, Connectors, and Chat Studio share one surface. Soft lg_test_ keys for pilots; lg_live_ for production. Coverage stays honest per language × task.',
+      ),
+      guide(
+        'guide-builders',
+        'Builder launch path',
+        'From demo to shipped product voice.',
+        [
+          'Hear region voices on this page, then open the Builders console hub.',
+          'Path A: Agents (/voice) with native accent + tone picker.',
+          'Path B: Voice Studio (/audio) + Connectors/MCP for video/dubbing lines.',
+          'Path C: Create keys, hit Playground, ship with @lugemi/sdk or CLI.',
+        ],
+        [
+          { label: 'Builders console', href: '/builders' },
+          { label: 'Developers', href: '/developers' },
+          { label: 'Docs', href: '/docs' },
+          { label: 'Voice Studio', href: '/audio' },
+          { label: 'Agents', href: '/voice' },
+          { label: 'Connectors', href: '/connectors' },
+        ],
+      ),
+      guide(
+        'api-builders',
+        'API · SDK · MCP kit',
+        'Same contracts agents and video share.',
+        [
+          'POST /v1/speech/synthesize with own:* or clone:{id}.',
+          'POST /v1/voice/simulate for speaking-agent turns.',
+          'POST /v1/translate for scripts and dubbing lines.',
+          'MCP/CLI: lugemi speech · lugemi video-voice · lugemi voices.',
+        ],
+        [
+          { label: 'API docs', href: '/docs' },
+          { label: 'Playground', href: '/playground' },
+          { label: 'API keys', href: '/keys' },
+          { label: 'TTS API', href: '/p/tts-api' },
+          { label: 'Agents API', href: '/p/agents-api' },
+          { label: 'Infrastructure', href: '/p/infrastructure' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Builders hub', href: '/builders' },
+    secondaryCta: { label: 'Start free', href: '/sign-up' },
+    footerColumn: 'resources',
+  }),
+  page({
+    slug: 'infrastructure',
+    title: 'Infrastructure',
+    eyebrow: 'Language Intelligence',
+    lead:
+      'Lugemi is the voice and language layer under products that speak — agents, video, and apps built for native languages.',
+    body:
+      'Teams building AI agents and video products need infrastructure that delivers human-sounding speech in the languages their users actually speak. Lugemi owns the speech, translate, and speaking-agent stack: Africa-first completeness, own:* native accents, connectors into video/voice platforms, and developer surfaces (API, SDK, MCP, CLI) so you launch powerful products — not demo gadgets.',
+    sections: [
+      content(
+        'layer',
+        'The language layer',
+        'Recognize → translate → synthesize → speak. Lugemi sits under your agent runtime or video pipeline; you keep product UX and media orchestration.',
+      ),
+      content(
+        'native',
+        'Native languages, human presence',
+        'Region-aware voices with cultural context so agents and dubbed video sound like people from Nairobi, Lagos, Accra, Addis — not a single generic voice bank.',
+      ),
+      content(
+        'surfaces',
+        'Surfaces that ship',
+        'Builders console, Developers hub, Docs, Playground, Voice Studio, Agents, Connectors, Chat Studio — one workspace, one key model.',
+      ),
+      guide(
+        'guide-infra',
+        'Adopt Lugemi as infrastructure',
+        'Wire the layer, then scale languages.',
+        [
+          'Open /p/builders for positioning, demos, and the launch kit.',
+          'Use the Builders console for Agents, Video voice, and Keys paths.',
+          'Authenticate with lg_live_ / lg_test_ and call published /v1 routes.',
+        ],
+        [
+          { label: 'Builders', href: '/p/builders' },
+          { label: 'Builders console', href: '/builders' },
+          { label: 'Developers', href: '/developers' },
+          { label: 'Docs', href: '/docs' },
+          { label: 'Coverage', href: '/coverage' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Builders', href: '/p/builders' },
+    secondaryCta: { label: 'Open console hub', href: '/builders' },
+    footerColumn: 'api',
+  }),
 ];
 
 export const FOOTER_PAGE_SLUGS = FOOTER_CMS_PAGES.map((p) => p.slug);
