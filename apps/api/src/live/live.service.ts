@@ -113,7 +113,7 @@ export class LiveService {
       targetLanguage: (input.targetLanguage ?? 'en').toLowerCase(),
       glossaryVersion: input.glossaryVersion ?? null,
       permissions: input.permissions ?? ['transcribe', 'translate', 'speak'],
-      transport: input.transport === 'websocket' ? 'websocket' : 'sse',
+      transport: 'sse',
       createdAt: Date.now(),
       lastAckEventId: null,
       sequence: 0,
@@ -124,11 +124,17 @@ export class LiveService {
     };
     this.sessions.set(id, session);
 
+    const requestedWebsocket = input.transport === 'websocket';
     const meta = portfolioMeta({
       modelId: 'lugemi-live',
       sourceLanguageTags: [session.sourceLanguage],
       targetLanguageTag: session.targetLanguage,
       evidenceRef: `live_${id}`,
+      warnings: requestedWebsocket
+        ? [
+            'transport=websocket requested; pilot serves the same versioned events over SSE only (no native WebSocket upgrade).',
+          ]
+        : [],
     });
 
     await this.audit.record({
@@ -137,7 +143,11 @@ export class LiveService {
       action: 'live.session_created',
       route: 'POST /v1/live/sessions',
       ip: input.ip,
-      metadata: { session_id: id, transport: session.transport },
+      metadata: {
+        session_id: id,
+        transport: session.transport,
+        requested_transport: input.transport ?? 'sse',
+      },
     });
 
     return {
@@ -150,6 +160,7 @@ export class LiveService {
       glossary_version: session.glossaryVersion,
       permissions: session.permissions,
       transport: session.transport,
+      requested_transport: input.transport ?? 'sse',
       events_url: `/v1/live/sessions/${id}/events`,
       audio_url: `/v1/live/sessions/${id}/audio`,
       states: ['receiving', 'provisional', 'committed', 'spoken', 'repair_required', 'cancelled'],

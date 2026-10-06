@@ -88,9 +88,7 @@ export class GroundedService {
 
     const ocrTokens = this.ocrRegion(docText, input.region);
     const regionId = `region_${randomUUID().slice(0, 10)}`;
-    const amountMatch = ocrTokens.map((t) => t.text).join(' ').match(
-      /\b((?:USD|GHS|NGN|\$|₵)?\s?\d[\d,]*(?:\.\d+)?)\b/,
-    );
+    const amountMatch = this.extractAmount(ocrTokens.map((t) => t.text).join(' '));
 
     const speakerClaim = {
       text: utterance || '(audio reference supplied — local adapter awaiting STT)',
@@ -117,7 +115,8 @@ export class GroundedService {
         resolved_referent: null,
         document_evidence: {
           tokens: ocrTokens,
-          amount: amountMatch?.[1] ?? null,
+          amount: amountMatch?.amount ?? null,
+          currency: amountMatch?.currency ?? null,
           offsets: ocrTokens.map((t) => t.offset),
         },
         speaker_claim: speakerClaim,
@@ -131,8 +130,8 @@ export class GroundedService {
     const referent = {
       region_id: regionId,
       label: ocrTokens.slice(0, 8).map((t) => t.text).join(' '),
-      amount: amountMatch?.[1] ?? null,
-      currency: amountMatch?.[1]?.match(/USD|GHS|NGN|\$|₵/)?.[0] ?? null,
+      amount: amountMatch?.amount ?? null,
+      currency: amountMatch?.currency ?? null,
     };
 
     const discrepancy_flags: Array<{ code: string; detail: string }> = [];
@@ -248,5 +247,37 @@ export class GroundedService {
     if (/how much|what (is|does)|charge|fee|amount/i.test(utterance)) return 'ask_amount';
     if (/this|that|second|line|instruction/i.test(utterance)) return 'refer_region';
     return 'general';
+  }
+
+  /**
+   * Prefer currency-prefixed amounts (GHS 500) over bare line numbers ("Line 2").
+   * Returns the full matched token and a separate currency code/symbol when present.
+   */
+  private extractAmount(text: string): { amount: string; currency: string | null } | null {
+    if (!text?.trim()) return null;
+    const currencyPrefixed =
+      text.match(/\b((?:USD|GHS|NGN)\s*\d[\d,]*(?:\.\d+)?)\b/i) ??
+      text.match(/((?:\$|₵)\s*\d[\d,]*(?:\.\d+)?)/);
+    if (currencyPrefixed?.[1]) {
+      const raw = currencyPrefixed[1].trim();
+      const currency = raw.match(/USD|GHS|NGN|\$|₵/i)?.[0] ?? null;
+      return { amount: raw, currency: currency ? currency.toUpperCase().replace('₵', '₵') : null };
+    }
+    // Bare amounts: skip single-digit ordinals that look like line/item numbers when
+    // followed by words like "charge", "line", or appearing after "Line"/"Item".
+    const bare = [...text.matchAll(/\b(\d[\d,]*(?:\.\d+)?)\b/g)].map((m) => ({
+      value: m[1]!,
+      index: m.index ?? 0,
+    }));
+    const preferred = bare.find((m) => {
+      const before = text.slice(Math.max(0, m.index - 12), m.index);
+      const after = text.slice(m.index + m.value.length, m.index + m.value.length + 16);
+      if (/\b(line|item|row|no\.?)\s*$/i.test(before)) return false;
+      if (/^\s*(st|nd|rd|th)\b/i.test(after)) return false;
+      // Prefer multi-digit / decimal monetary-looking values.
+      return m.value.replace(/,/g, '').length >= 2 || m.value.includes('.');
+    });
+    if (!preferred) return null;
+    return { amount: preferred.value, currency: null };
   }
 }

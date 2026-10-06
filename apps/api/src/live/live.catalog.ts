@@ -15,7 +15,7 @@ export function liveCatalog() {
       repair: 'POST /v1/live/sessions/:id/repair',
     },
     transport:
-      'Session negotiation over HTTP; versioned events delivered via SSE (same event schema as the portfolio WebSocket contract). Native WebSocket upgrade mirrors these events when the client requests transport=websocket.',
+      'Session negotiation over HTTP; versioned events delivered via Server-Sent Events at GET /v1/live/sessions/:id/events (same event schema as the portfolio brief). A transport=websocket request is accepted for compatibility but events still stream over SSE — there is no native WebSocket upgrade in this pilot adapter.',
     console: '/live',
     docs: '/docs/next-model-portfolio/03_LIVE.md',
   };
