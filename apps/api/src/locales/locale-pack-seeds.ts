@@ -1179,7 +1179,6 @@ export const LOCALE_PACK_SEEDS: LocalePackSeed[] = [
     currencyNotes: 'ZAR — local market currency for Zulu audiences.',
     culturalNotes: 'Respectful address and clan names matter.',
   }),
-,
   thinPack({
     languageCode: 'ay',
     bcp47: 'ay-BO',
@@ -1669,8 +1668,7 @@ export const LOCALE_VARIANT_SEEDS: Array<{ languageCode: string; bcp47: string; 
   { languageCode: 'yo', bcp47: 'yo-BJ', currencyCode: 'XOF', culturalNotes: 'Yoruba in BJ.' },
   { languageCode: 'zdj', bcp47: 'zdj-KM', currencyCode: 'KMF', culturalNotes: 'Comorian in KM.' },
   { languageCode: 'zgh', bcp47: 'zgh-MA', currencyCode: 'MAD', culturalNotes: 'Standard Moroccan Tamazight in MA.' },
-,
-  { languageCode: 'th', bcp47: 'th-TH', currencyCode: 'THB', culturalNotes: 'Central Thai.' },
+{ languageCode: 'th', bcp47: 'th-TH', currencyCode: 'THB', culturalNotes: 'Central Thai.' },
   { languageCode: 'vi', bcp47: 'vi-VN', currencyCode: 'VND', culturalNotes: 'Northern Vietnamese.' },
   { languageCode: 'ms', bcp47: 'ms-MY', currencyCode: 'MYR', culturalNotes: 'Malaysian Malay.' },
   { languageCode: 'ms', bcp47: 'ms-SG', currencyCode: 'SGD', culturalNotes: 'Singapore Malay.' },
