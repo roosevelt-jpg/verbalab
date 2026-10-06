@@ -23,8 +23,7 @@ export class VendorVoiceCloneAdapter implements TtsProvider {
   constructor(
     private readonly apiKey: string,
     private readonly fetchImpl: typeof fetch = fetch,
-    private readonly apiBase = process.env.VENDOR_VOICE_CLONE_API_BASE?.trim() ||
-      'https://api.elevenlabs.io',
+    private readonly apiBase = process.env.VENDOR_VOICE_CLONE_API_BASE?.trim() || '',
   ) {}
 
   isConfigured(): boolean {
@@ -40,10 +39,10 @@ export class VendorVoiceCloneAdapter implements TtsProvider {
     description: string;
     samples: VoiceCloneSample[];
   }): Promise<VoiceCloneCreateResult> {
-    if (!this.apiKey) {
+    if (!this.apiKey || !this.apiBase) {
       throw new ApiException(
         'provider_not_configured',
-        'VENDOR_VOICE_CLONE_API_KEY is not set. Add the key to enable vendor voice cloning.',
+        'VENDOR_VOICE_CLONE_API_KEY and VENDOR_VOICE_CLONE_API_BASE must be set (or VOICE_CLONE_FIXTURE=1).',
         HttpStatus.SERVICE_UNAVAILABLE,
       );
     }

@@ -782,7 +782,7 @@ export const CMS_DEFAULTS: CmsDocument = {
     }),
     page({
       slug: 'lugemi-studio',
-      title: 'Lugemi Studio',
+      title: 'Studio',
       eyebrow: 'Creative',
       lead: 'Scripts, instant clones, localization, and review — then hand off clone:{id} into video dubbing and song vocals.',
       body: 'Lugemi Studio is where creators and localization teams draft narration, pick registry languages, enroll consent-gated Instant Voice Clones, extract tracks from uploads, and review synthetic disclosure. Open Voice Studio after sign-up to generate with own:* voices or approved clone:{id}.',
