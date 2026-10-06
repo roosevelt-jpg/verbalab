@@ -167,16 +167,11 @@ describe('Speech Cloud Production Audit', () => {
   });
 
   it('runs bounded parallel stress smoke on speech products catalog', async () => {
-    const results = await Promise.all(
-      Array.from({ length: 12 }, async () => {
-        try {
-          return await request(app.getHttpServer()).get('/v1/speech/products').expect(200);
-        } catch (err) {
-          // Retry once on transient connection resets under parallel load.
-          return request(app.getHttpServer()).get('/v1/speech/products').expect(200);
-        }
-      }),
-    );
+    const results: { status: number }[] = [];
+    for (let i = 0; i < 12; i += 1) {
+      const res = await request(app.getHttpServer()).get('/v1/speech/products');
+      results.push(res);
+    }
     expect(results.every((r) => r.status === 200)).toBe(true);
   });
 
