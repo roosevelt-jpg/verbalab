@@ -5,6 +5,7 @@ import { ApiException } from '../common/errors/api-exception';
 import { AuditService } from '../audit/audit.service';
 import { ApiKeysService } from '../api-keys/api-keys.service';
 import { UsageService } from '../usage/usage.service';
+import { normalizePlanId, PLAN_IDS, planFromId } from '../billing/plans';
 
 @Injectable()
 export class AdminService {
@@ -15,19 +16,31 @@ export class AdminService {
     private readonly usage: UsageService,
   ) {}
 
-  async searchOrganizations(q?: string, limitRaw?: number) {
+  listPlanFilters() {
+    return PLAN_IDS.map((id) => ({ id, name: planFromId(id).name }));
+  }
+
+  async searchOrganizations(q?: string, limitRaw?: number, planRaw?: string) {
     const take = Math.min(Math.max(limitRaw ?? 50, 1), 100);
     const query = q?.trim();
-    const where: Prisma.OrganizationWhereInput = query
-      ? {
-          OR: [
-            { id: { contains: query, mode: 'insensitive' } },
-            { name: { contains: query, mode: 'insensitive' } },
-            { clerkOrgId: { contains: query, mode: 'insensitive' } },
-            { stripeCustomerId: { contains: query, mode: 'insensitive' } },
-          ],
-        }
-      : {};
+    const planFilter = planRaw?.trim()
+      ? planRaw.trim() === 'all'
+        ? undefined
+        : normalizePlanId(planRaw.trim())
+      : undefined;
+    const where: Prisma.OrganizationWhereInput = {
+      ...(query
+        ? {
+            OR: [
+              { id: { contains: query, mode: 'insensitive' } },
+              { name: { contains: query, mode: 'insensitive' } },
+              { clerkOrgId: { contains: query, mode: 'insensitive' } },
+              { stripeCustomerId: { contains: query, mode: 'insensitive' } },
+            ],
+          }
+        : {}),
+      ...(planFilter ? { plan: planFilter } : {}),
+    };
 
     const orgs = await this.prisma.organization.findMany({
       where,

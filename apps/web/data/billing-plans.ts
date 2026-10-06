@@ -1,5 +1,5 @@
-/** Client-side plan catalog mirroring apps/api billing plans (tiered). */
-export type WebPlanId = 'free' | 'starter' | 'creator' | 'pro' | 'scale' | 'enterprise';
+/** Client-side plan catalog mirroring apps/api billing plans (exactly 4). */
+export type WebPlanId = 'free' | 'pro' | 'business' | 'enterprise';
 
 export type WebPlan = {
   id: WebPlanId;
@@ -35,14 +35,21 @@ export const FEATURE_MIN_PLAN: Record<string, WebPlanId> = {
   speech: 'free',
   translate: 'free',
   playground: 'free',
-  commercial: 'starter',
-  voiceClones: 'creator',
+  commercial: 'pro',
+  voiceClones: 'pro',
   marketplace: 'pro',
   fineTunes: 'pro',
   prioritySupport: 'pro',
-  workspacesExtra: 'scale',
+  workspacesExtra: 'business',
   sso: 'enterprise',
   dedicated: 'enterprise',
+};
+
+/** Legacy plan ids → current catalog id. */
+const LEGACY_WEB_PLAN_MAP: Record<string, WebPlanId> = {
+  starter: 'pro',
+  creator: 'pro',
+  scale: 'business',
 };
 
 export const WEB_BILLING_PLANS: WebPlan[] = [
@@ -60,40 +67,14 @@ export const WEB_BILLING_PLANS: WebPlan[] = [
     checkoutAvailable: false,
   },
   {
-    id: 'starter',
-    name: 'Starter',
+    id: 'pro',
+    name: 'Pro',
     rank: 1,
-    characterQuota: 200_000,
-    workspaceLimit: 1,
-    priceLabel: '$22',
-    priceMonthlyUsd: 22,
-    blurb: 'Indie builders shipping first African-language agents and product voice.',
-    features: ['speech', 'translate', 'playground', 'commercial'],
-    highlight: false,
-    checkoutAvailable: true,
-  },
-  {
-    id: 'creator',
-    name: 'Creator',
-    rank: 2,
-    characterQuota: 500_000,
+    characterQuota: 2_000_000,
     workspaceLimit: 1,
     priceLabel: '$99',
     priceMonthlyUsd: 99,
-    blurb: 'Studios and agencies — commercial use plus consent-gated voice clones.',
-    features: ['speech', 'translate', 'playground', 'commercial', 'voiceClones'],
-    highlight: true,
-    checkoutAvailable: true,
-  },
-  {
-    id: 'pro',
-    name: 'Pro',
-    rank: 3,
-    characterQuota: 2_000_000,
-    workspaceLimit: 1,
-    priceLabel: '$330',
-    priceMonthlyUsd: 330,
-    blurb: 'Production teams — marketplace, fine-tunes, higher quotas, and priority paths.',
+    blurb: 'Production teams — commercial use, voice clones, marketplace, fine-tunes, and priority paths.',
     features: [
       'speech',
       'translate',
@@ -104,17 +85,17 @@ export const WEB_BILLING_PLANS: WebPlan[] = [
       'fineTunes',
       'prioritySupport',
     ],
-    highlight: false,
+    highlight: true,
     checkoutAvailable: true,
   },
   {
-    id: 'scale',
-    name: 'Scale',
-    rank: 4,
+    id: 'business',
+    name: 'Business',
+    rank: 2,
     characterQuota: 11_000_000,
     workspaceLimit: 3,
-    priceLabel: '$1,320',
-    priceMonthlyUsd: 1320,
+    priceLabel: '$330',
+    priceMonthlyUsd: 330,
     blurb: 'High-volume workspaces across regions with extra seats and headroom.',
     features: [
       'speech',
@@ -133,7 +114,7 @@ export const WEB_BILLING_PLANS: WebPlan[] = [
   {
     id: 'enterprise',
     name: 'Enterprise',
-    rank: 5,
+    rank: 3,
     characterQuota: 50_000_000,
     workspaceLimit: -1,
     priceLabel: 'Custom',
@@ -158,7 +139,8 @@ export const WEB_BILLING_PLANS: WebPlan[] = [
 ];
 
 export function planById(id: string): WebPlan {
-  return WEB_BILLING_PLANS.find((p) => p.id === id) ?? WEB_BILLING_PLANS[0]!;
+  const normalized = LEGACY_WEB_PLAN_MAP[id] ?? id;
+  return WEB_BILLING_PLANS.find((p) => p.id === normalized) ?? WEB_BILLING_PLANS[0]!;
 }
 
 export function planHasFeature(planId: string, feature: string): boolean {

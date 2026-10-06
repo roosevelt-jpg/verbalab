@@ -35,6 +35,7 @@ export function AdminClient() {
   const [tab, setTab] = useState<AdminTab>('cms');
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [q, setQ] = useState('');
+  const [planFilter, setPlanFilter] = useState<string>('all');
   const [rows, setRows] = useState<OrgRow[]>([]);
   const [selected, setSelected] = useState<OrgDetail | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -56,16 +57,20 @@ export function AdminClient() {
   }, [getToken]);
 
   const search = useCallback(
-    async (query: string) => {
+    async (query: string, plan = planFilter) => {
       const token = await getToken();
       if (!token) throw new Error('Not signed in');
+      const params = new URLSearchParams();
+      if (query.trim()) params.set('q', query.trim());
+      if (plan && plan !== 'all') params.set('plan', plan);
+      const qs = params.toString();
       const data = await apiFetch<OrgRow[]>(
-        `/v1/admin/organizations${query.trim() ? `?q=${encodeURIComponent(query.trim())}` : ''}`,
+        `/v1/admin/organizations${qs ? `?${qs}` : ''}`,
         { token },
       );
       setRows(data);
     },
-    [getToken],
+    [getToken, planFilter],
   );
 
   useEffect(() => {
@@ -203,6 +208,23 @@ export function AdminClient() {
                   onChange={(e) => setQ(e.target.value)}
                   style={{ flex: '1 1 16rem' }}
                 />
+                <select
+                  className="vl-input"
+                  value={planFilter}
+                  onChange={(e) => {
+                    const next = e.target.value;
+                    setPlanFilter(next);
+                    void search(q, next).catch((err: Error) => setError(err.message));
+                  }}
+                  aria-label="Filter by plan"
+                  style={{ flex: '0 1 10rem' }}
+                >
+                  <option value="all">All plans</option>
+                  <option value="free">Free</option>
+                  <option value="pro">Pro</option>
+                  <option value="business">Business</option>
+                  <option value="enterprise">Enterprise</option>
+                </select>
                 <button type="submit" className="vl-btn vl-btn-primary" disabled={busy}>
                   Search
                 </button>

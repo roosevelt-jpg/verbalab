@@ -49,9 +49,9 @@ pnpm dev
 
 ## Stripe billing
 
-Plans mirror tiered packaging: **Free → Starter → Creator → Pro → Scale → Enterprise**.
+Plans: **Free → Pro → Business → Enterprise**.
 Each organization workspace inherits the subscribed features (speech, commercial use, voice clones, marketplace, SSO, …).
-Workspace seats: Free–Pro = 1, Scale = 3, Enterprise = unlimited. Extra creates return `plan_required`.
+Workspace seats: Free–Pro = 1, Business = 3, Enterprise = unlimited. Extra creates return `plan_required`.
 
 Add to `apps/api/.env`:
 
@@ -59,7 +59,7 @@ Add to `apps/api/.env`:
 | --- | --- |
 | `STRIPE_SECRET_KEY` | API secret |
 | `STRIPE_WEBHOOK_SECRET` | Webhook signing (`stripe listen --forward-to localhost:3001/v1/billing/webhook`) |
-| `STRIPE_PRICE_ID_STARTER` / `_CREATOR` / `_PRO` / `_SCALE` | Recurring Price IDs |
+| `STRIPE_PRICE_ID_PRO` / `STRIPE_PRICE_ID_BUSINESS` | Recurring Price IDs (Free + Enterprise have no Checkout price) |
 | `BILLING_SUCCESS_URL` / `BILLING_CANCEL_URL` | Checkout redirects |
 | `BILLING_PORTAL_RETURN_URL` | Customer portal return |
 

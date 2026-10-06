@@ -137,8 +137,8 @@ export function BillingClient() {
         Billing & plans
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0', lineHeight: 1.6, maxWidth: '42rem' }}>
-        Each workspace inherits your subscription. Plans mirror tiered tiers:
-        Free → Starter → Creator → Pro → Scale → Enterprise. Features and workspace seats unlock with your plan.
+        Each workspace inherits your subscription. Plans:
+        Free → Pro → Business → Enterprise. Features and workspace seats unlock with your plan.
       </p>
 
       {error ? <p style={{ color: 'var(--bad)' }}>{error}</p> : null}
@@ -285,7 +285,7 @@ export function BillingClient() {
             {!summary.stripeConfigured ? (
               <p style={{ color: 'var(--muted)', marginBottom: 0, marginTop: '1rem' }}>
                 Stripe is not fully configured. Set <code className="vl-code">STRIPE_SECRET_KEY</code>, price IDs (
-                <code className="vl-code">STRIPE_PRICE_ID_STARTER</code> … <code className="vl-code">_SCALE</code>),
+                <code className="vl-code">STRIPE_PRICE_ID_PRO</code>, <code className="vl-code">STRIPE_PRICE_ID_BUSINESS</code>),
                 webhook secret, and billing URLs.
               </p>
             ) : null}

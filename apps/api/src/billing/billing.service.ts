@@ -27,10 +27,7 @@ export class BillingService {
   isConfigured(): boolean {
     return Boolean(
       this.stripe &&
-        (process.env.STRIPE_PRICE_ID_PRO ||
-          process.env.STRIPE_PRICE_ID_STARTER ||
-          process.env.STRIPE_PRICE_ID_CREATOR ||
-          process.env.STRIPE_PRICE_ID_SCALE) &&
+        (process.env.STRIPE_PRICE_ID_PRO || process.env.STRIPE_PRICE_ID_BUSINESS) &&
         process.env.STRIPE_WEBHOOK_SECRET &&
         process.env.BILLING_SUCCESS_URL &&
         process.env.BILLING_CANCEL_URL,
@@ -594,9 +591,10 @@ export class BillingService {
             subscription.status === 'active' || subscription.status === 'trialing'
               ? 'active'
               : subscription.status;
+          const planId = (subscription.metadata?.planId as PlanId | undefined) ?? 'pro';
           await this.applyEntitlement({
             organizationId,
-            plan: 'pro',
+            plan: planFromId(planId).id,
             stripeSubscriptionId: subscription.id,
             billingStatus: status,
           });

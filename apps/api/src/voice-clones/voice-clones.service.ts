@@ -154,7 +154,7 @@ export class VoiceClonesService {
     await this.billing.assertFeature(
       input.organizationId,
       'voiceClones',
-      'Voice clones require Creator plan or higher. Upgrade under Billing.',
+      'Voice clones require Pro plan or higher. Upgrade under Billing.',
     );
 
     if (!input.consentAttested) {
@@ -489,7 +489,7 @@ export class VoiceClonesService {
     await this.billing.assertFeature(
       input.organizationId,
       'voiceClones',
-      'Voice clones require Creator plan or higher. Upgrade under Billing.',
+      'Voice clones require Pro plan or higher. Upgrade under Billing.',
     );
 
     const row = await this.prisma.voiceClone.findFirst({

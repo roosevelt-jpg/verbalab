@@ -96,6 +96,34 @@ describe('Admin + customer portal', () => {
     expect(members[0]!.user.email).toBe('portalMembers@example.com');
   });
 
+  it('filters organizations by the four Lugemi plans', async () => {
+    const freeOrg = await seedOrg(prisma, 'adminPlanFree');
+    const proOrg = await seedOrg(prisma, 'adminPlanPro');
+    await prisma.organization.update({
+      where: { id: proOrg.id },
+      data: { plan: 'pro', characterQuota: 2_000_000 },
+    });
+    const businessOrg = await seedOrg(prisma, 'adminPlanBusiness');
+    await prisma.organization.update({
+      where: { id: businessOrg.id },
+      data: { plan: 'business', characterQuota: 11_000_000 },
+    });
+
+    const plans = admin.listPlanFilters();
+    expect(plans.map((p) => p.id)).toEqual(['free', 'pro', 'business', 'enterprise']);
+
+    const freeOnly = await admin.searchOrganizations('adminPlan', undefined, 'free');
+    expect(freeOnly.some((o) => o.id === freeOrg.id)).toBe(true);
+    expect(freeOnly.every((o) => o.plan === 'free')).toBe(true);
+
+    const proOnly = await admin.searchOrganizations('adminPlan', undefined, 'pro');
+    expect(proOnly.some((o) => o.id === proOrg.id)).toBe(true);
+    expect(proOnly.every((o) => o.plan === 'pro')).toBe(true);
+
+    const businessOnly = await admin.searchOrganizations('adminPlan', undefined, 'business');
+    expect(businessOnly.some((o) => o.id === businessOrg.id)).toBe(true);
+  });
+
   it('searches orgs and disables them, revoking keys', async () => {
     const org = await seedOrg(prisma, 'adminSearchTarget');
     const other = await seedOrg(prisma, 'adminOther');

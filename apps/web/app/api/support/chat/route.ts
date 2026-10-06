@@ -28,7 +28,7 @@ const FAQ: FaqItem[] = [
   {
     keys: ['rate limit', '429', 'too many', 'throttle'],
     answer:
-      'Per-key and per-org rate limits scale with your plan (Free is lowest; Scale/Enterprise highest). 429 means slow down or upgrade under /billing. Retry with exponential backoff; check response headers when present.',
+      'Per-key and per-org rate limits scale with your plan (Free is lowest; Business/Enterprise highest). 429 means slow down or upgrade under /billing. Retry with exponential backoff; check response headers when present.',
   },
   {
     keys: ['quota', 'character', '402', 'exceeded', 'usage'],
@@ -38,7 +38,7 @@ const FAQ: FaqItem[] = [
   {
     keys: ['billing', 'invoice', 'upgrade', 'plan', 'price', 'checkout', 'payment', 'stripe', 'portal', 'card'],
     answer:
-      'Plans: Free → Starter → Creator → Pro → Scale → Enterprise. Open /billing to upgrade (Checkout) or manage payment methods (Customer Portal). Features unlock with the plan and apply to every workspace under your org. Enterprise is custom — escalate for sales.',
+      'Plans: Free → Pro → Business → Enterprise. Open /billing to upgrade (Checkout) or manage payment methods (Customer Portal). Features unlock with the plan and apply to every workspace under your org. Enterprise is custom — escalate for sales.',
   },
   {
     keys: ['refund', 'chargeback', 'double charge', 'cancel subscription', 'dispute'],
@@ -49,12 +49,12 @@ const FAQ: FaqItem[] = [
   {
     keys: ['workspace', 'seat', 'create workspace', 'plan_required', 'extra workspace'],
     answer:
-      'Workspace limits: Free–Pro = 1, Scale = 3, Enterprise = unlimited. Creating beyond the limit returns plan_required — upgrade under /billing. Switch workspaces from the console header; each workspace inherits your org’s subscribed features.',
+      'Workspace limits: Free–Pro = 1, Business = 3, Enterprise = unlimited. Creating beyond the limit returns plan_required — upgrade under /billing. Switch workspaces from the console header; each workspace inherits your org’s subscribed features.',
   },
   {
     keys: ['voice', 'tts', 'speech', 'own:', 'audio/speech', 'clone'],
     answer:
-      'Speech: POST /v1/audio/speech or @lugemi/sdk. Prefer own:* voices when configured. Voice clones need Creator+ plus consent/ownership attestation under /voice-cloning. Neural TTS: /neural-tts.',
+      'Speech: POST /v1/audio/speech or @lugemi/sdk. Prefer own:* voices when configured. Voice clones need Pro+ plus consent/ownership attestation under /voice-cloning. Neural TTS: /neural-tts.',
   },
   {
     keys: ['translate', 'language', 'twi', 'akan', 'swahili', 'yoruba', 'locale'],
@@ -217,7 +217,7 @@ export async function POST(request: Request) {
             {
               role: 'system',
               content:
-                'You are Lugemi Support — a self-serve assistant for the Lugemi API and console. Help with API keys (lg_live_/lg_test_), billing plans (Free/Starter/Creator/Pro/Scale/Enterprise), quotas, workspaces, speech (own:*), translate, SDKs, MCP, and health checks. Prefer concrete console paths (/billing, /keys, /docs). Never invent competitors. If the user needs refunds, account deletion, security incidents, or contract/Enterprise sales, tell them to escalate to a human and end with the word ESCALATE. Keep answers under 130 words.',
+                'You are Lugemi Support — a self-serve assistant for the Lugemi API and console. Help with API keys (lg_live_/lg_test_), billing plans (Free/Pro/Business/Enterprise), quotas, workspaces, speech (own:*), translate, SDKs, MCP, and health checks. Prefer concrete console paths (/billing, /keys, /docs). Never invent competitors. If the user needs refunds, account deletion, security incidents, or contract/Enterprise sales, tell them to escalate to a human and end with the word ESCALATE. Keep answers under 130 words.',
             },
             ...(body.history ?? []).slice(-8),
             { role: 'user', content: message },

@@ -3,6 +3,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ApiException } from '../common/errors/api-exception';
 import { AuditService } from '../audit/audit.service';
 import { BillingService } from '../billing/billing.service';
+import { isProOrAbove } from '../billing/plans';
 import { upsertGlossarySnapshot } from '../glossary/glossary-snapshot-install';
 import {
   VERTICAL_GLOSSARY_PACKS,
@@ -74,7 +75,7 @@ export class VerticalGlossariesService {
         packId_workspaceId: { packId, workspaceId },
       },
     });
-    const includeFull = org.plan === 'pro' || org.plan === 'scale' || org.plan === 'enterprise' || Boolean(install);
+    const includeFull = isProOrAbove(org.plan) || Boolean(install);
     return this.serializePack(pack, Boolean(install), includeFull);
   }
 

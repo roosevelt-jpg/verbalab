@@ -30,10 +30,20 @@ export class AdminController {
     };
   }
 
+  @Get('plans')
+  @UseGuards(PlatformAdminGuard)
+  plans() {
+    return this.admin.listPlanFilters();
+  }
+
   @Get('organizations')
   @UseGuards(PlatformAdminGuard)
-  search(@Query('q') q?: string, @Query('limit') limit?: string) {
-    return this.admin.searchOrganizations(q, limit ? Number(limit) : undefined);
+  search(
+    @Query('q') q?: string,
+    @Query('limit') limit?: string,
+    @Query('plan') plan?: string,
+  ) {
+    return this.admin.searchOrganizations(q, limit ? Number(limit) : undefined, plan);
   }
 
   @Get('organizations/:id')

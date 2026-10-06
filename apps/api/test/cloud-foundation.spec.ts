@@ -80,8 +80,8 @@ describe('Cloud Platform Foundation', () => {
     expect(text).toContain('Not built');
   });
 
-  it('lists, creates, and patches workspaces within Scale plan limit', async () => {
-    const org = await seedOrg(prisma, `cf_ws_${Date.now()}`, 'scale');
+  it('lists, creates, and patches workspaces within Business plan limit', async () => {
+    const org = await seedOrg(prisma, `cf_ws_${Date.now()}`, 'business');
     const listed = await workspaces.list(org.id, org.workspaces[0].id);
     expect(listed.data).toHaveLength(1);
     expect(listed.data[0].isCurrent).toBe(true);

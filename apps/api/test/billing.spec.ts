@@ -9,7 +9,7 @@ import { ApiKeysService } from '../src/api-keys/api-keys.service';
 import { GatewayService } from '../src/gateway/gateway.service';
 import { BillingService } from '../src/billing/billing.service';
 import { ApiExceptionFilter } from '../src/common/errors/api-exception.filter';
-import { PLANS } from '../src/billing/plans';
+import { PLANS, listPlans, normalizePlanId } from '../src/billing/plans';
 
 async function seedOrg(prisma: PrismaService, name: string) {
   return prisma.organization.create({
@@ -70,6 +70,20 @@ describe('Billing', () => {
 
   afterAll(async () => {
     await app.close();
+  });
+
+
+  it('exposes exactly four public plans', () => {
+    const plans = listPlans();
+    expect(plans.map((p) => p.id)).toEqual(['free', 'pro', 'business', 'enterprise']);
+    expect(billing.listPublicPlans()).toHaveLength(4);
+  });
+
+  it('maps legacy starter/creator/scale ids onto the four-plan catalog', () => {
+    expect(normalizePlanId('starter')).toBe('pro');
+    expect(normalizePlanId('creator')).toBe('pro');
+    expect(normalizePlanId('scale')).toBe('business');
+    expect(PLANS.business.workspaceLimit).toBe(3);
   });
 
   it('defaults new orgs to free plan quota', async () => {
