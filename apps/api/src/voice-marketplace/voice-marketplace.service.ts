@@ -1,4 +1,4 @@
-import { HttpStatus, Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuditService } from '../audit/audit.service';
@@ -6,19 +6,33 @@ import { BillingService } from '../billing/billing.service';
 import { ApiException } from '../common/errors/api-exception';
 import {
   LANGUAGE_PACK_CATALOG,
+  LANGUAGE_PACK_COUNT,
+  LANGUAGE_PACK_DEFAULT_PRICE_CENTS,
   voiceMarketplaceEngineCatalog,
 } from './voice-marketplace.catalog';
 
 const KINDS = ['voice', 'pack', 'language_pack', 'enterprise'] as const;
 const LICENSE_TYPES = ['personal', 'commercial', 'broadcast', 'enterprise', 'subscription'] as const;
 
+const STOCK_PUBLISHER_NAME = 'Lugemi Studio Stock';
+
 @Injectable()
-export class VoiceMarketplaceService {
+export class VoiceMarketplaceService implements OnModuleInit {
+  private readonly logger = new Logger(VoiceMarketplaceService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
     private readonly billing: BillingService,
   ) {}
+
+  async onModuleInit() {
+    if (!this.prisma.isReady()) {
+      this.logger.warn('DATABASE_URL unset — skipping voice marketplace language pack seed');
+      return;
+    }
+    await this.seedLanguagePackListingsSafe();
+  }
 
   engine() {
     return voiceMarketplaceEngineCatalog();
@@ -28,10 +42,171 @@ export class VoiceMarketplaceService {
     return {
       packs: Object.entries(LANGUAGE_PACK_CATALOG).map(([id, p]) => ({
         id,
-        ...p,
+        title: p.title,
+        language: p.language,
+        voices: p.voices,
+        description: p.description,
+        nameEn: p.nameEn,
+        nameNative: p.nameNative ?? null,
+        licenseType: 'commercial',
+        priceCents: LANGUAGE_PACK_DEFAULT_PRICE_CENTS,
+        sourceVoiceId: `language_pack:${id}`,
       })),
-      note: 'Curated own:* language packs. Celebrity packs deferred.',
+      count: LANGUAGE_PACK_COUNT,
+      note: `One commercial language pack per registry language (${LANGUAGE_PACK_COUNT}). Celebrity packs deferred.`,
     };
+  }
+
+  async seedLanguagePackListingsSafe() {
+    try {
+      await this.seedLanguagePackListings();
+    } catch (err) {
+      this.logger.warn(
+        `[voice-marketplace] language pack seed skipped: ${
+          err instanceof Error ? err.message : String(err)
+        }`,
+      );
+    }
+  }
+
+  async seedLanguagePackListings() {
+    if (!this.prisma.isReady()) return { seeded: 0, deduped: 0 };
+
+    const publisher = await this.ensureStockPublisher();
+    const workspaceId = publisher.workspaces[0]!.id;
+
+    const existing = await this.prisma.voiceListing.findMany({
+      where: { kind: 'language_pack' },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    const bySource = new Map<string, typeof existing>();
+    for (const row of existing) {
+      const list = bySource.get(row.sourceVoiceId) ?? [];
+      list.push(row);
+      bySource.set(row.sourceVoiceId, list);
+    }
+
+    let deduped = 0;
+    for (const rows of bySource.values()) {
+      const keep = rows.find((r) => r.status === 'published') ?? rows[0]!;
+      for (const dup of rows) {
+        if (dup.id === keep.id) continue;
+        if (dup.status === 'unpublished') continue;
+        await this.prisma.voiceListing.update({
+          where: { id: dup.id },
+          data: { status: 'unpublished' },
+        });
+        deduped += 1;
+      }
+    }
+
+    const publishedPackSources = new Set(
+      [...bySource.entries()]
+        .filter(([, rows]) => rows.some((r) => r.status === 'published'))
+        .map(([source]) => source),
+    );
+    const catalogComplete =
+      publishedPackSources.size >= LANGUAGE_PACK_COUNT &&
+      Object.keys(LANGUAGE_PACK_CATALOG).every((id) =>
+        publishedPackSources.has(`language_pack:${id}`),
+      );
+
+    if (catalogComplete && deduped === 0) {
+      return { seeded: 0, deduped: 0, catalog: LANGUAGE_PACK_COUNT };
+    }
+
+    let seeded = 0;
+    for (const [packId, pack] of Object.entries(LANGUAGE_PACK_CATALOG)) {
+      const sourceVoiceId = `language_pack:${packId}`;
+      const snapshot = {
+        languagePackId: packId,
+        voices: pack.voices,
+        nameEn: pack.nameEn,
+        nameNative: pack.nameNative ?? null,
+      } as Prisma.InputJsonValue;
+
+      const kept =
+        (bySource.get(sourceVoiceId) ?? []).find((r) => r.status === 'published') ??
+        bySource.get(sourceVoiceId)?.[0];
+
+      if (kept) {
+        await this.prisma.voiceListing.update({
+          where: { id: kept.id },
+          data: {
+            title: pack.title,
+            description: pack.description,
+            language: pack.language,
+            sourceType: 'pack',
+            sourceVoiceId,
+            licenseType: 'commercial',
+            rightsAttested: true,
+            celebrityClaim: false,
+            priceCents: LANGUAGE_PACK_DEFAULT_PRICE_CENTS,
+            currency: 'usd',
+            status: 'published',
+            snapshot,
+            publisherOrgId: kept.publisherOrgId || publisher.id,
+            publisherWorkspaceId: kept.publisherWorkspaceId || workspaceId,
+          },
+        });
+      } else {
+        await this.prisma.voiceListing.create({
+          data: {
+            publisherOrgId: publisher.id,
+            publisherWorkspaceId: workspaceId,
+            kind: 'language_pack',
+            sourceType: 'pack',
+            sourceVoiceId,
+            title: pack.title,
+            description: pack.description,
+            language: pack.language,
+            licenseType: 'commercial',
+            licenseNotes: '',
+            rightsAttested: true,
+            celebrityClaim: false,
+            priceCents: LANGUAGE_PACK_DEFAULT_PRICE_CENTS,
+            currency: 'usd',
+            status: 'published',
+            snapshot,
+          },
+        });
+        seeded += 1;
+      }
+    }
+
+    this.logger.log(
+      JSON.stringify({
+        event: 'voice_marketplace.language_packs_seeded',
+        catalog: LANGUAGE_PACK_COUNT,
+        seeded,
+        deduped,
+      }),
+    );
+    return { seeded, deduped, catalog: LANGUAGE_PACK_COUNT };
+  }
+
+  private async ensureStockPublisher() {
+    const existing = await this.prisma.organization.findFirst({
+      where: { name: STOCK_PUBLISHER_NAME },
+      include: { workspaces: true },
+    });
+    if (existing?.workspaces[0]) return existing;
+
+    return this.prisma.organization.create({
+      data: {
+        name: STOCK_PUBLISHER_NAME,
+        plan: 'enterprise',
+        workspaces: {
+          create: {
+            name: 'Catalog',
+            defaultSourceLang: 'en',
+            defaultTargetLang: 'sw',
+          },
+        },
+      },
+      include: { workspaces: true },
+    });
   }
 
   private assertOwnerOrAdmin(role: string) {
@@ -68,6 +243,18 @@ export class VoiceMarketplaceService {
     publisherOrg?: { name: string };
   }) {
     const avg = row.ratingCount > 0 ? row.ratingSum / row.ratingCount : null;
+    const snap =
+      row.snapshot && typeof row.snapshot === 'object' && !Array.isArray(row.snapshot)
+        ? (row.snapshot as Record<string, unknown>)
+        : {};
+    const voices = Array.isArray(snap.voices)
+      ? (snap.voices as unknown[]).filter((v): v is string => typeof v === 'string')
+      : [];
+    const previewVoiceId =
+      voices[0] ??
+      (row.kind === 'language_pack' && row.language
+        ? `own:${row.language}-pack`
+        : row.sourceVoiceId);
     return {
       id: row.id,
       kind: row.kind,
@@ -89,6 +276,7 @@ export class VoiceMarketplaceService {
       ratingAverage: avg != null ? Number(avg.toFixed(2)) : null,
       ratingCount: row.ratingCount,
       snapshot: row.snapshot,
+      previewVoiceId,
       publisherOrgId: row.publisherOrgId,
       publisherWorkspaceId: row.publisherWorkspaceId,
       publisherName: row.publisherOrg?.name ?? null,
@@ -99,15 +287,16 @@ export class VoiceMarketplaceService {
 
   async listPublished(organizationId: string, kind?: string) {
     await this.billing.assertPro(organizationId);
+    await this.seedLanguagePackListingsSafe();
     const rows = await this.prisma.voiceListing.findMany({
       where: {
         status: 'published',
         ...(kind ? { kind } : {}),
       },
       include: { publisherOrg: { select: { name: true } } },
-      orderBy: { createdAt: 'desc' },
+      orderBy: [{ language: 'asc' }, { title: 'asc' }, { createdAt: 'desc' }],
     });
-    return { listings: rows.map((r) => this.serialize(r)) };
+    return { listings: rows.map((r) => this.serialize(r)), languagePackCount: LANGUAGE_PACK_COUNT };
   }
 
   async listMine(organizationId: string) {
@@ -187,7 +376,7 @@ export class VoiceMarketplaceService {
       if (!pack) {
         throw new ApiException(
           'validation_error',
-          'languagePackId must be one of sw|yo|am|en (see GET /v1/voice-marketplace/language-packs)',
+          `languagePackId must be a registry language code (see GET /v1/voice-marketplace/language-packs; ${LANGUAGE_PACK_COUNT} packs)`,
           HttpStatus.BAD_REQUEST,
         );
       }
@@ -196,7 +385,57 @@ export class VoiceMarketplaceService {
       title = title || pack.title;
       description = description || pack.description;
       language = pack.language;
-      snapshot = { languagePackId: packId, voices: pack.voices };
+      snapshot = {
+        languagePackId: packId,
+        voices: pack.voices,
+        nameEn: pack.nameEn,
+        nameNative: pack.nameNative ?? null,
+      };
+
+      const existingPack = await this.prisma.voiceListing.findFirst({
+        where: { kind: 'language_pack', sourceVoiceId, status: 'published' },
+        include: { publisherOrg: { select: { name: true } } },
+      });
+      if (existingPack) {
+        const priceCentsUpsert = Math.max(
+          0,
+          Math.floor(Number(input.priceCents ?? existingPack.priceCents) || 0),
+        );
+        const updated = await this.prisma.voiceListing.update({
+          where: { id: existingPack.id },
+          data: {
+            title,
+            description,
+            language,
+            licenseType:
+              (LICENSE_TYPES as readonly string[]).includes(licenseType) && input.licenseType
+                ? licenseType
+                : existingPack.licenseType || 'commercial',
+            licenseNotes: input.licenseNotes?.trim() || existingPack.licenseNotes,
+            rightsAttested: Boolean(input.rightsAttested) || existingPack.rightsAttested,
+            priceCents: priceCentsUpsert,
+            currency:
+              (input.currency ?? existingPack.currency ?? 'usd').trim().toLowerCase() || 'usd',
+            snapshot: snapshot as Prisma.InputJsonValue,
+          },
+          include: { publisherOrg: { select: { name: true } } },
+        });
+        await this.audit.record({
+          organizationId: input.organizationId,
+          userId: input.userId,
+          action: 'voice_marketplace.published',
+          route: 'POST /v1/voice-marketplace/listings',
+          ip: input.ip,
+          metadata: {
+            listingId: updated.id,
+            kind,
+            sourceType,
+            priceCents: priceCentsUpsert,
+            upsert: true,
+          },
+        });
+        return this.serialize(updated);
+      }
     } else if (kind === 'pack') {
       const members = Array.isArray(input.packMemberIds) ? input.packMemberIds.filter(Boolean) : [];
       if (members.length < 2) {
@@ -314,7 +553,10 @@ export class VoiceMarketplaceService {
         licenseNotes: input.licenseNotes?.trim() || '',
         rightsAttested: Boolean(input.rightsAttested) || sourceType !== 'clone',
         celebrityClaim: false,
-        priceCents,
+        priceCents:
+          kind === 'language_pack' && input.priceCents == null
+            ? LANGUAGE_PACK_DEFAULT_PRICE_CENTS
+            : priceCents,
         currency: (input.currency ?? 'usd').trim().toLowerCase() || 'usd',
         subscriptionInterval,
         status: 'published',
@@ -611,6 +853,7 @@ export class VoiceMarketplaceService {
       salesCount: sales._count._all,
       revenueCents: sales._sum.amountCents ?? 0,
       reviewsReceived: reviews,
+      languagePackCatalogCount: LANGUAGE_PACK_COUNT,
       product: 'Lugemi Voice Marketplace',
       note: 'Publisher-side aggregates. Full Voice Analytics lives in the Voice Analytics hub.',
       docs: '/docs/VOICE_MARKETPLACE.md',
