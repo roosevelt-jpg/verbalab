@@ -2,33 +2,39 @@
 
 import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
-import { useCallback, useEffect, useState, type CSSProperties } from 'react';
+import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
 import { useDemoPlayer } from '@/components/marketing/use-demo-player';
+import { SearchableCombobox, type ComboboxOption } from '@/components/searchable-combobox';
 
 type Listing = {
   id: string;
   title: string;
   kind: string;
   sourceVoiceId: string;
+  previewVoiceId?: string;
+  language: string | null;
   licenseType: string;
   priceCents: number;
   ratingAverage: number | null;
   ratingCount: number;
   publisherName: string | null;
+  snapshot?: { voices?: string[]; nameEn?: string; nameNative?: string | null };
 };
 type Engine = {
   product: string;
   note: string;
-  capabilities: Array<{ id: string; name: string; status: string; notes: string }>;
+  languagePackCount?: number;
+  capabilities: Array<{ id: string; name: string; notes: string }>;
 };
 
 export function VoiceMarketplaceClient() {
   const { getToken, isLoaded } = useAuth();
   const [engine, setEngine] = useState<Engine | null>(null);
   const [listings, setListings] = useState<Listing[]>([]);
+  const [langFilter, setLangFilter] = useState('');
   const [title, setTitle] = useState('Nova Studio Stock');
   const [voiceId, setVoiceId] = useState('nova');
   const [priceCents, setPriceCents] = useState(0);
@@ -52,6 +58,31 @@ export function VoiceMarketplaceClient() {
     if (!isLoaded) return;
     void load().catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
+
+  const languageOptions: ComboboxOption[] = useMemo(() => {
+    const byCode = new Map<string, ComboboxOption>();
+    for (const l of listings) {
+      if (!l.language) continue;
+      if (byCode.has(l.language)) continue;
+      const name =
+        l.snapshot?.nameEn ??
+        (l.title.endsWith(' Pack') ? l.title.slice(0, -5) : l.title);
+      byCode.set(l.language, {
+        value: l.language,
+        label: `${name} (${l.language})`,
+        keywords: `${name} ${l.language} ${l.snapshot?.nameNative ?? ''} ${l.title}`,
+      });
+    }
+    return [
+      { value: '', label: 'All languages', keywords: 'all every' },
+      ...Array.from(byCode.values()).sort((a, b) => a.label.localeCompare(b.label)),
+    ];
+  }, [listings]);
+
+  const filteredListings = useMemo(() => {
+    if (!langFilter) return listings;
+    return listings.filter((l) => l.language === langFilter);
+  }, [listings, langFilter]);
 
   async function publish() {
     setBusy(true);
@@ -171,8 +202,28 @@ export function VoiceMarketplaceClient() {
 
       <section style={{ marginBottom: '1.75rem' }}>
         <h2 style={h2}>Catalog</h2>
+        <p style={{ color: 'var(--muted)', fontSize: '0.9rem', margin: '0 0 0.75rem' }}>
+          {engine?.languagePackCount
+            ? `${engine.languagePackCount} language packs in registry`
+            : 'Language packs from the full Lugemi registry'}
+          {langFilter
+            ? ` · showing ${filteredListings.length}`
+            : listings.length
+              ? ` · ${listings.length} listed`
+              : ''}
+        </p>
+        <div style={{ maxWidth: '28rem', marginBottom: '0.85rem' }}>
+          <SearchableCombobox
+            value={langFilter}
+            onChange={setLangFilter}
+            options={languageOptions}
+            placeholder="Filter by language…"
+            emptyLabel="All languages"
+            aria-label="Filter marketplace catalog by language"
+          />
+        </div>
         <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
-          {listings.map((l) => (
+          {filteredListings.map((l) => (
             <li
               key={l.id}
               style={{
@@ -188,7 +239,15 @@ export function VoiceMarketplaceClient() {
                 {l.ratingAverage != null ? ` · ★ ${l.ratingAverage} (${l.ratingCount})` : ''}
                 {l.publisherName ? ` · ${l.publisherName}` : ''}
               </div>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.5rem', alignItems: 'center' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: '0.5rem',
+                  marginTop: '0.5rem',
+                  alignItems: 'center',
+                }}
+              >
                 <DemoPlayStopButton
                   active={playingId === `mp-${l.id}`}
                   loading={loadingId === `mp-${l.id}`}
@@ -202,10 +261,15 @@ export function VoiceMarketplaceClient() {
                   }
                   onStop={stop}
                   onPlay={() => {
+                    const previewVoice =
+                      l.previewVoiceId ??
+                      l.snapshot?.voices?.[0] ??
+                      (l.language ? `own:${l.language}-pack` : 'nova');
                     void play({
                       id: `mp-${l.id}`,
                       text: `Hello from ${l.title}. This is a Lugemi marketplace voice preview.`,
-                      voiceId: l.sourceVoiceId,
+                      voiceId: previewVoice,
+                      lang: l.language ?? undefined,
                       label: l.title,
                     });
                   }}
@@ -219,8 +283,12 @@ export function VoiceMarketplaceClient() {
               </div>
             </li>
           ))}
-          {!listings.length ? (
-            <li style={{ color: 'var(--muted)' }}>No published voice listings yet (Pro plan required).</li>
+          {!filteredListings.length ? (
+            <li style={{ color: 'var(--muted)' }}>
+              {listings.length
+                ? 'No listings match this language filter.'
+                : 'No published voice listings yet (Pro plan required).'}
+            </li>
           ) : null}
         </ul>
       </section>

@@ -17,7 +17,7 @@
 | Voice Packs | **Shipped** — `kind=pack` |
 | Celebrity Voices | **Deferred / forbidden** without rights chain |
 | Enterprise Voices | **Partial** — approved clones + enterprise license |
-| Language Packs | **Shipped** — curated `own:*` packs (sw/yo/am/en) |
+| Language Packs | One commercial pack per registry language (204) — `language_pack:{code}` |
 | Analytics / Billing | **Partial** — publisher aggregates + Pro gate + recorded sales |
 | GraphQL / SDK / CLI | `voiceMarketplaceEngine`, language packs |
 | Production deployment | Shared Fly / Docker / optional EKS `af-south-1` |
@@ -35,6 +35,6 @@
 | Install / Reviews | `…/listings/:id/install` · `/reviews` |
 | Analytics / Sales | `GET …/analytics` · `/sales` |
 
-Voice Marketplace is **not** vendor voice clone Voice Library + celebrity marketplace combined.
+Voice Marketplace is **not** a third-party voice clone library or celebrity marketplace.
 
-See ADR-0088. Hub: [`VOICE_CLOUD.md`](./VOICE_CLOUD.md). Cloning trust: [`VOICE_CLONING.md`](./VOICE_CLONING.md).
+Hub: [`VOICE_CLOUD.md`](./VOICE_CLOUD.md). Cloning trust: [`VOICE_CLONING.md`](./VOICE_CLONING.md).

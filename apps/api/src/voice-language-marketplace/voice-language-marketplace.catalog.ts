@@ -1,3 +1,8 @@
+import {
+  LANGUAGE_PACK_CATALOG,
+  LANGUAGE_PACK_COUNT,
+} from '../voice-marketplace/voice-marketplace.catalog';
+
 export type VoiceLanguageMarketplaceStatus = 'shipped' | 'partial' | 'deferred';
 
 export type VoiceLanguageMarketplaceCapability = {
@@ -29,6 +34,17 @@ export type VoiceLanguageCatalogEntry = {
   notes: string;
 };
 
+function languagePackEntries(): VoiceLanguageCatalogEntry[] {
+  return Object.entries(LANGUAGE_PACK_CATALOG).map(([code, pack]) => ({
+    key: `language.${code}`,
+    name: `${pack.nameEn} Language Pack`,
+    packType: 'language' as const,
+    status: 'shipped' as const,
+    extendsApi: '/v1/voice-marketplace/language-packs',
+    notes: `Extends LANGUAGE_PACK_CATALOG ${code} (${pack.title}).`,
+  }));
+}
+
 /** Built-in pack SKUs — extend voice marketplace + language surfaces. */
 export const VOICE_LANGUAGE_PACK_CATALOG: VoiceLanguageCatalogEntry[] = [
   {
@@ -39,38 +55,7 @@ export const VOICE_LANGUAGE_PACK_CATALOG: VoiceLanguageCatalogEntry[] = [
     extendsApi: '/v1/voice-marketplace/listings',
     notes: 'Entitlement over existing kind=pack listings — not a voice CDN OS.',
   },
-  {
-    key: 'language.sw',
-    name: 'Swahili Language Pack',
-    packType: 'language',
-    status: 'shipped',
-    extendsApi: '/v1/voice-marketplace/language-packs',
-    notes: 'Extends existing LANGUAGE_PACK_CATALOG sw + own:* voices.',
-  },
-  {
-    key: 'language.yo',
-    name: 'Yoruba Language Pack',
-    packType: 'language',
-    status: 'shipped',
-    extendsApi: '/v1/voice-marketplace/language-packs',
-    notes: 'Extends existing LANGUAGE_PACK_CATALOG yo.',
-  },
-  {
-    key: 'language.am',
-    name: 'Amharic Language Pack',
-    packType: 'language',
-    status: 'shipped',
-    extendsApi: '/v1/voice-marketplace/language-packs',
-    notes: 'Extends existing LANGUAGE_PACK_CATALOG am.',
-  },
-  {
-    key: 'language.en',
-    name: 'English African Language Pack',
-    packType: 'language',
-    status: 'shipped',
-    extendsApi: '/v1/voice-marketplace/language-packs',
-    notes: 'Extends existing LANGUAGE_PACK_CATALOG en.',
-  },
+  ...languagePackEntries(),
   {
     key: 'dialect.generic',
     name: 'Dialect Pack',
@@ -141,7 +126,7 @@ export function voiceLanguageMarketplaceEngineCatalog() {
         name: 'Language Packs',
         status: 'shipped',
         api: 'POST /v1/voice-language-marketplace/listings',
-        notes: 'packType=language — extends existing language packs (sw/yo/am/en).',
+        notes: `packType=language — extends all ${LANGUAGE_PACK_COUNT} registry language packs.`,
       },
       {
         id: 'dialect-packs',
@@ -222,6 +207,7 @@ export function voiceLanguageMarketplaceEngineCatalog() {
       },
     ] satisfies VoiceLanguageMarketplaceCapability[],
     packTypes: VOICE_LANGUAGE_PACK_TYPES.map((id) => ({ id })),
+    languagePackCount: LANGUAGE_PACK_COUNT,
     packs: VOICE_LANGUAGE_PACK_CATALOG.map((c) => ({
       key: c.key,
       name: c.name,

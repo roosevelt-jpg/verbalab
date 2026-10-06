@@ -78,13 +78,70 @@ describe('Voice Marketplace', () => {
     expect(engine.body.product).toBe('Lugemi Voice Marketplace');
     expect(engine.body.honesty.celebrityWithoutRights).toBe(false);
     expect(engine.body.honesty.crossTenantCloneSynthesis).toBe(false);
+    expect(engine.body.languagePackCount).toBe(204);
     const celeb = engine.body.capabilities.find((c: { id: string }) => c.id === 'celebrity-voices');
     expect(celeb.status).toBe('deferred');
 
     const packs = await request(app.getHttpServer())
       .get('/v1/voice-marketplace/language-packs')
       .expect(200);
+    expect(packs.body.count).toBe(204);
+    expect(packs.body.packs).toHaveLength(204);
     expect(packs.body.packs.some((p: { id: string }) => p.id === 'sw')).toBe(true);
+    expect(packs.body.packs.some((p: { id: string }) => p.id === 'th')).toBe(true);
+    expect(packs.body.packs.some((p: { id: string }) => p.id === 'yo')).toBe(true);
+    expect(packs.body.packs.some((p: { id: string }) => p.id === 'vi')).toBe(true);
+    const sw = packs.body.packs.find((p: { id: string }) => p.id === 'sw');
+    expect(sw.title).toBe('Swahili Pack');
+    expect(sw.sourceVoiceId).toBe('language_pack:sw');
+    expect(sw.licenseType).toBe('commercial');
+  });
+
+  it('dedupes language pack publish upserts to a single sw listing', async () => {
+    const publisher = await seedOrg(prisma, 'vmdedupe');
+    await billing.applyEntitlementForTests({ organizationId: publisher.id, plan: 'pro' });
+    const pubKey = await apiKeys.create({
+      organizationId: publisher.id,
+      workspaceId: publisher.workspaces[0]!.id,
+      userId: publisher.memberships[0]!.userId,
+      name: 'vm-dedupe',
+    });
+
+    const first = await request(app.getHttpServer())
+      .post('/v1/voice-marketplace/listings')
+      .set('Authorization', `Bearer ${pubKey.secret}`)
+      .send({
+        kind: 'language_pack',
+        languagePackId: 'sw',
+        licenseType: 'commercial',
+        priceCents: 500,
+        rightsAttested: true,
+      })
+      .expect(201);
+
+    const second = await request(app.getHttpServer())
+      .post('/v1/voice-marketplace/listings')
+      .set('Authorization', `Bearer ${pubKey.secret}`)
+      .send({
+        kind: 'language_pack',
+        languagePackId: 'sw',
+        licenseType: 'commercial',
+        priceCents: 500,
+        rightsAttested: true,
+      })
+      .expect(201);
+
+    expect(second.body.id).toBe(first.body.id);
+    expect(second.body.sourceVoiceId).toBe('language_pack:sw');
+
+    const catalog = await request(app.getHttpServer())
+      .get('/v1/voice-marketplace/listings?kind=language_pack')
+      .set('Authorization', `Bearer ${pubKey.secret}`)
+      .expect(200);
+    const swRows = catalog.body.listings.filter(
+      (l: { sourceVoiceId: string }) => l.sourceVoiceId === 'language_pack:sw',
+    );
+    expect(swRows).toHaveLength(1);
   });
 
   it('rejects celebrity claims and free-plan publish', async () => {

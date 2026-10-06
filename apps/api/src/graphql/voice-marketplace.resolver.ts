@@ -18,6 +18,7 @@ export class VoiceMarketplaceGraphqlResolver {
       capabilities: catalog.capabilities as GqlVoiceMarketplaceCapability[],
       celebrityWithoutRights: catalog.architecture.celebrityWithoutRights,
       crossTenantCloneSynthesis: catalog.architecture.crossTenantCloneSynthesis,
+      languagePackCount: catalog.languagePackCount,
     };
   }
 }

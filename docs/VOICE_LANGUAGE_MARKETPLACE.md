@@ -10,7 +10,7 @@
 | Library ask | Lugemi reality |
 | --- | --- |
 | Voice Packs | **Shipped** — `packType=voice` over VL-177 packs |
-| Language Packs | **Shipped** — `language.sw/yo/am/en` over VL-177 language packs |
+| Language Packs | One pack per registry language (204) over Voice Marketplace language packs |
 | Dialect Packs | **Shipped** — metadata entitlement over dialect registry |
 | Accent Packs | **Partial** — metadata entitlement; acoustic models deferred |
 | Grammar Packs | **Partial** — metadata only; grammar OS deferred |
@@ -49,4 +49,4 @@
 | `realMoneyRiskCategory` | true |
 | `creatorPayoutMathVerifiedLive` | false |
 
-See ADR-0159. Prior surface: [`VOICE_MARKETPLACE.md`](./VOICE_MARKETPLACE.md). Ecosystem: [`ECOSYSTEM_CLOUD.md`](./ECOSYSTEM_CLOUD.md).
+Prior surface: [`VOICE_MARKETPLACE.md`](./VOICE_MARKETPLACE.md). Ecosystem: [`ECOSYSTEM_CLOUD.md`](./ECOSYSTEM_CLOUD.md).

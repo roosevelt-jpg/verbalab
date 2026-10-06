@@ -106,6 +106,10 @@ describe('Voice & Language Marketplace', () => {
     expect(res.body.docs).toBe('/docs/VOICE_LANGUAGE_MARKETPLACE.md');
     expect(res.body.packTypes.some((c: { id: string }) => c.id === 'language')).toBe(true);
     expect(res.body.packs.some((c: { key: string }) => c.key === 'language.sw')).toBe(true);
+    expect(res.body.languagePackCount).toBe(204);
+    expect(res.body.packs.filter((c: { packType: string }) => c.packType === 'language')).toHaveLength(
+      204,
+    );
   });
 
   it('exposes voiceLanguageMarketplaceEngine via GraphQL CQRS façade', async () => {

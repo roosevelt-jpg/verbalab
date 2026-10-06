@@ -3472,6 +3472,9 @@ export class GqlVoiceMarketplaceEngine {
 
   @Field()
   crossTenantCloneSynthesis!: boolean;
+
+  @Field({ nullable: true })
+  languagePackCount?: number;
 }
 
 @ObjectType()

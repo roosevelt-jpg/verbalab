@@ -705,9 +705,9 @@ export class VoiceAnalyticsService {
 }
 
 function languageFromVoiceId(voice: string): string | null {
-  const own = /^own:([a-z]{2,3})-/i.exec(voice);
+  const own = /^own:([a-z]{2,8})-/i.exec(voice);
   if (own?.[1]) return own[1].toLowerCase();
-  const pack = /^language_pack:([a-z]{2,3})$/i.exec(voice);
+  const pack = /^language_pack:([a-z]{2,8})$/i.exec(voice);
   if (pack?.[1]) return pack[1].toLowerCase();
   return null;
 }
