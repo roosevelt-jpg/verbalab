@@ -74,6 +74,16 @@ export class ClerkAuthGuard implements CanActivate {
       ? preferredOrgRaw[0]
       : preferredOrgRaw;
 
+    const geoRaw =
+      request.headers['x-lugemi-registered-from'] ??
+      request.headers['cf-ipcountry'] ??
+      request.headers['x-vercel-ip-country'];
+    const signupCountryRaw = Array.isArray(geoRaw) ? geoRaw[0] : geoRaw;
+    const signupCountry =
+      signupCountryRaw && signupCountryRaw !== 'XX' && signupCountryRaw !== 'T1'
+        ? signupCountryRaw
+        : undefined;
+
     const platformAdmin = isPlatformAdmin({ email, clerkUserId });
 
     const session = await this.identity.ensureSessionIdentity({
@@ -86,6 +96,7 @@ export class ClerkAuthGuard implements CanActivate {
       preferredWorkspaceId: preferredWorkspaceId?.trim() || undefined,
       preferredOrganizationId: preferredOrganizationId?.trim() || undefined,
       platformAdmin,
+      signupCountry,
     });
 
     request.sessionAuth = session;

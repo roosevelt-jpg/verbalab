@@ -11,6 +11,7 @@ import {
   type ModelFeature,
 } from './model-registry.seeds';
 import { modelsEngineCatalog } from './models-engine.catalog';
+import { defaultHostingForModelSlug } from '../residency/residency.catalog';
 
 @Injectable()
 export class ModelsService implements OnModuleInit {
@@ -33,6 +34,14 @@ export class ModelsService implements OnModuleInit {
   async ensureVendorDefaults() {
     for (const seed of VENDOR_MODEL_SEEDS) {
       const kind = seed.kind ?? 'vendor';
+      const hosting =
+        seed.dataCenter || seed.hostedResidency || seed.hostedRegion
+          ? {
+              hostedResidency: seed.hostedResidency ?? null,
+              dataCenter: seed.dataCenter ?? null,
+              hostedRegion: seed.hostedRegion ?? null,
+            }
+          : defaultHostingForModelSlug(seed.slug);
       await this.prisma.modelRegistryEntry.upsert({
         where: { slug: seed.slug },
         create: {
@@ -45,6 +54,9 @@ export class ModelsService implements OnModuleInit {
           status: 'ready',
           notes: seed.notes,
           metricsJson: { role: seed.role ?? 'primary', envKey: seed.envKey },
+          hostedResidency: hosting.hostedResidency,
+          dataCenter: hosting.dataCenter,
+          hostedRegion: hosting.hostedRegion,
         },
         update: {
           displayName: seed.displayName,
@@ -53,6 +65,9 @@ export class ModelsService implements OnModuleInit {
           provider: seed.provider,
           baseModel: seed.baseModel,
           notes: seed.notes,
+          hostedResidency: hosting.hostedResidency,
+          dataCenter: hosting.dataCenter,
+          hostedRegion: hosting.hostedRegion,
           // Do not force status — admins may retire a vendor entry.
         },
       });
@@ -121,6 +136,10 @@ export class ModelsService implements OnModuleInit {
             artifactKind: m.artifactKind,
             externalUrl: m.externalUrl,
             notes: m.notes,
+            hostedResidency: m.hostedResidency,
+            dataCenter: m.dataCenter,
+            hostedRegion: m.hostedRegion,
+            servingFrom: m.hostedResidency ?? m.dataCenter ?? null,
             configured,
             envKey: seed?.envKey ?? null,
           };

@@ -178,6 +178,17 @@ export function ChatClient() {
   const [interim, setInterim] = useState('');
   const [livePreview, setLivePreview] = useState('');
   const [hydrated, setHydrated] = useState(false);
+  const [servingFrom, setServingFrom] = useState<string | null>(null);
+
+  useEffect(() => {
+    void apiFetch<{ features: Array<{ feature: string; models: Array<{ slug: string; hostedResidency?: string | null; servingFrom?: string | null }> }> }>('/v1/models/live')
+      .then((matrix) => {
+        const chat = matrix.features.find((f) => f.feature === 'chat');
+        const atlas = chat?.models.find((m) => m.slug === 'lugemi-atlas-reason');
+        setServingFrom(atlas?.servingFrom ?? atlas?.hostedResidency ?? null);
+      })
+      .catch(() => undefined);
+  }, []);
 
   useEffect(() => {
     liveTargetRef.current = liveTarget;
@@ -900,6 +911,7 @@ export function ChatClient() {
               <p style={ledeStyle}>
                 Powered by Lugemi Atlas — complex multilingual reasoning and dialect nuance. Record
                 for live Baobab translation, upload documents/video/voice, or connect office tools.
+                {servingFrom ? (<><span style={{ color: 'var(--brand-navy)' }}> Serving from {servingFrom}.</span></>) : null}
               </p>
             </div>
             <div className="lg-chat-toolbar-actions">

@@ -43,6 +43,7 @@ import { ModelsModule } from './models/models.module';
 import { TrainingModule } from './training/training.module';
 import { VoiceClonesModule } from './voice-clones/voice-clones.module';
 import { RegionsModule } from './regions/regions.module';
+import { ResidencyModule } from './residency/residency.module';
 import { WorkspacesModule } from './workspaces/workspaces.module';
 import { CloudFoundationModule } from './cloud-foundation/cloud-foundation.module';
 import { DeveloperCloudModule } from './developer-cloud/developer-cloud.module';
@@ -455,6 +456,7 @@ import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
     TrainingModule,
     VoiceClonesModule,
     RegionsModule,
+    ResidencyModule,
   ],
 })
 export class AppModule implements NestModule {

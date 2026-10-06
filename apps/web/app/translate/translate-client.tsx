@@ -40,10 +40,18 @@ export function TranslateClient() {
   const [detectedSource, setDetectedSource] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [servingFrom, setServingFrom] = useState<string | null>(null);
 
   useEffect(() => {
     void apiFetch<Engine>('/v1/translate/engine')
       .then((eng) => setEngine(eng))
+      .catch(() => undefined);
+    void apiFetch<{ features: Array<{ feature: string; models: Array<{ slug: string; hostedResidency?: string | null; servingFrom?: string | null }> }> }>('/v1/models/live')
+      .then((matrix) => {
+        const translate = matrix.features.find((f) => f.feature === 'translate');
+        const baobab = translate?.models.find((m) => m.slug === 'lugemi-baobab-translate');
+        setServingFrom(baobab?.servingFrom ?? baobab?.hostedResidency ?? null);
+      })
       .catch(() => undefined);
   }, []);
 
@@ -106,6 +114,7 @@ export function TranslateClient() {
       <p style={ledeStyle}>
         Default pair is English → Twi (Akan, Ghana / <code className="vl-code">ak</code> ·{' '}\n        <code className="vl-code">ak-GH</code>). Pick any language or BCP-47 locale from the dropdowns —
         Powered by Lugemi Baobab — proprietary Africa-first MT for complex multilingual and dialect-aware tasks.
+        {servingFrom ? (<><span style={{ color: 'var(--brand-navy)' }}> Serving from {servingFrom}.</span></>) : null}
       </p>
       <p style={{ margin: '0.65rem 0 0', fontSize: '0.9rem' }}>
         <Link href="/models">Lugemi models</Link>

@@ -25,6 +25,9 @@ type WorkspaceRow = {
   plan: string;
   status: string;
   dataRegion: string | null;
+  residencyCountry?: string | null;
+  residencyRegion?: string | null;
+  registeredFrom?: string | null;
   memberCount: number;
   characterQuota: number;
   disabledAt: string | null;
@@ -48,6 +51,9 @@ type WorkspaceDetail = {
   billingStatus: string;
   characterQuota: number;
   dataRegion: string | null;
+  residencyCountry?: string | null;
+  residencyRegion?: string | null;
+  registeredFrom?: string | null;
   status: string;
   disabledAt: string | null;
   disabledReason: string | null;
@@ -136,6 +142,9 @@ export function AdminWorkspacesClient() {
   const [editPlan, setEditPlan] = useState('free');
   const [editQuota, setEditQuota] = useState(50000);
   const [editRegion, setEditRegion] = useState('');
+  const [editResidencyCountry, setEditResidencyCountry] = useState('');
+  const [editResidencyRegion, setEditResidencyRegion] = useState('');
+  const [editRegisteredFrom, setEditRegisteredFrom] = useState('');
 
   const tokenFn = useCallback(async () => {
     const token = await getToken();
@@ -205,6 +214,9 @@ export function AdminWorkspacesClient() {
       setEditPlan(detail.plan);
       setEditQuota(detail.characterQuota);
       setEditRegion(detail.dataRegion ?? '');
+      setEditResidencyCountry(detail.residencyCountry ?? '');
+      setEditResidencyRegion(detail.residencyRegion ?? '');
+      setEditRegisteredFrom(detail.registeredFrom ?? '');
     } catch (err) {
       setError(softFailMessage(err, 'Load failed'));
     } finally {
@@ -433,7 +445,7 @@ export function AdminWorkspacesClient() {
                             }} aria-label={`Select ${row.name}`} />
                             <button type="button" onClick={() => void openDetail(row.id)}>
                               <strong>{row.name}</strong>
-                              <span>{row.plan} · {row.status} · {row.memberCount} members · {(row.usageSummary.characters / 1000).toFixed(1)}k chars{row.dataRegion ? ` · ${row.dataRegion}` : ''}</span>
+                              <span>{row.plan} · {row.status} · {row.memberCount} members · {(row.usageSummary.characters / 1000).toFixed(1)}k chars{row.dataRegion ? ` · pin ${row.dataRegion}` : ''}{row.residencyCountry ? ` · residency ${row.residencyCountry}` : ''}</span>
                               <code>{row.id}</code>
                             </button>
                           </div>
@@ -491,11 +503,14 @@ export function AdminWorkspacesClient() {
                             {PLANS.filter(Boolean).map((p) => <option key={p} value={p}>{p}</option>)}
                           </select>
                           <input className="vl-input" type="number" value={editQuota} onChange={(e) => setEditQuota(Number(e.target.value))} aria-label="Quota" />
-                          <input className="vl-input" value={editRegion} onChange={(e) => setEditRegion(e.target.value)} placeholder="Region" aria-label="Region" />
+                          <input className="vl-input" value={editRegion} onChange={(e) => setEditRegion(e.target.value)} placeholder="Deploy pin (us/eu)" aria-label="Deploy region" />
+                          <input className="vl-input" value={editResidencyCountry} onChange={(e) => setEditResidencyCountry(e.target.value.toUpperCase())} placeholder="Residency country" aria-label="Residency country" maxLength={2} />
+                          <input className="vl-input" value={editResidencyRegion} onChange={(e) => setEditResidencyRegion(e.target.value)} placeholder="Residency region" aria-label="Residency region" />
+                          <input className="vl-input" value={editRegisteredFrom} onChange={(e) => setEditRegisteredFrom(e.target.value.toUpperCase())} placeholder="Registered from" aria-label="Registered from" maxLength={2} />
                           <button type="button" className="vl-btn" disabled={busy} onClick={() => void (async () => {
                             const token = await tokenFn();
-                            await apiFetch(`/v1/admin/workspaces/${selected.id}`, { method: 'PATCH', token, body: JSON.stringify({ plan: editPlan, characterQuota: editQuota, dataRegion: editRegion || null }) });
-                            await openDetail(selected.id); await loadList(); setMessage('Billing updated');
+                            await apiFetch(`/v1/admin/workspaces/${selected.id}`, { method: 'PATCH', token, body: JSON.stringify({ plan: editPlan, characterQuota: editQuota, dataRegion: editRegion || null, residencyCountry: editResidencyCountry || null, residencyRegion: editResidencyRegion || null, registeredFrom: editRegisteredFrom || null }) });
+                            await openDetail(selected.id); await loadList(); setMessage('Billing & residency updated');
                           })()}>Save</button>
                         </div>
                       </div>

@@ -4,6 +4,10 @@ import { PrismaService } from '../prisma/prisma.service';
 import { SessionContext } from '../common/guards/clerk-auth.guard';
 import { NotificationsService } from '../notifications/notifications.service';
 import { mapClerkOrgRole } from './clerk-roles';
+import {
+  normalizeCountry,
+  regionLabelForCountry,
+} from '../residency/residency.catalog';
 
 @Injectable()
 export class IdentityService {
@@ -28,20 +32,44 @@ export class IdentityService {
      */
     preferredOrganizationId?: string;
     platformAdmin?: boolean;
+    /** Signup / request geo (CF-IPCountry or X-Lugemi-Registered-From). */
+    signupCountry?: string;
   }): Promise<SessionContext> {
     const clerkMappedRole = mapClerkOrgRole(input.clerkOrgRole);
+    const signup = normalizeCountry(input.signupCountry);
     const user = await this.prisma.user.upsert({
       where: { clerkUserId: input.clerkUserId },
       create: {
         clerkUserId: input.clerkUserId,
         email: input.email,
         name: input.name,
+        ...(signup
+          ? {
+              registeredFrom: signup,
+              residencyCountry: signup,
+              residencyRegion: regionLabelForCountry(signup),
+            }
+          : {}),
       },
       update: {
         email: input.email,
         name: input.name,
       },
     });
+
+    if (signup && !user.registeredFrom) {
+      await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          registeredFrom: signup,
+          residencyCountry: user.residencyCountry ?? signup,
+          residencyRegion: user.residencyRegion ?? regionLabelForCountry(signup),
+        },
+      });
+      user.registeredFrom = signup;
+      user.residencyCountry = user.residencyCountry ?? signup;
+      user.residencyRegion = user.residencyRegion ?? regionLabelForCountry(signup);
+    }
 
     // Apply pending Lugemi invites before creating a personal org.
     await this.acceptPendingInvitesForUser(user.id, input.email);
@@ -118,6 +146,13 @@ export class IdentityService {
         data: {
           clerkOrgId: input.clerkOrgId,
           name: input.orgName ?? 'Organization',
+          ...(signup
+            ? {
+                registeredFrom: signup,
+                residencyCountry: signup,
+                residencyRegion: regionLabelForCountry(signup),
+              }
+            : {}),
           memberships: {
             create: { userId: user.id, role: MembershipRole.owner },
           },
@@ -137,10 +172,27 @@ export class IdentityService {
 
       if (membership) {
         organization = membership.organization;
+        if (signup && !organization.registeredFrom) {
+          organization = await this.prisma.organization.update({
+            where: { id: organization.id },
+            data: {
+              registeredFrom: signup,
+              residencyCountry: organization.residencyCountry ?? signup,
+              residencyRegion: organization.residencyRegion ?? regionLabelForCountry(signup),
+            },
+          });
+        }
       } else {
         organization = await this.prisma.organization.create({
           data: {
             name: input.orgName ?? `${input.name ?? 'Personal'} workspace`,
+            ...(signup
+              ? {
+                  registeredFrom: signup,
+                  residencyCountry: signup,
+                  residencyRegion: regionLabelForCountry(signup),
+                }
+              : {}),
             memberships: {
               create: { userId: user.id, role: MembershipRole.owner },
             },
@@ -151,6 +203,16 @@ export class IdentityService {
         });
       }
     } else {
+      if (signup && !organization.registeredFrom) {
+        organization = await this.prisma.organization.update({
+          where: { id: organization.id },
+          data: {
+            registeredFrom: signup,
+            residencyCountry: organization.residencyCountry ?? signup,
+            residencyRegion: organization.residencyRegion ?? regionLabelForCountry(signup),
+          },
+        });
+      }
       const existingMembership = await this.prisma.membership.findUnique({
         where: {
           organizationId_userId: { organizationId: organization.id, userId: user.id },

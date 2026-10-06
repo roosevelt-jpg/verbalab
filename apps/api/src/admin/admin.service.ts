@@ -74,6 +74,9 @@ export class AdminService {
           billingStatus: true,
           characterQuota: true,
           dataRegion: true,
+          residencyCountry: true,
+          residencyRegion: true,
+          registeredFrom: true,
           disabledAt: true,
           disabledReason: true,
           clerkOrgId: true,
@@ -103,6 +106,9 @@ export class AdminService {
         billingStatus: org.billingStatus,
         characterQuota: org.characterQuota,
         dataRegion: org.dataRegion,
+        residencyCountry: org.residencyCountry,
+        residencyRegion: org.residencyRegion,
+        registeredFrom: org.registeredFrom,
         status: org.disabledAt
           ? 'suspended'
           : org.billingStatus === 'active'
@@ -149,6 +155,9 @@ export class AdminService {
         billingStatus: true,
         characterQuota: true,
         dataRegion: true,
+        residencyCountry: true,
+        residencyRegion: true,
+        registeredFrom: true,
         retentionDays: true,
         persistSourceText: true,
         allowVendorTraining: true,
@@ -208,6 +217,9 @@ export class AdminService {
       billingStatus: org.billingStatus,
       characterQuota: org.characterQuota,
       dataRegion: org.dataRegion,
+      residencyCountry: org.residencyCountry,
+      residencyRegion: org.residencyRegion,
+      registeredFrom: org.registeredFrom,
       retentionDays: org.retentionDays,
       persistSourceText: org.persistSourceText,
       allowVendorTraining: org.allowVendorTraining,
@@ -281,6 +293,9 @@ export class AdminService {
       plan?: string;
       characterQuota?: number;
       dataRegion?: string | null;
+      residencyCountry?: string | null;
+      residencyRegion?: string | null;
+      registeredFrom?: string | null;
       billingStatus?: string;
       featureOverrides?: Record<string, boolean | null>;
       retentionDays?: number | null;
@@ -307,6 +322,15 @@ export class AdminService {
     }
     if (body.dataRegion !== undefined) {
       data.dataRegion = body.dataRegion?.trim() || null;
+    }
+    if (body.residencyCountry !== undefined) {
+      data.residencyCountry = body.residencyCountry?.trim().toUpperCase() || null;
+    }
+    if (body.residencyRegion !== undefined) {
+      data.residencyRegion = body.residencyRegion?.trim() || null;
+    }
+    if (body.registeredFrom !== undefined) {
+      data.registeredFrom = body.registeredFrom?.trim().toUpperCase() || null;
     }
     if (typeof body.billingStatus === 'string' && body.billingStatus.trim()) {
       data.billingStatus = body.billingStatus.trim();
@@ -748,6 +772,9 @@ export class AdminService {
     plan?: string;
     ownerEmail?: string;
     dataRegion?: string;
+    residencyCountry?: string;
+    residencyRegion?: string;
+    registeredFrom?: string;
     characterQuota?: number;
     ip?: string;
   }) {
@@ -777,12 +804,19 @@ export class AdminService {
       }
     }
 
+    const residencyCountry = input.residencyCountry?.trim().toUpperCase() || null;
+    const registeredFrom =
+      input.registeredFrom?.trim().toUpperCase() || residencyCountry || null;
+
     const org = await this.prisma.organization.create({
       data: {
         name,
         plan: plan.id,
         characterQuota: input.characterQuota ?? plan.characterQuota,
         dataRegion: input.dataRegion?.trim() || null,
+        residencyCountry,
+        residencyRegion: input.residencyRegion?.trim() || null,
+        registeredFrom,
         memberships: {
           create: { userId: ownerUserId, role: MembershipRole.owner },
         },
@@ -822,6 +856,9 @@ export class AdminService {
       name: org.name,
       plan: org.plan,
       dataRegion: org.dataRegion,
+      residencyCountry: org.residencyCountry,
+      residencyRegion: org.residencyRegion,
+      registeredFrom: org.registeredFrom,
       characterQuota: org.characterQuota,
       workspaceId: org.workspaces[0]?.id ?? null,
       ownerUserId,

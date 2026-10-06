@@ -25,7 +25,8 @@ type InviteRow = {
 
 type Overview = {
   session: { role: string; userId: string; clerkUserId: string };
-  organization: { name: string; clerkOrgId: string | null; plan: string };
+  profile?: { userId: string; email: string | null; name: string | null; residencyCountry: string | null; residencyRegion: string | null; registeredFrom: string | null };
+  organization: { name: string; clerkOrgId: string | null; plan: string; residencyCountry?: string | null; residencyRegion?: string | null; registeredFrom?: string | null; dataRegion?: string | null };
   members: { total: number; byRole: Record<string, number>; data: MemberRow[] };
   machineIdentity: { activeKeys: number; revokedKeys: number };
   provider: {
@@ -49,12 +50,20 @@ export function IdentityClient() {
   const [inviteError, setInviteError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
+  const [residencyCountry, setResidencyCountry] = useState('');
+  const [residencyRegion, setResidencyRegion] = useState('');
+  const [orgResidencyCountry, setOrgResidencyCountry] = useState('');
+  const [orgResidencyRegion, setOrgResidencyRegion] = useState('');
 
   const load = useCallback(async () => {
     const token = await getToken();
     if (!token) throw new Error('Not signed in');
     const overview = await apiFetch<Overview>('/v1/identity/overview', { token });
     setData(overview);
+    setResidencyCountry(overview.profile?.residencyCountry ?? '');
+    setResidencyRegion(overview.profile?.residencyRegion ?? '');
+    setOrgResidencyCountry(overview.organization.residencyCountry ?? '');
+    setOrgResidencyRegion(overview.organization.residencyRegion ?? '');
     try {
       const inviteRows = await apiFetch<InviteRow[]>('/v1/organization/invites', { token });
       setInvites(inviteRows);
@@ -145,6 +154,27 @@ export function IdentityClient() {
     }
   }
 
+
+  async function saveUserResidency() {
+    setError(null); setMessage(null); setBusyId('user-residency');
+    try {
+      const token = await getToken();
+      if (!token) throw new Error('Not signed in');
+      await apiFetch('/v1/residency/user', { method: 'PATCH', token, body: JSON.stringify({ residencyCountry: residencyCountry.trim() || null, residencyRegion: residencyRegion.trim() || null }) });
+      setMessage('Your residency saved.'); await load();
+    } catch (err) { setError(err instanceof Error ? err.message : 'Residency save failed'); }
+    finally { setBusyId(null); }
+  }
+  async function saveOrgResidency() {
+    setError(null); setMessage(null); setBusyId('org-residency');
+    try {
+      const token = await getToken();
+      if (!token) throw new Error('Not signed in');
+      await apiFetch('/v1/residency/organization', { method: 'PATCH', token, body: JSON.stringify({ residencyCountry: orgResidencyCountry.trim() || null, residencyRegion: orgResidencyRegion.trim() || null }) });
+      setMessage('Organization residency saved.'); await load();
+    } catch (err) { setError(err instanceof Error ? err.message : 'Org residency save failed'); }
+    finally { setBusyId(null); }
+  }
   const canManage = data?.session.role === 'owner' || data?.session.role === 'admin';
   const pendingInvites = invites.filter((i) => i.status === 'pending');
 
@@ -214,6 +244,28 @@ export function IdentityClient() {
                 margin: '0 0 0.5rem',
               }}
             >
+
+          <section>
+            <h2 style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--muted)', margin: '0 0 0.5rem' }}>Residency</h2>
+            <p style={{ color: 'var(--muted)', fontSize: '0.9rem', margin: '0 0 1rem' }}>Person residency = registration origin. Models are hosted in Lugemi data centers (<code>GET /v1/residency</code>).</p>
+            <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fit, minmax(16rem, 1fr))' }}>
+              <div className="vl-panel" style={{ padding: '1rem' }}>
+                <div style={{ fontWeight: 650 }}>Your profile</div>
+                <p style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>Registered from {data.profile?.registeredFrom ?? '—'}</p>
+                <input className="vl-field" value={residencyCountry} onChange={(e) => setResidencyCountry(e.target.value.toUpperCase())} placeholder="Country ISO" maxLength={2} style={{ marginBottom: '0.5rem', width: '100%' }} />
+                <input className="vl-field" value={residencyRegion} onChange={(e) => setResidencyRegion(e.target.value)} placeholder="Region label" style={{ marginBottom: '0.75rem', width: '100%' }} />
+                <button type="button" className="vl-btn vl-btn-primary" disabled={busyId === 'user-residency'} onClick={() => void saveUserResidency()}>Save my residency</button>
+              </div>
+              <div className="vl-panel" style={{ padding: '1rem' }}>
+                <div style={{ fontWeight: 650 }}>Organization</div>
+                <p style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>Registered from {data.organization.registeredFrom ?? '—'}</p>
+                <input className="vl-field" value={orgResidencyCountry} onChange={(e) => setOrgResidencyCountry(e.target.value.toUpperCase())} placeholder="Country ISO" maxLength={2} disabled={!canManage} style={{ marginBottom: '0.5rem', width: '100%' }} />
+                <input className="vl-field" value={orgResidencyRegion} onChange={(e) => setOrgResidencyRegion(e.target.value)} placeholder="Region label" disabled={!canManage} style={{ marginBottom: '0.75rem', width: '100%' }} />
+                {canManage ? <button type="button" className="vl-btn vl-btn-primary" disabled={busyId === 'org-residency'} onClick={() => void saveOrgResidency()}>Save org residency</button> : <p style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>Owners/admins edit org residency.</p>}
+              </div>
+            </div>
+          </section>
+
               Members ({data.members.total})
             </h2>
             <p style={{ color: 'var(--muted)', fontSize: '0.9rem', margin: '0 0 1rem' }}>

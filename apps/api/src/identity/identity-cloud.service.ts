@@ -20,19 +20,51 @@ export class IdentityCloudService {
   }
 
   async overview(session: SessionContext) {
-    const [org, members, keys] = await Promise.all([
+    const [org, members, keys, user] = await Promise.all([
       this.prisma.organization.findUniqueOrThrow({
         where: { id: session.organizationId },
-        select: { id: true, name: true, clerkOrgId: true, plan: true, disabledAt: true },
+        select: {
+          id: true,
+          name: true,
+          clerkOrgId: true,
+          plan: true,
+          disabledAt: true,
+          residencyCountry: true,
+          residencyRegion: true,
+          registeredFrom: true,
+          dataRegion: true,
+        },
       }),
       this.prisma.membership.findMany({
         where: { organizationId: session.organizationId },
-        include: { user: { select: { id: true, email: true, name: true } } },
+        include: {
+          user: {
+            select: {
+              id: true,
+              email: true,
+              name: true,
+              residencyCountry: true,
+              residencyRegion: true,
+              registeredFrom: true,
+            },
+          },
+        },
         orderBy: { createdAt: 'asc' },
       }),
       this.prisma.apiKey.findMany({
         where: { organizationId: session.organizationId },
         select: { revokedAt: true },
+      }),
+      this.prisma.user.findUniqueOrThrow({
+        where: { id: session.userId },
+        select: {
+          id: true,
+          email: true,
+          name: true,
+          residencyCountry: true,
+          residencyRegion: true,
+          registeredFrom: true,
+        },
       }),
     ]);
 
@@ -56,12 +88,24 @@ export class IdentityCloudService {
 
     return {
       session: this.me(session),
+      profile: {
+        userId: user.id,
+        email: user.email,
+        name: user.name,
+        residencyCountry: user.residencyCountry,
+        residencyRegion: user.residencyRegion,
+        registeredFrom: user.registeredFrom,
+      },
       organization: {
         id: org.id,
         name: org.name,
         clerkOrgId: org.clerkOrgId,
         plan: org.plan,
         disabled: Boolean(org.disabledAt),
+        residencyCountry: org.residencyCountry,
+        residencyRegion: org.residencyRegion,
+        registeredFrom: org.registeredFrom,
+        dataRegion: org.dataRegion,
       },
       members: {
         total: data.length,
@@ -100,6 +144,7 @@ export class IdentityCloudService {
         consolePath: '/audit',
       },
       docs: '/docs/IDENTITY_CLOUD.md',
+      residencyDocs: '/docs/residency.md',
     };
   }
 }

@@ -31,6 +31,9 @@ export type VendorDefaultSeed = {
   envKey: string | null;
   role?: 'primary' | 'fallback';
   kind?: ModelKind;
+  hostedResidency?: string;
+  dataCenter?: string;
+  hostedRegion?: string;
 };
 
 /**

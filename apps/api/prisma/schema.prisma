@@ -30,6 +30,9 @@ model Organization {
   plan                 String   @default("free")
   characterQuota       Int      @default(50000) @map("character_quota")
   dataRegion           String?  @map("data_region")
+  residencyCountry     String?  @map("residency_country")
+  residencyRegion      String?  @map("residency_region")
+  registeredFrom       String?  @map("registered_from")
   stripeCustomerId     String?  @unique @map("stripe_customer_id")
   stripeSubscriptionId String?  @unique @map("stripe_subscription_id")
   stripeConnectAccountId String? @unique @map("stripe_connect_account_id")
@@ -102,6 +105,7 @@ model Organization {
   @@index([plan])
   @@index([billingStatus])
   @@index([dataRegion])
+  @@index([residencyCountry])
   @@index([disabledAt])
   @@map("organizations")
 }
@@ -128,6 +132,9 @@ model User {
   clerkUserId String   @unique @map("clerk_user_id")
   email       String?
   name        String?
+  residencyCountry String? @map("residency_country")
+  residencyRegion  String? @map("residency_region")
+  registeredFrom   String? @map("registered_from")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
@@ -137,6 +144,7 @@ model User {
   auditEvents AuditEvent[]
   reviews     TranslationReview[]
 
+  @@index([residencyCountry])
   @@map("users")
 }
 
@@ -948,6 +956,9 @@ model ModelRegistryEntry {
   externalUrl   String?  @map("external_url")
   notes         String?
   metricsJson   Json?    @map("metrics_json")
+  hostedResidency String? @map("hosted_residency")
+  dataCenter      String? @map("data_center")
+  hostedRegion    String? @map("hosted_region")
   fineTuneJobId String?  @unique @map("fine_tune_job_id")
   createdAt     DateTime @default(now()) @map("created_at")
   updatedAt     DateTime @updatedAt @map("updated_at")
@@ -956,6 +967,8 @@ model ModelRegistryEntry {
 
   @@index([feature, status])
   @@index([feature, sourceLang, targetLang, status])
+  @@index([hostedRegion])
+  @@index([dataCenter])
   @@map("model_registry")
 }
 

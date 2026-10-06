@@ -10,6 +10,8 @@ Visible brand, packages, env vars, `X-Lugemi-*` headers, and health JSON (`lugem
 
 Vendor adapters in `apps/api/src/gateway/` are **historical scaffolding** for local/legacy fallbacks — not the public product. Intended production speech uses `OWN_TTS_URL` (`own:*` voices). Do not treat fixtures as live GPU.
 
+**Residency:** Person residency = registration origin; model residency = data-center host. See [`docs/residency.md`](docs/residency.md) and `GET /v1/residency`.
+
 ## Prerequisites
 
 - Node.js 20+

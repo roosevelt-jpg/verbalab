@@ -97,6 +97,9 @@ export class AdminController {
       plan?: string;
       ownerEmail?: string;
       dataRegion?: string;
+      residencyCountry?: string;
+      residencyRegion?: string;
+      registeredFrom?: string;
       characterQuota?: number;
     },
   ) {
@@ -106,6 +109,9 @@ export class AdminController {
       plan: body.plan,
       ownerEmail: body.ownerEmail,
       dataRegion: body.dataRegion,
+      residencyCountry: body.residencyCountry,
+      residencyRegion: body.residencyRegion,
+      registeredFrom: body.registeredFrom,
       characterQuota: body.characterQuota,
       ip: clientIp(req),
     });
@@ -150,6 +156,9 @@ export class AdminController {
       plan?: string;
       characterQuota?: number;
       dataRegion?: string | null;
+      residencyCountry?: string | null;
+      residencyRegion?: string | null;
+      registeredFrom?: string | null;
       billingStatus?: string;
       featureOverrides?: Record<string, boolean | null>;
       retentionDays?: number | null;

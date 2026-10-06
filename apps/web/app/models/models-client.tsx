@@ -28,6 +28,10 @@ type LiveModel = {
   envKey: string | null;
   externalUrl: string | null;
   notes: string | null;
+  hostedResidency?: string | null;
+  dataCenter?: string | null;
+  hostedRegion?: string | null;
+  servingFrom?: string | null;
 };
 
 type FeatureBlock = {
@@ -335,6 +339,12 @@ export function ModelsClient() {
                         {m.sourceLang && m.targetLang ? ` · ${m.sourceLang}→${m.targetLang}` : ''}
                         {m.configured ? ' · ready to call' : ' · not configured'}
                       </div>
+                      {m.hostedResidency || m.dataCenter ? (
+                        <div style={{ color: 'var(--brand-navy)', fontSize: '0.85rem', marginTop: '0.35rem' }}>
+                          Hosted {m.hostedResidency ?? m.dataCenter}
+                          {m.hostedRegion ? ` · affinity ${m.hostedRegion}` : ''}
+                        </div>
+                      ) : null}
                       {m.notes ? (
                         <div style={{ color: '#555', fontSize: '0.85rem', marginTop: '0.35rem' }}>
                           {m.notes}
