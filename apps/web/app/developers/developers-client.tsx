@@ -61,10 +61,10 @@ export function DevelopersClient() {
         Developers
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '40rem', lineHeight: 1.6 }}>
-        Build with Lugemi in minutes: create an API key, install <code className="vl-code">@lugemi/sdk</code>, and
-        call translate or speech. Africa-first coverage across countries and communities; LATAM, Southeast Asia, the
-        Middle East, and the EU also in scope. Soft <code className="vl-code">vl_test_</code> keys share this cluster —
-        not a separate sandbox plane.
+        Build speaking agents with Lugemi: create an API key, install <code className="vl-code">@lugemi/sdk</code>, and
+        call speech, translate, detect, or voice simulate. Africa-first languages, accents, and cultural context; LATAM,
+        Southeast Asia, the Middle East, and the EU in scope. Soft <code className="vl-code">lg_test_</code> keys share
+        this cluster — not a separate sandbox plane.
       </p>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
