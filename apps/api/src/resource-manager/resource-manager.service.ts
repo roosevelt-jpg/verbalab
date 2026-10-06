@@ -4,7 +4,7 @@ import { GpuPlatformService } from '../gpu-platform/gpu-platform.service';
 import { GpuRuntimeService } from '../gpu-runtime/gpu-runtime.service';
 import { AiKernelService } from '../ai-kernel/ai-kernel.service';
 
-@Injectable()
+@Injectable
 export class ResourceManagerService {
   constructor(
     private readonly gpuPlatform: GpuPlatformService,
@@ -12,36 +12,36 @@ export class ResourceManagerService {
     private readonly aiKernel: AiKernelService
   ) {}
 
-  engine() {
-    return resourceManagerEngineCatalog();
+  engine {
+    return resourceManagerEngineCatalog;
   }
 
   /** Route/execute façade: returns upstream endpoint + live status from injected Kernel/Fabric/Data Plane services. */
   route(capability?: string) {
-    const catalog = this.engine();
-    const q = (capability ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (capability ?? '').trim.toLowerCase;
     const capabilities = catalog.capabilities.filter((c) => {
       if (!q) return true;
-      return c.id.includes(q) || c.name.toLowerCase().includes(q);
+      return c.id.includes(q) || c.name.toLowerCase.includes(q);
     });
     const upstreamStatus = [
       {
         module: 'gpu-platform',
         method: 'engine',
         status: 'reachable',
-        upstream: this.gpuPlatform.engine(),
+        upstream: this.gpuPlatform.engine,
       },
       {
         module: 'gpu-runtime',
         method: 'engine',
         status: 'reachable',
-        upstream: this.gpuRuntime.engine(),
+        upstream: this.gpuRuntime.engine,
       },
       {
         module: 'ai-kernel',
         method: 'products',
         status: 'reachable',
-        upstream: this.aiKernel.products(),
+        upstream: this.aiKernel.products,
       }
     ];
     return {
@@ -63,11 +63,11 @@ export class ResourceManagerService {
   }
 
   list(query?: string) {
-    const catalog = this.engine();
-    const q = (query ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (query ?? '').trim.toLowerCase;
     const rows = catalog.routes.filter((row) => {
       if (!q) return true;
-      return JSON.stringify(row).toLowerCase().includes(q);
+      return JSON.stringify(row).toLowerCase.includes(q);
     });
     return {
       routes: rows,
@@ -84,8 +84,8 @@ export class ResourceManagerService {
     return this.list(query);
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'resource-manager',
       count: catalog.routes.length,
@@ -94,7 +94,7 @@ export class ResourceManagerService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'ResourceManager monitoring snapshot (VL-337).',
+      note: 'ResourceManager monitoring snapshot.',
     };
   }
 }

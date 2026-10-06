@@ -17,8 +17,8 @@ export class ListSpeechProductsHandler implements IQueryHandler<ListSpeechProduc
     @Inject(SPEECH_CATALOG_PORT) private readonly catalog: SpeechCatalogPort,
   ) {}
 
-  execute(): Promise<SpeechProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<SpeechProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 
@@ -30,8 +30,8 @@ export class GetSpeechProductsBundleHandler
     @Inject(SPEECH_CATALOG_PORT) private readonly catalog: SpeechCatalogPort,
   ) {}
 
-  execute(): Promise<SpeechProductsBundle> {
-    return Promise.resolve(this.catalog.products());
+  execute: Promise<SpeechProductsBundle> {
+    return Promise.resolve(this.catalog.products);
   }
 }
 

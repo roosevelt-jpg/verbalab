@@ -33,8 +33,8 @@ type Analytics = {
   byKind: Record<string, number>;
 };
 
-export function MemoryRuntimeClient() {
-  const { getToken, isLoaded } = useAuth();
+export function MemoryRuntimeClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -43,8 +43,8 @@ export function MemoryRuntimeClient() {
   const [kind, setKind] = useState('short_term');
   const [created, setCreated] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, ana] = await Promise.all([
       apiFetch<Engine>('/v1/memory-runtime/engine', { token }),
@@ -54,15 +54,15 @@ export function MemoryRuntimeClient() {
     setAnalytics(ana);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
-  const put = useCallback(async () => {
+  const put = useCallback(async  => {
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const res = await apiFetch<{
         memory: { id: string; version: number; scope: string; kind: string };
@@ -75,7 +75,7 @@ export function MemoryRuntimeClient() {
         `${res.memory.scope}/${res.memory.kind} v${res.memory.version} (${res.memory.id.slice(0, 8)}…)`,
       );
       setContent('');
-      await load();
+      await load;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Put failed');
     }
@@ -121,7 +121,7 @@ export function MemoryRuntimeClient() {
           <option value="semantic">semantic</option>
           <option value="shared">shared</option>
         </select>
-        <button type="button" onClick={() => void put()} disabled={!content.trim()} style={btn}>
+        <button type="button" onClick={ => void put} disabled={!content.trim} style={btn}>
           Put
         </button>
       </div>

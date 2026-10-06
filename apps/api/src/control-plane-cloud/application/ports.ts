@@ -1,4 +1,4 @@
-/** Application ports for Control Plane Cloud (VL-314). */
+/** Application ports for Control Plane Cloud. */
 
 export type ControlPlaneCloudProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type ControlPlaneCloudEngineBundle = ReturnType<
 >;
 
 export interface ControlPlaneCloudCatalogPort {
-  engine(): ControlPlaneCloudEngineBundle;
-  listProducts(): ControlPlaneCloudProductRow[];
+  engine: ControlPlaneCloudEngineBundle;
+  listProducts: ControlPlaneCloudProductRow[];
 }
 
 export const CONTROL_PLANE_CLOUD_CATALOG_PORT = Symbol('CONTROL_PLANE_CLOUD_CATALOG_PORT');

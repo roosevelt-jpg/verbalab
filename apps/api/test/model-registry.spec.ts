@@ -17,7 +17,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory()) out.push(...walkTsFiles(full));
+    if (statSync(full).isDirectory) out.push(...walkTsFiles(full));
     else if (full.endsWith('.ts')) out.push(full);
   }
   return out;
@@ -32,7 +32,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_mr_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_mr_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -46,41 +46,41 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Model Registry hub (VL-237)', () => {
+describe('Model Registry hub',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let registry: ModelRegistryService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     registry = app.get(ModelRegistryService);
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents registry honesty (no MLflow / traffic mesh)', () => {
+  it('documents registry honesty (no MLflow / traffic mesh)',  => {
     const doc = join(root, 'docs/MODEL_REGISTRY.md');
     const adr = join(root, 'docs/adr/0138-model-registry-hub.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-237');
-    expect(text).toMatch(/VL-110|models\/live/i);
+    expect(text).toContain('');
+    expect(text).toMatch(/|models\/live/i);
     expect(text).toMatch(/MLflow|trafficMesh/i);
     expect(text).toContain('CQRS');
   });
 
-  it('has no TODO/FIXME/implement-later markers in Model Registry source', () => {
+  it('has no TODO/FIXME/implement-later markers in Model Registry source',  => {
     const roots = [join(apiSrc, 'model-registry')];
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
@@ -93,8 +93,8 @@ describe('Model Registry hub (VL-237)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes public engine with honest capabilities + VL-110 bridge', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes public engine with honest capabilities + bridge', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/model-registry/engine')
       .expect(200);
     expect(res.body.product).toBe('Lugemi Model Registry');
@@ -105,15 +105,15 @@ describe('Model Registry hub (VL-237)', () => {
     expect(res.body.liveSummary.featureCount).toBeGreaterThan(0);
     expect(res.body.docs).toBe('/docs/MODEL_REGISTRY.md');
 
-    const cards = await request(app.getHttpServer())
+    const cards = await request(app.getHttpServer)
       .get('/v1/model-registry/cards')
       .expect(200);
     expect(cards.body.cards.length).toBeGreaterThan(0);
     expect(cards.body.cards[0].card.limitations).toMatch(/not a full Model Cards/i);
   });
 
-  it('versions, approvals, canary deploy plan, and rollback', async () => {
-    const org = await seedOrg(prisma, `mr_${Date.now()}`);
+  it('versions, approvals, canary deploy plan, and rollback', async  => {
+    const org = await seedOrg(prisma, `mr_${Date.now}`);
     const session = {
       userId: org.memberships[0].userId,
       organizationId: org.id,
@@ -155,14 +155,14 @@ describe('Model Registry hub (VL-237)', () => {
     expect(rb.active.status).toBe('active');
   });
 
-  it('exposes modelRegistryCapabilities via GraphQL CQRS façade', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes modelRegistryCapabilities via GraphQL CQRS façade', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query: '{ modelRegistryCapabilities { id name status api notes } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.modelRegistryCapabilities.length).toBeGreaterThan(5);
     expect(
       res.body.data.modelRegistryCapabilities.some(

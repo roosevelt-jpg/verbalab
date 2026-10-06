@@ -9,19 +9,19 @@ import {
   voiceCloningEngineCatalog,
 } from './voice-cloning.catalog';
 
-@Injectable()
+@Injectable
 export class VoiceCloningService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly clones: VoiceClonesService,
   ) {}
 
-  engine() {
-    return voiceCloningEngineCatalog();
+  engine {
+    return voiceCloningEngineCatalog;
   }
 
-  consentPolicy() {
-    return voiceCloningConsentPolicy();
+  consentPolicy {
+    return voiceCloningConsentPolicy;
   }
 
   async analytics(organizationId: string, workspaceId: string) {
@@ -69,7 +69,7 @@ export class VoiceCloningService {
     return {
       library: items,
       count: items.length,
-      consentPolicy: this.consentPolicy().required,
+      consentPolicy: this.consentPolicy.required,
       docs: '/docs/VOICE_CLONING.md',
     };
   }

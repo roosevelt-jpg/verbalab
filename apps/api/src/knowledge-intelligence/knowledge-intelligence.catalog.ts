@@ -9,14 +9,14 @@ export type KnowledgeIntelCapability = {
 };
 
 /**
- * Library Phase 67 → Knowledge Intelligence (VL-200).
+ * Library Phase 67 → Knowledge Intelligence.
  * Combined knowledge analysis/insight over Knowledge Cloud surfaces — not a BI / Palantir OS.
  */
-export function knowledgeIntelligenceCatalog() {
+export function knowledgeIntelligenceCatalog {
   return {
     product: 'Lugemi Knowledge Intelligence',
     note:
-      'Combined knowledge analysis and insight for Knowledge Cloud (VL-200): discovery, linking, recommendations, validation, duplicates, evolution, confidence. Heuristic over EKB / Search / Ontology / Taxonomy / Knowledge Memory / VL-062. Not a BI dashboard OS, Palantir-style knowledge OS, or Intelligence Analytics (VL-191) regenerate.',
+      'Combined knowledge analysis and insight for Knowledge Cloud: discovery, linking, recommendations, validation, duplicates, evolution, confidence. Heuristic over EKB / Search / Ontology / Taxonomy / Knowledge Memory / . Not a BI dashboard OS, Palantir-style knowledge OS, or Intelligence Analytics regenerate.',
     capabilities: [
       {
         id: 'knowledge-discovery',
@@ -79,7 +79,7 @@ export function knowledgeIntelligenceCatalog() {
         name: 'Analytics',
         status: 'shipped',
         api: 'GET /v1/knowledge-intelligence/analytics',
-        notes: 'Audit + inventory counts (≠ VL-202 Knowledge Analytics pack).',
+        notes: 'Audit + inventory counts (≠ Knowledge Analytics pack).',
       },
       {
         id: 'monitoring',

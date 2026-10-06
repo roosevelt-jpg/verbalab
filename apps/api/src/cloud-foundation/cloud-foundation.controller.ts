@@ -13,12 +13,12 @@ export class CloudFoundationController {
   ) {}
 
   @Get('feature-flags')
-  featureFlags(@CurrentSession() session: SessionContext) {
+  featureFlags(@CurrentSession session: SessionContext) {
     return this.flags.forOrganization(session.organizationId);
   }
 
   @Get('cloud/overview')
-  cloudOverview(@CurrentSession() session: SessionContext) {
+  cloudOverview(@CurrentSession session: SessionContext) {
     return this.overview.get(session);
   }
 }

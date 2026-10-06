@@ -1,4 +1,4 @@
-/** Application ports for Global Scheduler (VL-321). */
+/** Application ports for Global Scheduler. */
 
 export type GlobalSchedulerProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type GlobalSchedulerEngineBundle = ReturnType<
 >;
 
 export interface GlobalSchedulerCatalogPort {
-  engine(): GlobalSchedulerEngineBundle;
-  listProducts(): GlobalSchedulerProductRow[];
+  engine: GlobalSchedulerEngineBundle;
+  listProducts: GlobalSchedulerProductRow[];
 }
 
 export const GLOBAL_SCHEDULER_CATALOG_PORT = Symbol('GLOBAL_SCHEDULER_CATALOG_PORT');

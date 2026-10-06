@@ -6,16 +6,16 @@ import {
   ContinuousLearningProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestContinuousLearningCatalogAdapter implements ContinuousLearningCatalogPort {
   constructor(private readonly service: ContinuousLearningService) {}
 
-  engine(): ContinuousLearningEngineBundle {
-    return this.service.engine();
+  engine: ContinuousLearningEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): ContinuousLearningProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: ContinuousLearningProductRow[] {
+    const bundle = this.engine as {
       products?: ContinuousLearningProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestContinuousLearningCatalogAdapter implements ContinuousLearningC
         status: 'shipped',
         api: 'GET /v1/continuous-learning/engine',
         console: '/continuous-learning',
-        notes: 'VL-289 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

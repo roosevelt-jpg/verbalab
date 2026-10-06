@@ -84,25 +84,25 @@ const VERTICALS = [
   },
 ];
 
-export function ModelsClient() {
-  const { getToken, isLoaded } = useAuth();
+export function ModelsClient {
+  const { getToken, isLoaded } = useAuth;
   const [matrix, setMatrix] = useState<LiveMatrix | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    void (async () => {
+  useEffect( => {
+    void (async  => {
       try {
         const data = await apiFetch<LiveMatrix>('/v1/models/live');
         setMatrix(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load model registry');
       }
-    })();
+    });
   }, []);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded || !getToken) return;
-    void getToken().catch(() => undefined);
+    void getToken.catch( => undefined);
   }, [getToken, isLoaded]);
 
   return (

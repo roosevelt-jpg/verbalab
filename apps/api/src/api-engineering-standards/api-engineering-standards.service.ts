@@ -3,37 +3,37 @@ import { apiEngineeringStandardsEngineCatalog } from './api-engineering-standard
 import { DeveloperCloudService } from '../developer-cloud/developer-cloud.service';
 import { DeveloperExperiencePlatformService } from '../developer-experience-platform/developer-experience-platform.service';
 
-@Injectable()
+@Injectable
 export class ApiEngineeringStandardsService {
   constructor(
     private readonly developerCloud: DeveloperCloudService,
     private readonly developerExperience: DeveloperExperiencePlatformService
   ) {}
 
-  engine() {
-    return apiEngineeringStandardsEngineCatalog();
+  engine {
+    return apiEngineeringStandardsEngineCatalog;
   }
 
   /** Catalog route: returns standards capability + live status from injected upstream services. */
   route(capability?: string) {
-    const catalog = this.engine();
-    const q = (capability ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (capability ?? '').trim.toLowerCase;
     const capabilities = catalog.capabilities.filter((c) => {
       if (!q) return true;
-      return c.id.includes(q) || c.name.toLowerCase().includes(q);
+      return c.id.includes(q) || c.name.toLowerCase.includes(q);
     });
     const upstreamStatus = [
       {
         module: 'developer-cloud',
         method: 'products',
         status: 'reachable',
-        upstream: this.developerCloud.sdk(),
+        upstream: this.developerCloud.sdk,
       },
       {
         module: 'developer-experience-platform',
         method: 'engine',
         status: 'reachable',
-        upstream: this.developerExperience.engine(),
+        upstream: this.developerExperience.engine,
       }
     ];
     return {
@@ -57,11 +57,11 @@ export class ApiEngineeringStandardsService {
   }
 
   list(query?: string) {
-    const catalog = this.engine();
-    const q = (query ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (query ?? '').trim.toLowerCase;
     const rows = catalog.routes.filter((row) => {
       if (!q) return true;
-      return JSON.stringify(row).toLowerCase().includes(q);
+      return JSON.stringify(row).toLowerCase.includes(q);
     });
     return {
       routes: rows,
@@ -78,8 +78,8 @@ export class ApiEngineeringStandardsService {
     return this.list(query);
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'api-engineering-standards',
       count: catalog.routes.length,
@@ -90,7 +90,7 @@ export class ApiEngineeringStandardsService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'ApiEngineeringStandards monitoring snapshot (VL-350).',
+      note: 'ApiEngineeringStandards monitoring snapshot.',
     };
   }
 }

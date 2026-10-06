@@ -22,22 +22,22 @@ export class SlackConnectorController {
 
   @Get('status')
   @UseGuards(ClerkAuthGuard)
-  status() {
-    return this.slack.status();
+  status {
+    return this.slack.status;
   }
 
   @Get('installations')
   @UseGuards(ClerkAuthGuard)
-  list(@CurrentSession() session: SessionContext) {
+  list(@CurrentSession session: SessionContext) {
     return this.slack.listInstallations(session.organizationId);
   }
 
   @Post('installations')
   @UseGuards(ClerkAuthGuard)
   upsert(
-    @CurrentSession() session: SessionContext,
-    @Req() req: Request,
-    @Body()
+    @CurrentSession session: SessionContext,
+    @Req req: Request,
+    @Body
     body: { teamId?: string; teamName?: string; defaultTargetLang?: string },
   ) {
     return this.slack.upsertInstallation({
@@ -55,7 +55,7 @@ export class SlackConnectorController {
   @Post('events')
   @HttpCode(200)
   events(
-    @Req() req: Request & { rawBody?: Buffer },
+    @Req req: Request & { rawBody?: Buffer },
     @Headers('x-slack-signature') signature: string | undefined,
     @Headers('x-slack-request-timestamp') timestamp: string | undefined,
   ) {
@@ -70,7 +70,7 @@ export class SlackConnectorController {
   @Post('commands')
   @HttpCode(200)
   async commands(
-    @Req() req: Request & { rawBody?: Buffer; body?: Record<string, string> },
+    @Req req: Request & { rawBody?: Buffer; body?: Record<string, string> },
     @Headers('x-slack-signature') signature: string | undefined,
     @Headers('x-slack-request-timestamp') timestamp: string | undefined,
   ) {

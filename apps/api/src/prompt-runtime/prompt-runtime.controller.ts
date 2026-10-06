@@ -25,19 +25,19 @@ export class PromptRuntimeController {
   constructor(private readonly runtime: PromptRuntimeService) {}
 
   @Get('engine')
-  engine() {
-    return this.runtime.engine();
+  engine {
+    return this.runtime.engine;
   }
 
   @Get('keys')
-  keys() {
-    return this.runtime.keys();
+  keys {
+    return this.runtime.keys;
   }
 
   @Get('routes')
-  routes() {
+  routes {
     return {
-      routes: this.runtime.engine().routes,
+      routes: this.runtime.engine.routes,
       honesty: { promptMeshOs: false },
       note: 'Sandbox feature→key map — not a prompt mesh OS.',
     };
@@ -45,7 +45,7 @@ export class PromptRuntimeController {
 
   @Get('registry')
   @UseGuards(TranslateAuthGuard)
-  registry(@Req() req: AuthedReq) {
+  registry(@Req req: AuthedReq) {
     return this.runtime.registry({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -54,7 +54,7 @@ export class PromptRuntimeController {
 
   @Get('templates')
   @UseGuards(TranslateAuthGuard)
-  templates(@Req() req: AuthedReq) {
+  templates(@Req req: AuthedReq) {
     return this.runtime.templates({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -63,7 +63,7 @@ export class PromptRuntimeController {
 
   @Get('versions')
   @UseGuards(TranslateAuthGuard)
-  versions(@Req() req: AuthedReq, @Query('key') key?: string) {
+  versions(@Req req: AuthedReq, @Query('key') key?: string) {
     return this.runtime.versions({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -73,7 +73,7 @@ export class PromptRuntimeController {
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.runtime.analytics({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -82,7 +82,7 @@ export class PromptRuntimeController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req() req: AuthedReq) {
+  monitoring(@Req req: AuthedReq) {
     return this.runtime.monitoring({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -91,7 +91,7 @@ export class PromptRuntimeController {
 
   @Post('route')
   @HttpCode(HttpStatus.OK)
-  route(@Body() body: { feature?: string }) {
+  route(@Body body: { feature?: string }) {
     return this.runtime.route(body);
   }
 
@@ -99,8 +99,8 @@ export class PromptRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   render(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       key?: string;
       body?: string;
@@ -121,8 +121,8 @@ export class PromptRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   validate(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       key?: string;
       body?: string;
@@ -143,8 +143,8 @@ export class PromptRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   securityScan(
-    @Req() req: AuthedReq,
-    @Body() body: { key?: string; body?: string; version?: number },
+    @Req req: AuthedReq,
+    @Body body: { key?: string; body?: string; version?: number },
   ) {
     return this.runtime.securityScan({
       organizationId: req.translateAuth.organizationId,
@@ -159,8 +159,8 @@ export class PromptRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   optimize(
-    @Req() req: AuthedReq,
-    @Body() body: { key?: string; body?: string; version?: number; maxChars?: number },
+    @Req req: AuthedReq,
+    @Body body: { key?: string; body?: string; version?: number; maxChars?: number },
   ) {
     return this.runtime.optimize({
       organizationId: req.translateAuth.organizationId,
@@ -175,8 +175,8 @@ export class PromptRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   execute(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       key?: string;
       feature?: string;

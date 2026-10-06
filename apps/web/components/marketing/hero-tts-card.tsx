@@ -7,7 +7,7 @@ import { useDemoPlayer } from './use-demo-player';
 export function HeroTtsCard({ demo }: { demo: CmsHeroDemo }) {
   const [text, setText] = useState(demo.defaultText);
   const [voice, setVoice] = useState(demo.voices[0]?.id ?? '');
-  const { play, stop, playingId, status, error } = useDemoPlayer();
+  const { play, stop, playingId, status, error } = useDemoPlayer;
   const selected = demo.voices.find((item) => item.id === voice);
 
   return (
@@ -36,7 +36,7 @@ export function HeroTtsCard({ demo }: { demo: CmsHeroDemo }) {
               type="button"
               className={item.id === voice ? 'mkt-voice-chip is-active' : 'mkt-voice-chip'}
               aria-pressed={item.id === voice}
-              onClick={() => {
+              onClick={ => {
                 setVoice(item.id);
               }}
             >
@@ -49,9 +49,9 @@ export function HeroTtsCard({ demo }: { demo: CmsHeroDemo }) {
         <button
           type="button"
           className="vl-btn vl-btn-primary"
-          onClick={() => {
+          onClick={ => {
             if (playingId === 'hero-tts') {
-              stop();
+              stop;
               return;
             }
             void play({
@@ -68,7 +68,7 @@ export function HeroTtsCard({ demo }: { demo: CmsHeroDemo }) {
           type="button"
           className="vl-btn vl-btn-secondary"
           disabled={!selected}
-          onClick={() => {
+          onClick={ => {
             void play({
               id: `hero-voice-${voice}`,
               text: text || demo.defaultText,

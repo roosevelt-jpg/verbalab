@@ -17,7 +17,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory()) {
+    if (name.isDirectory) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       out.push(...walkTsFiles(p));
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -27,23 +27,23 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('VAIOS Production Audit (VL-343)', () => {
+describe('VAIOS Production Audit',  => {
   let app: INestApplication<App>;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
   }, 120_000);
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('ships audit pack and ADR-0245', () => {
+  it('ships audit pack and ADR-0245',  => {
     expect(existsSync(join(root, 'docs/adr/0245-vaios-production-audit.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/VAIOS.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/vaios-audit/PRODUCTION_READINESS.md'))).toBe(true);
@@ -54,7 +54,7 @@ describe('VAIOS Production Audit (VL-343)', () => {
     expect(existsSync(join(root, 'docs/vaios-audit/VAIOS_READINESS_REPORT.md'))).toBe(true);
   });
 
-  it('has no TODO/FIXME markers across Volume 19 hubs', () => {
+  it('has no TODO/FIXME markers across Volume 19 hubs',  => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const slug of VOLUME19_HUBS) {
@@ -71,8 +71,8 @@ describe('VAIOS Production Audit (VL-343)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('foundation catalogs all shipped products', async () => {
-    const res = await request(app.getHttpServer())
+  it('foundation catalogs all shipped products', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/vaios/products')
       .expect(200);
     expect(res.body.honesty.unifyingOrchestrationLayer).toBe(true);
@@ -87,9 +87,9 @@ describe('VAIOS Production Audit (VL-343)', () => {
     expect(ids).toContain('vaios');
   });
 
-  it('each hub is unifyingOrchestrationLayer with non-empty routesTo', async () => {
+  it('each hub is unifyingOrchestrationLayer with non-empty routesTo', async  => {
     for (const slug of ORCH_HUBS) {
-      const res = await request(app.getHttpServer())
+      const res = await request(app.getHttpServer)
         .get(`/v1/${slug}/engine`)
         .expect(200);
       expect(res.body.honesty.unifyingOrchestrationLayer).toBe(true);
@@ -101,7 +101,7 @@ describe('VAIOS Production Audit (VL-343)', () => {
     }
   });
 
-  it('rejects third parallel agent/workflow/memory implementation', () => {
+  it('rejects third parallel agent/workflow/memory implementation',  => {
     const bannedImpl = /class AgentExecutor|new WorkflowEngine|Mem0Client|createSandboxVm|linuxSyscallTable/i;
     const hits: string[] = [];
     for (const slug of ORCH_HUBS) {
@@ -117,7 +117,7 @@ describe('VAIOS Production Audit (VL-343)', () => {
     expect(readiness).toMatch(/third parallel|Rejected inventions/i);
   });
 
-  it('rejects Enterprise Engineering System invention', () => {
+  it('rejects Enterprise Engineering System invention',  => {
     const readiness = readFileSync(
       join(root, 'docs/vaios-audit/PRODUCTION_READINESS.md'),
       'utf8',
@@ -132,20 +132,20 @@ describe('VAIOS Production Audit (VL-343)', () => {
     expect(foundation).toMatch(/enterpriseEngineeringSystemOs:\s*false/);
   });
 
-  it('resource manager GPU budget honesty', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/resource-manager/engine').expect(200);
+  it('resource manager GPU budget honesty', async  => {
+    const res = await request(app.getHttpServer).get('/v1/resource-manager/engine').expect(200);
     expect(res.body.honesty.gpuBudgetLimitsRequired).toBe(true);
     expect(res.body.honesty.kubernetesResourceOs).toBe(false);
   });
 
-  it('auth smoke on overview', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/vaios/overview');
+  it('auth smoke on overview', async  => {
+    const res = await request(app.getHttpServer).get('/v1/vaios/overview');
     expect([401, 403, 503]).toContain(res.status);
   });
 
-  it('GraphQL honesty fields', async () => {
-    const started = Date.now();
-    const gql = await request(app.getHttpServer())
+  it('GraphQL honesty fields', async  => {
+    const started = Date.now;
+    const gql = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query: `{
@@ -161,8 +161,8 @@ describe('VAIOS Production Audit (VL-343)', () => {
         }`,
       })
       .expect(200);
-    expect(Date.now() - started).toBeLessThan(5_000);
-    expect(gql.body.errors).toBeUndefined();
+    expect(Date.now - started).toBeLessThan(5_000);
+    expect(gql.body.errors).toBeUndefined;
     expect(gql.body.data.vaiosProducts.length).toBeGreaterThan(8);
     expect(gql.body.data.aiSchedulerEngine.unifyingOrchestrationLayer).toBe(true);
     expect(gql.body.data.aiSchedulerEngine.duplicatesKernelOrFabric).toBe(false);
@@ -171,9 +171,9 @@ describe('VAIOS Production Audit (VL-343)', () => {
     expect(gql.body.data.resourceManagerEngine.enterpriseEngineeringSystemOs).toBe(false);
   });
 
-  it('documents VAIOS in CLOUD_BLUEPRINT', () => {
+  it('documents VAIOS in CLOUD_BLUEPRINT',  => {
     const blueprint = readFileSync(join(root, 'docs/CLOUD_BLUEPRINT.md'), 'utf8');
     expect(blueprint).toMatch(/VAIOS/);
-    expect(blueprint).toMatch(/VL-334/);
+    expect(blueprint).toMatch(/);
   });
 });

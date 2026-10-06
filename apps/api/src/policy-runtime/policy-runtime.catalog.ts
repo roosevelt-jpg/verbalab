@@ -47,19 +47,19 @@ export const POLICY_GLOBAL_DENIES = [
   'workflow.execute_live',
 ] as const;
 
-export function policyRuntimeMode(): 'enforce' | 'disabled' {
-  const raw = (process.env.LUGEMI_POLICY_RUNTIME_MODE ?? 'enforce').toLowerCase();
+export function policyRuntimeMode: 'enforce' | 'disabled' {
+  const raw = (process.env.LUGEMI_POLICY_RUNTIME_MODE ?? 'enforce').toLowerCase;
   if (raw === 'disabled') return 'disabled';
   return 'enforce';
 }
 
-export function policyRuntimeCeilings() {
+export function policyRuntimeCeilings {
   return {
     maxPoliciesPerWorkspace: Math.min(
       200,
       Math.max(1, Number(process.env.LUGEMI_POLICY_RUNTIME_MAX_POLICIES ?? '50') || 50),
     ),
-    mode: policyRuntimeMode(),
+    mode: policyRuntimeMode,
     logOnlyForbidden: true,
     hardGateRequired: true,
     note: 'Policy Runtime hard-gates Agent/Workflow/Plugin. Log-only mode is forbidden.',
@@ -67,14 +67,14 @@ export function policyRuntimeCeilings() {
 }
 
 /**
- * Library Phase 89 → Policy Runtime (VL-222).
+ * Library Phase 89 → Policy Runtime.
  * Must hard-gate Agent/Workflow/Plugin — not log/flag decoration.
  */
-export function policyRuntimeCatalog() {
+export function policyRuntimeCatalog {
   return {
     product: 'Lugemi Policy Runtime',
     note:
-      'Policy Runtime (VL-222). Shared hard-gate enforcement for Agent/Workflow/Plugin Runtimes. Org policies (deny rules) and global denies block actions with 403 — not log-only. Extends local runtime allowlists; does not invent OPA/Cedar enterprise policy OS. Wired into AgentPolicyGate / WorkflowPolicyGate / PluginPolicyGate.',
+      'Policy Runtime. Shared hard-gate enforcement for Agent/Workflow/Plugin Runtimes. Org policies (deny rules) and global denies block actions with 403 — not log-only. Extends local runtime allowlists; does not invent OPA/Cedar enterprise policy OS. Wired into AgentPolicyGate / WorkflowPolicyGate / PluginPolicyGate.',
     capabilities: [
       {
         id: 'security-policies',
@@ -157,7 +157,7 @@ export function policyRuntimeCatalog() {
         id: 'sdk',
         name: 'SDK',
         status: 'shipped',
-        api: 'policyRuntimeEngine()',
+        api: 'policyRuntimeEngine',
         notes: '@lugemi/sdk',
       },
       {

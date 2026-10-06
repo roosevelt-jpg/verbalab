@@ -23,7 +23,7 @@ type SearchHit = {
   source: 'keyword' | 'semantic' | 'hybrid';
 };
 
-@Injectable()
+@Injectable
 export class EnterpriseSearchService {
   constructor(
     private readonly prisma: PrismaService,
@@ -31,12 +31,12 @@ export class EnterpriseSearchService {
     private readonly audit: AuditService,
   ) {}
 
-  engine() {
-    return enterpriseSearchCatalog();
+  engine {
+    return enterpriseSearchCatalog;
   }
 
-  modes() {
-    const c = this.engine();
+  modes {
+    const c = this.engine;
     return {
       modes: c.modes.map((id) => ({
         id,
@@ -44,11 +44,11 @@ export class EnterpriseSearchService {
           id === 'hybrid'
             ? 'Light RRF of keyword + semantic — not BM25/Elastic hybrid OS.'
             : id === 'semantic'
-              ? 'pgvector cosine via VL-182 / VL-062.'
+              ? 'pgvector cosine via existing.'
               : 'ILIKE substring match on chunk content.',
       })),
       deferred: ['image', 'voice', 'translation_os', 'bm25_parity'],
-      note: 'Enterprise Search modes for VL-195.',
+      note: 'Enterprise Search modes for .',
     };
   }
 
@@ -78,7 +78,7 @@ export class EnterpriseSearchService {
       ...(input.collection ? { collection: input.collection } : {}),
       ...(input.contentKind ? { contentKind: input.contentKind } : {}),
       ...(input.documentId ? { id: input.documentId } : {}),
-      ...(input.tag ? { tags: { has: input.tag.trim().toLowerCase() } } : {}),
+      ...(input.tag ? { tags: { has: input.tag.trim.toLowerCase } } : {}),
     };
   }
 
@@ -114,10 +114,10 @@ export class EnterpriseSearchService {
       orderBy: { ordinal: 'asc' },
     });
 
-    const q = input.query.toLowerCase();
+    const q = input.query.toLowerCase;
     return chunks
       .map((c) => {
-        const lower = c.content.toLowerCase();
+        const lower = c.content.toLowerCase;
         const idx = lower.indexOf(q);
         const score = idx < 0 ? 0.1 : Math.max(0.15, 1 - idx / Math.max(lower.length, 1));
         return {
@@ -207,7 +207,7 @@ export class EnterpriseSearchService {
     semantic: Omit<SearchHit, 'rank'>[],
     k: number,
   ): Omit<SearchHit, 'rank'>[] {
-    const scores = new Map<string, Omit<SearchHit, 'rank'> & { rrf: number }>();
+    const scores = new Map<string, Omit<SearchHit, 'rank'> & { rrf: number }>;
     const add = (list: Omit<SearchHit, 'rank'>[], weight: number) => {
       list.forEach((hit, i) => {
         const prev = scores.get(hit.id);
@@ -223,7 +223,7 @@ export class EnterpriseSearchService {
     };
     add(keyword, 1);
     add(semantic, 1);
-    return [...scores.values()]
+    return [...scores.values]
       .sort((a, b) => b.rrf - a.rrf)
       .slice(0, k)
       .map(({ rrf: _rrf, ...rest }) => rest);
@@ -244,7 +244,7 @@ export class EnterpriseSearchService {
     userId?: string;
     ip?: string;
   }) {
-    const query = input.query?.trim();
+    const query = input.query?.trim;
     if (!query) {
       throw new ApiException('validation_error', 'query is required', HttpStatus.BAD_REQUEST);
     }
@@ -294,12 +294,12 @@ export class EnterpriseSearchService {
         documentId: input.documentId ?? null,
       },
       hits,
-      honesty: this.engine().honesty,
+      honesty: this.engine.honesty,
       note:
         mode === 'hybrid'
-          ? 'Light hybrid RRF over keyword + pgvector semantic (VL-195). Not Elastic/BM25 OS.'
+          ? 'Light hybrid RRF over keyword + pgvector semantic. Not Elastic/BM25 OS.'
           : mode === 'semantic'
-            ? 'Semantic search via VL-182 pgvector over VL-062 chunks.'
+            ? 'Semantic search via existing pgvector over existing chunks.'
             : 'Keyword ILIKE search over workspace knowledge chunks.',
     };
   }
@@ -310,7 +310,7 @@ export class EnterpriseSearchService {
     workspaceId: string;
     limit?: number;
   }) {
-    const q = input.q?.trim() ?? '';
+    const q = input.q?.trim ?? '';
     if (!q) {
       return { suggestions: [], note: 'Pass q= for filename/tag prefix suggestions.' };
     }
@@ -321,7 +321,7 @@ export class EnterpriseSearchService {
         workspaceId: input.workspaceId,
         OR: [
           { filename: { contains: q, mode: 'insensitive' } },
-          { tags: { has: q.toLowerCase() } },
+          { tags: { has: q.toLowerCase } },
           { collection: { contains: q, mode: 'insensitive' } },
         ],
       },
@@ -331,7 +331,7 @@ export class EnterpriseSearchService {
     });
 
     const suggestions: Array<{ type: string; value: string }> = [];
-    const seen = new Set<string>();
+    const seen = new Set<string>;
     const push = (type: string, value: string) => {
       const key = `${type}:${value}`;
       if (seen.has(key) || !value) return;
@@ -343,7 +343,7 @@ export class EnterpriseSearchService {
       push('filename', d.filename);
       push('collection', d.collection);
       for (const t of d.tags) {
-        if (t.includes(q.toLowerCase())) push('tag', t);
+        if (t.includes(q.toLowerCase)) push('tag', t);
       }
       if (suggestions.length >= limit) break;
     }
@@ -356,7 +356,7 @@ export class EnterpriseSearchService {
   }
 
   async analytics(organizationId: string, workspaceId: string) {
-    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
     const [documents, chunks, searches] = await Promise.all([
       this.prisma.knowledgeDocument.count({ where: { organizationId, workspaceId } }),
       this.prisma.knowledgeChunk.count({ where: { organizationId, workspaceId } }),
@@ -373,12 +373,12 @@ export class EnterpriseSearchService {
       documents,
       chunks,
       searchesLast30d: searches,
-      note: 'Workspace-scoped Enterprise Search analytics (VL-195).',
+      note: 'Workspace-scoped Enterprise Search analytics.',
     };
   }
 
   async monitoring(organizationId: string, workspaceId: string) {
-    const engine = this.engine();
+    const engine = this.engine;
     const analytics = await this.analytics(organizationId, workspaceId);
     return {
       ...analytics,

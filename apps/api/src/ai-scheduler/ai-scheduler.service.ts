@@ -6,7 +6,7 @@ import { GpuPlatformService } from '../gpu-platform/gpu-platform.service';
 import { WorkflowRuntimeService } from '../workflow-runtime/workflow-runtime.service';
 import { AgentRuntimeService } from '../agent-runtime/agent-runtime.service';
 
-@Injectable()
+@Injectable
 export class AiSchedulerService {
   constructor(
     private readonly globalScheduler: GlobalSchedulerService,
@@ -16,48 +16,48 @@ export class AiSchedulerService {
     private readonly agentRuntime: AgentRuntimeService
   ) {}
 
-  engine() {
-    return aiSchedulerEngineCatalog();
+  engine {
+    return aiSchedulerEngineCatalog;
   }
 
   /** Route/execute façade: returns upstream endpoint + live status from injected Kernel/Fabric/Data Plane services. */
   route(capability?: string) {
-    const catalog = this.engine();
-    const q = (capability ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (capability ?? '').trim.toLowerCase;
     const capabilities = catalog.capabilities.filter((c) => {
       if (!q) return true;
-      return c.id.includes(q) || c.name.toLowerCase().includes(q);
+      return c.id.includes(q) || c.name.toLowerCase.includes(q);
     });
     const upstreamStatus = [
       {
         module: 'global-scheduler',
         method: 'engine',
         status: 'reachable',
-        upstream: this.globalScheduler.engine(),
+        upstream: this.globalScheduler.engine,
       },
       {
         module: 'gpu-runtime',
         method: 'engine',
         status: 'reachable',
-        upstream: this.gpuRuntime.engine(),
+        upstream: this.gpuRuntime.engine,
       },
       {
         module: 'gpu-platform',
         method: 'engine',
         status: 'reachable',
-        upstream: this.gpuPlatform.engine(),
+        upstream: this.gpuPlatform.engine,
       },
       {
         module: 'workflow-runtime',
         method: 'engine',
         status: 'reachable',
-        upstream: this.workflowRuntime.engine(),
+        upstream: this.workflowRuntime.engine,
       },
       {
         module: 'agent-runtime',
         method: 'engine',
         status: 'reachable',
-        upstream: this.agentRuntime.engine(),
+        upstream: this.agentRuntime.engine,
       }
     ];
     return {
@@ -79,11 +79,11 @@ export class AiSchedulerService {
   }
 
   list(query?: string) {
-    const catalog = this.engine();
-    const q = (query ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (query ?? '').trim.toLowerCase;
     const rows = catalog.routes.filter((row) => {
       if (!q) return true;
-      return JSON.stringify(row).toLowerCase().includes(q);
+      return JSON.stringify(row).toLowerCase.includes(q);
     });
     return {
       routes: rows,
@@ -100,8 +100,8 @@ export class AiSchedulerService {
     return this.list(query);
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'ai-scheduler',
       count: catalog.routes.length,
@@ -110,7 +110,7 @@ export class AiSchedulerService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'AiScheduler monitoring snapshot (VL-335).',
+      note: 'AiScheduler monitoring snapshot.',
     };
   }
 }

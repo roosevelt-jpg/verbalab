@@ -6,16 +6,16 @@ import {
   GlobalConfigurationPlatformProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestGlobalConfigurationPlatformCatalogAdapter implements GlobalConfigurationPlatformCatalogPort {
   constructor(private readonly service: GlobalConfigurationPlatformService) {}
 
-  engine(): GlobalConfigurationPlatformEngineBundle {
-    return this.service.engine();
+  engine: GlobalConfigurationPlatformEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): GlobalConfigurationPlatformProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: GlobalConfigurationPlatformProductRow[] {
+    const bundle = this.engine as {
       products?: GlobalConfigurationPlatformProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestGlobalConfigurationPlatformCatalogAdapter implements GlobalConf
         status: 'shipped',
         api: 'GET /v1/global-configuration-platform/engine',
         console: '/global-configuration-platform',
-        notes: 'VL-316 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

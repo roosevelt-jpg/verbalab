@@ -25,24 +25,24 @@ export class MemoryRuntimeController {
   constructor(private readonly runtime: MemoryRuntimeService) {}
 
   @Get('engine')
-  engine() {
-    return this.runtime.engine();
+  engine {
+    return this.runtime.engine;
   }
 
   @Get('scopes')
-  scopes() {
-    return this.runtime.scopes();
+  scopes {
+    return this.runtime.scopes;
   }
 
   @Get('ceilings')
-  ceilings() {
-    return this.runtime.ceilings();
+  ceilings {
+    return this.runtime.ceilings;
   }
 
   @Get('memories')
   @UseGuards(TranslateAuthGuard)
   list(
-    @Req() req: AuthedReq,
+    @Req req: AuthedReq,
     @Query('scope') scope?: string,
     @Query('kind') kind?: string,
     @Query('limit') limit?: string,
@@ -60,8 +60,8 @@ export class MemoryRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   put(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       scope?: string;
       kind?: string;
@@ -88,8 +88,8 @@ export class MemoryRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   search(
-    @Req() req: AuthedReq,
-    @Body() body: { query?: string; scope?: string; kind?: string; limit?: number },
+    @Req req: AuthedReq,
+    @Body body: { query?: string; scope?: string; kind?: string; limit?: number },
   ) {
     return this.runtime.search({
       organizationId: req.translateAuth.organizationId,
@@ -101,7 +101,7 @@ export class MemoryRuntimeController {
   @Post('revise')
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
-  revise(@Req() req: AuthedReq, @Body() body: { id?: string; content?: string }) {
+  revise(@Req req: AuthedReq, @Body body: { id?: string; content?: string }) {
     return this.runtime.revise({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -114,7 +114,7 @@ export class MemoryRuntimeController {
   @Post('compress')
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
-  compress(@Req() req: AuthedReq, @Body() body: { id?: string; maxChars?: number }) {
+  compress(@Req req: AuthedReq, @Body body: { id?: string; maxChars?: number }) {
     return this.runtime.compress({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -127,7 +127,7 @@ export class MemoryRuntimeController {
   @Post('evict')
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
-  evict(@Req() req: AuthedReq, @Body() body: { policy?: string }) {
+  evict(@Req req: AuthedReq, @Body body: { policy?: string }) {
     return this.runtime.evict({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -140,7 +140,7 @@ export class MemoryRuntimeController {
   @Post('sync')
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
-  sync(@Req() req: AuthedReq) {
+  sync(@Req req: AuthedReq) {
     return this.runtime.sync({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -152,7 +152,7 @@ export class MemoryRuntimeController {
   @Post('snapshots')
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.CREATED)
-  snapshot(@Req() req: AuthedReq, @Body() body: { label?: string }) {
+  snapshot(@Req req: AuthedReq, @Body body: { label?: string }) {
     return this.runtime.createSnapshot({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -164,7 +164,7 @@ export class MemoryRuntimeController {
 
   @Get('snapshots')
   @UseGuards(TranslateAuthGuard)
-  listSnapshots(@Req() req: AuthedReq) {
+  listSnapshots(@Req req: AuthedReq) {
     return this.runtime.listSnapshots({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -173,7 +173,7 @@ export class MemoryRuntimeController {
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.runtime.analytics({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -182,7 +182,7 @@ export class MemoryRuntimeController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req() req: AuthedReq) {
+  monitoring(@Req req: AuthedReq) {
     return this.runtime.monitoring({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,

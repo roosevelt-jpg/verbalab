@@ -17,8 +17,8 @@ export class GetGlobalConfigurationPlatformEngineHandler
     private readonly catalog: GlobalConfigurationPlatformCatalogPort,
   ) {}
 
-  execute(): Promise<GlobalConfigurationPlatformEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<GlobalConfigurationPlatformEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListGlobalConfigurationPlatformProductsHandler
     private readonly catalog: GlobalConfigurationPlatformCatalogPort,
   ) {}
 
-  execute(): Promise<GlobalConfigurationPlatformProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<GlobalConfigurationPlatformProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetAgentOperatingSystemEngineQuery } from '../agent-operating-system/application/messages';
 import { GqlAgentOperatingSystemEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class AgentOperatingSystemGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query(() => GqlAgentOperatingSystemEngine, { name: 'agentOperatingSystemEngine' })
-  async agentOperatingSystemEngine(): Promise<GqlAgentOperatingSystemEngine> {
-    const catalog = await this.queries.execute(new GetAgentOperatingSystemEngineQuery());
+  @Query( => GqlAgentOperatingSystemEngine, { name: 'agentOperatingSystemEngine' })
+  async agentOperatingSystemEngine: Promise<GqlAgentOperatingSystemEngine> {
+    const catalog = await this.queries.execute(new GetAgentOperatingSystemEngineQuery);
     return {
       product: catalog.product,
       note: catalog.note,

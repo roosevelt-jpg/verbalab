@@ -6,16 +6,16 @@ import {
   GoldenPathPlatformProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestGoldenPathPlatformCatalogAdapter implements GoldenPathPlatformCatalogPort {
   constructor(private readonly service: GoldenPathPlatformService) {}
 
-  engine(): GoldenPathPlatformEngineBundle {
-    return this.service.engine();
+  engine: GoldenPathPlatformEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): GoldenPathPlatformProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: GoldenPathPlatformProductRow[] {
+    const bundle = this.engine as {
       products?: GoldenPathPlatformProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestGoldenPathPlatformCatalogAdapter implements GoldenPathPlatformC
         status: 'shipped',
         api: 'GET /v1/golden-path-platform/engine',
         console: '/golden-path-platform',
-        notes: 'VL-305 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

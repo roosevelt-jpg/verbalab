@@ -1,4 +1,4 @@
-export default function SetupPage() {
+export default function SetupPage {
   return (
     <main style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', padding: '2rem' }}>
       <div className="vl-panel vl-fade-up" style={{ maxWidth: '40rem', padding: '2rem' }}>

@@ -8,28 +8,28 @@ export class EnterpriseEngineeringSystemController {
   constructor(private readonly ees: EnterpriseEngineeringSystemService) {}
 
   @Get('products')
-  products() {
-    return this.ees.products();
+  products {
+    return this.ees.products;
   }
 
   @Get('engine')
-  engine() {
-    return this.ees.products();
+  engine {
+    return this.ees.products;
   }
 
   @Get('routing')
-  routing() {
-    return this.ees.routing();
+  routing {
+    return this.ees.routing;
   }
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession() session: SessionContext) {
+  overview(@CurrentSession session: SessionContext) {
     return this.ees.overview(session);
   }
 
   @Get('monitoring')
-  monitoring() {
-    return this.ees.monitoring();
+  monitoring {
+    return this.ees.monitoring;
   }
 }

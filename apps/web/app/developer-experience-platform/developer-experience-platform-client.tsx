@@ -11,11 +11,11 @@ type Engine = {
   safety?: { note?: string } & Record<string, unknown>;
 };
 
-export function DeveloperExperiencePlatformClient() {
+export function DeveloperExperiencePlatformClient {
   const [data, setData] = useState<Engine | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  useEffect( => {
     void apiFetch<Engine>('/v1/developer-experience-platform/engine')
       .then(setData)
       .catch((err: Error) => setError(err.message));

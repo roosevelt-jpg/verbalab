@@ -9,18 +9,18 @@ import { gitopsPlatformEngineCatalog } from '../gitops-platform/gitops-platform.
 import { goldenPathPlatformEngineCatalog } from '../golden-path-platform/golden-path-platform.catalog';
 import { internalDeveloperPortalEngineCatalog } from '../internal-developer-portal/internal-developer-portal.catalog';
 
-@Injectable()
+@Injectable
 export class PlatformEngineeringAnalyticsService {
-  engine() {
-    const base = platformEngineeringAnalyticsEngineCatalog();
-    const products = platformEngineeringCloudProductCatalog();
-    const releases = releaseEngineeringEngineCatalog();
-    const reliability = reliabilityEngineeringEngineCatalog();
-    const finops = finopsPlatformEngineCatalog();
-    const supply = supplyChainSecurityEngineCatalog();
-    const gitops = gitopsPlatformEngineCatalog();
-    const golden = goldenPathPlatformEngineCatalog();
-    const portal = internalDeveloperPortalEngineCatalog();
+  engine {
+    const base = platformEngineeringAnalyticsEngineCatalog;
+    const products = platformEngineeringCloudProductCatalog;
+    const releases = releaseEngineeringEngineCatalog;
+    const reliability = reliabilityEngineeringEngineCatalog;
+    const finops = finopsPlatformEngineCatalog;
+    const supply = supplyChainSecurityEngineCatalog;
+    const gitops = gitopsPlatformEngineCatalog;
+    const golden = goldenPathPlatformEngineCatalog;
+    const portal = internalDeveloperPortalEngineCatalog;
     return {
       ...base,
       snapshot: {
@@ -65,11 +65,11 @@ export class PlatformEngineeringAnalyticsService {
   }
 
   list(query?: string) {
-    const engine = this.engine();
-    const q = (query ?? '').trim().toLowerCase();
+    const engine = this.engine;
+    const q = (query ?? '').trim.toLowerCase;
     const rows = Object.entries(engine.snapshot).filter(([k]) => {
       if (!q) return true;
-      return k.toLowerCase().includes(q);
+      return k.toLowerCase.includes(q);
     });
     return {
       snapshot: Object.fromEntries(rows),
@@ -85,15 +85,15 @@ export class PlatformEngineeringAnalyticsService {
     return this.list(query);
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'platform-engineering-analytics',
-      shippedProducts: platformEngineeringCloudProductCatalog().filter((p) => p.status === 'shipped')
+      shippedProducts: platformEngineeringCloudProductCatalog.filter((p) => p.status === 'shipped')
         .length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Platform Engineering Analytics monitoring snapshot (VL-312).',
+      note: 'Platform Engineering Analytics monitoring snapshot.',
     };
   }
 }

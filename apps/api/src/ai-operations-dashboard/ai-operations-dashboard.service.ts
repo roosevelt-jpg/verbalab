@@ -10,19 +10,19 @@ import { agentopsPlatformEngineCatalog } from '../agentops-platform/agentops-pla
 import { aiDriftDetectionEngineCatalog } from '../ai-drift-detection/ai-drift-detection.catalog';
 import { continuousLearningEngineCatalog } from '../continuous-learning/continuous-learning.catalog';
 
-@Injectable()
+@Injectable
 export class AiOperationsDashboardService {
-  engine() {
-    const base = aiOperationsDashboardEngineCatalog();
-    const products = mlopsLlmopsCloudProductCatalog();
-    const datasets = datasetPipelineEngineCatalog();
-    const training = trainingPipelineEngineCatalog();
-    const conteval = continuousEvaluationEngineCatalog();
-    const prompts = promptopsPlatformEngineCatalog();
-    const rag = ragopsPlatformEngineCatalog();
-    const agents = agentopsPlatformEngineCatalog();
-    const drift = aiDriftDetectionEngineCatalog();
-    const learning = continuousLearningEngineCatalog();
+  engine {
+    const base = aiOperationsDashboardEngineCatalog;
+    const products = mlopsLlmopsCloudProductCatalog;
+    const datasets = datasetPipelineEngineCatalog;
+    const training = trainingPipelineEngineCatalog;
+    const conteval = continuousEvaluationEngineCatalog;
+    const prompts = promptopsPlatformEngineCatalog;
+    const rag = ragopsPlatformEngineCatalog;
+    const agents = agentopsPlatformEngineCatalog;
+    const drift = aiDriftDetectionEngineCatalog;
+    const learning = continuousLearningEngineCatalog;
     return {
       ...base,
       snapshot: {
@@ -66,7 +66,7 @@ export class AiOperationsDashboardService {
   }
 
   snapshot(_query?: string) {
-    const engine = this.engine();
+    const engine = this.engine;
     return {
       snapshot: engine.snapshot,
       honesty: engine.honesty,
@@ -81,14 +81,14 @@ export class AiOperationsDashboardService {
     return this.snapshot(query);
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'dashboard',
-      shippedProducts: mlopsLlmopsCloudProductCatalog().filter((p) => p.status === 'shipped').length,
+      shippedProducts: mlopsLlmopsCloudProductCatalog.filter((p) => p.status === 'shipped').length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'AI Operations Dashboard monitoring snapshot (VL-290).',
+      note: 'AI Operations Dashboard monitoring snapshot.',
     };
   }
 }

@@ -19,7 +19,7 @@ export type BioAuth = {
   ip?: string;
 };
 
-@Injectable()
+@Injectable
 export class VoiceBiometricsService {
   constructor(
     private readonly prisma: PrismaService,
@@ -28,12 +28,12 @@ export class VoiceBiometricsService {
     private readonly speakers: SpeakerIntelligenceService,
   ) {}
 
-  engine() {
-    return voiceBiometricsEngineCatalog();
+  engine {
+    return voiceBiometricsEngineCatalog;
   }
 
   async analytics(organizationId: string) {
-    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
     const events = await this.prisma.auditEvent.findMany({
       where: {
         organizationId,
@@ -90,7 +90,7 @@ export class VoiceBiometricsService {
       ...result,
       product: 'Voice Biometrics',
       encryptionAtRest: true,
-      note: 'Encrypted enrollment via VL-176. Not a commercial biometric template / NIST enrollment.',
+      note: 'Encrypted enrollment via existing. Not a commercial biometric template / NIST enrollment.',
     };
   }
 
@@ -147,8 +147,8 @@ export class VoiceBiometricsService {
     return assessAntiSpoof(file.buffer);
   }
 
-  livenessChallenge() {
-    return createLivenessChallenge();
+  livenessChallenge {
+    return createLivenessChallenge;
   }
 
   async livenessCheck(auth: BioAuth, file: Express.Multer.File, minDurationSeconds?: number) {
@@ -166,7 +166,7 @@ export class VoiceBiometricsService {
   }
 
   async risk(auth: BioAuth, profileId?: string) {
-    const since = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now - 7 * 24 * 60 * 60 * 1000);
     const events = await this.prisma.speakerEvent.findMany({
       where: {
         organizationId: auth.organizationId,
@@ -203,7 +203,7 @@ export class VoiceBiometricsService {
     input: { profileId: string; file: Express.Multer.File; threshold?: number },
   ) {
     this.audio.assertAllowedAudio(input.file);
-    if (!input.profileId?.trim()) {
+    if (!input.profileId?.trim) {
       throw new ApiException('validation_error', 'profileId is required', HttpStatus.BAD_REQUEST);
     }
 
@@ -212,13 +212,13 @@ export class VoiceBiometricsService {
     const verify = await this.speakers.verify({
       organizationId: auth.organizationId,
       workspaceId: auth.workspaceId,
-      profileId: input.profileId.trim(),
+      profileId: input.profileId.trim,
       file: input.file,
       threshold: input.threshold,
       userId: auth.userId,
       ip: auth.ip,
     });
-    const workspaceRisk = await this.risk(auth, input.profileId.trim());
+    const workspaceRisk = await this.risk(auth, input.profileId.trim);
 
     let riskScore = spoof.riskScore * 0.45;
     if (!verify.match) riskScore += 0.35;
@@ -300,15 +300,15 @@ export class VoiceBiometricsService {
     };
   }
 
-  encryptionStatus() {
+  encryptionStatus {
     const configured = Boolean(
-      process.env.VOICE_BIOMETRIC_KEY?.trim() || process.env.ENCRYPTION_KEY?.trim(),
+      process.env.VOICE_BIOMETRIC_KEY?.trim || process.env.ENCRYPTION_KEY?.trim,
     );
     return {
       algorithm: 'aes-256-gcm',
       keyConfigured: configured,
       keySource: configured
-        ? process.env.VOICE_BIOMETRIC_KEY?.trim()
+        ? process.env.VOICE_BIOMETRIC_KEY?.trim
           ? 'VOICE_BIOMETRIC_KEY'
           : 'ENCRYPTION_KEY'
         : 'dev_fallback_hash',

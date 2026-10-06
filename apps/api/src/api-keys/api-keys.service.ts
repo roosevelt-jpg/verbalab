@@ -6,7 +6,7 @@ import { generateApiKeySecret } from '../common/crypto/api-keys';
 import { ApiException } from '../common/errors/api-exception';
 import { AuditService } from '../audit/audit.service';
 
-@Injectable()
+@Injectable
 export class ApiKeysService {
   constructor(
     private readonly prisma: PrismaService,
@@ -108,7 +108,7 @@ export class ApiKeysService {
     }
     const updated = await this.prisma.apiKey.update({
       where: { id: key.id },
-      data: { revokedAt: new Date() },
+      data: { revokedAt: new Date },
     });
 
     await this.audit.record({

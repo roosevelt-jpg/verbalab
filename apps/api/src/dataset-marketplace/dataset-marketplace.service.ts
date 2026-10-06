@@ -39,7 +39,7 @@ type DatasetSnapshot = {
   targetLang: string | null;
 };
 
-@Injectable()
+@Injectable
 export class DatasetMarketplaceService {
   constructor(
     private readonly prisma: PrismaService,
@@ -49,8 +49,8 @@ export class DatasetMarketplaceService {
     private readonly fabricGate: FabricPolicyGate,
   ) {}
 
-  engine() {
-    return datasetMarketplaceEngineCatalog();
+  engine {
+    return datasetMarketplaceEngineCatalog;
   }
 
   private assertOwnerOrAdmin(role: string) {
@@ -88,7 +88,7 @@ export class DatasetMarketplaceService {
   }
 
   private parseCategory(raw?: string): DatasetMarketplaceCategory {
-    const value = (raw ?? 'translation').trim().toLowerCase();
+    const value = (raw ?? 'translation').trim.toLowerCase;
     if (!(DATASET_MARKETPLACE_CATEGORIES as readonly string[]).includes(value)) {
       throw new ApiException(
         'validation_error',
@@ -100,7 +100,7 @@ export class DatasetMarketplaceService {
   }
 
   private parseLicense(raw?: string): string {
-    const value = (raw ?? 'commercial').trim().toLowerCase();
+    const value = (raw ?? 'commercial').trim.toLowerCase;
     if (!(DATASET_MARKETPLACE_LICENSE_TYPES as readonly string[]).includes(value)) {
       throw new ApiException(
         'validation_error',
@@ -153,8 +153,8 @@ export class DatasetMarketplaceService {
       publisherOrgId: row.publisherOrgId,
       publisherWorkspaceId: row.publisherWorkspaceId,
       publisherName: row.publisherOrg?.name ?? null,
-      createdAt: row.createdAt.toISOString(),
-      updatedAt: row.updatedAt.toISOString(),
+      createdAt: row.createdAt.toISOString,
+      updatedAt: row.updatedAt.toISOString,
     };
   }
 
@@ -204,7 +204,7 @@ export class DatasetMarketplaceService {
         .map((r) => ({
           id: r.id,
           listingId: r.listingId,
-          installedAt: r.installedAt.toISOString(),
+          installedAt: r.installedAt.toISOString,
           listing: this.serialize(r.listing),
         })),
     };
@@ -229,7 +229,7 @@ export class DatasetMarketplaceService {
           applicationFeeCents: r.applicationFeeCents,
           currency: r.currency,
           status: r.status,
-          createdAt: r.createdAt.toISOString(),
+          createdAt: r.createdAt.toISOString,
         })),
       honesty: {
         platformFeeBps: PLATFORM_FEE_BPS,
@@ -237,7 +237,7 @@ export class DatasetMarketplaceService {
         storesRawCardData: false,
         creatorPayoutMathVerifiedLive: false,
       },
-      note: 'Recorded receipts only. Creator Economy (VL-258) expands payout math.',
+      note: 'Recorded receipts only. Creator Economy expands payout math.',
     };
   }
 
@@ -269,7 +269,7 @@ export class DatasetMarketplaceService {
       permissions: ['marketplace.publish'],
     });
 
-    const source = (input.source ?? (input.assetId ? 'dataset_asset' : 'tm_corpus')).trim();
+    const source = (input.source ?? (input.assetId ? 'dataset_asset' : 'tm_corpus')).trim;
     if (source !== 'tm_corpus' && source !== 'dataset_asset') {
       throw new ApiException(
         'validation_error',
@@ -280,16 +280,16 @@ export class DatasetMarketplaceService {
 
     const category = this.parseCategory(input.category);
     const licenseType = this.parseLicense(input.licenseType);
-    const datasetVersion = (input.datasetVersion ?? 'v1').trim().slice(0, 64) || 'v1';
+    const datasetVersion = (input.datasetVersion ?? 'v1').trim.slice(0, 64) || 'v1';
     const priceCents = Math.max(0, Math.floor(Number(input.priceCents ?? 0) || 0));
-    const currency = (input.currency ?? 'usd').trim().toLowerCase().slice(0, 8) || 'usd';
+    const currency = (input.currency ?? 'usd').trim.toLowerCase.slice(0, 8) || 'usd';
 
     let snapshot: DatasetSnapshot;
     let title: string;
     let description: string | null;
 
     if (source === 'dataset_asset') {
-      const assetId = (input.assetId ?? '').trim();
+      const assetId = (input.assetId ?? '').trim;
       if (!assetId) {
         throw new ApiException(
           'validation_error',
@@ -298,9 +298,9 @@ export class DatasetMarketplaceService {
         );
       }
       const asset = await this.datasets.get(input.organizationId, assetId);
-      title = (input.title ?? asset.title).trim().slice(0, 120);
+      title = (input.title ?? asset.title).trim.slice(0, 120);
       description =
-        input.description?.trim().slice(0, 500) ||
+        input.description?.trim.slice(0, 500) ||
         `DatasetAsset listing (${asset.licenseTag})`;
       snapshot = {
         hub: HUB,
@@ -345,9 +345,9 @@ export class DatasetMarketplaceService {
         sourceText: e.sourceText,
         targetText: e.targetText,
       }));
-      title = (input.title ?? 'Translation corpus').trim().slice(0, 120);
+      title = (input.title ?? 'Translation corpus').trim.slice(0, 120);
       description =
-        input.description?.trim().slice(0, 500) ||
+        input.description?.trim.slice(0, 500) ||
         `${pairs.length} approved TM pairs`;
       snapshot = {
         hub: HUB,
@@ -406,7 +406,7 @@ export class DatasetMarketplaceService {
 
     return {
       listing: this.serialize(listing),
-      honesty: this.engine().honesty,
+      honesty: this.engine.honesty,
       note:
         'Dataset listing published under content-marketplace dataset kind with Dataset Marketplace hub marker. Not Label Studio OS.',
     };
@@ -449,7 +449,7 @@ export class DatasetMarketplaceService {
     const next: DatasetSnapshot = {
       ...snap,
       datasetVersion:
-        (input.datasetVersion ?? snap.datasetVersion).trim().slice(0, 64) || snap.datasetVersion,
+        (input.datasetVersion ?? snap.datasetVersion).trim.slice(0, 64) || snap.datasetVersion,
       verified: true,
       labelStudioOs: false,
       datasetCloudOs: false,
@@ -459,7 +459,7 @@ export class DatasetMarketplaceService {
       where: { id: listing.id },
       data: {
         snapshot: next as unknown as Prisma.InputJsonValue,
-        description: input.description?.trim().slice(0, 500) ?? listing.description,
+        description: input.description?.trim.slice(0, 500) ?? listing.description,
         status: 'published',
       },
       include: { publisherOrg: { select: { name: true } } },
@@ -554,7 +554,7 @@ export class DatasetMarketplaceService {
       }
       for (const pair of snap.pairs) {
         const sourceText = normalizeTmSegment(pair.sourceText ?? '');
-        const targetText = (pair.targetText ?? '').trim();
+        const targetText = (pair.targetText ?? '').trim;
         if (!sourceText || !targetText || !pair.sourceLang || !pair.targetLang) continue;
         const sourceHash = hashTmSegment(sourceText);
         await this.prisma.translationMemoryEntry.upsert({
@@ -648,7 +648,7 @@ export class DatasetMarketplaceService {
         listingId: listing.id,
         source: snap.source,
         termsInstalled,
-        installedAt: install.installedAt.toISOString(),
+        installedAt: install.installedAt.toISOString,
       },
       entitlement: {
         workspaceId: input.workspaceId,
@@ -664,7 +664,7 @@ export class DatasetMarketplaceService {
             : 'License entitlement for DatasetAsset metadata — files are not re-hosted as Dataset Cloud.',
       },
       sale,
-      honesty: this.engine().honesty,
+      honesty: this.engine.honesty,
       note: 'Dataset marketplace install completed. Not Label Studio / Dataset Cloud OS.',
     };
   }
@@ -750,8 +750,8 @@ export class DatasetMarketplaceService {
       listingId: listing.id,
       organizationId: input.organizationId,
       rating,
-      body: input.body?.trim().slice(0, 1000) || undefined,
-      createdAt: new Date().toISOString(),
+      body: input.body?.trim.slice(0, 1000) || undefined,
+      createdAt: new Date.toISOString,
     };
 
     if (existing) {
@@ -857,19 +857,19 @@ export class DatasetMarketplaceService {
       installs,
       sales,
       reviews,
-      honesty: this.engine().honesty,
-      note: 'Dataset marketplace aggregates. Payout depth deferred to Creator Economy (VL-258).',
+      honesty: this.engine.honesty,
+      note: 'Dataset marketplace aggregates. Payout depth deferred to Creator Economy.',
     };
   }
 
-  monitoring() {
-    const engine = this.engine();
+  monitoring {
+    const engine = this.engine;
     return {
       mode: 'dataset-marketplace',
       products: engine.capabilities.map((c) => ({ id: c.id, status: c.status })),
       honesty: engine.honesty,
       safety: engine.safety,
-      note: 'Dataset Marketplace monitoring snapshot (VL-252).',
+      note: 'Dataset Marketplace monitoring snapshot.',
     };
   }
 }

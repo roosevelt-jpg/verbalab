@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_admin_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_admin_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
               name: `${name} Owner`,
             },
@@ -36,21 +36,21 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Admin + customer portal (VL-081)', () => {
+describe('Admin + customer portal',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let admin: AdminService;
   let governance: GovernanceService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -72,11 +72,11 @@ describe('Admin + customer portal (VL-081)', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('isPlatformAdmin respects allowlists', () => {
+  it('isPlatformAdmin respects allowlists',  => {
     const prevEmails = process.env.ADMIN_EMAILS;
     const prevIds = process.env.ADMIN_USER_IDS;
     process.env.ADMIN_EMAILS = 'ops@lugemi.test';
@@ -88,7 +88,7 @@ describe('Admin + customer portal (VL-081)', () => {
     process.env.ADMIN_USER_IDS = prevIds;
   });
 
-  it('lists organization members for the customer portal', async () => {
+  it('lists organization members for the customer portal', async  => {
     const org = await seedOrg(prisma, 'portalMembers');
     const members = await governance.listMembers(org.id);
     expect(members).toHaveLength(1);
@@ -96,7 +96,7 @@ describe('Admin + customer portal (VL-081)', () => {
     expect(members[0]!.user.email).toBe('portalMembers@example.com');
   });
 
-  it('searches orgs and disables them, revoking keys', async () => {
+  it('searches orgs and disables them, revoking keys', async  => {
     const org = await seedOrg(prisma, 'adminSearchTarget');
     const other = await seedOrg(prisma, 'adminOther');
 
@@ -118,9 +118,9 @@ describe('Admin + customer portal (VL-081)', () => {
     // Suspend without revoke-all: API keys must still fail closed
     await prisma.organization.update({
       where: { id: org.id },
-      data: { disabledAt: new Date(), disabledReason: 'manual' },
+      data: { disabledAt: new Date, disabledReason: 'manual' },
     });
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post('/v1/translate')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'Hello', source: 'en', target: 'sw' })
@@ -134,10 +134,10 @@ describe('Admin + customer portal (VL-081)', () => {
     });
 
     const reloaded = await prisma.organization.findUniqueOrThrow({ where: { id: org.id } });
-    expect(reloaded.disabledAt).not.toBeNull();
+    expect(reloaded.disabledAt).not.toBeNull;
     expect(reloaded.disabledReason).toBe('abuse');
     const revoked = await prisma.apiKey.findUniqueOrThrow({ where: { id: key.id } });
-    expect(revoked.revokedAt).not.toBeNull();
+    expect(revoked.revokedAt).not.toBeNull;
 
     await admin.setDisabled({
       organizationId: org.id,
@@ -145,6 +145,6 @@ describe('Admin + customer portal (VL-081)', () => {
       disabled: false,
     });
     const enabled = await prisma.organization.findUniqueOrThrow({ where: { id: org.id } });
-    expect(enabled.disabledAt).toBeNull();
+    expect(enabled.disabledAt).toBeNull;
   });
 });

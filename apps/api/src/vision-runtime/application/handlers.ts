@@ -17,8 +17,8 @@ export class GetVisionRuntimeEngineHandler
     private readonly catalog: VisionRuntimeCatalogPort,
   ) {}
 
-  execute(): Promise<VisionRuntimeEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<VisionRuntimeEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListVisionRuntimeProductsHandler
     private readonly catalog: VisionRuntimeCatalogPort,
   ) {}
 
-  execute(): Promise<VisionRuntimeProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<VisionRuntimeProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

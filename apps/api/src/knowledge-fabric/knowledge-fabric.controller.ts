@@ -24,23 +24,23 @@ export class KnowledgeFabricController {
   constructor(private readonly fabric: KnowledgeFabricService) {}
 
   @Get('products')
-  products() {
-    return this.fabric.products();
+  products {
+    return this.fabric.products;
   }
 
   @Get('engine')
-  engine() {
-    return this.fabric.products();
+  engine {
+    return this.fabric.products;
   }
 
   @Get('routes')
-  routes() {
-    return this.fabric.routes();
+  routes {
+    return this.fabric.routes;
   }
 
   @Post('route')
   @HttpCode(HttpStatus.OK)
-  route(@Body() body: { kinds?: string[] }) {
+  route(@Body body: { kinds?: string[] }) {
     return this.fabric.route({ kinds: body.kinds });
   }
 
@@ -48,8 +48,8 @@ export class KnowledgeFabricController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   distribute(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       kinds?: string[];
       targetWorkspaceIds?: string[];
@@ -71,8 +71,8 @@ export class KnowledgeFabricController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   sync(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       targetWorkspaceId: string;
       kinds?: string[];
@@ -92,18 +92,18 @@ export class KnowledgeFabricController {
 
   @Post('federate')
   @HttpCode(HttpStatus.OK)
-  federate(@Body() body: { kinds?: string[] }) {
+  federate(@Body body: { kinds?: string[] }) {
     return this.fabric.federate({ kinds: body.kinds });
   }
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession() session: SessionContext) {
+  overview(@CurrentSession session: SessionContext) {
     return this.fabric.overview(session);
   }
 
   @Get('monitoring')
-  monitoring() {
-    return this.fabric.monitoring();
+  monitoring {
+    return this.fabric.monitoring;
   }
 }

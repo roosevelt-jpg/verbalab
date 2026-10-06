@@ -25,7 +25,7 @@ type IcuResult = {
   formatted?: string;
 };
 
-export function LocalizationClient() {
+export function LocalizationClient {
   const [platform, setPlatform] = useState<Platform | null>(null);
   const [icuMessage, setIcuMessage] = useState('{count, plural, one {# item} other {# items}}');
   const [icuLocale, setIcuLocale] = useState('en');
@@ -36,15 +36,15 @@ export function LocalizationClient() {
   const [layout, setLayout] = useState<{ dir: string; rtl: boolean; script: string | null } | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async  => {
     setPlatform(await apiFetch<Platform>('/v1/localization'));
   }, []);
 
-  useEffect(() => {
-    void load().catch((err: Error) => setError(err.message));
+  useEffect( => {
+    void load.catch((err: Error) => setError(err.message));
   }, [load]);
 
-  async function runIcu() {
+  async function runIcu {
     setError(null);
     const validated = await apiFetch<IcuResult>('/v1/icu/validate', {
       method: 'POST',
@@ -61,7 +61,7 @@ export function LocalizationClient() {
     setIcu({ ...validated, formatted: formatted.formatted });
   }
 
-  async function runQa() {
+  async function runQa {
     setError(null);
     setQa(
       await apiFetch<QaResult>('/v1/localize/qa', {
@@ -77,7 +77,7 @@ export function LocalizationClient() {
     );
   }
 
-  async function runLayout() {
+  async function runLayout {
     setError(null);
     setLayout(await apiFetch(`/v1/locales/${encodeURIComponent(layoutCode)}/layout`));
   }
@@ -119,7 +119,7 @@ export function LocalizationClient() {
             count
             <input className="vl-field" value={icuCount} onChange={(e) => setIcuCount(e.target.value)} />
           </label>
-          <button type="button" className="vl-button" onClick={() => void runIcu().catch((e: Error) => setError(e.message))}>
+          <button type="button" className="vl-button" onClick={ => void runIcu.catch((e: Error) => setError(e.message))}>
             Run
           </button>
         </div>
@@ -133,7 +133,7 @@ export function LocalizationClient() {
 
       <section style={{ marginBottom: '1.75rem' }}>
         <h2 style={h2}>Localization QA</h2>
-        <button type="button" className="vl-button" onClick={() => void runQa().catch((e: Error) => setError(e.message))}>
+        <button type="button" className="vl-button" onClick={ => void runQa.catch((e: Error) => setError(e.message))}>
           Run sample QA
         </button>
         {qa ? (
@@ -150,7 +150,7 @@ export function LocalizationClient() {
             Language
             <input className="vl-field" value={layoutCode} onChange={(e) => setLayoutCode(e.target.value)} />
           </label>
-          <button type="button" className="vl-button" onClick={() => void runLayout().catch((e: Error) => setError(e.message))}>
+          <button type="button" className="vl-button" onClick={ => void runLayout.catch((e: Error) => setError(e.message))}>
             Lookup
           </button>
         </div>

@@ -25,18 +25,18 @@ export class CostOptimizationController {
   constructor(private readonly cost: CostOptimizationService) {}
 
   @Get('engine')
-  engine() {
-    return this.cost.engine();
+  engine {
+    return this.cost.engine;
   }
 
   @Get('ceilings')
-  ceilings() {
-    return this.cost.ceilings();
+  ceilings {
+    return this.cost.ceilings;
   }
 
   @Get('budgets')
   @UseGuards(TranslateAuthGuard)
-  budgets(@Req() req: AuthedReq) {
+  budgets(@Req req: AuthedReq) {
     return this.cost.getBudget({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -46,8 +46,8 @@ export class CostOptimizationController {
   @Put('budgets')
   @UseGuards(TranslateAuthGuard)
   upsertBudget(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       dailyCapUsd?: number;
       monthlyCapUsd?: number;
@@ -70,8 +70,8 @@ export class CostOptimizationController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   check(
-    @Req() req: AuthedReq,
-    @Body() body: { additionalUsd?: number; soft?: boolean },
+    @Req req: AuthedReq,
+    @Body body: { additionalUsd?: number; soft?: boolean },
   ) {
     return this.cost.check({
       organizationId: req.translateAuth.organizationId,
@@ -86,8 +86,8 @@ export class CostOptimizationController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   record(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       category?: string;
       amountUsd?: number;
@@ -109,8 +109,8 @@ export class CostOptimizationController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   optimize(
-    @Req() req: AuthedReq,
-    @Body() body: { feature?: string; tokensPer1k?: number },
+    @Req req: AuthedReq,
+    @Body body: { feature?: string; tokensPer1k?: number },
   ) {
     return this.cost.optimize({
       organizationId: req.translateAuth.organizationId,
@@ -123,7 +123,7 @@ export class CostOptimizationController {
 
   @Get('gpu')
   @UseGuards(TranslateAuthGuard)
-  gpu(@Req() req: AuthedReq) {
+  gpu(@Req req: AuthedReq) {
     return this.cost.gpuView({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -132,7 +132,7 @@ export class CostOptimizationController {
 
   @Get('predictions')
   @UseGuards(TranslateAuthGuard)
-  predictions(@Req() req: AuthedReq) {
+  predictions(@Req req: AuthedReq) {
     return this.cost.predictions({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -141,7 +141,7 @@ export class CostOptimizationController {
 
   @Get('reports')
   @UseGuards(TranslateAuthGuard)
-  reports(@Req() req: AuthedReq) {
+  reports(@Req req: AuthedReq) {
     return this.cost.reports({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -150,7 +150,7 @@ export class CostOptimizationController {
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.cost.analytics({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -159,7 +159,7 @@ export class CostOptimizationController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req() req: AuthedReq) {
+  monitoring(@Req req: AuthedReq) {
     return this.cost.monitoring({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,

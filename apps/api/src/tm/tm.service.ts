@@ -10,7 +10,7 @@ import { isTmScope, lexicalSimilarity, TmScope } from './tm-similarity';
 
 const SEARCH_CANDIDATE_LIMIT = 400;
 
-@Injectable()
+@Injectable
 export class TmService {
   private readonly logger = new Logger(TmService.name);
 
@@ -20,8 +20,8 @@ export class TmService {
     private readonly gateway: GatewayService,
   ) {}
 
-  intelligence() {
-    return tmIntelligenceCatalog();
+  intelligence {
+    return tmIntelligenceCatalog;
   }
 
   list(
@@ -35,7 +35,7 @@ export class TmService {
         ...(pair?.scope === 'enterprise' || pair?.scope === 'shared'
           ? { scope: pair.scope }
           : pair?.scope === 'project'
-            ? { scope: 'project', projectKey: pair.projectKey?.trim() || undefined }
+            ? { scope: 'project', projectKey: pair.projectKey?.trim || undefined }
             : { workspaceId, ...(pair?.scope ? { scope: pair.scope } : {}) }),
         ...(pair?.source ? { sourceLang: pair.source } : {}),
         ...(pair?.target ? { targetLang: pair.target } : {}),
@@ -63,7 +63,7 @@ export class TmService {
   }
 
   async analytics(organizationId: string) {
-    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
     const [entries, versions, upserts, searches, glossaryTerms] = await Promise.all([
       this.prisma.translationMemoryEntry.count({ where: { organizationId } }),
       this.prisma.translationMemoryVersion.count({
@@ -105,7 +105,7 @@ export class TmService {
     return {
       data: terms,
       count: terms.length,
-      note: 'Terminology is the workspace glossary façade (VL-050/145) — not a separate termbase product.',
+      note: 'Terminology is the workspace glossary façade — not a separate termbase product.',
       api: '/v1/glossary/terms',
     };
   }
@@ -148,7 +148,7 @@ export class TmService {
     return {
       versions,
       audits,
-      note: 'TM version snapshots + recent TM audit events (VL-145).',
+      note: 'TM version snapshots + recent TM audit events.',
     };
   }
 
@@ -192,7 +192,7 @@ export class TmService {
     }
 
     const sourceText = normalizeTmSegment(input.sourceText);
-    const targetText = input.targetText.trim();
+    const targetText = input.targetText.trim;
     if (!sourceText || !targetText) {
       throw new ApiException(
         'validation_error',
@@ -208,7 +208,7 @@ export class TmService {
       );
     }
 
-    const scopeRaw = (input.scope ?? 'workspace').trim().toLowerCase();
+    const scopeRaw = (input.scope ?? 'workspace').trim.toLowerCase;
     if (!isTmScope(scopeRaw)) {
       throw new ApiException(
         'validation_error',
@@ -217,7 +217,7 @@ export class TmService {
       );
     }
     const scope: TmScope = scopeRaw;
-    const projectKey = scope === 'project' ? (input.projectKey?.trim() || '') : '';
+    const projectKey = scope === 'project' ? (input.projectKey?.trim || '') : '';
     if (scope === 'project' && !projectKey) {
       throw new ApiException(
         'validation_error',
@@ -436,7 +436,7 @@ export class TmService {
     }));
 
     const wantVector = mode === 'vector' || mode === 'auto';
-    if (wantVector && process.env.OPENAI_API_KEY?.trim()) {
+    if (wantVector && process.env.OPENAI_API_KEY?.trim) {
       const vectorHits = await this.vectorSearch({
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
@@ -472,7 +472,7 @@ export class TmService {
             match: prev ? ('lexical' as const) : ('vector' as const),
           });
         }
-        scored = [...byId.values()];
+        scored = [...byId.values];
       } else if (mode === 'vector') {
         provider = 'lexical';
       }
@@ -511,8 +511,8 @@ export class TmService {
       resultCount: results.length,
       note:
         provider === 'lexical'
-          ? 'Lexical bigram similarity (VL-145). Set OPENAI_API_KEY for optional vector re-rank.'
-          : 'Similarity search with optional pgvector re-rank (VL-145). Not a CAT fuzzy-match product.',
+          ? 'Lexical bigram similarity. Set OPENAI_API_KEY for optional vector re-rank.'
+          : 'Similarity search with optional pgvector re-rank. Not a CAT fuzzy-match product.',
     };
   }
 
@@ -524,7 +524,7 @@ export class TmService {
   }
 
   private async maybeStoreEmbedding(entryId: string, sourceText: string) {
-    if (!process.env.OPENAI_API_KEY?.trim()) return;
+    if (!process.env.OPENAI_API_KEY?.trim) return;
     try {
       const embedded = await this.gateway.embed({ input: [sourceText] });
       const dims = embedded.data[0]?.embedding;

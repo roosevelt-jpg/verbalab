@@ -6,17 +6,17 @@ import {
 } from '../policy-fabric/application/messages';
 import { GqlPolicyFabricCapability, GqlPolicyFabricRoute } from './gql.types';
 
-@Resolver()
+@Resolver
 export class PolicyFabricGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query(() => [GqlPolicyFabricCapability], { name: 'policyFabricCapabilities' })
-  policyFabricCapabilities(): Promise<GqlPolicyFabricCapability[]> {
-    return this.queries.execute(new ListPolicyFabricCapabilitiesQuery());
+  @Query( => [GqlPolicyFabricCapability], { name: 'policyFabricCapabilities' })
+  policyFabricCapabilities: Promise<GqlPolicyFabricCapability[]> {
+    return this.queries.execute(new ListPolicyFabricCapabilitiesQuery);
   }
 
-  @Query(() => [GqlPolicyFabricRoute], { name: 'policyFabricRoutes' })
-  policyFabricRoutes(): Promise<GqlPolicyFabricRoute[]> {
-    return this.queries.execute(new ListPolicyFabricRoutesQuery());
+  @Query( => [GqlPolicyFabricRoute], { name: 'policyFabricRoutes' })
+  policyFabricRoutes: Promise<GqlPolicyFabricRoute[]> {
+    return this.queries.execute(new ListPolicyFabricRoutesQuery);
   }
 }

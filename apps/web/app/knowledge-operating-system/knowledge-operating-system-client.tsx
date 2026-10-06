@@ -12,11 +12,11 @@ type Engine = {
   routesTo?: Array<{ module: string; path: string; role: string }>;
 };
 
-export function KnowledgeOperatingSystemClient() {
+export function KnowledgeOperatingSystemClient {
   const [data, setData] = useState<Engine | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  useEffect( => {
     void apiFetch<Engine>('/v1/knowledge-operating-system/engine')
       .then(setData)
       .catch((err: Error) => setError(err.message));

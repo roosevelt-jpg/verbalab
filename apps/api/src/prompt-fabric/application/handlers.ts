@@ -21,8 +21,8 @@ export class ListPromptFabricCapabilitiesHandler
     @Inject(PROMPT_FABRIC_CATALOG_PORT) private readonly catalog: PromptFabricCatalogPort,
   ) {}
 
-  execute(): Promise<PromptFabricCapabilityRow[]> {
-    return Promise.resolve(this.catalog.listCapabilities());
+  execute: Promise<PromptFabricCapabilityRow[]> {
+    return Promise.resolve(this.catalog.listCapabilities);
   }
 }
 
@@ -34,8 +34,8 @@ export class ListPromptFabricRoutesHandler
     @Inject(PROMPT_FABRIC_CATALOG_PORT) private readonly catalog: PromptFabricCatalogPort,
   ) {}
 
-  execute(): Promise<PromptFabricRouteRow[]> {
-    return Promise.resolve(this.catalog.listRoutes());
+  execute: Promise<PromptFabricRouteRow[]> {
+    return Promise.resolve(this.catalog.listRoutes);
   }
 }
 
@@ -47,8 +47,8 @@ export class GetPromptFabricProductsBundleHandler
     @Inject(PROMPT_FABRIC_CATALOG_PORT) private readonly catalog: PromptFabricCatalogPort,
   ) {}
 
-  execute(): Promise<PromptFabricProductsBundle> {
-    return Promise.resolve(this.catalog.products());
+  execute: Promise<PromptFabricProductsBundle> {
+    return Promise.resolve(this.catalog.products);
   }
 }
 

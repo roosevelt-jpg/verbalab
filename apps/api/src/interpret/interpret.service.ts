@@ -5,7 +5,7 @@ import { AuditService } from '../audit/audit.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiException } from '../common/errors/api-exception';
 
-@Injectable()
+@Injectable
 export class InterpretService {
   constructor(
     private readonly audio: AudioService,
@@ -27,10 +27,10 @@ export class InterpretService {
     userId?: string;
     ip?: string;
   }) {
-    if (typeof input.target !== 'string' || !input.target.trim()) {
+    if (typeof input.target !== 'string' || !input.target.trim) {
       throw new ApiException('validation_error', 'target is required', HttpStatus.BAD_REQUEST);
     }
-    if (typeof input.voice !== 'string' || !input.voice.trim()) {
+    if (typeof input.voice !== 'string' || !input.voice.trim) {
       throw new ApiException('validation_error', 'voice is required', HttpStatus.BAD_REQUEST);
     }
 
@@ -44,7 +44,7 @@ export class InterpretService {
       ip: input.ip,
     });
 
-    const sourceText = stt.text.trim();
+    const sourceText = stt.text.trim;
     if (!sourceText) {
       throw new ApiException(
         'detection_failed',
@@ -54,8 +54,8 @@ export class InterpretService {
     }
 
     const source =
-      (input.source?.trim() || stt.language || 'auto').toLowerCase() || 'auto';
-    const target = input.target.trim().toLowerCase();
+      (input.source?.trim || stt.language || 'auto').toLowerCase || 'auto';
+    const target = input.target.trim.toLowerCase;
 
     let targetText = sourceText;
     let mtProvider: string | null = null;
@@ -84,7 +84,7 @@ export class InterpretService {
     const format = input.format ?? 'mp3';
     const tts = await this.audio.speak({
       text: targetText,
-      voice: input.voice.trim(),
+      voice: input.voice.trim,
       language: target,
       format,
       organizationId: input.organizationId,

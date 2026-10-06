@@ -2,7 +2,7 @@ type LogFields = Record<string, unknown>;
 
 function emit(level: string, message: string, fields?: LogFields) {
   const line = {
-    ts: new Date().toISOString(),
+    ts: new Date.toISOString,
     level,
     msg: message,
     service: 'lugemi-api',

@@ -6,16 +6,16 @@ import {
   AiDriftDetectionProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestAiDriftDetectionCatalogAdapter implements AiDriftDetectionCatalogPort {
   constructor(private readonly service: AiDriftDetectionService) {}
 
-  engine(): AiDriftDetectionEngineBundle {
-    return this.service.engine();
+  engine: AiDriftDetectionEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): AiDriftDetectionProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: AiDriftDetectionProductRow[] {
+    const bundle = this.engine as {
       products?: AiDriftDetectionProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestAiDriftDetectionCatalogAdapter implements AiDriftDetectionCatal
         status: 'shipped',
         api: 'GET /v1/ai-drift-detection/engine',
         console: '/ai-drift-detection',
-        notes: 'VL-288 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

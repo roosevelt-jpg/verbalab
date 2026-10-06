@@ -17,8 +17,8 @@ export class GetEngineeringGovernanceEngineHandler
     private readonly catalog: EngineeringGovernanceCatalogPort,
   ) {}
 
-  execute(): Promise<EngineeringGovernanceEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<EngineeringGovernanceEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListEngineeringGovernanceProductsHandler
     private readonly catalog: EngineeringGovernanceCatalogPort,
   ) {}
 
-  execute(): Promise<EngineeringGovernanceProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<EngineeringGovernanceProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

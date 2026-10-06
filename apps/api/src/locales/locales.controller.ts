@@ -6,16 +6,16 @@ import { ApiException } from '../common/errors/api-exception';
 export class LocalesController {
   constructor(private readonly locales: LocalesService) {}
 
-  @Get()
-  async list() {
-    const data = await this.locales.list();
+  @Get
+  async list {
+    const data = await this.locales.list;
     return { data };
   }
 
   @Post('format')
   @HttpCode(HttpStatus.OK)
   format(
-    @Body()
+    @Body
     body: {
       code?: string;
       date?: string;

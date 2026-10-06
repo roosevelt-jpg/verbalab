@@ -12,7 +12,7 @@ export type GlossaryProtectResult = {
 
 /** Escape RegExp metacharacters. */
 export function escapeRegExp(value: string): string {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  return value.replace(/[.*+?^${}|[\]\\]/g, '\\$&');
 }
 
 function buildTermPattern(term: GlossaryTermLike): RegExp {
@@ -37,11 +37,11 @@ export function protectGlossaryTerms(
   let output = text;
 
   for (const term of sorted) {
-    if (!term.sourceTerm.trim()) continue;
+    if (!term.sourceTerm.trim) continue;
     const placeholder = `⟦VL${startIndex + replacements.length}⟧`;
     const pattern = buildTermPattern(term);
     if (!pattern.test(output)) continue;
-    // reset lastIndex after test()
+    // reset lastIndex after test
     pattern.lastIndex = 0;
     output = output.replace(pattern, placeholder);
     replacements.push({
@@ -70,7 +70,7 @@ export function enforceGlossaryTargets(text: string, terms: GlossaryTermLike[]):
   const sorted = [...terms].sort((a, b) => b.sourceTerm.length - a.sourceTerm.length);
   let output = text;
   for (const term of sorted) {
-    if (!term.sourceTerm.trim()) continue;
+    if (!term.sourceTerm.trim) continue;
     const pattern = buildTermPattern(term);
     output = output.replace(pattern, term.targetTerm);
   }

@@ -20,19 +20,19 @@ export class EmotionVoiceController {
   constructor(private readonly emotionVoice: EmotionVoiceService) {}
 
   @Get('engine')
-  engine() {
-    return this.emotionVoice.engine();
+  engine {
+    return this.emotionVoice.engine;
   }
 
   @Get('profiles')
-  profiles() {
-    return this.emotionVoice.profiles();
+  profiles {
+    return this.emotionVoice.profiles;
   }
 
   @Get('engine/analytics')
   @UseGuards(TranslateAuthGuard)
   analytics(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
     },
@@ -43,12 +43,12 @@ export class EmotionVoiceController {
   @Post('synthesize')
   @UseGuards(TranslateAuthGuard)
   async synthesize(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body()
+    @Body
     body: {
       text?: string;
       emotion?: string;
@@ -56,7 +56,7 @@ export class EmotionVoiceController {
       language?: string;
       format?: 'mp3' | 'wav' | 'opus' | 'aac' | 'flac';
     },
-    @Res() res: Response,
+    @Res res: Response,
   ) {
     if (typeof body.text !== 'string') {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
@@ -95,13 +95,13 @@ export class EmotionVoiceController {
   @Post('stream')
   @UseGuards(TranslateAuthGuard)
   async stream(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Res() res: Response,
-    @Body()
+    @Res res: Response,
+    @Body
     body: {
       text?: string;
       emotion?: string;
@@ -122,7 +122,7 @@ export class EmotionVoiceController {
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('Connection', 'keep-alive');
     res.setHeader('X-Lugemi-Emotion', body.emotion);
-    res.flushHeaders?.();
+    res.flushHeaders?.;
 
     const stream = this.emotionVoice.streamSynthesize({
       text: body.text,
@@ -141,6 +141,6 @@ export class EmotionVoiceController {
       res.write(`event: ${chunk.event}\ndata: ${JSON.stringify(chunk)}\n\n`);
       if (chunk.event === 'error' || chunk.event === 'done') break;
     }
-    res.end();
+    res.end;
   }
 }

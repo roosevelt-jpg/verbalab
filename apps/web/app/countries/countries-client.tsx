@@ -24,20 +24,20 @@ type Detail = CountryPack & {
   note?: string;
 };
 
-export function CountriesClient() {
+export function CountriesClient {
   const [packs, setPacks] = useState<CountryPack[]>([]);
   const [selected, setSelected] = useState<Detail | null>(null);
   const [region, setRegion] = useState('');
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    const q = region.trim() ? `?region=${encodeURIComponent(region.trim())}` : '';
+  const load = useCallback(async  => {
+    const q = region.trim ? `?region=${encodeURIComponent(region.trim)}` : '';
     const res = await apiFetch<{ data: CountryPack[] }>(`/v1/country-packs${q}`);
     setPacks(res.data);
   }, [region]);
 
-  useEffect(() => {
-    void load().catch((err: Error) => setError(err.message));
+  useEffect( => {
+    void load.catch((err: Error) => setError(err.message));
   }, [load]);
 
   async function openPack(code: string) {
@@ -65,7 +65,7 @@ export function CountriesClient() {
         Country packs
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.5rem', maxWidth: '42rem' }}>
-        ISO country guidance that composes VL-102 language locale packs. Curated African-priority set — not a CLDR dump
+        ISO country guidance that composes language locale packs. Curated African-priority set — not a CLDR dump
         or billing SKU catalog.
       </p>
 
@@ -86,7 +86,7 @@ export function CountriesClient() {
           <li key={p.code} style={{ borderTop: '1px solid var(--line)', paddingTop: '0.55rem' }}>
             <button
               type="button"
-              onClick={() => void openPack(p.code)}
+              onClick={ => void openPack(p.code)}
               style={{
                 background: 'none',
                 border: 0,

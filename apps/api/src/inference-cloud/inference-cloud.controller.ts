@@ -8,13 +8,13 @@ export class InferenceCloudController {
   constructor(private readonly inferenceCloud: InferenceCloudService) {}
 
   @Get('products')
-  products() {
-    return this.inferenceCloud.products();
+  products {
+    return this.inferenceCloud.products;
   }
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession() session: SessionContext) {
+  overview(@CurrentSession session: SessionContext) {
     return this.inferenceCloud.overview(session);
   }
 }

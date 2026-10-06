@@ -1,4 +1,4 @@
-/** Application ports for GitOps Platform (VL-306). */
+/** Application ports for GitOps Platform. */
 
 export type GitopsPlatformProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type GitopsPlatformEngineBundle = ReturnType<
 >;
 
 export interface GitopsPlatformCatalogPort {
-  engine(): GitopsPlatformEngineBundle;
-  listProducts(): GitopsPlatformProductRow[];
+  engine: GitopsPlatformEngineBundle;
+  listProducts: GitopsPlatformProductRow[];
 }
 
 export const GITOPS_PLATFORM_CATALOG_PORT = Symbol('GITOPS_PLATFORM_CATALOG_PORT');

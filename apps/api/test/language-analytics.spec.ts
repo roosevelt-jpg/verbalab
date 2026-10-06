@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_la_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_la_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Language Analytics Phase 14 (VL-146)', () => {
+describe('Language Analytics Phase 14',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -43,13 +43,13 @@ describe('Language Analytics Phase 14 (VL-146)', () => {
   let orgId: string;
   let workspaceId: string;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
 
@@ -146,17 +146,17 @@ describe('Language Analytics Phase 14 (VL-146)', () => {
     });
   }, 120_000);
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('ships ADR and docs', () => {
+  it('ships ADR and docs',  => {
     expect(existsSync(join(root, 'docs/adr/0067-language-analytics-phase-14.md'))).toBe(true);
     expect(readFileSync(join(root, 'docs/ANALYTICS.md'), 'utf8')).toContain('/reports/enterprise');
   });
 
-  it('exposes catalog with partial country/accuracy', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/analytics').expect(200);
+  it('exposes catalog with partial country/accuracy', async  => {
+    const res = await request(app.getHttpServer).get('/v1/analytics').expect(200);
     expect(res.body.product).toMatch(/Language Analytics/i);
     expect(
       res.body.capabilities.some(
@@ -175,21 +175,21 @@ describe('Language Analytics Phase 14 (VL-146)', () => {
     ).toBe(true);
   });
 
-  it('returns translation, language, quality, latency, dialect analytics', async () => {
-    const translation = await request(app.getHttpServer())
+  it('returns translation, language, quality, latency, dialect analytics', async  => {
+    const translation = await request(app.getHttpServer)
       .get('/v1/analytics/translation')
       .set('Authorization', `Bearer ${rawKey}`)
       .expect(200);
     expect(translation.body.requests).toBe(3);
     expect(translation.body.tmHits).toBe(1);
 
-    const languages = await request(app.getHttpServer())
+    const languages = await request(app.getHttpServer)
       .get('/v1/analytics/languages')
       .set('Authorization', `Bearer ${rawKey}`)
       .expect(200);
     expect(languages.body.asTarget.some((r: { language: string }) => r.language === 'sw')).toBe(true);
 
-    const quality = await request(app.getHttpServer())
+    const quality = await request(app.getHttpServer)
       .get('/v1/analytics/quality')
       .set('Authorization', `Bearer ${rawKey}`)
       .expect(200);
@@ -197,14 +197,14 @@ describe('Language Analytics Phase 14 (VL-146)', () => {
     expect(quality.body.translationAccuracyProxy).toBe(0.5);
     expect(quality.body.averageQualityScore).toBe(64);
 
-    const latency = await request(app.getHttpServer())
+    const latency = await request(app.getHttpServer)
       .get('/v1/analytics/latency')
       .set('Authorization', `Bearer ${rawKey}`)
       .expect(200);
     expect(latency.body.samples).toBe(3);
     expect(latency.body.p95Ms).toBeGreaterThan(0);
 
-    const dialects = await request(app.getHttpServer())
+    const dialects = await request(app.getHttpServer)
       .get('/v1/analytics/dialects')
       .set('Authorization', `Bearer ${rawKey}`)
       .expect(200);
@@ -212,8 +212,8 @@ describe('Language Analytics Phase 14 (VL-146)', () => {
     expect(dialects.body.byDialect[0].code).toBe('en-us');
   });
 
-  it('returns enterprise report and GraphQL languageAnalytics', async () => {
-    const report = await request(app.getHttpServer())
+  it('returns enterprise report and GraphQL languageAnalytics', async  => {
+    const report = await request(app.getHttpServer)
       .get('/v1/analytics/reports/enterprise')
       .set('Authorization', `Bearer ${rawKey}`)
       .expect(200);
@@ -221,7 +221,7 @@ describe('Language Analytics Phase 14 (VL-146)', () => {
     expect(report.body.translation.requests).toBe(3);
     expect(report.body.quality.reviews).toBe(2);
 
-    const gql = await request(app.getHttpServer())
+    const gql = await request(app.getHttpServer)
       .post('/graphql')
       .set('Authorization', `Bearer ${rawKey}`)
       .send({
@@ -232,7 +232,7 @@ describe('Language Analytics Phase 14 (VL-146)', () => {
         }`,
       })
       .expect(200);
-    expect(gql.body.errors).toBeUndefined();
+    expect(gql.body.errors).toBeUndefined;
     expect(gql.body.data.languageAnalytics.shippedCount).toBeGreaterThan(5);
     expect(gql.body.data.enterpriseAnalyticsReport.translationRequests).toBe(3);
   });

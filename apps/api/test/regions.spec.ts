@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_reg_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_reg_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,32 +35,32 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Multi-region residency (VL-075)', () => {
+describe('Multi-region residency',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let regions: RegionsService;
   const prevRegion = process.env.LUGEMI_REGION;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     process.env.LUGEMI_REGION = 'us';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     regions = app.get(RegionsService);
   });
 
-  afterAll(async () => {
+  afterAll(async  => {
     process.env.LUGEMI_REGION = prevRegion;
-    await app.close();
+    await app.close;
   });
 
-  it('ships separate EU Fly configs (not a mesh)', () => {
+  it('ships separate EU Fly configs (not a mesh)',  => {
     expect(existsSync(join(root, 'infra/fly/api.eu.toml'))).toBe(true);
     expect(existsSync(join(root, 'infra/fly/web.eu.toml'))).toBe(true);
     const eu = readFileSync(join(root, 'infra/fly/api.eu.toml'), 'utf8');
@@ -70,8 +70,8 @@ describe('Multi-region residency (VL-075)', () => {
     expect(eu).toContain('prisma migrate deploy');
   });
 
-  it('GET /v1/regions is public and health reports region', async () => {
-    const regionsRes = await request(app.getHttpServer()).get('/v1/regions').expect(200);
+  it('GET /v1/regions is public and health reports region', async  => {
+    const regionsRes = await request(app.getHttpServer).get('/v1/regions').expect(200);
     expect(regionsRes.body.currentRegion).toBe('us');
     expect(regionsRes.body.regions).toEqual(
       expect.arrayContaining([
@@ -80,13 +80,13 @@ describe('Multi-region residency (VL-075)', () => {
       ]),
     );
 
-    const health = await request(app.getHttpServer()).get('/health').expect(200);
+    const health = await request(app.getHttpServer).get('/health').expect(200);
     expect(health.body.region).toBe('us');
     expect(health.headers['x-lugemi-region']).toBe('us');
   });
 
-  it('pins org residency and rejects mismatched deploy', async () => {
-    const org = await seedOrg(prisma, `regpin_${Date.now()}`);
+  it('pins org residency and rejects mismatched deploy', async  => {
+    const org = await seedOrg(prisma, `regpin_${Date.now}`);
     const set = await regions.setOrgResidency({
       organizationId: org.id,
       userId: org.memberships[0].userId,
@@ -106,6 +106,6 @@ describe('Multi-region residency (VL-075)', () => {
       role: 'owner',
       dataRegion: 'us',
     });
-    await expect(regions.assertOrgMatchesDeploy(org.id)).resolves.toBeUndefined();
+    await expect(regions.assertOrgMatchesDeploy(org.id)).resolves.toBeUndefined;
   });
 });

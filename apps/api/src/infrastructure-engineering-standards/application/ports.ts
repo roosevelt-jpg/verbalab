@@ -1,4 +1,4 @@
-/** Application ports for Infrastructure Engineering Standards (VL-352). */
+/** Application ports for Infrastructure Engineering Standards. */
 
 export type InfrastructureEngineeringStandardsProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type InfrastructureEngineeringStandardsEngineBundle = ReturnType<
 >;
 
 export interface InfrastructureEngineeringStandardsCatalogPort {
-  engine(): InfrastructureEngineeringStandardsEngineBundle;
-  listProducts(): InfrastructureEngineeringStandardsProductRow[];
+  engine: InfrastructureEngineeringStandardsEngineBundle;
+  listProducts: InfrastructureEngineeringStandardsProductRow[];
 }
 
 export const INFRASTRUCTURE_ENGINEERING_STANDARDS_CATALOG_PORT = Symbol('INFRASTRUCTURE_ENGINEERING_STANDARDS_CATALOG_PORT');

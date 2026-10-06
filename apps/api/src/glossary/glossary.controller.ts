@@ -11,21 +11,21 @@ import { Request } from 'express';
 export class GlossaryController {
   constructor(private readonly glossary: GlossaryService) {}
 
-  @Get()
+  @Get
   list(
-    @CurrentSession() session: SessionContext,
+    @CurrentSession session: SessionContext,
     @Query('source') source?: string,
     @Query('target') target?: string,
   ) {
     return this.glossary.list(session.organizationId, session.workspaceId, { source, target });
   }
 
-  @Post()
+  @Post
   @HttpCode(HttpStatus.CREATED)
   create(
-    @CurrentSession() session: SessionContext,
-    @Req() req: Request,
-    @Body()
+    @CurrentSession session: SessionContext,
+    @Req req: Request,
+    @Body
     body: {
       sourceLang?: string;
       targetLang?: string;
@@ -51,10 +51,10 @@ export class GlossaryController {
 
   @Patch(':id')
   update(
-    @CurrentSession() session: SessionContext,
-    @Req() req: Request,
+    @CurrentSession session: SessionContext,
+    @Req req: Request,
     @Param('id') id: string,
-    @Body()
+    @Body
     body: {
       sourceTerm?: string;
       targetTerm?: string;
@@ -71,8 +71,8 @@ export class GlossaryController {
 
   @Delete(':id')
   remove(
-    @CurrentSession() session: SessionContext,
-    @Req() req: Request,
+    @CurrentSession session: SessionContext,
+    @Req req: Request,
     @Param('id') id: string,
   ) {
     if (!id) {

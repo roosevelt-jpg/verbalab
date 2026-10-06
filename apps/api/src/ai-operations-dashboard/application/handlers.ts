@@ -17,8 +17,8 @@ export class GetAiOperationsDashboardEngineHandler
     private readonly catalog: AiOperationsDashboardCatalogPort,
   ) {}
 
-  execute(): Promise<AiOperationsDashboardEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<AiOperationsDashboardEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListAiOperationsDashboardProductsHandler
     private readonly catalog: AiOperationsDashboardCatalogPort,
   ) {}
 
-  execute(): Promise<AiOperationsDashboardProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<AiOperationsDashboardProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

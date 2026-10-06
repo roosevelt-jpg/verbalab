@@ -27,14 +27,14 @@ export class EmotionIntelligenceController {
   constructor(private readonly emotion: EmotionIntelligenceService) {}
 
   @Get('engine')
-  engine() {
-    return this.emotion.engine();
+  engine {
+    return this.emotion.engine;
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
   analytics(
-    @Req()
+    @Req
     req: Request & { translateAuth: TranslateAuthContext },
   ) {
     return this.emotion.analytics(req.translateAuth.organizationId);
@@ -45,21 +45,21 @@ export class EmotionIntelligenceController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   detect(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { text?: string; language?: string },
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { text?: string; language?: string },
   ) {
     const text = typeof body.text === 'string' ? body.text : undefined;
-    if ((!text || !text.trim()) && !file) {
+    if ((!text || !text.trim) && !file) {
       throw new ApiException(
         'validation_error',
         'text or file is required',
@@ -82,22 +82,22 @@ export class EmotionIntelligenceController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   async stream(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Res() res: Response,
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { text?: string; language?: string },
+    @Res res: Response,
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { text?: string; language?: string },
   ) {
     const text = typeof body.text === 'string' ? body.text : undefined;
-    if ((!text || !text.trim()) && !file) {
+    if ((!text || !text.trim) && !file) {
       throw new ApiException(
         'validation_error',
         'text or file is required',
@@ -109,7 +109,7 @@ export class EmotionIntelligenceController {
     res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders?.();
+    res.flushHeaders?.;
 
     const stream = this.emotion.streamDetect({
       text,
@@ -126,6 +126,6 @@ export class EmotionIntelligenceController {
       res.write(`event: ${chunk.event}\ndata: ${JSON.stringify(chunk)}\n\n`);
       if (chunk.event === 'error' || chunk.event === 'done') break;
     }
-    res.end();
+    res.end;
   }
 }

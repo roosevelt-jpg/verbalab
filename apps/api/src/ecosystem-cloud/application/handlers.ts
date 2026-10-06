@@ -19,8 +19,8 @@ export class ListEcosystemProductsHandler
     @Inject(ECOSYSTEM_CATALOG_PORT) private readonly catalog: EcosystemCatalogPort,
   ) {}
 
-  execute(): Promise<EcosystemProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<EcosystemProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 
@@ -32,8 +32,8 @@ export class GetEcosystemProductsBundleHandler
     @Inject(ECOSYSTEM_CATALOG_PORT) private readonly catalog: EcosystemCatalogPort,
   ) {}
 
-  execute(): Promise<EcosystemProductsBundle> {
-    return Promise.resolve(this.catalog.products());
+  execute: Promise<EcosystemProductsBundle> {
+    return Promise.resolve(this.catalog.products);
   }
 }
 

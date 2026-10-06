@@ -8,12 +8,12 @@ export type OrchCapability = {
   notes: string;
 };
 
-/** Library Phase 57 → AI Orchestration (VL-190). Coordinate gateway/engines — not multi-cloud agent OS. */
-export function aiOrchestrationCatalog() {
+/** Library Phase 57 → AI Orchestration. Coordinate gateway/engines — not multi-cloud agent OS. */
+export function aiOrchestrationCatalog {
   return {
     product: 'Lugemi AI Orchestration',
     note:
-      'Load-bearing orchestration over the AI Gateway + engines (VL-190). Runs real e2e pipelines (detect→translate, translate→chat, decide→act, tool/model chains). Extends VL-083 workflows. Not a multi-cloud agent OS, LangGraph OS, or distributed AI fabric.',
+      'Load-bearing orchestration over the AI Gateway + engines. Runs real e2e pipelines (detect→translate, translate→chat, decide→act, tool/model chains). Extends existing workflows. Not a multi-cloud agent OS, LangGraph OS, or distributed AI fabric.',
     capabilities: [
       {
         id: 'multi-model-execution',
@@ -27,14 +27,14 @@ export function aiOrchestrationCatalog() {
         name: 'Multi Cloud Routing',
         status: 'deferred',
         api: null,
-        notes: 'Multi-cloud agent OS / geo mesh deferred (VL-190 out of scope).',
+        notes: 'Multi-cloud agent OS / geo mesh deferred ( out of scope).',
       },
       {
         id: 'workflow-orchestration',
         name: 'Workflow Orchestration',
         status: 'shipped',
         api: 'POST /v1/ai-orchestration/run',
-        notes: 'Named pipelines + VL-083 /v1/workflows job steps.',
+        notes: 'Named pipelines + v1/workflows job steps.',
       },
       {
         id: 'agent-collaboration',

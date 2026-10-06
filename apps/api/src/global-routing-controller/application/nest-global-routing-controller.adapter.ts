@@ -6,16 +6,16 @@ import {
   GlobalRoutingControllerProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestGlobalRoutingControllerCatalogAdapter implements GlobalRoutingControllerCatalogPort {
   constructor(private readonly service: GlobalRoutingControllerService) {}
 
-  engine(): GlobalRoutingControllerEngineBundle {
-    return this.service.engine();
+  engine: GlobalRoutingControllerEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): GlobalRoutingControllerProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: GlobalRoutingControllerProductRow[] {
+    const bundle = this.engine as {
       products?: GlobalRoutingControllerProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestGlobalRoutingControllerCatalogAdapter implements GlobalRoutingC
         status: 'shipped',
         api: 'GET /v1/global-routing-controller/engine',
         console: '/global-routing-controller',
-        notes: 'VL-319 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

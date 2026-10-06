@@ -8,28 +8,28 @@ export class ResearchCloudController {
   constructor(private readonly research: ResearchCloudService) {}
 
   @Get('products')
-  products() {
-    return this.research.products();
+  products {
+    return this.research.products;
   }
 
   @Get('engine')
-  engine() {
-    return this.research.products();
+  engine {
+    return this.research.products;
   }
 
   @Get('routing')
-  routing() {
-    return this.research.routing();
+  routing {
+    return this.research.routing;
   }
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession() session: SessionContext) {
+  overview(@CurrentSession session: SessionContext) {
     return this.research.overview(session);
   }
 
   @Get('monitoring')
-  monitoring() {
-    return this.research.monitoring();
+  monitoring {
+    return this.research.monitoring;
   }
 }

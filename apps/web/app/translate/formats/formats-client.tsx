@@ -22,8 +22,8 @@ type FormatResult = {
 
 const FORMATS = ['html', 'markdown', 'xml', 'csv', 'srt'] as const;
 
-export function TranslateFormatsClient() {
-  const { getToken, isLoaded } = useAuth();
+export function TranslateFormatsClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [format, setFormat] = useState<(typeof FORMATS)[number]>('html');
   const [source, setSource] = useState('en');
@@ -33,17 +33,17 @@ export function TranslateFormatsClient() {
   const [streamLog, setStreamLog] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
 
-  const loadEngine = useCallback(async () => {
+  const loadEngine = useCallback(async  => {
     setEngine(await apiFetch<Engine>('/v1/translate/engine'));
   }, []);
 
-  useEffect(() => {
-    void loadEngine().catch((err: Error) => setError(err.message));
+  useEffect( => {
+    void loadEngine.catch((err: Error) => setError(err.message));
   }, [loadEngine]);
 
-  async function runFormat() {
+  async function runFormat {
     setError(null);
-    const token = await getToken();
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     setResult(
       await apiFetch<FormatResult>('/v1/translate/formats', {
@@ -54,10 +54,10 @@ export function TranslateFormatsClient() {
     );
   }
 
-  async function runStream() {
+  async function runStream {
     setError(null);
     setStreamLog('');
-    const token = await getToken();
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'}/v1/translate/stream`, {
       method: 'POST',
@@ -71,20 +71,20 @@ export function TranslateFormatsClient() {
     if (!res.ok || !res.body) {
       throw new Error(`Stream failed (${res.status})`);
     }
-    const reader = res.body.getReader();
-    const decoder = new TextDecoder();
+    const reader = res.body.getReader;
+    const decoder = new TextDecoder;
     let buffer = '';
     let out = '';
     while (true) {
-      const { done, value } = await reader.read();
+      const { done, value } = await reader.read;
       if (done) break;
       buffer += decoder.decode(value, { stream: true });
       const parts = buffer.split('\n\n');
-      buffer = parts.pop() ?? '';
+      buffer = parts.pop ?? '';
       for (const part of parts) {
         const line = part.split('\n').find((l) => l.startsWith('data:'));
         if (!line) continue;
-        const ev = JSON.parse(line.slice(5).trim()) as { event: string; text?: string; index?: number };
+        const ev = JSON.parse(line.slice(5).trim) as { event: string; text?: string; index?: number };
         if (ev.event === 'chunk' && ev.text) out += (out ? '\n\n' : '') + ev.text;
         if (ev.event === 'done' && ev.text) out = ev.text;
       }
@@ -143,10 +143,10 @@ export function TranslateFormatsClient() {
           <textarea className="vl-field" rows={8} value={content} onChange={(e) => setContent(e.target.value)} />
         </label>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-          <button type="button" className="vl-button" disabled={!isLoaded} onClick={() => void runFormat().catch((e: Error) => setError(e.message))}>
+          <button type="button" className="vl-button" disabled={!isLoaded} onClick={ => void runFormat.catch((e: Error) => setError(e.message))}>
             Translate format
           </button>
-          <button type="button" className="vl-button" disabled={!isLoaded} onClick={() => void runStream().catch((e: Error) => setError(e.message))}>
+          <button type="button" className="vl-button" disabled={!isLoaded} onClick={ => void runStream.catch((e: Error) => setError(e.message))}>
             Stream plain extract
           </button>
         </div>

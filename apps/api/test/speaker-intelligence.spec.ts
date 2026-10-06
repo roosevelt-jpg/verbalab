@@ -27,7 +27,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_spk_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_spk_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -67,26 +67,26 @@ function toneWav(freq: number, seconds = 0.4): Buffer {
   return buffer;
 }
 
-describe('Speaker Intelligence (VL-152)', () => {
+describe('Speaker Intelligence',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
 
     app.get(GatewayService).setSttProviderForTests({
       name: 'fixture',
-      async transcribe() {
+      async transcribe {
         return {
           text: 'hello there how are you today',
           language: 'en',
@@ -103,11 +103,11 @@ describe('Speaker Intelligence (VL-152)', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Speaker Intelligence honesty', () => {
+  it('documents Speaker Intelligence honesty',  => {
     const doc = join(root, 'docs/SPEAKER_INTELLIGENCE.md');
     const adr = join(root, 'docs/adr/0071-speaker-intelligence.md');
     expect(existsSync(doc)).toBe(true);
@@ -118,8 +118,8 @@ describe('Speaker Intelligence (VL-152)', () => {
     expect(text).not.toMatch(/NIST.*shipped/i);
   });
 
-  it('exposes speaker engine catalog', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/speakers/engine').expect(200);
+  it('exposes speaker engine catalog', async  => {
+    const res = await request(app.getHttpServer).get('/v1/speakers/engine').expect(200);
     expect(res.body.product).toContain('Speaker');
     const ids = res.body.capabilities.map((c: { id: string }) => c.id);
     expect(ids).toEqual(
@@ -134,7 +134,7 @@ describe('Speaker Intelligence (VL-152)', () => {
     );
   });
 
-  it('creates profile, enrolls, verifies, and identifies', async () => {
+  it('creates profile, enrolls, verifies, and identifies', async  => {
     const org = await seedOrg(prisma, 'spk');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -143,20 +143,20 @@ describe('Speaker Intelligence (VL-152)', () => {
       name: 'spk-key',
     });
 
-    const created = await request(app.getHttpServer())
+    const created = await request(app.getHttpServer)
       .post('/v1/speakers/profiles')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ displayName: 'Alice' })
       .expect(201);
 
     const wav = toneWav(440);
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post(`/v1/speakers/profiles/${created.body.id}/enroll`)
       .set('Authorization', `Bearer ${key.secret}`)
       .attach('file', wav, 'alice.wav')
       .expect(200);
 
-    const verify = await request(app.getHttpServer())
+    const verify = await request(app.getHttpServer)
       .post('/v1/speakers/verify')
       .set('Authorization', `Bearer ${key.secret}`)
       .field('profileId', created.body.id)
@@ -166,7 +166,7 @@ describe('Speaker Intelligence (VL-152)', () => {
     expect(verify.body.match).toBe(true);
     expect(verify.body.score).toBeGreaterThan(0.9);
 
-    const identify = await request(app.getHttpServer())
+    const identify = await request(app.getHttpServer)
       .post('/v1/speakers/identify')
       .set('Authorization', `Bearer ${key.secret}`)
       .attach('file', wav, 'probe.wav')
@@ -175,7 +175,7 @@ describe('Speaker Intelligence (VL-152)', () => {
     expect(identify.body.match).toBe(true);
     expect(identify.body.best.profileId).toBe(created.body.id);
 
-    const history = await request(app.getHttpServer())
+    const history = await request(app.getHttpServer)
       .get('/v1/speakers/history')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -183,7 +183,7 @@ describe('Speaker Intelligence (VL-152)', () => {
     expect(history.body.data.length).toBeGreaterThanOrEqual(3);
   });
 
-  it('diarizes with gap-based turns', async () => {
+  it('diarizes with gap-based turns', async  => {
     const org = await seedOrg(prisma, 'dia');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -192,7 +192,7 @@ describe('Speaker Intelligence (VL-152)', () => {
       name: 'dia-key',
     });
 
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer)
       .post('/v1/speakers/diarize')
       .set('Authorization', `Bearer ${key.secret}`)
       .attach('file', toneWav(330), 'dialog.wav')
@@ -203,16 +203,16 @@ describe('Speaker Intelligence (VL-152)', () => {
     expect(res.body.diarizationProvider).toBe('gap_diarization_v1');
   });
 
-  it('exposes speakerEngine via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes speakerEngine via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({ query: '{ speakerEngine { product capabilities { id status } } }' })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.speakerEngine.product).toContain('Speaker');
   });
 
-  it('computes fingerprints and gap diarization helpers', () => {
+  it('computes fingerprints and gap diarization helpers',  => {
     const a = computeVoiceFingerprint(toneWav(220));
     const b = computeVoiceFingerprint(toneWav(220));
     expect(cosineSimilarity(a.vector, b.vector)).toBeGreaterThan(0.95);

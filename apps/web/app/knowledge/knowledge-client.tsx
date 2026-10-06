@@ -25,7 +25,7 @@ type QueryResult = {
   provider?: string | null;
 };
 
-export function KnowledgeClient() {
+export function KnowledgeClient {
   const [apiKey, setApiKey] = useState('');
   const [docs, setDocs] = useState<KnowledgeDoc[]>([]);
   const [file, setFile] = useState<File | null>(null);
@@ -39,13 +39,13 @@ export function KnowledgeClient() {
     setDocs(res.data);
   }
 
-  useEffect(() => {
+  useEffect( => {
     if (!apiKey.startsWith('lg_live_')) return;
-    void refreshDocs(apiKey).catch(() => undefined);
+    void refreshDocs(apiKey).catch( => undefined);
   }, [apiKey]);
 
   async function onUpload(event: FormEvent) {
-    event.preventDefault();
+    event.preventDefault;
     setError(null);
     if (!file) {
       setError('Choose a DOCX, PDF, or TXT file');
@@ -57,14 +57,14 @@ export function KnowledgeClient() {
     }
     setLoading(true);
     try {
-      const form = new FormData();
+      const form = new FormData;
       form.append('file', file);
       const res = await fetch(`${API_URL}/v1/knowledge/documents`, {
         method: 'POST',
         headers: { Authorization: `Bearer ${apiKey}` },
         body: form,
       });
-      const body = (await res.json()) as KnowledgeDoc & { error?: { message: string } };
+      const body = (await res.json) as KnowledgeDoc & { error?: { message: string } };
       if (!res.ok) throw new Error(body.error?.message ?? `Upload failed (${res.status})`);
       setFile(null);
       await refreshDocs(apiKey);
@@ -76,7 +76,7 @@ export function KnowledgeClient() {
   }
 
   async function onAsk(event: FormEvent) {
-    event.preventDefault();
+    event.preventDefault;
     setError(null);
     setResult(null);
     if (!apiKey.startsWith('lg_live_')) {
@@ -154,7 +154,7 @@ export function KnowledgeClient() {
                   {doc.error ? ` · ${doc.error}` : ''}
                 </div>
               </div>
-              <button type="button" className="vl-btn vl-btn-secondary" onClick={() => void onDelete(doc.id)}>
+              <button type="button" className="vl-btn vl-btn-secondary" onClick={ => void onDelete(doc.id)}>
                 Delete
               </button>
             </div>

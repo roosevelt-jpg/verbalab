@@ -17,8 +17,8 @@ export class GetAfricanIntelligenceCloudEngineHandler
     private readonly catalog: AfricanIntelligenceCloudCatalogPort,
   ) {}
 
-  execute(): Promise<AfricanIntelligenceCloudEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<AfricanIntelligenceCloudEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListAfricanIntelligenceCloudProductsHandler
     private readonly catalog: AfricanIntelligenceCloudCatalogPort,
   ) {}
 
-  execute(): Promise<AfricanIntelligenceCloudProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<AfricanIntelligenceCloudProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

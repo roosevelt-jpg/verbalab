@@ -17,8 +17,8 @@ export class GetKnowledgeRuntimeEngineHandler
     private readonly catalog: KnowledgeRuntimeCatalogPort,
   ) {}
 
-  execute(): Promise<KnowledgeRuntimeEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<KnowledgeRuntimeEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListKnowledgeRuntimeProductsHandler
     private readonly catalog: KnowledgeRuntimeCatalogPort,
   ) {}
 
-  execute(): Promise<KnowledgeRuntimeProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<KnowledgeRuntimeProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

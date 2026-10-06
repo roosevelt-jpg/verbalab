@@ -16,8 +16,8 @@ export class GetWorkflowMarketplaceEngineHandler
     private readonly catalog: WorkflowMarketplaceCatalogPort,
   ) {}
 
-  execute(): Promise<WorkflowMarketplaceEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<WorkflowMarketplaceEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 

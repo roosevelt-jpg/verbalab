@@ -18,10 +18,10 @@ export type ContextFabricRoute = {
 };
 
 /**
- * Library Phase 108 → Context Fabric (VL-241).
+ * Library Phase 108 → Context Fabric.
  * Cross-cloud context routing over Context Runtime — not infinite-context OS.
  */
-export function contextFabricCapabilityCatalog(): ContextFabricCapability[] {
+export function contextFabricCapabilityCatalog: ContextFabricCapability[] {
   return [
     {
       id: 'context-fabric',
@@ -29,7 +29,7 @@ export function contextFabricCapabilityCatalog(): ContextFabricCapability[] {
       status: 'shipped',
       api: 'GET /v1/context-fabric/products',
       notes:
-        'Cross-cloud context router (VL-241). Extends Context Runtime — does not regenerate VL-217/VL-185.',
+        'Cross-cloud context router. Extends Context Runtime — does not regenerate .',
     },
     {
       id: 'context-router',
@@ -64,7 +64,7 @@ export function contextFabricCapabilityCatalog(): ContextFabricCapability[] {
       name: 'Agent Context',
       status: 'partial',
       api: 'GET /v1/context-fabric/routes',
-      notes: 'Discovery link to Agent Runtime; sandboxed + Policy-gated. Full agent fabric later (VL-246).',
+      notes: 'Discovery link to Agent Runtime; sandboxed + Policy-gated. Full agent fabric later.',
     },
     {
       id: 'language-context',
@@ -111,7 +111,7 @@ export function contextFabricCapabilityCatalog(): ContextFabricCapability[] {
   ];
 }
 
-export function contextFabricRoutingTable(): ContextFabricRoute[] {
+export function contextFabricRoutingTable: ContextFabricRoute[] {
   return [
     {
       kind: 'user',
@@ -143,7 +143,7 @@ export function contextFabricRoutingTable(): ContextFabricRoute[] {
       target: 'agent-runtime',
       api: 'GET /v1/agent-runtime/engine',
       cloud: 'ai-kernel',
-      notes: 'Handoff discovery; Agent Fabric (VL-246) coordinates later.',
+      notes: 'Handoff discovery; Agent Fabric coordinates later.',
     },
     {
       kind: 'language',
@@ -180,7 +180,7 @@ export function contextFabricRoutingTable(): ContextFabricRoute[] {
   ];
 }
 
-export function contextFabricArchitectureNotes() {
+export function contextFabricArchitectureNotes {
   return {
     style: 'nest_modular_monolith',
     ddd: 'bounded_context_fabric',
@@ -204,11 +204,11 @@ export function contextFabricArchitectureNotes() {
     fabricWidePolicyHardGateRequired: true,
     policyLogOnlyForbidden: true,
     note:
-      'Context Fabric (VL-241). Cross-cloud router over Context Runtime assemble/retrieve. Optional Event Fabric propagation. Not infinite-context or WebSocket OS.',
+      'Context Fabric. Cross-cloud router over Context Runtime assemble/retrieve. Optional Event Fabric propagation. Not infinite-context or WebSocket OS.',
   };
 }
 
-export function contextFabricHonesty() {
+export function contextFabricHonesty {
   return {
     customerFacingProduct: false,
     infiniteContextWindow: false,

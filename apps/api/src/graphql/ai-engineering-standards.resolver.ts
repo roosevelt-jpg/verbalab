@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetAiEngineeringStandardsEngineQuery } from '../ai-engineering-standards/application/messages';
 import { GqlAiEngineeringStandardsEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class AiEngineeringStandardsGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query(() => GqlAiEngineeringStandardsEngine, { name: 'aiEngineeringStandardsEngine' })
-  async aiEngineeringStandardsEngine(): Promise<GqlAiEngineeringStandardsEngine> {
-    const catalog = await this.queries.execute(new GetAiEngineeringStandardsEngineQuery());
+  @Query( => GqlAiEngineeringStandardsEngine, { name: 'aiEngineeringStandardsEngine' })
+  async aiEngineeringStandardsEngine: Promise<GqlAiEngineeringStandardsEngine> {
+    const catalog = await this.queries.execute(new GetAiEngineeringStandardsEngineQuery);
     return {
       product: catalog.product,
       note: catalog.note,

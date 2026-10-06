@@ -9,10 +9,10 @@ export type DomainTerm = {
 };
 
 /**
- * Library Phase 131 → Government Intelligence (VL-264).
+ * Library Phase 131 → Government Intelligence.
  * Domain vocabulary + safety flags for African Intelligence Cloud.
  */
-export function governmentIntelligenceEngineCatalog() {
+export function governmentIntelligenceEngineCatalog {
   const terms: DomainTerm[] = [
       {
         id: 'gov-eligibility',
@@ -46,7 +46,7 @@ export function governmentIntelligenceEngineCatalog() {
   return {
     product: 'Lugemi Government Intelligence',
     note:
-      'Government Intelligence (VL-264). Domain terms/services catalog for African Intelligence Cloud with domain-specific safety flags. Extends Knowledge/Intelligence clouds — not a vertical operations OS.',
+      'Government Intelligence. Domain terms/services catalog for African Intelligence Cloud with domain-specific safety flags. Extends Knowledge/Intelligence clouds — not a vertical operations OS.',
     capabilities: terms,
     terms,
     architecture: {

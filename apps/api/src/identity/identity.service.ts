@@ -5,7 +5,7 @@ import { SessionContext } from '../common/guards/clerk-auth.guard';
 import { NotificationsService } from '../notifications/notifications.service';
 import { mapClerkOrgRole } from './clerk-roles';
 
-@Injectable()
+@Injectable
 export class IdentityService {
   constructor(
     private readonly prisma: PrismaService,
@@ -154,14 +154,14 @@ export class IdentityService {
 
   /** Accept pending org invites matching the user's email (workspace RBAC invites). */
   private async acceptPendingInvitesForUser(userId: string, email?: string) {
-    const normalized = email?.trim().toLowerCase();
+    const normalized = email?.trim.toLowerCase;
     if (!normalized) return;
 
     const pending = await this.prisma.organizationInvite.findMany({
       where: {
         email: normalized,
         status: 'pending',
-        expiresAt: { gt: new Date() },
+        expiresAt: { gt: new Date },
       },
     });
 
@@ -183,7 +183,7 @@ export class IdentityService {
         });
         await tx.organizationInvite.update({
           where: { id: invite.id },
-          data: { status: 'accepted', acceptedAt: new Date() },
+          data: { status: 'accepted', acceptedAt: new Date },
         });
       });
     }

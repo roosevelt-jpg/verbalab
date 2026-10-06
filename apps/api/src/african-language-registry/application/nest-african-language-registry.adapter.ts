@@ -6,16 +6,16 @@ import {
   AfricanLanguageRegistryProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestAfricanLanguageRegistryCatalogAdapter implements AfricanLanguageRegistryCatalogPort {
   constructor(private readonly service: AfricanLanguageRegistryService) {}
 
-  engine(): AfricanLanguageRegistryEngineBundle {
-    return this.service.engine();
+  engine: AfricanLanguageRegistryEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): AfricanLanguageRegistryProductRow[] {
-    const bundle = this.engine() as { products?: AfricanLanguageRegistryProductRow[]; capabilities?: AfricanLanguageRegistryProductRow[] };
+  listProducts: AfricanLanguageRegistryProductRow[] {
+    const bundle = this.engine as { products?: AfricanLanguageRegistryProductRow[]; capabilities?: AfricanLanguageRegistryProductRow[] };
     if (Array.isArray(bundle.products)) return bundle.products;
     if (Array.isArray(bundle.capabilities)) {
       return bundle.capabilities.map((c) => ({
@@ -34,7 +34,7 @@ export class NestAfricanLanguageRegistryCatalogAdapter implements AfricanLanguag
         status: 'shipped',
         api: 'GET /v1/african-language-registry/engine',
         console: '/african-language-registry',
-        notes: 'VL-261 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

@@ -35,16 +35,16 @@ type Workflow = {
   permissions: string[];
 };
 
-export function WorkflowRuntimeClient() {
-  const { getToken, isLoaded } = useAuth();
+export function WorkflowRuntimeClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [workflows, setWorkflows] = useState<Workflow[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState('Sandbox QA Flow');
   const [result, setResult] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, list] = await Promise.all([
       apiFetch<Engine>('/v1/workflow-runtime/engine', { token }),
@@ -54,15 +54,15 @@ export function WorkflowRuntimeClient() {
     setWorkflows(list.workflows);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
-  const createAndRun = useCallback(async () => {
+  const createAndRun = useCallback(async  => {
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const created = await apiFetch<{ workflow: Workflow }>('/v1/workflow-runtime/workflows', {
         token,
@@ -95,7 +95,7 @@ export function WorkflowRuntimeClient() {
           .map((s) => `${s.action}: ${s.allowed ? 'allowed' : 'denied'}`)
           .join('\n')}\n${run.note}`,
       );
-      await load();
+      await load;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Workflow run failed');
     }
@@ -104,7 +104,7 @@ export function WorkflowRuntimeClient() {
   return (
     <AppShell>
       <main style={{ maxWidth: 720, margin: '0 auto', padding: '2rem 1.25rem 4rem' }}>
-        <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.85rem' }}>AI Kernel · VL-220</p>
+        <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.85rem' }}>AI Kernel</p>
         <h1 style={{ margin: '0.35rem 0 0.5rem', fontSize: '1.75rem' }}>Workflow Runtime</h1>
         <p style={{ color: 'var(--muted)', lineHeight: 1.55 }}>
           Sandbox multi-step workflows with hard permission allowlists. Extends product{' '}
@@ -143,7 +143,7 @@ export function WorkflowRuntimeClient() {
               style={{ display: 'block', width: '100%', marginTop: 4, padding: '0.5rem' }}
             />
           </label>
-          <button type="button" onClick={() => void createAndRun()}>
+          <button type="button" onClick={ => void createAndRun}>
             Create, activate, run (sandbox)
           </button>
           {result ? (

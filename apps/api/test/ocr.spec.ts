@@ -20,7 +20,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_ocr_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_ocr_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,27 +35,27 @@ async function seedOrg(prisma: PrismaService, name: string) {
 }
 
 /** Minimal 1x1 PNG */
-function tinyPng(): Buffer {
+function tinyPng: Buffer {
   return Buffer.from(
     'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==',
     'base64',
   );
 }
 
-describe('OCR (VL-043)', () => {
+describe('OCR',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let usage: UsageService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -64,7 +64,7 @@ describe('OCR (VL-043)', () => {
     const gateway = app.get(GatewayService);
     gateway.setOcrProviderForTests({
       name: 'fixture',
-      async extract() {
+      async extract {
         return {
           text: 'Habari dunia',
           pages: 1,
@@ -88,11 +88,11 @@ describe('OCR (VL-043)', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('extracts text and meters OCR pages', async () => {
+  it('extracts text and meters OCR pages', async  => {
     const org = await seedOrg(prisma, 'ocr');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -101,11 +101,11 @@ describe('OCR (VL-043)', () => {
       name: 'ocr-key',
     });
 
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer)
       .post('/v1/ocr')
       .set('Authorization', `Bearer ${key.secret}`)
       .field('languageHint', 'sw')
-      .attach('file', tinyPng(), { filename: 'scan.png', contentType: 'image/png' })
+      .attach('file', tinyPng, { filename: 'scan.png', contentType: 'image/png' })
       .expect(200);
 
     expect(res.body).toMatchObject({
@@ -121,7 +121,7 @@ describe('OCR (VL-043)', () => {
     expect(summary.ocr.pages).toBe(1);
   });
 
-  it('optionally translates OCR text', async () => {
+  it('optionally translates OCR text', async  => {
     const org = await seedOrg(prisma, 'ocrx');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -130,19 +130,19 @@ describe('OCR (VL-043)', () => {
       name: 'ocr-tr',
     });
 
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer)
       .post('/v1/ocr')
       .set('Authorization', `Bearer ${key.secret}`)
       .field('source', 'sw')
       .field('target', 'en')
-      .attach('file', tinyPng(), { filename: 'scan.png', contentType: 'image/png' })
+      .attach('file', tinyPng, { filename: 'scan.png', contentType: 'image/png' })
       .expect(200);
 
     expect(res.body.translatedText).toBe('[en] Habari dunia');
     expect(res.body.translateProvider).toBe('fixture');
   });
 
-  it('rejects non-image uploads', async () => {
+  it('rejects non-image uploads', async  => {
     const org = await seedOrg(prisma, 'ocrbad');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -151,7 +151,7 @@ describe('OCR (VL-043)', () => {
       name: 'ocr-bad',
     });
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post('/v1/ocr')
       .set('Authorization', `Bearer ${key.secret}`)
       .attach('file', Buffer.from('not-an-image'), {
@@ -161,11 +161,11 @@ describe('OCR (VL-043)', () => {
       .expect(400);
   });
 
-  it('Vision adapter reports not configured without key', async () => {
+  it('Vision adapter reports not configured without key', async  => {
     const adapter = new GoogleVisionOcrAdapter('');
     await expect(
       adapter.extract({
-        buffer: tinyPng(),
+        buffer: tinyPng,
         filename: 'a.png',
         mimeType: 'image/png',
       }),

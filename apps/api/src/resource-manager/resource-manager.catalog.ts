@@ -1,8 +1,8 @@
 /**
- * Library Phase 204 → Resource Manager (VL-337).
- * Resource Manager (VL-337). GPU/CPU/RAM/storage/networking/vector/context-window allocation catalog over gpu-platform/gpu-runtime + FinOps budget honesty — not K8s resource OS.
+ * Library Phase 204 → Resource Manager.
+ * Resource Manager. GPU/CPU/RAM/storage/networking/vector/context-window allocation catalog over gpu-platform/gpu-runtime + FinOps budget honesty — not K8s resource OS.
  */
-export function resourceManagerEngineCatalog() {
+export function resourceManagerEngineCatalog {
   return {
     product: 'Lugemi Resource Manager',
     unifyingOrchestrationLayer: true,
@@ -11,13 +11,13 @@ export function resourceManagerEngineCatalog() {
     notKubernetes: true,
     literalOsKernel: false,
     capabilities: [
-      { id: 'gpu', name: 'GPU Allocation Catalog', status: 'shipped', notes: 'VL-337 routed capability — not a new engine.' },
-      { id: 'cpu', name: 'CPU Allocation Catalog', status: 'shipped', notes: 'VL-337 routed capability — not a new engine.' },
-      { id: 'ram', name: 'RAM Allocation Catalog', status: 'shipped', notes: 'VL-337 routed capability — not a new engine.' },
-      { id: 'storage', name: 'Storage Allocation Catalog', status: 'shipped', notes: 'VL-337 routed capability — not a new engine.' },
-      { id: 'networking', name: 'Networking Allocation Catalog', status: 'shipped', notes: 'VL-337 routed capability — not a new engine.' },
-      { id: 'vector_memory', name: 'Vector Memory Allocation Catalog', status: 'shipped', notes: 'VL-337 routed capability — not a new engine.' },
-      { id: 'context_window', name: 'Context Window Allocation Catalog', status: 'shipped', notes: 'VL-337 routed capability — not a new engine.' }
+      { id: 'gpu', name: 'GPU Allocation Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'cpu', name: 'CPU Allocation Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'ram', name: 'RAM Allocation Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'storage', name: 'Storage Allocation Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'networking', name: 'Networking Allocation Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'vector_memory', name: 'Vector Memory Allocation Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'context_window', name: 'Context Window Allocation Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' }
     ],
     routes: [
       {
@@ -69,9 +69,9 @@ export function resourceManagerEngineCatalog() {
       notKubernetes: true,
       literalOsKernel: false,
       enterpriseEngineeringSystemOs: false,
-      note: 'Resource Manager (VL-337). GPU/CPU/RAM/storage/networking/vector/context-window allocation catalog over gpu-platform/gpu-runtime + FinOps budget honesty — not K8s resource OS.',
+      note: 'Resource Manager. GPU/CPU/RAM/storage/networking/vector/context-window allocation catalog over gpu-platform/gpu-runtime + FinOps budget honesty — not K8s resource OS.',
     },
     docs: '/docs/RESOURCE_MANAGER.md',
-    note: 'Resource Manager (VL-337). GPU/CPU/RAM/storage/networking/vector/context-window allocation catalog over gpu-platform/gpu-runtime + FinOps budget honesty — not K8s resource OS.',
+    note: 'Resource Manager. GPU/CPU/RAM/storage/networking/vector/context-window allocation catalog over gpu-platform/gpu-runtime + FinOps budget honesty — not K8s resource OS.',
   };
 }

@@ -19,7 +19,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory()) out.push(...walkTsFiles(full));
+    if (statSync(full).isDirectory) out.push(...walkTsFiles(full));
     else if (full.endsWith('.ts')) out.push(full);
   }
   return out;
@@ -34,7 +34,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_pm_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_pm_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -48,42 +48,42 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Prompt Marketplace (VL-253)', () => {
+describe('Prompt Marketplace',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;
   let marketplace: PromptMarketplaceService;
   let prompts: PromptsService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
     prisma = app.get(PrismaService);
     billing = app.get(BillingService);
     marketplace = app.get(PromptMarketplaceService);
     prompts = app.get(PromptsService);
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Prompt Marketplace honesty (not prompt mesh; Stripe-only)', () => {
+  it('documents Prompt Marketplace honesty (not prompt mesh; Stripe-only)',  => {
     const doc = join(root, 'docs/PROMPT_MARKETPLACE.md');
     const adr = join(root, 'docs/adr/0155-prompt-marketplace.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-253');
+    expect(text).toContain('');
     expect(text).toMatch(/prompt mesh|promptMeshOs/i);
     expect(text).toMatch(/Stripe|storesRawCardData/i);
   });
 
-  it('has no TODO/FIXME markers in Prompt Marketplace source', () => {
+  it('has no TODO/FIXME markers in Prompt Marketplace source',  => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const file of walkTsFiles(join(apiSrc, 'prompt-marketplace'))) {
@@ -93,8 +93,8 @@ describe('Prompt Marketplace (VL-253)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes engine with real-money + anti-mesh honesty', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes engine with real-money + anti-mesh honesty', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/prompt-marketplace/engine')
       .expect(200);
     expect(res.body.product).toBe('Lugemi Prompt Marketplace');
@@ -108,15 +108,15 @@ describe('Prompt Marketplace (VL-253)', () => {
     expect(res.body.categories.some((c: { id: string }) => c.id === 'packs')).toBe(true);
   });
 
-  it('exposes promptMarketplaceEngine via GraphQL CQRS façade', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes promptMarketplaceEngine via GraphQL CQRS façade', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
           '{ promptMarketplaceEngine { product promptMeshOs autoPromptResearchOs storesRawCardData stripeOrEquivalentRequired capabilities { id status } } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.promptMarketplaceEngine.product).toContain('Prompt Marketplace');
     expect(res.body.data.promptMarketplaceEngine.promptMeshOs).toBe(false);
     expect(res.body.data.promptMarketplaceEngine.autoPromptResearchOs).toBe(false);
@@ -124,9 +124,9 @@ describe('Prompt Marketplace (VL-253)', () => {
     expect(res.body.data.promptMarketplaceEngine.stripeOrEquivalentRequired).toBe(true);
   });
 
-  it('publishes pack, tests, installs with revenue share, reviews; rejects free plan', async () => {
-    const publisher = await seedOrg(prisma, `pmpub_${Date.now()}`);
-    const buyer = await seedOrg(prisma, `pmbuy_${Date.now()}`);
+  it('publishes pack, tests, installs with revenue share, reviews; rejects free plan', async  => {
+    const publisher = await seedOrg(prisma, `pmpub_${Date.now}`);
+    const buyer = await seedOrg(prisma, `pmbuy_${Date.now}`);
     await billing.applyEntitlementForTests({ organizationId: publisher.id, plan: 'pro' });
     await billing.applyEntitlementForTests({ organizationId: buyer.id, plan: 'pro' });
 
@@ -222,7 +222,7 @@ describe('Prompt Marketplace (VL-253)', () => {
     expect(sales.honesty.storesRawCardData).toBe(false);
     expect(sales.honesty.stripeOrEquivalentRequired).toBe(true);
 
-    const free = await seedOrg(prisma, `pmfree_${Date.now()}`);
+    const free = await seedOrg(prisma, `pmfree_${Date.now}`);
     await expect(
       marketplace.publish({
         organizationId: free.id,

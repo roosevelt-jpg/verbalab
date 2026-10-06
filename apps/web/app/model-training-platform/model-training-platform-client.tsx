@@ -35,15 +35,15 @@ type Engine = {
   methods: Method[];
 };
 
-export function ModelTrainingPlatformClient() {
-  const { getToken, isLoaded } = useAuth();
+export function ModelTrainingPlatformClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [experiments, setExperiments] = useState<Experiment[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const refresh = useCallback(async () => {
-    const token = await getToken();
+  const refresh = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, list] = await Promise.all([
       apiFetch<Engine>('/v1/model-training-platform/engine', { token }),
@@ -55,16 +55,16 @@ export function ModelTrainingPlatformClient() {
     setExperiments(list.experiments);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void refresh().catch((err: Error) => setError(err.message));
+    void refresh.catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
-  const createLoraPlan = async () => {
+  const createLoraPlan = async  => {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       await apiFetch('/v1/model-training-platform/experiments', {
         token,
@@ -77,7 +77,7 @@ export function ModelTrainingPlatformClient() {
           hyperparams: { rank: 8, epochs: 1 },
         }),
       });
-      await refresh();
+      await refresh;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Create failed');
     } finally {
@@ -131,7 +131,7 @@ export function ModelTrainingPlatformClient() {
 
           <section>
             <h2 style={label}>Actions</h2>
-            <button type="button" onClick={() => void createLoraPlan()} disabled={busy} style={btn}>
+            <button type="button" onClick={ => void createLoraPlan} disabled={busy} style={btn}>
               {busy ? 'Creating…' : 'Create LoRA experiment plan'}
             </button>
           </section>

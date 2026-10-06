@@ -10,17 +10,17 @@ export const dynamic = 'force-dynamic';
 export async function POST(request: Request) {
   let body: { text?: string; openaiVoice?: string; voiceId?: string; lang?: string };
   try {
-    body = (await request.json()) as typeof body;
+    body = (await request.json) as typeof body;
   } catch {
     return NextResponse.json({ error: { message: 'Invalid JSON' } }, { status: 400 });
   }
 
-  const text = typeof body.text === 'string' ? body.text.trim().slice(0, 500) : '';
+  const text = typeof body.text === 'string' ? body.text.trim.slice(0, 500) : '';
   if (!text) {
     return NextResponse.json({ error: { message: 'text required' } }, { status: 400 });
   }
 
-  const apiKey = process.env.OPENAI_API_KEY?.trim();
+  const apiKey = process.env.OPENAI_API_KEY?.trim;
   if (!apiKey) {
     return NextResponse.json({ mode: 'browser', voiceId: body.voiceId ?? null });
   }
@@ -50,7 +50,7 @@ export async function POST(request: Request) {
     );
   }
 
-  const audio = await upstream.arrayBuffer();
+  const audio = await upstream.arrayBuffer;
   return new NextResponse(audio, {
     status: 200,
     headers: {

@@ -2,13 +2,13 @@ import { Query, Resolver } from '@nestjs/graphql';
 import { PluginRuntimeService } from '../plugin-runtime/plugin-runtime.service';
 import { GqlPluginRuntimeEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class PluginRuntimeGraphqlResolver {
   constructor(private readonly runtime: PluginRuntimeService) {}
 
-  @Query(() => GqlPluginRuntimeEngine, { name: 'pluginRuntimeEngine' })
-  pluginRuntimeEngine(): GqlPluginRuntimeEngine {
-    const c = this.runtime.engine();
+  @Query( => GqlPluginRuntimeEngine, { name: 'pluginRuntimeEngine' })
+  pluginRuntimeEngine: GqlPluginRuntimeEngine {
+    const c = this.runtime.engine;
     return {
       product: c.product,
       note: c.note,

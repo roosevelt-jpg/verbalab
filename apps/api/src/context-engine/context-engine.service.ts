@@ -38,7 +38,7 @@ type ContextBlock = {
   truncated?: boolean;
 };
 
-@Injectable()
+@Injectable
 export class ContextEngineService {
   constructor(
     private readonly prisma: PrismaService,
@@ -49,11 +49,11 @@ export class ContextEngineService {
     private readonly prompts: PromptsService,
   ) {}
 
-  engine() {
-    return contextEngineCatalog();
+  engine {
+    return contextEngineCatalog;
   }
 
-  sources() {
+  sources {
     return {
       sources: [
         { id: 'language', status: 'shipped', from: 'workspace defaults' },
@@ -63,11 +63,11 @@ export class ContextEngineService {
         { id: 'project', status: 'shipped', from: 'project memories' },
         { id: 'conversation', status: 'shipped', from: 'conversation memories' },
         { id: 'historical', status: 'shipped', from: 'long_term/shared memories' },
-        { id: 'documents', status: 'shipped', from: 'vector search (VL-182)' },
-        { id: 'knowledgeGraph', status: 'partial', from: 'entity name list (VL-184)' },
+        { id: 'documents', status: 'shipped', from: 'vector search' },
+        { id: 'knowledgeGraph', status: 'partial', from: 'entity name list' },
         { id: 'prompt', status: 'shipped', from: 'prompts resolve (chat/rag)' },
       ],
-      note: 'Context sources assembled by VL-185. Realtime deferred.',
+      note: 'Context sources assembled by . Realtime deferred.',
     };
   }
 
@@ -207,34 +207,34 @@ export class ContextEngineService {
       blocks.push({ id: 'user', kind: 'user', priority: 30, content, chars: content.length });
     }
 
-    if (this.flag(include, 'project') && input.projectKey?.trim()) {
+    if (this.flag(include, 'project') && input.projectKey?.trim) {
       included.push('project');
       const mem = await this.memory.list({
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
         scope: 'project',
-        projectKey: input.projectKey.trim(),
+        projectKey: input.projectKey.trim,
         limit: memoryLimit,
       });
       const lines = [
-        `Project: ${input.projectKey.trim()}.`,
+        `Project: ${input.projectKey.trim}.`,
         ...mem.data.map((m) => `- ${m.content}`),
       ];
       const content = lines.join('\n');
       blocks.push({ id: 'project', kind: 'project', priority: 35, content, chars: content.length });
     }
 
-    if (this.flag(include, 'conversation') && input.conversationId?.trim()) {
+    if (this.flag(include, 'conversation') && input.conversationId?.trim) {
       included.push('conversation');
       const mem = await this.memory.list({
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
         scope: 'conversation',
-        conversationId: input.conversationId.trim(),
+        conversationId: input.conversationId.trim,
         limit: memoryLimit,
       });
       const lines = [
-        `Conversation: ${input.conversationId.trim()}.`,
+        `Conversation: ${input.conversationId.trim}.`,
         ...mem.data.map((m) => `- ${m.content}`),
       ];
       const content = lines.join('\n');
@@ -290,10 +290,10 @@ export class ContextEngineService {
       blocks.push({ id: 'prompt', kind: 'prompt', priority: 15, content, chars: content.length });
     }
 
-    if (this.flag(include, 'documents') && input.query?.trim()) {
+    if (this.flag(include, 'documents') && input.query?.trim) {
       included.push('documents');
       const search = await this.knowledge.searchVectors({
-        query: input.query.trim(),
+        query: input.query.trim,
         k: documentK,
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
@@ -316,7 +316,7 @@ export class ContextEngineService {
       const entities = await this.knowledgeGraph.listEntities({
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
-        q: input.query?.trim() || undefined,
+        q: input.query?.trim || undefined,
         limit: 12,
       });
       const lines = [
@@ -354,10 +354,10 @@ export class ContextEngineService {
     });
 
     return {
-      assembledAt: new Date().toISOString(),
+      assembledAt: new Date.toISOString,
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,
-      query: input.query?.trim() || null,
+      query: input.query?.trim || null,
       included,
       blocks: compressed.blocks,
       promptContext,
@@ -368,12 +368,12 @@ export class ContextEngineService {
         truncated: compressed.truncated,
         method: 'priority_char_budget',
       },
-      note: 'Assembled context for AI requests (VL-185). Not an infinite context window; LLM summarization deferred.',
+      note: 'Assembled context for AI requests. Not an infinite context window; LLM summarization deferred.',
     };
   }
 
   async analytics(organizationId: string, workspaceId: string) {
-    const start = new Date();
+    const start = new Date;
     start.setUTCDate(1);
     start.setUTCHours(0, 0, 0, 0);
     const assemblies = await this.prisma.auditEvent.count({
@@ -384,26 +384,26 @@ export class ContextEngineService {
       },
     });
     return {
-      periodStart: start.toISOString(),
+      periodStart: start.toISOString,
       assemblies,
       workspaceId,
-      note: 'Context Engine analytics from assemble audits (VL-185).',
+      note: 'Context Engine analytics from assemble audits.',
     };
   }
 
   async monitoring(organizationId: string, workspaceId: string) {
     const [analytics, engine] = await Promise.all([
       this.analytics(organizationId, workspaceId),
-      Promise.resolve(this.engine()),
+      Promise.resolve(this.engine),
     ]);
     return {
-      generatedAt: new Date().toISOString(),
+      generatedAt: new Date.toISOString,
       periodStart: analytics.periodStart,
       assemblies: analytics.assemblies,
       infiniteContextWindow: engine.honesty.infiniteContextWindow,
       realtimePush: engine.honesty.realtimePush,
       deferred: engine.capabilities.filter((c) => c.status === 'deferred').map((c) => c.id),
-      note: 'Context Engine monitoring snapshot (VL-185).',
+      note: 'Context Engine monitoring snapshot.',
     };
   }
 }

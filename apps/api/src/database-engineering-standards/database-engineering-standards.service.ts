@@ -4,7 +4,7 @@ import { KnowledgeCloudService } from '../knowledge-cloud/knowledge-cloud.servic
 import { VectorCloudService } from '../vector-cloud/vector-cloud.service';
 import { EmbeddingRuntimeService } from '../embedding-runtime/embedding-runtime.service';
 
-@Injectable()
+@Injectable
 export class DatabaseEngineeringStandardsService {
   constructor(
     private readonly knowledgeCloud: KnowledgeCloudService,
@@ -12,36 +12,36 @@ export class DatabaseEngineeringStandardsService {
     private readonly embeddingRuntime: EmbeddingRuntimeService
   ) {}
 
-  engine() {
-    return databaseEngineeringStandardsEngineCatalog();
+  engine {
+    return databaseEngineeringStandardsEngineCatalog;
   }
 
   /** Catalog route: returns standards capability + live status from injected upstream services. */
   route(capability?: string) {
-    const catalog = this.engine();
-    const q = (capability ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (capability ?? '').trim.toLowerCase;
     const capabilities = catalog.capabilities.filter((c) => {
       if (!q) return true;
-      return c.id.includes(q) || c.name.toLowerCase().includes(q);
+      return c.id.includes(q) || c.name.toLowerCase.includes(q);
     });
     const upstreamStatus = [
       {
         module: 'knowledge-cloud',
         method: 'products',
         status: 'reachable',
-        upstream: this.knowledgeCloud.products(),
+        upstream: this.knowledgeCloud.products,
       },
       {
         module: 'vector-cloud',
         method: 'engine',
         status: 'reachable',
-        upstream: this.vectorCloud.engine(),
+        upstream: this.vectorCloud.engine,
       },
       {
         module: 'embedding-runtime',
         method: 'engine',
         status: 'reachable',
-        upstream: this.embeddingRuntime.engine(),
+        upstream: this.embeddingRuntime.engine,
       }
     ];
     return {
@@ -65,11 +65,11 @@ export class DatabaseEngineeringStandardsService {
   }
 
   list(query?: string) {
-    const catalog = this.engine();
-    const q = (query ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (query ?? '').trim.toLowerCase;
     const rows = catalog.routes.filter((row) => {
       if (!q) return true;
-      return JSON.stringify(row).toLowerCase().includes(q);
+      return JSON.stringify(row).toLowerCase.includes(q);
     });
     return {
       routes: rows,
@@ -86,8 +86,8 @@ export class DatabaseEngineeringStandardsService {
     return this.list(query);
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'database-engineering-standards',
       count: catalog.routes.length,
@@ -98,7 +98,7 @@ export class DatabaseEngineeringStandardsService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'DatabaseEngineeringStandards monitoring snapshot (VL-351).',
+      note: 'DatabaseEngineeringStandards monitoring snapshot.',
     };
   }
 }

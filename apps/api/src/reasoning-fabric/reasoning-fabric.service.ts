@@ -33,7 +33,7 @@ type DistRecord = {
   at: string;
 };
 
-@Injectable()
+@Injectable
 export class ReasoningFabricService {
   private routePlans = 0;
   private pipelines = 0;
@@ -52,7 +52,7 @@ export class ReasoningFabricService {
   ) {}
 
   /** Test hook. */
-  resetCounters() {
+  resetCounters {
     this.routePlans = 0;
     this.pipelines = 0;
     this.distributions = 0;
@@ -62,38 +62,38 @@ export class ReasoningFabricService {
     this.distLog.length = 0;
   }
 
-  products() {
-    const cacheEngine = this.intelligentCache.engine();
+  products {
+    const cacheEngine = this.intelligentCache.engine;
     return {
       product: 'Lugemi Reasoning Fabric',
-      products: reasoningFabricCapabilityCatalog(),
-      routes: reasoningFabricRoutingTable(),
-      pipelines: reasoningFabricPipelines(),
-      versions: reasoningFabricVersions(),
-      reasoningRuntime: this.reasoningRuntime.engine(),
+      products: reasoningFabricCapabilityCatalog,
+      routes: reasoningFabricRoutingTable,
+      pipelines: reasoningFabricPipelines,
+      versions: reasoningFabricVersions,
+      reasoningRuntime: this.reasoningRuntime.engine,
       intelligentCache: {
         product: cacheEngine.product,
         honesty: cacheEngine.honesty,
         console: '/intelligent-cache',
       },
-      architecture: reasoningFabricArchitectureNotes(),
-      honesty: reasoningFabricHonesty(),
+      architecture: reasoningFabricArchitectureNotes,
+      honesty: reasoningFabricHonesty,
       safety: {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric (VL-247) must hard-gate across fabric buses when shipped — not log-only.',
+          'Policy Fabric must hard-gate across fabric buses when shipped — not log-only.',
       },
       docs: '/docs/REASONING_FABRIC.md',
       note:
-        'Reasoning Fabric (VL-244). Cross-cloud reasoning router over Reasoning Runtime. Not a custom reasoner OS.',
+        'Reasoning Fabric. Cross-cloud reasoning router over Reasoning Runtime. Not a custom reasoner OS.',
     };
   }
 
-  routes() {
+  routes {
     return {
-      routes: reasoningFabricRoutingTable(),
-      honesty: reasoningFabricHonesty(),
+      routes: reasoningFabricRoutingTable,
+      honesty: reasoningFabricHonesty,
       docs: '/docs/REASONING_FABRIC.md',
       note: 'Static reasoning-intent → Runtime/Cloud handoff catalog.',
     };
@@ -101,30 +101,30 @@ export class ReasoningFabricService {
 
   route(input: { kinds?: string[] }) {
     this.routePlans += 1;
-    const table = reasoningFabricRoutingTable();
+    const table = reasoningFabricRoutingTable;
     const kinds = input.kinds?.length
-      ? input.kinds.map((k) => k.toLowerCase())
+      ? input.kinds.map((k) => k.toLowerCase)
       : table.map((r) => r.kind);
     const selected = table.filter((r) => kinds.includes(r.kind));
     const missing = kinds.filter((k) => !table.some((r) => r.kind === k));
     return {
       plan: selected,
       missing,
-      honesty: reasoningFabricHonesty(),
+      honesty: reasoningFabricHonesty,
       note: 'Reasoning Router plan — does not execute reasoning steps.',
     };
   }
 
   pipeline(input: { pipelineId?: string; steps?: string[] }) {
     this.pipelines += 1;
-    const catalog = reasoningFabricPipelines();
+    const catalog = reasoningFabricPipelines;
     const chosen =
       catalog.find((p) => p.id === input.pipelineId) ??
       (input.steps?.length
         ? {
             id: 'custom',
             name: 'Custom Pipeline',
-            steps: input.steps.map((s) => s.toLowerCase()),
+            steps: input.steps.map((s) => s.toLowerCase),
             notes: 'Caller-supplied step list.',
           }
         : catalog[0]!);
@@ -134,22 +134,22 @@ export class ReasoningFabricService {
       pipeline: chosen,
       plan: routed.plan,
       missing: routed.missing,
-      honesty: reasoningFabricHonesty(),
+      honesty: reasoningFabricHonesty,
       note: 'Pipeline is an ordered handoff plan — each step runs via Reasoning Runtime APIs.',
     };
   }
 
-  versions() {
+  versions {
     return {
-      versions: reasoningFabricVersions(),
-      honesty: reasoningFabricHonesty(),
+      versions: reasoningFabricVersions,
+      honesty: reasoningFabricHonesty,
       docs: '/docs/REASONING_FABRIC.md',
       note: 'Fabric strategy/pipeline versions — Runtime owns run payloads.',
     };
   }
 
-  cacheHandoff() {
-    const engine = this.intelligentCache.engine();
+  cacheHandoff {
+    const engine = this.intelligentCache.engine;
     return {
       cache: {
         target: 'intelligent-cache',
@@ -160,9 +160,9 @@ export class ReasoningFabricService {
       fabric: {
         status: 'partial',
         note:
-          'Reasoning Fabric does not auto-cache every reason() call. Opt into Intelligent Cache namespaces explicitly.',
+          'Reasoning Fabric does not auto-cache every reason call. Opt into Intelligent Cache namespaces explicitly.',
       },
-      honesty: reasoningFabricHonesty(),
+      honesty: reasoningFabricHonesty,
       docs: '/docs/REASONING_FABRIC.md',
     };
   }
@@ -178,7 +178,7 @@ export class ReasoningFabricService {
         mode: r.kind === 'cloud' ? 'catalog' : 'handoff',
       })),
       missing: plan.missing,
-      honesty: reasoningFabricHonesty(),
+      honesty: reasoningFabricHonesty,
       note: 'Federation is a product-handoff catalog — not cross-tenant reasoner mesh.',
     };
   }
@@ -186,7 +186,7 @@ export class ReasoningFabricService {
   async history(auth: AuthCtx, limit?: number) {
     return {
       ...(await this.reasoningRuntime.history({ ...auth, limit })),
-      honesty: reasoningFabricHonesty(),
+      honesty: reasoningFabricHonesty,
       docs: '/docs/REASONING_FABRIC.md',
       note: 'History façade over Reasoning Runtime.',
     };
@@ -196,7 +196,7 @@ export class ReasoningFabricService {
     this.replays += 1;
     return {
       ...(await this.reasoningRuntime.replay({ ...auth, id })),
-      honesty: reasoningFabricHonesty(),
+      honesty: reasoningFabricHonesty,
       docs: '/docs/REASONING_FABRIC.md',
       note: 'Replay façade over Reasoning Runtime MemoryRecords.',
     };
@@ -219,13 +219,13 @@ export class ReasoningFabricService {
         : peers;
 
     const record: DistRecord = {
-      id: randomUUID(),
+      id: randomUUID,
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,
       targets: targets.map((t) => t.id),
       kinds: plan.plan.map((p) => p.kind),
       status: 'planned',
-      at: new Date().toISOString(),
+      at: new Date.toISOString,
     };
 
     let event: Awaited<ReturnType<EventFabricBus['publish']>> | null = null;
@@ -253,7 +253,7 @@ export class ReasoningFabricService {
       plan: plan.plan,
       peers: targets,
       event,
-      honesty: reasoningFabricHonesty(),
+      honesty: reasoningFabricHonesty,
       note: 'Distribution plan for same-org workspaces — does not replicate reasoning runs automatically.',
     };
   }
@@ -267,7 +267,7 @@ export class ReasoningFabricService {
     });
   }
 
-  monitoring() {
+  monitoring {
     return {
       mode: 'reasoning_fabric',
       counters: {
@@ -279,12 +279,12 @@ export class ReasoningFabricService {
         eventPublishes: this.eventPublishes,
       },
       recent: { distributions: this.distLog.slice(-10) },
-      products: reasoningFabricCapabilityCatalog().map((p) => ({
+      products: reasoningFabricCapabilityCatalog.map((p) => ({
         id: p.id,
         status: p.status,
       })),
-      honesty: reasoningFabricHonesty(),
-      note: 'Reasoning Fabric monitoring (VL-244).',
+      honesty: reasoningFabricHonesty,
+      note: 'Reasoning Fabric monitoring.',
     };
   }
 
@@ -303,11 +303,11 @@ export class ReasoningFabricService {
         embeddings: usageSummary.embeddings,
       },
       workspace: { peerWorkspaces: peers.length },
-      products: reasoningFabricCapabilityCatalog(),
-      routes: reasoningFabricRoutingTable(),
-      pipelines: reasoningFabricPipelines(),
-      architecture: reasoningFabricArchitectureNotes(),
-      honesty: reasoningFabricHonesty(),
+      products: reasoningFabricCapabilityCatalog,
+      routes: reasoningFabricRoutingTable,
+      pipelines: reasoningFabricPipelines,
+      architecture: reasoningFabricArchitectureNotes,
+      honesty: reasoningFabricHonesty,
       counters: {
         routePlans: this.routePlans,
         pipelines: this.pipelines,
@@ -320,7 +320,7 @@ export class ReasoningFabricService {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric (VL-247) must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
+          'Policy Fabric must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
       },
       deferred: {
         memoryFabric: false,
@@ -345,7 +345,7 @@ export class ReasoningFabricService {
       },
       docs: '/docs/REASONING_FABRIC.md',
       note:
-        'Reasoning Fabric (VL-244). Router + pipelines + replay over Reasoning Runtime; same-org distribute plans.',
+        'Reasoning Fabric. Router + pipelines + replay over Reasoning Runtime; same-org distribute plans.',
     };
   }
 }

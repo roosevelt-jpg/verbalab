@@ -1,4 +1,4 @@
-/** Application ports for Golden Path Platform (VL-305). */
+/** Application ports for Golden Path Platform. */
 
 export type GoldenPathPlatformProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type GoldenPathPlatformEngineBundle = ReturnType<
 >;
 
 export interface GoldenPathPlatformCatalogPort {
-  engine(): GoldenPathPlatformEngineBundle;
-  listProducts(): GoldenPathPlatformProductRow[];
+  engine: GoldenPathPlatformEngineBundle;
+  listProducts: GoldenPathPlatformProductRow[];
 }
 
 export const GOLDEN_PATH_PLATFORM_CATALOG_PORT = Symbol('GOLDEN_PATH_PLATFORM_CATALOG_PORT');

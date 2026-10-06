@@ -6,10 +6,10 @@ import { FABRIC_BUSES, FABRIC_GLOBAL_DENIES } from './policy-fabric.catalog';
 export type FabricBus = (typeof FABRIC_BUSES)[number];
 
 /**
- * Fabric-wide hard gate (VL-247).
+ * Fabric-wide hard gate.
  * Blocks denied fabric actions with 403 — never log-only.
  */
-@Injectable()
+@Injectable
 export class FabricPolicyGate {
   private asserts = 0;
   private denies = 0;
@@ -17,12 +17,12 @@ export class FabricPolicyGate {
   constructor(private readonly policyRuntime: PolicyRuntimeService) {}
 
   /** Test hook. */
-  resetCounters() {
+  resetCounters {
     this.asserts = 0;
     this.denies = 0;
   }
 
-  counters() {
+  counters {
     return { asserts: this.asserts, denies: this.denies };
   }
 
@@ -42,8 +42,8 @@ export class FabricPolicyGate {
     logOnly: false;
   }> {
     this.asserts += 1;
-    const action = (input.action ?? '').trim();
-    const bus = (input.bus ?? '').trim();
+    const action = (input.action ?? '').trim;
+    const bus = (input.bus ?? '').trim;
 
     if (!action) {
       this.denies += 1;

@@ -17,8 +17,8 @@ export class GetKnowledgeOperatingSystemEngineHandler
     private readonly catalog: KnowledgeOperatingSystemCatalogPort,
   ) {}
 
-  execute(): Promise<KnowledgeOperatingSystemEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<KnowledgeOperatingSystemEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListKnowledgeOperatingSystemProductsHandler
     private readonly catalog: KnowledgeOperatingSystemCatalogPort,
   ) {}
 
-  execute(): Promise<KnowledgeOperatingSystemProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<KnowledgeOperatingSystemProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

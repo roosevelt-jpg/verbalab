@@ -1,4 +1,4 @@
-/** Application ports for Healthcare Intelligence (VL-265). */
+/** Application ports for Healthcare Intelligence. */
 
 export type HealthcareIntelligenceProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type HealthcareIntelligenceEngineBundle = ReturnType<
 >;
 
 export interface HealthcareIntelligenceCatalogPort {
-  engine(): HealthcareIntelligenceEngineBundle;
-  listProducts(): HealthcareIntelligenceProductRow[];
+  engine: HealthcareIntelligenceEngineBundle;
+  listProducts: HealthcareIntelligenceProductRow[];
 }
 
 export const HEALTHCARE_INTELLIGENCE_CATALOG_PORT = Symbol('HEALTHCARE_INTELLIGENCE_CATALOG_PORT');

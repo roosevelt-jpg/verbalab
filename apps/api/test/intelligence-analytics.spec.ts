@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_ia_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_ia_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,40 +35,40 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Intelligence Analytics (VL-191)', () => {
+describe('Intelligence Analytics',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Intelligence Analytics honesty', () => {
+  it('documents Intelligence Analytics honesty',  => {
     const doc = join(root, 'docs/INTELLIGENCE_ANALYTICS.md');
     const adr = join(root, 'docs/adr/0102-intelligence-analytics.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/not.*Language.*Speech.*Voice/i);
-    expect(text).toContain('VL-191');
+    expect(text).toContain('');
   });
 
-  it('exposes engine with regeneratesSpeechAnalytics=false', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes engine with regeneratesSpeechAnalytics=false', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/intelligence-analytics/engine')
       .expect(200);
     expect(res.body.product).toContain('Intelligence Analytics');
@@ -79,7 +79,7 @@ describe('Intelligence Analytics (VL-191)', () => {
     expect(res.body.honesty.aggregatesOnly).toBe(true);
   });
 
-  it('returns overview/surfaces/report for org with seeded intel audits', async () => {
+  it('returns overview/surfaces/report for org with seeded intel audits', async  => {
     const org = await seedOrg(prisma, 'ia');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -132,7 +132,7 @@ describe('Intelligence Analytics (VL-191)', () => {
       ],
     });
 
-    const overview = await request(app.getHttpServer())
+    const overview = await request(app.getHttpServer)
       .get('/v1/intelligence-analytics/overview')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -141,7 +141,7 @@ describe('Intelligence Analytics (VL-191)', () => {
     expect(overview.body.estimatedCostUsd).toBeGreaterThanOrEqual(0);
     expect(overview.body.quality.avgDecisionConfidence).toBeCloseTo(0.8, 1);
 
-    const surfaces = await request(app.getHttpServer())
+    const surfaces = await request(app.getHttpServer)
       .get('/v1/intelligence-analytics/surfaces')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -150,7 +150,7 @@ describe('Intelligence Analytics (VL-191)', () => {
       true,
     );
 
-    const report = await request(app.getHttpServer())
+    const report = await request(app.getHttpServer)
       .get('/v1/intelligence-analytics/report')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -158,8 +158,8 @@ describe('Intelligence Analytics (VL-191)', () => {
     expect(report.body.routing.decisions).toBeGreaterThanOrEqual(1);
   });
 
-  it('exposes intelligenceAnalytics via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes intelligenceAnalytics via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
@@ -167,7 +167,7 @@ describe('Intelligence Analytics (VL-191)', () => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.intelligenceAnalytics.regeneratesSpeechAnalytics).toBe(false);
     expect(res.body.data.intelligenceAnalytics.aggregatesOnly).toBe(true);
   });

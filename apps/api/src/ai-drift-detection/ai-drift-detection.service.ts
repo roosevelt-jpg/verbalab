@@ -1,22 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { aiDriftDetectionEngineCatalog, driftClearStatus } from './ai-drift-detection.catalog';
 
-@Injectable()
+@Injectable
 export class AiDriftDetectionService {
-  engine() {
-    return aiDriftDetectionEngineCatalog();
+  engine {
+    return aiDriftDetectionEngineCatalog;
   }
 
   signals(query?: string) {
-    const catalog = this.engine();
-    const q = (query ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (query ?? '').trim.toLowerCase;
     const signals = catalog.signals.filter((s) => {
       if (!q) return true;
       return (
-        s.id.toLowerCase().includes(q) ||
-        s.kind.toLowerCase().includes(q) ||
-        s.severity.toLowerCase().includes(q) ||
-        s.notes.toLowerCase().includes(q)
+        s.id.toLowerCase.includes(q) ||
+        s.kind.toLowerCase.includes(q) ||
+        s.severity.toLowerCase.includes(q) ||
+        s.notes.toLowerCase.includes(q)
       );
     });
     return {
@@ -31,16 +31,16 @@ export class AiDriftDetectionService {
   }
 
   /** Required Continuous Learning promote check. */
-  check() {
-    return driftClearStatus();
+  check {
+    return driftClearStatus;
   }
 
   query(query?: string) {
     return this.signals(query);
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'drift',
       signalCount: catalog.signals.length,
@@ -48,7 +48,7 @@ export class AiDriftDetectionService {
       driftClear: catalog.driftClear,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'AI Drift Detection monitoring snapshot (VL-288).',
+      note: 'AI Drift Detection monitoring snapshot.',
     };
   }
 }

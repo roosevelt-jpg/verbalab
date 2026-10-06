@@ -39,8 +39,8 @@ type Overview = {
   rbac: { roles: string[]; abac: boolean };
 };
 
-export function IdentityClient() {
-  const { getToken, isLoaded } = useAuth();
+export function IdentityClient {
+  const { getToken, isLoaded } = useAuth;
   const [data, setData] = useState<Overview | null>(null);
   const [invites, setInvites] = useState<InviteRow[]>([]);
   const [inviteEmail, setInviteEmail] = useState('');
@@ -49,34 +49,34 @@ export function IdentityClient() {
   const [message, setMessage] = useState<string | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [overview, inviteRows] = await Promise.all([
       apiFetch<Overview>('/v1/identity/overview', { token }),
-      apiFetch<InviteRow[]>('/v1/organization/invites', { token }).catch(() => [] as InviteRow[]),
+      apiFetch<InviteRow[]>('/v1/organization/invites', { token }).catch( => [] as InviteRow[]),
     ]);
     setData(overview);
     setInvites(inviteRows);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
   async function setRole(membershipId: string, role: string) {
     setError(null);
     setBusyId(membershipId);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       await apiFetch(`/v1/organization/members/${membershipId}`, {
         method: 'PATCH',
         token,
         body: JSON.stringify({ role }),
       });
-      await load();
+      await load;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Role update failed');
     } finally {
@@ -89,13 +89,13 @@ export function IdentityClient() {
     setError(null);
     setBusyId(membershipId);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       await apiFetch(`/v1/organization/members/${membershipId}`, {
         method: 'DELETE',
         token,
       });
-      await load();
+      await load;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Remove failed');
     } finally {
@@ -103,12 +103,12 @@ export function IdentityClient() {
     }
   }
 
-  async function sendInvite() {
+  async function sendInvite {
     setError(null);
     setMessage(null);
     setBusyId('invite');
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       await apiFetch('/v1/organization/invites', {
         method: 'POST',
@@ -117,7 +117,7 @@ export function IdentityClient() {
       });
       setInviteEmail('');
       setMessage('Invite sent. They accept by signing in with that email.');
-      await load();
+      await load;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Invite failed');
     } finally {
@@ -129,10 +129,10 @@ export function IdentityClient() {
     setError(null);
     setBusyId(inviteId);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       await apiFetch(`/v1/organization/invites/${inviteId}`, { method: 'DELETE', token });
-      await load();
+      await load;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Revoke failed');
     } finally {
@@ -204,8 +204,8 @@ export function IdentityClient() {
             {canManage ? (
               <form
                 onSubmit={(e) => {
-                  e.preventDefault();
-                  void sendInvite();
+                  e.preventDefault;
+                  void sendInvite;
                 }}
                 style={{
                   display: 'flex',
@@ -243,7 +243,7 @@ export function IdentityClient() {
                 <button
                   type="submit"
                   className="vl-btn vl-btn-primary"
-                  disabled={busyId === 'invite' || !inviteEmail.trim()}
+                  disabled={busyId === 'invite' || !inviteEmail.trim}
                 >
                   Send invite
                 </button>
@@ -275,7 +275,7 @@ export function IdentityClient() {
                           type="button"
                           className="vl-btn vl-btn-secondary"
                           disabled={busyId === inv.id}
-                          onClick={() => void revokeInvite(inv.id)}
+                          onClick={ => void revokeInvite(inv.id)}
                           style={{ minHeight: 32, fontSize: '0.78rem' }}
                         >
                           Revoke
@@ -334,7 +334,7 @@ export function IdentityClient() {
                         <button
                           type="button"
                           disabled={busyId === m.id}
-                          onClick={() => void removeMember(m.id)}
+                          onClick={ => void removeMember(m.id)}
                           style={{
                             fontSize: '0.8rem',
                             padding: '0.35rem 0.55rem',

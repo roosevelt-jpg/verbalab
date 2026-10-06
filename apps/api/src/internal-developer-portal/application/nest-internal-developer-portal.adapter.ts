@@ -6,16 +6,16 @@ import {
   InternalDeveloperPortalProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestInternalDeveloperPortalCatalogAdapter implements InternalDeveloperPortalCatalogPort {
   constructor(private readonly service: InternalDeveloperPortalService) {}
 
-  engine(): InternalDeveloperPortalEngineBundle {
-    return this.service.engine();
+  engine: InternalDeveloperPortalEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): InternalDeveloperPortalProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: InternalDeveloperPortalProductRow[] {
+    const bundle = this.engine as {
       products?: InternalDeveloperPortalProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestInternalDeveloperPortalCatalogAdapter implements InternalDevelo
         status: 'shipped',
         api: 'GET /v1/internal-developer-portal/engine',
         console: '/internal-developer-portal',
-        notes: 'VL-303 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

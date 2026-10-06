@@ -6,18 +6,18 @@ export class AiGovernancePlatformController {
   constructor(private readonly service: AiGovernancePlatformService) {}
 
   @Get('engine')
-  engine() {
-    return this.service.engine();
+  engine {
+    return this.service.engine;
   }
 
   @Get('products')
-  products() {
-    return this.service.engine();
+  products {
+    return this.service.engine;
   }
 
   @Get('monitoring')
-  monitoring() {
-    return this.service.monitoring();
+  monitoring {
+    return this.service.monitoring;
   }
 
   @Get('approvals')
@@ -37,7 +37,7 @@ export class AiGovernancePlatformController {
 
   @Get('check')
   check(@Query('id') id?: string) {
-    if (!id) return this.service.list();
+    if (!id) return this.service.list;
     return this.service.status(id);
   }
 

@@ -6,16 +6,16 @@ import {
   IdentityFederationProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestIdentityFederationCatalogAdapter implements IdentityFederationCatalogPort {
   constructor(private readonly service: IdentityFederationService) {}
 
-  engine(): IdentityFederationEngineBundle {
-    return this.service.engine();
+  engine: IdentityFederationEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): IdentityFederationProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: IdentityFederationProductRow[] {
+    const bundle = this.engine as {
       products?: IdentityFederationProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestIdentityFederationCatalogAdapter implements IdentityFederationC
         status: 'shipped',
         api: 'GET /v1/identity-federation/engine',
         console: '/identity-federation',
-        notes: 'VL-299 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

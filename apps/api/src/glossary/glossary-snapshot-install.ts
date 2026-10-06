@@ -46,7 +46,7 @@ export async function upsertGlossarySnapshot(
 ): Promise<number> {
   let count = 0;
   for (const term of input.terms) {
-    if (!term.sourceTerm?.trim() || !term.targetTerm?.trim()) continue;
+    if (!term.sourceTerm?.trim || !term.targetTerm?.trim) continue;
     await tx.glossaryTerm.upsert({
       where: {
         workspaceId_sourceLang_targetLang_sourceTerm: {

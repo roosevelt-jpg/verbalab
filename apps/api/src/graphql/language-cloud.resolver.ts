@@ -39,58 +39,58 @@ type GqlReq = Request & {
   sessionAuth?: SessionContext;
 };
 
-@Resolver()
+@Resolver
 export class LanguageCloudGraphqlResolver {
   constructor(
     private readonly commands: CommandBus,
     private readonly queries: QueryBus,
   ) {}
 
-  @Query(() => [GqlLanguage], { name: 'languages' })
-  languages(): Promise<GqlLanguage[]> {
-    return this.queries.execute(new ListLanguagesQuery());
+  @Query( => [GqlLanguage], { name: 'languages' })
+  languages: Promise<GqlLanguage[]> {
+    return this.queries.execute(new ListLanguagesQuery);
   }
 
-  @Query(() => [GqlDialect], { name: 'dialects' })
+  @Query( => [GqlDialect], { name: 'dialects' })
   dialects(
-    @Args('language', { type: () => String, nullable: true }) language?: string,
+    @Args('language', { type:  => String, nullable: true }) language?: string,
   ): Promise<GqlDialect[]> {
     return this.queries.execute(new ListDialectsQuery(language));
   }
 
-  @Query(() => [GqlAccent], { name: 'accents' })
+  @Query( => [GqlAccent], { name: 'accents' })
   accents(
-    @Args('language', { type: () => String, nullable: true }) language?: string,
+    @Args('language', { type:  => String, nullable: true }) language?: string,
   ): Promise<GqlAccent[]> {
     return this.queries.execute(new ListAccentsQuery(language));
   }
 
-  @Query(() => [GqlLocalePack], { name: 'localePacks' })
-  localePacks(): Promise<GqlLocalePack[]> {
-    return this.queries.execute(new ListLocalePacksQuery());
+  @Query( => [GqlLocalePack], { name: 'localePacks' })
+  localePacks: Promise<GqlLocalePack[]> {
+    return this.queries.execute(new ListLocalePacksQuery);
   }
 
-  @Query(() => [GqlCountryPack], { name: 'countryPacks' })
+  @Query( => [GqlCountryPack], { name: 'countryPacks' })
   countryPacks(
-    @Args('region', { type: () => String, nullable: true }) region?: string,
+    @Args('region', { type:  => String, nullable: true }) region?: string,
   ): Promise<GqlCountryPack[]> {
     return this.queries.execute(new ListCountryPacksQuery(region));
   }
 
-  @Query(() => [GqlStyleProfile], { name: 'styleProfiles' })
-  styleProfiles(): Promise<GqlStyleProfile[]> {
-    return this.queries.execute(new ListStyleProfilesQuery());
+  @Query( => [GqlStyleProfile], { name: 'styleProfiles' })
+  styleProfiles: Promise<GqlStyleProfile[]> {
+    return this.queries.execute(new ListStyleProfilesQuery);
   }
 
-  @Query(() => [GqlLanguageProduct], { name: 'languageProducts' })
-  languageProducts(): Promise<GqlLanguageProduct[]> {
-    return this.queries.execute(new ListLanguageProductsQuery());
+  @Query( => [GqlLanguageProduct], { name: 'languageProducts' })
+  languageProducts: Promise<GqlLanguageProduct[]> {
+    return this.queries.execute(new ListLanguageProductsQuery);
   }
 
-  @Mutation(() => GqlDialectDetectResult, { name: 'detectDialect' })
+  @Mutation( => GqlDialectDetectResult, { name: 'detectDialect' })
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   detectDialect(
-    @Args('input', { type: () => DetectDialectInput }) input: DetectDialectInput,
+    @Args('input', { type:  => DetectDialectInput }) input: DetectDialectInput,
     @Context('req') req: GqlReq,
   ): Promise<GqlDialectDetectResult> {
     const auth = req.translateAuth!;
@@ -105,10 +105,10 @@ export class LanguageCloudGraphqlResolver {
     );
   }
 
-  @Mutation(() => GqlGrammarCheckResult, { name: 'checkGrammar' })
+  @Mutation( => GqlGrammarCheckResult, { name: 'checkGrammar' })
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   checkGrammar(
-    @Args('input', { type: () => CheckGrammarInput }) input: CheckGrammarInput,
+    @Args('input', { type:  => CheckGrammarInput }) input: CheckGrammarInput,
     @Context('req') req: GqlReq,
   ): Promise<GqlGrammarCheckResult> {
     const auth = req.translateAuth!;
@@ -123,10 +123,10 @@ export class LanguageCloudGraphqlResolver {
     );
   }
 
-  @Mutation(() => GqlStyleRewriteResult, { name: 'rewriteStyle' })
+  @Mutation( => GqlStyleRewriteResult, { name: 'rewriteStyle' })
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   rewriteStyle(
-    @Args('input', { type: () => RewriteStyleInput }) input: RewriteStyleInput,
+    @Args('input', { type:  => RewriteStyleInput }) input: RewriteStyleInput,
     @Context('req') req: GqlReq,
   ): Promise<GqlStyleRewriteResult> {
     const auth = req.translateAuth!;

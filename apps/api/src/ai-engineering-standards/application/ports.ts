@@ -1,4 +1,4 @@
-/** Application ports for AI Engineering Standards (VL-349). */
+/** Application ports for AI Engineering Standards. */
 
 export type AiEngineeringStandardsProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type AiEngineeringStandardsEngineBundle = ReturnType<
 >;
 
 export interface AiEngineeringStandardsCatalogPort {
-  engine(): AiEngineeringStandardsEngineBundle;
-  listProducts(): AiEngineeringStandardsProductRow[];
+  engine: AiEngineeringStandardsEngineBundle;
+  listProducts: AiEngineeringStandardsProductRow[];
 }
 
 export const AI_ENGINEERING_STANDARDS_CATALOG_PORT = Symbol('AI_ENGINEERING_STANDARDS_CATALOG_PORT');

@@ -6,16 +6,16 @@ import {
   WorkflowOperatingSystemProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestWorkflowOperatingSystemCatalogAdapter implements WorkflowOperatingSystemCatalogPort {
   constructor(private readonly service: WorkflowOperatingSystemService) {}
 
-  engine(): WorkflowOperatingSystemEngineBundle {
-    return this.service.engine();
+  engine: WorkflowOperatingSystemEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): WorkflowOperatingSystemProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: WorkflowOperatingSystemProductRow[] {
+    const bundle = this.engine as {
       products?: WorkflowOperatingSystemProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestWorkflowOperatingSystemCatalogAdapter implements WorkflowOperat
         status: 'shipped',
         api: 'GET /v1/workflow-operating-system/engine',
         console: '/workflow-operating-system',
-        notes: 'VL-338 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

@@ -16,8 +16,8 @@ export class GetAgentMarketplaceEngineHandler
     private readonly catalog: AgentMarketplaceCatalogPort,
   ) {}
 
-  execute(): Promise<AgentMarketplaceEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<AgentMarketplaceEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 

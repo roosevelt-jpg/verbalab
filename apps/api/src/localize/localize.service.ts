@@ -10,7 +10,7 @@ export type LocalizeFormat = 'json' | 'yaml';
 
 const MAX_STRINGS = Number(process.env.LOCALIZE_MAX_STRINGS ?? 200);
 
-@Injectable()
+@Injectable
 export class LocalizeService {
   constructor(
     private readonly translate: TranslateService,
@@ -33,7 +33,7 @@ export class LocalizeService {
 
   detectFormat(filename: string, explicit?: string): LocalizeFormat {
     if (explicit === 'json' || explicit === 'yaml') return explicit;
-    const lower = filename.toLowerCase();
+    const lower = filename.toLowerCase;
     if (lower.endsWith('.yaml') || lower.endsWith('.yml')) return 'yaml';
     if (lower.endsWith('.json')) return 'json';
     throw new ApiException(
@@ -80,7 +80,7 @@ export class LocalizeService {
     let glossaryApplied = 0;
 
     for (const entry of entries) {
-      if (!entry.value.trim()) {
+      if (!entry.value.trim) {
         setAtPath(output, entry.path, entry.value);
         continue;
       }

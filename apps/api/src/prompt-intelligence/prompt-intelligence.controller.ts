@@ -15,18 +15,18 @@ export class PromptIntelligenceController {
   constructor(private readonly promptIntel: PromptIntelligenceService) {}
 
   @Get('engine')
-  engine() {
-    return this.promptIntel.engine();
+  engine {
+    return this.promptIntel.engine;
   }
 
   @Get('keys')
-  keys() {
-    return this.promptIntel.keys();
+  keys {
+    return this.promptIntel.keys;
   }
 
   @Get('registry')
   @UseGuards(TranslateAuthGuard)
-  registry(@Req() req: AuthedReq) {
+  registry(@Req req: AuthedReq) {
     return this.promptIntel.registry(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -35,13 +35,13 @@ export class PromptIntelligenceController {
 
   @Get('marketplace')
   @UseGuards(TranslateAuthGuard)
-  marketplace(@Req() req: AuthedReq) {
+  marketplace(@Req req: AuthedReq) {
     return this.promptIntel.marketplace(req.translateAuth.organizationId);
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.promptIntel.analytics(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -50,7 +50,7 @@ export class PromptIntelligenceController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req() req: AuthedReq) {
+  monitoring(@Req req: AuthedReq) {
     return this.promptIntel.monitoring(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -61,8 +61,8 @@ export class PromptIntelligenceController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   preview(
-    @Req() req: AuthedReq,
-    @Body() body: { key?: string; body?: string; version?: number },
+    @Req req: AuthedReq,
+    @Body body: { key?: string; body?: string; version?: number },
   ) {
     return this.promptIntel.preview({
       organizationId: req.translateAuth.organizationId,
@@ -80,8 +80,8 @@ export class PromptIntelligenceController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   evaluate(
-    @Req() req: AuthedReq,
-    @Body() body: { key?: string; body?: string; version?: number },
+    @Req req: AuthedReq,
+    @Body body: { key?: string; body?: string; version?: number },
   ) {
     return this.promptIntel.evaluate({
       organizationId: req.translateAuth.organizationId,
@@ -99,8 +99,8 @@ export class PromptIntelligenceController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   securityScan(
-    @Req() req: AuthedReq,
-    @Body() body: { key?: string; body?: string; version?: number },
+    @Req req: AuthedReq,
+    @Body body: { key?: string; body?: string; version?: number },
   ) {
     return this.promptIntel.securityScan({
       organizationId: req.translateAuth.organizationId,

@@ -15,24 +15,24 @@ type PeriodInput = {
   to?: string;
 };
 
-@Injectable()
+@Injectable
 export class AiRuntimeAnalyticsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  engine() {
+  engine {
     return {
-      ...aiRuntimeAnalyticsCatalog(),
-      mode: aiRuntimeAnalyticsMode(),
+      ...aiRuntimeAnalyticsCatalog,
+      mode: aiRuntimeAnalyticsMode,
       spendSafety: {
         hardSpendCeilingsRequired: true,
         note:
-          'Analytics is report-only. Spend enforcement remains Cost Optimization (VL-211) + GPU ceilings (VL-205).',
+          'Analytics is report-only. Spend enforcement remains Cost Optimization + GPU ceilings.',
       },
     };
   }
 
   async overview(input: PeriodInput) {
-    this.assertEnabled();
+    this.assertEnabled;
     const { periodStart, periodEnd } = this.parsePeriod(input.from, input.to);
     const [latency, throughput, gpu, cache, requests, errors, cost, models, streaming] =
       await Promise.all([
@@ -47,8 +47,8 @@ export class AiRuntimeAnalyticsService {
         this.streaming(input),
       ]);
     return {
-      periodStart: periodStart.toISOString(),
-      periodEnd: periodEnd.toISOString(),
+      periodStart: periodStart.toISOString,
+      periodEnd: periodEnd.toISOString,
       latency: { samples: latency.samples, p50Ms: latency.p50Ms, p95Ms: latency.p95Ms },
       throughput: {
         routerDecisions: throughput.routerDecisions,
@@ -63,13 +63,13 @@ export class AiRuntimeAnalyticsService {
       cost: { ledgerUsd: cost.ledgerUsd, gpuHourlyUsd: cost.gpuHourlyUsd },
       models: { distinctSelected: models.distinctSelected, deployments: models.deployments },
       streaming: { sessions: streaming.sessions, chunks: streaming.chunks },
-      honesty: aiRuntimeAnalyticsCatalog().honesty,
-      note: 'AI Runtime Analytics overview (VL-212) — Inference Cloud aggregates only.',
+      honesty: aiRuntimeAnalyticsCatalog.honesty,
+      note: 'AI Runtime Analytics overview — Inference Cloud aggregates only.',
     };
   }
 
   async latency(input: PeriodInput) {
-    this.assertEnabled();
+    this.assertEnabled;
     const { periodStart, periodEnd } = this.parsePeriod(input.from, input.to);
     const scope = this.scope(input, periodStart, periodEnd);
 
@@ -120,7 +120,7 @@ export class AiRuntimeAnalyticsService {
     }
 
     for (const b of batches) {
-      const ms = Math.max(0, b.updatedAt.getTime() - b.createdAt.getTime());
+      const ms = Math.max(0, b.updatedAt.getTime - b.createdAt.getTime);
       samples.push(ms);
       const key = `batch.${b.kind}`;
       bySource[key] = bySource[key] ?? [];
@@ -129,8 +129,8 @@ export class AiRuntimeAnalyticsService {
 
     const sorted = [...samples].sort((a, b) => a - b);
     return {
-      periodStart: periodStart.toISOString(),
-      periodEnd: periodEnd.toISOString(),
+      periodStart: periodStart.toISOString,
+      periodEnd: periodEnd.toISOString,
       samples: sorted.length,
       p50Ms: percentile(sorted, 0.5),
       p95Ms: percentile(sorted, 0.95),
@@ -150,7 +150,7 @@ export class AiRuntimeAnalyticsService {
   }
 
   async throughput(input: PeriodInput) {
-    this.assertEnabled();
+    this.assertEnabled;
     const { periodStart, periodEnd } = this.parsePeriod(input.from, input.to);
     const scope = this.scope(input, periodStart, periodEnd);
 
@@ -174,13 +174,13 @@ export class AiRuntimeAnalyticsService {
 
     const hours = Math.max(
       1 / 60,
-      (periodEnd.getTime() - periodStart.getTime()) / (1000 * 60 * 60),
+      (periodEnd.getTime - periodStart.getTime) / (1000 * 60 * 60),
     );
     const total = routerDecisions + usageEvents + batchRuns + streamingSessions;
 
     return {
-      periodStart: periodStart.toISOString(),
-      periodEnd: periodEnd.toISOString(),
+      periodStart: periodStart.toISOString,
+      periodEnd: periodEnd.toISOString,
       routerDecisions,
       usageEvents,
       batchRuns,
@@ -192,8 +192,8 @@ export class AiRuntimeAnalyticsService {
   }
 
   async gpu(input: PeriodInput) {
-    this.assertEnabled();
-    const ceilings = gpuCeilings();
+    this.assertEnabled;
+    const ceilings = gpuCeilings;
     const allocations = await this.prisma.gpuAllocation.findMany({
       where: {
         organizationId: input.organizationId,
@@ -222,19 +222,19 @@ export class AiRuntimeAnalyticsService {
   }
 
   async cpu(_input: PeriodInput) {
-    this.assertEnabled();
-    const load = os.loadavg();
-    const cpus = os.cpus().length;
-    const usage = process.cpuUsage();
-    const mem = process.memoryUsage();
+    this.assertEnabled;
+    const load = os.loadavg;
+    const cpus = os.cpus.length;
+    const usage = process.cpuUsage;
+    const mem = process.memoryUsage;
     return {
       host: {
         cpuCount: cpus,
         load1: load[0] ?? 0,
         load5: load[1] ?? 0,
         load15: load[2] ?? 0,
-        freememMb: Math.round(os.freemem() / (1024 * 1024)),
-        totalmemMb: Math.round(os.totalmem() / (1024 * 1024)),
+        freememMb: Math.round(os.freemem / (1024 * 1024)),
+        totalmemMb: Math.round(os.totalmem / (1024 * 1024)),
       },
       process: {
         userMicros: usage.user,
@@ -248,7 +248,7 @@ export class AiRuntimeAnalyticsService {
   }
 
   async cache(input: PeriodInput) {
-    this.assertEnabled();
+    this.assertEnabled;
     const rows = await this.prisma.cacheEntry.findMany({
       where: {
         organizationId: input.organizationId,
@@ -279,12 +279,12 @@ export class AiRuntimeAnalyticsService {
         namespace,
         ...v,
       })),
-      note: 'Intelligent Cache (VL-210) hit/miss aggregates.',
+      note: 'Intelligent Cache hit/miss aggregates.',
     };
   }
 
   async requests(input: PeriodInput) {
-    this.assertEnabled();
+    this.assertEnabled;
     const { periodStart, periodEnd } = this.parsePeriod(input.from, input.to);
     const scope = this.scope(input, periodStart, periodEnd);
 
@@ -315,8 +315,8 @@ export class AiRuntimeAnalyticsService {
     ]);
 
     return {
-      periodStart: periodStart.toISOString(),
-      periodEnd: periodEnd.toISOString(),
+      periodStart: periodStart.toISOString,
+      periodEnd: periodEnd.toISOString,
       usageEvents: usage,
       routerDecisions: router,
       streamingSessions: streaming,
@@ -331,7 +331,7 @@ export class AiRuntimeAnalyticsService {
   }
 
   async errors(input: PeriodInput) {
-    this.assertEnabled();
+    this.assertEnabled;
     const { periodStart, periodEnd } = this.parsePeriod(input.from, input.to);
     const scope = this.scope(input, periodStart, periodEnd);
 
@@ -364,8 +364,8 @@ export class AiRuntimeAnalyticsService {
     ]);
 
     return {
-      periodStart: periodStart.toISOString(),
-      periodEnd: periodEnd.toISOString(),
+      periodStart: periodStart.toISOString,
+      periodEnd: periodEnd.toISOString,
       failedBatchRuns: failedBatch,
       failedStreamingSessions: failedStreaming,
       auditFailureLike: auditFails,
@@ -376,7 +376,7 @@ export class AiRuntimeAnalyticsService {
   }
 
   async cost(input: PeriodInput) {
-    this.assertEnabled();
+    this.assertEnabled;
     const { periodStart, periodEnd } = this.parsePeriod(input.from, input.to);
     const [ledger, byCategory, activeGpu] = await Promise.all([
       this.prisma.costSpendEvent.aggregate({
@@ -410,8 +410,8 @@ export class AiRuntimeAnalyticsService {
 
     const gpuHourlyUsd = activeGpu.reduce((s, a) => s + a.estimatedHourlyUsd, 0);
     return {
-      periodStart: periodStart.toISOString(),
-      periodEnd: periodEnd.toISOString(),
+      periodStart: periodStart.toISOString,
+      periodEnd: periodEnd.toISOString,
       ledgerUsd: ledger._sum.amountUsd ?? 0,
       events: ledger._count,
       byCategory: byCategory.map((c) => ({
@@ -420,13 +420,13 @@ export class AiRuntimeAnalyticsService {
         events: c._count,
       })),
       gpuHourlyUsd,
-      note: 'Cost ledger (VL-211) + GPU hourly estimates — report-only here; enforce on Cost Optimization.',
+      note: 'Cost ledger + GPU hourly estimates — report-only here; enforce on Cost Optimization.',
       honesty: { reportOnly: true, enforcesSpendCaps: false },
     };
   }
 
   async customers(input: PeriodInput) {
-    this.assertEnabled();
+    this.assertEnabled;
     const { periodStart, periodEnd } = this.parsePeriod(input.from, input.to);
     const [workspaces, activeWorkspaces, decisions] = await Promise.all([
       this.prisma.workspace.count({
@@ -451,8 +451,8 @@ export class AiRuntimeAnalyticsService {
     ]);
 
     return {
-      periodStart: periodStart.toISOString(),
-      periodEnd: periodEnd.toISOString(),
+      periodStart: periodStart.toISOString,
+      periodEnd: periodEnd.toISOString,
       organizationId: input.organizationId,
       workspaceCount: workspaces,
       activeWorkspacesInPeriod: activeWorkspaces.length,
@@ -463,7 +463,7 @@ export class AiRuntimeAnalyticsService {
   }
 
   async models(input: PeriodInput) {
-    this.assertEnabled();
+    this.assertEnabled;
     const { periodStart, periodEnd } = this.parsePeriod(input.from, input.to);
     const scope = this.scope(input, periodStart, periodEnd);
 
@@ -495,8 +495,8 @@ export class AiRuntimeAnalyticsService {
     ]);
 
     return {
-      periodStart: periodStart.toISOString(),
-      periodEnd: periodEnd.toISOString(),
+      periodStart: periodStart.toISOString,
+      periodEnd: periodEnd.toISOString,
       distinctSelected: byModel.filter((m) => m.selectedModel).length,
       bySelectedModel: byModel
         .map((m) => ({ model: m.selectedModel || '(none)', count: m._count }))
@@ -512,7 +512,7 @@ export class AiRuntimeAnalyticsService {
   }
 
   async streaming(input: PeriodInput) {
-    this.assertEnabled();
+    this.assertEnabled;
     const { periodStart, periodEnd } = this.parsePeriod(input.from, input.to);
     const scope = this.scope(input, periodStart, periodEnd);
 
@@ -532,18 +532,18 @@ export class AiRuntimeAnalyticsService {
     }
 
     return {
-      periodStart: periodStart.toISOString(),
-      periodEnd: periodEnd.toISOString(),
+      periodStart: periodStart.toISOString,
+      periodEnd: periodEnd.toISOString,
       sessions: sessions.length,
       chunks,
       byKind: Object.entries(byKind).map(([kind, count]) => ({ kind, count })),
       byStatus: Object.entries(byStatus).map(([status, count]) => ({ status, count })),
-      note: 'Streaming Runtime (VL-208) session aggregates — not WebSocket/video OS.',
+      note: 'Streaming Runtime session aggregates — not WebSocket/video OS.',
     };
   }
 
   async report(input: PeriodInput) {
-    this.assertEnabled();
+    this.assertEnabled;
     const [
       overview,
       latency,
@@ -585,15 +585,15 @@ export class AiRuntimeAnalyticsService {
       customers,
       models,
       streaming,
-      honesty: aiRuntimeAnalyticsCatalog().honesty,
-      note: 'Bundled Inference Cloud runtime report (VL-212) — not enterprise BI/PDF suite.',
+      honesty: aiRuntimeAnalyticsCatalog.honesty,
+      note: 'Bundled Inference Cloud runtime report — not enterprise BI/PDF suite.',
     };
   }
 
   async monitoring(input: PeriodInput) {
-    this.assertEnabled();
+    this.assertEnabled;
     const [engine, overview, errors, cost] = await Promise.all([
-      Promise.resolve(this.engine()),
+      Promise.resolve(this.engine),
       this.overview(input),
       this.errors(input),
       this.cost(input),
@@ -608,8 +608,8 @@ export class AiRuntimeAnalyticsService {
     };
   }
 
-  private assertEnabled() {
-    if (aiRuntimeAnalyticsMode() === 'disabled') {
+  private assertEnabled {
+    if (aiRuntimeAnalyticsMode === 'disabled') {
       throw new ApiException(
         'ai_runtime_analytics_disabled',
         'AI Runtime Analytics mode is disabled (LUGEMI_AI_RUNTIME_ANALYTICS_MODE=disabled).',
@@ -626,11 +626,11 @@ export class AiRuntimeAnalyticsService {
   }
 
   private parsePeriod(from?: string, to?: string) {
-    const periodEnd = to ? new Date(to) : new Date();
+    const periodEnd = to ? new Date(to) : new Date;
     const periodStart = from
       ? new Date(from)
-      : new Date(periodEnd.getTime() - 30 * 24 * 60 * 60 * 1000);
-    if (Number.isNaN(periodStart.getTime()) || Number.isNaN(periodEnd.getTime())) {
+      : new Date(periodEnd.getTime - 30 * 24 * 60 * 60 * 1000);
+    if (Number.isNaN(periodStart.getTime) || Number.isNaN(periodEnd.getTime)) {
       throw new ApiException(
         'validation_error',
         'from/to must be valid ISO timestamps',

@@ -1,8 +1,8 @@
 /**
- * Library Phase 208 → Knowledge Operating System (VL-341).
- * Knowledge Operating System (VL-341). Façade over knowledge-runtime + knowledge-fabric + knowledge-cloud / african-knowledge-graph. Federation/sync as catalog.
+ * Library Phase 208 → Knowledge Operating System.
+ * Knowledge Operating System. Façade over knowledge-runtime + knowledge-fabric + knowledge-cloud / african-knowledge-graph. Federation/sync as catalog.
  */
-export function knowledgeOperatingSystemEngineCatalog() {
+export function knowledgeOperatingSystemEngineCatalog {
   return {
     product: 'Lugemi Knowledge Operating System',
     unifyingOrchestrationLayer: true,
@@ -11,9 +11,9 @@ export function knowledgeOperatingSystemEngineCatalog() {
     notKubernetes: true,
     literalOsKernel: false,
     capabilities: [
-      { id: 'routing', name: 'Knowledge Routing Catalog', status: 'shipped', notes: 'VL-341 routed capability — not a new engine.' },
-      { id: 'federation', name: 'Knowledge Federation Catalog', status: 'shipped', notes: 'VL-341 routed capability — not a new engine.' },
-      { id: 'sync', name: 'Knowledge Sync Catalog', status: 'shipped', notes: 'VL-341 routed capability — not a new engine.' }
+      { id: 'routing', name: 'Knowledge Routing Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'federation', name: 'Knowledge Federation Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'sync', name: 'Knowledge Sync Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' }
     ],
     routes: [
       {
@@ -72,9 +72,9 @@ export function knowledgeOperatingSystemEngineCatalog() {
       notKubernetes: true,
       literalOsKernel: false,
       enterpriseEngineeringSystemOs: false,
-      note: 'Knowledge Operating System (VL-341). Façade over knowledge-runtime + knowledge-fabric + knowledge-cloud / african-knowledge-graph. Federation/sync as catalog.',
+      note: 'Knowledge Operating System. Façade over knowledge-runtime + knowledge-fabric + knowledge-cloud / african-knowledge-graph. Federation/sync as catalog.',
     },
     docs: '/docs/KNOWLEDGE_OPERATING_SYSTEM.md',
-    note: 'Knowledge Operating System (VL-341). Façade over knowledge-runtime + knowledge-fabric + knowledge-cloud / african-knowledge-graph. Federation/sync as catalog.',
+    note: 'Knowledge Operating System. Façade over knowledge-runtime + knowledge-fabric + knowledge-cloud / african-knowledge-graph. Federation/sync as catalog.',
   };
 }

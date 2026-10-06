@@ -9,7 +9,7 @@ import {
   languageProductCatalog,
 } from './language-products.catalog';
 
-@Injectable()
+@Injectable
 export class LanguageCloudService {
   constructor(
     private readonly prisma: PrismaService,
@@ -18,10 +18,10 @@ export class LanguageCloudService {
     private readonly evalService: EvalService,
   ) {}
 
-  products() {
+  products {
     return {
-      products: languageProductCatalog(),
-      architecture: languageArchitectureNotes(),
+      products: languageProductCatalog,
+      architecture: languageArchitectureNotes,
       docs: '/docs/LANGUAGE_CLOUD.md',
     };
   }
@@ -29,9 +29,9 @@ export class LanguageCloudService {
   async overview(session: SessionContext) {
     const [langs, localePacks, coverage, glossaryCount, tmCount, reviewCount] =
       await Promise.all([
-        this.languages.list(),
-        this.locales.list(),
-        this.evalService.coverageMatrix(),
+        this.languages.list,
+        this.locales.list,
+        this.evalService.coverageMatrix,
         this.prisma.glossaryTerm.count({
           where: { organizationId: session.organizationId },
         }),
@@ -68,8 +68,8 @@ export class LanguageCloudService {
         focusPairs: coverage.focusPairs?.length ?? 0,
         disclaimer: coverage.disclaimer,
       },
-      products: languageProductCatalog(),
-      architecture: languageArchitectureNotes(),
+      products: languageProductCatalog,
+      architecture: languageArchitectureNotes,
       deferred: {
         dialectDetection: false,
         accentDetection: false,

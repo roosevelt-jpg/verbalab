@@ -35,14 +35,14 @@ export class DocumentsController {
   @UseGuards(TranslateAuthGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: documentMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: documentMaxBytes },
     }),
   )
   async translate(
-    @Req() req: Request & { translateAuth: TranslateAuthContext },
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { source?: string; target?: string; webhookUrl?: string },
+    @Req req: Request & { translateAuth: TranslateAuthContext },
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { source?: string; target?: string; webhookUrl?: string },
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
@@ -79,9 +79,9 @@ export class DocumentsController {
   @Get(':id/content')
   @UseGuards(TranslateAuthGuard)
   async content(
-    @Req() req: Request & { translateAuth: TranslateAuthContext },
+    @Req req: Request & { translateAuth: TranslateAuthContext },
     @Param('id') id: string,
-    @Res() res: Response,
+    @Res res: Response,
   ) {
     const doc = await this.documents.getOwned(req.translateAuth.organizationId, id);
     res.setHeader('Content-Type', doc.mimeType);
@@ -93,7 +93,7 @@ export class DocumentsController {
   @Get(':id')
   @UseGuards(TranslateAuthGuard)
   @Header('Cache-Control', 'no-store')
-  async meta(@Req() req: Request & { translateAuth: TranslateAuthContext }, @Param('id') id: string) {
+  async meta(@Req req: Request & { translateAuth: TranslateAuthContext }, @Param('id') id: string) {
     const doc = await this.documents.getOwned(req.translateAuth.organizationId, id);
     return {
       id: doc.id,

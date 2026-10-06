@@ -27,18 +27,18 @@ export class AudioIntelligenceController {
   constructor(private readonly audioIntel: AudioIntelligenceService) {}
 
   @Get('engine')
-  engine() {
-    return this.audioIntel.engine();
+  engine {
+    return this.audioIntel.engine;
   }
 
   @Get('echo')
-  echo() {
-    return this.audioIntel.echoStatus();
+  echo {
+    return this.audioIntel.echoStatus;
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: Request & { translateAuth: TranslateAuthContext }) {
+  analytics(@Req req: Request & { translateAuth: TranslateAuthContext }) {
     return this.audioIntel.analytics(req.translateAuth.organizationId);
   }
 
@@ -47,17 +47,17 @@ export class AudioIntelligenceController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   analyze(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @UploadedFile() file: Express.Multer.File | undefined,
+    @UploadedFile file: Express.Multer.File | undefined,
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
@@ -77,17 +77,17 @@ export class AudioIntelligenceController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   silence(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @UploadedFile() file: Express.Multer.File | undefined,
+    @UploadedFile file: Express.Multer.File | undefined,
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
@@ -107,17 +107,17 @@ export class AudioIntelligenceController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   enhance(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @UploadedFile() file: Express.Multer.File | undefined,
+    @UploadedFile file: Express.Multer.File | undefined,
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
@@ -137,18 +137,18 @@ export class AudioIntelligenceController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   upscale(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { targetRate?: string },
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { targetRate?: string },
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
@@ -169,17 +169,17 @@ export class AudioIntelligenceController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   isolate(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @UploadedFile() file: Express.Multer.File | undefined,
+    @UploadedFile file: Express.Multer.File | undefined,
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
@@ -198,18 +198,18 @@ export class AudioIntelligenceController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   async analyzeStream(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Res() res: Response,
-    @UploadedFile() file: Express.Multer.File | undefined,
+    @Res res: Response,
+    @UploadedFile file: Express.Multer.File | undefined,
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
@@ -218,7 +218,7 @@ export class AudioIntelligenceController {
     res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders?.();
+    res.flushHeaders?.;
 
     const stream = this.audioIntel.streamAnalyze({
       file,
@@ -233,6 +233,6 @@ export class AudioIntelligenceController {
       res.write(`event: ${chunk.event}\ndata: ${JSON.stringify(chunk)}\n\n`);
       if (chunk.event === 'error' || chunk.event === 'done') break;
     }
-    res.end();
+    res.end;
   }
 }

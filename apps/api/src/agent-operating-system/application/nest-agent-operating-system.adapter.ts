@@ -6,16 +6,16 @@ import {
   AgentOperatingSystemProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestAgentOperatingSystemCatalogAdapter implements AgentOperatingSystemCatalogPort {
   constructor(private readonly service: AgentOperatingSystemService) {}
 
-  engine(): AgentOperatingSystemEngineBundle {
-    return this.service.engine();
+  engine: AgentOperatingSystemEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): AgentOperatingSystemProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: AgentOperatingSystemProductRow[] {
+    const bundle = this.engine as {
       products?: AgentOperatingSystemProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestAgentOperatingSystemCatalogAdapter implements AgentOperatingSys
         status: 'shipped',
         api: 'GET /v1/agent-operating-system/engine',
         console: '/agent-operating-system',
-        notes: 'VL-339 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

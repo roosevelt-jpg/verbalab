@@ -1,4 +1,4 @@
-/** Application ports for Research Cloud (VL-271). */
+/** Application ports for Research Cloud. */
 
 export type ResearchCloudProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type ResearchCloudEngineBundle = ReturnType<
 >;
 
 export interface ResearchCloudCatalogPort {
-  engine(): ResearchCloudEngineBundle;
-  listProducts(): ResearchCloudProductRow[];
+  engine: ResearchCloudEngineBundle;
+  listProducts: ResearchCloudProductRow[];
 }
 
 export const RESEARCH_CLOUD_CATALOG_PORT = Symbol('RESEARCH_CLOUD_CATALOG_PORT');

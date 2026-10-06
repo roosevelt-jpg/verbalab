@@ -7,15 +7,15 @@ import {
   KnowledgeProductsBundle,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestKnowledgeCatalogAdapter implements KnowledgeCatalogPort {
   constructor(private readonly knowledgeCloud: KnowledgeCloudService) {}
 
-  products(): KnowledgeProductsBundle {
-    return this.knowledgeCloud.products();
+  products: KnowledgeProductsBundle {
+    return this.knowledgeCloud.products;
   }
 
-  listProducts(): KnowledgeProductRow[] {
-    return knowledgeProductCatalog();
+  listProducts: KnowledgeProductRow[] {
+    return knowledgeProductCatalog;
   }
 }

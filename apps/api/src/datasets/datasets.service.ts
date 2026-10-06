@@ -6,7 +6,7 @@ import { AuditService } from '../audit/audit.service';
 import { ApiException } from '../common/errors/api-exception';
 import { datasetMaxBytes, isDatasetLicenseTag } from './datasets.types';
 
-@Injectable()
+@Injectable
 export class DatasetsService {
   constructor(
     private readonly prisma: PrismaService,
@@ -129,9 +129,9 @@ export class DatasetsService {
     ip?: string;
   }) {
     this.assertOwnerOrAdmin(input.role);
-    const title = input.title.trim();
-    const licenseTag = input.licenseTag.trim();
-    const consentNotes = input.consentNotes.trim();
+    const title = input.title.trim;
+    const licenseTag = input.licenseTag.trim;
+    const consentNotes = input.consentNotes.trim;
     if (!title) {
       throw new ApiException('validation_error', 'title is required', HttpStatus.BAD_REQUEST);
     }
@@ -159,9 +159,9 @@ export class DatasetsService {
         licenseTag,
         consentNotes,
         containsPii: this.parseBool(input.containsPii),
-        sourceLang: input.sourceLang?.trim() || null,
-        targetLang: input.targetLang?.trim() || null,
-        partnerOrgName: input.partnerOrgName?.trim() || null,
+        sourceLang: input.sourceLang?.trim || null,
+        targetLang: input.targetLang?.trim || null,
+        partnerOrgName: input.partnerOrgName?.trim || null,
         status: 'active',
         createdBy: input.userId,
       },
@@ -202,7 +202,7 @@ export class DatasetsService {
       throw new ApiException('not_found', 'Dataset asset not found', HttpStatus.NOT_FOUND);
     }
 
-    if (input.licenseTag != null && !isDatasetLicenseTag(input.licenseTag.trim())) {
+    if (input.licenseTag != null && !isDatasetLicenseTag(input.licenseTag.trim)) {
       throw new ApiException(
         'validation_error',
         'licenseTag must be a known license tag',
@@ -220,18 +220,18 @@ export class DatasetsService {
     await this.prisma.datasetAsset.update({
       where: { id: existing.id },
       data: {
-        ...(input.title != null ? { title: input.title.trim() } : {}),
-        ...(input.licenseTag != null ? { licenseTag: input.licenseTag.trim() } : {}),
-        ...(input.consentNotes != null ? { consentNotes: input.consentNotes.trim() } : {}),
+        ...(input.title != null ? { title: input.title.trim } : {}),
+        ...(input.licenseTag != null ? { licenseTag: input.licenseTag.trim } : {}),
+        ...(input.consentNotes != null ? { consentNotes: input.consentNotes.trim } : {}),
         ...(input.containsPii != null ? { containsPii: input.containsPii } : {}),
         ...(input.sourceLang !== undefined
-          ? { sourceLang: input.sourceLang?.trim() || null }
+          ? { sourceLang: input.sourceLang?.trim || null }
           : {}),
         ...(input.targetLang !== undefined
-          ? { targetLang: input.targetLang?.trim() || null }
+          ? { targetLang: input.targetLang?.trim || null }
           : {}),
         ...(input.partnerOrgName !== undefined
-          ? { partnerOrgName: input.partnerOrgName?.trim() || null }
+          ? { partnerOrgName: input.partnerOrgName?.trim || null }
           : {}),
         ...(input.status != null ? { status: input.status } : {}),
       },
@@ -366,7 +366,7 @@ export class DatasetsService {
     });
     const version = (latest?.version ?? 0) + 1;
     const safeName = input.file.originalname.replace(/[^\w.\-]+/g, '_').slice(0, 180);
-    const storageKey = `datasets/${input.asset.organizationId}/${input.asset.id}/v${version}-${randomUUID()}-${safeName}`;
+    const storageKey = `datasets/${input.asset.organizationId}/${input.asset.id}/v${version}-${randomUUID}-${safeName}`;
     const checksum = createHash('sha256').update(input.file.buffer).digest('hex');
 
     await this.storage.writeBuffer(storageKey, input.file.buffer);
@@ -379,7 +379,7 @@ export class DatasetsService {
         mimeType: input.file.mimetype || 'application/octet-stream',
         sizeBytes: input.file.size,
         checksumSha256: checksum,
-        note: input.note?.trim() || null,
+        note: input.note?.trim || null,
         status: 'ready',
       },
     });
@@ -403,10 +403,10 @@ export class DatasetsService {
     if (!file?.buffer?.length) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
     }
-    if (file.size > datasetMaxBytes()) {
+    if (file.size > datasetMaxBytes) {
       throw new ApiException(
         'validation_error',
-        `file exceeds DATASET_MAX_BYTES (${datasetMaxBytes()})`,
+        `file exceeds DATASET_MAX_BYTES (${datasetMaxBytes})`,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -415,7 +415,7 @@ export class DatasetsService {
   private parseBool(value?: boolean | string) {
     if (typeof value === 'boolean') return value;
     if (typeof value === 'string') {
-      return value === '1' || value.toLowerCase() === 'true';
+      return value === '1' || value.toLowerCase === 'true';
     }
     return false;
   }

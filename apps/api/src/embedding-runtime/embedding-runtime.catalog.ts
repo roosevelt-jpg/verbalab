@@ -1,17 +1,17 @@
 /**
- * Library Phase 197 → Embedding Runtime (VL-330).
- * Embedding Runtime (VL-330). Thin layer over embeddings / embedding-cloud — routes vector encode/batch; does not reimplement embedding models.
+ * Library Phase 197 → Embedding Runtime.
+ * Embedding Runtime. Thin layer over embeddings / embedding-cloud — routes vector encode/batch; does not reimplement embedding models.
  */
-export function embeddingRuntimeEngineCatalog() {
+export function embeddingRuntimeEngineCatalog {
   return {
     product: 'Lugemi Embedding Runtime',
     thinExecutionLayer: true,
     duplicatesProductLogic: false,
     capabilities: [
-      { id: 'encode', name: 'Encode Routing', status: 'shipped', notes: 'VL-330 routing capability — not a new engine.' },
-      { id: 'batch', name: 'Batch Embedding Routing', status: 'shipped', notes: 'VL-330 routing capability — not a new engine.' },
-      { id: 'multilingual', name: 'Multilingual Embedding Routing', status: 'shipped', notes: 'VL-330 routing capability — not a new engine.' },
-      { id: 'retrieval', name: 'Retrieval Embedding Routing', status: 'shipped', notes: 'VL-330 routing capability — not a new engine.' }
+      { id: 'encode', name: 'Encode Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
+      { id: 'batch', name: 'Batch Embedding Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
+      { id: 'multilingual', name: 'Multilingual Embedding Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
+      { id: 'retrieval', name: 'Retrieval Embedding Routing', status: 'shipped', notes: ' routing capability — not a new engine.' }
     ],
     routes: [
       {
@@ -50,9 +50,9 @@ export function embeddingRuntimeEngineCatalog() {
       duplicatesProductLogic: false,
       managesOrgsPoliciesBilling: false,
       serviceMeshOs: false,
-      note: 'Embedding Runtime (VL-330). Thin layer over embeddings / embedding-cloud — routes vector encode/batch; does not reimplement embedding models.',
+      note: 'Embedding Runtime. Thin layer over embeddings / embedding-cloud — routes vector encode/batch; does not reimplement embedding models.',
     },
     docs: '/docs/EMBEDDING_RUNTIME.md',
-    note: 'Embedding Runtime (VL-330). Thin layer over embeddings / embedding-cloud — routes vector encode/batch; does not reimplement embedding models.',
+    note: 'Embedding Runtime. Thin layer over embeddings / embedding-cloud — routes vector encode/batch; does not reimplement embedding models.',
   };
 }

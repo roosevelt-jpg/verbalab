@@ -32,7 +32,7 @@ type ModelSnapshot = {
   ratingCount: number;
 };
 
-@Injectable()
+@Injectable
 export class ModelMarketplaceService {
   constructor(
     private readonly prisma: PrismaService,
@@ -42,8 +42,8 @@ export class ModelMarketplaceService {
     private readonly fabricGate: FabricPolicyGate,
   ) {}
 
-  engine() {
-    return modelMarketplaceEngineCatalog();
+  engine {
+    return modelMarketplaceEngineCatalog;
   }
 
   private assertOwnerOrAdmin(role: string) {
@@ -64,7 +64,7 @@ export class ModelMarketplaceService {
   }
 
   private parseCategory(raw?: string): ModelMarketplaceCategory {
-    const value = (raw ?? 'commercial').trim().toLowerCase();
+    const value = (raw ?? 'commercial').trim.toLowerCase;
     if (!(MODEL_MARKETPLACE_CATEGORIES as readonly string[]).includes(value)) {
       throw new ApiException(
         'validation_error',
@@ -76,7 +76,7 @@ export class ModelMarketplaceService {
   }
 
   private parseLicense(raw?: string): string {
-    const value = (raw ?? 'commercial').trim().toLowerCase();
+    const value = (raw ?? 'commercial').trim.toLowerCase;
     if (!(MODEL_LICENSE_TYPES as readonly string[]).includes(value)) {
       throw new ApiException(
         'validation_error',
@@ -128,8 +128,8 @@ export class ModelMarketplaceService {
       publisherOrgId: row.publisherOrgId,
       publisherWorkspaceId: row.publisherWorkspaceId,
       publisherName: row.publisherOrg?.name ?? null,
-      createdAt: row.createdAt.toISOString(),
-      updatedAt: row.updatedAt.toISOString(),
+      createdAt: row.createdAt.toISOString,
+      updatedAt: row.updatedAt.toISOString,
     };
   }
 
@@ -175,7 +175,7 @@ export class ModelMarketplaceService {
       installs: rows.map((r) => ({
         id: r.id,
         listingId: r.listingId,
-        installedAt: r.installedAt.toISOString(),
+        installedAt: r.installedAt.toISOString,
         listing: this.serialize(r.listing),
       })),
     };
@@ -198,7 +198,7 @@ export class ModelMarketplaceService {
         applicationFeeCents: r.applicationFeeCents,
         currency: r.currency,
         status: r.status,
-        createdAt: r.createdAt.toISOString(),
+        createdAt: r.createdAt.toISOString,
       })),
       honesty: {
         platformFeeBps: PLATFORM_FEE_BPS,
@@ -206,7 +206,7 @@ export class ModelMarketplaceService {
         storesRawCardData: false,
         creatorPayoutMathVerifiedLive: false,
       },
-      note: 'Recorded receipts only. Creator Economy (VL-258) expands payout math — hand-check before live creators.',
+      note: 'Recorded receipts only. Creator Economy expands payout math — hand-check before live creators.',
     };
   }
 
@@ -237,31 +237,31 @@ export class ModelMarketplaceService {
       permissions: ['marketplace.publish'],
     });
 
-    const slug = (input.modelSlug ?? '').trim();
+    const slug = (input.modelSlug ?? '').trim;
     if (!slug) {
       throw new ApiException('validation_error', 'modelSlug is required', HttpStatus.BAD_REQUEST);
     }
 
-    const cards = await this.registry.cards();
+    const cards = await this.registry.cards;
     const card = cards.cards.find((c) => c.slug === slug || c.id === slug);
     if (!card) {
       throw new ApiException(
         'not_found',
-        `Model slug "${slug}" not found in Model Registry / VL-110 cards`,
+        `Model slug "${slug}" not found in Model Registry / cards`,
         HttpStatus.NOT_FOUND,
       );
     }
 
     const category = this.parseCategory(input.category);
     const licenseType = this.parseLicense(input.licenseType);
-    const title = (input.title ?? card.displayName).trim().slice(0, 120);
+    const title = (input.title ?? card.displayName).trim.slice(0, 120);
     if (!title) {
       throw new ApiException('validation_error', 'title is required', HttpStatus.BAD_REQUEST);
     }
 
     const priceCents = Math.max(0, Math.floor(Number(input.priceCents ?? 0) || 0));
-    const currency = (input.currency ?? 'usd').trim().toLowerCase().slice(0, 8) || 'usd';
-    const modelVersion = (input.modelVersion ?? 'v1').trim().slice(0, 64) || 'v1';
+    const currency = (input.currency ?? 'usd').trim.toLowerCase.slice(0, 8) || 'usd';
+    const modelVersion = (input.modelVersion ?? 'v1').trim.slice(0, 64) || 'v1';
 
     const snapshot: ModelSnapshot = {
       modelSlug: card.slug,
@@ -285,7 +285,7 @@ export class ModelMarketplaceService {
         kind: LISTING_KIND,
         title,
         description:
-          input.description?.trim().slice(0, 500) ||
+          input.description?.trim.slice(0, 500) ||
           card.notes ||
           `${card.displayName} marketplace listing`,
         status: 'published',
@@ -314,7 +314,7 @@ export class ModelMarketplaceService {
 
     return {
       listing: this.serialize(listing),
-      honesty: this.engine().honesty,
+      honesty: this.engine.honesty,
       note:
         'Model listing published as a license SKU over registry metadata. Install grants entitlement — not weight hosting.',
     };
@@ -356,7 +356,7 @@ export class ModelMarketplaceService {
     const snap = this.parseSnapshot(listing.snapshot);
     const next: ModelSnapshot = {
       ...snap,
-      modelVersion: (input.modelVersion ?? snap.modelVersion).trim().slice(0, 64) || snap.modelVersion,
+      modelVersion: (input.modelVersion ?? snap.modelVersion).trim.slice(0, 64) || snap.modelVersion,
       verified: true,
       weightHosted: false,
     };
@@ -365,7 +365,7 @@ export class ModelMarketplaceService {
       where: { id: listing.id },
       data: {
         snapshot: next as unknown as Prisma.InputJsonValue,
-        description: input.description?.trim().slice(0, 500) ?? listing.description,
+        description: input.description?.trim.slice(0, 500) ?? listing.description,
         status: 'published',
       },
       include: { publisherOrg: { select: { name: true } } },
@@ -495,7 +495,7 @@ export class ModelMarketplaceService {
         listingId: listing.id,
         modelSlug: snap.modelSlug,
         licenseType: snap.licenseType,
-        installedAt: install.installedAt.toISOString(),
+        installedAt: install.installedAt.toISOString,
       },
       entitlement: {
         workspaceId: input.workspaceId,
@@ -505,7 +505,7 @@ export class ModelMarketplaceService {
         note: 'License entitlement only — inference still uses existing gateway/model serving paths.',
       },
       sale,
-      honesty: this.engine().honesty,
+      honesty: this.engine.honesty,
       note: 'Installed model license entitlement. Not a weight download or Hugging Face clone.',
     };
   }
@@ -591,8 +591,8 @@ export class ModelMarketplaceService {
       listingId: listing.id,
       organizationId: input.organizationId,
       rating,
-      body: input.body?.trim().slice(0, 1000) || undefined,
-      createdAt: new Date().toISOString(),
+      body: input.body?.trim.slice(0, 1000) || undefined,
+      createdAt: new Date.toISOString,
     };
 
     if (existing) {
@@ -700,19 +700,19 @@ export class ModelMarketplaceService {
       installs,
       sales,
       reviews,
-      honesty: this.engine().honesty,
-      note: 'Model marketplace aggregates. Payout depth deferred to Creator Economy (VL-258).',
+      honesty: this.engine.honesty,
+      note: 'Model marketplace aggregates. Payout depth deferred to Creator Economy.',
     };
   }
 
-  monitoring() {
-    const engine = this.engine();
+  monitoring {
+    const engine = this.engine;
     return {
       mode: 'model-marketplace',
       products: engine.capabilities.map((c) => ({ id: c.id, status: c.status })),
       honesty: engine.honesty,
       safety: engine.safety,
-      note: 'Model Marketplace monitoring snapshot (VL-251).',
+      note: 'Model Marketplace monitoring snapshot.',
     };
   }
 }

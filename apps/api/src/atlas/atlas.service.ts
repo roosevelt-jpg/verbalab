@@ -8,15 +8,15 @@ import {
   atlasHonesty,
 } from './atlas.catalog';
 
-@Injectable()
+@Injectable
 export class AtlasService {
   constructor(private readonly usage: UsageService) {}
 
-  engine() {
+  engine {
     return {
-      ...atlasCatalog(),
-      capabilities: atlasCapabilities(),
-      architecture: atlasArchitectureNotes(),
+      ...atlasCatalog,
+      capabilities: atlasCapabilities,
+      architecture: atlasArchitectureNotes,
       safety: {
         noFakeTrainedWeights: true,
         scaffoldNotModel: true,
@@ -26,10 +26,10 @@ export class AtlasService {
     };
   }
 
-  capabilities() {
+  capabilities {
     return {
-      capabilities: atlasCapabilities(),
-      honesty: atlasHonesty(),
+      capabilities: atlasCapabilities,
+      honesty: atlasHonesty,
       docs: '/docs/ATLAS.md',
     };
   }
@@ -47,7 +47,7 @@ export class AtlasService {
         chat: usageSummary.chat,
         embeddings: usageSummary.embeddings,
       },
-      engine: this.engine(),
+      engine: this.engine,
       deferred: {
         codingSpecialist: true,
         mathSpecialist: true,
@@ -74,20 +74,20 @@ export class AtlasService {
       },
       docs: '/docs/ATLAS.md',
       note:
-        'Atlas scaffold (VL-225). Capability map + MLOps handoffs — not trained competitive weights.',
+        'Atlas scaffold. Capability map + MLOps handoffs — not trained competitive weights.',
     };
   }
 
-  monitoring() {
+  monitoring {
     return {
       mode: 'scaffold',
-      capabilities: atlasCapabilities().map((c) => ({
+      capabilities: atlasCapabilities.map((c) => ({
         id: c.id,
         status: c.status,
       })),
-      honesty: atlasHonesty(),
+      honesty: atlasHonesty,
       note:
-        'Atlas monitoring (VL-225). Scaffold shipped; trained weights and domain specialists deferred.',
+        'Atlas monitoring. Scaffold shipped; trained weights and domain specialists deferred.',
     };
   }
 }

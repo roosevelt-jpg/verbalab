@@ -30,14 +30,14 @@ type Engine = {
   };
 };
 
-export function PromptMarketplaceClient() {
-  const { getToken, isLoaded } = useAuth();
+export function PromptMarketplaceClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [listings, setListings] = useState<Listing[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, list] = await Promise.all([
       apiFetch<Engine>('/v1/prompt-marketplace/engine', { token }),
@@ -47,9 +47,9 @@ export function PromptMarketplaceClient() {
     setListings(list.listings);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
   return (

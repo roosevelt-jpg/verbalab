@@ -6,18 +6,18 @@ export class AiEngineeringStandardsController {
   constructor(private readonly service: AiEngineeringStandardsService) {}
 
   @Get('engine')
-  engine() {
-    return this.service.engine();
+  engine {
+    return this.service.engine;
   }
 
   @Get('products')
-  products() {
-    return this.service.engine();
+  products {
+    return this.service.engine;
   }
 
   @Get('monitoring')
-  monitoring() {
-    return this.service.monitoring();
+  monitoring {
+    return this.service.monitoring;
   }
 
   @Get('routes')
@@ -41,12 +41,12 @@ export class AiEngineeringStandardsController {
   }
 
   @Get('checks')
-  checks() {
-    return this.service.checks();
+  checks {
+    return this.service.checks;
   }
 
   @Get('check/list')
-  checkList() {
-    return this.service.checkList();
+  checkList {
+    return this.service.checkList;
   }
 }

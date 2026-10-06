@@ -1,12 +1,12 @@
-/** Reference-based MT metrics for the VL-100 harness (not heuristic QE). */
+/** Reference-based MT metrics for the harness (not heuristic QE). */
 
 export function normalizeForEval(text: string): string {
   return text
     .normalize('NFC')
-    .toLowerCase()
+    .toLowerCase
     .replace(/[^\p{L}\p{N}\s]/gu, ' ')
     .replace(/\s+/g, ' ')
-    .trim();
+    .trim;
 }
 
 /** Levenshtein distance on Unicode code points. */

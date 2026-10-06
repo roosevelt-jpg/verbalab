@@ -1,4 +1,4 @@
-/** Application ports for Trust Cloud (VL-292). */
+/** Application ports for Trust Cloud. */
 
 export type TrustCloudProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type TrustCloudEngineBundle = ReturnType<
 >;
 
 export interface TrustCloudCatalogPort {
-  engine(): TrustCloudEngineBundle;
-  listProducts(): TrustCloudProductRow[];
+  engine: TrustCloudEngineBundle;
+  listProducts: TrustCloudProductRow[];
 }
 
 export const TRUST_CLOUD_CATALOG_PORT = Symbol('TRUST_CLOUD_CATALOG_PORT');

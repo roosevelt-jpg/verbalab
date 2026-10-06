@@ -17,8 +17,8 @@ export class GetReleaseEngineeringEngineHandler
     private readonly catalog: ReleaseEngineeringCatalogPort,
   ) {}
 
-  execute(): Promise<ReleaseEngineeringEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<ReleaseEngineeringEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListReleaseEngineeringProductsHandler
     private readonly catalog: ReleaseEngineeringCatalogPort,
   ) {}
 
-  execute(): Promise<ReleaseEngineeringProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<ReleaseEngineeringProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

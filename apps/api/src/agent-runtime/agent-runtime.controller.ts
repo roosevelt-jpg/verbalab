@@ -25,18 +25,18 @@ export class AgentRuntimeController {
   constructor(private readonly runtime: AgentRuntimeService) {}
 
   @Get('engine')
-  engine() {
-    return this.runtime.engine();
+  engine {
+    return this.runtime.engine;
   }
 
   @Get('permissions')
-  permissions() {
-    return this.runtime.permissions();
+  permissions {
+    return this.runtime.permissions;
   }
 
   @Get('agents')
   @UseGuards(TranslateAuthGuard)
-  listAgents(@Req() req: AuthedReq) {
+  listAgents(@Req req: AuthedReq) {
     return this.runtime.listAgents({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -45,7 +45,7 @@ export class AgentRuntimeController {
 
   @Get('agents/:id')
   @UseGuards(TranslateAuthGuard)
-  getAgent(@Req() req: AuthedReq, @Param('id') id: string) {
+  getAgent(@Req req: AuthedReq, @Param('id') id: string) {
     return this.runtime.getAgent({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -57,8 +57,8 @@ export class AgentRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   createAgent(
-    @Req() req: AuthedReq,
-    @Body() body: { name?: string; permissions?: string[]; goal?: string },
+    @Req req: AuthedReq,
+    @Body body: { name?: string; permissions?: string[]; goal?: string },
   ) {
     return this.runtime.createAgent({
       organizationId: req.translateAuth.organizationId,
@@ -73,9 +73,9 @@ export class AgentRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   lifecycle(
-    @Req() req: AuthedReq,
+    @Req req: AuthedReq,
     @Param('id') id: string,
-    @Body() body: { status?: string },
+    @Body body: { status?: string },
   ) {
     return this.runtime.lifecycle({
       organizationId: req.translateAuth.organizationId,
@@ -91,8 +91,8 @@ export class AgentRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   run(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       agentId?: string;
       goal?: string;
@@ -113,8 +113,8 @@ export class AgentRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   collaborate(
-    @Req() req: AuthedReq,
-    @Body() body: { agentIds?: string[]; topic?: string; message?: string },
+    @Req req: AuthedReq,
+    @Body body: { agentIds?: string[]; topic?: string; message?: string },
   ) {
     return this.runtime.collaborate({
       organizationId: req.translateAuth.organizationId,
@@ -129,8 +129,8 @@ export class AgentRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   schedule(
-    @Req() req: AuthedReq,
-    @Body() body: { agentId?: string; goal?: string; runAt?: string },
+    @Req req: AuthedReq,
+    @Body body: { agentId?: string; goal?: string; runAt?: string },
   ) {
     return this.runtime.schedule({
       organizationId: req.translateAuth.organizationId,
@@ -145,8 +145,8 @@ export class AgentRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   memory(
-    @Req() req: AuthedReq,
-    @Body() body: { agentId?: string; content?: string; kind?: string },
+    @Req req: AuthedReq,
+    @Body body: { agentId?: string; content?: string; kind?: string },
   ) {
     return this.runtime.putMemory({
       organizationId: req.translateAuth.organizationId,
@@ -159,7 +159,7 @@ export class AgentRuntimeController {
 
   @Get('marketplace')
   @UseGuards(TranslateAuthGuard)
-  marketplace(@Req() req: AuthedReq) {
+  marketplace(@Req req: AuthedReq) {
     return this.runtime.marketplace({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -168,7 +168,7 @@ export class AgentRuntimeController {
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.runtime.analytics({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -177,7 +177,7 @@ export class AgentRuntimeController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req() req: AuthedReq) {
+  monitoring(@Req req: AuthedReq) {
     return this.runtime.monitoring({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,

@@ -6,16 +6,16 @@ import {
   PlatformEngineeringAnalyticsProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestPlatformEngineeringAnalyticsCatalogAdapter implements PlatformEngineeringAnalyticsCatalogPort {
   constructor(private readonly service: PlatformEngineeringAnalyticsService) {}
 
-  engine(): PlatformEngineeringAnalyticsEngineBundle {
-    return this.service.engine();
+  engine: PlatformEngineeringAnalyticsEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): PlatformEngineeringAnalyticsProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: PlatformEngineeringAnalyticsProductRow[] {
+    const bundle = this.engine as {
       products?: PlatformEngineeringAnalyticsProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestPlatformEngineeringAnalyticsCatalogAdapter implements PlatformE
         status: 'shipped',
         api: 'GET /v1/platform-engineering-analytics/engine',
         console: '/platform-engineering-analytics',
-        notes: 'VL-312 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

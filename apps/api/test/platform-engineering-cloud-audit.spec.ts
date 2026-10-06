@@ -60,7 +60,7 @@ const SHIPPED_PRODUCT_IDS = [
 function walkTsFiles(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory()) {
+    if (name.isDirectory) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       walkTsFiles(p, out);
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -72,23 +72,23 @@ function walkTsFiles(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-describe('Platform Engineering Cloud Production Audit (VL-313)', () => {
+describe('Platform Engineering Cloud Production Audit',  => {
   let app: INestApplication<App>;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
   }, 120_000);
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('ships audit ADR and report pack', () => {
+  it('ships audit ADR and report pack',  => {
     expect(existsSync(join(root, 'docs/adr/0215-platform-engineering-cloud-production-audit.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/CLOUD_BLUEPRINT.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/PLATFORM_ENGINEERING_CLOUD.md'))).toBe(true);
@@ -109,7 +109,7 @@ describe('Platform Engineering Cloud Production Audit (VL-313)', () => {
     expect(readiness).toMatch(/snykOs=false/i);
     expect(readiness).toMatch(/argoCdOs=false/i);
     expect(readiness).toMatch(/controlPlaneOs=false/i);
-    expect(readiness).toMatch(/VL-302|Volume 16/i);
+    expect(readiness).toMatch(/|Volume 16/i);
 
     const adr = readFileSync(
       join(root, 'docs/adr/0215-platform-engineering-cloud-production-audit.md'),
@@ -117,10 +117,10 @@ describe('Platform Engineering Cloud Production Audit (VL-313)', () => {
     );
     expect(adr).toMatch(/Vitest audit gates|review gate|checklist/i);
     expect(adr).toMatch(/Control Plane|Data Plane|AI Cloud OS|do not invent|Rejected/i);
-    expect(adr).toMatch(/Volume 16 closed|VL-302–313|closes/i);
+    expect(adr).toMatch(/Volume 16 closed|–313|closes/i);
   });
 
-  it('has no TODO/FIXME/implement-later markers in Volume 16 source trees', () => {
+  it('has no TODO/FIXME/implement-later markers in Volume 16 source trees',  => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const name of VOLUME16_DIRS) {
@@ -144,13 +144,13 @@ describe('Platform Engineering Cloud Production Audit (VL-313)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes all Volume 16 catalogs as shipped with monitoring', async () => {
+  it('exposes all Volume 16 catalogs as shipped with monitoring', async  => {
     for (const path of ENGINE_PATHS) {
-      const res = await request(app.getHttpServer()).get(path).expect(200);
-      expect(res.body).toBeTruthy();
+      const res = await request(app.getHttpServer).get(path).expect(200);
+      expect(res.body).toBeTruthy;
     }
 
-    const hub = await request(app.getHttpServer())
+    const hub = await request(app.getHttpServer)
       .get('/v1/platform-engineering-cloud/products')
       .expect(200);
     expect(hub.body.honesty.controlPlaneOs).toBe(false);
@@ -172,8 +172,8 @@ describe('Platform Engineering Cloud Production Audit (VL-313)', () => {
     }
   });
 
-  it('enforces FinOps GPU alerts, supply-chain findings, GitOps honesty', async () => {
-    const finops = await request(app.getHttpServer())
+  it('enforces FinOps GPU alerts, supply-chain findings, GitOps honesty', async  => {
+    const finops = await request(app.getHttpServer)
       .get('/v1/finops-platform/engine')
       .expect(200);
     expect(finops.body.honesty.finopsOs).toBe(false);
@@ -183,36 +183,36 @@ describe('Platform Engineering Cloud Production Audit (VL-313)', () => {
       finops.body.alerts.some((a: { kind: string; enabled: boolean }) => a.kind === 'gpu' && a.enabled),
     ).toBe(true);
 
-    const alerts = await request(app.getHttpServer())
+    const alerts = await request(app.getHttpServer)
       .get('/v1/finops-platform/alerts')
       .expect(200);
     expect(alerts.body.gpuBudgetAlertsEnabled).toBe(true);
     expect(alerts.body.gpuAlerts.length).toBeGreaterThan(0);
 
-    const supply = await request(app.getHttpServer())
+    const supply = await request(app.getHttpServer)
       .get('/v1/supply-chain-security/engine')
       .expect(200);
     expect(supply.body.honesty.snykOs).toBe(false);
     expect(supply.body.findings.length).toBeGreaterThan(0);
 
-    const scan = await request(app.getHttpServer())
+    const scan = await request(app.getHttpServer)
       .get('/v1/supply-chain-security/scan')
       .expect(200);
     expect(scan.body.packages.length).toBeGreaterThan(0);
     expect(scan.body.findings.length).toBeGreaterThan(0);
 
-    const findings = await request(app.getHttpServer())
+    const findings = await request(app.getHttpServer)
       .get('/v1/supply-chain-security/findings')
       .expect(200);
     expect(findings.body.findings.length).toBeGreaterThan(0);
 
-    const gitops = await request(app.getHttpServer())
+    const gitops = await request(app.getHttpServer)
       .get('/v1/gitops-platform/engine')
       .expect(200);
     expect(gitops.body.honesty.argoCdOs).toBe(false);
     expect(gitops.body.honesty.fluxOs).toBe(false);
 
-    const analytics = await request(app.getHttpServer())
+    const analytics = await request(app.getHttpServer)
       .get('/v1/platform-engineering-analytics/engine')
       .expect(200);
     expect(analytics.body.computedFromSiblings).toBe(true);
@@ -221,14 +221,14 @@ describe('Platform Engineering Cloud Production Audit (VL-313)', () => {
     expect(analytics.body.snapshot.supplyChain.snykOs).toBe(false);
   });
 
-  it('rejects unauthenticated Platform Engineering overview (auth smoke)', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/platform-engineering-cloud/overview');
+  it('rejects unauthenticated Platform Engineering overview (auth smoke)', async  => {
+    const res = await request(app.getHttpServer).get('/v1/platform-engineering-cloud/overview');
     expect([401, 403, 503]).toContain(res.status);
   });
 
-  it('exposes GraphQL façades for Platform Engineering hubs', async () => {
-    const started = Date.now();
-    const gql = await request(app.getHttpServer())
+  it('exposes GraphQL façades for Platform Engineering hubs', async  => {
+    const started = Date.now;
+    const gql = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query: `{
@@ -246,8 +246,8 @@ describe('Platform Engineering Cloud Production Audit (VL-313)', () => {
         }`,
       })
       .expect(200);
-    expect(Date.now() - started).toBeLessThan(5_000);
-    expect(gql.body.errors).toBeUndefined();
+    expect(Date.now - started).toBeLessThan(5_000);
+    expect(gql.body.errors).toBeUndefined;
     expect(gql.body.data.platformEngineeringCloudProducts.length).toBeGreaterThan(10);
     expect(gql.body.data.finopsPlatformEngine.gpuBudgetAlertsEnabled).toBe(true);
     expect(gql.body.data.finopsPlatformEngine.finopsOs).toBe(false);
@@ -257,7 +257,7 @@ describe('Platform Engineering Cloud Production Audit (VL-313)', () => {
     expect(gql.body.data.gitopsPlatformEngine.fluxOs).toBe(false);
   });
 
-  it('rejects inventing Control Plane / Data Plane / AI Cloud OS in this volume', () => {
+  it('rejects inventing Control Plane / Data Plane / AI Cloud OS in this volume',  => {
     const readiness = readFileSync(
       join(root, 'docs/platform-engineering-cloud-audit/PRODUCTION_READINESS.md'),
       'utf8',

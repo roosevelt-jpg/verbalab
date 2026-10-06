@@ -17,7 +17,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory()) {
+    if (name.isDirectory) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       out.push(...walkTsFiles(p));
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -27,23 +27,23 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Enterprise Engineering System Production Audit (VL-353)', () => {
+describe('Enterprise Engineering System Production Audit',  => {
   let app: INestApplication<App>;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
   }, 120_000);
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('ships audit pack and ADR-0255', () => {
+  it('ships audit pack and ADR-0255',  => {
     expect(existsSync(join(root, 'docs/adr/0255-enterprise-engineering-system-production-audit.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/ENTERPRISE_ENGINEERING_SYSTEM.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/enterprise-engineering-system-audit/PRODUCTION_READINESS.md'))).toBe(true);
@@ -55,7 +55,7 @@ describe('Enterprise Engineering System Production Audit (VL-353)', () => {
     expect(existsSync(join(root, 'docs/enterprise-engineering-system-audit/ENTERPRISE_ENGINEERING_SYSTEM_READINESS_REPORT.md'))).toBe(true);
   });
 
-  it('has no TODO/FIXME markers across Volume 20 hubs', () => {
+  it('has no TODO/FIXME markers across Volume 20 hubs',  => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const slug of VOLUME20_HUBS) {
@@ -72,8 +72,8 @@ describe('Enterprise Engineering System Production Audit (VL-353)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('foundation catalogs all shipped products with honesty gates', async () => {
-    const res = await request(app.getHttpServer())
+  it('foundation catalogs all shipped products with honesty gates', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/enterprise-engineering-system/products')
       .expect(200);
     expect(res.body.honesty.engineeringOsForHumansAndCursor).toBe(true);
@@ -87,9 +87,9 @@ describe('Enterprise Engineering System Production Audit (VL-353)', () => {
     expect(ids).toContain('enterprise-engineering-system');
   });
 
-  it('each standards hub has honesty and non-empty routesTo', async () => {
+  it('each standards hub has honesty and non-empty routesTo', async  => {
     for (const slug of STANDARDS_HUBS) {
-      const res = await request(app.getHttpServer())
+      const res = await request(app.getHttpServer)
         .get(`/v1/${slug}/engine`)
         .expect(200);
       expect(res.body.honesty.engineeringOsForHumansAndCursor).toBe(true);
@@ -100,8 +100,8 @@ describe('Enterprise Engineering System Production Audit (VL-353)', () => {
     }
   });
 
-  it('retroactive checks present for Vol 11/12/17', async () => {
-    const res = await request(app.getHttpServer())
+  it('retroactive checks present for Vol 11/12/17', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/ai-engineering-standards/check/list')
       .expect(200);
     expect(res.body.fakeComplianceCertification).toBe(false);
@@ -117,7 +117,7 @@ describe('Enterprise Engineering System Production Audit (VL-353)', () => {
     }
   });
 
-  it('rejects Architecture Knowledge Base / mass ADR factory', () => {
+  it('rejects Architecture Knowledge Base / mass ADR factory',  => {
     const readiness = readFileSync(
       join(root, 'docs/enterprise-engineering-system-audit/PRODUCTION_READINESS.md'),
       'utf8',
@@ -137,8 +137,8 @@ describe('Enterprise Engineering System Production Audit (VL-353)', () => {
     expect(foundation).toMatch(/adrFactoryOs:\s*false/);
   });
 
-  it('infrastructure GPU/secrets honesty', async () => {
-    const res = await request(app.getHttpServer())
+  it('infrastructure GPU/secrets honesty', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/infrastructure-engineering-standards/engine')
       .expect(200);
     expect(res.body.honesty.kubernetesOs).toBe(false);
@@ -146,14 +146,14 @@ describe('Enterprise Engineering System Production Audit (VL-353)', () => {
     expect(res.body.honesty.secretsEnvelopeHonesty).toBe(true);
   });
 
-  it('auth smoke on overview', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/enterprise-engineering-system/overview');
+  it('auth smoke on overview', async  => {
+    const res = await request(app.getHttpServer).get('/v1/enterprise-engineering-system/overview');
     expect([401, 403, 503]).toContain(res.status);
   });
 
-  it('GraphQL honesty fields', async () => {
-    const started = Date.now();
-    const gql = await request(app.getHttpServer())
+  it('GraphQL honesty fields', async  => {
+    const started = Date.now;
+    const gql = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query: `{
@@ -169,8 +169,8 @@ describe('Enterprise Engineering System Production Audit (VL-353)', () => {
         }`,
       })
       .expect(200);
-    expect(Date.now() - started).toBeLessThan(5_000);
-    expect(gql.body.errors).toBeUndefined();
+    expect(Date.now - started).toBeLessThan(5_000);
+    expect(gql.body.errors).toBeUndefined;
     expect(gql.body.data.enterpriseEngineeringSystemProducts.length).toBeGreaterThan(8);
     expect(gql.body.data.engineeringGovernanceEngine.engineeringOsForHumansAndCursor).toBe(true);
     expect(gql.body.data.architectureGovernanceEngine.adrFactoryOs).toBe(false);
@@ -179,12 +179,12 @@ describe('Enterprise Engineering System Production Audit (VL-353)', () => {
     expect(gql.body.data.infrastructureEngineeringStandardsEngine.architectureKnowledgeBaseOs).toBe(false);
   });
 
-  it('documents EES in CLOUD_BLUEPRINT and PROGRESS', () => {
+  it('documents EES in CLOUD_BLUEPRINT and PROGRESS',  => {
     const blueprint = readFileSync(join(root, 'docs/CLOUD_BLUEPRINT.md'), 'utf8');
     expect(blueprint).toMatch(/Enterprise Engineering System/);
-    expect(blueprint).toMatch(/VL-344/);
+    expect(blueprint).toMatch(/);
     const progress = readFileSync(join(root, 'PROGRESS.md'), 'utf8');
-    expect(progress).toMatch(/VL-353/);
+    expect(progress).toMatch(/);
     expect(progress).toMatch(/Volume 20 closed/);
   });
 });

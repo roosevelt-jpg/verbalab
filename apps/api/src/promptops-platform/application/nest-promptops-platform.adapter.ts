@@ -6,16 +6,16 @@ import {
   PromptopsPlatformProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestPromptopsPlatformCatalogAdapter implements PromptopsPlatformCatalogPort {
   constructor(private readonly service: PromptopsPlatformService) {}
 
-  engine(): PromptopsPlatformEngineBundle {
-    return this.service.engine();
+  engine: PromptopsPlatformEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): PromptopsPlatformProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: PromptopsPlatformProductRow[] {
+    const bundle = this.engine as {
       products?: PromptopsPlatformProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestPromptopsPlatformCatalogAdapter implements PromptopsPlatformCat
         status: 'shipped',
         api: 'GET /v1/promptops-platform/engine',
         console: '/promptops-platform',
-        notes: 'VL-285 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

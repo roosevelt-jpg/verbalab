@@ -26,13 +26,13 @@ export class GpuPlatformController {
   constructor(private readonly gpu: GpuPlatformService) {}
 
   @Get('engine')
-  engine() {
-    return this.gpu.engine();
+  engine {
+    return this.gpu.engine;
   }
 
   @Get('vendors')
-  vendors() {
-    return this.gpu.vendors();
+  vendors {
+    return this.gpu.vendors;
   }
 
   @Get('pools')
@@ -41,13 +41,13 @@ export class GpuPlatformController {
   }
 
   @Get('ceilings')
-  ceilings() {
-    return this.gpu.ceilings();
+  ceilings {
+    return this.gpu.ceilings;
   }
 
   @Get('allocations')
   @UseGuards(TranslateAuthGuard)
-  list(@Req() req: AuthedReq, @Query('status') status?: string) {
+  list(@Req req: AuthedReq, @Query('status') status?: string) {
     return this.gpu.listAllocations({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -59,8 +59,8 @@ export class GpuPlatformController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   allocate(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       poolId?: string;
       instances?: number;
@@ -84,9 +84,9 @@ export class GpuPlatformController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   scale(
-    @Req() req: AuthedReq,
+    @Req req: AuthedReq,
     @Param('id') id: string,
-    @Body() body: { targetInstances?: number },
+    @Body body: { targetInstances?: number },
   ) {
     return this.gpu.scale({
       organizationId: req.translateAuth.organizationId,
@@ -101,7 +101,7 @@ export class GpuPlatformController {
   @Post('allocations/:id/release')
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
-  release(@Req() req: AuthedReq, @Param('id') id: string) {
+  release(@Req req: AuthedReq, @Param('id') id: string) {
     return this.gpu.release({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -113,7 +113,7 @@ export class GpuPlatformController {
 
   @Get('health')
   @UseGuards(TranslateAuthGuard)
-  health(@Req() req: AuthedReq) {
+  health(@Req req: AuthedReq) {
     return this.gpu.health({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -122,7 +122,7 @@ export class GpuPlatformController {
 
   @Get('costs')
   @UseGuards(TranslateAuthGuard)
-  costs(@Req() req: AuthedReq) {
+  costs(@Req req: AuthedReq) {
     return this.gpu.costs({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -131,7 +131,7 @@ export class GpuPlatformController {
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.gpu.analytics({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -140,7 +140,7 @@ export class GpuPlatformController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req() req: AuthedReq) {
+  monitoring(@Req req: AuthedReq) {
     return this.gpu.monitoring({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,

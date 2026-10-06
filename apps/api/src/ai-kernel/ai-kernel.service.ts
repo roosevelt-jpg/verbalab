@@ -7,19 +7,19 @@ import {
   aiKernelSafetyNotes,
 } from './ai-kernel.catalog';
 
-@Injectable()
+@Injectable
 export class AiKernelService {
   constructor(private readonly usage: UsageService) {}
 
-  products() {
+  products {
     return {
       product: 'Lugemi AI Kernel',
-      products: aiKernelRuntimeCatalog(),
-      architecture: aiKernelArchitectureNotes(),
-      safety: aiKernelSafetyNotes(),
+      products: aiKernelRuntimeCatalog,
+      architecture: aiKernelArchitectureNotes,
+      safety: aiKernelSafetyNotes,
       docs: '/docs/AI_KERNEL.md',
       note:
-        'Internal operating-system hub for Lugemi runtimes (VL-214). Not a customer-facing product. Does not regenerate Volumes 1–7 or invent a Linux/VAIOS rewrite.',
+        'Internal operating-system hub for Lugemi runtimes. Not a customer-facing product. Does not regenerate Volumes 1–7 or invent a Linux/VAIOS rewrite.',
     };
   }
 
@@ -36,9 +36,9 @@ export class AiKernelService {
         chat: usageSummary.chat,
         embeddings: usageSummary.embeddings,
       },
-      products: aiKernelRuntimeCatalog(),
-      architecture: aiKernelArchitectureNotes(),
-      safety: aiKernelSafetyNotes(),
+      products: aiKernelRuntimeCatalog,
+      architecture: aiKernelArchitectureNotes,
+      safety: aiKernelSafetyNotes,
       deferred: {
         memoryRuntime: false,
         promptRuntime: false,
@@ -81,21 +81,21 @@ export class AiKernelService {
     };
   }
 
-  monitoring() {
-    const products = aiKernelRuntimeCatalog();
+  monitoring {
+    const products = aiKernelRuntimeCatalog;
     return {
       product: 'Lugemi AI Kernel',
       mode: 'foundation',
       runtimes: products.map((p) => ({ id: p.id, status: p.status })),
-      architecture: aiKernelArchitectureNotes(),
-      safety: aiKernelSafetyNotes(),
+      architecture: aiKernelArchitectureNotes,
+      safety: aiKernelSafetyNotes,
       honesty: {
         customerFacingProduct: false,
         linuxOsRewrite: false,
         vaiosOs: false,
         regeneratesVolumes1to7: false,
       },
-      note: 'Kernel monitoring snapshot (VL-214–223). Volume 8 closed via Production Audit evidence pack; Foundation Model Cloud is Volume 9 when scheduled.',
+      note: 'Kernel monitoring snapshot (–223). Volume 8 closed via Production Audit evidence pack; Foundation Model Cloud is Volume 9 when scheduled.',
     };
   }
 }

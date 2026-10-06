@@ -16,23 +16,23 @@ type AuditRow = {
   metadata: Record<string, unknown> | null;
 };
 
-export function AuditClient() {
-  const { getToken, isLoaded } = useAuth();
+export function AuditClient {
+  const { getToken, isLoaded } = useAuth;
   const [events, setEvents] = useState<AuditRow[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void (async () => {
+    void (async  => {
       try {
-        const token = await getToken();
+        const token = await getToken;
         if (!token) throw new Error('Not signed in');
         const data = await apiFetch<AuditRow[]>('/v1/audit-events?limit=100', { token });
         setEvents(data);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load audit log');
       }
-    })();
+    });
   }, [getToken, isLoaded]);
 
   return (
@@ -64,7 +64,7 @@ export function AuditClient() {
                 ) : null}
               </div>
               <div className="vl-code" style={{ color: 'var(--muted)', fontSize: '0.8rem' }}>
-                {new Date(event.createdAt).toLocaleString()}
+                {new Date(event.createdAt).toLocaleString}
               </div>
             </div>
           </li>

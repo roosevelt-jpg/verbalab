@@ -1,4 +1,4 @@
-/** Application ports for Reasoning Fabric (VL-244). */
+/** Application ports for Reasoning Fabric. */
 
 export type ReasoningFabricCapabilityRow = {
   id: string;
@@ -22,9 +22,9 @@ export type ReasoningFabricProductsBundle = ReturnType<
 >;
 
 export interface ReasoningFabricCatalogPort {
-  products(): ReasoningFabricProductsBundle;
-  listCapabilities(): ReasoningFabricCapabilityRow[];
-  listRoutes(): ReasoningFabricRouteRow[];
+  products: ReasoningFabricProductsBundle;
+  listCapabilities: ReasoningFabricCapabilityRow[];
+  listRoutes: ReasoningFabricRouteRow[];
 }
 
 export const REASONING_FABRIC_CATALOG_PORT = Symbol('REASONING_FABRIC_CATALOG_PORT');

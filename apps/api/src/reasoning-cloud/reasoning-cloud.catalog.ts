@@ -8,12 +8,12 @@ export type ReasoningCapability = {
   notes: string;
 };
 
-/** Library Phase 53 → Reasoning Cloud (VL-186). LLM gateway multi-step prompts — not a custom reasoner kernel. */
-export function reasoningCloudCatalog() {
+/** Library Phase 53 → Reasoning Cloud. LLM gateway multi-step prompts — not a custom reasoner kernel. */
+export function reasoningCloudCatalog {
   return {
     product: 'Lugemi Reasoning Cloud',
     note:
-      'Multi-step reasoning via AI Gateway chat prompts (VL-186). Chain/plan/decision/problem-solving shipped as prompt strategies. Tree-of-thought is shallow branching. Not a proprietary symbolic reasoner or agent OS.',
+      'Multi-step reasoning via AI Gateway chat prompts. Chain/plan/decision/problem-solving shipped as prompt strategies. Tree-of-thought is shallow branching. Not a proprietary symbolic reasoner or agent OS.',
     capabilities: [
       {
         id: 'chain-of-thought',

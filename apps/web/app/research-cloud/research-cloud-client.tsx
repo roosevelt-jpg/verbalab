@@ -22,11 +22,11 @@ type Overview = {
   safety?: { note?: string };
 };
 
-export function ResearchCloudClient() {
+export function ResearchCloudClient {
   const [data, setData] = useState<Overview | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  useEffect( => {
     void apiFetch<Overview>('/v1/research-cloud/products')
       .then(setData)
       .catch((err: Error) => setError(err.message));

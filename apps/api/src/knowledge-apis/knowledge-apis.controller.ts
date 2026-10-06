@@ -22,54 +22,54 @@ export class KnowledgeApisController {
   constructor(private readonly knowledgeApis: KnowledgeApisService) {}
 
   @Get('engine')
-  engine() {
-    return this.knowledgeApis.engine();
+  engine {
+    return this.knowledgeApis.engine;
   }
 
   @Get('surfaces')
   @UseGuards(TranslateAuthGuard)
-  async surfaces(@Req() req: AuthedReq) {
+  async surfaces(@Req req: AuthedReq) {
     await this.knowledgeApis.recordSurfacesView(
       req.translateAuth.organizationId,
       req.sessionAuth?.userId,
       clientIp(req),
     );
-    return this.knowledgeApis.surfaces();
+    return this.knowledgeApis.surfaces;
   }
 
   @Get('graphql')
-  graphqlCatalog() {
-    return this.knowledgeApis.graphqlCatalog();
+  graphqlCatalog {
+    return this.knowledgeApis.graphqlCatalog;
   }
 
   @Get('openapi')
-  openapi() {
-    return this.knowledgeApis.openapi();
+  openapi {
+    return this.knowledgeApis.openapi;
   }
 
   @Get('sdk')
-  sdk() {
-    return this.knowledgeApis.sdk();
+  sdk {
+    return this.knowledgeApis.sdk;
   }
 
   @Get('cli')
-  cli() {
-    return this.knowledgeApis.cli();
+  cli {
+    return this.knowledgeApis.cli;
   }
 
   @Get('webhooks')
-  webhooks() {
-    return this.knowledgeApis.webhooks();
+  webhooks {
+    return this.knowledgeApis.webhooks;
   }
 
   @Get('developer-portal')
-  developerPortal() {
-    return this.knowledgeApis.developerPortal();
+  developerPortal {
+    return this.knowledgeApis.developerPortal;
   }
 
   @Get('events')
   @UseGuards(TranslateAuthGuard)
-  events(@Req() req: AuthedReq, @Query('limit') limit?: string) {
+  events(@Req req: AuthedReq, @Query('limit') limit?: string) {
     return this.knowledgeApis.recentEvents(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -79,7 +79,7 @@ export class KnowledgeApisController {
 
   @Get('events/stream')
   @UseGuards(TranslateAuthGuard)
-  async stream(@Req() req: AuthedReq, @Res() res: Response) {
+  async stream(@Req req: AuthedReq, @Res res: Response) {
     const events = await this.knowledgeApis.recentEvents(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -95,7 +95,7 @@ export class KnowledgeApisController {
     res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders?.();
+    res.flushHeaders?.;
 
     res.write(
       `event: meta\ndata: ${JSON.stringify({
@@ -112,12 +112,12 @@ export class KnowledgeApisController {
     res.write(
       `event: done\ndata: ${JSON.stringify({ ok: true, honesty: { kafkaEventStreamingOs: false } })}\n\n`,
     );
-    res.end();
+    res.end;
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.knowledgeApis.analytics(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -126,7 +126,7 @@ export class KnowledgeApisController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req() req: AuthedReq) {
+  monitoring(@Req req: AuthedReq) {
     return this.knowledgeApis.monitoring(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,

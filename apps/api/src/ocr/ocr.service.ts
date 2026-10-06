@@ -8,12 +8,12 @@ import { ApiException } from '../common/errors/api-exception';
 
 const ALLOWED = new Set(['png', 'jpg', 'jpeg', 'webp', 'gif']);
 
-export function ocrMaxBytes(): number {
+export function ocrMaxBytes: number {
   const raw = Number(process.env.OCR_MAX_BYTES ?? 8 * 1024 * 1024);
   return Number.isFinite(raw) && raw > 0 ? raw : 8 * 1024 * 1024;
 }
 
-@Injectable()
+@Injectable
 export class OcrService {
   constructor(
     private readonly gateway: GatewayService,
@@ -27,14 +27,14 @@ export class OcrService {
     if (file.size <= 0) {
       throw new ApiException('validation_error', 'Empty file', HttpStatus.BAD_REQUEST);
     }
-    if (file.size > ocrMaxBytes()) {
+    if (file.size > ocrMaxBytes) {
       throw new ApiException(
         'validation_error',
-        `File exceeds maximum size of ${ocrMaxBytes()} bytes`,
+        `File exceeds maximum size of ${ocrMaxBytes} bytes`,
         HttpStatus.BAD_REQUEST,
       );
     }
-    const ext = file.originalname.split('.').pop()?.toLowerCase() ?? '';
+    const ext = file.originalname.split('.').pop?.toLowerCase ?? '';
     if (!ALLOWED.has(ext)) {
       throw new ApiException(
         'validation_error',

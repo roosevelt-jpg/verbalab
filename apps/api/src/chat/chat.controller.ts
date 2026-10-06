@@ -13,12 +13,12 @@ export class ChatController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   completions(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body()
+    @Body
     body: {
       messages?: unknown;
       model?: string;

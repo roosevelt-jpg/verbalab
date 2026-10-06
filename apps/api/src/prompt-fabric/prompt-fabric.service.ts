@@ -42,7 +42,7 @@ type DistRecord = {
   at: string;
 };
 
-@Injectable()
+@Injectable
 export class PromptFabricService {
   private routePlans = 0;
   private validations = 0;
@@ -61,7 +61,7 @@ export class PromptFabricService {
   ) {}
 
   /** Test hook. */
-  resetCounters() {
+  resetCounters {
     this.routePlans = 0;
     this.validations = 0;
     this.distributions = 0;
@@ -71,37 +71,37 @@ export class PromptFabricService {
     this.distLog.length = 0;
   }
 
-  products() {
-    const policy = this.policyRuntime.engine();
+  products {
+    const policy = this.policyRuntime.engine;
     return {
       product: 'Lugemi Prompt Fabric',
-      products: promptFabricCapabilityCatalog(),
-      routes: promptFabricRoutingTable(),
-      promptRuntime: this.promptRuntime.engine(),
+      products: promptFabricCapabilityCatalog,
+      routes: promptFabricRoutingTable,
+      promptRuntime: this.promptRuntime.engine,
       policyRuntime: {
         product: policy.product,
         honesty: policy.honesty,
         console: '/policy-runtime',
       },
-      architecture: promptFabricArchitectureNotes(),
-      honesty: promptFabricHonesty(),
+      architecture: promptFabricArchitectureNotes,
+      honesty: promptFabricHonesty,
       safety: {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric (VL-247) must hard-gate across fabric buses when shipped — not log-only. Until then Policy Runtime hard-gates Agent/Workflow/Plugin.',
+          'Policy Fabric must hard-gate across fabric buses when shipped — not log-only. Until then Policy Runtime hard-gates Agent/Workflow/Plugin.',
       },
       docs: '/docs/PROMPT_FABRIC.md',
       note:
-        'Prompt Fabric (VL-243). Cross-cloud prompt router over Prompt Runtime. Not a prompt mesh or research lab OS.',
+        'Prompt Fabric. Cross-cloud prompt router over Prompt Runtime. Not a prompt mesh or research lab OS.',
     };
   }
 
-  routes() {
+  routes {
     return {
-      routes: promptFabricRoutingTable(),
-      runtimeRoutes: this.promptRuntime.engine().routes,
-      honesty: promptFabricHonesty(),
+      routes: promptFabricRoutingTable,
+      runtimeRoutes: this.promptRuntime.engine.routes,
+      honesty: promptFabricHonesty,
       docs: '/docs/PROMPT_FABRIC.md',
       note: 'Fabric cloud handoffs + Prompt Runtime feature→key sandbox map.',
     };
@@ -109,17 +109,17 @@ export class PromptFabricService {
 
   route(input: { kinds?: string[]; feature?: string }) {
     this.routePlans += 1;
-    const table = promptFabricRoutingTable();
+    const table = promptFabricRoutingTable;
     const kinds = input.kinds?.length
-      ? input.kinds.map((k) => k.toLowerCase())
+      ? input.kinds.map((k) => k.toLowerCase)
       : input.feature
-        ? [input.feature.toLowerCase()]
+        ? [input.feature.toLowerCase]
         : table.map((r) => r.kind);
     const selected = table.filter((r) => kinds.includes(r.kind));
     const missing = kinds.filter((k) => !table.some((r) => r.kind === k));
 
     let runtimeRoute: ReturnType<PromptRuntimeService['route']> | null = null;
-    if (input.feature?.trim()) {
+    if (input.feature?.trim) {
       runtimeRoute = this.promptRuntime.route({ feature: input.feature });
     } else if (selected.length === 1 && ['chat', 'rag', 'voice_faq', 'translate'].includes(selected[0]!.kind)) {
       runtimeRoute = this.promptRuntime.route({ feature: selected[0]!.kind });
@@ -129,7 +129,7 @@ export class PromptFabricService {
       plan: selected,
       missing,
       runtimeRoute,
-      honesty: promptFabricHonesty(),
+      honesty: promptFabricHonesty,
       note: 'Prompt Router plan — does not call an LLM.',
     };
   }
@@ -137,9 +137,9 @@ export class PromptFabricService {
   async versions(auth: AuthCtx, key?: string) {
     return {
       ...(await this.promptRuntime.versions({ ...auth, key: key ?? 'chat' })),
-      honesty: promptFabricHonesty(),
+      honesty: promptFabricHonesty,
       docs: '/docs/PROMPT_FABRIC.md',
-      note: 'Prompt Fabric versioning façade over Prompt Runtime / VL-086.',
+      note: 'Prompt Fabric versioning façade over Prompt Runtime / .',
     };
   }
 
@@ -156,14 +156,14 @@ export class PromptFabricService {
     const result = await this.promptRuntime.validate({ ...auth, ...body });
     return {
       ...result,
-      honesty: promptFabricHonesty(),
+      honesty: promptFabricHonesty,
       docs: '/docs/PROMPT_FABRIC.md',
       note: 'Validation delegated to Prompt Runtime — not LLM-as-judge.',
     };
   }
 
-  policies() {
-    const engine = this.policyRuntime.engine();
+  policies {
+    const engine = this.policyRuntime.engine;
     return {
       policies: {
         target: 'policy-runtime',
@@ -175,9 +175,9 @@ export class PromptFabricService {
         status: 'partial',
         policyFabricDeferred: false,
         note:
-          'Prompt policies use Policy Runtime hard-gates. Fabric-wide Policy Fabric (VL-247) hard-gates distribute planes.',
+          'Prompt policies use Policy Runtime hard-gates. Fabric-wide Policy Fabric hard-gates distribute planes.',
       },
-      honesty: promptFabricHonesty(),
+      honesty: promptFabricHonesty,
       docs: '/docs/PROMPT_FABRIC.md',
     };
   }
@@ -199,13 +199,13 @@ export class PromptFabricService {
         : peers;
 
     const record: DistRecord = {
-      id: randomUUID(),
+      id: randomUUID,
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,
       targets: targets.map((t) => t.id),
       keys,
       status: 'planned',
-      at: new Date().toISOString(),
+      at: new Date.toISOString,
     };
 
     let event: Awaited<ReturnType<EventFabricBus['publish']>> | null = null;
@@ -232,7 +232,7 @@ export class PromptFabricService {
       distribution: record,
       peers: targets,
       event,
-      honesty: promptFabricHonesty(),
+      honesty: promptFabricHonesty,
       note: 'Distribution plan for same-org workspaces — does not copy prompt bodies automatically.',
     };
   }
@@ -253,20 +253,20 @@ export class PromptFabricService {
         sync: null,
         error: 'target_workspace_not_in_org_peers',
         peers,
-        honesty: promptFabricHonesty(),
+        honesty: promptFabricHonesty,
         note: 'Cross-workspace sync is same-organization only.',
       };
     }
 
     const record: SyncRecord = {
-      id: randomUUID(),
+      id: randomUUID,
       organizationId: input.organizationId,
       sourceWorkspaceId: input.workspaceId,
       targetWorkspaceId: target.id,
       keys: input.keys?.length ? input.keys : ['chat', 'rag', 'voice_faq'],
-      cursor: `pf:${Date.now()}`,
+      cursor: `pf:${Date.now}`,
       status: 'planned',
-      at: new Date().toISOString(),
+      at: new Date.toISOString,
     };
 
     let event: Awaited<ReturnType<EventFabricBus['publish']>> | null = null;
@@ -294,7 +294,7 @@ export class PromptFabricService {
       sync: record,
       target,
       event,
-      honesty: promptFabricHonesty(),
+      honesty: promptFabricHonesty,
       note: 'Sync cursor/plan only — not CRDT/bidirectional prompt replication OS.',
     };
   }
@@ -308,7 +308,7 @@ export class PromptFabricService {
     });
   }
 
-  monitoring() {
+  monitoring {
     return {
       mode: 'prompt_fabric',
       counters: {
@@ -322,12 +322,12 @@ export class PromptFabricService {
         distributions: this.distLog.slice(-10),
         syncs: this.syncLog.slice(-10),
       },
-      products: promptFabricCapabilityCatalog().map((p) => ({
+      products: promptFabricCapabilityCatalog.map((p) => ({
         id: p.id,
         status: p.status,
       })),
-      honesty: promptFabricHonesty(),
-      note: 'Prompt Fabric monitoring (VL-243).',
+      honesty: promptFabricHonesty,
+      note: 'Prompt Fabric monitoring.',
     };
   }
 
@@ -346,10 +346,10 @@ export class PromptFabricService {
         embeddings: usageSummary.embeddings,
       },
       workspace: { peerWorkspaces: peers.length },
-      products: promptFabricCapabilityCatalog(),
-      routes: promptFabricRoutingTable(),
-      architecture: promptFabricArchitectureNotes(),
-      honesty: promptFabricHonesty(),
+      products: promptFabricCapabilityCatalog,
+      routes: promptFabricRoutingTable,
+      architecture: promptFabricArchitectureNotes,
+      honesty: promptFabricHonesty,
       counters: {
         routePlans: this.routePlans,
         validations: this.validations,
@@ -361,7 +361,7 @@ export class PromptFabricService {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric (VL-247) must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
+          'Policy Fabric must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
       },
       deferred: {
         reasoningFabric: false,
@@ -385,7 +385,7 @@ export class PromptFabricService {
       },
       docs: '/docs/PROMPT_FABRIC.md',
       note:
-        'Prompt Fabric (VL-243). Router + same-org distribute/sync over Prompt Runtime; policies via Policy Runtime.',
+        'Prompt Fabric. Router + same-org distribute/sync over Prompt Runtime; policies via Policy Runtime.',
     };
   }
 }

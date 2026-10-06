@@ -45,7 +45,7 @@ function envQuota(key: string, fallback: number) {
   return Number.isFinite(n) && n > 0 ? n : fallback;
 }
 
-function freePlan(): PlanDefinition {
+function freePlan: PlanDefinition {
   return {
     id: 'free',
     name: 'Free',
@@ -61,7 +61,7 @@ function freePlan(): PlanDefinition {
   };
 }
 
-function starterPlan(): PlanDefinition {
+function starterPlan: PlanDefinition {
   return {
     id: 'starter',
     name: 'Starter',
@@ -78,7 +78,7 @@ function starterPlan(): PlanDefinition {
   };
 }
 
-function creatorPlan(): PlanDefinition {
+function creatorPlan: PlanDefinition {
   return {
     id: 'creator',
     name: 'Creator',
@@ -96,7 +96,7 @@ function creatorPlan(): PlanDefinition {
   };
 }
 
-function proPlan(): PlanDefinition {
+function proPlan: PlanDefinition {
   return {
     id: 'pro',
     name: 'Pro',
@@ -113,7 +113,7 @@ function proPlan(): PlanDefinition {
   };
 }
 
-function scalePlan(): PlanDefinition {
+function scalePlan: PlanDefinition {
   return {
     id: 'scale',
     name: 'Scale',
@@ -139,7 +139,7 @@ function scalePlan(): PlanDefinition {
   };
 }
 
-function enterprisePlan(): PlanDefinition {
+function enterprisePlan: PlanDefinition {
   return {
     id: 'enterprise',
     name: 'Enterprise',
@@ -165,7 +165,7 @@ function enterprisePlan(): PlanDefinition {
   };
 }
 
-const BUILDERS: Record<PlanId, () => PlanDefinition> = {
+const BUILDERS: Record<PlanId,  => PlanDefinition> = {
   free: freePlan,
   starter: starterPlan,
   creator: creatorPlan,
@@ -175,33 +175,33 @@ const BUILDERS: Record<PlanId, () => PlanDefinition> = {
 };
 
 export const PLANS: Record<PlanId, PlanDefinition> = {
-  get free() {
-    return freePlan();
+  get free {
+    return freePlan;
   },
-  get starter() {
-    return starterPlan();
+  get starter {
+    return starterPlan;
   },
-  get creator() {
-    return creatorPlan();
+  get creator {
+    return creatorPlan;
   },
-  get pro() {
-    return proPlan();
+  get pro {
+    return proPlan;
   },
-  get scale() {
-    return scalePlan();
+  get scale {
+    return scalePlan;
   },
-  get enterprise() {
-    return enterprisePlan();
+  get enterprise {
+    return enterprisePlan;
   },
 };
 
-export function listPlans(): PlanDefinition[] {
-  return (Object.keys(BUILDERS) as PlanId[]).map((id) => BUILDERS[id]());
+export function listPlans: PlanDefinition[] {
+  return (Object.keys(BUILDERS) as PlanId[]).map((id) => BUILDERS[id]);
 }
 
 export function planFromId(id: string): PlanDefinition {
-  if (id in BUILDERS) return BUILDERS[id as PlanId]();
-  return freePlan();
+  if (id in BUILDERS) return BUILDERS[id as PlanId];
+  return freePlan;
 }
 
 /** True when org plan rank is at least the required plan. */
@@ -229,7 +229,7 @@ export function planAllowsAnotherWorkspace(orgPlanId: string, currentCount: numb
   return currentCount < limit;
 }
 
-export function rateLimitWindowSec(): number {
+export function rateLimitWindowSec: number {
   const raw = Number(process.env.RATE_LIMIT_WINDOW_SEC ?? 60);
   return Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 60;
 }

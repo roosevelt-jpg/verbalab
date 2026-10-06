@@ -14,8 +14,8 @@ type Engine = {
 };
 type Analytics = { reasonRequests: number; chatTokens: number; note: string };
 
-export function ReasoningCloudClient() {
-  const { getToken, isLoaded } = useAuth();
+export function ReasoningCloudClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [problem, setProblem] = useState('Should we translate the FAQ into Swahili first or English?');
@@ -24,8 +24,8 @@ export function ReasoningCloudClient() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(async () => {
-    const token = await getToken();
+  const refresh = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, an] = await Promise.all([
       apiFetch<Engine>('/v1/reasoning-cloud/engine', { token }),
@@ -35,17 +35,17 @@ export function ReasoningCloudClient() {
     setAnalytics(an);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void refresh().catch((err: Error) => setError(err.message));
+    void refresh.catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
-  async function reason() {
+  async function reason {
     setLoading(true);
     setError(null);
     setResult(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const body = await apiFetch<{
         strategy: string;
@@ -60,7 +60,7 @@ export function ReasoningCloudClient() {
         body: { problem, strategy, retrieve: true },
       });
       setResult(JSON.stringify(body, null, 2));
-      await refresh();
+      await refresh;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Reason failed');
     } finally {
@@ -125,7 +125,7 @@ export function ReasoningCloudClient() {
               <option value="graph_reasoning">graph_reasoning</option>
               <option value="agent">agent</option>
             </select>
-            <button type="button" disabled={loading} style={primary} onClick={() => void reason()}>
+            <button type="button" disabled={loading} style={primary} onClick={ => void reason}>
               Run reasoning
             </button>
           </div>

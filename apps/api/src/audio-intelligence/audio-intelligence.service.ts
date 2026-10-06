@@ -10,7 +10,7 @@ import {
   upscaleAudio,
 } from './audio-dsp';
 
-@Injectable()
+@Injectable
 export class AudioIntelligenceService {
   constructor(
     private readonly prisma: PrismaService,
@@ -18,12 +18,12 @@ export class AudioIntelligenceService {
     private readonly audio: AudioService,
   ) {}
 
-  engine() {
-    return audioEngineCatalog();
+  engine {
+    return audioEngineCatalog;
   }
 
   async analytics(organizationId: string) {
-    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
     const events = await this.prisma.auditEvent.findMany({
       where: {
         organizationId,
@@ -100,7 +100,7 @@ export class AudioIntelligenceService {
       silenceRatio: analysis.silenceRatio,
       regions: analysis.silenceRegions,
       durationSeconds: analysis.durationSeconds,
-      note: 'Frame-energy silence regions (VL-155).',
+      note: 'Frame-energy silence regions.',
     };
   }
 
@@ -133,7 +133,7 @@ export class AudioIntelligenceService {
         noiseFloor: result.analysisAfter.noiseFloor,
         noisy: result.analysisAfter.noisy,
       },
-      note: 'Noise gate + mild high-pass + normalize — not ML denoise (VL-155).',
+      note: 'Noise gate + mild high-pass + normalize — not ML denoise.',
     };
   }
 
@@ -186,13 +186,13 @@ export class AudioIntelligenceService {
     };
   }
 
-  echoStatus() {
+  echoStatus {
     return {
       available: false,
       status: 'deferred',
       capability: 'echo-cancellation',
       note:
-        'Echo cancellation requires an AEC reference path or vendor SDK — deferred in VL-155. See ADR-0074.',
+        'Echo cancellation requires an AEC reference path or vendor SDK — deferred in . See ADR-0074.',
     };
   }
 

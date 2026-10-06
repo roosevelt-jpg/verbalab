@@ -18,13 +18,13 @@ type GqlReq = Request & {
   sessionAuth?: SessionContext;
 };
 
-@Resolver()
+@Resolver
 export class AccentIntelligenceGraphqlResolver {
   constructor(private readonly accents: AccentsService) {}
 
-  @Query(() => GqlAccentEngine, { name: 'accentEngine' })
-  accentEngine(): GqlAccentEngine {
-    const catalog = this.accents.engine();
+  @Query( => GqlAccentEngine, { name: 'accentEngine' })
+  accentEngine: GqlAccentEngine {
+    const catalog = this.accents.engine;
     return {
       product: catalog.product,
       note: catalog.note,
@@ -32,10 +32,10 @@ export class AccentIntelligenceGraphqlResolver {
     };
   }
 
-  @Mutation(() => GqlAccentDetectResult, { name: 'detectAccent' })
+  @Mutation( => GqlAccentDetectResult, { name: 'detectAccent' })
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   async detectAccent(
-    @Args('input', { type: () => DetectAccentInput }) input: DetectAccentInput,
+    @Args('input', { type:  => DetectAccentInput }) input: DetectAccentInput,
     @Context('req') req: GqlReq,
   ): Promise<GqlAccentDetectResult> {
     const auth = req.translateAuth!;

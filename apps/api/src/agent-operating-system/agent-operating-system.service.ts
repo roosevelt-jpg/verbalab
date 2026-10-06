@@ -6,7 +6,7 @@ import { AgentMarketplaceService } from '../agent-marketplace/agent-marketplace.
 import { AiKernelService } from '../ai-kernel/ai-kernel.service';
 import { AiFabricService } from '../ai-fabric/ai-fabric.service';
 
-@Injectable()
+@Injectable
 export class AgentOperatingSystemService {
   constructor(
     private readonly agentRuntime: AgentRuntimeService,
@@ -16,48 +16,48 @@ export class AgentOperatingSystemService {
     private readonly aiFabric: AiFabricService
   ) {}
 
-  engine() {
-    return agentOperatingSystemEngineCatalog();
+  engine {
+    return agentOperatingSystemEngineCatalog;
   }
 
   /** Route/execute façade: returns upstream endpoint + live status from injected Kernel/Fabric/Data Plane services. */
   route(capability?: string) {
-    const catalog = this.engine();
-    const q = (capability ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (capability ?? '').trim.toLowerCase;
     const capabilities = catalog.capabilities.filter((c) => {
       if (!q) return true;
-      return c.id.includes(q) || c.name.toLowerCase().includes(q);
+      return c.id.includes(q) || c.name.toLowerCase.includes(q);
     });
     const upstreamStatus = [
       {
         module: 'agent-runtime',
         method: 'engine',
         status: 'reachable',
-        upstream: this.agentRuntime.engine(),
+        upstream: this.agentRuntime.engine,
       },
       {
         module: 'agent-fabric',
         method: 'products',
         status: 'reachable',
-        upstream: this.agentFabric.products(),
+        upstream: this.agentFabric.products,
       },
       {
         module: 'agent-marketplace',
         method: 'engine',
         status: 'reachable',
-        upstream: this.agentMarketplace.engine(),
+        upstream: this.agentMarketplace.engine,
       },
       {
         module: 'ai-kernel',
         method: 'products',
         status: 'reachable',
-        upstream: this.aiKernel.products(),
+        upstream: this.aiKernel.products,
       },
       {
         module: 'ai-fabric',
         method: 'products',
         status: 'reachable',
-        upstream: this.aiFabric.products(),
+        upstream: this.aiFabric.products,
       }
     ];
     return {
@@ -79,11 +79,11 @@ export class AgentOperatingSystemService {
   }
 
   list(query?: string) {
-    const catalog = this.engine();
-    const q = (query ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (query ?? '').trim.toLowerCase;
     const rows = catalog.routes.filter((row) => {
       if (!q) return true;
-      return JSON.stringify(row).toLowerCase().includes(q);
+      return JSON.stringify(row).toLowerCase.includes(q);
     });
     return {
       routes: rows,
@@ -100,8 +100,8 @@ export class AgentOperatingSystemService {
     return this.list(query);
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'agent-operating-system',
       count: catalog.routes.length,
@@ -110,7 +110,7 @@ export class AgentOperatingSystemService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'AgentOperatingSystem monitoring snapshot (VL-339).',
+      note: 'AgentOperatingSystem monitoring snapshot.',
     };
   }
 }

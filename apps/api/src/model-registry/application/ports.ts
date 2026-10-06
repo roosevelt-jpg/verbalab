@@ -1,4 +1,4 @@
-/** Application ports for Model Registry hub (VL-237). */
+/** Application ports for Model Registry hub. */
 
 export type MrCapabilityRow = {
   id: string;
@@ -13,8 +13,8 @@ export type MrEngineBundle = Awaited<
 >;
 
 export interface ModelRegistryCatalogPort {
-  engine(): Promise<MrEngineBundle>;
-  listCapabilities(): MrCapabilityRow[];
+  engine: Promise<MrEngineBundle>;
+  listCapabilities: MrCapabilityRow[];
 }
 
 export const MODEL_REGISTRY_CATALOG_PORT = Symbol('MODEL_REGISTRY_CATALOG_PORT');

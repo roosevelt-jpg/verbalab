@@ -17,7 +17,7 @@ export function MotionPoster({
   language?: string;
 }) {
   const [active, setActive] = useState(false);
-  const labelId = useId();
+  const labelId = useId;
 
   return (
     <div className="lg-ana lg-ana--sm" role="group" aria-labelledby={labelId}>
@@ -38,7 +38,7 @@ export function MotionPoster({
         className="lg-ana__play"
         aria-pressed={active}
         aria-label={active ? `${title} motion poster playing` : `Play ${title} motion poster`}
-        onClick={() => setActive((v) => !v)}
+        onClick={ => setActive((v) => !v)}
       >
         <span className="lg-ana__play-disc" aria-hidden="true">
           {active ? (

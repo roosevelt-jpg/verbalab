@@ -2,13 +2,13 @@ import { Query, Resolver } from '@nestjs/graphql';
 import { KnowledgeAnalyticsService } from '../knowledge-analytics/knowledge-analytics.service';
 import { GqlKnowledgeAnalytics } from './gql.types';
 
-@Resolver()
+@Resolver
 export class KnowledgeAnalyticsGraphqlResolver {
   constructor(private readonly analytics: KnowledgeAnalyticsService) {}
 
-  @Query(() => GqlKnowledgeAnalytics, { name: 'knowledgeAnalytics' })
-  knowledgeAnalytics(): GqlKnowledgeAnalytics {
-    const c = this.analytics.engine();
+  @Query( => GqlKnowledgeAnalytics, { name: 'knowledgeAnalytics' })
+  knowledgeAnalytics: GqlKnowledgeAnalytics {
+    const c = this.analytics.engine;
     return {
       product: c.product,
       note: c.note,

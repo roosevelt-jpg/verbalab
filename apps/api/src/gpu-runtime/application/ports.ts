@@ -1,4 +1,4 @@
-/** Application ports for GPU Runtime (VL-332). */
+/** Application ports for GPU Runtime. */
 
 export type GpuRuntimeProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type GpuRuntimeEngineBundle = ReturnType<
 >;
 
 export interface GpuRuntimeCatalogPort {
-  engine(): GpuRuntimeEngineBundle;
-  listProducts(): GpuRuntimeProductRow[];
+  engine: GpuRuntimeEngineBundle;
+  listProducts: GpuRuntimeProductRow[];
 }
 
 export const GPU_RUNTIME_CATALOG_PORT = Symbol('GPU_RUNTIME_CATALOG_PORT');

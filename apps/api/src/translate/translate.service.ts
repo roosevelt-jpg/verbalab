@@ -17,7 +17,7 @@ import {
   type GlossaryTermLike,
 } from '../glossary/glossary-apply';
 
-@Injectable()
+@Injectable
 export class TranslateService {
   constructor(
     private readonly gateway: GatewayService,
@@ -202,7 +202,7 @@ export class TranslateService {
       ...(await this.locales.doNotTranslateTerms(input.target)),
     ].filter(
       (term, index, all) =>
-        all.findIndex((t) => t.sourceTerm.toLowerCase() === term.sourceTerm.toLowerCase()) === index,
+        all.findIndex((t) => t.sourceTerm.toLowerCase === term.sourceTerm.toLowerCase) === index,
     );
     const localeProtect =
       localeTerms.length > 0

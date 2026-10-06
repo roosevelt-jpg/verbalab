@@ -6,16 +6,16 @@ import {
   PatentInnovationPlatformProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestPatentInnovationPlatformCatalogAdapter implements PatentInnovationPlatformCatalogPort {
   constructor(private readonly service: PatentInnovationPlatformService) {}
 
-  engine(): PatentInnovationPlatformEngineBundle {
-    return this.service.engine();
+  engine: PatentInnovationPlatformEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): PatentInnovationPlatformProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: PatentInnovationPlatformProductRow[] {
+    const bundle = this.engine as {
       products?: PatentInnovationPlatformProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestPatentInnovationPlatformCatalogAdapter implements PatentInnovat
         status: 'shipped',
         api: 'GET /v1/patent-innovation-platform/engine',
         console: '/patent-innovation-platform',
-        notes: 'VL-277 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

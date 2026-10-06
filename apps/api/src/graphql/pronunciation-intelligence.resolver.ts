@@ -18,13 +18,13 @@ type GqlReq = Request & {
   sessionAuth?: SessionContext;
 };
 
-@Resolver()
+@Resolver
 export class PronunciationIntelligenceGraphqlResolver {
   constructor(private readonly pronunciation: PronunciationIntelligenceService) {}
 
-  @Query(() => GqlPronunciationEngine, { name: 'pronunciationEngine' })
-  pronunciationEngine(): GqlPronunciationEngine {
-    const catalog = this.pronunciation.engine();
+  @Query( => GqlPronunciationEngine, { name: 'pronunciationEngine' })
+  pronunciationEngine: GqlPronunciationEngine {
+    const catalog = this.pronunciation.engine;
     return {
       product: catalog.product,
       note: catalog.note,
@@ -32,10 +32,10 @@ export class PronunciationIntelligenceGraphqlResolver {
     };
   }
 
-  @Mutation(() => GqlPronunciationAssessResult, { name: 'assessPronunciation' })
+  @Mutation( => GqlPronunciationAssessResult, { name: 'assessPronunciation' })
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   async assessPronunciation(
-    @Args('input', { type: () => AssessPronunciationInput }) input: AssessPronunciationInput,
+    @Args('input', { type:  => AssessPronunciationInput }) input: AssessPronunciationInput,
     @Context('req') req: GqlReq,
   ): Promise<GqlPronunciationAssessResult> {
     const auth = req.translateAuth!;

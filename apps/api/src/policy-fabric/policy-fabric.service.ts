@@ -35,7 +35,7 @@ type DistRecord = {
   at: string;
 };
 
-@Injectable()
+@Injectable
 export class PolicyFabricService {
   private routePlans = 0;
   private pipelines = 0;
@@ -55,7 +55,7 @@ export class PolicyFabricService {
   ) {}
 
   /** Test hook. */
-  resetCounters() {
+  resetCounters {
     this.routePlans = 0;
     this.pipelines = 0;
     this.evaluations = 0;
@@ -64,21 +64,21 @@ export class PolicyFabricService {
     this.distributions = 0;
     this.eventPublishes = 0;
     this.distLog.length = 0;
-    this.fabricGate.resetCounters();
+    this.fabricGate.resetCounters;
   }
 
-  products() {
+  products {
     return {
       product: 'Lugemi Policy Fabric',
-      products: policyFabricCapabilityCatalog(),
-      routes: policyFabricRoutingTable(),
-      pipelines: policyFabricPipelines(),
-      versions: policyFabricVersions(),
+      products: policyFabricCapabilityCatalog,
+      routes: policyFabricRoutingTable,
+      pipelines: policyFabricPipelines,
+      versions: policyFabricVersions,
       buses: FABRIC_BUSES.map((id) => ({ id })),
       globalDenies: FABRIC_GLOBAL_DENIES.map((id) => ({ id })),
-      policyRuntime: this.policyRuntime.engine(),
-      architecture: policyFabricArchitectureNotes(),
-      honesty: policyFabricHonesty(),
+      policyRuntime: this.policyRuntime.engine,
+      architecture: policyFabricArchitectureNotes,
+      honesty: policyFabricHonesty,
       safety: {
         hardGate: true,
         logOnlyMode: false,
@@ -89,14 +89,14 @@ export class PolicyFabricService {
       },
       docs: '/docs/POLICY_FABRIC.md',
       note:
-        'Policy Fabric (VL-247). Fabric-wide hard gate over Policy Runtime. Not OPA/Cedar/GRC OS.',
+        'Policy Fabric. Fabric-wide hard gate over Policy Runtime. Not OPA/Cedar/GRC OS.',
     };
   }
 
-  routes() {
+  routes {
     return {
-      routes: policyFabricRoutingTable(),
-      honesty: policyFabricHonesty(),
+      routes: policyFabricRoutingTable,
+      honesty: policyFabricHonesty,
       docs: '/docs/POLICY_FABRIC.md',
       note: 'Static policy-kind → Runtime/Fabric handoff catalog.',
     };
@@ -104,30 +104,30 @@ export class PolicyFabricService {
 
   route(input: { kinds?: string[] }) {
     this.routePlans += 1;
-    const table = policyFabricRoutingTable();
+    const table = policyFabricRoutingTable;
     const kinds = input.kinds?.length
-      ? input.kinds.map((k) => k.toLowerCase())
+      ? input.kinds.map((k) => k.toLowerCase)
       : table.map((r) => r.kind);
     const selected = table.filter((r) => kinds.includes(r.kind));
     const missing = kinds.filter((k) => !table.some((r) => r.kind === k));
     return {
       plan: selected,
       missing,
-      honesty: policyFabricHonesty(),
+      honesty: policyFabricHonesty,
       note: 'Policy Router plan — enforcement is via assert/FabricPolicyGate.',
     };
   }
 
   pipeline(input: { pipelineId?: string; steps?: string[] }) {
     this.pipelines += 1;
-    const catalog = policyFabricPipelines();
+    const catalog = policyFabricPipelines;
     const chosen =
       catalog.find((p) => p.id === input.pipelineId) ??
       (input.steps?.length
         ? {
             id: 'custom',
             name: 'Custom Pipeline',
-            steps: input.steps.map((s) => s.toLowerCase()),
+            steps: input.steps.map((s) => s.toLowerCase),
             notes: 'Caller-supplied step list.',
           }
         : catalog[0]!);
@@ -137,15 +137,15 @@ export class PolicyFabricService {
       pipeline: chosen,
       plan: routed.plan,
       missing: routed.missing,
-      honesty: policyFabricHonesty(),
+      honesty: policyFabricHonesty,
       note: 'Pipeline is an ordered handoff plan — assert steps hard-gate.',
     };
   }
 
-  versions() {
+  versions {
     return {
-      versions: policyFabricVersions(),
-      honesty: policyFabricHonesty(),
+      versions: policyFabricVersions,
+      honesty: policyFabricHonesty,
       docs: '/docs/POLICY_FABRIC.md',
       note: 'Fabric hard-gate/router versions — Runtime owns policy rows.',
     };
@@ -162,7 +162,7 @@ export class PolicyFabricService {
         mode: r.kind === 'assert' ? 'hard_gate' : 'handoff',
       })),
       missing: plan.missing,
-      honesty: policyFabricHonesty(),
+      honesty: policyFabricHonesty,
       note: 'Federation is a product-handoff catalog — not cross-tenant policy mesh.',
     };
   }
@@ -200,7 +200,7 @@ export class PolicyFabricService {
         hardGate: true,
         logOnly: false,
       },
-      honesty: policyFabricHonesty(),
+      honesty: policyFabricHonesty,
       docs: '/docs/POLICY_FABRIC.md',
       note: 'Evaluate façade — does not throw; use assert for hard-gate 403.',
     };
@@ -224,7 +224,7 @@ export class PolicyFabricService {
     });
     return {
       ...gate,
-      honesty: policyFabricHonesty(),
+      honesty: policyFabricHonesty,
       docs: '/docs/POLICY_FABRIC.md',
       note: 'Hard gate passed. Denies throw 403 — never log-only.',
     };
@@ -233,7 +233,7 @@ export class PolicyFabricService {
   async listPolicies(auth: AuthCtx) {
     return {
       ...(await this.policyRuntime.listPolicies(auth)),
-      honesty: policyFabricHonesty(),
+      honesty: policyFabricHonesty,
       docs: '/docs/POLICY_FABRIC.md',
       note: 'List façade over Policy Runtime.',
     };
@@ -255,8 +255,8 @@ export class PolicyFabricService {
     return {
       synced: listed.policies.length,
       peers: peers.map((p) => p.id),
-      stamp: new Date().toISOString(),
-      honesty: policyFabricHonesty(),
+      stamp: new Date.toISOString,
+      honesty: policyFabricHonesty,
       docs: '/docs/POLICY_FABRIC.md',
       note: 'Same-org sync plan of policy catalog — does not push rows to peers automatically.',
     };
@@ -292,13 +292,13 @@ export class PolicyFabricService {
         : peers;
 
     const record: DistRecord = {
-      id: randomUUID(),
+      id: randomUUID,
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,
       targets: targets.map((t) => t.id),
       kinds: plan.plan.map((p) => p.kind),
       status: 'planned',
-      at: new Date().toISOString(),
+      at: new Date.toISOString,
     };
 
     let event: Awaited<ReturnType<EventFabricBus['publish']>> | null = null;
@@ -326,7 +326,7 @@ export class PolicyFabricService {
       plan: plan.plan,
       peers: targets,
       event,
-      honesty: policyFabricHonesty(),
+      honesty: policyFabricHonesty,
       note: 'Distribution plan for same-org workspaces — hard-gated before planning.',
     };
   }
@@ -340,7 +340,7 @@ export class PolicyFabricService {
     });
   }
 
-  monitoring() {
+  monitoring {
     return {
       mode: 'policy_fabric',
       counters: {
@@ -351,15 +351,15 @@ export class PolicyFabricService {
         federations: this.federations,
         distributions: this.distributions,
         eventPublishes: this.eventPublishes,
-        ...this.fabricGate.counters(),
+        ...this.fabricGate.counters,
       },
       recent: { distributions: this.distLog.slice(-10) },
-      products: policyFabricCapabilityCatalog().map((p) => ({
+      products: policyFabricCapabilityCatalog.map((p) => ({
         id: p.id,
         status: p.status,
       })),
-      honesty: policyFabricHonesty(),
-      note: 'Policy Fabric monitoring (VL-247).',
+      honesty: policyFabricHonesty,
+      note: 'Policy Fabric monitoring.',
     };
   }
 
@@ -378,11 +378,11 @@ export class PolicyFabricService {
         embeddings: usageSummary.embeddings,
       },
       workspace: { peerWorkspaces: peers.length },
-      products: policyFabricCapabilityCatalog(),
-      routes: policyFabricRoutingTable(),
-      pipelines: policyFabricPipelines(),
-      architecture: policyFabricArchitectureNotes(),
-      honesty: policyFabricHonesty(),
+      products: policyFabricCapabilityCatalog,
+      routes: policyFabricRoutingTable,
+      pipelines: policyFabricPipelines,
+      architecture: policyFabricArchitectureNotes,
+      honesty: policyFabricHonesty,
       counters: {
         routePlans: this.routePlans,
         pipelines: this.pipelines,
@@ -391,7 +391,7 @@ export class PolicyFabricService {
         federations: this.federations,
         distributions: this.distributions,
         eventPublishes: this.eventPublishes,
-        ...this.fabricGate.counters(),
+        ...this.fabricGate.counters,
       },
       safety: {
         hardGate: true,
@@ -417,7 +417,7 @@ export class PolicyFabricService {
       },
       docs: '/docs/POLICY_FABRIC.md',
       note:
-        'Policy Fabric (VL-247). Hard-gate engine + router over Policy Runtime; same-org sync/distribute.',
+        'Policy Fabric. Hard-gate engine + router over Policy Runtime; same-org sync/distribute.',
     };
   }
 }

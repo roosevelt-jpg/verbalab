@@ -8,8 +8,8 @@ export type GrammarCapability = {
   notes: string;
 };
 
-/** Library Phase 10 → Lugemi Grammar Intelligence (VL-142). */
-export function grammarIntelligenceCatalog() {
+/** Library Phase 10 → Lugemi Grammar Intelligence. */
+export function grammarIntelligenceCatalog {
   return {
     product: 'Grammar Intelligence',
     note:
@@ -20,14 +20,14 @@ export function grammarIntelligenceCatalog() {
         name: 'Grammar checking',
         status: 'shipped',
         api: 'POST /v1/grammar/check',
-        notes: 'Deterministic rules + optional LLM (VL-133).',
+        notes: 'Deterministic rules + optional LLM.',
       },
       {
         id: 'spell_checking',
         name: 'Spell checking',
         status: 'shipped',
         api: 'POST /v1/grammar/spell',
-        notes: 'Curated misspelling list — not a full dictionary product (VL-142).',
+        notes: 'Curated misspelling list — not a full dictionary product.',
       },
       {
         id: 'sentence_correction',
@@ -48,7 +48,7 @@ export function grammarIntelligenceCatalog() {
         name: 'Style suggestions',
         status: 'shipped',
         api: 'POST /v1/style/rewrite',
-        notes: 'Bounded profiles (VL-134 + VL-142 domain tones).',
+        notes: 'Bounded profiles ( + domain tones).',
       },
       {
         id: 'professional_writing',
@@ -90,7 +90,7 @@ export function grammarIntelligenceCatalog() {
       grammar: { status: 'shipped', api: '/v1/grammar/*' },
       style: { status: 'shipped', api: '/v1/style/*' },
       rest: { status: 'shipped' },
-      graphql: { status: 'shipped', notes: 'checkGrammar + suggestWriting (VL-142)' },
+      graphql: { status: 'shipped', notes: 'checkGrammar + suggestWriting' },
       sdk: { status: 'shipped', package: '@lugemi/sdk' },
       analytics: { status: 'shipped', api: 'GET /v1/grammar/analytics' },
       monitoring: { status: 'partial', api: 'GET /v1/metrics/translate', notes: 'Shared observability stack' },

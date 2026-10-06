@@ -7,15 +7,15 @@ import {
   IntelligenceProductsBundle,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestIntelligenceCatalogAdapter implements IntelligenceCatalogPort {
   constructor(private readonly intelligenceCloud: IntelligenceCloudService) {}
 
-  products(): IntelligenceProductsBundle {
-    return this.intelligenceCloud.products();
+  products: IntelligenceProductsBundle {
+    return this.intelligenceCloud.products;
   }
 
-  listProducts(): IntelligenceProductRow[] {
-    return intelligenceProductCatalog();
+  listProducts: IntelligenceProductRow[] {
+    return intelligenceProductCatalog;
   }
 }

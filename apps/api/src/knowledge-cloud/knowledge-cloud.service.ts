@@ -7,17 +7,17 @@ import {
   knowledgeProductCatalog,
 } from './knowledge-products.catalog';
 
-@Injectable()
+@Injectable
 export class KnowledgeCloudService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly usage: UsageService,
   ) {}
 
-  products() {
+  products {
     return {
-      products: knowledgeProductCatalog(),
-      architecture: knowledgeArchitectureNotes(),
+      products: knowledgeProductCatalog,
+      architecture: knowledgeArchitectureNotes,
       docs: '/docs/KNOWLEDGE_CLOUD.md',
     };
   }
@@ -48,8 +48,8 @@ export class KnowledgeCloudService {
         knowledgeDocuments: knowledgeDocs,
         knowledgeChunks,
       },
-      products: knowledgeProductCatalog(),
-      architecture: knowledgeArchitectureNotes(),
+      products: knowledgeProductCatalog,
+      architecture: knowledgeArchitectureNotes,
       deferred: {
         enterpriseKnowledgeBase: false,
         enterpriseSearch: false,
@@ -94,7 +94,7 @@ export class KnowledgeCloudService {
         playground: '/playground',
       },
       docs: '/docs/KNOWLEDGE_CLOUD.md',
-      note: 'Hub over VL-062 RAG + Intelligence knowledge surfaces. Not an enterprise knowledge OS / ontology platform.',
+      note: 'Hub over existing RAG + Intelligence knowledge surfaces. Not an enterprise knowledge OS / ontology platform.',
     };
   }
 }

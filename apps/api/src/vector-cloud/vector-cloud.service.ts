@@ -3,15 +3,15 @@ import { PrismaService } from '../prisma/prisma.service';
 import { KnowledgeService } from '../knowledge/knowledge.service';
 import { vectorCloudCatalog } from './vector-cloud.catalog';
 
-@Injectable()
+@Injectable
 export class VectorCloudService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly knowledge: KnowledgeService,
   ) {}
 
-  engine() {
-    return vectorCloudCatalog();
+  engine {
+    return vectorCloudCatalog;
   }
 
   async collections(organizationId: string, workspaceId: string) {
@@ -45,7 +45,7 @@ export class VectorCloudService {
           searchApi: 'POST /v1/vector-cloud/search',
         },
       ],
-      note: 'One knowledge collection per workspace (VL-182). Multi-collection product deferred.',
+      note: 'One knowledge collection per workspace. Multi-collection product deferred.',
     };
   }
 
@@ -63,11 +63,11 @@ export class VectorCloudService {
           collection: 'knowledge',
         },
       ],
-      note: 'Workspace id is the vector namespace for tenant isolation (VL-182).',
+      note: 'Workspace id is the vector namespace for tenant isolation.',
     };
   }
 
-  async indexes() {
+  async indexes {
     return {
       indexes: [
         {
@@ -78,10 +78,10 @@ export class VectorCloudService {
           dimensions: 1536,
           managed: false,
           status: 'shipped',
-          notes: 'Created by VL-062 migration on knowledge_chunks.embedding.',
+          notes: 'Created by migration on knowledge_chunks.embedding.',
         },
       ],
-      note: 'Index create/drop/rebuild APIs deferred — migration-managed HNSW only (VL-182).',
+      note: 'Index create/drop/rebuild APIs deferred — migration-managed HNSW only.',
     };
   }
 
@@ -101,7 +101,7 @@ export class VectorCloudService {
       vectors: chunks,
       dimensions: 1536,
       backend: 'pgvector',
-      note: 'Inventory stats for workspace knowledge vectors (VL-182).',
+      note: 'Inventory stats for workspace knowledge vectors.',
     };
   }
 
@@ -120,7 +120,7 @@ export class VectorCloudService {
   }
 
   async analytics(organizationId: string, workspaceId: string) {
-    const start = new Date();
+    const start = new Date;
     start.setUTCDate(1);
     start.setUTCHours(0, 0, 0, 0);
 
@@ -136,26 +136,26 @@ export class VectorCloudService {
     ]);
 
     return {
-      periodStart: start.toISOString(),
+      periodStart: start.toISOString,
       searchRequests: searches,
       vectors: stats.vectors,
       readyDocuments: stats.readyDocuments,
-      note: 'Vector Cloud analytics from search audits + inventory (VL-182).',
+      note: 'Vector Cloud analytics from search audits + inventory.',
     };
   }
 
   async monitoring(organizationId: string, workspaceId: string) {
     const [analytics, engine] = await Promise.all([
       this.analytics(organizationId, workspaceId),
-      Promise.resolve(this.engine()),
+      Promise.resolve(this.engine),
     ]);
     return {
-      generatedAt: new Date().toISOString(),
+      generatedAt: new Date.toISOString,
       periodStart: analytics.periodStart,
       searchRequests: analytics.searchRequests,
       vectors: analytics.vectors,
       deferred: engine.capabilities.filter((c) => c.status === 'deferred').map((c) => c.id),
-      note: 'Vector Cloud monitoring snapshot (VL-182).',
+      note: 'Vector Cloud monitoring snapshot.',
     };
   }
 }

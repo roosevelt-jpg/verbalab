@@ -19,8 +19,8 @@ export class ListKnowledgeProductsHandler
     @Inject(KNOWLEDGE_CATALOG_PORT) private readonly catalog: KnowledgeCatalogPort,
   ) {}
 
-  execute(): Promise<KnowledgeProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<KnowledgeProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 
@@ -32,8 +32,8 @@ export class GetKnowledgeProductsBundleHandler
     @Inject(KNOWLEDGE_CATALOG_PORT) private readonly catalog: KnowledgeCatalogPort,
   ) {}
 
-  execute(): Promise<KnowledgeProductsBundle> {
-    return Promise.resolve(this.catalog.products());
+  execute: Promise<KnowledgeProductsBundle> {
+    return Promise.resolve(this.catalog.products);
   }
 }
 

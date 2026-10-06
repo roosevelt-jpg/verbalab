@@ -11,7 +11,7 @@ import { BatchRuntimeService } from '../batch-runtime/batch-runtime.service';
 import { StreamingRuntimeService } from '../streaming-runtime/streaming-runtime.service';
 import { DataPlaneCloudService } from '../data-plane-cloud/data-plane-cloud.service';
 
-@Injectable()
+@Injectable
 export class RuntimeManagerService {
   constructor(
     private readonly aiKernel: AiKernelService,
@@ -26,78 +26,78 @@ export class RuntimeManagerService {
     private readonly dataPlaneCloud: DataPlaneCloudService
   ) {}
 
-  engine() {
-    return runtimeManagerEngineCatalog();
+  engine {
+    return runtimeManagerEngineCatalog;
   }
 
   /** Route/execute façade: returns upstream endpoint + live status from injected Kernel/Fabric/Data Plane services. */
   route(capability?: string) {
-    const catalog = this.engine();
-    const q = (capability ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (capability ?? '').trim.toLowerCase;
     const capabilities = catalog.capabilities.filter((c) => {
       if (!q) return true;
-      return c.id.includes(q) || c.name.toLowerCase().includes(q);
+      return c.id.includes(q) || c.name.toLowerCase.includes(q);
     });
     const upstreamStatus = [
       {
         module: 'ai-kernel',
         method: 'products',
         status: 'reachable',
-        upstream: this.aiKernel.products(),
+        upstream: this.aiKernel.products,
       },
       {
         module: 'agent-runtime',
         method: 'engine',
         status: 'reachable',
-        upstream: this.agentRuntime.engine(),
+        upstream: this.agentRuntime.engine,
       },
       {
         module: 'workflow-runtime',
         method: 'engine',
         status: 'reachable',
-        upstream: this.workflowRuntime.engine(),
+        upstream: this.workflowRuntime.engine,
       },
       {
         module: 'memory-runtime',
         method: 'engine',
         status: 'reachable',
-        upstream: this.memoryRuntime.engine(),
+        upstream: this.memoryRuntime.engine,
       },
       {
         module: 'policy-runtime',
         method: 'engine',
         status: 'reachable',
-        upstream: this.policyRuntime.engine(),
+        upstream: this.policyRuntime.engine,
       },
       {
         module: 'prompt-runtime',
         method: 'engine',
         status: 'reachable',
-        upstream: this.promptRuntime.engine(),
+        upstream: this.promptRuntime.engine,
       },
       {
         module: 'context-runtime',
         method: 'engine',
         status: 'reachable',
-        upstream: this.contextRuntime.engine(),
+        upstream: this.contextRuntime.engine,
       },
       {
         module: 'batch-runtime',
         method: 'engine',
         status: 'reachable',
-        upstream: this.batchRuntime.engine(),
+        upstream: this.batchRuntime.engine,
       },
       {
         module: 'streaming-runtime',
         method: 'engine',
         status: 'reachable',
-        upstream: this.streamingRuntime.engine(),
+        upstream: this.streamingRuntime.engine,
       },
       {
         module: 'data-plane-cloud',
         method: 'products',
         status: 'reachable',
-        upstream: this.dataPlaneCloud.products(),
+        upstream: this.dataPlaneCloud.products,
       }
     ];
     return {
@@ -119,11 +119,11 @@ export class RuntimeManagerService {
   }
 
   list(query?: string) {
-    const catalog = this.engine();
-    const q = (query ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (query ?? '').trim.toLowerCase;
     const rows = catalog.routes.filter((row) => {
       if (!q) return true;
-      return JSON.stringify(row).toLowerCase().includes(q);
+      return JSON.stringify(row).toLowerCase.includes(q);
     });
     return {
       routes: rows,
@@ -140,8 +140,8 @@ export class RuntimeManagerService {
     return this.list(query);
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'runtime-manager',
       count: catalog.routes.length,
@@ -150,7 +150,7 @@ export class RuntimeManagerService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'RuntimeManager monitoring snapshot (VL-336).',
+      note: 'RuntimeManager monitoring snapshot.',
     };
   }
 }

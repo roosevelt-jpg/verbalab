@@ -38,20 +38,20 @@ type Overview = {
   links: Record<string, string>;
 };
 
-export function EnterpriseClient() {
-  const { getToken, isLoaded } = useAuth();
+export function EnterpriseClient {
+  const { getToken, isLoaded } = useAuth;
   const [data, setData] = useState<Overview | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     setData(await apiFetch<Overview>('/v1/enterprise/overview', { token }));
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
   const p = data?.policies.organization;
@@ -126,8 +126,8 @@ export function EnterpriseClient() {
           <section>
             <h2 style={label}>Billing policy</h2>
             <p style={{ margin: 0, fontWeight: 600 }}>
-              {p.billing.planName} · {p.billing.charactersUsed.toLocaleString()} /{' '}
-              {p.billing.characterQuota.toLocaleString()} characters
+              {p.billing.planName} · {p.billing.charactersUsed.toLocaleString} /{' '}
+              {p.billing.characterQuota.toLocaleString} characters
             </p>
             <p style={{ margin: '0.65rem 0 0' }}>
               <Link href={data.links.billing} style={{ color: 'var(--accent)', fontWeight: 550 }}>

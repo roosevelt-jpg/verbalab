@@ -1,4 +1,4 @@
-/** Application ports for API Engineering Standards (VL-350). */
+/** Application ports for API Engineering Standards. */
 
 export type ApiEngineeringStandardsProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type ApiEngineeringStandardsEngineBundle = ReturnType<
 >;
 
 export interface ApiEngineeringStandardsCatalogPort {
-  engine(): ApiEngineeringStandardsEngineBundle;
-  listProducts(): ApiEngineeringStandardsProductRow[];
+  engine: ApiEngineeringStandardsEngineBundle;
+  listProducts: ApiEngineeringStandardsProductRow[];
 }
 
 export const API_ENGINEERING_STANDARDS_CATALOG_PORT = Symbol('API_ENGINEERING_STANDARDS_CATALOG_PORT');

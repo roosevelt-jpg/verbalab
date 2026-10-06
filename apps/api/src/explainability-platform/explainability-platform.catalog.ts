@@ -1,5 +1,5 @@
 /**
- * Library Phase 162 → Explainability Platform (VL-295).
+ * Library Phase 162 → Explainability Platform.
  * Not SHAP OS — confidence/evidence/attribution/decision-trace/provenance.
  */
 export type ExplanationRecord = {
@@ -18,7 +18,7 @@ export type ExplanationRecord = {
   notes: string;
 };
 
-export function seedExplanations(): ExplanationRecord[] {
+export function seedExplanations: ExplanationRecord[] {
   return [
     {
       id: 'xai-001',
@@ -58,8 +58,8 @@ export function seedExplanations(): ExplanationRecord[] {
   ];
 }
 
-export function explainabilityPlatformEngineCatalog() {
-  const explanations = seedExplanations();
+export function explainabilityPlatformEngineCatalog {
+  const explanations = seedExplanations;
   return {
     product: 'Lugemi Explainability Platform',
     capabilities: [
@@ -84,6 +84,6 @@ export function explainabilityPlatformEngineCatalog() {
       note: 'Explainability catalog for confidence/evidence/attribution/traces — not a SHAP/LIME research OS.',
     },
     docs: '/docs/EXPLAINABILITY_PLATFORM.md',
-    note: 'Explainability Platform (VL-295). Decision explainability seed — shapOs=false.',
+    note: 'Explainability Platform. Decision explainability seed — shapOs=false.',
   };
 }

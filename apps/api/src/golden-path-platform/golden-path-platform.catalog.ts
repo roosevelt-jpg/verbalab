@@ -1,18 +1,18 @@
 /**
- * Library Phase 172 → Golden Path Platform (VL-305).
- * Golden Path Platform (VL-305). Service/microservice/cloud/SDK/repo/CI/security templates catalog. scaffoldingOs=false.
+ * Library Phase 172 → Golden Path Platform.
+ * Golden Path Platform. Service/microservice/cloud/SDK/repo/CI/security templates catalog. scaffoldingOs=false.
  */
-export function goldenPathPlatformEngineCatalog() {
+export function goldenPathPlatformEngineCatalog {
   return {
     product: 'Lugemi Golden Path Platform',
     capabilities: [
-      { id: 'service_template', name: 'Service Template', status: 'shipped', notes: 'VL-305 capability.' },
-      { id: 'microservice_template', name: 'Microservice Template', status: 'shipped', notes: 'VL-305 capability.' },
-      { id: 'cloud_template', name: 'Cloud Hub Template', status: 'shipped', notes: 'VL-305 capability.' },
-      { id: 'sdk_template', name: 'SDK Template', status: 'shipped', notes: 'VL-305 capability.' },
-      { id: 'repo_template', name: 'Repo Template', status: 'shipped', notes: 'VL-305 capability.' },
-      { id: 'ci_template', name: 'CI Template', status: 'shipped', notes: 'VL-305 capability.' },
-      { id: 'security_template', name: 'Security Template', status: 'shipped', notes: 'VL-305 capability.' }
+      { id: 'service_template', name: 'Service Template', status: 'shipped', notes: ' capability.' },
+      { id: 'microservice_template', name: 'Microservice Template', status: 'shipped', notes: ' capability.' },
+      { id: 'cloud_template', name: 'Cloud Hub Template', status: 'shipped', notes: ' capability.' },
+      { id: 'sdk_template', name: 'SDK Template', status: 'shipped', notes: ' capability.' },
+      { id: 'repo_template', name: 'Repo Template', status: 'shipped', notes: ' capability.' },
+      { id: 'ci_template', name: 'CI Template', status: 'shipped', notes: ' capability.' },
+      { id: 'security_template', name: 'Security Template', status: 'shipped', notes: ' capability.' }
     ],
     templates: [
       {
@@ -73,9 +73,9 @@ export function goldenPathPlatformEngineCatalog() {
     },
     safety: {
       scaffoldingOs: false,
-      note: 'Golden Path Platform (VL-305). Service/microservice/cloud/SDK/repo/CI/security templates catalog. scaffoldingOs=false.',
+      note: 'Golden Path Platform. Service/microservice/cloud/SDK/repo/CI/security templates catalog. scaffoldingOs=false.',
     },
     docs: '/docs/GOLDEN_PATH_PLATFORM.md',
-    note: 'Golden Path Platform (VL-305). Service/microservice/cloud/SDK/repo/CI/security templates catalog. scaffoldingOs=false.',
+    note: 'Golden Path Platform. Service/microservice/cloud/SDK/repo/CI/security templates catalog. scaffoldingOs=false.',
   };
 }

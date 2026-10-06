@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetVisionRuntimeEngineQuery } from '../vision-runtime/application/messages';
 import { GqlVisionRuntimeEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class VisionRuntimeGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query(() => GqlVisionRuntimeEngine, { name: 'visionRuntimeEngine' })
-  async visionRuntimeEngine(): Promise<GqlVisionRuntimeEngine> {
-    const catalog = await this.queries.execute(new GetVisionRuntimeEngineQuery());
+  @Query( => GqlVisionRuntimeEngine, { name: 'visionRuntimeEngine' })
+  async visionRuntimeEngine: Promise<GqlVisionRuntimeEngine> {
+    const catalog = await this.queries.execute(new GetVisionRuntimeEngineQuery);
     return {
       product: catalog.product,
       note: catalog.note,

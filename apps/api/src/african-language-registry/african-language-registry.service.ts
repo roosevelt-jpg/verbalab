@@ -5,46 +5,46 @@ import {
   africanLanguageFamilies,
 } from './african-language-registry.catalog';
 
-@Injectable()
+@Injectable
 export class AfricanLanguageRegistryService {
-  engine() {
-    return africanLanguageRegistryEngineCatalog();
+  engine {
+    return africanLanguageRegistryEngineCatalog;
   }
 
   languages(query?: string) {
-    const q = (query ?? '').trim().toLowerCase();
-    const languages = africanLanguageSeed().filter((l) => {
+    const q = (query ?? '').trim.toLowerCase;
+    const languages = africanLanguageSeed.filter((l) => {
       if (!q) return true;
       return (
-        l.code.toLowerCase().includes(q) ||
-        l.name.toLowerCase().includes(q) ||
-        l.family.toLowerCase().includes(q)
+        l.code.toLowerCase.includes(q) ||
+        l.name.toLowerCase.includes(q) ||
+        l.family.toLowerCase.includes(q)
       );
     });
     return {
       languages,
       count: languages.length,
       coverageComplete: false,
-      honesty: this.engine().honesty,
+      honesty: this.engine.honesty,
       docs: '/docs/AFRICAN_LANGUAGE_REGISTRY.md',
     };
   }
 
-  families() {
+  families {
     return {
-      families: africanLanguageFamilies(),
+      families: africanLanguageFamilies,
       coverageComplete: false,
-      honesty: this.engine().honesty,
+      honesty: this.engine.honesty,
     };
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'registry',
       languageCount: catalog.languages.length,
       honesty: catalog.honesty,
-      note: 'African Language Registry monitoring snapshot (VL-261).',
+      note: 'African Language Registry monitoring snapshot.',
     };
   }
 }

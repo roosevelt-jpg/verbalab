@@ -28,14 +28,14 @@ export class SpeakerIntelligenceController {
   constructor(private readonly speakers: SpeakerIntelligenceService) {}
 
   @Get('engine')
-  engine() {
-    return this.speakers.engine();
+  engine {
+    return this.speakers.engine;
   }
 
   @Get('profiles')
   @UseGuards(TranslateAuthGuard)
   listProfiles(
-    @Req()
+    @Req
     req: Request & { translateAuth: TranslateAuthContext },
   ) {
     return this.speakers.listProfiles(
@@ -47,7 +47,7 @@ export class SpeakerIntelligenceController {
   @Get('profiles/:id')
   @UseGuards(TranslateAuthGuard)
   getProfile(
-    @Req()
+    @Req
     req: Request & { translateAuth: TranslateAuthContext },
     @Param('id') id: string,
   ) {
@@ -62,12 +62,12 @@ export class SpeakerIntelligenceController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(TranslateAuthGuard)
   createProfile(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body() body: { displayName?: string; externalRef?: string },
+    @Body body: { displayName?: string; externalRef?: string },
   ) {
     if (typeof body.displayName !== 'string') {
       throw new ApiException('validation_error', 'displayName is required', HttpStatus.BAD_REQUEST);
@@ -87,18 +87,18 @@ export class SpeakerIntelligenceController {
   @UseGuards(TranslateAuthGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   enroll(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
     @Param('id') id: string,
-    @UploadedFile() file: Express.Multer.File | undefined,
+    @UploadedFile file: Express.Multer.File | undefined,
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
@@ -118,29 +118,29 @@ export class SpeakerIntelligenceController {
   @UseGuards(TranslateAuthGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   verify(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { profileId?: string; threshold?: string },
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { profileId?: string; threshold?: string },
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
     }
-    if (typeof body.profileId !== 'string' || !body.profileId.trim()) {
+    if (typeof body.profileId !== 'string' || !body.profileId.trim) {
       throw new ApiException('validation_error', 'profileId is required', HttpStatus.BAD_REQUEST);
     }
     return this.speakers.verify({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
-      profileId: body.profileId.trim(),
+      profileId: body.profileId.trim,
       file,
       threshold: body.threshold ? Number(body.threshold) : undefined,
       userId: req.sessionAuth?.userId,
@@ -153,18 +153,18 @@ export class SpeakerIntelligenceController {
   @UseGuards(TranslateAuthGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   identify(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { threshold?: string; topK?: string },
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { threshold?: string; topK?: string },
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
@@ -185,18 +185,18 @@ export class SpeakerIntelligenceController {
   @UseGuards(TranslateAuthGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   diarize(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { language?: string; gapSeconds?: string },
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { language?: string; gapSeconds?: string },
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
@@ -217,19 +217,19 @@ export class SpeakerIntelligenceController {
   @UseGuards(TranslateAuthGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   async diarizeStream(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Res() res: Response,
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { language?: string },
+    @Res res: Response,
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { language?: string },
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
@@ -238,7 +238,7 @@ export class SpeakerIntelligenceController {
     res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders?.();
+    res.flushHeaders?.;
 
     const stream = this.speakers.streamDiarize({
       organizationId: req.translateAuth.organizationId,
@@ -254,13 +254,13 @@ export class SpeakerIntelligenceController {
       res.write(`event: ${chunk.event}\ndata: ${JSON.stringify(chunk)}\n\n`);
       if (chunk.event === 'error' || chunk.event === 'done') break;
     }
-    res.end();
+    res.end;
   }
 
   @Get('history')
   @UseGuards(TranslateAuthGuard)
   history(
-    @Req()
+    @Req
     req: Request & { translateAuth: TranslateAuthContext },
     @Query('limit') limit?: string,
   ) {

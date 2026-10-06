@@ -2,7 +2,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
 
 export const WORKSPACE_STORAGE_KEY = 'lugemi_workspace_id';
 
-export function getStoredWorkspaceId(): string | null {
+export function getStoredWorkspaceId: string | null {
   if (typeof window === 'undefined') return null;
   return window.localStorage.getItem(WORKSPACE_STORAGE_KEY);
 }
@@ -21,7 +21,7 @@ export async function apiFetch<T>(
   const ws =
     workspaceId === null
       ? undefined
-      : workspaceId ?? (typeof window !== 'undefined' ? getStoredWorkspaceId() : null);
+      : workspaceId ?? (typeof window !== 'undefined' ? getStoredWorkspaceId : null);
 
   const response = await fetch(`${API_URL}${path}`, {
     ...rest,
@@ -33,7 +33,7 @@ export async function apiFetch<T>(
     },
   });
 
-  const body = (await response.json().catch(() => ({}))) as T & {
+  const body = (await response.json.catch( => ({}))) as T & {
     error?: { code: string; message: string };
   };
 

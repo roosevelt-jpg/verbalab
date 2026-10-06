@@ -22,7 +22,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_wr_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_wr_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -36,22 +36,22 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Workflow Runtime (VL-220)', () => {
+describe('Workflow Runtime',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   const prevMode = process.env.LUGEMI_WORKFLOW_RUNTIME_MODE;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     process.env.LUGEMI_WORKFLOW_RUNTIME_MODE = 'sandbox';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -59,7 +59,7 @@ describe('Workflow Runtime (VL-220)', () => {
     app.get(GatewayService).setChatProviderForTests({
       name: 'fixture_chat',
       async complete(input) {
-        const user = [...input.messages].reverse().find((m) => m.role === 'user');
+        const user = [...input.messages].reverse.find((m) => m.role === 'user');
         return {
           message: {
             role: 'assistant',
@@ -76,13 +76,13 @@ describe('Workflow Runtime (VL-220)', () => {
     });
   });
 
-  afterAll(async () => {
+  afterAll(async  => {
     if (prevMode === undefined) delete process.env.LUGEMI_WORKFLOW_RUNTIME_MODE;
     else process.env.LUGEMI_WORKFLOW_RUNTIME_MODE = prevMode;
-    await app.close();
+    await app.close;
   });
 
-  it('documents Workflow Runtime honesty (sandbox + permissions; not Temporal OS)', () => {
+  it('documents Workflow Runtime honesty (sandbox + permissions; not Temporal OS)',  => {
     const doc = join(root, 'docs/WORKFLOW_RUNTIME.md');
     const adr = join(root, 'docs/adr/0131-workflow-runtime.md');
     expect(existsSync(doc)).toBe(true);
@@ -94,8 +94,8 @@ describe('Workflow Runtime (VL-220)', () => {
     expect(text).toMatch(/hard/i);
   });
 
-  it('exposes engine with honest safety flags', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/workflow-runtime/engine').expect(200);
+  it('exposes engine with honest safety flags', async  => {
+    const res = await request(app.getHttpServer).get('/v1/workflow-runtime/engine').expect(200);
     expect(res.body.product).toContain('Workflow Runtime');
     expect(res.body.honesty.openToolExecution).toBe(false);
     expect(res.body.honesty.liveStepExecution).toBe(false);
@@ -110,7 +110,7 @@ describe('Workflow Runtime (VL-220)', () => {
     expect(res.body.links.console).toBe('/workflow-runtime');
   });
 
-  it('denies missing permissions, runs sandbox steps, approves, rolls back, replays', async () => {
+  it('denies missing permissions, runs sandbox steps, approves, rolls back, replays', async  => {
     const org = await seedOrg(prisma, 'wr');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -120,7 +120,7 @@ describe('Workflow Runtime (VL-220)', () => {
     });
     const auth = { Authorization: `Bearer ${key.secret}` };
 
-    const created = await request(app.getHttpServer())
+    const created = await request(app.getHttpServer)
       .post('/v1/workflow-runtime/workflows')
       .set(auth)
       .send({
@@ -144,13 +144,13 @@ describe('Workflow Runtime (VL-220)', () => {
 
     const workflowId = created.body.workflow.id as string;
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post(`/v1/workflow-runtime/workflows/${workflowId}/lifecycle`)
       .set(auth)
       .send({ status: 'active' })
       .expect(200);
 
-    const denied = await request(app.getHttpServer())
+    const denied = await request(app.getHttpServer)
       .post('/v1/workflow-runtime/workflows')
       .set(auth)
       .send({
@@ -159,25 +159,25 @@ describe('Workflow Runtime (VL-220)', () => {
         steps: [{ action: 'shell.exec' }],
       })
       .expect(201);
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post(`/v1/workflow-runtime/workflows/${denied.body.workflow.id}/lifecycle`)
       .set(auth)
       .send({ status: 'active' })
       .expect(200);
     // shell.exec is stripped from permissions; step still denied at run
-    const badRun = await request(app.getHttpServer())
+    const badRun = await request(app.getHttpServer)
       .post('/v1/workflow-runtime/run')
       .set(auth)
       .send({
         workflowId: denied.body.workflow.id,
       })
       .expect(200);
-    // default step becomes reason.plan when only invalid steps were provided... 
+    // default step becomes reason.plan when only invalid steps were provided...
     // Actually steps with shell.exec remain in the definition - run will deny
     expect(badRun.body.run.sandbox).toBe(true);
 
     // Force a workflow that still has shell.exec in steps
-    const shellWf = await request(app.getHttpServer())
+    const shellWf = await request(app.getHttpServer)
       .post('/v1/workflow-runtime/workflows')
       .set(auth)
       .send({
@@ -186,12 +186,12 @@ describe('Workflow Runtime (VL-220)', () => {
         steps: [{ action: 'shell.exec', input: { cmd: 'echo' } }],
       })
       .expect(201);
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post(`/v1/workflow-runtime/workflows/${shellWf.body.workflow.id}/lifecycle`)
       .set(auth)
       .send({ status: 'active' })
       .expect(200);
-    const shellRun = await request(app.getHttpServer())
+    const shellRun = await request(app.getHttpServer)
       .post('/v1/workflow-runtime/run')
       .set(auth)
       .send({ workflowId: shellWf.body.workflow.id })
@@ -199,7 +199,7 @@ describe('Workflow Runtime (VL-220)', () => {
     expect(shellRun.body.run.status).toBe('denied');
     expect(shellRun.body.run.steps[0].allowed).toBe(false);
 
-    const missing = await request(app.getHttpServer())
+    const missing = await request(app.getHttpServer)
       .post('/v1/workflow-runtime/workflows')
       .set(auth)
       .send({
@@ -208,12 +208,12 @@ describe('Workflow Runtime (VL-220)', () => {
         steps: [{ action: 'context.assemble', input: { query: 'x' } }],
       })
       .expect(201);
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post(`/v1/workflow-runtime/workflows/${missing.body.workflow.id}/lifecycle`)
       .set(auth)
       .send({ status: 'active' })
       .expect(200);
-    const missingRun = await request(app.getHttpServer())
+    const missingRun = await request(app.getHttpServer)
       .post('/v1/workflow-runtime/run')
       .set(auth)
       .send({ workflowId: missing.body.workflow.id })
@@ -221,7 +221,7 @@ describe('Workflow Runtime (VL-220)', () => {
     expect(missingRun.body.run.status).toBe('denied');
     expect(missingRun.body.run.steps[0].error).toMatch(/lacks permission/i);
 
-    const ok = await request(app.getHttpServer())
+    const ok = await request(app.getHttpServer)
       .post('/v1/workflow-runtime/run')
       .set(auth)
       .send({ workflowId })
@@ -230,14 +230,14 @@ describe('Workflow Runtime (VL-220)', () => {
     expect(ok.body.run.liveStepExecution).toBe(false);
     expect(ok.body.run.steps.every((s: { allowed: boolean }) => s.allowed)).toBe(true);
 
-    const versioned = await request(app.getHttpServer())
+    const versioned = await request(app.getHttpServer)
       .post(`/v1/workflow-runtime/workflows/${workflowId}/version`)
       .set(auth)
       .send({})
       .expect(200);
     expect(versioned.body.workflow.version).toBe(2);
 
-    const rolled = await request(app.getHttpServer())
+    const rolled = await request(app.getHttpServer)
       .post('/v1/workflow-runtime/rollback')
       .set(auth)
       .send({ runId: ok.body.run.id })
@@ -245,7 +245,7 @@ describe('Workflow Runtime (VL-220)', () => {
     expect(rolled.body.run.status).toBe('rolled_back');
     expect(rolled.body.honesty.distributedSagaOs).toBe(false);
 
-    const replayed = await request(app.getHttpServer())
+    const replayed = await request(app.getHttpServer)
       .post('/v1/workflow-runtime/replay')
       .set(auth)
       .send({ runId: ok.body.run.id })
@@ -253,7 +253,7 @@ describe('Workflow Runtime (VL-220)', () => {
     expect(replayed.body.replay.sourceRunId).toBe(ok.body.run.id);
     expect(replayed.body.honesty.eventSourcingOs).toBe(false);
 
-    const approvalWf = await request(app.getHttpServer())
+    const approvalWf = await request(app.getHttpServer)
       .post('/v1/workflow-runtime/workflows')
       .set(auth)
       .send({
@@ -263,22 +263,22 @@ describe('Workflow Runtime (VL-220)', () => {
         steps: [{ action: 'reason.plan', input: { problem: 'gated' } }],
       })
       .expect(201);
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post(`/v1/workflow-runtime/workflows/${approvalWf.body.workflow.id}/lifecycle`)
       .set(auth)
       .send({ status: 'active' })
       .expect(200);
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post('/v1/workflow-runtime/run')
       .set(auth)
       .send({ workflowId: approvalWf.body.workflow.id })
       .expect(403);
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post('/v1/workflow-runtime/approve')
       .set(auth)
       .send({ workflowId: approvalWf.body.workflow.id, note: 'ok' })
       .expect(200);
-    const approvedRun = await request(app.getHttpServer())
+    const approvedRun = await request(app.getHttpServer)
       .post('/v1/workflow-runtime/run')
       .set(auth)
       .send({ workflowId: approvalWf.body.workflow.id, approved: true })
@@ -286,15 +286,15 @@ describe('Workflow Runtime (VL-220)', () => {
     expect(approvedRun.body.run.status).toBe('completed');
   });
 
-  it('exposes workflowRuntimeEngine via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes workflowRuntimeEngine via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
           '{ workflowRuntimeEngine { product openToolExecution liveStepExecution temporalOs extendsWorkflowsProduct scopedPermissionsRequired sandboxRequired localPermissionHardGate mode maxWorkflowsPerWorkspace } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.workflowRuntimeEngine.temporalOs).toBe(false);
     expect(res.body.data.workflowRuntimeEngine.extendsWorkflowsProduct).toBe(true);
     expect(res.body.data.workflowRuntimeEngine.localPermissionHardGate).toBe(true);

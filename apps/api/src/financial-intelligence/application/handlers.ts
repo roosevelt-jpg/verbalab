@@ -17,8 +17,8 @@ export class GetFinancialIntelligenceEngineHandler
     private readonly catalog: FinancialIntelligenceCatalogPort,
   ) {}
 
-  execute(): Promise<FinancialIntelligenceEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<FinancialIntelligenceEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListFinancialIntelligenceProductsHandler
     private readonly catalog: FinancialIntelligenceCatalogPort,
   ) {}
 
-  execute(): Promise<FinancialIntelligenceProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<FinancialIntelligenceProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

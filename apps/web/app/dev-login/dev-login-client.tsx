@@ -4,9 +4,9 @@ import { useSignIn } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-export function DevLoginClient() {
-  const { isLoaded, signIn, setActive } = useSignIn();
-  const router = useRouter();
+export function DevLoginClient {
+  const { isLoaded, signIn, setActive } = useSignIn;
+  const router = useRouter;
   const [email, setEmail] = useState('local.reviewer@example.com');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -19,14 +19,14 @@ export function DevLoginClient() {
     router.replace('/dashboard');
   }
 
-  async function signInWithTicket() {
+  async function signInWithTicket {
     if (!isLoaded || !signIn) return;
     setBusy(true);
     setError(null);
     setStatus('Minting sign-in ticket…');
     try {
       const res = await fetch('/api/dev-login', { method: 'POST' });
-      const data = (await res.json()) as {
+      const data = (await res.json) as {
         ticket?: string;
         email?: string;
         error?: string;
@@ -54,14 +54,14 @@ export function DevLoginClient() {
   }
 
   async function signInWithPassword(e: React.FormEvent) {
-    e.preventDefault();
+    e.preventDefault;
     if (!isLoaded || !signIn) return;
     setBusy(true);
     setError(null);
     setStatus('Signing in with password…');
     try {
       const result = await signIn.create({
-        identifier: email.trim(),
+        identifier: email.trim,
         strategy: 'password',
         password,
       });
@@ -121,7 +121,7 @@ export function DevLoginClient() {
         <button
           type="button"
           disabled={!isLoaded || busy}
-          onClick={() => void signInWithTicket()}
+          onClick={ => void signInWithTicket}
           style={{
             width: '100%',
             border: 0,

@@ -11,7 +11,7 @@ import {
   splitRevenue,
 } from './creator-economy.catalog';
 
-@Injectable()
+@Injectable
 export class CreatorEconomyService {
   constructor(
     private readonly prisma: PrismaService,
@@ -20,8 +20,8 @@ export class CreatorEconomyService {
     private readonly fabricGate: FabricPolicyGate,
   ) {}
 
-  engine() {
-    return creatorEconomyEngineCatalog();
+  engine {
+    return creatorEconomyEngineCatalog;
   }
 
   private assertOwnerOrAdmin(role: string) {
@@ -30,7 +30,7 @@ export class CreatorEconomyService {
     }
   }
 
-  royaltyScenarios() {
+  royaltyScenarios {
     const verified = ROYALTY_HAND_CHECK_SCENARIOS.map((s) => {
       const split = splitRevenue({ amountCents: s.amountCents, feeBps: s.feeBps });
       const ok =
@@ -70,7 +70,7 @@ export class CreatorEconomyService {
     ip?: string;
   }) {
     this.assertOwnerOrAdmin(input.role);
-    return this.billing.assertPro(input.organizationId).then(async () => {
+    return this.billing.assertPro(input.organizationId).then(async  => {
       await this.fabricGate.assertAllowed({
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
@@ -85,7 +85,7 @@ export class CreatorEconomyService {
         input.feeBps != null
           ? Math.floor(Number(input.feeBps))
           : schedule === 'content_marketplace'
-            ? this.billing.platformFeeBps()
+            ? this.billing.platformFeeBps
             : ECOSYSTEM_HUB_PLATFORM_FEE_BPS;
 
       const split = splitRevenue({
@@ -105,10 +105,10 @@ export class CreatorEconomyService {
       return {
         schedule,
         ...split,
-        honesty: this.engine().honesty,
+        honesty: this.engine.honesty,
         note:
           schedule === 'content_marketplace'
-            ? 'Uses billing.platformFeeBps() (MARKETPLACE_PLATFORM_FEE_BPS, default 20%).'
+            ? 'Uses billing.platformFeeBps (MARKETPLACE_PLATFORM_FEE_BPS, default 20%).'
             : 'Uses ecosystem hub fee 15% (1500 bps) — Volume 11 model→voice-language marketplaces.',
       };
     });
@@ -144,12 +144,12 @@ export class CreatorEconomyService {
           publisherNetCents: r.amountCents - r.applicationFeeCents,
           currency: r.currency,
           status: r.status,
-          createdAt: r.createdAt.toISOString(),
+          createdAt: r.createdAt.toISOString,
           impliedFeeBps: split.feeBps,
         };
       }),
-      honesty: this.engine().honesty,
-      note: 'Aggregated MarketplaceSale receipts (VL-092 + Volume 11 hubs). Not a payment ledger OS.',
+      honesty: this.engine.honesty,
+      note: 'Aggregated MarketplaceSale receipts ( + Volume 11 hubs). Not a payment ledger OS.',
     };
   }
 
@@ -174,7 +174,7 @@ export class CreatorEconomyService {
         publisherNetCents: r.amountCents - r.applicationFeeCents,
         currency: r.currency,
         status: r.status === 'paid' ? 'paid' : 'recorded',
-        issuedAt: r.createdAt.toISOString(),
+        issuedAt: r.createdAt.toISOString,
       })),
       honesty: {
         fullInvoicingOs: false,
@@ -221,7 +221,7 @@ export class CreatorEconomyService {
           platformFeeBps: connect.platformFeeBps,
         },
       },
-      honesty: this.engine().honesty,
+      honesty: this.engine.honesty,
       note: 'Creator profile over org + Connect + sales. Not a social creator CRM.',
     };
   }
@@ -277,7 +277,7 @@ export class CreatorEconomyService {
         liveConnectBlockedWithoutStripeEnv: !connect.onboardingConfigured,
       },
       note:
-        'Partner readiness is Stripe Connect Express (VL-092). Full partner program / multi-tier accounts deferred.',
+        'Partner readiness is Stripe Connect Express. Full partner program / multi-tier accounts deferred.',
     };
   }
 
@@ -296,7 +296,7 @@ export class CreatorEconomyService {
         title: i.listing.title,
         kind: i.listing.kind,
         listingStatus: i.listing.status,
-        installedAt: i.installedAt.toISOString(),
+        installedAt: i.installedAt.toISOString,
       })),
       honesty: {
         licenseServerOs: false,
@@ -306,7 +306,7 @@ export class CreatorEconomyService {
     };
   }
 
-  async taxReporting() {
+  async taxReporting {
     return {
       status: 'deferred',
       coverage: {
@@ -326,7 +326,7 @@ export class CreatorEconomyService {
     };
   }
 
-  async disputes() {
+  async disputes {
     return {
       status: 'deferred',
       coverage: {
@@ -368,21 +368,21 @@ export class CreatorEconomyService {
       grossSalesCents: gross,
       platformFeesCents: fees,
       publisherNetCents: gross - fees,
-      honesty: this.engine().honesty,
+      honesty: this.engine.honesty,
       note: 'Creator Economy aggregates over MarketplaceSale / installs.',
     };
   }
 
-  monitoring() {
-    const engine = this.engine();
-    const scenarios = this.royaltyScenarios();
+  monitoring {
+    const engine = this.engine;
+    const scenarios = this.royaltyScenarios;
     return {
       mode: 'creator-economy',
       products: engine.capabilities.map((c) => ({ id: c.id, status: c.status })),
       royaltyHandChecksPassed: scenarios.allHandChecksPassed,
       honesty: engine.honesty,
       safety: engine.safety,
-      note: 'Creator Economy monitoring snapshot (VL-258).',
+      note: 'Creator Economy monitoring snapshot.',
     };
   }
 }

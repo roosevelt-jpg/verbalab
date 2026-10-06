@@ -6,16 +6,16 @@ import {
   RiskIntelligenceProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestRiskIntelligenceCatalogAdapter implements RiskIntelligenceCatalogPort {
   constructor(private readonly service: RiskIntelligenceService) {}
 
-  engine(): RiskIntelligenceEngineBundle {
-    return this.service.engine();
+  engine: RiskIntelligenceEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): RiskIntelligenceProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: RiskIntelligenceProductRow[] {
+    const bundle = this.engine as {
       products?: RiskIntelligenceProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestRiskIntelligenceCatalogAdapter implements RiskIntelligenceCatal
         status: 'shipped',
         api: 'GET /v1/risk-intelligence/engine',
         console: '/risk-intelligence',
-        notes: 'VL-298 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

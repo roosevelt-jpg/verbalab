@@ -18,7 +18,7 @@ type AuthCtx = {
   ip?: string;
 };
 
-@Injectable()
+@Injectable
 export class OntologyPlatformService {
   constructor(
     private readonly prisma: PrismaService,
@@ -26,11 +26,11 @@ export class OntologyPlatformService {
     private readonly audit: AuditService,
   ) {}
 
-  engine() {
-    return ontologyPlatformCatalog();
+  engine {
+    return ontologyPlatformCatalog;
   }
 
-  domains() {
+  domains {
     return {
       domains: ONTOLOGY_DOMAINS.map((d) => ({
         id: d.id,
@@ -41,12 +41,12 @@ export class OntologyPlatformService {
             ? 'Domain tag allowed on concepts; certified vertical ontology pack deferred.'
             : 'Default workspace ontology domain.',
       })),
-      note: 'Vertical packs are tags, not OWL/SNOMED/FIBO OS (VL-196).',
+      note: 'Vertical packs are tags, not OWL/SNOMED/FIBO OS.',
     };
   }
 
   private assertDomain(domain: string): string {
-    const id = domain.trim() || 'general';
+    const id = domain.trim || 'general';
     if (!ONTOLOGY_DOMAINS.some((d) => d.id === id)) {
       throw new ApiException(
         'validation_error',
@@ -196,7 +196,7 @@ export class OntologyPlatformService {
       fromEntityId: input.childId,
       toEntityId: input.parentId,
       type: 'is_a',
-      label: input.label?.trim() || 'is_a',
+      label: input.label?.trim || 'is_a',
     });
     await this.audit.record({
       organizationId: input.organizationId,
@@ -291,10 +291,10 @@ export class OntologyPlatformService {
       });
     }
 
-    const synonym = input.synonym?.trim();
+    const synonym = input.synonym?.trim;
     let updated = concept;
     if (synonym) {
-      const aliases = [...new Set([...concept.aliases, synonym.toLowerCase()])].slice(0, 20);
+      const aliases = [...new Set([...concept.aliases, synonym.toLowerCase])].slice(0, 20);
       updated = await this.prisma.kgEntity.update({
         where: { id: concept.id },
         data: { aliases },
@@ -352,12 +352,12 @@ export class OntologyPlatformService {
       categories,
       hierarchyEdges: isA,
       synonymEdges: synonyms,
-      note: 'Workspace-scoped Ontology analytics (VL-196).',
+      note: 'Workspace-scoped Ontology analytics.',
     };
   }
 
   async monitoring(organizationId: string, workspaceId: string) {
-    const engine = this.engine();
+    const engine = this.engine;
     const analytics = await this.analytics(organizationId, workspaceId);
     return {
       ...analytics,
@@ -373,8 +373,8 @@ export class OntologyPlatformService {
     if (!labels || typeof labels !== 'object') return null;
     const out: Record<string, string> = {};
     for (const [lang, value] of Object.entries(labels)) {
-      const l = lang.trim().toLowerCase().slice(0, 16);
-      const v = String(value ?? '').trim().slice(0, 200);
+      const l = lang.trim.toLowerCase.slice(0, 16);
+      const v = String(value ?? '').trim.slice(0, 200);
       if (l && v) out[l] = v;
     }
     return Object.keys(out).length ? out : null;

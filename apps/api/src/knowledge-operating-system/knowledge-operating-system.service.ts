@@ -5,7 +5,7 @@ import { KnowledgeFabricService } from '../knowledge-fabric/knowledge-fabric.ser
 import { KnowledgeCloudService } from '../knowledge-cloud/knowledge-cloud.service';
 import { AfricanKnowledgeGraphService } from '../african-knowledge-graph/african-knowledge-graph.service';
 
-@Injectable()
+@Injectable
 export class KnowledgeOperatingSystemService {
   constructor(
     private readonly knowledgeRuntime: KnowledgeRuntimeService,
@@ -14,42 +14,42 @@ export class KnowledgeOperatingSystemService {
     private readonly africanKnowledgeGraph: AfricanKnowledgeGraphService
   ) {}
 
-  engine() {
-    return knowledgeOperatingSystemEngineCatalog();
+  engine {
+    return knowledgeOperatingSystemEngineCatalog;
   }
 
   /** Route/execute façade: returns upstream endpoint + live status from injected Kernel/Fabric/Data Plane services. */
   route(capability?: string) {
-    const catalog = this.engine();
-    const q = (capability ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (capability ?? '').trim.toLowerCase;
     const capabilities = catalog.capabilities.filter((c) => {
       if (!q) return true;
-      return c.id.includes(q) || c.name.toLowerCase().includes(q);
+      return c.id.includes(q) || c.name.toLowerCase.includes(q);
     });
     const upstreamStatus = [
       {
         module: 'knowledge-runtime',
         method: 'engine',
         status: 'reachable',
-        upstream: this.knowledgeRuntime.engine(),
+        upstream: this.knowledgeRuntime.engine,
       },
       {
         module: 'knowledge-fabric',
         method: 'products',
         status: 'reachable',
-        upstream: this.knowledgeFabric.products(),
+        upstream: this.knowledgeFabric.products,
       },
       {
         module: 'knowledge-cloud',
         method: 'products',
         status: 'reachable',
-        upstream: this.knowledgeCloud.products(),
+        upstream: this.knowledgeCloud.products,
       },
       {
         module: 'african-knowledge-graph',
         method: 'engine',
         status: 'reachable',
-        upstream: this.africanKnowledgeGraph.engine(),
+        upstream: this.africanKnowledgeGraph.engine,
       }
     ];
     return {
@@ -71,11 +71,11 @@ export class KnowledgeOperatingSystemService {
   }
 
   list(query?: string) {
-    const catalog = this.engine();
-    const q = (query ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (query ?? '').trim.toLowerCase;
     const rows = catalog.routes.filter((row) => {
       if (!q) return true;
-      return JSON.stringify(row).toLowerCase().includes(q);
+      return JSON.stringify(row).toLowerCase.includes(q);
     });
     return {
       routes: rows,
@@ -92,8 +92,8 @@ export class KnowledgeOperatingSystemService {
     return this.list(query);
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'knowledge-operating-system',
       count: catalog.routes.length,
@@ -102,7 +102,7 @@ export class KnowledgeOperatingSystemService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'KnowledgeOperatingSystem monitoring snapshot (VL-341).',
+      note: 'KnowledgeOperatingSystem monitoring snapshot.',
     };
   }
 }

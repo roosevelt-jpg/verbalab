@@ -6,16 +6,16 @@ import {
   SupplyChainSecurityProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestSupplyChainSecurityCatalogAdapter implements SupplyChainSecurityCatalogPort {
   constructor(private readonly service: SupplyChainSecurityService) {}
 
-  engine(): SupplyChainSecurityEngineBundle {
-    return this.service.engine();
+  engine: SupplyChainSecurityEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): SupplyChainSecurityProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: SupplyChainSecurityProductRow[] {
+    const bundle = this.engine as {
       products?: SupplyChainSecurityProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestSupplyChainSecurityCatalogAdapter implements SupplyChainSecurit
         status: 'shipped',
         api: 'GET /v1/supply-chain-security/engine',
         console: '/supply-chain-security',
-        notes: 'VL-310 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

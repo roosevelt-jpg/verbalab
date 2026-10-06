@@ -28,7 +28,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_tax_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_tax_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -42,23 +42,23 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Taxonomy Platform (VL-197)', () => {
+describe('Taxonomy Platform',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let storageDir: string;
 
-  beforeAll(async () => {
-    storageDir = await mkdtemp(join(tmpdir(), 'lugemi-tax-'));
+  beforeAll(async  => {
+    storageDir = await mkdtemp(join(tmpdir, 'lugemi-tax-'));
     process.env.DOCUMENT_STORAGE_DIR = storageDir;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -82,12 +82,12 @@ describe('Taxonomy Platform (VL-197)', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
     await rm(storageDir, { recursive: true, force: true });
   });
 
-  it('documents Taxonomy honesty (not enterprise taxonomy OS)', () => {
+  it('documents Taxonomy honesty (not enterprise taxonomy OS)',  => {
     const doc = join(root, 'docs/TAXONOMY_PLATFORM.md');
     const adr = join(root, 'docs/adr/0108-taxonomy-platform.md');
     expect(existsSync(doc)).toBe(true);
@@ -98,21 +98,21 @@ describe('Taxonomy Platform (VL-197)', () => {
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
   });
 
-  it('exposes engine with honest flags', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/taxonomy/engine').expect(200);
+  it('exposes engine with honest flags', async  => {
+    const res = await request(app.getHttpServer).get('/v1/taxonomy/engine').expect(200);
     expect(res.body.product).toContain('Taxonomy');
     expect(res.body.honesty.enterpriseTaxonomyOs).toBe(false);
     expect(res.body.honesty.mlAutoClassification).toBe(false);
     expect(res.body.honesty.orgWorkspaceScoped).toBe(true);
     expect(res.body.honesty.distinctFromOntology).toBe(true);
 
-    const kinds = await request(app.getHttpServer())
+    const kinds = await request(app.getHttpServer)
       .get('/v1/taxonomy/content-types')
       .expect(200);
     expect(kinds.body.kinds.some((k: { id: string }) => k.id === 'markdown')).toBe(true);
   });
 
-  it('creates trees, assigns to documents, and heuristic classifies', async () => {
+  it('creates trees, assigns to documents, and heuristic classifies', async  => {
     const org = await seedOrg(prisma, 'tax');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -121,51 +121,51 @@ describe('Taxonomy Platform (VL-197)', () => {
       name: 'tax-key',
     });
 
-    const root = await request(app.getHttpServer())
+    const root = await request(app.getHttpServer)
       .post('/v1/taxonomy/terms')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ name: 'Policies', kind: 'category' })
       .expect(201);
     expect(root.body.slug).toBe('policies');
 
-    const child = await request(app.getHttpServer())
+    const child = await request(app.getHttpServer)
       .post('/v1/taxonomy/terms')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ name: 'HR', kind: 'category', parentId: root.body.id })
       .expect(201);
 
-    const tag = await request(app.getHttpServer())
+    const tag = await request(app.getHttpServer)
       .post('/v1/taxonomy/terms')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ name: 'leave-policy', kind: 'tag' })
       .expect(201);
 
-    const trees = await request(app.getHttpServer())
+    const trees = await request(app.getHttpServer)
       .get('/v1/taxonomy/trees')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     const policies = trees.body.trees.find((t: { id: string }) => t.id === root.body.id);
     expect(policies.children.some((c: { id: string }) => c.id === child.body.id)).toBe(true);
 
-    const uploaded = await request(app.getHttpServer())
+    const uploaded = await request(app.getHttpServer)
       .post('/v1/knowledge/documents')
       .set('Authorization', `Bearer ${key.secret}`)
       .attach('file', Buffer.from('# Leave policy\n\nVacation days.'), 'leave-policy.md')
       .expect(201);
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post('/v1/taxonomy/assign')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ termId: child.body.id, documentId: uploaded.body.id })
       .expect(201);
 
-    const doc = await request(app.getHttpServer())
+    const doc = await request(app.getHttpServer)
       .get(`/v1/knowledge/documents/${uploaded.body.id}`)
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(doc.body.collection).toBe('hr');
 
-    const classified = await request(app.getHttpServer())
+    const classified = await request(app.getHttpServer)
       .post('/v1/taxonomy/classify')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ documentId: uploaded.body.id, apply: true })
@@ -173,7 +173,7 @@ describe('Taxonomy Platform (VL-197)', () => {
     expect(classified.body.honesty.mlAutoClassification).toBe(false);
     expect(classified.body.matches.some((m: { id: string }) => m.id === tag.body.id)).toBe(true);
 
-    const analytics = await request(app.getHttpServer())
+    const analytics = await request(app.getHttpServer)
       .get('/v1/taxonomy/analytics')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -181,8 +181,8 @@ describe('Taxonomy Platform (VL-197)', () => {
     expect(analytics.body.assignments).toBeGreaterThanOrEqual(1);
   });
 
-  it('exposes taxonomyEngine via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes taxonomyEngine via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
@@ -190,7 +190,7 @@ describe('Taxonomy Platform (VL-197)', () => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.taxonomyEngine.enterpriseTaxonomyOs).toBe(false);
     expect(res.body.data.taxonomyEngine.mlAutoClassification).toBe(false);
     expect(res.body.data.taxonomyEngine.orgWorkspaceScoped).toBe(true);

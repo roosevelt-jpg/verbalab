@@ -69,8 +69,8 @@ type Dialects = {
   byDialect: Array<{ code: string; count: number }>;
 };
 
-export function AnalyticsClient() {
-  const { getToken, isLoaded } = useAuth();
+export function AnalyticsClient {
+  const { getToken, isLoaded } = useAuth;
   const [catalog, setCatalog] = useState<Catalog | null>(null);
   const [data, setData] = useState<Overview | null>(null);
   const [quality, setQuality] = useState<Quality | null>(null);
@@ -94,29 +94,29 @@ export function AnalyticsClient() {
     setDialects(dia);
   }, []);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void (async () => {
+    void (async  => {
       try {
-        const token = await getToken();
+        const token = await getToken;
         if (!token) throw new Error('Not signed in');
         await load(token);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load analytics');
       }
-    })();
+    });
   }, [getToken, isLoaded, load]);
 
-  async function loadEnterpriseReport() {
+  async function loadEnterpriseReport {
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const report = await apiFetch<{ note: string; generatedAt: string }>(
         '/v1/analytics/reports/enterprise',
         { token },
       );
-      setReportNote(`Report generated ${new Date(report.generatedAt).toUTCString()}. ${report.note}`);
+      setReportNote(`Report generated ${new Date(report.generatedAt).toUTCString}. ${report.note}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Report failed');
     }
@@ -145,7 +145,7 @@ export function AnalyticsClient() {
       ) : null}
 
       <div style={{ marginTop: '1rem' }}>
-        <button type="button" className="vl-btn" onClick={() => void loadEnterpriseReport()}>
+        <button type="button" className="vl-btn" onClick={ => void loadEnterpriseReport}>
           Generate enterprise report
         </button>
         {reportNote ? (
@@ -308,7 +308,7 @@ export function AnalyticsClient() {
           </section>
 
           <p style={{ color: 'var(--muted)', fontSize: '0.85rem', margin: 0 }}>
-            Period: {new Date(data.periodStart).toUTCString()} → {new Date(data.periodEnd).toUTCString()}
+            Period: {new Date(data.periodStart).toUTCString} → {new Date(data.periodEnd).toUTCString}
           </p>
         </div>
       ) : !error ? (

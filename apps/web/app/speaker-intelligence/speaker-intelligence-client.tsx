@@ -20,8 +20,8 @@ type Engine = {
 };
 type HistoryItem = { id: string; action: string; score: number | null; decision: string | null; createdAt: string };
 
-export function SpeakerIntelligenceClient() {
-  const { getToken, isLoaded } = useAuth();
+export function SpeakerIntelligenceClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [history, setHistory] = useState<HistoryItem[]>([]);
@@ -32,8 +32,8 @@ export function SpeakerIntelligenceClient() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(async () => {
-    const token = await getToken();
+  const refresh = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, prof, hist] = await Promise.all([
       apiFetch<Engine>('/v1/speakers/engine', { token }),
@@ -46,28 +46,28 @@ export function SpeakerIntelligenceClient() {
     if (!selectedId && prof.data[0]) setSelectedId(prof.data[0].id);
   }, [getToken, selectedId]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void refresh().catch((err: Error) => setError(err.message));
+    void refresh.catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
-  async function authHeaders() {
-    const token = await getToken();
+  async function authHeaders {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     return { Authorization: `Bearer ${token}` };
   }
 
   async function onCreate(e: FormEvent) {
-    e.preventDefault();
-    const token = await getToken();
-    if (!token || !name.trim()) return;
+    e.preventDefault;
+    const token = await getToken;
+    if (!token || !name.trim) return;
     await apiFetch('/v1/speakers/profiles', {
       token,
       method: 'POST',
-      body: JSON.stringify({ displayName: name.trim() }),
+      body: JSON.stringify({ displayName: name.trim }),
     });
     setName('');
-    await refresh();
+    await refresh;
   }
 
   async function postMultipart(path: string, extra: Record<string, string> = {}) {
@@ -76,15 +76,15 @@ export function SpeakerIntelligenceClient() {
     setError(null);
     setResult(null);
     try {
-      const headers = await authHeaders();
-      const form = new FormData();
+      const headers = await authHeaders;
+      const form = new FormData;
       form.append('file', file);
       for (const [k, v] of Object.entries(extra)) form.append(k, v);
       const res = await fetch(`${API_URL}${path}`, { method: 'POST', headers, body: form });
-      const body = await res.json();
+      const body = await res.json;
       if (!res.ok) throw new Error(body?.error?.message ?? `HTTP ${res.status}`);
       setResult(JSON.stringify(body, null, 2));
-      await refresh();
+      await refresh;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Request failed');
     } finally {
@@ -131,7 +131,7 @@ export function SpeakerIntelligenceClient() {
               <li key={p.id} style={{ borderTop: '1px solid var(--line)', padding: '0.45rem 0' }}>
                 <button
                   type="button"
-                  onClick={() => setSelectedId(p.id)}
+                  onClick={ => setSelectedId(p.id)}
                   style={{
                     background: 'none',
                     border: 'none',
@@ -164,7 +164,7 @@ export function SpeakerIntelligenceClient() {
               type="button"
               disabled={loading || !file || !selectedId}
               style={primary}
-              onClick={() => void postMultipart(`/v1/speakers/profiles/${selectedId}/enroll`)}
+              onClick={ => void postMultipart(`/v1/speakers/profiles/${selectedId}/enroll`)}
             >
               Enroll
             </button>
@@ -172,7 +172,7 @@ export function SpeakerIntelligenceClient() {
               type="button"
               disabled={loading || !file || !selectedId}
               style={secondary}
-              onClick={() => void postMultipart('/v1/speakers/verify', { profileId: selectedId })}
+              onClick={ => void postMultipart('/v1/speakers/verify', { profileId: selectedId })}
             >
               Verify
             </button>
@@ -180,7 +180,7 @@ export function SpeakerIntelligenceClient() {
               type="button"
               disabled={loading || !file}
               style={secondary}
-              onClick={() => void postMultipart('/v1/speakers/identify')}
+              onClick={ => void postMultipart('/v1/speakers/identify')}
             >
               Identify
             </button>
@@ -188,7 +188,7 @@ export function SpeakerIntelligenceClient() {
               type="button"
               disabled={loading || !file}
               style={secondary}
-              onClick={() => void postMultipart('/v1/speakers/diarize')}
+              onClick={ => void postMultipart('/v1/speakers/diarize')}
             >
               Diarize
             </button>

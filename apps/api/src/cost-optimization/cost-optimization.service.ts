@@ -37,34 +37,34 @@ type BudgetView = {
   updatedAt?: string;
 };
 
-@Injectable()
+@Injectable
 export class CostOptimizationService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
   ) {}
 
-  engine() {
+  engine {
     return {
-      ...costOptimizationCatalog(),
-      ceilings: costCeilings(),
-      mode: costOptimizationMode(),
+      ...costOptimizationCatalog,
+      ceilings: costCeilings,
+      mode: costOptimizationMode,
       spendSafety: {
         hardSpendCeilingsRequired: true,
         enforcesSpendCaps: true,
         reportOnly: false,
         note:
-          'Hard daily/monthly caps enforced on record/check and AI Router resolve. Do not connect to a production cloud billing account without these caps. GPU instance ceilings remain on VL-205.',
+          'Hard daily/monthly caps enforced on record/check and AI Router resolve. Do not connect to a production cloud billing account without these caps. GPU instance ceilings remain on .',
       },
     };
   }
 
-  ceilings() {
-    return costCeilings();
+  ceilings {
+    return costCeilings;
   }
 
   async getBudget(input: AuthCtx): Promise<{ budget: BudgetView; note: string }> {
-    const ceilings = costCeilings();
+    const ceilings = costCeilings;
     const row = await this.prisma.costBudget.findUnique({
       where: {
         organizationId_workspaceId: {
@@ -100,7 +100,7 @@ export class CostOptimizationService {
         reservedCapacityUnits: row.reservedCapacityUnits,
         optimizeRouting: row.optimizeRouting,
         persisted: true,
-        updatedAt: row.updatedAt.toISOString(),
+        updatedAt: row.updatedAt.toISOString,
       },
       note: 'Org/workspace-scoped cost budget with hard enforce flag.',
     };
@@ -116,8 +116,8 @@ export class CostOptimizationService {
       optimizeRouting?: boolean;
     },
   ) {
-    this.assertEnabled();
-    const ceilings = costCeilings();
+    this.assertEnabled;
+    const ceilings = costCeilings;
     const dailyCapUsd = this.clampCap(
       input.dailyCapUsd ?? ceilings.defaultDailyCapUsd,
       ceilings.maxDailyCapUsd,
@@ -176,9 +176,9 @@ export class CostOptimizationService {
 
   async spendSummary(input: AuthCtx) {
     const { budget } = await this.getBudget(input);
-    const now = new Date();
-    const dayStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
-    const monthStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+    const now = new Date;
+    const dayStart = new Date(Date.UTC(now.getUTCFullYear, now.getUTCMonth, now.getUTCDate));
+    const monthStart = new Date(Date.UTC(now.getUTCFullYear, now.getUTCMonth, 1));
 
     const [dailyAgg, monthlyAgg, byCategory] = await Promise.all([
       this.prisma.costSpendEvent.aggregate({
@@ -235,7 +235,7 @@ export class CostOptimizationService {
         spentUsd: c._sum.amountUsd ?? 0,
         events: c._count,
       })),
-      honesty: costOptimizationCatalog().honesty,
+      honesty: costOptimizationCatalog.honesty,
     };
   }
 
@@ -246,7 +246,7 @@ export class CostOptimizationService {
   async assertWithinCaps(
     input: AuthCtx & { additionalUsd?: number; soft?: boolean },
   ) {
-    this.assertEnabled();
+    this.assertEnabled;
     const additionalUsd = Math.max(0, Number(input.additionalUsd ?? 0) || 0);
     const summary = await this.spendSummary(input);
     const { budget, daily, monthly } = summary;
@@ -296,7 +296,7 @@ export class CostOptimizationService {
       label?: string;
     },
   ) {
-    this.assertEnabled();
+    this.assertEnabled;
     const category = this.normalizeCategory(input.category ?? 'other');
     const amountUsd = Number(input.amountUsd);
     if (!Number.isFinite(amountUsd) || amountUsd < 0) {
@@ -346,7 +346,7 @@ export class CostOptimizationService {
         feature: row.feature,
         providerId: row.providerId,
         label: row.label,
-        createdAt: row.createdAt.toISOString(),
+        createdAt: row.createdAt.toISOString,
       },
       summary,
       note: 'Spend recorded under hard caps.',
@@ -356,8 +356,8 @@ export class CostOptimizationService {
   async optimize(
     input: AuthCtx & { feature?: string; tokensPer1k?: number },
   ) {
-    this.assertEnabled();
-    const feature = (input.feature ?? 'chat').trim().toLowerCase() as RouterFeature;
+    this.assertEnabled;
+    const feature = (input.feature ?? 'chat').trim.toLowerCase as RouterFeature;
     if (!ROUTER_FEATURES.includes(feature)) {
       throw new ApiException(
         'validation_error',
@@ -366,7 +366,7 @@ export class CostOptimizationService {
       );
     }
     const tokensPer1k = Math.max(0.001, Number(input.tokensPer1k ?? 1) || 1);
-    const route = routerFeatureRoutes().find((r) => r.feature === feature)!;
+    const route = routerFeatureRoutes.find((r) => r.feature === feature)!;
     const candidates = hydrateCandidates(route.candidates, feature)
       .map((c) => ({
         providerId: c.providerId,
@@ -399,12 +399,12 @@ export class CostOptimizationService {
       spendGate: gate,
       note:
         'Cost-preferring plan over Gateway candidates. Spot/reserved are sandbox planning hints. Call AI Router / Gateway to execute.',
-      honesty: costOptimizationCatalog().honesty,
+      honesty: costOptimizationCatalog.honesty,
     };
   }
 
   async gpuView(input: AuthCtx) {
-    const ceilings = gpuCeilings();
+    const ceilings = gpuCeilings;
     const active = await this.prisma.gpuAllocation.findMany({
       where: {
         organizationId: input.organizationId,
@@ -426,12 +426,12 @@ export class CostOptimizationService {
       withinGpuSpendCeiling: hourlyUsd <= ceilings.maxSpendUsd,
       scaleAdvice: nearCap
         ? 'Near workspace spend caps — scale down or stop new GPU allocations (never open-ended autoscale).'
-        : 'Within workspace spend caps; GPU allocate/scale still hard-clamped by VL-205 ceilings.',
+        : 'Within workspace spend caps; GPU allocate/scale still hard-clamped by ceilings.',
       preferSpot: summary.budget.preferSpot,
       reservedCapacityUnits: summary.budget.reservedCapacityUnits,
       spend: summary,
       honesty: {
-        ...costOptimizationCatalog().honesty,
+        ...costOptimizationCatalog.honesty,
         cloudSpotApis: false,
         openEndedAutoscale: false,
       },
@@ -440,8 +440,8 @@ export class CostOptimizationService {
 
   async predictions(input: AuthCtx) {
     const summary = await this.spendSummary(input);
-    const now = new Date();
-    const dayOfMonth = now.getUTCDate();
+    const now = new Date;
+    const dayOfMonth = now.getUTCDate;
     const projectedMonthEnd =
       dayOfMonth <= 1
         ? summary.monthly.spentUsd
@@ -466,7 +466,7 @@ export class CostOptimizationService {
       recommendation: projectedMonthEnd > budget.monthlyCapUsd
         ? 'Projected to exceed monthly cap — reduce provider/GPU spend or raise caps deliberately.'
         : 'Projection within monthly cap under linear extrapolation.',
-      honesty: costOptimizationCatalog().honesty,
+      honesty: costOptimizationCatalog.honesty,
       note: 'Linear extrapolation from ledger — not ML forecasting OS.',
     };
   }
@@ -490,10 +490,10 @@ export class CostOptimizationService {
         feature: e.feature,
         providerId: e.providerId,
         label: e.label,
-        createdAt: e.createdAt.toISOString(),
+        createdAt: e.createdAt.toISOString,
       })),
       note: 'Ledger-backed spend report — not a BI/FinOps OS.',
-      honesty: costOptimizationCatalog().honesty,
+      honesty: costOptimizationCatalog.honesty,
     };
   }
 
@@ -507,13 +507,13 @@ export class CostOptimizationService {
       categories: summary.byCategory.length,
       eventsMonth: summary.monthly.events,
       enforce: summary.budget.enforce,
-      honesty: costOptimizationCatalog().honesty,
+      honesty: costOptimizationCatalog.honesty,
     };
   }
 
   async monitoring(input: AuthCtx) {
     const [engine, summary, predictions] = await Promise.all([
-      Promise.resolve(this.engine()),
+      Promise.resolve(this.engine),
       this.spendSummary(input),
       this.predictions(input),
     ]);
@@ -527,8 +527,8 @@ export class CostOptimizationService {
     };
   }
 
-  private assertEnabled() {
-    if (costOptimizationMode() === 'disabled') {
+  private assertEnabled {
+    if (costOptimizationMode === 'disabled') {
       throw new ApiException(
         'cost_optimization_disabled',
         'Cost Optimization mode is disabled (LUGEMI_COST_OPTIMIZATION_MODE=disabled).',
@@ -550,7 +550,7 @@ export class CostOptimizationService {
   }
 
   private normalizeCategory(raw: string): CostSpendCategory {
-    const c = raw.trim().toLowerCase() as CostSpendCategory;
+    const c = raw.trim.toLowerCase as CostSpendCategory;
     if (!COST_SPEND_CATEGORIES.includes(c)) {
       throw new ApiException(
         'validation_error',

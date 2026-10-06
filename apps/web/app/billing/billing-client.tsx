@@ -44,16 +44,16 @@ type MemberRow = {
   user: { id: string; email: string | null; name: string | null };
 };
 
-export function BillingClient() {
-  const { getToken, isLoaded } = useAuth();
+export function BillingClient {
+  const { getToken, isLoaded } = useAuth;
   const [summary, setSummary] = useState<BillingSummary | null>(null);
   const [plans, setPlans] = useState<PlanCard[]>([]);
   const [members, setMembers] = useState<MemberRow[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [billing, memberRows] = await Promise.all([
       apiFetch<BillingSummary>('/v1/billing/summary', { token }),
@@ -70,16 +70,16 @@ export function BillingClient() {
     }
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
   async function startCheckout(planId: string) {
     setError(null);
     setBusy(true);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       if (planId === 'enterprise') {
         window.location.href = '/sign-up';
@@ -98,11 +98,11 @@ export function BillingClient() {
     }
   }
 
-  async function openPortal() {
+  async function openPortal {
     setError(null);
     setBusy(true);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const res = await apiFetch<{ url: string }>('/v1/billing/portal', {
         method: 'POST',
@@ -154,7 +154,7 @@ export function BillingClient() {
                 value={summary.charactersUsed}
                 max={summary.characterQuota}
                 label="Quota used"
-                sublabel={`${summary.charactersRemaining.toLocaleString()} remaining`}
+                sublabel={`${summary.charactersRemaining.toLocaleString} remaining`}
               />
             </div>
           </div>
@@ -193,7 +193,7 @@ export function BillingClient() {
                   </div>
                   <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.5 }}>{plan.blurb}</p>
                   <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: 600 }}>
-                    {plan.characterQuota.toLocaleString()} characters / mo
+                    {plan.characterQuota.toLocaleString} characters / mo
                   </p>
                   <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--muted)' }}>
                     {formatWorkspaceLimit(plan.workspaceLimit ?? 1)} workspace
@@ -221,7 +221,7 @@ export function BillingClient() {
                       type="button"
                       className={isUpgrade ? 'vl-btn vl-btn-primary' : 'vl-btn vl-btn-secondary'}
                       disabled={busy || !plan.checkoutAvailable}
-                      onClick={() => void startCheckout(plan.id)}
+                      onClick={ => void startCheckout(plan.id)}
                     >
                       {isUpgrade ? `Upgrade to ${plan.name}` : `Switch to ${plan.name}`}
                     </button>
@@ -237,7 +237,7 @@ export function BillingClient() {
                 type="button"
                 className="vl-btn vl-btn-secondary"
                 disabled={busy || !summary.stripeConfigured || !summary.hasCustomer}
-                onClick={() => void openPortal()}
+                onClick={ => void openPortal}
               >
                 Manage payment method
               </button>

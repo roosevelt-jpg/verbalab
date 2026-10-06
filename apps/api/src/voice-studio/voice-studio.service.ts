@@ -26,7 +26,7 @@ export type TimelineClip = {
   pauseMsAfter?: number;
 };
 
-@Injectable()
+@Injectable
 export class VoiceStudioService {
   constructor(
     private readonly audio: AudioService,
@@ -36,8 +36,8 @@ export class VoiceStudioService {
     private readonly neuralTts: NeuralTtsService,
   ) {}
 
-  engine() {
-    return voiceStudioEngineCatalog();
+  engine {
+    return voiceStudioEngineCatalog;
   }
 
   async analytics(organizationId: string) {
@@ -100,7 +100,7 @@ export class VoiceStudioService {
         language: r.language,
         notes: r.notes,
       })),
-      note: 'Grapheme→alias before TTS. Not VL-156 pronunciation assessment.',
+      note: 'Grapheme→alias before TTS. Not pronunciation assessment.',
     };
   }
 
@@ -108,8 +108,8 @@ export class VoiceStudioService {
     auth: StudioAuth,
     body: { grapheme?: string; alias?: string; language?: string; notes?: string; id?: string },
   ) {
-    const grapheme = body.grapheme?.trim();
-    const alias = body.alias?.trim();
+    const grapheme = body.grapheme?.trim;
+    const alias = body.alias?.trim;
     if (!grapheme || !alias) {
       throw new ApiException(
         'validation_error',
@@ -123,8 +123,8 @@ export class VoiceStudioService {
           data: {
             grapheme,
             alias,
-            language: body.language?.trim() || null,
-            notes: body.notes?.trim() || '',
+            language: body.language?.trim || null,
+            notes: body.notes?.trim || '',
           },
         })
       : await this.prisma.voiceStudioLexeme.upsert({
@@ -139,13 +139,13 @@ export class VoiceStudioService {
             workspaceId: auth.workspaceId,
             grapheme,
             alias,
-            language: body.language?.trim() || null,
-            notes: body.notes?.trim() || '',
+            language: body.language?.trim || null,
+            notes: body.notes?.trim || '',
           },
           update: {
             alias,
-            language: body.language?.trim() || null,
-            notes: body.notes?.trim() || '',
+            language: body.language?.trim || null,
+            notes: body.notes?.trim || '',
           },
         });
 
@@ -205,7 +205,7 @@ export class VoiceStudioService {
         voice: r.voice,
         language: r.language,
         notes: r.notes,
-        updatedAt: r.updatedAt.toISOString(),
+        updatedAt: r.updatedAt.toISOString,
       })),
     };
   }
@@ -214,8 +214,8 @@ export class VoiceStudioService {
     auth: StudioAuth,
     body: { id?: string; name?: string; voice?: string; language?: string; notes?: string },
   ) {
-    const name = body.name?.trim();
-    const voice = body.voice?.trim();
+    const name = body.name?.trim;
+    const voice = body.voice?.trim;
     if (!name || !voice) {
       throw new ApiException(
         'validation_error',
@@ -229,8 +229,8 @@ export class VoiceStudioService {
           data: {
             name,
             voice,
-            language: body.language?.trim() || null,
-            notes: body.notes?.trim() || '',
+            language: body.language?.trim || null,
+            notes: body.notes?.trim || '',
           },
         })
       : await this.prisma.voiceStudioProfile.create({
@@ -239,8 +239,8 @@ export class VoiceStudioService {
             workspaceId: auth.workspaceId,
             name,
             voice,
-            language: body.language?.trim() || null,
-            notes: body.notes?.trim() || '',
+            language: body.language?.trim || null,
+            notes: body.notes?.trim || '',
           },
         });
 
@@ -291,7 +291,7 @@ export class VoiceStudioService {
         name: r.name,
         description: r.description,
         timeline: r.timeline,
-        updatedAt: r.updatedAt.toISOString(),
+        updatedAt: r.updatedAt.toISOString,
       })),
       note: 'Timeline is a linear clip list — not a DAW.',
     };
@@ -306,7 +306,7 @@ export class VoiceStudioService {
       timeline?: TimelineClip[];
     },
   ) {
-    const name = body.name?.trim();
+    const name = body.name?.trim;
     if (!name) {
       throw new ApiException('validation_error', 'name is required', HttpStatus.BAD_REQUEST);
     }
@@ -316,7 +316,7 @@ export class VoiceStudioService {
           where: { id: body.id },
           data: {
             name,
-            description: body.description?.trim() || '',
+            description: body.description?.trim || '',
             timeline,
           },
         })
@@ -325,7 +325,7 @@ export class VoiceStudioService {
             organizationId: auth.organizationId,
             workspaceId: auth.workspaceId,
             name,
-            description: body.description?.trim() || '',
+            description: body.description?.trim || '',
             timeline,
           },
         });
@@ -377,7 +377,7 @@ export class VoiceStudioService {
   ): Promise<{ renderedText: string; ssmlPlan: ReturnType<typeof compileSsmlLite> | null }> {
     let base = '';
     let ssmlPlan: ReturnType<typeof compileSsmlLite> | null = null;
-    if (typeof input.ssml === 'string' && input.ssml.trim()) {
+    if (typeof input.ssml === 'string' && input.ssml.trim) {
       ssmlPlan = compileSsmlLite(input.ssml);
       base = ssmlPlan.plainText;
     } else if (typeof input.text === 'string') {
@@ -401,7 +401,7 @@ export class VoiceStudioService {
     language?: string;
     format?: 'mp3' | 'wav' | 'opus' | 'aac' | 'flac';
   }) {
-    const voice = body.voice?.trim();
+    const voice = body.voice?.trim;
     if (!voice) {
       throw new ApiException('validation_error', 'voice is required', HttpStatus.BAD_REQUEST);
     }
@@ -459,7 +459,7 @@ export class VoiceStudioService {
   }
 
   async testVoice(auth: StudioAuth, body: { voice?: string; language?: string }) {
-    const voice = body.voice?.trim();
+    const voice = body.voice?.trim;
     if (!voice) {
       throw new ApiException('validation_error', 'voice is required', HttpStatus.BAD_REQUEST);
     }
@@ -496,7 +496,7 @@ export class VoiceStudioService {
       format?: 'mp3' | 'wav' | 'opus' | 'aac' | 'flac';
     },
   ) {
-    const voices = (body.voices ?? []).map((v) => v.trim()).filter(Boolean);
+    const voices = (body.voices ?? []).map((v) => v.trim).filter(Boolean);
     if (voices.length < 2) {
       throw new ApiException(
         'validation_error',
@@ -592,7 +592,7 @@ export class VoiceStudioService {
       );
     }
 
-    const defaultVoice = body.defaultVoice?.trim() || 'alloy';
+    const defaultVoice = body.defaultVoice?.trim || 'alloy';
     const format = body.format ?? 'mp3';
     const lexemes = await this.loadLexemes(auth);
     const rendered: Array<{
@@ -610,10 +610,10 @@ export class VoiceStudioService {
     for (let i = 0; i < clips.length; i++) {
       const clip = clips[i]!;
       let text = '';
-      if (clip.ssml?.trim()) {
+      if (clip.ssml?.trim) {
         text = compileSsmlLite(clip.ssml).plainText;
-      } else if (clip.text?.trim()) {
-        text = clip.text.trim();
+      } else if (clip.text?.trim) {
+        text = clip.text.trim;
       } else {
         throw new ApiException(
           'validation_error',
@@ -622,7 +622,7 @@ export class VoiceStudioService {
         );
       }
       text = applyPronunciationLexicon(text, lexemes);
-      const voice = clip.voice?.trim() || defaultVoice;
+      const voice = clip.voice?.trim || defaultVoice;
       const result = await this.audio.speak({
         text,
         voice,

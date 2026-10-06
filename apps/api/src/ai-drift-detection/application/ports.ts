@@ -1,4 +1,4 @@
-/** Application ports for AI Drift Detection (VL-288). */
+/** Application ports for AI Drift Detection. */
 
 export type AiDriftDetectionProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type AiDriftDetectionEngineBundle = ReturnType<
 >;
 
 export interface AiDriftDetectionCatalogPort {
-  engine(): AiDriftDetectionEngineBundle;
-  listProducts(): AiDriftDetectionProductRow[];
+  engine: AiDriftDetectionEngineBundle;
+  listProducts: AiDriftDetectionProductRow[];
 }
 
 export const AI_DRIFT_DETECTION_CATALOG_PORT = Symbol('AI_DRIFT_DETECTION_CATALOG_PORT');

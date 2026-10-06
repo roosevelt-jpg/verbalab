@@ -13,11 +13,11 @@ type Engine = {
   retroactiveChecks?: Array<Record<string, unknown>>;
 };
 
-export function AiEngineeringStandardsClient() {
+export function AiEngineeringStandardsClient {
   const [data, setData] = useState<Engine | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  useEffect( => {
     void apiFetch<Engine>('/v1/ai-engineering-standards/engine')
       .then(setData)
       .catch((err: Error) => setError(err.message));

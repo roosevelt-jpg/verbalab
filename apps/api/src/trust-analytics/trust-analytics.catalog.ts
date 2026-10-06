@@ -1,8 +1,8 @@
 /**
- * Library Phase 167 → Trust Analytics (VL-300).
+ * Library Phase 167 → Trust Analytics.
  * Aggregates sibling Trust Cloud hubs — not SIEM OS.
  */
-export function trustAnalyticsEngineCatalog() {
+export function trustAnalyticsEngineCatalog {
   return {
     product: 'Lugemi Trust Analytics',
     capabilities: [
@@ -26,6 +26,6 @@ export function trustAnalyticsEngineCatalog() {
       note: 'Trust Analytics aggregates sibling Trust Cloud hubs — not a SIEM OS or Platform Engineering OS.',
     },
     docs: '/docs/TRUST_ANALYTICS.md',
-    note: 'Trust Analytics (VL-300). Unified trust analytics over safety/compliance/privacy/policy/risk.',
+    note: 'Trust Analytics. Unified trust analytics over safety/compliance/privacy/policy/risk.',
   };
 }

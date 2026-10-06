@@ -8,12 +8,12 @@ export type PromptCapability = {
   notes: string;
 };
 
-/** Library Phase 55 → Prompt Intelligence (VL-188). Extend VL-086 versioning — not an auto-prompt research lab. */
-export function promptIntelligenceCatalog() {
+/** Library Phase 55 → Prompt Intelligence. Extend versioning — not an auto-prompt research lab. */
+export function promptIntelligenceCatalog {
   return {
     product: 'Lugemi Prompt Intelligence',
     note:
-      'Hub over versioned chat/rag/voice_faq prompts (VL-086 / VL-188). Registry, preview/test, heuristic evaluate + security scan, marketplace listings, and audit analytics. Not an auto-prompt research lab or red-team harness OS.',
+      'Hub over versioned chat/rag/voice_faq prompts. Registry, preview/test, heuristic evaluate + security scan, marketplace listings, and audit analytics. Not an auto-prompt research lab or red-team harness OS.',
     capabilities: [
       {
         id: 'prompt-registry',
@@ -48,7 +48,7 @@ export function promptIntelligenceCatalog() {
         name: 'Prompt Marketplace',
         status: 'partial',
         api: 'GET /v1/marketplace?kind=prompt',
-        notes: 'Existing marketplace prompt listings (VL-091). Hub surfaces link + counts.',
+        notes: 'Existing marketplace prompt listings. Hub surfaces link + counts.',
       },
       {
         id: 'prompt-security',
@@ -69,7 +69,7 @@ export function promptIntelligenceCatalog() {
         name: 'Prompt Optimization',
         status: 'deferred',
         api: null,
-        notes: 'Auto-prompt research / evolutionary optimizers deferred (VL-188 out of scope).',
+        notes: 'Auto-prompt research / evolutionary optimizers deferred ( out of scope).',
       },
       {
         id: 'prompt-approval',

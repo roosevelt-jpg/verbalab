@@ -23,7 +23,7 @@ export type VoiceTurnResult = {
   model: string;
 };
 
-@Injectable()
+@Injectable
 export class VoiceAgentService {
   constructor(
     private readonly audio: AudioService,
@@ -46,7 +46,7 @@ export class VoiceAgentService {
     voice?: string;
     format?: 'mp3' | 'wav' | 'opus' | 'aac' | 'flac';
   }): Promise<VoiceTurnResult> {
-    const voice = input.voice?.trim() || defaultFaqVoice();
+    const voice = input.voice?.trim || defaultFaqVoice;
     const format = input.format ?? 'mp3';
 
     let userText = '';
@@ -62,11 +62,11 @@ export class VoiceAgentService {
         userId: input.userId,
         ip: input.ip,
       });
-      userText = transcribed.text.trim();
+      userText = transcribed.text.trim;
       language = transcribed.language;
       sttProvider = transcribed.provider;
-    } else if (typeof input.text === 'string' && input.text.trim()) {
-      userText = input.text.trim();
+    } else if (typeof input.text === 'string' && input.text.trim) {
+      userText = input.text.trim;
     } else {
       throw new ApiException(
         'validation_error',
@@ -100,7 +100,7 @@ export class VoiceAgentService {
       provider: chat.provider,
     });
 
-    const replyText = chat.message.content.trim();
+    const replyText = chat.message.content.trim;
     if (!replyText) {
       throw new ApiException('provider_error', 'FAQ model returned empty reply', HttpStatus.BAD_GATEWAY);
     }

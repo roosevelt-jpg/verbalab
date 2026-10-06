@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { organizationControlEngineCatalog } from './organization-control.catalog';
 
-@Injectable()
+@Injectable
 export class OrganizationControlService {
-  engine() {
-    return organizationControlEngineCatalog();
+  engine {
+    return organizationControlEngineCatalog;
   }
 
   list(query?: string) {
-    const catalog = this.engine();
-    const q = (query ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (query ?? '').trim.toLowerCase;
     const organizations = catalog.organizations.filter((row) => {
       if (!q) return true;
-      return JSON.stringify(row).toLowerCase().includes(q);
+      return JSON.stringify(row).toLowerCase.includes(q);
     });
     return {
       organizations,
@@ -25,8 +25,8 @@ export class OrganizationControlService {
     };
   }
 
-  roles() {
-    const catalog = this.engine();
+  roles {
+    const catalog = this.engine;
     return {
       roles: catalog.roles,
       leastPrivilegeRequired: true,
@@ -42,15 +42,15 @@ export class OrganizationControlService {
     return this.list(query);
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'organization-control',
       organizationCount: catalog.organizations.length,
       roleCount: catalog.roles.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Organization Control monitoring snapshot (VL-315).',
+      note: 'Organization Control monitoring snapshot.',
     };
   }
 }

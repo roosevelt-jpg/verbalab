@@ -17,8 +17,8 @@ export class GetAgentOperatingSystemEngineHandler
     private readonly catalog: AgentOperatingSystemCatalogPort,
   ) {}
 
-  execute(): Promise<AgentOperatingSystemEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<AgentOperatingSystemEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListAgentOperatingSystemProductsHandler
     private readonly catalog: AgentOperatingSystemCatalogPort,
   ) {}
 
-  execute(): Promise<AgentOperatingSystemProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<AgentOperatingSystemProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

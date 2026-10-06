@@ -35,14 +35,14 @@ type Analytics = {
   chunks: number;
 };
 
-export function KnowledgeBaseClient() {
-  const { getToken, isLoaded } = useAuth();
+export function KnowledgeBaseClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, ana] = await Promise.all([
       apiFetch<Engine>('/v1/knowledge-base/engine', { token }),
@@ -52,9 +52,9 @@ export function KnowledgeBaseClient() {
     setAnalytics(ana);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
   return (
@@ -71,7 +71,7 @@ export function KnowledgeBaseClient() {
         Enterprise Knowledge Base
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        Org/workspace-scoped document store over VL-062. Upload on{' '}
+        Org/workspace-scoped document store over existing. Upload on{' '}
         <Link href="/knowledge">Knowledge / RAG</Link>. Not a Confluence/SharePoint OS.
       </p>
 
@@ -91,8 +91,8 @@ export function KnowledgeBaseClient() {
           <section>
             <h2 style={label}>Honesty</h2>
             <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.55 }}>
-              Org/workspace scoped {engine.honesty.orgWorkspaceScoped ? 'yes' : 'no'} · Extends
-              VL-062 {engine.honesty.extendsVl062 ? 'yes' : 'no'} · Confluence OS{' '}
+              Org/workspace scoped {engine.honesty.orgWorkspaceScoped ? 'yes' : 'no'} · Extends prior
+               {engine.honesty.extendsVl062 ? 'yes' : 'no'} · Confluence OS{' '}
               {engine.honesty.confluenceOs ? 'yes' : 'no'} · SharePoint parity{' '}
               {engine.honesty.sharePointParity ? 'yes' : 'no'} · Approval workflow{' '}
               {engine.honesty.approvalWorkflow ? 'yes' : 'no'} · Media ingest{' '}

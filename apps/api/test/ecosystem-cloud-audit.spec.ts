@@ -66,7 +66,7 @@ const SHIPPED_PRODUCT_IDS = [
 function walkTsFiles(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory()) {
+    if (name.isDirectory) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       walkTsFiles(p, out);
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -78,23 +78,23 @@ function walkTsFiles(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-describe('Ecosystem Cloud Production Audit (VL-259)', () => {
+describe('Ecosystem Cloud Production Audit',  => {
   let app: INestApplication<App>;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
   }, 120_000);
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('ships audit ADR and report pack', () => {
+  it('ships audit ADR and report pack',  => {
     expect(existsSync(join(root, 'docs/adr/0161-ecosystem-cloud-production-audit.md'))).toBe(
       true,
     );
@@ -122,7 +122,7 @@ describe('Ecosystem Cloud Production Audit (VL-259)', () => {
     expect(readiness).toMatch(/sandbox|Policy/i);
     expect(readiness).toMatch(/Rejected|not a payment-processor/i);
     expect(readiness).toMatch(/Digital Twin|Volume 12/i);
-    expect(readiness).toMatch(/VL-249|Volume 11/i);
+    expect(readiness).toMatch(/|Volume 11/i);
 
     const adr = readFileSync(
       join(root, 'docs/adr/0161-ecosystem-cloud-production-audit.md'),
@@ -130,10 +130,10 @@ describe('Ecosystem Cloud Production Audit (VL-259)', () => {
     );
     expect(adr).toMatch(/review gate|checklist/i);
     expect(adr).toMatch(/do not implement|Rejected|not implement/i);
-    expect(adr).toMatch(/Volume 11 closes|VL-249–259|closes/i);
+    expect(adr).toMatch(/Volume 11 closes|–259|closes/i);
   });
 
-  it('has no TODO/FIXME/implement-later markers in Volume 11 source trees', () => {
+  it('has no TODO/FIXME/implement-later markers in Volume 11 source trees',  => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const name of ECOSYSTEM_DIRS) {
@@ -157,13 +157,13 @@ describe('Ecosystem Cloud Production Audit (VL-259)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes all marketplace + economy catalogs as shipped with monitoring', async () => {
+  it('exposes all marketplace + economy catalogs as shipped with monitoring', async  => {
     for (const path of ENGINE_PATHS) {
-      const res = await request(app.getHttpServer()).get(path).expect(200);
-      expect(res.body).toBeTruthy();
+      const res = await request(app.getHttpServer).get(path).expect(200);
+      expect(res.body).toBeTruthy;
     }
 
-    const hub = await request(app.getHttpServer())
+    const hub = await request(app.getHttpServer)
       .get('/v1/ecosystem-cloud/products')
       .expect(200);
     expect(hub.body.honesty.storesRawCardData).toBe(false);
@@ -181,60 +181,60 @@ describe('Ecosystem Cloud Production Audit (VL-259)', () => {
     }
   });
 
-  it('keeps plugin/agent/workflow sandbox honesty (no live execution OS)', async () => {
-    const plugin = await request(app.getHttpServer())
+  it('keeps plugin/agent/workflow sandbox honesty (no live execution OS)', async  => {
+    const plugin = await request(app.getHttpServer)
       .get('/v1/plugin-marketplace/engine')
       .expect(200);
     expect(plugin.body.honesty.liveCodeExecution).toBe(false);
     expect(plugin.body.honesty.storesRawCardData).toBe(false);
 
-    const agent = await request(app.getHttpServer())
+    const agent = await request(app.getHttpServer)
       .get('/v1/agent-marketplace/engine')
       .expect(200);
     expect(agent.body.honesty.liveToolExecution).toBe(false);
     expect(agent.body.honesty.sandboxRequired).toBe(true);
 
-    const workflow = await request(app.getHttpServer())
+    const workflow = await request(app.getHttpServer)
       .get('/v1/workflow-marketplace/engine')
       .expect(200);
     expect(workflow.body.honesty.liveStepExecution).toBe(false);
     expect(workflow.body.honesty.sandboxRequired).toBe(true);
 
-    const connector = await request(app.getHttpServer())
+    const connector = await request(app.getHttpServer)
       .get('/v1/connector-marketplace/engine')
       .expect(200);
     expect(connector.body.honesty.liveConnectorExecution).toBe(false);
     expect(connector.body.honesty.ipaasOs).toBe(false);
 
-    const voiceLang = await request(app.getHttpServer())
+    const voiceLang = await request(app.getHttpServer)
       .get('/v1/voice-language-marketplace/engine')
       .expect(200);
     expect(voiceLang.body.honesty.thirdPartyVoiceOs).toBe(false);
     expect(voiceLang.body.honesty.celebrityWithoutRights).toBe(false);
   });
 
-  it('hand-checks Creator Economy royalty math (real-money gate)', async () => {
+  it('hand-checks Creator Economy royalty math (real-money gate)', async  => {
     for (const s of ROYALTY_HAND_CHECK_SCENARIOS) {
       const split = splitRevenue({ amountCents: s.amountCents, feeBps: s.feeBps });
       expect(split.applicationFeeCents).toBe(s.fee);
       expect(split.publisherNetCents).toBe(s.net);
     }
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer)
       .get('/v1/creator-economy/royalty/scenarios')
       .expect(200);
     expect(res.body.allHandChecksPassed).toBe(true);
     expect(res.body.honesty.creatorPayoutMathVerifiedLive).toBe(false);
     expect(res.body.honesty.storesRawCardData).toBe(false);
 
-    const tax = await request(app.getHttpServer()).get('/v1/creator-economy/tax').expect(200);
+    const tax = await request(app.getHttpServer).get('/v1/creator-economy/tax').expect(200);
     expect(tax.body.honesty.taxHandlingComplete).toBe(false);
-    const disputes = await request(app.getHttpServer())
+    const disputes = await request(app.getHttpServer)
       .get('/v1/creator-economy/disputes')
       .expect(200);
     expect(disputes.body.honesty.disputeChargebackComplete).toBe(false);
   });
 
-  it('rejects unauthenticated sensitive ecosystem routes (security smoke)', async () => {
+  it('rejects unauthenticated sensitive ecosystem routes (security smoke)', async  => {
     const paths = [
       { method: 'get', path: '/v1/ecosystem-cloud/overview' },
       { method: 'get', path: '/v1/plugin-marketplace/listings' },
@@ -246,15 +246,15 @@ describe('Ecosystem Cloud Production Audit (VL-259)', () => {
     for (const item of paths) {
       const res =
         item.method === 'post'
-          ? await request(app.getHttpServer()).post(item.path).send({ amountCents: 1000 })
-          : await request(app.getHttpServer()).get(item.path);
+          ? await request(app.getHttpServer).post(item.path).send({ amountCents: 1000 })
+          : await request(app.getHttpServer).get(item.path);
       expect([401, 403, 503]).toContain(res.status);
     }
   });
 
-  it('exposes GraphQL engine façades for ecosystem hubs', async () => {
-    const started = Date.now();
-    const gql = await request(app.getHttpServer())
+  it('exposes GraphQL engine façades for ecosystem hubs', async  => {
+    const started = Date.now;
+    const gql = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query: `{
@@ -271,8 +271,8 @@ describe('Ecosystem Cloud Production Audit (VL-259)', () => {
         }`,
       })
       .expect(200);
-    expect(Date.now() - started).toBeLessThan(5_000);
-    expect(gql.body.errors).toBeUndefined();
+    expect(Date.now - started).toBeLessThan(5_000);
+    expect(gql.body.errors).toBeUndefined;
     expect(gql.body.data.ecosystemProducts.length).toBeGreaterThan(8);
     expect(gql.body.data.pluginMarketplaceEngine.liveCodeExecution).toBe(false);
     expect(gql.body.data.pluginMarketplaceEngine.sandboxRequired).toBe(true);

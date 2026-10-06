@@ -6,16 +6,16 @@ import {
   GitopsPlatformProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestGitopsPlatformCatalogAdapter implements GitopsPlatformCatalogPort {
   constructor(private readonly service: GitopsPlatformService) {}
 
-  engine(): GitopsPlatformEngineBundle {
-    return this.service.engine();
+  engine: GitopsPlatformEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): GitopsPlatformProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: GitopsPlatformProductRow[] {
+    const bundle = this.engine as {
       products?: GitopsPlatformProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestGitopsPlatformCatalogAdapter implements GitopsPlatformCatalogPo
         status: 'shipped',
         api: 'GET /v1/gitops-platform/engine',
         console: '/gitops-platform',
-        notes: 'VL-306 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

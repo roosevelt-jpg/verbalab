@@ -1,4 +1,4 @@
-/** Application ports for Policy Fabric (VL-247). */
+/** Application ports for Policy Fabric. */
 
 export type PolicyFabricCapabilityRow = {
   id: string;
@@ -22,9 +22,9 @@ export type PolicyFabricProductsBundle = ReturnType<
 >;
 
 export interface PolicyFabricCatalogPort {
-  products(): PolicyFabricProductsBundle;
-  listCapabilities(): PolicyFabricCapabilityRow[];
-  listRoutes(): PolicyFabricRouteRow[];
+  products: PolicyFabricProductsBundle;
+  listCapabilities: PolicyFabricCapabilityRow[];
+  listRoutes: PolicyFabricRouteRow[];
 }
 
 export const POLICY_FABRIC_CATALOG_PORT = Symbol('POLICY_FABRIC_CATALOG_PORT');

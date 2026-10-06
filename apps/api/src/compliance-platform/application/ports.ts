@@ -1,4 +1,4 @@
-/** Application ports for Compliance Platform (VL-297). */
+/** Application ports for Compliance Platform. */
 
 export type CompliancePlatformProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type CompliancePlatformEngineBundle = ReturnType<
 >;
 
 export interface CompliancePlatformCatalogPort {
-  engine(): CompliancePlatformEngineBundle;
-  listProducts(): CompliancePlatformProductRow[];
+  engine: CompliancePlatformEngineBundle;
+  listProducts: CompliancePlatformProductRow[];
 }
 
 export const COMPLIANCE_PLATFORM_CATALOG_PORT = Symbol('COMPLIANCE_PLATFORM_CATALOG_PORT');

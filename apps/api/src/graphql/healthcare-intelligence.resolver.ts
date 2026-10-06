@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetHealthcareIntelligenceEngineQuery } from '../healthcare-intelligence/application/messages';
 import { GqlHealthcareIntelligenceEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class HealthcareIntelligenceGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query(() => GqlHealthcareIntelligenceEngine, { name: 'healthcareIntelligenceEngine' })
-  async healthcareIntelligenceEngine(): Promise<GqlHealthcareIntelligenceEngine> {
-    const catalog = await this.queries.execute(new GetHealthcareIntelligenceEngineQuery());
+  @Query( => GqlHealthcareIntelligenceEngine, { name: 'healthcareIntelligenceEngine' })
+  async healthcareIntelligenceEngine: Promise<GqlHealthcareIntelligenceEngine> {
+    const catalog = await this.queries.execute(new GetHealthcareIntelligenceEngineQuery);
     return {
       product: catalog.product,
       note: catalog.note,

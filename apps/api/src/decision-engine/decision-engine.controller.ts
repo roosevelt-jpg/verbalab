@@ -15,18 +15,18 @@ export class DecisionEngineController {
   constructor(private readonly decisions: DecisionEngineService) {}
 
   @Get('engine')
-  engine() {
-    return this.decisions.engine();
+  engine {
+    return this.decisions.engine;
   }
 
   @Get('kinds')
-  kinds() {
-    return this.decisions.kinds();
+  kinds {
+    return this.decisions.kinds;
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.decisions.analytics(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -35,7 +35,7 @@ export class DecisionEngineController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req() req: AuthedReq) {
+  monitoring(@Req req: AuthedReq) {
     return this.decisions.monitoring(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -46,8 +46,8 @@ export class DecisionEngineController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   decide(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       kind?: string;
       query?: string;

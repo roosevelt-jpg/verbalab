@@ -6,16 +6,16 @@ import {
   KnowledgeRuntimeProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestKnowledgeRuntimeCatalogAdapter implements KnowledgeRuntimeCatalogPort {
   constructor(private readonly service: KnowledgeRuntimeService) {}
 
-  engine(): KnowledgeRuntimeEngineBundle {
-    return this.service.engine();
+  engine: KnowledgeRuntimeEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): KnowledgeRuntimeProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: KnowledgeRuntimeProductRow[] {
+    const bundle = this.engine as {
       products?: KnowledgeRuntimeProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestKnowledgeRuntimeCatalogAdapter implements KnowledgeRuntimeCatal
         status: 'shipped',
         api: 'GET /v1/knowledge-runtime/engine',
         console: '/knowledge-runtime',
-        notes: 'VL-329 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

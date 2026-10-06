@@ -7,16 +7,16 @@ import {
   foundationModelCloudHonesty,
 } from './foundation-model-cloud.catalog';
 
-@Injectable()
+@Injectable
 export class FoundationModelCloudService {
   constructor(private readonly usage: UsageService) {}
 
-  products() {
+  products {
     return {
       product: 'Lugemi Foundation Model Cloud',
-      products: foundationModelCloudCatalog(),
-      architecture: foundationModelCloudArchitectureNotes(),
-      honesty: foundationModelCloudHonesty(),
+      products: foundationModelCloudCatalog,
+      architecture: foundationModelCloudArchitectureNotes,
+      honesty: foundationModelCloudHonesty,
       safety: {
         noFakeTrainedWeights: true,
         scaffoldsAreNotModels: true,
@@ -25,13 +25,13 @@ export class FoundationModelCloudService {
       },
       docs: '/docs/FOUNDATION_MODEL_CLOUD.md',
       note:
-        'Foundation Model Cloud hub (VL-224). Model-family catalog + MLOps roadmap. Not trained competitive weights. Extends Inference Cloud + AI Kernel without regenerating Volumes 1–8.',
+        'Foundation Model Cloud hub. Model-family catalog + MLOps roadmap. Not trained competitive weights. Extends Inference Cloud + AI Kernel without regenerating Volumes 1–8.',
     };
   }
 
   async overview(session: SessionContext) {
     const usageSummary = await this.usage.summary(session.organizationId);
-    const products = foundationModelCloudCatalog();
+    const products = foundationModelCloudCatalog;
 
     return {
       session: {
@@ -45,8 +45,8 @@ export class FoundationModelCloudService {
         embeddings: usageSummary.embeddings,
       },
       products,
-      architecture: foundationModelCloudArchitectureNotes(),
-      honesty: foundationModelCloudHonesty(),
+      architecture: foundationModelCloudArchitectureNotes,
+      honesty: foundationModelCloudHonesty,
       safety: {
         noFakeTrainedWeights: true,
         scaffoldsAreNotModels: true,
@@ -93,19 +93,19 @@ export class FoundationModelCloudService {
       },
       docs: '/docs/FOUNDATION_MODEL_CLOUD.md',
       note:
-        'Foundation Model Cloud hub (VL-224). Model-family catalog + MLOps roadmap. Not trained competitive weights. Extends Inference Cloud + AI Kernel without regenerating Volumes 1–8.',
+        'Foundation Model Cloud hub. Model-family catalog + MLOps roadmap. Not trained competitive weights. Extends Inference Cloud + AI Kernel without regenerating Volumes 1–8.',
     };
   }
 
-  monitoring() {
-    const products = foundationModelCloudCatalog();
+  monitoring {
+    const products = foundationModelCloudCatalog;
     return {
       mode: 'foundation',
       products: products.map((p) => ({ id: p.id, status: p.status, modality: p.modality })),
-      architecture: foundationModelCloudArchitectureNotes(),
-      honesty: foundationModelCloudHonesty(),
+      architecture: foundationModelCloudArchitectureNotes,
+      honesty: foundationModelCloudHonesty,
       note:
-        'Foundation Model Cloud monitoring snapshot (VL-224). Hub shipped; named families and MLOps platforms deferred per Volume 9 README.',
+        'Foundation Model Cloud monitoring snapshot. Hub shipped; named families and MLOps platforms deferred per Volume 9 README.',
     };
   }
 }

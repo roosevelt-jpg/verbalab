@@ -30,7 +30,7 @@ export class GoogleTranslateAdapter implements TranslationProvider {
       );
     }
 
-    const started = Date.now();
+    const started = Date.now;
     const url = new URL('https://translation.googleapis.com/language/translate/v2');
     url.searchParams.set('key', this.apiKey);
 
@@ -41,8 +41,8 @@ export class GoogleTranslateAdapter implements TranslationProvider {
       format: 'text',
     };
 
-    const response = await this.requestWithRetry(url.toString(), body);
-    const json = (await response.json()) as GoogleTranslateResponse;
+    const response = await this.requestWithRetry(url.toString, body);
+    const json = (await response.json) as GoogleTranslateResponse;
 
     if (!response.ok) {
       const message = json.error?.message ?? `Google Translate HTTP ${response.status}`;
@@ -67,7 +67,7 @@ export class GoogleTranslateAdapter implements TranslationProvider {
       target: input.target,
       provider: this.name,
       characters: [...input.text].length,
-      latencyMs: Date.now() - started,
+      latencyMs: Date.now - started,
     };
   }
 

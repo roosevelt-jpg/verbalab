@@ -11,15 +11,15 @@ import {
   formatLocaleNumber,
 } from './locale-format';
 
-@Injectable()
+@Injectable
 export class LocalesService implements OnModuleInit {
   constructor(private readonly prisma: PrismaService) {}
 
-  async onModuleInit() {
-    await this.seed();
+  async onModuleInit {
+    await this.seed;
   }
 
-  async seed() {
+  async seed {
     for (const pack of LOCALE_PACK_SEEDS) {
       const language = await this.prisma.language.findUnique({
         where: { code: pack.languageCode },
@@ -90,7 +90,7 @@ export class LocalesService implements OnModuleInit {
     };
   }
 
-  async list() {
+  async list {
     const rows = await this.prisma.localePack.findMany({
       include: {
         language: {
@@ -125,10 +125,10 @@ export class LocalesService implements OnModuleInit {
     });
     const entities = (pack?.doNotTranslate as string[] | null) ?? [];
     return entities
-      .filter((e) => typeof e === 'string' && e.trim())
+      .filter((e) => typeof e === 'string' && e.trim)
       .map((sourceTerm) => ({
-        sourceTerm: sourceTerm.trim(),
-        targetTerm: sourceTerm.trim(),
+        sourceTerm: sourceTerm.trim,
+        targetTerm: sourceTerm.trim,
         caseSensitive: false,
         wholeWord: true,
       }));

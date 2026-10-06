@@ -14,7 +14,7 @@ function isApiKey(value: string) {
   return value.startsWith('lg_live_') || value.startsWith('lg_test_');
 }
 
-export function PlaygroundClient() {
+export function PlaygroundClient {
   const [mode, setMode] = useState<Mode>('translate');
   const [apiKey, setApiKey] = useState('');
   const [languages, setLanguages] = useState<Language[]>([]);
@@ -25,10 +25,10 @@ export function PlaygroundClient() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  useEffect( => {
     void apiFetch<{ data: Language[] }>('/v1/languages')
       .then((res) => setLanguages(res.data))
-      .catch(() => undefined);
+      .catch( => undefined);
   }, []);
 
   const curl =
@@ -45,7 +45,7 @@ export function PlaygroundClient() {
   -d '{"text":${JSON.stringify(text)},"source":"${source}","target":"${target}"}'`;
 
   async function onSubmit(event: FormEvent) {
-    event.preventDefault();
+    event.preventDefault;
     setError(null);
     setLoading(true);
     setResponse('');
@@ -100,7 +100,7 @@ export function PlaygroundClient() {
           <button
             key={m}
             type="button"
-            onClick={() => setMode(m)}
+            onClick={ => setMode(m)}
             className={`vl-mode-tab${mode === m ? ' is-active' : ''}`}
           >
             {m}
@@ -187,7 +187,7 @@ export function PlaygroundClient() {
   );
 }
 
-function PublicHeader() {
+function PublicHeader {
   return (
     <div className="vl-api-public-header">
       <BrandMark href="/" />

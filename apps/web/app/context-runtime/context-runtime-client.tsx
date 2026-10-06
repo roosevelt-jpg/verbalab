@@ -25,8 +25,8 @@ type Engine = {
 
 type Analytics = { assemblies: number };
 
-export function ContextRuntimeClient() {
-  const { getToken, isLoaded } = useAuth();
+export function ContextRuntimeClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -34,8 +34,8 @@ export function ContextRuntimeClient() {
   const [modelHint, setModelHint] = useState('gpt-sandbox');
   const [result, setResult] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, ana] = await Promise.all([
       apiFetch<Engine>('/v1/context-runtime/engine', { token }),
@@ -45,15 +45,15 @@ export function ContextRuntimeClient() {
     setAnalytics(ana);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
-  const assemble = useCallback(async () => {
+  const assemble = useCallback(async  => {
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const res = await apiFetch<{
         included: string[];
@@ -73,7 +73,7 @@ export function ContextRuntimeClient() {
       setResult(
         `included=${res.included.join(',')} · chars=${res.compression.afterChars} · truncated=${res.compression.truncated} · cache=${res.cache}\n\n${res.promptContext.slice(0, 500)}`,
       );
-      await load();
+      await load;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Assemble failed');
     }
@@ -112,7 +112,7 @@ export function ContextRuntimeClient() {
           placeholder="model hint"
           style={input}
         />
-        <button type="button" onClick={() => void assemble()} style={btn}>
+        <button type="button" onClick={ => void assemble} style={btn}>
           Assemble
         </button>
       </div>

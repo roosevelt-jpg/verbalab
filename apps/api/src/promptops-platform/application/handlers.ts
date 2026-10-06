@@ -17,8 +17,8 @@ export class GetPromptopsPlatformEngineHandler
     private readonly catalog: PromptopsPlatformCatalogPort,
   ) {}
 
-  execute(): Promise<PromptopsPlatformEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<PromptopsPlatformEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListPromptopsPlatformProductsHandler
     private readonly catalog: PromptopsPlatformCatalogPort,
   ) {}
 
-  execute(): Promise<PromptopsPlatformProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<PromptopsPlatformProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

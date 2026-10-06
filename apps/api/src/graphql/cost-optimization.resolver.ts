@@ -2,13 +2,13 @@ import { Query, Resolver } from '@nestjs/graphql';
 import { CostOptimizationService } from '../cost-optimization/cost-optimization.service';
 import { GqlCostOptimizationEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class CostOptimizationGraphqlResolver {
   constructor(private readonly cost: CostOptimizationService) {}
 
-  @Query(() => GqlCostOptimizationEngine, { name: 'costOptimizationEngine' })
-  costOptimizationEngine(): GqlCostOptimizationEngine {
-    const c = this.cost.engine();
+  @Query( => GqlCostOptimizationEngine, { name: 'costOptimizationEngine' })
+  costOptimizationEngine: GqlCostOptimizationEngine {
+    const c = this.cost.engine;
     return {
       product: c.product,
       note: c.note,

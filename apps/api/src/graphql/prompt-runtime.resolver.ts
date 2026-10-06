@@ -2,13 +2,13 @@ import { Query, Resolver } from '@nestjs/graphql';
 import { PromptRuntimeService } from '../prompt-runtime/prompt-runtime.service';
 import { GqlPromptRuntimeEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class PromptRuntimeGraphqlResolver {
   constructor(private readonly runtime: PromptRuntimeService) {}
 
-  @Query(() => GqlPromptRuntimeEngine, { name: 'promptRuntimeEngine' })
-  promptRuntimeEngine(): GqlPromptRuntimeEngine {
-    const c = this.runtime.engine();
+  @Query( => GqlPromptRuntimeEngine, { name: 'promptRuntimeEngine' })
+  promptRuntimeEngine: GqlPromptRuntimeEngine {
+    const c = this.runtime.engine;
     return {
       product: c.product,
       note: c.note,

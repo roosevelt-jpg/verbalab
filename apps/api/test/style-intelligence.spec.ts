@@ -22,7 +22,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_si_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_si_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -36,29 +36,29 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Style Intelligence Phase 11 (VL-143)', () => {
+describe('Style Intelligence Phase 11',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let rawKey: string;
   let prevOpenAi: string | undefined;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     prevOpenAi = process.env.OPENAI_API_KEY;
     delete process.env.OPENAI_API_KEY;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
 
     app.get(GatewayService).setDetectProviderForTests({
       name: 'fixture_detect',
-      async detect() {
+      async detect {
         return { language: 'en', confidence: 0.95, provider: 'fixture_detect' };
       },
     });
@@ -73,20 +73,20 @@ describe('Style Intelligence Phase 11 (VL-143)', () => {
     rawKey = created.secret;
   }, 120_000);
 
-  afterAll(async () => {
+  afterAll(async  => {
     if (prevOpenAi === undefined) delete process.env.OPENAI_API_KEY;
     else process.env.OPENAI_API_KEY = prevOpenAi;
-    await app.close();
+    await app.close;
   });
 
-  it('ships ADR and docs', () => {
+  it('ships ADR and docs',  => {
     expect(existsSync(join(root, 'docs/adr/0064-style-intelligence-phase-11.md'))).toBe(true);
     expect(readFileSync(join(root, 'docs/STYLE.md'), 'utf8')).toContain('/detect');
     expect(readFileSync(join(root, 'docs/STYLE.md'), 'utf8')).toContain('/transfer');
   });
 
-  it('exposes intelligence catalog with partial marketing/legal', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/style/intelligence').expect(200);
+  it('exposes intelligence catalog with partial marketing/legal', async  => {
+    const res = await request(app.getHttpServer).get('/v1/style/intelligence').expect(200);
     expect(res.body.product).toMatch(/Style/i);
     expect(
       res.body.capabilities.some((c: { id: string; status: string }) => c.id === 'tone_detection' && c.status === 'shipped'),
@@ -99,8 +99,8 @@ describe('Style Intelligence Phase 11 (VL-143)', () => {
     ).toBe(true);
   });
 
-  it('lists expanded profiles including formal/business/marketing/technical', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/style/profiles').expect(200);
+  it('lists expanded profiles including formal/business/marketing/technical', async  => {
+    const res = await request(app.getHttpServer).get('/v1/style/profiles').expect(200);
     const ids = res.body.data.map((p: { id: string }) => p.id);
     expect(ids).toEqual(
       expect.arrayContaining([
@@ -117,8 +117,8 @@ describe('Style Intelligence Phase 11 (VL-143)', () => {
     );
   });
 
-  it('detects marketing tone from cues', async () => {
-    const res = await request(app.getHttpServer())
+  it('detects marketing tone from cues', async  => {
+    const res = await request(app.getHttpServer)
       .post('/v1/style/detect')
       .set('Authorization', `Bearer ${rawKey}`)
       .send({ text: 'Buy now and unlock this limited time campaign CTA!' })
@@ -127,8 +127,8 @@ describe('Style Intelligence Phase 11 (VL-143)', () => {
     expect(res.body.confidence).toBeGreaterThan(0.4);
   });
 
-  it('transforms tone to formal', async () => {
-    const res = await request(app.getHttpServer())
+  it('transforms tone to formal', async  => {
+    const res = await request(app.getHttpServer)
       .post('/v1/style/transform')
       .set('Authorization', `Bearer ${rawKey}`)
       .send({ text: "I'm gonna finish this, yeah?", targetTone: 'formal', language: 'en' })
@@ -139,20 +139,20 @@ describe('Style Intelligence Phase 11 (VL-143)', () => {
     expect(res.body.changed).toBe(true);
   });
 
-  it('transfers style from casual cues to professional with disclaimer profiles intact', async () => {
-    const res = await request(app.getHttpServer())
+  it('transfers style from casual cues to professional with disclaimer profiles intact', async  => {
+    const res = await request(app.getHttpServer)
       .post('/v1/style/transfer')
       .set('Authorization', `Bearer ${rawKey}`)
       .send({ text: "I'm gonna get this ASAP, yeah?", targetProfile: 'business', language: 'en' })
       .expect(200);
-    expect(res.body.sourceTone).toBeTruthy();
+    expect(res.body.sourceTone).toBeTruthy;
     expect(res.body.targetProfile).toBe('business');
-    expect(res.body.rewritten.toLowerCase()).toContain('as soon as possible');
+    expect(res.body.rewritten.toLowerCase).toContain('as soon as possible');
     expect(res.body.operation).toBe('style_transfer');
   });
 
-  it('returns analytics for the org', async () => {
-    const res = await request(app.getHttpServer())
+  it('returns analytics for the org', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/style/analytics')
       .set('Authorization', `Bearer ${rawKey}`)
       .expect(200);
@@ -160,15 +160,15 @@ describe('Style Intelligence Phase 11 (VL-143)', () => {
     expect(res.body.toneDetections + res.body.toneTransforms + res.body.styleTransfers).toBeGreaterThan(0);
   });
 
-  it('exposes GraphQL styleIntelligence and detectTone', async () => {
-    const catalog = await request(app.getHttpServer())
+  it('exposes GraphQL styleIntelligence and detectTone', async  => {
+    const catalog = await request(app.getHttpServer)
       .post('/graphql')
       .send({ query: '{ styleIntelligence { product shippedCount } }' })
       .expect(200);
-    expect(catalog.body.errors).toBeUndefined();
+    expect(catalog.body.errors).toBeUndefined;
     expect(catalog.body.data.styleIntelligence.shippedCount).toBeGreaterThan(5);
 
-    const detect = await request(app.getHttpServer())
+    const detect = await request(app.getHttpServer)
       .post('/graphql')
       .set('Authorization', `Bearer ${rawKey}`)
       .send({
@@ -178,7 +178,7 @@ describe('Style Intelligence Phase 11 (VL-143)', () => {
         variables: { input: { text: 'Refactor the API endpoint schema for lower latency' } },
       })
       .expect(200);
-    expect(detect.body.errors).toBeUndefined();
+    expect(detect.body.errors).toBeUndefined;
     expect(detect.body.data.detectTone.detectedTone).toBe('technical');
   });
 });

@@ -10,11 +10,11 @@ export type FabricBusRow = {
 };
 
 /**
- * Library Phase 106 → AI Fabric Foundation (VL-239).
+ * Library Phase 106 → AI Fabric Foundation.
  * Internal communication hub connecting Lugemi clouds — not a Kafka hyperscaler OS.
  * Volume 10 README: buildable event/message-bus architecture; Policy Fabric must hard-gate.
  */
-export function aiFabricBusCatalog(): FabricBusRow[] {
+export function aiFabricBusCatalog: FabricBusRow[] {
   return [
     {
       id: 'ai-fabric',
@@ -23,7 +23,7 @@ export function aiFabricBusCatalog(): FabricBusRow[] {
       api: 'GET /v1/ai-fabric/products',
       console: '/ai-fabric',
       notes:
-        'Internal communication hub (VL-239). Extends AI Kernel + Inference Cloud — does not regenerate Volumes 1–9. Not a customer product mesh OS.',
+        'Internal communication hub. Extends AI Kernel + Inference Cloud — does not regenerate Volumes 1–9. Not a customer product mesh OS.',
     },
     {
       id: 'event-fabric',
@@ -32,7 +32,7 @@ export function aiFabricBusCatalog(): FabricBusRow[] {
       api: 'GET /v1/event-fabric/products',
       console: '/event-fabric',
       notes:
-        'Redis Streams + CloudEvents bus (VL-240). Kafka/NATS/RabbitMQ adapters deferred.',
+        'Redis Streams + CloudEvents bus. Kafka/NATS/RabbitMQ adapters deferred.',
     },
     {
       id: 'context-fabric',
@@ -41,7 +41,7 @@ export function aiFabricBusCatalog(): FabricBusRow[] {
       api: 'GET /v1/context-fabric/products',
       console: '/context-fabric',
       notes:
-        'Cross-cloud context router over Context Runtime (VL-241). Not infinite-context OS.',
+        'Cross-cloud context router over Context Runtime. Not infinite-context OS.',
     },
     {
       id: 'knowledge-fabric',
@@ -50,7 +50,7 @@ export function aiFabricBusCatalog(): FabricBusRow[] {
       api: 'GET /v1/knowledge-fabric/products',
       console: '/knowledge-fabric',
       notes:
-        'Knowledge router over Knowledge Cloud (VL-242). Same-org distribute/sync — not Confluence/Neo4j OS.',
+        'Knowledge router over Knowledge Cloud. Same-org distribute/sync — not Confluence/Neo4j OS.',
     },
     {
       id: 'prompt-fabric',
@@ -59,7 +59,7 @@ export function aiFabricBusCatalog(): FabricBusRow[] {
       api: 'GET /v1/prompt-fabric/products',
       console: '/prompt-fabric',
       notes:
-        'Prompt router over Prompt Runtime (VL-243). Not prompt mesh/research lab OS.',
+        'Prompt router over Prompt Runtime. Not prompt mesh/research lab OS.',
     },
     {
       id: 'reasoning-fabric',
@@ -68,7 +68,7 @@ export function aiFabricBusCatalog(): FabricBusRow[] {
       api: 'GET /v1/reasoning-fabric/products',
       console: '/reasoning-fabric',
       notes:
-        'Reasoning router over Reasoning Runtime (VL-244). Not custom reasoner OS.',
+        'Reasoning router over Reasoning Runtime. Not custom reasoner OS.',
     },
     {
       id: 'memory-fabric',
@@ -77,7 +77,7 @@ export function aiFabricBusCatalog(): FabricBusRow[] {
       api: 'GET /v1/memory-fabric/products',
       console: '/memory-fabric',
       notes:
-        'Memory router over Memory Runtime (VL-245). Not Mem0 / multi-region replication OS.',
+        'Memory router over Memory Runtime. Not Mem0 / multi-region replication OS.',
     },
     {
       id: 'agent-fabric',
@@ -86,7 +86,7 @@ export function aiFabricBusCatalog(): FabricBusRow[] {
       api: 'GET /v1/agent-fabric/products',
       console: '/agent-fabric',
       notes:
-        'Agent router over Agent Runtime (VL-246). Sandboxed + Policy-gated; not LangGraph/AutoGPT OS.',
+        'Agent router over Agent Runtime. Sandboxed + Policy-gated; not LangGraph/AutoGPT OS.',
     },
     {
       id: 'policy-fabric',
@@ -95,7 +95,7 @@ export function aiFabricBusCatalog(): FabricBusRow[] {
       api: 'GET /v1/policy-fabric/products',
       console: '/policy-fabric',
       notes:
-        'Fabric-wide hard gate (VL-247). Enforces via FabricPolicyGate — not log-only. Not OPA/Cedar OS.',
+        'Fabric-wide hard gate. Enforces via FabricPolicyGate — not log-only. Not OPA/Cedar OS.',
     },
     {
       id: 'workflow-bus',
@@ -172,7 +172,7 @@ export function aiFabricBusCatalog(): FabricBusRow[] {
   ];
 }
 
-export function aiFabricArchitectureNotes() {
+export function aiFabricArchitectureNotes {
   return {
     style: 'nest_modular_monolith',
     ddd: 'bounded_ai_fabric_hub',
@@ -198,11 +198,11 @@ export function aiFabricArchitectureNotes() {
     redisStreamsActive: true,
     kafkaAdapterDeferred: true,
     note:
-      'Volume 10 README: buildable internal bus architecture. Foundation ships discovery/routing hub; Event Fabric (VL-240) wires Redis Streams + CloudEvents. Kafka/NATS/Rabbit adapters remain deferred. Policy Fabric must hard-gate when shipped.',
+      'Volume 10 README: buildable internal bus architecture. Foundation ships discovery/routing hub; Event Fabric wires Redis Streams + CloudEvents. Kafka/NATS/Rabbit adapters remain deferred. Policy Fabric must hard-gate when shipped.',
   };
 }
 
-export function aiFabricHonesty() {
+export function aiFabricHonesty {
   return {
     customerFacingProduct: false,
     kafkaHyperscalerOs: false,
@@ -219,7 +219,7 @@ export function aiFabricHonesty() {
   };
 }
 
-export function aiFabricRoutingTable() {
+export function aiFabricRoutingTable {
   return [
     { cloud: 'language', path: '/language', api: '/v1/language-cloud/products' },
     { cloud: 'speech', path: '/speech', api: '/v1/speech-cloud/products' },

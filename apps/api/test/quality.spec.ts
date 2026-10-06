@@ -20,7 +20,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_qe_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_qe_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -34,21 +34,21 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Quality reviews (VL-052)', () => {
+describe('Quality reviews',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let quality: QualityService;
   let tm: TmService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -70,11 +70,11 @@ describe('Quality reviews (VL-052)', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('returns quality fields on translate and accepts into TM', async () => {
+  it('returns quality fields on translate and accepts into TM', async  => {
     const org = await seedOrg(prisma, 'qe');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -83,13 +83,13 @@ describe('Quality reviews (VL-052)', () => {
       name: 'qe-key',
     });
 
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer)
       .post('/v1/translate')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'Good morning', source: 'en', target: 'sw' })
       .expect(200);
 
-    expect(res.body.reviewId).toBeTruthy();
+    expect(res.body.reviewId).toBeTruthy;
     expect(typeof res.body.qualityScore).toBe('number');
     expect(typeof res.body.needsReview).toBe('boolean');
 
@@ -100,12 +100,12 @@ describe('Quality reviews (VL-052)', () => {
       addToTm: true,
     });
     expect(accepted.status).toBe('accepted');
-    expect(accepted.tmEntryId).toBeTruthy();
+    expect(accepted.tmEntryId).toBeTruthy;
 
     const listed = await tm.list(org.id, org.workspaces[0]!.id, { source: 'en', target: 'sw' });
     expect(listed.some((e) => e.sourceText === 'Good morning')).toBe(true);
 
-    const hit = await request(app.getHttpServer())
+    const hit = await request(app.getHttpServer)
       .post('/v1/translate')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'Good morning', source: 'en', target: 'sw' })
@@ -114,7 +114,7 @@ describe('Quality reviews (VL-052)', () => {
     expect(hit.body.qualityScore).toBeGreaterThanOrEqual(95);
   });
 
-  it('rejects a pending review', async () => {
+  it('rejects a pending review', async  => {
     const org = await seedOrg(prisma, 'qerej');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -123,7 +123,7 @@ describe('Quality reviews (VL-052)', () => {
       name: 'rej-key',
     });
 
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer)
       .post('/v1/translate')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'Reject me', source: 'en', target: 'yo' })

@@ -32,13 +32,13 @@ export class PronunciationIntelligenceController {
   constructor(private readonly pronunciation: PronunciationIntelligenceService) {}
 
   @Get('engine')
-  engine() {
-    return this.pronunciation.engine();
+  engine {
+    return this.pronunciation.engine;
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: Request & { translateAuth: TranslateAuthContext }) {
+  analytics(@Req req: Request & { translateAuth: TranslateAuthContext }) {
     return this.pronunciation.analytics(req.translateAuth.organizationId);
   }
 
@@ -47,14 +47,14 @@ export class PronunciationIntelligenceController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   assess(
-    @Req() req: AuthReq,
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { reference?: string; hypothesis?: string; language?: string },
+    @Req req: AuthReq,
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { reference?: string; hypothesis?: string; language?: string },
   ) {
     return this.pronunciation.assess({
       ...this.ctx(req, body, file),
@@ -66,14 +66,14 @@ export class PronunciationIntelligenceController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   score(
-    @Req() req: AuthReq,
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { reference?: string; hypothesis?: string; language?: string },
+    @Req req: AuthReq,
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { reference?: string; hypothesis?: string; language?: string },
   ) {
     return this.pronunciation.score({
       ...this.ctx(req, body, file),
@@ -85,14 +85,14 @@ export class PronunciationIntelligenceController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   coach(
-    @Req() req: AuthReq,
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { reference?: string; hypothesis?: string; language?: string },
+    @Req req: AuthReq,
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { reference?: string; hypothesis?: string; language?: string },
   ) {
     return this.pronunciation.coach({
       ...this.ctx(req, body, file),
@@ -102,7 +102,7 @@ export class PronunciationIntelligenceController {
   @Post('phonemes')
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
-  phonemes(@Body() body: { text?: string; language?: string }) {
+  phonemes(@Body body: { text?: string; language?: string }) {
     return this.pronunciation.phonemes({
       text: body.text ?? '',
       language: body.language,
@@ -114,14 +114,14 @@ export class PronunciationIntelligenceController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   fluency(
-    @Req() req: AuthReq,
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { reference?: string; language?: string },
+    @Req req: AuthReq,
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { reference?: string; language?: string },
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
@@ -142,21 +142,21 @@ export class PronunciationIntelligenceController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   async assessStream(
-    @Req() req: AuthReq,
-    @Res() res: Response,
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { reference?: string; hypothesis?: string; language?: string },
+    @Req req: AuthReq,
+    @Res res: Response,
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { reference?: string; hypothesis?: string; language?: string },
   ) {
     res.status(HttpStatus.OK);
     res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders?.();
+    res.flushHeaders?.;
 
     const stream = this.pronunciation.streamAssess({
       ...this.ctx(req, body, file),
@@ -166,7 +166,7 @@ export class PronunciationIntelligenceController {
       res.write(`event: ${chunk.event}\ndata: ${JSON.stringify(chunk)}\n\n`);
       if (chunk.event === 'error' || chunk.event === 'done') break;
     }
-    res.end();
+    res.end;
   }
 
   private ctx(
@@ -175,7 +175,7 @@ export class PronunciationIntelligenceController {
     file?: Express.Multer.File,
   ) {
     const reference = typeof body.reference === 'string' ? body.reference : '';
-    if (!reference.trim()) {
+    if (!reference.trim) {
       throw new ApiException(
         'validation_error',
         'reference is required',

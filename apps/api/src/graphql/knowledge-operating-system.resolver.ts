@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetKnowledgeOperatingSystemEngineQuery } from '../knowledge-operating-system/application/messages';
 import { GqlKnowledgeOperatingSystemEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class KnowledgeOperatingSystemGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query(() => GqlKnowledgeOperatingSystemEngine, { name: 'knowledgeOperatingSystemEngine' })
-  async knowledgeOperatingSystemEngine(): Promise<GqlKnowledgeOperatingSystemEngine> {
-    const catalog = await this.queries.execute(new GetKnowledgeOperatingSystemEngineQuery());
+  @Query( => GqlKnowledgeOperatingSystemEngine, { name: 'knowledgeOperatingSystemEngine' })
+  async knowledgeOperatingSystemEngine: Promise<GqlKnowledgeOperatingSystemEngine> {
+    const catalog = await this.queries.execute(new GetKnowledgeOperatingSystemEngineQuery);
     return {
       product: catalog.product,
       note: catalog.note,

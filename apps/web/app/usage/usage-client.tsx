@@ -34,28 +34,28 @@ type BillingLite = {
   planName: string;
 };
 
-export function UsageClient() {
-  const { getToken, isLoaded } = useAuth();
+export function UsageClient {
+  const { getToken, isLoaded } = useAuth;
   const [summary, setSummary] = useState<Summary | null>(null);
   const [billing, setBilling] = useState<BillingLite | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void (async () => {
+    void (async  => {
       try {
-        const token = await getToken();
+        const token = await getToken;
         if (!token) throw new Error('Not signed in');
         const [data, bill] = await Promise.all([
           apiFetch<Summary>('/v1/usage/summary', { token }),
-          apiFetch<BillingLite>('/v1/billing/summary', { token }).catch(() => null),
+          apiFetch<BillingLite>('/v1/billing/summary', { token }).catch( => null),
         ]);
         setSummary(data);
         setBilling(bill);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load usage');
       }
-    })();
+    });
   }, [getToken, isLoaded]);
 
   const translateChars = summary?.translate?.characters ?? summary?.characters ?? 0;
@@ -87,21 +87,21 @@ export function UsageClient() {
                 value={billing.charactersUsed}
                 max={Math.max(billing.characterQuota, 1)}
                 label={`${billing.planName} balance`}
-                sublabel={`${billing.charactersRemaining.toLocaleString()} characters left`}
+                sublabel={`${billing.charactersRemaining.toLocaleString} characters left`}
               />
             ) : (
               <ProgressRing
                 value={translateChars}
                 max={Math.max(translateChars * 2, 50_000)}
                 label="Character volume"
-                sublabel={`${translateChars.toLocaleString()} translate chars`}
+                sublabel={`${translateChars.toLocaleString} translate chars`}
               />
             )}
             <ProgressRing
               value={Math.min(totalActivity, 500)}
               max={500}
               label="Request pace"
-              sublabel={`${totalActivity.toLocaleString()} calls this period`}
+              sublabel={`${totalActivity.toLocaleString} calls this period`}
             />
             <LineChart
               title="Character timeline"
@@ -131,11 +131,11 @@ export function UsageClient() {
 
           <div className="lg-stats-grid">
             <MetricCard label="Translate requests" value={String(translateReqs)} />
-            <MetricCard label="Translate characters" value={translateChars.toLocaleString()} />
+            <MetricCard label="Translate characters" value={translateChars.toLocaleString} />
             <MetricCard label="STT minutes" value={String(sttMins)} hint={`${summary.stt?.requests ?? 0} requests`} />
             <MetricCard
               label="TTS characters"
-              value={ttsChars.toLocaleString()}
+              value={ttsChars.toLocaleString}
               hint={`${summary.tts?.requests ?? 0} requests`}
             />
             <MetricCard
@@ -145,18 +145,18 @@ export function UsageClient() {
             />
             <MetricCard
               label="Chat tokens"
-              value={(summary.chat?.tokens ?? 0).toLocaleString()}
+              value={(summary.chat?.tokens ?? 0).toLocaleString}
               hint={`${summary.chat?.requests ?? 0} requests`}
             />
             <MetricCard
               label="Embeddings tokens"
-              value={(summary.embeddings?.tokens ?? 0).toLocaleString()}
+              value={(summary.embeddings?.tokens ?? 0).toLocaleString}
               hint={`${summary.embeddings?.requests ?? 0} requests`}
             />
           </div>
 
           <p style={{ color: 'var(--muted)', fontSize: '0.85rem', margin: 0 }}>
-            Period start: {new Date(summary.periodStart).toUTCString()}
+            Period start: {new Date(summary.periodStart).toUTCString}
           </p>
         </div>
       ) : !error ? (

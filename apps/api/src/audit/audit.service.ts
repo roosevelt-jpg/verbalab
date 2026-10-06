@@ -12,7 +12,7 @@ export type AuditRecordInput = {
   metadata?: Prisma.InputJsonValue;
 };
 
-@Injectable()
+@Injectable
 export class AuditService {
   constructor(private readonly prisma: PrismaService) {}
 
@@ -37,7 +37,7 @@ export class AuditService {
     route?: string;
     ip?: string;
   }) {
-    const start = new Date();
+    const start = new Date;
     start.setUTCHours(0, 0, 0, 0);
 
     const existing = await this.prisma.auditEvent.findFirst({

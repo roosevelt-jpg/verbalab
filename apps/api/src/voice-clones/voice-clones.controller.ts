@@ -24,33 +24,33 @@ import { HttpStatus } from '@nestjs/common';
 export class VoiceClonesController {
   constructor(private readonly clones: VoiceClonesService) {}
 
-  @Get()
-  list(@CurrentSession() session: SessionContext) {
+  @Get
+  list(@CurrentSession session: SessionContext) {
     return this.clones.list(session.organizationId, session.workspaceId);
   }
 
   @Get(':id')
-  get(@CurrentSession() session: SessionContext, @Param('id') id: string) {
+  get(@CurrentSession session: SessionContext, @Param('id') id: string) {
     return this.clones.get(session.organizationId, session.workspaceId, id);
   }
 
-  @Post()
+  @Post
   @UseInterceptors(
     FilesInterceptor('samples', 5, {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   create(
-    @CurrentSession() session: SessionContext,
-    @UploadedFiles() files: Express.Multer.File[] | undefined,
-    @Body()
+    @CurrentSession session: SessionContext,
+    @UploadedFiles files: Express.Multer.File[] | undefined,
+    @Body
     body: {
       name?: string;
       consentAttested?: string | boolean;
       consentNotes?: string;
     },
-    @Req() req: Request,
+    @Req req: Request,
   ) {
     const attested =
       body.consentAttested === true ||
@@ -71,10 +71,10 @@ export class VoiceClonesController {
 
   @Post(':id/review')
   review(
-    @CurrentSession() session: SessionContext,
+    @CurrentSession session: SessionContext,
     @Param('id') id: string,
-    @Body() body: { decision?: 'approved' | 'rejected'; reviewNotes?: string },
-    @Req() req: Request,
+    @Body body: { decision?: 'approved' | 'rejected'; reviewNotes?: string },
+    @Req req: Request,
   ) {
     if (body.decision !== 'approved' && body.decision !== 'rejected') {
       throw new ApiException(
@@ -97,10 +97,10 @@ export class VoiceClonesController {
 
   @Post(':id/disable')
   disable(
-    @CurrentSession() session: SessionContext,
+    @CurrentSession session: SessionContext,
     @Param('id') id: string,
-    @Body() body: { reason?: string },
-    @Req() req: Request,
+    @Body body: { reason?: string },
+    @Req req: Request,
   ) {
     return this.clones.disable({
       organizationId: session.organizationId,

@@ -10,7 +10,7 @@ export class UsageController {
 
   @Get('summary')
   @UseGuards(ClerkAuthGuard)
-  summary(@CurrentSession() session: SessionContext) {
+  summary(@CurrentSession session: SessionContext) {
     return this.usage.summary(session.organizationId);
   }
 }

@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { finopsPlatformEngineCatalog } from './finops-platform.catalog';
 
-@Injectable()
+@Injectable
 export class FinopsPlatformService {
-  engine() {
-    return finopsPlatformEngineCatalog();
+  engine {
+    return finopsPlatformEngineCatalog;
   }
 
   list(query?: string) {
-    const catalog = this.engine();
-    const q = (query ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (query ?? '').trim.toLowerCase;
     const costs = catalog.costs.filter((row) => {
       if (!q) return true;
-      return JSON.stringify(row).toLowerCase().includes(q);
+      return JSON.stringify(row).toLowerCase.includes(q);
     });
     return {
       costs,
@@ -27,8 +27,8 @@ export class FinopsPlatformService {
     };
   }
 
-  budgets() {
-    const catalog = this.engine();
+  budgets {
+    const catalog = this.engine;
     return {
       budgets: catalog.budgets,
       count: catalog.budgets.length,
@@ -39,8 +39,8 @@ export class FinopsPlatformService {
     };
   }
 
-  alerts() {
-    const catalog = this.engine();
+  alerts {
+    const catalog = this.engine;
     const gpuAlerts = catalog.alerts.filter((a) => a.kind === 'gpu' && a.enabled);
     return {
       alerts: catalog.alerts,
@@ -57,8 +57,8 @@ export class FinopsPlatformService {
     return this.list(query);
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'finops',
       costCount: catalog.costs.length,
@@ -67,7 +67,7 @@ export class FinopsPlatformService {
       gpuBudgetAlertsEnabled: true,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'FinOps Platform monitoring snapshot (VL-309).',
+      note: 'FinOps Platform monitoring snapshot.',
     };
   }
 }

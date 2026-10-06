@@ -3,37 +3,37 @@ import { architectureGovernanceEngineCatalog } from './architecture-governance.c
 import { PlatformEngineeringCloudService } from '../platform-engineering-cloud/platform-engineering-cloud.service';
 import { DeveloperExperiencePlatformService } from '../developer-experience-platform/developer-experience-platform.service';
 
-@Injectable()
+@Injectable
 export class ArchitectureGovernanceService {
   constructor(
     private readonly platformEngineeringCloud: PlatformEngineeringCloudService,
     private readonly developerExperience: DeveloperExperiencePlatformService
   ) {}
 
-  engine() {
-    return architectureGovernanceEngineCatalog();
+  engine {
+    return architectureGovernanceEngineCatalog;
   }
 
   /** Catalog route: returns standards capability + live status from injected upstream services. */
   route(capability?: string) {
-    const catalog = this.engine();
-    const q = (capability ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (capability ?? '').trim.toLowerCase;
     const capabilities = catalog.capabilities.filter((c) => {
       if (!q) return true;
-      return c.id.includes(q) || c.name.toLowerCase().includes(q);
+      return c.id.includes(q) || c.name.toLowerCase.includes(q);
     });
     const upstreamStatus = [
       {
         module: 'platform-engineering-cloud',
         method: 'products',
         status: 'reachable',
-        upstream: this.platformEngineeringCloud.products(),
+        upstream: this.platformEngineeringCloud.products,
       },
       {
         module: 'developer-experience-platform',
         method: 'engine',
         status: 'reachable',
-        upstream: this.developerExperience.engine(),
+        upstream: this.developerExperience.engine,
       }
     ];
     return {
@@ -57,11 +57,11 @@ export class ArchitectureGovernanceService {
   }
 
   list(query?: string) {
-    const catalog = this.engine();
-    const q = (query ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (query ?? '').trim.toLowerCase;
     const rows = catalog.routes.filter((row) => {
       if (!q) return true;
-      return JSON.stringify(row).toLowerCase().includes(q);
+      return JSON.stringify(row).toLowerCase.includes(q);
     });
     return {
       routes: rows,
@@ -78,7 +78,7 @@ export class ArchitectureGovernanceService {
     return this.list(query);
   }
 
-  adrSeries() {
+  adrSeries {
     return {
       pointsAt: 'docs/adr/',
       existingAdrCountAtShip: 246,
@@ -88,8 +88,8 @@ export class ArchitectureGovernanceService {
     };
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'architecture-governance',
       count: catalog.routes.length,
@@ -100,7 +100,7 @@ export class ArchitectureGovernanceService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'ArchitectureGovernance monitoring snapshot (VL-346).',
+      note: 'ArchitectureGovernance monitoring snapshot.',
     };
   }
 }

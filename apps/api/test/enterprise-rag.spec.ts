@@ -17,8 +17,8 @@ const root = join(__dirname, '../../..');
 
 /** Content-aware fixture embedding so semantic retrieval can find known phrases. */
 function fakeEmbedding(text: string): number[] {
-  const vec = Array.from({ length: 1536 }, () => 0);
-  const tokens = text.toLowerCase().split(/\W+/).filter(Boolean);
+  const vec = Array.from({ length: 1536 },  => 0);
+  const tokens = text.toLowerCase.split(/\W+/).filter(Boolean);
   for (const t of tokens) {
     let h = 2166136261;
     for (let i = 0; i < t.length; i++) {
@@ -40,7 +40,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_rag_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_rag_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -54,23 +54,23 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Enterprise RAG Platform (VL-198)', () => {
+describe('Enterprise RAG Platform',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let storageDir: string;
 
-  beforeAll(async () => {
-    storageDir = await mkdtemp(join(tmpdir(), 'lugemi-erag-'));
+  beforeAll(async  => {
+    storageDir = await mkdtemp(join(tmpdir, 'lugemi-erag-'));
     process.env.DOCUMENT_STORAGE_DIR = storageDir;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -96,9 +96,9 @@ describe('Enterprise RAG Platform (VL-198)', () => {
     gateway.setChatProviderForTests({
       name: 'fixture_chat',
       async complete(input) {
-        const user = [...input.messages].reverse().find((m) => m.role === 'user');
+        const user = [...input.messages].reverse.find((m) => m.role === 'user');
         const content = user?.content ?? '';
-        const question = (content.match(/Question:\s*([\s\S]*)$/i)?.[1] ?? '').trim();
+        const question = (content.match(/Question:\s*([\s\S]*)$/i)?.[1] ?? '').trim;
         const ctxHasLeave = /twenty-two|22\) paid leave|paid leave days/i.test(content);
         const ctxHasRefund = /fourteen|14\) calendar|refund within/i.test(content);
         let answer = 'Insufficient context to answer from the knowledge base.';
@@ -124,12 +124,12 @@ describe('Enterprise RAG Platform (VL-198)', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
     await rm(storageDir, { recursive: true, force: true });
   });
 
-  it('documents Enterprise RAG honesty (not LangChain OS; hand-verify required)', () => {
+  it('documents Enterprise RAG honesty (not LangChain OS; hand-verify required)',  => {
     const doc = join(root, 'docs/ENTERPRISE_RAG.md');
     const adr = join(root, 'docs/adr/0109-enterprise-rag-platform.md');
     expect(existsSync(doc)).toBe(true);
@@ -138,11 +138,11 @@ describe('Enterprise RAG Platform (VL-198)', () => {
     expect(text).toMatch(/LangChain/i);
     expect(text).toMatch(/hand-?verif/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
-    expect(text).toMatch(/VL-062/);
+    expect(text).toMatch(/);
   });
 
-  it('exposes engine with honest flags + chunk preview', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/enterprise-rag/engine').expect(200);
+  it('exposes engine with honest flags + chunk preview', async  => {
+    const res = await request(app.getHttpServer).get('/v1/enterprise-rag/engine').expect(200);
     expect(res.body.product).toContain('Enterprise RAG');
     expect(res.body.honesty.langchainOs).toBe(false);
     expect(res.body.honesty.agenticRagOs).toBe(false);
@@ -150,7 +150,7 @@ describe('Enterprise RAG Platform (VL-198)', () => {
     expect(res.body.honesty.extendsVl062).toBe(true);
     expect(res.body.honesty.handVerifyRequired).toBe(true);
 
-    const chunk = await request(app.getHttpServer())
+    const chunk = await request(app.getHttpServer)
       .post('/v1/enterprise-rag/chunk')
       .send({
         text: 'Alpha paragraph about leave policy.\n\nBeta paragraph about refund windows.',
@@ -162,7 +162,7 @@ describe('Enterprise RAG Platform (VL-198)', () => {
     expect(chunk.body.chunks[0].content).toContain('Alpha');
   });
 
-  it('hand-verifies retrieval + grounded answers on real documents with known facts', async () => {
+  it('hand-verifies retrieval + grounded answers on real documents with known facts', async  => {
     const org = await seedOrg(prisma, 'erag');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -185,7 +185,7 @@ describe('Enterprise RAG Platform (VL-198)', () => {
       'Digital goods are non-refundable after download completes.',
     ].join('\n');
 
-    const leave = await request(app.getHttpServer())
+    const leave = await request(app.getHttpServer)
       .post('/v1/knowledge/documents')
       .set('Authorization', `Bearer ${key.secret}`)
       .attach('file', Buffer.from(leaveDoc), 'leave-policy.md')
@@ -193,7 +193,7 @@ describe('Enterprise RAG Platform (VL-198)', () => {
     expect(leave.body.status).toBe('ready');
     expect(leave.body.chunkCount).toBeGreaterThanOrEqual(1);
 
-    const refund = await request(app.getHttpServer())
+    const refund = await request(app.getHttpServer)
       .post('/v1/knowledge/documents')
       .set('Authorization', `Bearer ${key.secret}`)
       .attach('file', Buffer.from(refundDoc), 'refund-policy.md')
@@ -201,7 +201,7 @@ describe('Enterprise RAG Platform (VL-198)', () => {
     expect(refund.body.status).toBe('ready');
 
     // Keyword retrieve — ILIKE needs a contiguous substring present in the doc.
-    const leaveRetrieve = await request(app.getHttpServer())
+    const leaveRetrieve = await request(app.getHttpServer)
       .post('/v1/enterprise-rag/retrieve')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ query: 'paid leave days per year', mode: 'keyword', k: 3 })
@@ -218,7 +218,7 @@ describe('Enterprise RAG Platform (VL-198)', () => {
     expect(leaveRetrieve.body.citations[0].filename).toBe('leave-policy.md');
     expect(leaveRetrieve.body.context.passageCount).toBeGreaterThanOrEqual(1);
 
-    const refundRetrieve = await request(app.getHttpServer())
+    const refundRetrieve = await request(app.getHttpServer)
       .post('/v1/enterprise-rag/retrieve')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ query: 'calendar days of purchase', mode: 'keyword', k: 3 })
@@ -228,7 +228,7 @@ describe('Enterprise RAG Platform (VL-198)', () => {
     expect(refundRetrieve.body.passages[0].content).toMatch(/14|fourteen/i);
 
     // Hybrid retrieve — content-aware fixture embeddings + keyword RRF.
-    const hybrid = await request(app.getHttpServer())
+    const hybrid = await request(app.getHttpServer)
       .post('/v1/enterprise-rag/retrieve')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ query: 'paid leave days per year', mode: 'hybrid', k: 4 })
@@ -240,7 +240,7 @@ describe('Enterprise RAG Platform (VL-198)', () => {
     ).toBe(true);
 
     // Grounded answers — use semantic so natural questions still retrieve the right passages.
-    const leaveAnswer = await request(app.getHttpServer())
+    const leaveAnswer = await request(app.getHttpServer)
       .post('/v1/enterprise-rag/query')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -260,7 +260,7 @@ describe('Enterprise RAG Platform (VL-198)', () => {
     expect(leaveAnswer.body.honesty.langchainOs).toBe(false);
 
     // Keyword grounded path with a contiguous phrase from the refund doc.
-    const refundAnswer = await request(app.getHttpServer())
+    const refundAnswer = await request(app.getHttpServer)
       .post('/v1/enterprise-rag/query')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -272,7 +272,7 @@ describe('Enterprise RAG Platform (VL-198)', () => {
     expect(refundAnswer.body.citations[0].filename).toBe('refund-policy.md');
     expect(refundAnswer.body.citations[0].snippet).toMatch(/14|fourteen|refund/i);
 
-    const analytics = await request(app.getHttpServer())
+    const analytics = await request(app.getHttpServer)
       .get('/v1/enterprise-rag/analytics')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -281,8 +281,8 @@ describe('Enterprise RAG Platform (VL-198)', () => {
     expect(analytics.body.queriesLast30d).toBeGreaterThanOrEqual(1);
   });
 
-  it('exposes enterpriseRagEngine via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes enterpriseRagEngine via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
@@ -290,7 +290,7 @@ describe('Enterprise RAG Platform (VL-198)', () => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.enterpriseRagEngine.langchainOs).toBe(false);
     expect(res.body.data.enterpriseRagEngine.agenticRagOs).toBe(false);
     expect(res.body.data.enterpriseRagEngine.orgWorkspaceScoped).toBe(true);

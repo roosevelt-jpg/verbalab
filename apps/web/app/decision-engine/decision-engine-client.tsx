@@ -20,8 +20,8 @@ type DecideResult = {
   reasons: string[];
 };
 
-export function DecisionEngineClient() {
-  const { getToken, isLoaded } = useAuth();
+export function DecisionEngineClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [kind, setKind] = useState('routing');
@@ -30,8 +30,8 @@ export function DecisionEngineClient() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(async () => {
-    const token = await getToken();
+  const refresh = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, an] = await Promise.all([
       apiFetch<Engine>('/v1/decision-engine/engine', { token }),
@@ -41,16 +41,16 @@ export function DecisionEngineClient() {
     setAnalytics(an);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void refresh().catch((err: Error) => setError(err.message));
+    void refresh.catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
-  async function decide() {
+  async function decide {
     setLoading(true);
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const body = await apiFetch<DecideResult>('/v1/decision-engine/decide', {
         token,
@@ -62,7 +62,7 @@ export function DecisionEngineClient() {
         },
       });
       setResult(body);
-      await refresh();
+      await refresh;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Decide failed');
     } finally {
@@ -127,7 +127,7 @@ export function DecisionEngineClient() {
                 border: '1px solid var(--line)',
               }}
             />
-            <button type="button" onClick={() => void decide()} disabled={loading} style={btn}>
+            <button type="button" onClick={ => void decide} disabled={loading} style={btn}>
               Decide
             </button>
           </div>

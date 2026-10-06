@@ -7,15 +7,15 @@ import {
   AtlasEngineBundle,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestAtlasCatalogAdapter implements AtlasCatalogPort {
   constructor(private readonly atlas: AtlasService) {}
 
-  engine(): AtlasEngineBundle {
-    return this.atlas.engine();
+  engine: AtlasEngineBundle {
+    return this.atlas.engine;
   }
 
-  listCapabilities(): AtlasCapabilityRow[] {
-    return atlasCapabilities();
+  listCapabilities: AtlasCapabilityRow[] {
+    return atlasCapabilities;
   }
 }

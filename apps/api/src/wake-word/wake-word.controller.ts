@@ -35,20 +35,20 @@ export class WakeWordController {
   constructor(private readonly wake: WakeWordService) {}
 
   @Get('engine')
-  engine() {
-    return this.wake.engine();
+  engine {
+    return this.wake.engine;
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: Request & { translateAuth: TranslateAuthContext }) {
+  analytics(@Req req: Request & { translateAuth: TranslateAuthContext }) {
     return this.wake.analytics(req.translateAuth.organizationId);
   }
 
   @Get('keywords')
   @UseGuards(TranslateAuthGuard)
   listKeywords(
-    @Req() req: Request & { translateAuth: TranslateAuthContext },
+    @Req req: Request & { translateAuth: TranslateAuthContext },
     @Query('kind') kind?: string,
   ) {
     return this.wake.listKeywords(
@@ -62,10 +62,10 @@ export class WakeWordController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   addKeyword(
-    @Req() req: AuthReq,
-    @Body() body: { phrase?: string; kind?: string },
+    @Req req: AuthReq,
+    @Body body: { phrase?: string; kind?: string },
   ) {
-    if (!body.phrase?.trim()) {
+    if (!body.phrase?.trim) {
       throw new ApiException('validation_error', 'phrase is required', HttpStatus.BAD_REQUEST);
     }
     return this.wake.addKeyword({
@@ -81,7 +81,7 @@ export class WakeWordController {
 
   @Delete('keywords/:id')
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
-  removeKeyword(@Req() req: AuthReq, @Param('id') id: string) {
+  removeKeyword(@Req req: AuthReq, @Param('id') id: string) {
     return this.wake.removeKeyword({
       id,
       organizationId: req.translateAuth.organizationId,
@@ -97,14 +97,14 @@ export class WakeWordController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   detect(
-    @Req() req: AuthReq,
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { text?: string; language?: string; includeDefaults?: string },
+    @Req req: AuthReq,
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { text?: string; language?: string; includeDefaults?: string },
   ) {
     return this.wake.detect({
       text: body.text,
@@ -124,19 +124,19 @@ export class WakeWordController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   spot(
-    @Req() req: AuthReq,
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { text?: string; language?: string; keywords?: string | string[] },
+    @Req req: AuthReq,
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { text?: string; language?: string; keywords?: string | string[] },
   ) {
     const keywords = Array.isArray(body.keywords)
-      ? body.keywords.map((k) => String(k).trim()).filter(Boolean)
+      ? body.keywords.map((k) => String(k).trim).filter(Boolean)
       : typeof body.keywords === 'string'
-        ? body.keywords.split(',').map((k) => k.trim()).filter(Boolean)
+        ? body.keywords.split(',').map((k) => k.trim).filter(Boolean)
         : undefined;
     return this.wake.spot({
       text: body.text,
@@ -156,14 +156,14 @@ export class WakeWordController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   triggers(
-    @Req() req: AuthReq,
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { text?: string; language?: string },
+    @Req req: AuthReq,
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { text?: string; language?: string },
   ) {
     return this.wake.triggers({
       text: body.text,
@@ -181,21 +181,21 @@ export class WakeWordController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   async detectStream(
-    @Req() req: AuthReq,
-    @Res() res: Response,
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { text?: string; language?: string },
+    @Req req: AuthReq,
+    @Res res: Response,
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { text?: string; language?: string },
   ) {
     res.status(HttpStatus.OK);
     res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders?.();
+    res.flushHeaders?.;
 
     const stream = this.wake.streamDetect({
       text: body.text,
@@ -212,6 +212,6 @@ export class WakeWordController {
       res.write(`event: ${chunk.event}\ndata: ${JSON.stringify(chunk)}\n\n`);
       if (chunk.event === 'error' || chunk.event === 'done') break;
     }
-    res.end();
+    res.end;
   }
 }

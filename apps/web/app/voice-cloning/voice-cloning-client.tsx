@@ -45,8 +45,8 @@ type Analytics = {
   ownershipAttested: number;
 };
 
-export function VoiceCloningClient() {
-  const { getToken, isLoaded } = useAuth();
+export function VoiceCloningClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [policy, setPolicy] = useState<Policy | null>(null);
   const [library, setLibrary] = useState<Clone[]>([]);
@@ -55,13 +55,13 @@ export function VoiceCloningClient() {
   const [clonesAllowed, setClonesAllowed] = useState<boolean | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const overview = await apiFetch<{
       organization: { plan: string };
       featureFlags: Record<string, boolean>;
-    }>('/v1/cloud/overview', { token }).catch(() => null);
+    }>('/v1/cloud/overview', { token }).catch( => null);
     if (overview) {
       setPlanId(overview.organization.plan);
       setClonesAllowed(overview.featureFlags.voiceClones ?? planHasFeature(overview.organization.plan, 'voiceClones'));
@@ -78,9 +78,9 @@ export function VoiceCloningClient() {
     setAnalytics(stats);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
   return (
@@ -98,7 +98,7 @@ export function VoiceCloningClient() {
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
         Enterprise cloning with explicit consent, ownership attestation, abuse review, licensing,
-        permissions, and required watermarking. Extends VL-064 — does not skip trust gates.
+        permissions, and required watermarking. Extends existing — does not skip trust gates.
       </p>
 
       <div style={{ marginBottom: '1.25rem' }}>

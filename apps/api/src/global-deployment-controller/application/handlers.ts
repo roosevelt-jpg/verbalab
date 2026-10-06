@@ -17,8 +17,8 @@ export class GetGlobalDeploymentControllerEngineHandler
     private readonly catalog: GlobalDeploymentControllerCatalogPort,
   ) {}
 
-  execute(): Promise<GlobalDeploymentControllerEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<GlobalDeploymentControllerEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListGlobalDeploymentControllerProductsHandler
     private readonly catalog: GlobalDeploymentControllerCatalogPort,
   ) {}
 
-  execute(): Promise<GlobalDeploymentControllerProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<GlobalDeploymentControllerProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

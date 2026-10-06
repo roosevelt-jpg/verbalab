@@ -1,4 +1,4 @@
-/** Application ports for FinOps Platform (VL-309). */
+/** Application ports for FinOps Platform. */
 
 export type FinopsPlatformProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type FinopsPlatformEngineBundle = ReturnType<
 >;
 
 export interface FinopsPlatformCatalogPort {
-  engine(): FinopsPlatformEngineBundle;
-  listProducts(): FinopsPlatformProductRow[];
+  engine: FinopsPlatformEngineBundle;
+  listProducts: FinopsPlatformProductRow[];
 }
 
 export const FINOPS_PLATFORM_CATALOG_PORT = Symbol('FINOPS_PLATFORM_CATALOG_PORT');

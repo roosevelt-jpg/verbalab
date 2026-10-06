@@ -22,7 +22,7 @@ import { WorkflowResult } from '../workflows/workflow.types';
 
 type QueueJobPayload = { jobId: string };
 
-@Injectable()
+@Injectable
 export class JobsService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(JobsService.name);
   private queue: Queue<QueueJobPayload> | null = null;
@@ -35,18 +35,18 @@ export class JobsService implements OnModuleInit, OnModuleDestroy {
     private readonly translate: TranslateService,
     private readonly webhooks: WebhookService,
     private readonly audit: AuditService,
-    @Inject(forwardRef(() => DocumentsService))
+    @Inject(forwardRef( => DocumentsService))
     private readonly documents: DocumentsService,
     private readonly notifications: NotificationsService,
-    @Inject(forwardRef(() => WorkflowsService))
+    @Inject(forwardRef( => WorkflowsService))
     private readonly workflows: WorkflowsService,
   ) {}
 
-  private redisEnabled() {
+  private redisEnabled {
     return process.env.JOBS_INLINE !== '1';
   }
 
-  private createRedis() {
+  private createRedis {
     const url = process.env.REDIS_URL ?? 'redis://127.0.0.1:6379';
     return new IORedis(url, {
       maxRetriesPerRequest: null,
@@ -55,17 +55,17 @@ export class JobsService implements OnModuleInit, OnModuleDestroy {
     });
   }
 
-  async onModuleInit() {
-    if (!this.redisEnabled()) {
+  async onModuleInit {
+    if (!this.redisEnabled) {
       this.logger.warn('JOBS_INLINE=1 — processing jobs in-process without Redis/BullMQ');
       return;
     }
 
     try {
-      this.queueConnection = this.createRedis();
-      this.workerConnection = this.createRedis();
-      await this.queueConnection.connect();
-      await this.workerConnection.connect();
+      this.queueConnection = this.createRedis;
+      this.workerConnection = this.createRedis;
+      await this.queueConnection.connect;
+      await this.workerConnection.connect;
 
       this.queue = new Queue(JOB_QUEUE_NAME, { connection: this.queueConnection });
       this.worker = new Worker(
@@ -83,10 +83,10 @@ export class JobsService implements OnModuleInit, OnModuleDestroy {
       this.logger.error(
         `Failed to start BullMQ (${error instanceof Error ? error.message : 'unknown'}). Falling back to inline.`,
       );
-      await this.worker?.close().catch(() => undefined);
-      await this.queue?.close().catch(() => undefined);
-      await this.workerConnection?.quit().catch(() => undefined);
-      await this.queueConnection?.quit().catch(() => undefined);
+      await this.worker?.close.catch( => undefined);
+      await this.queue?.close.catch( => undefined);
+      await this.workerConnection?.quit.catch( => undefined);
+      await this.queueConnection?.quit.catch( => undefined);
       this.queue = null;
       this.worker = null;
       this.queueConnection = null;
@@ -94,11 +94,11 @@ export class JobsService implements OnModuleInit, OnModuleDestroy {
     }
   }
 
-  async onModuleDestroy() {
-    await this.worker?.close();
-    await this.queue?.close();
-    await this.workerConnection?.quit().catch(() => undefined);
-    await this.queueConnection?.quit().catch(() => undefined);
+  async onModuleDestroy {
+    await this.worker?.close;
+    await this.queue?.close;
+    await this.workerConnection?.quit.catch( => undefined);
+    await this.queueConnection?.quit.catch( => undefined);
   }
 
   async create(input: {
@@ -190,7 +190,7 @@ export class JobsService implements OnModuleInit, OnModuleDestroy {
       );
       return;
     }
-    setImmediate(() => {
+    setImmediate( => {
       void this.processJob(jobId).catch((error) => {
         this.logger.error(
           `Inline job ${jobId} failed: ${error instanceof Error ? error.message : error}`,
@@ -209,7 +209,7 @@ export class JobsService implements OnModuleInit, OnModuleDestroy {
       where: { id: jobId },
       data: {
         status: 'running',
-        startedAt: new Date(),
+        startedAt: new Date,
         attempts: { increment: 1 },
       },
     });
@@ -231,7 +231,7 @@ export class JobsService implements OnModuleInit, OnModuleDestroy {
         data: {
           status: 'succeeded',
           result: result as unknown as Prisma.InputJsonValue,
-          completedAt: new Date(),
+          completedAt: new Date,
           error: null,
         },
       });
@@ -269,7 +269,7 @@ export class JobsService implements OnModuleInit, OnModuleDestroy {
         data: {
           status: 'failed',
           error: message,
-          completedAt: new Date(),
+          completedAt: new Date,
         },
       });
 

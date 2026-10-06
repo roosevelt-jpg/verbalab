@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { globalRoutingControllerEngineCatalog } from './global-routing-controller.catalog';
 
-@Injectable()
+@Injectable
 export class GlobalRoutingControllerService {
-  engine() {
-    return globalRoutingControllerEngineCatalog();
+  engine {
+    return globalRoutingControllerEngineCatalog;
   }
 
   list(query?: string) {
-    const catalog = this.engine() as {
+    const catalog = this.engine as {
       routes: Array<Record<string, unknown> & { id: string; notes?: string }>;
       honesty: Record<string, unknown>;
       safety: Record<string, unknown>;
       note: string;
       docs: string;
     };
-    const q = (query ?? '').trim().toLowerCase();
+    const q = (query ?? '').trim.toLowerCase;
     const rows = catalog.routes.filter((row) => {
       if (!q) return true;
-      return JSON.stringify(row).toLowerCase().includes(q);
+      return JSON.stringify(row).toLowerCase.includes(q);
     });
     return {
       routes: rows,
@@ -34,14 +34,14 @@ export class GlobalRoutingControllerService {
     return this.list(query);
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'global-routing-controller',
       count: (catalog as { routes: unknown[] }).routes.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'GlobalRoutingController monitoring snapshot (VL-319).',
+      note: 'GlobalRoutingController monitoring snapshot.',
     };
   }
 }

@@ -20,8 +20,8 @@ export class ListModelEvaluationSuitesHandler
     private readonly catalog: ModelEvaluationPlatformCatalogPort,
   ) {}
 
-  execute(): Promise<MepSuiteRow[]> {
-    return Promise.resolve(this.catalog.listSuites());
+  execute: Promise<MepSuiteRow[]> {
+    return Promise.resolve(this.catalog.listSuites);
   }
 }
 
@@ -34,8 +34,8 @@ export class GetModelEvaluationPlatformEngineHandler
     private readonly catalog: ModelEvaluationPlatformCatalogPort,
   ) {}
 
-  execute(): Promise<MepEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<MepEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 

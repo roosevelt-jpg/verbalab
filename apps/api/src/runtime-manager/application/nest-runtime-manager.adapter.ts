@@ -6,16 +6,16 @@ import {
   RuntimeManagerProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestRuntimeManagerCatalogAdapter implements RuntimeManagerCatalogPort {
   constructor(private readonly service: RuntimeManagerService) {}
 
-  engine(): RuntimeManagerEngineBundle {
-    return this.service.engine();
+  engine: RuntimeManagerEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): RuntimeManagerProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: RuntimeManagerProductRow[] {
+    const bundle = this.engine as {
       products?: RuntimeManagerProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestRuntimeManagerCatalogAdapter implements RuntimeManagerCatalogPo
         status: 'shipped',
         api: 'GET /v1/runtime-manager/engine',
         console: '/runtime-manager',
-        notes: 'VL-336 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

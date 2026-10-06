@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 
-@Injectable()
+@Injectable
 export class UsageService {
   constructor(private readonly prisma: PrismaService) {}
 
@@ -143,7 +143,7 @@ export class UsageService {
   }
 
   async summary(organizationId: string) {
-    const start = new Date();
+    const start = new Date;
     start.setUTCDate(1);
     start.setUTCHours(0, 0, 0, 0);
 
@@ -168,7 +168,7 @@ export class UsageService {
     const embeddingTokens = embeddingEvents.reduce((sum, event) => sum + event.units, 0);
 
     return {
-      periodStart: start.toISOString(),
+      periodStart: start.toISOString,
       requests: translateEvents.length,
       characters,
       translate: {

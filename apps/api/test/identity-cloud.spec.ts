@@ -25,7 +25,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_id_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_id_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
               name,
             },
@@ -40,7 +40,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Identity Cloud (VL-126)', () => {
+describe('Identity Cloud',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let governance: GovernanceService;
@@ -49,14 +49,14 @@ describe('Identity Cloud (VL-126)', () => {
   let apiKeys: ApiKeysService;
   let apiKeyGuard: ApiKeyGuard;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     governance = app.get(GovernanceService);
@@ -66,11 +66,11 @@ describe('Identity Cloud (VL-126)', () => {
     apiKeyGuard = app.get(ApiKeyGuard);
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Identity Cloud mapping (no SAML/SCIM/ABAC/Teams fake)', () => {
+  it('documents Identity Cloud mapping (no SAML/SCIM/ABAC/Teams fake)',  => {
     const doc = join(root, 'docs/IDENTITY_CLOUD.md');
     const adr = join(root, 'docs/adr/0047-identity-cloud.md');
     expect(existsSync(doc)).toBe(true);
@@ -83,24 +83,24 @@ describe('Identity Cloud (VL-126)', () => {
     expect(text).toContain('Teams');
   });
 
-  it('maps Clerk org role claims', () => {
+  it('maps Clerk org role claims',  => {
     expect(mapClerkOrgRole('org:admin')).toBe(MembershipRole.admin);
     expect(mapClerkOrgRole('admin')).toBe(MembershipRole.admin);
     expect(mapClerkOrgRole('basic_member')).toBe(MembershipRole.member);
     expect(mapClerkOrgRole('org:owner')).toBe(MembershipRole.owner);
-    expect(mapClerkOrgRole('weird')).toBeNull();
+    expect(mapClerkOrgRole('weird')).toBeNull;
   });
 
-  it('syncs clerk org role on session when claim present', async () => {
-    const org = await seedOrg(prisma, `id_sync_${Date.now()}`);
-    const clerkOrgId = `clerk_org_sync_${Date.now()}`;
+  it('syncs clerk org role on session when claim present', async  => {
+    const org = await seedOrg(prisma, `id_sync_${Date.now}`);
+    const clerkOrgId = `clerk_org_sync_${Date.now}`;
     await prisma.organization.update({
       where: { id: org.id },
       data: { clerkOrgId },
     });
     const memberUser = await prisma.user.create({
       data: {
-        clerkUserId: `clerk_member_${Date.now()}`,
+        clerkUserId: `clerk_member_${Date.now}`,
         email: 'member@example.com',
       },
     });
@@ -122,11 +122,11 @@ describe('Identity Cloud (VL-126)', () => {
     expect(synced.role).toBe('admin');
   });
 
-  it('promotes, demotes, and removes members with last-owner guard', async () => {
-    const org = await seedOrg(prisma, `id_rbac_${Date.now()}`);
+  it('promotes, demotes, and removes members with last-owner guard', async  => {
+    const org = await seedOrg(prisma, `id_rbac_${Date.now}`);
     const ownerId = org.memberships[0].userId;
     const other = await prisma.user.create({
-      data: { clerkUserId: `clerk_other_${Date.now()}`, email: 'other@example.com' },
+      data: { clerkUserId: `clerk_other_${Date.now}`, email: 'other@example.com' },
     });
     const membership = await prisma.membership.create({
       data: {
@@ -164,8 +164,8 @@ describe('Identity Cloud (VL-126)', () => {
     expect(removed.removed).toBe(true);
   });
 
-  it('returns identity overview and records API key lastUsedAt', async () => {
-    const org = await seedOrg(prisma, `id_ov_${Date.now()}`);
+  it('returns identity overview and records API key lastUsedAt', async  => {
+    const org = await seedOrg(prisma, `id_ov_${Date.now}`);
     const created = await apiKeys.create({
       organizationId: org.id,
       workspaceId: org.workspaces[0].id,
@@ -176,11 +176,11 @@ describe('Identity Cloud (VL-126)', () => {
 
     const listed = await apiKeys.list(org.id);
     expect(listed[0].kind).toBe('machine');
-    expect(listed[0].lastUsedAt).toBeNull();
+    expect(listed[0].lastUsedAt).toBeNull;
 
     const ctx = {
-      switchToHttp: () => ({
-        getRequest: () => ({
+      switchToHttp:  => ({
+        getRequest:  => ({
           headers: { authorization: `Bearer ${created.secret}` },
         }),
       }),
@@ -190,7 +190,7 @@ describe('Identity Cloud (VL-126)', () => {
     await new Promise((r) => setTimeout(r, 80));
 
     const after = await prisma.apiKey.findUniqueOrThrow({ where: { id: created.id } });
-    expect(after.lastUsedAt).toBeTruthy();
+    expect(after.lastUsedAt).toBeTruthy;
 
     const overview = await identityCloud.overview({
       userId: org.memberships[0].userId,

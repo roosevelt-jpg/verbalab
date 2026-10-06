@@ -2,13 +2,13 @@ import { Query, Resolver } from '@nestjs/graphql';
 import { AiRuntimeAnalyticsService } from '../ai-runtime-analytics/ai-runtime-analytics.service';
 import { GqlAiRuntimeAnalyticsEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class AiRuntimeAnalyticsGraphqlResolver {
   constructor(private readonly analytics: AiRuntimeAnalyticsService) {}
 
-  @Query(() => GqlAiRuntimeAnalyticsEngine, { name: 'aiRuntimeAnalyticsEngine' })
-  aiRuntimeAnalyticsEngine(): GqlAiRuntimeAnalyticsEngine {
-    const c = this.analytics.engine();
+  @Query( => GqlAiRuntimeAnalyticsEngine, { name: 'aiRuntimeAnalyticsEngine' })
+  aiRuntimeAnalyticsEngine: GqlAiRuntimeAnalyticsEngine {
+    const c = this.analytics.engine;
     return {
       product: c.product,
       note: c.note,

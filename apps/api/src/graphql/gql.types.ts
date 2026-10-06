@@ -1,3773 +1,3773 @@
 import { Field, Float, Int, InputType, ObjectType } from '@nestjs/graphql';
 
-@InputType()
+@InputType
 export class DetectDialectInput {
-  @Field()
+  @Field
   text!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   language?: string;
 }
 
-@InputType()
+@InputType
 export class CheckGrammarInput {
-  @Field()
+  @Field
   text!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   language?: string;
 }
 
-@InputType()
+@InputType
 export class SuggestWritingInput {
-  @Field()
+  @Field
   text!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   language?: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   styleProfile?: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlGrammarIntelligence {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Int)
+  @Field( => Int)
   capabilityCount!: number;
 
-  @Field(() => Int)
+  @Field( => Int)
   shippedCount!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlGrammarSuggestResult {
-  @Field()
+  @Field
   language!: string;
 
-  @Field()
+  @Field
   original!: string;
 
-  @Field()
+  @Field
   grammarCorrected!: string;
 
-  @Field()
+  @Field
   styleRewritten!: string;
 
-  @Field()
+  @Field
   styleProfile!: string;
 
-  @Field(() => Int)
+  @Field( => Int)
   suggestionCount!: number;
 
-  @Field()
+  @Field
   changed!: boolean;
 
-  @Field()
+  @Field
   note!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlStyleIntelligence {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Int)
+  @Field( => Int)
   capabilityCount!: number;
 
-  @Field(() => Int)
+  @Field( => Int)
   shippedCount!: number;
 }
 
-@InputType()
+@InputType
 export class DetectToneInput {
-  @Field()
+  @Field
   text!: string;
 }
 
-@InputType()
+@InputType
 export class TransformToneInput {
-  @Field()
+  @Field
   text!: string;
 
-  @Field()
+  @Field
   targetTone!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   language?: string;
 }
 
-@InputType()
+@InputType
 export class TransferStyleInput {
-  @Field()
+  @Field
   text!: string;
 
-  @Field()
+  @Field
   targetProfile!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   language?: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlToneDetectResult {
-  @Field()
+  @Field
   detectedTone!: string;
 
-  @Field(() => Float)
+  @Field( => Float)
   confidence!: number;
 
-  @Field()
+  @Field
   suggestedProfile!: string;
 
-  @Field()
+  @Field
   note!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlStyleTransferResult {
-  @Field()
+  @Field
   sourceTone!: string;
 
-  @Field(() => Float)
+  @Field( => Float)
   sourceConfidence!: number;
 
-  @Field()
+  @Field
   targetProfile!: string;
 
-  @Field()
+  @Field
   rewritten!: string;
 
-  @Field()
+  @Field
   changed!: boolean;
 
-  @Field(() => Int)
+  @Field( => Int)
   changeCount!: number;
 
-  @Field()
+  @Field
   note!: string;
 }
 
-@InputType()
+@InputType
 export class RewriteStyleInput {
-  @Field()
+  @Field
   text!: string;
 
-  @Field()
+  @Field
   profile!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   language?: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlLanguage {
-  @Field()
+  @Field
   code!: string;
 
-  @Field()
+  @Field
   nameEn!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   nameNative!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   script!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   familyCode!: string | null;
 
-  @Field()
+  @Field
   rtl!: boolean;
 
-  @Field()
+  @Field
   tier!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlDialect {
-  @Field()
+  @Field
   code!: string;
 
-  @Field()
+  @Field
   languageCode!: string;
 
-  @Field()
+  @Field
   nameEn!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   region!: string | null;
 
-  @Field(() => [String])
+  @Field( => [String])
   cueTerms!: string[];
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAccent {
-  @Field()
+  @Field
   code!: string;
 
-  @Field()
+  @Field
   languageCode!: string;
 
-  @Field()
+  @Field
   nameEn!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   region!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   relatedDialectCode!: string | null;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlLocalePack {
-  @Field()
+  @Field
   languageCode!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   bcp47!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   currencyCode!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   culturalNotes!: string | null;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlCountryPack {
-  @Field()
+  @Field
   code!: string;
 
-  @Field()
+  @Field
   nameEn!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   region!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   currencyCode!: string | null;
 
-  @Field(() => [String])
+  @Field( => [String])
   primaryLanguages!: string[];
 
-  @Field(() => [String])
+  @Field( => [String])
   bcp47Tags!: string[];
 }
 
-@ObjectType()
+@ObjectType
 export class GqlStyleProfile {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   description!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlLanguageProduct {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   console!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlSpeechProduct {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   console!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlVoiceProduct {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   console!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlIntelligenceProduct {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   console!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlKnowledgeProduct {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   console!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlInferenceProduct {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   console!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAiKernelRuntime {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   console!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlFoundationModelCloudProduct {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   console!: string | null;
 
-  @Field()
+  @Field
   modality!: string;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlModelTrainingMethod {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field()
+  @Field
   launchable!: boolean;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   existingApi!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlModelEvaluationSuite {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field()
+  @Field
   runnable!: boolean;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   existingApi!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlModelRegistryCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAtlasCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAiFabricBus {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   console!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlEcosystemProduct {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   console!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlPluginMarketplaceCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlPluginMarketplaceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlPluginMarketplaceCapability])
+  @Field( => [GqlPluginMarketplaceCapability])
   capabilities!: GqlPluginMarketplaceCapability[];
 
-  @Field()
+  @Field
   liveCodeExecution!: boolean;
 
-  @Field()
+  @Field
   sandboxRequired!: boolean;
 
-  @Field()
+  @Field
   pluginPolicyHardGateRequired!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlModelMarketplaceCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlModelMarketplaceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlModelMarketplaceCapability])
+  @Field( => [GqlModelMarketplaceCapability])
   capabilities!: GqlModelMarketplaceCapability[];
 
-  @Field()
+  @Field
   huggingFaceOs!: boolean;
 
-  @Field()
+  @Field
   weightHostingOs!: boolean;
 
-  @Field()
+  @Field
   storesRawCardData!: boolean;
 
-  @Field()
+  @Field
   stripeOrEquivalentRequired!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlDatasetMarketplaceCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlDatasetMarketplaceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlDatasetMarketplaceCapability])
+  @Field( => [GqlDatasetMarketplaceCapability])
   capabilities!: GqlDatasetMarketplaceCapability[];
 
-  @Field()
+  @Field
   labelStudioOs!: boolean;
 
-  @Field()
+  @Field
   datasetCloudOs!: boolean;
 
-  @Field()
+  @Field
   storesRawCardData!: boolean;
 
-  @Field()
+  @Field
   stripeOrEquivalentRequired!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlPromptMarketplaceCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlPromptMarketplaceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlPromptMarketplaceCapability])
+  @Field( => [GqlPromptMarketplaceCapability])
   capabilities!: GqlPromptMarketplaceCapability[];
 
-  @Field()
+  @Field
   promptMeshOs!: boolean;
 
-  @Field()
+  @Field
   autoPromptResearchOs!: boolean;
 
-  @Field()
+  @Field
   storesRawCardData!: boolean;
 
-  @Field()
+  @Field
   stripeOrEquivalentRequired!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAgentMarketplaceCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAgentMarketplaceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlAgentMarketplaceCapability])
+  @Field( => [GqlAgentMarketplaceCapability])
   capabilities!: GqlAgentMarketplaceCapability[];
 
-  @Field()
+  @Field
   liveToolExecution!: boolean;
 
-  @Field()
+  @Field
   sandboxRequired!: boolean;
 
-  @Field()
+  @Field
   agentPolicyHardGateRequired!: boolean;
 
-  @Field()
+  @Field
   storesRawCardData!: boolean;
 
-  @Field()
+  @Field
   stripeOrEquivalentRequired!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlWorkflowMarketplaceCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlWorkflowMarketplaceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlWorkflowMarketplaceCapability])
+  @Field( => [GqlWorkflowMarketplaceCapability])
   capabilities!: GqlWorkflowMarketplaceCapability[];
 
-  @Field()
+  @Field
   liveStepExecution!: boolean;
 
-  @Field()
+  @Field
   sandboxRequired!: boolean;
 
-  @Field()
+  @Field
   workflowPolicyHardGateRequired!: boolean;
 
-  @Field()
+  @Field
   storesRawCardData!: boolean;
 
-  @Field()
+  @Field
   stripeOrEquivalentRequired!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlConnectorMarketplaceCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlConnectorMarketplaceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlConnectorMarketplaceCapability])
+  @Field( => [GqlConnectorMarketplaceCapability])
   capabilities!: GqlConnectorMarketplaceCapability[];
 
-  @Field()
+  @Field
   liveConnectorExecution!: boolean;
 
-  @Field()
+  @Field
   sandboxRequired!: boolean;
 
-  @Field()
+  @Field
   fabricPolicyHardGateRequired!: boolean;
 
-  @Field()
+  @Field
   ipaasOs!: boolean;
 
-  @Field()
+  @Field
   storesRawCardData!: boolean;
 
-  @Field()
+  @Field
   stripeOrEquivalentRequired!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlVoiceLanguageMarketplaceCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlVoiceLanguageMarketplaceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlVoiceLanguageMarketplaceCapability])
+  @Field( => [GqlVoiceLanguageMarketplaceCapability])
   capabilities!: GqlVoiceLanguageMarketplaceCapability[];
 
-  @Field()
+  @Field
   thirdPartyVoiceOs!: boolean;
 
-  @Field()
+  @Field
   voiceCdnOs!: boolean;
 
-  @Field()
+  @Field
   celebrityWithoutRights!: boolean;
 
-  @Field()
+  @Field
   crossTenantCloneSynthesis!: boolean;
 
-  @Field()
+  @Field
   storesRawCardData!: boolean;
 
-  @Field()
+  @Field
   stripeOrEquivalentRequired!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlCreatorEconomyCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlCreatorEconomyEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlCreatorEconomyCapability])
+  @Field( => [GqlCreatorEconomyCapability])
   capabilities!: GqlCreatorEconomyCapability[];
 
-  @Field()
+  @Field
   paymentProcessorOs!: boolean;
 
-  @Field()
+  @Field
   taxHandlingComplete!: boolean;
 
-  @Field()
+  @Field
   disputeChargebackComplete!: boolean;
 
-  @Field()
+  @Field
   creatorPayoutMathVerifiedLive!: boolean;
 
-  @Field()
+  @Field
   creatorPayoutMathHandCheckedInTests!: boolean;
 
-  @Field()
+  @Field
   storesRawCardData!: boolean;
 
-  @Field()
+  @Field
   stripeOrEquivalentRequired!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlEventFabricCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlEventFabricBroker {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field()
+  @Field
   protocol!: string;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlContextFabricCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlContextFabricRoute {
-  @Field()
+  @Field
   kind!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   target!: string;
 
-  @Field()
+  @Field
   api!: string;
 
-  @Field()
+  @Field
   cloud!: string;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlKnowledgeFabricCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlKnowledgeFabricRoute {
-  @Field()
+  @Field
   kind!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   target!: string;
 
-  @Field()
+  @Field
   api!: string;
 
-  @Field()
+  @Field
   cloud!: string;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlPromptFabricCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlPromptFabricRoute {
-  @Field()
+  @Field
   kind!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   target!: string;
 
-  @Field()
+  @Field
   api!: string;
 
-  @Field()
+  @Field
   cloud!: string;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlReasoningFabricCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlReasoningFabricRoute {
-  @Field()
+  @Field
   kind!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   target!: string;
 
-  @Field()
+  @Field
   api!: string;
 
-  @Field()
+  @Field
   cloud!: string;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlMemoryFabricCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlMemoryFabricRoute {
-  @Field()
+  @Field
   kind!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   target!: string;
 
-  @Field()
+  @Field
   api!: string;
 
-  @Field()
+  @Field
   cloud!: string;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAgentFabricCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAgentFabricRoute {
-  @Field()
+  @Field
   kind!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   target!: string;
 
-  @Field()
+  @Field
   api!: string;
 
-  @Field()
+  @Field
   cloud!: string;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlPolicyFabricCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlPolicyFabricRoute {
-  @Field()
+  @Field
   kind!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   target!: string;
 
-  @Field()
+  @Field
   api!: string;
 
-  @Field()
+  @Field
   cloud!: string;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlMemoryRuntimeCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlMemoryRuntimeEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlMemoryRuntimeCapability])
+  @Field( => [GqlMemoryRuntimeCapability])
   capabilities!: GqlMemoryRuntimeCapability[];
 
-  @Field()
+  @Field
   mem0Os!: boolean;
 
-  @Field()
+  @Field
   infinitePersonalizationOs!: boolean;
 
-  @Field()
+  @Field
   replicationOs!: boolean;
 
-  @Field()
+  @Field
   encryptionKmsOs!: boolean;
 
-  @Field()
+  @Field
   regeneratesMemoryCloud!: boolean;
 
-  @Field()
+  @Field
   regeneratesKnowledgeMemory!: boolean;
 
-  @Field()
+  @Field
   extendsMemoryCloud!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 
-  @Field()
+  @Field
   kernelLayerOnly!: boolean;
 
-  @Field()
+  @Field
   vectorSemanticOs!: boolean;
 
-  @Field()
+  @Field
   mode!: string;
 
-  @Field()
+  @Field
   maxEntriesPerWorkspace!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlPromptRuntimeCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlPromptRuntimeEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlPromptRuntimeCapability])
+  @Field( => [GqlPromptRuntimeCapability])
   capabilities!: GqlPromptRuntimeCapability[];
 
-  @Field()
+  @Field
   autoPromptResearchLab!: boolean;
 
-  @Field()
+  @Field
   llmAsJudgeEvalLab!: boolean;
 
-  @Field()
+  @Field
   promptMeshOs!: boolean;
 
-  @Field()
+  @Field
   redisPromptCacheOs!: boolean;
 
-  @Field()
+  @Field
   callsLlmOnExecute!: boolean;
 
-  @Field()
+  @Field
   regeneratesPromptIntelligence!: boolean;
 
-  @Field()
+  @Field
   regeneratesVl086!: boolean;
 
-  @Field()
+  @Field
   extendsPromptIntelligence!: boolean;
 
-  @Field()
+  @Field
   extendsVersionedPrompts!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 
-  @Field()
+  @Field
   usesIntelligentCachePromptNamespace!: boolean;
 
-  @Field()
+  @Field
   mode!: string;
 
-  @Field()
+  @Field
   maxRenderedChars!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlContextRuntimeCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlContextRuntimeEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlContextRuntimeCapability])
+  @Field( => [GqlContextRuntimeCapability])
   capabilities!: GqlContextRuntimeCapability[];
 
-  @Field()
+  @Field
   infiniteContextWindow!: boolean;
 
-  @Field()
+  @Field
   llmSummarization!: boolean;
 
-  @Field()
+  @Field
   realtimePush!: boolean;
 
-  @Field()
+  @Field
   regeneratesContextEngine!: boolean;
 
-  @Field()
+  @Field
   extendsContextEngine!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 
-  @Field()
+  @Field
   redisContextCacheOs!: boolean;
 
-  @Field()
+  @Field
   usesIntelligentCacheContextNamespace!: boolean;
 
-  @Field()
+  @Field
   modelRouterOs!: boolean;
 
-  @Field()
+  @Field
   mode!: string;
 
-  @Field()
+  @Field
   maxChars!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlReasoningRuntimeCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlReasoningRuntimeEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlReasoningRuntimeCapability])
+  @Field( => [GqlReasoningRuntimeCapability])
   capabilities!: GqlReasoningRuntimeCapability[];
 
-  @Field()
+  @Field
   customReasonerKernel!: boolean;
 
-  @Field()
+  @Field
   symbolicReasonerOs!: boolean;
 
-  @Field()
+  @Field
   fullTreeOfThought!: boolean;
 
-  @Field()
+  @Field
   toolExecution!: boolean;
 
-  @Field()
+  @Field
   agentOs!: boolean;
 
-  @Field()
+  @Field
   llmAsJudgeEvalLab!: boolean;
 
-  @Field()
+  @Field
   droolsPegaBrms!: boolean;
 
-  @Field()
+  @Field
   regeneratesReasoningCloud!: boolean;
 
-  @Field()
+  @Field
   extendsReasoningCloud!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 
-  @Field()
+  @Field
   storesHistoryInMemoryCloud!: boolean;
 
-  @Field()
+  @Field
   mode!: string;
 
-  @Field()
+  @Field
   maxHistoryPerWorkspace!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAgentRuntimeCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAgentRuntimeEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlAgentRuntimeCapability])
+  @Field( => [GqlAgentRuntimeCapability])
   capabilities!: GqlAgentRuntimeCapability[];
 
-  @Field()
+  @Field
   openToolExecution!: boolean;
 
-  @Field()
+  @Field
   liveExternalActionsByDefault!: boolean;
 
-  @Field()
+  @Field
   langGraphOs!: boolean;
 
-  @Field()
+  @Field
   autoGptOs!: boolean;
 
-  @Field()
+  @Field
   scopedPermissionsRequired!: boolean;
 
-  @Field()
+  @Field
   sandboxRequired!: boolean;
 
-  @Field()
+  @Field
   policyHardGateRequired!: boolean;
 
-  @Field()
+  @Field
   policyRuntimeWired!: boolean;
 
-  @Field()
+  @Field
   localPermissionHardGate!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 
-  @Field()
+  @Field
   mode!: string;
 
-  @Field()
+  @Field
   maxAgentsPerWorkspace!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlWorkflowRuntimeCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlWorkflowRuntimeEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlWorkflowRuntimeCapability])
+  @Field( => [GqlWorkflowRuntimeCapability])
   capabilities!: GqlWorkflowRuntimeCapability[];
 
-  @Field()
+  @Field
   openToolExecution!: boolean;
 
-  @Field()
+  @Field
   liveStepExecution!: boolean;
 
-  @Field()
+  @Field
   temporalOs!: boolean;
 
-  @Field()
+  @Field
   airflowOs!: boolean;
 
-  @Field()
+  @Field
   distributedWorkflowOs!: boolean;
 
-  @Field()
+  @Field
   extendsWorkflowsProduct!: boolean;
 
-  @Field()
+  @Field
   regeneratesWorkflowsProduct!: boolean;
 
-  @Field()
+  @Field
   scopedPermissionsRequired!: boolean;
 
-  @Field()
+  @Field
   sandboxRequired!: boolean;
 
-  @Field()
+  @Field
   policyHardGateRequired!: boolean;
 
-  @Field()
+  @Field
   policyRuntimeWired!: boolean;
 
-  @Field()
+  @Field
   localPermissionHardGate!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 
-  @Field()
+  @Field
   mode!: string;
 
-  @Field()
+  @Field
   maxWorkflowsPerWorkspace!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlPluginRuntimeCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlPluginRuntimeEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlPluginRuntimeCapability])
+  @Field( => [GqlPluginRuntimeCapability])
   capabilities!: GqlPluginRuntimeCapability[];
 
-  @Field()
+  @Field
   openToolExecution!: boolean;
 
-  @Field()
+  @Field
   liveCodeExecution!: boolean;
 
-  @Field()
+  @Field
   browserExtensionOs!: boolean;
 
-  @Field()
+  @Field
   vsCodeExtensionOs!: boolean;
 
-  @Field()
+  @Field
   wasmPluginOs!: boolean;
 
-  @Field()
+  @Field
   extendsMarketplace!: boolean;
 
-  @Field()
+  @Field
   regeneratesMarketplace!: boolean;
 
-  @Field()
+  @Field
   scopedPermissionsRequired!: boolean;
 
-  @Field()
+  @Field
   sandboxRequired!: boolean;
 
-  @Field()
+  @Field
   policyHardGateRequired!: boolean;
 
-  @Field()
+  @Field
   policyRuntimeWired!: boolean;
 
-  @Field()
+  @Field
   localPermissionHardGate!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 
-  @Field()
+  @Field
   mode!: string;
 
-  @Field()
+  @Field
   maxPluginsPerWorkspace!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlPolicyRuntimeCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlPolicyRuntimeEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlPolicyRuntimeCapability])
+  @Field( => [GqlPolicyRuntimeCapability])
   capabilities!: GqlPolicyRuntimeCapability[];
 
-  @Field()
+  @Field
   hardGate!: boolean;
 
-  @Field()
+  @Field
   logOnly!: boolean;
 
-  @Field()
+  @Field
   logOnlyForbidden!: boolean;
 
-  @Field()
+  @Field
   opaOs!: boolean;
 
-  @Field()
+  @Field
   cedarOs!: boolean;
 
-  @Field()
+  @Field
   enterpriseGrcOs!: boolean;
 
-  @Field()
+  @Field
   wiredIntoAgentRuntime!: boolean;
 
-  @Field()
+  @Field
   wiredIntoWorkflowRuntime!: boolean;
 
-  @Field()
+  @Field
   wiredIntoPluginRuntime!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 
-  @Field()
+  @Field
   mode!: string;
 
-  @Field()
+  @Field
   maxPoliciesPerWorkspace!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlGpuPlatformCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlGpuPlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlGpuPlatformCapability])
+  @Field( => [GqlGpuPlatformCapability])
   capabilities!: GqlGpuPlatformCapability[];
 
-  @Field()
+  @Field
   gpuHyperscalerOs!: boolean;
 
-  @Field()
+  @Field
   callsCloudGpuApis!: boolean;
 
-  @Field()
+  @Field
   openEndedGpuAutoscale!: boolean;
 
-  @Field()
+  @Field
   hardSpendCeilingsRequired!: boolean;
 
-  @Field()
+  @Field
   sandboxLogicalOnly!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 
-  @Field()
+  @Field
   maxInstances!: number;
 
-  @Field()
+  @Field
   maxSpendUsd!: number;
 
-  @Field()
+  @Field
   provisionMode!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlModelServingCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlModelServingEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlModelServingCapability])
+  @Field( => [GqlModelServingCapability])
   capabilities!: GqlModelServingCapability[];
 
-  @Field()
+  @Field
   vllmOs!: boolean;
 
-  @Field()
+  @Field
   kserveOs!: boolean;
 
-  @Field()
+  @Field
   tritonOs!: boolean;
 
-  @Field()
+  @Field
   selfHostedGpuServingOs!: boolean;
 
-  @Field()
+  @Field
   regeneratesAiGateway!: boolean;
 
-  @Field()
+  @Field
   extendsAiGateway!: boolean;
 
-  @Field()
+  @Field
   extendsModelRegistry!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 
-  @Field()
+  @Field
   sandboxDeploymentsOnly!: boolean;
 
-  @Field()
+  @Field
   maxActiveDeployments!: number;
 
-  @Field()
+  @Field
   servingMode!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAiRouterCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAiRouterEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlAiRouterCapability])
+  @Field( => [GqlAiRouterCapability])
   capabilities!: GqlAiRouterCapability[];
 
-  @Field()
+  @Field
   serviceMeshOs!: boolean;
 
-  @Field()
+  @Field
   multiCloudRouterOs!: boolean;
 
-  @Field()
+  @Field
   regeneratesAiGateway!: boolean;
 
-  @Field()
+  @Field
   extendsAiGateway!: boolean;
 
-  @Field()
+  @Field
   extendsModelServing!: boolean;
 
-  @Field()
+  @Field
   dryRunResolveOnly!: boolean;
 
-  @Field()
+  @Field
   enforcesSpendCaps!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 
-  @Field()
+  @Field
   primaryRegion!: string;
 
-  @Field()
+  @Field
   mode!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlStreamingRuntimeCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlStreamingRuntimeEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlStreamingRuntimeCapability])
+  @Field( => [GqlStreamingRuntimeCapability])
   capabilities!: GqlStreamingRuntimeCapability[];
 
-  @Field()
+  @Field
   websocketOs!: boolean;
 
-  @Field()
+  @Field
   grpcStreamingOs!: boolean;
 
-  @Field()
+  @Field
   videoStreamingOs!: boolean;
 
-  @Field()
+  @Field
   bidirectionalRealtimeOs!: boolean;
 
-  @Field()
+  @Field
   regeneratesExistingStreams!: boolean;
 
-  @Field()
+  @Field
   extendsExistingSse!: boolean;
 
-  @Field()
+  @Field
   sandboxChunkStream!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 
-  @Field()
+  @Field
   primaryTransport!: string;
 
-  @Field()
+  @Field
   mode!: string;
 
-  @Field()
+  @Field
   maxChunksPerStream!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlBatchRuntimeCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlBatchRuntimeEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlBatchRuntimeCapability])
+  @Field( => [GqlBatchRuntimeCapability])
   capabilities!: GqlBatchRuntimeCapability[];
 
-  @Field()
+  @Field
   sparkOs!: boolean;
 
-  @Field()
+  @Field
   airflowOs!: boolean;
 
-  @Field()
+  @Field
   celeryOs!: boolean;
 
-  @Field()
+  @Field
   distributedBatchOs!: boolean;
 
-  @Field()
+  @Field
   regeneratesJobsApi!: boolean;
 
-  @Field()
+  @Field
   extendsBullMqJobs!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 
-  @Field()
+  @Field
   sandboxRunsForNonTranslate!: boolean;
 
-  @Field()
+  @Field
   mode!: string;
 
-  @Field()
+  @Field
   maxItemsPerRun!: number;
 
-  @Field()
+  @Field
   maxRetries!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlIntelligentCacheCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlIntelligentCacheEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlIntelligentCacheCapability])
+  @Field( => [GqlIntelligentCacheCapability])
   capabilities!: GqlIntelligentCacheCapability[];
 
-  @Field()
+  @Field
   redisClusterOs!: boolean;
 
-  @Field()
+  @Field
   vectorSemanticOs!: boolean;
 
-  @Field()
+  @Field
   cdnOs!: boolean;
 
-  @Field()
+  @Field
   autoWiresGatewayResponses!: boolean;
 
-  @Field()
+  @Field
   regeneratesAiGateway!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 
-  @Field()
+  @Field
   sandboxEntries!: boolean;
 
-  @Field()
+  @Field
   exactKeyLookup!: boolean;
 
-  @Field()
+  @Field
   mode!: string;
 
-  @Field()
+  @Field
   maxEntriesPerWorkspace!: number;
 
-  @Field()
+  @Field
   defaultTtlSec!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlCostOptimizationCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlCostOptimizationEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlCostOptimizationCapability])
+  @Field( => [GqlCostOptimizationCapability])
   capabilities!: GqlCostOptimizationCapability[];
 
-  @Field()
+  @Field
   finOpsOs!: boolean;
 
-  @Field()
+  @Field
   cloudSpotApis!: boolean;
 
-  @Field()
+  @Field
   reservedInstanceMarketplace!: boolean;
 
-  @Field()
+  @Field
   openEndedAutoscale!: boolean;
 
-  @Field()
+  @Field
   regeneratesAiGateway!: boolean;
 
-  @Field()
+  @Field
   enforcesSpendCaps!: boolean;
 
-  @Field()
+  @Field
   reportOnly!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 
-  @Field()
+  @Field
   extendsGpuPlatform!: boolean;
 
-  @Field()
+  @Field
   extendsAiRouter!: boolean;
 
-  @Field()
+  @Field
   mode!: string;
 
-  @Field()
+  @Field
   defaultDailyCapUsd!: number;
 
-  @Field()
+  @Field
   defaultMonthlyCapUsd!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAiRuntimeAnalyticsCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAiRuntimeAnalyticsEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlAiRuntimeAnalyticsCapability])
+  @Field( => [GqlAiRuntimeAnalyticsCapability])
   capabilities!: GqlAiRuntimeAnalyticsCapability[];
 
-  @Field()
+  @Field
   biDashboardOs!: boolean;
 
-  @Field()
+  @Field
   apmOs!: boolean;
 
-  @Field()
+  @Field
   cloudGpuTelemetryOs!: boolean;
 
-  @Field()
+  @Field
   regeneratesIntelligenceAnalytics!: boolean;
 
-  @Field()
+  @Field
   regeneratesKnowledgeAnalytics!: boolean;
 
-  @Field()
+  @Field
   enterpriseReportingSuite!: boolean;
 
-  @Field()
+  @Field
   aggregatesOnly!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 
-  @Field()
+  @Field
   extendsInferenceCloud!: boolean;
 
-  @Field()
+  @Field
   mode!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlKnowledgeBaseCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlKnowledgeBaseEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlKnowledgeBaseCapability])
+  @Field( => [GqlKnowledgeBaseCapability])
   capabilities!: GqlKnowledgeBaseCapability[];
 
-  @Field()
+  @Field
   confluenceOs!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 
-  @Field()
+  @Field
   extendsVl062!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlEnterpriseSearchCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlEnterpriseSearchEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlEnterpriseSearchCapability])
+  @Field( => [GqlEnterpriseSearchCapability])
   capabilities!: GqlEnterpriseSearchCapability[];
 
-  @Field()
+  @Field
   elasticOs!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 
-  @Field()
+  @Field
   extendsVl062!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlOntologyCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlOntologyEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlOntologyCapability])
+  @Field( => [GqlOntologyCapability])
   capabilities!: GqlOntologyCapability[];
 
-  @Field()
+  @Field
   owlOs!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 
-  @Field()
+  @Field
   extendsVl184!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlTaxonomyCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlTaxonomyEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlTaxonomyCapability])
+  @Field( => [GqlTaxonomyCapability])
   capabilities!: GqlTaxonomyCapability[];
 
-  @Field()
+  @Field
   enterpriseTaxonomyOs!: boolean;
 
-  @Field()
+  @Field
   mlAutoClassification!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlEnterpriseRagCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlEnterpriseRagEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlEnterpriseRagCapability])
+  @Field( => [GqlEnterpriseRagCapability])
   capabilities!: GqlEnterpriseRagCapability[];
 
-  @Field()
+  @Field
   langchainOs!: boolean;
 
-  @Field()
+  @Field
   agenticRagOs!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 
-  @Field()
+  @Field
   extendsVl062!: boolean;
 
-  @Field()
+  @Field
   handVerifyRequired!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlKnowledgeMemoryCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlKnowledgeMemoryEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlKnowledgeMemoryCapability])
+  @Field( => [GqlKnowledgeMemoryCapability])
   capabilities!: GqlKnowledgeMemoryCapability[];
 
-  @Field()
+  @Field
   mem0Os!: boolean;
 
-  @Field()
+  @Field
   regeneratesMemoryCloud!: boolean;
 
-  @Field()
+  @Field
   extendsVl183!: boolean;
 
-  @Field()
+  @Field
   distinctFromMemoryCloud!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlKnowledgeIntelligenceCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlKnowledgeIntelligenceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlKnowledgeIntelligenceCapability])
+  @Field( => [GqlKnowledgeIntelligenceCapability])
   capabilities!: GqlKnowledgeIntelligenceCapability[];
 
-  @Field()
+  @Field
   biOs!: boolean;
 
-  @Field()
+  @Field
   regeneratesIntelligenceAnalytics!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 
-  @Field()
+  @Field
   extendsKnowledgeCloud!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlKnowledgeApisCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlKnowledgeApisEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlKnowledgeApisCapability])
+  @Field( => [GqlKnowledgeApisCapability])
   capabilities!: GqlKnowledgeApisCapability[];
 
-  @Field()
+  @Field
   grpcOs!: boolean;
 
-  @Field()
+  @Field
   kafkaEventStreamingOs!: boolean;
 
-  @Field()
+  @Field
   sdkGeneratorOs!: boolean;
 
-  @Field()
+  @Field
   extendsExistingKnowledgeApis!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlEmbeddingCloudCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlEmbeddingCloudEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlEmbeddingCloudCapability])
+  @Field( => [GqlEmbeddingCloudCapability])
   capabilities!: GqlEmbeddingCloudCapability[];
 
-  @Field()
+  @Field
   trainsEmbeddingModels!: boolean;
 
-  @Field()
+  @Field
   multimodalOs!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlVectorCloudCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlVectorCloudEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlVectorCloudCapability])
+  @Field( => [GqlVectorCloudCapability])
   capabilities!: GqlVectorCloudCapability[];
 
-  @Field()
+  @Field
   managedVectorDbOs!: boolean;
 
-  @Field()
+  @Field
   pineconeParity!: boolean;
 
-  @Field()
+  @Field
   hybridBm25!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlMemoryCloudCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlMemoryCloudEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlMemoryCloudCapability])
+  @Field( => [GqlMemoryCloudCapability])
   capabilities!: GqlMemoryCloudCapability[];
 
-  @Field()
+  @Field
   infinitePersonalizationOs!: boolean;
 
-  @Field()
+  @Field
   gdprExport!: boolean;
 
-  @Field()
+  @Field
   gdprErase!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlKnowledgeGraphCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlKnowledgeGraphEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlKnowledgeGraphCapability])
+  @Field( => [GqlKnowledgeGraphCapability])
   capabilities!: GqlKnowledgeGraphCapability[];
 
-  @Field()
+  @Field
   neo4jParity!: boolean;
 
-  @Field()
+  @Field
   ontologyPlatform!: boolean;
 
-  @Field()
+  @Field
   preferRag!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlContextEngineCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlContextEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlContextEngineCapability])
+  @Field( => [GqlContextEngineCapability])
   capabilities!: GqlContextEngineCapability[];
 
-  @Field()
+  @Field
   infiniteContextWindow!: boolean;
 
-  @Field()
+  @Field
   llmSummarization!: boolean;
 
-  @Field()
+  @Field
   realtimePush!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlReasoningCloudCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlReasoningCloudEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlReasoningCloudCapability])
+  @Field( => [GqlReasoningCloudCapability])
   capabilities!: GqlReasoningCloudCapability[];
 
-  @Field()
+  @Field
   customReasonerKernel!: boolean;
 
-  @Field()
+  @Field
   symbolicReasonerOs!: boolean;
 
-  @Field()
+  @Field
   llmGateway!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlRecommendationEngineCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlRecommendationEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlRecommendationEngineCapability])
+  @Field( => [GqlRecommendationEngineCapability])
   capabilities!: GqlRecommendationEngineCapability[];
 
-  @Field()
+  @Field
   retailRecommenderOs!: boolean;
 
-  @Field()
+  @Field
   collaborativeFiltering!: boolean;
 
-  @Field()
+  @Field
   lightRankers!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlPromptIntelligenceCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlPromptIntelligence {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlPromptIntelligenceCapability])
+  @Field( => [GqlPromptIntelligenceCapability])
   capabilities!: GqlPromptIntelligenceCapability[];
 
-  @Field()
+  @Field
   autoPromptResearchLab!: boolean;
 
-  @Field()
+  @Field
   trainsPromptOptimizers!: boolean;
 
-  @Field()
+  @Field
   extendsVersionedPrompts!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlDecisionEngineCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlDecisionEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlDecisionEngineCapability])
+  @Field( => [GqlDecisionEngineCapability])
   capabilities!: GqlDecisionEngineCapability[];
 
-  @Field()
+  @Field
   enterpriseBrms!: boolean;
 
-  @Field()
+  @Field
   droolsPegaParity!: boolean;
 
-  @Field()
+  @Field
   lightRules!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAiOrchestrationCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAiOrchestration {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlAiOrchestrationCapability])
+  @Field( => [GqlAiOrchestrationCapability])
   capabilities!: GqlAiOrchestrationCapability[];
 
-  @Field()
+  @Field
   multiCloudAgentOs!: boolean;
 
-  @Field()
+  @Field
   langGraphOs!: boolean;
 
-  @Field()
+  @Field
   loadBearingE2e!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlIntelligenceAnalyticsCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlIntelligenceAnalytics {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlIntelligenceAnalyticsCapability])
+  @Field( => [GqlIntelligenceAnalyticsCapability])
   capabilities!: GqlIntelligenceAnalyticsCapability[];
 
-  @Field()
+  @Field
   regeneratesSpeechAnalytics!: boolean;
 
-  @Field()
+  @Field
   regeneratesVoiceAnalytics!: boolean;
 
-  @Field()
+  @Field
   biDashboardOs!: boolean;
 
-  @Field()
+  @Field
   aggregatesOnly!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlKnowledgeAnalyticsCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlKnowledgeAnalytics {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlKnowledgeAnalyticsCapability])
+  @Field( => [GqlKnowledgeAnalyticsCapability])
   capabilities!: GqlKnowledgeAnalyticsCapability[];
 
-  @Field()
+  @Field
   regeneratesLanguageAnalytics!: boolean;
 
-  @Field()
+  @Field
   regeneratesSpeechAnalytics!: boolean;
 
-  @Field()
+  @Field
   regeneratesVoiceAnalytics!: boolean;
 
-  @Field()
+  @Field
   regeneratesIntelligenceAnalytics!: boolean;
 
-  @Field()
+  @Field
   biDashboardOs!: boolean;
 
-  @Field()
+  @Field
   aggregatesOnly!: boolean;
 
-  @Field()
+  @Field
   orgWorkspaceScoped!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlSpeechCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlSpeechEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlSpeechCapability])
+  @Field( => [GqlSpeechCapability])
   capabilities!: GqlSpeechCapability[];
 }
 
-@ObjectType()
+@ObjectType
 export class GqlNeuralTtsCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlNeuralTtsEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlNeuralTtsCapability])
+  @Field( => [GqlNeuralTtsCapability])
   capabilities!: GqlNeuralTtsCapability[];
 }
 
-@ObjectType()
+@ObjectType
 export class GqlNeuralTtsVoice {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   gender!: string;
 
-  @Field(() => [String])
+  @Field( => [String])
   languages!: string[];
 
-  @Field()
+  @Field
   provider!: string;
 
-  @Field()
+  @Field
   personality!: string;
 
-  @Field()
+  @Field
   ageGroup!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   dialect!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   accent!: string | null;
 
-  @Field()
+  @Field
   category!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlVoiceCloningCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlVoiceCloningEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlVoiceCloningCapability])
+  @Field( => [GqlVoiceCloningCapability])
   capabilities!: GqlVoiceCloningCapability[];
 
-  @Field()
+  @Field
   consentRequired!: boolean;
 
-  @Field()
+  @Field
   watermarkRequired!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlEmotionVoiceCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlEmotionVoiceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlEmotionVoiceCapability])
+  @Field( => [GqlEmotionVoiceCapability])
   capabilities!: GqlEmotionVoiceCapability[];
 
-  @Field()
+  @Field
   trainedExpressiveModel!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlEmotionVoiceProfile {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   category!: string;
 
-  @Field()
+  @Field
   description!: string;
 
-  @Field()
+  @Field
   preferredVoice!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlVoiceStudioCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlVoiceStudioEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlVoiceStudioCapability])
+  @Field( => [GqlVoiceStudioCapability])
   capabilities!: GqlVoiceStudioCapability[];
 
-  @Field()
+  @Field
   nonlinearDaw!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlVoiceEnhancementCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlVoiceEnhancementEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlVoiceEnhancementCapability])
+  @Field( => [GqlVoiceEnhancementCapability])
   capabilities!: GqlVoiceEnhancementCapability[];
 
-  @Field()
+  @Field
   spectralMlDenoise!: boolean;
 
-  @Field()
+  @Field
   liveAec!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlVoiceEnhancementProfile {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   category!: string;
 
-  @Field()
+  @Field
   description!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlVoiceBiometricsCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlVoiceBiometricsEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlVoiceBiometricsCapability])
+  @Field( => [GqlVoiceBiometricsCapability])
   capabilities!: GqlVoiceBiometricsCapability[];
 
-  @Field()
+  @Field
   nistCertified!: boolean;
 
-  @Field()
+  @Field
   padCertified!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlVoiceMarketplaceCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlVoiceMarketplaceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlVoiceMarketplaceCapability])
+  @Field( => [GqlVoiceMarketplaceCapability])
   capabilities!: GqlVoiceMarketplaceCapability[];
 
-  @Field()
+  @Field
   celebrityWithoutRights!: boolean;
 
-  @Field()
+  @Field
   crossTenantCloneSynthesis!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlVoiceAnalyticsEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field()
+  @Field
   capabilityCount!: number;
 
-  @Field()
+  @Field
   shippedCount!: number;
 
-  @Field()
+  @Field
   regeneratesSpeechAnalytics!: boolean;
 
-  @Field()
+  @Field
   biDashboardProduct!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlVoiceAnalyticsOverview {
-  @Field()
+  @Field
   periodStart!: string;
 
-  @Field()
+  @Field
   periodEnd!: string;
 
-  @Field()
+  @Field
   estimatedCostUsd!: number;
 
-  @Field()
+  @Field
   ttsRequests!: number;
 
-  @Field()
+  @Field
   revenueCents!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlSpeechVocabPack {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   description!: string;
 
-  @Field(() => [String])
+  @Field( => [String])
   phrases!: string[];
 }
 
-@ObjectType()
+@ObjectType
 export class GqlSpeakerCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlSpeakerEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlSpeakerCapability])
+  @Field( => [GqlSpeakerCapability])
   capabilities!: GqlSpeakerCapability[];
 }
 
-@ObjectType()
+@ObjectType
 export class GqlSpeakerProfile {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   displayName!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field()
+  @Field
   enrolled!: boolean;
 
-  @Field()
+  @Field
   enrollmentCount!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAccentCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAccentEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlAccentCapability])
+  @Field( => [GqlAccentCapability])
   capabilities!: GqlAccentCapability[];
 }
 
-@InputType()
+@InputType
 export class DetectAccentInput {
-  @Field()
+  @Field
   text!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   language?: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAccentDetectResult {
-  @Field()
+  @Field
   language!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   accent!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   accentName!: string | null;
 
-  @Field()
+  @Field
   confidence!: number;
 
-  @Field()
+  @Field
   provider!: string;
 
-  @Field()
+  @Field
   note!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlEmotionCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlEmotionEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [String])
+  @Field( => [String])
   labels!: string[];
 
-  @Field(() => [GqlEmotionCapability])
+  @Field( => [GqlEmotionCapability])
   capabilities!: GqlEmotionCapability[];
 }
 
-@InputType()
+@InputType
 export class DetectEmotionInput {
-  @Field()
+  @Field
   text!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlEmotionDetectResult {
-  @Field()
+  @Field
   label!: string;
 
-  @Field()
+  @Field
   confidence!: number;
 
-  @Field()
+  @Field
   audioAdjusted!: boolean;
 
-  @Field()
+  @Field
   note!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAudioCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAudioEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlAudioCapability])
+  @Field( => [GqlAudioCapability])
   capabilities!: GqlAudioCapability[];
 }
 
-@ObjectType()
+@ObjectType
 export class GqlPronunciationCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlPronunciationEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlPronunciationCapability])
+  @Field( => [GqlPronunciationCapability])
   capabilities!: GqlPronunciationCapability[];
 }
 
-@ObjectType()
+@ObjectType
 export class GqlPronunciationScores {
-  @Field()
+  @Field
   overall!: number;
 
-  @Field()
+  @Field
   accuracy!: number;
 
-  @Field()
+  @Field
   fluency!: number;
 
-  @Field()
+  @Field
   stress!: number;
 }
 
-@InputType()
+@InputType
 export class AssessPronunciationInput {
-  @Field()
+  @Field
   reference!: string;
 
   @Field({ nullable: true })
@@ -3777,2101 +3777,2101 @@ export class AssessPronunciationInput {
   language?: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlPronunciationAssessResult {
-  @Field()
+  @Field
   language!: string;
 
-  @Field()
+  @Field
   hypothesis!: string;
 
-  @Field(() => GqlPronunciationScores)
+  @Field( => GqlPronunciationScores)
   scores!: GqlPronunciationScores;
 
-  @Field()
+  @Field
   note!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlWakeCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlWakeWordEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [String])
+  @Field( => [String])
   defaultWakePhrases!: string[];
 
-  @Field(() => [GqlWakeCapability])
+  @Field( => [GqlWakeCapability])
   capabilities!: GqlWakeCapability[];
 }
 
-@InputType()
+@InputType
 export class DetectWakeWordInput {
-  @Field()
+  @Field
   text!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlWakeDetectResult {
-  @Field()
+  @Field
   wakeDetected!: boolean;
 
-  @Field()
+  @Field
   transcript!: string;
 
-  @Field()
+  @Field
   note!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlCallCapability {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlCallIntelligenceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => [GqlCallCapability])
+  @Field( => [GqlCallCapability])
   capabilities!: GqlCallCapability[];
 }
 
-@InputType()
+@InputType
 export class IngestCallInput {
-  @Field()
+  @Field
   transcript!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   language?: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   direction?: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   externalRef?: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlCallRecord {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   summary?: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   transcript?: string | null;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlSpeechAnalyticsEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field()
+  @Field
   capabilityCount!: number;
 
-  @Field()
+  @Field
   shippedCount!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlSpeechAnalyticsOverview {
-  @Field()
+  @Field
   periodStart!: string;
 
-  @Field()
+  @Field
   periodEnd!: string;
 
-  @Field()
+  @Field
   estimatedCostUsd!: number;
 
-  @Field()
+  @Field
   sttRequests!: number;
 
-  @Field()
+  @Field
   ttsRequests!: number;
 }
 
-@InputType()
+@InputType
 export class TranslateInput {
-  @Field()
+  @Field
   text!: string;
 
-  @Field()
+  @Field
   source!: string;
 
-  @Field()
+  @Field
   target!: string;
 }
 
-@InputType()
+@InputType
 export class TranslateFormatInput {
-  @Field()
+  @Field
   format!: string;
 
-  @Field()
+  @Field
   content!: string;
 
-  @Field()
+  @Field
   source!: string;
 
-  @Field()
+  @Field
   target!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlTranslateResult {
-  @Field()
+  @Field
   text!: string;
 
-  @Field()
+  @Field
   source!: string;
 
-  @Field()
+  @Field
   target!: string;
 
-  @Field()
+  @Field
   provider!: string;
 
-  @Field(() => Int)
+  @Field( => Int)
   characters!: number;
 
-  @Field()
+  @Field
   tmHit!: boolean;
 
-  @Field(() => Int)
+  @Field( => Int)
   glossaryApplied!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlTranslateFormatResult {
-  @Field()
+  @Field
   format!: string;
 
-  @Field()
+  @Field
   content!: string;
 
-  @Field()
+  @Field
   source!: string;
 
-  @Field()
+  @Field
   target!: string;
 
-  @Field(() => Int)
+  @Field( => Int)
   segmentCount!: number;
 
-  @Field(() => Int)
+  @Field( => Int)
   characters!: number;
 
-  @Field()
+  @Field
   provider!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   note!: string | null;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlTranslateEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Int)
+  @Field( => Int)
   capabilityCount!: number;
 
-  @Field(() => Int)
+  @Field( => Int)
   shippedCount!: number;
 }
 
-@InputType()
+@InputType
 export class LocalizeInput {
-  @Field()
+  @Field
   content!: string;
 
-  @Field()
+  @Field
   source!: string;
 
-  @Field()
+  @Field
   target!: string;
 
   @Field({ nullable: true })
   format?: string;
 }
 
-@InputType()
+@InputType
 export class ValidateIcuInput {
-  @Field()
+  @Field
   message!: string;
 }
 
-@InputType()
+@InputType
 export class FormatIcuInput {
-  @Field()
+  @Field
   message!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   valuesJson?: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   locale?: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlLocalizeResult {
-  @Field()
+  @Field
   format!: string;
 
-  @Field()
+  @Field
   serialized!: string;
 
-  @Field(() => Int)
+  @Field( => Int)
   strings!: number;
 
-  @Field(() => Int)
+  @Field( => Int)
   translated!: number;
 
-  @Field(() => Int)
+  @Field( => Int)
   tmHits!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlIcuValidateResult {
-  @Field()
+  @Field
   valid!: boolean;
 
-  @Field(() => [String])
+  @Field( => [String])
   placeholders!: string[];
 
-  @Field()
+  @Field
   hasPlural!: boolean;
 
-  @Field()
+  @Field
   hasSelect!: boolean;
 
-  @Field(() => [String])
+  @Field( => [String])
   issueMessages!: string[];
 }
 
-@ObjectType()
+@ObjectType
 export class GqlIcuFormatResult {
-  @Field()
+  @Field
   formatted!: string;
 
-  @Field(() => [String])
+  @Field( => [String])
   placeholders!: string[];
 
-  @Field()
+  @Field
   locale!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlLocalizationPlatform {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Int)
+  @Field( => Int)
   capabilityCount!: number;
 
-  @Field(() => Int)
+  @Field( => Int)
   shippedCount!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlDialectDetectResult {
-  @Field()
+  @Field
   language!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   dialect!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   dialectName!: string | null;
 
-  @Field(() => Float)
+  @Field( => Float)
   confidence!: number;
 
-  @Field()
+  @Field
   provider!: string;
 
-  @Field()
+  @Field
   note!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlGrammarIssue {
-  @Field()
+  @Field
   type!: string;
 
-  @Field()
+  @Field
   severity!: string;
 
-  @Field()
+  @Field
   message!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   suggestion!: string | null;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlGrammarCheckResult {
-  @Field()
+  @Field
   language!: string;
 
-  @Field()
+  @Field
   corrected!: string;
 
-  @Field()
+  @Field
   changed!: boolean;
 
-  @Field(() => Int)
+  @Field( => Int)
   issueCount!: number;
 
-  @Field()
+  @Field
   provider!: string;
 
-  @Field(() => [GqlGrammarIssue])
+  @Field( => [GqlGrammarIssue])
   issues!: GqlGrammarIssue[];
 
-  @Field()
+  @Field
   note!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlStyleRewriteResult {
-  @Field()
+  @Field
   profile!: string;
 
-  @Field()
+  @Field
   rewritten!: string;
 
-  @Field()
+  @Field
   changed!: boolean;
 
-  @Field(() => Int)
+  @Field( => Int)
   changeCount!: number;
 
-  @Field()
+  @Field
   provider!: string;
 
-  @Field()
+  @Field
   note!: string;
 }
 
-@InputType()
+@InputType
 export class AnalyzeLanguageInput {
-  @Field()
+  @Field
   text!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   language?: string;
 
-  @Field(() => Boolean, { nullable: true })
+  @Field( => Boolean, { nullable: true })
   includeDialect?: boolean;
 
-  @Field(() => Boolean, { nullable: true })
+  @Field( => Boolean, { nullable: true })
   includeAccent?: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlLanguageIntelligence {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Int)
+  @Field( => Int)
   capabilityCount!: number;
 
-  @Field(() => Int)
+  @Field( => Int)
   shippedCount!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlLanguageAnalyzeResult {
-  @Field()
+  @Field
   language!: string;
 
-  @Field(() => Float)
+  @Field( => Float)
   languageConfidence!: number;
 
-  @Field()
+  @Field
   intentLabel!: string;
 
-  @Field()
+  @Field
   sentimentLabel!: string;
 
-  @Field()
+  @Field
   emotionLabel!: string;
 
-  @Field(() => Float)
+  @Field( => Float)
   readabilityScore!: number;
 
-  @Field(() => Float)
+  @Field( => Float)
   complexityScore!: number;
 
-  @Field()
+  @Field
   note!: string;
 }
 
-@InputType()
+@InputType
 export class SearchTmInput {
-  @Field()
+  @Field
   text!: string;
 
-  @Field()
+  @Field
   sourceLang!: string;
 
-  @Field()
+  @Field
   targetLang!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   projectKey?: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   mode?: string;
 
-  @Field(() => Int, { nullable: true })
+  @Field( => Int, { nullable: true })
   limit?: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlTmIntelligence {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Int)
+  @Field( => Int)
   capabilityCount!: number;
 
-  @Field(() => Int)
+  @Field( => Int)
   shippedCount!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlTmSearchHit {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   scope!: string;
 
-  @Field()
+  @Field
   sourceText!: string;
 
-  @Field()
+  @Field
   targetText!: string;
 
-  @Field(() => Float)
+  @Field( => Float)
   score!: number;
 
-  @Field(() => Int)
+  @Field( => Int)
   version!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlTmSearchResult {
-  @Field()
+  @Field
   provider!: string;
 
-  @Field(() => Int)
+  @Field( => Int)
   resultCount!: number;
 
-  @Field(() => [GqlTmSearchHit])
+  @Field( => [GqlTmSearchHit])
   results!: GqlTmSearchHit[];
 
-  @Field()
+  @Field
   note!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlLanguageAnalytics {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Int)
+  @Field( => Int)
   capabilityCount!: number;
 
-  @Field(() => Int)
+  @Field( => Int)
   shippedCount!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAnalyticsOverviewSummary {
-  @Field()
+  @Field
   periodStart!: string;
 
-  @Field()
+  @Field
   periodEnd!: string;
 
-  @Field(() => Float)
+  @Field( => Float)
   estimatedCostUsd!: number;
 
-  @Field(() => Float)
+  @Field( => Float)
   jobErrorRate!: number;
 
-  @Field(() => Int)
+  @Field( => Int)
   languagePairCount!: number;
 
-  @Field(() => Int)
+  @Field( => Int)
   featureCount!: number;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlEnterpriseAnalyticsReport {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   generatedAt!: string;
 
-  @Field()
+  @Field
   periodStart!: string;
 
-  @Field()
+  @Field
   periodEnd!: string;
 
-  @Field(() => Float)
+  @Field( => Float)
   estimatedCostUsd!: number;
 
-  @Field(() => Int)
+  @Field( => Int)
   translationRequests!: number;
 
-  @Field(() => Float, { nullable: true })
+  @Field( => Float, { nullable: true })
   averageQualityScore!: number | null;
 
-  @Field(() => Float, { nullable: true })
+  @Field( => Float, { nullable: true })
   p95LatencyMs!: number | null;
 
-  @Field()
+  @Field
   note!: string;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlAfricanIntelligenceCloudProduct {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   console!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlAfricanLanguageRegistryEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   coverageComplete!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlCulturalIntelligenceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   traditionalKnowledgeConsentRequired!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlAfricanKnowledgeGraphEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   neo4jOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlGovernmentIntelligenceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   officialGuidanceMustBeSourced!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlHealthcareIntelligenceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   notMedicalAdvice!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlFinancialIntelligenceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   notInvestmentAdvice!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlEducationIntelligenceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   verticalOperationsOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlAgriculturalIntelligenceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   verticalOperationsOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlTourismHeritageIntelligenceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   traditionalKnowledgeConsentRequired!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlResearchCloudProduct {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   console!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlExperimentPlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   weightsAndBiasesOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlSyntheticDataPlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   syntheticLabelRequired!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlBenchmarkPlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   publicLeaderboardOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlEvaluationPlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   regeneratesModelEvaluationPlatform!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlAiPublicationPlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   doiRegistryOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlPatentInnovationPlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   usptoOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlOpenSciencePlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   traditionalKnowledgeConsentRequired!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlResearchAnalyticsEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   aiSovereigntyOs!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlMlopsLlmopsCloudProduct {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   console!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlDatasetPipelineEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   regeneratesDatasetMarketplace!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlTrainingPipelineEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   distributedTrainingOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlContinuousEvaluationEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   continuousEvalPass!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlPromptopsPlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   langSmithOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlRagopsPlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   vectorDbOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlAgentopsPlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   policyViolationsVisible!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlAiDriftDetectionEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   driftClear!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlContinuousLearningEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   humanApprovalRequiredBeforePromote!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlAiOperationsDashboardEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   trustCloudOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlTrustCloudProduct {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   console!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlAiSafetyPlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   policyRuntimeIntegrated!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlAiGovernancePlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   humanSignOffRequired!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlExplainabilityPlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   shapOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlPrivacyPlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   traditionalKnowledgeConsentRequired!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlCompliancePlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   complianceToolingNotCertification!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlRiskIntelligenceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   grcSuiteOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlIdentityFederationEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   oktaOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlTrustAnalyticsEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   siemOs!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlPlatformEngineeringCloudProduct {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   console!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlInternalDeveloperPortalEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   backstageOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlServiceCatalogEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   serviceMeshOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlGoldenPathPlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   scaffoldingOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlGitopsPlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   argoCdOs!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   fluxOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlReleaseEngineeringEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   spinnakerOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlReliabilityEngineeringEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   datadogOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlFinopsPlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   finopsOs!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   gpuBudgetAlertsEnabled!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlSupplyChainSecurityEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   snykOs!: boolean;
 
-  @Field(() => Int)
+  @Field( => Int)
   findingCount!: number;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlDeveloperExperiencePlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   ideOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlPlatformEngineeringAnalyticsEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   devopsIntelligenceOs!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlControlPlaneCloudProduct {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   console!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlOrganizationControlEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   leastPrivilegeRequired!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   controlPlaneAdminNotDefault!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlGlobalConfigurationPlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   secretsRefsOnly!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlGlobalPolicyEngineEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   policyRuntimeIntegrated!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   leastPrivilegeRequired!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlGlobalDeploymentControllerEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   productionDeployRequiresAuthorization!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   rollbackPath!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlGlobalRoutingControllerEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   istioOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlSecretsCertificatePlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   encryptedAtRest!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   neverLogPlaintextSecrets!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   envelopeEncryptionPattern!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   accessAuditing!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   hashicorpVaultOs!: boolean;
 
-  @Field(() => Int)
+  @Field( => Int)
   secretCount!: number;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlGlobalSchedulerEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   executesInference!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlControlPlaneAnalyticsEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   aggregatesSiblingHubs!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlDataPlaneCloudProduct {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   console!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlTranslationRuntimeEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   thinExecutionLayer!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   duplicatesProductLogic!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   managesOrgsPoliciesBilling!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   serviceMeshOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlSpeechRuntimeEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   thinExecutionLayer!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   duplicatesProductLogic!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   managesOrgsPoliciesBilling!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   serviceMeshOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlVoiceRuntimeEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   thinExecutionLayer!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   duplicatesProductLogic!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   managesOrgsPoliciesBilling!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   serviceMeshOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlVisionRuntimeEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   thinExecutionLayer!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   duplicatesProductLogic!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   managesOrgsPoliciesBilling!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   serviceMeshOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlKnowledgeRuntimeEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   thinExecutionLayer!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   duplicatesProductLogic!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   managesOrgsPoliciesBilling!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   serviceMeshOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlEmbeddingRuntimeEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   thinExecutionLayer!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   duplicatesProductLogic!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   managesOrgsPoliciesBilling!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   serviceMeshOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlDataPlaneStreamingEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   thinExecutionLayer!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   duplicatesProductLogic!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   managesOrgsPoliciesBilling!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   serviceMeshOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlGpuRuntimeEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   thinExecutionLayer!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   duplicatesProductLogic!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   managesOrgsPoliciesBilling!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   serviceMeshOs!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlVaiosProduct {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   console!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlAiSchedulerEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   unifyingOrchestrationLayer!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   duplicatesKernelOrFabric!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   notLinux!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   notKubernetes!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   literalOsKernel!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   enterpriseEngineeringSystemOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlRuntimeManagerEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   unifyingOrchestrationLayer!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   duplicatesKernelOrFabric!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   notLinux!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   notKubernetes!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   literalOsKernel!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   enterpriseEngineeringSystemOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlResourceManagerEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   unifyingOrchestrationLayer!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   duplicatesKernelOrFabric!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   notLinux!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   notKubernetes!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   literalOsKernel!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   enterpriseEngineeringSystemOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlWorkflowOperatingSystemEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   unifyingOrchestrationLayer!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   duplicatesKernelOrFabric!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   notLinux!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   notKubernetes!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   literalOsKernel!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   enterpriseEngineeringSystemOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlAgentOperatingSystemEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   unifyingOrchestrationLayer!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   duplicatesKernelOrFabric!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   notLinux!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   notKubernetes!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   literalOsKernel!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   enterpriseEngineeringSystemOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlAiMemoryOperatingSystemEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   unifyingOrchestrationLayer!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   duplicatesKernelOrFabric!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   notLinux!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   notKubernetes!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   literalOsKernel!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   enterpriseEngineeringSystemOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlKnowledgeOperatingSystemEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   unifyingOrchestrationLayer!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   duplicatesKernelOrFabric!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   notLinux!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   notKubernetes!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   literalOsKernel!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   enterpriseEngineeringSystemOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlPluginOperatingSystemEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   unifyingOrchestrationLayer!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   duplicatesKernelOrFabric!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   notLinux!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   notKubernetes!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   literalOsKernel!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   enterpriseEngineeringSystemOs!: boolean;
 }
 
-@ObjectType()
+@ObjectType
 export class GqlEnterpriseEngineeringSystemProduct {
-  @Field()
+  @Field
   id!: string;
 
-  @Field()
+  @Field
   name!: string;
 
-  @Field()
+  @Field
   status!: string;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   api!: string | null;
 
-  @Field(() => String, { nullable: true })
+  @Field( => String, { nullable: true })
   console!: string | null;
 
-  @Field()
+  @Field
   notes!: string;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlEngineeringGovernanceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   engineeringOsForHumansAndCursor!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   customerFacingProductCloud!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   architectureKnowledgeBaseOs!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   adrFactoryOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlArchitectureGovernanceEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   engineeringOsForHumansAndCursor!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   customerFacingProductCloud!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   architectureKnowledgeBaseOs!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   adrFactoryOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlRepositoryStandardsEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   engineeringOsForHumansAndCursor!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   customerFacingProductCloud!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   architectureKnowledgeBaseOs!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   adrFactoryOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlEngineeringQualityPlatformEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   engineeringOsForHumansAndCursor!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   customerFacingProductCloud!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   architectureKnowledgeBaseOs!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   adrFactoryOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlAiEngineeringStandardsEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   engineeringOsForHumansAndCursor!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   customerFacingProductCloud!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   architectureKnowledgeBaseOs!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   adrFactoryOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlApiEngineeringStandardsEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   engineeringOsForHumansAndCursor!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   customerFacingProductCloud!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   architectureKnowledgeBaseOs!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   adrFactoryOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlDatabaseEngineeringStandardsEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   engineeringOsForHumansAndCursor!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   customerFacingProductCloud!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   architectureKnowledgeBaseOs!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   adrFactoryOs!: boolean;
 }
 
 
-@ObjectType()
+@ObjectType
 export class GqlInfrastructureEngineeringStandardsEngine {
-  @Field()
+  @Field
   product!: string;
 
-  @Field()
+  @Field
   note!: string;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   engineeringOsForHumansAndCursor!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   customerFacingProductCloud!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   architectureKnowledgeBaseOs!: boolean;
 
-  @Field(() => Boolean)
+  @Field( => Boolean)
   adrFactoryOs!: boolean;
 }

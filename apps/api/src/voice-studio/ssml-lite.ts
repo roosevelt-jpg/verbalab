@@ -33,7 +33,7 @@ function decodeEntities(s: string): string {
 function parseBreakMs(attrs: string): number {
   const m = /time\s*=\s*["']([^"']+)["']/i.exec(attrs);
   if (!m) return 300;
-  const raw = m[1]!.trim().toLowerCase();
+  const raw = m[1]!.trim.toLowerCase;
   if (raw.endsWith('ms')) return Math.max(0, Number.parseFloat(raw) || 0);
   if (raw.endsWith('s')) return Math.max(0, (Number.parseFloat(raw) || 0) * 1000);
   return Math.max(0, Number.parseFloat(raw) || 0);
@@ -46,16 +46,16 @@ function attr(attrs: string, name: string): string | undefined {
 
 /** Apply soft rate/pitch hints as punctuation only — never spoken stage directions. */
 function applyProsodyHints(text: string, rate?: string, pitch?: string): string {
-  let out = text.trim();
+  let out = text.trim;
   if (!out) return out;
-  const r = (rate ?? '').toLowerCase();
+  const r = (rate ?? '').toLowerCase;
   if (r.includes('slow') || r.includes('x-slow') || r.includes('-')) {
-    out = out.replace(/([.!?])\s*/g, '$1  ').replace(/,/g, ', ');
+    out = out.replace(/([.!?])\s*/g, '$1 ').replace(/,/g, ', ');
   }
   if (r.includes('fast') || r.includes('x-fast') || r.includes('+')) {
     out = out.replace(/\s+/g, ' ');
   }
-  const p = (pitch ?? '').toLowerCase();
+  const p = (pitch ?? '').toLowerCase;
   if (p.includes('high') || p.includes('+') || p.includes('up')) {
     if (!/[!?]$/.test(out)) out = `${out}!`;
   }
@@ -66,7 +66,7 @@ function applyProsodyHints(text: string, rate?: string, pitch?: string): string 
 }
 
 export function compileSsmlLite(input: string): SsmlCompileResult {
-  const raw = input?.trim() ?? '';
+  const raw = input?.trim ?? '';
   if (!raw) {
     return {
       plainText: '',
@@ -86,7 +86,7 @@ export function compileSsmlLite(input: string): SsmlCompileResult {
     };
   }
 
-  const unsupported = new Set<string>();
+  const unsupported = new Set<string>;
   const segments: SpeakSegment[] = [];
   let plainParts: string[] = [];
 
@@ -99,17 +99,17 @@ export function compileSsmlLite(input: string): SsmlCompileResult {
   while ((m = tokenRe.exec(raw)) !== null) {
     if (m[3] != null) {
       const text = decodeEntities(m[3]).replace(/\s+/g, ' ');
-      if (!text.trim()) continue;
-      const prosody = [...stack].reverse().find((f) => f.tag === 'prosody');
-      const phoneme = [...stack].reverse().find((f) => f.tag === 'phoneme');
-      const sayAs = [...stack].reverse().find((f) => f.tag === 'say-as');
+      if (!text.trim) continue;
+      const prosody = [...stack].reverse.find((f) => f.tag === 'prosody');
+      const phoneme = [...stack].reverse.find((f) => f.tag === 'phoneme');
+      const sayAs = [...stack].reverse.find((f) => f.tag === 'say-as');
       let spoken = text;
       if (phoneme) {
         const ph = attr(phoneme.attrs, 'ph');
         if (ph) spoken = ph; // IPA/alias substitute — vendors may ignore
       }
       if (sayAs) {
-        const interpret = (attr(sayAs.attrs, 'interpret-as') ?? '').toLowerCase();
+        const interpret = (attr(sayAs.attrs, 'interpret-as') ?? '').toLowerCase;
         if (interpret === 'characters' || interpret === 'digits') {
           spoken = spoken.split('').join(' ');
         }
@@ -127,7 +127,7 @@ export function compileSsmlLite(input: string): SsmlCompileResult {
       continue;
     }
 
-    const tag = m[1]!.toLowerCase();
+    const tag = m[1]!.toLowerCase;
     const attrs = m[2] ?? '';
     const selfClosing = /\/\s*$/.test(attrs) || m[0].endsWith('/>');
     const closing = m[0].startsWith('</');
@@ -145,8 +145,8 @@ export function compileSsmlLite(input: string): SsmlCompileResult {
     }
 
     if (closing) {
-      while (stack.length && stack[stack.length - 1]!.tag !== tag) stack.pop();
-      stack.pop();
+      while (stack.length && stack[stack.length - 1]!.tag !== tag) stack.pop;
+      stack.pop;
       continue;
     }
 
@@ -155,7 +155,7 @@ export function compileSsmlLite(input: string): SsmlCompileResult {
     }
   }
 
-  const plainText = plainParts.join(' ').replace(/\s+/g, ' ').trim();
+  const plainText = plainParts.join(' ').replace(/\s+/g, ' ').trim;
   return {
     plainText,
     segments: segments.length ? segments : [{ kind: 'speak', text: plainText }],

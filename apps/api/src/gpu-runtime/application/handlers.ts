@@ -17,8 +17,8 @@ export class GetGpuRuntimeEngineHandler
     private readonly catalog: GpuRuntimeCatalogPort,
   ) {}
 
-  execute(): Promise<GpuRuntimeEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<GpuRuntimeEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListGpuRuntimeProductsHandler
     private readonly catalog: GpuRuntimeCatalogPort,
   ) {}
 
-  execute(): Promise<GpuRuntimeProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<GpuRuntimeProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

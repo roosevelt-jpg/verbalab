@@ -19,7 +19,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -34,20 +34,20 @@ async function seedOrg(prisma: PrismaService, name: string) {
   return org;
 }
 
-describe('Phase 1 API', () => {
+describe('Phase 1 API',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let gateway: GatewayService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -68,12 +68,12 @@ describe('Phase 1 API', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('GET /health returns ok', async () => {
-    const res = await request(app.getHttpServer()).get('/health').expect(200);
+  it('GET /health returns ok', async  => {
+    const res = await request(app.getHttpServer).get('/health').expect(200);
     expect(res.body.status).toBe('ok');
     expect(res.body.translateLatency).toEqual({
       samples: 0,
@@ -84,13 +84,13 @@ describe('Phase 1 API', () => {
     });
   });
 
-  it('GET /v1/languages returns seeded languages', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/languages').expect(200);
+  it('GET /v1/languages returns seeded languages', async  => {
+    const res = await request(app.getHttpServer).get('/v1/languages').expect(200);
     expect(res.body.data.some((l: { code: string }) => l.code === 'sw')).toBe(true);
     expect(res.body.data.some((l: { code: string }) => l.code === 'yo')).toBe(true);
   });
 
-  it('API key create / auth / revoke → 401', async () => {
+  it('API key create / auth / revoke → 401', async  => {
     const org = await seedOrg(prisma, 'keys');
     const userId = org.memberships[0]!.userId;
     const workspaceId = org.workspaces[0]!.id;
@@ -104,7 +104,7 @@ describe('Phase 1 API', () => {
 
     expect(created.secret.startsWith('lg_live_')).toBe(true);
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post('/v1/translate')
       .set('Authorization', `Bearer ${created.secret}`)
       .send({ text: 'Hello', source: 'en', target: 'sw' })
@@ -112,14 +112,14 @@ describe('Phase 1 API', () => {
 
     await apiKeys.revoke(org.id, created.id);
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post('/v1/translate')
       .set('Authorization', `Bearer ${created.secret}`)
       .send({ text: 'Hello', source: 'en', target: 'sw' })
       .expect(401);
   });
 
-  it('rejects unsupported language and missing text', async () => {
+  it('rejects unsupported language and missing text', async  => {
     const org = await seedOrg(prisma, 'validation');
     const created = await apiKeys.create({
       organizationId: org.id,
@@ -128,14 +128,14 @@ describe('Phase 1 API', () => {
       name: 'validation',
     });
 
-    const missing = await request(app.getHttpServer())
+    const missing = await request(app.getHttpServer)
       .post('/v1/translate')
       .set('Authorization', `Bearer ${created.secret}`)
       .send({ source: 'en', target: 'sw' })
       .expect(400);
     expect(missing.body.error.code).toBe('validation_error');
 
-    const badLang = await request(app.getHttpServer())
+    const badLang = await request(app.getHttpServer)
       .post('/v1/translate')
       .set('Authorization', `Bearer ${created.secret}`)
       .send({ text: 'Hi', source: 'en', target: 'xx' })
@@ -143,7 +143,7 @@ describe('Phase 1 API', () => {
     expect(badLang.body.error.code).toBe('unsupported_language');
   });
 
-  it('tenant isolation: org B cannot see org A usage', async () => {
+  it('tenant isolation: org B cannot see org A usage', async  => {
     const orgA = await seedOrg(prisma, 'tenantA');
     const orgB = await seedOrg(prisma, 'tenantB');
 
@@ -154,7 +154,7 @@ describe('Phase 1 API', () => {
       name: 'a',
     });
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post('/v1/translate')
       .set('Authorization', `Bearer ${keyA.secret}`)
       .send({ text: 'Hello', source: 'en', target: 'sw' })
@@ -171,15 +171,15 @@ describe('Phase 1 API', () => {
     expect(summaryB.length).toBe(0);
 
     // Org B key must not authenticate as org A even with a forged prefix lookup
-    const forged = generateApiKeySecret();
-    await request(app.getHttpServer())
+    const forged = generateApiKeySecret;
+    await request(app.getHttpServer)
       .post('/v1/translate')
       .set('Authorization', `Bearer ${forged.secret}`)
       .send({ text: 'Hello', source: 'en', target: 'sw' })
       .expect(401);
   });
 
-  it('live Google translate is skipped unless TRANSLATE_LIVE=1 and key present', async () => {
+  it('live Google translate is skipped unless TRANSLATE_LIVE=1 and key present', async  => {
     if (process.env.TRANSLATE_LIVE !== '1' || !process.env.GOOGLE_TRANSLATE_API_KEY) {
       return;
     }

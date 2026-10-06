@@ -8,23 +8,23 @@ export class FoundationModelCloudController {
   constructor(private readonly cloud: FoundationModelCloudService) {}
 
   @Get('products')
-  products() {
-    return this.cloud.products();
+  products {
+    return this.cloud.products;
   }
 
   @Get('engine')
-  engine() {
-    return this.cloud.products();
+  engine {
+    return this.cloud.products;
   }
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession() session: SessionContext) {
+  overview(@CurrentSession session: SessionContext) {
     return this.cloud.overview(session);
   }
 
   @Get('monitoring')
-  monitoring() {
-    return this.cloud.monitoring();
+  monitoring {
+    return this.cloud.monitoring;
   }
 }

@@ -26,29 +26,29 @@ export class PromptFabricController {
   constructor(private readonly fabric: PromptFabricService) {}
 
   @Get('products')
-  products() {
-    return this.fabric.products();
+  products {
+    return this.fabric.products;
   }
 
   @Get('engine')
-  engine() {
-    return this.fabric.products();
+  engine {
+    return this.fabric.products;
   }
 
   @Get('routes')
-  routes() {
-    return this.fabric.routes();
+  routes {
+    return this.fabric.routes;
   }
 
   @Post('route')
   @HttpCode(HttpStatus.OK)
-  route(@Body() body: { kinds?: string[]; feature?: string }) {
+  route(@Body body: { kinds?: string[]; feature?: string }) {
     return this.fabric.route({ kinds: body.kinds, feature: body.feature });
   }
 
   @Get('versions')
   @UseGuards(TranslateAuthGuard)
-  versions(@Req() req: AuthedReq, @Query('key') key?: string) {
+  versions(@Req req: AuthedReq, @Query('key') key?: string) {
     return this.fabric.versions(
       {
         organizationId: req.translateAuth.organizationId,
@@ -65,8 +65,8 @@ export class PromptFabricController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   validate(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       key?: string;
       body?: string;
@@ -87,16 +87,16 @@ export class PromptFabricController {
   }
 
   @Get('policies')
-  policies() {
-    return this.fabric.policies();
+  policies {
+    return this.fabric.policies;
   }
 
   @Post('distribute')
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   distribute(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       keys?: string[];
       targetWorkspaceIds?: string[];
@@ -118,8 +118,8 @@ export class PromptFabricController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   sync(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       targetWorkspaceId: string;
       keys?: string[];
@@ -139,12 +139,12 @@ export class PromptFabricController {
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession() session: SessionContext) {
+  overview(@CurrentSession session: SessionContext) {
     return this.fabric.overview(session);
   }
 
   @Get('monitoring')
-  monitoring() {
-    return this.fabric.monitoring();
+  monitoring {
+    return this.fabric.monitoring;
   }
 }

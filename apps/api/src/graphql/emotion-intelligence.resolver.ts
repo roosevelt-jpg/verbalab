@@ -18,13 +18,13 @@ type GqlReq = Request & {
   sessionAuth?: SessionContext;
 };
 
-@Resolver()
+@Resolver
 export class EmotionIntelligenceGraphqlResolver {
   constructor(private readonly emotion: EmotionIntelligenceService) {}
 
-  @Query(() => GqlEmotionEngine, { name: 'emotionEngine' })
-  emotionEngine(): GqlEmotionEngine {
-    const catalog = this.emotion.engine();
+  @Query( => GqlEmotionEngine, { name: 'emotionEngine' })
+  emotionEngine: GqlEmotionEngine {
+    const catalog = this.emotion.engine;
     return {
       product: catalog.product,
       note: catalog.note,
@@ -33,10 +33,10 @@ export class EmotionIntelligenceGraphqlResolver {
     };
   }
 
-  @Mutation(() => GqlEmotionDetectResult, { name: 'detectEmotion' })
+  @Mutation( => GqlEmotionDetectResult, { name: 'detectEmotion' })
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   async detectEmotion(
-    @Args('input', { type: () => DetectEmotionInput }) input: DetectEmotionInput,
+    @Args('input', { type:  => DetectEmotionInput }) input: DetectEmotionInput,
     @Context('req') req: GqlReq,
   ): Promise<GqlEmotionDetectResult> {
     const auth = req.translateAuth!;

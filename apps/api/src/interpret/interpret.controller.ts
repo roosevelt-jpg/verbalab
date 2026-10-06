@@ -28,18 +28,18 @@ export class InterpretController {
   @UseGuards(TranslateAuthGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   run(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body()
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body
     body: {
       target?: string;
       source?: string;

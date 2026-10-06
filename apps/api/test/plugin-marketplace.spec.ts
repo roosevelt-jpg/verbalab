@@ -21,7 +21,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory()) out.push(...walkTsFiles(full));
+    if (statSync(full).isDirectory) out.push(...walkTsFiles(full));
     else if (full.endsWith('.ts')) out.push(full);
   }
   return out;
@@ -36,7 +36,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_pm_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_pm_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -50,7 +50,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Plugin Marketplace (VL-250)', () => {
+describe('Plugin Marketplace',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -59,14 +59,14 @@ describe('Plugin Marketplace (VL-250)', () => {
   let marketplace: PluginMarketplaceService;
   const prevMode = process.env.LUGEMI_PLUGIN_RUNTIME_MODE;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     process.env.LUGEMI_PLUGIN_RUNTIME_MODE = 'sandbox';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
     billing = app.get(BillingService);
@@ -76,7 +76,7 @@ describe('Plugin Marketplace (VL-250)', () => {
     app.get(GatewayService).setChatProviderForTests({
       name: 'fixture_chat',
       async complete(input) {
-        const user = [...input.messages].reverse().find((m) => m.role === 'user');
+        const user = [...input.messages].reverse.find((m) => m.role === 'user');
         return {
           message: {
             role: 'assistant',
@@ -93,26 +93,26 @@ describe('Plugin Marketplace (VL-250)', () => {
     });
   });
 
-  afterAll(async () => {
+  afterAll(async  => {
     if (prevMode === undefined) delete process.env.LUGEMI_PLUGIN_RUNTIME_MODE;
     else process.env.LUGEMI_PLUGIN_RUNTIME_MODE = prevMode;
-    await app.close();
+    await app.close;
   });
 
-  it('documents Plugin Marketplace honesty (sandbox + Policy; not extension OS)', () => {
+  it('documents Plugin Marketplace honesty (sandbox + Policy; not extension OS)',  => {
     const doc = join(root, 'docs/PLUGIN_MARKETPLACE.md');
     const adr = join(root, 'docs/adr/0152-plugin-marketplace.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-250');
+    expect(text).toContain('');
     expect(text).toMatch(/sandbox/i);
     expect(text).toMatch(/Policy/i);
     expect(text).toMatch(/liveCodeExecution/i);
     expect(text).toMatch(/browser|VS Code|extension/i);
   });
 
-  it('has no TODO/FIXME markers in Plugin Marketplace source', () => {
+  it('has no TODO/FIXME markers in Plugin Marketplace source',  => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const file of walkTsFiles(join(apiSrc, 'plugin-marketplace'))) {
@@ -122,8 +122,8 @@ describe('Plugin Marketplace (VL-250)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes engine with sandbox + Policy hard-gate honesty', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes engine with sandbox + Policy hard-gate honesty', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/plugin-marketplace/engine')
       .expect(200);
     expect(res.body.product).toBe('Lugemi Plugin Marketplace');
@@ -138,24 +138,24 @@ describe('Plugin Marketplace (VL-250)', () => {
     expect(security.status).toBe('shipped');
   });
 
-  it('exposes pluginMarketplaceEngine via GraphQL CQRS façade', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes pluginMarketplaceEngine via GraphQL CQRS façade', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
           '{ pluginMarketplaceEngine { product liveCodeExecution sandboxRequired pluginPolicyHardGateRequired capabilities { id status } } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.pluginMarketplaceEngine.product).toContain('Plugin Marketplace');
     expect(res.body.data.pluginMarketplaceEngine.liveCodeExecution).toBe(false);
     expect(res.body.data.pluginMarketplaceEngine.sandboxRequired).toBe(true);
     expect(res.body.data.pluginMarketplaceEngine.pluginPolicyHardGateRequired).toBe(true);
   });
 
-  it('publishes, installs, runs via sandbox Policy gate; denies live actions', async () => {
-    const publisher = await seedOrg(prisma, `pmpub_${Date.now()}`);
-    const buyer = await seedOrg(prisma, `pmbuy_${Date.now()}`);
+  it('publishes, installs, runs via sandbox Policy gate; denies live actions', async  => {
+    const publisher = await seedOrg(prisma, `pmpub_${Date.now}`);
+    const buyer = await seedOrg(prisma, `pmbuy_${Date.now}`);
     await billing.applyEntitlementForTests({ organizationId: publisher.id, plan: 'pro' });
     await billing.applyEntitlementForTests({ organizationId: buyer.id, plan: 'pro' });
 
@@ -228,7 +228,7 @@ describe('Plugin Marketplace (VL-250)', () => {
       userId: buyer.memberships[0]!.userId,
       name: 'pm-test',
     });
-    const httpRun = await request(app.getHttpServer())
+    const httpRun = await request(app.getHttpServer)
       .post(`/v1/plugin-marketplace/listings/${published.listing.id}/run`)
       .set('Authorization', `Bearer ${buyerKey.secret}`)
       .send({ actions: [{ action: 'plugin.invoke_live' }] })
@@ -248,8 +248,8 @@ describe('Plugin Marketplace (VL-250)', () => {
     expect(reviews.reviews[0]?.rating).toBe(5);
   });
 
-  it('rejects free-plan publish', async () => {
-    const free = await seedOrg(prisma, `pmfree_${Date.now()}`);
+  it('rejects free-plan publish', async  => {
+    const free = await seedOrg(prisma, `pmfree_${Date.now}`);
     await expect(
       marketplace.publish({
         organizationId: free.id,

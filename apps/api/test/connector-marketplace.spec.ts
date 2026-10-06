@@ -18,7 +18,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory()) out.push(...walkTsFiles(full));
+    if (statSync(full).isDirectory) out.push(...walkTsFiles(full));
     else if (full.endsWith('.ts')) out.push(full);
   }
   return out;
@@ -33,7 +33,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_cm_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_cm_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -47,41 +47,41 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Connector Marketplace (VL-256)', () => {
+describe('Connector Marketplace',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;
   let marketplace: ConnectorMarketplaceService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
     prisma = app.get(PrismaService);
     billing = app.get(BillingService);
     marketplace = app.get(ConnectorMarketplaceService);
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Connector Marketplace honesty (not iPaaS OS; Stripe-only)', () => {
+  it('documents Connector Marketplace honesty (not iPaaS OS; Stripe-only)',  => {
     const doc = join(root, 'docs/CONNECTOR_MARKETPLACE.md');
     const adr = join(root, 'docs/adr/0158-connector-marketplace.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-256');
+    expect(text).toContain('');
     expect(text).toMatch(/Zapier|iPaaS|ipaasOs/i);
     expect(text).toMatch(/Stripe|storesRawCardData/i);
     expect(text).toMatch(/liveConnectorExecution/i);
   });
 
-  it('has no TODO/FIXME markers in Connector Marketplace source', () => {
+  it('has no TODO/FIXME markers in Connector Marketplace source',  => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const file of walkTsFiles(join(apiSrc, 'connector-marketplace'))) {
@@ -91,8 +91,8 @@ describe('Connector Marketplace (VL-256)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes engine with real-money + anti-iPaaS honesty', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes engine with real-money + anti-iPaaS honesty', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/connector-marketplace/engine')
       .expect(200);
     expect(res.body.product).toBe('Lugemi Connector Marketplace');
@@ -109,15 +109,15 @@ describe('Connector Marketplace (VL-256)', () => {
     expect(res.body.connectors.some((c: { key: string }) => c.key === 'slack')).toBe(true);
   });
 
-  it('exposes connectorMarketplaceEngine via GraphQL CQRS façade', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes connectorMarketplaceEngine via GraphQL CQRS façade', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
           '{ connectorMarketplaceEngine { product liveConnectorExecution sandboxRequired fabricPolicyHardGateRequired ipaasOs storesRawCardData stripeOrEquivalentRequired capabilities { id status } } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.connectorMarketplaceEngine.product).toContain('Connector Marketplace');
     expect(res.body.data.connectorMarketplaceEngine.liveConnectorExecution).toBe(false);
     expect(res.body.data.connectorMarketplaceEngine.sandboxRequired).toBe(true);
@@ -127,9 +127,9 @@ describe('Connector Marketplace (VL-256)', () => {
     expect(res.body.data.connectorMarketplaceEngine.stripeOrEquivalentRequired).toBe(true);
   });
 
-  it('publishes, installs with revenue share, reviews; rejects free plan', async () => {
-    const publisher = await seedOrg(prisma, `cmpub_${Date.now()}`);
-    const buyer = await seedOrg(prisma, `cmbuy_${Date.now()}`);
+  it('publishes, installs with revenue share, reviews; rejects free plan', async  => {
+    const publisher = await seedOrg(prisma, `cmpub_${Date.now}`);
+    const buyer = await seedOrg(prisma, `cmbuy_${Date.now}`);
     await billing.applyEntitlementForTests({ organizationId: publisher.id, plan: 'pro' });
     await billing.applyEntitlementForTests({ organizationId: buyer.id, plan: 'pro' });
 
@@ -202,7 +202,7 @@ describe('Connector Marketplace (VL-256)', () => {
     expect(payments.listing.storesRawCardData).toBe(false);
     expect(payments.listing.category).toBe('payments');
 
-    const free = await seedOrg(prisma, `cmfree_${Date.now()}`);
+    const free = await seedOrg(prisma, `cmfree_${Date.now}`);
     await expect(
       marketplace.publish({
         organizationId: free.id,

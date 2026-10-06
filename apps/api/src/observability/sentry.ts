@@ -2,8 +2,8 @@ import * as Sentry from '@sentry/node';
 
 let initialized = false;
 
-export function initApiSentry() {
-  const dsn = process.env.SENTRY_DSN?.trim();
+export function initApiSentry {
+  const dsn = process.env.SENTRY_DSN?.trim;
   if (!dsn || initialized) return false;
   Sentry.init({
     dsn,
@@ -24,6 +24,6 @@ export function captureApiException(error: unknown, context?: Record<string, unk
   });
 }
 
-export function isSentryEnabled() {
+export function isSentryEnabled {
   return initialized;
 }

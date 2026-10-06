@@ -8,16 +8,16 @@ import { translateEngineCatalog } from '../translate-engine.catalog';
 
 const FORMATS: ContentFormat[] = ['html', 'markdown', 'xml', 'csv', 'srt', 'plain'];
 
-@Injectable()
+@Injectable
 export class TranslateFormatsService {
   constructor(private readonly translate: TranslateService) {}
 
-  engine() {
-    return translateEngineCatalog();
+  engine {
+    return translateEngineCatalog;
   }
 
   parseFormat(raw?: string): ContentFormat {
-    const f = (raw ?? '').trim().toLowerCase();
+    const f = (raw ?? '').trim.toLowerCase;
     if (!FORMATS.includes(f as ContentFormat)) {
       throw new ApiException(
         'validation_error',

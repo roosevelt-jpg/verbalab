@@ -11,19 +11,19 @@ import {
   PromptFabricRouteRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestPromptFabricCatalogAdapter implements PromptFabricCatalogPort {
   constructor(private readonly fabric: PromptFabricService) {}
 
-  products(): PromptFabricProductsBundle {
-    return this.fabric.products();
+  products: PromptFabricProductsBundle {
+    return this.fabric.products;
   }
 
-  listCapabilities(): PromptFabricCapabilityRow[] {
-    return promptFabricCapabilityCatalog();
+  listCapabilities: PromptFabricCapabilityRow[] {
+    return promptFabricCapabilityCatalog;
   }
 
-  listRoutes(): PromptFabricRouteRow[] {
-    return promptFabricRoutingTable();
+  listRoutes: PromptFabricRouteRow[] {
+    return promptFabricRoutingTable;
   }
 }

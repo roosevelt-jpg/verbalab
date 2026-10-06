@@ -27,8 +27,8 @@ type Report = {
   windowDays: number;
 };
 
-export function CallIntelligenceClient() {
-  const { getToken, isLoaded } = useAuth();
+export function CallIntelligenceClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [calls, setCalls] = useState<CallItem[]>([]);
   const [report, setReport] = useState<Report | null>(null);
@@ -39,8 +39,8 @@ export function CallIntelligenceClient() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(async () => {
-    const token = await getToken();
+  const refresh = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, list, rep] = await Promise.all([
       apiFetch<Engine>('/v1/call-intelligence/engine', { token }),
@@ -52,17 +52,17 @@ export function CallIntelligenceClient() {
     setReport(rep);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void refresh().catch((err: Error) => setError(err.message));
+    void refresh.catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
   async function onIngest(e: FormEvent) {
-    e.preventDefault();
+    e.preventDefault;
     setLoading(true);
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const body = await apiFetch('/v1/call-intelligence/calls', {
         token,
@@ -70,7 +70,7 @@ export function CallIntelligenceClient() {
         body: JSON.stringify({ transcript, direction: 'inbound', analyze: true }),
       });
       setDetail(JSON.stringify(body, null, 2));
-      await refresh();
+      await refresh;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Ingest failed');
     } finally {
@@ -116,7 +116,7 @@ export function CallIntelligenceClient() {
               rows={5}
               style={{ ...input, resize: 'vertical' }}
             />
-            <button type="submit" disabled={loading || !transcript.trim()} style={primary}>
+            <button type="submit" disabled={loading || !transcript.trim} style={primary}>
               Analyze call
             </button>
           </form>

@@ -27,8 +27,8 @@ export class AudioController {
 
   @Get('voices')
   @Header('Cache-Control', 'public, max-age=300')
-  voices() {
-    return this.audio.listVoices();
+  voices {
+    return this.audio.listVoices;
   }
 
   @Post('transcriptions')
@@ -36,18 +36,18 @@ export class AudioController {
   @UseGuards(TranslateAuthGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   transcribe(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { language?: string },
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { language?: string },
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
@@ -66,19 +66,19 @@ export class AudioController {
   @Post('speech')
   @UseGuards(TranslateAuthGuard)
   async speech(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body()
+    @Body
     body: {
       text?: string;
       voice?: string;
       language?: string;
       format?: 'mp3' | 'wav' | 'opus' | 'aac' | 'flac';
     },
-    @Res() res: Response,
+    @Res res: Response,
   ) {
     if (typeof body.text !== 'string') {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);

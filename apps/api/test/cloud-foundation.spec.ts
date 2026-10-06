@@ -24,7 +24,7 @@ async function seedOrg(prisma: PrismaService, name: string, plan: string = 'free
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_cf_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_cf_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -38,7 +38,7 @@ async function seedOrg(prisma: PrismaService, name: string, plan: string = 'free
   });
 }
 
-describe('Cloud Platform Foundation (VL-125)', () => {
+describe('Cloud Platform Foundation',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let workspaces: WorkspacesService;
@@ -46,14 +46,14 @@ describe('Cloud Platform Foundation (VL-125)', () => {
   let overview: CloudOverviewService;
   let identity: IdentityService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     workspaces = app.get(WorkspacesService);
@@ -62,11 +62,11 @@ describe('Cloud Platform Foundation (VL-125)', () => {
     identity = app.get(IdentityService);
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents foundation mapping and ADR (no AZ / discovery fake)', () => {
+  it('documents foundation mapping and ADR (no AZ / discovery fake)',  => {
     const doc = join(root, 'docs/CLOUD_PLATFORM_FOUNDATION.md');
     const adr = join(root, 'docs/adr/0046-cloud-platform-foundation.md');
     expect(existsSync(doc)).toBe(true);
@@ -80,8 +80,8 @@ describe('Cloud Platform Foundation (VL-125)', () => {
     expect(text).toContain('Not built');
   });
 
-  it('lists, creates, and patches workspaces within Scale plan limit', async () => {
-    const org = await seedOrg(prisma, `cf_ws_${Date.now()}`, 'scale');
+  it('lists, creates, and patches workspaces within Scale plan limit', async  => {
+    const org = await seedOrg(prisma, `cf_ws_${Date.now}`, 'scale');
     const listed = await workspaces.list(org.id, org.workspaces[0].id);
     expect(listed.data).toHaveLength(1);
     expect(listed.data[0].isCurrent).toBe(true);
@@ -114,8 +114,8 @@ describe('Cloud Platform Foundation (VL-125)', () => {
     expect(again.data).toHaveLength(2);
   });
 
-  it('rejects extra workspaces on Free plan (tiered limit)', async () => {
-    const org = await seedOrg(prisma, `cf_ws_limit_${Date.now()}`, 'free');
+  it('rejects extra workspaces on Free plan (tiered limit)', async  => {
+    const org = await seedOrg(prisma, `cf_ws_limit_${Date.now}`, 'free');
     await expect(
       workspaces.create({
         organizationId: org.id,
@@ -126,8 +126,8 @@ describe('Cloud Platform Foundation (VL-125)', () => {
     ).rejects.toMatchObject({ code: 'plan_required' });
   });
 
-  it('rejects workspace create for members', async () => {
-    const org = await seedOrg(prisma, `cf_member_${Date.now()}`);
+  it('rejects workspace create for members', async  => {
+    const org = await seedOrg(prisma, `cf_member_${Date.now}`);
     await expect(
       workspaces.create({
         organizationId: org.id,
@@ -138,8 +138,8 @@ describe('Cloud Platform Foundation (VL-125)', () => {
     ).rejects.toMatchObject({ code: 'forbidden' });
   });
 
-  it('honors preferred workspace on session identity', async () => {
-    const org = await seedOrg(prisma, `cf_pref_${Date.now()}`);
+  it('honors preferred workspace on session identity', async  => {
+    const org = await seedOrg(prisma, `cf_pref_${Date.now}`);
     const second = await prisma.workspace.create({
       data: {
         organizationId: org.id,
@@ -172,15 +172,15 @@ describe('Cloud Platform Foundation (VL-125)', () => {
     expect(ignored.workspaceId).toBe(org.workspaces[0].id);
   });
 
-  it('returns plan-aware feature flags and cloud overview', async () => {
-    const free = await seedOrg(prisma, `cf_free_${Date.now()}`, 'free');
+  it('returns plan-aware feature flags and cloud overview', async  => {
+    const free = await seedOrg(prisma, `cf_free_${Date.now}`, 'free');
     const freeFlags = await flags.forOrganization(free.id);
     expect(freeFlags.flags.pro).toBe(false);
     expect(freeFlags.flags.marketplace).toBe(false);
     expect(freeFlags.entitlements.workspaceLimit).toBe(1);
     expect(freeFlags.entitlements.canCreateWorkspace).toBe(false);
 
-    const pro = await seedOrg(prisma, `cf_pro_${Date.now()}`, 'pro');
+    const pro = await seedOrg(prisma, `cf_pro_${Date.now}`, 'pro');
     const proFlags = await flags.forOrganization(pro.id);
     expect(proFlags.flags.pro).toBe(true);
     expect(proFlags.flags.marketplace).toBe(true);
@@ -189,7 +189,7 @@ describe('Cloud Platform Foundation (VL-125)', () => {
       userId: pro.memberships[0].userId,
       organizationId: pro.id,
       workspaceId: pro.workspaces[0].id,
-      clerkUserId: `clerk_ov_${Date.now()}`,
+      clerkUserId: `clerk_ov_${Date.now}`,
       role: 'owner',
     });
     expect(ov.organization.id).toBe(pro.id);

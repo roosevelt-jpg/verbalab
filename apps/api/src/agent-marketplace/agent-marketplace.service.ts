@@ -39,7 +39,7 @@ type AgentSnapshot = {
   installedAgentIds?: Record<string, string>;
 };
 
-@Injectable()
+@Injectable
 export class AgentMarketplaceService {
   constructor(
     private readonly prisma: PrismaService,
@@ -50,8 +50,8 @@ export class AgentMarketplaceService {
     private readonly fabricGate: FabricPolicyGate,
   ) {}
 
-  engine() {
-    return agentMarketplaceEngineCatalog();
+  engine {
+    return agentMarketplaceEngineCatalog;
   }
 
   private assertOwnerOrAdmin(role: string) {
@@ -89,7 +89,7 @@ export class AgentMarketplaceService {
   }
 
   private parseCategory(raw?: string): AgentMarketplaceCategory {
-    const value = (raw ?? 'business').trim().toLowerCase();
+    const value = (raw ?? 'business').trim.toLowerCase;
     if (!(AGENT_MARKETPLACE_CATEGORIES as readonly string[]).includes(value)) {
       throw new ApiException(
         'validation_error',
@@ -160,8 +160,8 @@ export class AgentMarketplaceService {
       publisherOrgId: row.publisherOrgId,
       publisherWorkspaceId: row.publisherWorkspaceId,
       publisherName: row.publisherOrg?.name ?? null,
-      createdAt: row.createdAt.toISOString(),
-      updatedAt: row.updatedAt.toISOString(),
+      createdAt: row.createdAt.toISOString,
+      updatedAt: row.updatedAt.toISOString,
     };
   }
 
@@ -211,7 +211,7 @@ export class AgentMarketplaceService {
         .map((r) => ({
           id: r.id,
           listingId: r.listingId,
-          installedAt: r.installedAt.toISOString(),
+          installedAt: r.installedAt.toISOString,
           listing: this.serialize(r.listing),
         })),
     };
@@ -236,7 +236,7 @@ export class AgentMarketplaceService {
           applicationFeeCents: r.applicationFeeCents,
           currency: r.currency,
           status: r.status,
-          createdAt: r.createdAt.toISOString(),
+          createdAt: r.createdAt.toISOString,
         })),
       honesty: {
         platformFeeBps: PLATFORM_FEE_BPS,
@@ -244,7 +244,7 @@ export class AgentMarketplaceService {
         storesRawCardData: false,
         creatorPayoutMathVerifiedLive: false,
       },
-      note: 'Recorded receipts only. Creator Economy (VL-258) expands payout math.',
+      note: 'Recorded receipts only. Creator Economy expands payout math.',
     };
   }
 
@@ -292,14 +292,14 @@ export class AgentMarketplaceService {
     });
 
     const category = this.parseCategory(input.category);
-    const title = (input.title ?? agent.name).trim().slice(0, 120);
+    const title = (input.title ?? agent.name).trim.slice(0, 120);
     if (!title) {
       throw new ApiException('validation_error', 'title is required', HttpStatus.BAD_REQUEST);
     }
 
     const priceCents = Math.max(0, Math.floor(Number(input.priceCents ?? 0) || 0));
-    const currency = (input.currency ?? 'usd').trim().toLowerCase().slice(0, 8) || 'usd';
-    const agentVersion = (input.agentVersion ?? 'v1').trim().slice(0, 64) || 'v1';
+    const currency = (input.currency ?? 'usd').trim.toLowerCase.slice(0, 8) || 'usd';
+    const agentVersion = (input.agentVersion ?? 'v1').trim.slice(0, 64) || 'v1';
     const snapshot: AgentSnapshot = {
       hub: HUB,
       sourceAgentId: agent.id,
@@ -307,7 +307,7 @@ export class AgentMarketplaceService {
       category,
       permissions,
       goal: agent.goal,
-      description: input.description?.trim().slice(0, 500) || agent.goal,
+      description: input.description?.trim.slice(0, 500) || agent.goal,
       agentVersion,
       verified: true,
       sandboxOnly: true,
@@ -350,7 +350,7 @@ export class AgentMarketplaceService {
 
     return {
       listing: this.serialize(listing),
-      honesty: this.engine().honesty,
+      honesty: this.engine.honesty,
       note:
         'Agent listing published. Buyers install into Agent Runtime sandbox; run is Policy-gated. Not LangGraph/AutoGPT OS.',
     };
@@ -404,9 +404,9 @@ export class AgentMarketplaceService {
       permissions,
       goal: agent.goal,
       description:
-        input.description?.trim().slice(0, 500) || agent.goal || snap.description,
+        input.description?.trim.slice(0, 500) || agent.goal || snap.description,
       agentVersion:
-        (input.agentVersion ?? snap.agentVersion).trim().slice(0, 64) || snap.agentVersion,
+        (input.agentVersion ?? snap.agentVersion).trim.slice(0, 64) || snap.agentVersion,
       verified: true,
       sandboxOnly: true,
       liveToolExecution: false,
@@ -587,11 +587,11 @@ export class AgentMarketplaceService {
         id: install.id,
         listingId: listing.id,
         agentId: activated.agent.id,
-        installedAt: install.installedAt.toISOString(),
+        installedAt: install.installedAt.toISOString,
       },
       agent: activated.agent,
       sale,
-      honesty: this.engine().honesty,
+      honesty: this.engine.honesty,
       note:
         'Installed into Agent Runtime as active sandboxed agent. Run via POST /v1/agent-marketplace/listings/:id/run (Policy-gated).',
     };
@@ -696,7 +696,7 @@ export class AgentMarketplaceService {
       ...result,
       listingId: input.listingId,
       honesty: {
-        ...this.engine().honesty,
+        ...this.engine.honesty,
         ...result.honesty,
       },
       note:
@@ -785,8 +785,8 @@ export class AgentMarketplaceService {
       listingId: listing.id,
       organizationId: input.organizationId,
       rating,
-      body: input.body?.trim().slice(0, 1000) || undefined,
-      createdAt: new Date().toISOString(),
+      body: input.body?.trim.slice(0, 1000) || undefined,
+      createdAt: new Date.toISOString,
     };
 
     if (existing) {
@@ -896,19 +896,19 @@ export class AgentMarketplaceService {
       sales,
       reviews,
       runs,
-      honesty: this.engine().honesty,
-      note: 'Agent marketplace aggregates. Payout depth deferred to Creator Economy (VL-258).',
+      honesty: this.engine.honesty,
+      note: 'Agent marketplace aggregates. Payout depth deferred to Creator Economy.',
     };
   }
 
-  monitoring() {
-    const engine = this.engine();
+  monitoring {
+    const engine = this.engine;
     return {
       mode: 'agent-marketplace',
       products: engine.capabilities.map((c) => ({ id: c.id, status: c.status })),
       honesty: engine.honesty,
       safety: engine.safety,
-      note: 'Agent Marketplace monitoring snapshot (VL-254).',
+      note: 'Agent Marketplace monitoring snapshot.',
     };
   }
 }

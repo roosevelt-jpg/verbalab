@@ -1,8 +1,8 @@
 /**
- * Library Phase 219 → Infrastructure Engineering Standards (VL-352).
- * Infrastructure Engineering Standards (VL-352). AWS/Cloudflare/Terraform/Helm/K8s/Docker/networking/storage/GPU standards. Fly default + GPU budget + secrets envelope honesty. kubernetesOs=false.
+ * Library Phase 219 → Infrastructure Engineering Standards.
+ * Infrastructure Engineering Standards. AWS/Cloudflare/Terraform/Helm/K8s/Docker/networking/storage/GPU standards. Fly default + GPU budget + secrets envelope honesty. kubernetesOs=false.
  */
-export function infrastructureEngineeringStandardsEngineCatalog() {
+export function infrastructureEngineeringStandardsEngineCatalog {
   return {
     product: 'Lugemi Infrastructure Engineering Standards',
     engineeringOsForHumansAndCursor: true,
@@ -10,15 +10,15 @@ export function infrastructureEngineeringStandardsEngineCatalog() {
     architectureKnowledgeBaseOs: false,
     adrFactoryOs: false,
     capabilities: [
-      { id: 'aws', name: 'AWS Standards', status: 'shipped', notes: 'VL-352 standards capability — catalog, not a new OS.' },
-      { id: 'cloudflare', name: 'Cloudflare Standards', status: 'shipped', notes: 'VL-352 standards capability — catalog, not a new OS.' },
-      { id: 'terraform', name: 'Terraform Standards', status: 'shipped', notes: 'VL-352 standards capability — catalog, not a new OS.' },
-      { id: 'helm', name: 'Helm Standards', status: 'shipped', notes: 'VL-352 standards capability — catalog, not a new OS.' },
-      { id: 'kubernetes', name: 'Kubernetes Standards Catalog', status: 'shipped', notes: 'VL-352 standards capability — catalog, not a new OS.' },
-      { id: 'docker', name: 'Docker Standards', status: 'shipped', notes: 'VL-352 standards capability — catalog, not a new OS.' },
-      { id: 'networking', name: 'Networking Standards', status: 'shipped', notes: 'VL-352 standards capability — catalog, not a new OS.' },
-      { id: 'storage', name: 'Storage Standards', status: 'shipped', notes: 'VL-352 standards capability — catalog, not a new OS.' },
-      { id: 'gpu', name: 'GPU Cluster Standards', status: 'shipped', notes: 'VL-352 standards capability — catalog, not a new OS.' }
+      { id: 'aws', name: 'AWS Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'cloudflare', name: 'Cloudflare Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'terraform', name: 'Terraform Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'helm', name: 'Helm Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'kubernetes', name: 'Kubernetes Standards Catalog', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'docker', name: 'Docker Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'networking', name: 'Networking Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'storage', name: 'Storage Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'gpu', name: 'GPU Cluster Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' }
     ],
     routes: [
       {
@@ -106,9 +106,9 @@ export function infrastructureEngineeringStandardsEngineCatalog() {
       customerFacingProductCloud: false,
       architectureKnowledgeBaseOs: false,
       adrFactoryOs: false,
-      note: 'Infrastructure Engineering Standards (VL-352). AWS/Cloudflare/Terraform/Helm/K8s/Docker/networking/storage/GPU standards. Fly default + GPU budget + secrets envelope honesty. kubernetesOs=false.',
+      note: 'Infrastructure Engineering Standards. AWS/Cloudflare/Terraform/Helm/K8s/Docker/networking/storage/GPU standards. Fly default + GPU budget + secrets envelope honesty. kubernetesOs=false.',
     },
     docs: '/docs/INFRASTRUCTURE_ENGINEERING_STANDARDS.md',
-    note: 'Infrastructure Engineering Standards (VL-352). AWS/Cloudflare/Terraform/Helm/K8s/Docker/networking/storage/GPU standards. Fly default + GPU budget + secrets envelope honesty. kubernetesOs=false.',
+    note: 'Infrastructure Engineering Standards. AWS/Cloudflare/Terraform/Helm/K8s/Docker/networking/storage/GPU standards. Fly default + GPU budget + secrets envelope honesty. kubernetesOs=false.',
   };
 }

@@ -26,8 +26,8 @@ export type ServingModelKindRow = {
   notes: string;
 };
 
-/** Library model families → Gateway / registry features (VL-206). */
-export function servingModelKinds(): ServingModelKindRow[] {
+/** Library model families → Gateway / registry features. */
+export function servingModelKinds: ServingModelKindRow[] {
   return [
     {
       id: 'llm',
@@ -89,14 +89,14 @@ export function servingModelKinds(): ServingModelKindRow[] {
 }
 
 /**
- * Library Phase 73 → Model Serving (VL-206).
+ * Library Phase 73 → Model Serving.
  * Serving hub over AI Gateway + model registry — not a vLLM / KServe OS.
  */
-export function modelServingCatalog() {
+export function modelServingCatalog {
   return {
     product: 'Lugemi Model Serving',
     note:
-      'Enterprise Model Serving hub (VL-206). Catalogs LLM/speech/voice/OCR/embedding/vision/reasoning endpoints over AI Gateway + /v1/models. Sandbox deployments support light versioning, canary traffic %, blue/green slots, and rollback. Not a vLLM/KServe/Triton control plane or self-hosted GPU serving OS.',
+      'Enterprise Model Serving hub. Catalogs LLM/speech/voice/OCR/embedding/vision/reasoning endpoints over AI Gateway + /v1/models. Sandbox deployments support light versioning, canary traffic %, blue/green slots, and rollback. Not a vLLM/KServe/Triton control plane or self-hosted GPU serving OS.',
     capabilities: [
       {
         id: 'llms',
@@ -152,14 +152,14 @@ export function modelServingCatalog() {
         name: 'Streaming',
         status: 'partial',
         api: 'GET /v1/model-serving/modes',
-        notes: 'Existing chat/TTS SSE — dedicated Streaming Runtime is VL-208.',
+        notes: 'Existing chat/TTS SSE — dedicated Streaming Runtime is .',
       },
       {
         id: 'batch',
         name: 'Batch',
         status: 'partial',
         api: 'GET /v1/model-serving/modes',
-        notes: 'BullMQ jobs today — dedicated Batch Runtime is VL-209.',
+        notes: 'BullMQ jobs today — dedicated Batch Runtime is .',
       },
       {
         id: 'realtime',
@@ -173,7 +173,7 @@ export function modelServingCatalog() {
         name: 'Autoscaling',
         status: 'deferred',
         api: null,
-        notes: 'Serving autoscaler OS deferred — GPU Platform hard ceilings cover infra (VL-205).',
+        notes: 'Serving autoscaler OS deferred — GPU Platform hard ceilings cover infra.',
       },
       {
         id: 'canary',
@@ -222,7 +222,7 @@ export function modelServingCatalog() {
         name: 'Analytics',
         status: 'shipped',
         api: 'GET /v1/model-serving/analytics',
-        notes: 'Deployment aggregates — ≠ VL-212 AI Runtime Analytics.',
+        notes: 'Deployment aggregates — ≠ AI Runtime Analytics.',
       },
       {
         id: 'rest',
@@ -242,7 +242,7 @@ export function modelServingCatalog() {
         id: 'sdk',
         name: 'SDK',
         status: 'shipped',
-        api: 'modelServingEngine()',
+        api: 'modelServingEngine',
         notes: '@lugemi/sdk',
       },
       {
@@ -286,19 +286,19 @@ export function modelServingCatalog() {
   };
 }
 
-export function servingModes() {
+export function servingModes {
   return [
     {
       id: 'streaming',
       name: 'Streaming',
       status: 'partial' as const,
-      notes: 'Chat/TTS SSE where wired; dedicated Streaming Runtime VL-208.',
+      notes: 'Chat/TTS SSE where wired; dedicated Streaming Runtime .',
     },
     {
       id: 'batch',
       name: 'Batch',
       status: 'partial' as const,
-      notes: 'BullMQ jobs; dedicated Batch Runtime VL-209.',
+      notes: 'BullMQ jobs; dedicated Batch Runtime .',
     },
     {
       id: 'realtime',
@@ -341,21 +341,21 @@ export function servingModes() {
 
 export type ServingMode = 'sandbox' | 'disabled';
 
-export function modelServingMode(): ServingMode {
-  const raw = (process.env.LUGEMI_MODEL_SERVING_MODE ?? 'sandbox').toLowerCase();
+export function modelServingMode: ServingMode {
+  const raw = (process.env.LUGEMI_MODEL_SERVING_MODE ?? 'sandbox').toLowerCase;
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
 
 /** Max concurrent active sandbox deployments per workspace. */
-export function modelServingCeilings() {
+export function modelServingCeilings {
   const maxActive = Math.max(
     1,
     Number(process.env.LUGEMI_MODEL_SERVING_MAX_ACTIVE ?? '8') || 8,
   );
   return {
     maxActiveDeployments: Math.min(maxActive, 32),
-    mode: modelServingMode(),
+    mode: modelServingMode,
     note:
       'Hard ceiling on active sandbox deployments per org/workspace. Not a GPU spend ceiling — see GPU Platform.',
   };

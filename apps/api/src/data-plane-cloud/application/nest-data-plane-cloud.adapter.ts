@@ -6,15 +6,15 @@ import {
   DataPlaneCloudProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestDataPlaneCloudCatalogAdapter implements DataPlaneCloudCatalogPort {
   constructor(private readonly service: DataPlaneCloudService) {}
 
-  engine(): DataPlaneCloudEngineBundle {
-    return this.service.products();
+  engine: DataPlaneCloudEngineBundle {
+    return this.service.products;
   }
 
-  listProducts(): DataPlaneCloudProductRow[] {
-    return this.service.products().products;
+  listProducts: DataPlaneCloudProductRow[] {
+    return this.service.products.products;
   }
 }

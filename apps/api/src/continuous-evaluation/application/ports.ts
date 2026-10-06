@@ -1,4 +1,4 @@
-/** Application ports for Continuous Evaluation (VL-284). */
+/** Application ports for Continuous Evaluation. */
 
 export type ContinuousEvaluationProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type ContinuousEvaluationEngineBundle = ReturnType<
 >;
 
 export interface ContinuousEvaluationCatalogPort {
-  engine(): ContinuousEvaluationEngineBundle;
-  listProducts(): ContinuousEvaluationProductRow[];
+  engine: ContinuousEvaluationEngineBundle;
+  listProducts: ContinuousEvaluationProductRow[];
 }
 
 export const CONTINUOUS_EVALUATION_CATALOG_PORT = Symbol('CONTINUOUS_EVALUATION_CATALOG_PORT');

@@ -25,10 +25,10 @@ export type AgentPipeline = {
 };
 
 /**
- * Library Phase 113 → Agent Fabric (VL-246).
+ * Library Phase 113 → Agent Fabric.
  * Cross-cloud agent routing over Agent Runtime — sandboxed + Policy-gated; not LangGraph/AutoGPT OS.
  */
-export function agentFabricCapabilityCatalog(): AgentFabricCapability[] {
+export function agentFabricCapabilityCatalog: AgentFabricCapability[] {
   return [
     {
       id: 'agent-fabric',
@@ -36,7 +36,7 @@ export function agentFabricCapabilityCatalog(): AgentFabricCapability[] {
       status: 'shipped',
       api: 'GET /v1/agent-fabric/products',
       notes:
-        'Agent router hub (VL-246). Extends Agent Runtime — does not regenerate VL-219. Sandboxed + Policy-gated.',
+        'Agent router hub. Extends Agent Runtime — does not regenerate . Sandboxed + Policy-gated.',
     },
     {
       id: 'agent-router',
@@ -111,7 +111,7 @@ export function agentFabricCapabilityCatalog(): AgentFabricCapability[] {
   ];
 }
 
-export function agentFabricRoutingTable(): AgentFabricRoute[] {
+export function agentFabricRoutingTable: AgentFabricRoute[] {
   return [
     {
       kind: 'discover',
@@ -180,7 +180,7 @@ export function agentFabricRoutingTable(): AgentFabricRoute[] {
   ];
 }
 
-export function agentFabricPipelines(): AgentPipeline[] {
+export function agentFabricPipelines: AgentPipeline[] {
   return [
     {
       id: 'discover-collaborate',
@@ -203,14 +203,14 @@ export function agentFabricPipelines(): AgentPipeline[] {
   ];
 }
 
-export function agentFabricVersions() {
+export function agentFabricVersions {
   return [
     {
       id: 'router-v1',
       kind: 'router',
       version: 1,
       status: 'shipped',
-      notes: 'Initial agent intent → Runtime route table (VL-246).',
+      notes: 'Initial agent intent → Runtime route table.',
     },
     {
       id: 'pipeline-v1',
@@ -229,7 +229,7 @@ export function agentFabricVersions() {
   ];
 }
 
-export function agentFabricArchitectureNotes() {
+export function agentFabricArchitectureNotes {
   return {
     style: 'nest_modular_monolith',
     ddd: 'bounded_agent_fabric',
@@ -257,11 +257,11 @@ export function agentFabricArchitectureNotes() {
     fabricWidePolicyHardGateRequired: true,
     policyLogOnlyForbidden: true,
     note:
-      'Agent Fabric (VL-246). Router/discovery/collaborate/schedule façades over Agent Runtime. Sandboxed + Policy Runtime hard-gated. Not LangGraph/AutoGPT OS.',
+      'Agent Fabric. Router/discovery/collaborate/schedule façades over Agent Runtime. Sandboxed + Policy Runtime hard-gated. Not LangGraph/AutoGPT OS.',
   };
 }
 
-export function agentFabricHonesty() {
+export function agentFabricHonesty {
   return {
     customerFacingProduct: false,
     langGraphOs: false,

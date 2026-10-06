@@ -23,11 +23,11 @@ export type TrainingLaunchResult = {
 
 export interface TrainingGpuLauncher {
   readonly name: FineTuneLauncher;
-  isConfigured(): boolean;
+  isConfigured: boolean;
   launch(input: TrainingLaunchInput): Promise<TrainingLaunchResult>;
 }
 
-export function newCallbackToken(): string {
+export function newCallbackToken: string {
   return randomBytes(24).toString('hex');
 }
 
@@ -35,7 +35,7 @@ export function newCallbackToken(): string {
 export class ManualTrainingLauncher implements TrainingGpuLauncher {
   readonly name = 'manual' as const;
 
-  isConfigured(): boolean {
+  isConfigured: boolean {
     return true;
   }
 
@@ -60,7 +60,7 @@ export class ModalTrainingLauncher implements TrainingGpuLauncher {
 
   constructor(private readonly fetchImpl: typeof fetch = fetch) {}
 
-  isConfigured(): boolean {
+  isConfigured: boolean {
     return Boolean(
       process.env.MODAL_TOKEN_ID &&
         process.env.MODAL_TOKEN_SECRET &&
@@ -69,7 +69,7 @@ export class ModalTrainingLauncher implements TrainingGpuLauncher {
   }
 
   async launch(input: TrainingLaunchInput): Promise<TrainingLaunchResult> {
-    if (!this.isConfigured()) {
+    if (!this.isConfigured) {
       throw new ApiException(
         'provider_not_configured',
         'Modal not configured. Set MODAL_TOKEN_ID, MODAL_TOKEN_SECRET, and MODAL_LAUNCH_URL (your Modal/webhook endpoint), or use launcher=manual.',
@@ -105,7 +105,7 @@ export class ModalTrainingLauncher implements TrainingGpuLauncher {
       );
     }
 
-    const json = (await response.json()) as { externalJobId?: string; id?: string };
+    const json = (await response.json) as { externalJobId?: string; id?: string };
     const externalJobId = json.externalJobId ?? json.id;
     if (!externalJobId) {
       throw new ApiException(
@@ -131,12 +131,12 @@ export class VertexTrainingLauncher implements TrainingGpuLauncher {
 
   constructor(private readonly fetchImpl: typeof fetch = fetch) {}
 
-  isConfigured(): boolean {
+  isConfigured: boolean {
     return Boolean(process.env.VERTEX_LAUNCH_URL && process.env.VERTEX_ACCESS_TOKEN);
   }
 
   async launch(input: TrainingLaunchInput): Promise<TrainingLaunchResult> {
-    if (!this.isConfigured()) {
+    if (!this.isConfigured) {
       throw new ApiException(
         'provider_not_configured',
         'Vertex not configured. Set VERTEX_LAUNCH_URL and VERTEX_ACCESS_TOKEN, or use launcher=manual.',
@@ -171,7 +171,7 @@ export class VertexTrainingLauncher implements TrainingGpuLauncher {
       );
     }
 
-    const json = (await response.json()) as { externalJobId?: string; name?: string };
+    const json = (await response.json) as { externalJobId?: string; name?: string };
     const externalJobId = json.externalJobId ?? json.name;
     if (!externalJobId) {
       throw new ApiException(
@@ -196,12 +196,12 @@ export class VertexTrainingLauncher implements TrainingGpuLauncher {
 export class FixtureTrainingLauncher implements TrainingGpuLauncher {
   readonly name = 'fixture' as const;
 
-  isConfigured(): boolean {
+  isConfigured: boolean {
     return process.env.TRAINING_FIXTURE === '1';
   }
 
   async launch(input: TrainingLaunchInput): Promise<TrainingLaunchResult> {
-    if (!this.isConfigured()) {
+    if (!this.isConfigured) {
       throw new ApiException(
         'provider_not_configured',
         'Fixture launcher requires TRAINING_FIXTURE=1',
@@ -220,13 +220,13 @@ export class FixtureTrainingLauncher implements TrainingGpuLauncher {
 export function resolveTrainingLauncher(name: FineTuneLauncher): TrainingGpuLauncher {
   switch (name) {
     case 'manual':
-      return new ManualTrainingLauncher();
+      return new ManualTrainingLauncher;
     case 'modal':
-      return new ModalTrainingLauncher();
+      return new ModalTrainingLauncher;
     case 'vertex':
-      return new VertexTrainingLauncher();
+      return new VertexTrainingLauncher;
     case 'fixture':
-      return new FixtureTrainingLauncher();
+      return new FixtureTrainingLauncher;
     default:
       throw new ApiException(
         'validation_error',

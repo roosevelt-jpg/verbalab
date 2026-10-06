@@ -8,28 +8,28 @@ export class VaiosController {
   constructor(private readonly vaios: VaiosService) {}
 
   @Get('products')
-  products() {
-    return this.vaios.products();
+  products {
+    return this.vaios.products;
   }
 
   @Get('engine')
-  engine() {
-    return this.vaios.products();
+  engine {
+    return this.vaios.products;
   }
 
   @Get('routing')
-  routing() {
-    return this.vaios.routing();
+  routing {
+    return this.vaios.routing;
   }
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession() session: SessionContext) {
+  overview(@CurrentSession session: SessionContext) {
     return this.vaios.overview(session);
   }
 
   @Get('monitoring')
-  monitoring() {
-    return this.vaios.monitoring();
+  monitoring {
+    return this.vaios.monitoring;
   }
 }

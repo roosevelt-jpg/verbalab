@@ -6,13 +6,13 @@ import {
   GqlVoiceEnhancementProfile,
 } from './gql.types';
 
-@Resolver()
+@Resolver
 export class VoiceEnhancementGraphqlResolver {
   constructor(private readonly enhancement: VoiceEnhancementService) {}
 
-  @Query(() => GqlVoiceEnhancementEngine, { name: 'voiceEnhancementEngine' })
-  voiceEnhancementEngine(): GqlVoiceEnhancementEngine {
-    const catalog = this.enhancement.engine();
+  @Query( => GqlVoiceEnhancementEngine, { name: 'voiceEnhancementEngine' })
+  voiceEnhancementEngine: GqlVoiceEnhancementEngine {
+    const catalog = this.enhancement.engine;
     return {
       product: catalog.product,
       note: catalog.note,
@@ -22,9 +22,9 @@ export class VoiceEnhancementGraphqlResolver {
     };
   }
 
-  @Query(() => [GqlVoiceEnhancementProfile], { name: 'voiceEnhancementProfiles' })
-  voiceEnhancementProfiles(): GqlVoiceEnhancementProfile[] {
-    return this.enhancement.profiles().profiles.map((p) => ({
+  @Query( => [GqlVoiceEnhancementProfile], { name: 'voiceEnhancementProfiles' })
+  voiceEnhancementProfiles: GqlVoiceEnhancementProfile[] {
+    return this.enhancement.profiles.profiles.map((p) => ({
       id: p.id,
       name: p.name,
       category: p.category,

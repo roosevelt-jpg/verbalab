@@ -17,8 +17,8 @@ export class GetAiSchedulerEngineHandler
     private readonly catalog: AiSchedulerCatalogPort,
   ) {}
 
-  execute(): Promise<AiSchedulerEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<AiSchedulerEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListAiSchedulerProductsHandler
     private readonly catalog: AiSchedulerCatalogPort,
   ) {}
 
-  execute(): Promise<AiSchedulerProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<AiSchedulerProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

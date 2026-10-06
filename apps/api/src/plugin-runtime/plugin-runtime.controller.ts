@@ -25,18 +25,18 @@ export class PluginRuntimeController {
   constructor(private readonly runtime: PluginRuntimeService) {}
 
   @Get('engine')
-  engine() {
-    return this.runtime.engine();
+  engine {
+    return this.runtime.engine;
   }
 
   @Get('permissions')
-  permissions() {
-    return this.runtime.permissions();
+  permissions {
+    return this.runtime.permissions;
   }
 
   @Get('plugins')
   @UseGuards(TranslateAuthGuard)
-  list(@Req() req: AuthedReq) {
+  list(@Req req: AuthedReq) {
     return this.runtime.listPlugins({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -45,7 +45,7 @@ export class PluginRuntimeController {
 
   @Get('plugins/:id')
   @UseGuards(TranslateAuthGuard)
-  get(@Req() req: AuthedReq, @Param('id') id: string) {
+  get(@Req req: AuthedReq, @Param('id') id: string) {
     return this.runtime.getPlugin({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -57,8 +57,8 @@ export class PluginRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   register(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       name?: string;
       permissions?: string[];
@@ -79,9 +79,9 @@ export class PluginRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   lifecycle(
-    @Req() req: AuthedReq,
+    @Req req: AuthedReq,
     @Param('id') id: string,
-    @Body() body: { status?: string },
+    @Body body: { status?: string },
   ) {
     return this.runtime.lifecycle({
       organizationId: req.translateAuth.organizationId,
@@ -97,9 +97,9 @@ export class PluginRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   version(
-    @Req() req: AuthedReq,
+    @Req req: AuthedReq,
     @Param('id') id: string,
-    @Body() body: { description?: string },
+    @Body body: { description?: string },
   ) {
     return this.runtime.version({
       organizationId: req.translateAuth.organizationId,
@@ -115,8 +115,8 @@ export class PluginRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   invoke(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       pluginId?: string;
       actions?: Array<{ action: string; input?: Record<string, unknown> }>;
@@ -135,7 +135,7 @@ export class PluginRuntimeController {
 
   @Get('marketplace')
   @UseGuards(TranslateAuthGuard)
-  marketplace(@Req() req: AuthedReq) {
+  marketplace(@Req req: AuthedReq) {
     return this.runtime.marketplace({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -144,7 +144,7 @@ export class PluginRuntimeController {
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.runtime.analytics({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -153,7 +153,7 @@ export class PluginRuntimeController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req() req: AuthedReq) {
+  monitoring(@Req req: AuthedReq) {
     return this.runtime.monitoring({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,

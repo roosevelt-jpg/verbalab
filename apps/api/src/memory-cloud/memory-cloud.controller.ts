@@ -27,18 +27,18 @@ export class MemoryCloudController {
   constructor(private readonly memoryCloud: MemoryCloudService) {}
 
   @Get('engine')
-  engine() {
-    return this.memoryCloud.engine();
+  engine {
+    return this.memoryCloud.engine;
   }
 
   @Get('scopes')
-  scopes() {
-    return this.memoryCloud.scopes();
+  scopes {
+    return this.memoryCloud.scopes;
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.memoryCloud.analytics(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -47,7 +47,7 @@ export class MemoryCloudController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req() req: AuthedReq) {
+  monitoring(@Req req: AuthedReq) {
     return this.memoryCloud.monitoring(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -57,7 +57,7 @@ export class MemoryCloudController {
   @Get('memories')
   @UseGuards(TranslateAuthGuard)
   list(
-    @Req() req: AuthedReq,
+    @Req req: AuthedReq,
     @Query('scope') scope?: string,
     @Query('kind') kind?: string,
     @Query('subjectUserId') subjectUserId?: string,
@@ -83,7 +83,7 @@ export class MemoryCloudController {
 
   @Get('memories/:id')
   @UseGuards(TranslateAuthGuard)
-  get(@Req() req: AuthedReq, @Param('id') id: string) {
+  get(@Req req: AuthedReq, @Param('id') id: string) {
     return this.memoryCloud.get({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -95,8 +95,8 @@ export class MemoryCloudController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(TranslateAuthGuard)
   create(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       scope?: string;
       kind?: string;
@@ -135,9 +135,9 @@ export class MemoryCloudController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   revise(
-    @Req() req: AuthedReq,
+    @Req req: AuthedReq,
     @Param('id') id: string,
-    @Body() body: { content?: string; metadata?: Record<string, unknown> },
+    @Body body: { content?: string; metadata?: Record<string, unknown> },
   ) {
     return this.memoryCloud.revise({
       organizationId: req.translateAuth.organizationId,
@@ -152,7 +152,7 @@ export class MemoryCloudController {
 
   @Delete('memories/:id')
   @UseGuards(TranslateAuthGuard)
-  deleteOne(@Req() req: AuthedReq, @Param('id') id: string) {
+  deleteOne(@Req req: AuthedReq, @Param('id') id: string) {
     return this.memoryCloud.deleteOne({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -166,8 +166,8 @@ export class MemoryCloudController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   search(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: { query?: string; scope?: string; kind?: string; subjectUserId?: string; limit?: number },
   ) {
     return this.memoryCloud.search({
@@ -187,8 +187,8 @@ export class MemoryCloudController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   export(
-    @Req() req: AuthedReq,
-    @Body() body: { subjectUserId?: string },
+    @Req req: AuthedReq,
+    @Body body: { subjectUserId?: string },
   ) {
     return this.memoryCloud.export({
       organizationId: req.translateAuth.organizationId,
@@ -203,8 +203,8 @@ export class MemoryCloudController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   erase(
-    @Req() req: AuthedReq,
-    @Body() body: { subjectUserId?: string; confirm?: boolean; hard?: boolean },
+    @Req req: AuthedReq,
+    @Body body: { subjectUserId?: string; confirm?: boolean; hard?: boolean },
   ) {
     return this.memoryCloud.erase({
       organizationId: req.translateAuth.organizationId,

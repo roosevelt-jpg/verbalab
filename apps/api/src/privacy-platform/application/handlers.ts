@@ -17,8 +17,8 @@ export class GetPrivacyPlatformEngineHandler
     private readonly catalog: PrivacyPlatformCatalogPort,
   ) {}
 
-  execute(): Promise<PrivacyPlatformEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<PrivacyPlatformEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListPrivacyPlatformProductsHandler
     private readonly catalog: PrivacyPlatformCatalogPort,
   ) {}
 
-  execute(): Promise<PrivacyPlatformProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<PrivacyPlatformProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

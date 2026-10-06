@@ -18,13 +18,13 @@ type GqlReq = Request & {
   sessionAuth?: SessionContext;
 };
 
-@Resolver()
+@Resolver
 export class GrammarIntelligenceGraphqlResolver {
   constructor(private readonly grammar: GrammarService) {}
 
-  @Query(() => GqlGrammarIntelligence, { name: 'grammarIntelligence' })
-  grammarIntelligence(): GqlGrammarIntelligence {
-    const c = this.grammar.intelligence();
+  @Query( => GqlGrammarIntelligence, { name: 'grammarIntelligence' })
+  grammarIntelligence: GqlGrammarIntelligence {
+    const c = this.grammar.intelligence;
     return {
       product: c.product,
       note: c.note,
@@ -33,10 +33,10 @@ export class GrammarIntelligenceGraphqlResolver {
     };
   }
 
-  @Mutation(() => GqlGrammarSuggestResult, { name: 'suggestWriting' })
+  @Mutation( => GqlGrammarSuggestResult, { name: 'suggestWriting' })
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   async suggestWriting(
-    @Args('input', { type: () => SuggestWritingInput }) input: SuggestWritingInput,
+    @Args('input', { type:  => SuggestWritingInput }) input: SuggestWritingInput,
     @Context('req') req: GqlReq,
   ): Promise<GqlGrammarSuggestResult> {
     const auth = req.translateAuth!;
@@ -62,10 +62,10 @@ export class GrammarIntelligenceGraphqlResolver {
     };
   }
 
-  @Mutation(() => String, { name: 'correctGrammar' })
+  @Mutation( => String, { name: 'correctGrammar' })
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   async correctGrammar(
-    @Args('input', { type: () => CheckGrammarInput }) input: CheckGrammarInput,
+    @Args('input', { type:  => CheckGrammarInput }) input: CheckGrammarInput,
     @Context('req') req: GqlReq,
   ): Promise<string> {
     const auth = req.translateAuth!;

@@ -16,7 +16,7 @@ import { TranslateAuthGuard } from '../common/guards/translate-auth.guard';
     ApiKeysModule,
     IdentityModule,
     AuditCoreModule,
-    forwardRef(() => JobsModule),
+    forwardRef( => JobsModule),
   ],
   controllers: [DocumentsController],
   providers: [DocumentsService, LocalStorageService, DocumentCodecService, TranslateAuthGuard],

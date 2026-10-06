@@ -24,13 +24,13 @@ export class KnowledgeIntelligenceController {
   constructor(private readonly knowledgeIntel: KnowledgeIntelligenceService) {}
 
   @Get('engine')
-  engine() {
-    return this.knowledgeIntel.engine();
+  engine {
+    return this.knowledgeIntel.engine;
   }
 
   @Get('insight')
   @UseGuards(TranslateAuthGuard)
-  insight(@Req() req: AuthedReq) {
+  insight(@Req req: AuthedReq) {
     return this.knowledgeIntel.insight(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -39,7 +39,7 @@ export class KnowledgeIntelligenceController {
 
   @Get('evolution')
   @UseGuards(TranslateAuthGuard)
-  evolution(@Req() req: AuthedReq) {
+  evolution(@Req req: AuthedReq) {
     return this.knowledgeIntel.evolution(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -48,7 +48,7 @@ export class KnowledgeIntelligenceController {
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.knowledgeIntel.analytics(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -57,7 +57,7 @@ export class KnowledgeIntelligenceController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req() req: AuthedReq) {
+  monitoring(@Req req: AuthedReq) {
     return this.knowledgeIntel.monitoring(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -68,8 +68,8 @@ export class KnowledgeIntelligenceController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   discover(
-    @Req() req: AuthedReq,
-    @Body() body: { query?: string; limit?: number },
+    @Req req: AuthedReq,
+    @Body body: { query?: string; limit?: number },
   ) {
     return this.knowledgeIntel.discover({
       organizationId: req.translateAuth.organizationId,
@@ -85,8 +85,8 @@ export class KnowledgeIntelligenceController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   link(
-    @Req() req: AuthedReq,
-    @Body() body: { documentId?: string; limit?: number },
+    @Req req: AuthedReq,
+    @Body body: { documentId?: string; limit?: number },
   ) {
     return this.knowledgeIntel.link({
       organizationId: req.translateAuth.organizationId,
@@ -102,8 +102,8 @@ export class KnowledgeIntelligenceController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   recommend(
-    @Req() req: AuthedReq,
-    @Body() body: { query?: string; limit?: number },
+    @Req req: AuthedReq,
+    @Body body: { query?: string; limit?: number },
   ) {
     return this.knowledgeIntel.recommend({
       organizationId: req.translateAuth.organizationId,
@@ -118,7 +118,7 @@ export class KnowledgeIntelligenceController {
   @Post('validate')
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
-  validate(@Req() req: AuthedReq, @Body() body: { documentId?: string }) {
+  validate(@Req req: AuthedReq, @Body body: { documentId?: string }) {
     return this.knowledgeIntel.validate({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -131,7 +131,7 @@ export class KnowledgeIntelligenceController {
   @Post('duplicates')
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
-  duplicates(@Req() req: AuthedReq, @Body() body: { limit?: number }) {
+  duplicates(@Req req: AuthedReq, @Body body: { limit?: number }) {
     return this.knowledgeIntel.duplicates({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -145,8 +145,8 @@ export class KnowledgeIntelligenceController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   confidence(
-    @Req() req: AuthedReq,
-    @Body() body: { documentId?: string; limit?: number },
+    @Req req: AuthedReq,
+    @Body body: { documentId?: string; limit?: number },
   ) {
     return this.knowledgeIntel.confidence({
       organizationId: req.translateAuth.organizationId,

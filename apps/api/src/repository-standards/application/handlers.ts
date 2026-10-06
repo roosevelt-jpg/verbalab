@@ -17,8 +17,8 @@ export class GetRepositoryStandardsEngineHandler
     private readonly catalog: RepositoryStandardsCatalogPort,
   ) {}
 
-  execute(): Promise<RepositoryStandardsEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<RepositoryStandardsEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListRepositoryStandardsProductsHandler
     private readonly catalog: RepositoryStandardsCatalogPort,
   ) {}
 
-  execute(): Promise<RepositoryStandardsProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<RepositoryStandardsProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

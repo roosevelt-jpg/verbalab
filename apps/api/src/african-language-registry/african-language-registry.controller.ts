@@ -6,18 +6,18 @@ export class AfricanLanguageRegistryController {
   constructor(private readonly registry: AfricanLanguageRegistryService) {}
 
   @Get('engine')
-  engine() {
-    return this.registry.engine();
+  engine {
+    return this.registry.engine;
   }
 
   @Get('products')
-  products() {
-    return this.registry.engine();
+  products {
+    return this.registry.engine;
   }
 
   @Get('monitoring')
-  monitoring() {
-    return this.registry.monitoring();
+  monitoring {
+    return this.registry.monitoring;
   }
 
   @Get('languages')
@@ -26,7 +26,7 @@ export class AfricanLanguageRegistryController {
   }
 
   @Get('families')
-  families() {
-    return this.registry.families();
+  families {
+    return this.registry.families;
   }
 }

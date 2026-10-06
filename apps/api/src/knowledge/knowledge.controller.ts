@@ -30,7 +30,7 @@ export class KnowledgeController {
   @Get('documents')
   @UseGuards(TranslateAuthGuard)
   list(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
     },
@@ -48,7 +48,7 @@ export class KnowledgeController {
   @Get('documents/:id')
   @UseGuards(TranslateAuthGuard)
   get(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
     },
@@ -66,18 +66,18 @@ export class KnowledgeController {
   @UseGuards(TranslateAuthGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: documentMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: documentMaxBytes },
     }),
   )
   upload(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
       body: { collection?: string; tags?: string; contentKind?: string };
     },
-    @UploadedFile() file: Express.Multer.File | undefined,
+    @UploadedFile file: Express.Multer.File | undefined,
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
@@ -98,7 +98,7 @@ export class KnowledgeController {
   @Delete('documents/:id')
   @UseGuards(TranslateAuthGuard)
   remove(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
     },
@@ -115,12 +115,12 @@ export class KnowledgeController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   query(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body() body: { question?: string; k?: number },
+    @Body body: { question?: string; k?: number },
   ) {
     return this.knowledge.query({
       question: body.question ?? '',

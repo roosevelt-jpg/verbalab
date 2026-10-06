@@ -6,7 +6,7 @@ import { StyleService } from '../../style/style.service';
 import { languageProductCatalog } from '../language-products.catalog';
 import type { LanguageRegistryPort, LanguageRow, LocaleRow, CountryRow, StyleProfileRow } from './ports';
 
-@Injectable()
+@Injectable
 export class NestLanguageRegistryAdapter implements LanguageRegistryPort {
   constructor(
     private readonly languages: LanguagesService,
@@ -15,8 +15,8 @@ export class NestLanguageRegistryAdapter implements LanguageRegistryPort {
     private readonly style: StyleService,
   ) {}
 
-  async listLanguages(): Promise<LanguageRow[]> {
-    const rows = await this.languages.list();
+  async listLanguages: Promise<LanguageRow[]> {
+    const rows = await this.languages.list;
     return rows.map((r) => ({
       code: r.code,
       nameEn: r.nameEn,
@@ -28,8 +28,8 @@ export class NestLanguageRegistryAdapter implements LanguageRegistryPort {
     }));
   }
 
-  async listLocalePacks(): Promise<LocaleRow[]> {
-    const rows = await this.locales.list();
+  async listLocalePacks: Promise<LocaleRow[]> {
+    const rows = await this.locales.list;
     return rows.map((r) => ({
       languageCode: r.languageCode,
       bcp47: r.bcp47,
@@ -50,11 +50,11 @@ export class NestLanguageRegistryAdapter implements LanguageRegistryPort {
     }));
   }
 
-  listStyleProfiles(): StyleProfileRow[] {
-    return this.style.profiles().data;
+  listStyleProfiles: StyleProfileRow[] {
+    return this.style.profiles.data;
   }
 
-  listLanguageProducts() {
-    return languageProductCatalog();
+  listLanguageProducts {
+    return languageProductCatalog;
   }
 }

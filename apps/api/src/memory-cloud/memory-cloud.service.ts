@@ -20,18 +20,18 @@ type AuthCtx = {
   ip?: string;
 };
 
-@Injectable()
+@Injectable
 export class MemoryCloudService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
   ) {}
 
-  engine() {
-    return memoryCloudCatalog();
+  engine {
+    return memoryCloudCatalog;
   }
 
-  scopes() {
+  scopes {
     return {
       scopes: MEMORY_SCOPES.map((id) => ({
         id,
@@ -43,7 +43,7 @@ export class MemoryCloudService {
               : undefined,
       })),
       kinds: MEMORY_KINDS.map((id) => ({ id })),
-      note: 'Memory scopes and kinds for VL-183 writes.',
+      note: 'Memory scopes and kinds for writes.',
     };
   }
 
@@ -78,7 +78,7 @@ export class MemoryCloudService {
       organizationId,
       workspaceId,
       deletedAt: null,
-      OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+      OR: [{ expiresAt: null }, { expiresAt: { gt: new Date } }],
       ...extra,
     };
   }
@@ -115,9 +115,9 @@ export class MemoryCloudService {
       content: row.content,
       metadata: row.metadata,
       version: row.version,
-      expiresAt: row.expiresAt?.toISOString() ?? null,
-      createdAt: row.createdAt.toISOString(),
-      updatedAt: row.updatedAt.toISOString(),
+      expiresAt: row.expiresAt?.toISOString ?? null,
+      createdAt: row.createdAt.toISOString,
+      updatedAt: row.updatedAt.toISOString,
     };
   }
 
@@ -138,25 +138,25 @@ export class MemoryCloudService {
   ) {
     const scope = this.assertScope(input.scope);
     const kind = this.assertKind(input.kind);
-    const content = input.content?.trim();
+    const content = input.content?.trim;
     if (!content) {
       throw new ApiException('validation_error', 'content is required', HttpStatus.BAD_REQUEST);
     }
-    if (scope === 'conversation' && !input.conversationId?.trim()) {
+    if (scope === 'conversation' && !input.conversationId?.trim) {
       throw new ApiException(
         'validation_error',
         'conversationId is required for scope=conversation',
         HttpStatus.BAD_REQUEST,
       );
     }
-    if (scope === 'project' && !input.projectKey?.trim()) {
+    if (scope === 'project' && !input.projectKey?.trim) {
       throw new ApiException(
         'validation_error',
         'projectKey is required for scope=project',
         HttpStatus.BAD_REQUEST,
       );
     }
-    if (scope === 'agent' && !input.agentId?.trim()) {
+    if (scope === 'agent' && !input.agentId?.trim) {
       throw new ApiException(
         'validation_error',
         'agentId is required for scope=agent',
@@ -167,27 +167,27 @@ export class MemoryCloudService {
     let expiresAt: Date | null = null;
     if (input.expiresAt) {
       const parsed = new Date(input.expiresAt);
-      if (Number.isNaN(parsed.getTime())) {
+      if (Number.isNaN(parsed.getTime)) {
         throw new ApiException('validation_error', 'expiresAt must be ISO date', HttpStatus.BAD_REQUEST);
       }
       expiresAt = parsed;
     } else if (typeof input.ttlSeconds === 'number' && Number.isFinite(input.ttlSeconds)) {
-      expiresAt = new Date(Date.now() + Math.max(1, input.ttlSeconds) * 1000);
+      expiresAt = new Date(Date.now + Math.max(1, input.ttlSeconds) * 1000);
     } else if (kind === 'short_term') {
-      expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000);
+      expiresAt = new Date(Date.now + 24 * 60 * 60 * 1000);
     }
 
     const row = await this.prisma.memoryRecord.create({
       data: {
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
-        subjectUserId: input.subjectUserId?.trim() || input.userId || null,
-        agentId: input.agentId?.trim() || null,
-        projectKey: input.projectKey?.trim() || null,
-        conversationId: input.conversationId?.trim() || null,
+        subjectUserId: input.subjectUserId?.trim || input.userId || null,
+        agentId: input.agentId?.trim || null,
+        projectKey: input.projectKey?.trim || null,
+        conversationId: input.conversationId?.trim || null,
         scope,
         kind,
-        key: input.key?.trim() || null,
+        key: input.key?.trim || null,
         content,
         metadata: (input.metadata ?? {}) as Prisma.InputJsonValue,
         expiresAt,
@@ -249,7 +249,7 @@ export class MemoryCloudService {
   }
 
   async revise(input: AuthCtx & { id: string; content: string; metadata?: Record<string, unknown> }) {
-    const content = input.content?.trim();
+    const content = input.content?.trim;
     if (!content) {
       throw new ApiException('validation_error', 'content is required', HttpStatus.BAD_REQUEST);
     }
@@ -297,7 +297,7 @@ export class MemoryCloudService {
       limit?: number;
     },
   ) {
-    const query = input.query?.trim();
+    const query = input.query?.trim;
     if (!query) {
       throw new ApiException('validation_error', 'query is required', HttpStatus.BAD_REQUEST);
     }
@@ -325,7 +325,7 @@ export class MemoryCloudService {
     return {
       query,
       hits: rows.map((r) => this.serialize(r)),
-      note: 'Text contains search (VL-183). Embedding/NN semantic memory deferred.',
+      note: 'Text contains search. Embedding/NN semantic memory deferred.',
     };
   }
 
@@ -356,13 +356,13 @@ export class MemoryCloudService {
     });
 
     return {
-      exportedAt: new Date().toISOString(),
+      exportedAt: new Date.toISOString,
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,
       subjectUserId: input.subjectUserId ?? null,
       count: rows.length,
       memories: rows.map((r) => this.serialize(r)),
-      note: 'GDPR-style memory export (VL-183). Includes soft-active rows only.',
+      note: 'GDPR-style memory export. Includes soft-active rows only.',
     };
   }
 
@@ -396,7 +396,7 @@ export class MemoryCloudService {
     if (input.hard === false) {
       await this.prisma.memoryRecord.updateMany({
         where,
-        data: { deletedAt: new Date() },
+        data: { deletedAt: new Date },
       });
     } else {
       await this.prisma.memoryRecord.deleteMany({ where });
@@ -420,7 +420,7 @@ export class MemoryCloudService {
       count: matching.length,
       subjectUserId: input.subjectUserId ?? null,
       hard: input.hard !== false,
-      note: 'GDPR right-to-be-forgotten for Memory Cloud (VL-183).',
+      note: 'GDPR right-to-be-forgotten for Memory Cloud.',
     };
   }
 
@@ -452,7 +452,7 @@ export class MemoryCloudService {
   }
 
   async analytics(organizationId: string, workspaceId: string) {
-    const start = new Date();
+    const start = new Date;
     start.setUTCDate(1);
     start.setUTCHours(0, 0, 0, 0);
 
@@ -494,24 +494,24 @@ export class MemoryCloudService {
     ]);
 
     return {
-      periodStart: start.toISOString(),
+      periodStart: start.toISOString,
       activeMemories: active,
       byScope: byScope.map((r) => ({ scope: r.scope, count: r._count._all })),
       byKind: byKind.map((r) => ({ kind: r.kind, count: r._count._all })),
       writes,
       exports,
       erases,
-      note: 'Memory Cloud analytics (VL-183). Retention sweeper not automated.',
+      note: 'Memory Cloud analytics. Retention sweeper not automated.',
     };
   }
 
   async monitoring(organizationId: string, workspaceId: string) {
     const [analytics, engine] = await Promise.all([
       this.analytics(organizationId, workspaceId),
-      Promise.resolve(this.engine()),
+      Promise.resolve(this.engine),
     ]);
     return {
-      generatedAt: new Date().toISOString(),
+      generatedAt: new Date.toISOString,
       periodStart: analytics.periodStart,
       activeMemories: analytics.activeMemories,
       writes: analytics.writes,
@@ -520,7 +520,7 @@ export class MemoryCloudService {
       gdprExport: engine.honesty.gdprExport,
       gdprErase: engine.honesty.gdprErase,
       deferred: engine.capabilities.filter((c) => c.status === 'deferred').map((c) => c.id),
-      note: 'Memory Cloud monitoring snapshot (VL-183).',
+      note: 'Memory Cloud monitoring snapshot.',
     };
   }
 

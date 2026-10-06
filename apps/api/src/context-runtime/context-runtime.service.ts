@@ -45,7 +45,7 @@ type AssembleInput = AuthCtx & {
   priorityOverrides?: Record<string, number>;
 };
 
-@Injectable()
+@Injectable
 export class ContextRuntimeService {
   constructor(
     private readonly prisma: PrismaService,
@@ -54,27 +54,27 @@ export class ContextRuntimeService {
     private readonly cache: IntelligentCacheService,
   ) {}
 
-  engine() {
+  engine {
     return {
-      ...contextRuntimeCatalog(),
-      ceilings: contextRuntimeCeilings(),
-      mode: contextRuntimeMode(),
+      ...contextRuntimeCatalog,
+      ceilings: contextRuntimeCeilings,
+      mode: contextRuntimeMode,
       priorities: CONTEXT_RUNTIME_PRIORITIES,
     };
   }
 
-  scopes() {
+  scopes {
     return {
       scopes: CONTEXT_RUNTIME_PRIORITIES.map((p) => ({ id: p.kind, priority: p.priority })),
       layer: 'kernel',
-      note: 'Context Runtime scopes map onto VL-185 Context Engine sources + model block.',
-      honesty: contextRuntimeCatalog().honesty,
+      note: 'Context Runtime scopes map onto Context Engine sources + model block.',
+      honesty: contextRuntimeCatalog.honesty,
     };
   }
 
   async assemble(input: AssembleInput) {
-    this.assertEnabled();
-    const ceilings = contextRuntimeCeilings();
+    this.assertEnabled;
+    const ceilings = contextRuntimeCeilings;
     const maxChars = Math.min(
       ceilings.maxChars,
       Math.max(500, Math.floor(input.maxChars ?? ceilings.maxChars)),
@@ -109,11 +109,11 @@ export class ContextRuntimeService {
             });
             return {
               ...value,
-              assembledAt: new Date().toISOString(),
+              assembledAt: new Date.toISOString,
               organizationId: input.organizationId,
               workspaceId: input.workspaceId,
               cache: 'hit' as const,
-              honesty: contextRuntimeCatalog().honesty,
+              honesty: contextRuntimeCatalog.honesty,
               note: 'Cache hit from Intelligent Cache namespace=context.',
             };
           }
@@ -152,8 +152,8 @@ export class ContextRuntimeService {
       priority: this.priorityFor(b.kind, input.priorityOverrides),
     }));
 
-    if (input.modelHint?.trim() || input.providerHint?.trim()) {
-      const content = `Model context: model=${input.modelHint?.trim() || 'default'}, provider=${input.providerHint?.trim() || 'gateway'}.`;
+    if (input.modelHint?.trim || input.providerHint?.trim) {
+      const content = `Model context: model=${input.modelHint?.trim || 'default'}, provider=${input.providerHint?.trim || 'gateway'}.`;
       blocks.push({
         id: 'model',
         kind: 'model',
@@ -194,7 +194,7 @@ export class ContextRuntimeService {
     });
 
     const result = {
-      assembledAt: new Date().toISOString(),
+      assembledAt: new Date.toISOString,
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,
       query: base.query,
@@ -213,7 +213,7 @@ export class ContextRuntimeService {
         overrides: input.priorityOverrides ?? {},
       },
       cache: useCache ? ('miss' as const) : ('skipped' as const),
-      honesty: contextRuntimeCatalog().honesty,
+      honesty: contextRuntimeCatalog.honesty,
       note: 'Kernel assemble over Context Engine — not infinite context / LLM summarization OS.',
     };
 
@@ -252,7 +252,7 @@ export class ContextRuntimeService {
       promptContext: assembled.promptContext,
       compression: assembled.compression,
       honesty: assembled.honesty,
-      note: 'Retrieval façade over assemble (VL-217).',
+      note: 'Retrieval façade over assemble.',
     };
   }
 
@@ -263,7 +263,7 @@ export class ContextRuntimeService {
       maxChars?: number;
     },
   ) {
-    this.assertEnabled();
+    this.assertEnabled;
     const blocks = input.blocks ?? [];
     if (!blocks.length) {
       throw new ApiException(
@@ -274,7 +274,7 @@ export class ContextRuntimeService {
     }
     const prioritized = this.prioritizeBlocks(blocks, input.priorityOverrides);
     const maxChars = input.maxChars
-      ? Math.min(contextRuntimeCeilings().maxChars, Math.max(100, input.maxChars))
+      ? Math.min(contextRuntimeCeilings.maxChars, Math.max(100, input.maxChars))
       : undefined;
     const final = maxChars
       ? this.compressBlocks(prioritized.blocks, maxChars)
@@ -307,20 +307,20 @@ export class ContextRuntimeService {
       priorityOverrides?: Record<string, number>;
     },
   ) {
-    this.assertEnabled();
+    this.assertEnabled;
     const maxChars = Math.min(
-      contextRuntimeCeilings().maxChars,
-      Math.max(40, Math.floor(input.maxChars ?? contextRuntimeCeilings().maxChars)),
+      contextRuntimeCeilings.maxChars,
+      Math.max(40, Math.floor(input.maxChars ?? contextRuntimeCeilings.maxChars)),
     );
     let blocks = input.blocks;
-    if (!blocks?.length && input.text?.trim()) {
+    if (!blocks?.length && input.text?.trim) {
       blocks = [
         {
           id: 'text',
           kind: 'workspace',
           priority: 20,
-          content: input.text.trim(),
-          chars: input.text.trim().length,
+          content: input.text.trim,
+          chars: input.text.trim.length,
         },
       ];
     }
@@ -346,8 +346,8 @@ export class ContextRuntimeService {
   }
 
   async analytics(input: AuthCtx) {
-    this.assertEnabled();
-    const start = new Date();
+    this.assertEnabled;
+    const start = new Date;
     start.setUTCDate(1);
     start.setUTCHours(0, 0, 0, 0);
     const assemblies = await this.prisma.auditEvent.count({
@@ -358,17 +358,17 @@ export class ContextRuntimeService {
       },
     });
     return {
-      periodStart: start.toISOString(),
+      periodStart: start.toISOString,
       workspaceId: input.workspaceId,
       assemblies,
-      honesty: contextRuntimeCatalog().honesty,
-      note: 'Context Runtime analytics (VL-217).',
+      honesty: contextRuntimeCatalog.honesty,
+      note: 'Context Runtime analytics.',
     };
   }
 
   async monitoring(input: AuthCtx) {
     const [engine, analytics] = await Promise.all([
-      Promise.resolve(this.engine()),
+      Promise.resolve(this.engine),
       this.analytics(input),
     ]);
     return {
@@ -378,13 +378,13 @@ export class ContextRuntimeService {
       honesty: engine.honesty,
       safety: {
         agentActionBoundariesRequired: true,
-        note: 'Context Runtime assembles text only; Agent/Workflow action gates remain VL-219–222.',
+        note: 'Context Runtime assembles text only; Agent/Workflow action gates remain –222.',
       },
     };
   }
 
-  private assertEnabled() {
-    if (contextRuntimeMode() === 'disabled') {
+  private assertEnabled {
+    if (contextRuntimeMode === 'disabled') {
       throw new ApiException(
         'context_runtime_disabled',
         'Context Runtime mode is disabled (LUGEMI_CONTEXT_RUNTIME_MODE=disabled).',

@@ -6,16 +6,16 @@ import {
   AfricanKnowledgeGraphProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestAfricanKnowledgeGraphCatalogAdapter implements AfricanKnowledgeGraphCatalogPort {
   constructor(private readonly service: AfricanKnowledgeGraphService) {}
 
-  engine(): AfricanKnowledgeGraphEngineBundle {
-    return this.service.engine();
+  engine: AfricanKnowledgeGraphEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): AfricanKnowledgeGraphProductRow[] {
-    const bundle = this.engine() as { products?: AfricanKnowledgeGraphProductRow[]; capabilities?: AfricanKnowledgeGraphProductRow[] };
+  listProducts: AfricanKnowledgeGraphProductRow[] {
+    const bundle = this.engine as { products?: AfricanKnowledgeGraphProductRow[]; capabilities?: AfricanKnowledgeGraphProductRow[] };
     if (Array.isArray(bundle.products)) return bundle.products;
     if (Array.isArray(bundle.capabilities)) {
       return bundle.capabilities.map((c) => ({
@@ -34,7 +34,7 @@ export class NestAfricanKnowledgeGraphCatalogAdapter implements AfricanKnowledge
         status: 'shipped',
         api: 'GET /v1/african-knowledge-graph/engine',
         console: '/african-knowledge-graph',
-        notes: 'VL-263 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

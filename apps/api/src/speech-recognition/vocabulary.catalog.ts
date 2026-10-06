@@ -7,8 +7,8 @@ export type SpeechVocabPack = {
   phrases: string[];
 };
 
-/** Industry vocabulary packs for Whisper prompt priming (VL-151). */
-export function speechIndustryVocabularyPacks(): SpeechVocabPack[] {
+/** Industry vocabulary packs for Whisper prompt priming. */
+export function speechIndustryVocabularyPacks: SpeechVocabPack[] {
   return [
     {
       id: 'medical',
@@ -42,7 +42,7 @@ export function speechIndustryVocabularyPacks(): SpeechVocabPack[] {
         'subpoena',
         'deposition',
         'pursuant to',
-      ].map((p) => p.trim()),
+      ].map((p) => p.trim),
     },
     {
       id: 'financial',
@@ -85,17 +85,17 @@ export function buildVocabularyPrompt(input: {
   industryPackIds?: IndustryPackId[];
   customPhrases?: string[];
 }): string | undefined {
-  const packs = speechIndustryVocabularyPacks();
+  const packs = speechIndustryVocabularyPacks;
   const phrases: string[] = [];
   for (const id of input.industryPackIds ?? []) {
     const pack = packs.find((p) => p.id === id);
     if (pack) phrases.push(...pack.phrases);
   }
   for (const phrase of input.customPhrases ?? []) {
-    const t = phrase.trim();
+    const t = phrase.trim;
     if (t) phrases.push(t);
   }
-  const unique = [...new Set(phrases.map((p) => p.trim()).filter(Boolean))];
+  const unique = [...new Set(phrases.map((p) => p.trim).filter(Boolean))];
   if (!unique.length) return undefined;
   return unique.slice(0, 80).join(', ');
 }

@@ -17,8 +17,8 @@ export class GetAiGovernancePlatformEngineHandler
     private readonly catalog: AiGovernancePlatformCatalogPort,
   ) {}
 
-  execute(): Promise<AiGovernancePlatformEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<AiGovernancePlatformEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListAiGovernancePlatformProductsHandler
     private readonly catalog: AiGovernancePlatformCatalogPort,
   ) {}
 
-  execute(): Promise<AiGovernancePlatformProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<AiGovernancePlatformProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

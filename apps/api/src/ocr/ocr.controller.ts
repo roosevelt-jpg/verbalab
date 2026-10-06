@@ -27,18 +27,18 @@ export class OcrController {
   @UseGuards(TranslateAuthGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: ocrMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: ocrMaxBytes },
     }),
   )
   extract(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body()
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body
     body: {
       languageHint?: string;
       source?: string;

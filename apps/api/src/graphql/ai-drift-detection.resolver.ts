@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetAiDriftDetectionEngineQuery } from '../ai-drift-detection/application/messages';
 import { GqlAiDriftDetectionEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class AiDriftDetectionGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query(() => GqlAiDriftDetectionEngine, { name: 'aiDriftDetectionEngine' })
-  async aiDriftDetectionEngine(): Promise<GqlAiDriftDetectionEngine> {
-    const catalog = await this.queries.execute(new GetAiDriftDetectionEngineQuery());
+  @Query( => GqlAiDriftDetectionEngine, { name: 'aiDriftDetectionEngine' })
+  async aiDriftDetectionEngine: Promise<GqlAiDriftDetectionEngine> {
+    const catalog = await this.queries.execute(new GetAiDriftDetectionEngineQuery);
     return {
       product: catalog.product,
       note: catalog.note,

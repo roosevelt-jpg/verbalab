@@ -1,4 +1,4 @@
-/** Application ports for Risk Intelligence (VL-298). */
+/** Application ports for Risk Intelligence. */
 
 export type RiskIntelligenceProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type RiskIntelligenceEngineBundle = ReturnType<
 >;
 
 export interface RiskIntelligenceCatalogPort {
-  engine(): RiskIntelligenceEngineBundle;
-  listProducts(): RiskIntelligenceProductRow[];
+  engine: RiskIntelligenceEngineBundle;
+  listProducts: RiskIntelligenceProductRow[];
 }
 
 export const RISK_INTELLIGENCE_CATALOG_PORT = Symbol('RISK_INTELLIGENCE_CATALOG_PORT');

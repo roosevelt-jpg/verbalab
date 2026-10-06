@@ -17,8 +17,8 @@ export class GetSupplyChainSecurityEngineHandler
     private readonly catalog: SupplyChainSecurityCatalogPort,
   ) {}
 
-  execute(): Promise<SupplyChainSecurityEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<SupplyChainSecurityEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListSupplyChainSecurityProductsHandler
     private readonly catalog: SupplyChainSecurityCatalogPort,
   ) {}
 
-  execute(): Promise<SupplyChainSecurityProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<SupplyChainSecurityProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

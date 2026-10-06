@@ -43,23 +43,23 @@ export class VoiceEnhancementController {
   }
 
   @Get('engine')
-  engine() {
-    return this.enhancement.engine();
+  engine {
+    return this.enhancement.engine;
   }
 
   @Get('profiles')
-  profiles() {
-    return this.enhancement.profiles();
+  profiles {
+    return this.enhancement.profiles;
   }
 
   @Get('echo')
-  echo() {
-    return this.enhancement.echoStatus();
+  echo {
+    return this.enhancement.echoStatus;
   }
 
   @Get('engine/analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.enhancement.analytics(req.translateAuth.organizationId);
   }
 
@@ -68,14 +68,14 @@ export class VoiceEnhancementController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   enhance(
-    @Req() req: AuthedReq,
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { profile?: string; targetRate?: string },
+    @Req req: AuthedReq,
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { profile?: string; targetRate?: string },
     @Query('profile') profileQuery?: string,
   ) {
     if (!file) {
@@ -93,14 +93,14 @@ export class VoiceEnhancementController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   upscale(
-    @Req() req: AuthedReq,
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { targetRate?: string },
+    @Req req: AuthedReq,
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { targetRate?: string },
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
@@ -115,15 +115,15 @@ export class VoiceEnhancementController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   async enhanceStream(
-    @Req() req: AuthedReq,
-    @Res() res: Response,
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { profile?: string; targetRate?: string },
+    @Req req: AuthedReq,
+    @Res res: Response,
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { profile?: string; targetRate?: string },
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
@@ -132,7 +132,7 @@ export class VoiceEnhancementController {
     res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders?.();
+    res.flushHeaders?.;
 
     const stream = this.enhancement.streamEnhance(this.auth(req), {
       file,
@@ -144,6 +144,6 @@ export class VoiceEnhancementController {
       res.write(`event: ${chunk.event}\ndata: ${JSON.stringify(chunk)}\n\n`);
       if (chunk.event === 'error' || chunk.event === 'done') break;
     }
-    res.end();
+    res.end;
   }
 }

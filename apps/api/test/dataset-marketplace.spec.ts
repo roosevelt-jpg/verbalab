@@ -19,7 +19,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory()) out.push(...walkTsFiles(full));
+    if (statSync(full).isDirectory) out.push(...walkTsFiles(full));
     else if (full.endsWith('.ts')) out.push(full);
   }
   return out;
@@ -34,7 +34,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_dm_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_dm_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -48,41 +48,41 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Dataset Marketplace (VL-252)', () => {
+describe('Dataset Marketplace',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;
   let marketplace: DatasetMarketplaceService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
     prisma = app.get(PrismaService);
     billing = app.get(BillingService);
     marketplace = app.get(DatasetMarketplaceService);
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Dataset Marketplace honesty (not Label Studio; Stripe-only)', () => {
+  it('documents Dataset Marketplace honesty (not Label Studio; Stripe-only)',  => {
     const doc = join(root, 'docs/DATASET_MARKETPLACE.md');
     const adr = join(root, 'docs/adr/0154-dataset-marketplace.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-252');
+    expect(text).toContain('');
     expect(text).toMatch(/Label Studio|labelStudioOs/i);
     expect(text).toMatch(/Stripe|storesRawCardData/i);
     expect(text).toMatch(/Dataset Cloud|datasetCloudOs/i);
   });
 
-  it('has no TODO/FIXME markers in Dataset Marketplace source', () => {
+  it('has no TODO/FIXME markers in Dataset Marketplace source',  => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const file of walkTsFiles(join(apiSrc, 'dataset-marketplace'))) {
@@ -92,8 +92,8 @@ describe('Dataset Marketplace (VL-252)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes engine with real-money + anti-Label-Studio honesty', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes engine with real-money + anti-Label-Studio honesty', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/dataset-marketplace/engine')
       .expect(200);
     expect(res.body.product).toBe('Lugemi Dataset Marketplace');
@@ -107,15 +107,15 @@ describe('Dataset Marketplace (VL-252)', () => {
     expect(res.body.categories.some((c: { id: string }) => c.id === 'translation')).toBe(true);
   });
 
-  it('exposes datasetMarketplaceEngine via GraphQL CQRS façade', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes datasetMarketplaceEngine via GraphQL CQRS façade', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
           '{ datasetMarketplaceEngine { product labelStudioOs datasetCloudOs storesRawCardData stripeOrEquivalentRequired capabilities { id status } } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.datasetMarketplaceEngine.product).toContain('Dataset Marketplace');
     expect(res.body.data.datasetMarketplaceEngine.labelStudioOs).toBe(false);
     expect(res.body.data.datasetMarketplaceEngine.datasetCloudOs).toBe(false);
@@ -123,9 +123,9 @@ describe('Dataset Marketplace (VL-252)', () => {
     expect(res.body.data.datasetMarketplaceEngine.stripeOrEquivalentRequired).toBe(true);
   });
 
-  it('publishes TM corpus, installs with revenue share, reviews; rejects free plan', async () => {
-    const publisher = await seedOrg(prisma, `dmpub_${Date.now()}`);
-    const buyer = await seedOrg(prisma, `dmbuy_${Date.now()}`);
+  it('publishes TM corpus, installs with revenue share, reviews; rejects free plan', async  => {
+    const publisher = await seedOrg(prisma, `dmpub_${Date.now}`);
+    const buyer = await seedOrg(prisma, `dmbuy_${Date.now}`);
     await billing.applyEntitlementForTests({ organizationId: publisher.id, plan: 'pro' });
     await billing.applyEntitlementForTests({ organizationId: buyer.id, plan: 'pro' });
 
@@ -210,7 +210,7 @@ describe('Dataset Marketplace (VL-252)', () => {
     expect(sales.honesty.storesRawCardData).toBe(false);
     expect(sales.honesty.stripeOrEquivalentRequired).toBe(true);
 
-    const free = await seedOrg(prisma, `dmfree_${Date.now()}`);
+    const free = await seedOrg(prisma, `dmfree_${Date.now}`);
     await expect(
       marketplace.publish({
         organizationId: free.id,

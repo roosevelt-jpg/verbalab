@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_ak_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_ak_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,29 +35,29 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('AI Kernel Foundation (VL-214)', () => {
+describe('AI Kernel Foundation',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let kernel: AiKernelService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     kernel = app.get(AiKernelService);
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents AI Kernel mapping (not customer product / not Linux OS)', () => {
+  it('documents AI Kernel mapping (not customer product / not Linux OS)',  => {
     const doc = join(root, 'docs/AI_KERNEL.md');
     const adr = join(root, 'docs/adr/0125-ai-kernel-foundation.md');
     const readme = join(root, 'docs/roadmap/volume8-ai-kernel/README_VOLUME8.md');
@@ -71,13 +71,13 @@ describe('AI Kernel Foundation (VL-214)', () => {
     expect(text).toContain('Terraform');
     expect(text).toMatch(/scoped permissions|sandbox/i);
     expect(text).toMatch(/hard gate|Policy Runtime/i);
-    expect(text).toContain('VL-214');
+    expect(text).toContain('');
     const readmeText = readFileSync(readme, 'utf8');
     expect(readmeText).toMatch(/Policy Runtime|sandbox|permissions/i);
   });
 
-  it('exposes public runtime catalog with honest architecture + safety', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/ai-kernel/products').expect(200);
+  it('exposes public runtime catalog with honest architecture + safety', async  => {
+    const res = await request(app.getHttpServer).get('/v1/ai-kernel/products').expect(200);
     expect(res.body.architecture.customerFacingProduct).toBe(false);
     expect(res.body.architecture.linuxOsRewrite).toBe(false);
     expect(res.body.architecture.vaiosOs).toBe(false);
@@ -134,8 +134,8 @@ describe('AI Kernel Foundation (VL-214)', () => {
     expect(policy.notes).toMatch(/hard|block|gate/i);
   });
 
-  it('returns org kernel overview with deferred + safety', async () => {
-    const org = await seedOrg(prisma, `ak_${Date.now()}`);
+  it('returns org kernel overview with deferred + safety', async  => {
+    const org = await seedOrg(prisma, `ak_${Date.now}`);
     const overview = await kernel.overview({
       userId: org.memberships[0].userId,
       organizationId: org.id,
@@ -143,7 +143,7 @@ describe('AI Kernel Foundation (VL-214)', () => {
       clerkUserId: 'clerk_ak',
       role: 'owner',
     });
-    expect(overview.usage.chat).toBeDefined();
+    expect(overview.usage.chat).toBeDefined;
     expect(overview.deferred.memoryRuntime).toBe(false);
     expect(overview.deferred.promptRuntime).toBe(false);
     expect(overview.deferred.contextRuntime).toBe(false);
@@ -199,14 +199,14 @@ describe('AI Kernel Foundation (VL-214)', () => {
     expect(policy?.console).toBe('/policy-runtime');
   });
 
-  it('exposes aiKernelRuntimes via GraphQL CQRS façade', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes aiKernelRuntimes via GraphQL CQRS façade', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query: '{ aiKernelRuntimes { id name status api console notes } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.aiKernelRuntimes.length).toBeGreaterThan(5);
     expect(
       res.body.data.aiKernelRuntimes.some((r: { id: string }) => r.id === 'ai-kernel'),

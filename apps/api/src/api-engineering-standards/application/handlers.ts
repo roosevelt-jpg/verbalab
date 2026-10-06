@@ -17,8 +17,8 @@ export class GetApiEngineeringStandardsEngineHandler
     private readonly catalog: ApiEngineeringStandardsCatalogPort,
   ) {}
 
-  execute(): Promise<ApiEngineeringStandardsEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<ApiEngineeringStandardsEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListApiEngineeringStandardsProductsHandler
     private readonly catalog: ApiEngineeringStandardsCatalogPort,
   ) {}
 
-  execute(): Promise<ApiEngineeringStandardsProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<ApiEngineeringStandardsProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

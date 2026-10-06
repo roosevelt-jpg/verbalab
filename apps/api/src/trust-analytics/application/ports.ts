@@ -1,4 +1,4 @@
-/** Application ports for Trust Analytics (VL-300). */
+/** Application ports for Trust Analytics. */
 
 export type TrustAnalyticsProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type TrustAnalyticsEngineBundle = ReturnType<
 >;
 
 export interface TrustAnalyticsCatalogPort {
-  engine(): TrustAnalyticsEngineBundle;
-  listProducts(): TrustAnalyticsProductRow[];
+  engine: TrustAnalyticsEngineBundle;
+  listProducts: TrustAnalyticsProductRow[];
 }
 
 export const TRUST_ANALYTICS_CATALOG_PORT = Symbol('TRUST_ANALYTICS_CATALOG_PORT');

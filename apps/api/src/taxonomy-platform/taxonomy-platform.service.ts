@@ -17,18 +17,18 @@ type AuthCtx = {
   ip?: string;
 };
 
-@Injectable()
+@Injectable
 export class TaxonomyPlatformService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
   ) {}
 
-  engine() {
-    return taxonomyPlatformCatalog();
+  engine {
+    return taxonomyPlatformCatalog;
   }
 
-  contentTypes() {
+  contentTypes {
     return {
       kinds: KNOWLEDGE_CONTENT_KINDS.map((id) => ({ id, source: 'knowledge-base' })),
       note: 'Shipped EKB content kinds. Taxonomy content_type terms may mirror these slugs.',
@@ -48,8 +48,8 @@ export class TaxonomyPlatformService {
 
   private slugify(input: string): string {
     return input
-      .trim()
-      .toLowerCase()
+      .trim
+      .toLowerCase
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '')
       .slice(0, 64);
@@ -80,8 +80,8 @@ export class TaxonomyPlatformService {
       description: term.description,
       sortOrder: term.sortOrder,
       metadata: term.metadata,
-      createdAt: term.createdAt.toISOString(),
-      updatedAt: term.updatedAt.toISOString(),
+      createdAt: term.createdAt.toISOString,
+      updatedAt: term.updatedAt.toISOString,
     };
   }
 
@@ -96,12 +96,12 @@ export class TaxonomyPlatformService {
       metadata?: Record<string, unknown>;
     },
   ) {
-    const name = input.name?.trim();
+    const name = input.name?.trim;
     if (!name) {
       throw new ApiException('validation_error', 'name is required', HttpStatus.BAD_REQUEST);
     }
     const kind = this.assertKind(input.kind ?? 'category');
-    const slug = (input.slug?.trim() || this.slugify(name)) || `term-${Date.now()}`;
+    const slug = (input.slug?.trim || this.slugify(name)) || `term-${Date.now}`;
 
     if (input.parentId) {
       const parent = await this.prisma.taxonomyTerm.findFirst({
@@ -125,7 +125,7 @@ export class TaxonomyPlatformService {
           slug,
           name,
           kind,
-          description: input.description?.trim() ?? '',
+          description: input.description?.trim ?? '',
           sortOrder:
             typeof input.sortOrder === 'number' && Number.isFinite(input.sortOrder)
               ? input.sortOrder
@@ -233,7 +233,7 @@ export class TaxonomyPlatformService {
           orderBy: [{ sortOrder: 'asc' }, { name: 'asc' }],
         })
       : [];
-    const byParent = new Map<string, typeof kids>();
+    const byParent = new Map<string, typeof kids>;
     for (const k of kids) {
       const list = byParent.get(k.parentId!) ?? [];
       list.push(k);
@@ -368,9 +368,9 @@ export class TaxonomyPlatformService {
       take: 200,
     });
 
-    const hay = `${doc.filename} ${doc.collection} ${doc.contentKind} ${doc.tags.join(' ')}`.toLowerCase();
+    const hay = `${doc.filename} ${doc.collection} ${doc.contentKind} ${doc.tags.join(' ')}`.toLowerCase;
     const matches = terms.filter(
-      (t) => hay.includes(t.slug.toLowerCase()) || hay.includes(t.name.toLowerCase()),
+      (t) => hay.includes(t.slug.toLowerCase) || hay.includes(t.name.toLowerCase),
     );
 
     const applied: string[] = [];
@@ -433,12 +433,12 @@ export class TaxonomyPlatformService {
       tags,
       contentTypes,
       assignments,
-      note: 'Workspace-scoped Taxonomy analytics (VL-197).',
+      note: 'Workspace-scoped Taxonomy analytics.',
     };
   }
 
   async monitoring(organizationId: string, workspaceId: string) {
-    const engine = this.engine();
+    const engine = this.engine;
     const analytics = await this.analytics(organizationId, workspaceId);
     return {
       ...analytics,

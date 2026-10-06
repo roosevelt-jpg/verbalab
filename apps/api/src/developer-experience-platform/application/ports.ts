@@ -1,4 +1,4 @@
-/** Application ports for Developer Experience Platform (VL-311). */
+/** Application ports for Developer Experience Platform. */
 
 export type DeveloperExperiencePlatformProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type DeveloperExperiencePlatformEngineBundle = ReturnType<
 >;
 
 export interface DeveloperExperiencePlatformCatalogPort {
-  engine(): DeveloperExperiencePlatformEngineBundle;
-  listProducts(): DeveloperExperiencePlatformProductRow[];
+  engine: DeveloperExperiencePlatformEngineBundle;
+  listProducts: DeveloperExperiencePlatformProductRow[];
 }
 
 export const DEVELOPER_EXPERIENCE_PLATFORM_CATALOG_PORT = Symbol('DEVELOPER_EXPERIENCE_PLATFORM_CATALOG_PORT');

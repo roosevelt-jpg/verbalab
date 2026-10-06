@@ -16,8 +16,8 @@ export class GetModelMarketplaceEngineHandler
     private readonly catalog: ModelMarketplaceCatalogPort,
   ) {}
 
-  execute(): Promise<ModelMarketplaceEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<ModelMarketplaceEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 

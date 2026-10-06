@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_pr_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_pr_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,47 +35,47 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Prompt Runtime (VL-216)', () => {
+describe('Prompt Runtime',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   const prevMode = process.env.LUGEMI_PROMPT_RUNTIME_MODE;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     process.env.LUGEMI_PROMPT_RUNTIME_MODE = 'sandbox';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   });
 
-  afterAll(async () => {
+  afterAll(async  => {
     if (prevMode === undefined) delete process.env.LUGEMI_PROMPT_RUNTIME_MODE;
     else process.env.LUGEMI_PROMPT_RUNTIME_MODE = prevMode;
-    await app.close();
+    await app.close;
   });
 
-  it('documents Prompt Runtime honesty (extends PI/VL-086; not research lab)', () => {
+  it('documents Prompt Runtime honesty (extends PI/; not research lab)',  => {
     const doc = join(root, 'docs/PROMPT_RUNTIME.md');
     const adr = join(root, 'docs/adr/0127-prompt-runtime.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/research lab/i);
-    expect(text).toMatch(/Prompt Intelligence|VL-188/i);
-    expect(text).toMatch(/VL-086/);
+    expect(text).toMatch(/Prompt Intelligence|i);
+    expect(text).toMatch(/);
     expect(text).toMatch(/does \*\*not\*\* call an LLM|does not call an LLM/i);
   });
 
-  it('exposes engine with honest flags', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/prompt-runtime/engine').expect(200);
+  it('exposes engine with honest flags', async  => {
+    const res = await request(app.getHttpServer).get('/v1/prompt-runtime/engine').expect(200);
     expect(res.body.product).toContain('Prompt Runtime');
     expect(res.body.honesty.autoPromptResearchLab).toBe(false);
     expect(res.body.honesty.callsLlmOnExecute).toBe(false);
@@ -86,14 +86,14 @@ describe('Prompt Runtime (VL-216)', () => {
     expect(res.body.honesty.usesIntelligentCachePromptNamespace).toBe(true);
     expect(res.body.links.console).toBe('/prompt-runtime');
 
-    const keys = await request(app.getHttpServer()).get('/v1/prompt-runtime/keys').expect(200);
+    const keys = await request(app.getHttpServer).get('/v1/prompt-runtime/keys').expect(200);
     expect(keys.body.keys.some((k: { id: string }) => k.id === 'chat')).toBe(true);
 
-    const routes = await request(app.getHttpServer()).get('/v1/prompt-runtime/routes').expect(200);
+    const routes = await request(app.getHttpServer).get('/v1/prompt-runtime/routes').expect(200);
     expect(routes.body.routes.some((r: { feature: string }) => r.feature === 'rag')).toBe(true);
   });
 
-  it('routes, renders variables, executes with cache, and optimizes', async () => {
+  it('routes, renders variables, executes with cache, and optimizes', async  => {
     const org = await seedOrg(prisma, 'pr');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -102,14 +102,14 @@ describe('Prompt Runtime (VL-216)', () => {
       name: 'pr-key',
     });
 
-    const routed = await request(app.getHttpServer())
+    const routed = await request(app.getHttpServer)
       .post('/v1/prompt-runtime/route')
       .send({ feature: 'rag' })
       .expect(200);
     expect(routed.body.key).toBe('rag');
     expect(routed.body.honesty.promptMeshOs).toBe(false);
 
-    const rendered = await request(app.getHttpServer())
+    const rendered = await request(app.getHttpServer)
       .post('/v1/prompt-runtime/render')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -121,7 +121,7 @@ describe('Prompt Runtime (VL-216)', () => {
     expect(rendered.body.body).toBe('Hello Roosevelt from sw');
     expect(rendered.body.missingVariables).toEqual([]);
 
-    const executed = await request(app.getHttpServer())
+    const executed = await request(app.getHttpServer)
       .post('/v1/prompt-runtime/execute')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -135,7 +135,7 @@ describe('Prompt Runtime (VL-216)', () => {
     expect(executed.body.body).toContain('Locale=sw');
     expect(executed.body.cache).toBe('miss');
 
-    const cached = await request(app.getHttpServer())
+    const cached = await request(app.getHttpServer)
       .post('/v1/prompt-runtime/execute')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -147,7 +147,7 @@ describe('Prompt Runtime (VL-216)', () => {
       .expect(200);
     expect(cached.body.cache).toBe('hit');
 
-    const optimized = await request(app.getHttpServer())
+    const optimized = await request(app.getHttpServer)
       .post('/v1/prompt-runtime/optimize')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -159,7 +159,7 @@ describe('Prompt Runtime (VL-216)', () => {
     expect(optimized.body.afterChars).toBeLessThanOrEqual(80);
     expect(optimized.body.honesty.autoPromptResearchLab).toBe(false);
 
-    const blocked = await request(app.getHttpServer())
+    const blocked = await request(app.getHttpServer)
       .post('/v1/prompt-runtime/execute')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -168,24 +168,24 @@ describe('Prompt Runtime (VL-216)', () => {
         skipSecurity: false,
       })
       .expect(400);
-    expect(blocked.body).toBeTruthy();
+    expect(blocked.body).toBeTruthy;
 
-    const analytics = await request(app.getHttpServer())
+    const analytics = await request(app.getHttpServer)
       .get('/v1/prompt-runtime/analytics')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(analytics.body.events).toBeGreaterThanOrEqual(1);
   });
 
-  it('exposes promptRuntimeEngine via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes promptRuntimeEngine via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
           '{ promptRuntimeEngine { product autoPromptResearchLab callsLlmOnExecute extendsPromptIntelligence promptMeshOs mode maxRenderedChars capabilities { id status } } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.promptRuntimeEngine.product).toContain('Prompt Runtime');
     expect(res.body.data.promptRuntimeEngine.callsLlmOnExecute).toBe(false);
     expect(res.body.data.promptRuntimeEngine.extendsPromptIntelligence).toBe(true);

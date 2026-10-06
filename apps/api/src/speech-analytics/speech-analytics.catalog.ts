@@ -8,8 +8,8 @@ export type SpeechAnalyticsCapability = {
   notes: string;
 };
 
-/** Library Phase 25 → Speech Analytics (VL-159). */
-export function speechAnalyticsCatalog() {
+/** Library Phase 25 → Speech Analytics. */
+export function speechAnalyticsCatalog {
   return {
     product: 'Lugemi Speech Analytics',
     note:

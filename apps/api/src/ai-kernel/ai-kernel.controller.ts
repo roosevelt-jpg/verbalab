@@ -8,23 +8,23 @@ export class AiKernelController {
   constructor(private readonly kernel: AiKernelService) {}
 
   @Get('products')
-  products() {
-    return this.kernel.products();
+  products {
+    return this.kernel.products;
   }
 
   @Get('engine')
-  engine() {
-    return this.kernel.products();
+  engine {
+    return this.kernel.products;
   }
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession() session: SessionContext) {
+  overview(@CurrentSession session: SessionContext) {
     return this.kernel.overview(session);
   }
 
   @Get('monitoring')
-  monitoring() {
-    return this.kernel.monitoring();
+  monitoring {
+    return this.kernel.monitoring;
   }
 }

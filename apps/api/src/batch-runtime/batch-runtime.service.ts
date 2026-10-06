@@ -22,7 +22,7 @@ type AuthCtx = {
   ip?: string;
 };
 
-@Injectable()
+@Injectable
 export class BatchRuntimeService {
   constructor(
     private readonly prisma: PrismaService,
@@ -30,23 +30,23 @@ export class BatchRuntimeService {
     private readonly jobs: JobsService,
   ) {}
 
-  engine() {
+  engine {
     return {
-      ...batchRuntimeCatalog(),
-      ceilings: batchCeilings(),
-      mode: batchRuntimeMode(),
+      ...batchRuntimeCatalog,
+      ceilings: batchCeilings,
+      mode: batchRuntimeMode,
       spendSafety: {
         hardSpendCeilingsRequired: true,
         note:
-          'Batch Runtime does not open-ended autoscale GPU workers. Translation delegates to existing BullMQ. Cost Optimization (VL-211) must enforce spend caps.',
+          'Batch Runtime does not open-ended autoscale GPU workers. Translation delegates to existing BullMQ. Cost Optimization must enforce spend caps.',
       },
     };
   }
 
-  kinds() {
+  kinds {
     return {
-      kinds: batchKinds(),
-      honesty: batchRuntimeCatalog().honesty,
+      kinds: batchKinds,
+      honesty: batchRuntimeCatalog.honesty,
     };
   }
 
@@ -56,7 +56,7 @@ export class BatchRuntimeService {
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
         ...(input.status ? { status: input.status } : {}),
-        ...(input.kind ? { kind: input.kind.toLowerCase() } : {}),
+        ...(input.kind ? { kind: input.kind.toLowerCase } : {}),
       },
       orderBy: [{ priorityWeight: 'desc' }, { createdAt: 'desc' }],
       take: 50,
@@ -85,7 +85,7 @@ export class BatchRuntimeService {
       webhookUrl?: string;
     },
   ) {
-    this.assertEnabled();
+    this.assertEnabled;
     const kind = this.normalizeKind(input.kind ?? 'translation');
     if (kind === 'video') {
       throw new ApiException(
@@ -102,7 +102,7 @@ export class BatchRuntimeService {
       );
     }
 
-    const ceilings = batchCeilings();
+    const ceilings = batchCeilings;
     const priority = this.normalizePriority(input.priority ?? 'normal');
     const items = Array.isArray(input.items) ? input.items : [];
     if (items.length === 0) {
@@ -125,7 +125,7 @@ export class BatchRuntimeService {
       Math.max(0, Math.floor(input.maxRetries ?? ceilings.maxRetries)),
     );
     const runAt = input.runAt ? new Date(input.runAt) : null;
-    if (runAt && Number.isNaN(runAt.getTime())) {
+    if (runAt && Number.isNaN(runAt.getTime)) {
       throw new ApiException(
         'validation_error',
         'runAt must be an ISO datetime',
@@ -138,8 +138,8 @@ export class BatchRuntimeService {
     let jobId: string | null = null;
     let status = scheduled ? 'scheduled' : 'queued';
     let result: unknown = null;
-    const source = (input.source ?? 'en').trim() || 'en';
-    const target = (input.target ?? 'sw').trim() || 'sw';
+    const source = (input.source ?? 'en').trim || 'en';
+    const target = (input.target ?? 'sw').trim || 'sw';
 
     if (kind === 'translation' && !scheduled) {
       const batchItems = items.map((it) => {
@@ -210,7 +210,7 @@ export class BatchRuntimeService {
     return {
       run: this.serialize(row),
       ceilings,
-      honesty: batchRuntimeCatalog().honesty,
+      honesty: batchRuntimeCatalog.honesty,
       note:
         kind === 'translation'
           ? 'Delegated to existing BullMQ batch_translate job.'
@@ -221,7 +221,7 @@ export class BatchRuntimeService {
   }
 
   async startScheduled(input: AuthCtx & { id: string }) {
-    this.assertEnabled();
+    this.assertEnabled;
     const row = await this.requireRun(input);
     if (row.status !== 'scheduled') {
       throw new ApiException(
@@ -230,10 +230,10 @@ export class BatchRuntimeService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    if (row.runAt && row.runAt.getTime() > Date.now()) {
+    if (row.runAt && row.runAt.getTime > Date.now) {
       throw new ApiException(
         'validation_error',
-        `runAt ${row.runAt.toISOString()} is still in the future`,
+        `runAt ${row.runAt.toISOString} is still in the future`,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -291,7 +291,7 @@ export class BatchRuntimeService {
         result: result as object,
         metadata: {
           ...((row.metadata as object) ?? {}),
-          startedAt: new Date().toISOString(),
+          startedAt: new Date.toISOString,
         },
       },
     });
@@ -314,7 +314,7 @@ export class BatchRuntimeService {
   async checkpoint(
     input: AuthCtx & { id: string; index?: number },
   ) {
-    this.assertEnabled();
+    this.assertEnabled;
     const row = await this.requireRun(input);
     if (!['queued', 'running', 'scheduled', 'failed', 'completed'].includes(row.status)) {
       throw new ApiException(
@@ -334,7 +334,7 @@ export class BatchRuntimeService {
         status: row.status === 'scheduled' ? 'scheduled' : 'running',
         metadata: {
           ...((row.metadata as object) ?? {}),
-          lastCheckpointAt: new Date().toISOString(),
+          lastCheckpointAt: new Date.toISOString,
         },
       },
     });
@@ -353,7 +353,7 @@ export class BatchRuntimeService {
   }
 
   async retry(input: AuthCtx & { id: string }) {
-    this.assertEnabled();
+    this.assertEnabled;
     const row = await this.requireRun(input);
     if (row.attempts >= row.maxRetries) {
       throw new ApiException(
@@ -402,13 +402,13 @@ export class BatchRuntimeService {
 
     return {
       run: this.serialize(updated),
-      honesty: batchRuntimeCatalog().honesty,
+      honesty: batchRuntimeCatalog.honesty,
       note: 'Retry within hard budget — not open-ended.',
     };
   }
 
   async analytics(input: AuthCtx) {
-    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
     const [total, completed, failed, scheduled, audits] = await Promise.all([
       this.prisma.batchRun.count({
         where: {
@@ -455,25 +455,25 @@ export class BatchRuntimeService {
       failed,
       scheduled,
       auditsLast30d: audits,
-      note: 'Batch Runtime analytics (VL-209). ≠ VL-212 AI Runtime Analytics.',
+      note: 'Batch Runtime analytics. ≠ AI Runtime Analytics.',
     };
   }
 
   async monitoring(input: AuthCtx) {
     const [engine, analytics] = await Promise.all([
-      Promise.resolve(this.engine()),
+      Promise.resolve(this.engine),
       this.analytics(input),
     ]);
     return {
-      generatedAt: new Date().toISOString(),
-      mode: batchRuntimeMode(),
+      generatedAt: new Date.toISOString,
+      mode: batchRuntimeMode,
       analytics,
       honesty: engine.honesty,
       spendSafety: engine.spendSafety,
       deferred: engine.capabilities
         .filter((c) => c.status === 'deferred')
         .map((c) => c.id),
-      note: 'Batch Runtime monitoring snapshot (VL-209).',
+      note: 'Batch Runtime monitoring snapshot.',
     };
   }
 
@@ -490,8 +490,8 @@ export class BatchRuntimeService {
     };
   }
 
-  private assertEnabled() {
-    if (batchRuntimeMode() === 'disabled') {
+  private assertEnabled {
+    if (batchRuntimeMode === 'disabled') {
       throw new ApiException(
         'batch_runtime_disabled',
         'Batch Runtime mode is disabled (LUGEMI_BATCH_RUNTIME_MODE=disabled).',
@@ -501,7 +501,7 @@ export class BatchRuntimeService {
   }
 
   private normalizeKind(raw: string): BatchKind {
-    const k = raw.toLowerCase() as BatchKind;
+    const k = raw.toLowerCase as BatchKind;
     if (!BATCH_KINDS.includes(k)) {
       throw new ApiException(
         'validation_error',
@@ -513,7 +513,7 @@ export class BatchRuntimeService {
   }
 
   private normalizePriority(raw: string): BatchPriority {
-    const p = raw.toLowerCase();
+    const p = raw.toLowerCase;
     if (p === 'low' || p === 'normal' || p === 'high') return p;
     throw new ApiException(
       'validation_error',
@@ -571,12 +571,12 @@ export class BatchRuntimeService {
       attempts: r.attempts,
       maxRetries: r.maxRetries,
       jobId: r.jobId,
-      runAt: r.runAt?.toISOString() ?? null,
+      runAt: r.runAt?.toISOString ?? null,
       error: r.error,
       result: r.result,
       metadata: r.metadata,
-      createdAt: r.createdAt.toISOString(),
-      updatedAt: r.updatedAt.toISOString(),
+      createdAt: r.createdAt.toISOString,
+      updatedAt: r.updatedAt.toISOString,
     };
   }
 }

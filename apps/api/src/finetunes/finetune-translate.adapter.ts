@@ -37,7 +37,7 @@ export class FineTuneTranslateAdapter implements TranslationProvider {
       );
     }
 
-    const started = Date.now();
+    const started = Date.now;
     const text =
       route.artifactKind === 'phrase_map'
         ? this.translatePhraseMap(input, route.artifactUri)
@@ -49,7 +49,7 @@ export class FineTuneTranslateAdapter implements TranslationProvider {
       target: input.target,
       provider: this.name,
       characters: [...input.text].length,
-      latencyMs: Date.now() - started,
+      latencyMs: Date.now - started,
     };
   }
 
@@ -102,7 +102,7 @@ export class FineTuneTranslateAdapter implements TranslationProvider {
       );
     }
 
-    const json = (await response.json()) as { text?: string; translatedText?: string };
+    const json = (await response.json) as { text?: string; translatedText?: string };
     const text = json.text ?? json.translatedText;
     if (!text) {
       throw new ApiException(

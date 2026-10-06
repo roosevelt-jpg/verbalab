@@ -44,29 +44,29 @@ export class VoiceBiometricsController {
   }
 
   @Get('engine')
-  engine() {
-    return this.biometrics.engine();
+  engine {
+    return this.biometrics.engine;
   }
 
   @Get('encryption')
-  encryption() {
-    return this.biometrics.encryptionStatus();
+  encryption {
+    return this.biometrics.encryptionStatus;
   }
 
   @Get('engine/analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.biometrics.analytics(req.translateAuth.organizationId);
   }
 
   @Get('liveness/challenge')
-  livenessChallenge() {
-    return this.biometrics.livenessChallenge();
+  livenessChallenge {
+    return this.biometrics.livenessChallenge;
   }
 
   @Get('risk')
   @UseGuards(TranslateAuthGuard)
-  risk(@Req() req: AuthedReq, @Query('profileId') profileId?: string) {
+  risk(@Req req: AuthedReq, @Query('profileId') profileId?: string) {
     return this.biometrics.risk(this.auth(req), profileId);
   }
 
@@ -75,23 +75,23 @@ export class VoiceBiometricsController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   enroll(
-    @Req() req: AuthedReq,
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { profileId?: string; enableAuthFactor?: string },
+    @Req req: AuthedReq,
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { profileId?: string; enableAuthFactor?: string },
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
     }
-    if (typeof body.profileId !== 'string' || !body.profileId.trim()) {
+    if (typeof body.profileId !== 'string' || !body.profileId.trim) {
       throw new ApiException('validation_error', 'profileId is required', HttpStatus.BAD_REQUEST);
     }
     return this.biometrics.enroll(this.auth(req), {
-      profileId: body.profileId.trim(),
+      profileId: body.profileId.trim,
       file,
       enableAuthFactor: body.enableAuthFactor === 'true' || body.enableAuthFactor === '1',
     });
@@ -102,23 +102,23 @@ export class VoiceBiometricsController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   verify(
-    @Req() req: AuthedReq,
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { profileId?: string; threshold?: string },
+    @Req req: AuthedReq,
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { profileId?: string; threshold?: string },
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
     }
-    if (typeof body.profileId !== 'string' || !body.profileId.trim()) {
+    if (typeof body.profileId !== 'string' || !body.profileId.trim) {
       throw new ApiException('validation_error', 'profileId is required', HttpStatus.BAD_REQUEST);
     }
     return this.biometrics.verify(this.auth(req), {
-      profileId: body.profileId.trim(),
+      profileId: body.profileId.trim,
       file,
       threshold: body.threshold ? Number(body.threshold) : undefined,
     });
@@ -129,14 +129,14 @@ export class VoiceBiometricsController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   identify(
-    @Req() req: AuthedReq,
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { threshold?: string; topK?: string },
+    @Req req: AuthedReq,
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { threshold?: string; topK?: string },
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
@@ -153,11 +153,11 @@ export class VoiceBiometricsController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
-  antiSpoof(@UploadedFile() file: Express.Multer.File | undefined) {
+  antiSpoof(@UploadedFile file: Express.Multer.File | undefined) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
     }
@@ -169,14 +169,14 @@ export class VoiceBiometricsController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   liveness(
-    @Req() req: AuthedReq,
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { minDurationSeconds?: string },
+    @Req req: AuthedReq,
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { minDurationSeconds?: string },
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
@@ -193,14 +193,14 @@ export class VoiceBiometricsController {
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
-      limits: { fileSize: audioMaxBytes() },
+      storage: memoryStorage,
+      limits: { fileSize: audioMaxBytes },
     }),
   )
   authenticate(
-    @Req() req: AuthedReq,
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { profileId?: string; threshold?: string },
+    @Req req: AuthedReq,
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { profileId?: string; threshold?: string },
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
@@ -214,7 +214,7 @@ export class VoiceBiometricsController {
 
   @Delete('profiles/:id')
   @UseGuards(TranslateAuthGuard)
-  deleteProfile(@Req() req: AuthedReq, @Param('id') id: string) {
+  deleteProfile(@Req req: AuthedReq, @Param('id') id: string) {
     return this.biometrics.deleteProfile(this.auth(req), id);
   }
 }

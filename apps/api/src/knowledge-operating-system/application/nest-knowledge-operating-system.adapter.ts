@@ -6,16 +6,16 @@ import {
   KnowledgeOperatingSystemProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestKnowledgeOperatingSystemCatalogAdapter implements KnowledgeOperatingSystemCatalogPort {
   constructor(private readonly service: KnowledgeOperatingSystemService) {}
 
-  engine(): KnowledgeOperatingSystemEngineBundle {
-    return this.service.engine();
+  engine: KnowledgeOperatingSystemEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): KnowledgeOperatingSystemProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: KnowledgeOperatingSystemProductRow[] {
+    const bundle = this.engine as {
       products?: KnowledgeOperatingSystemProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestKnowledgeOperatingSystemCatalogAdapter implements KnowledgeOper
         status: 'shipped',
         api: 'GET /v1/knowledge-operating-system/engine',
         console: '/knowledge-operating-system',
-        notes: 'VL-341 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

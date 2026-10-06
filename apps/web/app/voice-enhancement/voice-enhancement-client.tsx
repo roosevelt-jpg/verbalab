@@ -14,8 +14,8 @@ type Engine = {
   honesty: { spectralMlDenoise: boolean; liveAec: boolean };
 };
 
-export function VoiceEnhancementClient() {
-  const { getToken, isLoaded } = useAuth();
+export function VoiceEnhancementClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [profile, setProfile] = useState('microphone_cleanup');
@@ -26,8 +26,8 @@ export function VoiceEnhancementClient() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, prof, echo] = await Promise.all([
       apiFetch<Engine>('/v1/voice-enhancement/engine', { token }),
@@ -39,12 +39,12 @@ export function VoiceEnhancementClient() {
     setEchoNote(`${echo.status}: ${echo.note}`);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
-  async function enhance() {
+  async function enhance {
     if (!file) {
       setError('Choose an audio file');
       return;
@@ -52,9 +52,9 @@ export function VoiceEnhancementClient() {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
-      const form = new FormData();
+      const form = new FormData;
       form.append('file', file);
       form.append('profile', profile);
       const res = await fetch(`${API_URL}/v1/voice-enhancement/enhance`, {
@@ -62,7 +62,7 @@ export function VoiceEnhancementClient() {
         headers: { Authorization: `Bearer ${token}` },
         body: form,
       });
-      const body = await res.json();
+      const body = await res.json;
       if (!res.ok) throw new Error(body?.error?.message ?? `HTTP ${res.status}`);
       const bin = atob(body.audioBase64 as string);
       const bytes = new Uint8Array(bin.length);
@@ -115,7 +115,7 @@ export function VoiceEnhancementClient() {
           <span style={label}>Audio file (WAV preferred)</span>
           <input type="file" accept="audio/*" onChange={(e) => setFile(e.target.files?.[0] ?? null)} />
         </label>
-        <button type="button" disabled={busy} onClick={() => void enhance()} style={primary}>
+        <button type="button" disabled={busy} onClick={ => void enhance} style={primary}>
           {busy ? 'Enhancing…' : 'Enhance'}
         </button>
         {meta ? <p style={{ color: 'var(--muted)', fontSize: '0.9rem' }}>{meta}</p> : null}

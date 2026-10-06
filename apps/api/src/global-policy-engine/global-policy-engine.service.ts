@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { globalPolicyEngineCatalog } from './global-policy-engine.catalog';
 
-@Injectable()
+@Injectable
 export class GlobalPolicyEngineService {
-  engine() {
-    return globalPolicyEngineCatalog();
+  engine {
+    return globalPolicyEngineCatalog;
   }
 
   list(query?: string) {
-    const catalog = this.engine();
-    const q = (query ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (query ?? '').trim.toLowerCase;
     const policies = catalog.policies.filter((row) => {
       if (!q) return true;
-      return JSON.stringify(row).toLowerCase().includes(q);
+      return JSON.stringify(row).toLowerCase.includes(q);
     });
     return {
       policies,
@@ -28,14 +28,14 @@ export class GlobalPolicyEngineService {
     return this.list(query);
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'global-policy-engine',
       count: catalog.policies.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Global Policy Engine monitoring snapshot (VL-317).',
+      note: 'Global Policy Engine monitoring snapshot.',
     };
   }
 }

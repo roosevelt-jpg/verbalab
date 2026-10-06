@@ -18,7 +18,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_analytics_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_analytics_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -32,35 +32,35 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Analytics (VL-085)', () => {
+describe('Analytics',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('estimates feature costs from units', () => {
+  it('estimates feature costs from units',  => {
     expect(roundUsd(estimateFeatureCostUsd('translate', 1000))).toBe(0.02);
     expect(roundUsd(estimateFeatureCostUsd('stt', 60))).toBe(0.006);
   });
 
-  it('returns volume by feature, language pairs, cost, and job error rate', async () => {
-    const org = await seedOrg(prisma, `an_${Date.now()}`);
+  it('returns volume by feature, language pairs, cost, and job error rate', async  => {
+    const org = await seedOrg(prisma, `an_${Date.now}`);
     const workspaceId = org.workspaces[0].id;
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -149,7 +149,7 @@ describe('Analytics (VL-085)', () => {
       ],
     });
 
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer)
       .get('/v1/analytics/overview')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -171,8 +171,8 @@ describe('Analytics (VL-085)', () => {
     expect(res.body.errors.errorRate).toBe(0.3333);
   });
 
-  it('rejects invalid period windows', async () => {
-    const org = await seedOrg(prisma, `an_bad_${Date.now()}`);
+  it('rejects invalid period windows', async  => {
+    const org = await seedOrg(prisma, `an_bad_${Date.now}`);
     const key = await apiKeys.create({
       organizationId: org.id,
       workspaceId: org.workspaces[0].id,
@@ -180,7 +180,7 @@ describe('Analytics (VL-085)', () => {
       name: 'analytics',
     });
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .get('/v1/analytics/overview')
       .query({ from: '2026-09-01', to: '2026-08-01' })
       .set('Authorization', `Bearer ${key.secret}`)

@@ -11,19 +11,19 @@ import {
   MemoryFabricRouteRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestMemoryFabricCatalogAdapter implements MemoryFabricCatalogPort {
   constructor(private readonly fabric: MemoryFabricService) {}
 
-  products(): MemoryFabricProductsBundle {
-    return this.fabric.products();
+  products: MemoryFabricProductsBundle {
+    return this.fabric.products;
   }
 
-  listCapabilities(): MemoryFabricCapabilityRow[] {
-    return memoryFabricCapabilityCatalog();
+  listCapabilities: MemoryFabricCapabilityRow[] {
+    return memoryFabricCapabilityCatalog;
   }
 
-  listRoutes(): MemoryFabricRouteRow[] {
-    return memoryFabricRoutingTable();
+  listRoutes: MemoryFabricRouteRow[] {
+    return memoryFabricRoutingTable;
   }
 }

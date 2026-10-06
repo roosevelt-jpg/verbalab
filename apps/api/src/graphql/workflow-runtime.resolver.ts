@@ -2,13 +2,13 @@ import { Query, Resolver } from '@nestjs/graphql';
 import { WorkflowRuntimeService } from '../workflow-runtime/workflow-runtime.service';
 import { GqlWorkflowRuntimeEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class WorkflowRuntimeGraphqlResolver {
   constructor(private readonly runtime: WorkflowRuntimeService) {}
 
-  @Query(() => GqlWorkflowRuntimeEngine, { name: 'workflowRuntimeEngine' })
-  workflowRuntimeEngine(): GqlWorkflowRuntimeEngine {
-    const c = this.runtime.engine();
+  @Query( => GqlWorkflowRuntimeEngine, { name: 'workflowRuntimeEngine' })
+  workflowRuntimeEngine: GqlWorkflowRuntimeEngine {
+    const c = this.runtime.engine;
     return {
       product: c.product,
       note: c.note,

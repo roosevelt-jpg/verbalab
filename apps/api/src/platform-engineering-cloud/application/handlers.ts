@@ -17,8 +17,8 @@ export class GetPlatformEngineeringCloudEngineHandler
     private readonly catalog: PlatformEngineeringCloudCatalogPort,
   ) {}
 
-  execute(): Promise<PlatformEngineeringCloudEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<PlatformEngineeringCloudEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListPlatformEngineeringCloudProductsHandler
     private readonly catalog: PlatformEngineeringCloudCatalogPort,
   ) {}
 
-  execute(): Promise<PlatformEngineeringCloudProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<PlatformEngineeringCloudProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

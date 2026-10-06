@@ -6,16 +6,16 @@ import {
   ControlPlaneAnalyticsProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestControlPlaneAnalyticsCatalogAdapter implements ControlPlaneAnalyticsCatalogPort {
   constructor(private readonly service: ControlPlaneAnalyticsService) {}
 
-  engine(): ControlPlaneAnalyticsEngineBundle {
-    return this.service.engine();
+  engine: ControlPlaneAnalyticsEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): ControlPlaneAnalyticsProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: ControlPlaneAnalyticsProductRow[] {
+    const bundle = this.engine as {
       products?: ControlPlaneAnalyticsProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestControlPlaneAnalyticsCatalogAdapter implements ControlPlaneAnal
         status: 'shipped',
         api: 'GET /v1/control-plane-analytics/engine',
         console: '/control-plane-analytics',
-        notes: 'VL-322 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

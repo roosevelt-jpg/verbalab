@@ -49,8 +49,8 @@ function statusBadge(status: string): CSSProperties {
   return { ...base, background: 'var(--bg-soft)', color: 'var(--muted)' };
 }
 
-export function AudioClient() {
-  const { getToken, isLoaded } = useAuth();
+export function AudioClient {
+  const { getToken, isLoaded } = useAuth;
   const [apiKey, setApiKey] = useState('');
   const [tab, setTab] = useState<'tts' | 'clone' | 'stt'>('tts');
 
@@ -75,9 +75,9 @@ export function AudioClient() {
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const usableClones = useMemo(() => clones.filter((c) => c.usable), [clones]);
+  const usableClones = useMemo( => clones.filter((c) => c.usable), [clones]);
   const stockVoices = useMemo(
-    () =>
+     =>
       voices.filter(
         (v) =>
           !v.id.startsWith('own:') &&
@@ -87,7 +87,7 @@ export function AudioClient() {
     [voices],
   );
   const ownVoices = useMemo(
-    () =>
+     =>
       voices.filter(
         (v) =>
           v.id.startsWith('own:') || v.provider === 'own_tts' || v.provider === 'own_tts_fixture',
@@ -95,8 +95,8 @@ export function AudioClient() {
     [voices],
   );
 
-  async function authHeader(): Promise<string> {
-    const token = await getToken();
+  async function authHeader: Promise<string> {
+    const token = await getToken;
     if (token) return `Bearer ${token}`;
     if (apiKey.startsWith('lg_live_')) return `Bearer ${apiKey}`;
     throw new Error('Sign in with Clerk, or paste a lg_live_ API key');
@@ -106,35 +106,35 @@ export function AudioClient() {
     setClones(await apiFetch<VoiceClone[]>('/v1/voice-clones', { token }));
   }
 
-  useEffect(() => {
+  useEffect( => {
     void apiFetch<{ data: Voice[] }>('/v1/audio/voices')
       .then((res) => {
         setVoices(res.data);
         if (res.data[0]) setVoice(res.data[0].id);
       })
-      .catch(() => undefined);
+      .catch( => undefined);
   }, []);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void (async () => {
+    void (async  => {
       try {
-        const token = await getToken();
+        const token = await getToken;
         if (token) await refreshClones(token);
       } catch {
         // optional when signed out
       }
-    })();
+    });
   }, [getToken, isLoaded]);
 
-  useEffect(() => {
-    return () => {
+  useEffect( => {
+    return  => {
       if (audioUrl) URL.revokeObjectURL(audioUrl);
     };
   }, [audioUrl]);
 
-  useEffect(() => {
-    return () => {
+  useEffect( => {
+    return  => {
       for (const url of samplePreviewUrls) URL.revokeObjectURL(url);
     };
   }, [samplePreviewUrls]);
@@ -153,7 +153,7 @@ export function AudioClient() {
   }
 
   async function onTranscribe(event: FormEvent) {
-    event.preventDefault();
+    event.preventDefault;
     setError(null);
     setTranscript(null);
     if (!file) {
@@ -162,8 +162,8 @@ export function AudioClient() {
     }
     setLoading(true);
     try {
-      const authorization = await authHeader();
-      const form = new FormData();
+      const authorization = await authHeader;
+      const form = new FormData;
       form.append('file', file);
       if (language) form.append('language', language);
       const res = await fetch(`${API_URL}/v1/audio/transcriptions`, {
@@ -171,7 +171,7 @@ export function AudioClient() {
         headers: { Authorization: authorization },
         body: form,
       });
-      const body = (await res.json()) as Transcript & { error?: { message: string } };
+      const body = (await res.json) as Transcript & { error?: { message: string } };
       if (!res.ok) {
         throw new Error(body.error?.message ?? `Transcription failed (${res.status})`);
       }
@@ -192,7 +192,7 @@ export function AudioClient() {
     }
     setLoading(true);
     try {
-      const authorization = await authHeader();
+      const authorization = await authHeader;
       const res = await fetch(`${API_URL}/v1/audio/speech`, {
         method: 'POST',
         headers: {
@@ -202,11 +202,11 @@ export function AudioClient() {
         body: JSON.stringify({ text, voice: voiceId, language: lang }),
       });
       if (!res.ok) {
-        const body = (await res.json().catch(() => ({}))) as { error?: { message: string } };
+        const body = (await res.json.catch( => ({}))) as { error?: { message: string } };
         throw new Error(body.error?.message ?? `Speech failed (${res.status})`);
       }
       setWatermarkApplied(res.headers.get('x-lugemi-watermark') === 'required');
-      const blob = await res.blob();
+      const blob = await res.blob;
       setAudioUrl(URL.createObjectURL(blob));
       setTab('tts');
     } catch (err) {
@@ -217,16 +217,16 @@ export function AudioClient() {
   }
 
   async function onSpeak(event: FormEvent) {
-    event.preventDefault();
+    event.preventDefault;
     await speak(speechText, voice, language);
   }
 
-  async function onPreview() {
+  async function onPreview {
     await speak(speechText, voice, language);
   }
 
   async function onCreateClone(event: FormEvent) {
-    event.preventDefault();
+    event.preventDefault;
     setError(null);
     setMessage(null);
     if (sampleFiles.length === 0) {
@@ -235,9 +235,9 @@ export function AudioClient() {
     }
     setLoading(true);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
-      const form = new FormData();
+      const form = new FormData;
       form.append('name', cloneName);
       form.append('consentNotes', consentNotes);
       form.append('consentAttested', consentAttested ? 'true' : 'false');
@@ -249,7 +249,7 @@ export function AudioClient() {
         headers: { Authorization: `Bearer ${token}` },
         body: form,
       });
-      const body = (await res.json()) as VoiceClone & { error?: { message: string } };
+      const body = (await res.json) as VoiceClone & { error?: { message: string } };
       if (!res.ok) throw new Error(body.error?.message ?? 'Create failed (Pro + consent required)');
       setMessage(`Clone “${body.name}” submitted for abuse review (pending).`);
       setCloneName('');
@@ -268,7 +268,7 @@ export function AudioClient() {
     setError(null);
     setMessage(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       await apiFetch(`/v1/voice-clones/${id}/review`, {
         method: 'POST',
@@ -286,7 +286,7 @@ export function AudioClient() {
     setError(null);
     setMessage(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       await apiFetch(`/v1/voice-clones/${id}/disable`, {
         method: 'POST',
@@ -332,7 +332,7 @@ export function AudioClient() {
             key={id}
             type="button"
             className={tab === id ? 'vl-btn' : 'vl-btn vl-btn-secondary'}
-            onClick={() => setTab(id)}
+            onClick={ => setTab(id)}
           >
             {label}
           </button>
@@ -354,7 +354,7 @@ export function AudioClient() {
                   type="button"
                   className={language === p.code ? 'vl-btn' : 'vl-btn vl-btn-secondary'}
                   style={{ padding: '0.35rem 0.7rem', fontSize: '0.85rem' }}
-                  onClick={() => applyLangPreset(p.code)}
+                  onClick={ => applyLangPreset(p.code)}
                 >
                   {p.label}
                 </button>
@@ -412,7 +412,7 @@ export function AudioClient() {
           </label>
 
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-            <button type="button" className="vl-btn vl-btn-secondary" disabled={loading} onClick={() => void onPreview()}>
+            <button type="button" className="vl-btn vl-btn-secondary" disabled={loading} onClick={ => void onPreview}>
               {loading ? 'Working…' : 'Preview'}
             </button>
             <button type="submit" className="vl-btn" disabled={loading}>
@@ -543,14 +543,14 @@ export function AudioClient() {
                         <button
                           type="button"
                           className="vl-btn"
-                          onClick={() => void reviewClone(c.id, 'approved')}
+                          onClick={ => void reviewClone(c.id, 'approved')}
                         >
                           Approve
                         </button>
                         <button
                           type="button"
                           className="vl-btn vl-btn-secondary"
-                          onClick={() => void reviewClone(c.id, 'rejected')}
+                          onClick={ => void reviewClone(c.id, 'rejected')}
                         >
                           Reject
                         </button>
@@ -561,7 +561,7 @@ export function AudioClient() {
                         type="button"
                         className="vl-btn vl-btn-secondary"
                         disabled={loading}
-                        onClick={() => {
+                        onClick={ => {
                           setVoice(c.voice);
                           void speak(speechText || LANG_PRESETS[1]!.sample, c.voice, language);
                         }}
@@ -573,7 +573,7 @@ export function AudioClient() {
                       <button
                         type="button"
                         className="vl-btn vl-btn-danger"
-                        onClick={() => void disableClone(c.id)}
+                        onClick={ => void disableClone(c.id)}
                       >
                         Disable
                       </button>

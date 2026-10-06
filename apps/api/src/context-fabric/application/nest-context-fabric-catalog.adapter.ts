@@ -11,19 +11,19 @@ import {
   ContextFabricRouteRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestContextFabricCatalogAdapter implements ContextFabricCatalogPort {
   constructor(private readonly fabric: ContextFabricService) {}
 
-  products(): ContextFabricProductsBundle {
-    return this.fabric.products();
+  products: ContextFabricProductsBundle {
+    return this.fabric.products;
   }
 
-  listCapabilities(): ContextFabricCapabilityRow[] {
-    return contextFabricCapabilityCatalog();
+  listCapabilities: ContextFabricCapabilityRow[] {
+    return contextFabricCapabilityCatalog;
   }
 
-  listRoutes(): ContextFabricRouteRow[] {
-    return contextFabricRoutingTable();
+  listRoutes: ContextFabricRouteRow[] {
+    return contextFabricRoutingTable;
   }
 }

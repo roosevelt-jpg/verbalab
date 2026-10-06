@@ -13,24 +13,24 @@ import { ApiException } from './api-exception';
 import { structuredLog } from '../logging/structured-logger';
 import { captureApiException } from '../../observability/sentry';
 
-@Catch()
+@Catch
 export class ApiExceptionFilter implements ExceptionFilter {
   catch(exception: unknown, host: ArgumentsHost) {
-    if (host.getType<string>() === 'graphql') {
+    if (host.getType<string> === 'graphql') {
       this.catchGraphql(exception, host);
       return;
     }
 
-    const ctx = host.switchToHttp();
-    const response = ctx.getResponse<Response>();
-    const request = ctx.getRequest<Request & { requestId?: string }>();
-    const requestId = request?.requestId ?? randomUUID();
+    const ctx = host.switchToHttp;
+    const response = ctx.getResponse<Response>;
+    const request = ctx.getRequest<Request & { requestId?: string }>;
+    const requestId = request?.requestId ?? randomUUID;
     if (response?.setHeader) {
       response.setHeader('x-request-id', requestId);
     }
 
     if (exception instanceof ApiException) {
-      const status = exception.getStatus();
+      const status = exception.getStatus;
       if (status >= 500) {
         structuredLog.error('api.exception', {
           event: 'api.exception',
@@ -52,8 +52,8 @@ export class ApiExceptionFilter implements ExceptionFilter {
     }
 
     if (exception instanceof HttpException) {
-      const status = exception.getStatus();
-      const body = exception.getResponse();
+      const status = exception.getStatus;
+      const body = exception.getResponse;
       const message =
         typeof body === 'string'
           ? body
@@ -101,11 +101,11 @@ export class ApiExceptionFilter implements ExceptionFilter {
 
   private catchGraphql(exception: unknown, host: ArgumentsHost) {
     const gqlHost = GqlArgumentsHost.create(host);
-    const ctx = gqlHost.getContext<{ req?: Request & { requestId?: string } }>();
-    const requestId = ctx?.req?.requestId ?? randomUUID();
+    const ctx = gqlHost.getContext<{ req?: Request & { requestId?: string } }>;
+    const requestId = ctx?.req?.requestId ?? randomUUID;
 
     if (exception instanceof ApiException) {
-      const status = exception.getStatus();
+      const status = exception.getStatus;
       if (status >= 500) {
         structuredLog.error('api.exception', {
           event: 'api.exception',
@@ -122,8 +122,8 @@ export class ApiExceptionFilter implements ExceptionFilter {
     }
 
     if (exception instanceof HttpException) {
-      const status = exception.getStatus();
-      const body = exception.getResponse();
+      const status = exception.getStatus;
+      const body = exception.getResponse;
       const message =
         typeof body === 'string'
           ? body

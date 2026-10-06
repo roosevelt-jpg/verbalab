@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetGpuRuntimeEngineQuery } from '../gpu-runtime/application/messages';
 import { GqlGpuRuntimeEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class GpuRuntimeGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query(() => GqlGpuRuntimeEngine, { name: 'gpuRuntimeEngine' })
-  async gpuRuntimeEngine(): Promise<GqlGpuRuntimeEngine> {
-    const catalog = await this.queries.execute(new GetGpuRuntimeEngineQuery());
+  @Query( => GqlGpuRuntimeEngine, { name: 'gpuRuntimeEngine' })
+  async gpuRuntimeEngine: Promise<GqlGpuRuntimeEngine> {
+    const catalog = await this.queries.execute(new GetGpuRuntimeEngineQuery);
     return {
       product: catalog.product,
       note: catalog.note,

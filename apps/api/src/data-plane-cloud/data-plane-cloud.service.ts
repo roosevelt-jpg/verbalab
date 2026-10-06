@@ -9,17 +9,17 @@ import {
   dataPlaneCloudRuntimeInventory,
 } from './data-plane-cloud.catalog';
 
-@Injectable()
+@Injectable
 export class DataPlaneCloudService {
   constructor(private readonly usage: UsageService) {}
 
-  products() {
+  products {
     return {
       product: 'Lugemi Data Plane Cloud',
-      products: dataPlaneCloudProductCatalog(),
-      runtimeInventory: dataPlaneCloudRuntimeInventory(),
-      architecture: dataPlaneCloudArchitectureNotes(),
-      honesty: dataPlaneCloudHonesty(),
+      products: dataPlaneCloudProductCatalog,
+      runtimeInventory: dataPlaneCloudRuntimeInventory,
+      architecture: dataPlaneCloudArchitectureNotes,
+      honesty: dataPlaneCloudHonesty,
       safety: {
         managesOrgsPoliciesBilling: false,
         serviceMeshOs: false,
@@ -30,20 +30,20 @@ export class DataPlaneCloudService {
       },
       docs: '/docs/DATA_PLANE_CLOUD.md',
       note:
-        'Data Plane Foundation (VL-324). Executes via thin runtimes — never manages orgs/policies/billing. Not Service Mesh OS.',
+        'Data Plane Foundation. Executes via thin runtimes — never manages orgs/policies/billing. Not Service Mesh OS.',
     };
   }
 
-  routing() {
+  routing {
     return {
-      routes: dataPlaneCloudRoutingTable(),
-      products: dataPlaneCloudProductCatalog().map((p) => ({
+      routes: dataPlaneCloudRoutingTable,
+      products: dataPlaneCloudProductCatalog.map((p) => ({
         id: p.id,
         status: p.status,
         api: p.api,
       })),
-      runtimeInventory: dataPlaneCloudRuntimeInventory(),
-      honesty: dataPlaneCloudHonesty(),
+      runtimeInventory: dataPlaneCloudRuntimeInventory,
+      honesty: dataPlaneCloudHonesty,
       note: 'Static Data Plane Cloud discovery catalog for Foundation.',
       docs: '/docs/DATA_PLANE_CLOUD.md',
     };
@@ -62,10 +62,10 @@ export class DataPlaneCloudService {
         chat: usageSummary.chat,
         embeddings: usageSummary.embeddings,
       },
-      products: dataPlaneCloudProductCatalog(),
-      runtimeInventory: dataPlaneCloudRuntimeInventory(),
-      architecture: dataPlaneCloudArchitectureNotes(),
-      honesty: dataPlaneCloudHonesty(),
+      products: dataPlaneCloudProductCatalog,
+      runtimeInventory: dataPlaneCloudRuntimeInventory,
+      architecture: dataPlaneCloudArchitectureNotes,
+      honesty: dataPlaneCloudHonesty,
       safety: {
         managesOrgsPoliciesBilling: false,
         serviceMeshOs: false,
@@ -94,19 +94,19 @@ export class DataPlaneCloudService {
       },
       docs: '/docs/DATA_PLANE_CLOUD.md',
       note:
-        'Data Plane Cloud (VL-324–333). Discovery hub over thin execution runtimes; Production Audit closes the volume.',
+        'Data Plane Cloud (–333). Discovery hub over thin execution runtimes; Production Audit closes the volume.',
     };
   }
 
-  monitoring() {
-    const products = dataPlaneCloudProductCatalog();
+  monitoring {
+    const products = dataPlaneCloudProductCatalog;
     return {
       mode: 'foundation',
       products: products.map((p) => ({ id: p.id, status: p.status })),
-      runtimeInventory: dataPlaneCloudRuntimeInventory(),
-      architecture: dataPlaneCloudArchitectureNotes(),
-      honesty: dataPlaneCloudHonesty(),
-      note: 'Data Plane Cloud monitoring snapshot (VL-324).',
+      runtimeInventory: dataPlaneCloudRuntimeInventory,
+      architecture: dataPlaneCloudArchitectureNotes,
+      honesty: dataPlaneCloudHonesty,
+      note: 'Data Plane Cloud monitoring snapshot.',
     };
   }
 }

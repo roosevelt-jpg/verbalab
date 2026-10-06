@@ -17,7 +17,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory()) out.push(...walkTsFiles(full));
+    if (statSync(full).isDirectory) out.push(...walkTsFiles(full));
     else if (full.endsWith('.ts')) out.push(full);
   }
   return out;
@@ -32,7 +32,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_eco_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_eco_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -46,27 +46,27 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Ecosystem Cloud Foundation (VL-249)', () => {
+describe('Ecosystem Cloud Foundation',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let ecosystem: EcosystemCloudService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
     prisma = app.get(PrismaService);
     ecosystem = app.get(EcosystemCloudService);
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Ecosystem Cloud honesty (marketplace hub, not payment OS)', () => {
+  it('documents Ecosystem Cloud honesty (marketplace hub, not payment OS)',  => {
     const doc = join(root, 'docs/ECOSYSTEM_CLOUD.md');
     const adr = join(root, 'docs/adr/0151-ecosystem-cloud-foundation.md');
     const readme = join(root, 'docs/roadmap/volume11-ecosystem-cloud/README_VOLUME11.md');
@@ -74,7 +74,7 @@ describe('Ecosystem Cloud Foundation (VL-249)', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(readme)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-249');
+    expect(text).toContain('');
     expect(text).toContain('CQRS');
     expect(text).toMatch(/real-money|real money/i);
     expect(text).toMatch(/Stripe|payment/i);
@@ -84,7 +84,7 @@ describe('Ecosystem Cloud Foundation (VL-249)', () => {
     expect(readmeText).toMatch(/Stripe|PCI|card/i);
   });
 
-  it('has no TODO/FIXME/implement-later markers in Ecosystem Cloud source', () => {
+  it('has no TODO/FIXME/implement-later markers in Ecosystem Cloud source',  => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const file of walkTsFiles(join(apiSrc, 'ecosystem-cloud'))) {
@@ -94,8 +94,8 @@ describe('Ecosystem Cloud Foundation (VL-249)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes public product catalog with honest architecture + safety', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes public product catalog with honest architecture + safety', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/ecosystem-cloud/products')
       .expect(200);
     expect(res.body.product).toBe('Lugemi Ecosystem Cloud');
@@ -165,16 +165,16 @@ describe('Ecosystem Cloud Foundation (VL-249)', () => {
     );
     expect(voiceLang.status).toBe('shipped');
     expect(voiceLang.console).toBe('/voice-language-marketplace');
-    expect(voiceLang.notes).toMatch(/third-party TTS|voice CDN|VL-177|Stripe/i);
+    expect(voiceLang.notes).toMatch(/third-party TTS|voice CDN||Stripe/i);
 
     const creator = res.body.products.find((p: { id: string }) => p.id === 'creator-economy');
     expect(creator.status).toBe('shipped');
     expect(creator.console).toBe('/creator-economy');
-    expect(creator.notes).toMatch(/VL-092|royalty|tax|Stripe/i);
+    expect(creator.notes).toMatch(/|royalty|tax|Stripe/i);
   });
 
-  it('exposes routing table and org overview', async () => {
-    const routing = await request(app.getHttpServer())
+  it('exposes routing table and org overview', async  => {
+    const routing = await request(app.getHttpServer)
       .get('/v1/ecosystem-cloud/routing')
       .expect(200);
     expect(routing.body.routes.length).toBeGreaterThan(5);
@@ -182,7 +182,7 @@ describe('Ecosystem Cloud Foundation (VL-249)', () => {
       routing.body.routes.some((r: { surface: string }) => r.surface === 'content-marketplace'),
     ).toBe(true);
 
-    const org = await seedOrg(prisma, `eco_${Date.now()}`);
+    const org = await seedOrg(prisma, `eco_${Date.now}`);
     const overview = await ecosystem.overview({
       userId: org.memberships[0].userId,
       organizationId: org.id,
@@ -206,14 +206,14 @@ describe('Ecosystem Cloud Foundation (VL-249)', () => {
     expect(overview.safety.pluginAgentSandboxRequired).toBe(true);
   });
 
-  it('exposes ecosystemProducts via GraphQL CQRS façade', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes ecosystemProducts via GraphQL CQRS façade', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query: '{ ecosystemProducts { id name status api console notes } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.ecosystemProducts.length).toBeGreaterThan(8);
     expect(
       res.body.data.ecosystemProducts.some((p: { id: string }) => p.id === 'ecosystem-cloud'),

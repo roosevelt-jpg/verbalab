@@ -1,19 +1,19 @@
 /**
- * Library Phase 171 → Service Catalog (VL-304).
- * Service Catalog (VL-304). Seed catalog of Lugemi services (api, web, SDK, CLI) with ownership/deps. serviceMeshOs=false.
+ * Library Phase 171 → Service Catalog.
+ * Service Catalog. Seed catalog of Lugemi services (api, web, SDK, CLI) with ownership/deps. serviceMeshOs=false.
  */
-export function serviceCatalogEngineCatalog() {
+export function serviceCatalogEngineCatalog {
   return {
     product: 'Lugemi Service Catalog',
     capabilities: [
-      { id: 'microservices', name: 'Microservices', status: 'shipped', notes: 'VL-304 capability.' },
-      { id: 'ownership', name: 'Ownership', status: 'shipped', notes: 'VL-304 capability.' },
-      { id: 'dependencies', name: 'Dependencies', status: 'shipped', notes: 'VL-304 capability.' },
-      { id: 'apis', name: 'APIs', status: 'shipped', notes: 'VL-304 capability.' },
-      { id: 'databases', name: 'Databases', status: 'shipped', notes: 'VL-304 capability.' },
-      { id: 'queues', name: 'Queues', status: 'shipped', notes: 'VL-304 capability.' },
-      { id: 'events', name: 'Events', status: 'shipped', notes: 'VL-304 capability.' },
-      { id: 'infra', name: 'Infrastructure', status: 'shipped', notes: 'VL-304 capability.' }
+      { id: 'microservices', name: 'Microservices', status: 'shipped', notes: ' capability.' },
+      { id: 'ownership', name: 'Ownership', status: 'shipped', notes: ' capability.' },
+      { id: 'dependencies', name: 'Dependencies', status: 'shipped', notes: ' capability.' },
+      { id: 'apis', name: 'APIs', status: 'shipped', notes: ' capability.' },
+      { id: 'databases', name: 'Databases', status: 'shipped', notes: ' capability.' },
+      { id: 'queues', name: 'Queues', status: 'shipped', notes: ' capability.' },
+      { id: 'events', name: 'Events', status: 'shipped', notes: ' capability.' },
+      { id: 'infra', name: 'Infrastructure', status: 'shipped', notes: ' capability.' }
     ],
     services: [
       {
@@ -74,9 +74,9 @@ export function serviceCatalogEngineCatalog() {
     },
     safety: {
       serviceMeshOs: false,
-      note: 'Service Catalog (VL-304). Seed catalog of Lugemi services (api, web, SDK, CLI) with ownership/deps. serviceMeshOs=false.',
+      note: 'Service Catalog. Seed catalog of Lugemi services (api, web, SDK, CLI) with ownership/deps. serviceMeshOs=false.',
     },
     docs: '/docs/SERVICE_CATALOG.md',
-    note: 'Service Catalog (VL-304). Seed catalog of Lugemi services (api, web, SDK, CLI) with ownership/deps. serviceMeshOs=false.',
+    note: 'Service Catalog. Seed catalog of Lugemi services (api, web, SDK, CLI) with ownership/deps. serviceMeshOs=false.',
   };
 }

@@ -17,7 +17,7 @@ export type AccentScore = {
   matchedCues: string[];
 };
 
-@Injectable()
+@Injectable
 export class AccentsService implements OnModuleInit {
   private readonly logger = new Logger(AccentsService.name);
 
@@ -30,12 +30,12 @@ export class AccentsService implements OnModuleInit {
     private readonly audio: AudioService,
   ) {}
 
-  async onModuleInit() {
-    await this.languages.seed();
-    await this.seed();
+  async onModuleInit {
+    await this.languages.seed;
+    await this.seed;
   }
 
-  async seed() {
+  async seed {
     for (const a of ACCENT_SEEDS) {
       await this.prisma.accent.upsert({
         where: { code: a.code },
@@ -70,7 +70,7 @@ export class AccentsService implements OnModuleInit {
     });
     return {
       data: rows.map((r) => this.toDto(r)),
-      note: 'Curated spoken accent profiles — not acoustic phonetics ID (VL-132 / ADR-0053).',
+      note: 'Curated spoken accent profiles — not acoustic phonetics ID.',
     };
   }
 
@@ -82,12 +82,12 @@ export class AccentsService implements OnModuleInit {
     return this.toDto(row);
   }
 
-  engine() {
-    return accentEngineCatalog();
+  engine {
+    return accentEngineCatalog;
   }
 
   async analytics(organizationId: string) {
-    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
     const events = await this.prisma.auditEvent.findMany({
       where: {
         organizationId,
@@ -110,7 +110,7 @@ export class AccentsService implements OnModuleInit {
       byInputMode[mode] = (byInputMode[mode] ?? 0) + 1;
     }
 
-    const profileCount = await this.prisma.accent.count();
+    const profileCount = await this.prisma.accent.count;
 
     return {
       windowDays: 30,
@@ -166,8 +166,8 @@ export class AccentsService implements OnModuleInit {
       product: 'Accent Intelligence',
       note:
         band === 'none'
-          ? 'No accent classified above threshold — cue scoring only (VL-153). Not acoustic classification.'
-          : `Accent classified with ${band} confidence via cue scoring (VL-153). Not acoustic regional models.`,
+          ? 'No accent classified above threshold — cue scoring only. Not acoustic classification.'
+          : `Accent classified with ${band} confidence via cue scoring. Not acoustic regional models.`,
     };
 
     await this.recordAudit(
@@ -197,7 +197,7 @@ export class AccentsService implements OnModuleInit {
     ip?: string;
     skipAudit?: boolean;
   }) {
-    let text = input.text?.trim() ?? '';
+    let text = input.text?.trim ?? '';
     let stt:
       | {
           provider: string;
@@ -222,7 +222,7 @@ export class AccentsService implements OnModuleInit {
         seconds: durationSeconds,
         provider: result.provider,
       });
-      text = result.text.trim();
+      text = result.text.trim;
       stt = {
         provider: result.provider,
         durationSeconds: result.durationSeconds,
@@ -241,7 +241,7 @@ export class AccentsService implements OnModuleInit {
       );
     }
 
-    let language = input.language?.trim().toLowerCase() || '';
+    let language = input.language?.trim.toLowerCase || '';
     let languageConfidence = 1;
     let languageProvider = 'hint';
 
@@ -295,7 +295,7 @@ export class AccentsService implements OnModuleInit {
       accentName = best.nameEn;
     }
 
-    if (!accent && scored.length > 1 && process.env.OPENAI_API_KEY?.trim()) {
+    if (!accent && scored.length > 1 && process.env.OPENAI_API_KEY?.trim) {
       const assisted = await this.assistWithLlm(text, language, scored.slice(0, 5));
       if (assisted) {
         accent = assisted.code;
@@ -376,11 +376,11 @@ export class AccentsService implements OnModuleInit {
 
   private normalize(value: string) {
     return value
-      .toLowerCase()
+      .toLowerCase
       .normalize('NFKD')
       .replace(/\p{M}/gu, '')
       .replace(/\s+/g, ' ')
-      .trim();
+      .trim;
   }
 
   private async assistWithLlm(
@@ -404,9 +404,9 @@ export class AccentsService implements OnModuleInit {
         ],
         model: process.env.OPENAI_CHAT_MODEL ?? 'gpt-4o-mini',
       });
-      const raw = out.message.content.trim().split(/\s+/)[0]?.replace(/[^a-z0-9-]/gi, '');
-      if (!raw || raw.toUpperCase() === 'NONE') return null;
-      const hit = candidates.find((c) => c.code === raw.toLowerCase());
+      const raw = out.message.content.trim.split(/\s+/)[0]?.replace(/[^a-z0-9-]/gi, '');
+      if (!raw || raw.toUpperCase === 'NONE') return null;
+      const hit = candidates.find((c) => c.code === raw.toLowerCase);
       return hit ?? null;
     } catch (error) {
       this.logger.warn(

@@ -17,8 +17,8 @@ type Voice = { id: string; name: string; provider?: string };
 type Lexeme = { id: string; grapheme: string; alias: string };
 type Profile = { id: string; name: string; voice: string; language: string | null };
 
-export function VoiceStudioClient() {
-  const { getToken, isLoaded } = useAuth();
+export function VoiceStudioClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [voices, setVoices] = useState<Voice[]>([]);
   const [lexemes, setLexemes] = useState<Lexeme[]>([]);
@@ -37,8 +37,8 @@ export function VoiceStudioClient() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, lib, pron, prof] = await Promise.all([
       apiFetch<Engine>('/v1/voice-studio/engine', { token }),
@@ -55,15 +55,15 @@ export function VoiceStudioClient() {
     }
   }, [getToken, voice]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
-  async function compileSsml() {
+  async function compileSsml {
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const res = await apiFetch<{ plainText: string; unsupportedTags: string[]; note: string }>(
         '/v1/voice-studio/ssml/compile',
@@ -75,18 +75,18 @@ export function VoiceStudioClient() {
     }
   }
 
-  async function addLexeme() {
+  async function addLexeme {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       await apiFetch('/v1/voice-studio/pronunciation', {
         token,
         method: 'POST',
         body: JSON.stringify({ grapheme, alias }),
       });
-      await load();
+      await load;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Lexeme save failed');
     } finally {
@@ -94,18 +94,18 @@ export function VoiceStudioClient() {
     }
   }
 
-  async function saveProfile() {
+  async function saveProfile {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       await apiFetch('/v1/voice-studio/profiles', {
         token,
         method: 'POST',
         body: JSON.stringify({ name: `Preset ${voice}`, voice }),
       });
-      await load();
+      await load;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Profile save failed');
     } finally {
@@ -117,7 +117,7 @@ export function VoiceStudioClient() {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const res = await fetch(`${API_URL}/v1/voice-studio/preview`, {
         method: 'POST',
@@ -127,8 +127,8 @@ export function VoiceStudioClient() {
         },
         body: JSON.stringify(useSsml ? { ssml, voice, format: 'mp3' } : { text, voice, format: 'mp3' }),
       });
-      if (!res.ok) throw new Error(await res.text());
-      const blob = await res.blob();
+      if (!res.ok) throw new Error(await res.text);
+      const blob = await res.blob;
       if (audioUrl) URL.revokeObjectURL(audioUrl);
       setAudioUrl(URL.createObjectURL(blob));
     } catch (err) {
@@ -138,11 +138,11 @@ export function VoiceStudioClient() {
     }
   }
 
-  async function compare() {
+  async function compare {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const res = await apiFetch<{
         clips: Array<{ voice: string; mimeType: string; audioBase64: string }>;
@@ -170,11 +170,11 @@ export function VoiceStudioClient() {
     }
   }
 
-  async function renderTimeline() {
+  async function renderTimeline {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const res = await apiFetch<{ audioBase64: string; mimeType: string; note: string }>(
         '/v1/voice-studio/timeline/render',
@@ -243,19 +243,19 @@ export function VoiceStudioClient() {
           </select>
         </label>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-          <button type="button" disabled={busy} onClick={() => void compileSsml()} style={secondary}>
+          <button type="button" disabled={busy} onClick={ => void compileSsml} style={secondary}>
             Compile SSML
           </button>
-          <button type="button" disabled={busy} onClick={() => void preview(false)} style={primary}>
+          <button type="button" disabled={busy} onClick={ => void preview(false)} style={primary}>
             Preview text
           </button>
-          <button type="button" disabled={busy} onClick={() => void preview(true)} style={secondary}>
+          <button type="button" disabled={busy} onClick={ => void preview(true)} style={secondary}>
             Preview SSML
           </button>
-          <button type="button" disabled={busy} onClick={() => void renderTimeline()} style={secondary}>
+          <button type="button" disabled={busy} onClick={ => void renderTimeline} style={secondary}>
             Render timeline
           </button>
-          <button type="button" disabled={busy} onClick={() => void saveProfile()} style={secondary}>
+          <button type="button" disabled={busy} onClick={ => void saveProfile} style={secondary}>
             Save profile
           </button>
         </div>
@@ -268,7 +268,7 @@ export function VoiceStudioClient() {
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.75rem' }}>
           <input value={grapheme} onChange={(e) => setGrapheme(e.target.value)} placeholder="Grapheme" style={input} />
           <input value={alias} onChange={(e) => setAlias(e.target.value)} placeholder="Spoken alias" style={input} />
-          <button type="button" disabled={busy} onClick={() => void addLexeme()} style={primary}>
+          <button type="button" disabled={busy} onClick={ => void addLexeme} style={primary}>
             Add
           </button>
         </div>
@@ -292,7 +292,7 @@ export function VoiceStudioClient() {
               </option>
             ))}
           </select>
-          <button type="button" disabled={busy} onClick={() => void compare()} style={primary}>
+          <button type="button" disabled={busy} onClick={ => void compare} style={primary}>
             Compare
           </button>
         </div>

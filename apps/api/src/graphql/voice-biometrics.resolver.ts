@@ -5,13 +5,13 @@ import {
   GqlVoiceBiometricsEngine,
 } from './gql.types';
 
-@Resolver()
+@Resolver
 export class VoiceBiometricsGraphqlResolver {
   constructor(private readonly biometrics: VoiceBiometricsService) {}
 
-  @Query(() => GqlVoiceBiometricsEngine, { name: 'voiceBiometricsEngine' })
-  voiceBiometricsEngine(): GqlVoiceBiometricsEngine {
-    const catalog = this.biometrics.engine();
+  @Query( => GqlVoiceBiometricsEngine, { name: 'voiceBiometricsEngine' })
+  voiceBiometricsEngine: GqlVoiceBiometricsEngine {
+    const catalog = this.biometrics.engine;
     return {
       product: catalog.product,
       note: catalog.note,

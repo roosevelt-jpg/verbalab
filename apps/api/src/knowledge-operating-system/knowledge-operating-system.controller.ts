@@ -6,18 +6,18 @@ export class KnowledgeOperatingSystemController {
   constructor(private readonly service: KnowledgeOperatingSystemService) {}
 
   @Get('engine')
-  engine() {
-    return this.service.engine();
+  engine {
+    return this.service.engine;
   }
 
   @Get('products')
-  products() {
-    return this.service.engine();
+  products {
+    return this.service.engine;
   }
 
   @Get('monitoring')
-  monitoring() {
-    return this.service.monitoring();
+  monitoring {
+    return this.service.monitoring;
   }
 
   @Get('routes')

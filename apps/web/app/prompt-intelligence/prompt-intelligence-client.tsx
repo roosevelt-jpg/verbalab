@@ -20,8 +20,8 @@ type EvalResult = {
   source: string;
 };
 
-export function PromptIntelligenceClient() {
-  const { getToken, isLoaded } = useAuth();
+export function PromptIntelligenceClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [key, setKey] = useState('chat');
@@ -31,8 +31,8 @@ export function PromptIntelligenceClient() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(async () => {
-    const token = await getToken();
+  const refresh = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, an] = await Promise.all([
       apiFetch<Engine>('/v1/prompt-intelligence/engine', { token }),
@@ -42,24 +42,24 @@ export function PromptIntelligenceClient() {
     setAnalytics(an);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void refresh().catch((err: Error) => setError(err.message));
+    void refresh.catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
-  async function runPreview() {
+  async function runPreview {
     setLoading(true);
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const body = await apiFetch<{ body: string }>('/v1/prompt-intelligence/preview', {
         token,
         method: 'POST',
-        body: { key, ...(draft.trim() ? { body: draft } : {}) },
+        body: { key, ...(draft.trim ? { body: draft } : {}) },
       });
       setPreview(body.body);
-      await refresh();
+      await refresh;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Preview failed');
     } finally {
@@ -67,19 +67,19 @@ export function PromptIntelligenceClient() {
     }
   }
 
-  async function runEvaluate() {
+  async function runEvaluate {
     setLoading(true);
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const body = await apiFetch<EvalResult>('/v1/prompt-intelligence/evaluate', {
         token,
         method: 'POST',
-        body: { key, ...(draft.trim() ? { body: draft } : {}) },
+        body: { key, ...(draft.trim ? { body: draft } : {}) },
       });
       setEvalResult(body);
-      await refresh();
+      await refresh;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Evaluate failed');
     } finally {
@@ -127,10 +127,10 @@ export function PromptIntelligenceClient() {
               <option value="rag">rag</option>
               <option value="voice_faq">voice_faq</option>
             </select>
-            <button type="button" onClick={() => void runPreview()} disabled={loading} style={btn}>
+            <button type="button" onClick={ => void runPreview} disabled={loading} style={btn}>
               Preview
             </button>
-            <button type="button" onClick={() => void runEvaluate()} disabled={loading} style={btn}>
+            <button type="button" onClick={ => void runEvaluate} disabled={loading} style={btn}>
               Evaluate
             </button>
           </div>

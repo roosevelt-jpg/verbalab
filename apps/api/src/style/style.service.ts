@@ -16,7 +16,7 @@ import {
 
 const MAX_CHARS = 12_000;
 
-@Injectable()
+@Injectable
 export class StyleService {
   private readonly logger = new Logger(StyleService.name);
 
@@ -27,20 +27,20 @@ export class StyleService {
     private readonly usage: UsageService,
   ) {}
 
-  intelligence() {
-    return styleIntelligenceCatalog();
+  intelligence {
+    return styleIntelligenceCatalog;
   }
 
-  profiles() {
+  profiles {
     return {
       data: STYLE_PROFILES,
       note:
-        'Bounded style profiles (VL-134 / VL-142 / VL-143). Domain tones include disclaimers — not certified vertical writing products.',
+        'Bounded style profiles. Domain tones include disclaimers — not certified vertical writing products.',
     };
   }
 
   async analytics(organizationId: string) {
-    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
     const [rewrites, detects, transforms, transfers] = await Promise.all([
       this.prisma.auditEvent.count({
         where: { organizationId, action: 'style.rewrite', createdAt: { gte: since } },
@@ -182,7 +182,7 @@ export class StyleService {
     }
     const profile = input.profile as StyleProfileId;
 
-    let language = input.language?.trim().toLowerCase() || '';
+    let language = input.language?.trim.toLowerCase || '';
     let languageProvider = 'hint';
     let languageConfidence = 1;
     if (!language) {
@@ -198,12 +198,12 @@ export class StyleService {
     let provider: 'rules' | 'llm' | 'rules+llm' = 'rules';
     let model: string | null = null;
 
-    if (process.env.OPENAI_API_KEY?.trim()) {
+    if (process.env.OPENAI_API_KEY?.trim) {
       const llm = await this.assistWithLlm(text, profile, language);
       if (llm) {
         model = llm.model;
         provider = changes.length > 0 ? 'rules+llm' : 'llm';
-        if (llm.rewritten.trim()) rewritten = llm.rewritten.trim();
+        if (llm.rewritten.trim) rewritten = llm.rewritten.trim;
         if (llm.changes.length > 0) {
           changes = this.mergeChanges(changes, llm.changes);
         }
@@ -265,7 +265,7 @@ export class StyleService {
   }
 
   private requireText(raw: string) {
-    const text = raw.trim();
+    const text = raw.trim;
     if (!text) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }
@@ -354,7 +354,7 @@ export class StyleService {
         for (const item of raw.changes) {
           if (!item || typeof item !== 'object') continue;
           const row = item as Record<string, unknown>;
-          if (typeof row.message !== 'string' || !row.message.trim()) continue;
+          if (typeof row.message !== 'string' || !row.message.trim) continue;
           const type =
             row.type === 'formality' ||
             row.type === 'filler' ||
@@ -365,7 +365,7 @@ export class StyleService {
               : 'other';
           changes.push({
             type,
-            message: row.message.trim(),
+            message: row.message.trim,
             original: typeof row.original === 'string' ? row.original : undefined,
             suggestion: typeof row.suggestion === 'string' ? row.suggestion : undefined,
           });

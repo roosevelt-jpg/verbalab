@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { GrammarService } from '../../grammar/grammar.service';
 import type { AuthContext, GrammarCheckResult, GrammarPort } from './ports';
 
-@Injectable()
+@Injectable
 export class NestGrammarAdapter implements GrammarPort {
   constructor(private readonly grammar: GrammarService) {}
 

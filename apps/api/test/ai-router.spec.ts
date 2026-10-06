@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_ar_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_ar_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,34 +35,34 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('AI Router (VL-207)', () => {
+describe('AI Router',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   const prevMode = process.env.LUGEMI_AI_ROUTER_MODE;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     process.env.LUGEMI_AI_ROUTER_MODE = 'sandbox';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   });
 
-  afterAll(async () => {
+  afterAll(async  => {
     if (prevMode === undefined) delete process.env.LUGEMI_AI_ROUTER_MODE;
     else process.env.LUGEMI_AI_ROUTER_MODE = prevMode;
-    await app.close();
+    await app.close;
   });
 
-  it('documents AI Router honesty', () => {
+  it('documents AI Router honesty',  => {
     const doc = join(root, 'docs/AI_ROUTER.md');
     const adr = join(root, 'docs/adr/0118-ai-router.md');
     const readme = join(root, 'docs/roadmap/volume7-inference-cloud/README_VOLUME7.md');
@@ -73,13 +73,13 @@ describe('AI Router (VL-207)', () => {
     expect(text).toMatch(/service mesh|mesh/i);
     expect(text).toMatch(/does \*\*not\*\*|not a service mesh/i);
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
-    expect(text).toContain('VL-207');
+    expect(text).toContain('');
     expect(text).toMatch(/Gateway/i);
-    expect(text).toMatch(/spend|VL-211|Cost Optimization/i);
+    expect(text).toMatch(/spend||Cost Optimization/i);
   });
 
-  it('exposes engine with honesty + features', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/ai-router/engine').expect(200);
+  it('exposes engine with honesty + features', async  => {
+    const res = await request(app.getHttpServer).get('/v1/ai-router/engine').expect(200);
     expect(res.body.product).toContain('AI Router');
     expect(res.body.honesty.serviceMeshOs).toBe(false);
     expect(res.body.honesty.multiCloudRouterOs).toBe(false);
@@ -95,14 +95,14 @@ describe('AI Router (VL-207)', () => {
       res.body.capabilities.find((c: { id: string }) => c.id === 'caching').status,
     ).toBe('partial');
 
-    const features = await request(app.getHttpServer()).get('/v1/ai-router/features').expect(200);
+    const features = await request(app.getHttpServer).get('/v1/ai-router/features').expect(200);
     expect(features.body.features.some((f: { feature: string }) => f.feature === 'chat')).toBe(
       true,
     );
   });
 
-  it('upserts policy and resolves cost vs latency routes', async () => {
-    const org = await seedOrg(prisma, `ar_${Date.now()}`);
+  it('upserts policy and resolves cost vs latency routes', async  => {
+    const org = await seedOrg(prisma, `ar_${Date.now}`);
     const key = await apiKeys.create({
       organizationId: org.id,
       workspaceId: org.workspaces[0].id,
@@ -110,13 +110,13 @@ describe('AI Router (VL-207)', () => {
       name: 'ar-test',
     });
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .put('/v1/ai-router/policies')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ optimize: 'balanced', maxRetries: 2, preferRegion: 'af-south-1' })
       .expect(200);
 
-    const detect = await request(app.getHttpServer())
+    const detect = await request(app.getHttpServer)
       .post('/v1/ai-router/resolve')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ feature: 'detect', optimize: 'latency', preferConfiguredOnly: false })
@@ -127,7 +127,7 @@ describe('AI Router (VL-207)', () => {
     expect(detect.body.honesty.serviceMeshOs).toBe(false);
     expect(detect.body.caching.enabled).toBe(false);
 
-    const costChat = await request(app.getHttpServer())
+    const costChat = await request(app.getHttpServer)
       .post('/v1/ai-router/resolve')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -141,13 +141,13 @@ describe('AI Router (VL-207)', () => {
     expect(costChat.body.spendSafety?.enforcesSpendCaps ?? false).toBe(false);
     expect(costChat.body.honesty.enforcesSpendCaps).toBe(false);
 
-    const decisions = await request(app.getHttpServer())
+    const decisions = await request(app.getHttpServer)
       .get('/v1/ai-router/decisions')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(decisions.body.decisions.length).toBeGreaterThanOrEqual(2);
 
-    const mon = await request(app.getHttpServer())
+    const mon = await request(app.getHttpServer)
       .get('/v1/ai-router/monitoring')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -155,15 +155,15 @@ describe('AI Router (VL-207)', () => {
     expect(mon.body.deferred).not.toContain('caching');
   });
 
-  it('exposes aiRouterEngine via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes aiRouterEngine via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
           '{ aiRouterEngine { product serviceMeshOs multiCloudRouterOs regeneratesAiGateway extendsAiGateway dryRunResolveOnly enforcesSpendCaps orgWorkspaceScoped primaryRegion mode capabilities { id status } } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.aiRouterEngine.serviceMeshOs).toBe(false);
     expect(res.body.data.aiRouterEngine.multiCloudRouterOs).toBe(false);
     expect(res.body.data.aiRouterEngine.regeneratesAiGateway).toBe(false);

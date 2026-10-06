@@ -17,8 +17,8 @@ export class GetTourismHeritageIntelligenceEngineHandler
     private readonly catalog: TourismHeritageIntelligenceCatalogPort,
   ) {}
 
-  execute(): Promise<TourismHeritageIntelligenceEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<TourismHeritageIntelligenceEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListTourismHeritageIntelligenceProductsHandler
     private readonly catalog: TourismHeritageIntelligenceCatalogPort,
   ) {}
 
-  execute(): Promise<TourismHeritageIntelligenceProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<TourismHeritageIntelligenceProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

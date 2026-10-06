@@ -1,4 +1,4 @@
-/** Application ports for Resource Manager (VL-337). */
+/** Application ports for Resource Manager. */
 
 export type ResourceManagerProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type ResourceManagerEngineBundle = ReturnType<
 >;
 
 export interface ResourceManagerCatalogPort {
-  engine(): ResourceManagerEngineBundle;
-  listProducts(): ResourceManagerProductRow[];
+  engine: ResourceManagerEngineBundle;
+  listProducts: ResourceManagerProductRow[];
 }
 
 export const RESOURCE_MANAGER_CATALOG_PORT = Symbol('RESOURCE_MANAGER_CATALOG_PORT');

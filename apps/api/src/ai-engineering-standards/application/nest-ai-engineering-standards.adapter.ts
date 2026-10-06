@@ -6,16 +6,16 @@ import {
   AiEngineeringStandardsProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestAiEngineeringStandardsCatalogAdapter implements AiEngineeringStandardsCatalogPort {
   constructor(private readonly service: AiEngineeringStandardsService) {}
 
-  engine(): AiEngineeringStandardsEngineBundle {
-    return this.service.engine();
+  engine: AiEngineeringStandardsEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): AiEngineeringStandardsProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: AiEngineeringStandardsProductRow[] {
+    const bundle = this.engine as {
       products?: AiEngineeringStandardsProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestAiEngineeringStandardsCatalogAdapter implements AiEngineeringSt
         status: 'shipped',
         api: 'GET /v1/ai-engineering-standards/engine',
         console: '/ai-engineering-standards',
-        notes: 'VL-349 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

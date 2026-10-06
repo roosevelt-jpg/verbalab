@@ -4,22 +4,22 @@ import {
   continuousEvaluationEngineCatalog,
 } from './continuous-evaluation.catalog';
 
-@Injectable()
+@Injectable
 export class ContinuousEvaluationService {
-  engine() {
-    return continuousEvaluationEngineCatalog();
+  engine {
+    return continuousEvaluationEngineCatalog;
   }
 
   gates(query?: string) {
-    const catalog = this.engine();
-    const q = (query ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (query ?? '').trim.toLowerCase;
     const gates = catalog.gates.filter((g) => {
       if (!q) return true;
       return (
-        g.id.toLowerCase().includes(q) ||
-        g.name.toLowerCase().includes(q) ||
-        g.kind.toLowerCase().includes(q) ||
-        g.notes.toLowerCase().includes(q)
+        g.id.toLowerCase.includes(q) ||
+        g.name.toLowerCase.includes(q) ||
+        g.kind.toLowerCase.includes(q) ||
+        g.notes.toLowerCase.includes(q)
       );
     });
     return {
@@ -34,23 +34,23 @@ export class ContinuousEvaluationService {
   }
 
   /** Required Continuous Learning promote check. */
-  gateStatus() {
-    return continuousEvalGateStatus();
+  gateStatus {
+    return continuousEvalGateStatus;
   }
 
   query(query?: string) {
     return this.gates(query);
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'conteval',
       gateCount: catalog.gates.length,
       continuousEvalPass: catalog.continuousEvalPass,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Continuous Evaluation monitoring snapshot (VL-284).',
+      note: 'Continuous Evaluation monitoring snapshot.',
     };
   }
 }

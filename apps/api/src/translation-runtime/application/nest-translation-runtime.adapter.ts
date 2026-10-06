@@ -6,16 +6,16 @@ import {
   TranslationRuntimeProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestTranslationRuntimeCatalogAdapter implements TranslationRuntimeCatalogPort {
   constructor(private readonly service: TranslationRuntimeService) {}
 
-  engine(): TranslationRuntimeEngineBundle {
-    return this.service.engine();
+  engine: TranslationRuntimeEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): TranslationRuntimeProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: TranslationRuntimeProductRow[] {
+    const bundle = this.engine as {
       products?: TranslationRuntimeProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestTranslationRuntimeCatalogAdapter implements TranslationRuntimeC
         status: 'shipped',
         api: 'GET /v1/translation-runtime/engine',
         console: '/translation-runtime',
-        notes: 'VL-325 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

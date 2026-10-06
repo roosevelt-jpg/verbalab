@@ -25,7 +25,7 @@ type AuthCtx = {
 const KERNEL_LAYER = 'kernel';
 const RUNTIME = 'reasoning-runtime';
 
-@Injectable()
+@Injectable
 export class ReasoningRuntimeService {
   constructor(
     private readonly prisma: PrismaService,
@@ -36,12 +36,12 @@ export class ReasoningRuntimeService {
     private readonly memoryCloud: MemoryCloudService,
   ) {}
 
-  engine() {
+  engine {
     return {
-      ...reasoningRuntimeCatalog(),
-      ceilings: reasoningRuntimeCeilings(),
-      mode: reasoningRuntimeMode(),
-      strategies: this.reasoningCloud.strategies(),
+      ...reasoningRuntimeCatalog,
+      ceilings: reasoningRuntimeCeilings,
+      mode: reasoningRuntimeMode,
+      strategies: this.reasoningCloud.strategies,
     };
   }
 
@@ -57,8 +57,8 @@ export class ReasoningRuntimeService {
       persist?: boolean;
     },
   ) {
-    this.assertEnabled();
-    const problem = (input.problem ?? '').trim();
+    this.assertEnabled;
+    const problem = (input.problem ?? '').trim;
     if (!problem) {
       throw new ApiException('validation_error', 'problem is required', HttpStatus.BAD_REQUEST);
     }
@@ -114,7 +114,7 @@ export class ReasoningRuntimeService {
       historyId,
       honesty: {
         ...result.honesty,
-        ...reasoningRuntimeCatalog().honesty,
+        ...reasoningRuntimeCatalog.honesty,
       },
       note: 'Kernel reason over Reasoning Cloud — not a custom reasoner OS.',
     };
@@ -129,8 +129,8 @@ export class ReasoningRuntimeService {
       sandboxOnly?: boolean;
     },
   ) {
-    this.assertEnabled();
-    const problem = (input.problem ?? '').trim();
+    this.assertEnabled;
+    const problem = (input.problem ?? '').trim;
     if (!problem) {
       throw new ApiException('validation_error', 'problem is required', HttpStatus.BAD_REQUEST);
     }
@@ -177,13 +177,13 @@ export class ReasoningRuntimeService {
   async reflect(
     input: AuthCtx & { problem?: string; answer?: string; historyId?: string },
   ) {
-    this.assertEnabled();
-    let problem = (input.problem ?? '').trim();
-    let answer = (input.answer ?? '').trim();
-    if (input.historyId?.trim()) {
+    this.assertEnabled;
+    let problem = (input.problem ?? '').trim;
+    let answer = (input.answer ?? '').trim;
+    if (input.historyId?.trim) {
       const replay = await this.replay({
         ...input,
-        id: input.historyId.trim(),
+        id: input.historyId.trim,
       });
       problem = problem || String(replay.run.problem ?? '');
       answer = answer || String(replay.run.answer ?? '');
@@ -233,14 +233,14 @@ export class ReasoningRuntimeService {
   }
 
   async selectTools(input: AuthCtx & { problem?: string; model?: string }) {
-    this.assertEnabled();
-    const problem = (input.problem ?? '').trim();
+    this.assertEnabled;
+    const problem = (input.problem ?? '').trim;
     if (!problem) {
       throw new ApiException('validation_error', 'problem is required', HttpStatus.BAD_REQUEST);
     }
 
     // Heuristic catalog pick first (always available); optionally enrich via RC.
-    const lowered = problem.toLowerCase();
+    const lowered = problem.toLowerCase;
     const heuristic = REASONING_TOOL_CATALOG.filter((t) => {
       if (t.id === 'translate' && /translat|localize|language/.test(lowered)) return true;
       if (t.id === 'knowledge_query' && /knowledge|rag|document|cite/.test(lowered)) return true;
@@ -276,15 +276,15 @@ export class ReasoningRuntimeService {
       selectedTools,
       catalog: REASONING_TOOL_CATALOG,
       honesty: { toolExecution: false },
-      note: 'Tool ids suggested only — Reasoning Runtime does not execute tools (VL-218 / VL-219).',
+      note: 'Tool ids suggested only — Reasoning Runtime does not execute tools.',
     };
   }
 
   async selectModel(
     input: AuthCtx & { problem?: string; feature?: string; optimize?: string },
   ) {
-    this.assertEnabled();
-    const problem = (input.problem ?? '').trim() || 'general reasoning';
+    this.assertEnabled;
+    const problem = (input.problem ?? '').trim || 'general reasoning';
     try {
       const resolved = await this.aiRouter.resolve({
         organizationId: input.organizationId,
@@ -328,12 +328,12 @@ export class ReasoningRuntimeService {
   async decisionTree(
     input: AuthCtx & { problem?: string; kind?: string },
   ) {
-    this.assertEnabled();
-    const problem = (input.problem ?? '').trim();
+    this.assertEnabled;
+    const problem = (input.problem ?? '').trim;
     if (!problem) {
       throw new ApiException('validation_error', 'problem is required', HttpStatus.BAD_REQUEST);
     }
-    const kind = (input.kind ?? 'routing').trim();
+    const kind = (input.kind ?? 'routing').trim;
     const decided = await this.decisions.decide({
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,
@@ -382,11 +382,11 @@ export class ReasoningRuntimeService {
   async evaluate(
     input: AuthCtx & { problem?: string; answer?: string; historyId?: string },
   ) {
-    this.assertEnabled();
-    let problem = (input.problem ?? '').trim();
-    let answer = (input.answer ?? '').trim();
-    if (input.historyId?.trim()) {
-      const replay = await this.replay({ ...input, id: input.historyId.trim() });
+    this.assertEnabled;
+    let problem = (input.problem ?? '').trim;
+    let answer = (input.answer ?? '').trim;
+    if (input.historyId?.trim) {
+      const replay = await this.replay({ ...input, id: input.historyId.trim });
       problem = problem || String(replay.run.problem ?? '');
       answer = answer || String(replay.run.answer ?? '');
     }
@@ -418,7 +418,7 @@ export class ReasoningRuntimeService {
   async confidence(
     input: AuthCtx & { problem?: string; answer?: string; historyId?: string },
   ) {
-    this.assertEnabled();
+    this.assertEnabled;
     const evaluation = await this.evaluate(input);
     const decided = await this.decisions.decide({
       organizationId: input.organizationId,
@@ -447,9 +447,9 @@ export class ReasoningRuntimeService {
   }
 
   async history(input: AuthCtx & { limit?: number }) {
-    this.assertEnabled();
+    this.assertEnabled;
     const take = Math.min(
-      reasoningRuntimeCeilings().maxHistoryPerWorkspace,
+      reasoningRuntimeCeilings.maxHistoryPerWorkspace,
       Math.max(1, input.limit ?? 20),
     );
     const rows = await this.prisma.memoryRecord.findMany({
@@ -469,8 +469,8 @@ export class ReasoningRuntimeService {
   }
 
   async replay(input: AuthCtx & { id?: string }) {
-    this.assertEnabled();
-    const id = (input.id ?? '').trim();
+    this.assertEnabled;
+    const id = (input.id ?? '').trim;
     if (!id) {
       throw new ApiException('validation_error', 'id is required', HttpStatus.BAD_REQUEST);
     }
@@ -495,15 +495,15 @@ export class ReasoningRuntimeService {
     return {
       id: row.id,
       run,
-      createdAt: row.createdAt.toISOString(),
+      createdAt: row.createdAt.toISOString,
       honesty: { distributedReplayOs: false },
       note: 'Sandbox replay of stored payload — not a distributed replay OS.',
     };
   }
 
   async analytics(input: AuthCtx) {
-    this.assertEnabled();
-    const start = new Date();
+    this.assertEnabled;
+    const start = new Date;
     start.setUTCDate(1);
     start.setUTCHours(0, 0, 0, 0);
     const actions = [
@@ -532,19 +532,19 @@ export class ReasoningRuntimeService {
       },
     });
     return {
-      periodStart: start.toISOString(),
+      periodStart: start.toISOString,
       workspaceId: input.workspaceId,
       events: counts.reduce((s, c) => s + c.count, 0),
       byAction: Object.fromEntries(counts.map((c) => [c.action, c.count])),
       historyCount,
-      honesty: reasoningRuntimeCatalog().honesty,
-      note: 'Reasoning Runtime analytics (VL-218).',
+      honesty: reasoningRuntimeCatalog.honesty,
+      note: 'Reasoning Runtime analytics.',
     };
   }
 
   async monitoring(input: AuthCtx) {
     const [engine, analytics] = await Promise.all([
-      Promise.resolve(this.engine()),
+      Promise.resolve(this.engine),
       this.analytics(input),
     ]);
     return {
@@ -555,13 +555,13 @@ export class ReasoningRuntimeService {
       safety: {
         agentActionBoundariesRequired: true,
         toolExecutionForbiddenHere: true,
-        note: 'Reasoning Runtime must not execute tools; Agent Runtime (VL-219) requires sandbox + scoped permissions.',
+        note: 'Reasoning Runtime must not execute tools; Agent Runtime requires sandbox + scoped permissions.',
       },
     };
   }
 
-  private assertEnabled() {
-    if (reasoningRuntimeMode() === 'disabled') {
+  private assertEnabled {
+    if (reasoningRuntimeMode === 'disabled') {
       throw new ApiException(
         'reasoning_runtime_disabled',
         'Reasoning Runtime mode is disabled (LUGEMI_REASONING_RUNTIME_MODE=disabled).',
@@ -573,7 +573,7 @@ export class ReasoningRuntimeService {
   private parseSteps(content: string): string[] {
     const lines = content
       .split('\n')
-      .map((l) => l.trim())
+      .map((l) => l.trim)
       .filter(Boolean);
     const numbered = lines.filter((l) => /^\d+[\).\]]\s+/.test(l));
     if (numbered.length > 0) return numbered.map((l) => l.replace(/^\d+[\).\]]\s+/, ''));
@@ -583,11 +583,11 @@ export class ReasoningRuntimeService {
   private heuristicEval(problem: string, answer: string, steps: string[]) {
     const findings: Array<{ id: string; severity: string; message: string }> = [];
     let score = 1;
-    if (!answer.trim()) {
+    if (!answer.trim) {
       findings.push({ id: 'empty', severity: 'error', message: 'Empty answer' });
       score -= 0.8;
     }
-    if (answer.trim().length < 40) {
+    if (answer.trim.length < 40) {
       findings.push({ id: 'short', severity: 'warn', message: 'Answer is very short' });
       score -= 0.15;
     }
@@ -596,11 +596,11 @@ export class ReasoningRuntimeService {
       score -= 0.12;
     }
     const problemTokens = problem
-      .toLowerCase()
+      .toLowerCase
       .split(/\W+/)
       .filter((t) => t.length > 3)
       .slice(0, 8);
-    const hits = problemTokens.filter((t) => answer.toLowerCase().includes(t)).length;
+    const hits = problemTokens.filter((t) => answer.toLowerCase.includes(t)).length;
     const coverage = problemTokens.length ? hits / problemTokens.length : 0.5;
     if (coverage < 0.25) {
       findings.push({
@@ -625,7 +625,7 @@ export class ReasoningRuntimeService {
   }
 
   private async persistRun(input: AuthCtx, payload: Record<string, unknown>) {
-    const ceilings = reasoningRuntimeCeilings();
+    const ceilings = reasoningRuntimeCeilings;
     const active = await this.prisma.memoryRecord.count({
       where: {
         organizationId: input.organizationId,
@@ -649,7 +649,7 @@ export class ReasoningRuntimeService {
       if (oldest.length) {
         await this.prisma.memoryRecord.updateMany({
           where: { id: { in: oldest.map((o) => o.id) } },
-          data: { deletedAt: new Date() },
+          data: { deletedAt: new Date },
         });
       }
     }
@@ -661,8 +661,8 @@ export class ReasoningRuntimeService {
       ip: input.ip,
       scope: 'workspace',
       kind: 'long_term',
-      key: `reasoning:${Date.now()}`,
-      content: JSON.stringify({ ...payload, storedAt: new Date().toISOString() }),
+      key: `reasoning:${Date.now}`,
+      content: JSON.stringify({ ...payload, storedAt: new Date.toISOString }),
       metadata: {
         layer: KERNEL_LAYER,
         runtime: RUNTIME,
@@ -700,7 +700,7 @@ export class ReasoningRuntimeService {
       key: row.key,
       kind: meta.kind ?? 'reason',
       summary,
-      createdAt: row.createdAt.toISOString(),
+      createdAt: row.createdAt.toISOString,
     };
   }
 }

@@ -113,12 +113,12 @@ export const DEMO_VOICE_PROFILES: Record<string, DemoVoiceProfile> = {
 let activeAudio: HTMLAudioElement | null = null;
 let activeUtterance: SpeechSynthesisUtterance | null = null;
 
-export function stopDemoSpeech() {
+export function stopDemoSpeech {
   if (typeof window === 'undefined') return;
-  window.speechSynthesis?.cancel();
+  window.speechSynthesis?.cancel;
   activeUtterance = null;
   if (activeAudio) {
-    activeAudio.pause();
+    activeAudio.pause;
     activeAudio.src = '';
     activeAudio = null;
   }
@@ -126,14 +126,14 @@ export function stopDemoSpeech() {
 
 function pickBrowserVoice(lang: string): SpeechSynthesisVoice | null {
   if (typeof window === 'undefined' || !window.speechSynthesis) return null;
-  const voices = window.speechSynthesis.getVoices();
+  const voices = window.speechSynthesis.getVoices;
   if (!voices.length) return null;
-  const exact = voices.find((v) => v.lang.toLowerCase() === lang.toLowerCase());
+  const exact = voices.find((v) => v.lang.toLowerCase === lang.toLowerCase);
   if (exact) return exact;
-  const prefix = lang.split('-')[0]?.toLowerCase() ?? '';
-  const byPrefix = voices.find((v) => v.lang.toLowerCase().startsWith(prefix));
+  const prefix = lang.split('-')[0]?.toLowerCase ?? '';
+  const byPrefix = voices.find((v) => v.lang.toLowerCase.startsWith(prefix));
   if (byPrefix) return byPrefix;
-  return voices.find((v) => v.lang.toLowerCase().startsWith('en')) ?? voices[0] ?? null;
+  return voices.find((v) => v.lang.toLowerCase.startsWith('en')) ?? voices[0] ?? null;
 }
 
 async function playViaServer(text: string, profile: DemoVoiceProfile): Promise<boolean> {
@@ -151,26 +151,26 @@ async function playViaServer(text: string, profile: DemoVoiceProfile): Promise<b
     if (!res.ok) return false;
     const contentType = res.headers.get('content-type') ?? '';
     if (contentType.includes('application/json')) {
-      const body = (await res.json()) as { mode?: string };
+      const body = (await res.json) as { mode?: string };
       return body.mode !== 'browser';
     }
-    const blob = await res.blob();
+    const blob = await res.blob;
     if (!blob.size) return false;
-    stopDemoSpeech();
+    stopDemoSpeech;
     const url = URL.createObjectURL(blob);
     const audio = new Audio(url);
     activeAudio = audio;
     await new Promise<void>((resolve, reject) => {
-      audio.onended = () => {
+      audio.onended =  => {
         URL.revokeObjectURL(url);
         if (activeAudio === audio) activeAudio = null;
-        resolve();
+        resolve;
       };
-      audio.onerror = () => {
+      audio.onerror =  => {
         URL.revokeObjectURL(url);
         reject(new Error('Audio playback failed'));
       };
-      void audio.play().catch(reject);
+      void audio.play.catch(reject);
     });
     return true;
   } catch {
@@ -184,7 +184,7 @@ function playViaBrowser(text: string, profile: DemoVoiceProfile): Promise<void> 
       reject(new Error('Speech synthesis unavailable in this browser'));
       return;
     }
-    stopDemoSpeech();
+    stopDemoSpeech;
     const utter = new SpeechSynthesisUtterance(text.slice(0, 500));
     utter.lang = profile.lang;
     utter.rate = profile.rate ?? 1;
@@ -192,26 +192,26 @@ function playViaBrowser(text: string, profile: DemoVoiceProfile): Promise<void> 
     const voice = pickBrowserVoice(profile.lang);
     if (voice) utter.voice = voice;
     activeUtterance = utter;
-    utter.onend = () => {
+    utter.onend =  => {
       if (activeUtterance === utter) activeUtterance = null;
-      resolve();
+      resolve;
     };
-    utter.onerror = () => {
+    utter.onerror =  => {
       if (activeUtterance === utter) activeUtterance = null;
       reject(new Error('Speech synthesis failed'));
     };
     // Chrome often needs voices loaded asynchronously
-    const speak = () => window.speechSynthesis.speak(utter);
-    if (window.speechSynthesis.getVoices().length === 0) {
-      window.speechSynthesis.onvoiceschanged = () => {
+    const speak =  => window.speechSynthesis.speak(utter);
+    if (window.speechSynthesis.getVoices.length === 0) {
+      window.speechSynthesis.onvoiceschanged =  => {
         const v = pickBrowserVoice(profile.lang);
         if (v) utter.voice = v;
-        speak();
+        speak;
       };
       // Fallback if event never fires
       setTimeout(speak, 250);
     } else {
-      speak();
+      speak;
     }
   });
 }

@@ -1,8 +1,8 @@
 /**
- * Library Phase 150 → Training Pipeline (VL-283).
+ * Library Phase 150 → Training Pipeline.
  * Not Ray cluster OS, Kubeflow OS, or distributed training OS.
  */
-export function trainingPipelineEngineCatalog() {
+export function trainingPipelineEngineCatalog {
   return {
     product: 'Lugemi Training Pipeline',
     methods: [
@@ -56,6 +56,6 @@ export function trainingPipelineEngineCatalog() {
       note: 'Trained artifacts never auto-promote — Continuous Learning gates apply.',
     },
     docs: '/docs/TRAINING_PIPELINE.md',
-    note: 'Training Pipeline (VL-283). LoRA/QLoRA/DPO/RLHF/SFT/checkpointing/GPU scheduling. distributedTrainingOs=false.',
+    note: 'Training Pipeline. LoRA/QLoRA/DPO/RLHF/SFT/checkpointing/GPU scheduling. distributedTrainingOs=false.',
   };
 }

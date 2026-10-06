@@ -19,35 +19,35 @@ type AuthCtx = {
   ip?: string;
 };
 
-@Injectable()
+@Injectable
 export class IntelligentCacheService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
   ) {}
 
-  engine() {
+  engine {
     return {
-      ...intelligentCacheCatalog(),
-      ceilings: cacheCeilings(),
-      mode: intelligentCacheMode(),
+      ...intelligentCacheCatalog,
+      ceilings: cacheCeilings,
+      mode: intelligentCacheMode,
       spendSafety: {
         hardSpendCeilingsRequired: true,
         note:
-          'Intelligent Cache stores sandbox entry payloads in Postgres. It does not provision Redis Cluster or auto-cache every Gateway call. Cost Optimization (VL-211) still owns spend caps.',
+          'Intelligent Cache stores sandbox entry payloads in Postgres. It does not provision Redis Cluster or auto-cache every Gateway call. Cost Optimization still owns spend caps.',
       },
     };
   }
 
-  namespaces() {
+  namespaces {
     return {
-      namespaces: cacheNamespaces(),
-      honesty: intelligentCacheCatalog().honesty,
+      namespaces: cacheNamespaces,
+      honesty: intelligentCacheCatalog.honesty,
     };
   }
 
-  ceilings() {
-    return cacheCeilings();
+  ceilings {
+    return cacheCeilings;
   }
 
   async listEntries(
@@ -59,8 +59,8 @@ export class IntelligentCacheService {
       where: {
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
-        ...(input.namespace ? { namespace: input.namespace.toLowerCase() } : {}),
-        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+        ...(input.namespace ? { namespace: input.namespace.toLowerCase } : {}),
+        OR: [{ expiresAt: null }, { expiresAt: { gt: new Date } }],
       },
       orderBy: { updatedAt: 'desc' },
       take,
@@ -81,15 +81,15 @@ export class IntelligentCacheService {
       labels?: string[];
     },
   ) {
-    this.assertEnabled();
+    this.assertEnabled;
     const namespace = this.normalizeNamespace(input.namespace ?? 'translation');
     const cacheKey = this.resolveKey(namespace, input.key, input.text);
-    const ceilings = cacheCeilings();
+    const ceilings = cacheCeilings;
     const ttlSec = Math.min(
       ceilings.defaultTtlSec * 2,
       Math.max(30, Math.floor(input.ttlSec ?? ceilings.defaultTtlSec)),
     );
-    const expiresAt = new Date(Date.now() + ttlSec * 1000);
+    const expiresAt = new Date(Date.now + ttlSec * 1000);
     const valueJson = (input.value ?? { ok: true }) as object;
 
     await this.purgeExpired(input);
@@ -110,7 +110,7 @@ export class IntelligentCacheService {
         where: {
           organizationId: input.organizationId,
           workspaceId: input.workspaceId,
-          OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+          OR: [{ expiresAt: null }, { expiresAt: { gt: new Date } }],
         },
       });
       if (active >= ceilings.maxEntriesPerWorkspace) {
@@ -150,7 +150,7 @@ export class IntelligentCacheService {
         valueJson,
         expiresAt,
         labels: (input.labels ?? []).slice(0, 16),
-        updatedAt: new Date(),
+        updatedAt: new Date,
       },
     });
 
@@ -166,7 +166,7 @@ export class IntelligentCacheService {
     return {
       entry: this.serialize(row, true),
       ceilings,
-      honesty: intelligentCacheCatalog().honesty,
+      honesty: intelligentCacheCatalog.honesty,
       note: 'Sandbox cache entry stored — Gateway is not auto-wired.',
     };
   }
@@ -174,7 +174,7 @@ export class IntelligentCacheService {
   async lookup(
     input: AuthCtx & { namespace?: string; key?: string; text?: string },
   ) {
-    this.assertEnabled();
+    this.assertEnabled;
     const namespace = this.normalizeNamespace(input.namespace ?? 'translation');
     const cacheKey = this.resolveKey(namespace, input.key, input.text);
     await this.purgeExpired(input);
@@ -190,9 +190,9 @@ export class IntelligentCacheService {
       },
     });
 
-    if (!row || (row.expiresAt && row.expiresAt.getTime() <= Date.now())) {
-      if (row?.expiresAt && row.expiresAt.getTime() <= Date.now()) {
-        await this.prisma.cacheEntry.delete({ where: { id: row.id } }).catch(() => undefined);
+    if (!row || (row.expiresAt && row.expiresAt.getTime <= Date.now)) {
+      if (row?.expiresAt && row.expiresAt.getTime <= Date.now) {
+        await this.prisma.cacheEntry.delete({ where: { id: row.id } }).catch( => undefined);
       }
       // Track miss on a sentinel? Skip — return miss only.
       await this.audit.record({
@@ -208,7 +208,7 @@ export class IntelligentCacheService {
         namespace,
         cacheKey,
         entry: null,
-        honesty: intelligentCacheCatalog().honesty,
+        honesty: intelligentCacheCatalog.honesty,
         note: 'Cache miss.',
       };
     }
@@ -232,7 +232,7 @@ export class IntelligentCacheService {
       namespace,
       cacheKey,
       entry: this.serialize(updated, true),
-      honesty: intelligentCacheCatalog().honesty,
+      honesty: intelligentCacheCatalog.honesty,
       note: 'Cache hit (exact key / normalized hash).',
     };
   }
@@ -246,7 +246,7 @@ export class IntelligentCacheService {
       allInNamespace?: boolean;
     },
   ) {
-    this.assertEnabled();
+    this.assertEnabled;
     let deleted = 0;
 
     if (input.id) {
@@ -300,13 +300,13 @@ export class IntelligentCacheService {
     return {
       deleted,
       note: 'Sandbox entries removed.',
-      honesty: intelligentCacheCatalog().honesty,
+      honesty: intelligentCacheCatalog.honesty,
     };
   }
 
   async analytics(input: AuthCtx) {
     await this.purgeExpired(input);
-    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
     const [total, byNs, sumHits, audits] = await Promise.all([
       this.prisma.cacheEntry.count({
         where: {
@@ -351,30 +351,30 @@ export class IntelligentCacheService {
         hits: r._sum.hits ?? 0,
       })),
       auditsLast30d: audits,
-      note: 'Intelligent Cache analytics (VL-210). ≠ VL-212 AI Runtime Analytics.',
+      note: 'Intelligent Cache analytics. ≠ AI Runtime Analytics.',
     };
   }
 
   async monitoring(input: AuthCtx) {
     const [engine, analytics] = await Promise.all([
-      Promise.resolve(this.engine()),
+      Promise.resolve(this.engine),
       this.analytics(input),
     ]);
     return {
-      generatedAt: new Date().toISOString(),
-      mode: intelligentCacheMode(),
+      generatedAt: new Date.toISOString,
+      mode: intelligentCacheMode,
       analytics,
       honesty: engine.honesty,
       spendSafety: engine.spendSafety,
       deferred: engine.capabilities
         .filter((c) => c.status === 'deferred')
         .map((c) => c.id),
-      note: 'Intelligent Cache monitoring snapshot (VL-210).',
+      note: 'Intelligent Cache monitoring snapshot.',
     };
   }
 
-  private assertEnabled() {
-    if (intelligentCacheMode() === 'disabled') {
+  private assertEnabled {
+    if (intelligentCacheMode === 'disabled') {
       throw new ApiException(
         'intelligent_cache_disabled',
         'Intelligent Cache mode is disabled (LUGEMI_INTELLIGENT_CACHE_MODE=disabled).',
@@ -384,7 +384,7 @@ export class IntelligentCacheService {
   }
 
   private normalizeNamespace(raw: string): CacheNamespace {
-    const n = raw.toLowerCase() as CacheNamespace;
+    const n = raw.toLowerCase as CacheNamespace;
     if (!CACHE_NAMESPACES.includes(n)) {
       throw new ApiException(
         'validation_error',
@@ -400,12 +400,12 @@ export class IntelligentCacheService {
     key?: string,
     text?: string,
   ): string {
-    if (key?.trim()) return key.trim().slice(0, 256);
-    if (text?.trim()) {
+    if (key?.trim) return key.trim.slice(0, 256);
+    if (text?.trim) {
       const normalized =
         namespace === 'semantic'
-          ? text.trim().toLowerCase().replace(/\s+/g, ' ')
-          : text.trim();
+          ? text.trim.toLowerCase.replace(/\s+/g, ' ')
+          : text.trim;
       return createHash('sha256').update(`${namespace}:${normalized}`).digest('hex');
     }
     throw new ApiException(
@@ -420,7 +420,7 @@ export class IntelligentCacheService {
       where: {
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
-        expiresAt: { lte: new Date() },
+        expiresAt: { lte: new Date },
       },
     });
   }
@@ -452,11 +452,11 @@ export class IntelligentCacheService {
       value: includeValue ? r.valueJson : undefined,
       hits: r.hits,
       misses: r.misses,
-      expiresAt: r.expiresAt?.toISOString() ?? null,
+      expiresAt: r.expiresAt?.toISOString ?? null,
       labels: r.labels,
       metadata: r.metadata,
-      createdAt: r.createdAt.toISOString(),
-      updatedAt: r.updatedAt.toISOString(),
+      createdAt: r.createdAt.toISOString,
+      updatedAt: r.updatedAt.toISOString,
     };
   }
 }

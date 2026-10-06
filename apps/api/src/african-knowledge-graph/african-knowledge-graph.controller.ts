@@ -6,18 +6,18 @@ export class AfricanKnowledgeGraphController {
   constructor(private readonly graph: AfricanKnowledgeGraphService) {}
 
   @Get('engine')
-  engine() {
-    return this.graph.engine();
+  engine {
+    return this.graph.engine;
   }
 
   @Get('products')
-  products() {
-    return this.graph.engine();
+  products {
+    return this.graph.engine;
   }
 
   @Get('monitoring')
-  monitoring() {
-    return this.graph.monitoring();
+  monitoring {
+    return this.graph.monitoring;
   }
 
   @Get('nodes')

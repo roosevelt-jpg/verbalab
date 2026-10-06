@@ -26,23 +26,23 @@ export class ContextFabricController {
   constructor(private readonly fabric: ContextFabricService) {}
 
   @Get('products')
-  products() {
-    return this.fabric.products();
+  products {
+    return this.fabric.products;
   }
 
   @Get('engine')
-  engine() {
-    return this.fabric.products();
+  engine {
+    return this.fabric.products;
   }
 
   @Get('routes')
-  routes() {
-    return this.fabric.routes();
+  routes {
+    return this.fabric.routes;
   }
 
   @Post('route')
   @HttpCode(HttpStatus.OK)
-  route(@Body() body: { kinds?: string[] }) {
+  route(@Body body: { kinds?: string[] }) {
     return this.fabric.route({ kinds: body.kinds });
   }
 
@@ -50,8 +50,8 @@ export class ContextFabricController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   propagate(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       kinds?: string[];
       query?: string;
@@ -80,21 +80,21 @@ export class ContextFabricController {
   }
 
   @Get('stream')
-  stream(@Res() res: Response) {
+  stream(@Res res: Response) {
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders?.();
+    res.flushHeaders?.;
 
-    const write = () => {
-      const payload = JSON.stringify(this.fabric.streamSnapshot());
+    const write =  => {
+      const payload = JSON.stringify(this.fabric.streamSnapshot);
       res.write(`event: context-fabric\ndata: ${payload}\n\n`);
     };
-    write();
+    write;
     const timer = setInterval(write, 500);
-    const done = () => {
+    const done =  => {
       clearInterval(timer);
-      res.end();
+      res.end;
     };
     res.on('close', done);
     // Auto-close after a couple ticks so smoke/tests do not hang
@@ -103,12 +103,12 @@ export class ContextFabricController {
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession() session: SessionContext) {
+  overview(@CurrentSession session: SessionContext) {
     return this.fabric.overview(session);
   }
 
   @Get('monitoring')
-  monitoring() {
-    return this.fabric.monitoring();
+  monitoring {
+    return this.fabric.monitoring;
   }
 }

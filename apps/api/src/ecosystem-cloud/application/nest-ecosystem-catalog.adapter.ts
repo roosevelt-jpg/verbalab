@@ -7,15 +7,15 @@ import {
   EcosystemProductsBundle,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestEcosystemCatalogAdapter implements EcosystemCatalogPort {
   constructor(private readonly ecosystem: EcosystemCloudService) {}
 
-  products(): EcosystemProductsBundle {
-    return this.ecosystem.products();
+  products: EcosystemProductsBundle {
+    return this.ecosystem.products;
   }
 
-  listProducts(): EcosystemProductRow[] {
-    return ecosystemProductCatalog();
+  listProducts: EcosystemProductRow[] {
+    return ecosystemProductCatalog;
   }
 }

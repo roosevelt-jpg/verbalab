@@ -1,4 +1,4 @@
-/** Application ports for Database Engineering Standards (VL-351). */
+/** Application ports for Database Engineering Standards. */
 
 export type DatabaseEngineeringStandardsProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type DatabaseEngineeringStandardsEngineBundle = ReturnType<
 >;
 
 export interface DatabaseEngineeringStandardsCatalogPort {
-  engine(): DatabaseEngineeringStandardsEngineBundle;
-  listProducts(): DatabaseEngineeringStandardsProductRow[];
+  engine: DatabaseEngineeringStandardsEngineBundle;
+  listProducts: DatabaseEngineeringStandardsProductRow[];
 }
 
 export const DATABASE_ENGINEERING_STANDARDS_CATALOG_PORT = Symbol('DATABASE_ENGINEERING_STANDARDS_CATALOG_PORT');

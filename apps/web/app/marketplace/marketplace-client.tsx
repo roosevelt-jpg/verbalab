@@ -64,12 +64,12 @@ function formatPrice(cents: number | undefined, currency = 'usd') {
   if (!cents) return 'Free';
   return new Intl.NumberFormat(undefined, {
     style: 'currency',
-    currency: currency.toUpperCase(),
+    currency: currency.toUpperCase,
   }).format(cents / 100);
 }
 
-export function MarketplaceClient() {
-  const { getToken, isLoaded } = useAuth();
+export function MarketplaceClient {
+  const { getToken, isLoaded } = useAuth;
   const [catalog, setCatalog] = useState<Listing[]>([]);
   const [mine, setMine] = useState<Listing[]>([]);
   const [installs, setInstalls] = useState<Install[]>([]);
@@ -84,8 +84,8 @@ export function MarketplaceClient() {
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const kindQuery = filterKind === 'all' ? '' : `&kind=${filterKind}`;
     const [published, myListings, myInstalls, mySales, connectStatus] = await Promise.all([
@@ -102,23 +102,23 @@ export function MarketplaceClient() {
     setConnect(connectStatus);
   }, [getToken, filterKind]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void (async () => {
+    void (async  => {
       try {
-        await load();
+        await load;
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load marketplace');
       }
-    })();
+    });
   }, [isLoaded, load]);
 
-  async function publish() {
+  async function publish {
     setBusy(true);
     setError(null);
     setMessage(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const dollars = Number(priceDollars);
       const priceCents = Number.isFinite(dollars) ? Math.round(dollars * 100) : 0;
@@ -135,8 +135,8 @@ export function MarketplaceClient() {
       setTitle('');
       setDescription('');
       setPriceDollars('0');
-      setMessage(`Published ${kindLabel(kind).toLowerCase()} listing from this workspace.`);
-      await load();
+      setMessage(`Published ${kindLabel(kind).toLowerCase} listing from this workspace.`);
+      await load;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Publish failed');
     } finally {
@@ -149,7 +149,7 @@ export function MarketplaceClient() {
     setError(null);
     setMessage(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const result = await apiFetch<{
         requiresPayment?: boolean;
@@ -165,10 +165,10 @@ export function MarketplaceClient() {
       const n = result.itemsInstalled ?? result.termsInstalled ?? 0;
       setMessage(
         result.saleStatus === 'recorded'
-          ? `Installed ${n} ${kindLabel(listingKind).toLowerCase()} item(s) (sale recorded).`
-          : `Installed ${n} ${kindLabel(listingKind).toLowerCase()} item(s) into this workspace.`,
+          ? `Installed ${n} ${kindLabel(listingKind).toLowerCase} item(s) (sale recorded).`
+          : `Installed ${n} ${kindLabel(listingKind).toLowerCase} item(s) into this workspace.`,
       );
-      await load();
+      await load;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Install failed');
     } finally {
@@ -181,11 +181,11 @@ export function MarketplaceClient() {
     setError(null);
     setMessage(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       await apiFetch(`/v1/marketplace/listings/${id}`, { method: 'DELETE', token });
       setMessage('Listing unpublished.');
-      await load();
+      await load;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unpublish failed');
     } finally {
@@ -193,12 +193,12 @@ export function MarketplaceClient() {
     }
   }
 
-  async function startConnect() {
+  async function startConnect {
     setBusy(true);
     setError(null);
     setMessage(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const result = await apiFetch<{ url: string }>('/v1/marketplace/connect/onboard', {
         method: 'POST',
@@ -245,7 +245,7 @@ export function MarketplaceClient() {
           <button
             type="button"
             disabled={busy || !connect?.onboardingConfigured}
-            onClick={() => void startConnect()}
+            onClick={ => void startConnect}
             style={{
               padding: '0.45rem 0.85rem',
               border: '1px solid #111',
@@ -300,8 +300,8 @@ export function MarketplaceClient() {
             />
             <button
               type="button"
-              disabled={busy || !title.trim()}
-              onClick={() => void publish()}
+              disabled={busy || !title.trim}
+              onClick={ => void publish}
               style={{
                 alignSelf: 'flex-start',
                 padding: '0.55rem 1rem',
@@ -371,7 +371,7 @@ export function MarketplaceClient() {
                   <button
                     type="button"
                     disabled={busy || installedIds.has(row.id)}
-                    onClick={() => void install(row.id, row.kind)}
+                    onClick={ => void install(row.id, row.kind)}
                     style={{
                       padding: '0.4rem 0.75rem',
                       border: '1px solid #111',
@@ -425,7 +425,7 @@ export function MarketplaceClient() {
                     <button
                       type="button"
                       disabled={busy}
-                      onClick={() => void unpublish(row.id)}
+                      onClick={ => void unpublish(row.id)}
                       style={{
                         padding: '0.4rem 0.75rem',
                         border: '1px solid #999',
@@ -458,7 +458,7 @@ export function MarketplaceClient() {
                   </div>
                   <div style={{ color: '#666', fontSize: '0.9rem' }}>
                     {row.itemsInstalled ?? row.termsInstalled} items ·{' '}
-                    {new Date(row.installedAt).toLocaleString()}
+                    {new Date(row.installedAt).toLocaleString}
                   </div>
                 </li>
               ))}
@@ -483,7 +483,7 @@ export function MarketplaceClient() {
                   <div style={{ color: '#666', fontSize: '0.9rem' }}>
                     {formatPrice(row.amountCents, row.currency)} · fee{' '}
                     {formatPrice(row.applicationFeeCents, row.currency)} ·{' '}
-                    {new Date(row.createdAt).toLocaleString()}
+                    {new Date(row.createdAt).toLocaleString}
                   </div>
                 </li>
               ))}

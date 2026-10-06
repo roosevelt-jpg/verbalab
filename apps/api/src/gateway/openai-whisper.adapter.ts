@@ -26,8 +26,8 @@ export class OpenAiWhisperAdapter implements SttProvider {
       );
     }
 
-    const started = Date.now();
-    const form = new FormData();
+    const started = Date.now;
+    const form = new FormData;
     const blob = new Blob([new Uint8Array(input.buffer)], {
       type: input.mimeType || 'application/octet-stream',
     });
@@ -37,9 +37,9 @@ export class OpenAiWhisperAdapter implements SttProvider {
     if (input.language) {
       form.append('language', input.language);
     }
-    if (input.prompt?.trim()) {
+    if (input.prompt?.trim) {
       // Whisper uses prompt for style/vocabulary priming (not a hard lexicon).
-      form.append('prompt', input.prompt.trim().slice(0, 800));
+      form.append('prompt', input.prompt.trim.slice(0, 800));
     }
 
     let response: Response;
@@ -61,7 +61,7 @@ export class OpenAiWhisperAdapter implements SttProvider {
     }
 
     if (!response.ok) {
-      const detail = await response.text().catch(() => '');
+      const detail = await response.text.catch( => '');
       throw new ApiException(
         'provider_error',
         `OpenAI Whisper HTTP ${response.status}${detail ? `: ${detail.slice(0, 200)}` : ''}`,
@@ -69,7 +69,7 @@ export class OpenAiWhisperAdapter implements SttProvider {
       );
     }
 
-    const body = (await response.json()) as {
+    const body = (await response.json) as {
       text?: string;
       language?: string;
       duration?: number;
@@ -90,7 +90,7 @@ export class OpenAiWhisperAdapter implements SttProvider {
       language: body.language ?? input.language,
       durationSeconds,
       provider: this.name,
-      latencyMs: Date.now() - started,
+      latencyMs: Date.now - started,
       segments: segments.length ? segments : undefined,
       confidence,
     };
@@ -108,7 +108,7 @@ function mapSegments(raw: WhisperSegment[] | undefined): SttSegment[] {
       id: typeof seg.id === 'number' ? seg.id : index,
       start: typeof seg.start === 'number' ? seg.start : 0,
       end: typeof seg.end === 'number' ? seg.end : 0,
-      text: typeof seg.text === 'string' ? seg.text.trim() : '',
+      text: typeof seg.text === 'string' ? seg.text.trim : '',
       confidence,
     };
   });

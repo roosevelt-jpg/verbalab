@@ -11,11 +11,11 @@ type Engine = {
   safety?: { note?: string } & Record<string, unknown>;
 };
 
-export function OrganizationControlClient() {
+export function OrganizationControlClient {
   const [data, setData] = useState<Engine | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  useEffect( => {
     void apiFetch<Engine>('/v1/organization-control/engine')
       .then(setData)
       .catch((err: Error) => setError(err.message));

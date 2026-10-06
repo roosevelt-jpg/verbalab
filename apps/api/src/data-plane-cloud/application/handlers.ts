@@ -17,8 +17,8 @@ export class GetDataPlaneCloudEngineHandler
     private readonly catalog: DataPlaneCloudCatalogPort,
   ) {}
 
-  execute(): Promise<DataPlaneCloudEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<DataPlaneCloudEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListDataPlaneCloudProductsHandler
     private readonly catalog: DataPlaneCloudCatalogPort,
   ) {}
 
-  execute(): Promise<DataPlaneCloudProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<DataPlaneCloudProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

@@ -1,18 +1,18 @@
 /**
- * Library Phase 185 → Global Deployment Controller (VL-318).
+ * Library Phase 185 → Global Deployment Controller.
  * Largest blast-radius honesty: production deploys require authorization; rollback path required.
  * Extends release-engineering — does not regenerate Spinnaker/Argo.
  */
-export function globalDeploymentControllerEngineCatalog() {
+export function globalDeploymentControllerEngineCatalog {
   return {
     product: 'Lugemi Global Deployment Controller',
     capabilities: [
-      { id: 'multi_region', name: 'Multi Region', status: 'shipped', notes: 'VL-318.' },
-      { id: 'blue_green', name: 'Blue Green', status: 'shipped', notes: 'VL-318.' },
-      { id: 'canary', name: 'Canary', status: 'shipped', notes: 'VL-318.' },
-      { id: 'progressive', name: 'Progressive Delivery', status: 'shipped', notes: 'VL-318.' },
+      { id: 'multi_region', name: 'Multi Region', status: 'shipped', notes: '.' },
+      { id: 'blue_green', name: 'Blue Green', status: 'shipped', notes: '.' },
+      { id: 'canary', name: 'Canary', status: 'shipped', notes: '.' },
+      { id: 'progressive', name: 'Progressive Delivery', status: 'shipped', notes: '.' },
       { id: 'rollback', name: 'Rollback', status: 'shipped', notes: 'rollbackPath=true.' },
-      { id: 'scheduling', name: 'Scheduling', status: 'shipped', notes: 'VL-318.' },
+      { id: 'scheduling', name: 'Scheduling', status: 'shipped', notes: '.' },
       { id: 'approvals', name: 'Deployment Approvals', status: 'shipped', notes: 'Prod auth required.' },
     ],
     deployments: [
@@ -90,6 +90,6 @@ export function globalDeploymentControllerEngineCatalog() {
     },
     docs: '/docs/GLOBAL_DEPLOYMENT_CONTROLLER.md',
     note:
-      'Global Deployment Controller (VL-318). Multi-region/blue-green/canary/progressive/rollback/scheduling/approvals. productionDeployRequiresAuthorization=true; rollbackPath=true.',
+      'Global Deployment Controller. Multi-region/blue-green/canary/progressive/rollback/scheduling/approvals. productionDeployRequiresAuthorization=true; rollbackPath=true.',
   };
 }

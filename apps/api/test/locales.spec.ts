@@ -20,7 +20,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_loc_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_loc_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -34,21 +34,21 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Locale packs (VL-102)', () => {
+describe('Locale packs',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let locales: LocalesService;
   let lastText: string | null;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -71,18 +71,18 @@ describe('Locale packs (VL-102)', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('formats dates/numbers/currency via Intl helpers', () => {
+  it('formats dates/numbers/currency via Intl helpers',  => {
     expect(formatLocaleDate('2026-09-07T12:00:00.000Z', 'en-US')).toMatch(/2026|September|9/);
     expect(formatLocaleNumber(1234.5, 'fr-FR')).toMatch(/1/);
     expect(formatLocaleCurrency(10, 'sw-TZ', 'TZS')).toMatch(/10|TZS|TSh/i);
   });
 
-  it('GET /v1/locales lists seeded packs including sw/yo/am', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/locales').expect(200);
+  it('GET /v1/locales lists seeded packs including sw/yo/am', async  => {
+    const res = await request(app.getHttpServer).get('/v1/locales').expect(200);
     const codes = res.body.data.map((p: { languageCode: string }) => p.languageCode);
     expect(codes).toEqual(expect.arrayContaining(['en', 'fr', 'sw', 'yo', 'am']));
     const sw = res.body.data.find((p: { languageCode: string }) => p.languageCode === 'sw');
@@ -90,14 +90,14 @@ describe('Locale packs (VL-102)', () => {
     expect(sw.doNotTranslate).toContain('Nairobi');
   });
 
-  it('GET /v1/locales/:code/examples returns Intl samples', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/locales/am/examples').expect(200);
+  it('GET /v1/locales/:code/examples returns Intl samples', async  => {
+    const res = await request(app.getHttpServer).get('/v1/locales/am/examples').expect(200);
     expect(res.body.bcp47).toBe('am-ET');
-    expect(res.body.currency).toBeTruthy();
+    expect(res.body.currency).toBeTruthy;
   });
 
-  it('protects locale do-not-translate entities during translate', async () => {
-    const org = await seedOrg(prisma, `lprot_${Date.now()}`);
+  it('protects locale do-not-translate entities during translate', async  => {
+    const org = await seedOrg(prisma, `lprot_${Date.now}`);
     const key = await apiKeys.create({
       organizationId: org.id,
       workspaceId: org.workspaces[0].id,
@@ -105,7 +105,7 @@ describe('Locale packs (VL-102)', () => {
       name: 'locale-protect',
     });
 
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer)
       .post('/v1/translate')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'Visit Nairobi tomorrow', source: 'en', target: 'sw' })

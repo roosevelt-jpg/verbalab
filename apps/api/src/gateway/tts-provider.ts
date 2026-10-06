@@ -25,6 +25,6 @@ export type TtsOutput = {
 
 export interface TtsProvider {
   readonly name: string;
-  listVoices(): TtsVoice[];
+  listVoices: TtsVoice[];
   synthesize(input: TtsInput): Promise<TtsOutput>;
 }

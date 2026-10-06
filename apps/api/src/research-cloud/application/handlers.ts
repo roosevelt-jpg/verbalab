@@ -17,8 +17,8 @@ export class GetResearchCloudEngineHandler
     private readonly catalog: ResearchCloudCatalogPort,
   ) {}
 
-  execute(): Promise<ResearchCloudEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<ResearchCloudEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListResearchCloudProductsHandler
     private readonly catalog: ResearchCloudCatalogPort,
   ) {}
 
-  execute(): Promise<ResearchCloudProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<ResearchCloudProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

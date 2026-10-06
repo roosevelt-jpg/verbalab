@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_speech_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_speech_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,29 +35,29 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Speech Cloud Foundation (VL-150)', () => {
+describe('Speech Cloud Foundation',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let speechCloud: SpeechCloudService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     speechCloud = app.get(SpeechCloudService);
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Speech Cloud mapping (no fake streaming/speaker OS)', () => {
+  it('documents Speech Cloud mapping (no fake streaming/speaker OS)',  => {
     const doc = join(root, 'docs/SPEECH_CLOUD.md');
     const adr = join(root, 'docs/adr/0069-speech-cloud-foundation.md');
     expect(existsSync(doc)).toBe(true);
@@ -72,8 +72,8 @@ describe('Speech Cloud Foundation (VL-150)', () => {
     expect(text).toMatch(/is \*\*not\*\* Deepgram/i);
   });
 
-  it('exposes public product catalog with honest statuses', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/speech/products').expect(200);
+  it('exposes public product catalog with honest statuses', async  => {
+    const res = await request(app.getHttpServer).get('/v1/speech/products').expect(200);
     expect(res.body.architecture.graphql).toBe(true);
     expect(res.body.architecture.cqrs).toBe(true);
     expect(res.body.architecture.terraform).toBe(true);
@@ -133,8 +133,8 @@ describe('Speech Cloud Foundation (VL-150)', () => {
     expect(speechAnalytics.api).toContain('/v1/speech-analytics');
   });
 
-  it('returns org speech overview with usage + deferred flags', async () => {
-    const org = await seedOrg(prisma, `speech_${Date.now()}`);
+  it('returns org speech overview with usage + deferred flags', async  => {
+    const org = await seedOrg(prisma, `speech_${Date.now}`);
 
     const overview = await speechCloud.overview({
       userId: org.memberships[0].userId,
@@ -144,8 +144,8 @@ describe('Speech Cloud Foundation (VL-150)', () => {
       role: 'owner',
     });
 
-    expect(overview.usage.stt).toBeDefined();
-    expect(overview.usage.tts).toBeDefined();
+    expect(overview.usage.stt).toBeDefined;
+    expect(overview.usage.tts).toBeDefined;
     expect(overview.workspace.voiceClones).toBeGreaterThanOrEqual(0);
     expect(overview.deferred.streamingStt).toBe(false);
     expect(overview.deferred.speakerIntelligence).toBe(false);
@@ -176,15 +176,15 @@ describe('Speech Cloud Foundation (VL-150)', () => {
     expect(overview.architecture.hexagonalRewrite).toBe(false);
   });
 
-  it('exposes speechProducts via GraphQL CQRS façade', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes speechProducts via GraphQL CQRS façade', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query: '{ speechProducts { id name status } }',
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     const products = res.body.data.speechProducts as Array<{ id: string; status: string }>;
     expect(products.length).toBeGreaterThan(5);
     expect(products.some((p) => p.id === 'batch-stt' && p.status === 'shipped')).toBe(true);

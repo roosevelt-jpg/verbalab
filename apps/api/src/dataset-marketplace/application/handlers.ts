@@ -16,8 +16,8 @@ export class GetDatasetMarketplaceEngineHandler
     private readonly catalog: DatasetMarketplaceCatalogPort,
   ) {}
 
-  execute(): Promise<DatasetMarketplaceEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<DatasetMarketplaceEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 

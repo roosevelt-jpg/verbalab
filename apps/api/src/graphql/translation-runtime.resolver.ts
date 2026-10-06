@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetTranslationRuntimeEngineQuery } from '../translation-runtime/application/messages';
 import { GqlTranslationRuntimeEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class TranslationRuntimeGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query(() => GqlTranslationRuntimeEngine, { name: 'translationRuntimeEngine' })
-  async translationRuntimeEngine(): Promise<GqlTranslationRuntimeEngine> {
-    const catalog = await this.queries.execute(new GetTranslationRuntimeEngineQuery());
+  @Query( => GqlTranslationRuntimeEngine, { name: 'translationRuntimeEngine' })
+  async translationRuntimeEngine: Promise<GqlTranslationRuntimeEngine> {
+    const catalog = await this.queries.execute(new GetTranslationRuntimeEngineQuery);
     return {
       product: catalog.product,
       note: catalog.note,

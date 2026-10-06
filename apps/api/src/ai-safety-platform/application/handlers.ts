@@ -17,8 +17,8 @@ export class GetAiSafetyPlatformEngineHandler
     private readonly catalog: AiSafetyPlatformCatalogPort,
   ) {}
 
-  execute(): Promise<AiSafetyPlatformEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<AiSafetyPlatformEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListAiSafetyPlatformProductsHandler
     private readonly catalog: AiSafetyPlatformCatalogPort,
   ) {}
 
-  execute(): Promise<AiSafetyPlatformProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<AiSafetyPlatformProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

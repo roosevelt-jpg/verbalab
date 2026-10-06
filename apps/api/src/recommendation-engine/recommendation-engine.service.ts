@@ -32,7 +32,7 @@ type RecItem = {
   metadata?: Record<string, unknown>;
 };
 
-@Injectable()
+@Injectable
 export class RecommendationEngineService {
   constructor(
     private readonly prisma: PrismaService,
@@ -45,25 +45,25 @@ export class RecommendationEngineService {
     private readonly embeddingCloud: EmbeddingCloudService,
   ) {}
 
-  engine() {
-    return recommendationEngineCatalog();
+  engine {
+    return recommendationEngineCatalog;
   }
 
-  kinds() {
+  kinds {
     return {
       kinds: RECOMMEND_KINDS.map((id) => ({ id })),
       deferred: ['enterprise'],
-      note: 'Recommendable kinds for VL-187 light rankers.',
+      note: 'Recommendable kinds for light rankers.',
     };
   }
 
   private assertKind(raw: string | undefined): RecommendKind {
-    const kind = (raw?.trim() || 'language') as RecommendKind;
+    const kind = (raw?.trim || 'language') as RecommendKind;
     if (!(RECOMMEND_KINDS as readonly string[]).includes(kind)) {
       if (kind === ('enterprise' as RecommendKind)) {
         throw new ApiException(
           'validation_error',
-          'kind=enterprise is deferred — not a retail recommender OS (VL-187)',
+          'kind=enterprise is deferred — not a retail recommender OS',
           HttpStatus.BAD_REQUEST,
         );
       }
@@ -77,9 +77,9 @@ export class RecommendationEngineService {
   }
 
   private textScore(query: string, ...parts: Array<string | null | undefined>): number {
-    const q = query.trim().toLowerCase();
+    const q = query.trim.toLowerCase;
     if (!q) return 0.35;
-    const hay = parts.filter(Boolean).join(' ').toLowerCase();
+    const hay = parts.filter(Boolean).join(' ').toLowerCase;
     if (!hay) return 0;
     let score = 0;
     if (hay.includes(q)) score += 0.55;
@@ -93,12 +93,12 @@ export class RecommendationEngineService {
   }
 
   private async memoryBoost(input: AuthCtx & { query?: string }): Promise<string[]> {
-    if (!input.query?.trim()) return [];
+    if (!input.query?.trim) return [];
     try {
       const found = await this.memory.search({
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
-        query: input.query.trim(),
+        query: input.query.trim,
         limit: 5,
       });
       return found.hits.map((h) => h.content);
@@ -109,7 +109,7 @@ export class RecommendationEngineService {
 
   private async recommendLanguages(input: AuthCtx & { query?: string; k: number }): Promise<RecItem[]> {
     const [langs, workspace, memHints] = await Promise.all([
-      this.languages.list(),
+      this.languages.list,
       this.prisma.workspace.findFirst({
         where: { id: input.workspaceId, organizationId: input.organizationId },
         select: { defaultSourceLang: true, defaultTargetLang: true },
@@ -151,7 +151,7 @@ export class RecommendationEngineService {
         { language: input.language },
         { organizationId: input.organizationId, workspaceId: input.workspaceId },
       ),
-      this.voiceMarketplace.listPublished(input.organizationId).catch(() => ({ listings: [] as Array<{
+      this.voiceMarketplace.listPublished(input.organizationId).catch( => ({ listings: [] as Array<{
         id: string;
         title: string;
         description: string;
@@ -206,9 +206,9 @@ export class RecommendationEngineService {
   private async recommendContent(
     input: AuthCtx & { query?: string; k: number; useVectors: boolean },
   ): Promise<RecItem[]> {
-    if (input.query?.trim() && input.useVectors) {
+    if (input.query?.trim && input.useVectors) {
       const search = await this.knowledge.searchVectors({
-        query: input.query.trim(),
+        query: input.query.trim,
         k: input.k,
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
@@ -271,13 +271,13 @@ export class RecommendationEngineService {
         metadata: { source, target: workspace.defaultTargetLang },
       });
     }
-    const dedup = new Map<string, RecItem>();
+    const dedup = new Map<string, RecItem>;
     for (const p of pairs) dedup.set(p.id, p);
-    return [...dedup.values()].sort((a, b) => b.score - a.score).slice(0, input.k);
+    return [...dedup.values].sort((a, b) => b.score - a.score).slice(0, input.k);
   }
 
   private recommendModels(input: { query?: string; k: number }): RecItem[] {
-    const models = this.embeddingCloud.models().models;
+    const models = this.embeddingCloud.models.models;
     return models
       .map((m) => ({
         id: m.id,
@@ -356,7 +356,7 @@ export class RecommendationEngineService {
 
     return {
       kind,
-      query: input.query?.trim() || null,
+      query: input.query?.trim || null,
       items,
       sources: {
         languages: kind === 'language' || kind === 'translation',
@@ -371,12 +371,12 @@ export class RecommendationEngineService {
         collaborativeFiltering: false,
         trainsRankingModels: false,
       },
-      note: 'Light rankers over existing catalogs (VL-187). Not a retail recommender OS.',
+      note: 'Light rankers over existing catalogs. Not a retail recommender OS.',
     };
   }
 
   async analytics(organizationId: string, workspaceId: string) {
-    const start = new Date();
+    const start = new Date;
     start.setUTCDate(1);
     start.setUTCHours(0, 0, 0, 0);
     const requests = await this.prisma.auditEvent.count({
@@ -387,25 +387,25 @@ export class RecommendationEngineService {
       },
     });
     return {
-      periodStart: start.toISOString(),
+      periodStart: start.toISOString,
       requests,
       workspaceId,
-      note: 'Recommendation Engine analytics (VL-187).',
+      note: 'Recommendation Engine analytics.',
     };
   }
 
   async monitoring(organizationId: string, workspaceId: string) {
     const [analytics, engine] = await Promise.all([
       this.analytics(organizationId, workspaceId),
-      Promise.resolve(this.engine()),
+      Promise.resolve(this.engine),
     ]);
     return {
-      generatedAt: new Date().toISOString(),
+      generatedAt: new Date.toISOString,
       periodStart: analytics.periodStart,
       requests: analytics.requests,
       retailRecommenderOs: engine.honesty.retailRecommenderOs,
       deferred: engine.capabilities.filter((c) => c.status === 'deferred').map((c) => c.id),
-      note: 'Recommendation Engine monitoring snapshot (VL-187).',
+      note: 'Recommendation Engine monitoring snapshot.',
     };
   }
 }

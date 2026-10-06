@@ -12,10 +12,10 @@ export type ExtractedDocument = {
   paragraphs: string[];
 };
 
-@Injectable()
+@Injectable
 export class DocumentCodecService {
   async extract(buffer: Buffer, mimeType: string, filename: string): Promise<ExtractedDocument> {
-    const lower = filename.toLowerCase();
+    const lower = filename.toLowerCase;
     if (
       mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
       lower.endsWith('.docx')
@@ -105,7 +105,7 @@ export class DocumentCodecService {
     const chunks: string[] = [];
     let current = '';
     for (const para of paragraphs) {
-      const piece = para.trim();
+      const piece = para.trim;
       if (!piece) continue;
       if (!current) {
         current = piece;
@@ -126,7 +126,7 @@ export class DocumentCodecService {
     return text
       .replace(/\r\n/g, '\n')
       .split(/\n{2,}/)
-      .map((p) => p.trim())
+      .map((p) => p.trim)
       .filter(Boolean);
   }
 }

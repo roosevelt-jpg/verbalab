@@ -20,7 +20,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_bill_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_bill_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -34,20 +34,20 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Billing (VL-031)', () => {
+describe('Billing',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let billing: BillingService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
     app = moduleFixture.createNestApplication({ rawBody: true });
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -68,11 +68,11 @@ describe('Billing (VL-031)', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('defaults new orgs to free plan quota', async () => {
+  it('defaults new orgs to free plan quota', async  => {
     const org = await seedOrg(prisma, 'freeDefault');
     const summary = await billing.getSummary(org.id);
     expect(summary.plan).toBe('free');
@@ -80,7 +80,7 @@ describe('Billing (VL-031)', () => {
     expect(summary.charactersUsed).toBe(0);
   });
 
-  it('rejects translate when monthly quota is exceeded', async () => {
+  it('rejects translate when monthly quota is exceeded', async  => {
     const org = await seedOrg(prisma, 'quota');
     await billing.applyEntitlementForTests({
       organizationId: org.id,
@@ -95,7 +95,7 @@ describe('Billing (VL-031)', () => {
       name: 'quota-key',
     });
 
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer)
       .post('/v1/translate')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'Hello!!', source: 'en', target: 'sw' })
@@ -104,7 +104,7 @@ describe('Billing (VL-031)', () => {
     expect(res.body.error.code).toBe('quota_exceeded');
   });
 
-  it('allows translate within quota and tracks usage against entitlement', async () => {
+  it('allows translate within quota and tracks usage against entitlement', async  => {
     const org = await seedOrg(prisma, 'within');
     await billing.applyEntitlementForTests({
       organizationId: org.id,
@@ -119,7 +119,7 @@ describe('Billing (VL-031)', () => {
       name: 'ok-key',
     });
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post('/v1/translate')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'Hi', source: 'en', target: 'sw' })
@@ -130,7 +130,7 @@ describe('Billing (VL-031)', () => {
     expect(summary.charactersRemaining).toBe(98);
   });
 
-  it('applies pro entitlement from webhook-style helper', async () => {
+  it('applies pro entitlement from webhook-style helper', async  => {
     const org = await seedOrg(prisma, 'pro');
     await billing.applyEntitlement({
       organizationId: org.id,
@@ -151,7 +151,7 @@ describe('Billing (VL-031)', () => {
     expect(events.length).toBeGreaterThan(0);
   });
 
-  it('checkout returns billing_not_configured without Stripe env', async () => {
+  it('checkout returns billing_not_configured without Stripe env', async  => {
     // Without Clerk we cannot hit the guarded route; exercise the service directly.
     const org = await seedOrg(prisma, 'nocheckout');
     await expect(
@@ -162,7 +162,7 @@ describe('Billing (VL-031)', () => {
     ).rejects.toMatchObject({ code: 'billing_not_configured' });
   });
 
-  it('webhook without signature fails', async () => {
-    await request(app.getHttpServer()).post('/v1/billing/webhook').send({ hello: 'stripe' }).expect(400);
+  it('webhook without signature fails', async  => {
+    await request(app.getHttpServer).post('/v1/billing/webhook').send({ hello: 'stripe' }).expect(400);
   });
 });

@@ -28,7 +28,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_vb_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_vb_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -52,34 +52,34 @@ function speechishWav(seconds = 1.5): Buffer {
     samples[i] =
       Math.sin(2 * Math.PI * 180 * t) * 0.25 * env +
       Math.sin(2 * Math.PI * 320 * t) * 0.15 * env +
-      (Math.random() - 0.5) * 0.04;
+      (Math.random - 0.5) * 0.04;
   }
   return encodeWavPcm16(samples, sampleRate);
 }
 
-describe('Voice Biometrics (VL-176)', () => {
+describe('Voice Biometrics',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Voice Biometrics honesty (not NIST/PAD)', () => {
+  it('documents Voice Biometrics honesty (not NIST/PAD)',  => {
     const doc = join(root, 'docs/VOICE_BIOMETRICS.md');
     const adr = join(root, 'docs/adr/0087-voice-biometrics.md');
     expect(existsSync(doc)).toBe(true);
@@ -89,8 +89,8 @@ describe('Voice Biometrics (VL-176)', () => {
     expect(text).toContain('Encryption at rest');
   });
 
-  it('encrypts and resolves fingerprints round-trip', () => {
-    const fp = computeVoiceFingerprint(speechishWav());
+  it('encrypts and resolves fingerprints round-trip',  => {
+    const fp = computeVoiceFingerprint(speechishWav);
     const enc = encryptFingerprint(fp);
     expect(enc.enc).toBe(1);
     const back = resolveFingerprint(enc);
@@ -98,25 +98,25 @@ describe('Voice Biometrics (VL-176)', () => {
     expect(back?.vector.length).toBe(fp.vector.length);
   });
 
-  it('anti-spoof heuristics mark certifiedPad=false', () => {
-    const result = assessAntiSpoof(speechishWav());
+  it('anti-spoof heuristics mark certifiedPad=false',  => {
+    const result = assessAntiSpoof(speechishWav);
     expect(result.certifiedPad).toBe(false);
     expect(result.riskScore).toBeGreaterThanOrEqual(0);
   });
 
-  it('exposes engine with nistCertified=false', async () => {
-    const engine = await request(app.getHttpServer()).get('/v1/voice-biometrics/engine').expect(200);
+  it('exposes engine with nistCertified=false', async  => {
+    const engine = await request(app.getHttpServer).get('/v1/voice-biometrics/engine').expect(200);
     expect(engine.body.product).toBe('Lugemi Voice Biometrics');
     expect(engine.body.honesty.nistCertified).toBe(false);
     expect(engine.body.honesty.padCertified).toBe(false);
     const auth = engine.body.capabilities.find((c: { id: string }) => c.id === 'voice-authentication');
     expect(auth.status).toBe('partial');
 
-    const enc = await request(app.getHttpServer()).get('/v1/voice-biometrics/encryption').expect(200);
+    const enc = await request(app.getHttpServer).get('/v1/voice-biometrics/encryption').expect(200);
     expect(enc.body.algorithm).toBe('aes-256-gcm');
   });
 
-  it('secure enroll, authenticate, and delete biometric', async () => {
+  it('secure enroll, authenticate, and delete biometric', async  => {
     const org = await seedOrg(prisma, 'vb');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -125,14 +125,14 @@ describe('Voice Biometrics (VL-176)', () => {
       name: 'vb-key',
     });
 
-    const profile = await request(app.getHttpServer())
+    const profile = await request(app.getHttpServer)
       .post('/v1/speakers/profiles')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ displayName: 'Roosevelt' })
       .expect(201);
 
-    const wav = speechishWav();
-    const enroll = await request(app.getHttpServer())
+    const wav = speechishWav;
+    const enroll = await request(app.getHttpServer)
       .post('/v1/voice-biometrics/enroll')
       .set('Authorization', `Bearer ${key.secret}`)
       .field('profileId', profile.body.id)
@@ -147,7 +147,7 @@ describe('Voice Biometrics (VL-176)', () => {
     expect(stored?.fingerprintEncrypted).toBe(true);
     expect(stored?.fingerprintJson).toMatchObject({ enc: 1 });
 
-    const auth = await request(app.getHttpServer())
+    const auth = await request(app.getHttpServer)
       .post('/v1/voice-biometrics/authenticate')
       .set('Authorization', `Bearer ${key.secret}`)
       .field('profileId', profile.body.id)
@@ -158,7 +158,7 @@ describe('Voice Biometrics (VL-176)', () => {
     expect(auth.body.nistCertified).toBe(false);
     expect(auth.body.antiSpoof.certifiedPad).toBe(false);
 
-    const del = await request(app.getHttpServer())
+    const del = await request(app.getHttpServer)
       .delete(`/v1/voice-biometrics/profiles/${profile.body.id}`)
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -167,12 +167,12 @@ describe('Voice Biometrics (VL-176)', () => {
     expect(del.body.profile.status).toBe('deleted');
 
     const after = await prisma.speakerProfile.findUnique({ where: { id: profile.body.id } });
-    expect(after?.fingerprintJson).toBeNull();
-    expect(after?.deletedAt).toBeTruthy();
+    expect(after?.fingerprintJson).toBeNull;
+    expect(after?.deletedAt).toBeTruthy;
   });
 
-  it('exposes voiceBiometricsEngine via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes voiceBiometricsEngine via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
@@ -180,7 +180,7 @@ describe('Voice Biometrics (VL-176)', () => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.voiceBiometricsEngine.nistCertified).toBe(false);
     expect(res.body.data.voiceBiometricsEngine.padCertified).toBe(false);
   });

@@ -6,16 +6,16 @@ import {
   GlobalDeploymentControllerProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestGlobalDeploymentControllerCatalogAdapter implements GlobalDeploymentControllerCatalogPort {
   constructor(private readonly service: GlobalDeploymentControllerService) {}
 
-  engine(): GlobalDeploymentControllerEngineBundle {
-    return this.service.engine();
+  engine: GlobalDeploymentControllerEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): GlobalDeploymentControllerProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: GlobalDeploymentControllerProductRow[] {
+    const bundle = this.engine as {
       products?: GlobalDeploymentControllerProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestGlobalDeploymentControllerCatalogAdapter implements GlobalDeplo
         status: 'shipped',
         api: 'GET /v1/global-deployment-controller/engine',
         console: '/global-deployment-controller',
-        notes: 'VL-318 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

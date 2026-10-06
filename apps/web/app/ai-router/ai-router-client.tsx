@@ -36,30 +36,30 @@ type ResolveResult = {
   note: string;
 };
 
-export function AiRouterClient() {
-  const { getToken, isLoaded } = useAuth();
+export function AiRouterClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [result, setResult] = useState<ResolveResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [optimize, setOptimize] = useState('balanced');
 
-  const refresh = useCallback(async () => {
-    const token = await getToken();
+  const refresh = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     setEngine(await apiFetch<Engine>('/v1/ai-router/engine', { token }));
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void refresh().catch((err: Error) => setError(err.message));
+    void refresh.catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
   const resolve = async (feature: string) => {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const res = await apiFetch<ResolveResult>('/v1/ai-router/resolve', {
         token,
@@ -135,7 +135,7 @@ export function AiRouterClient() {
               key={f}
               type="button"
               disabled={busy}
-              onClick={() => void resolve(f)}
+              onClick={ => void resolve(f)}
               style={{
                 border: '1px solid var(--border)',
                 background: 'transparent',

@@ -12,13 +12,13 @@ export type RateLimitHit = {
 
 type MemoryBucket = { count: number; resetAt: number };
 
-@Injectable()
+@Injectable
 export class RateLimitService implements OnModuleInit, OnModuleDestroy {
   private readonly logger = new Logger(RateLimitService.name);
   private redis: IORedis | null = null;
-  private readonly memory = new Map<string, MemoryBucket>();
+  private readonly memory = new Map<string, MemoryBucket>;
 
-  private useMemory(): boolean {
+  private useMemory: boolean {
     return (
       process.env.RATE_LIMIT_MEMORY === '1' ||
       process.env.JOBS_INLINE === '1' ||
@@ -26,8 +26,8 @@ export class RateLimitService implements OnModuleInit, OnModuleDestroy {
     );
   }
 
-  async onModuleInit() {
-    if (this.useMemory()) {
+  async onModuleInit {
+    if (this.useMemory) {
       this.logger.warn('Rate limits using in-memory store (RATE_LIMIT_MEMORY / JOBS_INLINE)');
       return;
     }
@@ -40,29 +40,29 @@ export class RateLimitService implements OnModuleInit, OnModuleDestroy {
         lazyConnect: true,
         connectTimeout: 2_000,
       });
-      await this.redis.connect();
+      await this.redis.connect;
       this.logger.log('Rate limit Redis connected');
     } catch (error) {
       this.logger.warn(
         `Rate limit Redis unavailable (${error instanceof Error ? error.message : 'unknown'}); using memory`,
       );
-      await this.redis?.quit().catch(() => undefined);
+      await this.redis?.quit.catch( => undefined);
       this.redis = null;
     }
   }
 
-  async onModuleDestroy() {
-    await this.redis?.quit().catch(() => undefined);
+  async onModuleDestroy {
+    await this.redis?.quit.catch( => undefined);
     this.redis = null;
   }
 
   /** Test hook — force memory backend and clear counters. */
-  resetForTests() {
-    this.memory.clear();
+  resetForTests {
+    this.memory.clear;
   }
 
-  private windowMeta(nowMs = Date.now()) {
-    const windowSec = rateLimitWindowSec();
+  private windowMeta(nowMs = Date.now) {
+    const windowSec = rateLimitWindowSec;
     const windowStart = Math.floor(nowMs / 1000 / windowSec) * windowSec;
     const retryAfterSec = Math.max(1, windowStart + windowSec - Math.floor(nowMs / 1000));
     return { windowSec, windowStart, retryAfterSec };
@@ -80,7 +80,7 @@ export class RateLimitService implements OnModuleInit, OnModuleDestroy {
 
     const resetAt = (windowStart + windowSec) * 1000;
     const existing = this.memory.get(key);
-    if (!existing || existing.resetAt <= Date.now()) {
+    if (!existing || existing.resetAt <= Date.now) {
       this.memory.set(key, { count: 1, resetAt });
       return 1;
     }
@@ -103,7 +103,7 @@ export class RateLimitService implements OnModuleInit, OnModuleDestroy {
       };
     }
 
-    const { windowSec, windowStart, retryAfterSec } = this.windowMeta();
+    const { windowSec, windowStart, retryAfterSec } = this.windowMeta;
     const key = `rl:${input.scope}:${input.id}`;
     const count = await this.incr(key, windowSec, windowStart);
     const allowed = count <= input.limit;

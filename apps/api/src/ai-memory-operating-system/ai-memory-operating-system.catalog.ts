@@ -1,8 +1,8 @@
 /**
- * Library Phase 207 → AI Memory Operating System (VL-340).
- * AI Memory Operating System (VL-340). Façade over memory-runtime + memory-fabric + knowledge-memory. Global/org/workspace/user/semantic scopes as catalog — not a third memory store.
+ * Library Phase 207 → AI Memory Operating System.
+ * AI Memory Operating System. Façade over memory-runtime + memory-fabric + knowledge-memory. Global/org/workspace/user/semantic scopes as catalog — not a third memory store.
  */
-export function aiMemoryOperatingSystemEngineCatalog() {
+export function aiMemoryOperatingSystemEngineCatalog {
   return {
     product: 'Lugemi AI Memory Operating System',
     unifyingOrchestrationLayer: true,
@@ -11,11 +11,11 @@ export function aiMemoryOperatingSystemEngineCatalog() {
     notKubernetes: true,
     literalOsKernel: false,
     capabilities: [
-      { id: 'global_scope', name: 'Global Memory Scope Catalog', status: 'shipped', notes: 'VL-340 routed capability — not a new engine.' },
-      { id: 'org_scope', name: 'Org Memory Scope Catalog', status: 'shipped', notes: 'VL-340 routed capability — not a new engine.' },
-      { id: 'workspace_scope', name: 'Workspace Memory Scope Catalog', status: 'shipped', notes: 'VL-340 routed capability — not a new engine.' },
-      { id: 'user_scope', name: 'User Memory Scope Catalog', status: 'shipped', notes: 'VL-340 routed capability — not a new engine.' },
-      { id: 'semantic_scope', name: 'Semantic Memory Scope Catalog', status: 'shipped', notes: 'VL-340 routed capability — not a new engine.' }
+      { id: 'global_scope', name: 'Global Memory Scope Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'org_scope', name: 'Org Memory Scope Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'workspace_scope', name: 'Workspace Memory Scope Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'user_scope', name: 'User Memory Scope Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' },
+      { id: 'semantic_scope', name: 'Semantic Memory Scope Catalog', status: 'shipped', notes: ' routed capability — not a new engine.' }
     ],
     routes: [
       {
@@ -74,9 +74,9 @@ export function aiMemoryOperatingSystemEngineCatalog() {
       notKubernetes: true,
       literalOsKernel: false,
       enterpriseEngineeringSystemOs: false,
-      note: 'AI Memory Operating System (VL-340). Façade over memory-runtime + memory-fabric + knowledge-memory. Global/org/workspace/user/semantic scopes as catalog — not a third memory store.',
+      note: 'AI Memory Operating System. Façade over memory-runtime + memory-fabric + knowledge-memory. Global/org/workspace/user/semantic scopes as catalog — not a third memory store.',
     },
     docs: '/docs/AI_MEMORY_OPERATING_SYSTEM.md',
-    note: 'AI Memory Operating System (VL-340). Façade over memory-runtime + memory-fabric + knowledge-memory. Global/org/workspace/user/semantic scopes as catalog — not a third memory store.',
+    note: 'AI Memory Operating System. Façade over memory-runtime + memory-fabric + knowledge-memory. Global/org/workspace/user/semantic scopes as catalog — not a third memory store.',
   };
 }

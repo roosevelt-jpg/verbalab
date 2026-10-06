@@ -1,5 +1,5 @@
 import { GoldenPathPlatformClient } from './golden-path-platform-client';
 
-export default function GoldenPathPlatformPage() {
+export default function GoldenPathPlatformPage {
   return <GoldenPathPlatformClient />;
 }

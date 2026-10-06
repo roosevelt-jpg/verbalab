@@ -19,7 +19,7 @@ export function AgentChatDemo({
   userLang?: string;
   agentLang?: string;
 }) {
-  const { play, stop, playingId, status, error } = useDemoPlayer();
+  const { play, stop, playingId, status, error } = useDemoPlayer;
 
   return (
     <div className="mkt-fake-chat mkt-chat-demo">
@@ -30,9 +30,9 @@ export function AgentChatDemo({
           type="button"
           className="mkt-play-chip"
           aria-label="Play user message"
-          onClick={() => {
+          onClick={ => {
             if (playingId === 'chat-user') {
-              stop();
+              stop;
               return;
             }
             void play({ id: 'chat-user', text: userText, voiceId: userVoiceId, lang: userLang });
@@ -47,9 +47,9 @@ export function AgentChatDemo({
           type="button"
           className="mkt-play-chip"
           aria-label="Play agent reply"
-          onClick={() => {
+          onClick={ => {
             if (playingId === 'chat-agent') {
-              stop();
+              stop;
               return;
             }
             void play({
@@ -67,7 +67,7 @@ export function AgentChatDemo({
         <button
           type="button"
           className="vl-btn vl-btn-primary"
-          onClick={async () => {
+          onClick={async  => {
             await play({ id: 'chat-user', text: userText, voiceId: userVoiceId, lang: userLang });
             await play({
               id: 'chat-agent',

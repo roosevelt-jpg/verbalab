@@ -8,13 +8,13 @@ export class IntelligenceCloudController {
   constructor(private readonly intelligenceCloud: IntelligenceCloudService) {}
 
   @Get('products')
-  products() {
-    return this.intelligenceCloud.products();
+  products {
+    return this.intelligenceCloud.products;
   }
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession() session: SessionContext) {
+  overview(@CurrentSession session: SessionContext) {
     return this.intelligenceCloud.overview(session);
   }
 }

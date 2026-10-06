@@ -1,5 +1,5 @@
 /**
- * Library Phase 176 → FinOps Platform (VL-309).
+ * Library Phase 176 → FinOps Platform.
  * Pairs with Volume 7 GPU/Inference cost surfaces. Catalog/dashboard — not cloud-billing OS.
  */
 export type FinOpsBudget = {
@@ -30,7 +30,7 @@ export type FinOpsCostRow = {
   notes: string;
 };
 
-export function seedFinOpsBudgets(): FinOpsBudget[] {
+export function seedFinOpsBudgets: FinOpsBudget[] {
   return [
     {
       id: 'budget-gpu-monthly',
@@ -80,7 +80,7 @@ export function seedFinOpsBudgets(): FinOpsBudget[] {
   ];
 }
 
-export function seedFinOpsAlerts(): FinOpsAlert[] {
+export function seedFinOpsAlerts: FinOpsAlert[] {
   return [
     {
       id: 'alert-gpu-80',
@@ -121,7 +121,7 @@ export function seedFinOpsAlerts(): FinOpsAlert[] {
   ];
 }
 
-export function seedFinOpsCosts(): FinOpsCostRow[] {
+export function seedFinOpsCosts: FinOpsCostRow[] {
   return [
     { id: 'cost-gpu', name: 'GPU hours', kind: 'gpu', monthlyUsd: 1875, notes: 'From gpu-platform / ai-runtime-analytics.' },
     { id: 'cost-model', name: 'Model inference', kind: 'model', monthlyUsd: 940, notes: 'Token/model ledger showback.' },
@@ -134,10 +134,10 @@ export function seedFinOpsCosts(): FinOpsCostRow[] {
   ];
 }
 
-export function finopsPlatformEngineCatalog() {
-  const budgets = seedFinOpsBudgets();
-  const alerts = seedFinOpsAlerts();
-  const costs = seedFinOpsCosts();
+export function finopsPlatformEngineCatalog {
+  const budgets = seedFinOpsBudgets;
+  const alerts = seedFinOpsAlerts;
+  const costs = seedFinOpsCosts;
   return {
     product: 'Lugemi FinOps Platform',
     capabilities: [
@@ -173,6 +173,6 @@ export function finopsPlatformEngineCatalog() {
     },
     docs: '/docs/FINOPS_PLATFORM.md',
     note:
-      'FinOps Platform (VL-309). Cloud/GPU/model/storage/bandwidth + chargeback/showback/forecast/budgets. gpuBudgetAlertsEnabled=true; finopsOs=false.',
+      'FinOps Platform. Cloud/GPU/model/storage/bandwidth + chargeback/showback/forecast/budgets. gpuBudgetAlertsEnabled=true; finopsOs=false.',
   };
 }

@@ -35,15 +35,15 @@ type Engine = {
   };
 };
 
-export function CreatorEconomyClient() {
-  const { getToken, isLoaded } = useAuth();
+export function CreatorEconomyClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [scenarios, setScenarios] = useState<Scenario[]>([]);
   const [allPassed, setAllPassed] = useState<boolean | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, royalty] = await Promise.all([
       apiFetch<Engine>('/v1/creator-economy/engine', { token }),
@@ -57,9 +57,9 @@ export function CreatorEconomyClient() {
     setAllPassed(royalty.allHandChecksPassed);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
   return (
@@ -76,7 +76,7 @@ export function CreatorEconomyClient() {
         Creator Economy
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        Royalty math and Connect payouts over VL-092 — Stripe-only, never a card vault.
+        Royalty math and Connect payouts over existing — Stripe-only, never a card vault.
       </p>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}

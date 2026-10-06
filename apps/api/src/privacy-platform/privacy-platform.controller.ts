@@ -6,18 +6,18 @@ export class PrivacyPlatformController {
   constructor(private readonly service: PrivacyPlatformService) {}
 
   @Get('engine')
-  engine() {
-    return this.service.engine();
+  engine {
+    return this.service.engine;
   }
 
   @Get('products')
-  products() {
-    return this.service.engine();
+  products {
+    return this.service.engine;
   }
 
   @Get('monitoring')
-  monitoring() {
-    return this.service.monitoring();
+  monitoring {
+    return this.service.monitoring;
   }
 
   @Get('assets')
@@ -32,7 +32,7 @@ export class PrivacyPlatformController {
 
   @Get('check')
   check(@Query('id') id?: string) {
-    if (!id) return this.service.assets();
+    if (!id) return this.service.assets;
     return this.service.checkConsent(id);
   }
 

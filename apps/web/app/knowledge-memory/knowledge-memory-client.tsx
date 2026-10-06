@@ -27,8 +27,8 @@ type Analytics = {
   evolved: number;
 };
 
-export function KnowledgeMemoryClient() {
-  const { getToken, isLoaded } = useAuth();
+export function KnowledgeMemoryClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -36,8 +36,8 @@ export function KnowledgeMemoryClient() {
   const [scope, setScope] = useState('workspace');
   const [created, setCreated] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, ana] = await Promise.all([
       apiFetch<Engine>('/v1/knowledge-memory/engine', { token }),
@@ -47,15 +47,15 @@ export function KnowledgeMemoryClient() {
     setAnalytics(ana);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
-  const create = useCallback(async () => {
+  const create = useCallback(async  => {
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const res = await apiFetch<{ id: string; version: number; scope: string }>(
         '/v1/knowledge-memory/memories',
@@ -67,7 +67,7 @@ export function KnowledgeMemoryClient() {
       );
       setCreated(`${res.scope} v${res.version} (${res.id.slice(0, 8)}…)`);
       setContent('');
-      await load();
+      await load;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Create failed');
     }
@@ -109,7 +109,7 @@ export function KnowledgeMemoryClient() {
           <option value="conversation">conversation</option>
           <option value="ai">ai</option>
         </select>
-        <button type="button" onClick={() => void create()} disabled={!content.trim()} style={btn}>
+        <button type="button" onClick={ => void create} disabled={!content.trim} style={btn}>
           Remember
         </button>
       </div>

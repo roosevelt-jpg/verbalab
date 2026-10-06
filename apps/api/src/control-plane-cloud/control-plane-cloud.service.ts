@@ -8,16 +8,16 @@ import {
   controlPlaneCloudRoutingTable,
 } from './control-plane-cloud.catalog';
 
-@Injectable()
+@Injectable
 export class ControlPlaneCloudService {
   constructor(private readonly usage: UsageService) {}
 
-  products() {
+  products {
     return {
       product: 'Lugemi Control Plane Cloud',
-      products: controlPlaneCloudProductCatalog(),
-      architecture: controlPlaneCloudArchitectureNotes(),
-      honesty: controlPlaneCloudHonesty(),
+      products: controlPlaneCloudProductCatalog,
+      architecture: controlPlaneCloudArchitectureNotes,
+      honesty: controlPlaneCloudHonesty,
       safety: {
         executesInference: false,
         dataPlaneOs: false,
@@ -31,19 +31,19 @@ export class ControlPlaneCloudService {
       },
       docs: '/docs/CONTROL_PLANE_CLOUD.md',
       note:
-        'Control Plane Foundation (VL-314). Manages the platform — never executes inference. Not Kubernetes/Istio/Vault/Data Plane OS.',
+        'Control Plane Foundation. Manages the platform — never executes inference. Not Kubernetes/Istio/Vault/Data Plane OS.',
     };
   }
 
-  routing() {
+  routing {
     return {
-      routes: controlPlaneCloudRoutingTable(),
-      products: controlPlaneCloudProductCatalog().map((p) => ({
+      routes: controlPlaneCloudRoutingTable,
+      products: controlPlaneCloudProductCatalog.map((p) => ({
         id: p.id,
         status: p.status,
         api: p.api,
       })),
-      honesty: controlPlaneCloudHonesty(),
+      honesty: controlPlaneCloudHonesty,
       note: 'Static Control Plane Cloud discovery catalog for Foundation.',
       docs: '/docs/CONTROL_PLANE_CLOUD.md',
     };
@@ -62,9 +62,9 @@ export class ControlPlaneCloudService {
         chat: usageSummary.chat,
         embeddings: usageSummary.embeddings,
       },
-      products: controlPlaneCloudProductCatalog(),
-      architecture: controlPlaneCloudArchitectureNotes(),
-      honesty: controlPlaneCloudHonesty(),
+      products: controlPlaneCloudProductCatalog,
+      architecture: controlPlaneCloudArchitectureNotes,
+      honesty: controlPlaneCloudHonesty,
       safety: {
         executesInference: false,
         dataPlaneOs: false,
@@ -92,18 +92,18 @@ export class ControlPlaneCloudService {
       },
       docs: '/docs/CONTROL_PLANE_CLOUD.md',
       note:
-        'Control Plane Cloud (VL-314–323). Discovery hub over org/config/policy/deploy/routing/secrets/scheduler/analytics; Production Audit closes the volume.',
+        'Control Plane Cloud (–323). Discovery hub over org/config/policy/deploy/routing/secrets/scheduler/analytics; Production Audit closes the volume.',
     };
   }
 
-  monitoring() {
-    const products = controlPlaneCloudProductCatalog();
+  monitoring {
+    const products = controlPlaneCloudProductCatalog;
     return {
       mode: 'foundation',
       products: products.map((p) => ({ id: p.id, status: p.status })),
-      architecture: controlPlaneCloudArchitectureNotes(),
-      honesty: controlPlaneCloudHonesty(),
-      note: 'Control Plane Cloud monitoring snapshot (VL-314).',
+      architecture: controlPlaneCloudArchitectureNotes,
+      honesty: controlPlaneCloudHonesty,
+      note: 'Control Plane Cloud monitoring snapshot.',
     };
   }
 }

@@ -6,17 +6,17 @@ import {
 } from '../reasoning-fabric/application/messages';
 import { GqlReasoningFabricCapability, GqlReasoningFabricRoute } from './gql.types';
 
-@Resolver()
+@Resolver
 export class ReasoningFabricGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query(() => [GqlReasoningFabricCapability], { name: 'reasoningFabricCapabilities' })
-  reasoningFabricCapabilities(): Promise<GqlReasoningFabricCapability[]> {
-    return this.queries.execute(new ListReasoningFabricCapabilitiesQuery());
+  @Query( => [GqlReasoningFabricCapability], { name: 'reasoningFabricCapabilities' })
+  reasoningFabricCapabilities: Promise<GqlReasoningFabricCapability[]> {
+    return this.queries.execute(new ListReasoningFabricCapabilitiesQuery);
   }
 
-  @Query(() => [GqlReasoningFabricRoute], { name: 'reasoningFabricRoutes' })
-  reasoningFabricRoutes(): Promise<GqlReasoningFabricRoute[]> {
-    return this.queries.execute(new ListReasoningFabricRoutesQuery());
+  @Query( => [GqlReasoningFabricRoute], { name: 'reasoningFabricRoutes' })
+  reasoningFabricRoutes: Promise<GqlReasoningFabricRoute[]> {
+    return this.queries.execute(new ListReasoningFabricRoutesQuery);
   }
 }

@@ -25,14 +25,14 @@ export const COST_SPEND_CATEGORIES: CostSpendCategory[] = [
   'other',
 ];
 
-export function costOptimizationMode(): 'disabled' | 'sandbox' {
-  const raw = (process.env.LUGEMI_COST_OPTIMIZATION_MODE ?? 'sandbox').toLowerCase();
+export function costOptimizationMode: 'disabled' | 'sandbox' {
+  const raw = (process.env.LUGEMI_COST_OPTIMIZATION_MODE ?? 'sandbox').toLowerCase;
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
 
 /** Hard spend caps — not soft reporting targets. */
-export function costCeilings() {
+export function costCeilings {
   const daily = Math.max(
     0.01,
     Number(process.env.LUGEMI_COST_DAILY_CAP_USD ?? '10') || 10,
@@ -47,21 +47,21 @@ export function costCeilings() {
     maxDailyCapUsd: 10_000,
     maxMonthlyCapUsd: 100_000,
     enforceByDefault: true,
-    mode: costOptimizationMode(),
+    mode: costOptimizationMode,
     note:
       'Hard daily/monthly USD caps enforced on record/check and AI Router resolve. Not a cloud FinOps OS. Spot/reserved are sandbox planning hints — no AWS Spot APIs.',
   };
 }
 
 /**
- * Library Phase 78 → Cost Optimization Engine (VL-211).
+ * Library Phase 78 → Cost Optimization Engine.
  * Enforces spend caps — does not invent FinOps / Spot / reserved cloud OS.
  */
-export function costOptimizationCatalog() {
+export function costOptimizationCatalog {
   return {
     product: 'Lugemi Cost Optimization Engine',
     note:
-      'Cost Optimization (VL-211). Org/workspace daily/monthly spend caps with hard enforce on record/check and AI Router resolve. Dynamic routing prefers cheaper Gateway candidates; GPU cost views reuse VL-205 ceilings; spot/reserved are sandbox planning only. Not a cloud FinOps OS, Spot marketplace, or reserved-instance broker.',
+      'Cost Optimization. Org/workspace daily/monthly spend caps with hard enforce on record/check and AI Router resolve. Dynamic routing prefers cheaper Gateway candidates; GPU cost views reuse ceilings; spot/reserved are sandbox planning only. Not a cloud FinOps OS, Spot marketplace, or reserved-instance broker.',
     capabilities: [
       {
         id: 'dynamic-routing',
@@ -75,7 +75,7 @@ export function costOptimizationCatalog() {
         name: 'GPU Cost Optimization',
         status: 'partial',
         api: 'GET /v1/cost-optimization/gpu',
-        notes: 'Surfaces GPU Platform ceilings + estimated spend; hard GPU caps remain VL-205.',
+        notes: 'Surfaces GPU Platform ceilings + estimated spend; hard GPU caps remain .',
       },
       {
         id: 'provider-cost-optimization',
@@ -172,7 +172,7 @@ export function costOptimizationCatalog() {
         id: 'sdk',
         name: 'SDK',
         status: 'shipped',
-        api: 'costOptimizationEngine()',
+        api: 'costOptimizationEngine',
         notes: '@lugemi/sdk',
       },
       {

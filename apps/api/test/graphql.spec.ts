@@ -17,7 +17,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_gql_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_gql_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -31,36 +31,36 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('GraphQL Language Cloud (VL-136)', () => {
+describe('GraphQL Language Cloud',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let prevOpenAi: string | undefined;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     prevOpenAi = process.env.OPENAI_API_KEY;
     delete process.env.OPENAI_API_KEY;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   });
 
-  afterAll(async () => {
+  afterAll(async  => {
     if (prevOpenAi === undefined) delete process.env.OPENAI_API_KEY;
     else process.env.OPENAI_API_KEY = prevOpenAi;
-    await app.close();
+    await app.close;
   });
 
-  it('query languages and languageProducts', async () => {
-    const res = await request(app.getHttpServer())
+  it('query languages and languageProducts', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .set('apollo-require-preflight', 'true')
       .send({
@@ -72,7 +72,7 @@ describe('GraphQL Language Cloud (VL-136)', () => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.languages.length).toBeGreaterThan(5);
     expect(res.body.data.languageProducts.some((p: { id: string }) => p.id === 'dialect')).toBe(
       true,
@@ -80,7 +80,7 @@ describe('GraphQL Language Cloud (VL-136)', () => {
     expect(res.body.data.countryPacks.some((p: { code: string }) => p.code === 'KE')).toBe(true);
   });
 
-  it('mutation checkGrammar requires auth and works with API key', async () => {
+  it('mutation checkGrammar requires auth and works with API key', async  => {
     const org = await seedOrg(prisma, 'gql');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -89,7 +89,7 @@ describe('GraphQL Language Cloud (VL-136)', () => {
       name: 'gql-key',
     });
 
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .set('Authorization', `Bearer ${key.secret}`)
       .set('apollo-require-preflight', 'true')
@@ -106,7 +106,7 @@ describe('GraphQL Language Cloud (VL-136)', () => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.checkGrammar.changed).toBe(true);
     expect(res.body.data.checkGrammar.provider).toBe('rules');
     expect(res.body.data.checkGrammar.corrected).toMatch(/I have/);

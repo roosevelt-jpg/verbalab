@@ -6,18 +6,18 @@ export class GlobalDeploymentControllerController {
   constructor(private readonly service: GlobalDeploymentControllerService) {}
 
   @Get('engine')
-  engine() {
-    return this.service.engine();
+  engine {
+    return this.service.engine;
   }
 
   @Get('products')
-  products() {
-    return this.service.engine();
+  products {
+    return this.service.engine;
   }
 
   @Get('monitoring')
-  monitoring() {
-    return this.service.monitoring();
+  monitoring {
+    return this.service.monitoring;
   }
 
   @Get('deployments')
@@ -32,7 +32,7 @@ export class GlobalDeploymentControllerController {
 
   @Post('promote')
   promote(
-    @Body()
+    @Body
     body: {
       deploymentId: string;
       environment: string;

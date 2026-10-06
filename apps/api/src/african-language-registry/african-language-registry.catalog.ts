@@ -13,10 +13,10 @@ export type AfricanLanguageEntry = {
 };
 
 /**
- * Library Phase 128 → African Language Registry (VL-261).
+ * Library Phase 128 → African Language Registry.
  * Representative seed — Expanded seed aligned with marketing catalog; full country directory lives in the web Africa catalog.
  */
-export function africanLanguageSeed(): AfricanLanguageEntry[] {
+export function africanLanguageSeed: AfricanLanguageEntry[] {
   return [
     {
       code: 'sw',
@@ -171,7 +171,7 @@ export function africanLanguageSeed(): AfricanLanguageEntry[] {
   ];
 }
 
-export function africanLanguageFamilies() {
+export function africanLanguageFamilies {
   return [
     { id: 'niger-congo', name: 'Niger-Congo', note: 'Largest family represented in seed (Bantu + Volta-Niger).' },
     { id: 'afro-asiatic', name: 'Afro-Asiatic', note: 'Semitic, Chadic, Cushitic representatives in seed.' },
@@ -179,12 +179,12 @@ export function africanLanguageFamilies() {
   ];
 }
 
-export function africanLanguageRegistryEngineCatalog() {
-  const languages = africanLanguageSeed();
+export function africanLanguageRegistryEngineCatalog {
+  const languages = africanLanguageSeed;
   return {
     product: 'Lugemi African Language Registry',
     note:
-      'African Language Registry (VL-261). Representative language/dialect/writing-system seed extending dialects/locales. Expanded seed; web Africa catalog documents full country/community directory.',
+      'African Language Registry. Representative language/dialect/writing-system seed extending dialects/locales. Expanded seed; web Africa catalog documents full country/community directory.',
     capabilities: [
       {
         id: 'language-catalog',
@@ -216,7 +216,7 @@ export function africanLanguageRegistryEngineCatalog() {
       },
     ],
     languages,
-    families: africanLanguageFamilies(),
+    families: africanLanguageFamilies,
     architecture: {
       style: 'nest_modular_monolith',
       cqrs: true,

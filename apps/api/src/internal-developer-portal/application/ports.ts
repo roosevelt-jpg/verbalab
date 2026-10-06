@@ -1,4 +1,4 @@
-/** Application ports for Internal Developer Portal (VL-303). */
+/** Application ports for Internal Developer Portal. */
 
 export type InternalDeveloperPortalProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type InternalDeveloperPortalEngineBundle = ReturnType<
 >;
 
 export interface InternalDeveloperPortalCatalogPort {
-  engine(): InternalDeveloperPortalEngineBundle;
-  listProducts(): InternalDeveloperPortalProductRow[];
+  engine: InternalDeveloperPortalEngineBundle;
+  listProducts: InternalDeveloperPortalProductRow[];
 }
 
 export const INTERNAL_DEVELOPER_PORTAL_CATALOG_PORT = Symbol('INTERNAL_DEVELOPER_PORTAL_CATALOG_PORT');

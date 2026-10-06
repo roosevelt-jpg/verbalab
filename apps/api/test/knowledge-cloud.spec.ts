@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_know_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_know_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,29 +35,29 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Knowledge Cloud Foundation (VL-193)', () => {
+describe('Knowledge Cloud Foundation',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let knowledgeCloud: KnowledgeCloudService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     knowledgeCloud = app.get(KnowledgeCloudService);
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Knowledge Cloud mapping (no enterprise knowledge OS)', () => {
+  it('documents Knowledge Cloud mapping (no enterprise knowledge OS)',  => {
     const doc = join(root, 'docs/KNOWLEDGE_CLOUD.md');
     const adr = join(root, 'docs/adr/0104-knowledge-cloud-foundation.md');
     const readme = join(root, 'docs/roadmap/volume6-knowledge-cloud/README_VOLUME6.md');
@@ -70,12 +70,12 @@ describe('Knowledge Cloud Foundation (VL-193)', () => {
     expect(text).toContain('Terraform');
     expect(text).toContain('af-south-1');
     expect(text).toMatch(/is \*\*not\*\* an enterprise knowledge OS/i);
-    expect(text).toContain('VL-062');
-    expect(text).toContain('VL-063');
+    expect(text).toContain('');
+    expect(text).toContain('');
   });
 
-  it('exposes public product catalog with honest statuses', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes public product catalog with honest statuses', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/knowledge-cloud/products')
       .expect(200);
     expect(res.body.architecture.graphql).toBe(true);
@@ -157,8 +157,8 @@ describe('Knowledge Cloud Foundation (VL-193)', () => {
     expect(apis.console).toBe('/knowledge-apis');
   });
 
-  it('returns org knowledge overview with doc/chunk counts + deferred flags', async () => {
-    const org = await seedOrg(prisma, `know_${Date.now()}`);
+  it('returns org knowledge overview with doc/chunk counts + deferred flags', async  => {
+    const org = await seedOrg(prisma, `know_${Date.now}`);
 
     const overview = await knowledgeCloud.overview({
       userId: org.memberships[0].userId,
@@ -168,8 +168,8 @@ describe('Knowledge Cloud Foundation (VL-193)', () => {
       role: 'owner',
     });
 
-    expect(overview.usage.chat).toBeDefined();
-    expect(overview.usage.embeddings).toBeDefined();
+    expect(overview.usage.chat).toBeDefined;
+    expect(overview.usage.embeddings).toBeDefined;
     expect(overview.workspace.knowledgeDocuments).toBeGreaterThanOrEqual(0);
     expect(overview.workspace.knowledgeChunks).toBeGreaterThanOrEqual(0);
     expect(overview.deferred.enterpriseKnowledgeBase).toBe(false);
@@ -203,15 +203,15 @@ describe('Knowledge Cloud Foundation (VL-193)', () => {
     expect(overview.architecture.extendsVl062).toBe(true);
   });
 
-  it('exposes knowledgeProducts via GraphQL CQRS façade', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes knowledgeProducts via GraphQL CQRS façade', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query: '{ knowledgeProducts { id name status } }',
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.knowledgeProducts.length).toBeGreaterThan(5);
     expect(
       res.body.data.knowledgeProducts.some((p: { id: string }) => p.id === 'knowledge-cloud'),

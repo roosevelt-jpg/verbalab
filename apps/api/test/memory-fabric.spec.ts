@@ -19,7 +19,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory()) out.push(...walkTsFiles(full));
+    if (statSync(full).isDirectory) out.push(...walkTsFiles(full));
     else if (full.endsWith('.ts')) out.push(full);
   }
   return out;
@@ -34,7 +34,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_mf_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_mf_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -51,7 +51,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Memory Fabric (VL-245)', () => {
+describe('Memory Fabric',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -59,30 +59,30 @@ describe('Memory Fabric (VL-245)', () => {
   let bus: EventFabricBus;
   const prevMode = process.env.LUGEMI_MEMORY_RUNTIME_MODE;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     process.env.EVENT_FABRIC_MEMORY = '1';
     process.env.LUGEMI_MEMORY_RUNTIME_MODE = 'sandbox';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
     fabric = app.get(MemoryFabricService);
     bus = app.get(EventFabricBus);
-    bus.resetForTests();
-    fabric.resetCounters();
+    bus.resetForTests;
+    fabric.resetCounters;
   });
 
-  afterAll(async () => {
+  afterAll(async  => {
     if (prevMode === undefined) delete process.env.LUGEMI_MEMORY_RUNTIME_MODE;
     else process.env.LUGEMI_MEMORY_RUNTIME_MODE = prevMode;
-    await app.close();
+    await app.close;
   });
 
-  it('documents Memory Fabric honesty (extends Memory Runtime; not Mem0 / replication OS)', () => {
+  it('documents Memory Fabric honesty (extends Memory Runtime; not Mem0 / replication OS)',  => {
     const doc = join(root, 'docs/MEMORY_FABRIC.md');
     const adr = join(root, 'docs/adr/0147-memory-fabric.md');
     const phase = join(
@@ -93,13 +93,13 @@ describe('Memory Fabric (VL-245)', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(phase)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-245');
+    expect(text).toContain('');
     expect(text).toMatch(/Memory Runtime/i);
     expect(text).toMatch(/Mem0/i);
     expect(text).toMatch(/hard gate|hard-gate/i);
   });
 
-  it('has no TODO/FIXME/implement-later markers in Memory Fabric source', () => {
+  it('has no TODO/FIXME/implement-later markers in Memory Fabric source',  => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const file of walkTsFiles(join(apiSrc, 'memory-fabric'))) {
@@ -109,8 +109,8 @@ describe('Memory Fabric (VL-245)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes catalog, routes, pipelines, cache, and federation with honesty', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes catalog, routes, pipelines, cache, and federation with honesty', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/memory-fabric/products')
       .expect(200);
     expect(res.body.product).toBe('Lugemi Memory Fabric');
@@ -129,12 +129,12 @@ describe('Memory Fabric (VL-245)', () => {
     const hub = res.body.products.find((p: { id: string }) => p.id === 'memory-fabric');
     expect(hub.status).toBe('shipped');
 
-    const routes = await request(app.getHttpServer())
+    const routes = await request(app.getHttpServer)
       .get('/v1/memory-fabric/routes')
       .expect(200);
     expect(routes.body.routes.some((r: { kind: string }) => r.kind === 'short_term')).toBe(true);
 
-    const plan = await request(app.getHttpServer())
+    const plan = await request(app.getHttpServer)
       .post('/v1/memory-fabric/route')
       .send({ kinds: ['short_term', 'sync', 'nope'] })
       .expect(200);
@@ -143,27 +143,27 @@ describe('Memory Fabric (VL-245)', () => {
     );
     expect(plan.body.missing).toContain('nope');
 
-    const pipeline = await request(app.getHttpServer())
+    const pipeline = await request(app.getHttpServer)
       .post('/v1/memory-fabric/pipeline')
       .send({ pipelineId: 'write-sync' })
       .expect(200);
     expect(pipeline.body.pipeline.steps).toEqual(['short_term', 'sync']);
     expect(pipeline.body.plan.length).toBe(2);
 
-    const cache = await request(app.getHttpServer()).get('/v1/memory-fabric/cache').expect(200);
+    const cache = await request(app.getHttpServer).get('/v1/memory-fabric/cache').expect(200);
     expect(cache.body.cache.target).toBe('intelligent-cache');
 
-    const fed = await request(app.getHttpServer())
+    const fed = await request(app.getHttpServer)
       .post('/v1/memory-fabric/federate')
       .send({ kinds: ['cloud', 'workspace'] })
       .expect(200);
     expect(fed.body.federation.length).toBe(2);
   });
 
-  it('distributes/replicates same-org peers and syncs via Runtime façade', async () => {
-    bus.resetForTests();
-    fabric.resetCounters();
-    const org = await seedOrg(prisma, `mf_${Date.now()}`);
+  it('distributes/replicates same-org peers and syncs via Runtime façade', async  => {
+    bus.resetForTests;
+    fabric.resetCounters;
+    const org = await seedOrg(prisma, `mf_${Date.now}`);
     const primary = org.workspaces.find((w) => w.name === 'Default')!;
     const peer = org.workspaces.find((w) => w.name === 'Peer')!;
     const key = await apiKeys.create({
@@ -173,7 +173,7 @@ describe('Memory Fabric (VL-245)', () => {
       name: 'mf-key',
     });
 
-    const dist = await request(app.getHttpServer())
+    const dist = await request(app.getHttpServer)
       .post('/v1/memory-fabric/distribute')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -185,7 +185,7 @@ describe('Memory Fabric (VL-245)', () => {
     expect(dist.body.distribution.targets).toContain(peer.id);
     expect(dist.body.event.type).toBe('com.lugemi.memory.distributed');
 
-    const replicate = await request(app.getHttpServer())
+    const replicate = await request(app.getHttpServer)
       .post('/v1/memory-fabric/replicate')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({})
@@ -193,7 +193,7 @@ describe('Memory Fabric (VL-245)', () => {
     expect(replicate.body.replication.targets).toContain(peer.id);
     expect(replicate.body.honesty.multiRegionReplicationOs).toBe(false);
 
-    const sync = await request(app.getHttpServer())
+    const sync = await request(app.getHttpServer)
       .post('/v1/memory-fabric/sync')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({})
@@ -201,15 +201,15 @@ describe('Memory Fabric (VL-245)', () => {
     expect(typeof sync.body.synced).toBe('number');
     expect(sync.body.honesty.regeneratesMemoryRuntime).toBe(false);
 
-    const monitoring = await request(app.getHttpServer())
+    const monitoring = await request(app.getHttpServer)
       .get('/v1/memory-fabric/monitoring')
       .expect(200);
     expect(monitoring.body.counters.distributions).toBeGreaterThan(0);
     expect(monitoring.body.counters.syncs).toBeGreaterThan(0);
   });
 
-  it('exposes overview and GraphQL CQRS façades', async () => {
-    const org = await seedOrg(prisma, `mf_ov_${Date.now()}`);
+  it('exposes overview and GraphQL CQRS façades', async  => {
+    const org = await seedOrg(prisma, `mf_ov_${Date.now}`);
     const overview = await fabric.overview({
       userId: org.memberships[0].userId,
       organizationId: org.id,
@@ -222,22 +222,22 @@ describe('Memory Fabric (VL-245)', () => {
     expect(overview.links.memoryFabric).toBe('/memory-fabric');
     expect(overview.honesty.extendsMemoryRuntime).toBe(true);
 
-    const caps = await request(app.getHttpServer())
+    const caps = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query: '{ memoryFabricCapabilities { id name status api notes } }',
       })
       .expect(200);
-    expect(caps.body.errors).toBeUndefined();
+    expect(caps.body.errors).toBeUndefined;
     expect(caps.body.data.memoryFabricCapabilities.length).toBeGreaterThan(5);
 
-    const routes = await request(app.getHttpServer())
+    const routes = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query: '{ memoryFabricRoutes { kind name target api cloud notes } }',
       })
       .expect(200);
-    expect(routes.body.errors).toBeUndefined();
+    expect(routes.body.errors).toBeUndefined;
     expect(
       routes.body.data.memoryFabricRoutes.some((r: { kind: string }) => r.kind === 'short_term'),
     ).toBe(true);

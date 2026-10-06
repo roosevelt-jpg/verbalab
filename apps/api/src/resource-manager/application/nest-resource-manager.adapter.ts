@@ -6,16 +6,16 @@ import {
   ResourceManagerProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestResourceManagerCatalogAdapter implements ResourceManagerCatalogPort {
   constructor(private readonly service: ResourceManagerService) {}
 
-  engine(): ResourceManagerEngineBundle {
-    return this.service.engine();
+  engine: ResourceManagerEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): ResourceManagerProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: ResourceManagerProductRow[] {
+    const bundle = this.engine as {
       products?: ResourceManagerProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestResourceManagerCatalogAdapter implements ResourceManagerCatalog
         status: 'shipped',
         api: 'GET /v1/resource-manager/engine',
         console: '/resource-manager',
-        notes: 'VL-337 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

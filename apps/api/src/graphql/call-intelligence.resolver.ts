@@ -18,13 +18,13 @@ type GqlReq = Request & {
   sessionAuth?: SessionContext;
 };
 
-@Resolver()
+@Resolver
 export class CallIntelligenceGraphqlResolver {
   constructor(private readonly calls: CallIntelligenceService) {}
 
-  @Query(() => GqlCallIntelligenceEngine, { name: 'callIntelligenceEngine' })
-  callIntelligenceEngine(): GqlCallIntelligenceEngine {
-    const catalog = this.calls.engine();
+  @Query( => GqlCallIntelligenceEngine, { name: 'callIntelligenceEngine' })
+  callIntelligenceEngine: GqlCallIntelligenceEngine {
+    const catalog = this.calls.engine;
     return {
       product: catalog.product,
       note: catalog.note,
@@ -32,10 +32,10 @@ export class CallIntelligenceGraphqlResolver {
     };
   }
 
-  @Mutation(() => GqlCallRecord, { name: 'ingestCall' })
+  @Mutation( => GqlCallRecord, { name: 'ingestCall' })
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   async ingestCall(
-    @Args('input', { type: () => IngestCallInput }) input: IngestCallInput,
+    @Args('input', { type:  => IngestCallInput }) input: IngestCallInput,
     @Context('req') req: GqlReq,
   ): Promise<GqlCallRecord> {
     const auth = req.translateAuth!;

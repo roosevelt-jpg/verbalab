@@ -17,8 +17,8 @@ export class GetBenchmarkPlatformEngineHandler
     private readonly catalog: BenchmarkPlatformCatalogPort,
   ) {}
 
-  execute(): Promise<BenchmarkPlatformEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<BenchmarkPlatformEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListBenchmarkPlatformProductsHandler
     private readonly catalog: BenchmarkPlatformCatalogPort,
   ) {}
 
-  execute(): Promise<BenchmarkPlatformProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<BenchmarkPlatformProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

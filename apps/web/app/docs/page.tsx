@@ -6,17 +6,17 @@ import { API_URL } from '@/lib/api';
 import { BrandMark } from '@/components/brand-mark';
 import { CodePanel } from '@/components/code-panel';
 
-export default function DocsPage() {
+export default function DocsPage {
   const [specUrl, setSpecUrl] = useState(`${API_URL}/v1/openapi.json`);
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  useEffect( => {
     setSpecUrl(`${API_URL}/v1/openapi.json`);
     void fetch(`${API_URL}/v1/openapi.json`)
       .then(async (res) => {
         if (!res.ok) throw new Error(`OpenAPI HTTP ${res.status}`);
-        await res.json();
+        await res.json;
         setLoaded(true);
       })
       .catch((err: Error) => setError(err.message));

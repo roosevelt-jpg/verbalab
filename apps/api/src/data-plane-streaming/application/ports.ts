@@ -1,4 +1,4 @@
-/** Application ports for Data Plane Streaming (VL-331). */
+/** Application ports for Data Plane Streaming. */
 
 export type DataPlaneStreamingProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type DataPlaneStreamingEngineBundle = ReturnType<
 >;
 
 export interface DataPlaneStreamingCatalogPort {
-  engine(): DataPlaneStreamingEngineBundle;
-  listProducts(): DataPlaneStreamingProductRow[];
+  engine: DataPlaneStreamingEngineBundle;
+  listProducts: DataPlaneStreamingProductRow[];
 }
 
 export const DATA_PLANE_STREAMING_CATALOG_PORT = Symbol('DATA_PLANE_STREAMING_CATALOG_PORT');

@@ -1,17 +1,17 @@
 /**
- * Library Phase 198 → Data Plane Streaming (VL-331).
- * Data Plane Streaming (VL-331). Façade over Volume 7 streaming-runtime — extendsStreamingRuntime=true; does not create a second streaming-runtime module.
+ * Library Phase 198 → Data Plane Streaming.
+ * Data Plane Streaming. Façade over Volume 7 streaming-runtime — extendsStreamingRuntime=true; does not create a second streaming-runtime module.
  */
-export function dataPlaneStreamingEngineCatalog() {
+export function dataPlaneStreamingEngineCatalog {
   return {
     product: 'Lugemi Data Plane Streaming',
     thinExecutionLayer: true,
     duplicatesProductLogic: false,
     capabilities: [
-      { id: 'sse', name: 'SSE Stream Routing', status: 'shipped', notes: 'VL-331 routing capability — not a new engine.' },
-      { id: 'chunk', name: 'Chunk Stream Routing', status: 'shipped', notes: 'VL-331 routing capability — not a new engine.' },
-      { id: 'realtime', name: 'Realtime Stream Routing', status: 'shipped', notes: 'VL-331 routing capability — not a new engine.' },
-      { id: 'backpressure', name: 'Backpressure Routing', status: 'shipped', notes: 'VL-331 routing capability — not a new engine.' }
+      { id: 'sse', name: 'SSE Stream Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
+      { id: 'chunk', name: 'Chunk Stream Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
+      { id: 'realtime', name: 'Realtime Stream Routing', status: 'shipped', notes: ' routing capability — not a new engine.' },
+      { id: 'backpressure', name: 'Backpressure Routing', status: 'shipped', notes: ' routing capability — not a new engine.' }
     ],
     routes: [
       {
@@ -51,9 +51,9 @@ export function dataPlaneStreamingEngineCatalog() {
       duplicatesProductLogic: false,
       managesOrgsPoliciesBilling: false,
       serviceMeshOs: false,
-      note: 'Data Plane Streaming (VL-331). Façade over Volume 7 streaming-runtime — extendsStreamingRuntime=true; does not create a second streaming-runtime module.',
+      note: 'Data Plane Streaming. Façade over Volume 7 streaming-runtime — extendsStreamingRuntime=true; does not create a second streaming-runtime module.',
     },
     docs: '/docs/DATA_PLANE_STREAMING.md',
-    note: 'Data Plane Streaming (VL-331). Façade over Volume 7 streaming-runtime — extendsStreamingRuntime=true; does not create a second streaming-runtime module.',
+    note: 'Data Plane Streaming. Façade over Volume 7 streaming-runtime — extendsStreamingRuntime=true; does not create a second streaming-runtime module.',
   };
 }

@@ -11,19 +11,19 @@ import {
   AgentFabricRouteRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestAgentFabricCatalogAdapter implements AgentFabricCatalogPort {
   constructor(private readonly fabric: AgentFabricService) {}
 
-  products(): AgentFabricProductsBundle {
-    return this.fabric.products();
+  products: AgentFabricProductsBundle {
+    return this.fabric.products;
   }
 
-  listCapabilities(): AgentFabricCapabilityRow[] {
-    return agentFabricCapabilityCatalog();
+  listCapabilities: AgentFabricCapabilityRow[] {
+    return agentFabricCapabilityCatalog;
   }
 
-  listRoutes(): AgentFabricRouteRow[] {
-    return agentFabricRoutingTable();
+  listRoutes: AgentFabricRouteRow[] {
+    return agentFabricRoutingTable;
   }
 }

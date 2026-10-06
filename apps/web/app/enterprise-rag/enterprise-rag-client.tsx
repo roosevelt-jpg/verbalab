@@ -34,8 +34,8 @@ type RetrieveResult = {
   context: { passageCount: number; truncated: boolean; totalChars: number };
 };
 
-export function EnterpriseRagClient() {
-  const { getToken, isLoaded } = useAuth();
+export function EnterpriseRagClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -44,8 +44,8 @@ export function EnterpriseRagClient() {
   const [result, setResult] = useState<RetrieveResult | null>(null);
   const [answer, setAnswer] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, ana] = await Promise.all([
       apiFetch<Engine>('/v1/enterprise-rag/engine', { token }),
@@ -55,16 +55,16 @@ export function EnterpriseRagClient() {
     setAnalytics(ana);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
-  const retrieve = useCallback(async () => {
+  const retrieve = useCallback(async  => {
     setError(null);
     setAnswer(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const res = await apiFetch<RetrieveResult>('/v1/enterprise-rag/retrieve', {
         token,
@@ -72,16 +72,16 @@ export function EnterpriseRagClient() {
         body: JSON.stringify({ query, mode }),
       });
       setResult(res);
-      await load();
+      await load;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Retrieve failed');
     }
   }, [getToken, query, mode, load]);
 
-  const ask = useCallback(async () => {
+  const ask = useCallback(async  => {
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const res = await apiFetch<{
         answer: string;
@@ -98,7 +98,7 @@ export function EnterpriseRagClient() {
         citations: res.citations,
         context: res.context,
       });
-      await load();
+      await load;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Query failed');
     }
@@ -120,7 +120,7 @@ export function EnterpriseRagClient() {
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
         Grounded answers over the{' '}
         <Link href="/knowledge-base">Knowledge Base</Link> with citations and hybrid retrieval.
-        Extends VL-062. Not a LangChain / agentic RAG OS — hand-check retrieved context on real
+        Extends existing. Not a LangChain / agentic RAG OS — hand-check retrieved context on real
         docs.
       </p>
 
@@ -138,10 +138,10 @@ export function EnterpriseRagClient() {
           <option value="semantic">semantic</option>
           <option value="keyword">keyword</option>
         </select>
-        <button type="button" onClick={() => void retrieve()} disabled={!query.trim()} style={btn}>
+        <button type="button" onClick={ => void retrieve} disabled={!query.trim} style={btn}>
           Retrieve
         </button>
-        <button type="button" onClick={() => void ask()} disabled={!query.trim()} style={btn}>
+        <button type="button" onClick={ => void ask} disabled={!query.trim} style={btn}>
           Ask (grounded)
         </button>
       </div>
@@ -221,7 +221,7 @@ export function EnterpriseRagClient() {
         {' · '}
         <Link href="/enterprise-search">Enterprise Search</Link>
         {' · '}
-        <Link href="/knowledge">VL-062 Knowledge</Link>
+        <Link href="/knowledge"> Knowledge</Link>
       </p>
     </AppShell>
   );

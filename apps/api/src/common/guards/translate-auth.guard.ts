@@ -13,7 +13,7 @@ export type TranslateAuthContext = {
   apiKeyId?: string;
 };
 
-@Injectable()
+@Injectable
 export class TranslateAuthGuard implements CanActivate {
   constructor(
     private readonly apiKeys: ApiKeyGuard,
@@ -30,7 +30,7 @@ export class TranslateAuthGuard implements CanActivate {
     };
 
     const header = request.headers.authorization;
-    const token = header?.startsWith('Bearer ') ? header.slice('Bearer '.length).trim() : '';
+    const token = header?.startsWith('Bearer ') ? header.slice('Bearer '.length).trim : '';
 
     if (token && looksLikeApiKey(token)) {
       await this.apiKeys.canActivate(context);

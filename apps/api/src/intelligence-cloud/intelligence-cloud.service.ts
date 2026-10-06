@@ -7,17 +7,17 @@ import {
   intelligenceProductCatalog,
 } from './intelligence-products.catalog';
 
-@Injectable()
+@Injectable
 export class IntelligenceCloudService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly usage: UsageService,
   ) {}
 
-  products() {
+  products {
     return {
-      products: intelligenceProductCatalog(),
-      architecture: intelligenceArchitectureNotes(),
+      products: intelligenceProductCatalog,
+      architecture: intelligenceArchitectureNotes,
       docs: '/docs/INTELLIGENCE_CLOUD.md',
     };
   }
@@ -48,8 +48,8 @@ export class IntelligenceCloudService {
         knowledgeDocuments: knowledgeDocs,
         knowledgeChunks,
       },
-      products: intelligenceProductCatalog(),
-      architecture: intelligenceArchitectureNotes(),
+      products: intelligenceProductCatalog,
+      architecture: intelligenceArchitectureNotes,
       deferred: {
         customAiKernel: true,
         speechEmbeddings: true,

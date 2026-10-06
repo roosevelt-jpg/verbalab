@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetCreatorEconomyEngineQuery } from '../creator-economy/application/messages';
 import { GqlCreatorEconomyCapability, GqlCreatorEconomyEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class CreatorEconomyGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query(() => GqlCreatorEconomyEngine, { name: 'creatorEconomyEngine' })
-  async creatorEconomyEngine(): Promise<GqlCreatorEconomyEngine> {
-    const catalog = await this.queries.execute(new GetCreatorEconomyEngineQuery());
+  @Query( => GqlCreatorEconomyEngine, { name: 'creatorEconomyEngine' })
+  async creatorEconomyEngine: Promise<GqlCreatorEconomyEngine> {
+    const catalog = await this.queries.execute(new GetCreatorEconomyEngineQuery);
     return {
       product: catalog.product,
       note: catalog.note,

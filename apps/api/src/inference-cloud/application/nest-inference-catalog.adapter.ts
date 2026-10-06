@@ -7,15 +7,15 @@ import {
   InferenceProductsBundle,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestInferenceCatalogAdapter implements InferenceCatalogPort {
   constructor(private readonly inferenceCloud: InferenceCloudService) {}
 
-  products(): InferenceProductsBundle {
-    return this.inferenceCloud.products();
+  products: InferenceProductsBundle {
+    return this.inferenceCloud.products;
   }
 
-  listProducts(): InferenceProductRow[] {
-    return inferenceProductCatalog();
+  listProducts: InferenceProductRow[] {
+    return inferenceProductCatalog;
   }
 }

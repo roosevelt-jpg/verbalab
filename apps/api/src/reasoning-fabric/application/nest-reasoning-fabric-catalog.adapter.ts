@@ -11,19 +11,19 @@ import {
   ReasoningFabricRouteRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestReasoningFabricCatalogAdapter implements ReasoningFabricCatalogPort {
   constructor(private readonly fabric: ReasoningFabricService) {}
 
-  products(): ReasoningFabricProductsBundle {
-    return this.fabric.products();
+  products: ReasoningFabricProductsBundle {
+    return this.fabric.products;
   }
 
-  listCapabilities(): ReasoningFabricCapabilityRow[] {
-    return reasoningFabricCapabilityCatalog();
+  listCapabilities: ReasoningFabricCapabilityRow[] {
+    return reasoningFabricCapabilityCatalog;
   }
 
-  listRoutes(): ReasoningFabricRouteRow[] {
-    return reasoningFabricRoutingTable();
+  listRoutes: ReasoningFabricRouteRow[] {
+    return reasoningFabricRoutingTable;
   }
 }

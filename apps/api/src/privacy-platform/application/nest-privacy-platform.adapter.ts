@@ -6,16 +6,16 @@ import {
   PrivacyPlatformProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestPrivacyPlatformCatalogAdapter implements PrivacyPlatformCatalogPort {
   constructor(private readonly service: PrivacyPlatformService) {}
 
-  engine(): PrivacyPlatformEngineBundle {
-    return this.service.engine();
+  engine: PrivacyPlatformEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): PrivacyPlatformProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: PrivacyPlatformProductRow[] {
+    const bundle = this.engine as {
       products?: PrivacyPlatformProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestPrivacyPlatformCatalogAdapter implements PrivacyPlatformCatalog
         status: 'shipped',
         api: 'GET /v1/privacy-platform/engine',
         console: '/privacy-platform',
-        notes: 'VL-296 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

@@ -17,8 +17,8 @@ export class GetAgentopsPlatformEngineHandler
     private readonly catalog: AgentopsPlatformCatalogPort,
   ) {}
 
-  execute(): Promise<AgentopsPlatformEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<AgentopsPlatformEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListAgentopsPlatformProductsHandler
     private readonly catalog: AgentopsPlatformCatalogPort,
   ) {}
 
-  execute(): Promise<AgentopsPlatformProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<AgentopsPlatformProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

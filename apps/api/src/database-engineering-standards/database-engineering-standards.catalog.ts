@@ -1,8 +1,8 @@
 /**
- * Library Phase 218 → Database Engineering Standards (VL-351).
- * Database Engineering Standards (VL-351). Postgres/Redis/ES/vector/KG/schema/migration/performance standards. Extends existing Prisma/DB usage — not a new Database OS.
+ * Library Phase 218 → Database Engineering Standards.
+ * Database Engineering Standards. Postgres/Redis/ES/vector/KG/schema/migration/performance standards. Extends existing Prisma/DB usage — not a new Database OS.
  */
-export function databaseEngineeringStandardsEngineCatalog() {
+export function databaseEngineeringStandardsEngineCatalog {
   return {
     product: 'Lugemi Database Engineering Standards',
     engineeringOsForHumansAndCursor: true,
@@ -10,14 +10,14 @@ export function databaseEngineeringStandardsEngineCatalog() {
     architectureKnowledgeBaseOs: false,
     adrFactoryOs: false,
     capabilities: [
-      { id: 'postgresql', name: 'PostgreSQL Standards', status: 'shipped', notes: 'VL-351 standards capability — catalog, not a new OS.' },
-      { id: 'redis', name: 'Redis Standards', status: 'shipped', notes: 'VL-351 standards capability — catalog, not a new OS.' },
-      { id: 'elasticsearch', name: 'Elasticsearch Standards', status: 'shipped', notes: 'VL-351 standards capability — catalog, not a new OS.' },
-      { id: 'vector', name: 'Vector Database Standards', status: 'shipped', notes: 'VL-351 standards capability — catalog, not a new OS.' },
-      { id: 'knowledge_graph', name: 'Knowledge Graph Standards', status: 'shipped', notes: 'VL-351 standards capability — catalog, not a new OS.' },
-      { id: 'schema', name: 'Schema Governance', status: 'shipped', notes: 'VL-351 standards capability — catalog, not a new OS.' },
-      { id: 'migration', name: 'Migration Standards', status: 'shipped', notes: 'VL-351 standards capability — catalog, not a new OS.' },
-      { id: 'performance', name: 'Performance Standards', status: 'shipped', notes: 'VL-351 standards capability — catalog, not a new OS.' }
+      { id: 'postgresql', name: 'PostgreSQL Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'redis', name: 'Redis Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'elasticsearch', name: 'Elasticsearch Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'vector', name: 'Vector Database Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'knowledge_graph', name: 'Knowledge Graph Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'schema', name: 'Schema Governance', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'migration', name: 'Migration Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'performance', name: 'Performance Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' }
     ],
     routes: [
       {
@@ -78,9 +78,9 @@ export function databaseEngineeringStandardsEngineCatalog() {
       customerFacingProductCloud: false,
       architectureKnowledgeBaseOs: false,
       adrFactoryOs: false,
-      note: 'Database Engineering Standards (VL-351). Postgres/Redis/ES/vector/KG/schema/migration/performance standards. Extends existing Prisma/DB usage — not a new Database OS.',
+      note: 'Database Engineering Standards. Postgres/Redis/ES/vector/KG/schema/migration/performance standards. Extends existing Prisma/DB usage — not a new Database OS.',
     },
     docs: '/docs/DATABASE_ENGINEERING_STANDARDS.md',
-    note: 'Database Engineering Standards (VL-351). Postgres/Redis/ES/vector/KG/schema/migration/performance standards. Extends existing Prisma/DB usage — not a new Database OS.',
+    note: 'Database Engineering Standards. Postgres/Redis/ES/vector/KG/schema/migration/performance standards. Extends existing Prisma/DB usage — not a new Database OS.',
   };
 }

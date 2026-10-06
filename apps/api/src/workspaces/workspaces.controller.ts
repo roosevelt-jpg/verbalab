@@ -9,18 +9,18 @@ import { CurrentSession } from '../common/decorators/auth.decorators';
 export class WorkspacesController {
   constructor(private readonly workspaces: WorkspacesService) {}
 
-  @Get()
-  list(@CurrentSession() session: SessionContext) {
+  @Get
+  list(@CurrentSession session: SessionContext) {
     return this.workspaces.list(session.organizationId, session.workspaceId);
   }
 
-  @Post()
+  @Post
   @HttpCode(HttpStatus.CREATED)
   create(
-    @CurrentSession() session: SessionContext,
-    @Body()
+    @CurrentSession session: SessionContext,
+    @Body
     body: { name?: string; defaultSourceLang?: string; defaultTargetLang?: string },
-    @Req() req: Request,
+    @Req req: Request,
   ) {
     return this.workspaces.create({
       organizationId: session.organizationId,
@@ -34,17 +34,17 @@ export class WorkspacesController {
   }
 
   @Get(':id')
-  get(@CurrentSession() session: SessionContext, @Param('id') id: string) {
+  get(@CurrentSession session: SessionContext, @Param('id') id: string) {
     return this.workspaces.get(session.organizationId, id, session.workspaceId);
   }
 
   @Patch(':id')
   update(
-    @CurrentSession() session: SessionContext,
+    @CurrentSession session: SessionContext,
     @Param('id') id: string,
-    @Body()
+    @Body
     body: { name?: string; defaultSourceLang?: string; defaultTargetLang?: string },
-    @Req() req: Request,
+    @Req req: Request,
   ) {
     return this.workspaces.update({
       organizationId: session.organizationId,

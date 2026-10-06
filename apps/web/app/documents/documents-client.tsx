@@ -17,7 +17,7 @@ type Job = {
   error?: string | null;
 };
 
-export function DocumentsClient() {
+export function DocumentsClient {
   const [apiKey, setApiKey] = useState('');
   const [languages, setLanguages] = useState<Language[]>([]);
   const [source, setSource] = useState('en');
@@ -27,14 +27,14 @@ export function DocumentsClient() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  useEffect( => {
     void apiFetch<{ data: Language[] }>('/v1/languages')
       .then((res) => setLanguages(res.data))
       .catch((err: Error) => setError(err.message));
   }, []);
 
   async function onSubmit(event: FormEvent) {
-    event.preventDefault();
+    event.preventDefault;
     setError(null);
     setJob(null);
     if (!file) {
@@ -47,7 +47,7 @@ export function DocumentsClient() {
     }
     setLoading(true);
     try {
-      const form = new FormData();
+      const form = new FormData;
       form.append('file', file);
       form.append('source', source);
       form.append('target', target);
@@ -56,7 +56,7 @@ export function DocumentsClient() {
         headers: { Authorization: `Bearer ${apiKey}` },
         body: form,
       });
-      const created = (await createRes.json()) as Job & { error?: { message: string } };
+      const created = (await createRes.json) as Job & { error?: { message: string } };
       if (!createRes.ok) {
         throw new Error(created.error?.message ?? `Upload failed (${createRes.status})`);
       }
@@ -148,18 +148,18 @@ export function DocumentsClient() {
               style={{ display: 'inline-block', marginTop: '1rem', textDecoration: 'none' }}
               href={`${API_URL}${job.result.downloadPath}`}
               onClick={(e) => {
-                e.preventDefault();
+                e.preventDefault;
                 void fetch(`${API_URL}${job.result!.downloadPath}`, {
                   headers: { Authorization: `Bearer ${apiKey}` },
                 })
                   .then(async (res) => {
                     if (!res.ok) throw new Error(`Download failed (${res.status})`);
-                    const blob = await res.blob();
+                    const blob = await res.blob;
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
                     a.download = 'translated';
-                    a.click();
+                    a.click;
                     URL.revokeObjectURL(url);
                   })
                   .catch((err: Error) => setError(err.message));

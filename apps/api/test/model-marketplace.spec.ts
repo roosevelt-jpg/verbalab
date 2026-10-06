@@ -19,7 +19,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory()) out.push(...walkTsFiles(full));
+    if (statSync(full).isDirectory) out.push(...walkTsFiles(full));
     else if (full.endsWith('.ts')) out.push(full);
   }
   return out;
@@ -34,7 +34,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_mm_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_mm_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -48,44 +48,44 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Model Marketplace (VL-251)', () => {
+describe('Model Marketplace',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;
   let marketplace: ModelMarketplaceService;
   let models: ModelsService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
     prisma = app.get(PrismaService);
     billing = app.get(BillingService);
     marketplace = app.get(ModelMarketplaceService);
     models = app.get(ModelsService);
-    await models.ensureVendorDefaults();
+    await models.ensureVendorDefaults;
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Model Marketplace honesty (not HF OS; Stripe-only)', () => {
+  it('documents Model Marketplace honesty (not HF OS; Stripe-only)',  => {
     const doc = join(root, 'docs/MODEL_MARKETPLACE.md');
     const adr = join(root, 'docs/adr/0153-model-marketplace.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-251');
+    expect(text).toContain('');
     expect(text).toMatch(/Hugging Face|huggingFaceOs/i);
     expect(text).toMatch(/Stripe|storesRawCardData/i);
     expect(text).toMatch(/weight/i);
   });
 
-  it('has no TODO/FIXME markers in Model Marketplace source', () => {
+  it('has no TODO/FIXME markers in Model Marketplace source',  => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const file of walkTsFiles(join(apiSrc, 'model-marketplace'))) {
@@ -95,8 +95,8 @@ describe('Model Marketplace (VL-251)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes engine with real-money + anti-HF honesty', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes engine with real-money + anti-HF honesty', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/model-marketplace/engine')
       .expect(200);
     expect(res.body.product).toBe('Lugemi Model Marketplace');
@@ -110,15 +110,15 @@ describe('Model Marketplace (VL-251)', () => {
     expect(res.body.categories.some((c: { id: string }) => c.id === 'foundation')).toBe(true);
   });
 
-  it('exposes modelMarketplaceEngine via GraphQL CQRS façade', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes modelMarketplaceEngine via GraphQL CQRS façade', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
           '{ modelMarketplaceEngine { product huggingFaceOs weightHostingOs storesRawCardData stripeOrEquivalentRequired capabilities { id status } } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.modelMarketplaceEngine.product).toContain('Model Marketplace');
     expect(res.body.data.modelMarketplaceEngine.huggingFaceOs).toBe(false);
     expect(res.body.data.modelMarketplaceEngine.weightHostingOs).toBe(false);
@@ -126,9 +126,9 @@ describe('Model Marketplace (VL-251)', () => {
     expect(res.body.data.modelMarketplaceEngine.stripeOrEquivalentRequired).toBe(true);
   });
 
-  it('publishes, installs with revenue share, reviews; rejects free plan', async () => {
-    const publisher = await seedOrg(prisma, `mmpub_${Date.now()}`);
-    const buyer = await seedOrg(prisma, `mmbuy_${Date.now()}`);
+  it('publishes, installs with revenue share, reviews; rejects free plan', async  => {
+    const publisher = await seedOrg(prisma, `mmpub_${Date.now}`);
+    const buyer = await seedOrg(prisma, `mmbuy_${Date.now}`);
     await billing.applyEntitlementForTests({ organizationId: publisher.id, plan: 'pro' });
     await billing.applyEntitlementForTests({ organizationId: buyer.id, plan: 'pro' });
 
@@ -187,7 +187,7 @@ describe('Model Marketplace (VL-251)', () => {
     expect(sales.honesty.storesRawCardData).toBe(false);
     expect(sales.honesty.stripeOrEquivalentRequired).toBe(true);
 
-    const free = await seedOrg(prisma, `mmfree_${Date.now()}`);
+    const free = await seedOrg(prisma, `mmfree_${Date.now}`);
     await expect(
       marketplace.publish({
         organizationId: free.id,

@@ -16,14 +16,14 @@ import { HttpStatus } from '@nestjs/common';
 export class RegistryController {
   constructor(private readonly registry: RegistryService) {}
 
-  @Get()
-  overview() {
-    return this.registry.overview();
+  @Get
+  overview {
+    return this.registry.overview;
   }
 
   @Get('families')
-  async families() {
-    const rows = await this.registry.listFamilies();
+  async families {
+    const rows = await this.registry.listFamilies;
     return {
       data: rows.map((f) => ({
         code: f.code,
@@ -50,7 +50,7 @@ export class RegistryController {
   }
 
   @Get('alphabets')
-  async alphabets() {
+  async alphabets {
     const rows = await this.registry.listWritingSystems(WritingSystemKind.alphabet);
     return { data: rows.map(mapScript), note: 'Writing systems with kind=alphabet (ISO 15924 subset).' };
   }
@@ -70,7 +70,7 @@ export class RegistryController {
     const parsed = parseRuleKind(kind);
     const rows = await this.registry.listRules({
       kind: parsed,
-      language: language?.trim() || undefined,
+      language: language?.trim || undefined,
     });
     return {
       data: rows.map((r) => ({
@@ -93,18 +93,18 @@ export class RegistryController {
 
   @Post('validate')
   @HttpCode(200)
-  validate(@Body() body: RegistryValidateInput) {
+  validate(@Body body: RegistryValidateInput) {
     return this.registry.validate(body ?? {});
   }
 
   @Get('analytics')
-  analytics() {
-    return this.registry.analytics();
+  analytics {
+    return this.registry.analytics;
   }
 
   @Get('health')
-  health() {
-    return this.registry.health();
+  health {
+    return this.registry.health;
   }
 
   private async listScripts(kind?: string) {
@@ -136,8 +136,8 @@ function mapScript(s: {
 }
 
 function parseWritingKind(kind?: string): WritingSystemKind | undefined {
-  if (!kind?.trim()) return undefined;
-  const k = kind.trim().toLowerCase();
+  if (!kind?.trim) return undefined;
+  const k = kind.trim.toLowerCase;
   if (!(k in WritingSystemKind)) {
     throw new ApiException(
       'invalid_argument',
@@ -149,8 +149,8 @@ function parseWritingKind(kind?: string): WritingSystemKind | undefined {
 }
 
 function parseRuleKind(kind?: string): LinguisticRuleKind | undefined {
-  if (!kind?.trim()) return undefined;
-  const k = kind.trim().toLowerCase();
+  if (!kind?.trim) return undefined;
+  const k = kind.trim.toLowerCase;
   if (!(k in LinguisticRuleKind)) {
     throw new ApiException(
       'invalid_argument',

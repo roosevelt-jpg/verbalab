@@ -17,8 +17,8 @@ export class GetServiceCatalogEngineHandler
     private readonly catalog: ServiceCatalogCatalogPort,
   ) {}
 
-  execute(): Promise<ServiceCatalogEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<ServiceCatalogEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListServiceCatalogProductsHandler
     private readonly catalog: ServiceCatalogCatalogPort,
   ) {}
 
-  execute(): Promise<ServiceCatalogProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<ServiceCatalogProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

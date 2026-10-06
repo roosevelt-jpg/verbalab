@@ -8,16 +8,16 @@ import {
   aiFabricRoutingTable,
 } from './ai-fabric.catalog';
 
-@Injectable()
+@Injectable
 export class AiFabricService {
   constructor(private readonly usage: UsageService) {}
 
-  products() {
+  products {
     return {
       product: 'Lugemi AI Fabric',
-      products: aiFabricBusCatalog(),
-      architecture: aiFabricArchitectureNotes(),
-      honesty: aiFabricHonesty(),
+      products: aiFabricBusCatalog,
+      architecture: aiFabricArchitectureNotes,
+      honesty: aiFabricHonesty,
       safety: {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
@@ -26,19 +26,19 @@ export class AiFabricService {
       },
       docs: '/docs/AI_FABRIC.md',
       note:
-        'AI Fabric hub (VL-239). Internal communication layer connecting Lugemi clouds. Not a Kafka hyperscaler or customer-facing mesh product. Event Fabric (VL-240) provides Redis Streams + CloudEvents.',
+        'AI Fabric hub. Internal communication layer connecting Lugemi clouds. Not a Kafka hyperscaler or customer-facing mesh product. Event Fabric provides Redis Streams + CloudEvents.',
     };
   }
 
-  routing() {
+  routing {
     return {
-      routes: aiFabricRoutingTable(),
-      buses: aiFabricBusCatalog().map((b) => ({
+      routes: aiFabricRoutingTable,
+      buses: aiFabricBusCatalog.map((b) => ({
         id: b.id,
         status: b.status,
         api: b.api,
       })),
-      honesty: aiFabricHonesty(),
+      honesty: aiFabricHonesty,
       note:
         'Static service-discovery catalog for Foundation. Not Consul/etcd. Identity propagates via existing Clerk session + request IDs.',
       docs: '/docs/AI_FABRIC.md',
@@ -58,14 +58,14 @@ export class AiFabricService {
         chat: usageSummary.chat,
         embeddings: usageSummary.embeddings,
       },
-      products: aiFabricBusCatalog(),
-      architecture: aiFabricArchitectureNotes(),
-      honesty: aiFabricHonesty(),
+      products: aiFabricBusCatalog,
+      architecture: aiFabricArchitectureNotes,
+      honesty: aiFabricHonesty,
       safety: {
         fabricWidePolicyHardGateRequired: true,
         policyLogOnlyForbidden: true,
         note:
-          'Policy Fabric (VL-247) must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
+          'Policy Fabric must enforce hard gates fabric-wide. Until then, Policy Runtime hard-gates Agent/Workflow/Plugin.',
       },
       deferred: {
         eventFabric: false,
@@ -101,19 +101,19 @@ export class AiFabricService {
       },
       docs: '/docs/AI_FABRIC.md',
       note:
-        'AI Fabric Foundation (VL-239). Discovery + routing hub. Event through Policy Fabric (VL-240–247) shipped with fabric-wide hard gate.',
+        'AI Fabric Foundation. Discovery + routing hub. Event through Policy Fabric (–247) shipped with fabric-wide hard gate.',
     };
   }
 
-  monitoring() {
-    const products = aiFabricBusCatalog();
+  monitoring {
+    const products = aiFabricBusCatalog;
     return {
       mode: 'foundation',
       products: products.map((p) => ({ id: p.id, status: p.status })),
-      architecture: aiFabricArchitectureNotes(),
-      honesty: aiFabricHonesty(),
+      architecture: aiFabricArchitectureNotes,
+      honesty: aiFabricHonesty,
       note:
-        'AI Fabric monitoring snapshot (VL-239). Hub through Policy Fabric shipped; production audit remains.',
+        'AI Fabric monitoring snapshot. Hub through Policy Fabric shipped; production audit remains.',
     };
   }
 }

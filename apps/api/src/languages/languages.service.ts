@@ -6,22 +6,22 @@ import { ApiException } from '../common/errors/api-exception';
 import { HttpStatus } from '@nestjs/common';
 import { seedFamiliesAndScripts } from '../registry/registry-seed';
 
-@Injectable()
+@Injectable
 export class LanguagesService implements OnModuleInit {
   constructor(private readonly prisma: PrismaService) {}
 
-  async onModuleInit() {
-    await this.seedSafe();
+  async onModuleInit {
+    await this.seedSafe;
   }
 
   /** Public entry used by dialects/accents — never throws on FK races. */
-  async seed() {
-    await this.seedSafe();
+  async seed {
+    await this.seedSafe;
   }
 
-  private async seedSafe() {
+  private async seedSafe {
     try {
-      await this.seedUnsafe();
+      await this.seedUnsafe;
     } catch (err) {
       // eslint-disable-next-line no-console
       console.warn(
@@ -31,7 +31,7 @@ export class LanguagesService implements OnModuleInit {
     }
   }
 
-  private async seedUnsafe() {
+  private async seedUnsafe {
     // Families must exist before language.family_code FK writes.
     await seedFamiliesAndScripts(this.prisma);
 
@@ -59,7 +59,7 @@ export class LanguagesService implements OnModuleInit {
     }
   }
 
-  list() {
+  list {
     return this.prisma.language.findMany({
       orderBy: { code: 'asc' },
       include: { family: true },

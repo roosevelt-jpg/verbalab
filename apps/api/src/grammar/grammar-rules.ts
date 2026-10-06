@@ -41,11 +41,11 @@ const COMMON_MISSPELLINGS: Record<string, string> = {
   writting: 'writing',
 };
 
-export function listCommonMisspellings(): Record<string, string> {
+export function listCommonMisspellings: Record<string, string> {
   return { ...COMMON_MISSPELLINGS };
 }
 
-/** Spell-only pass (VL-142). */
+/** Spell-only pass. */
 export function applySpellRules(text: string): {
   corrected: string;
   issues: GrammarIssue[];
@@ -57,8 +57,8 @@ export function applySpellRules(text: string): {
     for (const match of collectMatches(corrected, re)) {
       const original = match[0];
       const suggestion =
-        original[0] === original[0]!.toUpperCase() && original[0] !== original[0]!.toLowerCase()
-          ? right.charAt(0).toUpperCase() + right.slice(1)
+        original[0] === original[0]!.toUpperCase && original[0] !== original[0]!.toLowerCase
+          ? right.charAt(0).toUpperCase + right.slice(1)
           : right;
       issues.push({
         type: 'spelling',
@@ -71,12 +71,12 @@ export function applySpellRules(text: string): {
       });
     }
     corrected = corrected.replace(new RegExp(`\\b${wrong}\\b`, 'gi'), (m) =>
-      m[0] === m[0]!.toUpperCase() && m[0] !== m[0]!.toLowerCase()
-        ? right.charAt(0).toUpperCase() + right.slice(1)
+      m[0] === m[0]!.toUpperCase && m[0] !== m[0]!.toLowerCase
+        ? right.charAt(0).toUpperCase + right.slice(1)
         : right,
     );
   }
-  return { corrected: corrected.trimEnd(), issues };
+  return { corrected: corrected.trimEnd, issues };
 }
 
 const SUBJECT_VERB: Array<{ pattern: RegExp; message: string; replacement: string }> = [
@@ -115,7 +115,7 @@ function collectMatches(text: string, re: RegExp): RegExpExecArray[] {
 }
 
 /**
- * Deterministic grammar/spelling heuristics (VL-133).
+ * Deterministic grammar/spelling heuristics.
  * English-leaning; not a full grammar engine.
  */
 export function applyGrammarRules(text: string): {
@@ -156,8 +156,8 @@ export function applyGrammarRules(text: string): {
     for (const match of collectMatches(corrected, re)) {
       const original = match[0];
       const suggestion =
-        original[0] === original[0]!.toUpperCase() && original[0] !== original[0]!.toLowerCase()
-          ? right.charAt(0).toUpperCase() + right.slice(1)
+        original[0] === original[0]!.toUpperCase && original[0] !== original[0]!.toLowerCase
+          ? right.charAt(0).toUpperCase + right.slice(1)
           : right;
       issues.push({
         type: 'spelling',
@@ -170,8 +170,8 @@ export function applyGrammarRules(text: string): {
       });
     }
     corrected = corrected.replace(new RegExp(`\\b${wrong}\\b`, 'gi'), (m) =>
-      m[0] === m[0]!.toUpperCase() && m[0] !== m[0]!.toLowerCase()
-        ? right.charAt(0).toUpperCase() + right.slice(1)
+      m[0] === m[0]!.toUpperCase && m[0] !== m[0]!.toLowerCase
+        ? right.charAt(0).toUpperCase + right.slice(1)
         : right,
     );
   }
@@ -204,7 +204,7 @@ export function applyGrammarRules(text: string): {
     corrected = corrected.replace(new RegExp(rule.pattern.source, rule.pattern.flags), rule.replacement);
   }
 
-  const trimmed = corrected.trim();
+  const trimmed = corrected.trim;
   if (trimmed.length > 20 && !/[.!?…]"?$/.test(trimmed)) {
     issues.push({
       type: 'punctuation',
@@ -214,5 +214,5 @@ export function applyGrammarRules(text: string): {
     });
   }
 
-  return { corrected: corrected.trimEnd(), issues };
+  return { corrected: corrected.trimEnd, issues };
 }

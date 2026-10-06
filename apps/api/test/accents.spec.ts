@@ -18,7 +18,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_acc_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_acc_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -32,7 +32,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-function tinyWav(): Buffer {
+function tinyWav: Buffer {
   const dataSize = 64;
   const buffer = Buffer.alloc(44 + dataSize);
   buffer.write('RIFF', 0);
@@ -51,19 +51,19 @@ function tinyWav(): Buffer {
   return buffer;
 }
 
-describe('Accent detection (VL-132)', () => {
+describe('Accent detection',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -71,13 +71,13 @@ describe('Accent detection (VL-132)', () => {
     const gateway = app.get(GatewayService);
     gateway.setDetectProviderForTests({
       name: 'fixture_detect',
-      async detect() {
+      async detect {
         return { language: 'en', confidence: 0.9, provider: 'fixture_detect' };
       },
     });
     gateway.setSttProviderForTests({
       name: 'fixture_stt',
-      async transcribe() {
+      async transcribe {
         return {
           text: 'How far abi wetin sef oya',
           language: 'en',
@@ -89,17 +89,17 @@ describe('Accent detection (VL-132)', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('GET /v1/accents lists curated profiles', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/accents').expect(200);
+  it('GET /v1/accents lists curated profiles', async  => {
+    const res = await request(app.getHttpServer).get('/v1/accents').expect(200);
     expect(res.body.data.length).toBeGreaterThanOrEqual(8);
     expect(res.body.data.some((a: { code: string }) => a.code === 'en-ng')).toBe(true);
   });
 
-  it('POST /v1/accents/detect scores Nigerian English cues from text', async () => {
+  it('POST /v1/accents/detect scores Nigerian English cues from text', async  => {
     const org = await seedOrg(prisma, 'acc');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -108,7 +108,7 @@ describe('Accent detection (VL-132)', () => {
       name: 'acc-key',
     });
 
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer)
       .post('/v1/accents/detect')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'How far, abi you dey come? Wetin happen sef?', language: 'en' })
@@ -120,7 +120,7 @@ describe('Accent detection (VL-132)', () => {
     expect(res.body.provider).toBe('cues');
   });
 
-  it('POST /v1/accents/detect accepts audio → STT → cues', async () => {
+  it('POST /v1/accents/detect accepts audio → STT → cues', async  => {
     const org = await seedOrg(prisma, 'accaudio');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -129,11 +129,11 @@ describe('Accent detection (VL-132)', () => {
       name: 'acc-audio-key',
     });
 
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer)
       .post('/v1/accents/detect')
       .set('Authorization', `Bearer ${key.secret}`)
       .field('language', 'en')
-      .attach('file', tinyWav(), 'sample.wav')
+      .attach('file', tinyWav, 'sample.wav')
       .expect(200);
 
     expect(res.body.inputMode).toBe('audio');

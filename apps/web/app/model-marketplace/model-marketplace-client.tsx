@@ -32,14 +32,14 @@ type Engine = {
   };
 };
 
-export function ModelMarketplaceClient() {
-  const { getToken, isLoaded } = useAuth();
+export function ModelMarketplaceClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [listings, setListings] = useState<Listing[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, list] = await Promise.all([
       apiFetch<Engine>('/v1/model-marketplace/engine', { token }),
@@ -49,9 +49,9 @@ export function ModelMarketplaceClient() {
     setListings(list.listings);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
   return (
@@ -113,7 +113,7 @@ export function ModelMarketplaceClient() {
             <h2 style={label}>Listings</h2>
             {listings.length === 0 ? (
               <p style={{ margin: 0, color: 'var(--muted)' }}>
-                No published model listings yet. Publish a VL-110 / Model Registry card slug here.
+                No published model listings yet. Publish a Model Registry card slug here.
               </p>
             ) : (
               <ul style={{ margin: 0, paddingLeft: '1.1rem', lineHeight: 1.7 }}>

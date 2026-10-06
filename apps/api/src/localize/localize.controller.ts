@@ -28,20 +28,20 @@ export class LocalizeController {
   ) {}
 
   @Get('localization')
-  localizationPlatform() {
-    return this.platform.platform();
+  localizationPlatform {
+    return this.platform.platform;
   }
 
   @Post('localize')
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   localizeJson(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body()
+    @Body
     body: {
       format?: string;
       source?: string;
@@ -79,18 +79,18 @@ export class LocalizeController {
   @UseGuards(TranslateAuthGuard)
   @UseInterceptors(
     FileInterceptor('file', {
-      storage: memoryStorage(),
+      storage: memoryStorage,
       limits: { fileSize: Number(process.env.LOCALIZE_MAX_BYTES ?? 512 * 1024) },
     }),
   )
   localizeFile(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @UploadedFile() file: Express.Multer.File | undefined,
-    @Body() body: { format?: string; source?: string; target?: string },
+    @UploadedFile file: Express.Multer.File | undefined,
+    @Body body: { format?: string; source?: string; target?: string },
   ) {
     if (!file) {
       throw new ApiException('validation_error', 'file is required', HttpStatus.BAD_REQUEST);
@@ -116,7 +116,7 @@ export class LocalizeController {
 
   @Post('localize/catalog')
   @HttpCode(HttpStatus.OK)
-  catalog(@Body() body: { format?: string; content?: unknown }) {
+  catalog(@Body body: { format?: string; content?: unknown }) {
     if (body.content === undefined) {
       throw new ApiException('validation_error', 'content is required', HttpStatus.BAD_REQUEST);
     }
@@ -131,7 +131,7 @@ export class LocalizeController {
   @Post('localize/qa')
   @HttpCode(HttpStatus.OK)
   qa(
-    @Body()
+    @Body
     body: {
       format?: string;
       sourceContent?: unknown;
@@ -167,14 +167,14 @@ export class LocalizeController {
 
   @Post('icu/validate')
   @HttpCode(HttpStatus.OK)
-  validateIcu(@Body() body: { message?: string }) {
+  validateIcu(@Body body: { message?: string }) {
     return this.platform.validateIcu(body.message ?? '');
   }
 
   @Post('icu/format')
   @HttpCode(HttpStatus.OK)
   formatIcu(
-    @Body()
+    @Body
     body: {
       message?: string;
       values?: Record<string, string | number>;

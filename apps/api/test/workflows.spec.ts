@@ -34,7 +34,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_wf_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_wf_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -48,7 +48,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-function tinyWav(): Buffer {
+function tinyWav: Buffer {
   const dataSize = 64;
   const buffer = Buffer.alloc(44 + dataSize);
   buffer.write('RIFF', 0);
@@ -68,8 +68,8 @@ function tinyWav(): Buffer {
 }
 
 async function waitForJob(jobs: JobsService, organizationId: string, jobId: string) {
-  const start = Date.now();
-  while (Date.now() - start < 8000) {
+  const start = Date.now;
+  while (Date.now - start < 8000) {
     const job = await jobs.get(organizationId, jobId);
     if (job.status === 'succeeded' || job.status === 'failed') return job;
     await new Promise((r) => setTimeout(r, 25));
@@ -77,7 +77,7 @@ async function waitForJob(jobs: JobsService, organizationId: string, jobId: stri
   throw new Error(`Job ${jobId} timed out`);
 }
 
-describe('Workflows (VL-083)', () => {
+describe('Workflows',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
@@ -86,7 +86,7 @@ describe('Workflows (VL-083)', () => {
   let storage: LocalStorageService;
   let mailbox: MemoryEmailProvider;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     process.env.JOBS_INLINE = '1';
     process.env.RESEND_API_KEY = 're_test_fixture';
     process.env.EMAIL_FROM = 'Lugemi <noreply@example.com>';
@@ -94,18 +94,18 @@ describe('Workflows (VL-083)', () => {
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
     jobs = app.get(JobsService);
     workflows = app.get(WorkflowsService);
     storage = app.get(LocalStorageService);
-    mailbox = new MemoryEmailProvider();
+    mailbox = new MemoryEmailProvider;
     app.get(NotificationsService).setProviderForTests(mailbox);
 
     const gateway = app.get(GatewayService);
@@ -124,7 +124,7 @@ describe('Workflows (VL-083)', () => {
     });
     gateway.setSttProviderForTests({
       name: 'fixture_stt',
-      async transcribe() {
+      async transcribe {
         return {
           text: 'Hello friend',
           language: 'en',
@@ -136,12 +136,12 @@ describe('Workflows (VL-083)', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('runs transcribe → translate → notify via POST /v1/jobs', async () => {
-    const org = await seedOrg(prisma, `wf_pipe_${Date.now()}`);
+  it('runs transcribe → translate → notify via POST /v1/jobs', async  => {
+    const org = await seedOrg(prisma, `wf_pipe_${Date.now}`);
     const workspaceId = org.workspaces[0].id;
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -150,8 +150,8 @@ describe('Workflows (VL-083)', () => {
       userId: org.memberships[0].userId,
     });
 
-    const storageKey = `${org.id}/${randomUUID()}-clip.wav`;
-    const buf = tinyWav();
+    const storageKey = `${org.id}/${randomUUID}-clip.wav`;
+    const buf = tinyWav;
     await storage.writeBuffer(storageKey, buf);
     const doc = await prisma.document.create({
       data: {
@@ -166,7 +166,7 @@ describe('Workflows (VL-083)', () => {
     });
 
     const before = mailbox.sent.length;
-    const created = await request(app.getHttpServer())
+    const created = await request(app.getHttpServer)
       .post('/v1/jobs')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -207,8 +207,8 @@ describe('Workflows (VL-083)', () => {
     expect(mailbox.sent.some((m) => String(m.text).includes('[sw] Hello friend'))).toBe(true);
   });
 
-  it('saves a definition and runs it by workflowId', async () => {
-    const org = await seedOrg(prisma, `wf_def_${Date.now()}`);
+  it('saves a definition and runs it by workflowId', async  => {
+    const org = await seedOrg(prisma, `wf_def_${Date.now}`);
     const workspaceId = org.workspaces[0].id;
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -232,7 +232,7 @@ describe('Workflows (VL-083)', () => {
       ],
     });
 
-    const created = await request(app.getHttpServer())
+    const created = await request(app.getHttpServer)
       .post(`/v1/workflows/${def.id}/run`)
       .set('Authorization', `Bearer ${key.secret}`)
       .send({})
@@ -249,8 +249,8 @@ describe('Workflows (VL-083)', () => {
     expect(result.steps[0].output.text).toBe('[fr] Bonjour');
   });
 
-  it('rejects invalid workflow payloads', async () => {
-    const org = await seedOrg(prisma, `wf_bad_${Date.now()}`);
+  it('rejects invalid workflow payloads', async  => {
+    const org = await seedOrg(prisma, `wf_bad_${Date.now}`);
     const workspaceId = org.workspaces[0].id;
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -259,13 +259,13 @@ describe('Workflows (VL-083)', () => {
       userId: org.memberships[0].userId,
     });
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post('/v1/jobs')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ type: 'workflow', input: { steps: [] } })
       .expect(400);
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post('/v1/jobs')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({

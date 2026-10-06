@@ -24,15 +24,15 @@ export const AGENT_MARKETPLACE_CATEGORIES = [
 export type AgentMarketplaceCategory = (typeof AGENT_MARKETPLACE_CATEGORIES)[number];
 
 /**
- * Library Phase 121 → Agent Marketplace (VL-254).
+ * Library Phase 121 → Agent Marketplace.
  * Buy/sell/publish sandboxed agents over Agent Runtime — not LangGraph/AutoGPT OS.
  * Volume 11 README: enforce Agent Runtime sandbox + Policy gate before third-party agents run.
  */
-export function agentMarketplaceEngineCatalog() {
+export function agentMarketplaceEngineCatalog {
   return {
     product: 'Lugemi Agent Marketplace',
     note:
-      'Agent Marketplace (VL-254). Publish/install/run sandboxed enterprise agents. Execution always goes through Agent Runtime run + AgentPolicyGate (hard allowlist) and Policy Fabric hard gate — never open tool execution. Extends VL-219 / listings kind=agent. Not a LangGraph/AutoGPT OS.',
+      'Agent Marketplace. Publish/install/run sandboxed enterprise agents. Execution always goes through Agent Runtime run + AgentPolicyGate (hard allowlist) and Policy Fabric hard gate — never open tool execution. Extends listings kind=agent. Not a LangGraph/AutoGPT OS.',
     capabilities: [
       {
         id: 'business-agents',

@@ -16,8 +16,8 @@ export class GetPluginMarketplaceEngineHandler
     private readonly catalog: PluginMarketplaceCatalogPort,
   ) {}
 
-  execute(): Promise<PluginMarketplaceEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<PluginMarketplaceEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 

@@ -9,10 +9,10 @@ export type EvalCapability = {
 };
 
 /**
- * Library Phase 142 → Evaluation Platform (VL-275).
+ * Library Phase 142 → Evaluation Platform.
  * Extends model-evaluation-platform / eval surfaces — does not regenerate them.
  */
-export function evaluationPlatformEngineCatalog() {
+export function evaluationPlatformEngineCatalog {
   const capabilities: EvalCapability[] = [
     { id: 'automatic', name: 'Automatic evaluation', status: 'shipped', api: 'GET /v1/evaluation-platform/capabilities', notes: 'Metric runners catalog.' },
     { id: 'human', name: 'Human evaluation', status: 'shipped', api: 'GET /v1/evaluation-platform/capabilities', notes: 'Human review workflow posture.' },
@@ -26,7 +26,7 @@ export function evaluationPlatformEngineCatalog() {
   return {
     product: 'Lugemi Evaluation Platform',
     note:
-      'Evaluation Platform (VL-275). Enterprise evaluation catalog extending VL-236 model-evaluation-platform and VL-100 eval — does not regenerate those surfaces.',
+      'Evaluation Platform. Enterprise evaluation catalog extending model-evaluation-platform and eval — does not regenerate those surfaces.',
     capabilities,
     extends: {
       modelEvaluationPlatform: true,

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { AccentsService } from '../../accents/accents.service';
 import type { AccentPort, AccentRow } from './ports';
 
-@Injectable()
+@Injectable
 export class NestAccentAdapter implements AccentPort {
   constructor(private readonly accents: AccentsService) {}
 

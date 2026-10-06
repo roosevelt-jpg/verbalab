@@ -41,22 +41,22 @@ export type TrainingExperiment = {
 
 const LAUNCHABLE: MtpMethodId[] = ['lora', 'instruction_tuning'];
 
-@Injectable()
+@Injectable
 export class ModelTrainingPlatformService {
-  private readonly experiments = new Map<string, TrainingExperiment>();
+  private readonly experiments = new Map<string, TrainingExperiment>;
 
   constructor(
     private readonly usage: UsageService,
     private readonly finetunes: FineTunesService,
   ) {}
 
-  engine() {
+  engine {
     return {
-      ...modelTrainingPlatformCatalog(),
-      methods: modelTrainingMethods(),
-      architecture: modelTrainingPlatformArchitectureNotes(),
-      ceilings: modelTrainingCeilings(),
-      launchers: this.finetunes.launcherStatus(),
+      ...modelTrainingPlatformCatalog,
+      methods: modelTrainingMethods,
+      architecture: modelTrainingPlatformArchitectureNotes,
+      ceilings: modelTrainingCeilings,
+      launchers: this.finetunes.launcherStatus,
       safety: {
         noFakeGpuSuccess: true,
         noFakeTrainedWeights: true,
@@ -66,10 +66,10 @@ export class ModelTrainingPlatformService {
     };
   }
 
-  methods() {
+  methods {
     return {
-      methods: modelTrainingMethods(),
-      honesty: modelTrainingPlatformHonesty(),
+      methods: modelTrainingMethods,
+      honesty: modelTrainingPlatformHonesty,
       docs: '/docs/MODEL_TRAINING_PLATFORM.md',
     };
   }
@@ -88,7 +88,7 @@ export class ModelTrainingPlatformService {
         chat: usageSummary.chat,
         embeddings: usageSummary.embeddings,
       },
-      engine: this.engine(),
+      engine: this.engine,
       experiments: experiments.slice(0, 20),
       deferred: {
         distributedTraining: true,
@@ -110,15 +110,15 @@ export class ModelTrainingPlatformService {
       },
       docs: '/docs/MODEL_TRAINING_PLATFORM.md',
       note:
-        'Model Training Platform (VL-235). Orchestrates experiment plans over VL-111 — not a distributed training OS.',
+        'Model Training Platform. Orchestrates experiment plans over existing — not a distributed training OS.',
     };
   }
 
   listExperiments(session: SessionContext) {
     return {
       experiments: this.listExperimentsForOrg(session.organizationId),
-      ceilings: modelTrainingCeilings(),
-      note: 'Org-scoped sandbox experiment plans (VL-235).',
+      ceilings: modelTrainingCeilings,
+      note: 'Org-scoped sandbox experiment plans.',
     };
   }
 
@@ -139,7 +139,7 @@ export class ModelTrainingPlatformService {
       notes?: string;
     },
   ) {
-    const ceilings = modelTrainingCeilings();
+    const ceilings = modelTrainingCeilings;
     const existing = this.listExperimentsForOrg(session.organizationId);
     if (existing.length >= ceilings.maxExperimentsPerOrg) {
       throw new ApiException(
@@ -151,17 +151,17 @@ export class ModelTrainingPlatformService {
 
     const method = this.normalizeMethod(body.method ?? 'lora');
     const hyperparams = this.normalizeHyperparams(body.hyperparams);
-    const now = new Date().toISOString();
+    const now = new Date.toISOString;
     const experiment: TrainingExperiment = {
-      id: randomUUID(),
+      id: randomUUID,
       organizationId: session.organizationId,
       workspaceId: session.workspaceId,
       method,
-      name: (body.name ?? `${method}-${Date.now()}`).slice(0, 120),
+      name: (body.name ?? `${method}-${Date.now}`).slice(0, 120),
       baseModel: (body.baseModel ?? 'nllb-200-distilled-600M').slice(0, 120),
-      sourceLang: (body.sourceLang ?? 'en').trim().toLowerCase().slice(0, 16),
-      targetLang: (body.targetLang ?? 'sw').trim().toLowerCase().slice(0, 16),
-      datasetRef: body.datasetRef?.trim().slice(0, 240) || null,
+      sourceLang: (body.sourceLang ?? 'en').trim.toLowerCase.slice(0, 16),
+      targetLang: (body.targetLang ?? 'sw').trim.toLowerCase.slice(0, 16),
+      datasetRef: body.datasetRef?.trim.slice(0, 240) || null,
       hyperparams,
       status: LAUNCHABLE.includes(method) ? 'ready_to_launch' : 'planned',
       checkpointIndex: 0,
@@ -173,7 +173,7 @@ export class ModelTrainingPlatformService {
     this.experiments.set(experiment.id, experiment);
     return {
       experiment,
-      honesty: modelTrainingPlatformHonesty(),
+      honesty: modelTrainingPlatformHonesty,
       note: LAUNCHABLE.includes(method)
         ? 'Experiment ready. POST …/launch to hand off to /v1/training-jobs (does not invent GPU success).'
         : 'Method is deferred or non-launchable — plan recorded for roadmap tracking only.',
@@ -185,7 +185,7 @@ export class ModelTrainingPlatformService {
     if (!LAUNCHABLE.includes(experiment.method)) {
       throw new ApiException(
         'validation_error',
-        `Method ${experiment.method} is not launchable in VL-235 (deferred / non-GPU path)`,
+        `Method ${experiment.method} is not launchable in (deferred / non-GPU path)`,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -210,19 +210,19 @@ export class ModelTrainingPlatformService {
         'POST /v1/training-jobs/:id/launch',
         'GPU worker callback or POST /v1/training-jobs/:id/complete',
       ],
-      launchers: this.finetunes.launcherStatus(),
+      launchers: this.finetunes.launcherStatus,
       note:
-        'Handoff only — Model Training Platform does not regenerate VL-111 or invent GPU completion. Manual is the honest default when Modal/Vertex URLs are unset.',
+        'Handoff only — Model Training Platform does not regenerate or invent GPU completion. Manual is the honest default when Modal/Vertex URLs are unset.',
     };
 
     experiment.status = 'handed_off';
-    experiment.updatedAt = new Date().toISOString();
+    experiment.updatedAt = new Date.toISOString;
     this.experiments.set(experiment.id, experiment);
 
     return {
       experiment,
       handoff,
-      honesty: modelTrainingPlatformHonesty(),
+      honesty: modelTrainingPlatformHonesty,
     };
   }
 
@@ -232,7 +232,7 @@ export class ModelTrainingPlatformService {
     body: { index?: number; note?: string },
   ) {
     const experiment = this.requireExperiment(session.organizationId, id);
-    const ceilings = modelTrainingCeilings();
+    const ceilings = modelTrainingCeilings;
     const next =
       typeof body.index === 'number' && Number.isFinite(body.index)
         ? Math.max(0, Math.floor(body.index))
@@ -249,7 +249,7 @@ export class ModelTrainingPlatformService {
     if (body.note) {
       experiment.notes = `${experiment.notes} | ckpt ${next}: ${body.note}`.slice(0, 500);
     }
-    experiment.updatedAt = new Date().toISOString();
+    experiment.updatedAt = new Date.toISOString;
     this.experiments.set(experiment.id, experiment);
     return {
       experiment,
@@ -260,7 +260,7 @@ export class ModelTrainingPlatformService {
   cancelExperiment(session: SessionContext, id: string) {
     const experiment = this.requireExperiment(session.organizationId, id);
     experiment.status = 'cancelled';
-    experiment.updatedAt = new Date().toISOString();
+    experiment.updatedAt = new Date.toISOString;
     this.experiments.set(experiment.id, experiment);
     return { experiment };
   }
@@ -275,20 +275,20 @@ export class ModelTrainingPlatformService {
       mode: 'foundation',
       experimentCount: experiments.length,
       byStatus,
-      methods: modelTrainingMethods().map((m) => ({
+      methods: modelTrainingMethods.map((m) => ({
         id: m.id,
         status: m.status,
         launchable: m.launchable,
       })),
-      launchers: this.finetunes.launcherStatus(),
-      honesty: modelTrainingPlatformHonesty(),
+      launchers: this.finetunes.launcherStatus,
+      honesty: modelTrainingPlatformHonesty,
       note:
-        'Model Training Platform monitoring (VL-235). Hub partial; distributed/RLHF/DPO deferred.',
+        'Model Training Platform monitoring. Hub partial; distributed/RLHF/DPO deferred.',
     };
   }
 
   private listExperimentsForOrg(organizationId: string): TrainingExperiment[] {
-    return [...this.experiments.values()]
+    return [...this.experiments.values]
       .filter((e) => e.organizationId === organizationId)
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   }
@@ -306,8 +306,8 @@ export class ModelTrainingPlatformService {
   }
 
   private normalizeMethod(raw: string): MtpMethodId {
-    const id = raw.trim().toLowerCase().replace(/-/g, '_') as MtpMethodId;
-    const known = modelTrainingMethods().find((m) => m.id === id);
+    const id = raw.trim.toLowerCase.replace(/-/g, '_') as MtpMethodId;
+    const known = modelTrainingMethods.find((m) => m.id === id);
     if (!known) {
       throw new ApiException(
         'validation_error',
@@ -322,7 +322,7 @@ export class ModelTrainingPlatformService {
     raw: Record<string, unknown> | undefined,
   ): Record<string, string | number | boolean> {
     if (!raw || typeof raw !== 'object') return {};
-    const ceilings = modelTrainingCeilings();
+    const ceilings = modelTrainingCeilings;
     const entries = Object.entries(raw).slice(0, ceilings.maxHyperparamKeys);
     const out: Record<string, string | number | boolean> = {};
     for (const [k, v] of entries) {

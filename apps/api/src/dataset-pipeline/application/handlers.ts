@@ -17,8 +17,8 @@ export class GetDatasetPipelineEngineHandler
     private readonly catalog: DatasetPipelineCatalogPort,
   ) {}
 
-  execute(): Promise<DatasetPipelineEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<DatasetPipelineEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListDatasetPipelineProductsHandler
     private readonly catalog: DatasetPipelineCatalogPort,
   ) {}
 
-  execute(): Promise<DatasetPipelineProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<DatasetPipelineProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

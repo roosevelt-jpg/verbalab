@@ -9,23 +9,23 @@ import {
   embeddingModelsCatalog,
 } from './embedding-cloud.catalog';
 
-@Injectable()
+@Injectable
 export class EmbeddingCloudService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly embeddings: EmbeddingsService,
   ) {}
 
-  engine() {
-    return embeddingCloudCatalog();
+  engine {
+    return embeddingCloudCatalog;
   }
 
-  models() {
-    return embeddingModelsCatalog();
+  models {
+    return embeddingModelsCatalog;
   }
 
-  modalities() {
-    const c = embeddingCloudCatalog();
+  modalities {
+    const c = embeddingCloudCatalog;
     return { modalities: c.modalities, note: c.note };
   }
 
@@ -78,7 +78,7 @@ export class EmbeddingCloudService {
   }
 
   async analytics(organizationId: string) {
-    const start = new Date();
+    const start = new Date;
     start.setUTCDate(1);
     start.setUTCHours(0, 0, 0, 0);
 
@@ -124,7 +124,7 @@ export class EmbeddingCloudService {
     }
 
     return {
-      periodStart: start.toISOString(),
+      periodStart: start.toISOString,
       requests: events.length,
       tokens,
       byProvider,
@@ -134,21 +134,21 @@ export class EmbeddingCloudService {
       averageLatencyMs: latencySamples
         ? Number((latencySum / latencySamples).toFixed(1))
         : null,
-      note: 'Embedding Cloud analytics from usage_events + audits (VL-181).',
+      note: 'Embedding Cloud analytics from usage_events + audits.',
     };
   }
 
   async monitoring(organizationId: string) {
     const analytics = await this.analytics(organizationId);
-    const engine = this.engine();
+    const engine = this.engine;
     return {
-      generatedAt: new Date().toISOString(),
+      generatedAt: new Date.toISOString,
       periodStart: analytics.periodStart,
       requests: analytics.requests,
       tokens: analytics.tokens,
       averageLatencyMs: analytics.averageLatencyMs,
       deferredModalities: engine.modalities.filter((m) => m.status === 'deferred').map((m) => m.id),
-      note: 'Embedding Cloud monitoring snapshot (VL-181).',
+      note: 'Embedding Cloud monitoring snapshot.',
     };
   }
 
@@ -157,7 +157,7 @@ export class EmbeddingCloudService {
     if (typeof raw !== 'string') {
       throw new ApiException('validation_error', 'modality must be a string', HttpStatus.BAD_REQUEST);
     }
-    const modality = raw.trim().toLowerCase();
+    const modality = raw.trim.toLowerCase;
     if ((SUPPORTED_EMBED_MODALITIES as readonly string[]).includes(modality)) {
       return modality as SupportedEmbedModality;
     }
@@ -168,7 +168,7 @@ export class EmbeddingCloudService {
     ) {
       throw new ApiException(
         'validation_error',
-        `modality '${modality}' is deferred — Embedding Cloud ships text/document/code only (VL-181)`,
+        `modality '${modality}' is deferred — Embedding Cloud ships text/document/code only`,
         HttpStatus.BAD_REQUEST,
       );
     }

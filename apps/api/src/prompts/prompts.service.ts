@@ -9,7 +9,7 @@ import {
   isPromptKey,
 } from './prompt-defaults';
 
-@Injectable()
+@Injectable
 export class PromptsService {
   constructor(
     private readonly prisma: PrismaService,
@@ -118,7 +118,7 @@ export class PromptsService {
   }) {
     this.assertAdmin(input.role);
     const key = this.requireKey(input.key);
-    const body = input.body?.trim() ?? '';
+    const body = input.body?.trim ?? '';
     if (!body) {
       throw new ApiException('validation_error', 'body is required', HttpStatus.BAD_REQUEST);
     }
@@ -148,7 +148,7 @@ export class PromptsService {
         promptId: prompt.id,
         version,
         body,
-        note: input.note?.trim() || null,
+        note: input.note?.trim || null,
         createdBy: input.userId,
       },
     });

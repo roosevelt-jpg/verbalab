@@ -2,13 +2,13 @@ import { Query, Resolver } from '@nestjs/graphql';
 import { AiRouterService } from '../ai-router/ai-router.service';
 import { GqlAiRouterEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class AiRouterGraphqlResolver {
   constructor(private readonly router: AiRouterService) {}
 
-  @Query(() => GqlAiRouterEngine, { name: 'aiRouterEngine' })
-  aiRouterEngine(): GqlAiRouterEngine {
-    const c = this.router.engine();
+  @Query( => GqlAiRouterEngine, { name: 'aiRouterEngine' })
+  aiRouterEngine: GqlAiRouterEngine {
+    const c = this.router.engine;
     return {
       product: c.product,
       note: c.note,

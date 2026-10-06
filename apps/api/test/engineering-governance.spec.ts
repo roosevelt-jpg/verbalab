@@ -14,7 +14,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory()) {
+    if (name.isDirectory) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       out.push(...walkTsFiles(p));
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -24,28 +24,28 @@ function walkTsFiles(dir: string): string[] {
   return out;
 }
 
-describe('Engineering Governance (VL-345)', () => {
+describe('Engineering Governance',  => {
   let app: INestApplication<App>;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
   }, 120_000);
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('ships ADR and product doc', () => {
+  it('ships ADR and product doc',  => {
     expect(existsSync(join(root, 'docs/adr/0247-engineering-governance.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/ENGINEERING_GOVERNANCE.md'))).toBe(true);
   });
 
-  it('has no TODO/FIXME markers in hub source', () => {
+  it('has no TODO/FIXME markers in hub source',  => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     const dir = join(apiSrc, 'engineering-governance');
@@ -56,11 +56,11 @@ describe('Engineering Governance (VL-345)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes engine/products with honesty gates', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes engine/products with honesty gates', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/engineering-governance/engine')
       .expect(200);
-    expect(res.body.product).toBeTruthy();
+    expect(res.body.product).toBeTruthy;
     expect(res.body.honesty.extendsAiGovernance).toBe(true);
 
     expect(res.body.honesty.engineeringOsForHumansAndCursor).toBe(true);
@@ -76,7 +76,7 @@ describe('Engineering Governance (VL-345)', () => {
     expect(JSON.stringify(res.body.routesTo)).toContain('release-engineering');
     expect(JSON.stringify(res.body.routesTo)).toContain('platform-engineering-cloud');
 
-    const route = await request(app.getHttpServer())
+    const route = await request(app.getHttpServer)
       .get('/v1/engineering-governance/route')
       .expect(200);
     expect(route.body.engineeringOsForHumansAndCursor).toBe(true);
@@ -89,10 +89,10 @@ describe('Engineering Governance (VL-345)', () => {
 
   });
 
-  it('exposes monitoring', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes monitoring', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/engineering-governance/monitoring')
       .expect(200);
-    expect(res.body).toBeTruthy();
+    expect(res.body).toBeTruthy;
   });
 });

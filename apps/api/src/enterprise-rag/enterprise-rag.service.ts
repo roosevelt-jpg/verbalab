@@ -37,7 +37,7 @@ type Passage = {
   source: string;
 };
 
-@Injectable()
+@Injectable
 export class EnterpriseRagService {
   constructor(
     private readonly prisma: PrismaService,
@@ -48,8 +48,8 @@ export class EnterpriseRagService {
     private readonly enterpriseSearch: EnterpriseSearchService,
   ) {}
 
-  engine() {
-    return enterpriseRagCatalog();
+  engine {
+    return enterpriseRagCatalog;
   }
 
   private assertMode(mode: string): EnterpriseRagMode {
@@ -63,10 +63,10 @@ export class EnterpriseRagService {
     return mode;
   }
 
-  /** Preview VL-062 chunk windows — does not persist. */
+  /** Preview chunk windows — does not persist. */
   chunk(input: { text?: string; size?: number; overlap?: number }) {
     const text = input.text ?? '';
-    if (!text.trim()) {
+    if (!text.trim) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }
     const size =
@@ -88,7 +88,7 @@ export class EnterpriseRagService {
         preview: content.slice(0, 160),
         content,
       })),
-      note: 'Same overlapping character windows as VL-062 ingest. Preview only — not stored.',
+      note: 'Same overlapping character windows as ingest. Preview only — not stored.',
     };
   }
 
@@ -101,12 +101,12 @@ export class EnterpriseRagService {
     opts: { maxChars?: number; k?: number },
   ): { passages: Passage[]; dropped: number; maxChars: number; truncated: boolean } {
     const maxChars = Math.min(Math.max(opts.maxChars ?? 6000, 500), 20000);
-    const k = Math.min(Math.max(opts.k ?? ragTopK(), 1), 10);
-    const seen = new Set<string>();
+    const k = Math.min(Math.max(opts.k ?? ragTopK, 1), 10);
+    const seen = new Set<string>;
     const deduped: Passage[] = [];
     let dropped = 0;
     for (const p of passages) {
-      const key = `${p.documentId}:${p.ordinal}:${p.content.slice(0, 80).toLowerCase()}`;
+      const key = `${p.documentId}:${p.ordinal}:${p.content.slice(0, 80).toLowerCase}`;
       if (seen.has(key)) {
         dropped += 1;
         continue;
@@ -170,12 +170,12 @@ export class EnterpriseRagService {
     userId?: string;
     ip?: string;
   }) {
-    const query = input.query?.trim();
+    const query = input.query?.trim;
     if (!query) {
       throw new ApiException('validation_error', 'query is required', HttpStatus.BAD_REQUEST);
     }
     const mode = this.assertMode(input.mode ?? 'hybrid');
-    const k = Math.min(Math.max(input.k ?? ragTopK(), 1), 10);
+    const k = Math.min(Math.max(input.k ?? ragTopK, 1), 10);
 
     const search = await this.enterpriseSearch.search({
       query,
@@ -247,8 +247,8 @@ export class EnterpriseRagService {
         truncated: optimized.truncated,
         totalChars: optimized.passages.reduce((s, p) => s + p.content.length, 0),
       },
-      honesty: this.engine().honesty,
-      note: 'Retrieval + citation + context optimization for Enterprise RAG (VL-198). Not LangChain OS.',
+      honesty: this.engine.honesty,
+      note: 'Retrieval + citation + context optimization for Enterprise RAG. Not LangChain OS.',
     };
   }
 
@@ -267,7 +267,7 @@ export class EnterpriseRagService {
     userId?: string;
     ip?: string;
   }) {
-    const question = input.question?.trim();
+    const question = input.question?.trim;
     if (!question) {
       throw new ApiException('validation_error', 'question is required', HttpStatus.BAD_REQUEST);
     }
@@ -317,7 +317,7 @@ export class EnterpriseRagService {
         model: null,
         provider: null,
         grounded: true,
-        honesty: this.engine().honesty,
+        honesty: this.engine.honesty,
       };
     }
 
@@ -377,13 +377,13 @@ export class EnterpriseRagService {
         completion_tokens: chat.completionTokens,
         total_tokens: chat.totalTokens,
       },
-      honesty: this.engine().honesty,
-      note: 'Grounded answer from retrieved workspace passages only (VL-198). Extends VL-062; not agentic RAG OS.',
+      honesty: this.engine.honesty,
+      note: 'Grounded answer from retrieved workspace passages only. Extends existing; not agentic RAG OS.',
     };
   }
 
   async analytics(organizationId: string, workspaceId: string) {
-    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
     const [documents, chunks, retrieves, queries] = await Promise.all([
       this.prisma.knowledgeDocument.count({ where: { organizationId, workspaceId } }),
       this.prisma.knowledgeChunk.count({ where: { organizationId, workspaceId } }),
@@ -408,12 +408,12 @@ export class EnterpriseRagService {
       chunks,
       retrievesLast30d: retrieves,
       queriesLast30d: queries,
-      note: 'Workspace-scoped Enterprise RAG analytics (VL-198).',
+      note: 'Workspace-scoped Enterprise RAG analytics.',
     };
   }
 
   async monitoring(organizationId: string, workspaceId: string) {
-    const engine = this.engine();
+    const engine = this.engine;
     const analytics = await this.analytics(organizationId, workspaceId);
     return {
       ...analytics,

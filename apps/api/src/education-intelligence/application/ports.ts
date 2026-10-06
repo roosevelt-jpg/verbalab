@@ -1,4 +1,4 @@
-/** Application ports for Education Intelligence (VL-267). */
+/** Application ports for Education Intelligence. */
 
 export type EducationIntelligenceProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type EducationIntelligenceEngineBundle = ReturnType<
 >;
 
 export interface EducationIntelligenceCatalogPort {
-  engine(): EducationIntelligenceEngineBundle;
-  listProducts(): EducationIntelligenceProductRow[];
+  engine: EducationIntelligenceEngineBundle;
+  listProducts: EducationIntelligenceProductRow[];
 }
 
 export const EDUCATION_INTELLIGENCE_CATALOG_PORT = Symbol('EDUCATION_INTELLIGENCE_CATALOG_PORT');

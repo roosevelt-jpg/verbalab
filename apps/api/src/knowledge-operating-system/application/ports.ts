@@ -1,4 +1,4 @@
-/** Application ports for Knowledge Operating System (VL-341). */
+/** Application ports for Knowledge Operating System. */
 
 export type KnowledgeOperatingSystemProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type KnowledgeOperatingSystemEngineBundle = ReturnType<
 >;
 
 export interface KnowledgeOperatingSystemCatalogPort {
-  engine(): KnowledgeOperatingSystemEngineBundle;
-  listProducts(): KnowledgeOperatingSystemProductRow[];
+  engine: KnowledgeOperatingSystemEngineBundle;
+  listProducts: KnowledgeOperatingSystemProductRow[];
 }
 
 export const KNOWLEDGE_OPERATING_SYSTEM_CATALOG_PORT = Symbol('KNOWLEDGE_OPERATING_SYSTEM_CATALOG_PORT');

@@ -1,22 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { trainingPipelineEngineCatalog } from './training-pipeline.catalog';
 
-@Injectable()
+@Injectable
 export class TrainingPipelineService {
-  engine() {
-    return trainingPipelineEngineCatalog();
+  engine {
+    return trainingPipelineEngineCatalog;
   }
 
   jobs(query?: string) {
-    const catalog = this.engine();
-    const q = (query ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (query ?? '').trim.toLowerCase;
     const jobs = catalog.jobs.filter((j) => {
       if (!q) return true;
       return (
-        j.id.toLowerCase().includes(q) ||
-        j.name.toLowerCase().includes(q) ||
-        j.method.toLowerCase().includes(q) ||
-        j.notes.toLowerCase().includes(q)
+        j.id.toLowerCase.includes(q) ||
+        j.name.toLowerCase.includes(q) ||
+        j.method.toLowerCase.includes(q) ||
+        j.notes.toLowerCase.includes(q)
       );
     });
     return {
@@ -33,15 +33,15 @@ export class TrainingPipelineService {
     return this.jobs(query);
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'training',
       methodCount: catalog.methods.length,
       jobCount: catalog.jobs.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Training Pipeline monitoring snapshot (VL-283).',
+      note: 'Training Pipeline monitoring snapshot.',
     };
   }
 }

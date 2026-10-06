@@ -1,4 +1,4 @@
-/** Application ports for Privacy Platform (VL-296). */
+/** Application ports for Privacy Platform. */
 
 export type PrivacyPlatformProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type PrivacyPlatformEngineBundle = ReturnType<
 >;
 
 export interface PrivacyPlatformCatalogPort {
-  engine(): PrivacyPlatformEngineBundle;
-  listProducts(): PrivacyPlatformProductRow[];
+  engine: PrivacyPlatformEngineBundle;
+  listProducts: PrivacyPlatformProductRow[];
 }
 
 export const PRIVACY_PLATFORM_CATALOG_PORT = Symbol('PRIVACY_PLATFORM_CATALOG_PORT');

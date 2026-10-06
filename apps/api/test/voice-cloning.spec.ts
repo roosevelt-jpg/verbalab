@@ -24,7 +24,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_vcl_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_vcl_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -47,35 +47,35 @@ function sample(n: number): Express.Multer.File[] {
   })) as Express.Multer.File[];
 }
 
-describe('Voice Cloning Platform (VL-172)', () => {
+describe('Voice Cloning Platform',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;
   let clones: VoiceClonesService;
   let cloning: VoiceCloningService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     billing = app.get(BillingService);
     clones = app.get(VoiceClonesService);
     cloning = app.get(VoiceCloningService);
-    clones.setFixtureForTests(new FixtureVoiceCloneAdapter());
+    clones.setFixtureForTests(new FixtureVoiceCloneAdapter);
   });
 
-  afterAll(async () => {
+  afterAll(async  => {
     clones.setFixtureForTests(null);
-    await app.close();
+    await app.close;
   });
 
-  it('documents cloning trust gates (consent + watermark, no ToS-only)', () => {
+  it('documents cloning trust gates (consent + watermark, no ToS-only)',  => {
     const doc = join(root, 'docs/VOICE_CLONING.md');
     const adr = join(root, 'docs/adr/0083-voice-cloning-platform.md');
     expect(existsSync(doc)).toBe(true);
@@ -87,8 +87,8 @@ describe('Voice Cloning Platform (VL-172)', () => {
     expect(text).toMatch(/not\*\* Resemble|is \*\*not\*\* Resemble/i);
   });
 
-  it('exposes engine + consent policy with honest professional status', async () => {
-    const engine = await request(app.getHttpServer()).get('/v1/voice-cloning/engine').expect(200);
+  it('exposes engine + consent policy with honest professional status', async  => {
+    const engine = await request(app.getHttpServer).get('/v1/voice-cloning/engine').expect(200);
     expect(engine.body.product).toBe('Lugemi Voice Cloning');
     expect(engine.body.trust.consentRequired).toBe(true);
     expect(engine.body.trust.watermarkRequired).toBe(true);
@@ -99,7 +99,7 @@ describe('Voice Cloning Platform (VL-172)', () => {
     const pro = engine.body.capabilities.find((c: { id: string }) => c.id === 'professional-cloning');
     expect(pro.status).toBe('partial');
 
-    const policy = await request(app.getHttpServer())
+    const policy = await request(app.getHttpServer)
       .get('/v1/voice-cloning/consent/policy')
       .expect(200);
     expect(policy.body.required.consentAttested).toBe(true);
@@ -107,8 +107,8 @@ describe('Voice Cloning Platform (VL-172)', () => {
     expect(policy.body.forbidden.some((f: string) => /ToS/i.test(f))).toBe(true);
   });
 
-  it('enrolls instant clone and updates ownership/license/permissions/verify', async () => {
-    const org = await seedOrg(prisma, `vcl_${Date.now()}`);
+  it('enrolls instant clone and updates ownership/license/permissions/verify', async  => {
+    const org = await seedOrg(prisma, `vcl_${Date.now}`);
     await billing.applyEntitlementForTests({ organizationId: org.id, plan: 'pro' });
 
     const created = await cloning.enroll({
@@ -175,8 +175,8 @@ describe('Voice Cloning Platform (VL-172)', () => {
     expect(analytics.consentAttested).toBeGreaterThanOrEqual(1);
   });
 
-  it('requires ownership + 3 samples for professional enroll', async () => {
-    const org = await seedOrg(prisma, `vclpro_${Date.now()}`);
+  it('requires ownership + 3 samples for professional enroll', async  => {
+    const org = await seedOrg(prisma, `vclpro_${Date.now}`);
     await billing.applyEntitlementForTests({ organizationId: org.id, plan: 'pro' });
 
     await expect(
@@ -214,8 +214,8 @@ describe('Voice Cloning Platform (VL-172)', () => {
     expect(ok.sampleCount).toBe(3);
   });
 
-  it('exposes voiceCloningEngine via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes voiceCloningEngine via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
@@ -223,7 +223,7 @@ describe('Voice Cloning Platform (VL-172)', () => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.voiceCloningEngine.consentRequired).toBe(true);
     expect(res.body.data.voiceCloningEngine.watermarkRequired).toBe(true);
     expect(

@@ -27,8 +27,8 @@ type SimResult = {
   providers: { stt: string | null; chat: string; tts: string };
 };
 
-export function VoiceClient() {
-  const { getToken, isLoaded } = useAuth();
+export function VoiceClient {
+  const { getToken, isLoaded } = useAuth;
   const [status, setStatus] = useState<VoiceStatus | null>(null);
   const [text, setText] = useState(
     'What languages and accents can Lugemi speaking agents use across African countries and ethnic communities?',
@@ -37,23 +37,23 @@ export function VoiceClient() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     setStatus(await apiFetch<VoiceStatus>('/v1/voice/status', { token }));
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
-  async function simulate() {
+  async function simulate {
     setBusy(true);
     setError(null);
     setResult(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const res = await apiFetch<SimResult>('/v1/voice/simulate', {
         method: 'POST',
@@ -110,7 +110,7 @@ export function VoiceClient() {
           disabled={busy}
           style={{ width: '100%', fontFamily: 'inherit' }}
         />
-        <button type="button" onClick={() => void simulate()} disabled={busy || !text.trim()} style={{ marginTop: '0.75rem' }}>
+        <button type="button" onClick={ => void simulate} disabled={busy || !text.trim} style={{ marginTop: '0.75rem' }}>
           Run simulate
         </button>
         {result ? (

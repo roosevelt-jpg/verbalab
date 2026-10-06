@@ -12,11 +12,11 @@ type Engine = {
   routesTo?: Array<{ module: string; path: string; role: string }>;
 };
 
-export function DataPlaneCloudClient() {
+export function DataPlaneCloudClient {
   const [data, setData] = useState<Engine | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  useEffect( => {
     void apiFetch<Engine>('/v1/data-plane-cloud/products')
       .then(setData)
       .catch((err: Error) => setError(err.message));

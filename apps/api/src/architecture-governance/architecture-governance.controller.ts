@@ -6,18 +6,18 @@ export class ArchitectureGovernanceController {
   constructor(private readonly service: ArchitectureGovernanceService) {}
 
   @Get('engine')
-  engine() {
-    return this.service.engine();
+  engine {
+    return this.service.engine;
   }
 
   @Get('products')
-  products() {
-    return this.service.engine();
+  products {
+    return this.service.engine;
   }
 
   @Get('monitoring')
-  monitoring() {
-    return this.service.monitoring();
+  monitoring {
+    return this.service.monitoring;
   }
 
   @Get('routes')
@@ -41,7 +41,7 @@ export class ArchitectureGovernanceController {
   }
 
   @Get('adr-series')
-  adrSeries() {
-    return this.service.adrSeries();
+  adrSeries {
+    return this.service.adrSeries;
   }
 }

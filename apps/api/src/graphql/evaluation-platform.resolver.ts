@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetEvaluationPlatformEngineQuery } from '../evaluation-platform/application/messages';
 import { GqlEvaluationPlatformEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class EvaluationPlatformGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query(() => GqlEvaluationPlatformEngine, { name: 'evaluationPlatformEngine' })
-  async evaluationPlatformEngine(): Promise<GqlEvaluationPlatformEngine> {
-    const catalog = await this.queries.execute(new GetEvaluationPlatformEngineQuery());
+  @Query( => GqlEvaluationPlatformEngine, { name: 'evaluationPlatformEngine' })
+  async evaluationPlatformEngine: Promise<GqlEvaluationPlatformEngine> {
+    const catalog = await this.queries.execute(new GetEvaluationPlatformEngineQuery);
     return {
       product: catalog.product,
       note: catalog.note,

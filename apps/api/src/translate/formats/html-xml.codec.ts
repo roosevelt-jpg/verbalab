@@ -10,7 +10,7 @@ export function planHtml(html: string): FormatPlan {
     .map((part) => {
       if (!part) return part;
       if (part.startsWith('<')) {
-        const lower = part.toLowerCase();
+        const lower = part.toLowerCase;
         if (/^<(script|style|code|pre)\b/.test(lower)) inSkip = true;
         if (/^<\/(script|style|code|pre)\s*>/.test(lower)) inSkip = false;
         return part;

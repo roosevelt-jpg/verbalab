@@ -19,8 +19,8 @@ export class ListAiKernelRuntimesHandler
     @Inject(AI_KERNEL_CATALOG_PORT) private readonly catalog: AiKernelCatalogPort,
   ) {}
 
-  execute(): Promise<KernelRuntimeRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<KernelRuntimeRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 
@@ -32,8 +32,8 @@ export class GetAiKernelProductsBundleHandler
     @Inject(AI_KERNEL_CATALOG_PORT) private readonly catalog: AiKernelCatalogPort,
   ) {}
 
-  execute(): Promise<KernelProductsBundle> {
-    return Promise.resolve(this.catalog.products());
+  execute: Promise<KernelProductsBundle> {
+    return Promise.resolve(this.catalog.products);
   }
 }
 

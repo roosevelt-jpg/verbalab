@@ -21,8 +21,8 @@ export class ListContextFabricCapabilitiesHandler
     @Inject(CONTEXT_FABRIC_CATALOG_PORT) private readonly catalog: ContextFabricCatalogPort,
   ) {}
 
-  execute(): Promise<ContextFabricCapabilityRow[]> {
-    return Promise.resolve(this.catalog.listCapabilities());
+  execute: Promise<ContextFabricCapabilityRow[]> {
+    return Promise.resolve(this.catalog.listCapabilities);
   }
 }
 
@@ -34,8 +34,8 @@ export class ListContextFabricRoutesHandler
     @Inject(CONTEXT_FABRIC_CATALOG_PORT) private readonly catalog: ContextFabricCatalogPort,
   ) {}
 
-  execute(): Promise<ContextFabricRouteRow[]> {
-    return Promise.resolve(this.catalog.listRoutes());
+  execute: Promise<ContextFabricRouteRow[]> {
+    return Promise.resolve(this.catalog.listRoutes);
   }
 }
 
@@ -47,8 +47,8 @@ export class GetContextFabricProductsBundleHandler
     @Inject(CONTEXT_FABRIC_CATALOG_PORT) private readonly catalog: ContextFabricCatalogPort,
   ) {}
 
-  execute(): Promise<ContextFabricProductsBundle> {
-    return Promise.resolve(this.catalog.products());
+  execute: Promise<ContextFabricProductsBundle> {
+    return Promise.resolve(this.catalog.products);
   }
 }
 

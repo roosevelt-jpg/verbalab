@@ -6,16 +6,16 @@ import {
   CulturalIntelligenceProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestCulturalIntelligenceCatalogAdapter implements CulturalIntelligenceCatalogPort {
   constructor(private readonly service: CulturalIntelligenceService) {}
 
-  engine(): CulturalIntelligenceEngineBundle {
-    return this.service.engine();
+  engine: CulturalIntelligenceEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): CulturalIntelligenceProductRow[] {
-    const bundle = this.engine() as { products?: CulturalIntelligenceProductRow[]; capabilities?: CulturalIntelligenceProductRow[] };
+  listProducts: CulturalIntelligenceProductRow[] {
+    const bundle = this.engine as { products?: CulturalIntelligenceProductRow[]; capabilities?: CulturalIntelligenceProductRow[] };
     if (Array.isArray(bundle.products)) return bundle.products;
     if (Array.isArray(bundle.capabilities)) {
       return bundle.capabilities.map((c) => ({
@@ -34,7 +34,7 @@ export class NestCulturalIntelligenceCatalogAdapter implements CulturalIntellige
         status: 'shipped',
         api: 'GET /v1/cultural-intelligence/engine',
         console: '/cultural-intelligence',
-        notes: 'VL-262 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

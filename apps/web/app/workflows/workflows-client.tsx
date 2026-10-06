@@ -18,8 +18,8 @@ const EXAMPLE = `[
   { "id": "s3", "op": "notify", "channel": "email", "message": "Done: {{s2.text}}" }
 ]`;
 
-export function WorkflowsClient() {
-  const { getToken, isLoaded } = useAuth();
+export function WorkflowsClient {
+  const { getToken, isLoaded } = useAuth;
   const [rows, setRows] = useState<Workflow[]>([]);
   const [name, setName] = useState('Transcribe → translate → notify');
   const [stepsJson, setStepsJson] = useState(EXAMPLE);
@@ -27,24 +27,24 @@ export function WorkflowsClient() {
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const list = await apiFetch<Workflow[]>('/v1/workflows', { token });
     setRows(list);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
-  async function save() {
+  async function save {
     setBusy(true);
     setError(null);
     setMessage(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       let steps: unknown;
       try {
@@ -58,7 +58,7 @@ export function WorkflowsClient() {
         body: JSON.stringify({ name, steps }),
       });
       setMessage('Workflow saved. Run with POST /v1/workflows/{id}/run (API key) or POST /v1/jobs type=workflow.');
-      await load();
+      await load;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Save failed');
     } finally {
@@ -70,11 +70,11 @@ export function WorkflowsClient() {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       await apiFetch(`/v1/workflows/${id}`, { method: 'DELETE', token });
       setMessage('Deleted.');
-      await load();
+      await load;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Delete failed');
     } finally {
@@ -110,7 +110,7 @@ export function WorkflowsClient() {
             style={{ fontFamily: 'ui-monospace, monospace', fontSize: '0.85rem' }}
           />
         </label>
-        <button type="button" onClick={() => void save()} disabled={busy} style={{ marginTop: '1rem' }}>
+        <button type="button" onClick={ => void save} disabled={busy} style={{ marginTop: '1rem' }}>
           Save workflow
         </button>
       </section>
@@ -130,7 +130,7 @@ export function WorkflowsClient() {
                       {row.id} · {Array.isArray(row.steps) ? row.steps.length : '?'} steps
                     </div>
                   </div>
-                  <button type="button" onClick={() => void remove(row.id)} disabled={busy}>
+                  <button type="button" onClick={ => void remove(row.id)} disabled={busy}>
                     Delete
                   </button>
                 </div>

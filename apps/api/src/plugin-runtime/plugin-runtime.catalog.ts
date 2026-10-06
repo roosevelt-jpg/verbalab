@@ -21,7 +21,7 @@ export const PLUGIN_PERMISSIONS = [
 
 export type PluginPermission = (typeof PLUGIN_PERMISSIONS)[number];
 
-/** Always denied — never grantable in VL-221. */
+/** Always denied — never grantable in . */
 export const PLUGIN_DENIED_ACTIONS = [
   'external.execute',
   'billing.charge',
@@ -32,13 +32,13 @@ export const PLUGIN_DENIED_ACTIONS = [
   'network.fetch',
 ] as const;
 
-export function pluginRuntimeMode(): 'disabled' | 'sandbox' {
-  const raw = (process.env.LUGEMI_PLUGIN_RUNTIME_MODE ?? 'sandbox').toLowerCase();
+export function pluginRuntimeMode: 'disabled' | 'sandbox' {
+  const raw = (process.env.LUGEMI_PLUGIN_RUNTIME_MODE ?? 'sandbox').toLowerCase;
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
 
-export function pluginRuntimeCeilings() {
+export function pluginRuntimeCeilings {
   return {
     maxPluginsPerWorkspace: Math.min(
       100,
@@ -48,21 +48,21 @@ export function pluginRuntimeCeilings() {
       20,
       Math.max(1, Number(process.env.LUGEMI_PLUGIN_RUNTIME_MAX_STEPS ?? '6') || 6),
     ),
-    mode: pluginRuntimeMode(),
+    mode: pluginRuntimeMode,
     liveCodeExecution: false,
-    note: 'Sandbox plugin runtime. Live arbitrary code / network plugin execution is forbidden in VL-221.',
+    note: 'Sandbox plugin runtime. Live arbitrary code / network plugin execution is forbidden in .',
   };
 }
 
 /**
- * Library Phase 88 → Plugin Runtime (VL-221).
+ * Library Phase 88 → Plugin Runtime.
  * Scoped permissions + sandbox required. Extends marketplace — not a browser/VS Code extension OS.
  */
-export function pluginRuntimeCatalog() {
+export function pluginRuntimeCatalog {
   return {
     product: 'Lugemi Plugin Runtime',
     note:
-      'Plugin Runtime (VL-221). Registry of sandboxed plugins with hard permission allowlists, lifecycle, versioning, dependency declarations, and marketplace listing counts. Invoke runs simulated sandbox handlers only — not arbitrary JS/WASM or live network plugins. Extends existing marketplace; does not invent a browser/VS Code extension OS. Policy Runtime (VL-222) is wired as a hard gate via PluginPolicyGate.',
+      'Plugin Runtime. Registry of sandboxed plugins with hard permission allowlists, lifecycle, versioning, dependency declarations, and marketplace listing counts. Invoke runs simulated sandbox handlers only — not arbitrary JS/WASM or live network plugins. Extends existing marketplace; does not invent a browser/VS Code extension OS. Policy Runtime is wired as a hard gate via PluginPolicyGate.',
     capabilities: [
       {
         id: 'plugin-registry',
@@ -98,7 +98,7 @@ export function pluginRuntimeCatalog() {
         status: 'shipped',
         api: 'GET /v1/plugin-marketplace/engine',
         notes:
-          'VL-250 dedicated Plugin Marketplace. Runtime still exposes listing counts at GET /v1/plugin-runtime/marketplace.',
+          ' dedicated Plugin Marketplace. Runtime still exposes listing counts at GET /v1/plugin-runtime/marketplace.',
       },
       {
         id: 'plugin-dependencies',
@@ -139,7 +139,7 @@ export function pluginRuntimeCatalog() {
         id: 'sdk',
         name: 'SDK',
         status: 'shipped',
-        api: 'pluginRuntimeEngine()',
+        api: 'pluginRuntimeEngine',
         notes: '@lugemi/sdk',
       },
       {

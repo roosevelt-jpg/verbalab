@@ -1,5 +1,5 @@
 import { CoverageClient } from './coverage-client';
 
-export default function CoveragePage() {
+export default function CoveragePage {
   return <CoverageClient />;
 }

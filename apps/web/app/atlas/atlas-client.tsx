@@ -26,20 +26,20 @@ type Engine = {
   capabilities: Capability[];
 };
 
-export function AtlasClient() {
-  const { getToken, isLoaded } = useAuth();
+export function AtlasClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     setEngine(await apiFetch<Engine>('/v1/atlas/engine', { token }));
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
   return (

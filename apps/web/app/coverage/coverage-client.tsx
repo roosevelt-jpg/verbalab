@@ -30,18 +30,18 @@ type CoveragePayload = {
   focusPairs: FocusPair[];
 };
 
-export function CoverageClient() {
+export function CoverageClient {
   const [data, setData] = useState<CoveragePayload | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [region, setRegion] = useState<(typeof AFRICA_REGIONS)[number] | 'All'>('All');
 
-  const catalogStats = useMemo(() => {
+  const catalogStats = useMemo( => {
     const countries = new Set(AFRICA_LANGUAGE_CATALOG.map((e) => e.countryCode)).size;
     const languages = new Set(AFRICA_LANGUAGE_CATALOG.map((e) => e.code)).size;
     return { countries, languages };
   }, []);
 
-  const catalogRows = useMemo(() => {
+  const catalogRows = useMemo( => {
     const rows =
       region === 'All'
         ? AFRICA_LANGUAGE_CATALOG
@@ -49,11 +49,11 @@ export function CoverageClient() {
     return rows.slice(0, 120);
   }, [region]);
 
-  useEffect(() => {
+  useEffect( => {
     void fetch(`${API_URL}/v1/coverage`)
       .then(async (res) => {
         if (!res.ok) throw new Error(`Coverage HTTP ${res.status}`);
-        setData((await res.json()) as CoveragePayload);
+        setData((await res.json) as CoveragePayload);
       })
       .catch((err: Error) => setError(err.message));
   }, []);
@@ -99,7 +99,7 @@ export function CoverageClient() {
           <button
             type="button"
             className={`vl-mode-tab${region === 'All' ? ' is-active' : ''}`}
-            onClick={() => setRegion('All')}
+            onClick={ => setRegion('All')}
           >
             All
           </button>
@@ -108,7 +108,7 @@ export function CoverageClient() {
               key={r}
               type="button"
               className={`vl-mode-tab${region === r ? ' is-active' : ''}`}
-              onClick={() => setRegion(r)}
+              onClick={ => setRegion(r)}
             >
               {r}
             </button>

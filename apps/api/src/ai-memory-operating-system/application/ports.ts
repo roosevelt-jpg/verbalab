@@ -1,4 +1,4 @@
-/** Application ports for AI Memory Operating System (VL-340). */
+/** Application ports for AI Memory Operating System. */
 
 export type AiMemoryOperatingSystemProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type AiMemoryOperatingSystemEngineBundle = ReturnType<
 >;
 
 export interface AiMemoryOperatingSystemCatalogPort {
-  engine(): AiMemoryOperatingSystemEngineBundle;
-  listProducts(): AiMemoryOperatingSystemProductRow[];
+  engine: AiMemoryOperatingSystemEngineBundle;
+  listProducts: AiMemoryOperatingSystemProductRow[];
 }
 
 export const AI_MEMORY_OPERATING_SYSTEM_CATALOG_PORT = Symbol('AI_MEMORY_OPERATING_SYSTEM_CATALOG_PORT');

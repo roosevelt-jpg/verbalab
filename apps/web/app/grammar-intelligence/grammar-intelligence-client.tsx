@@ -21,8 +21,8 @@ type SuggestResult = {
   note: string;
 };
 
-export function GrammarIntelligenceClient() {
-  const { getToken, isLoaded } = useAuth();
+export function GrammarIntelligenceClient {
+  const { getToken, isLoaded } = useAuth;
   const [overview, setOverview] = useState<Overview | null>(null);
   const [text, setText] = useState('teh goverment is gonna writting a report');
   const [profile, setProfile] = useState('professional');
@@ -30,17 +30,17 @@ export function GrammarIntelligenceClient() {
   const [spell, setSpell] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async  => {
     setOverview(await apiFetch<Overview>('/v1/grammar/intelligence'));
   }, []);
 
-  useEffect(() => {
-    void load().catch((err: Error) => setError(err.message));
+  useEffect( => {
+    void load.catch((err: Error) => setError(err.message));
   }, [load]);
 
-  async function runSuggest() {
+  async function runSuggest {
     setError(null);
-    const token = await getToken();
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     setResult(
       await apiFetch<SuggestResult>('/v1/grammar/suggest', {
@@ -51,9 +51,9 @@ export function GrammarIntelligenceClient() {
     );
   }
 
-  async function runSpell() {
+  async function runSpell {
     setError(null);
-    const token = await getToken();
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const res = await apiFetch<{ corrected: string; issueCount: number }>('/v1/grammar/spell', {
       method: 'POST',
@@ -103,7 +103,7 @@ export function GrammarIntelligenceClient() {
           type="button"
           className="vl-button"
           disabled={!isLoaded}
-          onClick={() => void runSuggest().catch((e: Error) => setError(e.message))}
+          onClick={ => void runSuggest.catch((e: Error) => setError(e.message))}
         >
           Suggest writing
         </button>
@@ -111,7 +111,7 @@ export function GrammarIntelligenceClient() {
           type="button"
           className="vl-button"
           disabled={!isLoaded}
-          onClick={() => void runSpell().catch((e: Error) => setError(e.message))}
+          onClick={ => void runSpell.catch((e: Error) => setError(e.message))}
         >
           Spell check
         </button>

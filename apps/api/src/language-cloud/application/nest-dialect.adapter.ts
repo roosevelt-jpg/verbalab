@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DialectsService } from '../../dialects/dialects.service';
 import type { AuthContext, DialectDetectResult, DialectPort, DialectRow } from './ports';
 
-@Injectable()
+@Injectable
 export class NestDialectAdapter implements DialectPort {
   constructor(private readonly dialects: DialectsService) {}
 

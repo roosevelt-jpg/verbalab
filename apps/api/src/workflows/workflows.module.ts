@@ -14,9 +14,9 @@ import { AuditCoreModule } from '../audit/audit-core.module';
   imports: [
     AudioModule,
     TranslateModule,
-    forwardRef(() => DocumentsModule),
+    forwardRef( => DocumentsModule),
     NotificationsModule,
-    forwardRef(() => JobsModule),
+    forwardRef( => JobsModule),
     ApiKeysModule,
     IdentityModule,
     AuditCoreModule,

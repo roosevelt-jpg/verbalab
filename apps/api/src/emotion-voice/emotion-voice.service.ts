@@ -27,7 +27,7 @@ export type EmotionSynthesizeInput = {
   ip?: string;
 };
 
-@Injectable()
+@Injectable
 export class EmotionVoiceService {
   constructor(
     private readonly audio: AudioService,
@@ -36,11 +36,11 @@ export class EmotionVoiceService {
     private readonly prisma: PrismaService,
   ) {}
 
-  engine() {
-    return emotionVoiceEngineCatalog();
+  engine {
+    return emotionVoiceEngineCatalog;
   }
 
-  profiles() {
+  profiles {
     return {
       profiles: EMOTION_VOICE_PROFILES.map((p) => ({
         id: p.id,
@@ -52,7 +52,7 @@ export class EmotionVoiceService {
         expressiveCloneControl: Boolean(p.cloneStyle),
       })),
       note:
-        'Profiles drive soft prosody + voice defaults. Trained emotion TTS models are not claimed. Distinct from /v1/emotion detect (VL-154).',
+        'Profiles drive soft prosody + voice defaults. Trained emotion TTS models are not claimed. Distinct from /v1/emotion detect.',
       docs: '/docs/EMOTION_VOICE.md',
     };
   }
@@ -96,7 +96,7 @@ export class EmotionVoiceService {
       );
     }
     const renderedText = applySoftProsody(input.text, profile.prosody);
-    const voice = input.voice?.trim() || profile.preferredVoice;
+    const voice = input.voice?.trim || profile.preferredVoice;
     const cloneExpressive = Boolean(voiceCloneIdFromVoice(voice) && profile.cloneStyle);
     return {
       profile,

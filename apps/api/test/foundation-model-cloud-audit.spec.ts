@@ -18,7 +18,7 @@ const apiSrc = join(root, 'apps/api/src');
 function walkTsFiles(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory()) {
+    if (name.isDirectory) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       walkTsFiles(p, out);
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -37,7 +37,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_fmcaudit_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_fmcaudit_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -51,31 +51,31 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Foundation Model Cloud Production Audit (VL-238)', () => {
+describe('Foundation Model Cloud Production Audit',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let training: ModelTrainingPlatformService;
   let evaluation: ModelEvaluationPlatformService;
   let registry: ModelRegistryService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
     prisma = app.get(PrismaService);
     training = app.get(ModelTrainingPlatformService);
     evaluation = app.get(ModelEvaluationPlatformService);
     registry = app.get(ModelRegistryService);
   }, 120_000);
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('ships audit ADR and report pack', () => {
+  it('ships audit ADR and report pack',  => {
     expect(existsSync(join(root, 'docs/adr/0139-foundation-model-cloud-production-audit.md'))).toBe(
       true,
     );
@@ -117,7 +117,7 @@ describe('Foundation Model Cloud Production Audit (VL-238)', () => {
     expect(adr).toMatch(/do not implement|Rejected|not implement/i);
   });
 
-  it('has no TODO/FIXME/implement-later markers in Foundation Model Cloud source trees', () => {
+  it('has no TODO/FIXME/implement-later markers in Foundation Model Cloud source trees',  => {
     const roots = [
       join(apiSrc, 'foundation-model-cloud'),
       join(apiSrc, 'model-training-platform'),
@@ -136,7 +136,7 @@ describe('Foundation Model Cloud Production Audit (VL-238)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes integrated FMC + MLOps catalogs', async () => {
+  it('exposes integrated FMC + MLOps catalogs', async  => {
     const paths = [
       '/v1/foundation-model-cloud/products',
       '/v1/foundation-model-cloud/engine',
@@ -151,11 +151,11 @@ describe('Foundation Model Cloud Production Audit (VL-238)', () => {
       '/v1/models/live',
     ];
     for (const path of paths) {
-      const res = await request(app.getHttpServer()).get(path).expect(200);
-      expect(res.body).toBeTruthy();
+      const res = await request(app.getHttpServer).get(path).expect(200);
+      expect(res.body).toBeTruthy;
     }
 
-    const products = await request(app.getHttpServer())
+    const products = await request(app.getHttpServer)
       .get('/v1/foundation-model-cloud/products')
       .expect(200);
     expect(products.body.honesty.trainsCompetitiveFoundationWeights).toBe(false);
@@ -170,7 +170,7 @@ describe('Foundation Model Cloud Production Audit (VL-238)', () => {
     expect(byId.atlas).toBe('partial');
   });
 
-  it('rejects unauthenticated sensitive FMC routes', async () => {
+  it('rejects unauthenticated sensitive FMC routes', async  => {
     const paths = [
       '/v1/foundation-model-cloud/overview',
       '/v1/model-training-platform/overview',
@@ -181,12 +181,12 @@ describe('Foundation Model Cloud Production Audit (VL-238)', () => {
       '/v1/model-registry/versions',
     ];
     for (const path of paths) {
-      const res = await request(app.getHttpServer()).get(path);
+      const res = await request(app.getHttpServer).get(path);
       expect([401, 403, 503]).toContain(res.status);
     }
   });
 
-  it('exercises Training / Evaluation / Registry operational paths', async () => {
+  it('exercises Training / Evaluation / Registry operational paths', async  => {
     const org = await seedOrg(prisma, 'fmc');
     const session = {
       userId: org.memberships[0].userId,
@@ -222,7 +222,7 @@ describe('Foundation Model Cloud Production Audit (VL-238)', () => {
     expect(deploy.handoff.console).toBe('/model-serving');
   });
 
-  it('exposes FMC GraphQL façades', async () => {
+  it('exposes FMC GraphQL façades', async  => {
     const queries = [
       '{ foundationModelCloudProducts { id name status } }',
       '{ modelTrainingMethods { id name launchable } }',
@@ -230,18 +230,18 @@ describe('Foundation Model Cloud Production Audit (VL-238)', () => {
       '{ modelRegistryCapabilities { id name status } }',
     ];
     for (const query of queries) {
-      const res = await request(app.getHttpServer()).post('/graphql').send({ query }).expect(200);
-      expect(res.body.errors).toBeUndefined();
+      const res = await request(app.getHttpServer).post('/graphql').send({ query }).expect(200);
+      expect(res.body.errors).toBeUndefined;
     }
   });
 
-  it('keeps serving/monitoring operational via existing surfaces', async () => {
-    const serving = await request(app.getHttpServer())
+  it('keeps serving/monitoring operational via existing surfaces', async  => {
+    const serving = await request(app.getHttpServer)
       .get('/v1/model-serving/engine')
       .expect(200);
-    expect(serving.body).toBeTruthy();
+    expect(serving.body).toBeTruthy;
 
-    const monitoring = await request(app.getHttpServer())
+    const monitoring = await request(app.getHttpServer)
       .get('/v1/foundation-model-cloud/monitoring')
       .expect(200);
     expect(monitoring.body.mode).toBe('foundation');

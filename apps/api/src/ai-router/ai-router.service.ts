@@ -23,7 +23,7 @@ type AuthCtx = {
   ip?: string;
 };
 
-@Injectable()
+@Injectable
 export class AiRouterService {
   constructor(
     private readonly prisma: PrismaService,
@@ -31,39 +31,39 @@ export class AiRouterService {
     private readonly cost: CostOptimizationService,
   ) {}
 
-  engine() {
+  engine {
     return {
-      ...aiRouterCatalog(),
-      mode: aiRouterMode(),
-      defaults: defaultRouterPolicy(),
+      ...aiRouterCatalog,
+      mode: aiRouterMode,
+      defaults: defaultRouterPolicy,
       spendSafety: {
         hardSpendCeilingsRequired: true,
         enforcesSpendCaps: true,
         costOptimizationApi: 'GET /v1/cost-optimization/engine',
         note:
-          'Resolve gates via Cost Optimization (VL-211) hard daily/monthly caps (402 when over). Router honesty.enforcesSpendCaps remains false (ledger lives in Cost Opt). GPU ceilings remain on GPU Platform (VL-205).',
+          'Resolve gates via Cost Optimization hard daily/monthly caps (402 when over). Router honesty.enforcesSpendCaps remains false (ledger lives in Cost Opt). GPU ceilings remain on GPU Platform.',
       },
     };
   }
 
-  features() {
+  features {
     return {
-      features: routerFeatureRoutes().map((r) => ({
+      features: routerFeatureRoutes.map((r) => ({
         feature: r.feature,
         gatewayApi: r.gatewayApi,
         candidateCount: r.candidates.length,
         streamingCapable: STREAMING_FEATURES.has(r.feature),
       })),
-      honesty: aiRouterCatalog().honesty,
+      honesty: aiRouterCatalog.honesty,
     };
   }
 
-  providers() {
+  providers {
     const byProvider = new Map<
       string,
       { providerId: string; features: string[]; candidates: number }
-    >();
-    for (const route of routerFeatureRoutes()) {
+    >;
+    for (const route of routerFeatureRoutes) {
       for (const c of hydrateCandidates(route.candidates, route.feature)) {
         const cur = byProvider.get(c.providerId) ?? {
           providerId: c.providerId,
@@ -76,9 +76,9 @@ export class AiRouterService {
       }
     }
     return {
-      providers: [...byProvider.values()],
+      providers: [...byProvider.values],
       note: 'Gateway provider IDs — not a new vendor mesh.',
-      honesty: aiRouterCatalog().honesty,
+      honesty: aiRouterCatalog.honesty,
     };
   }
 
@@ -91,7 +91,7 @@ export class AiRouterService {
         },
       },
     });
-    const defaults = defaultRouterPolicy();
+    const defaults = defaultRouterPolicy;
     if (!row) {
       return {
         policy: {
@@ -116,7 +116,7 @@ export class AiRouterService {
         streamingPreferred: row.streamingPreferred,
         preferProvider: row.preferProvider || null,
         persisted: true,
-        updatedAt: row.updatedAt.toISOString(),
+        updatedAt: row.updatedAt.toISOString,
       },
       note: 'Org/workspace-scoped router policy.',
     };
@@ -133,7 +133,7 @@ export class AiRouterService {
       preferProvider?: string | null;
     },
   ) {
-    if (aiRouterMode() === 'disabled') {
+    if (aiRouterMode === 'disabled') {
       throw new ApiException(
         'ai_router_disabled',
         'AI Router mode is disabled (LUGEMI_AI_ROUTER_MODE=disabled).',
@@ -142,7 +142,7 @@ export class AiRouterService {
     }
     const optimize = this.normalizeOptimize(input.optimize ?? 'balanced');
     const maxRetries = Math.min(3, Math.max(0, Math.floor(input.maxRetries ?? 1)));
-    const preferRegion = (input.preferRegion ?? 'af-south-1').trim().slice(0, 64) || 'af-south-1';
+    const preferRegion = (input.preferRegion ?? 'af-south-1').trim.slice(0, 64) || 'af-south-1';
     const row = await this.prisma.aiRouterPolicy.upsert({
       where: {
         organizationId_workspaceId: {
@@ -196,7 +196,7 @@ export class AiRouterService {
       dryRun?: boolean;
     },
   ) {
-    if (aiRouterMode() === 'disabled') {
+    if (aiRouterMode === 'disabled') {
       throw new ApiException(
         'ai_router_disabled',
         'AI Router mode is disabled',
@@ -204,7 +204,7 @@ export class AiRouterService {
       );
     }
 
-    const feature = (input.feature ?? 'chat').trim().toLowerCase() as RouterFeature;
+    const feature = (input.feature ?? 'chat').trim.toLowerCase as RouterFeature;
     if (!ROUTER_FEATURES.includes(feature)) {
       throw new ApiException(
         'validation_error',
@@ -216,18 +216,18 @@ export class AiRouterService {
     const policyRes = await this.getPolicy(input);
     const policy = policyRes.policy;
     const optimize = this.normalizeOptimize(input.optimize ?? policy.optimize);
-    const preferRegion = (input.preferRegion ?? policy.preferRegion).trim();
+    const preferRegion = (input.preferRegion ?? policy.preferRegion).trim;
     const allowFallback = input.allowFallback ?? policy.allowFallback;
     const preferProvider = (
       input.preferProvider ??
       policy.preferProvider ??
       ''
     )
-      .trim()
-      .toLowerCase();
+      .trim
+      .toLowerCase;
     const preferConfiguredOnly = policy.preferConfiguredOnly !== false;
 
-    const route = routerFeatureRoutes().find((r) => r.feature === feature)!;
+    const route = routerFeatureRoutes.find((r) => r.feature === feature)!;
     let candidates = hydrateCandidates(route.candidates, feature);
 
     // Blend Model Serving canary weights when present.
@@ -276,7 +276,7 @@ export class AiRouterService {
       ...c,
     }));
 
-    // Hard spend gate via Cost Optimization (VL-211) — refuse when already over caps.
+    // Hard spend gate via Cost Optimization — refuse when already over caps.
     const spendGate = await this.cost.assertWithinCaps({
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,
@@ -307,19 +307,19 @@ export class AiRouterService {
         requested: Boolean(input.streaming ?? policy.streamingPreferred),
         capable: STREAMING_FEATURES.has(feature),
         note: STREAMING_FEATURES.has(feature)
-          ? 'Feature supports SSE where wired; dedicated Streaming Runtime is VL-208.'
+          ? 'Feature supports SSE where wired; dedicated Streaming Runtime is .'
           : 'Feature is request/response today.',
       },
       caching: {
         enabled: false,
-        note: 'Opt-in via Intelligent Cache (VL-210) — resolve does not auto-cache.',
+        note: 'Opt-in via Intelligent Cache — resolve does not auto-cache.',
         api: 'GET /v1/intelligent-cache/engine',
       },
       spendGate: {
         allowed: spendGate.allowed,
         enforce: spendGate.enforce,
         api: 'GET /v1/cost-optimization/engine',
-        note: 'Hard caps enforced by Cost Optimization (VL-211).',
+        note: 'Hard caps enforced by Cost Optimization.',
       },
       loadBalancing: {
         strategy: 'weighted_static',
@@ -331,8 +331,8 @@ export class AiRouterService {
         multiRegionMesh: false,
       },
       dryRun: input.dryRun !== false,
-      honesty: aiRouterCatalog().honesty,
-      note: 'Dry-run route plan — does not invoke the provider. Call Gateway APIs to execute. Spend caps enforced via VL-211.',
+      honesty: aiRouterCatalog.honesty,
+      note: 'Dry-run route plan — does not invoke the provider. Call Gateway APIs to execute. Spend caps enforced via existing.',
     };
 
     const row = await this.prisma.aiRouterDecision.create({
@@ -371,7 +371,7 @@ export class AiRouterService {
     return {
       decisionId: row.id,
       ...decision,
-      createdAt: row.createdAt.toISOString(),
+      createdAt: row.createdAt.toISOString,
     };
   }
 
@@ -380,7 +380,7 @@ export class AiRouterService {
       where: {
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
-        ...(input.feature ? { feature: input.feature.toLowerCase() } : {}),
+        ...(input.feature ? { feature: input.feature.toLowerCase } : {}),
       },
       orderBy: { createdAt: 'desc' },
       take: 50,
@@ -392,14 +392,14 @@ export class AiRouterService {
         optimize: r.optimize,
         selectedProvider: r.selectedProvider,
         selectedModel: r.selectedModel,
-        createdAt: r.createdAt.toISOString(),
+        createdAt: r.createdAt.toISOString,
       })),
       note: 'Recent dry-run route decisions.',
     };
   }
 
   async analytics(input: AuthCtx) {
-    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
     const [total, byFeature, audits] = await Promise.all([
       this.prisma.aiRouterDecision.count({
         where: {
@@ -435,19 +435,19 @@ export class AiRouterService {
         count: r._count,
       })),
       auditsLast30d: audits,
-      note: 'AI Router analytics (VL-207). ≠ VL-212 AI Runtime Analytics.',
+      note: 'AI Router analytics. ≠ AI Runtime Analytics.',
     };
   }
 
   async monitoring(input: AuthCtx) {
     const [engine, analytics, policy] = await Promise.all([
-      Promise.resolve(this.engine()),
+      Promise.resolve(this.engine),
       this.analytics(input),
       this.getPolicy(input),
     ]);
     return {
-      generatedAt: new Date().toISOString(),
-      mode: aiRouterMode(),
+      generatedAt: new Date.toISOString,
+      mode: aiRouterMode,
       policy: policy.policy,
       analytics,
       honesty: engine.honesty,
@@ -455,12 +455,12 @@ export class AiRouterService {
       deferred: engine.capabilities
         .filter((c) => c.status === 'deferred')
         .map((c) => c.id),
-      note: 'AI Router monitoring snapshot (VL-207).',
+      note: 'AI Router monitoring snapshot.',
     };
   }
 
   private normalizeOptimize(raw: string): RouterOptimize {
-    const s = raw.toLowerCase();
+    const s = raw.toLowerCase;
     if (s === 'latency' || s === 'cost' || s === 'balanced' || s === 'quality') return s;
     throw new ApiException(
       'validation_error',

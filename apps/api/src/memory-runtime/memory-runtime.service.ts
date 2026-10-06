@@ -22,7 +22,7 @@ type AuthCtx = {
   ip?: string;
 };
 
-@Injectable()
+@Injectable
 export class MemoryRuntimeService {
   constructor(
     private readonly prisma: PrismaService,
@@ -30,31 +30,31 @@ export class MemoryRuntimeService {
     private readonly audit: AuditService,
   ) {}
 
-  engine() {
+  engine {
     return {
-      ...memoryRuntimeCatalog(),
-      ceilings: memoryRuntimeCeilings(),
-      mode: memoryRuntimeMode(),
+      ...memoryRuntimeCatalog,
+      ceilings: memoryRuntimeCeilings,
+      mode: memoryRuntimeMode,
       safety: {
         agentActionBoundariesRequired: true,
         note:
-          'Kernel memory is org/workspace-scoped. Agent memory writes require agentId; Agent Runtime VL-219 writes via /v1/agent-runtime/memory.',
+          'Kernel memory is org/workspace-scoped. Agent memory writes require agentId; Agent Runtime writes via /v1/agent-runtime/memory.',
       },
     };
   }
 
-  scopes() {
+  scopes {
     return {
       scopes: KERNEL_MEMORY_SCOPES.map((id) => ({ id })),
       kinds: KERNEL_MEMORY_KINDS.map((id) => ({ id })),
       layer: KERNEL_MEMORY_LAYER,
-      note: 'Memory Runtime scopes map onto VL-183 Memory Cloud storage.',
-      honesty: memoryRuntimeCatalog().honesty,
+      note: 'Memory Runtime scopes map onto Memory Cloud storage.',
+      honesty: memoryRuntimeCatalog.honesty,
     };
   }
 
-  ceilings() {
-    return memoryRuntimeCeilings();
+  ceilings {
+    return memoryRuntimeCeilings;
   }
 
   async put(
@@ -71,15 +71,15 @@ export class MemoryRuntimeService {
       metadata?: Record<string, unknown>;
     },
   ) {
-    this.assertEnabled();
+    this.assertEnabled;
     const scope = this.assertScope(input.scope ?? 'workspace');
     const kind = this.assertKind(input.kind ?? 'short_term');
-    let content = (input.content ?? '').trim();
+    let content = (input.content ?? '').trim;
     if (!content) {
       throw new ApiException('validation_error', 'content is required', HttpStatus.BAD_REQUEST);
     }
 
-    const ceilings = memoryRuntimeCeilings();
+    const ceilings = memoryRuntimeCeilings;
     await this.purgeExpired(input);
     await this.enforceCeiling(input, ceilings.maxEntriesPerWorkspace);
 
@@ -138,7 +138,7 @@ export class MemoryRuntimeService {
   }
 
   async list(input: AuthCtx & { scope?: string; kind?: string; limit?: number }) {
-    this.assertEnabled();
+    this.assertEnabled;
     await this.purgeExpired(input);
     const take = Math.min(100, Math.max(1, input.limit ?? 50));
     const rows = await this.prisma.memoryRecord.findMany({
@@ -156,8 +156,8 @@ export class MemoryRuntimeService {
   }
 
   async search(input: AuthCtx & { query?: string; scope?: string; kind?: string; limit?: number }) {
-    this.assertEnabled();
-    const q = (input.query ?? '').trim();
+    this.assertEnabled;
+    const q = (input.query ?? '').trim;
     if (!q) {
       throw new ApiException('validation_error', 'query is required', HttpStatus.BAD_REQUEST);
     }
@@ -180,9 +180,9 @@ export class MemoryRuntimeService {
   }
 
   async revise(input: AuthCtx & { id?: string; content?: string }) {
-    this.assertEnabled();
-    const id = (input.id ?? '').trim();
-    const content = (input.content ?? '').trim();
+    this.assertEnabled;
+    const id = (input.id ?? '').trim;
+    const content = (input.content ?? '').trim;
     if (!id || !content) {
       throw new ApiException(
         'validation_error',
@@ -204,8 +204,8 @@ export class MemoryRuntimeService {
   }
 
   async compress(input: AuthCtx & { id?: string; maxChars?: number }) {
-    this.assertEnabled();
-    const id = (input.id ?? '').trim();
+    this.assertEnabled;
+    const id = (input.id ?? '').trim;
     if (!id) {
       throw new ApiException('validation_error', 'id is required', HttpStatus.BAD_REQUEST);
     }
@@ -215,7 +215,7 @@ export class MemoryRuntimeService {
     const compressed =
       raw.length <= maxChars
         ? raw
-        : `${raw.slice(0, Math.max(0, maxChars - 16)).trim()}…[compressed]`;
+        : `${raw.slice(0, Math.max(0, maxChars - 16)).trim}…[compressed]`;
     const revised = await this.memoryCloud.revise({
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,
@@ -241,9 +241,9 @@ export class MemoryRuntimeService {
   }
 
   async evict(input: AuthCtx & { policy?: string }) {
-    this.assertEnabled();
-    const policy = (input.policy ?? 'ttl_and_ceiling').toLowerCase();
-    const ceilings = memoryRuntimeCeilings();
+    this.assertEnabled;
+    const policy = (input.policy ?? 'ttl_and_ceiling').toLowerCase;
+    const ceilings = memoryRuntimeCeilings;
     const purged = await this.purgeExpired(input);
 
     const active = await this.prisma.memoryRecord.findMany({
@@ -262,7 +262,7 @@ export class MemoryRuntimeService {
           organizationId: input.organizationId,
           workspaceId: input.workspaceId,
         },
-        data: { deletedAt: new Date() },
+        data: { deletedAt: new Date },
       });
       deletedForCeiling = res.count;
     }
@@ -286,8 +286,8 @@ export class MemoryRuntimeService {
   }
 
   async sync(input: AuthCtx) {
-    this.assertEnabled();
-    const stamp = new Date().toISOString();
+    this.assertEnabled;
+    const stamp = new Date.toISOString;
     const rows = await this.prisma.memoryRecord.findMany({
       where: this.kernelWhere(input),
       take: 500,
@@ -312,7 +312,7 @@ export class MemoryRuntimeService {
   }
 
   async createSnapshot(input: AuthCtx & { label?: string }) {
-    this.assertEnabled();
+    this.assertEnabled;
     const rows = await this.prisma.memoryRecord.findMany({
       where: this.kernelWhere(input),
       orderBy: { updatedAt: 'desc' },
@@ -320,7 +320,7 @@ export class MemoryRuntimeService {
     });
     const payload = {
       label: (input.label ?? 'snapshot').slice(0, 64),
-      capturedAt: new Date().toISOString(),
+      capturedAt: new Date.toISOString,
       count: rows.length,
       memories: rows.map((r) => this.serialize(r)),
     };
@@ -331,7 +331,7 @@ export class MemoryRuntimeService {
       ip: input.ip,
       scope: 'workspace',
       kind: 'long_term',
-      key: `kernel:snapshot:${Date.now()}`,
+      key: `kernel:snapshot:${Date.now}`,
       content: JSON.stringify(payload),
       metadata: {
         layer: KERNEL_MEMORY_LAYER,
@@ -347,7 +347,7 @@ export class MemoryRuntimeService {
   }
 
   async listSnapshots(input: AuthCtx) {
-    this.assertEnabled();
+    this.assertEnabled;
     const rows = await this.prisma.memoryRecord.findMany({
       where: this.kernelWhere(input, {
         // filter snapshot in code via metadata
@@ -360,14 +360,14 @@ export class MemoryRuntimeService {
       .map((r) => ({
         id: r.id,
         label: String(this.metaOf(r).label ?? 'snapshot'),
-        createdAt: r.createdAt.toISOString(),
+        createdAt: r.createdAt.toISOString,
         key: r.key,
       }));
     return { snapshots, note: 'Kernel memory snapshots.' };
   }
 
   async analytics(input: AuthCtx) {
-    this.assertEnabled();
+    this.assertEnabled;
     const rows = await this.prisma.memoryRecord.findMany({
       where: this.kernelWhere(input),
       select: { scope: true, kind: true },
@@ -383,14 +383,14 @@ export class MemoryRuntimeService {
       total: rows.length,
       byScope,
       byKind,
-      ceilings: memoryRuntimeCeilings(),
-      honesty: memoryRuntimeCatalog().honesty,
+      ceilings: memoryRuntimeCeilings,
+      honesty: memoryRuntimeCatalog.honesty,
     };
   }
 
   async monitoring(input: AuthCtx) {
     const [engine, analytics] = await Promise.all([
-      Promise.resolve(this.engine()),
+      Promise.resolve(this.engine),
       this.analytics(input),
     ]);
     return {
@@ -402,8 +402,8 @@ export class MemoryRuntimeService {
     };
   }
 
-  private assertEnabled() {
-    if (memoryRuntimeMode() === 'disabled') {
+  private assertEnabled {
+    if (memoryRuntimeMode === 'disabled') {
       throw new ApiException(
         'memory_runtime_disabled',
         'Memory Runtime mode is disabled (LUGEMI_MEMORY_RUNTIME_MODE=disabled).',
@@ -413,7 +413,7 @@ export class MemoryRuntimeService {
   }
 
   private assertScope(raw: string): KernelMemoryScope {
-    const s = raw.trim().toLowerCase() as KernelMemoryScope;
+    const s = raw.trim.toLowerCase as KernelMemoryScope;
     if (!(KERNEL_MEMORY_SCOPES as readonly string[]).includes(s)) {
       throw new ApiException(
         'validation_error',
@@ -425,7 +425,7 @@ export class MemoryRuntimeService {
   }
 
   private assertKind(raw: string): KernelMemoryKind {
-    const k = raw.trim().toLowerCase() as KernelMemoryKind;
+    const k = raw.trim.toLowerCase as KernelMemoryKind;
     if (!(KERNEL_MEMORY_KINDS as readonly string[]).includes(k)) {
       throw new ApiException(
         'validation_error',
@@ -450,7 +450,7 @@ export class MemoryRuntimeService {
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,
       deletedAt: null,
-      OR: [{ expiresAt: null }, { expiresAt: { gt: new Date() } }],
+      OR: [{ expiresAt: null }, { expiresAt: { gt: new Date } }],
       metadata: { path: ['layer'], equals: KERNEL_MEMORY_LAYER },
       ...extra,
     };
@@ -514,9 +514,9 @@ export class MemoryRuntimeService {
       agentId: row.agentId,
       conversationId: row.conversationId,
       subjectUserId: row.subjectUserId,
-      expiresAt: row.expiresAt?.toISOString() ?? null,
-      createdAt: row.createdAt.toISOString(),
-      updatedAt: row.updatedAt.toISOString(),
+      expiresAt: row.expiresAt?.toISOString ?? null,
+      createdAt: row.createdAt.toISOString,
+      updatedAt: row.updatedAt.toISOString,
     };
   }
 
@@ -526,10 +526,10 @@ export class MemoryRuntimeService {
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
         deletedAt: null,
-        expiresAt: { lte: new Date() },
+        expiresAt: { lte: new Date },
         metadata: { path: ['layer'], equals: KERNEL_MEMORY_LAYER },
       },
-      data: { deletedAt: new Date() },
+      data: { deletedAt: new Date },
     });
     return res.count;
   }

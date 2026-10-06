@@ -18,32 +18,32 @@ type ApiKeyRow = {
   createdAt: string;
 };
 
-export function KeysClient() {
-  const { getToken, isLoaded } = useAuth();
+export function KeysClient {
+  const { getToken, isLoaded } = useAuth;
   const [keys, setKeys] = useState<ApiKeyRow[]>([]);
   const [name, setName] = useState('Default');
   const [environment, setEnvironment] = useState<'live' | 'test'>('live');
   const [secretOnce, setSecretOnce] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) return;
     const rows = await apiFetch<ApiKeyRow[]>('/v1/api-keys', { token });
     setKeys(rows);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
   async function onCreate(event: FormEvent) {
-    event.preventDefault();
+    event.preventDefault;
     setError(null);
     setSecretOnce(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const created = await apiFetch<{ secret: string }>('/v1/api-keys', {
         method: 'POST',
@@ -51,7 +51,7 @@ export function KeysClient() {
         body: JSON.stringify({ name, environment }),
       });
       setSecretOnce(created.secret);
-      await load();
+      await load;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Create failed');
     }
@@ -60,10 +60,10 @@ export function KeysClient() {
   async function onRevoke(id: string) {
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       await apiFetch(`/v1/api-keys/${id}`, { method: 'DELETE', token });
-      await load();
+      await load;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Revoke failed');
     }
@@ -158,11 +158,11 @@ export function KeysClient() {
                 </div>
                 <div className="vl-code" style={{ color: 'var(--muted)', marginTop: '0.35rem' }}>
                   {key.prefix}…{key.revokedAt ? ' · revoked' : ''}
-                  {key.lastUsedAt ? ` · last used ${new Date(key.lastUsedAt).toLocaleString()}` : ' · never used'}
+                  {key.lastUsedAt ? ` · last used ${new Date(key.lastUsedAt).toLocaleString}` : ' · never used'}
                 </div>
               </div>
               {!key.revokedAt ? (
-                <button type="button" className="vl-btn vl-btn-danger" onClick={() => void onRevoke(key.id)}>
+                <button type="button" className="vl-btn vl-btn-danger" onClick={ => void onRevoke(key.id)}>
                   Revoke
                 </button>
               ) : null}

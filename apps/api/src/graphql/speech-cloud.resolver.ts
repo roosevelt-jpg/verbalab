@@ -3,12 +3,12 @@ import { QueryBus } from '@nestjs/cqrs';
 import { ListSpeechProductsQuery } from '../speech-cloud/application/messages';
 import { GqlSpeechProduct } from './gql.types';
 
-@Resolver()
+@Resolver
 export class SpeechCloudGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query(() => [GqlSpeechProduct], { name: 'speechProducts' })
-  speechProducts(): Promise<GqlSpeechProduct[]> {
-    return this.queries.execute(new ListSpeechProductsQuery());
+  @Query( => [GqlSpeechProduct], { name: 'speechProducts' })
+  speechProducts: Promise<GqlSpeechProduct[]> {
+    return this.queries.execute(new ListSpeechProductsQuery);
   }
 }

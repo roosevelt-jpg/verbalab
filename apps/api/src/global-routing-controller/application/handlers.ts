@@ -17,8 +17,8 @@ export class GetGlobalRoutingControllerEngineHandler
     private readonly catalog: GlobalRoutingControllerCatalogPort,
   ) {}
 
-  execute(): Promise<GlobalRoutingControllerEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<GlobalRoutingControllerEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListGlobalRoutingControllerProductsHandler
     private readonly catalog: GlobalRoutingControllerCatalogPort,
   ) {}
 
-  execute(): Promise<GlobalRoutingControllerProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<GlobalRoutingControllerProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

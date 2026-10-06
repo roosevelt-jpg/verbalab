@@ -9,10 +9,10 @@ export type DomainTerm = {
 };
 
 /**
- * Library Phase 132 → Healthcare Intelligence (VL-265).
+ * Library Phase 132 → Healthcare Intelligence.
  * Domain vocabulary + safety flags for African Intelligence Cloud.
  */
-export function healthcareIntelligenceEngineCatalog() {
+export function healthcareIntelligenceEngineCatalog {
   const terms: DomainTerm[] = [
       {
         id: 'health-info',
@@ -46,7 +46,7 @@ export function healthcareIntelligenceEngineCatalog() {
   return {
     product: 'Lugemi Healthcare Intelligence',
     note:
-      'Healthcare Intelligence (VL-265). Domain terms/services catalog for African Intelligence Cloud with domain-specific safety flags. Extends Knowledge/Intelligence clouds — not a vertical operations OS.',
+      'Healthcare Intelligence. Domain terms/services catalog for African Intelligence Cloud with domain-specific safety flags. Extends Knowledge/Intelligence clouds — not a vertical operations OS.',
     capabilities: terms,
     terms,
     architecture: {

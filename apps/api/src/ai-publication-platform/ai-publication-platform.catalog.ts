@@ -10,10 +10,10 @@ export type PublicationRecord = {
 };
 
 /**
- * Library Phase 143 → AI Publication Platform (VL-276).
+ * Library Phase 143 → AI Publication Platform.
  * doiRegistryOs=false — DOI field optional/stub honesty.
  */
-export function aiPublicationPlatformEngineCatalog() {
+export function aiPublicationPlatformEngineCatalog {
   const publications: PublicationRecord[] = [
     {
       id: 'pub-paper-001',
@@ -59,7 +59,7 @@ export function aiPublicationPlatformEngineCatalog() {
   return {
     product: 'Lugemi AI Publication Platform',
     note:
-      'AI Publication Platform (VL-276). Papers/reports/datasets/benchmarks/reproducibility packages with versioning. doiRegistryOs=false — DOI is optional stub, not a DOI registry OS.',
+      'AI Publication Platform. Papers/reports/datasets/benchmarks/reproducibility packages with versioning. doiRegistryOs=false — DOI is optional stub, not a DOI registry OS.',
     publications,
     capabilities: [
       { id: 'papers', name: 'Research papers', status: 'shipped' as PublicationStatus, api: 'GET /v1/ai-publication-platform/publications', notes: 'Paper tracking.' },

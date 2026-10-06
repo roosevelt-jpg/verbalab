@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetAgriculturalIntelligenceEngineQuery } from '../agricultural-intelligence/application/messages';
 import { GqlAgriculturalIntelligenceEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class AgriculturalIntelligenceGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query(() => GqlAgriculturalIntelligenceEngine, { name: 'agriculturalIntelligenceEngine' })
-  async agriculturalIntelligenceEngine(): Promise<GqlAgriculturalIntelligenceEngine> {
-    const catalog = await this.queries.execute(new GetAgriculturalIntelligenceEngineQuery());
+  @Query( => GqlAgriculturalIntelligenceEngine, { name: 'agriculturalIntelligenceEngine' })
+  async agriculturalIntelligenceEngine: Promise<GqlAgriculturalIntelligenceEngine> {
+    const catalog = await this.queries.execute(new GetAgriculturalIntelligenceEngineQuery);
     return {
       product: catalog.product,
       note: catalog.note,

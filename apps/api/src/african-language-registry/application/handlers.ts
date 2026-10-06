@@ -17,8 +17,8 @@ export class GetAfricanLanguageRegistryEngineHandler
     private readonly catalog: AfricanLanguageRegistryCatalogPort,
   ) {}
 
-  execute(): Promise<AfricanLanguageRegistryEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<AfricanLanguageRegistryEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListAfricanLanguageRegistryProductsHandler
     private readonly catalog: AfricanLanguageRegistryCatalogPort,
   ) {}
 
-  execute(): Promise<AfricanLanguageRegistryProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<AfricanLanguageRegistryProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

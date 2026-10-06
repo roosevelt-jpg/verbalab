@@ -5,7 +5,7 @@ import { MemoryFabricService } from '../memory-fabric/memory-fabric.service';
 import { KnowledgeMemoryService } from '../knowledge-memory/knowledge-memory.service';
 import { AiKernelService } from '../ai-kernel/ai-kernel.service';
 
-@Injectable()
+@Injectable
 export class AiMemoryOperatingSystemService {
   constructor(
     private readonly memoryRuntime: MemoryRuntimeService,
@@ -14,42 +14,42 @@ export class AiMemoryOperatingSystemService {
     private readonly aiKernel: AiKernelService
   ) {}
 
-  engine() {
-    return aiMemoryOperatingSystemEngineCatalog();
+  engine {
+    return aiMemoryOperatingSystemEngineCatalog;
   }
 
   /** Route/execute façade: returns upstream endpoint + live status from injected Kernel/Fabric/Data Plane services. */
   route(capability?: string) {
-    const catalog = this.engine();
-    const q = (capability ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (capability ?? '').trim.toLowerCase;
     const capabilities = catalog.capabilities.filter((c) => {
       if (!q) return true;
-      return c.id.includes(q) || c.name.toLowerCase().includes(q);
+      return c.id.includes(q) || c.name.toLowerCase.includes(q);
     });
     const upstreamStatus = [
       {
         module: 'memory-runtime',
         method: 'engine',
         status: 'reachable',
-        upstream: this.memoryRuntime.engine(),
+        upstream: this.memoryRuntime.engine,
       },
       {
         module: 'memory-fabric',
         method: 'products',
         status: 'reachable',
-        upstream: this.memoryFabric.products(),
+        upstream: this.memoryFabric.products,
       },
       {
         module: 'knowledge-memory',
         method: 'engine',
         status: 'reachable',
-        upstream: this.knowledgeMemory.engine(),
+        upstream: this.knowledgeMemory.engine,
       },
       {
         module: 'ai-kernel',
         method: 'products',
         status: 'reachable',
-        upstream: this.aiKernel.products(),
+        upstream: this.aiKernel.products,
       }
     ];
     return {
@@ -71,11 +71,11 @@ export class AiMemoryOperatingSystemService {
   }
 
   list(query?: string) {
-    const catalog = this.engine();
-    const q = (query ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (query ?? '').trim.toLowerCase;
     const rows = catalog.routes.filter((row) => {
       if (!q) return true;
-      return JSON.stringify(row).toLowerCase().includes(q);
+      return JSON.stringify(row).toLowerCase.includes(q);
     });
     return {
       routes: rows,
@@ -92,8 +92,8 @@ export class AiMemoryOperatingSystemService {
     return this.list(query);
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'ai-memory-operating-system',
       count: catalog.routes.length,
@@ -102,7 +102,7 @@ export class AiMemoryOperatingSystemService {
       routesTo: catalog.routesTo,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'AiMemoryOperatingSystem monitoring snapshot (VL-340).',
+      note: 'AiMemoryOperatingSystem monitoring snapshot.',
     };
   }
 }

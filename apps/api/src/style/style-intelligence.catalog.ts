@@ -8,8 +8,8 @@ export type StyleCapability = {
   notes: string;
 };
 
-/** Library Phase 11 → Lugemi Style Intelligence (VL-143). */
-export function styleIntelligenceCatalog() {
+/** Library Phase 11 → Lugemi Style Intelligence. */
+export function styleIntelligenceCatalog {
   return {
     product: 'Style Intelligence',
     note:
@@ -27,7 +27,7 @@ export function styleIntelligenceCatalog() {
         name: 'Professional',
         status: 'shipped',
         api: 'POST /v1/style/rewrite profile=professional',
-        notes: 'Business formality (VL-134).',
+        notes: 'Business formality.',
       },
       {
         id: 'academic',

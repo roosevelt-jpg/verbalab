@@ -17,8 +17,8 @@ export class GetSpeechRuntimeEngineHandler
     private readonly catalog: SpeechRuntimeCatalogPort,
   ) {}
 
-  execute(): Promise<SpeechRuntimeEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<SpeechRuntimeEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListSpeechRuntimeProductsHandler
     private readonly catalog: SpeechRuntimeCatalogPort,
   ) {}
 
-  execute(): Promise<SpeechRuntimeProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<SpeechRuntimeProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

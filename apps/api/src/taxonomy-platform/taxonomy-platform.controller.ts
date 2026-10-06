@@ -27,18 +27,18 @@ export class TaxonomyPlatformController {
   constructor(private readonly taxonomy: TaxonomyPlatformService) {}
 
   @Get('engine')
-  engine() {
-    return this.taxonomy.engine();
+  engine {
+    return this.taxonomy.engine;
   }
 
   @Get('content-types')
-  contentTypes() {
-    return this.taxonomy.contentTypes();
+  contentTypes {
+    return this.taxonomy.contentTypes;
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.taxonomy.analytics(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -47,7 +47,7 @@ export class TaxonomyPlatformController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req() req: AuthedReq) {
+  monitoring(@Req req: AuthedReq) {
     return this.taxonomy.monitoring(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -56,7 +56,7 @@ export class TaxonomyPlatformController {
 
   @Get('trees')
   @UseGuards(TranslateAuthGuard)
-  trees(@Req() req: AuthedReq, @Query('kind') kind?: string) {
+  trees(@Req req: AuthedReq, @Query('kind') kind?: string) {
     return this.taxonomy.trees({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -67,7 +67,7 @@ export class TaxonomyPlatformController {
   @Get('terms')
   @UseGuards(TranslateAuthGuard)
   list(
-    @Req() req: AuthedReq,
+    @Req req: AuthedReq,
     @Query('kind') kind?: string,
     @Query('parentId') parentId?: string,
     @Query('root') root?: string,
@@ -86,7 +86,7 @@ export class TaxonomyPlatformController {
 
   @Get('terms/:id')
   @UseGuards(TranslateAuthGuard)
-  get(@Req() req: AuthedReq, @Param('id') id: string) {
+  get(@Req req: AuthedReq, @Param('id') id: string) {
     return this.taxonomy.getTerm({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -96,7 +96,7 @@ export class TaxonomyPlatformController {
 
   @Get('terms/:id/children')
   @UseGuards(TranslateAuthGuard)
-  children(@Req() req: AuthedReq, @Param('id') id: string) {
+  children(@Req req: AuthedReq, @Param('id') id: string) {
     return this.taxonomy.children({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -108,8 +108,8 @@ export class TaxonomyPlatformController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(TranslateAuthGuard)
   create(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       name?: string;
       slug?: string;
@@ -131,7 +131,7 @@ export class TaxonomyPlatformController {
 
   @Delete('terms/:id')
   @UseGuards(TranslateAuthGuard)
-  remove(@Req() req: AuthedReq, @Param('id') id: string) {
+  remove(@Req req: AuthedReq, @Param('id') id: string) {
     return this.taxonomy.deleteTerm({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -145,8 +145,8 @@ export class TaxonomyPlatformController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(TranslateAuthGuard)
   assign(
-    @Req() req: AuthedReq,
-    @Body() body: { termId?: string; documentId?: string; syncDocument?: boolean },
+    @Req req: AuthedReq,
+    @Body body: { termId?: string; documentId?: string; syncDocument?: boolean },
   ) {
     return this.taxonomy.assign({
       organizationId: req.translateAuth.organizationId,
@@ -161,8 +161,8 @@ export class TaxonomyPlatformController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   classify(
-    @Req() req: AuthedReq,
-    @Body() body: { documentId?: string; apply?: boolean },
+    @Req req: AuthedReq,
+    @Body body: { documentId?: string; apply?: boolean },
   ) {
     return this.taxonomy.classify({
       organizationId: req.translateAuth.organizationId,

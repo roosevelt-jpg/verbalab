@@ -1,24 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { gitopsPlatformEngineCatalog } from './gitops-platform.catalog';
 
-@Injectable()
+@Injectable
 export class GitopsPlatformService {
-  engine() {
-    return gitopsPlatformEngineCatalog();
+  engine {
+    return gitopsPlatformEngineCatalog;
   }
 
   list(query?: string) {
-    const catalog = this.engine() as {
+    const catalog = this.engine as {
       readiness: Array<Record<string, unknown> & { id: string; notes?: string }>;
       honesty: Record<string, unknown>;
       safety: Record<string, unknown>;
       note: string;
       docs: string;
     };
-    const q = (query ?? '').trim().toLowerCase();
+    const q = (query ?? '').trim.toLowerCase;
     const rows = catalog.readiness.filter((row) => {
       if (!q) return true;
-      return JSON.stringify(row).toLowerCase().includes(q);
+      return JSON.stringify(row).toLowerCase.includes(q);
     });
     return {
       readiness: rows,
@@ -34,14 +34,14 @@ export class GitopsPlatformService {
     return this.list(query);
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'gitops-platform',
       count: (catalog as { readiness: unknown[] }).readiness.length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'GitopsPlatform monitoring snapshot (VL-306).',
+      note: 'GitopsPlatform monitoring snapshot.',
     };
   }
 }

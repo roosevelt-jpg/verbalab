@@ -1,6 +1,6 @@
 import { AFRICA_LANGUAGE_TICKER } from '@/data/africa-language-catalog';
 
-export function LanguageTicker() {
+export function LanguageTicker {
   const items = [...AFRICA_LANGUAGE_TICKER, ...AFRICA_LANGUAGE_TICKER];
 
   return (

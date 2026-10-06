@@ -30,8 +30,8 @@ type Monitoring = {
   note: string;
 };
 
-export function SpeechAnalyticsClient() {
-  const { getToken, isLoaded } = useAuth();
+export function SpeechAnalyticsClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [overview, setOverview] = useState<Overview | null>(null);
   const [monitoring, setMonitoring] = useState<Monitoring | null>(null);
@@ -39,8 +39,8 @@ export function SpeechAnalyticsClient() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(async () => {
-    const token = await getToken();
+  const refresh = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, over, mon] = await Promise.all([
       apiFetch<Engine>('/v1/speech-analytics/engine', { token }),
@@ -52,16 +52,16 @@ export function SpeechAnalyticsClient() {
     setMonitoring(mon);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void refresh().catch((err: Error) => setError(err.message));
+    void refresh.catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
-  async function loadReport() {
+  async function loadReport {
     setLoading(true);
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const body = await apiFetch('/v1/speech-analytics/report', { token });
       setReport(JSON.stringify(body, null, 2));
@@ -135,7 +135,7 @@ export function SpeechAnalyticsClient() {
         ) : null}
 
         <section>
-          <button type="button" disabled={loading} style={primary} onClick={() => void loadReport()}>
+          <button type="button" disabled={loading} style={primary} onClick={ => void loadReport}>
             Load enterprise report
           </button>
           {report ? <pre style={pre}>{report}</pre> : null}

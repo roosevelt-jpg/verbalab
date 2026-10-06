@@ -1,4 +1,4 @@
-/** Application ports for Enterprise Engineering System (VL-344). */
+/** Application ports for Enterprise Engineering System. */
 
 export type EnterpriseEngineeringSystemProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type EnterpriseEngineeringSystemEngineBundle = ReturnType<
 >;
 
 export interface EnterpriseEngineeringSystemCatalogPort {
-  engine(): EnterpriseEngineeringSystemEngineBundle;
-  listProducts(): EnterpriseEngineeringSystemProductRow[];
+  engine: EnterpriseEngineeringSystemEngineBundle;
+  listProducts: EnterpriseEngineeringSystemProductRow[];
 }
 
 export const ENTERPRISE_ENGINEERING_SYSTEM_CATALOG_PORT = Symbol('ENTERPRISE_ENGINEERING_SYSTEM_CATALOG_PORT');

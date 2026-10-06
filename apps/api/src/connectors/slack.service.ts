@@ -15,7 +15,7 @@ export type SlackSlashCommand = {
   command?: string;
 };
 
-@Injectable()
+@Injectable
 export class SlackConnectorService {
   private readonly logger = new Logger(SlackConnectorService.name);
   private client: SlackClient;
@@ -33,7 +33,7 @@ export class SlackConnectorService {
     this.client = client;
   }
 
-  isConfigured(): boolean {
+  isConfigured: boolean {
     return Boolean(process.env.SLACK_SIGNING_SECRET);
   }
 
@@ -72,16 +72,16 @@ export class SlackConnectorService {
   }
 
   parseSlashText(text: string, defaultTarget: string): { target: string; sourceText: string } {
-    const trimmed = text.trim();
+    const trimmed = text.trim;
     if (!trimmed) {
       throw new ApiException(
         'validation_error',
-        'Usage: /lugemi <targetLang> <text>  e.g. /lugemi sw Hello',
+        'Usage: /lugemi <targetLang> <text> e.g. /lugemi sw Hello',
         HttpStatus.BAD_REQUEST,
       );
     }
     const parts = trimmed.split(/\s+/);
-    const maybeTarget = parts[0]!.toLowerCase();
+    const maybeTarget = parts[0]!.toLowerCase;
     if (/^[a-z]{2,3}(-[a-z0-9]+)?$/i.test(maybeTarget) && parts.length >= 2) {
       return { target: maybeTarget, sourceText: parts.slice(1).join(' ') };
     }
@@ -184,7 +184,7 @@ export class SlackConnectorService {
       );
     }
 
-    const teamId = input.teamId.trim();
+    const teamId = input.teamId.trim;
     if (!teamId) {
       throw new ApiException('validation_error', 'teamId is required', HttpStatus.BAD_REQUEST);
     }
@@ -203,13 +203,13 @@ export class SlackConnectorService {
         teamName: input.teamName,
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
-        defaultTargetLang: input.defaultTargetLang?.trim() || 'en',
+        defaultTargetLang: input.defaultTargetLang?.trim || 'en',
       },
       update: {
         teamName: input.teamName,
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
-        defaultTargetLang: input.defaultTargetLang?.trim() || undefined,
+        defaultTargetLang: input.defaultTargetLang?.trim || undefined,
       },
     });
 
@@ -232,7 +232,7 @@ export class SlackConnectorService {
     });
   }
 
-  status() {
+  status {
     return {
       provider: 'slack',
       signingSecretConfigured: Boolean(process.env.SLACK_SIGNING_SECRET),

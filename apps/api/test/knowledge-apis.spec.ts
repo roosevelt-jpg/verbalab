@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_kapis_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_kapis_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,29 +35,29 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Enterprise Knowledge APIs (VL-201)', () => {
+describe('Enterprise Knowledge APIs',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Knowledge APIs honesty (not gRPC/Kafka/SDK-generator OS)', () => {
+  it('documents Knowledge APIs honesty (not gRPC/Kafka/SDK-generator OS)',  => {
     const doc = join(root, 'docs/KNOWLEDGE_APIS.md');
     const adr = join(root, 'docs/adr/0112-enterprise-knowledge-apis.md');
     expect(existsSync(doc)).toBe(true);
@@ -69,8 +69,8 @@ describe('Enterprise Knowledge APIs (VL-201)', () => {
     expect(text).toMatch(/org\/workspace|workspace-scoped/i);
   });
 
-  it('exposes engine with honest flags + public catalogs', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/knowledge-apis/engine').expect(200);
+  it('exposes engine with honest flags + public catalogs', async  => {
+    const res = await request(app.getHttpServer).get('/v1/knowledge-apis/engine').expect(200);
     expect(res.body.product).toContain('Knowledge APIs');
     expect(res.body.honesty.grpcOs).toBe(false);
     expect(res.body.honesty.kafkaEventStreamingOs).toBe(false);
@@ -78,25 +78,25 @@ describe('Enterprise Knowledge APIs (VL-201)', () => {
     expect(res.body.honesty.extendsExistingKnowledgeApis).toBe(true);
     expect(res.body.honesty.orgWorkspaceScoped).toBe(true);
 
-    const gql = await request(app.getHttpServer()).get('/v1/knowledge-apis/graphql').expect(200);
+    const gql = await request(app.getHttpServer).get('/v1/knowledge-apis/graphql').expect(200);
     expect(gql.body.queries.some((q: { name: string }) => q.name === 'enterpriseRagEngine')).toBe(
       true,
     );
 
-    const openapi = await request(app.getHttpServer()).get('/v1/knowledge-apis/openapi').expect(200);
+    const openapi = await request(app.getHttpServer).get('/v1/knowledge-apis/openapi').expect(200);
     expect(openapi.body.document).toBe('/v1/openapi.json');
     expect(openapi.body.knowledgePaths.length).toBeGreaterThan(5);
 
-    const sdk = await request(app.getHttpServer()).get('/v1/knowledge-apis/sdk').expect(200);
+    const sdk = await request(app.getHttpServer).get('/v1/knowledge-apis/sdk').expect(200);
     expect(sdk.body.methods).toContain('knowledgeApisEngine');
     expect(sdk.body.honesty.sdkGeneratorOs).toBe(false);
 
-    const webhooks = await request(app.getHttpServer()).get('/v1/knowledge-apis/webhooks').expect(200);
+    const webhooks = await request(app.getHttpServer).get('/v1/knowledge-apis/webhooks').expect(200);
     expect(webhooks.body.events.length).toBeGreaterThan(0);
     expect(webhooks.body.honesty.kafkaEventStreamingOs).toBe(false);
   });
 
-  it('lists surfaces and streams SSE audit tails', async () => {
+  it('lists surfaces and streams SSE audit tails', async  => {
     const org = await seedOrg(prisma, 'kapis');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -105,7 +105,7 @@ describe('Enterprise Knowledge APIs (VL-201)', () => {
       name: 'kapis-key',
     });
 
-    const surfaces = await request(app.getHttpServer())
+    const surfaces = await request(app.getHttpServer)
       .get('/v1/knowledge-apis/surfaces')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -116,7 +116,7 @@ describe('Enterprise Knowledge APIs (VL-201)', () => {
       surfaces.body.surfaces.some((s: { product: string }) => s.product === 'knowledge-intelligence'),
     ).toBe(true);
 
-    const stream = await request(app.getHttpServer())
+    const stream = await request(app.getHttpServer)
       .get('/v1/knowledge-apis/events/stream')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -125,7 +125,7 @@ describe('Enterprise Knowledge APIs (VL-201)', () => {
     expect(stream.text).toContain('event: done');
     expect(stream.text).toContain('kafkaEventStreamingOs');
 
-    const analytics = await request(app.getHttpServer())
+    const analytics = await request(app.getHttpServer)
       .get('/v1/knowledge-apis/analytics')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -133,8 +133,8 @@ describe('Enterprise Knowledge APIs (VL-201)', () => {
     expect(analytics.body.surfacesViewsLast30d).toBeGreaterThanOrEqual(1);
   });
 
-  it('exposes knowledgeApisEngine via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes knowledgeApisEngine via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
@@ -142,7 +142,7 @@ describe('Enterprise Knowledge APIs (VL-201)', () => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.knowledgeApisEngine.grpcOs).toBe(false);
     expect(res.body.data.knowledgeApisEngine.kafkaEventStreamingOs).toBe(false);
     expect(res.body.data.knowledgeApisEngine.sdkGeneratorOs).toBe(false);

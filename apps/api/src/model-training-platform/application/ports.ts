@@ -1,4 +1,4 @@
-/** Application ports for Model Training Platform (VL-235). */
+/** Application ports for Model Training Platform. */
 
 export type MtpMethodRow = {
   id: string;
@@ -14,8 +14,8 @@ export type MtpEngineBundle = ReturnType<
 >;
 
 export interface ModelTrainingPlatformCatalogPort {
-  engine(): MtpEngineBundle;
-  listMethods(): MtpMethodRow[];
+  engine: MtpEngineBundle;
+  listMethods: MtpMethodRow[];
 }
 
 export const MODEL_TRAINING_PLATFORM_CATALOG_PORT = Symbol(

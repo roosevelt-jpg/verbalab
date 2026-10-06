@@ -1,4 +1,4 @@
-/** Application ports for Embedding Runtime (VL-330). */
+/** Application ports for Embedding Runtime. */
 
 export type EmbeddingRuntimeProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type EmbeddingRuntimeEngineBundle = ReturnType<
 >;
 
 export interface EmbeddingRuntimeCatalogPort {
-  engine(): EmbeddingRuntimeEngineBundle;
-  listProducts(): EmbeddingRuntimeProductRow[];
+  engine: EmbeddingRuntimeEngineBundle;
+  listProducts: EmbeddingRuntimeProductRow[];
 }
 
 export const EMBEDDING_RUNTIME_CATALOG_PORT = Symbol('EMBEDDING_RUNTIME_CATALOG_PORT');

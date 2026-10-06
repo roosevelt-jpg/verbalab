@@ -17,8 +17,8 @@ export class GetWorkflowOperatingSystemEngineHandler
     private readonly catalog: WorkflowOperatingSystemCatalogPort,
   ) {}
 
-  execute(): Promise<WorkflowOperatingSystemEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<WorkflowOperatingSystemEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListWorkflowOperatingSystemProductsHandler
     private readonly catalog: WorkflowOperatingSystemCatalogPort,
   ) {}
 
-  execute(): Promise<WorkflowOperatingSystemProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<WorkflowOperatingSystemProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

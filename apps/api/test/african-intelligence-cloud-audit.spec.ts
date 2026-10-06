@@ -57,7 +57,7 @@ const SHIPPED_PRODUCT_IDS = [
 function walkTsFiles(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory()) {
+    if (name.isDirectory) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       walkTsFiles(p, out);
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -69,23 +69,23 @@ function walkTsFiles(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-describe('African Intelligence Cloud Production Audit (VL-270)', () => {
+describe('African Intelligence Cloud Production Audit',  => {
   let app: INestApplication<App>;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
   }, 120_000);
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('ships audit ADR and report pack', () => {
+  it('ships audit ADR and report pack',  => {
     expect(
       existsSync(join(root, 'docs/adr/0172-african-intelligence-cloud-production-audit.md')),
     ).toBe(true);
@@ -122,7 +122,7 @@ describe('African Intelligence Cloud Production Audit (VL-270)', () => {
     expect(readiness).toMatch(/traditionalKnowledgeConsentRequired|consent/i);
     expect(readiness).toMatch(/notMedicalAdvice|consult/i);
     expect(readiness).toMatch(/Global Intelligence|Rejected/i);
-    expect(readiness).toMatch(/VL-260|Volume 12/i);
+    expect(readiness).toMatch(/|Volume 12/i);
 
     const adr = readFileSync(
       join(root, 'docs/adr/0172-african-intelligence-cloud-production-audit.md'),
@@ -130,10 +130,10 @@ describe('African Intelligence Cloud Production Audit (VL-270)', () => {
     );
     expect(adr).toMatch(/review gate|checklist/i);
     expect(adr).toMatch(/Global Intelligence|do not invent|Rejected/i);
-    expect(adr).toMatch(/Volume 12 closed|VL-260–270|closes/i);
+    expect(adr).toMatch(/Volume 12 closed|–270|closes/i);
   });
 
-  it('has no TODO/FIXME/implement-later markers in Volume 12 source trees', () => {
+  it('has no TODO/FIXME/implement-later markers in Volume 12 source trees',  => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const name of VOLUME12_DIRS) {
@@ -157,13 +157,13 @@ describe('African Intelligence Cloud Production Audit (VL-270)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes all Volume 12 catalogs as shipped with monitoring', async () => {
+  it('exposes all Volume 12 catalogs as shipped with monitoring', async  => {
     for (const path of ENGINE_PATHS) {
-      const res = await request(app.getHttpServer()).get(path).expect(200);
-      expect(res.body).toBeTruthy();
+      const res = await request(app.getHttpServer).get(path).expect(200);
+      expect(res.body).toBeTruthy;
     }
 
-    const hub = await request(app.getHttpServer())
+    const hub = await request(app.getHttpServer)
       .get('/v1/african-intelligence-cloud/products')
       .expect(200);
     expect(hub.body.honesty.neo4jOs).toBe(false);
@@ -184,8 +184,8 @@ describe('African Intelligence Cloud Production Audit (VL-270)', () => {
     }
   });
 
-  it('keeps cultural/graph/domain honesty flags', async () => {
-    const cultural = await request(app.getHttpServer())
+  it('keeps cultural/graph/domain honesty flags', async  => {
+    const cultural = await request(app.getHttpServer)
       .get('/v1/cultural-intelligence/engine')
       .expect(200);
     expect(cultural.body.honesty.traditionalKnowledgeConsentRequired).toBe(true);
@@ -194,51 +194,51 @@ describe('African Intelligence Cloud Production Audit (VL-270)', () => {
       e.provenance && e.sourceCommunity && e.consentStatus,
     )).toBe(true);
 
-    const graph = await request(app.getHttpServer())
+    const graph = await request(app.getHttpServer)
       .get('/v1/african-knowledge-graph/engine')
       .expect(200);
     expect(graph.body.honesty.neo4jOs).toBe(false);
-    const nodes = await request(app.getHttpServer())
+    const nodes = await request(app.getHttpServer)
       .get('/v1/african-knowledge-graph/nodes')
       .expect(200);
     expect(nodes.body.neo4jOs).toBe(false);
     expect(nodes.body.count).toBeGreaterThan(5);
 
-    const lang = await request(app.getHttpServer())
+    const lang = await request(app.getHttpServer)
       .get('/v1/african-language-registry/engine')
       .expect(200);
     expect(lang.body.honesty.coverageComplete).toBe(false);
 
-    const health = await request(app.getHttpServer())
+    const health = await request(app.getHttpServer)
       .get('/v1/healthcare-intelligence/engine')
       .expect(200);
     expect(health.body.honesty.notMedicalAdvice).toBe(true);
     expect(health.body.safety.notMedicalAdvice).toBe(true);
     expect(String(health.body.safety.note)).toMatch(/consult|not diagnosis|professional/i);
 
-    const finance = await request(app.getHttpServer())
+    const finance = await request(app.getHttpServer)
       .get('/v1/financial-intelligence/engine')
       .expect(200);
     expect(finance.body.honesty.notInvestmentAdvice).toBe(true);
     expect(finance.body.honesty.fairLendingConsiderationsFlagged).toBe(true);
 
-    const gov = await request(app.getHttpServer())
+    const gov = await request(app.getHttpServer)
       .get('/v1/government-intelligence/engine')
       .expect(200);
     expect(gov.body.honesty.officialGuidanceMustBeSourced).toBe(true);
     expect(gov.body.honesty.staleGuidanceRiskNoted).toBe(true);
   });
 
-  it('rejects unauthenticated African Intelligence overview (auth smoke)', async () => {
-    const res = await request(app.getHttpServer()).get(
+  it('rejects unauthenticated African Intelligence overview (auth smoke)', async  => {
+    const res = await request(app.getHttpServer).get(
       '/v1/african-intelligence-cloud/overview',
     );
     expect([401, 403, 503]).toContain(res.status);
   });
 
-  it('exposes GraphQL façades for African Intelligence hubs', async () => {
-    const started = Date.now();
-    const gql = await request(app.getHttpServer())
+  it('exposes GraphQL façades for African Intelligence hubs', async  => {
+    const started = Date.now;
+    const gql = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query: `{
@@ -255,8 +255,8 @@ describe('African Intelligence Cloud Production Audit (VL-270)', () => {
         }`,
       })
       .expect(200);
-    expect(Date.now() - started).toBeLessThan(5_000);
-    expect(gql.body.errors).toBeUndefined();
+    expect(Date.now - started).toBeLessThan(5_000);
+    expect(gql.body.errors).toBeUndefined;
     expect(gql.body.data.africanIntelligenceCloudProducts.length).toBeGreaterThan(8);
     expect(gql.body.data.africanLanguageRegistryEngine.coverageComplete).toBe(false);
     expect(gql.body.data.culturalIntelligenceEngine.traditionalKnowledgeConsentRequired).toBe(

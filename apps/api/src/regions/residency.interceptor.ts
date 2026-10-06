@@ -12,7 +12,7 @@ import type { SessionContext } from '../common/guards/clerk-auth.guard';
 import type { TranslateAuthContext } from '../common/guards/translate-auth.guard';
 import { getHttpPair } from '../common/http/execution-request';
 
-@Injectable()
+@Injectable
 export class ResidencyInterceptor implements NestInterceptor {
   constructor(private readonly regions: RegionsService) {}
 
@@ -23,17 +23,17 @@ export class ResidencyInterceptor implements NestInterceptor {
       translateAuth?: TranslateAuthContext;
     };
     if (res && typeof res.setHeader === 'function') {
-      res.setHeader('X-Lugemi-Region', currentRegionCode());
+      res.setHeader('X-Lugemi-Region', currentRegionCode);
     }
 
     const organizationId =
       request.translateAuth?.organizationId ?? request.sessionAuth?.organizationId;
     if (!organizationId) {
-      return next.handle();
+      return next.handle;
     }
 
     return from(this.regions.assertOrgMatchesDeploy(organizationId)).pipe(
-      switchMap(() => next.handle()),
+      switchMap( => next.handle),
     );
   }
 }

@@ -20,7 +20,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_prompt_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_prompt_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -34,21 +34,21 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Prompt management (VL-086)', () => {
+describe('Prompt management',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let prompts: PromptsService;
   let lastSystem: string | null;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -72,12 +72,12 @@ describe('Prompt management (VL-086)', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('falls back to code defaults when no active version', async () => {
-    const org = await seedOrg(prisma, `pf_${Date.now()}`);
+  it('falls back to code defaults when no active version', async  => {
+    const org = await seedOrg(prisma, `pf_${Date.now}`);
     const resolved = await prompts.resolve({
       organizationId: org.id,
       workspaceId: org.workspaces[0].id,
@@ -87,8 +87,8 @@ describe('Prompt management (VL-086)', () => {
     expect(resolved.body).toBe(LUGEMI_CHAT_SYSTEM);
   });
 
-  it('activates a version and rolls back; chat uses the active body', async () => {
-    const org = await seedOrg(prisma, `pa_${Date.now()}`);
+  it('activates a version and rolls back; chat uses the active body', async  => {
+    const org = await seedOrg(prisma, `pa_${Date.now}`);
     const workspaceId = org.workspaces[0].id;
     const userId = org.memberships[0].userId;
 
@@ -146,7 +146,7 @@ describe('Prompt management (VL-086)', () => {
       name: 'prompt-chat',
     });
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post('/v1/chat/completions')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ messages: [{ role: 'user', content: 'Hi' }] })
@@ -169,8 +169,8 @@ describe('Prompt management (VL-086)', () => {
     expect(fallback.source).toBe('fallback');
   });
 
-  it('lists managed keys and rejects unknown keys', async () => {
-    const org = await seedOrg(prisma, `pl_${Date.now()}`);
+  it('lists managed keys and rejects unknown keys', async  => {
+    const org = await seedOrg(prisma, `pl_${Date.now}`);
     const list = await prompts.list(org.id, org.workspaces[0].id);
     expect(list.map((row) => row.key)).toEqual(['chat', 'rag', 'voice_faq']);
 

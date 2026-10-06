@@ -5,7 +5,7 @@ import { UsageService } from '../usage/usage.service';
 import { SessionContext } from '../common/guards/clerk-auth.guard';
 import { sdkCatalog } from './sdk-catalog';
 
-@Injectable()
+@Injectable
 export class DeveloperCloudService {
   constructor(
     private readonly prisma: PrismaService,
@@ -13,8 +13,8 @@ export class DeveloperCloudService {
     private readonly usage: UsageService,
   ) {}
 
-  sdk() {
-    return sdkCatalog();
+  sdk {
+    return sdkCatalog;
   }
 
   async overview(session: SessionContext) {
@@ -88,7 +88,7 @@ export class DeveloperCloudService {
         requests: usage.requests,
         periodStart: usage.periodStart,
       },
-      sdk: sdkCatalog(),
+      sdk: sdkCatalog,
       links: {
         docs: '/docs',
         playground: '/playground',

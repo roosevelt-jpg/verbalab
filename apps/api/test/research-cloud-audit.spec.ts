@@ -51,7 +51,7 @@ const SHIPPED_PRODUCT_IDS = [
 function walkTsFiles(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory()) {
+    if (name.isDirectory) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       walkTsFiles(p, out);
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -63,23 +63,23 @@ function walkTsFiles(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-describe('Research Cloud Production Audit (VL-280)', () => {
+describe('Research Cloud Production Audit',  => {
   let app: INestApplication<App>;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
   }, 120_000);
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('ships audit ADR and report pack', () => {
+  it('ships audit ADR and report pack',  => {
     expect(existsSync(join(root, 'docs/adr/0182-research-cloud-production-audit.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/CLOUD_BLUEPRINT.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/RESEARCH_CLOUD.md'))).toBe(true);
@@ -99,7 +99,7 @@ describe('Research Cloud Production Audit (VL-280)', () => {
     expect(readiness).toMatch(/syntheticLabelRequired|isSynthetic/i);
     expect(readiness).toMatch(/traditionalKnowledgeConsentRequired|consent/i);
     expect(readiness).toMatch(/AI Sovereignty|Rejected/i);
-    expect(readiness).toMatch(/VL-271|Volume 13/i);
+    expect(readiness).toMatch(/|Volume 13/i);
 
     const adr = readFileSync(
       join(root, 'docs/adr/0182-research-cloud-production-audit.md'),
@@ -107,10 +107,10 @@ describe('Research Cloud Production Audit (VL-280)', () => {
     );
     expect(adr).toMatch(/review gate|checklist/i);
     expect(adr).toMatch(/AI Sovereignty|do not invent|Rejected/i);
-    expect(adr).toMatch(/Volume 13 closed|VL-271–280|closes/i);
+    expect(adr).toMatch(/Volume 13 closed|–280|closes/i);
   });
 
-  it('has no TODO/FIXME/implement-later markers in Volume 13 source trees', () => {
+  it('has no TODO/FIXME/implement-later markers in Volume 13 source trees',  => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const name of VOLUME13_DIRS) {
@@ -134,13 +134,13 @@ describe('Research Cloud Production Audit (VL-280)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes all Volume 13 catalogs as shipped with monitoring', async () => {
+  it('exposes all Volume 13 catalogs as shipped with monitoring', async  => {
     for (const path of ENGINE_PATHS) {
-      const res = await request(app.getHttpServer()).get(path).expect(200);
-      expect(res.body).toBeTruthy();
+      const res = await request(app.getHttpServer).get(path).expect(200);
+      expect(res.body).toBeTruthy;
     }
 
-    const hub = await request(app.getHttpServer()).get('/v1/research-cloud/products').expect(200);
+    const hub = await request(app.getHttpServer).get('/v1/research-cloud/products').expect(200);
     expect(hub.body.honesty.weightsAndBiasesOs).toBe(false);
     expect(hub.body.honesty.mlflowOs).toBe(false);
     expect(hub.body.honesty.huggingFaceHubOs).toBe(false);
@@ -159,8 +159,8 @@ describe('Research Cloud Production Audit (VL-280)', () => {
     }
   });
 
-  it('keeps synthetic labeling and open-science consent gates', async () => {
-    const synthetic = await request(app.getHttpServer())
+  it('keeps synthetic labeling and open-science consent gates', async  => {
+    const synthetic = await request(app.getHttpServer)
       .get('/v1/synthetic-data-platform/engine')
       .expect(200);
     expect(synthetic.body.honesty.syntheticLabelRequired).toBe(true);
@@ -168,47 +168,47 @@ describe('Research Cloud Production Audit (VL-280)', () => {
       true,
     );
 
-    const openSci = await request(app.getHttpServer())
+    const openSci = await request(app.getHttpServer)
       .get('/v1/open-science-platform/engine')
       .expect(200);
     expect(openSci.body.honesty.traditionalKnowledgeConsentRequired).toBe(true);
 
-    const blocked = await request(app.getHttpServer())
+    const blocked = await request(app.getHttpServer)
       .get('/v1/open-science-platform/check')
       .query({ id: 'os-dataset-restricted' })
       .expect(200);
     expect(blocked.body.allowed).toBe(false);
 
-    const unverified = await request(app.getHttpServer())
+    const unverified = await request(app.getHttpServer)
       .get('/v1/open-science-platform/check')
       .query({ id: 'os-dataset-unverified' })
       .expect(200);
     expect(unverified.body.allowed).toBe(false);
 
-    const pubs = await request(app.getHttpServer())
+    const pubs = await request(app.getHttpServer)
       .get('/v1/ai-publication-platform/engine')
       .expect(200);
     expect(pubs.body.honesty.doiRegistryOs).toBe(false);
 
-    const patents = await request(app.getHttpServer())
+    const patents = await request(app.getHttpServer)
       .get('/v1/patent-innovation-platform/engine')
       .expect(200);
     expect(patents.body.honesty.usptoOs).toBe(false);
 
-    const benches = await request(app.getHttpServer())
+    const benches = await request(app.getHttpServer)
       .get('/v1/benchmark-platform/engine')
       .expect(200);
     expect(benches.body.honesty.publicLeaderboardOs).toBe(false);
   });
 
-  it('rejects unauthenticated Research Cloud overview (auth smoke)', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/research-cloud/overview');
+  it('rejects unauthenticated Research Cloud overview (auth smoke)', async  => {
+    const res = await request(app.getHttpServer).get('/v1/research-cloud/overview');
     expect([401, 403, 503]).toContain(res.status);
   });
 
-  it('exposes GraphQL façades for Research Cloud hubs', async () => {
-    const started = Date.now();
-    const gql = await request(app.getHttpServer())
+  it('exposes GraphQL façades for Research Cloud hubs', async  => {
+    const started = Date.now;
+    const gql = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query: `{
@@ -224,8 +224,8 @@ describe('Research Cloud Production Audit (VL-280)', () => {
         }`,
       })
       .expect(200);
-    expect(Date.now() - started).toBeLessThan(5_000);
-    expect(gql.body.errors).toBeUndefined();
+    expect(Date.now - started).toBeLessThan(5_000);
+    expect(gql.body.errors).toBeUndefined;
     expect(gql.body.data.researchCloudProducts.length).toBeGreaterThan(8);
     expect(gql.body.data.experimentPlatformEngine.weightsAndBiasesOs).toBe(false);
     expect(gql.body.data.syntheticDataPlatformEngine.syntheticLabelRequired).toBe(true);

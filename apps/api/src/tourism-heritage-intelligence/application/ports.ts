@@ -1,4 +1,4 @@
-/** Application ports for Tourism & Heritage Intelligence (VL-269). */
+/** Application ports for Tourism & Heritage Intelligence. */
 
 export type TourismHeritageIntelligenceProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type TourismHeritageIntelligenceEngineBundle = ReturnType<
 >;
 
 export interface TourismHeritageIntelligenceCatalogPort {
-  engine(): TourismHeritageIntelligenceEngineBundle;
-  listProducts(): TourismHeritageIntelligenceProductRow[];
+  engine: TourismHeritageIntelligenceEngineBundle;
+  listProducts: TourismHeritageIntelligenceProductRow[];
 }
 
 export const TOURISM_HERITAGE_INTELLIGENCE_CATALOG_PORT = Symbol('TOURISM_HERITAGE_INTELLIGENCE_CATALOG_PORT');

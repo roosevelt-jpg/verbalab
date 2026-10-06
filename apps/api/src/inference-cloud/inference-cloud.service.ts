@@ -6,14 +6,14 @@ import {
   inferenceProductCatalog,
 } from './inference-products.catalog';
 
-@Injectable()
+@Injectable
 export class InferenceCloudService {
   constructor(private readonly usage: UsageService) {}
 
-  products() {
+  products {
     return {
-      products: inferenceProductCatalog(),
-      architecture: inferenceArchitectureNotes(),
+      products: inferenceProductCatalog,
+      architecture: inferenceArchitectureNotes,
       docs: '/docs/INFERENCE_CLOUD.md',
     };
   }
@@ -32,8 +32,8 @@ export class InferenceCloudService {
         chat: usageSummary.chat,
         embeddings: usageSummary.embeddings,
       },
-      products: inferenceProductCatalog(),
-      architecture: inferenceArchitectureNotes(),
+      products: inferenceProductCatalog,
+      architecture: inferenceArchitectureNotes,
       deferred: {
         gpuPlatform: false,
         modelServing: false,
@@ -53,7 +53,7 @@ export class InferenceCloudService {
         openEndedGpuAutoscale: false,
         sandboxBeforeRealCloudBill: true,
         note:
-          'GPU Platform (VL-205) must not run against a production billing account without spend limits. Cost Optimization (VL-211) must enforce caps, not only report.',
+          'GPU Platform must not run against a production billing account without spend limits. Cost Optimization must enforce caps, not only report.',
       },
       links: {
         inferenceCloud: '/inference-cloud',

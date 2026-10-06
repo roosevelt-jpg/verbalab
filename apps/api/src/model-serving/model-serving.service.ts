@@ -18,49 +18,49 @@ type AuthCtx = {
   ip?: string;
 };
 
-const KIND_IDS = new Set(servingModelKinds().map((k) => k.id));
+const KIND_IDS = new Set(servingModelKinds.map((k) => k.id));
 
-@Injectable()
+@Injectable
 export class ModelServingService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
   ) {}
 
-  engine() {
-    const ceilings = modelServingCeilings();
+  engine {
+    const ceilings = modelServingCeilings;
     return {
-      ...modelServingCatalog(),
+      ...modelServingCatalog,
       ceilings,
       spendSafety: {
         hardSpendCeilingsRequired: true,
         note:
-          'Model Serving does not provision GPUs. GPU spend ceilings live on GPU Platform (VL-205). Cost Optimization (VL-211) must enforce caps.',
+          'Model Serving does not provision GPUs. GPU spend ceilings live on GPU Platform. Cost Optimization must enforce caps.',
       },
     };
   }
 
-  kinds() {
+  kinds {
     return {
-      kinds: servingModelKinds(),
-      honesty: modelServingCatalog().honesty,
+      kinds: servingModelKinds,
+      honesty: modelServingCatalog.honesty,
     };
   }
 
-  modes() {
+  modes {
     return {
-      modes: servingModes(),
-      honesty: modelServingCatalog().honesty,
+      modes: servingModes,
+      honesty: modelServingCatalog.honesty,
     };
   }
 
-  ceilings() {
-    return modelServingCeilings();
+  ceilings {
+    return modelServingCeilings;
   }
 
   async endpoints(kind?: string) {
-    const kinds = servingModelKinds().filter((k) =>
-      kind ? k.id === kind.toLowerCase() : true,
+    const kinds = servingModelKinds.filter((k) =>
+      kind ? k.id === kind.toLowerCase : true,
     );
     const features = [...new Set(kinds.flatMap((k) => k.registryFeatures))];
     const registry =
@@ -98,7 +98,7 @@ export class ModelServingService {
     return {
       endpoints,
       note: 'Discoverable Gateway + registry map — traffic still goes through AI Gateway adapters.',
-      honesty: modelServingCatalog().honesty,
+      honesty: modelServingCatalog.honesty,
     };
   }
 
@@ -108,7 +108,7 @@ export class ModelServingService {
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
         ...(input.status ? { status: input.status } : {}),
-        ...(input.kind ? { kind: input.kind.toLowerCase() } : {}),
+        ...(input.kind ? { kind: input.kind.toLowerCase } : {}),
       },
       orderBy: { createdAt: 'desc' },
       take: 100,
@@ -130,7 +130,7 @@ export class ModelServingService {
       label?: string;
     },
   ) {
-    if (modelServingMode() === 'disabled') {
+    if (modelServingMode === 'disabled') {
       throw new ApiException(
         'model_serving_disabled',
         'Model Serving mode is disabled (LUGEMI_MODEL_SERVING_MODE=disabled).',
@@ -138,7 +138,7 @@ export class ModelServingService {
       );
     }
 
-    const kind = (input.kind ?? '').trim().toLowerCase() as ServingModelKind;
+    const kind = (input.kind ?? '').trim.toLowerCase as ServingModelKind;
     if (!KIND_IDS.has(kind)) {
       throw new ApiException(
         'validation_error',
@@ -146,7 +146,7 @@ export class ModelServingService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const kindMeta = servingModelKinds().find((k) => k.id === kind)!;
+    const kindMeta = servingModelKinds.find((k) => k.id === kind)!;
     if (kindMeta.status === 'deferred') {
       throw new ApiException(
         'validation_error',
@@ -155,7 +155,7 @@ export class ModelServingService {
       );
     }
 
-    const modelSlug = (input.modelSlug ?? '').trim();
+    const modelSlug = (input.modelSlug ?? '').trim;
     if (!modelSlug) {
       throw new ApiException(
         'validation_error',
@@ -188,7 +188,7 @@ export class ModelServingService {
       );
     }
 
-    const ceilings = modelServingCeilings();
+    const ceilings = modelServingCeilings;
     const activeCount = await this.prisma.modelServingDeployment.count({
       where: {
         organizationId: input.organizationId,
@@ -207,7 +207,7 @@ export class ModelServingService {
     const strategy = this.normalizeStrategy(input.strategy);
     const trafficPercent = this.clampTraffic(input.trafficPercent, strategy);
     const slot = this.normalizeSlot(input.slot, strategy);
-    const version = (input.version ?? 'v1').trim().slice(0, 64) || 'v1';
+    const version = (input.version ?? 'v1').trim.slice(0, 64) || 'v1';
     const status =
       strategy === 'canary' ? 'canary' : slot === 'green' ? 'green' : 'active';
 
@@ -254,14 +254,14 @@ export class ModelServingService {
       deployment: this.serialize(row),
       ceilings,
       note: 'Sandbox logical deployment recorded — inference still routes through AI Gateway.',
-      honesty: modelServingCatalog().honesty,
+      honesty: modelServingCatalog.honesty,
     };
   }
 
   async setTraffic(
     input: AuthCtx & { id: string; trafficPercent?: number },
   ) {
-    this.assertEnabled();
+    this.assertEnabled;
     const row = await this.requireDeployment(input);
     if (!['active', 'canary', 'blue', 'green'].includes(row.status)) {
       throw new ApiException(
@@ -296,7 +296,7 @@ export class ModelServingService {
   }
 
   async promote(input: AuthCtx & { id: string }) {
-    this.assertEnabled();
+    this.assertEnabled;
     const row = await this.requireDeployment(input);
     if (!['canary', 'blue', 'green', 'active'].includes(row.status)) {
       throw new ApiException(
@@ -344,7 +344,7 @@ export class ModelServingService {
         slot: row.strategy === 'blue_green' ? 'blue' : row.slot,
         metadata: {
           ...((row.metadata as object) ?? {}),
-          promotedAt: new Date().toISOString(),
+          promotedAt: new Date.toISOString,
         },
       },
     });
@@ -365,7 +365,7 @@ export class ModelServingService {
   }
 
   async rollback(input: AuthCtx & { id: string }) {
-    this.assertEnabled();
+    this.assertEnabled;
     const row = await this.requireDeployment(input);
     const previousVersion = row.previousVersion;
     if (!previousVersion) {
@@ -491,9 +491,9 @@ export class ModelServingService {
       trafficPercent?: number;
     },
   ) {
-    this.assertEnabled();
+    this.assertEnabled;
     const row = await this.requireDeployment(input);
-    const newVersion = (input.version ?? `${row.version}-next`).trim().slice(0, 64);
+    const newVersion = (input.version ?? `${row.version}-next`).trim.slice(0, 64);
     const created = await this.deploy({
       ...input,
       kind: row.kind,
@@ -527,17 +527,17 @@ export class ModelServingService {
       },
     });
     return {
-      status: modelServingMode() === 'disabled' ? 'disabled' : 'sandbox_ok',
+      status: modelServingMode === 'disabled' ? 'disabled' : 'sandbox_ok',
       activeDeployments: active,
-      ceilings: modelServingCeilings(),
-      kindsReady: servingModelKinds().filter((k) => k.status !== 'deferred').length,
+      ceilings: modelServingCeilings,
+      kindsReady: servingModelKinds.filter((k) => k.status !== 'deferred').length,
       note: 'Sandbox health — not vendor serving telemetry.',
-      honesty: modelServingCatalog().honesty,
+      honesty: modelServingCatalog.honesty,
     };
   }
 
   async analytics(input: AuthCtx) {
-    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
     const [total, active, canary, released, audits] = await Promise.all([
       this.prisma.modelServingDeployment.count({
         where: {
@@ -584,18 +584,18 @@ export class ModelServingService {
       canary,
       released,
       auditsLast30d: audits,
-      note: 'Model Serving analytics (VL-206). ≠ VL-212 AI Runtime Analytics.',
+      note: 'Model Serving analytics. ≠ AI Runtime Analytics.',
     };
   }
 
   async monitoring(input: AuthCtx) {
     const [engine, health, analytics] = await Promise.all([
-      Promise.resolve(this.engine()),
+      Promise.resolve(this.engine),
       this.health(input),
       this.analytics(input),
     ]);
     return {
-      generatedAt: new Date().toISOString(),
+      generatedAt: new Date.toISOString,
       health,
       analytics,
       honesty: engine.honesty,
@@ -603,12 +603,12 @@ export class ModelServingService {
       deferred: engine.capabilities
         .filter((c) => c.status === 'deferred')
         .map((c) => c.id),
-      note: 'Model Serving monitoring snapshot (VL-206).',
+      note: 'Model Serving monitoring snapshot.',
     };
   }
 
-  private assertEnabled() {
-    if (modelServingMode() === 'disabled') {
+  private assertEnabled {
+    if (modelServingMode === 'disabled') {
       throw new ApiException(
         'model_serving_disabled',
         'Model Serving mode is disabled',
@@ -636,7 +636,7 @@ export class ModelServingService {
   }
 
   private normalizeStrategy(raw?: string) {
-    const s = (raw ?? 'rolling').toLowerCase();
+    const s = (raw ?? 'rolling').toLowerCase;
     if (s === 'canary' || s === 'blue_green' || s === 'rolling') return s;
     throw new ApiException(
       'validation_error',
@@ -647,7 +647,7 @@ export class ModelServingService {
 
   private normalizeSlot(raw: string | undefined, strategy: string) {
     if (strategy !== 'blue_green') return 'none';
-    const s = (raw ?? 'blue').toLowerCase();
+    const s = (raw ?? 'blue').toLowerCase;
     if (s === 'blue' || s === 'green') return s;
     throw new ApiException(
       'validation_error',
@@ -696,8 +696,8 @@ export class ModelServingService {
       label: r.label,
       previousVersion: r.previousVersion,
       metadata: r.metadata,
-      createdAt: r.createdAt.toISOString(),
-      updatedAt: r.updatedAt.toISOString(),
+      createdAt: r.createdAt.toISOString,
+      updatedAt: r.updatedAt.toISOString,
     };
   }
 }

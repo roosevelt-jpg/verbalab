@@ -6,16 +6,16 @@ import {
   BenchmarkPlatformProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestBenchmarkPlatformCatalogAdapter implements BenchmarkPlatformCatalogPort {
   constructor(private readonly service: BenchmarkPlatformService) {}
 
-  engine(): BenchmarkPlatformEngineBundle {
-    return this.service.engine();
+  engine: BenchmarkPlatformEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): BenchmarkPlatformProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: BenchmarkPlatformProductRow[] {
+    const bundle = this.engine as {
       products?: BenchmarkPlatformProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestBenchmarkPlatformCatalogAdapter implements BenchmarkPlatformCat
         status: 'shipped',
         api: 'GET /v1/benchmark-platform/engine',
         console: '/benchmark-platform',
-        notes: 'VL-274 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

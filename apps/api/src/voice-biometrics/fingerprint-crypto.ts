@@ -12,12 +12,12 @@ export type EncryptedFingerprint = {
   dims: number;
 };
 
-function keyBytes(): Buffer {
+function keyBytes: Buffer {
   const raw =
-    process.env.VOICE_BIOMETRIC_KEY?.trim() ||
-    process.env.ENCRYPTION_KEY?.trim() ||
+    process.env.VOICE_BIOMETRIC_KEY?.trim ||
+    process.env.ENCRYPTION_KEY?.trim ||
     'lugemi-dev-voice-biometric-key';
-  return createHash('sha256').update(raw).digest();
+  return createHash('sha256').update(raw).digest;
 }
 
 export function isEncryptedFingerprint(value: unknown): value is EncryptedFingerprint {
@@ -31,10 +31,10 @@ export function isEncryptedFingerprint(value: unknown): value is EncryptedFinger
 
 export function encryptFingerprint(fp: VoiceFingerprint): EncryptedFingerprint {
   const iv = randomBytes(12);
-  const cipher = createCipheriv('aes-256-gcm', keyBytes(), iv);
+  const cipher = createCipheriv('aes-256-gcm', keyBytes, iv);
   const plaintext = Buffer.from(JSON.stringify(fp), 'utf8');
-  const encrypted = Buffer.concat([cipher.update(plaintext), cipher.final()]);
-  const tag = cipher.getAuthTag();
+  const encrypted = Buffer.concat([cipher.update(plaintext), cipher.final]);
+  const tag = cipher.getAuthTag;
   return {
     enc: 1,
     alg: 'aes-256-gcm',
@@ -49,13 +49,13 @@ export function encryptFingerprint(fp: VoiceFingerprint): EncryptedFingerprint {
 export function decryptFingerprint(stored: EncryptedFingerprint): VoiceFingerprint {
   const decipher = createDecipheriv(
     'aes-256-gcm',
-    keyBytes(),
+    keyBytes,
     Buffer.from(stored.iv, 'base64'),
   );
   decipher.setAuthTag(Buffer.from(stored.tag, 'base64'));
   const decrypted = Buffer.concat([
     decipher.update(Buffer.from(stored.data, 'base64')),
-    decipher.final(),
+    decipher.final,
   ]);
   return JSON.parse(decrypted.toString('utf8')) as VoiceFingerprint;
 }

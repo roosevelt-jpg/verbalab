@@ -22,8 +22,8 @@ type Installation = {
   createdAt: string;
 };
 
-export function ConnectorsClient() {
-  const { getToken, isLoaded } = useAuth();
+export function ConnectorsClient {
+  const { getToken, isLoaded } = useAuth;
   const [status, setStatus] = useState<SlackStatus | null>(null);
   const [installations, setInstallations] = useState<Installation[]>([]);
   const [teamId, setTeamId] = useState('');
@@ -33,8 +33,8 @@ export function ConnectorsClient() {
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [st, rows] = await Promise.all([
       apiFetch<SlackStatus>('/v1/connectors/slack/status', { token }),
@@ -44,17 +44,17 @@ export function ConnectorsClient() {
     setInstallations(rows);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
-  async function saveInstallation() {
+  async function saveInstallation {
     setBusy(true);
     setError(null);
     setMessage(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       await apiFetch('/v1/connectors/slack/installations', {
         method: 'POST',
@@ -68,7 +68,7 @@ export function ConnectorsClient() {
       setMessage('Slack workspace linked.');
       setTeamId('');
       setTeamName('');
-      await load();
+      await load;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Save failed');
     } finally {
@@ -148,8 +148,8 @@ export function ConnectorsClient() {
               <button
                 type="button"
                 className="vl-btn vl-btn-primary"
-                disabled={busy || !teamId.trim()}
-                onClick={() => void saveInstallation()}
+                disabled={busy || !teamId.trim}
+                onClick={ => void saveInstallation}
               >
                 Save installation
               </button>

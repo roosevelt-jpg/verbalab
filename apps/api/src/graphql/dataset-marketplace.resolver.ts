@@ -6,13 +6,13 @@ import {
   GqlDatasetMarketplaceEngine,
 } from './gql.types';
 
-@Resolver()
+@Resolver
 export class DatasetMarketplaceGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query(() => GqlDatasetMarketplaceEngine, { name: 'datasetMarketplaceEngine' })
-  async datasetMarketplaceEngine(): Promise<GqlDatasetMarketplaceEngine> {
-    const catalog = await this.queries.execute(new GetDatasetMarketplaceEngineQuery());
+  @Query( => GqlDatasetMarketplaceEngine, { name: 'datasetMarketplaceEngine' })
+  async datasetMarketplaceEngine: Promise<GqlDatasetMarketplaceEngine> {
+    const catalog = await this.queries.execute(new GetDatasetMarketplaceEngineQuery);
     return {
       product: catalog.product,
       note: catalog.note,

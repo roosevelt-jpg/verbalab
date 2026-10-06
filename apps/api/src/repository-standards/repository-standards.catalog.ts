@@ -1,8 +1,8 @@
 /**
- * Library Phase 214 → Repository Standards (VL-347).
- * Repository Standards (VL-347). Monorepo/polyrepo/templates/naming/folder/branch/git/commit/versioning catalog matching Lugemi monorepo reality (pnpm/turbo apps/* packages/*).
+ * Library Phase 214 → Repository Standards.
+ * Repository Standards. Monorepo/polyrepo/templates/naming/folder/branch/git/commit/versioning catalog matching Lugemi monorepo reality (pnpm/turbo apps/* packages/*).
  */
-export function repositoryStandardsEngineCatalog() {
+export function repositoryStandardsEngineCatalog {
   return {
     product: 'Lugemi Repository Standards',
     engineeringOsForHumansAndCursor: true,
@@ -10,15 +10,15 @@ export function repositoryStandardsEngineCatalog() {
     architectureKnowledgeBaseOs: false,
     adrFactoryOs: false,
     capabilities: [
-      { id: 'monorepo', name: 'Monorepo Standards', status: 'shipped', notes: 'VL-347 standards capability — catalog, not a new OS.' },
-      { id: 'polyrepo', name: 'Polyrepo Guidance', status: 'shipped', notes: 'VL-347 standards capability — catalog, not a new OS.' },
-      { id: 'service_templates', name: 'Service Templates', status: 'shipped', notes: 'VL-347 standards capability — catalog, not a new OS.' },
-      { id: 'naming', name: 'Naming Standards', status: 'shipped', notes: 'VL-347 standards capability — catalog, not a new OS.' },
-      { id: 'folder', name: 'Folder Standards', status: 'shipped', notes: 'VL-347 standards capability — catalog, not a new OS.' },
-      { id: 'branch', name: 'Branch Strategy', status: 'shipped', notes: 'VL-347 standards capability — catalog, not a new OS.' },
-      { id: 'git', name: 'Git Standards', status: 'shipped', notes: 'VL-347 standards capability — catalog, not a new OS.' },
-      { id: 'commit', name: 'Commit Standards', status: 'shipped', notes: 'VL-347 standards capability — catalog, not a new OS.' },
-      { id: 'versioning', name: 'Versioning Standards', status: 'shipped', notes: 'VL-347 standards capability — catalog, not a new OS.' }
+      { id: 'monorepo', name: 'Monorepo Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'polyrepo', name: 'Polyrepo Guidance', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'service_templates', name: 'Service Templates', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'naming', name: 'Naming Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'folder', name: 'Folder Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'branch', name: 'Branch Strategy', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'git', name: 'Git Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'commit', name: 'Commit Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'versioning', name: 'Versioning Standards', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' }
     ],
     routes: [
       {
@@ -79,9 +79,9 @@ export function repositoryStandardsEngineCatalog() {
       customerFacingProductCloud: false,
       architectureKnowledgeBaseOs: false,
       adrFactoryOs: false,
-      note: 'Repository Standards (VL-347). Monorepo/polyrepo/templates/naming/folder/branch/git/commit/versioning catalog matching Lugemi monorepo reality (pnpm/turbo apps/* packages/*).',
+      note: 'Repository Standards. Monorepo/polyrepo/templates/naming/folder/branch/git/commit/versioning catalog matching Lugemi monorepo reality (pnpm/turbo apps/* packages/*).',
     },
     docs: '/docs/REPOSITORY_STANDARDS.md',
-    note: 'Repository Standards (VL-347). Monorepo/polyrepo/templates/naming/folder/branch/git/commit/versioning catalog matching Lugemi monorepo reality (pnpm/turbo apps/* packages/*).',
+    note: 'Repository Standards. Monorepo/polyrepo/templates/naming/folder/branch/git/commit/versioning catalog matching Lugemi monorepo reality (pnpm/turbo apps/* packages/*).',
   };
 }

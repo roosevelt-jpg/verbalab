@@ -5,11 +5,11 @@ import {
   PromptMarketplaceEngineBundle,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestPromptMarketplaceCatalogAdapter implements PromptMarketplaceCatalogPort {
   constructor(private readonly marketplace: PromptMarketplaceService) {}
 
-  engine(): PromptMarketplaceEngineBundle {
-    return this.marketplace.engine();
+  engine: PromptMarketplaceEngineBundle {
+    return this.marketplace.engine;
   }
 }

@@ -22,7 +22,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_pol_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_pol_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -36,22 +36,22 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Policy Runtime (VL-222)', () => {
+describe('Policy Runtime',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   const prevMode = process.env.LUGEMI_POLICY_RUNTIME_MODE;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     process.env.LUGEMI_POLICY_RUNTIME_MODE = 'enforce';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -59,7 +59,7 @@ describe('Policy Runtime (VL-222)', () => {
     app.get(GatewayService).setChatProviderForTests({
       name: 'fixture_chat',
       async complete(input) {
-        const user = [...input.messages].reverse().find((m) => m.role === 'user');
+        const user = [...input.messages].reverse.find((m) => m.role === 'user');
         return {
           message: {
             role: 'assistant',
@@ -76,13 +76,13 @@ describe('Policy Runtime (VL-222)', () => {
     });
   });
 
-  afterAll(async () => {
+  afterAll(async  => {
     if (prevMode === undefined) delete process.env.LUGEMI_POLICY_RUNTIME_MODE;
     else process.env.LUGEMI_POLICY_RUNTIME_MODE = prevMode;
-    await app.close();
+    await app.close;
   });
 
-  it('documents Policy Runtime honesty (hard gate; not log-only / OPA OS)', () => {
+  it('documents Policy Runtime honesty (hard gate; not log-only / OPA OS)',  => {
     const doc = join(root, 'docs/POLICY_RUNTIME.md');
     const adr = join(root, 'docs/adr/0133-policy-runtime.md');
     expect(existsSync(doc)).toBe(true);
@@ -94,8 +94,8 @@ describe('Policy Runtime (VL-222)', () => {
     expect(text).toMatch(/Agent|Workflow|Plugin/);
   });
 
-  it('exposes engine with hard-gate wiring flags', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/policy-runtime/engine').expect(200);
+  it('exposes engine with hard-gate wiring flags', async  => {
+    const res = await request(app.getHttpServer).get('/v1/policy-runtime/engine').expect(200);
     expect(res.body.product).toContain('Policy Runtime');
     expect(res.body.honesty.hardGate).toBe(true);
     expect(res.body.honesty.logOnly).toBe(false);
@@ -108,7 +108,7 @@ describe('Policy Runtime (VL-222)', () => {
     expect(res.body.links.console).toBe('/policy-runtime');
   });
 
-  it('hard-blocks global denies and org policies; wired into Agent Runtime', async () => {
+  it('hard-blocks global denies and org policies; wired into Agent Runtime', async  => {
     const org = await seedOrg(prisma, 'pol');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -118,7 +118,7 @@ describe('Policy Runtime (VL-222)', () => {
     });
     const auth = { Authorization: `Bearer ${key.secret}` };
 
-    const global = await request(app.getHttpServer())
+    const global = await request(app.getHttpServer)
       .post('/v1/policy-runtime/evaluate')
       .set(auth)
       .send({ action: 'shell.exec', runtime: 'agent-runtime' })
@@ -128,7 +128,7 @@ describe('Policy Runtime (VL-222)', () => {
     expect(global.body.logOnly).toBe(false);
     expect(global.body.reason).toMatch(/globally denied/i);
 
-    const created = await request(app.getHttpServer())
+    const created = await request(app.getHttpServer)
       .post('/v1/policy-runtime/policies')
       .set(auth)
       .send({
@@ -142,7 +142,7 @@ describe('Policy Runtime (VL-222)', () => {
     expect(created.body.policy.id).toMatch(/^pol_/);
     expect(created.body.honesty.hardGate).toBe(true);
 
-    const deniedEval = await request(app.getHttpServer())
+    const deniedEval = await request(app.getHttpServer)
       .post('/v1/policy-runtime/evaluate')
       .set(auth)
       .send({ action: 'memory.put', runtime: 'agent-runtime' })
@@ -151,7 +151,7 @@ describe('Policy Runtime (VL-222)', () => {
     expect(deniedEval.body.hardGate).toBe(true);
     expect(deniedEval.body.matchedPolicyIds).toContain(created.body.policy.id);
 
-    const allowedEval = await request(app.getHttpServer())
+    const allowedEval = await request(app.getHttpServer)
       .post('/v1/policy-runtime/evaluate')
       .set(auth)
       .send({ action: 'reason.plan', runtime: 'agent-runtime' })
@@ -159,7 +159,7 @@ describe('Policy Runtime (VL-222)', () => {
     expect(allowedEval.body.allowed).toBe(true);
 
     // Wire check: Agent Runtime run with memory.put permission is blocked by Policy Runtime
-    const agent = await request(app.getHttpServer())
+    const agent = await request(app.getHttpServer)
       .post('/v1/agent-runtime/agents')
       .set(auth)
       .send({
@@ -168,13 +168,13 @@ describe('Policy Runtime (VL-222)', () => {
         goal: 'test policy wiring',
       })
       .expect(201);
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post(`/v1/agent-runtime/agents/${agent.body.agent.id}/lifecycle`)
       .set(auth)
       .send({ status: 'active' })
       .expect(200);
 
-    const run = await request(app.getHttpServer())
+    const run = await request(app.getHttpServer)
       .post('/v1/agent-runtime/run')
       .set(auth)
       .send({
@@ -187,7 +187,7 @@ describe('Policy Runtime (VL-222)', () => {
     expect(run.body.run.steps[0].error).toMatch(/organization policy|Policy Runtime|hard gate/i);
 
     // Plan still works (not denied by org policy)
-    const planRun = await request(app.getHttpServer())
+    const planRun = await request(app.getHttpServer)
       .post('/v1/agent-runtime/run')
       .set(auth)
       .send({
@@ -197,7 +197,7 @@ describe('Policy Runtime (VL-222)', () => {
       .expect(200);
     expect(planRun.body.run.status).toBe('completed');
 
-    const monitoring = await request(app.getHttpServer())
+    const monitoring = await request(app.getHttpServer)
       .get('/v1/policy-runtime/monitoring')
       .set(auth)
       .expect(200);
@@ -206,15 +206,15 @@ describe('Policy Runtime (VL-222)', () => {
     expect(monitoring.body.wiring.agentRuntime).toBe(true);
   });
 
-  it('exposes policyRuntimeEngine via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes policyRuntimeEngine via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
           '{ policyRuntimeEngine { product hardGate logOnly logOnlyForbidden opaOs wiredIntoAgentRuntime wiredIntoWorkflowRuntime wiredIntoPluginRuntime mode maxPoliciesPerWorkspace } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.policyRuntimeEngine.hardGate).toBe(true);
     expect(res.body.data.policyRuntimeEngine.logOnly).toBe(false);
     expect(res.body.data.policyRuntimeEngine.wiredIntoAgentRuntime).toBe(true);

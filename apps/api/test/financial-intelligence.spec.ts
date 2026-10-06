@@ -14,36 +14,36 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory()) out.push(...walkTsFiles(full));
+    if (statSync(full).isDirectory) out.push(...walkTsFiles(full));
     else if (full.endsWith('.ts')) out.push(full);
   }
   return out;
 }
 
-describe('Financial Intelligence (VL-266)', () => {
+describe('Financial Intelligence',  => {
   let app: INestApplication<App>;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
   }, 120_000);
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Financial Intelligence + ADR', () => {
+  it('documents Financial Intelligence + ADR',  => {
     expect(existsSync(join(root, 'docs/FINANCIAL_INTELLIGENCE.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0168-financial-intelligence.md'))).toBe(true);
     const text = readFileSync(join(root, 'docs/FINANCIAL_INTELLIGENCE.md'), 'utf8');
-    expect(text).toContain('VL-266');
+    expect(text).toContain('');
   });
 
-  it('has no TODO/FIXME/implement-later markers', () => {
+  it('has no TODO/FIXME/implement-later markers',  => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const file of walkTsFiles(join(apiSrc, 'financial-intelligence'))) {
@@ -53,8 +53,8 @@ describe('Financial Intelligence (VL-266)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes engine honesty', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes engine honesty', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/financial-intelligence/engine')
       .expect(200);
     expect(res.body.product).toBe('Lugemi Financial Intelligence');

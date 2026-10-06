@@ -8,8 +8,8 @@ export function isTmScope(value: string): value is TmScope {
 
 /** Character bigrams for Dice coefficient. */
 function bigrams(text: string): Map<string, number> {
-  const normalized = normalizeTmSegment(text).toLowerCase();
-  const map = new Map<string, number>();
+  const normalized = normalizeTmSegment(text).toLowerCase;
+  const map = new Map<string, number>;
   if (normalized.length < 2) {
     if (normalized) map.set(normalized, 1);
     return map;

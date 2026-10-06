@@ -1,5 +1,5 @@
 /**
- * Library Phase 156 → Continuous Learning (VL-289).
+ * Library Phase 156 → Continuous Learning.
  * CRITICAL: never auto-promote. Requires humanApproval + drift clear + continuous eval pass + vetted feedback.
  */
 import { continuousEvalGateStatus } from '../continuous-evaluation/continuous-evaluation.catalog';
@@ -23,7 +23,7 @@ export type PromoteCandidate = {
   notes: string;
 };
 
-export function continuousLearningFeedback(): LearningFeedbackItem[] {
+export function continuousLearningFeedback: LearningFeedbackItem[] {
   return [
     {
       id: 'fb-vetted-001',
@@ -52,7 +52,7 @@ export function continuousLearningFeedback(): LearningFeedbackItem[] {
   ];
 }
 
-export function continuousLearningCandidates(): PromoteCandidate[] {
+export function continuousLearningCandidates: PromoteCandidate[] {
   return [
     {
       id: 'promo-ready-001',
@@ -96,11 +96,11 @@ export type PromoteCheckResult = {
 };
 
 export function evaluatePromote(candidateId: string): PromoteCheckResult & { candidate?: PromoteCandidate } {
-  const candidates = continuousLearningCandidates();
+  const candidates = continuousLearningCandidates;
   const candidate = candidates.find((c) => c.id === candidateId);
-  const drift = driftClearStatus();
-  const evalStatus = continuousEvalGateStatus();
-  const feedback = continuousLearningFeedback();
+  const drift = driftClearStatus;
+  const evalStatus = continuousEvalGateStatus;
+  const feedback = continuousLearningFeedback;
 
   const base = {
     humanApprovalRequiredBeforePromote: true as const,
@@ -178,7 +178,7 @@ export function evaluatePromote(candidateId: string): PromoteCheckResult & { can
   };
 }
 
-export function continuousLearningEngineCatalog() {
+export function continuousLearningEngineCatalog {
   return {
     product: 'Lugemi Continuous Learning',
     capabilities: [
@@ -190,8 +190,8 @@ export function continuousLearningEngineCatalog() {
       { id: 'model-refresh', name: 'Model refresh', status: 'shipped', notes: 'Model candidates — gated promote.' },
       { id: 'prompt-updates', name: 'Prompt updates', status: 'shipped', notes: 'Prompt candidates — gated promote.' },
     ],
-    feedback: continuousLearningFeedback(),
-    candidates: continuousLearningCandidates(),
+    feedback: continuousLearningFeedback,
+    candidates: continuousLearningCandidates,
     honesty: {
       humanApprovalRequiredBeforePromote: true,
       poisonedInputGuard: true,
@@ -210,6 +210,6 @@ export function continuousLearningEngineCatalog() {
         'Never auto-promote. Promote requires human approval + drift clear + continuous eval pass + vetted non-poisoned feedback.',
     },
     docs: '/docs/CONTINUOUS_LEARNING.md',
-    note: 'Continuous Learning (VL-289). Feedback/review/retrain/synthetic/knowledge/model/prompt updates with hard promote gates.',
+    note: 'Continuous Learning. Feedback/review/retrain/synthetic/knowledge/model/prompt updates with hard promote gates.',
   };
 }

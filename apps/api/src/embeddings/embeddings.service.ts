@@ -5,17 +5,17 @@ import { AuditService } from '../audit/audit.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiException } from '../common/errors/api-exception';
 
-export function embeddingsMaxInputs(): number {
+export function embeddingsMaxInputs: number {
   const raw = Number(process.env.EMBEDDINGS_MAX_INPUTS ?? 64);
   return Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 64;
 }
 
-export function embeddingsMaxChars(): number {
+export function embeddingsMaxChars: number {
   const raw = Number(process.env.EMBEDDINGS_MAX_CHARS ?? 8_000);
   return Number.isFinite(raw) && raw > 0 ? Math.floor(raw) : 8_000;
 }
 
-@Injectable()
+@Injectable
 export class EmbeddingsService {
   constructor(
     private readonly gateway: GatewayService,
@@ -51,7 +51,7 @@ export class EmbeddingsService {
       throw new ApiException('validation_error', 'input is required', HttpStatus.BAD_REQUEST);
     }
 
-    const maxInputs = embeddingsMaxInputs();
+    const maxInputs = embeddingsMaxInputs;
     if (texts.length > maxInputs) {
       throw new ApiException(
         'validation_error',
@@ -60,9 +60,9 @@ export class EmbeddingsService {
       );
     }
 
-    const maxChars = embeddingsMaxChars();
+    const maxChars = embeddingsMaxChars;
     for (const text of texts) {
-      if (text.trim().length === 0) {
+      if (text.trim.length === 0) {
         throw new ApiException(
           'validation_error',
           'input texts must be non-empty',
@@ -91,13 +91,13 @@ export class EmbeddingsService {
     ip?: string;
   }) {
     const texts = this.normalizeInput(input.input);
-    if (input.model !== undefined && (typeof input.model !== 'string' || !input.model.trim())) {
+    if (input.model !== undefined && (typeof input.model !== 'string' || !input.model.trim)) {
       throw new ApiException('validation_error', 'model must be a non-empty string', HttpStatus.BAD_REQUEST);
     }
 
     const result = await this.gateway.embed({
       input: texts.length === 1 ? texts[0]! : texts,
-      model: input.model?.trim() || undefined,
+      model: input.model?.trim || undefined,
     });
 
     const tokens = Math.max(1, result.totalTokens || texts.reduce((sum, t) => sum + [...t].length, 0));

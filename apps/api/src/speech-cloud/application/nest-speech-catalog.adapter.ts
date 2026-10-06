@@ -7,15 +7,15 @@ import {
   SpeechProductsBundle,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestSpeechCatalogAdapter implements SpeechCatalogPort {
   constructor(private readonly speechCloud: SpeechCloudService) {}
 
-  products(): SpeechProductsBundle {
-    return this.speechCloud.products();
+  products: SpeechProductsBundle {
+    return this.speechCloud.products;
   }
 
-  listProducts(): SpeechProductRow[] {
-    return speechProductCatalog();
+  listProducts: SpeechProductRow[] {
+    return speechProductCatalog;
   }
 }

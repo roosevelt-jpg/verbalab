@@ -17,8 +17,8 @@ export class GetHealthcareIntelligenceEngineHandler
     private readonly catalog: HealthcareIntelligenceCatalogPort,
   ) {}
 
-  execute(): Promise<HealthcareIntelligenceEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<HealthcareIntelligenceEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListHealthcareIntelligenceProductsHandler
     private readonly catalog: HealthcareIntelligenceCatalogPort,
   ) {}
 
-  execute(): Promise<HealthcareIntelligenceProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<HealthcareIntelligenceProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

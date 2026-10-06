@@ -5,31 +5,31 @@ import { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
 import { ApiExceptionFilter } from '../src/common/errors/api-exception.filter';
 
-describe('Country packs (VL-135)', () => {
+describe('Country packs',  => {
   let app: INestApplication<App>;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('GET /v1/country-packs lists curated packs', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/country-packs').expect(200);
+  it('GET /v1/country-packs lists curated packs', async  => {
+    const res = await request(app.getHttpServer).get('/v1/country-packs').expect(200);
     expect(res.body.data.length).toBeGreaterThanOrEqual(8);
     expect(res.body.data.some((p: { code: string }) => p.code === 'KE')).toBe(true);
   });
 
-  it('GET /v1/country-packs?region= filters', async () => {
-    const res = await request(app.getHttpServer())
+  it('GET /v1/country-packs?region= filters', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/country-packs')
       .query({ region: 'East Africa' })
       .expect(200);
@@ -37,8 +37,8 @@ describe('Country packs (VL-135)', () => {
     expect(res.body.data.some((p: { code: string }) => p.code === 'KE')).toBe(true);
   });
 
-  it('GET /v1/country-packs/:code?includeLocales=true composes locale packs', async () => {
-    const res = await request(app.getHttpServer())
+  it('GET /v1/country-packs/:code?includeLocales=true composes locale packs', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/country-packs/KE')
       .query({ includeLocales: 'true' })
       .expect(200);

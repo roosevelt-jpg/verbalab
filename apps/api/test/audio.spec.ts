@@ -20,7 +20,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_stt_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_stt_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
 }
 
 /** Minimal RIFF/WAV header + silence payload so multer accepts a .wav upload. */
-function tinyWav(): Buffer {
+function tinyWav: Buffer {
   const dataSize = 64;
   const buffer = Buffer.alloc(44 + dataSize);
   buffer.write('RIFF', 0);
@@ -54,20 +54,20 @@ function tinyWav(): Buffer {
   return buffer;
 }
 
-describe('Speech-to-text (VL-041)', () => {
+describe('Speech-to-text',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let usage: UsageService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -87,11 +87,11 @@ describe('Speech-to-text (VL-041)', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('transcribes audio and meters STT seconds', async () => {
+  it('transcribes audio and meters STT seconds', async  => {
     const org = await seedOrg(prisma, 'stt');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -100,11 +100,11 @@ describe('Speech-to-text (VL-041)', () => {
       name: 'stt-key',
     });
 
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer)
       .post('/v1/audio/transcriptions')
       .set('Authorization', `Bearer ${key.secret}`)
       .field('language', 'en')
-      .attach('file', tinyWav(), { filename: 'hello.wav', contentType: 'audio/wav' })
+      .attach('file', tinyWav, { filename: 'hello.wav', contentType: 'audio/wav' })
       .expect(200);
 
     expect(res.body).toMatchObject({
@@ -121,7 +121,7 @@ describe('Speech-to-text (VL-041)', () => {
     expect(summary.stt.minutes).toBeCloseTo(13 / 60, 3);
   });
 
-  it('rejects unsupported extensions', async () => {
+  it('rejects unsupported extensions', async  => {
     const org = await seedOrg(prisma, 'badext');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -130,7 +130,7 @@ describe('Speech-to-text (VL-041)', () => {
       name: 'bad-key',
     });
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post('/v1/audio/transcriptions')
       .set('Authorization', `Bearer ${key.secret}`)
       .attach('file', Buffer.from('not-audio'), {
@@ -140,7 +140,7 @@ describe('Speech-to-text (VL-041)', () => {
       .expect(400);
   });
 
-  it('OpenAI adapter reports not configured without key', async () => {
+  it('OpenAI adapter reports not configured without key', async  => {
     const adapter = new OpenAiWhisperAdapter('');
     await expect(
       adapter.transcribe({

@@ -5,25 +5,25 @@ import {
   seedApprovalRequests,
 } from './ai-governance-platform.catalog';
 
-@Injectable()
+@Injectable
 export class AiGovernancePlatformService {
-  private approvals: ApprovalRequest[] = seedApprovalRequests().map((a) => ({ ...a }));
+  private approvals: ApprovalRequest[] = seedApprovalRequests.map((a) => ({ ...a }));
 
-  engine() {
+  engine {
     return aiGovernancePlatformEngineCatalog(this.approvals);
   }
 
   list(query?: string) {
-    const catalog = this.engine();
-    const q = (query ?? '').trim().toLowerCase();
+    const catalog = this.engine;
+    const q = (query ?? '').trim.toLowerCase;
     const approvals = catalog.approvals.filter((a) => {
       if (!q) return true;
       return (
-        a.id.toLowerCase().includes(q) ||
-        a.kind.toLowerCase().includes(q) ||
-        a.title.toLowerCase().includes(q) ||
-        a.status.toLowerCase().includes(q) ||
-        a.notes.toLowerCase().includes(q)
+        a.id.toLowerCase.includes(q) ||
+        a.kind.toLowerCase.includes(q) ||
+        a.title.toLowerCase.includes(q) ||
+        a.status.toLowerCase.includes(q) ||
+        a.notes.toLowerCase.includes(q)
       );
     });
     return {
@@ -43,7 +43,7 @@ export class AiGovernancePlatformService {
     return {
       ...row,
       humanSignOffRequired: true as const,
-      honesty: this.engine().honesty,
+      honesty: this.engine.honesty,
       docs: '/docs/AI_GOVERNANCE_PLATFORM.md',
     };
   }
@@ -76,8 +76,8 @@ export class AiGovernancePlatformService {
     return this.list(query);
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'governance',
       approvalCount: catalog.approvals.length,
@@ -85,7 +85,7 @@ export class AiGovernancePlatformService {
       humanSignOffRequired: true,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'AI Governance Platform monitoring snapshot (VL-294) — human sign-off required.',
+      note: 'AI Governance Platform monitoring snapshot — human sign-off required.',
     };
   }
 }

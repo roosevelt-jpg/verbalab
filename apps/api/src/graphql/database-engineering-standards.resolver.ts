@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetDatabaseEngineeringStandardsEngineQuery } from '../database-engineering-standards/application/messages';
 import { GqlDatabaseEngineeringStandardsEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class DatabaseEngineeringStandardsGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query(() => GqlDatabaseEngineeringStandardsEngine, { name: 'databaseEngineeringStandardsEngine' })
-  async databaseEngineeringStandardsEngine(): Promise<GqlDatabaseEngineeringStandardsEngine> {
-    const catalog = await this.queries.execute(new GetDatabaseEngineeringStandardsEngineQuery());
+  @Query( => GqlDatabaseEngineeringStandardsEngine, { name: 'databaseEngineeringStandardsEngine' })
+  async databaseEngineeringStandardsEngine: Promise<GqlDatabaseEngineeringStandardsEngine> {
+    const catalog = await this.queries.execute(new GetDatabaseEngineeringStandardsEngineQuery);
     return {
       product: catalog.product,
       note: catalog.note,

@@ -9,12 +9,12 @@ export class IdentityCloudController {
   constructor(private readonly identityCloud: IdentityCloudService) {}
 
   @Get('me')
-  me(@CurrentSession() session: SessionContext) {
+  me(@CurrentSession session: SessionContext) {
     return this.identityCloud.me(session);
   }
 
   @Get('overview')
-  overview(@CurrentSession() session: SessionContext) {
+  overview(@CurrentSession session: SessionContext) {
     return this.identityCloud.overview(session);
   }
 }

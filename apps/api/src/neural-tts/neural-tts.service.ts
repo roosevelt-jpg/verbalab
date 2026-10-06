@@ -26,7 +26,7 @@ export type SynthesizeInput = {
   ip?: string;
 };
 
-@Injectable()
+@Injectable
 export class NeuralTtsService {
   constructor(
     private readonly gateway: GatewayService,
@@ -36,8 +36,8 @@ export class NeuralTtsService {
     private readonly audio: AudioService,
   ) {}
 
-  engine() {
-    return neuralTtsEngineCatalog();
+  engine {
+    return neuralTtsEngineCatalog;
   }
 
   async analytics(organizationId: string) {
@@ -46,7 +46,7 @@ export class NeuralTtsService {
       periodStart: summary.periodStart,
       tts: summary.tts,
       product: 'Lugemi Neural TTS',
-      note: 'Usage metering for TTS characters. Full Voice Analytics = VL-178 /voice-analytics.',
+      note: 'Usage metering for TTS characters. Full Voice Analytics = voice-analytics.',
       docs: '/docs/NEURAL_TTS.md',
     };
   }
@@ -55,7 +55,7 @@ export class NeuralTtsService {
     filters: VoiceListFilters = {},
     workspace?: { organizationId: string; workspaceId: string },
   ) {
-    const stock = this.gateway.listVoices().map((v) => enrichVoice(v));
+    const stock = this.gateway.listVoices.map((v) => enrichVoice(v));
     const clones: EnrichedTtsVoice[] = [];
     if (workspace) {
       const rows = await this.prisma.voiceClone.findMany({

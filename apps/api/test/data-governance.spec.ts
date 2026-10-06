@@ -23,7 +23,7 @@ async function seedOrg(prisma: PrismaService, name: string, role: MembershipRole
           role,
           user: {
             create: {
-              clerkUserId: `clerk_gov_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_gov_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -37,7 +37,7 @@ async function seedOrg(prisma: PrismaService, name: string, role: MembershipRole
   });
 }
 
-describe('Data governance (VL-073)', () => {
+describe('Data governance',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let governance: GovernanceService;
@@ -46,17 +46,17 @@ describe('Data governance (VL-073)', () => {
   let storage: LocalStorageService;
   let storageDir: string;
 
-  beforeAll(async () => {
-    storageDir = await mkdtemp(join(tmpdir(), 'lugemi-gov-'));
+  beforeAll(async  => {
+    storageDir = await mkdtemp(join(tmpdir, 'lugemi-gov-'));
     process.env.DOCUMENT_STORAGE_DIR = storageDir;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     governance = app.get(GovernanceService);
@@ -65,12 +65,12 @@ describe('Data governance (VL-073)', () => {
     storage = app.get(LocalStorageService);
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
     await rm(storageDir, { recursive: true, force: true });
   });
 
-  it('updates data settings for the org', async () => {
+  it('updates data settings for the org', async  => {
     const org = await seedOrg(prisma, 'govSettings');
     const updated = await governance.updateSettings({
       organizationId: org.id,
@@ -88,7 +88,7 @@ describe('Data governance (VL-073)', () => {
     expect(got).toMatchObject(updated);
   });
 
-  it('rejects settings updates from members', async () => {
+  it('rejects settings updates from members', async  => {
     const org = await seedOrg(prisma, 'govMember', MembershipRole.member);
     await expect(
       governance.updateSettings({
@@ -100,7 +100,7 @@ describe('Data governance (VL-073)', () => {
     ).rejects.toBeInstanceOf(ApiException);
   });
 
-  it('exports only the requesting org workspace data', async () => {
+  it('exports only the requesting org workspace data', async  => {
     const orgA = await seedOrg(prisma, 'govExportA');
     const orgB = await seedOrg(prisma, 'govExportB');
 
@@ -138,7 +138,7 @@ describe('Data governance (VL-073)', () => {
     expect(exported.glossaryTerms.some((t) => t.sourceTerm === 'secret')).toBe(false);
   });
 
-  it('deletes org with cascade and removes storage files; leaves other orgs', async () => {
+  it('deletes org with cascade and removes storage files; leaves other orgs', async  => {
     const orgA = await seedOrg(prisma, 'govDeleteA');
     const orgB = await seedOrg(prisma, 'govDeleteB');
 
@@ -163,12 +163,12 @@ describe('Data governance (VL-073)', () => {
       confirmName: 'govDeleteA',
     });
 
-    expect(await prisma.organization.findUnique({ where: { id: orgA.id } })).toBeNull();
-    expect(await prisma.organization.findUnique({ where: { id: orgB.id } })).not.toBeNull();
-    await expect(access(join(storageDir, key))).rejects.toThrow();
+    expect(await prisma.organization.findUnique({ where: { id: orgA.id } })).toBeNull;
+    expect(await prisma.organization.findUnique({ where: { id: orgB.id } })).not.toBeNull;
+    await expect(access(join(storageDir, key))).rejects.toThrow;
   });
 
-  it('rejects org delete from non-owners and mismatched confirmName', async () => {
+  it('rejects org delete from non-owners and mismatched confirmName', async  => {
     const org = await seedOrg(prisma, 'govDeleteGuard');
     await expect(
       governance.deleteOrganization({
@@ -189,7 +189,7 @@ describe('Data governance (VL-073)', () => {
     ).rejects.toBeInstanceOf(ApiException);
   });
 
-  it('redacts review text and blocks TM when persistSourceText is false', async () => {
+  it('redacts review text and blocks TM when persistSourceText is false', async  => {
     const org = await seedOrg(prisma, 'govPersist');
     await governance.updateSettings({
       organizationId: org.id,

@@ -26,18 +26,18 @@ export class KnowledgeMemoryController {
   constructor(private readonly knowledgeMemory: KnowledgeMemoryService) {}
 
   @Get('engine')
-  engine() {
-    return this.knowledgeMemory.engine();
+  engine {
+    return this.knowledgeMemory.engine;
   }
 
   @Get('scopes')
-  scopes() {
-    return this.knowledgeMemory.scopes();
+  scopes {
+    return this.knowledgeMemory.scopes;
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.knowledgeMemory.analytics(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -46,7 +46,7 @@ export class KnowledgeMemoryController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req() req: AuthedReq) {
+  monitoring(@Req req: AuthedReq) {
     return this.knowledgeMemory.monitoring(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -56,7 +56,7 @@ export class KnowledgeMemoryController {
   @Get('memories')
   @UseGuards(TranslateAuthGuard)
   list(
-    @Req() req: AuthedReq,
+    @Req req: AuthedReq,
     @Query('scope') scope?: string,
     @Query('subjectUserId') subjectUserId?: string,
     @Query('conversationId') conversationId?: string,
@@ -78,7 +78,7 @@ export class KnowledgeMemoryController {
 
   @Get('memories/:id')
   @UseGuards(TranslateAuthGuard)
-  get(@Req() req: AuthedReq, @Param('id') id: string) {
+  get(@Req req: AuthedReq, @Param('id') id: string) {
     return this.knowledgeMemory.get({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -88,7 +88,7 @@ export class KnowledgeMemoryController {
 
   @Get('memories/:id/versions')
   @UseGuards(TranslateAuthGuard)
-  versions(@Req() req: AuthedReq, @Param('id') id: string) {
+  versions(@Req req: AuthedReq, @Param('id') id: string) {
     return this.knowledgeMemory.versions({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -100,8 +100,8 @@ export class KnowledgeMemoryController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(TranslateAuthGuard)
   create(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       scope?: string;
       kind?: string;
@@ -130,9 +130,9 @@ export class KnowledgeMemoryController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   evolve(
-    @Req() req: AuthedReq,
+    @Req req: AuthedReq,
     @Param('id') id: string,
-    @Body() body: { content?: string; reason?: string },
+    @Body body: { content?: string; reason?: string },
   ) {
     return this.knowledgeMemory.evolve({
       organizationId: req.translateAuth.organizationId,
@@ -149,8 +149,8 @@ export class KnowledgeMemoryController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   search(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: { query?: string; scope?: string; documentId?: string; limit?: number },
   ) {
     return this.knowledgeMemory.search({

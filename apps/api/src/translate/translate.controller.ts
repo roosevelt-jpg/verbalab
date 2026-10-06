@@ -27,20 +27,20 @@ export class TranslateController {
   ) {}
 
   @Get('translate/engine')
-  engine() {
-    return this.formats.engine();
+  engine {
+    return this.formats.engine;
   }
 
   @Post('detect')
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   detect(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body() body: { text?: string },
+    @Body body: { text?: string },
   ) {
     if (typeof body.text !== 'string' || body.text.length === 0) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
@@ -59,12 +59,12 @@ export class TranslateController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   translate(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body() body: { text?: string; source?: string; target?: string },
+    @Body body: { text?: string; source?: string; target?: string },
   ) {
     if (typeof body.text !== 'string' || body.text.length === 0) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
@@ -92,12 +92,12 @@ export class TranslateController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   translateFormat(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body() body: { format?: string; content?: string; source?: string; target?: string },
+    @Body body: { format?: string; content?: string; source?: string; target?: string },
   ) {
     if (typeof body.source !== 'string' || !body.source) {
       throw new ApiException('validation_error', 'source is required', HttpStatus.BAD_REQUEST);
@@ -126,12 +126,12 @@ export class TranslateController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   translateChat(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body()
+    @Body
     body: {
       messages?: Array<{ role?: string; content?: string }>;
       source?: string;
@@ -167,13 +167,13 @@ export class TranslateController {
   @Header('Connection', 'keep-alive')
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   async translateStream(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Res() res: Response,
-    @Body() body: { text?: string; source?: string; target?: string },
+    @Res res: Response,
+    @Body body: { text?: string; source?: string; target?: string },
   ) {
     if (typeof body.text !== 'string' || body.text.length === 0) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
@@ -189,7 +189,7 @@ export class TranslateController {
     res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders?.();
+    res.flushHeaders?.;
 
     try {
       for await (const event of this.formats.streamTranslate({
@@ -208,7 +208,7 @@ export class TranslateController {
       const message = err instanceof Error ? err.message : 'stream_failed';
       res.write(`data: ${JSON.stringify({ event: 'error', message })}\n\n`);
     } finally {
-      res.end();
+      res.end;
     }
   }
 }

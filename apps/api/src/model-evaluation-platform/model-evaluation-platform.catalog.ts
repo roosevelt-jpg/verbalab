@@ -30,21 +30,21 @@ export type MepSuite = {
 };
 
 /**
- * Library Phase 103 → Model Evaluation Platform (VL-236).
- * Hub over VL-100 coverage/eval harness — not a global LLM leaderboard OS.
+ * Library Phase 103 → Model Evaluation Platform.
+ * Hub over existing coverage/eval harness — not a global LLM leaderboard OS.
  */
-export function modelEvaluationPlatformCatalog() {
+export function modelEvaluationPlatformCatalog {
   return {
     product: 'Lugemi Model Evaluation Platform',
     note:
-      'Model Evaluation Platform (VL-236). Extends VL-100 coverage/eval for translation goldens. Sandbox suites for bias/safety/latency. MMLU/HumanEval/MT-Bench and speech/vision/reasoning corpora stay deferred. Never claims market leadership or SOTA.',
+      'Model Evaluation Platform. Extends existing coverage/eval for translation goldens. Sandbox suites for bias/safety/latency. MMLU/HumanEval/MT-Bench and speech/vision/reasoning corpora stay deferred. Never claims market leadership or SOTA.',
     capabilities: [
       {
         id: 'evaluation-orchestration',
         name: 'Evaluation Orchestration',
         status: 'partial',
         api: 'POST /v1/model-evaluation-platform/runs',
-        notes: 'Eval run plans + handoff to VL-100 for translation.',
+        notes: 'Eval run plans + handoff to for translation.',
       },
       {
         id: 'translation-benchmarks',
@@ -131,12 +131,12 @@ export function modelEvaluationPlatformCatalog() {
         notes: 'Reasoning bench deferred — Reasoning Runtime has plan/reflect only.',
       },
     ] satisfies MepCapability[],
-    honesty: modelEvaluationPlatformHonesty(),
+    honesty: modelEvaluationPlatformHonesty,
     docs: '/docs/MODEL_EVALUATION_PLATFORM.md',
   };
 }
 
-export function modelEvaluationSuites(): MepSuite[] {
+export function modelEvaluationSuites: MepSuite[] {
   return [
     {
       id: 'translation',
@@ -144,7 +144,7 @@ export function modelEvaluationSuites(): MepSuite[] {
       status: 'partial',
       runnable: true,
       existingApi: 'POST /v1/eval/run',
-      notes: 'Handoff to VL-100 golden harness (fixture/live/oracle).',
+      notes: 'Handoff to golden harness (fixture/live/oracle).',
     },
     {
       id: 'bias',
@@ -221,7 +221,7 @@ export function modelEvaluationSuites(): MepSuite[] {
   ];
 }
 
-export function modelEvaluationPlatformArchitectureNotes() {
+export function modelEvaluationPlatformArchitectureNotes {
   return {
     style: 'nest_modular_monolith',
     ddd: 'bounded_model_evaluation_platform',
@@ -249,7 +249,7 @@ export function modelEvaluationPlatformArchitectureNotes() {
   };
 }
 
-export function modelEvaluationPlatformHonesty() {
+export function modelEvaluationPlatformHonesty {
   return {
     trainsCompetitiveFoundationWeights: false,
     globalLeaderboardOs: false,
@@ -265,12 +265,12 @@ export function modelEvaluationPlatformHonesty() {
   };
 }
 
-export function modelEvaluationCeilings() {
+export function modelEvaluationCeilings {
   return {
     maxRunsPerOrg: 100,
     maxLabelLength: 120,
     mode: 'sandbox',
     note:
-      'Sandbox ceilings for eval run plans. Live translation eval still gated by EVAL_LIVE=1 + VL-100 owner/admin.',
+      'Sandbox ceilings for eval run plans. Live translation eval still gated by EVAL_LIVE=1 + owner/admin.',
   };
 }

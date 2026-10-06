@@ -20,18 +20,18 @@ type AuthCtx = {
   ip?: string;
 };
 
-@Injectable()
+@Injectable
 export class StreamingRuntimeService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
   ) {}
 
-  engine() {
+  engine {
     return {
-      ...streamingRuntimeCatalog(),
-      ceilings: streamingCeilings(),
-      mode: streamingRuntimeMode(),
+      ...streamingRuntimeCatalog,
+      ceilings: streamingCeilings,
+      mode: streamingRuntimeMode,
       spendSafety: {
         hardSpendCeilingsRequired: true,
         note:
@@ -41,21 +41,21 @@ export class StreamingRuntimeService {
   }
 
   surfaces(kind?: string) {
-    const all = streamingSurfaces();
+    const all = streamingSurfaces;
     const filtered = kind
-      ? all.filter((s) => s.kind === kind.toLowerCase())
+      ? all.filter((s) => s.kind === kind.toLowerCase)
       : all;
     return {
       surfaces: filtered,
-      honesty: streamingRuntimeCatalog().honesty,
+      honesty: streamingRuntimeCatalog.honesty,
       note: 'Discoverable stream surfaces — prefer existing product SSE where listed.',
     };
   }
 
-  transports() {
+  transports {
     return {
-      transports: streamingTransports(),
-      honesty: streamingRuntimeCatalog().honesty,
+      transports: streamingTransports,
+      honesty: streamingRuntimeCatalog.honesty,
     };
   }
 
@@ -65,7 +65,7 @@ export class StreamingRuntimeService {
         organizationId: input.organizationId,
         workspaceId: input.workspaceId,
         ...(input.status ? { status: input.status } : {}),
-        ...(input.kind ? { kind: input.kind.toLowerCase() } : {}),
+        ...(input.kind ? { kind: input.kind.toLowerCase } : {}),
       },
       orderBy: { createdAt: 'desc' },
       take: 50,
@@ -79,7 +79,7 @@ export class StreamingRuntimeService {
   async createSession(
     input: AuthCtx & { kind?: string; label?: string; text?: string },
   ) {
-    this.assertEnabled();
+    this.assertEnabled;
     const kind = this.normalizeKind(input.kind ?? 'llm');
     if (kind === 'video') {
       throw new ApiException(
@@ -88,7 +88,7 @@ export class StreamingRuntimeService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const surface = streamingSurfaces().find((s) => s.kind === kind);
+    const surface = streamingSurfaces.find((s) => s.kind === kind);
     const row = await this.prisma.streamingSession.create({
       data: {
         organizationId: input.organizationId,
@@ -152,22 +152,22 @@ export class StreamingRuntimeService {
     },
     res: Response,
   ) {
-    this.assertEnabled();
+    this.assertEnabled;
     const kind = this.normalizeKind(input.kind ?? 'llm');
-    const ceilings = streamingCeilings();
-    const surface = streamingSurfaces().find((s) => s.kind === kind);
+    const ceilings = streamingCeilings;
+    const surface = streamingSurfaces.find((s) => s.kind === kind);
 
     res.status(200);
     res.setHeader('Content-Type', 'text/event-stream; charset=utf-8');
     res.setHeader('Cache-Control', 'no-cache, no-transform');
     res.setHeader('Connection', 'keep-alive');
-    res.flushHeaders?.();
+    res.flushHeaders?.;
 
     const write = (event: string, data: unknown) => {
       res.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
     };
 
-    let sessionId = input.sessionId?.trim() || null;
+    let sessionId = input.sessionId?.trim || null;
     if (sessionId) {
       const existing = await this.prisma.streamingSession.findFirst({
         where: {
@@ -178,7 +178,7 @@ export class StreamingRuntimeService {
       });
       if (!existing) {
         write('error', { message: 'session not found' });
-        res.end();
+        res.end;
         return;
       }
     } else {
@@ -204,7 +204,7 @@ export class StreamingRuntimeService {
       transport: 'sse',
       surfaceApi: surface?.api ?? null,
       existingSurface: surface?.existing ?? false,
-      honesty: streamingRuntimeCatalog().honesty,
+      honesty: streamingRuntimeCatalog.honesty,
       note: 'Sandbox SSE — not WebSocket/gRPC/video OS.',
     });
 
@@ -212,7 +212,7 @@ export class StreamingRuntimeService {
       write('error', { message: 'Video streaming is deferred', code: 'deferred' });
       write('done', { ok: false, deferred: true });
       await this.finishSession(sessionId, 0, 'failed');
-      res.end();
+      res.end;
       return;
     }
 
@@ -235,12 +235,12 @@ export class StreamingRuntimeService {
         ip: input.ip,
         metadata: { sessionId, kind, api: surface.api },
       });
-      res.end();
+      res.end;
       return;
     }
 
     const text =
-      (input.text ?? '').trim() ||
+      (input.text ?? '').trim ||
       (kind === 'translation'
         ? 'Habari dunia — sandbox translation stream.'
         : 'Hello from Lugemi Streaming Runtime sandbox.');
@@ -267,7 +267,7 @@ export class StreamingRuntimeService {
       chunks: i,
       sessionId,
       ceilings,
-      honesty: streamingRuntimeCatalog().honesty,
+      honesty: streamingRuntimeCatalog.honesty,
     });
 
     await this.finishSession(sessionId, i, 'closed');
@@ -279,11 +279,11 @@ export class StreamingRuntimeService {
       ip: input.ip,
       metadata: { sessionId, kind, chunks: i },
     });
-    res.end();
+    res.end;
   }
 
   async analytics(input: AuthCtx) {
-    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
     const [total, streaming, closed, audits, chunks] = await Promise.all([
       this.prisma.streamingSession.count({
         where: {
@@ -330,30 +330,30 @@ export class StreamingRuntimeService {
       closed,
       chunksTotal: chunks._sum.chunkCount ?? 0,
       auditsLast30d: audits,
-      note: 'Streaming Runtime analytics (VL-208). ≠ VL-212 AI Runtime Analytics.',
+      note: 'Streaming Runtime analytics. ≠ AI Runtime Analytics.',
     };
   }
 
   async monitoring(input: AuthCtx) {
     const [engine, analytics] = await Promise.all([
-      Promise.resolve(this.engine()),
+      Promise.resolve(this.engine),
       this.analytics(input),
     ]);
     return {
-      generatedAt: new Date().toISOString(),
-      mode: streamingRuntimeMode(),
+      generatedAt: new Date.toISOString,
+      mode: streamingRuntimeMode,
       analytics,
       honesty: engine.honesty,
       spendSafety: engine.spendSafety,
       deferred: engine.capabilities
         .filter((c) => c.status === 'deferred')
         .map((c) => c.id),
-      note: 'Streaming Runtime monitoring snapshot (VL-208).',
+      note: 'Streaming Runtime monitoring snapshot.',
     };
   }
 
-  private assertEnabled() {
-    if (streamingRuntimeMode() === 'disabled') {
+  private assertEnabled {
+    if (streamingRuntimeMode === 'disabled') {
       throw new ApiException(
         'streaming_runtime_disabled',
         'Streaming Runtime mode is disabled (LUGEMI_STREAMING_RUNTIME_MODE=disabled).',
@@ -363,7 +363,7 @@ export class StreamingRuntimeService {
   }
 
   private normalizeKind(raw: string): StreamKind {
-    const k = raw.toLowerCase() as StreamKind;
+    const k = raw.toLowerCase as StreamKind;
     if (!STREAM_KINDS.includes(k)) {
       throw new ApiException(
         'validation_error',
@@ -435,8 +435,8 @@ export class StreamingRuntimeService {
       label: r.label,
       chunkCount: r.chunkCount,
       metadata: r.metadata,
-      createdAt: r.createdAt.toISOString(),
-      updatedAt: r.updatedAt.toISOString(),
+      createdAt: r.createdAt.toISOString,
+      updatedAt: r.updatedAt.toISOString,
     };
   }
 }

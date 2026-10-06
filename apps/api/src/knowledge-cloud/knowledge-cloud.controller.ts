@@ -8,13 +8,13 @@ export class KnowledgeCloudController {
   constructor(private readonly knowledgeCloud: KnowledgeCloudService) {}
 
   @Get('products')
-  products() {
-    return this.knowledgeCloud.products();
+  products {
+    return this.knowledgeCloud.products;
   }
 
   @Get('overview')
   @UseGuards(ClerkAuthGuard)
-  overview(@CurrentSession() session: SessionContext) {
+  overview(@CurrentSession session: SessionContext) {
     return this.knowledgeCloud.overview(session);
   }
 }

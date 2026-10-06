@@ -31,35 +31,35 @@ export type EvaluationRun = {
 
 const RUNNABLE: MepSuiteId[] = ['translation', 'bias', 'safety', 'latency'];
 
-@Injectable()
+@Injectable
 export class ModelEvaluationPlatformService {
-  private readonly runs = new Map<string, EvaluationRun>();
+  private readonly runs = new Map<string, EvaluationRun>;
 
   constructor(
     private readonly usage: UsageService,
     private readonly evalService: EvalService,
   ) {}
 
-  engine() {
+  engine {
     return {
-      ...modelEvaluationPlatformCatalog(),
-      suites: modelEvaluationSuites(),
-      architecture: modelEvaluationPlatformArchitectureNotes(),
-      ceilings: modelEvaluationCeilings(),
-      coverage: this.evalService.getSnapshot(),
+      ...modelEvaluationPlatformCatalog,
+      suites: modelEvaluationSuites,
+      architecture: modelEvaluationPlatformArchitectureNotes,
+      ceilings: modelEvaluationCeilings,
+      coverage: this.evalService.getSnapshot,
       safety: {
         sotaClaimsForbidden: true,
         noFakeMmluScores: true,
         note:
-          'Leaderboards are org-scoped from local runs. Translation scores come from VL-100 reference metrics — not market leadership.',
+          'Leaderboards are org-scoped from local runs. Translation scores come from reference metrics — not market leadership.',
       },
     };
   }
 
-  suites() {
+  suites {
     return {
-      suites: modelEvaluationSuites(),
-      honesty: modelEvaluationPlatformHonesty(),
+      suites: modelEvaluationSuites,
+      honesty: modelEvaluationPlatformHonesty,
       docs: '/docs/MODEL_EVALUATION_PLATFORM.md',
     };
   }
@@ -78,7 +78,7 @@ export class ModelEvaluationPlatformService {
         chat: usageSummary.chat,
         embeddings: usageSummary.embeddings,
       },
-      engine: this.engine(),
+      engine: this.engine,
       runs: runs.slice(0, 20),
       leaderboard: this.buildLeaderboard(session.organizationId).entries.slice(0, 10),
       deferred: {
@@ -100,15 +100,15 @@ export class ModelEvaluationPlatformService {
       },
       docs: '/docs/MODEL_EVALUATION_PLATFORM.md',
       note:
-        'Model Evaluation Platform (VL-236). Translation via VL-100; sandbox bias/safety/latency. Not a global LLM leaderboard.',
+        'Model Evaluation Platform. Translation via existing; sandbox bias/safety/latency. Not a global LLM leaderboard.',
     };
   }
 
   listRuns(session: SessionContext) {
     return {
       runs: this.listRunsForOrg(session.organizationId),
-      ceilings: modelEvaluationCeilings(),
-      note: 'Org-scoped sandbox evaluation runs (VL-236).',
+      ceilings: modelEvaluationCeilings,
+      note: 'Org-scoped sandbox evaluation runs.',
     };
   }
 
@@ -125,7 +125,7 @@ export class ModelEvaluationPlatformService {
       targetLatencyMs?: number;
     },
   ) {
-    const ceilings = modelEvaluationCeilings();
+    const ceilings = modelEvaluationCeilings;
     const existing = this.listRunsForOrg(session.organizationId);
     if (existing.length >= ceilings.maxRunsPerOrg) {
       throw new ApiException(
@@ -136,13 +136,13 @@ export class ModelEvaluationPlatformService {
     }
 
     const suite = this.normalizeSuite(body.suite ?? 'translation');
-    const now = new Date().toISOString();
+    const now = new Date.toISOString;
     const run: EvaluationRun = {
-      id: randomUUID(),
+      id: randomUUID,
       organizationId: session.organizationId,
       workspaceId: session.workspaceId,
       suite,
-      label: (body.label ?? `${suite}-${Date.now()}`).slice(0, ceilings.maxLabelLength),
+      label: (body.label ?? `${suite}-${Date.now}`).slice(0, ceilings.maxLabelLength),
       status: 'planned',
       score: null,
       metrics: {},
@@ -155,7 +155,7 @@ export class ModelEvaluationPlatformService {
     if (body.execute === false) {
       return {
         run,
-        honesty: modelEvaluationPlatformHonesty(),
+        honesty: modelEvaluationPlatformHonesty,
         note: 'Run planned. POST …/execute to score or hand off.',
       };
     }
@@ -181,13 +181,13 @@ export class ModelEvaluationPlatformService {
     if (!RUNNABLE.includes(run.suite)) {
       throw new ApiException(
         'validation_error',
-        `Suite ${run.suite} is not runnable in VL-236 (deferred)`,
+        `Suite ${run.suite} is not runnable in (deferred)`,
         HttpStatus.BAD_REQUEST,
       );
     }
 
     if (run.suite === 'translation') {
-      const snapshot = this.evalService.getSnapshot();
+      const snapshot = this.evalService.getSnapshot;
       run.status = 'handed_off';
       run.metrics = {
         handoff: 'POST /v1/eval/run',
@@ -196,8 +196,8 @@ export class ModelEvaluationPlatformService {
       };
       run.score = snapshot?.pairs[0]?.exactMatchRate ?? null;
       run.report =
-        'Handoff to VL-100. Owner/admin: POST /v1/eval/run?mode=fixture|live|reference_oracle. Platform does not regenerate the harness or invent leadership scores.';
-      run.updatedAt = new Date().toISOString();
+        'Handoff to . Owner/admin: POST /v1/eval/run?mode=fixture|live|reference_oracle. Platform does not regenerate the harness or invent leadership scores.';
+      run.updatedAt = new Date.toISOString;
       this.runs.set(run.id, run);
       return {
         run,
@@ -207,7 +207,7 @@ export class ModelEvaluationPlatformService {
           coverage: 'GET /v1/coverage',
           note: 'Live mode requires EVAL_LIVE=1. Scores are reference metrics on tiny goldens — not SOTA.',
         },
-        honesty: modelEvaluationPlatformHonesty(),
+        honesty: modelEvaluationPlatformHonesty,
       };
     }
 
@@ -216,11 +216,11 @@ export class ModelEvaluationPlatformService {
     run.score = scored.score;
     run.metrics = scored.metrics;
     run.report = scored.report;
-    run.updatedAt = new Date().toISOString();
+    run.updatedAt = new Date.toISOString;
     this.runs.set(run.id, run);
     return {
       run,
-      honesty: modelEvaluationPlatformHonesty(),
+      honesty: modelEvaluationPlatformHonesty,
       note: 'Sandbox suite score only — not a research-grade benchmark.',
     };
   }
@@ -228,7 +228,7 @@ export class ModelEvaluationPlatformService {
   cancelRun(session: SessionContext, id: string) {
     const run = this.requireRun(session.organizationId, id);
     run.status = 'cancelled';
-    run.updatedAt = new Date().toISOString();
+    run.updatedAt = new Date.toISOString;
     this.runs.set(run.id, run);
     return { run };
   }
@@ -245,13 +245,13 @@ export class ModelEvaluationPlatformService {
       bySuite[r.suite] = (bySuite[r.suite] ?? 0) + 1;
     }
     return {
-      asOf: new Date().toISOString(),
+      asOf: new Date.toISOString,
       runCount: runs.length,
       completedCount: completed.length,
       bySuite,
-      coverage: this.evalService.getSnapshot(),
+      coverage: this.evalService.getSnapshot,
       recent: completed.slice(0, 10),
-      honesty: modelEvaluationPlatformHonesty(),
+      honesty: modelEvaluationPlatformHonesty,
       disclaimer:
         'Reports aggregate local sandbox/handoff runs. They do not claim market leadership, MMLU SOTA, or human quality.',
       docs: '/docs/MODEL_EVALUATION_PLATFORM.md',
@@ -268,14 +268,14 @@ export class ModelEvaluationPlatformService {
       mode: 'foundation',
       runCount: runs.length,
       byStatus,
-      suites: modelEvaluationSuites().map((s) => ({
+      suites: modelEvaluationSuites.map((s) => ({
         id: s.id,
         status: s.status,
         runnable: s.runnable,
       })),
-      honesty: modelEvaluationPlatformHonesty(),
+      honesty: modelEvaluationPlatformHonesty,
       note:
-        'Model Evaluation Platform monitoring (VL-236). Translation handoff + sandbox suites; MMLU/HumanEval deferred.',
+        'Model Evaluation Platform monitoring. Translation handoff + sandbox suites; MMLU/HumanEval deferred.',
     };
   }
 
@@ -295,7 +295,7 @@ export class ModelEvaluationPlatformService {
       .sort((a, b) => b.score - a.score);
     return {
       entries,
-      honesty: modelEvaluationPlatformHonesty(),
+      honesty: modelEvaluationPlatformHonesty,
       note:
         'Org-scoped sandbox leaderboard from local runs only — not a public LMSYS/HELM board.',
     };
@@ -351,7 +351,7 @@ export class ModelEvaluationPlatformService {
   }
 
   private listRunsForOrg(organizationId: string): EvaluationRun[] {
-    return [...this.runs.values()]
+    return [...this.runs.values]
       .filter((r) => r.organizationId === organizationId)
       .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   }
@@ -365,8 +365,8 @@ export class ModelEvaluationPlatformService {
   }
 
   private normalizeSuite(raw: string): MepSuiteId {
-    const id = raw.trim().toLowerCase().replace(/-/g, '_') as MepSuiteId;
-    const known = modelEvaluationSuites().find((s) => s.id === id);
+    const id = raw.trim.toLowerCase.replace(/-/g, '_') as MepSuiteId;
+    const known = modelEvaluationSuites.find((s) => s.id === id);
     if (!known) {
       throw new ApiException(
         'validation_error',

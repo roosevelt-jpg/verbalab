@@ -6,16 +6,16 @@ import {
   TrainingPipelineProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestTrainingPipelineCatalogAdapter implements TrainingPipelineCatalogPort {
   constructor(private readonly service: TrainingPipelineService) {}
 
-  engine(): TrainingPipelineEngineBundle {
-    return this.service.engine();
+  engine: TrainingPipelineEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): TrainingPipelineProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: TrainingPipelineProductRow[] {
+    const bundle = this.engine as {
       products?: TrainingPipelineProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestTrainingPipelineCatalogAdapter implements TrainingPipelineCatal
         status: 'shipped',
         api: 'GET /v1/training-pipeline/engine',
         console: '/training-pipeline',
-        notes: 'VL-283 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

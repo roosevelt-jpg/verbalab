@@ -6,16 +6,16 @@ import {
   VoiceRuntimeProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestVoiceRuntimeCatalogAdapter implements VoiceRuntimeCatalogPort {
   constructor(private readonly service: VoiceRuntimeService) {}
 
-  engine(): VoiceRuntimeEngineBundle {
-    return this.service.engine();
+  engine: VoiceRuntimeEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): VoiceRuntimeProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: VoiceRuntimeProductRow[] {
+    const bundle = this.engine as {
       products?: VoiceRuntimeProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestVoiceRuntimeCatalogAdapter implements VoiceRuntimeCatalogPort {
         status: 'shipped',
         api: 'GET /v1/voice-runtime/engine',
         console: '/voice-runtime',
-        notes: 'VL-327 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

@@ -22,7 +22,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_te_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_te_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -36,20 +36,20 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Translation Engine Phase 8 (VL-140)', () => {
+describe('Translation Engine Phase 8',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let rawKey: string;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -78,18 +78,18 @@ describe('Translation Engine Phase 8 (VL-140)', () => {
     rawKey = created.secret;
   }, 120_000);
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('ships ADR and docs', () => {
+  it('ships ADR and docs',  => {
     expect(existsSync(join(root, 'docs/adr/0061-translation-engine-phase-8.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/TRANSLATE.md'))).toBe(true);
     expect(readFileSync(join(root, 'docs/TRANSLATE.md'), 'utf8')).toContain('/v1/translate/formats');
   });
 
-  it('exposes engine catalog with honest deferred channels', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/translate/engine').expect(200);
+  it('exposes engine catalog with honest deferred channels', async  => {
+    const res = await request(app.getHttpServer).get('/v1/translate/engine').expect(200);
     expect(res.body.product).toMatch(/Translate/i);
     expect(res.body.capabilities.some((c: { id: string; status: string }) => c.id === 'html' && c.status === 'shipped')).toBe(
       true,
@@ -100,8 +100,8 @@ describe('Translation Engine Phase 8 (VL-140)', () => {
     expect(res.body.engines.translationMemory.status).toBe('partial');
   });
 
-  it('translates HTML preserving tags', async () => {
-    const res = await request(app.getHttpServer())
+  it('translates HTML preserving tags', async  => {
+    const res = await request(app.getHttpServer)
       .post('/v1/translate/formats')
       .set('Authorization', `Bearer ${rawKey}`)
       .send({
@@ -117,13 +117,13 @@ describe('Translation Engine Phase 8 (VL-140)', () => {
     expect(res.body.segmentCount).toBeGreaterThan(0);
   });
 
-  it('translates SRT keeping timestamps', async () => {
+  it('translates SRT keeping timestamps', async  => {
     const srt = `1
 00:00:01,000 --> 00:00:04,000
 Hello there
 
 `;
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer)
       .post('/v1/translate/formats')
       .set('Authorization', `Bearer ${rawKey}`)
       .send({ format: 'srt', content: srt, source: 'en', target: 'sw' })
@@ -132,8 +132,8 @@ Hello there
     expect(res.body.content).toContain('[sw]');
   });
 
-  it('translates chat messages', async () => {
-    const res = await request(app.getHttpServer())
+  it('translates chat messages', async  => {
+    const res = await request(app.getHttpServer)
       .post('/v1/translate/chat')
       .set('Authorization', `Bearer ${rawKey}`)
       .send({
@@ -145,8 +145,8 @@ Hello there
     expect(res.body.messages[0].content).toContain('[sw]');
   });
 
-  it('streams SSE chunks', async () => {
-    const res = await request(app.getHttpServer())
+  it('streams SSE chunks', async  => {
+    const res = await request(app.getHttpServer)
       .post('/v1/translate/stream')
       .set('Authorization', `Bearer ${rawKey}`)
       .set('Accept', 'text/event-stream')
@@ -159,8 +159,8 @@ Hello there
     expect(body).toContain('[sw]');
   });
 
-  it('exposes GraphQL translate mutation', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes GraphQL translate mutation', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .set('Authorization', `Bearer ${rawKey}`)
       .send({
@@ -170,7 +170,7 @@ Hello there
         variables: { input: { text: 'Hello', source: 'en', target: 'sw' } },
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.translate.text).toContain('[sw]');
   });
 });

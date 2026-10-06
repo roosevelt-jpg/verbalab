@@ -8,17 +8,17 @@ import { compliancePlatformEngineCatalog } from '../compliance-platform/complian
 import { riskIntelligenceEngineCatalog } from '../risk-intelligence/risk-intelligence.catalog';
 import { agentopsPlatformEngineCatalog } from '../agentops-platform/agentops-platform.catalog';
 
-@Injectable()
+@Injectable
 export class TrustAnalyticsService {
-  engine() {
-    const base = trustAnalyticsEngineCatalog();
-    const products = trustCloudProductCatalog();
-    const safety = aiSafetyPlatformEngineCatalog();
-    const governance = aiGovernancePlatformEngineCatalog(seedApprovalRequests());
-    const privacy = privacyPlatformEngineCatalog();
-    const compliance = compliancePlatformEngineCatalog();
-    const risk = riskIntelligenceEngineCatalog();
-    const agents = agentopsPlatformEngineCatalog();
+  engine {
+    const base = trustAnalyticsEngineCatalog;
+    const products = trustCloudProductCatalog;
+    const safety = aiSafetyPlatformEngineCatalog;
+    const governance = aiGovernancePlatformEngineCatalog(seedApprovalRequests);
+    const privacy = privacyPlatformEngineCatalog;
+    const compliance = compliancePlatformEngineCatalog;
+    const risk = riskIntelligenceEngineCatalog;
+    const agents = agentopsPlatformEngineCatalog;
     const privacyGates = privacy.assets.map((a) => evaluatePrivacyRelease(a));
     return {
       ...base,
@@ -60,11 +60,11 @@ export class TrustAnalyticsService {
   }
 
   list(query?: string) {
-    const engine = this.engine();
-    const q = (query ?? '').trim().toLowerCase();
+    const engine = this.engine;
+    const q = (query ?? '').trim.toLowerCase;
     const rows = Object.entries(engine.snapshot).filter(([k]) => {
       if (!q) return true;
-      return k.toLowerCase().includes(q);
+      return k.toLowerCase.includes(q);
     });
     return {
       snapshot: Object.fromEntries(rows),
@@ -80,14 +80,14 @@ export class TrustAnalyticsService {
     return this.list(query);
   }
 
-  monitoring() {
-    const catalog = this.engine();
+  monitoring {
+    const catalog = this.engine;
     return {
       mode: 'trust-analytics',
-      shippedProducts: trustCloudProductCatalog().filter((p) => p.status === 'shipped').length,
+      shippedProducts: trustCloudProductCatalog.filter((p) => p.status === 'shipped').length,
       honesty: catalog.honesty,
       safety: catalog.safety,
-      note: 'Trust Analytics monitoring snapshot (VL-300).',
+      note: 'Trust Analytics monitoring snapshot.',
     };
   }
 }

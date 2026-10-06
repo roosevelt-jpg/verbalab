@@ -8,13 +8,13 @@ export type PromptRuntimeCapability = {
   notes: string;
 };
 
-export function promptRuntimeMode(): 'disabled' | 'sandbox' {
-  const raw = (process.env.LUGEMI_PROMPT_RUNTIME_MODE ?? 'sandbox').toLowerCase();
+export function promptRuntimeMode: 'disabled' | 'sandbox' {
+  const raw = (process.env.LUGEMI_PROMPT_RUNTIME_MODE ?? 'sandbox').toLowerCase;
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
 
-export function promptRuntimeCeilings() {
+export function promptRuntimeCeilings {
   return {
     maxRenderedChars: Math.min(
       64_000,
@@ -24,7 +24,7 @@ export function promptRuntimeCeilings() {
       86_400,
       Math.max(30, Number(process.env.LUGEMI_PROMPT_RUNTIME_CACHE_TTL_SEC ?? '600') || 600),
     ),
-    mode: promptRuntimeMode(),
+    mode: promptRuntimeMode,
     note: 'Hard render size ceiling. Cache TTL for opt-in Intelligent Cache namespace=prompt.',
   };
 }
@@ -43,14 +43,14 @@ export const PROMPT_RUNTIME_ROUTES: Array<{
 ];
 
 /**
- * Library Phase 83 → Prompt Runtime (VL-216).
- * Kernel execution over VL-086 / VL-188 — not an auto-prompt research lab.
+ * Library Phase 83 → Prompt Runtime.
+ * Kernel execution over existing — not an auto-prompt research lab.
  */
-export function promptRuntimeCatalog() {
+export function promptRuntimeCatalog {
   return {
     product: 'Lugemi Prompt Runtime',
     note:
-      'Prompt Runtime (VL-216). Kernel execution over VL-086 versioned prompts + VL-188 Prompt Intelligence (resolve, variables, validate, security, cache via Intelligent Cache namespace=prompt). Not an auto-prompt research lab, LLM-as-judge, or prompt mesh OS. Does not regenerate Prompt Intelligence.',
+      'Prompt Runtime. Kernel execution over existing versioned prompts + Prompt Intelligence (resolve, variables, validate, security, cache via Intelligent Cache namespace=prompt). Not an auto-prompt research lab, LLM-as-judge, or prompt mesh OS. Does not regenerate Prompt Intelligence.',
     capabilities: [
       {
         id: 'prompt-execution',
@@ -64,7 +64,7 @@ export function promptRuntimeCatalog() {
         name: 'Prompt Templates',
         status: 'shipped',
         api: 'GET /v1/prompt-runtime/templates',
-        notes: 'Managed chat/rag/voice_faq templates over VL-086 keys.',
+        notes: 'Managed chat/rag/voice_faq templates over existing keys.',
       },
       {
         id: 'prompt-variables',
@@ -85,7 +85,7 @@ export function promptRuntimeCatalog() {
         name: 'Prompt Versioning',
         status: 'shipped',
         api: 'GET /v1/prompt-runtime/versions',
-        notes: 'Façade over VL-086 PromptVersion rows.',
+        notes: 'Façade over existing PromptVersion rows.',
       },
       {
         id: 'prompt-optimization',
@@ -127,7 +127,7 @@ export function promptRuntimeCatalog() {
         name: 'Prompt Registry Integration',
         status: 'shipped',
         api: 'GET /v1/prompt-runtime/registry',
-        notes: 'Reads VL-086 / VL-188 registry; CRUD stays on /v1/prompts.',
+        notes: 'Reads registry; CRUD stays on /v1/prompts.',
       },
       {
         id: 'rest',
@@ -147,7 +147,7 @@ export function promptRuntimeCatalog() {
         id: 'sdk',
         name: 'SDK',
         status: 'shipped',
-        api: 'promptRuntimeEngine()',
+        api: 'promptRuntimeEngine',
         notes: '@lugemi/sdk',
       },
       {

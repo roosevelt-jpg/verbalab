@@ -17,8 +17,8 @@ export class GetOrganizationControlEngineHandler
     private readonly catalog: OrganizationControlCatalogPort,
   ) {}
 
-  execute(): Promise<OrganizationControlEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<OrganizationControlEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListOrganizationControlProductsHandler
     private readonly catalog: OrganizationControlCatalogPort,
   ) {}
 
-  execute(): Promise<OrganizationControlProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<OrganizationControlProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

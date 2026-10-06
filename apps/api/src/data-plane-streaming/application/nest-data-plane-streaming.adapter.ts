@@ -6,16 +6,16 @@ import {
   DataPlaneStreamingProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestDataPlaneStreamingCatalogAdapter implements DataPlaneStreamingCatalogPort {
   constructor(private readonly service: DataPlaneStreamingService) {}
 
-  engine(): DataPlaneStreamingEngineBundle {
-    return this.service.engine();
+  engine: DataPlaneStreamingEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): DataPlaneStreamingProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: DataPlaneStreamingProductRow[] {
+    const bundle = this.engine as {
       products?: DataPlaneStreamingProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestDataPlaneStreamingCatalogAdapter implements DataPlaneStreamingC
         status: 'shipped',
         api: 'GET /v1/data-plane-streaming/engine',
         console: '/data-plane-streaming',
-        notes: 'VL-331 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

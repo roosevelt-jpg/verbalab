@@ -26,18 +26,18 @@ export class PolicyRuntimeController {
   constructor(private readonly runtime: PolicyRuntimeService) {}
 
   @Get('engine')
-  engine() {
-    return this.runtime.engine();
+  engine {
+    return this.runtime.engine;
   }
 
   @Get('kinds')
-  kinds() {
-    return this.runtime.kinds();
+  kinds {
+    return this.runtime.kinds;
   }
 
   @Get('policies')
   @UseGuards(TranslateAuthGuard)
-  list(@Req() req: AuthedReq) {
+  list(@Req req: AuthedReq) {
     return this.runtime.listPolicies({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -46,7 +46,7 @@ export class PolicyRuntimeController {
 
   @Get('policies/:id')
   @UseGuards(TranslateAuthGuard)
-  get(@Req() req: AuthedReq, @Param('id') id: string) {
+  get(@Req req: AuthedReq, @Param('id') id: string) {
     return this.runtime.getPolicy({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -58,8 +58,8 @@ export class PolicyRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   create(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       name?: string;
       kind?: string;
@@ -83,9 +83,9 @@ export class PolicyRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   setEnabled(
-    @Req() req: AuthedReq,
+    @Req req: AuthedReq,
     @Param('id') id: string,
-    @Body() body: { enabled?: boolean },
+    @Body body: { enabled?: boolean },
   ) {
     return this.runtime.setEnabled({
       organizationId: req.translateAuth.organizationId,
@@ -101,8 +101,8 @@ export class PolicyRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   evaluate(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       runtime?: string;
       subjectId?: string;
@@ -121,7 +121,7 @@ export class PolicyRuntimeController {
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.runtime.analytics({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -130,7 +130,7 @@ export class PolicyRuntimeController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req() req: AuthedReq) {
+  monitoring(@Req req: AuthedReq) {
     return this.runtime.monitoring({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,

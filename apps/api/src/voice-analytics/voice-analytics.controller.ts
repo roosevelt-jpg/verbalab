@@ -8,14 +8,14 @@ export class VoiceAnalyticsController {
   constructor(private readonly analytics: VoiceAnalyticsService) {}
 
   @Get('engine')
-  engine() {
-    return this.analytics.engine();
+  engine {
+    return this.analytics.engine;
   }
 
   @Get('overview')
   @UseGuards(TranslateAuthGuard)
   overview(
-    @Req() req: Request & { translateAuth: TranslateAuthContext },
+    @Req req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -30,7 +30,7 @@ export class VoiceAnalyticsController {
   @Get('usage')
   @UseGuards(TranslateAuthGuard)
   usage(
-    @Req() req: Request & { translateAuth: TranslateAuthContext },
+    @Req req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -44,7 +44,7 @@ export class VoiceAnalyticsController {
   @Get('languages')
   @UseGuards(TranslateAuthGuard)
   languages(
-    @Req() req: Request & { translateAuth: TranslateAuthContext },
+    @Req req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -58,7 +58,7 @@ export class VoiceAnalyticsController {
   @Get('voices')
   @UseGuards(TranslateAuthGuard)
   voices(
-    @Req() req: Request & { translateAuth: TranslateAuthContext },
+    @Req req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -72,7 +72,7 @@ export class VoiceAnalyticsController {
   @Get('customers')
   @UseGuards(TranslateAuthGuard)
   customers(
-    @Req() req: Request & { translateAuth: TranslateAuthContext },
+    @Req req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -86,7 +86,7 @@ export class VoiceAnalyticsController {
   @Get('revenue')
   @UseGuards(TranslateAuthGuard)
   revenue(
-    @Req() req: Request & { translateAuth: TranslateAuthContext },
+    @Req req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -100,7 +100,7 @@ export class VoiceAnalyticsController {
   @Get('latency')
   @UseGuards(TranslateAuthGuard)
   latency(
-    @Req() req: Request & { translateAuth: TranslateAuthContext },
+    @Req req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -114,7 +114,7 @@ export class VoiceAnalyticsController {
   @Get('quality')
   @UseGuards(TranslateAuthGuard)
   quality(
-    @Req() req: Request & { translateAuth: TranslateAuthContext },
+    @Req req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -128,7 +128,7 @@ export class VoiceAnalyticsController {
   @Get('streaming')
   @UseGuards(TranslateAuthGuard)
   streaming(
-    @Req() req: Request & { translateAuth: TranslateAuthContext },
+    @Req req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -142,7 +142,7 @@ export class VoiceAnalyticsController {
   @Get('downloads')
   @UseGuards(TranslateAuthGuard)
   downloads(
-    @Req() req: Request & { translateAuth: TranslateAuthContext },
+    @Req req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -156,7 +156,7 @@ export class VoiceAnalyticsController {
   @Get('marketplace')
   @UseGuards(TranslateAuthGuard)
   marketplace(
-    @Req() req: Request & { translateAuth: TranslateAuthContext },
+    @Req req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -170,7 +170,7 @@ export class VoiceAnalyticsController {
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
   monitoring(
-    @Req() req: Request & { translateAuth: TranslateAuthContext },
+    @Req req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {
@@ -184,7 +184,7 @@ export class VoiceAnalyticsController {
   @Get('report')
   @UseGuards(TranslateAuthGuard)
   report(
-    @Req() req: Request & { translateAuth: TranslateAuthContext },
+    @Req req: Request & { translateAuth: TranslateAuthContext },
     @Query('from') from?: string,
     @Query('to') to?: string,
   ) {

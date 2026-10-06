@@ -6,16 +6,16 @@ import {
   AfricanIntelligenceCloudProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestAfricanIntelligenceCloudCatalogAdapter implements AfricanIntelligenceCloudCatalogPort {
   constructor(private readonly service: AfricanIntelligenceCloudService) {}
 
-  engine(): AfricanIntelligenceCloudEngineBundle {
-    return this.service.products();
+  engine: AfricanIntelligenceCloudEngineBundle {
+    return this.service.products;
   }
 
-  listProducts(): AfricanIntelligenceCloudProductRow[] {
-    const bundle = this.engine() as { products?: AfricanIntelligenceCloudProductRow[]; capabilities?: AfricanIntelligenceCloudProductRow[] };
+  listProducts: AfricanIntelligenceCloudProductRow[] {
+    const bundle = this.engine as { products?: AfricanIntelligenceCloudProductRow[]; capabilities?: AfricanIntelligenceCloudProductRow[] };
     if (Array.isArray(bundle.products)) return bundle.products;
     if (Array.isArray(bundle.capabilities)) {
       return bundle.capabilities.map((c) => ({
@@ -34,7 +34,7 @@ export class NestAfricanIntelligenceCloudCatalogAdapter implements AfricanIntell
         status: 'shipped',
         api: 'GET /v1/african-intelligence-cloud/engine',
         console: '/african-intelligence-cloud',
-        notes: 'VL-260 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

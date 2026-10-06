@@ -28,7 +28,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_es_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_es_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -42,23 +42,23 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Enterprise Search (VL-195)', () => {
+describe('Enterprise Search',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let storageDir: string;
 
-  beforeAll(async () => {
-    storageDir = await mkdtemp(join(tmpdir(), 'lugemi-es-'));
+  beforeAll(async  => {
+    storageDir = await mkdtemp(join(tmpdir, 'lugemi-es-'));
     process.env.DOCUMENT_STORAGE_DIR = storageDir;
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -82,24 +82,24 @@ describe('Enterprise Search (VL-195)', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
     await rm(storageDir, { recursive: true, force: true });
   });
 
-  it('documents Enterprise Search honesty (not Elastic OS)', () => {
+  it('documents Enterprise Search honesty (not Elastic OS)',  => {
     const doc = join(root, 'docs/ENTERPRISE_SEARCH.md');
     const adr = join(root, 'docs/adr/0106-enterprise-search.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/Elastic/i);
-    expect(text).toContain('VL-062');
+    expect(text).toContain('');
     expect(text).toMatch(/hybrid/i);
   });
 
-  it('exposes engine with honest flags', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes engine with honest flags', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/enterprise-search/engine')
       .expect(200);
     expect(res.body.product).toContain('Enterprise Search');
@@ -112,7 +112,7 @@ describe('Enterprise Search (VL-195)', () => {
     expect(res.body.honesty.extendsVl062).toBe(true);
     expect(res.body.honesty.extendsVectorCloud).toBe(true);
 
-    const modes = await request(app.getHttpServer())
+    const modes = await request(app.getHttpServer)
       .get('/v1/enterprise-search/modes')
       .expect(200);
     expect(modes.body.modes.map((m: { id: string }) => m.id)).toEqual(
@@ -120,7 +120,7 @@ describe('Enterprise Search (VL-195)', () => {
     );
   });
 
-  it('runs keyword, semantic, hybrid search and suggestions (workspace scoped)', async () => {
+  it('runs keyword, semantic, hybrid search and suggestions (workspace scoped)', async  => {
     const org = await seedOrg(prisma, 'es');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -129,7 +129,7 @@ describe('Enterprise Search (VL-195)', () => {
       name: 'es-key',
     });
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post('/v1/knowledge/documents')
       .set('Authorization', `Bearer ${key.secret}`)
       .field('collection', 'policies')
@@ -142,17 +142,17 @@ describe('Enterprise Search (VL-195)', () => {
       )
       .expect(201);
 
-    const keyword = await request(app.getHttpServer())
+    const keyword = await request(app.getHttpServer)
       .post('/v1/enterprise-search/search')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ query: 'vacation', mode: 'keyword', collection: 'policies' })
       .expect(200);
     expect(keyword.body.mode).toBe('keyword');
     expect(keyword.body.hits.length).toBeGreaterThan(0);
-    expect(keyword.body.hits[0].content.toLowerCase()).toContain('vacation');
+    expect(keyword.body.hits[0].content.toLowerCase).toContain('vacation');
     expect(keyword.body.honesty.elasticOs).toBe(false);
 
-    const semantic = await request(app.getHttpServer())
+    const semantic = await request(app.getHttpServer)
       .post('/v1/enterprise-search/search')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ query: 'holiday leave days', mode: 'semantic', k: 5 })
@@ -160,7 +160,7 @@ describe('Enterprise Search (VL-195)', () => {
     expect(semantic.body.mode).toBe('semantic');
     expect(semantic.body.hits.length).toBeGreaterThan(0);
 
-    const hybrid = await request(app.getHttpServer())
+    const hybrid = await request(app.getHttpServer)
       .post('/v1/enterprise-search/search')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ query: 'Nairobi leave', mode: 'hybrid', tag: 'hr' })
@@ -168,7 +168,7 @@ describe('Enterprise Search (VL-195)', () => {
     expect(hybrid.body.mode).toBe('hybrid');
     expect(hybrid.body.hits.length).toBeGreaterThan(0);
 
-    const suggest = await request(app.getHttpServer())
+    const suggest = await request(app.getHttpServer)
       .get('/v1/enterprise-search/suggest')
       .query({ q: 'leave' })
       .set('Authorization', `Bearer ${key.secret}`)
@@ -178,8 +178,8 @@ describe('Enterprise Search (VL-195)', () => {
     );
   });
 
-  it('exposes enterpriseSearchEngine via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes enterpriseSearchEngine via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
@@ -187,7 +187,7 @@ describe('Enterprise Search (VL-195)', () => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.enterpriseSearchEngine.elasticOs).toBe(false);
     expect(res.body.data.enterpriseSearchEngine.orgWorkspaceScoped).toBe(true);
     expect(res.body.data.enterpriseSearchEngine.capabilities.length).toBeGreaterThan(3);

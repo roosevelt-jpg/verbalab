@@ -17,13 +17,13 @@ type GqlReq = Request & {
   sessionAuth?: SessionContext;
 };
 
-@Resolver()
+@Resolver
 export class LanguageIntelligenceGraphqlResolver {
   constructor(private readonly intel: LanguageIntelligenceService) {}
 
-  @Query(() => GqlLanguageIntelligence, { name: 'languageIntelligence' })
-  languageIntelligence(): GqlLanguageIntelligence {
-    const c = this.intel.catalog();
+  @Query( => GqlLanguageIntelligence, { name: 'languageIntelligence' })
+  languageIntelligence: GqlLanguageIntelligence {
+    const c = this.intel.catalog;
     return {
       product: c.product,
       note: c.note,
@@ -32,10 +32,10 @@ export class LanguageIntelligenceGraphqlResolver {
     };
   }
 
-  @Mutation(() => GqlLanguageAnalyzeResult, { name: 'analyzeLanguage' })
+  @Mutation( => GqlLanguageAnalyzeResult, { name: 'analyzeLanguage' })
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   async analyzeLanguage(
-    @Args('input', { type: () => AnalyzeLanguageInput }) input: AnalyzeLanguageInput,
+    @Args('input', { type:  => AnalyzeLanguageInput }) input: AnalyzeLanguageInput,
     @Context('req') req: GqlReq,
   ): Promise<GqlLanguageAnalyzeResult> {
     const auth = req.translateAuth!;

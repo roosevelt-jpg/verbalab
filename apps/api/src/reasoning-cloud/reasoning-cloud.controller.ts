@@ -15,18 +15,18 @@ export class ReasoningCloudController {
   constructor(private readonly reasoningCloud: ReasoningCloudService) {}
 
   @Get('engine')
-  engine() {
-    return this.reasoningCloud.engine();
+  engine {
+    return this.reasoningCloud.engine;
   }
 
   @Get('strategies')
-  strategies() {
-    return this.reasoningCloud.strategies();
+  strategies {
+    return this.reasoningCloud.strategies;
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.reasoningCloud.analytics(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -35,7 +35,7 @@ export class ReasoningCloudController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req() req: AuthedReq) {
+  monitoring(@Req req: AuthedReq) {
     return this.reasoningCloud.monitoring(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -46,8 +46,8 @@ export class ReasoningCloudController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   reason(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       problem?: string;
       strategy?: string;

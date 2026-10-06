@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_kg_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_kg_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,29 +35,29 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Knowledge Graph Cloud (VL-184)', () => {
+describe('Knowledge Graph Cloud',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Knowledge Graph honesty', () => {
+  it('documents Knowledge Graph honesty',  => {
     const doc = join(root, 'docs/KNOWLEDGE_GRAPH.md');
     const adr = join(root, 'docs/adr/0095-knowledge-graph-cloud.md');
     expect(existsSync(doc)).toBe(true);
@@ -68,8 +68,8 @@ describe('Knowledge Graph Cloud (VL-184)', () => {
     expect(text).not.toMatch(/neo4j parity shipped/i);
   });
 
-  it('exposes engine with neo4jParity=false and linked Ontology Platform', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/knowledge-graph/engine').expect(200);
+  it('exposes engine with neo4jParity=false and linked Ontology Platform', async  => {
+    const res = await request(app.getHttpServer).get('/v1/knowledge-graph/engine').expect(200);
     expect(res.body.product).toContain('Knowledge Graph');
     expect(res.body.honesty.neo4jParity).toBe(false);
     expect(res.body.honesty.ontologyPlatform).toBe(true);
@@ -81,13 +81,13 @@ describe('Knowledge Graph Cloud (VL-184)', () => {
     const medical = res.body.capabilities.find((c: { id: string }) => c.id === 'medical-graph');
     expect(medical.status).toBe('deferred');
 
-    const domains = await request(app.getHttpServer()).get('/v1/knowledge-graph/domains').expect(200);
+    const domains = await request(app.getHttpServer).get('/v1/knowledge-graph/domains').expect(200);
     expect(domains.body.domains.find((d: { id: string }) => d.id === 'general').status).toBe(
       'shipped',
     );
   });
 
-  it('creates entities/edges, rejects deferred domains, returns neighborhood', async () => {
+  it('creates entities/edges, rejects deferred domains, returns neighborhood', async  => {
     const org = await seedOrg(prisma, 'kg');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -96,27 +96,27 @@ describe('Knowledge Graph Cloud (VL-184)', () => {
       name: 'kg-key',
     });
 
-    const a = await request(app.getHttpServer())
+    const a = await request(app.getHttpServer)
       .post('/v1/knowledge-graph/entities')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ name: 'Lugemi', type: 'organization', domain: 'general' })
       .expect(201);
     expect(a.body.name).toBe('Lugemi');
 
-    const b = await request(app.getHttpServer())
+    const b = await request(app.getHttpServer)
       .post('/v1/knowledge-graph/entities')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ name: 'Nairobi', type: 'place' })
       .expect(201);
 
-    const rejected = await request(app.getHttpServer())
+    const rejected = await request(app.getHttpServer)
       .post('/v1/knowledge-graph/entities')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ name: 'Clinic', domain: 'medical' });
     expect(rejected.status).toBe(400);
     expect(JSON.stringify(rejected.body)).toMatch(/deferred/i);
 
-    const edge = await request(app.getHttpServer())
+    const edge = await request(app.getHttpServer)
       .post('/v1/knowledge-graph/relationships')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -128,14 +128,14 @@ describe('Knowledge Graph Cloud (VL-184)', () => {
       .expect(201);
     expect(edge.body.type).toBe('headquartered_in');
 
-    const neighborhood = await request(app.getHttpServer())
+    const neighborhood = await request(app.getHttpServer)
       .get(`/v1/knowledge-graph/entities/${a.body.id}/neighborhood`)
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(neighborhood.body.neighbors.some((n: { id: string }) => n.id === b.body.id)).toBe(true);
     expect(neighborhood.body.relationships.length).toBeGreaterThanOrEqual(1);
 
-    const analytics = await request(app.getHttpServer())
+    const analytics = await request(app.getHttpServer)
       .get('/v1/knowledge-graph/analytics')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -143,8 +143,8 @@ describe('Knowledge Graph Cloud (VL-184)', () => {
     expect(analytics.body.relationships).toBeGreaterThanOrEqual(1);
   });
 
-  it('exposes knowledgeGraphEngine via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes knowledgeGraphEngine via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
@@ -152,7 +152,7 @@ describe('Knowledge Graph Cloud (VL-184)', () => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.knowledgeGraphEngine.neo4jParity).toBe(false);
     expect(res.body.data.knowledgeGraphEngine.preferRag).toBe(true);
   });

@@ -31,7 +31,7 @@ type StepResult = {
   output: Record<string, unknown>;
 };
 
-@Injectable()
+@Injectable
 export class AiOrchestrationService {
   constructor(
     private readonly prisma: PrismaService,
@@ -43,11 +43,11 @@ export class AiOrchestrationService {
     private readonly contextEngine: ContextEngineService,
   ) {}
 
-  engine() {
-    return aiOrchestrationCatalog();
+  engine {
+    return aiOrchestrationCatalog;
   }
 
-  pipelines() {
+  pipelines {
     return {
       pipelines: ORCH_PIPELINES.map((p) => ({
         id: p.id,
@@ -58,14 +58,14 @@ export class AiOrchestrationService {
       related: {
         workflowsApi: '/v1/workflows',
         workflowsConsole: '/workflows',
-        note: 'VL-083 JSON job workflows remain available for transcribe→translate→notify.',
+        note: ' JSON job workflows remain available for transcribe→translate→notify.',
       },
-      note: 'Named e2e pipelines for VL-190. Multi-cloud deferred.',
+      note: 'Named e2e pipelines for . Multi-cloud deferred.',
     };
   }
 
   private assertPipeline(raw: string | undefined): OrchPipelineId {
-    const id = (raw?.trim() || 'detect_translate') as OrchPipelineId;
+    const id = (raw?.trim || 'detect_translate') as OrchPipelineId;
     const found = ORCH_PIPELINES.find((p) => p.id === id);
     if (!found) {
       throw new ApiException(
@@ -77,7 +77,7 @@ export class AiOrchestrationService {
     if (found.status === 'deferred') {
       throw new ApiException(
         'validation_error',
-        `pipeline=${id} is deferred — not a multi-cloud agent OS (VL-190)`,
+        `pipeline=${id} is deferred — not a multi-cloud agent OS`,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -85,7 +85,7 @@ export class AiOrchestrationService {
   }
 
   private requireText(text: string | undefined): string {
-    const t = text?.trim() ?? '';
+    const t = text?.trim ?? '';
     if (!t) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }
@@ -100,13 +100,13 @@ export class AiOrchestrationService {
   }
 
   private async runDetect(text: string): Promise<StepResult> {
-    const started = Date.now();
+    const started = Date.now;
     const detected = await this.gateway.detect({ text });
     return {
       id: 'detect',
       op: 'detect',
       ok: true,
-      durationMs: Date.now() - started,
+      durationMs: Date.now - started,
       output: {
         language: detected.language,
         confidence: detected.confidence,
@@ -121,7 +121,7 @@ export class AiOrchestrationService {
     source: string,
     target: string,
   ): Promise<StepResult> {
-    const started = Date.now();
+    const started = Date.now;
     const result = await this.translate.translate({
       text,
       source,
@@ -137,7 +137,7 @@ export class AiOrchestrationService {
       id: 'translate',
       op: 'translate',
       ok: true,
-      durationMs: Date.now() - started,
+      durationMs: Date.now - started,
       output: {
         text: result.text,
         source: result.source,
@@ -148,7 +148,7 @@ export class AiOrchestrationService {
   }
 
   private async runChat(auth: AuthCtx, userContent: string, model?: string): Promise<StepResult> {
-    const started = Date.now();
+    const started = Date.now;
     const result = await this.chat.completions({
       messages: [{ role: 'user', content: userContent }],
       model,
@@ -163,7 +163,7 @@ export class AiOrchestrationService {
       id: 'chat',
       op: 'chat',
       ok: true,
-      durationMs: Date.now() - started,
+      durationMs: Date.now - started,
       output: {
         content,
         model: result.model,
@@ -173,7 +173,7 @@ export class AiOrchestrationService {
   }
 
   private async runDecide(auth: AuthCtx, query: string, kind = 'routing'): Promise<StepResult> {
-    const started = Date.now();
+    const started = Date.now;
     const result = await this.decisions.decide({
       ...auth,
       kind,
@@ -183,7 +183,7 @@ export class AiOrchestrationService {
       id: 'decide',
       op: 'decide',
       ok: true,
-      durationMs: Date.now() - started,
+      durationMs: Date.now - started,
       output: {
         kind: result.kind,
         decision: result.decision,
@@ -194,7 +194,7 @@ export class AiOrchestrationService {
   }
 
   private async runAssemble(auth: AuthCtx, query: string): Promise<StepResult> {
-    const started = Date.now();
+    const started = Date.now;
     const assembled = await this.contextEngine.assemble({
       organizationId: auth.organizationId,
       workspaceId: auth.workspaceId,
@@ -208,7 +208,7 @@ export class AiOrchestrationService {
       id: 'assemble',
       op: 'assemble',
       ok: true,
-      durationMs: Date.now() - started,
+      durationMs: Date.now - started,
       output: {
         included: assembled.included,
         promptContext: assembled.promptContext.slice(0, 1500),
@@ -254,8 +254,8 @@ export class AiOrchestrationService {
   ) {
     const pipeline = this.assertPipeline(input.pipeline);
     const text = this.requireText(input.text);
-    const target = (input.target?.trim() || 'sw').toLowerCase();
-    const source = (input.source?.trim() || 'auto').toLowerCase();
+    const target = (input.target?.trim || 'sw').toLowerCase;
+    const source = (input.source?.trim || 'auto').toLowerCase;
     const steps: StepResult[] = [];
     let workingText = text;
 
@@ -301,7 +301,7 @@ export class AiOrchestrationService {
         }
         case 'tool_chain': {
           const ops = this.parseOps(input.ops);
-          for (const [i, op] of ops.entries()) {
+          for (const [i, op] of ops.entries) {
             let step: StepResult;
             if (op === 'detect') step = await this.runDetect(workingText);
             else if (op === 'translate') {
@@ -380,12 +380,12 @@ export class AiOrchestrationService {
         loadBearingE2e: true,
         executesRealRequests: true,
       },
-      note: 'Load-bearing e2e orchestration via gateway/engines (VL-190). Not a multi-cloud agent OS.',
+      note: 'Load-bearing e2e orchestration via gateway/engines. Not a multi-cloud agent OS.',
     };
   }
 
   async analytics(organizationId: string, workspaceId: string) {
-    const start = new Date();
+    const start = new Date;
     start.setUTCDate(1);
     start.setUTCHours(0, 0, 0, 0);
     const runs = await this.prisma.auditEvent.count({
@@ -396,25 +396,25 @@ export class AiOrchestrationService {
       },
     });
     return {
-      periodStart: start.toISOString(),
+      periodStart: start.toISOString,
       runs,
       workspaceId,
-      note: 'AI Orchestration analytics (VL-190).',
+      note: 'AI Orchestration analytics.',
     };
   }
 
   async monitoring(organizationId: string, workspaceId: string) {
     const [analytics, engine] = await Promise.all([
       this.analytics(organizationId, workspaceId),
-      Promise.resolve(this.engine()),
+      Promise.resolve(this.engine),
     ]);
     return {
-      generatedAt: new Date().toISOString(),
+      generatedAt: new Date.toISOString,
       periodStart: analytics.periodStart,
       runs: analytics.runs,
       multiCloudAgentOs: engine.honesty.multiCloudAgentOs,
       deferred: engine.capabilities.filter((c) => c.status === 'deferred').map((c) => c.id),
-      note: 'AI Orchestration monitoring snapshot (VL-190).',
+      note: 'AI Orchestration monitoring snapshot.',
     };
   }
 }

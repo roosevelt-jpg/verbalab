@@ -31,23 +31,23 @@ export class PluginMarketplaceController {
   }
 
   @Get('engine')
-  engine() {
-    return this.marketplace.engine();
+  engine {
+    return this.marketplace.engine;
   }
 
   @Get('products')
-  products() {
-    return this.marketplace.engine();
+  products {
+    return this.marketplace.engine;
   }
 
   @Get('monitoring')
-  monitoring() {
-    return this.marketplace.monitoring();
+  monitoring {
+    return this.marketplace.monitoring;
   }
 
   @Get('listings')
   @UseGuards(TranslateAuthGuard)
-  list(@Req() req: AuthedReq, @Query('mine') mine?: string) {
+  list(@Req req: AuthedReq, @Query('mine') mine?: string) {
     if (mine === '1' || mine === 'true') {
       return this.marketplace.listMine(req.translateAuth.organizationId);
     }
@@ -56,7 +56,7 @@ export class PluginMarketplaceController {
 
   @Get('installs')
   @UseGuards(TranslateAuthGuard)
-  installs(@Req() req: AuthedReq) {
+  installs(@Req req: AuthedReq) {
     return this.marketplace.listInstalls(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -65,13 +65,13 @@ export class PluginMarketplaceController {
 
   @Get('sales')
   @UseGuards(TranslateAuthGuard)
-  sales(@Req() req: AuthedReq) {
+  sales(@Req req: AuthedReq) {
     return this.marketplace.listSales(req.translateAuth.organizationId);
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.marketplace.analytics(req.translateAuth.organizationId);
   }
 
@@ -79,8 +79,8 @@ export class PluginMarketplaceController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(TranslateAuthGuard)
   publish(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       pluginId?: string;
       title?: string;
@@ -101,7 +101,7 @@ export class PluginMarketplaceController {
 
   @Post('listings/:id/update')
   @UseGuards(TranslateAuthGuard)
-  update(@Req() req: AuthedReq, @Param('id') id: string) {
+  update(@Req req: AuthedReq, @Param('id') id: string) {
     return this.marketplace.updateListing({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -114,7 +114,7 @@ export class PluginMarketplaceController {
 
   @Post('listings/:id/install')
   @UseGuards(TranslateAuthGuard)
-  install(@Req() req: AuthedReq, @Param('id') id: string) {
+  install(@Req req: AuthedReq, @Param('id') id: string) {
     return this.marketplace.install({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -129,9 +129,9 @@ export class PluginMarketplaceController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   run(
-    @Req() req: AuthedReq,
+    @Req req: AuthedReq,
     @Param('id') id: string,
-    @Body()
+    @Body
     body: { actions?: Array<{ action: string; input?: Record<string, unknown> }> },
   ) {
     return this.marketplace.run({
@@ -153,9 +153,9 @@ export class PluginMarketplaceController {
   @Post('listings/:id/reviews')
   @UseGuards(TranslateAuthGuard)
   review(
-    @Req() req: AuthedReq,
+    @Req req: AuthedReq,
     @Param('id') id: string,
-    @Body() body: { rating?: number; body?: string },
+    @Body body: { rating?: number; body?: string },
   ) {
     return this.marketplace.upsertReview({
       organizationId: req.translateAuth.organizationId,
@@ -170,7 +170,7 @@ export class PluginMarketplaceController {
 
   @Delete('listings/:id')
   @UseGuards(TranslateAuthGuard)
-  unpublish(@Req() req: AuthedReq, @Param('id') id: string) {
+  unpublish(@Req req: AuthedReq, @Param('id') id: string) {
     return this.marketplace.unpublish({
       organizationId: req.translateAuth.organizationId,
       listingId: id,

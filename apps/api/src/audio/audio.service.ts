@@ -11,7 +11,7 @@ export { audioMaxBytes };
 
 const ALLOWED_EXT = new Set(['mp3', 'mp4', 'mpeg', 'mpga', 'm4a', 'wav', 'webm', 'ogg', 'flac']);
 
-@Injectable()
+@Injectable
 export class AudioService {
   constructor(
     private readonly gateway: GatewayService,
@@ -25,14 +25,14 @@ export class AudioService {
     if (file.size <= 0) {
       throw new ApiException('validation_error', 'Empty audio file', HttpStatus.BAD_REQUEST);
     }
-    if (file.size > audioMaxBytes()) {
+    if (file.size > audioMaxBytes) {
       throw new ApiException(
         'validation_error',
-        `Audio exceeds maximum size of ${audioMaxBytes()} bytes`,
+        `Audio exceeds maximum size of ${audioMaxBytes} bytes`,
         HttpStatus.BAD_REQUEST,
       );
     }
-    const ext = file.originalname.split('.').pop()?.toLowerCase() ?? '';
+    const ext = file.originalname.split('.').pop?.toLowerCase ?? '';
     if (!ALLOWED_EXT.has(ext)) {
       throw new ApiException(
         'validation_error',
@@ -101,8 +101,8 @@ export class AudioService {
     };
   }
 
-  listVoices() {
-    return { data: this.gateway.listVoices() };
+  listVoices {
+    return { data: this.gateway.listVoices };
   }
 
   async speak(input: {
@@ -115,14 +115,14 @@ export class AudioService {
     apiKeyId?: string;
     userId?: string;
     ip?: string;
-    /** Optional third-party TTS expressive settings for clone:{id} only (VL-173). */
+    /** Optional third-party TTS expressive settings for clone:{id} only. */
     expressiveSettings?: {
       stability: number;
       similarity_boost: number;
       style: number;
     };
   }) {
-    const text = input.text.trim();
+    const text = input.text.trim;
     if (!text) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }

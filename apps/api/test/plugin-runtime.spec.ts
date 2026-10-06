@@ -22,7 +22,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_pr_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_pr_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -36,22 +36,22 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Plugin Runtime (VL-221)', () => {
+describe('Plugin Runtime',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   const prevMode = process.env.LUGEMI_PLUGIN_RUNTIME_MODE;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     process.env.LUGEMI_PLUGIN_RUNTIME_MODE = 'sandbox';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -59,7 +59,7 @@ describe('Plugin Runtime (VL-221)', () => {
     app.get(GatewayService).setChatProviderForTests({
       name: 'fixture_chat',
       async complete(input) {
-        const user = [...input.messages].reverse().find((m) => m.role === 'user');
+        const user = [...input.messages].reverse.find((m) => m.role === 'user');
         return {
           message: {
             role: 'assistant',
@@ -76,13 +76,13 @@ describe('Plugin Runtime (VL-221)', () => {
     });
   });
 
-  afterAll(async () => {
+  afterAll(async  => {
     if (prevMode === undefined) delete process.env.LUGEMI_PLUGIN_RUNTIME_MODE;
     else process.env.LUGEMI_PLUGIN_RUNTIME_MODE = prevMode;
-    await app.close();
+    await app.close;
   });
 
-  it('documents Plugin Runtime honesty (sandbox + permissions; not extension OS)', () => {
+  it('documents Plugin Runtime honesty (sandbox + permissions; not extension OS)',  => {
     const doc = join(root, 'docs/PLUGIN_RUNTIME.md');
     const adr = join(root, 'docs/adr/0132-plugin-runtime.md');
     expect(existsSync(doc)).toBe(true);
@@ -94,8 +94,8 @@ describe('Plugin Runtime (VL-221)', () => {
     expect(text).toMatch(/hard/i);
   });
 
-  it('exposes engine with honest safety flags', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/plugin-runtime/engine').expect(200);
+  it('exposes engine with honest safety flags', async  => {
+    const res = await request(app.getHttpServer).get('/v1/plugin-runtime/engine').expect(200);
     expect(res.body.product).toContain('Plugin Runtime');
     expect(res.body.honesty.openToolExecution).toBe(false);
     expect(res.body.honesty.liveCodeExecution).toBe(false);
@@ -109,7 +109,7 @@ describe('Plugin Runtime (VL-221)', () => {
     expect(res.body.links.console).toBe('/plugin-runtime');
   });
 
-  it('denies missing permissions and completes sandbox invoke', async () => {
+  it('denies missing permissions and completes sandbox invoke', async  => {
     const org = await seedOrg(prisma, 'pr');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -119,7 +119,7 @@ describe('Plugin Runtime (VL-221)', () => {
     });
     const auth = { Authorization: `Bearer ${key.secret}` };
 
-    const created = await request(app.getHttpServer())
+    const created = await request(app.getHttpServer)
       .post('/v1/plugin-runtime/plugins')
       .set(auth)
       .send({
@@ -133,13 +133,13 @@ describe('Plugin Runtime (VL-221)', () => {
 
     const pluginId = created.body.plugin.id as string;
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post(`/v1/plugin-runtime/plugins/${pluginId}/lifecycle`)
       .set(auth)
       .send({ status: 'active' })
       .expect(200);
 
-    const denied = await request(app.getHttpServer())
+    const denied = await request(app.getHttpServer)
       .post('/v1/plugin-runtime/invoke')
       .set(auth)
       .send({
@@ -151,7 +151,7 @@ describe('Plugin Runtime (VL-221)', () => {
     expect(denied.body.invocation.liveCodeExecution).toBe(false);
     expect(denied.body.invocation.steps[0].allowed).toBe(false);
 
-    const missing = await request(app.getHttpServer())
+    const missing = await request(app.getHttpServer)
       .post('/v1/plugin-runtime/invoke')
       .set(auth)
       .send({
@@ -162,7 +162,7 @@ describe('Plugin Runtime (VL-221)', () => {
     expect(missing.body.invocation.status).toBe('denied');
     expect(missing.body.invocation.steps[0].error).toMatch(/lacks permission/i);
 
-    const ok = await request(app.getHttpServer())
+    const ok = await request(app.getHttpServer)
       .post('/v1/plugin-runtime/invoke')
       .set(auth)
       .send({
@@ -177,25 +177,25 @@ describe('Plugin Runtime (VL-221)', () => {
     expect(ok.body.invocation.sandbox).toBe(true);
     expect(ok.body.invocation.steps.every((s: { allowed: boolean }) => s.allowed)).toBe(true);
 
-    const versioned = await request(app.getHttpServer())
+    const versioned = await request(app.getHttpServer)
       .post(`/v1/plugin-runtime/plugins/${pluginId}/version`)
       .set(auth)
       .send({ description: 'v2 sandbox' })
       .expect(200);
     expect(versioned.body.plugin.version).toBe(2);
 
-    const depBase = await request(app.getHttpServer())
+    const depBase = await request(app.getHttpServer)
       .post('/v1/plugin-runtime/plugins')
       .set(auth)
       .send({ name: 'Dep Base', permissions: ['plugin.read'] })
       .expect(201);
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post(`/v1/plugin-runtime/plugins/${depBase.body.plugin.id}/lifecycle`)
       .set(auth)
       .send({ status: 'active' })
       .expect(200);
 
-    const withDep = await request(app.getHttpServer())
+    const withDep = await request(app.getHttpServer)
       .post('/v1/plugin-runtime/plugins')
       .set(auth)
       .send({
@@ -204,19 +204,19 @@ describe('Plugin Runtime (VL-221)', () => {
         dependencies: [depBase.body.plugin.id],
       })
       .expect(201);
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post(`/v1/plugin-runtime/plugins/${withDep.body.plugin.id}/lifecycle`)
       .set(auth)
       .send({ status: 'active' })
       .expect(200);
-    const depInvoke = await request(app.getHttpServer())
+    const depInvoke = await request(app.getHttpServer)
       .post('/v1/plugin-runtime/invoke')
       .set(auth)
       .send({ pluginId: withDep.body.plugin.id })
       .expect(200);
     expect(depInvoke.body.invocation.status).toBe('completed');
 
-    const market = await request(app.getHttpServer())
+    const market = await request(app.getHttpServer)
       .get('/v1/plugin-runtime/marketplace')
       .set(auth)
       .expect(200);
@@ -224,15 +224,15 @@ describe('Plugin Runtime (VL-221)', () => {
     expect(market.body.honesty.extendsMarketplace).toBe(true);
   });
 
-  it('exposes pluginRuntimeEngine via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes pluginRuntimeEngine via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
           '{ pluginRuntimeEngine { product openToolExecution liveCodeExecution browserExtensionOs extendsMarketplace scopedPermissionsRequired sandboxRequired localPermissionHardGate mode maxPluginsPerWorkspace } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.pluginRuntimeEngine.liveCodeExecution).toBe(false);
     expect(res.body.data.pluginRuntimeEngine.extendsMarketplace).toBe(true);
     expect(res.body.data.pluginRuntimeEngine.localPermissionHardGate).toBe(true);

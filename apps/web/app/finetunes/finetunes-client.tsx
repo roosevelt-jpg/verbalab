@@ -36,8 +36,8 @@ type Model = {
   baseModel: string;
 };
 
-export function FinetunesClient() {
-  const { getToken, isLoaded } = useAuth();
+export function FinetunesClient {
+  const { getToken, isLoaded } = useAuth;
   const [candidates, setCandidates] = useState<Candidate[]>([]);
   const [disclaimer, setDisclaimer] = useState('');
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -60,17 +60,17 @@ export function FinetunesClient() {
     setModels(modelList);
   }
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void (async () => {
+    void (async  => {
       try {
-        const token = await getToken();
+        const token = await getToken;
         if (!token) throw new Error('Not signed in');
         await refresh(token);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load fine-tunes');
       }
-    })();
+    });
   }, [getToken, isLoaded]);
 
   async function createAndComplete(sourceLang: string, targetLang: string) {
@@ -78,7 +78,7 @@ export function FinetunesClient() {
     setMessage(null);
     setLoading(true);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const job = await apiFetch<{ id: string }>('/v1/finetunes/jobs', {
         method: 'POST',
@@ -109,7 +109,7 @@ export function FinetunesClient() {
   async function retire(id: string) {
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       await apiFetch(`/v1/finetunes/models/${id}/retire`, { method: 'POST', token });
       await refresh(token);
@@ -167,7 +167,7 @@ export function FinetunesClient() {
                     type="button"
                     className="vl-btn"
                     disabled={loading}
-                    onClick={() => void createAndComplete(c.sourceLang, c.targetLang)}
+                    onClick={ => void createAndComplete(c.sourceLang, c.targetLang)}
                   >
                     {loading ? 'Working…' : 'Queue + attach golden map (Pro)'}
                   </button>
@@ -230,7 +230,7 @@ export function FinetunesClient() {
                   <button
                     type="button"
                     className="vl-btn vl-btn-secondary"
-                    onClick={() => void retire(m.id)}
+                    onClick={ => void retire(m.id)}
                   >
                     Retire
                   </button>

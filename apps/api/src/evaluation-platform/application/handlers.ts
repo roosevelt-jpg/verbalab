@@ -17,8 +17,8 @@ export class GetEvaluationPlatformEngineHandler
     private readonly catalog: EvaluationPlatformCatalogPort,
   ) {}
 
-  execute(): Promise<EvaluationPlatformEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<EvaluationPlatformEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListEvaluationPlatformProductsHandler
     private readonly catalog: EvaluationPlatformCatalogPort,
   ) {}
 
-  execute(): Promise<EvaluationPlatformProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<EvaluationPlatformProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

@@ -2,13 +2,13 @@ import { Query, Resolver } from '@nestjs/graphql';
 import { ModelServingService } from '../model-serving/model-serving.service';
 import { GqlModelServingEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class ModelServingGraphqlResolver {
   constructor(private readonly serving: ModelServingService) {}
 
-  @Query(() => GqlModelServingEngine, { name: 'modelServingEngine' })
-  modelServingEngine(): GqlModelServingEngine {
-    const c = this.serving.engine();
+  @Query( => GqlModelServingEngine, { name: 'modelServingEngine' })
+  modelServingEngine: GqlModelServingEngine {
+    const c = this.serving.engine;
     return {
       product: c.product,
       note: c.note,

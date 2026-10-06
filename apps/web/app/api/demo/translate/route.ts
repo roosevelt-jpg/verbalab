@@ -96,7 +96,7 @@ const DEMO_PAIRS: Array<{
   },
 ];
 
-export async function GET() {
+export async function GET {
   return NextResponse.json({
     pairs: DEMO_PAIRS.map(({ translated: _t, ...meta }) => ({
       ...meta,
@@ -109,7 +109,7 @@ export async function GET() {
 export async function POST(request: Request) {
   let body: { text?: string; source?: string; target?: string; pairId?: string };
   try {
-    body = (await request.json()) as typeof body;
+    body = (await request.json) as typeof body;
   } catch {
     return NextResponse.json({ error: { message: 'Invalid JSON' } }, { status: 400 });
   }
@@ -119,10 +119,10 @@ export async function POST(request: Request) {
     DEMO_PAIRS.find((p) => p.source === body.source && p.target === body.target) ??
     DEMO_PAIRS[0]!;
 
-  const text = (typeof body.text === 'string' ? body.text.trim() : '') || pair.text;
+  const text = (typeof body.text === 'string' ? body.text.trim : '') || pair.text;
 
   // Exact curated match → instant demo translation
-  if (text.toLowerCase() === pair.text.toLowerCase()) {
+  if (text.toLowerCase === pair.text.toLowerCase) {
     return NextResponse.json({
       mode: 'demo',
       source: pair.source,
@@ -140,7 +140,7 @@ export async function POST(request: Request) {
   }
 
   // Fuzzy: if user edits slightly, still use curated target when pair selected
-  const apiKey = process.env.OPENAI_API_KEY?.trim();
+  const apiKey = process.env.OPENAI_API_KEY?.trim;
   if (apiKey && text.length > 0 && text.length < 400) {
     try {
       const upstream = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -162,10 +162,10 @@ export async function POST(request: Request) {
         }),
       });
       if (upstream.ok) {
-        const data = (await upstream.json()) as {
+        const data = (await upstream.json) as {
           choices?: Array<{ message?: { content?: string } }>;
         };
-        const translated = data.choices?.[0]?.message?.content?.trim();
+        const translated = data.choices?.[0]?.message?.content?.trim;
         if (translated) {
           return NextResponse.json({
             mode: 'live',

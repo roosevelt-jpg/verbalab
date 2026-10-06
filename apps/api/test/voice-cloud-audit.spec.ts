@@ -17,7 +17,7 @@ const apiSrc = join(root, 'apps/api/src');
 function walkTsFiles(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory()) {
+    if (name.isDirectory) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       walkTsFiles(p, out);
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -36,7 +36,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_vcaudit_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_vcaudit_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -50,24 +50,24 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Voice Cloud Production Audit (VL-179)', () => {
+describe('Voice Cloud Production Audit',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let rawKey: string;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
     app.get(GatewayService).setTtsProviderForTests({
       name: 'fixture',
-      listVoices() {
+      listVoices {
         return [
           {
             id: 'nova',
@@ -100,11 +100,11 @@ describe('Voice Cloud Production Audit (VL-179)', () => {
     rawKey = created.secret;
   }, 120_000);
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('ships audit ADR, blueprint ADR, and report pack', () => {
+  it('ships audit ADR, blueprint ADR, and report pack',  => {
     expect(existsSync(join(root, 'docs/adr/0090-voice-cloud-production-audit.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0080-lugemi-cloud-blueprint.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/CLOUD_BLUEPRINT.md'))).toBe(true);
@@ -118,7 +118,7 @@ describe('Voice Cloud Production Audit (VL-179)', () => {
     expect(readiness).toContain('bounded');
   });
 
-  it('has no TODO/FIXME/implement-later markers in Voice Cloud source trees', () => {
+  it('has no TODO/FIXME/implement-later markers in Voice Cloud source trees',  => {
     const roots = [
       join(apiSrc, 'voice-cloud'),
       join(apiSrc, 'neural-tts'),
@@ -144,7 +144,7 @@ describe('Voice Cloud Production Audit (VL-179)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes integrated Voice Cloud catalogs', async () => {
+  it('exposes integrated Voice Cloud catalogs', async  => {
     const paths = [
       '/v1/voice-cloud/products',
       '/v1/tts/engine',
@@ -157,20 +157,20 @@ describe('Voice Cloud Production Audit (VL-179)', () => {
       '/v1/voice-analytics/engine',
     ];
     for (const path of paths) {
-      const res = await request(app.getHttpServer()).get(path).expect(200);
-      expect(res.body).toBeTruthy();
+      const res = await request(app.getHttpServer).get(path).expect(200);
+      expect(res.body).toBeTruthy;
     }
   });
 
-  it('rejects unauthenticated voice analytics and marketplace listings (security)', async () => {
-    const overview = await request(app.getHttpServer()).get('/v1/voice-analytics/overview');
+  it('rejects unauthenticated voice analytics and marketplace listings (security)', async  => {
+    const overview = await request(app.getHttpServer).get('/v1/voice-analytics/overview');
     expect([401, 403, 503]).toContain(overview.status);
 
-    const listings = await request(app.getHttpServer()).get('/v1/voice-marketplace/listings');
+    const listings = await request(app.getHttpServer).get('/v1/voice-marketplace/listings');
     expect([401, 403, 503]).toContain(listings.status);
   });
 
-  it('runs bounded sequential load smoke on public voice catalogs', async () => {
+  it('runs bounded sequential load smoke on public voice catalogs', async  => {
     const paths = [
       '/v1/voice-cloud/products',
       '/v1/tts/engine',
@@ -179,28 +179,28 @@ describe('Voice Cloud Production Audit (VL-179)', () => {
       '/v1/voice-marketplace/engine',
       '/v1/voice-analytics/engine',
     ];
-    const started = Date.now();
+    const started = Date.now;
     const iterations = 24;
     for (let i = 0; i < iterations; i++) {
       const path = paths[i % paths.length]!;
-      await request(app.getHttpServer()).get(path).expect(200);
+      await request(app.getHttpServer).get(path).expect(200);
     }
-    const elapsed = Date.now() - started;
+    const elapsed = Date.now - started;
     expect(elapsed).toBeLessThan(30_000);
     expect(iterations).toBe(24);
   });
 
-  it('runs bounded rapid stress smoke on voice products catalog', async () => {
+  it('runs bounded rapid stress smoke on voice products catalog', async  => {
     // Rapid sequential — Nest/supertest in this env ECONNRESETs on parallel bursts.
-    const started = Date.now();
+    const started = Date.now;
     for (let i = 0; i < 12; i++) {
-      await request(app.getHttpServer()).get('/v1/voice-cloud/products').expect(200);
+      await request(app.getHttpServer).get('/v1/voice-cloud/products').expect(200);
     }
-    expect(Date.now() - started).toBeLessThan(15_000);
+    expect(Date.now - started).toBeLessThan(15_000);
   });
 
-  it('smoke-tests TTS chunk streaming SSE', async () => {
-    const stream = await request(app.getHttpServer())
+  it('smoke-tests TTS chunk streaming SSE', async  => {
+    const stream = await request(app.getHttpServer)
       .post('/v1/tts/stream')
       .set('Authorization', `Bearer ${rawKey}`)
       .send({ text: 'Voice audit stream', voice: 'nova' })
@@ -210,8 +210,8 @@ describe('Voice Cloud Production Audit (VL-179)', () => {
     expect(stream.text).toContain('chunk_sse_after_synthesis');
   });
 
-  it('GraphQL Voice Cloud façade queries respond', async () => {
-    const res = await request(app.getHttpServer())
+  it('GraphQL Voice Cloud façade queries respond', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .set('Authorization', `Bearer ${rawKey}`)
       .send({
@@ -228,7 +228,7 @@ describe('Voice Cloud Production Audit (VL-179)', () => {
         }`,
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.voiceProducts.length).toBeGreaterThan(5);
     expect(res.body.data.voiceAnalyticsEngine.regeneratesSpeechAnalytics).toBe(false);
     expect(res.body.data.voiceMarketplaceEngine.celebrityWithoutRights).toBe(false);
@@ -236,13 +236,13 @@ describe('Voice Cloud Production Audit (VL-179)', () => {
     expect(res.body.data.emotionVoiceEngine.trainedExpressiveModel).toBe(false);
   });
 
-  it('documents 12-layer cloud blueprint with Voice Cloud closed', () => {
+  it('documents 12-layer cloud blueprint with Voice Cloud closed',  => {
     const blueprint = readFileSync(join(root, 'docs/adr/0080-lugemi-cloud-blueprint.md'), 'utf8');
     expect(blueprint).toContain('Cloud Foundation');
     expect(blueprint).toContain('Production Audit');
     expect(blueprint).toContain('Voice Cloud');
-    expect(blueprint).toContain('VL-179');
+    expect(blueprint).toContain('');
     const living = readFileSync(join(root, 'docs/CLOUD_BLUEPRINT.md'), 'utf8');
-    expect(living).toMatch(/VL-170\s*→\s*VL-179/);
+    expect(living).toMatch(/\s*→\s*);
   });
 });

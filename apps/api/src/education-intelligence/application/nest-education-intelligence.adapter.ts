@@ -6,16 +6,16 @@ import {
   EducationIntelligenceProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestEducationIntelligenceCatalogAdapter implements EducationIntelligenceCatalogPort {
   constructor(private readonly service: EducationIntelligenceService) {}
 
-  engine(): EducationIntelligenceEngineBundle {
-    return this.service.engine();
+  engine: EducationIntelligenceEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): EducationIntelligenceProductRow[] {
-    const bundle = this.engine() as { products?: EducationIntelligenceProductRow[]; capabilities?: EducationIntelligenceProductRow[] };
+  listProducts: EducationIntelligenceProductRow[] {
+    const bundle = this.engine as { products?: EducationIntelligenceProductRow[]; capabilities?: EducationIntelligenceProductRow[] };
     if (Array.isArray(bundle.products)) return bundle.products;
     if (Array.isArray(bundle.capabilities)) {
       return bundle.capabilities.map((c) => ({
@@ -34,7 +34,7 @@ export class NestEducationIntelligenceCatalogAdapter implements EducationIntelli
         status: 'shipped',
         api: 'GET /v1/education-intelligence/engine',
         console: '/education-intelligence',
-        notes: 'VL-267 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

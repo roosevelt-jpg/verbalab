@@ -1,4 +1,4 @@
-/** Application ports for AgentOps Platform (VL-287). */
+/** Application ports for AgentOps Platform. */
 
 export type AgentopsPlatformProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type AgentopsPlatformEngineBundle = ReturnType<
 >;
 
 export interface AgentopsPlatformCatalogPort {
-  engine(): AgentopsPlatformEngineBundle;
-  listProducts(): AgentopsPlatformProductRow[];
+  engine: AgentopsPlatformEngineBundle;
+  listProducts: AgentopsPlatformProductRow[];
 }
 
 export const AGENTOPS_PLATFORM_CATALOG_PORT = Symbol('AGENTOPS_PLATFORM_CATALOG_PORT');

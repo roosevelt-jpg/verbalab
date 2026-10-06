@@ -17,8 +17,8 @@ export class GetControlPlaneAnalyticsEngineHandler
     private readonly catalog: ControlPlaneAnalyticsCatalogPort,
   ) {}
 
-  execute(): Promise<ControlPlaneAnalyticsEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<ControlPlaneAnalyticsEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListControlPlaneAnalyticsProductsHandler
     private readonly catalog: ControlPlaneAnalyticsCatalogPort,
   ) {}
 
-  execute(): Promise<ControlPlaneAnalyticsProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<ControlPlaneAnalyticsProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

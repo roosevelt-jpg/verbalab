@@ -22,11 +22,11 @@ type Bundle = {
   safety?: { note?: string } & Record<string, unknown>;
 };
 
-export function MlopsLlmopsCloudClient() {
+export function MlopsLlmopsCloudClient {
   const [data, setData] = useState<Bundle | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  useEffect( => {
     void apiFetch<Bundle>('/v1/mlops-llmops-cloud/products')
       .then(setData)
       .catch((err: Error) => setError(err.message));

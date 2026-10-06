@@ -1,4 +1,4 @@
-/** Application ports for Platform Engineering Cloud (VL-302). */
+/** Application ports for Platform Engineering Cloud. */
 
 export type PlatformEngineeringCloudProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type PlatformEngineeringCloudEngineBundle = ReturnType<
 >;
 
 export interface PlatformEngineeringCloudCatalogPort {
-  engine(): PlatformEngineeringCloudEngineBundle;
-  listProducts(): PlatformEngineeringCloudProductRow[];
+  engine: PlatformEngineeringCloudEngineBundle;
+  listProducts: PlatformEngineeringCloudProductRow[];
 }
 
 export const PLATFORM_ENGINEERING_CLOUD_CATALOG_PORT = Symbol('PLATFORM_ENGINEERING_CLOUD_CATALOG_PORT');

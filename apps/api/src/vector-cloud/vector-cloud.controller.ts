@@ -15,13 +15,13 @@ export class VectorCloudController {
   constructor(private readonly vectorCloud: VectorCloudService) {}
 
   @Get('engine')
-  engine() {
-    return this.vectorCloud.engine();
+  engine {
+    return this.vectorCloud.engine;
   }
 
   @Get('collections')
   @UseGuards(TranslateAuthGuard)
-  collections(@Req() req: AuthedReq) {
+  collections(@Req req: AuthedReq) {
     return this.vectorCloud.collections(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -30,7 +30,7 @@ export class VectorCloudController {
 
   @Get('namespaces')
   @UseGuards(TranslateAuthGuard)
-  namespaces(@Req() req: AuthedReq) {
+  namespaces(@Req req: AuthedReq) {
     return this.vectorCloud.namespaces(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -38,13 +38,13 @@ export class VectorCloudController {
   }
 
   @Get('indexes')
-  indexes() {
-    return this.vectorCloud.indexes();
+  indexes {
+    return this.vectorCloud.indexes;
   }
 
   @Get('stats')
   @UseGuards(TranslateAuthGuard)
-  stats(@Req() req: AuthedReq) {
+  stats(@Req req: AuthedReq) {
     return this.vectorCloud.stats(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -53,7 +53,7 @@ export class VectorCloudController {
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.vectorCloud.analytics(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -62,7 +62,7 @@ export class VectorCloudController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req() req: AuthedReq) {
+  monitoring(@Req req: AuthedReq) {
     return this.vectorCloud.monitoring(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -73,8 +73,8 @@ export class VectorCloudController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   search(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: { query?: string; k?: number; documentId?: string; minScore?: number },
   ) {
     return this.vectorCloud.search({

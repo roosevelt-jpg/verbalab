@@ -22,7 +22,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_sa_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_sa_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -36,31 +36,31 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Speech Analytics (VL-159)', () => {
+describe('Speech Analytics',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let usage: UsageService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
     usage = app.get(UsageService);
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Speech Analytics honesty', () => {
+  it('documents Speech Analytics honesty',  => {
     const doc = join(root, 'docs/SPEECH_ANALYTICS.md');
     const adr = join(root, 'docs/adr/0078-speech-analytics.md');
     expect(existsSync(doc)).toBe(true);
@@ -71,14 +71,14 @@ describe('Speech Analytics (VL-159)', () => {
     expect(text).not.toMatch(/WER lab.*shipped/i);
   });
 
-  it('exposes speech analytics engine with WER lab deferred', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/speech-analytics/engine').expect(200);
+  it('exposes speech analytics engine with WER lab deferred', async  => {
+    const res = await request(app.getHttpServer).get('/v1/speech-analytics/engine').expect(200);
     expect(res.body.product).toContain('Speech Analytics');
     const wer = res.body.capabilities.find((c: { id: string }) => c.id === 'wer-lab');
     expect(wer.status).toBe('deferred');
   });
 
-  it('returns usage overview costs and report', async () => {
+  it('returns usage overview costs and report', async  => {
     const org = await seedOrg(prisma, 'sa');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -117,7 +117,7 @@ describe('Speech Analytics (VL-159)', () => {
       },
     });
 
-    const overview = await request(app.getHttpServer())
+    const overview = await request(app.getHttpServer)
       .get('/v1/speech-analytics/overview')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -125,7 +125,7 @@ describe('Speech Analytics (VL-159)', () => {
     expect(overview.body.usage.tts.requests).toBeGreaterThanOrEqual(1);
     expect(overview.body.estimatedCostUsd).toBeGreaterThan(0);
 
-    const languages = await request(app.getHttpServer())
+    const languages = await request(app.getHttpServer)
       .get('/v1/speech-analytics/languages')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -133,13 +133,13 @@ describe('Speech Analytics (VL-159)', () => {
       true,
     );
 
-    const accuracy = await request(app.getHttpServer())
+    const accuracy = await request(app.getHttpServer)
       .get('/v1/speech-analytics/accuracy')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(accuracy.body.sttConfidence.average).toBe(0.88);
 
-    const industries = await request(app.getHttpServer())
+    const industries = await request(app.getHttpServer)
       .get('/v1/speech-analytics/industries')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -147,22 +147,22 @@ describe('Speech Analytics (VL-159)', () => {
       true,
     );
 
-    const report = await request(app.getHttpServer())
+    const report = await request(app.getHttpServer)
       .get('/v1/speech-analytics/report')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(report.body.product).toContain('Speech Analytics');
-    expect(report.body.usage).toBeDefined();
+    expect(report.body.usage).toBeDefined;
   });
 
-  it('exposes speechAnalyticsEngine via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes speechAnalyticsEngine via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query: '{ speechAnalyticsEngine { product capabilityCount shippedCount } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.speechAnalyticsEngine.capabilityCount).toBeGreaterThan(5);
   });
 });

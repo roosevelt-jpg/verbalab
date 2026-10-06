@@ -6,15 +6,15 @@ import {
   EnterpriseEngineeringSystemProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestEnterpriseEngineeringSystemCatalogAdapter implements EnterpriseEngineeringSystemCatalogPort {
   constructor(private readonly service: EnterpriseEngineeringSystemService) {}
 
-  engine(): EnterpriseEngineeringSystemEngineBundle {
-    return this.service.products();
+  engine: EnterpriseEngineeringSystemEngineBundle {
+    return this.service.products;
   }
 
-  listProducts(): EnterpriseEngineeringSystemProductRow[] {
-    return this.service.products().products;
+  listProducts: EnterpriseEngineeringSystemProductRow[] {
+    return this.service.products.products;
   }
 }

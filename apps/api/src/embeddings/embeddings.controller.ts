@@ -13,12 +13,12 @@ export class EmbeddingsController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   create(
-    @Req()
+    @Req
     req: Request & {
       translateAuth: TranslateAuthContext;
       sessionAuth?: SessionContext;
     },
-    @Body() body: { input?: unknown; model?: string },
+    @Body body: { input?: unknown; model?: string },
   ) {
     return this.embeddings.create({
       input: body.input,

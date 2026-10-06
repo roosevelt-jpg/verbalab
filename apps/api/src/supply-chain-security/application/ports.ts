@@ -1,4 +1,4 @@
-/** Application ports for Supply Chain Security (VL-310). */
+/** Application ports for Supply Chain Security. */
 
 export type SupplyChainSecurityProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type SupplyChainSecurityEngineBundle = ReturnType<
 >;
 
 export interface SupplyChainSecurityCatalogPort {
-  engine(): SupplyChainSecurityEngineBundle;
-  listProducts(): SupplyChainSecurityProductRow[];
+  engine: SupplyChainSecurityEngineBundle;
+  listProducts: SupplyChainSecurityProductRow[];
 }
 
 export const SUPPLY_CHAIN_SECURITY_CATALOG_PORT = Symbol('SUPPLY_CHAIN_SECURITY_CATALOG_PORT');

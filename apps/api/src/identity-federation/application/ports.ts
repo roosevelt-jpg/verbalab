@@ -1,4 +1,4 @@
-/** Application ports for Identity Federation (VL-299). */
+/** Application ports for Identity Federation. */
 
 export type IdentityFederationProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type IdentityFederationEngineBundle = ReturnType<
 >;
 
 export interface IdentityFederationCatalogPort {
-  engine(): IdentityFederationEngineBundle;
-  listProducts(): IdentityFederationProductRow[];
+  engine: IdentityFederationEngineBundle;
+  listProducts: IdentityFederationProductRow[];
 }
 
 export const IDENTITY_FEDERATION_CATALOG_PORT = Symbol('IDENTITY_FEDERATION_CATALOG_PORT');

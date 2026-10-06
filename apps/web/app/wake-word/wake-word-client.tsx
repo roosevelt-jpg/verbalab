@@ -21,8 +21,8 @@ type DetectResult = {
   note: string;
 };
 
-export function WakeWordClient() {
-  const { getToken, isLoaded } = useAuth();
+export function WakeWordClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [keywords, setKeywords] = useState<Keyword[]>([]);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
@@ -33,8 +33,8 @@ export function WakeWordClient() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(async () => {
-    const token = await getToken();
+  const refresh = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, list, stats] = await Promise.all([
       apiFetch<Engine>('/v1/wake-word/engine', { token }),
@@ -46,17 +46,17 @@ export function WakeWordClient() {
     setAnalytics(stats);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void refresh().catch((err: Error) => setError(err.message));
+    void refresh.catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
   async function onAdd(e: FormEvent) {
-    e.preventDefault();
+    e.preventDefault;
     setLoading(true);
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       await apiFetch('/v1/wake-word/keywords', {
         token,
@@ -64,7 +64,7 @@ export function WakeWordClient() {
         body: JSON.stringify({ phrase, kind }),
       });
       setPhrase('');
-      await refresh();
+      await refresh;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Add failed');
     } finally {
@@ -73,11 +73,11 @@ export function WakeWordClient() {
   }
 
   async function onDetect(e: FormEvent) {
-    e.preventDefault();
+    e.preventDefault;
     setLoading(true);
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const body = await apiFetch<DetectResult>('/v1/wake-word/detect', {
         token,
@@ -85,7 +85,7 @@ export function WakeWordClient() {
         body: JSON.stringify({ text }),
       });
       setResult(body);
-      await refresh();
+      await refresh;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Detect failed');
     } finally {
@@ -94,10 +94,10 @@ export function WakeWordClient() {
   }
 
   async function onDelete(id: string) {
-    const token = await getToken();
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     await apiFetch(`/v1/wake-word/keywords/${id}`, { token, method: 'DELETE' });
-    await refresh();
+    await refresh;
   }
 
   return (
@@ -137,7 +137,7 @@ export function WakeWordClient() {
               rows={3}
               style={{ ...input, resize: 'vertical' }}
             />
-            <button type="submit" disabled={loading || !text.trim()} style={primary}>
+            <button type="submit" disabled={loading || !text.trim} style={primary}>
               Detect wake words
             </button>
           </form>
@@ -176,7 +176,7 @@ export function WakeWordClient() {
               <option value="keyword">keyword</option>
               <option value="trigger">trigger</option>
             </select>
-            <button type="submit" disabled={loading || !phrase.trim()} style={primary}>
+            <button type="submit" disabled={loading || !phrase.trim} style={primary}>
               Add
             </button>
           </form>
@@ -196,7 +196,7 @@ export function WakeWordClient() {
                   {k.phrase}{' '}
                   <span style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>· {k.kind}</span>
                 </span>
-                <button type="button" style={linkBtn} onClick={() => void onDelete(k.id)}>
+                <button type="button" style={linkBtn} onClick={ => void onDelete(k.id)}>
                   Remove
                 </button>
               </li>

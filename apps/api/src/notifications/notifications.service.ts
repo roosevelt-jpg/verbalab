@@ -6,7 +6,7 @@ import { EmailProvider, SendEmailInput, SendEmailResult } from './email-provider
 import { ResendAdapter } from './resend.adapter';
 import { paragraph, renderSystemEmailHtml } from './email-layout';
 
-@Injectable()
+@Injectable
 export class NotificationsService {
   private readonly logger = new Logger(NotificationsService.name);
   private provider: EmailProvider;
@@ -26,24 +26,24 @@ export class NotificationsService {
     this.provider = provider;
   }
 
-  isConfigured(): boolean {
+  isConfigured: boolean {
     return Boolean(process.env.RESEND_API_KEY && process.env.EMAIL_FROM);
   }
 
-  private disabled(): boolean {
+  private disabled: boolean {
     return process.env.NOTIFICATIONS_DISABLED === '1';
   }
 
   async sendEmail(input: SendEmailInput): Promise<SendEmailResult | null> {
-    if (this.disabled()) return null;
-    if (!this.isConfigured() && this.provider.name === 'resend') {
+    if (this.disabled) return null;
+    if (!this.isConfigured && this.provider.name === 'resend') {
       this.logger.debug('Email skipped — Resend not configured');
       return null;
     }
     return this.provider.send(input);
   }
 
-  private async loadBranding(): Promise<PlatformBranding> {
+  private async loadBranding: Promise<PlatformBranding> {
     return this.prisma.platformBranding.upsert({
       where: { id: 'default' },
       create: { id: 'default' },
@@ -58,7 +58,7 @@ export class NotificationsService {
     title: string;
     bodyHtml: string;
   }) {
-    const branding = await this.loadBranding();
+    const branding = await this.loadBranding;
     const html = renderSystemEmailHtml({
       branding,
       title: input.title,
@@ -79,7 +79,7 @@ export class NotificationsService {
     status: 'succeeded' | 'failed';
     error?: string;
   }) {
-    if (this.disabled()) return;
+    if (this.disabled) return;
     const recipients = await this.ownerAdminEmails(input.organizationId);
     if (recipients.length === 0) return;
 
@@ -115,7 +115,7 @@ export class NotificationsService {
   }
 
   async maybeNotifyUsageThresholds(organizationId: string) {
-    if (this.disabled()) return;
+    if (this.disabled) return;
 
     try {
       const org = await this.prisma.organization.findUnique({
@@ -124,7 +124,7 @@ export class NotificationsService {
       });
       if (!org || org.characterQuota <= 0) return;
 
-      const periodStart = new Date();
+      const periodStart = new Date;
       periodStart.setUTCDate(1);
       periodStart.setUTCHours(0, 0, 0, 0);
 
@@ -169,7 +169,7 @@ export class NotificationsService {
         }
 
         try {
-          const text = `Your organization "${org.name}" has used ${characters.toLocaleString()} of ${org.characterQuota.toLocaleString()} monthly characters (${threshold.pct}% threshold).`;
+          const text = `Your organization "${org.name}" has used ${characters.toLocaleString} of ${org.characterQuota.toLocaleString} monthly characters (${threshold.pct}% threshold).`;
           const result = await this.sendBranded({
             to: recipients,
             subject: `Lugemi usage at ${threshold.pct}% — ${org.name}`,
@@ -217,7 +217,7 @@ export class NotificationsService {
     email: string;
     role: string;
   }) {
-    if (this.disabled() || !input.email) return;
+    if (this.disabled || !input.email) return;
 
     try {
       const text = `You now have ${input.role} access to "${input.organizationName}" on Lugemi. Sign in with the same email to open the console.`;
@@ -250,14 +250,14 @@ export class NotificationsService {
     token: string;
     expiresAt: Date;
   }) {
-    if (this.disabled() || !input.email) return;
+    if (this.disabled || !input.email) return;
 
     const publicBase =
-      process.env.APP_PUBLIC_URL?.trim() ||
-      process.env.NEXT_PUBLIC_APP_URL?.trim() ||
+      process.env.APP_PUBLIC_URL?.trim ||
+      process.env.NEXT_PUBLIC_APP_URL?.trim ||
       'http://127.0.0.1:43123';
     const signInUrl = `${publicBase.replace(/\/$/, '')}/sign-in`;
-    const text = `You've been invited to join "${input.organizationName}" on Lugemi as ${input.role}. Sign in with ${input.email} to accept: ${signInUrl}. Invite expires ${input.expiresAt.toISOString()}.`;
+    const text = `You've been invited to join "${input.organizationName}" on Lugemi as ${input.role}. Sign in with ${input.email} to accept: ${signInUrl}. Invite expires ${input.expiresAt.toISOString}.`;
 
     try {
       const result = await this.sendBranded({
@@ -271,7 +271,7 @@ export class NotificationsService {
           ),
           paragraph(`Sign in with ${input.email} to accept the invite and open the shared workspace.`),
           `<p style="margin:0 0 12px;"><a href="${signInUrl}" style="display:inline-block;padding:10px 16px;background:#007c78;color:#fff;text-decoration:none;border-radius:8px;font-weight:600;">Accept invite</a></p>`,
-          paragraph(`This invite expires on ${input.expiresAt.toUTCString()}.`),
+          paragraph(`This invite expires on ${input.expiresAt.toUTCString}.`),
         ].join(''),
       });
       if (!result) return;
@@ -299,7 +299,7 @@ export class NotificationsService {
     subject: string;
     message: string;
   }) {
-    if (this.disabled()) return null;
+    if (this.disabled) return null;
     const recipients = await this.ownerAdminEmails(input.organizationId);
     if (recipients.length === 0) return null;
 
@@ -343,7 +343,7 @@ export class NotificationsService {
     return [
       ...new Set(
         members
-          .map((m) => m.user.email?.trim())
+          .map((m) => m.user.email?.trim)
           .filter((email): email is string => Boolean(email)),
       ),
     ];

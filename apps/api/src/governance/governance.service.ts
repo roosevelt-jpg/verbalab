@@ -30,7 +30,7 @@ export type BrandingInput = {
   socialWebsite?: string;
 };
 
-@Injectable()
+@Injectable
 export class GovernanceService {
   constructor(
     private readonly prisma: PrismaService,
@@ -83,7 +83,7 @@ export class GovernanceService {
     ip?: string;
   }) {
     this.assertOwnerOrAdmin(input.actorRole);
-    const email = input.email.trim().toLowerCase();
+    const email = input.email.trim.toLowerCase;
     if (!email || !email.includes('@')) {
       throw new ApiException('validation_error', 'A valid email is required', HttpStatus.BAD_REQUEST);
     }
@@ -109,7 +109,7 @@ export class GovernanceService {
     const pending = await this.prisma.organizationInvite.findFirst({
       where: { organizationId: input.organizationId, email, status: 'pending' },
     });
-    if (pending && pending.expiresAt > new Date()) {
+    if (pending && pending.expiresAt > new Date) {
       throw new ApiException(
         'conflict',
         'A pending invite already exists for that email',
@@ -129,7 +129,7 @@ export class GovernanceService {
     });
 
     const token = randomBytes(24).toString('hex');
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+    const expiresAt = new Date(Date.now + 7 * 24 * 60 * 60 * 1000);
     const invite = await this.prisma.organizationInvite.create({
       data: {
         organizationId: input.organizationId,
@@ -205,7 +205,7 @@ export class GovernanceService {
     return { id: updated.id, status: updated.status };
   }
 
-  async getBranding(): Promise<PlatformBranding> {
+  async getBranding: Promise<PlatformBranding> {
     return this.prisma.platformBranding.upsert({
       where: { id: 'default' },
       create: { id: 'default' },
@@ -237,7 +237,7 @@ export class GovernanceService {
       'socialWebsite',
     ] as const) {
       if (input.patch[key] !== undefined) {
-        data[key] = String(input.patch[key] ?? '').trim();
+        data[key] = String(input.patch[key] ?? '').trim;
       }
     }
     const branding = await this.prisma.platformBranding.upsert({
@@ -615,7 +615,7 @@ export class GovernanceService {
     });
 
     return {
-      exportedAt: new Date().toISOString(),
+      exportedAt: new Date.toISOString,
       organization: org,
       workspace,
       glossaryTerms,
@@ -661,7 +661,7 @@ export class GovernanceService {
       select: { id: true, name: true },
     });
 
-    if (input.confirmName.trim() !== org.name) {
+    if (input.confirmName.trim !== org.name) {
       throw new ApiException(
         'invalid_request',
         'confirmName must exactly match the organization name',

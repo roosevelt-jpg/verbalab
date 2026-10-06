@@ -16,7 +16,7 @@ const apiSrc = join(root, 'apps/api/src');
 function walkTsFiles(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory()) {
+    if (name.isDirectory) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       walkTsFiles(p, out);
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_icaudit_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_icaudit_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -49,19 +49,19 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Inference Cloud Production Audit (VL-213)', () => {
+describe('Inference Cloud Production Audit',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let rawKey: string;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
     const org = await seedOrg(prisma, 'ica');
@@ -74,11 +74,11 @@ describe('Inference Cloud Production Audit (VL-213)', () => {
     rawKey = created.secret;
   }, 120_000);
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('ships audit ADR, blueprint ADR, and report pack', () => {
+  it('ships audit ADR, blueprint ADR, and report pack',  => {
     expect(existsSync(join(root, 'docs/adr/0124-inference-cloud-production-audit.md'))).toBe(
       true,
     );
@@ -111,7 +111,7 @@ describe('Inference Cloud Production Audit (VL-213)', () => {
     expect(adr).toMatch(/review gate|checklist/i);
   });
 
-  it('has no TODO/FIXME/implement-later markers in Inference Cloud source trees', () => {
+  it('has no TODO/FIXME/implement-later markers in Inference Cloud source trees',  => {
     const roots = [
       join(apiSrc, 'inference-cloud'),
       join(apiSrc, 'gpu-platform'),
@@ -135,7 +135,7 @@ describe('Inference Cloud Production Audit (VL-213)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes integrated Inference Cloud catalogs', async () => {
+  it('exposes integrated Inference Cloud catalogs', async  => {
     const paths = [
       '/v1/inference-cloud/products',
       '/v1/gpu-platform/engine',
@@ -148,25 +148,25 @@ describe('Inference Cloud Production Audit (VL-213)', () => {
       '/v1/ai-runtime-analytics/engine',
     ];
     for (const path of paths) {
-      const res = await request(app.getHttpServer()).get(path).expect(200);
-      expect(res.body).toBeTruthy();
+      const res = await request(app.getHttpServer).get(path).expect(200);
+      expect(res.body).toBeTruthy;
     }
   });
 
-  it('verifies spend-safety: GPU hard ceilings + Cost Optimization enforce', async () => {
-    const ceilings = await request(app.getHttpServer())
+  it('verifies spend-safety: GPU hard ceilings + Cost Optimization enforce', async  => {
+    const ceilings = await request(app.getHttpServer)
       .get('/v1/gpu-platform/ceilings')
       .expect(200);
     expect(ceilings.body.maxInstances).toBeGreaterThan(0);
     expect(ceilings.body.maxSpendUsd).toBeGreaterThan(0);
     expect(ceilings.body.note).toMatch(/Hard|ceiling/i);
 
-    const gpu = await request(app.getHttpServer()).get('/v1/gpu-platform/engine').expect(200);
+    const gpu = await request(app.getHttpServer).get('/v1/gpu-platform/engine').expect(200);
     expect(gpu.body.honesty.openEndedGpuAutoscale).toBe(false);
     expect(gpu.body.honesty.hardSpendCeilingsRequired).toBe(true);
     expect(gpu.body.spendSafety.openEndedGpuAutoscale).toBe(false);
 
-    const cost = await request(app.getHttpServer())
+    const cost = await request(app.getHttpServer)
       .get('/v1/cost-optimization/engine')
       .expect(200);
     expect(cost.body.honesty.enforcesSpendCaps).toBe(true);
@@ -174,24 +174,24 @@ describe('Inference Cloud Production Audit (VL-213)', () => {
     expect(cost.body.spendSafety.enforcesSpendCaps).toBe(true);
   });
 
-  it('rejects unauthenticated GPU allocate and cost record (security)', async () => {
-    const allocate = await request(app.getHttpServer())
+  it('rejects unauthenticated GPU allocate and cost record (security)', async  => {
+    const allocate = await request(app.getHttpServer)
       .post('/v1/gpu-platform/allocations')
       .send({ instances: 1 });
     expect([401, 403, 503]).toContain(allocate.status);
 
-    const record = await request(app.getHttpServer())
+    const record = await request(app.getHttpServer)
       .post('/v1/cost-optimization/record')
       .send({ category: 'provider', amountUsd: 0.01 });
     expect([401, 403, 503]).toContain(record.status);
 
-    const overview = await request(app.getHttpServer()).get(
+    const overview = await request(app.getHttpServer).get(
       '/v1/ai-runtime-analytics/overview',
     );
     expect([401, 403, 503]).toContain(overview.status);
   });
 
-  it('runs bounded sequential load smoke on public inference catalogs', async () => {
+  it('runs bounded sequential load smoke on public inference catalogs', async  => {
     const paths = [
       '/v1/inference-cloud/products',
       '/v1/gpu-platform/engine',
@@ -203,27 +203,27 @@ describe('Inference Cloud Production Audit (VL-213)', () => {
       '/v1/cost-optimization/engine',
       '/v1/ai-runtime-analytics/engine',
     ];
-    const started = Date.now();
+    const started = Date.now;
     const iterations = 24;
     for (let i = 0; i < iterations; i++) {
       const path = paths[i % paths.length]!;
-      await request(app.getHttpServer()).get(path).expect(200);
+      await request(app.getHttpServer).get(path).expect(200);
     }
-    const elapsed = Date.now() - started;
+    const elapsed = Date.now - started;
     expect(elapsed).toBeLessThan(30_000);
     expect(iterations).toBe(24);
   });
 
-  it('runs bounded rapid stress smoke on inference products catalog', async () => {
-    const started = Date.now();
+  it('runs bounded rapid stress smoke on inference products catalog', async  => {
+    const started = Date.now;
     for (let i = 0; i < 12; i++) {
-      await request(app.getHttpServer()).get('/v1/inference-cloud/products').expect(200);
+      await request(app.getHttpServer).get('/v1/inference-cloud/products').expect(200);
     }
-    expect(Date.now() - started).toBeLessThan(15_000);
+    expect(Date.now - started).toBeLessThan(15_000);
   });
 
-  it('GraphQL Inference Cloud façade queries respond with honesty flags', async () => {
-    const res = await request(app.getHttpServer())
+  it('GraphQL Inference Cloud façade queries respond with honesty flags', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .set('Authorization', `Bearer ${rawKey}`)
       .send({
@@ -240,7 +240,7 @@ describe('Inference Cloud Production Audit (VL-213)', () => {
         }`,
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.inferenceProducts.length).toBeGreaterThan(8);
     expect(res.body.data.gpuPlatformEngine.gpuHyperscalerOs).toBe(false);
     expect(res.body.data.gpuPlatformEngine.openEndedGpuAutoscale).toBe(false);
@@ -257,13 +257,13 @@ describe('Inference Cloud Production Audit (VL-213)', () => {
     expect(res.body.data.aiRuntimeAnalyticsEngine.aggregatesOnly).toBe(true);
   });
 
-  it('documents 12-layer cloud blueprint with Inference Cloud closed', () => {
+  it('documents 12-layer cloud blueprint with Inference Cloud closed',  => {
     const blueprint = readFileSync(join(root, 'docs/adr/0080-lugemi-cloud-blueprint.md'), 'utf8');
     expect(blueprint).toContain('Cloud Foundation');
     expect(blueprint).toContain('Production Audit');
     expect(blueprint).toContain('Inference');
-    expect(blueprint).toContain('VL-213');
+    expect(blueprint).toContain('');
     const living = readFileSync(join(root, 'docs/CLOUD_BLUEPRINT.md'), 'utf8');
-    expect(living).toMatch(/VL-204\s*→\s*VL-213/);
+    expect(living).toMatch(/\s*→\s*);
   });
 });

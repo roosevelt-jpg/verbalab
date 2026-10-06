@@ -1,4 +1,4 @@
-/** Application ports for Organization Control (VL-315). */
+/** Application ports for Organization Control. */
 
 export type OrganizationControlProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type OrganizationControlEngineBundle = ReturnType<
 >;
 
 export interface OrganizationControlCatalogPort {
-  engine(): OrganizationControlEngineBundle;
-  listProducts(): OrganizationControlProductRow[];
+  engine: OrganizationControlEngineBundle;
+  listProducts: OrganizationControlProductRow[];
 }
 
 export const ORGANIZATION_CONTROL_CATALOG_PORT = Symbol('ORGANIZATION_CONTROL_CATALOG_PORT');

@@ -24,7 +24,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_vs_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_vs_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -38,26 +38,26 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Voice Studio (VL-174)', () => {
+describe('Voice Studio',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
 
     app.get(GatewayService).setTtsProviderForTests({
       name: 'fixture',
-      listVoices() {
+      listVoices {
         return [
           {
             id: 'alloy',
@@ -89,11 +89,11 @@ describe('Voice Studio (VL-174)', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Voice Studio as non-DAW with SSML lite honesty', () => {
+  it('documents Voice Studio as non-DAW with SSML lite honesty',  => {
     const doc = join(root, 'docs/VOICE_STUDIO.md');
     const adr = join(root, 'docs/adr/0085-voice-studio.md');
     expect(existsSync(doc)).toBe(true);
@@ -103,25 +103,25 @@ describe('Voice Studio (VL-174)', () => {
     expect(text).toMatch(/is \*\*not\*\* a full nonlinear/i);
   });
 
-  it('compiles SSML lite without spoken stage directions', () => {
+  it('compiles SSML lite without spoken stage directions',  => {
     const plan = compileSsmlLite(
       '<speak>Hello <prosody rate="slow">world</prosody>. <break time="200ms"/><phoneme alphabet="ipa" ph="vɝbəlæb">Lugemi</phoneme></speak>',
     );
-    expect(plan.plainText.toLowerCase()).toContain('hello');
-    expect(plan.plainText.toLowerCase()).toContain('vɝbəlæb');
+    expect(plan.plainText.toLowerCase).toContain('hello');
+    expect(plan.plainText.toLowerCase).toContain('vɝbəlæb');
     expect(plan.segments.some((s) => s.kind === 'pause')).toBe(true);
-    expect(plan.plainText.toLowerCase()).not.toContain('say slowly');
+    expect(plan.plainText.toLowerCase).not.toContain('say slowly');
   });
 
-  it('applies pronunciation lexicon as word aliases', () => {
+  it('applies pronunciation lexicon as word aliases',  => {
     const out = applyPronunciationLexicon('Welcome to Lugemi studio', [
       { grapheme: 'Lugemi', alias: 'Verba Lab' },
     ]);
     expect(out).toBe('Welcome to Verba Lab studio');
   });
 
-  it('exposes engine with nonlinearDaw=false', async () => {
-    const engine = await request(app.getHttpServer()).get('/v1/voice-studio/engine').expect(200);
+  it('exposes engine with nonlinearDaw=false', async  => {
+    const engine = await request(app.getHttpServer).get('/v1/voice-studio/engine').expect(200);
     expect(engine.body.product).toBe('Lugemi Voice Studio');
     expect(engine.body.architecture.nonlinearDaw).toBe(false);
     expect(engine.body.honesty.vendorSsmlPassthrough).toBe(false);
@@ -129,7 +129,7 @@ describe('Voice Studio (VL-174)', () => {
     expect(timeline.status).toBe('partial');
   });
 
-  it('upserts pronunciation, previews with lexicon, and compares voices', async () => {
+  it('upserts pronunciation, previews with lexicon, and compares voices', async  => {
     const org = await seedOrg(prisma, 'vs');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -138,14 +138,14 @@ describe('Voice Studio (VL-174)', () => {
       name: 'vs-key',
     });
 
-    const lex = await request(app.getHttpServer())
+    const lex = await request(app.getHttpServer)
       .post('/v1/voice-studio/pronunciation')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ grapheme: 'Lugemi', alias: 'Verba Lab' });
     expect([200, 201]).toContain(lex.status);
     expect(lex.body.alias).toBe('Verba Lab');
 
-    const preview = await request(app.getHttpServer())
+    const preview = await request(app.getHttpServer)
       .post('/v1/voice-studio/preview')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'Hello Lugemi', voice: 'alloy' })
@@ -154,7 +154,7 @@ describe('Voice Studio (VL-174)', () => {
     expect(preview.headers['x-lugemi-voice']).toBe('alloy');
     expect(Buffer.from(preview.body).toString('utf8')).toContain('AUDIO:alloy:Hello Verba Lab');
 
-    const compare = await request(app.getHttpServer())
+    const compare = await request(app.getHttpServer)
       .post('/v1/voice-studio/compare')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'Hi', voices: ['alloy', 'nova'] });
@@ -163,7 +163,7 @@ describe('Voice Studio (VL-174)', () => {
     expect(compare.body.clips[0].voice).toBe('alloy');
     expect(compare.body.clips[1].voice).toBe('nova');
 
-    const project = await request(app.getHttpServer())
+    const project = await request(app.getHttpServer)
       .post('/v1/voice-studio/projects')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -172,7 +172,7 @@ describe('Voice Studio (VL-174)', () => {
       });
     expect([200, 201]).toContain(project.status);
 
-    const timeline = await request(app.getHttpServer())
+    const timeline = await request(app.getHttpServer)
       .post('/v1/voice-studio/timeline/render')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ projectId: project.body.id, defaultVoice: 'alloy' });
@@ -182,15 +182,15 @@ describe('Voice Studio (VL-174)', () => {
     expect(timeline.body.note).toMatch(/not nonlinear/i);
   });
 
-  it('exposes voiceStudioEngine via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes voiceStudioEngine via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query: '{ voiceStudioEngine { product nonlinearDaw capabilities { id status } } }',
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.voiceStudioEngine.nonlinearDaw).toBe(false);
     expect(res.body.data.voiceStudioEngine.capabilities.length).toBeGreaterThan(5);
   });

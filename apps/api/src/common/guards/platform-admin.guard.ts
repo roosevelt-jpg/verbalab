@@ -5,7 +5,7 @@ import { ApiException } from '../errors/api-exception';
 import { PrismaService } from '../../prisma/prisma.service';
 import { isPlatformAdmin } from '../admin/platform-admin';
 
-@Injectable()
+@Injectable
 export class PlatformAdminGuard implements CanActivate {
   constructor(
     private readonly clerk: ClerkAuthGuard,
@@ -14,7 +14,7 @@ export class PlatformAdminGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     await this.clerk.canActivate(context);
-    const request = context.switchToHttp().getRequest<{ sessionAuth?: SessionContext }>();
+    const request = context.switchToHttp.getRequest<{ sessionAuth?: SessionContext }>;
     const session = request.sessionAuth;
     if (!session) {
       throw new ApiException('unauthorized', 'Missing session', HttpStatus.UNAUTHORIZED);

@@ -39,20 +39,20 @@ type Overview = {
   note: string;
 };
 
-export function IntelligenceCloudClient() {
-  const { getToken, isLoaded } = useAuth();
+export function IntelligenceCloudClient {
+  const { getToken, isLoaded } = useAuth;
   const [data, setData] = useState<Overview | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     setData(await apiFetch<Overview>('/v1/intelligence-cloud/overview', { token }));
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
   return (

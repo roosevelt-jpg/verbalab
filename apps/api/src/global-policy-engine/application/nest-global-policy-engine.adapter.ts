@@ -6,16 +6,16 @@ import {
   GlobalPolicyEngineProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestGlobalPolicyEngineCatalogAdapter implements GlobalPolicyEngineCatalogPort {
   constructor(private readonly service: GlobalPolicyEngineService) {}
 
-  engine(): GlobalPolicyEngineEngineBundle {
-    return this.service.engine();
+  engine: GlobalPolicyEngineEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): GlobalPolicyEngineProductRow[] {
-    const bundle = this.engine() as {
+  listProducts: GlobalPolicyEngineProductRow[] {
+    const bundle = this.engine as {
       products?: GlobalPolicyEngineProductRow[];
       capabilities?: Array<{ id: string; name: string; status: string; api?: string | null; notes?: string }>;
     };
@@ -37,7 +37,7 @@ export class NestGlobalPolicyEngineCatalogAdapter implements GlobalPolicyEngineC
         status: 'shipped',
         api: 'GET /v1/global-policy-engine/engine',
         console: '/global-policy-engine',
-        notes: 'VL-317 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

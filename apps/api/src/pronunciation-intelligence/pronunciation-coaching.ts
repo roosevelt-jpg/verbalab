@@ -57,7 +57,7 @@ export function coachingTips(input: {
   insertions: string[];
   overall: number;
 }): CoachingTip[] {
-  const lang = input.language.toLowerCase().slice(0, 2);
+  const lang = input.language.toLowerCase.slice(0, 2);
   const tips: CoachingTip[] = [...(LANG_TIPS[lang] ?? LANG_TIPS.en!).slice(0, 2)];
 
   if (input.substitutions.length) {

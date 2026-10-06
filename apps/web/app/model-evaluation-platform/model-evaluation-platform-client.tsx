@@ -34,15 +34,15 @@ type Engine = {
   suites: Suite[];
 };
 
-export function ModelEvaluationPlatformClient() {
-  const { getToken, isLoaded } = useAuth();
+export function ModelEvaluationPlatformClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [runs, setRuns] = useState<Run[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const refresh = useCallback(async () => {
-    const token = await getToken();
+  const refresh = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, list] = await Promise.all([
       apiFetch<Engine>('/v1/model-evaluation-platform/engine', { token }),
@@ -52,23 +52,23 @@ export function ModelEvaluationPlatformClient() {
     setRuns(list.runs);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void refresh().catch((err: Error) => setError(err.message));
+    void refresh.catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
-  const runSafety = async () => {
+  const runSafety = async  => {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       await apiFetch('/v1/model-evaluation-platform/runs', {
         token,
         method: 'POST',
         body: JSON.stringify({ suite: 'safety', label: 'console-safety' }),
       });
-      await refresh();
+      await refresh;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Run failed');
     } finally {
@@ -90,7 +90,7 @@ export function ModelEvaluationPlatformClient() {
         Model Evaluation Platform
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.5rem', maxWidth: '44rem' }}>
-        Translation goldens via VL-100 plus sandbox bias/safety/latency — not a global LLM
+        Translation goldens via existing plus sandbox bias/safety/latency — not a global LLM
         leaderboard.{' '}
         <Link href="/coverage">Coverage</Link> ·{' '}
         <Link href="/foundation-model-cloud">Foundation Model Cloud</Link>.
@@ -120,7 +120,7 @@ export function ModelEvaluationPlatformClient() {
 
           <section>
             <h2 style={label}>Actions</h2>
-            <button type="button" onClick={() => void runSafety()} disabled={busy} style={btn}>
+            <button type="button" onClick={ => void runSafety} disabled={busy} style={btn}>
               {busy ? 'Running…' : 'Run sandbox safety suite'}
             </button>
           </section>

@@ -1,4 +1,4 @@
-/** Application ports for Agent Fabric (VL-246). */
+/** Application ports for Agent Fabric. */
 
 export type AgentFabricCapabilityRow = {
   id: string;
@@ -22,9 +22,9 @@ export type AgentFabricProductsBundle = ReturnType<
 >;
 
 export interface AgentFabricCatalogPort {
-  products(): AgentFabricProductsBundle;
-  listCapabilities(): AgentFabricCapabilityRow[];
-  listRoutes(): AgentFabricRouteRow[];
+  products: AgentFabricProductsBundle;
+  listCapabilities: AgentFabricCapabilityRow[];
+  listRoutes: AgentFabricRouteRow[];
 }
 
 export const AGENT_FABRIC_CATALOG_PORT = Symbol('AGENT_FABRIC_CATALOG_PORT');

@@ -20,7 +20,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_ft_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_ft_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -34,7 +34,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Fine-tunes (VL-104)', () => {
+describe('Fine-tunes',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let billing: BillingService;
@@ -42,14 +42,14 @@ describe('Fine-tunes (VL-104)', () => {
   let gateway: GatewayService;
   let evalService: EvalService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     billing = app.get(BillingService);
@@ -72,22 +72,22 @@ describe('Fine-tunes (VL-104)', () => {
     });
 
     await evalService.runAll('fixture');
-    gateway.allowFineTuneRoutingForTests();
+    gateway.allowFineTuneRoutingForTests;
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('lists failed-pair candidates from coverage thresholds', () => {
-    const result = finetunes.listCandidates();
+  it('lists failed-pair candidates from coverage thresholds',  => {
+    const result = finetunes.listCandidates;
     expect(result.candidates.length).toBeGreaterThanOrEqual(1);
     expect(result.candidates.some((c) => c.pairKey === 'en-sw')).toBe(true);
     expect(result.thresholds.exactMatchRateMax).toBe(0.5);
   });
 
-  it('rejects free-plan job creation', async () => {
-    const org = await seedOrg(prisma, `ftfree_${Date.now()}`);
+  it('rejects free-plan job creation', async  => {
+    const org = await seedOrg(prisma, `ftfree_${Date.now}`);
     await expect(
       finetunes.createJob({
         organizationId: org.id,
@@ -99,8 +99,8 @@ describe('Fine-tunes (VL-104)', () => {
     ).rejects.toMatchObject({ code: 'plan_required' });
   });
 
-  it('creates a job, exports pack, completes with phrase map, and routes translate', async () => {
-    const org = await seedOrg(prisma, `ftpro_${Date.now()}`);
+  it('creates a job, exports pack, completes with phrase map, and routes translate', async  => {
+    const org = await seedOrg(prisma, `ftpro_${Date.now}`);
     await billing.applyEntitlementForTests({ organizationId: org.id, plan: 'pro' });
 
     const created = await finetunes.createJob({

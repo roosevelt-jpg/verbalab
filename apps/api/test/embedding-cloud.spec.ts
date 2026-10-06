@@ -22,7 +22,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_ec_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_ec_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -36,19 +36,19 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Embedding Cloud (VL-181)', () => {
+describe('Embedding Cloud',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -72,23 +72,23 @@ describe('Embedding Cloud (VL-181)', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Embedding Cloud honesty', () => {
+  it('documents Embedding Cloud honesty',  => {
     const doc = join(root, 'docs/EMBEDDING_CLOUD.md');
     const adr = join(root, 'docs/adr/0092-embedding-cloud.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/deferred/i);
-    expect(text).toContain('VL-063');
+    expect(text).toContain('');
     expect(text).not.toMatch(/trains embedding models/i);
   });
 
-  it('exposes engine with multimodalOs=false and speech deferred', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/embedding-cloud/engine').expect(200);
+  it('exposes engine with multimodalOs=false and speech deferred', async  => {
+    const res = await request(app.getHttpServer).get('/v1/embedding-cloud/engine').expect(200);
     expect(res.body.product).toContain('Embedding Cloud');
     expect(res.body.honesty.trainsEmbeddingModels).toBe(false);
     expect(res.body.honesty.multimodalOs).toBe(false);
@@ -97,11 +97,11 @@ describe('Embedding Cloud (VL-181)', () => {
     const text = res.body.modalities.find((m: { id: string }) => m.id === 'text');
     expect(text.status).toBe('shipped');
 
-    const models = await request(app.getHttpServer()).get('/v1/embedding-cloud/models').expect(200);
+    const models = await request(app.getHttpServer).get('/v1/embedding-cloud/models').expect(200);
     expect(models.body.models.some((m: { default: boolean }) => m.default)).toBe(true);
   });
 
-  it('embeds text/code and rejects deferred modalities', async () => {
+  it('embeds text/code and rejects deferred modalities', async  => {
     const org = await seedOrg(prisma, 'ec');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -110,7 +110,7 @@ describe('Embedding Cloud (VL-181)', () => {
       name: 'ec-key',
     });
 
-    const emb = await request(app.getHttpServer())
+    const emb = await request(app.getHttpServer)
       .post('/v1/embedding-cloud/embed')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ input: 'Habari', modality: 'code' })
@@ -120,14 +120,14 @@ describe('Embedding Cloud (VL-181)', () => {
     expect(emb.body.data[0].embedding).toEqual([6, 0, 0.25]);
     expect(emb.body.usage.total_tokens).toBe(2);
 
-    const rejected = await request(app.getHttpServer())
+    const rejected = await request(app.getHttpServer)
       .post('/v1/embedding-cloud/embed')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ input: 'x', modality: 'image' });
     expect(rejected.status).toBe(400);
     expect(JSON.stringify(rejected.body)).toMatch(/deferred/i);
 
-    const analytics = await request(app.getHttpServer())
+    const analytics = await request(app.getHttpServer)
       .get('/v1/embedding-cloud/analytics')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -135,8 +135,8 @@ describe('Embedding Cloud (VL-181)', () => {
     expect(analytics.body.tokens).toBeGreaterThanOrEqual(2);
   });
 
-  it('exposes embeddingCloudEngine via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes embeddingCloudEngine via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
@@ -144,7 +144,7 @@ describe('Embedding Cloud (VL-181)', () => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.embeddingCloudEngine.trainsEmbeddingModels).toBe(false);
     expect(res.body.data.embeddingCloudEngine.multimodalOs).toBe(false);
   });

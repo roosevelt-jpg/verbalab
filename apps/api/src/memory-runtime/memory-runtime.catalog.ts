@@ -28,13 +28,13 @@ export const KERNEL_MEMORY_KINDS = [
 
 export type KernelMemoryKind = (typeof KERNEL_MEMORY_KINDS)[number];
 
-export function memoryRuntimeMode(): 'disabled' | 'sandbox' {
-  const raw = (process.env.LUGEMI_MEMORY_RUNTIME_MODE ?? 'sandbox').toLowerCase();
+export function memoryRuntimeMode: 'disabled' | 'sandbox' {
+  const raw = (process.env.LUGEMI_MEMORY_RUNTIME_MODE ?? 'sandbox').toLowerCase;
   if (raw === 'disabled') return 'disabled';
   return 'sandbox';
 }
 
-export function memoryRuntimeCeilings() {
+export function memoryRuntimeCeilings {
   const max = Math.max(
     1,
     Number(process.env.LUGEMI_KERNEL_MEMORY_MAX_ENTRIES ?? '200') || 200,
@@ -45,20 +45,20 @@ export function memoryRuntimeCeilings() {
       86_400,
       Math.max(60, Number(process.env.LUGEMI_KERNEL_MEMORY_SHORT_TTL_SEC ?? '3600') || 3600),
     ),
-    mode: memoryRuntimeMode(),
+    mode: memoryRuntimeMode,
     note: 'Hard entry ceiling for kernel-layer MemoryRecord rows. Eviction enforces under ceiling.',
   };
 }
 
 /**
- * Library Phase 82 → Memory Runtime (VL-215).
- * Kernel primitives over VL-183 Memory Cloud — not Mem0 / replication OS.
+ * Library Phase 82 → Memory Runtime.
+ * Kernel primitives over existing Memory Cloud — not Mem0 / replication OS.
  */
-export function memoryRuntimeCatalog() {
+export function memoryRuntimeCatalog {
   return {
     product: 'Lugemi Memory Runtime',
     note:
-      'Memory Runtime (VL-215). Kernel-layer short/long-term/semantic/workspace/org/conversation/agent memory over VL-183 MemoryRecord (metadata.layer=kernel). Versioning, eviction, heuristic compression, sandbox snapshots/sync. Not Mem0 OS, not infinite personalization, not multi-region replication. Does not regenerate Memory Cloud or Knowledge Memory.',
+      'Memory Runtime. Kernel-layer short/long-term/semantic/workspace/org/conversation/agent memory over existing MemoryRecord (metadata.layer=kernel). Versioning, eviction, heuristic compression, sandbox snapshots/sync. Not Mem0 OS, not infinite personalization, not multi-region replication. Does not regenerate Memory Cloud or Knowledge Memory.',
     capabilities: [
       {
         id: 'short-term-memory',
@@ -107,7 +107,7 @@ export function memoryRuntimeCatalog() {
         name: 'Agent Memory',
         status: 'partial',
         api: 'POST /v1/memory-runtime/put',
-        notes: 'scope=agent + agentId — Agent Runtime VL-219 writes via /v1/agent-runtime/memory.',
+        notes: 'scope=agent + agentId — Agent Runtime writes via /v1/agent-runtime/memory.',
       },
       {
         id: 'context-compression',
@@ -176,7 +176,7 @@ export function memoryRuntimeCatalog() {
         id: 'sdk',
         name: 'SDK',
         status: 'shipped',
-        api: 'memoryRuntimeEngine()',
+        api: 'memoryRuntimeEngine',
         notes: '@lugemi/sdk',
       },
       {

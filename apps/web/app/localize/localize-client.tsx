@@ -4,18 +4,18 @@ import { FormEvent, useState, type CSSProperties } from 'react';
 import { API_URL } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
 
-export function LocalizeClient() {
+export function LocalizeClient {
   const [apiKey, setApiKey] = useState('');
   const [source, setSource] = useState('en');
   const [target, setTarget] = useState('sw');
   const [format, setFormat] = useState<'json' | 'yaml'>('json');
-  const [input, setInput] = useState('{\n  "app": {\n    "title": "Welcome"\n  }\n}');
+  const [input, setInput] = useState('{\n "app": {\n "title": "Welcome"\n }\n}');
   const [output, setOutput] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function onSubmit(event: FormEvent) {
-    event.preventDefault();
+    event.preventDefault;
     setError(null);
     setOutput('');
     if (!apiKey.startsWith('lg_live_')) {
@@ -36,7 +36,7 @@ export function LocalizeClient() {
         },
         body: JSON.stringify({ format, source, target, content }),
       });
-      const body = (await res.json()) as {
+      const body = (await res.json) as {
         serialized?: string;
         error?: { message: string };
       };

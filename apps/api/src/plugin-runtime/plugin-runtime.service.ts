@@ -47,7 +47,7 @@ type InvokeStep = {
 const RUNTIME = 'plugin-runtime';
 const KERNEL_LAYER = 'kernel';
 
-@Injectable()
+@Injectable
 export class PluginRuntimeService {
   constructor(
     private readonly prisma: PrismaService,
@@ -58,11 +58,11 @@ export class PluginRuntimeService {
     private readonly contextRuntime: ContextRuntimeService,
   ) {}
 
-  engine() {
+  engine {
     return {
-      ...pluginRuntimeCatalog(),
-      ceilings: pluginRuntimeCeilings(),
-      mode: pluginRuntimeMode(),
+      ...pluginRuntimeCatalog,
+      ceilings: pluginRuntimeCeilings,
+      mode: pluginRuntimeMode,
       safety: {
         scopedPermissionsRequired: true,
         sandboxRequired: true,
@@ -70,15 +70,15 @@ export class PluginRuntimeService {
         liveCodeExecutionForbidden: true,
         policyMustHardGate: true,
         note:
-          'Every plugin action passes PluginPolicyGate (local hard allowlist). Policy Runtime (VL-222) will harden further. Not a browser/VS Code extension OS.',
+          'Every plugin action passes PluginPolicyGate (local hard allowlist). Policy Runtime will harden further. Not a browser/VS Code extension OS.',
       },
     };
   }
 
-  permissions() {
+  permissions {
     return {
       grantable: PLUGIN_PERMISSIONS.map((id) => ({ id })),
-      denied: pluginRuntimeCatalog().deniedActions,
+      denied: pluginRuntimeCatalog.deniedActions,
       note: 'Only grantable permissions may be attached to a plugin. Denied actions cannot be granted.',
     };
   }
@@ -91,12 +91,12 @@ export class PluginRuntimeService {
       description?: string;
     },
   ) {
-    this.assertEnabled();
-    const name = (input.name ?? '').trim();
+    this.assertEnabled;
+    const name = (input.name ?? '').trim;
     if (!name) {
       throw new ApiException('validation_error', 'name is required', HttpStatus.BAD_REQUEST);
     }
-    const ceilings = pluginRuntimeCeilings();
+    const ceilings = pluginRuntimeCeilings;
     const existing = await this.listPlugins(input);
     if (existing.plugins.length >= ceilings.maxPluginsPerWorkspace) {
       throw new ApiException(
@@ -107,21 +107,21 @@ export class PluginRuntimeService {
     }
 
     const deps = Array.isArray(input.dependencies)
-      ? input.dependencies.map((d) => String(d).trim()).filter(Boolean).slice(0, 20)
+      ? input.dependencies.map((d) => String(d).trim).filter(Boolean).slice(0, 20)
       : [];
     for (const dep of deps) {
       await this.requirePlugin(input, dep);
     }
 
-    const now = new Date().toISOString();
+    const now = new Date.toISOString;
     const plugin: PluginRecord = {
-      id: `plg_${randomUUID().replace(/-/g, '').slice(0, 16)}`,
+      id: `plg_${randomUUID.replace(/-/g, '').slice(0, 16)}`,
       name: name.slice(0, 80),
       version: 1,
       status: 'draft',
       permissions: this.policy.normalizePermissions(input.permissions),
       dependencies: deps,
-      description: input.description?.trim().slice(0, 500) || undefined,
+      description: input.description?.trim.slice(0, 500) || undefined,
       createdAt: now,
       updatedAt: now,
     };
@@ -143,13 +143,13 @@ export class PluginRuntimeService {
 
     return {
       plugin,
-      honesty: pluginRuntimeCatalog().honesty,
+      honesty: pluginRuntimeCatalog.honesty,
       note: 'Plugin registered in draft. Activate before invoke. Permissions are a hard allowlist.',
     };
   }
 
   async listPlugins(input: AuthCtx) {
-    this.assertEnabled();
+    this.assertEnabled;
     const rows = await this.findByType(input, 'plugin', 100);
     const plugins = rows
       .map((r) => this.parseJson<PluginRecord>(r.content))
@@ -163,9 +163,9 @@ export class PluginRuntimeService {
   }
 
   async lifecycle(input: AuthCtx & { id?: string; status?: string }) {
-    this.assertEnabled();
+    this.assertEnabled;
     const plugin = await this.requirePlugin(input, input.id);
-    const status = (input.status ?? '').trim() as PluginRecord['status'];
+    const status = (input.status ?? '').trim as PluginRecord['status'];
     if (!['draft', 'active', 'paused', 'archived'].includes(status)) {
       throw new ApiException(
         'validation_error',
@@ -174,7 +174,7 @@ export class PluginRuntimeService {
       );
     }
     plugin.status = status;
-    plugin.updatedAt = new Date().toISOString();
+    plugin.updatedAt = new Date.toISOString;
     await this.writeRecord(input, {
       key: `plugin:${plugin.id}`,
       content: plugin,
@@ -190,13 +190,13 @@ export class PluginRuntimeService {
   }
 
   async version(input: AuthCtx & { id?: string; description?: string }) {
-    this.assertEnabled();
+    this.assertEnabled;
     const plugin = await this.requirePlugin(input, input.id);
     if (input.description !== undefined) {
-      plugin.description = input.description.trim().slice(0, 500) || undefined;
+      plugin.description = input.description.trim.slice(0, 500) || undefined;
     }
     plugin.version += 1;
-    plugin.updatedAt = new Date().toISOString();
+    plugin.updatedAt = new Date.toISOString;
     await this.writeRecord(input, {
       key: `plugin:${plugin.id}`,
       content: plugin,
@@ -223,7 +223,7 @@ export class PluginRuntimeService {
       payload?: Record<string, unknown>;
     },
   ) {
-    this.assertEnabled();
+    this.assertEnabled;
     const plugin = await this.requirePlugin(input, input.pluginId);
     if (plugin.status !== 'active') {
       throw new ApiException(
@@ -244,7 +244,7 @@ export class PluginRuntimeService {
       }
     }
 
-    const ceilings = pluginRuntimeCeilings();
+    const ceilings = pluginRuntimeCeilings;
     const requested =
       input.actions?.length
         ? input.actions
@@ -258,11 +258,11 @@ export class PluginRuntimeService {
       );
     }
 
-    const invokeId = `pinv_${randomUUID().replace(/-/g, '').slice(0, 16)}`;
+    const invokeId = `pinv_${randomUUID.replace(/-/g, '').slice(0, 16)}`;
     const steps: InvokeStep[] = [];
 
     for (const step of requested) {
-      const at = new Date().toISOString();
+      const at = new Date.toISOString;
       try {
         const gate = await this.policy.assertAllowed({
           organizationId: input.organizationId,
@@ -287,7 +287,7 @@ export class PluginRuntimeService {
       } catch (err) {
         const message = err instanceof ApiException ? err.message : 'Action failed';
         const status =
-          err instanceof ApiException ? err.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
+          err instanceof ApiException ? err.getStatus : HttpStatus.INTERNAL_SERVER_ERROR;
         steps.push({
           action: step.action,
           allowed: false,
@@ -308,7 +308,7 @@ export class PluginRuntimeService {
       sandbox: true,
       liveCodeExecution: false,
       steps,
-      createdAt: new Date().toISOString(),
+      createdAt: new Date.toISOString,
     };
 
     await this.writeRecord(input, {
@@ -339,7 +339,7 @@ export class PluginRuntimeService {
     return {
       invocation,
       honesty: {
-        ...pluginRuntimeCatalog().honesty,
+        ...pluginRuntimeCatalog.honesty,
         simulatedSteps: true,
       },
       note: denied
@@ -349,7 +349,7 @@ export class PluginRuntimeService {
   }
 
   async marketplace(input: AuthCtx) {
-    this.assertEnabled();
+    this.assertEnabled;
     const listings = await this.prisma.marketplaceListing.count({
       where: { publisherOrgId: input.organizationId, kind: 'plugin' },
     });
@@ -368,13 +368,13 @@ export class PluginRuntimeService {
       console: '/plugin-marketplace',
       honesty: { regeneratesMarketplace: false, extendsMarketplace: true },
       note:
-        'Listing counts for kind=plugin. Full publish/install/run lives at /v1/plugin-marketplace (VL-250) with sandbox + Policy gates.',
+        'Listing counts for kind=plugin. Full publish/install/run lives at /v1/plugin-marketplace with sandbox + Policy gates.',
     };
   }
 
   async analytics(input: AuthCtx) {
-    this.assertEnabled();
-    const start = new Date();
+    this.assertEnabled;
+    const start = new Date;
     start.setUTCDate(1);
     start.setUTCHours(0, 0, 0, 0);
     const actions = [
@@ -395,18 +395,18 @@ export class PluginRuntimeService {
     );
     const plugins = await this.listPlugins(input);
     return {
-      periodStart: start.toISOString(),
+      periodStart: start.toISOString,
       workspaceId: input.workspaceId,
       pluginCount: plugins.plugins.length,
       events: counts.reduce((s, c) => s + c.count, 0),
       byAction: Object.fromEntries(counts.map((c) => [c.action, c.count])),
-      honesty: pluginRuntimeCatalog().honesty,
+      honesty: pluginRuntimeCatalog.honesty,
     };
   }
 
   async monitoring(input: AuthCtx) {
     const [engine, analytics] = await Promise.all([
-      Promise.resolve(this.engine()),
+      Promise.resolve(this.engine),
       this.analytics(input),
     ]);
     return {
@@ -439,7 +439,7 @@ export class PluginRuntimeService {
           input: payload,
           output: {
             text: String(payload.text ?? payload.content ?? plugin.name)
-              .trim()
+              .trim
               .slice(0, 500),
             transformed: true,
           },
@@ -500,8 +500,8 @@ export class PluginRuntimeService {
     }
   }
 
-  private assertEnabled() {
-    if (pluginRuntimeMode() === 'disabled') {
+  private assertEnabled {
+    if (pluginRuntimeMode === 'disabled') {
       throw new ApiException(
         'plugin_runtime_disabled',
         'Plugin Runtime mode is disabled (LUGEMI_PLUGIN_RUNTIME_MODE=disabled).',
@@ -511,7 +511,7 @@ export class PluginRuntimeService {
   }
 
   private async requirePlugin(input: AuthCtx, id?: string) {
-    const pluginId = (id ?? '').trim();
+    const pluginId = (id ?? '').trim;
     if (!pluginId) {
       throw new ApiException('validation_error', 'plugin id is required', HttpStatus.BAD_REQUEST);
     }
@@ -562,7 +562,7 @@ export class PluginRuntimeService {
           key: opts.replaceKey,
           deletedAt: null,
         },
-        data: { deletedAt: new Date() },
+        data: { deletedAt: new Date },
       });
     }
     return this.prisma.memoryRecord.create({

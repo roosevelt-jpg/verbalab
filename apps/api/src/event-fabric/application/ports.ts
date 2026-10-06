@@ -1,4 +1,4 @@
-/** Application ports for Event Fabric (VL-240). */
+/** Application ports for Event Fabric. */
 
 export type EventFabricCapabilityRow = {
   id: string;
@@ -21,9 +21,9 @@ export type EventFabricProductsBundle = ReturnType<
 >;
 
 export interface EventFabricCatalogPort {
-  products(): EventFabricProductsBundle;
-  listCapabilities(): EventFabricCapabilityRow[];
-  listBrokers(): EventFabricBrokerRow[];
+  products: EventFabricProductsBundle;
+  listCapabilities: EventFabricCapabilityRow[];
+  listBrokers: EventFabricBrokerRow[];
 }
 
 export const EVENT_FABRIC_CATALOG_PORT = Symbol('EVENT_FABRIC_CATALOG_PORT');

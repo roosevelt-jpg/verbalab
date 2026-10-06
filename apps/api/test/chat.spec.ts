@@ -18,7 +18,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_chat_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_chat_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -32,19 +32,19 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('AI Chat (VL-060)', () => {
+describe('AI Chat',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -53,7 +53,7 @@ describe('AI Chat (VL-060)', () => {
     gateway.setChatProviderForTests({
       name: 'fixture_chat',
       async complete(input) {
-        const lastUser = [...input.messages].reverse().find((m) => m.role === 'user');
+        const lastUser = [...input.messages].reverse.find((m) => m.role === 'user');
         return {
           message: {
             role: 'assistant',
@@ -70,7 +70,7 @@ describe('AI Chat (VL-060)', () => {
     });
     gateway.setDetectProviderForTests({
       name: 'fixture_detect',
-      async detect() {
+      async detect {
         return { language: 'en', confidence: 0.99, provider: 'fixture_detect' };
       },
     });
@@ -89,11 +89,11 @@ describe('AI Chat (VL-060)', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('completes chat and meters tokens', async () => {
+  it('completes chat and meters tokens', async  => {
     const org = await seedOrg(prisma, 'chat');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -102,7 +102,7 @@ describe('AI Chat (VL-060)', () => {
       name: 'chat-key',
     });
 
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer)
       .post('/v1/chat/completions')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -123,7 +123,7 @@ describe('AI Chat (VL-060)', () => {
     expect(events[0]!.units).toBe(16);
   });
 
-  it('optionally translates the reply', async () => {
+  it('optionally translates the reply', async  => {
     const org = await seedOrg(prisma, 'chatmt');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -132,7 +132,7 @@ describe('AI Chat (VL-060)', () => {
       name: 'chat-mt-key',
     });
 
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer)
       .post('/v1/chat/completions')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -146,7 +146,7 @@ describe('AI Chat (VL-060)', () => {
     expect(res.body.choices[0].message.content).toBe('[sw] Echo: Hello');
   });
 
-  it('rejects empty messages', async () => {
+  it('rejects empty messages', async  => {
     const org = await seedOrg(prisma, 'chatbad');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -155,7 +155,7 @@ describe('AI Chat (VL-060)', () => {
       name: 'chat-bad-key',
     });
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post('/v1/chat/completions')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ messages: [] })

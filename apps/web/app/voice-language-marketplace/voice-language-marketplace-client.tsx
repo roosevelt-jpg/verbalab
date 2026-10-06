@@ -34,14 +34,14 @@ type Engine = {
   };
 };
 
-export function VoiceLanguageMarketplaceClient() {
-  const { getToken, isLoaded } = useAuth();
+export function VoiceLanguageMarketplaceClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [listings, setListings] = useState<Listing[]>([]);
   const [error, setError] = useState<string | null>(null);
 
-  const load = useCallback(async () => {
-    const token = await getToken();
+  const load = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, list] = await Promise.all([
       apiFetch<Engine>('/v1/voice-language-marketplace/engine', { token }),
@@ -51,9 +51,9 @@ export function VoiceLanguageMarketplaceClient() {
     setListings(list.listings);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
+    void load.catch((err: Error) => setError(err.message));
   }, [isLoaded, load]);
 
   return (
@@ -70,7 +70,7 @@ export function VoiceLanguageMarketplaceClient() {
         Voice & Language Marketplace
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '42rem' }}>
-        License voice and language pack SKUs over VL-177 + Volume 1 — not third-party TTS or a voice CDN.
+        License voice and language pack SKUs over Volume 1 — not third-party TTS or a voice CDN.
       </p>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}

@@ -21,13 +21,13 @@ type GqlReq = Request & {
   sessionAuth?: SessionContext;
 };
 
-@Resolver()
+@Resolver
 export class StyleIntelligenceGraphqlResolver {
   constructor(private readonly style: StyleService) {}
 
-  @Query(() => GqlStyleIntelligence, { name: 'styleIntelligence' })
-  styleIntelligence(): GqlStyleIntelligence {
-    const c = this.style.intelligence();
+  @Query( => GqlStyleIntelligence, { name: 'styleIntelligence' })
+  styleIntelligence: GqlStyleIntelligence {
+    const c = this.style.intelligence;
     return {
       product: c.product,
       note: c.note,
@@ -36,10 +36,10 @@ export class StyleIntelligenceGraphqlResolver {
     };
   }
 
-  @Mutation(() => GqlToneDetectResult, { name: 'detectTone' })
+  @Mutation( => GqlToneDetectResult, { name: 'detectTone' })
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   async detectTone(
-    @Args('input', { type: () => DetectToneInput }) input: DetectToneInput,
+    @Args('input', { type:  => DetectToneInput }) input: DetectToneInput,
     @Context('req') req: GqlReq,
   ): Promise<GqlToneDetectResult> {
     const auth = req.translateAuth!;
@@ -58,10 +58,10 @@ export class StyleIntelligenceGraphqlResolver {
     };
   }
 
-  @Mutation(() => GqlStyleRewriteResult, { name: 'transformTone' })
+  @Mutation( => GqlStyleRewriteResult, { name: 'transformTone' })
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   async transformTone(
-    @Args('input', { type: () => TransformToneInput }) input: TransformToneInput,
+    @Args('input', { type:  => TransformToneInput }) input: TransformToneInput,
     @Context('req') req: GqlReq,
   ): Promise<GqlStyleRewriteResult> {
     const auth = req.translateAuth!;
@@ -85,10 +85,10 @@ export class StyleIntelligenceGraphqlResolver {
     };
   }
 
-  @Mutation(() => GqlStyleTransferResult, { name: 'transferStyle' })
+  @Mutation( => GqlStyleTransferResult, { name: 'transferStyle' })
   @UseGuards(TranslateAuthGuard, RateLimitGuard)
   async transferStyle(
-    @Args('input', { type: () => TransferStyleInput }) input: TransferStyleInput,
+    @Args('input', { type:  => TransferStyleInput }) input: TransferStyleInput,
     @Context('req') req: GqlReq,
   ): Promise<GqlStyleTransferResult> {
     const auth = req.translateAuth!;

@@ -22,7 +22,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_rr_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_rr_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -36,22 +36,22 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Reasoning Runtime (VL-218)', () => {
+describe('Reasoning Runtime',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   const prevMode = process.env.LUGEMI_REASONING_RUNTIME_MODE;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     process.env.LUGEMI_REASONING_RUNTIME_MODE = 'sandbox';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -59,7 +59,7 @@ describe('Reasoning Runtime (VL-218)', () => {
     app.get(GatewayService).setChatProviderForTests({
       name: 'fixture_chat',
       async complete(input) {
-        const user = [...input.messages].reverse().find((m) => m.role === 'user');
+        const user = [...input.messages].reverse.find((m) => m.role === 'user');
         const content = [
           '1. Clarify the ask.',
           '2. Weigh options briefly.',
@@ -79,25 +79,25 @@ describe('Reasoning Runtime (VL-218)', () => {
     });
   });
 
-  afterAll(async () => {
+  afterAll(async  => {
     if (prevMode === undefined) delete process.env.LUGEMI_REASONING_RUNTIME_MODE;
     else process.env.LUGEMI_REASONING_RUNTIME_MODE = prevMode;
-    await app.close();
+    await app.close;
   });
 
-  it('documents Reasoning Runtime honesty (extends Reasoning Cloud; no custom kernel)', () => {
+  it('documents Reasoning Runtime honesty (extends Reasoning Cloud; no custom kernel)',  => {
     const doc = join(root, 'docs/REASONING_RUNTIME.md');
     const adr = join(root, 'docs/adr/0129-reasoning-runtime.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/custom reasoner/i);
-    expect(text).toMatch(/Reasoning Cloud|VL-186/i);
+    expect(text).toMatch(/Reasoning Cloud|i);
     expect(text).toMatch(/tool.?execut/i);
   });
 
-  it('exposes engine with honest flags', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/reasoning-runtime/engine').expect(200);
+  it('exposes engine with honest flags', async  => {
+    const res = await request(app.getHttpServer).get('/v1/reasoning-runtime/engine').expect(200);
     expect(res.body.product).toContain('Reasoning Runtime');
     expect(res.body.honesty.customReasonerKernel).toBe(false);
     expect(res.body.honesty.toolExecution).toBe(false);
@@ -107,7 +107,7 @@ describe('Reasoning Runtime (VL-218)', () => {
     expect(res.body.links.console).toBe('/reasoning-runtime');
   });
 
-  it('plans, reasons, evaluates, histories, and never claims tool execution', async () => {
+  it('plans, reasons, evaluates, histories, and never claims tool execution', async  => {
     const org = await seedOrg(prisma, 'rr');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -116,17 +116,17 @@ describe('Reasoning Runtime (VL-218)', () => {
       name: 'rr-key',
     });
 
-    const planned = await request(app.getHttpServer())
+    const planned = await request(app.getHttpServer)
       .post('/v1/reasoning-runtime/plan')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ problem: 'Translate a FAQ and check quality', sandboxOnly: true })
       .expect(200);
     expect(planned.body.strategy).toBe('planning');
     expect(planned.body.steps.length).toBeGreaterThan(2);
-    expect(planned.body.historyId).toBeTruthy();
+    expect(planned.body.historyId).toBeTruthy;
     expect(planned.body.honesty.customReasonerKernel).toBe(false);
 
-    const reasoned = await request(app.getHttpServer())
+    const reasoned = await request(app.getHttpServer)
       .post('/v1/reasoning-runtime/reason')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -135,12 +135,12 @@ describe('Reasoning Runtime (VL-218)', () => {
         retrieve: false,
       })
       .expect(200);
-    expect(reasoned.body.answer).toBeTruthy();
+    expect(reasoned.body.answer).toBeTruthy;
     expect(reasoned.body.confidence.score).toBeGreaterThanOrEqual(0);
     expect(reasoned.body.honesty.toolExecution).toBe(false);
-    expect(reasoned.body.historyId).toBeTruthy();
+    expect(reasoned.body.historyId).toBeTruthy;
 
-    const tools = await request(app.getHttpServer())
+    const tools = await request(app.getHttpServer)
       .post('/v1/reasoning-runtime/select-tools')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ problem: 'translate documents and search knowledge' })
@@ -148,7 +148,7 @@ describe('Reasoning Runtime (VL-218)', () => {
     expect(tools.body.honesty.toolExecution).toBe(false);
     expect(tools.body.selectedTools.length).toBeGreaterThan(0);
 
-    const tree = await request(app.getHttpServer())
+    const tree = await request(app.getHttpServer)
       .post('/v1/reasoning-runtime/decision-tree')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ problem: 'route a chat request', kind: 'routing' })
@@ -156,49 +156,49 @@ describe('Reasoning Runtime (VL-218)', () => {
     expect(tree.body.tree.nodes.length).toBeGreaterThan(1);
     expect(tree.body.honesty.droolsPegaBrms).toBe(false);
 
-    const reflected = await request(app.getHttpServer())
+    const reflected = await request(app.getHttpServer)
       .post('/v1/reasoning-runtime/reflect')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ historyId: reasoned.body.historyId })
       .expect(200);
     expect(reflected.body.critiques.length).toBeGreaterThan(0);
 
-    const conf = await request(app.getHttpServer())
+    const conf = await request(app.getHttpServer)
       .post('/v1/reasoning-runtime/confidence')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ historyId: reasoned.body.historyId })
       .expect(200);
     expect(conf.body.score).toBeGreaterThanOrEqual(0);
 
-    const history = await request(app.getHttpServer())
+    const history = await request(app.getHttpServer)
       .get('/v1/reasoning-runtime/history')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(history.body.runs.length).toBeGreaterThanOrEqual(1);
 
-    const replay = await request(app.getHttpServer())
+    const replay = await request(app.getHttpServer)
       .get(`/v1/reasoning-runtime/history/${reasoned.body.historyId}`)
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(replay.body.run.problem).toContain('FAQ');
 
-    const model = await request(app.getHttpServer())
+    const model = await request(app.getHttpServer)
       .post('/v1/reasoning-runtime/select-model')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ problem: 'chat reasoning' })
       .expect(200);
-    expect(model.body.selection).toBeTruthy();
+    expect(model.body.selection).toBeTruthy;
   });
 
-  it('exposes reasoningRuntimeEngine via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes reasoningRuntimeEngine via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
           '{ reasoningRuntimeEngine { product customReasonerKernel toolExecution extendsReasoningCloud regeneratesReasoningCloud mode maxHistoryPerWorkspace capabilities { id status } } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.reasoningRuntimeEngine.product).toContain('Reasoning Runtime');
     expect(res.body.data.reasoningRuntimeEngine.customReasonerKernel).toBe(false);
     expect(res.body.data.reasoningRuntimeEngine.toolExecution).toBe(false);

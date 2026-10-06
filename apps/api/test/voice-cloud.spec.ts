@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_voice_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_voice_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,29 +35,29 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Voice Cloud Foundation (VL-170)', () => {
+describe('Voice Cloud Foundation',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let voiceCloud: VoiceCloudService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     voiceCloud = app.get(VoiceCloudService);
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Voice Cloud mapping (no fake emotion-TTS / marketplace OS)', () => {
+  it('documents Voice Cloud mapping (no fake emotion-TTS / marketplace OS)',  => {
     const doc = join(root, 'docs/VOICE_CLOUD.md');
     const adr = join(root, 'docs/adr/0081-voice-cloud-foundation.md');
     expect(existsSync(doc)).toBe(true);
@@ -72,8 +72,8 @@ describe('Voice Cloud Foundation (VL-170)', () => {
     expect(text).toMatch(/is \*\*not\*\* third-party TTS/i);
   });
 
-  it('exposes public product catalog with honest statuses', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/voice-cloud/products').expect(200);
+  it('exposes public product catalog with honest statuses', async  => {
+    const res = await request(app.getHttpServer).get('/v1/voice-cloud/products').expect(200);
     expect(res.body.architecture.graphql).toBe(true);
     expect(res.body.architecture.cqrs).toBe(true);
     expect(res.body.architecture.terraform).toBe(true);
@@ -137,8 +137,8 @@ describe('Voice Cloud Foundation (VL-170)', () => {
     expect(biometrics.api).toContain('/v1/voice-biometrics/engine');
   });
 
-  it('returns org voice overview with TTS usage + deferred flags', async () => {
-    const org = await seedOrg(prisma, `voice_${Date.now()}`);
+  it('returns org voice overview with TTS usage + deferred flags', async  => {
+    const org = await seedOrg(prisma, `voice_${Date.now}`);
 
     const overview = await voiceCloud.overview({
       userId: org.memberships[0].userId,
@@ -148,7 +148,7 @@ describe('Voice Cloud Foundation (VL-170)', () => {
       role: 'owner',
     });
 
-    expect(overview.usage.tts).toBeDefined();
+    expect(overview.usage.tts).toBeDefined;
     expect(overview.workspace.voiceClones).toBeGreaterThanOrEqual(0);
     expect(overview.workspace.speakerProfiles).toBeGreaterThanOrEqual(0);
     expect(overview.deferred.neuralTtsProductization).toBe(false);
@@ -180,15 +180,15 @@ describe('Voice Cloud Foundation (VL-170)', () => {
     expect(overview.architecture.hexagonalRewrite).toBe(false);
   });
 
-  it('exposes voiceProducts via GraphQL CQRS façade', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes voiceProducts via GraphQL CQRS façade', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query: '{ voiceProducts { id name status } }',
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     const products = res.body.data.voiceProducts as Array<{ id: string; status: string }>;
     expect(products.length).toBeGreaterThan(5);
     expect(products.some((p) => p.id === 'neural-tts' && p.status === 'shipped')).toBe(true);

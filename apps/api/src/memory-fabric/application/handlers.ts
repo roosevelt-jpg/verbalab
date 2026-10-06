@@ -22,8 +22,8 @@ export class ListMemoryFabricCapabilitiesHandler
     private readonly catalog: MemoryFabricCatalogPort,
   ) {}
 
-  execute(): Promise<MemoryFabricCapabilityRow[]> {
-    return Promise.resolve(this.catalog.listCapabilities());
+  execute: Promise<MemoryFabricCapabilityRow[]> {
+    return Promise.resolve(this.catalog.listCapabilities);
   }
 }
 
@@ -36,8 +36,8 @@ export class ListMemoryFabricRoutesHandler
     private readonly catalog: MemoryFabricCatalogPort,
   ) {}
 
-  execute(): Promise<MemoryFabricRouteRow[]> {
-    return Promise.resolve(this.catalog.listRoutes());
+  execute: Promise<MemoryFabricRouteRow[]> {
+    return Promise.resolve(this.catalog.listRoutes);
   }
 }
 
@@ -50,8 +50,8 @@ export class GetMemoryFabricProductsBundleHandler
     private readonly catalog: MemoryFabricCatalogPort,
   ) {}
 
-  execute(): Promise<MemoryFabricProductsBundle> {
-    return Promise.resolve(this.catalog.products());
+  execute: Promise<MemoryFabricProductsBundle> {
+    return Promise.resolve(this.catalog.products);
   }
 }
 

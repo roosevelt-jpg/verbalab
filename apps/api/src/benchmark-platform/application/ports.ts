@@ -1,4 +1,4 @@
-/** Application ports for Benchmark Platform (VL-274). */
+/** Application ports for Benchmark Platform. */
 
 export type BenchmarkPlatformProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type BenchmarkPlatformEngineBundle = ReturnType<
 >;
 
 export interface BenchmarkPlatformCatalogPort {
-  engine(): BenchmarkPlatformEngineBundle;
-  listProducts(): BenchmarkPlatformProductRow[];
+  engine: BenchmarkPlatformEngineBundle;
+  listProducts: BenchmarkPlatformProductRow[];
 }
 
 export const BENCHMARK_PLATFORM_CATALOG_PORT = Symbol('BENCHMARK_PLATFORM_CATALOG_PORT');

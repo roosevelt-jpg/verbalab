@@ -2,13 +2,13 @@ import { Query, Resolver } from '@nestjs/graphql';
 import { MemoryCloudService } from '../memory-cloud/memory-cloud.service';
 import { GqlMemoryCloudEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class MemoryCloudGraphqlResolver {
   constructor(private readonly memoryCloud: MemoryCloudService) {}
 
-  @Query(() => GqlMemoryCloudEngine, { name: 'memoryCloudEngine' })
-  memoryCloudEngine(): GqlMemoryCloudEngine {
-    const c = this.memoryCloud.engine();
+  @Query( => GqlMemoryCloudEngine, { name: 'memoryCloudEngine' })
+  memoryCloudEngine: GqlMemoryCloudEngine {
+    const c = this.memoryCloud.engine;
     return {
       product: c.product,
       note: c.note,

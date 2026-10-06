@@ -16,7 +16,7 @@ import {
 import { analyzePhonemes, stressScoreFromWords } from './pronunciation-phonemes';
 import { coachingTips } from './pronunciation-coaching';
 
-@Injectable()
+@Injectable
 export class PronunciationIntelligenceService {
   constructor(
     private readonly prisma: PrismaService,
@@ -26,12 +26,12 @@ export class PronunciationIntelligenceService {
     private readonly audio: AudioService,
   ) {}
 
-  engine() {
-    return pronunciationEngineCatalog();
+  engine {
+    return pronunciationEngineCatalog;
   }
 
   async analytics(organizationId: string) {
-    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
     const events = await this.prisma.auditEvent.findMany({
       where: {
         organizationId,
@@ -129,21 +129,21 @@ export class PronunciationIntelligenceService {
       scores: full.scores,
       coaching: full.coaching,
       language: full.language,
-      note: 'Rule/tip coaching from mismatches — not acoustic accent models (VL-156).',
+      note: 'Rule/tip coaching from mismatches — not acoustic accent models.',
     };
   }
 
   phonemes(input: { text: string; language?: string }) {
-    const text = input.text?.trim();
+    const text = input.text?.trim;
     if (!text) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }
-    const language = (input.language ?? 'en').trim() || 'en';
+    const language = (input.language ?? 'en').trim || 'en';
     const words = analyzePhonemes(text, language);
     return {
       language,
       words,
-      note: 'Dictionary + grapheme→phoneme heuristics — not forced-alignment phoneme ASR (VL-156).',
+      note: 'Dictionary + grapheme→phoneme heuristics — not forced-alignment phoneme ASR.',
     };
   }
 
@@ -159,7 +159,7 @@ export class PronunciationIntelligenceService {
   }) {
     this.audio.assertAllowedAudio(input.file);
     const analysis = analyzeAudioBuffer(input.file.buffer);
-    const language = (input.language ?? 'en').trim() || 'en';
+    const language = (input.language ?? 'en').trim || 'en';
 
     let wordCount = input.reference ? tokenize(input.reference).length : 0;
     let transcript: string | undefined;
@@ -178,7 +178,7 @@ export class PronunciationIntelligenceService {
         seconds: durationSeconds,
         provider: result.provider,
       });
-      transcript = result.text.trim();
+      transcript = result.text.trim;
       wordCount = tokenize(transcript).length;
       if (result.durationSeconds > 0) {
         analysis.durationSeconds = result.durationSeconds;
@@ -206,7 +206,7 @@ export class PronunciationIntelligenceService {
       speechRatio: analysis.speechRatio,
       durationSeconds: analysis.durationSeconds,
       transcript,
-      note: 'Fluency from speaking rate + silence proxies — not prosody ML (VL-156).',
+      note: 'Fluency from speaking rate + silence proxies — not prosody ML.',
     };
   }
 
@@ -255,7 +255,7 @@ export class PronunciationIntelligenceService {
     workspaceId: string;
     apiKeyId?: string;
   }) {
-    const reference = input.reference?.trim();
+    const reference = input.reference?.trim;
     if (!reference) {
       throw new ApiException(
         'validation_error',
@@ -263,9 +263,9 @@ export class PronunciationIntelligenceService {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const language = (input.language ?? 'en').trim() || 'en';
+    const language = (input.language ?? 'en').trim || 'en';
 
-    let hypothesis = input.hypothesis?.trim() ?? '';
+    let hypothesis = input.hypothesis?.trim ?? '';
     let stt:
       | { provider: string; durationSeconds: number; language?: string }
       | undefined;
@@ -297,7 +297,7 @@ export class PronunciationIntelligenceService {
         seconds: durationSeconds,
         provider: result.provider,
       });
-      hypothesis = result.text.trim();
+      hypothesis = result.text.trim;
       stt = {
         provider: result.provider,
         durationSeconds: result.durationSeconds,
@@ -388,7 +388,7 @@ export class PronunciationIntelligenceService {
         durationSeconds: Number(duration.toFixed(3)),
       },
       coaching,
-      note: 'Word alignment + fluency/stress heuristics — not ELSA/SpeechAce or forced-alignment phonemes (VL-156).',
+      note: 'Word alignment + fluency/stress heuristics — not ELSA/SpeechAce or forced-alignment phonemes.',
     };
   }
 

@@ -26,23 +26,23 @@ export class ModelServingController {
   constructor(private readonly serving: ModelServingService) {}
 
   @Get('engine')
-  engine() {
-    return this.serving.engine();
+  engine {
+    return this.serving.engine;
   }
 
   @Get('kinds')
-  kinds() {
-    return this.serving.kinds();
+  kinds {
+    return this.serving.kinds;
   }
 
   @Get('modes')
-  modes() {
-    return this.serving.modes();
+  modes {
+    return this.serving.modes;
   }
 
   @Get('ceilings')
-  ceilings() {
-    return this.serving.ceilings();
+  ceilings {
+    return this.serving.ceilings;
   }
 
   @Get('endpoints')
@@ -53,7 +53,7 @@ export class ModelServingController {
   @Get('deployments')
   @UseGuards(TranslateAuthGuard)
   list(
-    @Req() req: AuthedReq,
+    @Req req: AuthedReq,
     @Query('status') status?: string,
     @Query('kind') kind?: string,
   ) {
@@ -69,8 +69,8 @@ export class ModelServingController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   deploy(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       kind?: string;
       modelSlug?: string;
@@ -94,9 +94,9 @@ export class ModelServingController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   traffic(
-    @Req() req: AuthedReq,
+    @Req req: AuthedReq,
     @Param('id') id: string,
-    @Body() body: { trafficPercent?: number },
+    @Body body: { trafficPercent?: number },
   ) {
     return this.serving.setTraffic({
       organizationId: req.translateAuth.organizationId,
@@ -111,7 +111,7 @@ export class ModelServingController {
   @Post('deployments/:id/promote')
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
-  promote(@Req() req: AuthedReq, @Param('id') id: string) {
+  promote(@Req req: AuthedReq, @Param('id') id: string) {
     return this.serving.promote({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -124,7 +124,7 @@ export class ModelServingController {
   @Post('deployments/:id/rollback')
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
-  rollback(@Req() req: AuthedReq, @Param('id') id: string) {
+  rollback(@Req req: AuthedReq, @Param('id') id: string) {
     return this.serving.rollback({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -137,7 +137,7 @@ export class ModelServingController {
   @Post('deployments/:id/release')
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
-  release(@Req() req: AuthedReq, @Param('id') id: string) {
+  release(@Req req: AuthedReq, @Param('id') id: string) {
     return this.serving.release({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -151,9 +151,9 @@ export class ModelServingController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   redeploy(
-    @Req() req: AuthedReq,
+    @Req req: AuthedReq,
     @Param('id') id: string,
-    @Body() body: { version?: string; trafficPercent?: number },
+    @Body body: { version?: string; trafficPercent?: number },
   ) {
     return this.serving.redeployVersion({
       organizationId: req.translateAuth.organizationId,
@@ -168,7 +168,7 @@ export class ModelServingController {
 
   @Get('health')
   @UseGuards(TranslateAuthGuard)
-  health(@Req() req: AuthedReq) {
+  health(@Req req: AuthedReq) {
     return this.serving.health({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -177,7 +177,7 @@ export class ModelServingController {
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.serving.analytics({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -186,7 +186,7 @@ export class ModelServingController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req() req: AuthedReq) {
+  monitoring(@Req req: AuthedReq) {
     return this.serving.monitoring({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,

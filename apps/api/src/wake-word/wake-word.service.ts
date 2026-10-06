@@ -12,7 +12,7 @@ export type WakeKeywordKind = 'wake_word' | 'keyword' | 'trigger';
 
 const KINDS: WakeKeywordKind[] = ['wake_word', 'keyword', 'trigger'];
 
-@Injectable()
+@Injectable
 export class WakeWordService {
   constructor(
     private readonly prisma: PrismaService,
@@ -22,12 +22,12 @@ export class WakeWordService {
     private readonly audio: AudioService,
   ) {}
 
-  engine() {
-    return wakeWordEngineCatalog();
+  engine {
+    return wakeWordEngineCatalog;
   }
 
   async analytics(organizationId: string) {
-    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
     const events = await this.prisma.auditEvent.findMany({
       where: {
         organizationId,
@@ -79,7 +79,7 @@ export class WakeWordService {
         phrase: r.phrase,
         kind: r.kind,
         enabled: r.enabled,
-        createdAt: r.createdAt.toISOString(),
+        createdAt: r.createdAt.toISOString,
       })),
       defaultWakePhrases: [...DEFAULT_WAKE_PHRASES],
     };
@@ -94,7 +94,7 @@ export class WakeWordService {
     phrase: string;
     kind?: string;
   }) {
-    const phrase = input.phrase?.trim().toLowerCase();
+    const phrase = input.phrase?.trim.toLowerCase;
     if (!phrase || phrase.length < 2) {
       throw new ApiException(
         'validation_error',
@@ -139,7 +139,7 @@ export class WakeWordService {
         phrase: row.phrase,
         kind: row.kind,
         enabled: row.enabled,
-        createdAt: row.createdAt.toISOString(),
+        createdAt: row.createdAt.toISOString,
       };
     } catch {
       throw new ApiException(
@@ -202,7 +202,7 @@ export class WakeWordService {
       hits,
       inputMode: stt ? ('audio' as const) : ('text' as const),
       stt,
-      note: 'Transcript wake spotting — not on-device Porcupine DNN (VL-157).',
+      note: 'Transcript wake spotting — not on-device Porcupine DNN.',
     };
     if (!input.skipAudit) {
       await this.record(input, 'wake_word.detect', 'POST /v1/wake-word/detect', {
@@ -231,7 +231,7 @@ export class WakeWordService {
       kinds: ['keyword', 'wake_word'],
     });
     const extra = (input.keywords ?? [])
-      .map((k) => k.trim())
+      .map((k) => k.trim)
       .filter(Boolean)
       .map((phrase) => ({ phrase, kind: 'keyword' }));
     const hits = spotPhrases(text, [...stored, ...extra]);
@@ -242,7 +242,7 @@ export class WakeWordService {
       hitCount: hits.length,
       inputMode: stt ? ('audio' as const) : ('text' as const),
       stt,
-      note: 'Text/STT keyword spotting — not acoustic KWS DNN (VL-157).',
+      note: 'Text/STT keyword spotting — not acoustic KWS DNN.',
     };
     await this.record(input, 'wake_word.spot', 'POST /v1/wake-word/spot', {
       hitCount: hits.length,
@@ -285,7 +285,7 @@ export class WakeWordService {
       fired,
       inputMode: stt ? ('audio' as const) : ('text' as const),
       stt,
-      note: 'Trigger phrase hits + audit only — not a workflow orchestration engine (VL-157).',
+      note: 'Trigger phrase hits + audit only — not a workflow orchestration engine.',
     };
   }
 
@@ -371,7 +371,7 @@ export class WakeWordService {
     text: string;
     stt?: { provider: string; durationSeconds: number; language?: string };
   }> {
-    let text = input.text?.trim() ?? '';
+    let text = input.text?.trim ?? '';
     let stt: { provider: string; durationSeconds: number; language?: string } | undefined;
 
     if (input.file) {
@@ -390,7 +390,7 @@ export class WakeWordService {
         seconds: durationSeconds,
         provider: result.provider,
       });
-      text = result.text.trim();
+      text = result.text.trim;
       stt = {
         provider: result.provider,
         durationSeconds: result.durationSeconds,

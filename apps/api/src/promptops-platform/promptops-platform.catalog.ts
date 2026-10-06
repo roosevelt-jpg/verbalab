@@ -1,8 +1,8 @@
 /**
- * Library Phase 152 → PromptOps Platform (VL-285).
+ * Library Phase 152 → PromptOps Platform.
  * Over Prompt Runtime / Prompt Fabric. Not LangSmith OS.
  */
-export function promptopsPlatformEngineCatalog() {
+export function promptopsPlatformEngineCatalog {
   return {
     product: 'Lugemi PromptOps Platform',
     capabilities: [
@@ -43,6 +43,6 @@ export function promptopsPlatformEngineCatalog() {
       note: 'Prompt security checks before promote.',
     },
     docs: '/docs/PROMPTOPS_PLATFORM.md',
-    note: 'PromptOps Platform (VL-285). Registry/versioning/testing/reviews/rollback/analytics/security/optimization.',
+    note: 'PromptOps Platform. Registry/versioning/testing/reviews/rollback/analytics/security/optimization.',
   };
 }

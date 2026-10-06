@@ -21,15 +21,15 @@ export const WORKFLOW_MARKETPLACE_CATEGORIES = [
 export type WorkflowMarketplaceCategory = (typeof WORKFLOW_MARKETPLACE_CATEGORIES)[number];
 
 /**
- * Library Phase 122 → Workflow Marketplace (VL-255).
+ * Library Phase 122 → Workflow Marketplace.
  * Buy/sell/publish sandboxed workflows over Workflow Runtime — not Zapier/Temporal OS.
  * Volume 11: enforce Workflow Runtime sandbox + Policy gate before third-party workflows run.
  */
-export function workflowMarketplaceEngineCatalog() {
+export function workflowMarketplaceEngineCatalog {
   return {
     product: 'Lugemi Workflow Marketplace',
     note:
-      'Workflow Marketplace (VL-255). Publish/install/run sandboxed workflow templates. Execution always goes through Workflow Runtime run + WorkflowPolicyGate (hard allowlist) and Policy Fabric hard gate — never live step execution. Extends VL-220 / listings kind=workflow. Not a Zapier/Temporal/Airflow OS.',
+      'Workflow Marketplace. Publish/install/run sandboxed workflow templates. Execution always goes through Workflow Runtime run + WorkflowPolicyGate (hard allowlist) and Policy Fabric hard gate — never live step execution. Extends listings kind=workflow. Not a Zapier/Temporal/Airflow OS.',
     capabilities: [
       {
         id: 'automation-templates',

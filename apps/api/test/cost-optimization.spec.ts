@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_co_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_co_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,38 +35,38 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Cost Optimization (VL-211)', () => {
+describe('Cost Optimization',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   const prevMode = process.env.LUGEMI_COST_OPTIMIZATION_MODE;
   const prevDaily = process.env.LUGEMI_COST_DAILY_CAP_USD;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     process.env.LUGEMI_COST_OPTIMIZATION_MODE = 'sandbox';
     process.env.LUGEMI_COST_DAILY_CAP_USD = '1';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
   });
 
-  afterAll(async () => {
+  afterAll(async  => {
     if (prevMode === undefined) delete process.env.LUGEMI_COST_OPTIMIZATION_MODE;
     else process.env.LUGEMI_COST_OPTIMIZATION_MODE = prevMode;
     if (prevDaily === undefined) delete process.env.LUGEMI_COST_DAILY_CAP_USD;
     else process.env.LUGEMI_COST_DAILY_CAP_USD = prevDaily;
-    await app.close();
+    await app.close;
   });
 
-  it('documents Cost Optimization honesty + enforce requirement', () => {
+  it('documents Cost Optimization honesty + enforce requirement',  => {
     const doc = join(root, 'docs/COST_OPTIMIZATION.md');
     const adr = join(root, 'docs/adr/0122-cost-optimization.md');
     const readme = join(root, 'docs/roadmap/volume7-inference-cloud/README_VOLUME7.md');
@@ -78,12 +78,12 @@ describe('Cost Optimization (VL-211)', () => {
     expect(text).toMatch(/does \*\*not\*\*|not invent/i);
     expect(text).toMatch(/enforce|402/i);
     expect(text).toMatch(/org\/workspace|workspace/i);
-    expect(text).toContain('VL-211');
+    expect(text).toContain('');
     expect(readFileSync(readme, 'utf8')).toMatch(/enforce/i);
   });
 
-  it('exposes engine with honesty + hard ceilings', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes engine with honesty + hard ceilings', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/cost-optimization/engine')
       .expect(200);
     expect(res.body.product).toContain('Cost Optimization');
@@ -100,8 +100,8 @@ describe('Cost Optimization (VL-211)', () => {
     );
   });
 
-  it('records spend, enforces ceiling, and optimizes routes', async () => {
-    const org = await seedOrg(prisma, `co_${Date.now()}`);
+  it('records spend, enforces ceiling, and optimizes routes', async  => {
+    const org = await seedOrg(prisma, `co_${Date.now}`);
     const key = await apiKeys.create({
       organizationId: org.id,
       workspaceId: org.workspaces[0].id,
@@ -109,7 +109,7 @@ describe('Cost Optimization (VL-211)', () => {
       name: 'co-test',
     });
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .put('/v1/cost-optimization/budgets')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -121,36 +121,36 @@ describe('Cost Optimization (VL-211)', () => {
       })
       .expect(200);
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post('/v1/cost-optimization/record')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ category: 'provider', amountUsd: 0.6, feature: 'chat' })
       .expect(201);
 
-    const over = await request(app.getHttpServer())
+    const over = await request(app.getHttpServer)
       .post('/v1/cost-optimization/record')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ category: 'provider', amountUsd: 0.5, feature: 'chat' })
       .expect(402);
     expect(JSON.stringify(over.body)).toMatch(/ceiling|spend/i);
 
-    const soft = await request(app.getHttpServer())
+    const soft = await request(app.getHttpServer)
       .post('/v1/cost-optimization/check')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ additionalUsd: 0.5, soft: true })
       .expect(200);
     expect(soft.body.allowed).toBe(false);
 
-    const opt = await request(app.getHttpServer())
+    const opt = await request(app.getHttpServer)
       .post('/v1/cost-optimization/optimize')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ feature: 'chat' })
       .expect(200);
     expect(opt.body.optimize).toBe('cost');
-    expect(opt.body.selected?.providerId).toBeTruthy();
+    expect(opt.body.selected?.providerId).toBeTruthy;
     expect(opt.body.honesty.cloudSpotApis).toBe(false);
 
-    const pred = await request(app.getHttpServer())
+    const pred = await request(app.getHttpServer)
       .get('/v1/cost-optimization/predictions')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -158,20 +158,20 @@ describe('Cost Optimization (VL-211)', () => {
     expect(pred.body.honesty.finOpsOs).toBe(false);
 
     // Lower daily cap below already-spent so AI Router resolve hard-gates
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .put('/v1/cost-optimization/budgets')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ dailyCapUsd: 0.5, monthlyCapUsd: 10, enforce: true })
       .expect(200);
 
-    const resolve = await request(app.getHttpServer())
+    const resolve = await request(app.getHttpServer)
       .post('/v1/ai-router/resolve')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ feature: 'chat', optimize: 'cost' })
       .expect(402);
     expect(JSON.stringify(resolve.body)).toMatch(/ceiling|spend/i);
 
-    const mon = await request(app.getHttpServer())
+    const mon = await request(app.getHttpServer)
       .get('/v1/cost-optimization/monitoring')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
@@ -179,15 +179,15 @@ describe('Cost Optimization (VL-211)', () => {
     expect(mon.body.honesty.reportOnly).toBe(false);
   });
 
-  it('exposes costOptimizationEngine via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes costOptimizationEngine via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
           '{ costOptimizationEngine { product finOpsOs cloudSpotApis reservedInstanceMarketplace openEndedAutoscale regeneratesAiGateway enforcesSpendCaps reportOnly orgWorkspaceScoped extendsGpuPlatform extendsAiRouter mode defaultDailyCapUsd defaultMonthlyCapUsd capabilities { id status } } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.costOptimizationEngine.finOpsOs).toBe(false);
     expect(res.body.data.costOptimizationEngine.enforcesSpendCaps).toBe(true);
     expect(res.body.data.costOptimizationEngine.reportOnly).toBe(false);

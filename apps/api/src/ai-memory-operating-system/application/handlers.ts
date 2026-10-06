@@ -17,8 +17,8 @@ export class GetAiMemoryOperatingSystemEngineHandler
     private readonly catalog: AiMemoryOperatingSystemCatalogPort,
   ) {}
 
-  execute(): Promise<AiMemoryOperatingSystemEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<AiMemoryOperatingSystemEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListAiMemoryOperatingSystemProductsHandler
     private readonly catalog: AiMemoryOperatingSystemCatalogPort,
   ) {}
 
-  execute(): Promise<AiMemoryOperatingSystemProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<AiMemoryOperatingSystemProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

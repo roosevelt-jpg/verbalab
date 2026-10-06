@@ -1,4 +1,4 @@
-/** Application ports for Platform Engineering Analytics (VL-312). */
+/** Application ports for Platform Engineering Analytics. */
 
 export type PlatformEngineeringAnalyticsProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type PlatformEngineeringAnalyticsEngineBundle = ReturnType<
 >;
 
 export interface PlatformEngineeringAnalyticsCatalogPort {
-  engine(): PlatformEngineeringAnalyticsEngineBundle;
-  listProducts(): PlatformEngineeringAnalyticsProductRow[];
+  engine: PlatformEngineeringAnalyticsEngineBundle;
+  listProducts: PlatformEngineeringAnalyticsProductRow[];
 }
 
 export const PLATFORM_ENGINEERING_ANALYTICS_CATALOG_PORT = Symbol('PLATFORM_ENGINEERING_ANALYTICS_CATALOG_PORT');

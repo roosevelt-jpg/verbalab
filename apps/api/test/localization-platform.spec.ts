@@ -22,7 +22,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_l10n_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_l10n_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -36,19 +36,19 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Localization Platform Phase 9 (VL-141)', () => {
+describe('Localization Platform Phase 9',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let rawKey: string;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
     app.get(GatewayService).setProviderForTests({
@@ -74,17 +74,17 @@ describe('Localization Platform Phase 9 (VL-141)', () => {
     rawKey = created.secret;
   }, 120_000);
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('ships ADR and docs', () => {
+  it('ships ADR and docs',  => {
     expect(existsSync(join(root, 'docs/adr/0062-localization-platform-phase-9.md'))).toBe(true);
     expect(readFileSync(join(root, 'docs/LOCALIZATION.md'), 'utf8')).toContain('/v1/localize/qa');
   });
 
-  it('exposes platform catalog with deferred websites', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/localization').expect(200);
+  it('exposes platform catalog with deferred websites', async  => {
+    const res = await request(app.getHttpServer).get('/v1/localization').expect(200);
     expect(res.body.product).toMatch(/Localization/i);
     expect(res.body.capabilities.some((c: { id: string; status: string }) => c.id === 'websites' && c.status === 'deferred')).toBe(
       true,
@@ -94,24 +94,24 @@ describe('Localization Platform Phase 9 (VL-141)', () => {
     );
   });
 
-  it('validates and formats ICU plurals', async () => {
+  it('validates and formats ICU plurals', async  => {
     const message = '{count, plural, one {# item} other {# items}}';
-    const v = await request(app.getHttpServer())
+    const v = await request(app.getHttpServer)
       .post('/v1/icu/validate')
       .send({ message })
       .expect(200);
     expect(v.body.valid).toBe(true);
     expect(v.body.hasPlural).toBe(true);
 
-    const f = await request(app.getHttpServer())
+    const f = await request(app.getHttpServer)
       .post('/v1/icu/format')
       .send({ message, locale: 'en', values: { count: 3 } })
       .expect(200);
     expect(f.body.formatted).toBe('3 items');
   });
 
-  it('runs localization QA', async () => {
-    const res = await request(app.getHttpServer())
+  it('runs localization QA', async  => {
+    const res = await request(app.getHttpServer)
       .post('/v1/localize/qa')
       .send({
         format: 'json',
@@ -123,14 +123,14 @@ describe('Localization Platform Phase 9 (VL-141)', () => {
     expect(res.body.issues.some((i: { code: string }) => i.code === 'missing_key')).toBe(true);
   });
 
-  it('returns RTL layout metadata', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/locales/ar/layout').expect(200);
+  it('returns RTL layout metadata', async  => {
+    const res = await request(app.getHttpServer).get('/v1/locales/ar/layout').expect(200);
     expect(res.body.rtl).toBe(true);
     expect(res.body.dir).toBe('rtl');
   });
 
-  it('formats with timezone', async () => {
-    const res = await request(app.getHttpServer())
+  it('formats with timezone', async  => {
+    const res = await request(app.getHttpServer)
       .post('/v1/locales/format')
       .send({
         code: 'en',
@@ -140,21 +140,21 @@ describe('Localization Platform Phase 9 (VL-141)', () => {
         currencyValue: 12.5,
       })
       .expect(200);
-    expect(res.body.dateTime).toBeTruthy();
-    expect(res.body.currency).toBeTruthy();
+    expect(res.body.dateTime).toBeTruthy;
+    expect(res.body.currency).toBeTruthy;
   });
 
-  it('exposes GraphQL localizationPlatform', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes GraphQL localizationPlatform', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({ query: '{ localizationPlatform { product shippedCount } }' })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.localizationPlatform.shippedCount).toBeGreaterThan(3);
   });
 
-  it('localizes via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('localizes via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .set('Authorization', `Bearer ${rawKey}`)
       .send({
@@ -171,7 +171,7 @@ describe('Localization Platform Phase 9 (VL-141)', () => {
         },
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.localize.serialized).toContain('[sw]');
   });
 });

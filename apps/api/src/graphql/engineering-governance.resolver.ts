@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetEngineeringGovernanceEngineQuery } from '../engineering-governance/application/messages';
 import { GqlEngineeringGovernanceEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class EngineeringGovernanceGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query(() => GqlEngineeringGovernanceEngine, { name: 'engineeringGovernanceEngine' })
-  async engineeringGovernanceEngine(): Promise<GqlEngineeringGovernanceEngine> {
-    const catalog = await this.queries.execute(new GetEngineeringGovernanceEngineQuery());
+  @Query( => GqlEngineeringGovernanceEngine, { name: 'engineeringGovernanceEngine' })
+  async engineeringGovernanceEngine: Promise<GqlEngineeringGovernanceEngine> {
+    const catalog = await this.queries.execute(new GetEngineeringGovernanceEngineQuery);
     return {
       product: catalog.product,
       note: catalog.note,

@@ -9,8 +9,8 @@ export type InferenceProductRow = {
   notes: string;
 };
 
-/** Library Phase 71 product map (VL-204). Hub only — maps onto AI Gateway + chat/embeddings. */
-export function inferenceProductCatalog(): InferenceProductRow[] {
+/** Library Phase 71 product map. Hub only — maps onto AI Gateway + chat/embeddings. */
+export function inferenceProductCatalog: InferenceProductRow[] {
   return [
     {
       id: 'inference-cloud',
@@ -19,7 +19,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
       api: 'GET /v1/inference-cloud/products',
       console: '/inference-cloud',
       notes:
-        'Inference Cloud parent hub (VL-204). Shared model runtime layer over AI Gateway + vendor APIs — not a GPU hyperscaler or multi-region OS.',
+        'Inference Cloud parent hub. Shared model runtime layer over AI Gateway + vendor APIs — not a GPU hyperscaler or multi-region OS.',
     },
     {
       id: 'gpu-platform',
@@ -28,7 +28,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
       api: 'GET /v1/gpu-platform/engine',
       console: '/gpu-platform',
       notes:
-        'Sandbox pools/schedule/quotas/autoscale with hard ceilings (VL-205). No cloud GPU APIs; MIG/distributed deferred.',
+        'Sandbox pools/schedule/quotas/autoscale with hard ceilings. No cloud GPU APIs; MIG/distributed deferred.',
     },
     {
       id: 'model-serving',
@@ -37,7 +37,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
       api: 'GET /v1/model-serving/engine',
       console: '/model-serving',
       notes:
-        'Serving hub over Gateway + /v1/models with sandbox versioning/canary/blue-green/rollback (VL-206). Not vLLM/KServe OS.',
+        'Serving hub over Gateway + /v1/models with sandbox versioning/canary/blue-green/rollback. Not vLLM/KServe OS.',
     },
     {
       id: 'ai-router',
@@ -46,7 +46,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
       api: 'GET /v1/ai-router/engine',
       console: '/ai-router',
       notes:
-        'Dry-run model/provider routing over Gateway + Model Serving weights (VL-207). Not a service mesh; caching deferred; spend enforce is VL-211.',
+        'Dry-run model/provider routing over Gateway + Model Serving weights. Not a service mesh; caching deferred; spend enforce is .',
     },
     {
       id: 'streaming-runtime',
@@ -55,7 +55,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
       api: 'GET /v1/streaming-runtime/engine',
       console: '/streaming-runtime',
       notes:
-        'SSE hub over existing speech/voice/translate streams + sandbox LLM chunks (VL-208). WebSocket/gRPC/video deferred.',
+        'SSE hub over existing speech/voice/translate streams + sandbox LLM chunks. WebSocket/gRPC/video deferred.',
     },
     {
       id: 'batch-runtime',
@@ -64,7 +64,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
       api: 'GET /v1/batch-runtime/engine',
       console: '/batch-runtime',
       notes:
-        'Batch hub over BullMQ jobs + sandbox runs with priority/retry/checkpoint (VL-209). Not Spark/Airflow OS; video deferred.',
+        'Batch hub over BullMQ jobs + sandbox runs with priority/retry/checkpoint. Not Spark/Airflow OS; video deferred.',
     },
     {
       id: 'intelligent-cache',
@@ -73,7 +73,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
       api: 'GET /v1/intelligent-cache/engine',
       console: '/intelligent-cache',
       notes:
-        'Opt-in exact-key / normalized-hash cache namespaces (VL-210). Not Redis Cluster/vector/CDN OS; Gateway not auto-wired.',
+        'Opt-in exact-key / normalized-hash cache namespaces. Not Redis Cluster/vector/CDN OS; Gateway not auto-wired.',
     },
     {
       id: 'cost-optimization',
@@ -82,7 +82,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
       api: 'GET /v1/cost-optimization/engine',
       console: '/cost-optimization',
       notes:
-        'Hard daily/monthly spend caps + cost-preferring optimize (VL-211). Not FinOps/Spot OS; enforces, not report-only.',
+        'Hard daily/monthly spend caps + cost-preferring optimize. Not FinOps/Spot OS; enforces, not report-only.',
     },
     {
       id: 'ai-runtime-analytics',
@@ -91,7 +91,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
       api: 'GET /v1/ai-runtime-analytics/engine',
       console: '/ai-runtime-analytics',
       notes:
-        'Inference Cloud latency/throughput/GPU/CPU/cache/requests/errors/cost/models/streaming aggregates (VL-212). ≠ VL-191/VL-202; not BI/APM OS.',
+        'Inference Cloud latency/throughput/GPU/CPU/cache/requests/errors/cost/models/streaming aggregates. ≠ ; not BI/APM OS.',
     },
     {
       id: 'cpu-runtime',
@@ -99,7 +99,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
       status: 'partial',
       api: 'GET /v1/gateway/providers',
       console: '/gateway',
-      notes: 'CPU path today = Nest API + vendor HTTP adapters (VL-021). Not a custom CPU cluster OS.',
+      notes: 'CPU path today = Nest API + vendor HTTP adapters. Not a custom CPU cluster OS.',
     },
     {
       id: 'model-registry-bridge',
@@ -128,7 +128,7 @@ export function inferenceProductCatalog(): InferenceProductRow[] {
   ];
 }
 
-export function inferenceArchitectureNotes() {
+export function inferenceArchitectureNotes {
   return {
     style: 'nest_modular_monolith',
     ddd: 'bounded_inference_cloud_hub',

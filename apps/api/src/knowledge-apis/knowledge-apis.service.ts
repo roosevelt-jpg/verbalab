@@ -7,27 +7,27 @@ import {
   knowledgeApisCatalog,
 } from './knowledge-apis.catalog';
 
-@Injectable()
+@Injectable
 export class KnowledgeApisService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
   ) {}
 
-  engine() {
-    return knowledgeApisCatalog();
+  engine {
+    return knowledgeApisCatalog;
   }
 
-  surfaces() {
+  surfaces {
     return {
-      surfaces: knowledgeApiSurfaces(),
-      note: 'Knowledge Cloud REST/GraphQL/console surfaces (VL-201).',
-      honesty: this.engine().honesty,
+      surfaces: knowledgeApiSurfaces,
+      note: 'Knowledge Cloud REST/GraphQL/console surfaces.',
+      honesty: this.engine.honesty,
     };
   }
 
-  graphqlCatalog() {
-    const fields = knowledgeApiSurfaces().flatMap((s) =>
+  graphqlCatalog {
+    const fields = knowledgeApiSurfaces.flatMap((s) =>
       s.graphql.map((name) => ({ name, product: s.product })),
     );
     return {
@@ -37,8 +37,8 @@ export class KnowledgeApisService {
     };
   }
 
-  openapi() {
-    const paths = knowledgeApiSurfaces().flatMap((s) => s.rest);
+  openapi {
+    const paths = knowledgeApiSurfaces.flatMap((s) => s.rest);
     return {
       document: '/v1/openapi.json',
       knowledgePaths: paths,
@@ -46,7 +46,7 @@ export class KnowledgeApisService {
     };
   }
 
-  sdk() {
+  sdk {
     return {
       package: '@lugemi/sdk',
       install: 'pnpm add @lugemi/sdk',
@@ -76,7 +76,7 @@ export class KnowledgeApisService {
     };
   }
 
-  cli() {
+  cli {
     return {
       package: '@lugemi/cli',
       bin: 'lugemi',
@@ -103,7 +103,7 @@ export class KnowledgeApisService {
     };
   }
 
-  webhooks() {
+  webhooks {
     return {
       events: KNOWLEDGE_WEBHOOK_EVENTS,
       signingSecret: 'POST /v1/webhooks/signing-secret',
@@ -113,14 +113,14 @@ export class KnowledgeApisService {
     };
   }
 
-  developerPortal() {
+  developerPortal {
     return {
       console: '/knowledge-apis',
       developers: '/developers',
       playground: '/playground',
       docs: '/docs/KNOWLEDGE_APIS.md',
       overviewApi: 'GET /v1/developer/overview',
-      note: 'Extends VL-127 Developer Cloud — does not regenerate OAuth/sandbox clusters.',
+      note: 'Extends existing Developer Cloud — does not regenerate OAuth/sandbox clusters.',
       honesty: { regeneratesDeveloperCloud: false },
     };
   }
@@ -151,7 +151,7 @@ export class KnowledgeApisService {
         id: r.id,
         action: r.action,
         route: r.route,
-        createdAt: r.createdAt.toISOString(),
+        createdAt: r.createdAt.toISOString,
         metadata: r.metadata,
       })),
       note: 'Recent knowledge-related audit events (org-scoped). Workspace filter is advisory for residency.',
@@ -159,7 +159,7 @@ export class KnowledgeApisService {
   }
 
   async analytics(organizationId: string, workspaceId: string) {
-    const since = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+    const since = new Date(Date.now - 30 * 24 * 60 * 60 * 1000);
     const [surfacesViews, streamTails] = await Promise.all([
       this.prisma.auditEvent.count({
         where: {
@@ -182,13 +182,13 @@ export class KnowledgeApisService {
       surfacesViewsLast30d: surfacesViews,
       streamTailsLast30d: streamTails,
       recentEventCount: events.events.length,
-      surfaceCount: knowledgeApiSurfaces().length,
-      note: 'Knowledge APIs pack analytics (VL-201). ≠ VL-202 Knowledge Analytics.',
+      surfaceCount: knowledgeApiSurfaces.length,
+      note: 'Knowledge APIs pack analytics. ≠ Knowledge Analytics.',
     };
   }
 
   async monitoring(organizationId: string, workspaceId: string) {
-    const engine = this.engine();
+    const engine = this.engine;
     const analytics = await this.analytics(organizationId, workspaceId);
     return {
       ...analytics,
@@ -207,7 +207,7 @@ export class KnowledgeApisService {
       action: 'knowledge_apis.surfaces',
       route: 'GET /v1/knowledge-apis/surfaces',
       ip,
-      metadata: { surfaceCount: knowledgeApiSurfaces().length },
+      metadata: { surfaceCount: knowledgeApiSurfaces.length },
     });
   }
 

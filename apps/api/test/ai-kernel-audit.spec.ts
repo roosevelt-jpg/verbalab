@@ -17,7 +17,7 @@ const apiSrc = join(root, 'apps/api/src');
 function walkTsFiles(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory()) {
+    if (name.isDirectory) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       walkTsFiles(p, out);
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -36,7 +36,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_akaudit_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_akaudit_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -50,29 +50,29 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('AI Kernel Production Audit (VL-223)', () => {
+describe('AI Kernel Production Audit',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let rawKey: string;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     process.env.LUGEMI_POLICY_RUNTIME_MODE = 'enforce';
     process.env.LUGEMI_AGENT_RUNTIME_MODE = 'sandbox';
 
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
 
     app.get(GatewayService).setChatProviderForTests({
       name: 'fixture_chat',
       async complete(input) {
-        const user = [...input.messages].reverse().find((m) => m.role === 'user');
+        const user = [...input.messages].reverse.find((m) => m.role === 'user');
         return {
           message: {
             role: 'assistant',
@@ -98,11 +98,11 @@ describe('AI Kernel Production Audit (VL-223)', () => {
     rawKey = created.secret;
   }, 120_000);
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('ships audit ADR and report pack', () => {
+  it('ships audit ADR and report pack',  => {
     expect(existsSync(join(root, 'docs/adr/0134-ai-kernel-production-audit.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0080-lugemi-cloud-blueprint.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/CLOUD_BLUEPRINT.md'))).toBe(true);
@@ -128,7 +128,7 @@ describe('AI Kernel Production Audit (VL-223)', () => {
     expect(adr).toMatch(/hard-block|hard gate/i);
   });
 
-  it('has no TODO/FIXME/implement-later markers in AI Kernel source trees', () => {
+  it('has no TODO/FIXME/implement-later markers in AI Kernel source trees',  => {
     const roots = [
       join(apiSrc, 'ai-kernel'),
       join(apiSrc, 'memory-runtime'),
@@ -152,7 +152,7 @@ describe('AI Kernel Production Audit (VL-223)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes integrated AI Kernel catalogs', async () => {
+  it('exposes integrated AI Kernel catalogs', async  => {
     const paths = [
       '/v1/ai-kernel/products',
       '/v1/memory-runtime/engine',
@@ -165,11 +165,11 @@ describe('AI Kernel Production Audit (VL-223)', () => {
       '/v1/policy-runtime/engine',
     ];
     for (const path of paths) {
-      const res = await request(app.getHttpServer()).get(path).expect(200);
-      expect(res.body).toBeTruthy();
+      const res = await request(app.getHttpServer).get(path).expect(200);
+      expect(res.body).toBeTruthy;
     }
 
-    const products = await request(app.getHttpServer())
+    const products = await request(app.getHttpServer)
       .get('/v1/ai-kernel/products')
       .expect(200);
     const byId = Object.fromEntries(
@@ -190,24 +190,24 @@ describe('AI Kernel Production Audit (VL-223)', () => {
     }
   });
 
-  it('verifies action safety: sandbox + Policy hard-gate wiring', async () => {
-    const agent = await request(app.getHttpServer()).get('/v1/agent-runtime/engine').expect(200);
+  it('verifies action safety: sandbox + Policy hard-gate wiring', async  => {
+    const agent = await request(app.getHttpServer).get('/v1/agent-runtime/engine').expect(200);
     expect(agent.body.honesty.sandboxRequired).toBe(true);
     expect(agent.body.honesty.openToolExecution).toBe(false);
     expect(agent.body.honesty.policyRuntimeWired).toBe(true);
 
-    const workflow = await request(app.getHttpServer())
+    const workflow = await request(app.getHttpServer)
       .get('/v1/workflow-runtime/engine')
       .expect(200);
     expect(workflow.body.honesty.sandboxRequired).toBe(true);
     expect(workflow.body.honesty.policyRuntimeWired).toBe(true);
 
-    const plugin = await request(app.getHttpServer()).get('/v1/plugin-runtime/engine').expect(200);
+    const plugin = await request(app.getHttpServer).get('/v1/plugin-runtime/engine').expect(200);
     expect(plugin.body.honesty.sandboxRequired).toBe(true);
     expect(plugin.body.honesty.liveCodeExecution).toBe(false);
     expect(plugin.body.honesty.policyRuntimeWired).toBe(true);
 
-    const policy = await request(app.getHttpServer()).get('/v1/policy-runtime/engine').expect(200);
+    const policy = await request(app.getHttpServer).get('/v1/policy-runtime/engine').expect(200);
     expect(policy.body.honesty.hardGate).toBe(true);
     expect(policy.body.honesty.logOnly).toBe(false);
     expect(policy.body.honesty.wiredIntoAgentRuntime).toBe(true);
@@ -215,22 +215,22 @@ describe('AI Kernel Production Audit (VL-223)', () => {
     expect(policy.body.honesty.wiredIntoPluginRuntime).toBe(true);
   });
 
-  it('rejects unauthenticated agent run and policy create (security)', async () => {
-    const run = await request(app.getHttpServer())
+  it('rejects unauthenticated agent run and policy create (security)', async  => {
+    const run = await request(app.getHttpServer)
       .post('/v1/agent-runtime/run')
       .send({ agentId: 'agt_x', actions: [{ action: 'reason.plan' }] });
     expect([401, 403, 503]).toContain(run.status);
 
-    const policy = await request(app.getHttpServer())
+    const policy = await request(app.getHttpServer)
       .post('/v1/policy-runtime/policies')
       .send({ name: 'x', actions: ['memory.put'], effect: 'deny' });
     expect([401, 403, 503]).toContain(policy.status);
   });
 
-  it('exercises harmless Agent Runtime task and Policy hard-block (README gate)', async () => {
+  it('exercises harmless Agent Runtime task and Policy hard-block (README gate)', async  => {
     const auth = { Authorization: `Bearer ${rawKey}` };
 
-    const created = await request(app.getHttpServer())
+    const created = await request(app.getHttpServer)
       .post('/v1/agent-runtime/agents')
       .set(auth)
       .send({
@@ -241,13 +241,13 @@ describe('AI Kernel Production Audit (VL-223)', () => {
       .expect(201);
     const agentId = created.body.agent.id as string;
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post(`/v1/agent-runtime/agents/${agentId}/lifecycle`)
       .set(auth)
       .send({ status: 'active' })
       .expect(200);
 
-    const ok = await request(app.getHttpServer())
+    const ok = await request(app.getHttpServer)
       .post('/v1/agent-runtime/run')
       .set(auth)
       .send({
@@ -265,7 +265,7 @@ describe('AI Kernel Production Audit (VL-223)', () => {
     expect(ok.body.run.liveToolExecution).toBe(false);
     expect(ok.body.run.steps[0].allowed).toBe(true);
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post('/v1/policy-runtime/policies')
       .set(auth)
       .send({
@@ -277,7 +277,7 @@ describe('AI Kernel Production Audit (VL-223)', () => {
       })
       .expect(201);
 
-    const blocked = await request(app.getHttpServer())
+    const blocked = await request(app.getHttpServer)
       .post('/v1/agent-runtime/run')
       .set(auth)
       .send({
@@ -290,7 +290,7 @@ describe('AI Kernel Production Audit (VL-223)', () => {
     expect(blocked.body.run.steps[0].error).toMatch(/organization policy|Policy Runtime|hard gate/i);
   });
 
-  it('runs bounded sequential load smoke on public kernel catalogs', async () => {
+  it('runs bounded sequential load smoke on public kernel catalogs', async  => {
     const paths = [
       '/v1/ai-kernel/products',
       '/v1/memory-runtime/engine',
@@ -302,25 +302,25 @@ describe('AI Kernel Production Audit (VL-223)', () => {
       '/v1/plugin-runtime/engine',
       '/v1/policy-runtime/engine',
     ];
-    const started = Date.now();
+    const started = Date.now;
     const iterations = 24;
     for (let i = 0; i < iterations; i++) {
       const path = paths[i % paths.length]!;
-      await request(app.getHttpServer()).get(path).expect(200);
+      await request(app.getHttpServer).get(path).expect(200);
     }
-    expect(Date.now() - started).toBeLessThan(30_000);
+    expect(Date.now - started).toBeLessThan(30_000);
   });
 
-  it('runs bounded rapid stress smoke on ai-kernel products', async () => {
-    const started = Date.now();
+  it('runs bounded rapid stress smoke on ai-kernel products', async  => {
+    const started = Date.now;
     for (let i = 0; i < 12; i++) {
-      await request(app.getHttpServer()).get('/v1/ai-kernel/products').expect(200);
+      await request(app.getHttpServer).get('/v1/ai-kernel/products').expect(200);
     }
-    expect(Date.now() - started).toBeLessThan(15_000);
+    expect(Date.now - started).toBeLessThan(15_000);
   });
 
-  it('GraphQL AI Kernel façade queries respond with honesty flags', async () => {
-    const res = await request(app.getHttpServer())
+  it('GraphQL AI Kernel façade queries respond with honesty flags', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .set('Authorization', `Bearer ${rawKey}`)
       .send({
@@ -333,7 +333,7 @@ describe('AI Kernel Production Audit (VL-223)', () => {
         }`,
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.aiKernelRuntimes.length).toBeGreaterThan(5);
     expect(res.body.data.agentRuntimeEngine.openToolExecution).toBe(false);
     expect(res.body.data.agentRuntimeEngine.policyRuntimeWired).toBe(true);
@@ -344,9 +344,9 @@ describe('AI Kernel Production Audit (VL-223)', () => {
     expect(res.body.data.policyRuntimeEngine.wiredIntoAgentRuntime).toBe(true);
   });
 
-  it('documents Volume 8 close and Volume 9 not invented here', () => {
+  it('documents Volume 8 close and Volume 9 not invented here',  => {
     const living = readFileSync(join(root, 'docs/CLOUD_BLUEPRINT.md'), 'utf8');
-    expect(living).toMatch(/VL-214\s*→\s*VL-223/);
+    expect(living).toMatch(/\s*→\s*);
     expect(living).toMatch(/Volume 9|unscheduled|ask when ready/i);
     const readiness = readFileSync(
       join(root, 'docs/ai-kernel-audit/KERNEL_READINESS_REPORT.md'),

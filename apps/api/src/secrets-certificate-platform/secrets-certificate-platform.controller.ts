@@ -6,18 +6,18 @@ export class SecretsCertificatePlatformController {
   constructor(private readonly service: SecretsCertificatePlatformService) {}
 
   @Get('engine')
-  engine() {
-    return this.service.engine();
+  engine {
+    return this.service.engine;
   }
 
   @Get('products')
-  products() {
-    return this.service.engine();
+  products {
+    return this.service.engine;
   }
 
   @Get('monitoring')
-  monitoring() {
-    return this.service.monitoring();
+  monitoring {
+    return this.service.monitoring;
   }
 
   @Get('secrets')
@@ -31,8 +31,8 @@ export class SecretsCertificatePlatformController {
   }
 
   @Get('audit')
-  audit() {
-    return this.service.audit();
+  audit {
+    return this.service.audit;
   }
 
   @Get('query')

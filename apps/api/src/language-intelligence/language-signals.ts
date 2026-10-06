@@ -40,7 +40,7 @@ function countMatches(text: string, re: RegExp): number {
 
 function tokenizeWords(text: string): string[] {
   return text
-    .toLowerCase()
+    .toLowerCase
     .replace(/[^a-z0-9'\s-]/g, ' ')
     .split(/\s+/)
     .filter(Boolean);
@@ -49,19 +49,19 @@ function tokenizeWords(text: string): string[] {
 function splitSentences(text: string): string[] {
   return text
     .split(/[.!?]+/)
-    .map((s) => s.trim())
+    .map((s) => s.trim)
     .filter(Boolean);
 }
 
 function estimateSyllables(word: string): number {
-  const w = word.toLowerCase().replace(/[^a-z]/g, '');
+  const w = word.toLowerCase.replace(/[^a-z]/g, '');
   if (!w) return 0;
   if (w.length <= 3) return 1;
   const groups = w.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/, '').match(/[aeiouy]{1,2}/g);
   return Math.max(1, groups?.length ?? 1);
 }
 
-/** Lexicon polarity — not a trained sentiment model (VL-144). */
+/** Lexicon polarity — not a trained sentiment model. */
 export function analyzeSentiment(text: string) {
   const pos = countMatches(text, POSITIVE);
   const neg = countMatches(text, NEGATIVE);
@@ -81,11 +81,11 @@ export function analyzeSentiment(text: string) {
     positiveHits: pos,
     negativeHits: neg,
     confidence: Number(confidence.toFixed(3)),
-    note: 'Lexicon polarity scoring (VL-144) — not a production sentiment suite.',
+    note: 'Lexicon polarity scoring — not a production sentiment suite.',
   };
 }
 
-/** Text emotion buckets — not voice emotion recognition (VL-144). */
+/** Text emotion buckets — not voice emotion recognition. */
 export function analyzeEmotion(text: string) {
   const scores: Record<EmotionLabel, number> = {
     joy: 0,
@@ -122,13 +122,13 @@ export function analyzeEmotion(text: string) {
     scores,
     signals: signals.slice(0, 12),
     confidence: Number(confidence.toFixed(3)),
-    note: 'Text cue emotion buckets (VL-144) — not acoustic emotion recognition.',
+    note: 'Text cue emotion buckets — not acoustic emotion recognition.',
   };
 }
 
-/** Keyword/heuristic intents — not a trained NLU model (VL-144). */
+/** Keyword/heuristic intents — not a trained NLU model. */
 export function analyzeIntent(text: string) {
-  const t = text.trim();
+  const t = text.trim;
   const scores: Record<IntentLabel, number> = {
     question: 0,
     request: 0,
@@ -161,11 +161,11 @@ export function analyzeIntent(text: string) {
     label,
     scores,
     confidence,
-    note: 'Heuristic intent labels (VL-144) — not a trained NLU/dialog model.',
+    note: 'Heuristic intent labels — not a trained NLU/dialog model.',
   };
 }
 
-/** Flesch-like English readability heuristic (VL-144). */
+/** Flesch-like English readability heuristic. */
 export function analyzeReadability(text: string) {
   const words = tokenizeWords(text);
   const sentences = splitSentences(text);
@@ -191,11 +191,11 @@ export function analyzeReadability(text: string) {
     words: wordCount,
     sentences: sentenceCount,
     syllables: syllableCount,
-    note: 'English-leaning Flesch-like heuristic (VL-144) — not a certified readability product.',
+    note: 'English-leaning Flesch-like heuristic — not a certified readability product.',
   };
 }
 
-/** Lexical/syntactic density complexity (VL-144). */
+/** Lexical/syntactic density complexity. */
 export function analyzeComplexity(text: string) {
   const words = tokenizeWords(text);
   const sentences = splitSentences(text);
@@ -224,20 +224,20 @@ export function analyzeComplexity(text: string) {
     averageWordLength: Number(avgWordLen.toFixed(2)),
     averageSentenceLength: Number(avgSentenceLen.toFixed(2)),
     longWordRatio: Number((longWords / wordCount).toFixed(3)),
-    note: 'Lexical/syntactic density heuristic (VL-144) — not a linguistics complexity suite.',
+    note: 'Lexical/syntactic density heuristic — not a linguistics complexity suite.',
   };
 }
 
 /**
  * Speech confidence from transcript heuristics (+ optional client STT score).
- * Whisper path has no native confidence (VL-144).
+ * Whisper path has no native confidence.
  */
 export function analyzeSpeechConfidence(input: {
   transcript: string;
   durationSeconds?: number;
   sttConfidence?: number;
 }) {
-  const text = input.transcript.trim();
+  const text = input.transcript.trim;
   const words = tokenizeWords(text);
   const reasons: string[] = [];
   let score = 75;

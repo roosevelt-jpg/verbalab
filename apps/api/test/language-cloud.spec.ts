@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_lang_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_lang_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,29 +35,29 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Language Cloud Foundation (VL-130)', () => {
+describe('Language Cloud Foundation',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let languageCloud: LanguageCloudService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     languageCloud = app.get(LanguageCloudService);
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Language Cloud mapping (no dialect/grammar/GraphQL fake)', () => {
+  it('documents Language Cloud mapping (no dialect/grammar/GraphQL fake)',  => {
     const doc = join(root, 'docs/LANGUAGE_CLOUD.md');
     const adr = join(root, 'docs/adr/0051-language-cloud-foundation.md');
     expect(existsSync(doc)).toBe(true);
@@ -71,8 +71,8 @@ describe('Language Cloud Foundation (VL-130)', () => {
     expect(text).not.toMatch(/unlimited dialects.*shipped/i);
   });
 
-  it('exposes public product catalog', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/language/products').expect(200);
+  it('exposes public product catalog', async  => {
+    const res = await request(app.getHttpServer).get('/v1/language/products').expect(200);
     expect(res.body.architecture.graphql).toBe(true);
     expect(res.body.architecture.cqrs).toBe(true);
     expect(res.body.architecture.terraform).toBe(true);
@@ -96,8 +96,8 @@ describe('Language Cloud Foundation (VL-130)', () => {
     expect(translate.status).toBe('shipped');
   });
 
-  it('returns org language overview with workspace counts', async () => {
-    const org = await seedOrg(prisma, `lang_${Date.now()}`);
+  it('returns org language overview with workspace counts', async  => {
+    const org = await seedOrg(prisma, `lang_${Date.now}`);
     await prisma.glossaryTerm.create({
       data: {
         organizationId: org.id,

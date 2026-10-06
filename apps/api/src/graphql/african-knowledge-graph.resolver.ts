@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetAfricanKnowledgeGraphEngineQuery } from '../african-knowledge-graph/application/messages';
 import { GqlAfricanKnowledgeGraphEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class AfricanKnowledgeGraphGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query(() => GqlAfricanKnowledgeGraphEngine, { name: 'africanKnowledgeGraphEngine' })
-  async africanKnowledgeGraphEngine(): Promise<GqlAfricanKnowledgeGraphEngine> {
-    const catalog = await this.queries.execute(new GetAfricanKnowledgeGraphEngineQuery());
+  @Query( => GqlAfricanKnowledgeGraphEngine, { name: 'africanKnowledgeGraphEngine' })
+  async africanKnowledgeGraphEngine: Promise<GqlAfricanKnowledgeGraphEngine> {
+    const catalog = await this.queries.execute(new GetAfricanKnowledgeGraphEngineQuery);
     return {
       product: catalog.product,
       note: catalog.note,

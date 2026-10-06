@@ -1,4 +1,4 @@
-/** Application ports for Language Cloud (VL-137). Implemented by Nest service adapters. */
+/** Application ports for Language Cloud. Implemented by Nest service adapters. */
 
 export type AuthContext = {
   organizationId: string;
@@ -90,11 +90,11 @@ export type StyleRewriteResult = {
 };
 
 export interface LanguageRegistryPort {
-  listLanguages(): Promise<LanguageRow[]>;
-  listLocalePacks(): Promise<LocaleRow[]>;
+  listLanguages: Promise<LanguageRow[]>;
+  listLocalePacks: Promise<LocaleRow[]>;
   listCountryPacks(region?: string): Promise<CountryRow[]>;
-  listStyleProfiles(): StyleProfileRow[];
-  listLanguageProducts(): Array<{
+  listStyleProfiles: StyleProfileRow[];
+  listLanguageProducts: Array<{
     id: string;
     name: string;
     status: string;

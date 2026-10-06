@@ -17,7 +17,7 @@ const SUGGESTIONS = [
   'Escalate to human',
 ];
 
-export function SupportChatWidget() {
+export function SupportChatWidget {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
   const [busy, setBusy] = useState(false);
@@ -32,12 +32,12 @@ export function SupportChatWidget() {
   ]);
   const endRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useEffect( => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, open, showEscalateForm]);
 
   async function sendMessage(text: string, opts?: { escalateOnly?: boolean }) {
-    const trimmed = text.trim();
+    const trimmed = text.trim;
     if (!trimmed || busy) return;
     setInput('');
     if (!opts?.escalateOnly) {
@@ -51,11 +51,11 @@ export function SupportChatWidget() {
         body: JSON.stringify({
           message: trimmed,
           history: messages.map(({ role, content }) => ({ role, content })),
-          email: email.trim() || undefined,
+          email: email.trim || undefined,
           escalateOnly: opts?.escalateOnly ?? false,
         }),
       });
-      const body = (await res.json()) as {
+      const body = (await res.json) as {
         reply?: string;
         escalate?: boolean;
         ticketHint?: string | null;
@@ -87,13 +87,13 @@ export function SupportChatWidget() {
     }
   }
 
-  function send() {
+  function send {
     void sendMessage(input);
   }
 
-  function fileEscalation() {
+  function fileEscalation {
     const summary =
-      input.trim() ||
+      input.trim ||
       messages
         .filter((m) => m.role === 'user')
         .slice(-3)
@@ -112,7 +112,7 @@ export function SupportChatWidget() {
               <strong>Lugemi Support</strong>
               <p>Self-serve first · human when it is complex</p>
             </div>
-            <button type="button" className="lg-support-close" onClick={() => setOpen(false)} aria-label="Close">
+            <button type="button" className="lg-support-close" onClick={ => setOpen(false)} aria-label="Close">
               ×
             </button>
           </header>
@@ -135,8 +135,8 @@ export function SupportChatWidget() {
                   type="button"
                   className="lg-support-chip"
                   disabled={busy}
-                  onClick={() => {
-                    if (s.toLowerCase().includes('escalate')) {
+                  onClick={ => {
+                    if (s.toLowerCase.includes('escalate')) {
                       setShowEscalateForm(true);
                       setMessages((m) => [
                         ...m,
@@ -178,8 +178,8 @@ export function SupportChatWidget() {
           <form
             className="lg-support-form"
             onSubmit={(e) => {
-              e.preventDefault();
-              send();
+              e.preventDefault;
+              send;
             }}
           >
             <input
@@ -188,7 +188,7 @@ export function SupportChatWidget() {
               placeholder="Ask about API, billing, quotas…"
               aria-label="Support message"
             />
-            <button type="submit" disabled={busy || !input.trim()}>
+            <button type="submit" disabled={busy || !input.trim}>
               {busy ? '…' : 'Send'}
             </button>
           </form>
@@ -197,7 +197,7 @@ export function SupportChatWidget() {
       <button
         type="button"
         className="lg-support-fab"
-        onClick={() => setOpen((v) => !v)}
+        onClick={ => setOpen((v) => !v)}
         aria-expanded={open}
         aria-label="Open Lugemi support chat"
       >

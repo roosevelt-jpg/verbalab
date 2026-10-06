@@ -1,4 +1,4 @@
-/** Application ports for Repository Standards (VL-347). */
+/** Application ports for Repository Standards. */
 
 export type RepositoryStandardsProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type RepositoryStandardsEngineBundle = ReturnType<
 >;
 
 export interface RepositoryStandardsCatalogPort {
-  engine(): RepositoryStandardsEngineBundle;
-  listProducts(): RepositoryStandardsProductRow[];
+  engine: RepositoryStandardsEngineBundle;
+  listProducts: RepositoryStandardsProductRow[];
 }
 
 export const REPOSITORY_STANDARDS_CATALOG_PORT = Symbol('REPOSITORY_STANDARDS_CATALOG_PORT');

@@ -54,7 +54,7 @@ const SHIPPED_PRODUCT_IDS = [
 function walkTsFiles(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory()) {
+    if (name.isDirectory) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       walkTsFiles(p, out);
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -66,23 +66,23 @@ function walkTsFiles(dir: string, out: string[] = []): string[] {
   return out;
 }
 
-describe('Trust Cloud Production Audit (VL-301)', () => {
+describe('Trust Cloud Production Audit',  => {
   let app: INestApplication<App>;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
   }, 120_000);
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('ships audit ADR and report pack', () => {
+  it('ships audit ADR and report pack',  => {
     expect(existsSync(join(root, 'docs/adr/0203-trust-cloud-production-audit.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/CLOUD_BLUEPRINT.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/TRUST_CLOUD.md'))).toBe(true);
@@ -102,15 +102,15 @@ describe('Trust Cloud Production Audit (VL-301)', () => {
     expect(readiness).toMatch(/humanSignOffRequired/i);
     expect(readiness).toMatch(/complianceToolingNotCertification/i);
     expect(readiness).toMatch(/Platform Engineering|Rejected/i);
-    expect(readiness).toMatch(/VL-292|Volume 15/i);
+    expect(readiness).toMatch(/|Volume 15/i);
 
     const adr = readFileSync(join(root, 'docs/adr/0203-trust-cloud-production-audit.md'), 'utf8');
     expect(adr).toMatch(/review gate|checklist|Vitest audit gates/i);
     expect(adr).toMatch(/Platform Engineering|do not invent|Rejected/i);
-    expect(adr).toMatch(/Volume 15 closed|VL-292–301|closes/i);
+    expect(adr).toMatch(/Volume 15 closed|–301|closes/i);
   });
 
-  it('has no TODO/FIXME/implement-later markers in Volume 15 source trees', () => {
+  it('has no TODO/FIXME/implement-later markers in Volume 15 source trees',  => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const name of VOLUME15_DIRS) {
@@ -134,13 +134,13 @@ describe('Trust Cloud Production Audit (VL-301)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes all Volume 15 catalogs as shipped with monitoring', async () => {
+  it('exposes all Volume 15 catalogs as shipped with monitoring', async  => {
     for (const path of ENGINE_PATHS) {
-      const res = await request(app.getHttpServer()).get(path).expect(200);
-      expect(res.body).toBeTruthy();
+      const res = await request(app.getHttpServer).get(path).expect(200);
+      expect(res.body).toBeTruthy;
     }
 
-    const hub = await request(app.getHttpServer()).get('/v1/trust-cloud/products').expect(200);
+    const hub = await request(app.getHttpServer).get('/v1/trust-cloud/products').expect(200);
     expect(hub.body.honesty.platformEngineeringOs).toBe(false);
     expect(hub.body.honesty.oktaOs).toBe(false);
     expect(hub.body.honesty.grcSuiteOs).toBe(false);
@@ -161,59 +161,59 @@ describe('Trust Cloud Production Audit (VL-301)', () => {
     }
   });
 
-  it('enforces safety↔policy, privacy consent, governance sign-off, compliance honesty', async () => {
-    const safety = await request(app.getHttpServer())
+  it('enforces safety↔policy, privacy consent, governance sign-off, compliance honesty', async  => {
+    const safety = await request(app.getHttpServer)
       .get('/v1/ai-safety-platform/engine')
       .expect(200);
     expect(safety.body.honesty.policyRuntimeIntegrated).toBe(true);
     expect(safety.body.policyRuntimeIntegrated).toBe(true);
-    expect(safety.body.policyRuntime).toBeTruthy();
+    expect(safety.body.policyRuntime).toBeTruthy;
 
-    const check = await request(app.getHttpServer())
+    const check = await request(app.getHttpServer)
       .get('/v1/ai-safety-platform/check')
       .query({ id: 'safe-jb-001' })
       .expect(200);
     expect(check.body.policyRuntimeIntegrated).toBe(true);
     expect(check.body.blocked).toBe(true);
 
-    const gov = await request(app.getHttpServer())
+    const gov = await request(app.getHttpServer)
       .get('/v1/ai-governance-platform/engine')
       .expect(200);
     expect(gov.body.honesty.humanSignOffRequired).toBe(true);
     expect(gov.body.honesty.postFactoLogOnly).toBe(false);
 
-    const pending = await request(app.getHttpServer())
+    const pending = await request(app.getHttpServer)
       .get('/v1/ai-governance-platform/status/gov-policy-001')
       .expect(200);
     expect(['pending', 'approved', 'rejected']).toContain(pending.body.status);
     expect(pending.body.humanSignOffRequired).toBe(true);
 
-    const privacyBlocked = await request(app.getHttpServer())
+    const privacyBlocked = await request(app.getHttpServer)
       .get('/v1/privacy-platform/consent-check')
       .query({ id: 'priv-tk-restricted' })
       .expect(200);
     expect(privacyBlocked.body.allowed).toBe(false);
     expect(privacyBlocked.body.traditionalKnowledgeConsentRequired).toBe(true);
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .get('/v1/privacy-platform/release')
       .query({ id: 'priv-tk-unverified' })
       .expect(400);
 
-    const compliance = await request(app.getHttpServer())
+    const compliance = await request(app.getHttpServer)
       .get('/v1/compliance-platform/engine')
       .expect(200);
     expect(compliance.body.honesty.complianceToolingNotCertification).toBe(true);
     expect(compliance.body.honesty.notCertifiedCompliant).toBe(true);
     expect(compliance.body.honesty.lawyersAuditorsStillRequired).toBe(true);
 
-    const identity = await request(app.getHttpServer())
+    const identity = await request(app.getHttpServer)
       .get('/v1/identity-federation/engine')
       .expect(200);
     expect(identity.body.honesty.oktaOs).toBe(false);
     expect(identity.body.honesty.samlIdpOs).toBe(false);
 
-    const analytics = await request(app.getHttpServer())
+    const analytics = await request(app.getHttpServer)
       .get('/v1/trust-analytics/engine')
       .expect(200);
     expect(analytics.body.honesty.siemOs).toBe(false);
@@ -221,14 +221,14 @@ describe('Trust Cloud Production Audit (VL-301)', () => {
     expect(analytics.body.snapshot.safetyIncidents.policyRuntimeIntegrated).toBe(true);
   });
 
-  it('rejects unauthenticated Trust Cloud overview (auth smoke)', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/trust-cloud/overview');
+  it('rejects unauthenticated Trust Cloud overview (auth smoke)', async  => {
+    const res = await request(app.getHttpServer).get('/v1/trust-cloud/overview');
     expect([401, 403, 503]).toContain(res.status);
   });
 
-  it('exposes GraphQL façades for Trust Cloud hubs', async () => {
-    const started = Date.now();
-    const gql = await request(app.getHttpServer())
+  it('exposes GraphQL façades for Trust Cloud hubs', async  => {
+    const started = Date.now;
+    const gql = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query: `{
@@ -244,8 +244,8 @@ describe('Trust Cloud Production Audit (VL-301)', () => {
         }`,
       })
       .expect(200);
-    expect(Date.now() - started).toBeLessThan(5_000);
-    expect(gql.body.errors).toBeUndefined();
+    expect(Date.now - started).toBeLessThan(5_000);
+    expect(gql.body.errors).toBeUndefined;
     expect(gql.body.data.trustCloudProducts.length).toBeGreaterThan(8);
     expect(gql.body.data.aiSafetyPlatformEngine.policyRuntimeIntegrated).toBe(true);
     expect(gql.body.data.aiGovernancePlatformEngine.humanSignOffRequired).toBe(true);
@@ -257,7 +257,7 @@ describe('Trust Cloud Production Audit (VL-301)', () => {
     expect(gql.body.data.trustAnalyticsEngine.siemOs).toBe(false);
   });
 
-  it('rejects inventing Platform Engineering Cloud in this volume', () => {
+  it('rejects inventing Platform Engineering Cloud in this volume',  => {
     const readiness = readFileSync(
       join(root, 'docs/trust-cloud-audit/PRODUCTION_READINESS.md'),
       'utf8',

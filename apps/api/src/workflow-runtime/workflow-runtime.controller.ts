@@ -25,18 +25,18 @@ export class WorkflowRuntimeController {
   constructor(private readonly runtime: WorkflowRuntimeService) {}
 
   @Get('engine')
-  engine() {
-    return this.runtime.engine();
+  engine {
+    return this.runtime.engine;
   }
 
   @Get('permissions')
-  permissions() {
-    return this.runtime.permissions();
+  permissions {
+    return this.runtime.permissions;
   }
 
   @Get('workflows')
   @UseGuards(TranslateAuthGuard)
-  list(@Req() req: AuthedReq) {
+  list(@Req req: AuthedReq) {
     return this.runtime.listWorkflows({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -45,7 +45,7 @@ export class WorkflowRuntimeController {
 
   @Get('workflows/:id')
   @UseGuards(TranslateAuthGuard)
-  get(@Req() req: AuthedReq, @Param('id') id: string) {
+  get(@Req req: AuthedReq, @Param('id') id: string) {
     return this.runtime.getWorkflow({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -57,8 +57,8 @@ export class WorkflowRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   create(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       name?: string;
       permissions?: string[];
@@ -80,9 +80,9 @@ export class WorkflowRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   lifecycle(
-    @Req() req: AuthedReq,
+    @Req req: AuthedReq,
     @Param('id') id: string,
-    @Body() body: { status?: string },
+    @Body body: { status?: string },
   ) {
     return this.runtime.lifecycle({
       organizationId: req.translateAuth.organizationId,
@@ -98,9 +98,9 @@ export class WorkflowRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   version(
-    @Req() req: AuthedReq,
+    @Req req: AuthedReq,
     @Param('id') id: string,
-    @Body() body: { steps?: Array<{ action: string; input?: Record<string, unknown> }> },
+    @Body body: { steps?: Array<{ action: string; input?: Record<string, unknown> }> },
   ) {
     return this.runtime.version({
       organizationId: req.translateAuth.organizationId,
@@ -116,8 +116,8 @@ export class WorkflowRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   run(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: { workflowId?: string; forceFailAction?: string; approved?: boolean },
   ) {
     return this.runtime.run({
@@ -134,8 +134,8 @@ export class WorkflowRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   approve(
-    @Req() req: AuthedReq,
-    @Body() body: { workflowId?: string; note?: string },
+    @Req req: AuthedReq,
+    @Body body: { workflowId?: string; note?: string },
   ) {
     return this.runtime.approve({
       organizationId: req.translateAuth.organizationId,
@@ -150,8 +150,8 @@ export class WorkflowRuntimeController {
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   schedule(
-    @Req() req: AuthedReq,
-    @Body() body: { workflowId?: string; runAt?: string },
+    @Req req: AuthedReq,
+    @Body body: { workflowId?: string; runAt?: string },
   ) {
     return this.runtime.schedule({
       organizationId: req.translateAuth.organizationId,
@@ -165,7 +165,7 @@ export class WorkflowRuntimeController {
   @Post('rollback')
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
-  rollback(@Req() req: AuthedReq, @Body() body: { runId?: string }) {
+  rollback(@Req req: AuthedReq, @Body body: { runId?: string }) {
     return this.runtime.rollback({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -178,7 +178,7 @@ export class WorkflowRuntimeController {
   @Post('replay')
   @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
-  replay(@Req() req: AuthedReq, @Body() body: { runId?: string }) {
+  replay(@Req req: AuthedReq, @Body body: { runId?: string }) {
     return this.runtime.replay({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -190,7 +190,7 @@ export class WorkflowRuntimeController {
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.runtime.analytics({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,
@@ -199,7 +199,7 @@ export class WorkflowRuntimeController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req() req: AuthedReq) {
+  monitoring(@Req req: AuthedReq) {
     return this.runtime.monitoring({
       organizationId: req.translateAuth.organizationId,
       workspaceId: req.translateAuth.workspaceId,

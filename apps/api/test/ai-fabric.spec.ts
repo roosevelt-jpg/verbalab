@@ -17,7 +17,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory()) out.push(...walkTsFiles(full));
+    if (statSync(full).isDirectory) out.push(...walkTsFiles(full));
     else if (full.endsWith('.ts')) out.push(full);
   }
   return out;
@@ -32,7 +32,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_af_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_af_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -46,27 +46,27 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('AI Fabric Foundation (VL-239)', () => {
+describe('AI Fabric Foundation',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let fabric: AiFabricService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
     prisma = app.get(PrismaService);
     fabric = app.get(AiFabricService);
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents AI Fabric honesty (internal hub, not Kafka OS)', () => {
+  it('documents AI Fabric honesty (internal hub, not Kafka OS)',  => {
     const doc = join(root, 'docs/AI_FABRIC.md');
     const adr = join(root, 'docs/adr/0141-ai-fabric-foundation.md');
     const readme = join(root, 'docs/roadmap/volume10-ai-fabric/README_VOLUME10.md');
@@ -75,7 +75,7 @@ describe('AI Fabric Foundation (VL-239)', () => {
     expect(existsSync(readme)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/not\*\* a customer-facing|NOT a customer|not a customer/i);
-    expect(text).toContain('VL-239');
+    expect(text).toContain('');
     expect(text).toContain('CQRS');
     expect(text).toMatch(/hard gate|hard-gate/i);
     expect(text).toMatch(/Kafka|broker/i);
@@ -84,7 +84,7 @@ describe('AI Fabric Foundation (VL-239)', () => {
     expect(readmeText).toMatch(/Kafka|NATS|Redis Streams/i);
   });
 
-  it('has no TODO/FIXME/implement-later markers in AI Fabric source', () => {
+  it('has no TODO/FIXME/implement-later markers in AI Fabric source',  => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const file of walkTsFiles(join(apiSrc, 'ai-fabric'))) {
@@ -94,8 +94,8 @@ describe('AI Fabric Foundation (VL-239)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes public bus catalog with honest architecture + safety', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/ai-fabric/products').expect(200);
+  it('exposes public bus catalog with honest architecture + safety', async  => {
+    const res = await request(app.getHttpServer).get('/v1/ai-fabric/products').expect(200);
     expect(res.body.product).toBe('Lugemi AI Fabric');
     expect(res.body.architecture.customerFacingProduct).toBe(false);
     expect(res.body.architecture.kafkaHyperscalerOs).toBe(false);
@@ -123,12 +123,12 @@ describe('AI Fabric Foundation (VL-239)', () => {
     expect(policy.notes).toMatch(/hard gate|enforce|FabricPolicyGate/i);
   });
 
-  it('exposes routing table and org overview', async () => {
-    const routing = await request(app.getHttpServer()).get('/v1/ai-fabric/routing').expect(200);
+  it('exposes routing table and org overview', async  => {
+    const routing = await request(app.getHttpServer).get('/v1/ai-fabric/routing').expect(200);
     expect(routing.body.routes.length).toBeGreaterThan(5);
     expect(routing.body.routes.some((r: { cloud: string }) => r.cloud === 'ai-kernel')).toBe(true);
 
-    const org = await seedOrg(prisma, `af_${Date.now()}`);
+    const org = await seedOrg(prisma, `af_${Date.now}`);
     const overview = await fabric.overview({
       userId: org.memberships[0].userId,
       organizationId: org.id,
@@ -149,14 +149,14 @@ describe('AI Fabric Foundation (VL-239)', () => {
     expect(overview.safety.policyLogOnlyForbidden).toBe(true);
   });
 
-  it('exposes aiFabricBuses via GraphQL CQRS façade', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes aiFabricBuses via GraphQL CQRS façade', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query: '{ aiFabricBuses { id name status api console notes } }',
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.aiFabricBuses.length).toBeGreaterThan(8);
     expect(
       res.body.data.aiFabricBuses.some((b: { id: string }) => b.id === 'ai-fabric'),

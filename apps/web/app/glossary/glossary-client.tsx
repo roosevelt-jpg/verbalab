@@ -28,8 +28,8 @@ type VerticalPack = {
   installed: boolean;
 };
 
-export function GlossaryClient() {
-  const { getToken, isLoaded } = useAuth();
+export function GlossaryClient {
+  const { getToken, isLoaded } = useAuth;
   const [languages, setLanguages] = useState<Language[]>([]);
   const [terms, setTerms] = useState<Term[]>([]);
   const [packs, setPacks] = useState<VerticalPack[]>([]);
@@ -50,32 +50,32 @@ export function GlossaryClient() {
     setPacks(await apiFetch<VerticalPack[]>('/v1/vertical-glossaries', { token }));
   }
 
-  useEffect(() => {
+  useEffect( => {
     void apiFetch<{ data: Language[] }>('/v1/languages')
       .then((res) => setLanguages(res.data))
-      .catch(() => undefined);
+      .catch( => undefined);
   }, []);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void (async () => {
+    void (async  => {
       try {
-        const token = await getToken();
+        const token = await getToken;
         if (!token) throw new Error('Not signed in');
         await Promise.all([loadTerms(token), loadPacks(token)]);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load glossary');
       }
-    })();
+    });
   }, [getToken, isLoaded]);
 
   async function onCreate(event: FormEvent) {
-    event.preventDefault();
+    event.preventDefault;
     setError(null);
     setMessage(null);
     setLoading(true);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       await apiFetch('/v1/glossary/terms', {
         method: 'POST',
@@ -95,7 +95,7 @@ export function GlossaryClient() {
   async function onDelete(id: string) {
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       await apiFetch(`/v1/glossary/terms/${id}`, { method: 'DELETE', token });
       await loadTerms(token);
@@ -109,7 +109,7 @@ export function GlossaryClient() {
     setMessage(null);
     setLoading(true);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const result = await apiFetch<{ termsInstalled: number }>(
         `/v1/vertical-glossaries/${id}/install`,
@@ -162,7 +162,7 @@ export function GlossaryClient() {
                   type="button"
                   className="vl-btn vl-btn-secondary"
                   disabled={loading || pack.installed}
-                  onClick={() => void installPack(pack.id)}
+                  onClick={ => void installPack(pack.id)}
                 >
                   {pack.installed ? 'Installed' : 'Install (Pro)'}
                 </button>
@@ -250,7 +250,7 @@ export function GlossaryClient() {
                   {term.sourceLang} → {term.targetLang}
                 </div>
               </div>
-              <button type="button" className="vl-btn vl-btn-secondary" onClick={() => void onDelete(term.id)}>
+              <button type="button" className="vl-btn vl-btn-secondary" onClick={ => void onDelete(term.id)}>
                 Delete
               </button>
             </div>

@@ -13,7 +13,7 @@ export type ApiKeyContext = {
   prefix: string;
 };
 
-@Injectable()
+@Injectable
 export class ApiKeyGuard implements CanActivate {
   constructor(private readonly prisma: PrismaService) {}
 
@@ -25,7 +25,7 @@ export class ApiKeyGuard implements CanActivate {
       throw new ApiException('unauthorized', 'Missing Bearer token', HttpStatus.UNAUTHORIZED);
     }
 
-    const token = header.slice('Bearer '.length).trim();
+    const token = header.slice('Bearer '.length).trim;
     if (!looksLikeApiKey(token)) {
       throw new ApiException('unauthorized', 'Invalid API key', HttpStatus.UNAUTHORIZED);
     }
@@ -51,9 +51,9 @@ export class ApiKeyGuard implements CanActivate {
     void this.prisma.apiKey
       .update({
         where: { id: key.id },
-        data: { lastUsedAt: new Date() },
+        data: { lastUsedAt: new Date },
       })
-      .catch(() => undefined);
+      .catch( => undefined);
 
     request.apiKeyAuth = {
       apiKeyId: key.id,

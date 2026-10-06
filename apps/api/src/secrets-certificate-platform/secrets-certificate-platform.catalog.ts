@@ -1,5 +1,5 @@
 /**
- * Library Phase 187 → Secrets & Certificate Platform (VL-320).
+ * Library Phase 187 → Secrets & Certificate Platform.
  * Envelope-encryption + access-audit catalog over platform secrets.
  * Metadata-only APIs — never return plaintext secret values.
  * hashicorpVaultOs=false.
@@ -121,25 +121,25 @@ export function toSecretMetadata(row: SecretEnvelope): SecretMetadata {
   };
 }
 
-export function listSecretEnvelopes(): SecretEnvelope[] {
+export function listSecretEnvelopes: SecretEnvelope[] {
   return SECRET_STORE;
 }
 
-export function listAccessAudit() {
+export function listAccessAudit {
   return ACCESS_AUDIT;
 }
 
-export function secretsCertificatePlatformEngineCatalog() {
+export function secretsCertificatePlatformEngineCatalog {
   const secrets = SECRET_STORE.map(toSecretMetadata);
   return {
     product: 'Lugemi Secrets & Certificate Platform',
     capabilities: [
       { id: 'secrets', name: 'Secrets', status: 'shipped', notes: 'Metadata only.' },
-      { id: 'certificates', name: 'Certificates', status: 'shipped', notes: 'VL-320.' },
+      { id: 'certificates', name: 'Certificates', status: 'shipped', notes: '.' },
       { id: 'kms', name: 'KMS', status: 'shipped', notes: 'Envelope DEK wrap.' },
       { id: 'vault_pattern', name: 'Vault Pattern', status: 'shipped', notes: 'hashicorpVaultOs=false.' },
-      { id: 'rotation', name: 'Rotation', status: 'shipped', notes: 'VL-320.' },
-      { id: 'expiration', name: 'Expiration', status: 'shipped', notes: 'VL-320.' },
+      { id: 'rotation', name: 'Rotation', status: 'shipped', notes: '.' },
+      { id: 'expiration', name: 'Expiration', status: 'shipped', notes: '.' },
       { id: 'audit', name: 'Access Audit', status: 'shipped', notes: 'accessAuditing=true.' },
     ],
     secrets,
@@ -169,6 +169,6 @@ export function secretsCertificatePlatformEngineCatalog() {
     },
     docs: '/docs/SECRETS_CERTIFICATE_PLATFORM.md',
     note:
-      'Secrets & Certificate Platform (VL-320). Envelope encryption + audit. Metadata-only APIs. hashicorpVaultOs=false.',
+      'Secrets & Certificate Platform. Envelope encryption + audit. Metadata-only APIs. hashicorpVaultOs=false.',
   };
 }

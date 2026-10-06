@@ -31,8 +31,8 @@ type Analytics = {
   note: string;
 };
 
-export function VectorCloudClient() {
-  const { getToken, isLoaded } = useAuth();
+export function VectorCloudClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [collections, setCollections] = useState<Collections | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
@@ -41,8 +41,8 @@ export function VectorCloudClient() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(async () => {
-    const token = await getToken();
+  const refresh = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, cols, an] = await Promise.all([
       apiFetch<Engine>('/v1/vector-cloud/engine', { token }),
@@ -54,17 +54,17 @@ export function VectorCloudClient() {
     setAnalytics(an);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void refresh().catch((err: Error) => setError(err.message));
+    void refresh.catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
-  async function search() {
+  async function search {
     setLoading(true);
     setError(null);
     setResult(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const body = await apiFetch<{
         query: string;
@@ -95,7 +95,7 @@ export function VectorCloudClient() {
           2,
         ),
       );
-      await refresh();
+      await refresh;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Search failed');
     } finally {
@@ -147,7 +147,7 @@ export function VectorCloudClient() {
             }}
           />
           <div style={{ marginTop: '0.65rem' }}>
-            <button type="button" disabled={loading} style={primary} onClick={() => void search()}>
+            <button type="button" disabled={loading} style={primary} onClick={ => void search}>
               Search vectors
             </button>
           </div>

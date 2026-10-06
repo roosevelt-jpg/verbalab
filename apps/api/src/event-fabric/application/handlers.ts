@@ -21,8 +21,8 @@ export class ListEventFabricCapabilitiesHandler
     @Inject(EVENT_FABRIC_CATALOG_PORT) private readonly catalog: EventFabricCatalogPort,
   ) {}
 
-  execute(): Promise<EventFabricCapabilityRow[]> {
-    return Promise.resolve(this.catalog.listCapabilities());
+  execute: Promise<EventFabricCapabilityRow[]> {
+    return Promise.resolve(this.catalog.listCapabilities);
   }
 }
 
@@ -34,8 +34,8 @@ export class ListEventFabricBrokersHandler
     @Inject(EVENT_FABRIC_CATALOG_PORT) private readonly catalog: EventFabricCatalogPort,
   ) {}
 
-  execute(): Promise<EventFabricBrokerRow[]> {
-    return Promise.resolve(this.catalog.listBrokers());
+  execute: Promise<EventFabricBrokerRow[]> {
+    return Promise.resolve(this.catalog.listBrokers);
   }
 }
 
@@ -47,8 +47,8 @@ export class GetEventFabricProductsBundleHandler
     @Inject(EVENT_FABRIC_CATALOG_PORT) private readonly catalog: EventFabricCatalogPort,
   ) {}
 
-  execute(): Promise<EventFabricProductsBundle> {
-    return Promise.resolve(this.catalog.products());
+  execute: Promise<EventFabricProductsBundle> {
+    return Promise.resolve(this.catalog.products);
   }
 }
 

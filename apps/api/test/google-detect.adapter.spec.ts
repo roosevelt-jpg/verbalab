@@ -2,17 +2,17 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { GoogleDetectAdapter } from '../src/gateway/google-detect.adapter';
 import { ApiException } from '../src/common/errors/api-exception';
 
-describe('GoogleDetectAdapter', () => {
-  afterEach(() => {
-    vi.unstubAllGlobals();
+describe('GoogleDetectAdapter',  => {
+  afterEach( => {
+    vi.unstubAllGlobals;
   });
 
-  it('parses Google detect response', async () => {
+  it('parses Google detect response', async  => {
     vi.stubGlobal(
       'fetch',
-      vi.fn(async () => ({
+      vi.fn(async  => ({
         ok: true,
-        json: async () => ({
+        json: async  => ({
           data: { detections: [[{ language: 'sw', confidence: 0.88 }]] },
         }),
       })),
@@ -27,17 +27,17 @@ describe('GoogleDetectAdapter', () => {
     });
   });
 
-  it('throws when key missing', async () => {
+  it('throws when key missing', async  => {
     const adapter = new GoogleDetectAdapter('');
     await expect(adapter.detect({ text: 'Hi' })).rejects.toBeInstanceOf(ApiException);
   });
 
-  it('throws on und language', async () => {
+  it('throws on und language', async  => {
     vi.stubGlobal(
       'fetch',
-      vi.fn(async () => ({
+      vi.fn(async  => ({
         ok: true,
-        json: async () => ({
+        json: async  => ({
           data: { detections: [[{ language: 'und', confidence: 0 }]] },
         }),
       })),

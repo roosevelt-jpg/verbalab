@@ -1,4 +1,4 @@
-/** Application ports for AI Kernel (VL-214). Implemented by Nest adapters. */
+/** Application ports for AI Kernel. Implemented by Nest adapters. */
 
 export type KernelRuntimeRow = {
   id: string;
@@ -23,8 +23,8 @@ export type KernelProductsBundle = {
 };
 
 export interface AiKernelCatalogPort {
-  products(): KernelProductsBundle;
-  listProducts(): KernelRuntimeRow[];
+  products: KernelProductsBundle;
+  listProducts: KernelRuntimeRow[];
 }
 
 export const AI_KERNEL_CATALOG_PORT = Symbol('AI_KERNEL_CATALOG_PORT');

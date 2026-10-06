@@ -17,8 +17,8 @@ export class GetVaiosEngineHandler
     private readonly catalog: VaiosCatalogPort,
   ) {}
 
-  execute(): Promise<VaiosEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<VaiosEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListVaiosProductsHandler
     private readonly catalog: VaiosCatalogPort,
   ) {}
 
-  execute(): Promise<VaiosProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<VaiosProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

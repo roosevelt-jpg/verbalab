@@ -32,16 +32,16 @@ type Run = {
   jobId: string | null;
 };
 
-export function BatchRuntimeClient() {
-  const { getToken, isLoaded } = useAuth();
+export function BatchRuntimeClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [kinds, setKinds] = useState<Kind[]>([]);
   const [runs, setRuns] = useState<Run[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const refresh = useCallback(async () => {
-    const token = await getToken();
+  const refresh = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, kindsRes, runsRes] = await Promise.all([
       apiFetch<Engine>('/v1/batch-runtime/engine', { token }),
@@ -53,16 +53,16 @@ export function BatchRuntimeClient() {
     setRuns(runsRes.runs);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void refresh().catch((err: Error) => setError(err.message));
+    void refresh.catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
-  const createSandbox = async () => {
+  const createSandbox = async  => {
     setBusy(true);
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       await apiFetch('/v1/batch-runtime/runs', {
         token,
@@ -74,7 +74,7 @@ export function BatchRuntimeClient() {
           label: 'console',
         }),
       });
-      await refresh();
+      await refresh;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Create failed');
     } finally {
@@ -134,7 +134,7 @@ export function BatchRuntimeClient() {
         <button
           type="button"
           disabled={busy}
-          onClick={() => void createSandbox()}
+          onClick={ => void createSandbox}
           style={{
             marginTop: '0.85rem',
             border: '1px solid var(--border)',

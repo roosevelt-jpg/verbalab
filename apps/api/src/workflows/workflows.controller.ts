@@ -22,28 +22,28 @@ import { JobsService } from '../jobs/jobs.service';
 export class WorkflowsController {
   constructor(
     private readonly workflows: WorkflowsService,
-    @Inject(forwardRef(() => JobsService))
+    @Inject(forwardRef( => JobsService))
     private readonly jobs: JobsService,
   ) {}
 
-  @Get()
+  @Get
   @UseGuards(ClerkAuthGuard)
-  list(@CurrentSession() session: SessionContext) {
+  list(@CurrentSession session: SessionContext) {
     return this.workflows.list(session.organizationId, session.workspaceId);
   }
 
   @Get(':id')
   @UseGuards(ClerkAuthGuard)
-  get(@CurrentSession() session: SessionContext, @Param('id') id: string) {
+  get(@CurrentSession session: SessionContext, @Param('id') id: string) {
     return this.workflows.get(session.organizationId, id);
   }
 
-  @Post()
+  @Post
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(ClerkAuthGuard)
   create(
-    @CurrentSession() session: SessionContext,
-    @Body() body: { name?: string; steps?: unknown },
+    @CurrentSession session: SessionContext,
+    @Body body: { name?: string; steps?: unknown },
   ) {
     if (session.role !== 'owner' && session.role !== 'admin') {
       throw new ApiException(
@@ -63,7 +63,7 @@ export class WorkflowsController {
 
   @Delete(':id')
   @UseGuards(ClerkAuthGuard)
-  remove(@CurrentSession() session: SessionContext, @Param('id') id: string) {
+  remove(@CurrentSession session: SessionContext, @Param('id') id: string) {
     return this.workflows.remove({
       organizationId: session.organizationId,
       workflowId: id,
@@ -77,9 +77,9 @@ export class WorkflowsController {
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(ApiKeyGuard)
   async run(
-    @CurrentApiKey() auth: ApiKeyContext,
+    @CurrentApiKey auth: ApiKeyContext,
     @Param('id') id: string,
-    @Body() body: { webhookUrl?: string },
+    @Body body: { webhookUrl?: string },
   ) {
     const def = await this.workflows.get(auth.organizationId, id);
     return this.jobs.create({

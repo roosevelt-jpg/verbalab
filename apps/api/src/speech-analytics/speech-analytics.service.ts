@@ -18,12 +18,12 @@ type PeriodInput = {
   to?: string;
 };
 
-@Injectable()
+@Injectable
 export class SpeechAnalyticsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  engine() {
-    return speechAnalyticsCatalog();
+  engine {
+    return speechAnalyticsCatalog;
   }
 
   async overview(input: PeriodInput) {
@@ -34,15 +34,15 @@ export class SpeechAnalyticsService {
       this.costs(input),
     ]);
     return {
-      periodStart: periodStart.toISOString(),
-      periodEnd: periodEnd.toISOString(),
+      periodStart: periodStart.toISOString,
+      periodEnd: periodEnd.toISOString,
       usage: {
         stt: usage.stt,
         tts: usage.tts,
       },
       productActivity: productActivity.byAction.slice(0, 12),
       estimatedCostUsd: costs.estimatedUsd,
-      note: 'Speech Analytics overview (VL-159) — not a BI dashboard product.',
+      note: 'Speech Analytics overview — not a BI dashboard product.',
     };
   }
 
@@ -72,14 +72,14 @@ export class SpeechAnalyticsService {
     }
 
     return {
-      periodStart: periodStart.toISOString(),
-      periodEnd: periodEnd.toISOString(),
+      periodStart: periodStart.toISOString,
+      periodEnd: periodEnd.toISOString,
       stt: {
         ...stt,
         minutes: Math.round((stt.seconds / 60) * 1000) / 1000,
       },
       tts,
-      note: 'From usage_events feature=stt|tts (VL-159).',
+      note: 'From usage_events feature=stt|tts.',
     };
   }
 
@@ -118,12 +118,12 @@ export class SpeechAnalyticsService {
     }
 
     return {
-      periodStart: periodStart.toISOString(),
-      periodEnd: periodEnd.toISOString(),
+      periodStart: periodStart.toISOString,
+      periodEnd: periodEnd.toISOString,
       byLanguage: Object.entries(byLanguage)
         .map(([language, count]) => ({ language, count }))
         .sort((a, b) => b.count - a.count),
-      note: 'Speech language tags from STT audits + call records (VL-159).',
+      note: 'Speech language tags from STT audits + call records.',
     };
   }
 
@@ -154,15 +154,15 @@ export class SpeechAnalyticsService {
     }
 
     return {
-      periodStart: periodStart.toISOString(),
-      periodEnd: periodEnd.toISOString(),
+      periodStart: periodStart.toISOString,
+      periodEnd: periodEnd.toISOString,
       total: events.length,
       byAction,
       byLabel: Object.entries(byLabel)
         .map(([label, count]) => ({ label, count }))
         .sort((a, b) => b.count - a.count)
         .slice(0, 40),
-      note: 'Dialect/accent detect audits — Speech Analytics view (VL-159).',
+      note: 'Dialect/accent detect audits — Speech Analytics view.',
     };
   }
 
@@ -222,8 +222,8 @@ export class SpeechAnalyticsService {
       xs.length ? Number((xs.reduce((s, v) => s + v, 0) / xs.length).toFixed(3)) : null;
 
     return {
-      periodStart: periodStart.toISOString(),
-      periodEnd: periodEnd.toISOString(),
+      periodStart: periodStart.toISOString,
+      periodEnd: periodEnd.toISOString,
       sttConfidence: {
         samples: confidences.length,
         average: avg(confidences),
@@ -237,7 +237,7 @@ export class SpeechAnalyticsService {
         samples: qaScores.length,
         average: avg(qaScores),
       },
-      note: 'Accuracy proxies only — not golden-set WER / NIST eval (VL-159).',
+      note: 'Accuracy proxies only — not golden-set WER / NIST eval.',
     };
   }
 
@@ -269,8 +269,8 @@ export class SpeechAnalyticsService {
     };
 
     return {
-      periodStart: periodStart.toISOString(),
-      periodEnd: periodEnd.toISOString(),
+      periodStart: periodStart.toISOString,
+      periodEnd: periodEnd.toISOString,
       samples: durations.length,
       audioDurationSeconds: {
         p50: percentile(50),
@@ -280,7 +280,7 @@ export class SpeechAnalyticsService {
           ? Number((durations.reduce((s, v) => s + v, 0) / durations.length).toFixed(3))
           : null,
       },
-      note: 'Audio duration from STT audits — not HTTP request latency p95 (VL-159).',
+      note: 'Audio duration from STT audits — not HTTP request latency p95.',
     };
   }
 
@@ -314,18 +314,18 @@ export class SpeechAnalyticsService {
     }
 
     return {
-      periodStart: periodStart.toISOString(),
-      periodEnd: periodEnd.toISOString(),
+      periodStart: periodStart.toISOString,
+      periodEnd: periodEnd.toISOString,
       failedJobsInPeriod: failedJobs,
       errorAuditEvents: errorAudits.length,
       byAction,
-      note: 'Partial speech error surface — STT HTTP failures often lack audit rows; job failures are org-wide (VL-159).',
+      note: 'Partial speech error surface — STT HTTP failures often lack audit rows; job failures are org-wide.',
     };
   }
 
   async costs(input: PeriodInput) {
     const { periodStart, periodEnd } = this.parsePeriod(input.from, input.to);
-    const rates = analyticsCostRates();
+    const rates = analyticsCostRates;
     const events = await this.prisma.usageEvent.findMany({
       where: {
         organizationId: input.organizationId,
@@ -345,8 +345,8 @@ export class SpeechAnalyticsService {
     const ttsUsd = estimateFeatureCostUsd('tts', ttsUnits, rates);
 
     return {
-      periodStart: periodStart.toISOString(),
-      periodEnd: periodEnd.toISOString(),
+      periodStart: periodStart.toISOString,
+      periodEnd: periodEnd.toISOString,
       estimatedUsd: roundUsd(sttUsd + ttsUsd),
       currency: 'USD' as const,
       breakdown: [
@@ -357,7 +357,7 @@ export class SpeechAnalyticsService {
         sttPerMinute: rates.sttPerMinute,
         ttsPer1kChars: rates.ttsPer1kChars,
       },
-      note: 'Estimated STT/TTS cost — not Stripe invoices (VL-159).',
+      note: 'Estimated STT/TTS cost — not Stripe invoices.',
     };
   }
 
@@ -381,14 +381,14 @@ export class SpeechAnalyticsService {
     }
 
     return {
-      periodStart: periodStart.toISOString(),
-      periodEnd: periodEnd.toISOString(),
+      periodStart: periodStart.toISOString,
+      periodEnd: periodEnd.toISOString,
       activeKeyPrefixes: Object.keys(byKey).length,
       byKeyPrefix: Object.entries(byKey)
         .map(([apiKeyPrefix, events]) => ({ apiKeyPrefix, events }))
         .sort((a, b) => b.events - a.events)
         .slice(0, 50),
-      note: 'API key prefixes with speech product audits — not CRM customers (VL-159).',
+      note: 'API key prefixes with speech product audits — not CRM customers.',
     };
   }
 
@@ -418,12 +418,12 @@ export class SpeechAnalyticsService {
     }
 
     return {
-      periodStart: periodStart.toISOString(),
-      periodEnd: periodEnd.toISOString(),
+      periodStart: periodStart.toISOString,
+      periodEnd: periodEnd.toISOString,
       byIndustryPack: Object.entries(byPack)
         .map(([pack, count]) => ({ pack, count }))
         .sort((a, b) => b.count - a.count),
-      note: 'Industry vocabulary packs applied on STT — not firmographic industry taxonomy (VL-159).',
+      note: 'Industry vocabulary packs applied on STT — not firmographic industry taxonomy.',
     };
   }
 
@@ -435,14 +435,14 @@ export class SpeechAnalyticsService {
       this.accuracy(input),
     ]);
     return {
-      generatedAt: new Date().toISOString(),
+      generatedAt: new Date.toISOString,
       periodStart: overview.periodStart,
       periodEnd: overview.periodEnd,
       estimatedCostUsd: overview.estimatedCostUsd,
       failedJobsInPeriod: errors.failedJobsInPeriod,
       sttAudioDurationP95: latency.audioDurationSeconds.p95,
       averageSttConfidence: accuracy.sttConfidence.average,
-      note: 'Speech Analytics monitoring snapshot + shared request IDs (VL-159).',
+      note: 'Speech Analytics monitoring snapshot + shared request IDs.',
     };
   }
 
@@ -463,7 +463,7 @@ export class SpeechAnalyticsService {
 
     return {
       product: 'Speech Analytics Enterprise Report',
-      generatedAt: new Date().toISOString(),
+      generatedAt: new Date.toISOString,
       periodStart: overview.periodStart,
       periodEnd: overview.periodEnd,
       overview,
@@ -476,7 +476,7 @@ export class SpeechAnalyticsService {
       costs,
       customers,
       industries,
-      note: 'Bundled Speech Analytics report (VL-159). Not a scheduled BI export product.',
+      note: 'Bundled Speech Analytics report. Not a scheduled BI export product.',
     };
   }
 
@@ -507,26 +507,26 @@ export class SpeechAnalyticsService {
     periodStart: Date;
     periodEnd: Date;
   } {
-    const now = new Date();
+    const now = new Date;
     let periodStart: Date;
     let periodEnd: Date;
 
     if (fromRaw) {
       periodStart = new Date(fromRaw);
-      if (Number.isNaN(periodStart.getTime())) {
+      if (Number.isNaN(periodStart.getTime)) {
         throw new ApiException('validation_error', 'from must be an ISO date', HttpStatus.BAD_REQUEST);
       }
     } else {
-      periodStart = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1));
+      periodStart = new Date(Date.UTC(now.getUTCFullYear, now.getUTCMonth, 1));
     }
 
     if (toRaw) {
       periodEnd = new Date(toRaw);
-      if (Number.isNaN(periodEnd.getTime())) {
+      if (Number.isNaN(periodEnd.getTime)) {
         throw new ApiException('validation_error', 'to must be an ISO date', HttpStatus.BAD_REQUEST);
       }
     } else {
-      periodEnd = new Date(now.getTime() + 1);
+      periodEnd = new Date(now.getTime + 1);
     }
 
     if (periodEnd <= periodStart) {
@@ -534,7 +534,7 @@ export class SpeechAnalyticsService {
     }
 
     const maxDays = 366;
-    const spanMs = periodEnd.getTime() - periodStart.getTime();
+    const spanMs = periodEnd.getTime - periodStart.getTime;
     if (spanMs > maxDays * 24 * 60 * 60 * 1000) {
       throw new ApiException(
         'validation_error',

@@ -16,8 +16,8 @@ export class GetVoiceLanguageMarketplaceEngineHandler
     private readonly catalog: VoiceLanguageMarketplaceCatalogPort,
   ) {}
 
-  execute(): Promise<VoiceLanguageMarketplaceEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<VoiceLanguageMarketplaceEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 

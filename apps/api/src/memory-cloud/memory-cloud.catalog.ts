@@ -8,12 +8,12 @@ export type MemoryCapability = {
   notes: string;
 };
 
-/** Library Phase 50 → Memory Cloud (VL-183). Persistent memory with GDPR delete/export — not infinite personalization OS. */
-export function memoryCloudCatalog() {
+/** Library Phase 50 → Memory Cloud. Persistent memory with GDPR delete/export — not infinite personalization OS. */
+export function memoryCloudCatalog {
   return {
     product: 'Lugemi Memory Cloud',
     note:
-      'Persistent AI interaction memory in Postgres with subject export/erase (VL-183). Conversation/workspace/org/project/agent scopes. Not an infinite personalization OS; semantic vector memory deferred to Vector Cloud patterns.',
+      'Persistent AI interaction memory in Postgres with subject export/erase. Conversation/workspace/org/project/agent scopes. Not an infinite personalization OS; semantic vector memory deferred to Vector Cloud patterns.',
     capabilities: [
       {
         id: 'conversation-memory',

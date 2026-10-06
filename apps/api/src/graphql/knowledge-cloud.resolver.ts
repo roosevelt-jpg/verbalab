@@ -3,12 +3,12 @@ import { QueryBus } from '@nestjs/cqrs';
 import { ListKnowledgeProductsQuery } from '../knowledge-cloud/application/messages';
 import { GqlKnowledgeProduct } from './gql.types';
 
-@Resolver()
+@Resolver
 export class KnowledgeCloudGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query(() => [GqlKnowledgeProduct], { name: 'knowledgeProducts' })
-  knowledgeProducts(): Promise<GqlKnowledgeProduct[]> {
-    return this.queries.execute(new ListKnowledgeProductsQuery());
+  @Query( => [GqlKnowledgeProduct], { name: 'knowledgeProducts' })
+  knowledgeProducts: Promise<GqlKnowledgeProduct[]> {
+    return this.queries.execute(new ListKnowledgeProductsQuery);
   }
 }

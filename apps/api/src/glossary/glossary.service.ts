@@ -9,7 +9,7 @@ import {
   restoreGlossaryPlaceholders,
 } from './glossary-apply';
 
-@Injectable()
+@Injectable
 export class GlossaryService {
   constructor(
     private readonly prisma: PrismaService,
@@ -40,8 +40,8 @@ export class GlossaryService {
     wholeWord?: boolean;
     ip?: string;
   }) {
-    const sourceTerm = input.sourceTerm.trim();
-    const targetTerm = input.targetTerm.trim();
+    const sourceTerm = input.sourceTerm.trim;
+    const targetTerm = input.targetTerm.trim;
     if (!sourceTerm || !targetTerm) {
       throw new ApiException(
         'validation_error',
@@ -110,8 +110,8 @@ export class GlossaryService {
     const term = await this.prisma.glossaryTerm.update({
       where: { id: termId },
       data: {
-        ...(patch.sourceTerm !== undefined ? { sourceTerm: patch.sourceTerm.trim() } : {}),
-        ...(patch.targetTerm !== undefined ? { targetTerm: patch.targetTerm.trim() } : {}),
+        ...(patch.sourceTerm !== undefined ? { sourceTerm: patch.sourceTerm.trim } : {}),
+        ...(patch.targetTerm !== undefined ? { targetTerm: patch.targetTerm.trim } : {}),
         ...(patch.caseSensitive !== undefined ? { caseSensitive: patch.caseSensitive } : {}),
         ...(patch.wholeWord !== undefined ? { wholeWord: patch.wholeWord } : {}),
       },

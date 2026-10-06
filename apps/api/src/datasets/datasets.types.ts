@@ -13,7 +13,7 @@ export function isDatasetLicenseTag(value: string): value is DatasetLicenseTag {
   return (DATASET_LICENSE_TAGS as readonly string[]).includes(value);
 }
 
-export function datasetMaxBytes(): number {
+export function datasetMaxBytes: number {
   const raw = Number(process.env.DATASET_MAX_BYTES ?? String(50 * 1024 * 1024));
   if (!Number.isFinite(raw) || raw < 1024) return 50 * 1024 * 1024;
   return Math.floor(raw);

@@ -7,15 +7,15 @@ import {
   FabricProductsBundle,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestAiFabricCatalogAdapter implements AiFabricCatalogPort {
   constructor(private readonly fabric: AiFabricService) {}
 
-  products(): FabricProductsBundle {
-    return this.fabric.products();
+  products: FabricProductsBundle {
+    return this.fabric.products;
   }
 
-  listBuses(): FabricBusRow[] {
-    return aiFabricBusCatalog();
+  listBuses: FabricBusRow[] {
+    return aiFabricBusCatalog;
   }
 }

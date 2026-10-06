@@ -16,10 +16,10 @@ export type L10nQaIssue = {
   message: string;
 };
 
-@Injectable()
+@Injectable
 export class LocalizationPlatformService {
-  platform() {
-    return localizationPlatformCatalog();
+  platform {
+    return localizationPlatformCatalog;
   }
 
   catalog(content: unknown) {
@@ -125,14 +125,14 @@ export class LocalizationPlatformService {
         continue;
       }
       const tgt = targetMap.get(key)!;
-      if (!tgt.trim()) {
+      if (!tgt.trim) {
         issues.push({
           code: 'empty_target',
           severity: 'error',
           key,
           message: `Empty target for "${key}"`,
         });
-      } else if (tgt === src && src.trim()) {
+      } else if (tgt === src && src.trim) {
         issues.push({
           code: 'identical_to_source',
           severity: 'warning',
@@ -183,7 +183,7 @@ export class LocalizationPlatformService {
         }
       }
 
-      if (src.trim() && tgt.trim()) {
+      if (src.trim && tgt.trim) {
         const ratio = [...tgt].length / Math.max(1, [...src].length);
         if (ratio > 3 || ratio < 0.25) {
           issues.push({
@@ -196,7 +196,7 @@ export class LocalizationPlatformService {
       }
     }
 
-    for (const key of targetMap.keys()) {
+    for (const key of targetMap.keys) {
       if (!sourceMap.has(key)) {
         issues.push({
           code: 'extra_key',

@@ -16,7 +16,7 @@ const apiSrc = join(root, 'apps/api/src');
 function walkTsFiles(dir: string, out: string[] = []): string[] {
   for (const name of readdirSync(dir, { withFileTypes: true })) {
     const p = join(dir, name.name);
-    if (name.isDirectory()) {
+    if (name.isDirectory) {
       if (name.name === 'node_modules' || name.name === 'dist') continue;
       walkTsFiles(p, out);
     } else if (name.name.endsWith('.ts') && !name.name.endsWith('.d.ts')) {
@@ -35,7 +35,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_scaudit_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_scaudit_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -49,19 +49,19 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Speech Cloud Production Audit (VL-160)', () => {
+describe('Speech Cloud Production Audit',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let rawKey: string;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
     const org = await seedOrg(prisma, 'sca');
@@ -74,11 +74,11 @@ describe('Speech Cloud Production Audit (VL-160)', () => {
     rawKey = created.secret;
   }, 120_000);
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('ships audit ADR, blueprint ADR, and report pack', () => {
+  it('ships audit ADR, blueprint ADR, and report pack',  => {
     expect(existsSync(join(root, 'docs/adr/0079-speech-cloud-production-audit.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/adr/0080-lugemi-cloud-blueprint.md'))).toBe(true);
     expect(existsSync(join(root, 'docs/CLOUD_BLUEPRINT.md'))).toBe(true);
@@ -92,7 +92,7 @@ describe('Speech Cloud Production Audit (VL-160)', () => {
     expect(readiness).toContain('bounded');
   });
 
-  it('has no TODO/FIXME/implement-later markers in Speech Cloud source trees', () => {
+  it('has no TODO/FIXME/implement-later markers in Speech Cloud source trees',  => {
     const roots = [
       join(apiSrc, 'speech-cloud'),
       join(apiSrc, 'speech-recognition'),
@@ -119,7 +119,7 @@ describe('Speech Cloud Production Audit (VL-160)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes integrated Speech Cloud catalogs', async () => {
+  it('exposes integrated Speech Cloud catalogs', async  => {
     const paths = [
       '/v1/speech/products',
       '/v1/speech/engine',
@@ -133,20 +133,20 @@ describe('Speech Cloud Production Audit (VL-160)', () => {
       '/v1/speech-analytics/engine',
     ];
     for (const path of paths) {
-      const res = await request(app.getHttpServer()).get(path).expect(200);
-      expect(res.body).toBeTruthy();
+      const res = await request(app.getHttpServer).get(path).expect(200);
+      expect(res.body).toBeTruthy;
     }
   });
 
-  it('rejects unauthenticated speech analytics and call list (security)', async () => {
-    const overview = await request(app.getHttpServer()).get('/v1/speech-analytics/overview');
+  it('rejects unauthenticated speech analytics and call list (security)', async  => {
+    const overview = await request(app.getHttpServer).get('/v1/speech-analytics/overview');
     expect([401, 403, 503]).toContain(overview.status);
 
-    const calls = await request(app.getHttpServer()).get('/v1/call-intelligence/calls');
+    const calls = await request(app.getHttpServer).get('/v1/call-intelligence/calls');
     expect([401, 403, 503]).toContain(calls.status);
   });
 
-  it('runs bounded sequential load smoke on public speech catalogs', async () => {
+  it('runs bounded sequential load smoke on public speech catalogs', async  => {
     const paths = [
       '/v1/speech/products',
       '/v1/emotion/engine',
@@ -155,28 +155,28 @@ describe('Speech Cloud Production Audit (VL-160)', () => {
       '/v1/call-intelligence/engine',
       '/v1/audio-intelligence/engine',
     ];
-    const started = Date.now();
+    const started = Date.now;
     const iterations = 24;
     for (let i = 0; i < iterations; i++) {
       const path = paths[i % paths.length]!;
-      await request(app.getHttpServer()).get(path).expect(200);
+      await request(app.getHttpServer).get(path).expect(200);
     }
-    const elapsed = Date.now() - started;
+    const elapsed = Date.now - started;
     expect(elapsed).toBeLessThan(30_000);
     expect(iterations).toBe(24);
   });
 
-  it('runs bounded parallel stress smoke on speech products catalog', async () => {
+  it('runs bounded parallel stress smoke on speech products catalog', async  => {
     const results = await Promise.all(
-      Array.from({ length: 12 }, () =>
-        request(app.getHttpServer()).get('/v1/speech/products').expect(200),
+      Array.from({ length: 12 },  =>
+        request(app.getHttpServer).get('/v1/speech/products').expect(200),
       ),
     );
     expect(results.every((r) => r.status === 200)).toBe(true);
   });
 
-  it('smoke-tests realtime SSE endpoints (emotion + wake-word)', async () => {
-    const emotion = await request(app.getHttpServer())
+  it('smoke-tests realtime SSE endpoints (emotion + wake-word)', async  => {
+    const emotion = await request(app.getHttpServer)
       .post('/v1/emotion/stream')
       .set('Authorization', `Bearer ${rawKey}`)
       .send({ text: 'I am excited and this is urgent ASAP!' })
@@ -184,7 +184,7 @@ describe('Speech Cloud Production Audit (VL-160)', () => {
     expect(emotion.headers['content-type']).toMatch(/text\/event-stream/);
     expect(emotion.text).toContain('event: done');
 
-    const wake = await request(app.getHttpServer())
+    const wake = await request(app.getHttpServer)
       .post('/v1/wake-word/detect/stream')
       .set('Authorization', `Bearer ${rawKey}`)
       .send({ text: 'hey lugemi please help' })
@@ -193,8 +193,8 @@ describe('Speech Cloud Production Audit (VL-160)', () => {
     expect(wake.text).toContain('event: done');
   });
 
-  it('GraphQL Speech Cloud façade queries respond', async () => {
-    const res = await request(app.getHttpServer())
+  it('GraphQL Speech Cloud façade queries respond', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .set('Authorization', `Bearer ${rawKey}`)
       .send({
@@ -209,12 +209,12 @@ describe('Speech Cloud Production Audit (VL-160)', () => {
         }`,
       })
       .expect(200);
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.speechProducts.length).toBeGreaterThan(5);
     expect(res.body.data.speechAnalyticsEngine.shippedCount).toBeGreaterThan(3);
   });
 
-  it('documents 12-layer cloud blueprint', () => {
+  it('documents 12-layer cloud blueprint',  => {
     const blueprint = readFileSync(join(root, 'docs/adr/0080-lugemi-cloud-blueprint.md'), 'utf8');
     expect(blueprint).toContain('Cloud Foundation');
     expect(blueprint).toContain('Production Audit');

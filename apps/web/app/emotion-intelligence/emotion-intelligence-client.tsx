@@ -21,8 +21,8 @@ type DetectResult = {
   note: string;
 };
 
-export function EmotionIntelligenceClient() {
-  const { getToken, isLoaded } = useAuth();
+export function EmotionIntelligenceClient {
+  const { getToken, isLoaded } = useAuth;
   const [engine, setEngine] = useState<Engine | null>(null);
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [text, setText] = useState("I'm so excited and can't wait — this is urgent ASAP!");
@@ -30,8 +30,8 @@ export function EmotionIntelligenceClient() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
-  const refresh = useCallback(async () => {
-    const token = await getToken();
+  const refresh = useCallback(async  => {
+    const token = await getToken;
     if (!token) throw new Error('Not signed in');
     const [eng, stats] = await Promise.all([
       apiFetch<Engine>('/v1/emotion/engine', { token }),
@@ -41,17 +41,17 @@ export function EmotionIntelligenceClient() {
     setAnalytics(stats);
   }, [getToken]);
 
-  useEffect(() => {
+  useEffect( => {
     if (!isLoaded) return;
-    void refresh().catch((err: Error) => setError(err.message));
+    void refresh.catch((err: Error) => setError(err.message));
   }, [isLoaded, refresh]);
 
   async function onDetect(e: FormEvent) {
-    e.preventDefault();
+    e.preventDefault;
     setLoading(true);
     setError(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
       const body = await apiFetch<DetectResult>('/v1/emotion/detect', {
         token,
@@ -59,7 +59,7 @@ export function EmotionIntelligenceClient() {
         body: JSON.stringify({ text }),
       });
       setResult(body);
-      await refresh();
+      await refresh;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Detect failed');
     } finally {
@@ -104,7 +104,7 @@ export function EmotionIntelligenceClient() {
               rows={4}
               style={{ ...input, resize: 'vertical' }}
             />
-            <button type="submit" disabled={loading || !text.trim()} style={primary}>
+            <button type="submit" disabled={loading || !text.trim} style={primary}>
               Detect emotion
             </button>
           </form>

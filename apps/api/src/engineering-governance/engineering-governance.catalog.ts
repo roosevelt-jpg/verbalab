@@ -1,8 +1,8 @@
 /**
- * Library Phase 212 → Engineering Governance (VL-345).
- * Engineering Governance (VL-345). ARB/Engineering/Security/AI/Data/Release councils + CAB/TSC catalog. Extends AI Governance (Vol 15); humanSignOffRequired for consequential decisions.
+ * Library Phase 212 → Engineering Governance.
+ * Engineering Governance. ARB/Engineering/Security/AI/Data/Release councils + CAB/TSC catalog. Extends AI Governance (Vol 15); humanSignOffRequired for consequential decisions.
  */
-export function engineeringGovernanceEngineCatalog() {
+export function engineeringGovernanceEngineCatalog {
   return {
     product: 'Lugemi Engineering Governance',
     engineeringOsForHumansAndCursor: true,
@@ -10,14 +10,14 @@ export function engineeringGovernanceEngineCatalog() {
     architectureKnowledgeBaseOs: false,
     adrFactoryOs: false,
     capabilities: [
-      { id: 'arb', name: 'Architecture Review Board', status: 'shipped', notes: 'VL-345 standards capability — catalog, not a new OS.' },
-      { id: 'engineering_council', name: 'Engineering Council', status: 'shipped', notes: 'VL-345 standards capability — catalog, not a new OS.' },
-      { id: 'security_council', name: 'Security Council', status: 'shipped', notes: 'VL-345 standards capability — catalog, not a new OS.' },
-      { id: 'ai_council', name: 'AI Council', status: 'shipped', notes: 'VL-345 standards capability — catalog, not a new OS.' },
-      { id: 'data_council', name: 'Data Council', status: 'shipped', notes: 'VL-345 standards capability — catalog, not a new OS.' },
-      { id: 'release_council', name: 'Release Council', status: 'shipped', notes: 'VL-345 standards capability — catalog, not a new OS.' },
-      { id: 'cab', name: 'Change Advisory Board', status: 'shipped', notes: 'VL-345 standards capability — catalog, not a new OS.' },
-      { id: 'tsc', name: 'Technical Steering Committee', status: 'shipped', notes: 'VL-345 standards capability — catalog, not a new OS.' }
+      { id: 'arb', name: 'Architecture Review Board', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'engineering_council', name: 'Engineering Council', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'security_council', name: 'Security Council', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'ai_council', name: 'AI Council', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'data_council', name: 'Data Council', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'release_council', name: 'Release Council', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'cab', name: 'Change Advisory Board', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' },
+      { id: 'tsc', name: 'Technical Steering Committee', status: 'shipped', notes: ' standards capability — catalog, not a new OS.' }
     ],
     routes: [
       {
@@ -88,9 +88,9 @@ export function engineeringGovernanceEngineCatalog() {
       customerFacingProductCloud: false,
       architectureKnowledgeBaseOs: false,
       adrFactoryOs: false,
-      note: 'Engineering Governance (VL-345). ARB/Engineering/Security/AI/Data/Release councils + CAB/TSC catalog. Extends AI Governance (Vol 15); humanSignOffRequired for consequential decisions.',
+      note: 'Engineering Governance. ARB/Engineering/Security/AI/Data/Release councils + CAB/TSC catalog. Extends AI Governance (Vol 15); humanSignOffRequired for consequential decisions.',
     },
     docs: '/docs/ENGINEERING_GOVERNANCE.md',
-    note: 'Engineering Governance (VL-345). ARB/Engineering/Security/AI/Data/Release councils + CAB/TSC catalog. Extends AI Governance (Vol 15); humanSignOffRequired for consequential decisions.',
+    note: 'Engineering Governance. ARB/Engineering/Security/AI/Data/Release councils + CAB/TSC catalog. Extends AI Governance (Vol 15); humanSignOffRequired for consequential decisions.',
   };
 }

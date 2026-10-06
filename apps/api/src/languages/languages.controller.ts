@@ -5,9 +5,9 @@ import { LanguagesService } from './languages.service';
 export class LanguagesController {
   constructor(private readonly languages: LanguagesService) {}
 
-  @Get()
-  async list() {
-    const items = await this.languages.list();
+  @Get
+  async list {
+    const items = await this.languages.list;
     return {
       data: items.map((lang) => ({
         code: lang.code,

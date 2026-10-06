@@ -3,11 +3,11 @@ import { DetectDialectHandler } from '../src/language-cloud/application/handlers
 import { DetectDialectCommand } from '../src/language-cloud/application/messages';
 import type { DialectPort } from '../src/language-cloud/application/ports';
 
-describe('Language Cloud CQRS handlers (VL-137)', () => {
-  it('DetectDialectHandler delegates to DialectPort', async () => {
+describe('Language Cloud CQRS handlers',  => {
+  it('DetectDialectHandler delegates to DialectPort', async  => {
     const port: DialectPort = {
-      list: vi.fn(),
-      detect: vi.fn(async () => ({
+      list: vi.fn,
+      detect: vi.fn(async  => ({
         language: 'sw',
         dialect: 'sw-ke',
         dialectName: 'Kenyan Swahili',

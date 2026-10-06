@@ -12,7 +12,7 @@ export type QualityEstimate = {
   reasons: string[];
 };
 
-function reviewThreshold(): number {
+function reviewThreshold: number {
   const raw = Number(process.env.QUALITY_REVIEW_THRESHOLD ?? 70);
   return Number.isFinite(raw) ? raw : 70;
 }
@@ -25,8 +25,8 @@ export function estimateTranslationQuality(input: QualityEstimateInput): Quality
   const reasons: string[] = [];
   let score = 100;
 
-  const source = input.sourceText.trim();
-  const target = input.targetText.trim();
+  const source = input.sourceText.trim;
+  const target = input.targetText.trim;
 
   if (input.provider === 'tm') {
     return { score: 98, needsReview: false, reasons: ['tm_exact_hit'] };
@@ -42,8 +42,8 @@ export function estimateTranslationQuality(input: QualityEstimateInput): Quality
   }
 
   if (input.sourceLang !== input.targetLang) {
-    const srcNorm = source.toLowerCase();
-    const tgtNorm = target.toLowerCase();
+    const srcNorm = source.toLowerCase;
+    const tgtNorm = target.toLowerCase;
     if (srcNorm === tgtNorm) {
       score -= 35;
       reasons.push('identical_to_source');
@@ -67,7 +67,7 @@ export function estimateTranslationQuality(input: QualityEstimateInput): Quality
   }
 
   score = Math.max(0, Math.min(100, score));
-  const needsReview = score < reviewThreshold();
+  const needsReview = score < reviewThreshold;
   if (needsReview && reasons.length === 0) {
     reasons.push('below_threshold');
   }

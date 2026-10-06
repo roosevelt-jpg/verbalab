@@ -2,13 +2,13 @@ import { Query, Resolver } from '@nestjs/graphql';
 import { ReasoningRuntimeService } from '../reasoning-runtime/reasoning-runtime.service';
 import { GqlReasoningRuntimeEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class ReasoningRuntimeGraphqlResolver {
   constructor(private readonly runtime: ReasoningRuntimeService) {}
 
-  @Query(() => GqlReasoningRuntimeEngine, { name: 'reasoningRuntimeEngine' })
-  reasoningRuntimeEngine(): GqlReasoningRuntimeEngine {
-    const c = this.runtime.engine();
+  @Query( => GqlReasoningRuntimeEngine, { name: 'reasoningRuntimeEngine' })
+  reasoningRuntimeEngine: GqlReasoningRuntimeEngine {
+    const c = this.runtime.engine;
     return {
       product: c.product,
       note: c.note,

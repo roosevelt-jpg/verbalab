@@ -22,7 +22,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_rc_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_rc_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -36,19 +36,19 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Reasoning Cloud (VL-186)', () => {
+describe('Reasoning Cloud',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -56,7 +56,7 @@ describe('Reasoning Cloud (VL-186)', () => {
     app.get(GatewayService).setChatProviderForTests({
       name: 'fixture_chat',
       async complete(input) {
-        const user = [...input.messages].reverse().find((m) => m.role === 'user');
+        const user = [...input.messages].reverse.find((m) => m.role === 'user');
         const content = [
           '1. Clarify the ask.',
           '2. Weigh options briefly.',
@@ -75,22 +75,22 @@ describe('Reasoning Cloud (VL-186)', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Reasoning Cloud honesty', () => {
+  it('documents Reasoning Cloud honesty',  => {
     const doc = join(root, 'docs/REASONING_CLOUD.md');
     const adr = join(root, 'docs/adr/0097-reasoning-cloud.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/not a custom reasoner/i);
-    expect(text).toContain('VL-186');
+    expect(text).toContain('');
   });
 
-  it('exposes engine with customReasonerKernel=false', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/reasoning-cloud/engine').expect(200);
+  it('exposes engine with customReasonerKernel=false', async  => {
+    const res = await request(app.getHttpServer).get('/v1/reasoning-cloud/engine').expect(200);
     expect(res.body.product).toContain('Reasoning Cloud');
     expect(res.body.honesty.customReasonerKernel).toBe(false);
     expect(res.body.honesty.symbolicReasonerOs).toBe(false);
@@ -99,7 +99,7 @@ describe('Reasoning Cloud (VL-186)', () => {
     const tot = res.body.capabilities.find((c: { id: string }) => c.id === 'tree-of-thought');
     expect(tot.status).toBe('partial');
 
-    const strategies = await request(app.getHttpServer())
+    const strategies = await request(app.getHttpServer)
       .get('/v1/reasoning-cloud/strategies')
       .expect(200);
     expect(strategies.body.strategies.some((s: { id: string }) => s.id === 'chain_of_thought')).toBe(
@@ -107,7 +107,7 @@ describe('Reasoning Cloud (VL-186)', () => {
     );
   });
 
-  it('reasons with chain_of_thought and tool_selection without executing tools', async () => {
+  it('reasons with chain_of_thought and tool_selection without executing tools', async  => {
     const org = await seedOrg(prisma, 'rc');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -116,7 +116,7 @@ describe('Reasoning Cloud (VL-186)', () => {
       name: 'rc-key',
     });
 
-    const reasoned = await request(app.getHttpServer())
+    const reasoned = await request(app.getHttpServer)
       .post('/v1/reasoning-cloud/reason')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -133,7 +133,7 @@ describe('Reasoning Cloud (VL-186)', () => {
     expect(reasoned.body.honesty.customReasonerKernel).toBe(false);
     expect(reasoned.body.usage.calls).toBe(1);
 
-    const tools = await request(app.getHttpServer())
+    const tools = await request(app.getHttpServer)
       .post('/v1/reasoning-cloud/reason')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -145,21 +145,21 @@ describe('Reasoning Cloud (VL-186)', () => {
     expect(tools.body.strategy).toBe('tool_selection');
     expect(tools.body.honesty.toolExecution).toBe(false);
 
-    const bad = await request(app.getHttpServer())
+    const bad = await request(app.getHttpServer)
       .post('/v1/reasoning-cloud/reason')
       .set('Authorization', `Bearer ${key.secret}`)
-      .send({ problem: '   ', retrieve: false });
+      .send({ problem: ' ', retrieve: false });
     expect(bad.status).toBe(400);
 
-    const analytics = await request(app.getHttpServer())
+    const analytics = await request(app.getHttpServer)
       .get('/v1/reasoning-cloud/analytics')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(analytics.body.reasonRequests).toBeGreaterThanOrEqual(2);
   });
 
-  it('exposes reasoningCloudEngine via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes reasoningCloudEngine via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
@@ -167,7 +167,7 @@ describe('Reasoning Cloud (VL-186)', () => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.reasoningCloudEngine.customReasonerKernel).toBe(false);
     expect(res.body.data.reasoningCloudEngine.llmGateway).toBe(true);
   });

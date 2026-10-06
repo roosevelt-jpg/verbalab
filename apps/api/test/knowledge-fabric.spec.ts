@@ -19,7 +19,7 @@ function walkTsFiles(dir: string): string[] {
   const out: string[] = [];
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
-    if (statSync(full).isDirectory()) out.push(...walkTsFiles(full));
+    if (statSync(full).isDirectory) out.push(...walkTsFiles(full));
     else if (full.endsWith('.ts')) out.push(full);
   }
   return out;
@@ -34,7 +34,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_kf_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_kf_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -51,34 +51,34 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Knowledge Fabric (VL-242)', () => {
+describe('Knowledge Fabric',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let fabric: KnowledgeFabricService;
   let bus: EventFabricBus;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     process.env.EVENT_FABRIC_MEMORY = '1';
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    }).compile;
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
     fabric = app.get(KnowledgeFabricService);
     bus = app.get(EventFabricBus);
-    bus.resetForTests();
-    fabric.resetCounters();
+    bus.resetForTests;
+    fabric.resetCounters;
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Knowledge Fabric honesty (extends Knowledge Cloud; not Confluence OS)', () => {
+  it('documents Knowledge Fabric honesty (extends Knowledge Cloud; not Confluence OS)',  => {
     const doc = join(root, 'docs/KNOWLEDGE_FABRIC.md');
     const adr = join(root, 'docs/adr/0144-knowledge-fabric.md');
     const phase = join(
@@ -89,14 +89,14 @@ describe('Knowledge Fabric (VL-242)', () => {
     expect(existsSync(adr)).toBe(true);
     expect(existsSync(phase)).toBe(true);
     const text = readFileSync(doc, 'utf8');
-    expect(text).toContain('VL-242');
+    expect(text).toContain('');
     expect(text).toMatch(/Knowledge Cloud/i);
     expect(text).toMatch(/Confluence|SharePoint/i);
     expect(text).toMatch(/Neo4j/i);
     expect(text).toMatch(/hard gate|hard-gate/i);
   });
 
-  it('has no TODO/FIXME/implement-later markers in Knowledge Fabric source', () => {
+  it('has no TODO/FIXME/implement-later markers in Knowledge Fabric source',  => {
     const banned = /TODO|FIXME|implement later|XXX\s*:|not implemented/i;
     const hits: string[] = [];
     for (const file of walkTsFiles(join(apiSrc, 'knowledge-fabric'))) {
@@ -106,8 +106,8 @@ describe('Knowledge Fabric (VL-242)', () => {
     expect(hits).toEqual([]);
   });
 
-  it('exposes catalog, routes, router, and federation with honesty', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/knowledge-fabric/products').expect(200);
+  it('exposes catalog, routes, router, and federation with honesty', async  => {
+    const res = await request(app.getHttpServer).get('/v1/knowledge-fabric/products').expect(200);
     expect(res.body.product).toBe('Lugemi Knowledge Fabric');
     expect(res.body.architecture.customerFacingProduct).toBe(false);
     expect(res.body.architecture.confluenceSharepointOs).toBe(false);
@@ -123,13 +123,13 @@ describe('Knowledge Fabric (VL-242)', () => {
     const hub = res.body.products.find((p: { id: string }) => p.id === 'knowledge-fabric');
     expect(hub.status).toBe('shipped');
 
-    const routes = await request(app.getHttpServer())
+    const routes = await request(app.getHttpServer)
       .get('/v1/knowledge-fabric/routes')
       .expect(200);
     expect(routes.body.routes.length).toBeGreaterThanOrEqual(8);
     expect(routes.body.routes.some((r: { kind: string }) => r.kind === 'search')).toBe(true);
 
-    const plan = await request(app.getHttpServer())
+    const plan = await request(app.getHttpServer)
       .post('/v1/knowledge-fabric/route')
       .send({ kinds: ['search', 'rag', 'nope'] })
       .expect(200);
@@ -138,7 +138,7 @@ describe('Knowledge Fabric (VL-242)', () => {
     );
     expect(plan.body.missing).toContain('nope');
 
-    const fed = await request(app.getHttpServer())
+    const fed = await request(app.getHttpServer)
       .post('/v1/knowledge-fabric/federate')
       .send({ kinds: ['hub', 'search'] })
       .expect(200);
@@ -146,10 +146,10 @@ describe('Knowledge Fabric (VL-242)', () => {
     expect(fed.body.honesty.neo4jFederationOs).toBe(false);
   });
 
-  it('distributes and syncs same-org peers with optional Event Fabric events', async () => {
-    bus.resetForTests();
-    fabric.resetCounters();
-    const org = await seedOrg(prisma, `kf_${Date.now()}`);
+  it('distributes and syncs same-org peers with optional Event Fabric events', async  => {
+    bus.resetForTests;
+    fabric.resetCounters;
+    const org = await seedOrg(prisma, `kf_${Date.now}`);
     const primary = org.workspaces.find((w) => w.name === 'Default')!;
     const peer = org.workspaces.find((w) => w.name === 'Peer')!;
     const key = await apiKeys.create({
@@ -159,7 +159,7 @@ describe('Knowledge Fabric (VL-242)', () => {
       name: 'kf-key',
     });
 
-    const dist = await request(app.getHttpServer())
+    const dist = await request(app.getHttpServer)
       .post('/v1/knowledge-fabric/distribute')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -171,7 +171,7 @@ describe('Knowledge Fabric (VL-242)', () => {
     expect(dist.body.distribution.targets).toContain(peer.id);
     expect(dist.body.event.type).toBe('com.lugemi.knowledge.distributed');
 
-    const sync = await request(app.getHttpServer())
+    const sync = await request(app.getHttpServer)
       .post('/v1/knowledge-fabric/sync')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -184,14 +184,14 @@ describe('Knowledge Fabric (VL-242)', () => {
     expect(sync.body.sync.cursor).toMatch(/^kf:/);
     expect(sync.body.event.type).toBe('com.lugemi.knowledge.synced');
 
-    const bad = await request(app.getHttpServer())
+    const bad = await request(app.getHttpServer)
       .post('/v1/knowledge-fabric/sync')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ targetWorkspaceId: 'ws_not_a_peer' })
       .expect(200);
     expect(bad.body.error).toBe('target_workspace_not_in_org_peers');
 
-    const monitoring = await request(app.getHttpServer())
+    const monitoring = await request(app.getHttpServer)
       .get('/v1/knowledge-fabric/monitoring')
       .expect(200);
     expect(monitoring.body.counters.distributions).toBeGreaterThan(0);
@@ -199,8 +199,8 @@ describe('Knowledge Fabric (VL-242)', () => {
     expect(monitoring.body.counters.eventPublishes).toBeGreaterThan(0);
   });
 
-  it('exposes overview and GraphQL CQRS façades', async () => {
-    const org = await seedOrg(prisma, `kf_ov_${Date.now()}`);
+  it('exposes overview and GraphQL CQRS façades', async  => {
+    const org = await seedOrg(prisma, `kf_ov_${Date.now}`);
     const overview = await fabric.overview({
       userId: org.memberships[0].userId,
       organizationId: org.id,
@@ -216,22 +216,22 @@ describe('Knowledge Fabric (VL-242)', () => {
     expect(overview.honesty.extendsKnowledgeCloud).toBe(true);
     expect(overview.workspace.peerWorkspaces).toBeGreaterThanOrEqual(1);
 
-    const caps = await request(app.getHttpServer())
+    const caps = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query: '{ knowledgeFabricCapabilities { id name status api notes } }',
       })
       .expect(200);
-    expect(caps.body.errors).toBeUndefined();
+    expect(caps.body.errors).toBeUndefined;
     expect(caps.body.data.knowledgeFabricCapabilities.length).toBeGreaterThan(5);
 
-    const routes = await request(app.getHttpServer())
+    const routes = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query: '{ knowledgeFabricRoutes { kind name target api cloud notes } }',
       })
       .expect(200);
-    expect(routes.body.errors).toBeUndefined();
+    expect(routes.body.errors).toBeUndefined;
     expect(
       routes.body.data.knowledgeFabricRoutes.some((r: { kind: string }) => r.kind === 'rag'),
     ).toBe(true);

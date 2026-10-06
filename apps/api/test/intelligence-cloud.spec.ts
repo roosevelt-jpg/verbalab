@@ -21,7 +21,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_intel_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_intel_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -35,29 +35,29 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Intelligence Cloud Foundation (VL-180)', () => {
+describe('Intelligence Cloud Foundation',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let intelligenceCloud: IntelligenceCloudService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     intelligenceCloud = app.get(IntelligenceCloudService);
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents Intelligence Cloud mapping (no custom AI kernel)', () => {
+  it('documents Intelligence Cloud mapping (no custom AI kernel)',  => {
     const doc = join(root, 'docs/INTELLIGENCE_CLOUD.md');
     const adr = join(root, 'docs/adr/0091-intelligence-cloud-foundation.md');
     expect(existsSync(doc)).toBe(true);
@@ -68,13 +68,13 @@ describe('Intelligence Cloud Foundation (VL-180)', () => {
     expect(text).toContain('Terraform');
     expect(text).toContain('af-south-1');
     expect(text).toMatch(/is \*\*not\*\* a custom AI kernel/i);
-    expect(text).toContain('VL-060');
-    expect(text).toContain('VL-062');
-    expect(text).toContain('VL-063');
+    expect(text).toContain('');
+    expect(text).toContain('');
+    expect(text).toContain('');
   });
 
-  it('exposes public product catalog with honest statuses', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes public product catalog with honest statuses', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/intelligence-cloud/products')
       .expect(200);
     expect(res.body.architecture.graphql).toBe(true);
@@ -164,8 +164,8 @@ describe('Intelligence Cloud Foundation (VL-180)', () => {
     expect(intelAnalytics.console).toBe('/intelligence-analytics');
   });
 
-  it('returns org intelligence overview with chat/embeddings usage + deferred flags', async () => {
-    const org = await seedOrg(prisma, `intel_${Date.now()}`);
+  it('returns org intelligence overview with chat/embeddings usage + deferred flags', async  => {
+    const org = await seedOrg(prisma, `intel_${Date.now}`);
 
     const overview = await intelligenceCloud.overview({
       userId: org.memberships[0].userId,
@@ -175,8 +175,8 @@ describe('Intelligence Cloud Foundation (VL-180)', () => {
       role: 'owner',
     });
 
-    expect(overview.usage.chat).toBeDefined();
-    expect(overview.usage.embeddings).toBeDefined();
+    expect(overview.usage.chat).toBeDefined;
+    expect(overview.usage.embeddings).toBeDefined;
     expect(overview.workspace.knowledgeDocuments).toBeGreaterThanOrEqual(0);
     expect(overview.deferred.customAiKernel).toBe(true);
     expect(overview.deferred.embeddingCloudProduct).toBe(false);
@@ -213,15 +213,15 @@ describe('Intelligence Cloud Foundation (VL-180)', () => {
     expect(overview.architecture.customAiKernel).toBe(false);
   });
 
-  it('exposes intelligenceProducts via GraphQL CQRS façade', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes intelligenceProducts via GraphQL CQRS façade', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query: '{ intelligenceProducts { id name status } }',
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.intelligenceProducts.length).toBeGreaterThan(5);
     expect(
       res.body.data.intelligenceProducts.some((p: { id: string }) => p.id === 'intelligence'),

@@ -12,11 +12,11 @@ type Engine = {
   safety?: { note?: string } & Record<string, unknown>;
 };
 
-export function HealthcareIntelligenceClient() {
+export function HealthcareIntelligenceClient {
   const [data, setData] = useState<Engine | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
+  useEffect( => {
     void apiFetch<Engine>('/v1/healthcare-intelligence/engine')
       .then(setData)
       .catch((err: Error) => setError(err.message));

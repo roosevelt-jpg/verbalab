@@ -50,7 +50,7 @@ type RunStep = {
 const RUNTIME = 'workflow-runtime';
 const KERNEL_LAYER = 'kernel';
 
-@Injectable()
+@Injectable
 export class WorkflowRuntimeService {
   constructor(
     private readonly prisma: PrismaService,
@@ -61,11 +61,11 @@ export class WorkflowRuntimeService {
     private readonly contextRuntime: ContextRuntimeService,
   ) {}
 
-  engine() {
+  engine {
     return {
-      ...workflowRuntimeCatalog(),
-      ceilings: workflowRuntimeCeilings(),
-      mode: workflowRuntimeMode(),
+      ...workflowRuntimeCatalog,
+      ceilings: workflowRuntimeCeilings,
+      mode: workflowRuntimeMode,
       safety: {
         scopedPermissionsRequired: true,
         sandboxRequired: true,
@@ -73,15 +73,15 @@ export class WorkflowRuntimeService {
         liveStepExecutionForbidden: true,
         policyMustHardGate: true,
         note:
-          'Every workflow step passes WorkflowPolicyGate (local hard allowlist). Policy Runtime (VL-222) will harden further. Extends /v1/workflows — not Temporal/Airflow.',
+          'Every workflow step passes WorkflowPolicyGate (local hard allowlist). Policy Runtime will harden further. Extends /v1/workflows — not Temporal/Airflow.',
       },
     };
   }
 
-  permissions() {
+  permissions {
     return {
       grantable: WORKFLOW_PERMISSIONS.map((id) => ({ id })),
-      denied: workflowRuntimeCatalog().deniedActions,
+      denied: workflowRuntimeCatalog.deniedActions,
       note: 'Only grantable permissions may be attached to a workflow. Denied actions cannot be granted.',
     };
   }
@@ -95,12 +95,12 @@ export class WorkflowRuntimeService {
       requiresApproval?: boolean;
     },
   ) {
-    this.assertEnabled();
-    const name = (input.name ?? '').trim();
+    this.assertEnabled;
+    const name = (input.name ?? '').trim;
     if (!name) {
       throw new ApiException('validation_error', 'name is required', HttpStatus.BAD_REQUEST);
     }
-    const ceilings = workflowRuntimeCeilings();
+    const ceilings = workflowRuntimeCeilings;
     const existing = await this.listWorkflows(input);
     if (existing.workflows.length >= ceilings.maxWorkflowsPerWorkspace) {
       throw new ApiException(
@@ -112,9 +112,9 @@ export class WorkflowRuntimeService {
 
     const mode = input.mode === 'parallel' ? 'parallel' : 'sequential';
     const steps = Array.isArray(input.steps) ? input.steps.slice(0, ceilings.maxStepsPerRun) : [];
-    const now = new Date().toISOString();
+    const now = new Date.toISOString;
     const workflow: WorkflowDef = {
-      id: `wfk_${randomUUID().replace(/-/g, '').slice(0, 16)}`,
+      id: `wfk_${randomUUID.replace(/-/g, '').slice(0, 16)}`,
       name: name.slice(0, 80),
       version: 1,
       status: 'draft',
@@ -143,13 +143,13 @@ export class WorkflowRuntimeService {
 
     return {
       workflow,
-      honesty: workflowRuntimeCatalog().honesty,
+      honesty: workflowRuntimeCatalog.honesty,
       note: 'Kernel workflow created in draft. Activate before run. Permissions are a hard allowlist.',
     };
   }
 
   async listWorkflows(input: AuthCtx) {
-    this.assertEnabled();
+    this.assertEnabled;
     const rows = await this.findByType(input, 'workflow', 100);
     const workflows = rows
       .map((r) => this.parseJson<WorkflowDef>(r.content))
@@ -166,9 +166,9 @@ export class WorkflowRuntimeService {
   }
 
   async lifecycle(input: AuthCtx & { id?: string; status?: string }) {
-    this.assertEnabled();
+    this.assertEnabled;
     const workflow = await this.requireWorkflow(input, input.id);
-    const status = (input.status ?? '').trim() as WorkflowDef['status'];
+    const status = (input.status ?? '').trim as WorkflowDef['status'];
     if (!['draft', 'active', 'paused', 'archived'].includes(status)) {
       throw new ApiException(
         'validation_error',
@@ -177,7 +177,7 @@ export class WorkflowRuntimeService {
       );
     }
     workflow.status = status;
-    workflow.updatedAt = new Date().toISOString();
+    workflow.updatedAt = new Date.toISOString;
     await this.writeRecord(input, {
       key: `workflow:${workflow.id}`,
       content: workflow,
@@ -193,13 +193,13 @@ export class WorkflowRuntimeService {
   }
 
   async version(input: AuthCtx & { id?: string; steps?: WorkflowDef['steps'] }) {
-    this.assertEnabled();
+    this.assertEnabled;
     const workflow = await this.requireWorkflow(input, input.id);
     if (input.steps) {
-      workflow.steps = input.steps.slice(0, workflowRuntimeCeilings().maxStepsPerRun);
+      workflow.steps = input.steps.slice(0, workflowRuntimeCeilings.maxStepsPerRun);
     }
     workflow.version += 1;
-    workflow.updatedAt = new Date().toISOString();
+    workflow.updatedAt = new Date.toISOString;
     await this.writeRecord(input, {
       key: `workflow:${workflow.id}`,
       content: workflow,
@@ -230,7 +230,7 @@ export class WorkflowRuntimeService {
       approved?: boolean;
     },
   ) {
-    this.assertEnabled();
+    this.assertEnabled;
     const workflow = await this.requireWorkflow(input, input.workflowId);
     if (workflow.status !== 'active') {
       throw new ApiException(
@@ -248,7 +248,7 @@ export class WorkflowRuntimeService {
       );
     }
 
-    const ceilings = workflowRuntimeCeilings();
+    const ceilings = workflowRuntimeCeilings;
     const requested =
       workflow.steps.length > 0
         ? workflow.steps
@@ -262,7 +262,7 @@ export class WorkflowRuntimeService {
       );
     }
 
-    const runId = `wrun_${randomUUID().replace(/-/g, '').slice(0, 16)}`;
+    const runId = `wrun_${randomUUID.replace(/-/g, '').slice(0, 16)}`;
     const steps: RunStep[] = [];
 
     if (workflow.mode === 'parallel') {
@@ -296,7 +296,7 @@ export class WorkflowRuntimeService {
       sandbox: true,
       liveStepExecution: false,
       steps,
-      createdAt: new Date().toISOString(),
+      createdAt: new Date.toISOString,
     };
 
     await this.writeRecord(input, {
@@ -322,7 +322,7 @@ export class WorkflowRuntimeService {
     return {
       run,
       honesty: {
-        ...workflowRuntimeCatalog().honesty,
+        ...workflowRuntimeCatalog.honesty,
         simulatedSteps: true,
       },
       note: denied
@@ -332,7 +332,7 @@ export class WorkflowRuntimeService {
   }
 
   async approve(input: AuthCtx & { workflowId?: string; note?: string }) {
-    this.assertEnabled();
+    this.assertEnabled;
     const workflow = await this.requireWorkflow(input, input.workflowId);
     await this.policy.assertAllowed({
       organizationId: input.organizationId,
@@ -341,14 +341,14 @@ export class WorkflowRuntimeService {
       action: 'workflow.approve',
       permissions: workflow.permissions,
     });
-    const approvalId = `appr_${randomUUID().replace(/-/g, '').slice(0, 12)}`;
+    const approvalId = `appr_${randomUUID.replace(/-/g, '').slice(0, 12)}`;
     const approval = {
       id: approvalId,
       workflowId: workflow.id,
-      note: (input.note ?? 'approved in sandbox').trim().slice(0, 200),
+      note: (input.note ?? 'approved in sandbox').trim.slice(0, 200),
       approved: true,
       sandbox: true,
-      createdAt: new Date().toISOString(),
+      createdAt: new Date.toISOString,
     };
     await this.writeRecord(input, {
       key: `workflow-approval:${approvalId}`,
@@ -365,7 +365,7 @@ export class WorkflowRuntimeService {
   async schedule(
     input: AuthCtx & { workflowId?: string; runAt?: string },
   ) {
-    this.assertEnabled();
+    this.assertEnabled;
     const workflow = await this.requireWorkflow(input, input.workflowId);
     await this.policy.assertAllowed({
       organizationId: input.organizationId,
@@ -374,18 +374,18 @@ export class WorkflowRuntimeService {
       action: 'workflow.schedule',
       permissions: workflow.permissions,
     });
-    const runAt = input.runAt ? new Date(input.runAt) : new Date(Date.now() + 3600_000);
-    if (Number.isNaN(runAt.getTime())) {
+    const runAt = input.runAt ? new Date(input.runAt) : new Date(Date.now + 3600_000);
+    if (Number.isNaN(runAt.getTime)) {
       throw new ApiException('validation_error', 'runAt must be ISO datetime', HttpStatus.BAD_REQUEST);
     }
-    const scheduleId = `wsched_${randomUUID().replace(/-/g, '').slice(0, 12)}`;
+    const scheduleId = `wsched_${randomUUID.replace(/-/g, '').slice(0, 12)}`;
     const row = {
       id: scheduleId,
       workflowId: workflow.id,
-      runAt: runAt.toISOString(),
+      runAt: runAt.toISOString,
       status: 'scheduled',
       sandbox: true,
-      createdAt: new Date().toISOString(),
+      createdAt: new Date.toISOString,
     };
     await this.writeRecord(input, {
       key: `workflow-sched:${scheduleId}`,
@@ -400,8 +400,8 @@ export class WorkflowRuntimeService {
   }
 
   async rollback(input: AuthCtx & { runId?: string }) {
-    this.assertEnabled();
-    const runId = (input.runId ?? '').trim();
+    this.assertEnabled;
+    const runId = (input.runId ?? '').trim;
     if (!runId) {
       throw new ApiException('validation_error', 'runId is required', HttpStatus.BAD_REQUEST);
     }
@@ -431,7 +431,7 @@ export class WorkflowRuntimeService {
     const rolled = {
       ...run,
       status: 'rolled_back',
-      rolledBackAt: new Date().toISOString(),
+      rolledBackAt: new Date.toISOString,
       sandbox: true,
     };
     await this.writeRecord(input, {
@@ -453,8 +453,8 @@ export class WorkflowRuntimeService {
   }
 
   async replay(input: AuthCtx & { runId?: string }) {
-    this.assertEnabled();
-    const runId = (input.runId ?? '').trim();
+    this.assertEnabled;
+    const runId = (input.runId ?? '').trim;
     if (!runId) {
       throw new ApiException('validation_error', 'runId is required', HttpStatus.BAD_REQUEST);
     }
@@ -471,7 +471,7 @@ export class WorkflowRuntimeService {
     if (!prior?.id) {
       throw new ApiException('not_found', 'Workflow run not found', HttpStatus.NOT_FOUND);
     }
-    const replayId = `wrep_${randomUUID().replace(/-/g, '').slice(0, 12)}`;
+    const replayId = `wrep_${randomUUID.replace(/-/g, '').slice(0, 12)}`;
     const replay = {
       id: replayId,
       sourceRunId: prior.id,
@@ -480,10 +480,10 @@ export class WorkflowRuntimeService {
         ...s,
         simulated: true,
         replayed: true,
-        at: new Date().toISOString(),
+        at: new Date.toISOString,
       })),
       sandbox: true,
-      createdAt: new Date().toISOString(),
+      createdAt: new Date.toISOString,
     };
     await this.writeRecord(input, {
       key: `workflow-replay:${replayId}`,
@@ -498,8 +498,8 @@ export class WorkflowRuntimeService {
   }
 
   async analytics(input: AuthCtx) {
-    this.assertEnabled();
-    const start = new Date();
+    this.assertEnabled;
+    const start = new Date;
     start.setUTCDate(1);
     start.setUTCHours(0, 0, 0, 0);
     const actions = [
@@ -520,18 +520,18 @@ export class WorkflowRuntimeService {
     );
     const workflows = await this.listWorkflows(input);
     return {
-      periodStart: start.toISOString(),
+      periodStart: start.toISOString,
       workspaceId: input.workspaceId,
       workflowCount: workflows.workflows.length,
       events: counts.reduce((s, c) => s + c.count, 0),
       byAction: Object.fromEntries(counts.map((c) => [c.action, c.count])),
-      honesty: workflowRuntimeCatalog().honesty,
+      honesty: workflowRuntimeCatalog.honesty,
     };
   }
 
   async monitoring(input: AuthCtx) {
     const [engine, analytics] = await Promise.all([
-      Promise.resolve(this.engine()),
+      Promise.resolve(this.engine),
       this.analytics(input),
     ]);
     return {
@@ -550,13 +550,13 @@ export class WorkflowRuntimeService {
     parallelGroup: number | undefined,
     forceFailAction?: string,
   ): Promise<RunStep> {
-    const ceilings = workflowRuntimeCeilings();
+    const ceilings = workflowRuntimeCeilings;
     let attempt = 0;
     let lastError = '';
 
     while (attempt <= ceilings.maxRetries) {
       attempt += 1;
-      const at = new Date().toISOString();
+      const at = new Date.toISOString;
       try {
         if (forceFailAction && forceFailAction === step.action && attempt === 1) {
           throw new Error('simulated_step_failure');
@@ -586,7 +586,7 @@ export class WorkflowRuntimeService {
       } catch (err) {
         const message = err instanceof ApiException ? err.message : String((err as Error)?.message ?? 'Action failed');
         const status =
-          err instanceof ApiException ? err.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR;
+          err instanceof ApiException ? err.getStatus : HttpStatus.INTERNAL_SERVER_ERROR;
         lastError = message;
         if (status === HttpStatus.FORBIDDEN) {
           return {
@@ -620,7 +620,7 @@ export class WorkflowRuntimeService {
       attempt,
       parallelGroup,
       error: lastError || 'Action failed',
-      at: new Date().toISOString(),
+      at: new Date.toISOString,
     };
   }
 
@@ -696,8 +696,8 @@ export class WorkflowRuntimeService {
     }
   }
 
-  private assertEnabled() {
-    if (workflowRuntimeMode() === 'disabled') {
+  private assertEnabled {
+    if (workflowRuntimeMode === 'disabled') {
       throw new ApiException(
         'workflow_runtime_disabled',
         'Workflow Runtime mode is disabled (LUGEMI_WORKFLOW_RUNTIME_MODE=disabled).',
@@ -707,7 +707,7 @@ export class WorkflowRuntimeService {
   }
 
   private async requireWorkflow(input: AuthCtx, id?: string) {
-    const workflowId = (id ?? '').trim();
+    const workflowId = (id ?? '').trim;
     if (!workflowId) {
       throw new ApiException('validation_error', 'workflow id is required', HttpStatus.BAD_REQUEST);
     }
@@ -758,7 +758,7 @@ export class WorkflowRuntimeService {
           key: opts.replaceKey,
           deletedAt: null,
         },
-        data: { deletedAt: new Date() },
+        data: { deletedAt: new Date },
       });
     }
     return this.prisma.memoryRecord.create({

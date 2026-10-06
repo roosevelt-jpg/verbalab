@@ -7,20 +7,20 @@ type HealthState =
   | { kind: 'ok'; status: string }
   | { kind: 'error'; message: string };
 
-export function ApiHealth() {
+export function ApiHealth {
   const [state, setState] = useState<HealthState>({ kind: 'loading' });
 
-  useEffect(() => {
+  useEffect( => {
     const base = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
     let cancelled = false;
 
-    async function load() {
+    async function load {
       try {
         const response = await fetch(`${base}/health`);
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`);
         }
-        const body = (await response.json()) as { status?: string };
+        const body = (await response.json) as { status?: string };
         if (!cancelled) {
           setState({ kind: 'ok', status: body.status ?? 'unknown' });
         }
@@ -34,8 +34,8 @@ export function ApiHealth() {
       }
     }
 
-    void load();
-    return () => {
+    void load;
+    return  => {
       cancelled = true;
     };
   }, []);

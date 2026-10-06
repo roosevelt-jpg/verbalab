@@ -17,8 +17,8 @@ export class GetPatentInnovationPlatformEngineHandler
     private readonly catalog: PatentInnovationPlatformCatalogPort,
   ) {}
 
-  execute(): Promise<PatentInnovationPlatformEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<PatentInnovationPlatformEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListPatentInnovationPlatformProductsHandler
     private readonly catalog: PatentInnovationPlatformCatalogPort,
   ) {}
 
-  execute(): Promise<PatentInnovationPlatformProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<PatentInnovationPlatformProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

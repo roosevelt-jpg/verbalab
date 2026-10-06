@@ -8,30 +8,30 @@ import { ModelsService } from '../src/models/models.service';
 import { VENDOR_MODEL_SEEDS } from '../src/models/model-registry.seeds';
 import { ApiExceptionFilter } from '../src/common/errors/api-exception.filter';
 
-describe('Model registry (VL-110)', () => {
+describe('Model registry',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let models: ModelsService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     models = app.get(ModelsService);
-    await models.ensureVendorDefaults();
+    await models.ensureVendorDefaults;
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('seeds vendor defaults for each gateway feature', async () => {
+  it('seeds vendor defaults for each gateway feature', async  => {
     const rows = await prisma.modelRegistryEntry.findMany({
       where: { kind: 'vendor' },
     });
@@ -40,8 +40,8 @@ describe('Model registry (VL-110)', () => {
     }
   });
 
-  it('GET /v1/models/live is public and lists features with configured flags', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/models/live').expect(200);
+  it('GET /v1/models/live is public and lists features with configured flags', async  => {
+    const res = await request(app.getHttpServer).get('/v1/models/live').expect(200);
     expect(res.body.disclaimer).toMatch(/not MLflow/i);
     expect(res.body.features).toEqual(
       expect.arrayContaining([
@@ -62,9 +62,9 @@ describe('Model registry (VL-110)', () => {
     );
   });
 
-  it('platform admin can set an external W&B URL on a registry entry', async () => {
+  it('platform admin can set an external W&B URL on a registry entry', async  => {
     const org = await prisma.organization.create({
-      data: { name: `models_audit_${Date.now()}` },
+      data: { name: `models_audit_${Date.now}` },
     });
     const updated = await models.setExternalUrl({
       idOrSlug: 'vendor-translate-google',

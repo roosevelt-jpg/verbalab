@@ -25,18 +25,18 @@ export class EnterpriseSearchController {
   constructor(private readonly enterpriseSearch: EnterpriseSearchService) {}
 
   @Get('engine')
-  engine() {
-    return this.enterpriseSearch.engine();
+  engine {
+    return this.enterpriseSearch.engine;
   }
 
   @Get('modes')
-  modes() {
-    return this.enterpriseSearch.modes();
+  modes {
+    return this.enterpriseSearch.modes;
   }
 
   @Get('analytics')
   @UseGuards(TranslateAuthGuard)
-  analytics(@Req() req: AuthedReq) {
+  analytics(@Req req: AuthedReq) {
     return this.enterpriseSearch.analytics(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -45,7 +45,7 @@ export class EnterpriseSearchController {
 
   @Get('monitoring')
   @UseGuards(TranslateAuthGuard)
-  monitoring(@Req() req: AuthedReq) {
+  monitoring(@Req req: AuthedReq) {
     return this.enterpriseSearch.monitoring(
       req.translateAuth.organizationId,
       req.translateAuth.workspaceId,
@@ -54,7 +54,7 @@ export class EnterpriseSearchController {
 
   @Get('suggest')
   @UseGuards(TranslateAuthGuard)
-  suggest(@Req() req: AuthedReq, @Query('q') q?: string, @Query('limit') limit?: string) {
+  suggest(@Req req: AuthedReq, @Query('q') q?: string, @Query('limit') limit?: string) {
     return this.enterpriseSearch.suggest({
       q: q ?? '',
       organizationId: req.translateAuth.organizationId,
@@ -67,8 +67,8 @@ export class EnterpriseSearchController {
   @HttpCode(HttpStatus.OK)
   @UseGuards(TranslateAuthGuard)
   search(
-    @Req() req: AuthedReq,
-    @Body()
+    @Req req: AuthedReq,
+    @Body
     body: {
       query?: string;
       mode?: string;

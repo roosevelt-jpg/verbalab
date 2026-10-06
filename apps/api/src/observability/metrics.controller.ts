@@ -7,10 +7,10 @@ export class MetricsController {
 
   /** In-process translate latency percentiles (single instance). */
   @Get('translate')
-  translate() {
+  translate {
     return {
       feature: 'translate',
-      ...this.translateLatency.snapshot(),
+      ...this.translateLatency.snapshot,
     };
   }
 }

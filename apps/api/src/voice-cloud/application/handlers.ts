@@ -17,8 +17,8 @@ export class ListVoiceProductsHandler implements IQueryHandler<ListVoiceProducts
     @Inject(VOICE_CATALOG_PORT) private readonly catalog: VoiceCatalogPort,
   ) {}
 
-  execute(): Promise<VoiceProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<VoiceProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 
@@ -30,8 +30,8 @@ export class GetVoiceProductsBundleHandler
     @Inject(VOICE_CATALOG_PORT) private readonly catalog: VoiceCatalogPort,
   ) {}
 
-  execute(): Promise<VoiceProductsBundle> {
-    return Promise.resolve(this.catalog.products());
+  execute: Promise<VoiceProductsBundle> {
+    return Promise.resolve(this.catalog.products);
   }
 }
 

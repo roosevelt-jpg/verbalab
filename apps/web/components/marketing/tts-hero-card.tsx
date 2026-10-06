@@ -8,7 +8,7 @@ const VOICES = [
 ] as const;
 
 /** Illustrative TTS card for the marketing hero — not a live synthesis session. */
-export function TtsHeroCard() {
+export function TtsHeroCard {
   return (
     <aside className="mkt-tts-card" aria-label="Text-to-speech preview">
       <div className="mkt-tts-card-head">

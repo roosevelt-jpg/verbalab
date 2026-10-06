@@ -1,4 +1,4 @@
-/** Application ports for African Language Registry (VL-261). */
+/** Application ports for African Language Registry. */
 
 export type AfricanLanguageRegistryProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type AfricanLanguageRegistryEngineBundle = ReturnType<
 >;
 
 export interface AfricanLanguageRegistryCatalogPort {
-  engine(): AfricanLanguageRegistryEngineBundle;
-  listProducts(): AfricanLanguageRegistryProductRow[];
+  engine: AfricanLanguageRegistryEngineBundle;
+  listProducts: AfricanLanguageRegistryProductRow[];
 }
 
 export const AFRICAN_LANGUAGE_REGISTRY_CATALOG_PORT = Symbol('AFRICAN_LANGUAGE_REGISTRY_CATALOG_PORT');

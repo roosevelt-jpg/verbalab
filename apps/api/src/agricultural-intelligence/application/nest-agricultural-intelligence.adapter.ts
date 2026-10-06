@@ -6,16 +6,16 @@ import {
   AgriculturalIntelligenceProductRow,
 } from './ports';
 
-@Injectable()
+@Injectable
 export class NestAgriculturalIntelligenceCatalogAdapter implements AgriculturalIntelligenceCatalogPort {
   constructor(private readonly service: AgriculturalIntelligenceService) {}
 
-  engine(): AgriculturalIntelligenceEngineBundle {
-    return this.service.engine();
+  engine: AgriculturalIntelligenceEngineBundle {
+    return this.service.engine;
   }
 
-  listProducts(): AgriculturalIntelligenceProductRow[] {
-    const bundle = this.engine() as { products?: AgriculturalIntelligenceProductRow[]; capabilities?: AgriculturalIntelligenceProductRow[] };
+  listProducts: AgriculturalIntelligenceProductRow[] {
+    const bundle = this.engine as { products?: AgriculturalIntelligenceProductRow[]; capabilities?: AgriculturalIntelligenceProductRow[] };
     if (Array.isArray(bundle.products)) return bundle.products;
     if (Array.isArray(bundle.capabilities)) {
       return bundle.capabilities.map((c) => ({
@@ -34,7 +34,7 @@ export class NestAgriculturalIntelligenceCatalogAdapter implements AgriculturalI
         status: 'shipped',
         api: 'GET /v1/agricultural-intelligence/engine',
         console: '/agricultural-intelligence',
-        notes: 'VL-268 shipped.',
+        notes: ' shipped.',
       },
     ];
   }

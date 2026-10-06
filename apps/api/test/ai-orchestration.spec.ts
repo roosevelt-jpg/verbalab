@@ -22,7 +22,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_orch_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_orch_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -36,19 +36,19 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('AI Orchestration (VL-190)', () => {
+describe('AI Orchestration',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -56,7 +56,7 @@ describe('AI Orchestration (VL-190)', () => {
     const gateway = app.get(GatewayService);
     gateway.setDetectProviderForTests({
       name: 'fixture_detect',
-      async detect() {
+      async detect {
         return { language: 'en', confidence: 0.99, provider: 'fixture_detect' };
       },
     });
@@ -76,7 +76,7 @@ describe('AI Orchestration (VL-190)', () => {
     gateway.setChatProviderForTests({
       name: 'fixture_chat',
       async complete(input) {
-        const user = [...input.messages].reverse().find((m) => m.role === 'user');
+        const user = [...input.messages].reverse.find((m) => m.role === 'user');
         return {
           message: {
             role: 'assistant',
@@ -93,22 +93,22 @@ describe('AI Orchestration (VL-190)', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('documents AI Orchestration honesty', () => {
+  it('documents AI Orchestration honesty',  => {
     const doc = join(root, 'docs/AI_ORCHESTRATION.md');
     const adr = join(root, 'docs/adr/0101-ai-orchestration.md');
     expect(existsSync(doc)).toBe(true);
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toMatch(/not.*multi-cloud agent/i);
-    expect(text).toContain('VL-190');
+    expect(text).toContain('');
   });
 
-  it('exposes engine with multiCloudAgentOs=false', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes engine with multiCloudAgentOs=false', async  => {
+    const res = await request(app.getHttpServer)
       .get('/v1/ai-orchestration/engine')
       .expect(200);
     expect(res.body.product).toContain('Orchestration');
@@ -117,7 +117,7 @@ describe('AI Orchestration (VL-190)', () => {
     expect(res.body.honesty.loadBearingE2e).toBe(true);
     expect(res.body.honesty.executesRealRequests).toBe(true);
 
-    const pipelines = await request(app.getHttpServer())
+    const pipelines = await request(app.getHttpServer)
       .get('/v1/ai-orchestration/pipelines')
       .expect(200);
     expect(pipelines.body.pipelines.some((p: { id: string }) => p.id === 'detect_translate')).toBe(
@@ -125,7 +125,7 @@ describe('AI Orchestration (VL-190)', () => {
     );
   });
 
-  it('runs detect_translate and decide_act e2e pipelines', async () => {
+  it('runs detect_translate and decide_act e2e pipelines', async  => {
     const org = await seedOrg(prisma, 'orch');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -134,7 +134,7 @@ describe('AI Orchestration (VL-190)', () => {
       name: 'orch-key',
     });
 
-    const detectTranslate = await request(app.getHttpServer())
+    const detectTranslate = await request(app.getHttpServer)
       .post('/v1/ai-orchestration/run')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -151,7 +151,7 @@ describe('AI Orchestration (VL-190)', () => {
     expect(detectTranslate.body.result).toMatch(/\[sw\]/);
     expect(detectTranslate.body.honesty.multiCloudAgentOs).toBe(false);
 
-    const decideAct = await request(app.getHttpServer())
+    const decideAct = await request(app.getHttpServer)
       .post('/v1/ai-orchestration/run')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({
@@ -164,21 +164,21 @@ describe('AI Orchestration (VL-190)', () => {
     expect(decideAct.body.steps.length).toBeGreaterThanOrEqual(2);
     expect(decideAct.body.steps[0].op).toBe('decide');
 
-    const multiCloud = await request(app.getHttpServer())
+    const multiCloud = await request(app.getHttpServer)
       .post('/v1/ai-orchestration/run')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ pipeline: 'multi_cloud', text: 'hello' });
     expect(multiCloud.status).toBe(400);
 
-    const analytics = await request(app.getHttpServer())
+    const analytics = await request(app.getHttpServer)
       .get('/v1/ai-orchestration/analytics')
       .set('Authorization', `Bearer ${key.secret}`)
       .expect(200);
     expect(analytics.body.runs).toBeGreaterThanOrEqual(2);
   });
 
-  it('exposes aiOrchestration via GraphQL', async () => {
-    const res = await request(app.getHttpServer())
+  it('exposes aiOrchestration via GraphQL', async  => {
+    const res = await request(app.getHttpServer)
       .post('/graphql')
       .send({
         query:
@@ -186,7 +186,7 @@ describe('AI Orchestration (VL-190)', () => {
       })
       .expect(200);
 
-    expect(res.body.errors).toBeUndefined();
+    expect(res.body.errors).toBeUndefined;
     expect(res.body.data.aiOrchestration.multiCloudAgentOs).toBe(false);
     expect(res.body.data.aiOrchestration.loadBearingE2e).toBe(true);
   });

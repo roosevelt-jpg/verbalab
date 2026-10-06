@@ -17,8 +17,8 @@ export class GetResearchAnalyticsEngineHandler
     private readonly catalog: ResearchAnalyticsCatalogPort,
   ) {}
 
-  execute(): Promise<ResearchAnalyticsEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<ResearchAnalyticsEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListResearchAnalyticsProductsHandler
     private readonly catalog: ResearchAnalyticsCatalogPort,
   ) {}
 
-  execute(): Promise<ResearchAnalyticsProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<ResearchAnalyticsProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

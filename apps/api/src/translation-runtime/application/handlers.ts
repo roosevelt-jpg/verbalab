@@ -17,8 +17,8 @@ export class GetTranslationRuntimeEngineHandler
     private readonly catalog: TranslationRuntimeCatalogPort,
   ) {}
 
-  execute(): Promise<TranslationRuntimeEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<TranslationRuntimeEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListTranslationRuntimeProductsHandler
     private readonly catalog: TranslationRuntimeCatalogPort,
   ) {}
 
-  execute(): Promise<TranslationRuntimeProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<TranslationRuntimeProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

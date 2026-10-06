@@ -3,13 +3,13 @@ import { QueryBus } from '@nestjs/cqrs';
 import { GetSpeechRuntimeEngineQuery } from '../speech-runtime/application/messages';
 import { GqlSpeechRuntimeEngine } from './gql.types';
 
-@Resolver()
+@Resolver
 export class SpeechRuntimeGraphqlResolver {
   constructor(private readonly queries: QueryBus) {}
 
-  @Query(() => GqlSpeechRuntimeEngine, { name: 'speechRuntimeEngine' })
-  async speechRuntimeEngine(): Promise<GqlSpeechRuntimeEngine> {
-    const catalog = await this.queries.execute(new GetSpeechRuntimeEngineQuery());
+  @Query( => GqlSpeechRuntimeEngine, { name: 'speechRuntimeEngine' })
+  async speechRuntimeEngine: Promise<GqlSpeechRuntimeEngine> {
+    const catalog = await this.queries.execute(new GetSpeechRuntimeEngineQuery);
     return {
       product: catalog.product,
       note: catalog.note,

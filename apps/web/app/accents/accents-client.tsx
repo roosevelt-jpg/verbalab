@@ -25,8 +25,8 @@ type DetectResult = {
   candidates: { code: string; nameEn: string; score: number; matchedCues: string[] }[];
 };
 
-export function AccentsClient() {
-  const { getToken, isLoaded } = useAuth();
+export function AccentsClient {
+  const { getToken, isLoaded } = useAuth;
   const [accents, setAccents] = useState<AccentRow[]>([]);
   const [text, setText] = useState('How far, abi you dey come? Wetin happen sef?');
   const [language, setLanguage] = useState('en');
@@ -35,29 +35,29 @@ export function AccentsClient() {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const load = useCallback(async () => {
+  const load = useCallback(async  => {
     const res = await apiFetch<{ data: AccentRow[] }>('/v1/accents');
     setAccents(res.data);
   }, []);
 
-  useEffect(() => {
-    void load().catch((err: Error) => setError(err.message));
+  useEffect( => {
+    void load.catch((err: Error) => setError(err.message));
   }, [load]);
 
   async function onDetect(event: FormEvent) {
-    event.preventDefault();
+    event.preventDefault;
     setError(null);
     setBusy(true);
     setResult(null);
     try {
-      const token = await getToken();
+      const token = await getToken;
       if (!token) throw new Error('Not signed in');
 
       if (file) {
-        const form = new FormData();
+        const form = new FormData;
         form.append('file', file);
-        if (text.trim()) form.append('text', text.trim());
-        if (language.trim()) form.append('language', language.trim());
+        if (text.trim) form.append('text', text.trim);
+        if (language.trim) form.append('language', language.trim);
         const res = await apiFetch<DetectResult>('/v1/accents/detect', {
           method: 'POST',
           token,
@@ -66,7 +66,7 @@ export function AccentsClient() {
         setResult(res);
       } else {
         const body: { text: string; language?: string } = { text };
-        if (language.trim()) body.language = language.trim();
+        if (language.trim) body.language = language.trim;
         const res = await apiFetch<DetectResult>('/v1/accents/detect', {
           method: 'POST',
           token,

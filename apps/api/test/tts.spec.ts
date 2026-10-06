@@ -20,7 +20,7 @@ async function seedOrg(prisma: PrismaService, name: string) {
           role: MembershipRole.owner,
           user: {
             create: {
-              clerkUserId: `clerk_tts_${name}_${Date.now()}_${Math.random()}`,
+              clerkUserId: `clerk_tts_${name}_${Date.now}_${Math.random}`,
               email: `${name}@example.com`,
             },
           },
@@ -34,20 +34,20 @@ async function seedOrg(prisma: PrismaService, name: string) {
   });
 }
 
-describe('Text-to-speech (VL-042)', () => {
+describe('Text-to-speech',  => {
   let app: INestApplication<App>;
   let prisma: PrismaService;
   let apiKeys: ApiKeysService;
   let usage: UsageService;
 
-  beforeAll(async () => {
+  beforeAll(async  => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
-    }).compile();
+    }).compile;
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalFilters(new ApiExceptionFilter());
-    await app.init();
+    app = moduleFixture.createNestApplication;
+    app.useGlobalFilters(new ApiExceptionFilter);
+    await app.init;
 
     prisma = app.get(PrismaService);
     apiKeys = app.get(ApiKeysService);
@@ -55,7 +55,7 @@ describe('Text-to-speech (VL-042)', () => {
 
     app.get(GatewayService).setTtsProviderForTests({
       name: 'fixture',
-      listVoices() {
+      listVoices {
         return [
           {
             id: 'alloy',
@@ -80,16 +80,16 @@ describe('Text-to-speech (VL-042)', () => {
     });
   });
 
-  afterAll(async () => {
-    await app.close();
+  afterAll(async  => {
+    await app.close;
   });
 
-  it('lists voices without auth', async () => {
-    const res = await request(app.getHttpServer()).get('/v1/audio/voices').expect(200);
+  it('lists voices without auth', async  => {
+    const res = await request(app.getHttpServer).get('/v1/audio/voices').expect(200);
     expect(res.body.data.some((v: { id: string }) => v.id === 'alloy')).toBe(true);
   });
 
-  it('synthesizes speech audio and meters TTS characters', async () => {
+  it('synthesizes speech audio and meters TTS characters', async  => {
     const org = await seedOrg(prisma, 'tts');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -98,7 +98,7 @@ describe('Text-to-speech (VL-042)', () => {
       name: 'tts-key',
     });
 
-    const res = await request(app.getHttpServer())
+    const res = await request(app.getHttpServer)
       .post('/v1/audio/speech')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'Hello', voice: 'alloy' })
@@ -115,7 +115,7 @@ describe('Text-to-speech (VL-042)', () => {
     expect(summary.tts.characters).toBe(5);
   });
 
-  it('rejects missing voice/text', async () => {
+  it('rejects missing voice/text', async  => {
     const org = await seedOrg(prisma, 'badtts');
     const key = await apiKeys.create({
       organizationId: org.id,
@@ -124,14 +124,14 @@ describe('Text-to-speech (VL-042)', () => {
       name: 'bad-tts',
     });
 
-    await request(app.getHttpServer())
+    await request(app.getHttpServer)
       .post('/v1/audio/speech')
       .set('Authorization', `Bearer ${key.secret}`)
       .send({ text: 'Hi' })
       .expect(400);
   });
 
-  it('OpenAI TTS adapter reports not configured without key', async () => {
+  it('OpenAI TTS adapter reports not configured without key', async  => {
     const adapter = new OpenAiTtsAdapter('');
     await expect(
       adapter.synthesize({ text: 'Hi', voice: 'alloy' }),

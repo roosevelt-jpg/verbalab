@@ -17,8 +17,8 @@ export class GetReliabilityEngineeringEngineHandler
     private readonly catalog: ReliabilityEngineeringCatalogPort,
   ) {}
 
-  execute(): Promise<ReliabilityEngineeringEngineBundle> {
-    return Promise.resolve(this.catalog.engine());
+  execute: Promise<ReliabilityEngineeringEngineBundle> {
+    return Promise.resolve(this.catalog.engine);
   }
 }
 
@@ -31,8 +31,8 @@ export class ListReliabilityEngineeringProductsHandler
     private readonly catalog: ReliabilityEngineeringCatalogPort,
   ) {}
 
-  execute(): Promise<ReliabilityEngineeringProductRow[]> {
-    return Promise.resolve(this.catalog.listProducts());
+  execute: Promise<ReliabilityEngineeringProductRow[]> {
+    return Promise.resolve(this.catalog.listProducts);
   }
 }
 

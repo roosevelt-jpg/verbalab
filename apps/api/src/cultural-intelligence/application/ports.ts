@@ -1,4 +1,4 @@
-/** Application ports for Cultural Intelligence (VL-262). */
+/** Application ports for Cultural Intelligence. */
 
 export type CulturalIntelligenceProductRow = {
   id: string;
@@ -14,8 +14,8 @@ export type CulturalIntelligenceEngineBundle = ReturnType<
 >;
 
 export interface CulturalIntelligenceCatalogPort {
-  engine(): CulturalIntelligenceEngineBundle;
-  listProducts(): CulturalIntelligenceProductRow[];
+  engine: CulturalIntelligenceEngineBundle;
+  listProducts: CulturalIntelligenceProductRow[];
 }
 
 export const CULTURAL_INTELLIGENCE_CATALOG_PORT = Symbol('CULTURAL_INTELLIGENCE_CATALOG_PORT');
