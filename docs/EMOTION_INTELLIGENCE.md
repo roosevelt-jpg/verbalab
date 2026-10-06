@@ -7,7 +7,11 @@
 
 ## Labels
 
-happy · sad · angry · fear · neutral · stress · confidence · excitement · urgency
+**Emotional state:** happy · sad · angry · fear · neutral · stress · confidence · excitement · urgency  
+
+**Sentiment:** positive · neutral · negative · mixed  
+
+**Tone:** formal · casual · urgent · empathetic · assertive · hesitant · neutral  
 
 ---
 
@@ -15,15 +19,17 @@ happy · sad · angry · fear · neutral · stress · confidence · excitement �
 
 | Library ask | Lugemi reality |
 | --- | --- |
-| Emotion Intelligence / Engine | **VL-154** — `GET /v1/emotion/engine` + `/emotion-intelligence` |
-| Detect (9 labels) | **Shipped** — `POST /v1/emotion/detect` (text and/or audio→STT) |
-| Realtime | **Partial** — `POST /v1/emotion/stream` SSE |
+| Emotion Intelligence / Engine | `GET /v1/emotion/engine` + `/emotion-intelligence` |
+| Detect (9 labels) | **Shipped** — `POST /v1/emotion/detect` (text and/or audio→STT) returns `emotionalState`, `sentiment`, `tone` |
+| Sentiment / tone | **Shipped** — same detect path (lexicon heuristics) |
+| Realtime | **Partial** — `POST /v1/emotion/stream` SSE (scores + sentiment + tone) |
 | Acoustic SER | **Deferred** — soft energy/ZCR proxies only |
+| Agent voice tone | Emotion Voice profiles + `/voice` native accent picker (`emotion` on `POST /v1/voice/simulate`) |
 | GraphQL / SDK / CLI / Dashboard | `emotionEngine`, `detectEmotion`, `lugemi emotion-engine` |
-| Related | Language Cloud `POST /v1/language-intelligence/emotion` (VL-144) remains separate |
+| Related | Language Cloud `POST /v1/language-intelligence/emotion` remains separate |
 
 ---
 
 ## Honesty
 
-Not Affectiva / Hume / Azure Emotion API. Cue lexicon + optional soft audio proxies. See ADR-0073.
+Not a commercial Affective Computing lab and not NIST-certified emotion science. Cue lexicon + optional soft audio proxies. Confidence scores are heuristic, not calibrated model probabilities. See ADR-0073.

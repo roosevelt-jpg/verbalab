@@ -2,37 +2,41 @@ import { HttpStatus } from '@nestjs/common';
 import { ApiException } from '../common/errors/api-exception';
 import { TtsInput, TtsOutput, TtsProvider, TtsVoice } from './tts-provider';
 
-/** Intended production Lugemi speech catalog (`own:*`) via OWN_TTS_URL. Not a live-GPU claim. */
+/**
+ * Intended production Lugemi speech catalog (`own:*`) via OWN_TTS_URL.
+ * Region / ethnic labels are cultural metadata for pickers — not a claim of
+ * perfect native-speaker acoustic cloning for every tribe.
+ */
 export const OWN_TTS_VOICES: TtsVoice[] = [
-  {
-    id: 'own:sw-aisha',
-    name: 'Aisha (Swahili)',
-    gender: 'female',
-    languages: ['sw', 'en'],
-    provider: 'own_tts',
-  },
-  {
-    id: 'own:yo-tunde',
-    name: 'Tunde (Yoruba)',
-    gender: 'male',
-    languages: ['yo', 'en'],
-    provider: 'own_tts',
-  },
-  {
-    id: 'own:am-hanna',
-    name: 'Hanna (Amharic)',
-    gender: 'female',
-    languages: ['am', 'en'],
-    provider: 'own_tts',
-  },
-  {
-    id: 'own:en-kofi',
-    name: 'Kofi (EN-Africa)',
-    gender: 'male',
-    languages: ['en'],
-    provider: 'own_tts',
-  },
+  { id: 'own:sw-aisha', name: 'Aisha (Swahili)', gender: 'female', languages: ['sw', 'en'], provider: 'own_tts' },
+  { id: 'own:sw-ke-female', name: 'Aisha · Nairobi', gender: 'female', languages: ['sw', 'en'], provider: 'own_tts' },
+  { id: 'own:yo-tunde', name: 'Tunde (Yoruba)', gender: 'male', languages: ['yo', 'en'], provider: 'own_tts' },
+  { id: 'own:yo-ng-male', name: 'Tunde · Lagos', gender: 'male', languages: ['yo', 'en'], provider: 'own_tts' },
+  { id: 'own:am-hanna', name: 'Hanna (Amharic)', gender: 'female', languages: ['am', 'en'], provider: 'own_tts' },
+  { id: 'own:am-et-female', name: 'Hanna · Addis', gender: 'female', languages: ['am', 'en'], provider: 'own_tts' },
+  { id: 'own:en-kofi', name: 'Kofi (EN-Africa)', gender: 'male', languages: ['en'], provider: 'own_tts' },
+  { id: 'own:zu-za-female', name: 'Thandi · Durban', gender: 'female', languages: ['zu', 'en'], provider: 'own_tts' },
+  { id: 'own:ar-eg-male', name: 'Omar · Cairo', gender: 'male', languages: ['ar', 'en'], provider: 'own_tts' },
+  { id: 'own:fr-sn-female', name: 'Awa · Dakar', gender: 'female', languages: ['fr', 'wo', 'en'], provider: 'own_tts' },
+  { id: 'own:ha-ng-male', name: 'Sani · Kano', gender: 'male', languages: ['ha', 'en'], provider: 'own_tts' },
+  { id: 'own:ak-gh-female', name: 'Akosua · Accra', gender: 'female', languages: ['ak', 'en'], provider: 'own_tts' },
 ];
+
+/** Map region-aware CMS ids to synthesis keys sent to OWN_TTS_URL backends. */
+const OWN_TTS_SYNTH_KEY: Record<string, string> = {
+  'own:sw-ke-female': 'sw-aisha',
+  'own:sw-aisha': 'sw-aisha',
+  'own:yo-ng-male': 'yo-tunde',
+  'own:yo-tunde': 'yo-tunde',
+  'own:am-et-female': 'am-hanna',
+  'own:am-hanna': 'am-hanna',
+  'own:en-kofi': 'en-kofi',
+  'own:zu-za-female': 'zu-za-female',
+  'own:ar-eg-male': 'ar-eg-male',
+  'own:fr-sn-female': 'fr-sn-female',
+  'own:ha-ng-male': 'ha-ng-male',
+  'own:ak-gh-female': 'ak-gh-female',
+};
 
 const MIME: Record<string, string> = {
   mp3: 'audio/mpeg',
@@ -48,6 +52,10 @@ export function isOwnTtsVoice(voice: string): boolean {
 
 export function ownTtsConfigured(): boolean {
   return Boolean(process.env.OWN_TTS_URL?.trim()) || process.env.OWN_TTS_FIXTURE === '1';
+}
+
+export function resolveOwnTtsVoice(voice: string): TtsVoice | undefined {
+  return OWN_TTS_VOICES.find((v) => v.id === voice);
 }
 
 /** Minimal RIFF/WAV for fixture playback without claiming a real GPU run. */
@@ -81,7 +89,7 @@ export class FixtureOwnTtsAdapter implements TtsProvider {
   }
 
   async synthesize(input: TtsInput): Promise<TtsOutput> {
-    const voice = OWN_TTS_VOICES.find((v) => v.id === input.voice);
+    const voice = resolveOwnTtsVoice(input.voice);
     if (!voice) {
       throw new ApiException(
         'validation_error',
@@ -128,7 +136,7 @@ export class HttpOwnTtsAdapter implements TtsProvider {
       );
     }
 
-    const voice = OWN_TTS_VOICES.find((v) => v.id === input.voice);
+    const voice = resolveOwnTtsVoice(input.voice);
     if (!voice) {
       throw new ApiException(
         'validation_error',
@@ -149,6 +157,8 @@ export class HttpOwnTtsAdapter implements TtsProvider {
     };
     if (this.apiKey) headers.Authorization = `Bearer ${this.apiKey}`;
 
+    const synthKey = OWN_TTS_SYNTH_KEY[input.voice] ?? input.voice.replace(/^own:/, '');
+
     let response: Response;
     try {
       response = await fetch(this.baseUrl.replace(/\/$/, ''), {
@@ -156,7 +166,7 @@ export class HttpOwnTtsAdapter implements TtsProvider {
         headers,
         body: JSON.stringify({
           text: input.text,
-          voice: input.voice.replace(/^own:/, ''),
+          voice: synthKey,
           language: input.language,
           format,
         }),

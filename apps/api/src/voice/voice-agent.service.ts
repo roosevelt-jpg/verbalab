@@ -7,6 +7,7 @@ import { ApiException } from '../common/errors/api-exception';
 import { defaultFaqVoice } from './faq-prompt';
 import { VoiceAudioStore } from './voice-audio.store';
 import { PromptsService } from '../prompts/prompts.service';
+import { applySoftProsody, getEmotionProfile } from '../emotion-voice/emotion-profiles';
 
 export type VoiceTurnResult = {
   userText: string;
@@ -15,6 +16,8 @@ export type VoiceTurnResult = {
   audioBase64: string;
   mimeType: string;
   audioId: string;
+  voice: string;
+  emotionProfile: string | null;
   providers: {
     stt: string | null;
     chat: string;
@@ -44,9 +47,17 @@ export class VoiceAgentService {
     file?: Express.Multer.File;
     text?: string;
     voice?: string;
+    /** Emotion Voice profile for soft prosody on the reply (not trained expressive TTS). */
+    emotion?: string;
     format?: 'mp3' | 'wav' | 'opus' | 'aac' | 'flac';
   }): Promise<VoiceTurnResult> {
-    const voice = input.voice?.trim() || defaultFaqVoice();
+    const emotionProfile = input.emotion?.trim()
+      ? getEmotionProfile(input.emotion.trim())
+      : undefined;
+    const voice =
+      input.voice?.trim() ||
+      emotionProfile?.preferredVoice ||
+      defaultFaqVoice();
     const format = input.format ?? 'mp3';
 
     let userText = '';
@@ -105,8 +116,12 @@ export class VoiceAgentService {
       throw new ApiException('provider_error', 'FAQ model returned empty reply', HttpStatus.BAD_GATEWAY);
     }
 
+    const speakText = emotionProfile
+      ? applySoftProsody(replyText, emotionProfile.prosody)
+      : replyText;
+
     const spoken = await this.audio.speak({
-      text: replyText,
+      text: speakText,
       voice,
       format,
       organizationId: input.organizationId,
@@ -130,6 +145,8 @@ export class VoiceAgentService {
         chatProvider: chat.provider,
         ttsProvider: spoken.provider,
         model: chat.model,
+        voice,
+        emotion: emotionProfile?.id ?? null,
         userChars: [...userText].length,
         replyChars: [...replyText].length,
       },
@@ -142,6 +159,8 @@ export class VoiceAgentService {
       audioBase64,
       mimeType: spoken.mimeType,
       audioId,
+      voice,
+      emotionProfile: emotionProfile?.id ?? null,
       providers: {
         stt: sttProvider,
         chat: chat.provider,

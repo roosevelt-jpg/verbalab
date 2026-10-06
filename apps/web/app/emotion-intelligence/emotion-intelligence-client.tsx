@@ -10,6 +10,8 @@ type Engine = {
   product: string;
   note: string;
   labels: string[];
+  sentimentLabels?: string[];
+  toneLabels?: string[];
   capabilities: Array<{ id: string; name: string; status: string; notes: string }>;
 };
 type Analytics = { detects: number; byLabel: Record<string, number>; windowDays: number };
@@ -17,7 +19,21 @@ type DetectResult = {
   label: string;
   confidence: number;
   scores: Array<{ label: string; score: number }>;
+  emotionalState?: { label: string; confidence: number };
+  sentiment: {
+    label: string;
+    score: number;
+    confidence: number;
+    note: string;
+  };
+  tone: {
+    label: string;
+    confidence: number;
+    scores: Array<{ label: string; score: number }>;
+    note: string;
+  };
   audioAdjusted: boolean;
+  honesty?: string;
   note: string;
 };
 
@@ -81,9 +97,10 @@ export function EmotionIntelligenceClient() {
         Emotion Intelligence
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.5rem', maxWidth: '44rem' }}>
-        Detect happy, sad, angry, fear, neutral, stress, confidence, excitement, and urgency from text
-        (or audio→STT). Soft audio proxies only — not trained SER.{' '}
-        <Link href="/speech">Speech Cloud</Link>.
+        Detect emotional state, sentiment, and delivery tone from speech text (or audio→STT). Soft
+        audio energy proxies only — not trained SER and not NIST emotion science.{' '}
+        <Link href="/speech">Speech Cloud</Link> · <Link href="/voice">Agents voice picker</Link> ·{' '}
+        <Link href="/emotion-voice">Emotion Voice synthesis</Link>.
       </p>
 
       {error ? <p style={{ color: '#b42318' }}>{error}</p> : null}
@@ -96,7 +113,7 @@ export function EmotionIntelligenceClient() {
 
       <div style={{ display: 'grid', gap: '1.75rem', maxWidth: '48rem' }}>
         <section>
-          <h2 style={label}>Detect</h2>
+          <h2 style={label}>Detect emotional state · sentiment · tone</h2>
           <form onSubmit={(e) => void onDetect(e)} style={{ display: 'grid', gap: '0.65rem' }}>
             <textarea
               value={text}
@@ -105,7 +122,7 @@ export function EmotionIntelligenceClient() {
               style={{ ...input, resize: 'vertical' }}
             />
             <button type="submit" disabled={loading || !text.trim()} style={primary}>
-              Detect emotion
+              Detect emotion, sentiment &amp; tone
             </button>
           </form>
         </section>
@@ -113,12 +130,42 @@ export function EmotionIntelligenceClient() {
         {result ? (
           <section>
             <h2 style={label}>Result</h2>
-            <p style={{ margin: 0, fontWeight: 600 }}>
-              {result.label} · confidence {result.confidence}
-              {result.audioAdjusted ? ' · audio-adjusted' : ''}
-            </p>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(10rem, 1fr))',
+                gap: '0.75rem',
+                marginBottom: '0.85rem',
+              }}
+            >
+              <div style={statBox}>
+                <div style={statLabel}>Emotional state</div>
+                <div style={statValue}>
+                  {result.emotionalState?.label ?? result.label}
+                </div>
+                <div style={statMeta}>
+                  confidence {(result.emotionalState?.confidence ?? result.confidence).toFixed(2)}
+                  {result.audioAdjusted ? ' · audio-adjusted' : ''}
+                </div>
+              </div>
+              <div style={statBox}>
+                <div style={statLabel}>Sentiment</div>
+                <div style={statValue}>{result.sentiment.label}</div>
+                <div style={statMeta}>
+                  score {result.sentiment.score} · confidence {result.sentiment.confidence.toFixed(2)}
+                </div>
+              </div>
+              <div style={statBox}>
+                <div style={statLabel}>Tone</div>
+                <div style={statValue}>{result.tone.label}</div>
+                <div style={statMeta}>confidence {result.tone.confidence.toFixed(2)}</div>
+              </div>
+            </div>
             <p style={{ margin: '0.35rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
-              {result.note}
+              {result.honesty ?? result.note}
+            </p>
+            <p style={{ margin: '0.35rem 0 0', color: 'var(--muted)', fontSize: '0.85rem' }}>
+              {result.sentiment.note} {result.tone.note}
             </p>
             <ul style={{ margin: '0.75rem 0 0', padding: 0, listStyle: 'none' }}>
               {result.scores.slice(0, 6).map((s) => (
@@ -133,7 +180,13 @@ export function EmotionIntelligenceClient() {
         {engine ? (
           <section>
             <h2 style={label}>Labels</h2>
-            <p style={{ margin: 0 }}>{engine.labels.join(' · ')}</p>
+            <p style={{ margin: 0 }}>Emotion: {engine.labels.join(' · ')}</p>
+            {engine.sentimentLabels ? (
+              <p style={{ margin: '0.35rem 0 0' }}>Sentiment: {engine.sentimentLabels.join(' · ')}</p>
+            ) : null}
+            {engine.toneLabels ? (
+              <p style={{ margin: '0.35rem 0 0' }}>Tone: {engine.toneLabels.join(' · ')}</p>
+            ) : null}
             <h2 style={{ ...label, marginTop: '1.25rem' }}>Engine</h2>
             <p style={{ margin: '0 0 0.75rem', color: 'var(--muted)', fontSize: '0.9rem' }}>{engine.note}</p>
             <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
@@ -177,4 +230,30 @@ const primary: React.CSSProperties = {
   fontSize: '0.9rem',
   cursor: 'pointer',
   width: 'fit-content',
+};
+
+const statBox: React.CSSProperties = {
+  border: '1px solid var(--line)',
+  borderRadius: '0.45rem',
+  padding: '0.75rem 0.85rem',
+};
+
+const statLabel: React.CSSProperties = {
+  fontSize: '0.72rem',
+  textTransform: 'uppercase',
+  letterSpacing: '0.05em',
+  color: 'var(--muted)',
+};
+
+const statValue: React.CSSProperties = {
+  fontSize: '1.15rem',
+  fontWeight: 700,
+  marginTop: '0.2rem',
+  textTransform: 'capitalize',
+};
+
+const statMeta: React.CSSProperties = {
+  fontSize: '0.8rem',
+  color: 'var(--muted)',
+  marginTop: '0.2rem',
 };

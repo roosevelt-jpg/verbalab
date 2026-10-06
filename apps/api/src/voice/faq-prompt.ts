@@ -12,5 +12,5 @@ export const VOICE_FAQ_SYSTEM = [
 ].join(' ');
 
 export function defaultFaqVoice(): string {
-  return process.env.VOICE_FAQ_VOICE?.trim() || 'alloy';
+  return process.env.VOICE_FAQ_VOICE?.trim() || 'own:sw-ke-female';
 }

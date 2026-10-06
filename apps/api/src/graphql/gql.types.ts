@@ -3754,6 +3754,33 @@ export class DetectEmotionInput {
 }
 
 @ObjectType()
+export class GqlEmotionSentiment {
+  @Field()
+  label!: string;
+
+  @Field()
+  score!: number;
+
+  @Field()
+  confidence!: number;
+
+  @Field()
+  note!: string;
+}
+
+@ObjectType()
+export class GqlEmotionTone {
+  @Field()
+  label!: string;
+
+  @Field()
+  confidence!: number;
+
+  @Field()
+  note!: string;
+}
+
+@ObjectType()
 export class GqlEmotionDetectResult {
   @Field()
   label!: string;
@@ -3766,6 +3793,15 @@ export class GqlEmotionDetectResult {
 
   @Field()
   note!: string;
+
+  @Field(() => GqlEmotionSentiment, { nullable: true })
+  sentiment?: GqlEmotionSentiment;
+
+  @Field(() => GqlEmotionTone, { nullable: true })
+  tone?: GqlEmotionTone;
+
+  @Field({ nullable: true })
+  honesty?: string;
 }
 
 @ObjectType()

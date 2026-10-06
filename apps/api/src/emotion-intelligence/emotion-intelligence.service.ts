@@ -116,11 +116,19 @@ export class EmotionIntelligenceService {
       scores: analyzed.scores,
       signals: analyzed.signals,
       audioAdjusted: analyzed.audioAdjusted,
+      emotionalState: {
+        label: analyzed.label as SpeechEmotionLabel,
+        confidence: analyzed.confidence,
+      },
+      sentiment: analyzed.sentiment,
+      tone: analyzed.tone,
       inputMode: stt ? ('audio' as const) : ('text' as const),
       transcript: stt ? text : undefined,
       stt,
       text,
       product: 'Emotion Intelligence',
+      honesty:
+        'Heuristic cue lexicon + optional soft audio proxies. Not trained SER, not NIST-certified emotion science, and not a commercial Affective Computing lab.',
       note: analyzed.note,
     };
 
@@ -128,6 +136,8 @@ export class EmotionIntelligenceService {
       await this.recordAudit(input, 'emotion.detect', 'POST /v1/emotion/detect', {
         label: result.label,
         confidence: result.confidence,
+        sentiment: result.sentiment.label,
+        tone: result.tone.label,
         inputMode: result.inputMode,
         audioAdjusted: result.audioAdjusted,
       });
@@ -149,11 +159,25 @@ export class EmotionIntelligenceService {
     | { event: 'start'; inputMode: string }
     | { event: 'scores'; scores: Array<{ label: string; score: number }> }
     | {
+        event: 'sentiment';
+        label: string;
+        score: number;
+        confidence: number;
+      }
+    | {
+        event: 'tone';
+        label: string;
+        confidence: number;
+      }
+    | {
         event: 'done';
         label: string;
         confidence: number;
+        sentiment: string;
+        tone: string;
         audioAdjusted: boolean;
         note: string;
+        honesty: string;
       }
     | { event: 'error'; message: string }
   > {
@@ -165,15 +189,31 @@ export class EmotionIntelligenceService {
         scores: result.scores.slice(0, 5).map((s) => ({ label: s.label, score: s.score })),
       };
       yield {
+        event: 'sentiment',
+        label: result.sentiment.label,
+        score: result.sentiment.score,
+        confidence: result.sentiment.confidence,
+      };
+      yield {
+        event: 'tone',
+        label: result.tone.label,
+        confidence: result.tone.confidence,
+      };
+      yield {
         event: 'done',
         label: result.label,
         confidence: result.confidence,
+        sentiment: result.sentiment.label,
+        tone: result.tone.label,
         audioAdjusted: result.audioAdjusted,
         note: result.note,
+        honesty: result.honesty,
       };
       await this.recordAudit(input, 'emotion.stream', 'POST /v1/emotion/stream', {
         label: result.label,
         confidence: result.confidence,
+        sentiment: result.sentiment.label,
+        tone: result.tone.label,
         inputMode: result.inputMode,
         audioAdjusted: result.audioAdjusted,
       });

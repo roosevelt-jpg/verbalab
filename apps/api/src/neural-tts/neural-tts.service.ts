@@ -83,15 +83,24 @@ export class NeuralTtsService {
       }
     }
 
-    const data = filterEnrichedVoices([...stock, ...clones], filters);
+    const all = [...stock, ...clones];
+    const data = filterEnrichedVoices(all, filters);
+    const countries = [...new Set(all.map((v) => v.country).filter(Boolean))] as string[];
+    const accents = [...new Set(all.map((v) => v.accent).filter(Boolean))] as string[];
+    const regions = [...new Set(all.map((v) => v.region).filter(Boolean))] as string[];
+    const toneStyles = [...new Set(all.flatMap((v) => v.toneStyles))];
     return {
       data,
       facets: {
         genders: ['male', 'female', 'neutral'],
         ageGroups: ['adult', 'child', 'unknown'],
         categories: ['stock', 'own', 'clone'],
+        countries: countries.sort(),
+        accents: accents.sort(),
+        regions: regions.sort(),
+        toneStyles: toneStyles.sort(),
         note:
-          'Children voices are not available from current vendors (capability deferred). Dialect/accent tags are catalog metadata — not acoustic control knobs. Approved clones appear when authenticated.',
+          'Children voices deferred. Country/accent/ethnic tags are cultural metadata on own:* voices for agent builders — not acoustic accent control. Approved clones appear when authenticated.',
       },
       docs: '/docs/NEURAL_TTS.md',
     };

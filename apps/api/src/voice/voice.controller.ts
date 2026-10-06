@@ -78,6 +78,8 @@ export class VoiceController {
     body: {
       text?: string;
       voice?: string;
+      /** Emotion Voice profile id (calm, empathetic, customer_support, …) for soft prosody. */
+      emotion?: string;
       format?: 'mp3' | 'wav' | 'opus' | 'aac' | 'flac';
     },
   ) {
@@ -97,6 +99,7 @@ export class VoiceController {
       file,
       text: body.text,
       voice: body.voice,
+      emotion: body.emotion,
       format: body.format,
     });
   }

@@ -53,6 +53,13 @@ export class EmotionIntelligenceGraphqlResolver {
       confidence: result.confidence,
       audioAdjusted: result.audioAdjusted,
       note: result.note,
+      sentiment: result.sentiment,
+      tone: {
+        label: result.tone.label,
+        confidence: result.tone.confidence,
+        note: result.tone.note,
+      },
+      honesty: result.honesty,
     };
   }
 }

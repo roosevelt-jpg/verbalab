@@ -107,6 +107,10 @@ describe('Emotion Intelligence', () => {
     expect(['excitement', 'urgency', 'happy']).toContain(res.body.label);
     expect(res.body.confidence).toBeGreaterThan(0.4);
     expect(res.body.scores.length).toBeGreaterThan(3);
+    expect(res.body.emotionalState.label).toBe(res.body.label);
+    expect(res.body.sentiment.label).toBeTruthy();
+    expect(res.body.tone.label).toBeTruthy();
+    expect(res.body.honesty).toMatch(/heuristic|not trained SER|NIST/i);
 
     const analytics = await request(app.getHttpServer())
       .get('/v1/emotion/analytics')
@@ -147,7 +151,10 @@ describe('Emotion Intelligence', () => {
   it('scores cue lexicon helpers', () => {
     const sad = analyzeSpeechEmotion('I feel so sad and miserable today');
     expect(sad.label).toBe('sad');
+    expect(sad.sentiment.label).toBe('negative');
     const fear = analyzeSpeechEmotion('I am terrified and afraid');
     expect(fear.label).toBe('fear');
+    const urgent = analyzeSpeechEmotion('This is urgent ASAP — please hurry');
+    expect(urgent.tone.label).toBe('urgent');
   });
 });
