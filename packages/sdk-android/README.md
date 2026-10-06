@@ -1,44 +1,39 @@
 # Lugemi Android SDK (Kotlin)
 
-Official Android / Kotlin client for Lugemi speech, translate, and voice agents.
+Official Android / Kotlin client for Lugemi speech, translate, and video voice lines.
 
-## Status
+## APIs
 
-Scaffold ready for video and mobile apps. Mirrors `@lugemi/sdk` HTTP surface:
+| Method | HTTP |
+| --- | --- |
+| `speech` | `POST /v1/audio/speech` |
+| `translate` | `POST /v1/translate` |
+| `languages` | `GET /v1/languages` |
+| `voices` | `GET /v1/audio/voices` |
+| `videoVoiceLine` | translate + speech (dubbing helper) |
 
-- `POST /v1/audio/speech`
-- `POST /v1/translate`
-- `POST /v1/detect`
-- `GET /v1/languages`
-- `POST /v1/voice/simulate`
+## Install
 
-## Install (planned)
+Copy `LugemiClient.kt` into your app module, or publish as `com.lugemi:sdk` when ready.
 
-```kotlin
-implementation("com.lugemi:sdk:0.1.0")
-```
-
-## Usage sketch
+Requires `org.json` (bundled on Android) and `INTERNET` permission.
 
 ```kotlin
-val client = LugemiClient(
+val client = LugemiHttpClient(
   apiKey = BuildConfig.LUGEMI_API_KEY,
   baseUrl = "https://api.lugemi.com",
 )
 
-val speech = client.speech(
-  text = "Habari, dunia.",
-  voice = "own:sw-ke-female",
-)
-
-val translated = client.translate(
-  text = "Build speaking agents",
+// Video / content production
+val (translated, audio) = client.videoVoiceLine(
+  text = "Welcome to Accra",
+  target = "ak",
+  voice = "own:ak-gh-female",
   source = "en",
-  target = "sw",
 )
+// audio.audio → ByteArray (mp3) for ExoPlayer / MediaPlayer
 ```
 
-Auth header: `Authorization: Bearer lg_live_…`  
-Workspace header (optional): `X-Lugemi-Workspace-Id`
+Auth: `Authorization: Bearer lg_live_…` (or `lg_test_…`).
 
-See `LugemiClient.kt` for the typed stub interface.
+Same contracts as `@lugemi/sdk`, `@lugemi/cli`, and `@lugemi/mcp`.

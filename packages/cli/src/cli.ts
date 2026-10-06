@@ -1,10 +1,13 @@
 #!/usr/bin/env node
-import { readFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { Lugemi } from '@lugemi/sdk';
 
 function usage(): never {
   console.error(`Usage:
   lugemi translate --text <text> --target <lang> [--source <lang>]
+  lugemi speech --text <text> --voice <id> [--language <lang>] [--format mp3|wav] [--out <file>]
+  lugemi video-voice --text <text> --target <lang> --voice <id> [--source <lang>] [--out <file>]
+  lugemi voices
   lugemi translate-format --format <html|markdown|xml|csv|srt> --file <path> --target <lang> [--source <lang>]
   lugemi translate-engine
   lugemi localize --format <json|yaml> --file <path> --target <lang> [--source <lang>]
@@ -283,6 +286,77 @@ async function main() {
 
   if (command === 'languages') {
     console.log(JSON.stringify(await vl.languages(), null, 2));
+    return;
+  }
+
+  if (command === 'voices') {
+    console.log(JSON.stringify(await vl.voices(), null, 2));
+    return;
+  }
+
+  if (command === 'speech') {
+    const text = argValue(rest, '--text');
+    const voice = argValue(rest, '--voice') ?? 'own:ak-gh-female';
+    const language = argValue(rest, '--language');
+    const format = (argValue(rest, '--format') as 'mp3' | 'wav' | 'opus' | 'aac' | 'flac' | undefined) ?? 'mp3';
+    const out = argValue(rest, '--out') ?? `lugemi-speech.${format === 'wav' ? 'wav' : 'mp3'}`;
+    if (!text) {
+      console.error('speech requires --text');
+      process.exit(1);
+    }
+    const result = await vl.speech({ text, voice, language, format });
+    writeFileSync(out, result.audio);
+    console.log(
+      JSON.stringify(
+        {
+          out,
+          mimeType: result.mimeType,
+          voice: result.voice,
+          provider: result.provider,
+          characters: result.characters,
+          byteLength: result.audio.byteLength,
+        },
+        null,
+        2,
+      ),
+    );
+    return;
+  }
+
+  if (command === 'video-voice') {
+    const text = argValue(rest, '--text');
+    const target = argValue(rest, '--target') ?? 'ak';
+    const source = argValue(rest, '--source') ?? 'auto';
+    const voice = argValue(rest, '--voice') ?? 'own:ak-gh-female';
+    const out = argValue(rest, '--out') ?? 'lugemi-video-line.mp3';
+    if (!text) {
+      console.error('video-voice requires --text');
+      process.exit(1);
+    }
+    const translated = await vl.translate({ text, source, target });
+    const speech = await vl.speech({
+      text: translated.text,
+      voice,
+      language: target,
+      format: 'mp3',
+    });
+    writeFileSync(out, speech.audio);
+    console.log(
+      JSON.stringify(
+        {
+          translated: translated.text,
+          source: translated.source,
+          target,
+          out,
+          mimeType: speech.mimeType,
+          voice: speech.voice,
+          characters: translated.characters,
+          byteLength: speech.audio.byteLength,
+        },
+        null,
+        2,
+      ),
+    );
     return;
   }
 
@@ -1928,9 +2002,9 @@ async function main() {
     console.log(
       JSON.stringify(
         await vl.neuralTtsVoices({
-          gender: argValue(argv, '--gender'),
-          language: argValue(argv, '--language'),
-          category: argValue(argv, '--category'),
+          gender: argValue(rest, '--gender'),
+          language: argValue(rest, '--language'),
+          category: argValue(rest, '--category'),
         }),
         null,
         2,

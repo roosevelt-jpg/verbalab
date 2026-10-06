@@ -126,6 +126,55 @@ export LUGEMI_API_URL=${API_URL}`}
             </p>
           </section>
 
+          <section className="vl-endpoint-card">
+            <h2 style={sectionLabel}>Video platforms · MCP</h2>
+            <p style={{ margin: '0 0 0.65rem', color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.55 }}>
+              Wire Lugemi into video/agent tools via MCP: synthesize voice, translate scripts, or run a
+              translate→speech dubbing line in one tool call.
+            </p>
+            <CodePanel
+              label="MCP + CLI"
+              code={`# MCP (stdio)
+pnpm --filter @lugemi/mcp build
+LUGEMI_API_KEY=lg_live_... node packages/mcp/dist/index.js
+
+# CLI for content pipelines
+lugemi voices
+lugemi speech --text "Akwaaba" --voice own:ak-gh-female --language ak --out line.mp3
+lugemi video-voice --text "Welcome" --source en --target ak --voice own:ak-gh-female --out dub.mp3`}
+            />
+          </section>
+
+          <section className="vl-endpoint-card">
+            <h2 style={sectionLabel}>Android & iOS</h2>
+            <p style={{ margin: '0 0 0.65rem', color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.55 }}>
+              Mobile SDKs call the same REST APIs (<code className="vl-code">/v1/audio/speech</code>,{' '}
+              <code className="vl-code">/v1/translate</code>, voices, languages) with Bearer keys.
+            </p>
+            <CodePanel
+              label="Kotlin"
+              code={`val client = LugemiHttpClient(apiKey = "lg_live_…")
+val (translated, audio) = client.videoVoiceLine(
+  text = "Welcome to Accra",
+  target = "ak",
+  voice = "own:ak-gh-female",
+)`}
+            />
+            <CodePanel
+              label="Swift"
+              code={`let client = LugemiClient(apiKey: "lg_live_…")
+let (translated, audio) = try await client.videoVoiceLine(
+  text: "Welcome to Accra",
+  target: "ak",
+  voice: "own:ak-gh-female"
+)`}
+            />
+            <p style={{ margin: '0.65rem 0 0', color: 'var(--muted)', fontSize: '0.85rem' }}>
+              Sources: <code className="vl-code">packages/sdk-android</code> ·{' '}
+              <code className="vl-code">packages/sdk-ios</code>
+            </p>
+          </section>
+
           <section className="vl-player-bar">
             <Link href="/docs" className="vl-btn vl-btn-primary" style={{ textDecoration: 'none' }}>
               Docs

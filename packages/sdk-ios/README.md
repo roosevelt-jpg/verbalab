@@ -1,30 +1,35 @@
 # Lugemi iOS SDK (Swift)
 
-Official Swift client for Lugemi speech, translate, and speaking agents on iOS / macOS.
+Official Swift Package for Lugemi speech, translate, and video voice lines on iOS / macOS.
 
-## Status
+## APIs
 
-Scaffold ready. Same REST surface as `@lugemi/sdk` and the Android Kotlin stub.
+| Method | HTTP |
+| --- | --- |
+| `speech` | `POST /v1/audio/speech` |
+| `translate` | `POST /v1/translate` |
+| `languages` | `GET /v1/languages` |
+| `voices` | `GET /v1/audio/voices` |
+| `videoVoiceLine` | translate + speech (dubbing helper) |
 
-## Install (planned)
+## Install
 
-Swift Package Manager: `https://github.com/lugemi/lugemi-swift` (publish when ready)
-
-## Usage sketch
+Swift Package Manager — add the local package `packages/sdk-ios` or publish when ready.
 
 ```swift
+import Lugemi
+
 let client = LugemiClient(apiKey: ProcessInfo.processInfo.environment["LUGEMI_API_KEY"] ?? "")
 
-let audio = try await client.speech(
-  text: "Habari, dunia.",
-  voice: "own:sw-ke-female"
+let (translated, audio) = try await client.videoVoiceLine(
+  text: "Welcome to Accra",
+  target: "ak",
+  voice: "own:ak-gh-female",
+  source: "en"
 )
-
-let translated = try await client.translate(
-  text: "Build speaking agents",
-  source: "en",
-  target: "sw"
-)
+// audio.audio → Data (mp3) for AVAudioPlayer / AVFoundation
 ```
 
-See `Sources/Lugemi/LugemiClient.swift`.
+Auth: `Authorization: Bearer lg_live_…` (or `lg_test_…`).
+
+Same contracts as `@lugemi/sdk`, `@lugemi/cli`, and `@lugemi/mcp`.
