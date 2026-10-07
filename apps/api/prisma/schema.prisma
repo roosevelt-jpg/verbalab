@@ -1793,4 +1793,23 @@ model VoiceDataPromptFeedback {
   @@map("voice_data_prompt_feedback")
 }
 
+/// Pilot requests from the public /organizations page (UN agencies, NGOs, governments).
+model PilotRequest {
+  id           String   @id @default(cuid())
+  name         String
+  email        String
+  organization String
+  orgType      String   @map("org_type")
+  country      String?
+  languages    String?
+  useCase      String   @map("use_case")
+  message      String?
+  status       String   @default("new")
+  ip           String?
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([status, createdAt])
+  @@map("pilot_requests")
+}
+
 

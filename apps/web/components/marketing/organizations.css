@@ -1,0 +1,275 @@
+/* Lugemi for organisations — builds on enterprise.css (.ent-*) */
+
+.org .ent-hero-copy {
+  max-width: var(--ent-max);
+}
+
+.org .ent-hero-copy > * {
+  max-width: 40rem;
+}
+
+.org-eyebrow {
+  margin: 0 0 0.85rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand-teal);
+}
+
+.org-headline {
+  font-size: clamp(2.1rem, 5.4vw, 3.4rem);
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+  color: #ffffff;
+}
+
+.org-gap {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: start;
+  margin-top: 2.25rem;
+}
+
+.org-gap-stat strong {
+  display: block;
+  font-family: var(--ent-display);
+  font-size: clamp(2.6rem, 6vw, 3.8rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  color: var(--brand-navy);
+}
+
+.org-gap-stat:nth-child(2) strong {
+  color: var(--action-primary);
+}
+
+.org-gap-stat span {
+  display: block;
+  margin-top: 0.5rem;
+  max-width: 11rem;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.org-gap-copy {
+  margin: 0;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.org-offers {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  margin-top: 2.25rem;
+}
+
+.org-offer h3 {
+  margin: 0 0 0.55rem;
+  font-family: var(--ent-display);
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
+  color: var(--brand-navy);
+}
+
+.org-offer p {
+  margin: 0;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.org-steps {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1.75rem;
+  margin: 2.25rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.org-step-num {
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  font-weight: 700;
+  color: var(--on-action-primary);
+  background: var(--action-primary);
+}
+
+.org-steps h3 {
+  margin: 0.85rem 0 0.4rem;
+  font-family: var(--ent-display);
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  color: var(--brand-navy);
+}
+
+.org-steps p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.org-languages {
+  display: grid;
+  gap: 1.75rem;
+  margin-top: 2rem;
+}
+
+.org-language-group h3 {
+  margin: 0 0 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--brand-navy);
+}
+
+.org-language-group ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.org-language-group li {
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.org-language-now li {
+  color: var(--on-action-primary);
+  background: var(--action-primary);
+}
+
+.org-language-next li {
+  color: var(--brand-navy);
+  background: transparent;
+  border: 1px solid rgba(16, 38, 77, 0.22);
+}
+
+.org-pilot {
+  display: grid;
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+  gap: 3rem;
+  align-items: start;
+}
+
+.org-form {
+  display: grid;
+  gap: 1rem;
+  padding: 1.75rem;
+  border: 1px solid var(--border-subtle);
+  border-radius: 14px;
+  background: var(--surface-base, #ffffff);
+  box-shadow: 0 18px 40px -28px rgba(16, 38, 77, 0.35);
+}
+
+.org-form-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.org-form label {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.org-form label span {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--brand-navy);
+}
+
+.org-form input,
+.org-form select,
+.org-form textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.6rem 0.75rem;
+  font: inherit;
+  color: var(--text-primary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-control, 8px);
+  background: var(--surface-muted);
+}
+
+.org-form textarea {
+  resize: vertical;
+}
+
+.org-form input:focus-visible,
+.org-form select:focus-visible,
+.org-form textarea:focus-visible {
+  outline: 2px solid var(--action-primary);
+  outline-offset: 1px;
+}
+
+.org-form button[type='submit'] {
+  justify-self: start;
+}
+
+.org-form-trap {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.org-form-error {
+  margin: 0;
+  color: var(--status-danger, #b42318);
+  font-weight: 600;
+}
+
+.org-form-done h3 {
+  margin: 0;
+  font-family: var(--ent-display);
+  font-size: 1.35rem;
+  color: var(--brand-navy);
+}
+
+.org-form-done p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.org-form-done button {
+  justify-self: start;
+}
+
+@media (max-width: 960px) {
+  .org-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 860px) {
+  .org-gap,
+  .org-offers,
+  .org-pilot,
+  .org-form-row {
+    grid-template-columns: 1fr;
+  }
+  .org-gap {
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .org-steps {
+    grid-template-columns: 1fr;
+  }
+}

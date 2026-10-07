@@ -180,6 +180,9 @@ export function AdminClient() {
         <a href="/admin/voice-data" className="vl-btn">
           Voice data
         </a>
+        <a href="/admin/pilot-requests" className="vl-btn">
+          Pilot requests
+        </a>
         <button
           type="button"
           className="vl-btn"

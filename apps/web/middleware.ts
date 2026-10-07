@@ -34,6 +34,7 @@ const isPublicRoute = createRouteMatcher([
   '/health(.*)',
   '/p(.*)',
   '/enterprise',
+  '/organizations',
   '/pricing(.*)',
   '/onboarding(.*)',
   '/record(.*)',
