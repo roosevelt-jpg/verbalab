@@ -29,18 +29,19 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
         if: steps.fly.outputs.configured == 'true'
 
-      - name: Deploy API (Africa jnb)
+      # Production API (api.lugemi.com) is the Fly app "verbalab", deployed from the root fly.toml.
+      - name: Deploy API (Africa jnb → api.lugemi.com)
         if: steps.fly.outputs.configured == 'true'
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-        run: flyctl deploy -c infra/fly/api.jnb.toml --dockerfile apps/api/Dockerfile --remote-only
+        run: flyctl deploy . -c fly.toml -a ${{ vars.FLY_API_APP || 'verbalab' }} --remote-only
 
-      - name: Deploy Web (Africa jnb → lugemi.com)
+      - name: Deploy Web + admin (Africa jnb → lugemi.com)
         if: steps.fly.outputs.configured == 'true'
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         run: >
-          flyctl deploy -c infra/fly/web.jnb.toml --dockerfile apps/web/Dockerfile --remote-only
+          flyctl deploy . -c infra/fly/web.jnb.toml --dockerfile apps/web/Dockerfile --remote-only
           --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL || 'https://api.lugemi.com' }}
           --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
           --build-arg NEXT_PUBLIC_APP_URL=https://lugemi.com
@@ -49,14 +50,14 @@ jobs:
         if: steps.fly.outputs.configured == 'true' && vars.FLY_DEPLOY_EU == 'true'
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-        run: flyctl deploy -c infra/fly/api.eu.toml --dockerfile apps/api/Dockerfile --remote-only
+        run: flyctl deploy . -c infra/fly/api.eu.toml --dockerfile apps/api/Dockerfile --remote-only
 
       - name: Deploy Web (EU island)
         if: steps.fly.outputs.configured == 'true' && vars.FLY_DEPLOY_EU == 'true'
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         run: >
-          flyctl deploy -c infra/fly/web.eu.toml --dockerfile apps/web/Dockerfile --remote-only
+          flyctl deploy . -c infra/fly/web.eu.toml --dockerfile apps/web/Dockerfile --remote-only
           --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL_EU }}
           --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
 

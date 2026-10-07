@@ -78,7 +78,7 @@ else
 fi
 
 echo "==> Deploy ($CONFIG → $DOCKERFILE, region $REGION)"
-"$FLY" deploy -c "$CONFIG" --dockerfile "$DOCKERFILE" --remote-only "${BUILD_ARGS[@]}"
+"$FLY" deploy . -c "$CONFIG" --dockerfile "$DOCKERFILE" --remote-only "${BUILD_ARGS[@]}"
 
 echo "==> Add TLS certificate hosts (DNS must point here before issuance completes)"
 "$FLY" certs add lugemi.com -a "$APP" 2>/dev/null || true
