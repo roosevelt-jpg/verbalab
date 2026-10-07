@@ -20,6 +20,11 @@ ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL \
   NEXT_PUBLIC_CLERK_SIGN_IN_URL=$NEXT_PUBLIC_CLERK_SIGN_IN_URL \
   NEXT_PUBLIC_CLERK_SIGN_UP_URL=$NEXT_PUBLIC_CLERK_SIGN_UP_URL \
   NEXT_PUBLIC_SENTRY_DSN=$NEXT_PUBLIC_SENTRY_DSN
+# NEXT_PUBLIC_* values ship to browsers; refuse anything that is not a Clerk publishable key (e.g. an sk_ secret).
+RUN case "$NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY" in \
+      ""|pk_test_*|pk_live_*) ;; \
+      *) echo "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY must start with pk_live_ or pk_test_" >&2; exit 1 ;; \
+    esac
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY apps/web/package.json ./apps/web/
 COPY packages/typescript-config ./packages/typescript-config

@@ -43,7 +43,7 @@ jobs:
         run: >
           flyctl deploy . -c infra/fly/web.jnb.toml --dockerfile apps/web/Dockerfile --remote-only
           --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL || 'https://api.lugemi.com' }}
-          --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_live_Y2xlcmsubHVnZW1pLmNvbSQ' }}
+          --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_live_Y2xlcmsubHVnZW1pLmNvbSQ' }}
           --build-arg NEXT_PUBLIC_APP_URL=https://lugemi.com
 
       - name: Deploy API (EU island)
@@ -59,7 +59,7 @@ jobs:
         run: >
           flyctl deploy . -c infra/fly/web.eu.toml --dockerfile apps/web/Dockerfile --remote-only
           --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL_EU }}
-          --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_live_Y2xlcmsubHVnZW1pLmNvbSQ' }}
 
       - name: Skip notice
         if: steps.fly.outputs.configured != 'true'
