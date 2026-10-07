@@ -177,6 +177,9 @@ export function AdminClient() {
         <a href="/admin/workspaces" className="vl-btn vl-btn-primary">
           Workspace console
         </a>
+        <a href="/admin/voice-data" className="vl-btn">
+          Voice data
+        </a>
         <button
           type="button"
           className="vl-btn"

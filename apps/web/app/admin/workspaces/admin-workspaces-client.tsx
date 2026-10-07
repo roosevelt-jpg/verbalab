@@ -319,6 +319,9 @@ export function AdminWorkspacesClient() {
             <Link href="/admin" className="vl-btn">
               CMS
             </Link>
+            <Link href="/admin/voice-data" className="vl-btn">
+              Voice data
+            </Link>
           </div>
         </header>
 
