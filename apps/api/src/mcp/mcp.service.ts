@@ -291,8 +291,8 @@ export class McpService {
         const live = await this.models.liveMatrix();
         const feature = args.feature ? String(args.feature) : '';
         const features = (live.features ?? [])
-          .filter((f: { feature: string }) => !feature || f.feature === feature)
-          .map((f: { feature: string; models: Array<{ kind?: string; provider?: string }> }) => ({
+          .filter((f) => !feature || f.feature === feature)
+          .map((f) => ({
             ...f,
             models: f.models.filter((m) => m.kind === 'lugemi' || m.provider === 'lugemi'),
           }));
