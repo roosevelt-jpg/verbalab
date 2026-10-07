@@ -1,9 +1,5 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse, type NextRequest } from 'next/server';
-import {
-  LIVE_CLERK_LOCAL_HOST,
-  mustUseLiveClerkLocalOrigin,
-} from '@/lib/live-clerk-local-origin';
 
 const isPublicRoute = createRouteMatcher([
   '/',
@@ -45,50 +41,13 @@ const isPublicRoute = createRouteMatcher([
 const clerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
 /**
- * Live Clerk FAPI rejects Origin http://127.0.0.1 / localhost. Force browser
- * document navigations (especially /dev-login) onto the HTTPS :443 proxy host.
- * Leave /api/* on the loopback port so agents can mint tickets without the proxy.
+ * Do not 307 bare 127.0.0.1/localhost → local.lugemi.com.
+ * That hostname only works inside the agent VM (/etc/hosts + HTTPS :443 proxy).
+ * Without Fly DNS, users must keep using http://127.0.0.1:43125 (or Cursor preview).
+ * Live-key login on loopback uses /dev-login → Clerk hosted ticket URL instead.
  */
-function redirectBareLocalToLiveClerkHost(request: NextRequest): NextResponse | null {
-  const hostHeader =
-    request.headers.get('x-forwarded-host') || request.headers.get('host') || '';
-  if (
-    !mustUseLiveClerkLocalOrigin({
-      publishableKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
-      hostHeader,
-    })
-  ) {
-    return null;
-  }
-
-  const path = request.nextUrl.pathname;
-  if (path.startsWith('/api/') || path.startsWith('/_next/') || path === '/health') {
-    return null;
-  }
-
-  const dest = request.headers.get('sec-fetch-dest');
-  const accept = request.headers.get('accept') || '';
-  const isAuthEntry =
-    path.startsWith('/dev-login') || path.startsWith('/sign-in') || path.startsWith('/sign-up');
-  const isDocument =
-    dest === 'document' || (!dest && accept.includes('text/html')) || dest === 'empty';
-
-  if (!isAuthEntry && !isDocument) {
-    return null;
-  }
-
-  const target = new URL(request.url);
-  target.protocol = 'https:';
-  target.hostname = LIVE_CLERK_LOCAL_HOST;
-  target.port = '';
-  return NextResponse.redirect(target, 307);
-}
-
 export default clerkConfigured
   ? clerkMiddleware(async (auth, request) => {
-      const forced = redirectBareLocalToLiveClerkHost(request);
-      if (forced) return forced;
-
       if (!isPublicRoute(request)) {
         const { userId } = await auth();
         if (!userId) {
@@ -98,9 +57,7 @@ export default clerkConfigured
         }
       }
     })
-  : function middleware(request: NextRequest) {
-      const forced = redirectBareLocalToLiveClerkHost(request);
-      if (forced) return forced;
+  : function middleware(_request: NextRequest) {
       return NextResponse.next();
     };
 

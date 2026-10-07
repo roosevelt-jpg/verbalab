@@ -45,31 +45,33 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     hostHeader,
   });
 
+  const clerkLocalization = {
+    signIn: {
+      start: {
+        title: 'Sign in to Lugemi',
+        subtitle: 'Welcome back — continue to your workspace',
+      },
+    },
+    signUp: {
+      start: {
+        title: 'Create your Lugemi account',
+        subtitle: 'Start building with Africa-first language intelligence',
+      },
+    },
+  };
+
   return (
     <html lang="en" className={`${noto.variable} ${notoMono.variable}`}>
       <body>
         <SentryInit />
         {isClerkConfigured() ? (
-          <LiveKeyOriginGate blockClerk={blockClerkOnBareLocal}>
-            <ClerkProvider
-              localization={{
-                signIn: {
-                  start: {
-                    title: 'Sign in to Lugemi',
-                    subtitle: 'Welcome back — continue to your workspace',
-                  },
-                },
-                signUp: {
-                  start: {
-                    title: 'Create your Lugemi account',
-                    subtitle: 'Start building with Africa-first language intelligence',
-                  },
-                },
-              }}
-            >
-              {children}
-            </ClerkProvider>
-          </LiveKeyOriginGate>
+          blockClerkOnBareLocal ? (
+            // Live keys + bare loopback: skip ClerkProvider (FAPI origin_invalid) but still
+            // serve marketing /health /dev-login instructions on http://127.0.0.1:43125.
+            <LiveKeyOriginGate blockClerk>{children}</LiveKeyOriginGate>
+          ) : (
+            <ClerkProvider localization={clerkLocalization}>{children}</ClerkProvider>
+          )
         ) : (
           children
         )}

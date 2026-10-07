@@ -1,5 +1,7 @@
 # Connect lugemi.com (Cloudflare) → Fly.io
 
+**Until Fly DNS is connected, open http://127.0.0.1:43125** (or Cursor’s port preview). Do **not** use https://lugemi.com — that hostname is not on Fly yet. `https://local.lugemi.com` is only for live Clerk keys inside the agent VM (`/etc/hosts` + HTTPS :443 proxy → Next :43125); it will not resolve on your laptop unless you add hosts and run the proxy yourself. For login on bare loopback with live keys, use **http://127.0.0.1:43125/dev-login** → hosted ticket (or switch to `pk_test_`/`sk_test_`).
+
 **Audience:** operators who already registered `lugemi.com` on Cloudflare and want marketing + realtime admin on the brand domain.
 
 **Outcome after you finish these steps (not before):**

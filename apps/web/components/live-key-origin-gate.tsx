@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type ReactNode } from 'react';
 import {
+  LIVE_CLERK_LOCAL_ORIGIN,
   isBareLocalDevHost,
   isLiveClerkPublishableKey,
   liveClerkLocalUrl,
@@ -9,8 +10,8 @@ import {
 
 /**
  * With pk_live_, Clerk JS FAPI rejects Origin http://127.0.0.1 / localhost.
- * Delay mounting children (ClerkProvider) until we are on https://local.lugemi.com,
- * and hard-redirect bare local hosts so Next never surfaces a Clerk _baseFetch overlay.
+ * Do not hard-redirect to local.lugemi.com (that host only works inside the agent VM
+ * with /etc/hosts + HTTPS :443 proxy). Serve the page on loopback and show how to log in.
  */
 export function LiveKeyOriginGate({
   children,
@@ -20,22 +21,16 @@ export function LiveKeyOriginGate({
   /** Server-computed: live keys + bare localhost Host header. */
   blockClerk?: boolean;
 }) {
-  const [allowClerk, setAllowClerk] = useState(() => {
-    if (blockClerk) return false;
-    if (typeof window === 'undefined') return true;
+  const [bareLocalLive, setBareLocalLive] = useState(() => {
+    if (blockClerk) return true;
+    if (typeof window === 'undefined') return false;
     const live = isLiveClerkPublishableKey(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
-    return !(live && isBareLocalDevHost(window.location.hostname));
+    return live && isBareLocalDevHost(window.location.hostname);
   });
 
   useEffect(() => {
     const live = isLiveClerkPublishableKey(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
-    if (!live || !isBareLocalDevHost(window.location.hostname)) {
-      setAllowClerk(true);
-      return;
-    }
-    setAllowClerk(false);
-    const dest = liveClerkLocalUrl(`${window.location.pathname}${window.location.search}`);
-    window.location.replace(dest);
+    setBareLocalLive(Boolean(live && isBareLocalDevHost(window.location.hostname)));
   }, []);
 
   useEffect(() => {
@@ -53,7 +48,6 @@ export function LiveKeyOriginGate({
           }
         })
         .join(' ');
-      // Non-fatal while redirecting off a rejected Origin; login path uses local.lugemi.com.
       if (
         text.includes('clerk.lugemi.com') &&
         (text.includes('origin_invalid') ||
@@ -69,29 +63,46 @@ export function LiveKeyOriginGate({
     };
   }, []);
 
-  if (!allowClerk) {
-    return (
-      <main
-        style={{
-          minHeight: '100vh',
-          display: 'grid',
-          placeItems: 'center',
-          padding: '2rem',
-          fontFamily: 'var(--font-noto), system-ui, sans-serif',
-          background: '#f7f4ef',
-          color: '#1c1917',
-        }}
-      >
-        <p style={{ margin: 0, textAlign: 'center', lineHeight: 1.5 }}>
-          Live Clerk keys require{' '}
-          <a href={liveClerkLocalUrl('/dev-login')} style={{ color: '#0f766e', fontWeight: 700 }}>
-            https://local.lugemi.com
-          </a>
-          . Redirecting…
-        </p>
-      </main>
-    );
+  if (!bareLocalLive) {
+    return children;
   }
 
-  return children;
+  return (
+    <>
+      <div
+        role="status"
+        style={{
+          background: '#fffbeb',
+          borderBottom: '1px solid #fcd34d',
+          color: '#78350f',
+          padding: '0.85rem 1.25rem',
+          fontFamily: 'var(--font-noto), system-ui, sans-serif',
+          fontSize: '0.92rem',
+          lineHeight: 1.5,
+        }}
+      >
+        <strong style={{ display: 'block', marginBottom: '0.35rem' }}>
+          Until Fly DNS is connected, open{' '}
+          <a href="http://127.0.0.1:43125" style={{ color: '#0f766e' }}>
+            http://127.0.0.1:43125
+          </a>{' '}
+          (or Cursor’s port preview) — not https://lugemi.com
+        </strong>
+        <span style={{ display: 'block' }}>
+          Live Clerk keys reject bare localhost Origin. Login options:{' '}
+          <a href="/dev-login" style={{ color: '#0f766e', fontWeight: 700 }}>
+            /dev-login
+          </a>{' '}
+          (hosted ticket), or{' '}
+          <a href={liveClerkLocalUrl('/dev-login')} style={{ color: '#0f766e', fontWeight: 700 }}>
+            {LIVE_CLERK_LOCAL_ORIGIN}
+          </a>{' '}
+          only inside this agent VM (hosts + HTTPS proxy), or connect Fly + DNS later for real
+          lugemi.com. Your laptop will not resolve local.lugemi.com unless you add hosts and run the
+          proxy yourself.
+        </span>
+      </div>
+      {children}
+    </>
+  );
 }

@@ -31,11 +31,12 @@ pnpm typecheck
 pnpm dev
 ```
 
-- Web console: http://localhost:3000
-- API health: http://localhost:3001/health
-- Without Clerk keys: http://localhost:3000/setup
+- Web console: **http://127.0.0.1:43125** (Studio default) or http://localhost:3000
+- API health: http://127.0.0.1:3001/health
+- Without Clerk keys: http://127.0.0.1:43125/setup
+- **Until Fly DNS is connected:** open **http://127.0.0.1:43125** (or Cursor’s port preview) — **not** https://lugemi.com. See [`docs/domain-setup.md`](docs/domain-setup.md).
 - **Skip setup after login (local):** open **`/dev-login`** (Skip setup checked by default) or visit `/onboarding?skipOnboarding=1` → Creative Studio; optional `NEXT_PUBLIC_SKIP_ONBOARDING=1` in web env
-- **Live Clerk keys on local:** production keys reject bare `localhost` / `127.0.0.1` Origin (`origin_invalid` from `clerk.lugemi.com`). Map `127.0.0.1 local.lugemi.com`, terminate HTTPS on **:443** (proxy to Next **:43125**), set `ALLOW_CLERK_DEV_LOGIN=true`, then open **`https://local.lugemi.com/dev-login`** only — middleware and the live-key origin gate force-redirect bare loopback document hits there. Prefer `pnpm --filter @lugemi/web dev:local` so empty shell `CLERK_*` overrides do not wipe `.env.local` and bounce you to `/setup`.
+- **Live Clerk keys on local:** production keys reject bare `localhost` / `127.0.0.1` Origin (`origin_invalid` from `clerk.lugemi.com`). On **http://127.0.0.1:43125/dev-login**, use **Sign in without OTP (hosted ticket)** (no proxy required). Optional HTTPS proxy path (agent VM only): map `127.0.0.1 local.lugemi.com`, terminate HTTPS on **:443** → Next **:43125**, set `ALLOW_CLERK_DEV_LOGIN=true`, open **`https://local.lugemi.com/dev-login`**. Your laptop will not resolve `local.lugemi.com` unless you add hosts and run the proxy yourself. Prefer `pnpm --filter @lugemi/web dev:local` so empty shell `CLERK_*` overrides do not wipe `.env.local` and bounce you to `/setup`.
 - Marketing CMS: signed-in **Admin → CMS content** edits homepage, footer, `/p/*` pages, images, and videos (`GET/PUT /api/cms`, uploads to `/cms-media/`)
 
 ## Workspace scripts

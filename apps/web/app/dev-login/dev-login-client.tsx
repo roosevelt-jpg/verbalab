@@ -31,7 +31,7 @@ function Shell({ children }: { children: ReactNode }) {
     >
       <div
         style={{
-          width: 'min(28rem, 100%)',
+          width: 'min(32rem, 100%)',
           border: '1px solid #e5e0d6',
           borderRadius: '1rem',
           padding: '1.75rem',
@@ -45,13 +45,49 @@ function Shell({ children }: { children: ReactNode }) {
   );
 }
 
-/** Shown on bare localhost with pk_live_ — no Clerk hooks (avoids FAPI _baseFetch overlay). */
-function DevLoginRedirectPanel() {
-  const dest = liveClerkLocalUrl('/dev-login');
+/**
+ * Bare localhost + pk_live_: Clerk JS cannot complete ticket sign-in (origin_invalid).
+ * Mint a ticket server-side and open Clerk’s hosted URL instead — works without Fly DNS
+ * and without local.lugemi.com on the user’s laptop.
+ */
+function DevLoginBareLocalPanel() {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [status, setStatus] = useState<string | null>(null);
+  const proxyDevLogin = liveClerkLocalUrl('/dev-login');
 
-  useEffect(() => {
-    window.location.replace(dest);
-  }, [dest]);
+  async function signInViaHostedTicket() {
+    setBusy(true);
+    setError(null);
+    setStatus('Minting sign-in ticket…');
+    try {
+      const res = await fetch('/api/dev-login', { method: 'POST' });
+      const data = (await res.json()) as {
+        ticket?: string;
+        clerkHostedUrl?: string | null;
+        error?: string;
+        message?: string;
+      };
+      if (!res.ok) {
+        throw new Error(data.message || data.error || `Ticket mint failed (${res.status})`);
+      }
+      if (data.clerkHostedUrl) {
+        setStatus('Opening Clerk hosted sign-in…');
+        window.location.assign(data.clerkHostedUrl);
+        return;
+      }
+      throw new Error(
+        'Clerk did not return a hosted sign-in URL. Use test keys (pk_test_/sk_test_), or open ' +
+          proxyDevLogin +
+          ' inside the agent VM (hosts + HTTPS proxy), or connect Fly + DNS for lugemi.com.',
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+      setStatus(null);
+    } finally {
+      setBusy(false);
+    }
+  }
 
   return (
     <Shell>
@@ -59,7 +95,7 @@ function DevLoginRedirectPanel() {
         LOCAL DEV LOGIN
       </p>
       <h1 style={{ fontFamily: 'var(--font-display)', margin: '0.4rem 0 0.5rem', fontSize: '1.6rem' }}>
-        Use the HTTPS proxy
+        Loopback access (no Fly yet)
       </h1>
       <p
         style={{
@@ -73,31 +109,64 @@ function DevLoginRedirectPanel() {
           fontSize: '0.9rem',
         }}
       >
-        Live Clerk keys reject Origin <code>http://127.0.0.1</code> / <code>localhost</code>. Continue on{' '}
-        <a href={dest} style={{ color: '#0f766e', fontWeight: 700 }}>
-          {dest}
-        </a>{' '}
-        (hosts → 127.0.0.1, HTTPS :443 → Next :43125, Frontend API{' '}
-        <code style={{ fontSize: '0.85em' }}>clerk.lugemi.com</code>).
+        <strong>Until Fly DNS is connected, use </strong>
+        <code>http://127.0.0.1:43125</code> (or Cursor’s port preview) —{' '}
+        <strong>not</strong> https://lugemi.com. <code>local.lugemi.com</code> only works inside this
+        agent VM (/etc/hosts + HTTPS :443 → Next :43125); your laptop will not resolve it unless you
+        add hosts and run the proxy yourself.
       </p>
-      <a
-        href={dest}
+      <p style={{ color: '#78716c', margin: '0 0 1rem', lineHeight: 1.5, fontSize: '0.92rem' }}>
+        Live Clerk keys reject Origin <code>http://127.0.0.1</code>. Prefer the hosted ticket button
+        below. Alternatives: (a) switch to <code>pk_test_</code>/<code>sk_test_</code>, (b) open{' '}
+        <a href={proxyDevLogin} style={{ color: '#0f766e', fontWeight: 650 }}>
+          {proxyDevLogin}
+        </a>{' '}
+        via Cursor’s browser on the agent VM, or (c) connect Fly + DNS later for real lugemi.com.
+      </p>
+
+      <button
+        type="button"
+        disabled={busy}
+        onClick={() => void signInViaHostedTicket()}
         style={{
-          display: 'block',
           width: '100%',
-          boxSizing: 'border-box',
-          textAlign: 'center',
           border: 0,
           borderRadius: '0.65rem',
           padding: '0.85rem 1rem',
           background: '#0f766e',
           color: 'white',
           fontWeight: 700,
-          textDecoration: 'none',
+          cursor: busy ? 'wait' : 'pointer',
+          marginBottom: '0.75rem',
         }}
       >
-        Continue on local.lugemi.com
+        {busy ? 'Working…' : 'Sign in without OTP (hosted ticket)'}
+      </button>
+
+      <a
+        href={proxyDevLogin}
+        style={{
+          display: 'block',
+          width: '100%',
+          boxSizing: 'border-box',
+          textAlign: 'center',
+          border: '1px solid #d6d3d1',
+          borderRadius: '0.65rem',
+          padding: '0.75rem 1rem',
+          background: '#fff',
+          color: '#1c1917',
+          fontWeight: 650,
+          textDecoration: 'none',
+          marginBottom: '0.5rem',
+        }}
+      >
+        Optional: open local.lugemi.com (agent VM only)
       </a>
+
+      {status ? <p style={{ color: '#0f766e', margin: '1rem 0 0' }}>{status}</p> : null}
+      {error ? (
+        <p style={{ color: '#b42318', margin: '1rem 0 0', whiteSpace: 'pre-wrap' }}>{error}</p>
+      ) : null}
     </Shell>
   );
 }
@@ -119,10 +188,6 @@ function DevLoginTicketForm() {
   }
 
   async function signInWithTicket() {
-    if (liveKeysNeedLocalHost()) {
-      window.location.replace(liveClerkLocalUrl('/dev-login'));
-      return;
-    }
     if (!isLoaded || !signIn) return;
     setBusy(true);
     setError(null);
@@ -132,6 +197,7 @@ function DevLoginTicketForm() {
       const data = (await res.json()) as {
         ticket?: string;
         email?: string;
+        clerkHostedUrl?: string | null;
         error?: string;
         message?: string;
       };
@@ -140,14 +206,23 @@ function DevLoginTicketForm() {
       }
       if (data.email) setEmail(data.email);
       setStatus('Completing ticket sign-in…');
-      const result = await signIn.create({ strategy: 'ticket', ticket: data.ticket });
-      if (result.status === 'complete') {
-        await completeSession(result.createdSessionId);
-        return;
+      try {
+        const result = await signIn.create({ strategy: 'ticket', ticket: data.ticket });
+        if (result.status === 'complete') {
+          await completeSession(result.createdSessionId);
+          return;
+        }
+        throw new Error(
+          `Ticket sign-in incomplete: status=${result.status}. Check Clerk email-code settings.`,
+        );
+      } catch (clerkErr) {
+        if (data.clerkHostedUrl) {
+          setStatus('Clerk JS ticket failed — opening hosted sign-in…');
+          window.location.assign(data.clerkHostedUrl);
+          return;
+        }
+        throw clerkErr;
       }
-      throw new Error(
-        `Ticket sign-in incomplete: status=${result.status}. Check Clerk email-code settings.`,
-      );
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     } finally {
@@ -198,7 +273,7 @@ function DevLoginTicketForm() {
       </h1>
       <p style={{ color: '#78716c', margin: '0 0 1.25rem', lineHeight: 1.5 }}>
         This instance’s hosted Sign-in UI prefers email codes. Use the ticket button below for a
-        one-click session. Live keys require{' '}
+        one-click session. Live keys on the HTTPS proxy use{' '}
         <code style={{ fontSize: '0.85em' }}>{LIVE_CLERK_LOCAL_ORIGIN}</code> (Frontend API{' '}
         <code style={{ fontSize: '0.85em' }}>clerk.lugemi.com</code>).
       </p>
@@ -292,16 +367,12 @@ function DevLoginTicketForm() {
 }
 
 export function DevLoginClient() {
-  const [needsLocalHost, setNeedsLocalHost] = useState(false);
+  const [needsBareLocalFallback, setNeedsBareLocalFallback] = useState(false);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    const needs = liveKeysNeedLocalHost();
-    setNeedsLocalHost(needs);
+    setNeedsBareLocalFallback(liveKeysNeedLocalHost());
     setReady(true);
-    if (needs) {
-      window.location.replace(liveClerkLocalUrl('/dev-login'));
-    }
   }, []);
 
   if (!ready) {
@@ -312,8 +383,8 @@ export function DevLoginClient() {
     );
   }
 
-  if (needsLocalHost) {
-    return <DevLoginRedirectPanel />;
+  if (needsBareLocalFallback) {
+    return <DevLoginBareLocalPanel />;
   }
 
   return <DevLoginTicketForm />;
