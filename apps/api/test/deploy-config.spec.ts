@@ -25,7 +25,8 @@ describe('Production deploy config', () => {
     const yml = readFileSync(join(root, '.github/workflows/deploy.yml'), 'utf8');
     expect(yml).toContain('FLY_API_TOKEN');
     expect(yml).toContain('skipping production deploy');
-    expect(yml).toContain('infra/fly/api.toml');
+    expect(yml).toContain('infra/fly/api.jnb.toml');
+    expect(yml).toContain('infra/fly/web.jnb.toml');
   });
 
   it('ships EU residency island configs', () => {

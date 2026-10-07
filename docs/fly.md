@@ -36,8 +36,8 @@ Do **not** put the Nest API under `https://lugemi.com/api` — prefer the `api.`
 | `lugemi-web` | Next console (preferred) | **3000** | `infra/fly/web.jnb.toml` or `apps/web/fly.toml` |
 
 - **Primary region:** `jnb` (Johannesburg)
-- Health checks: `GET /health` on both services (`[[http_service.checks]]`, grace **45s**)
-- **API port pair:** `internal_port = 3001` **and** `[env] PORT = '3001'` (plus `API_PORT`). Nest binds `0.0.0.0:$PORT` in `apps/api/src/main.ts`. Keep these matched — a mismatch yields Fly `[PC01] instance refused connection`.
+- Health checks: `GET /health` on both services (`[[http_service.checks]]`; API grace **60s** — Nest maps many routes before listen)
+- **API port pair:** `internal_port = 3001` **and** `[env] PORT = '3001'` / `HOST = '0.0.0.0'` (plus `API_PORT`). Nest binds `HOST:$PORT` in `apps/api/src/main.ts`. Keep these matched — a mismatch yields Fly `[PC01] instance refused connection` / Doctor “not listening on expected port”.
 - Nest starts and serves `/health` **even when `DATABASE_URL` is unset** (Prisma connect + boot seeders soft-skip; health JSON includes `database: "skipped"`). Set secrets before relying on DB routes.
 - Without `REDIS_URL`, jobs / rate-limit / event-fabric use in-process / memory (no hang on `127.0.0.1:6379`).
 - US/EU residency islands remain in `infra/fly/api.toml`, `web.toml`, `*.eu.toml` (`lugemi-*` / `lugemi-*-eu` + `*.fly.dev` until those islands get custom hosts)

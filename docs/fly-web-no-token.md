@@ -8,15 +8,24 @@ Canonical DNS table after deploy: [`docs/dns-apex-cutover.md`](./dns-apex-cutove
 
 ---
 
+## Stop — reject Fly Launch junk (do this first)
+
+If the Fly dashboard shows **“Launch success! We've merged some new files…”** with commit author **Lubien** / message like `Merge pull request #N from fly-apps/revert-…` / `flyio-new-files`:
+
+1. That deploy is **not** Lugemi Next.js. Ignore the green banner.
+2. In GitHub: **close / do not merge** any Fly auto-generated PR that adds root `fly.toml` / Dockerfile junk over the monorepo. Prefer our configs: `infra/fly/web.jnb.toml` + `apps/web/Dockerfile`.
+3. Redeploy from the Mac (Path B) or GitHub source with the monorepo paths below — overwrite the junk image.
+4. Agent deploy tokens scoped only to **verbalab** cannot manage **`lugemi-web`**. Create a deploy token **for the `lugemi-web` app** (app → Tokens) or use `fly auth login` on your Mac. Rotate any token that was pasted into chat/agent storage.
+
+---
+
 ## Path A — Fly Dashboard only (no CLI)
 
-### A1. Create the app
+### A1. Create the app (skip if it already exists)
 
 1. Open [https://fly.io/dashboard](https://fly.io/dashboard) and sign in to the **same org** that owns **verbalab**.
-2. Click **Create app** (or **Apps** → **New app**).
-3. App name: **`lugemi-web`** (exact).
-4. Primary region: **Johannesburg (`jnb`)** — matches `infra/fly/web.jnb.toml`.
-5. Finish create. You should land on the app overview for `lugemi-web`.
+2. If **`lugemi-web` already exists** (even with a failed health check / Fly Launch junk): skip create → go to A2 and redeploy the correct image.
+3. Otherwise: **Create app** → name **`lugemi-web`** (exact) → primary region **Johannesburg (`jnb`)**.
 
 ### A2. Deploy the Next.js image
 

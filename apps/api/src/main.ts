@@ -80,9 +80,10 @@ async function bootstrap() {
     ],
   });
 
-  // Fly proxy routes to internal_port; bind all interfaces and honor process.env.PORT.
+  // Fly proxy routes to internal_port; bind all interfaces (never localhost/::1).
+  // Nest's default getUrl() log can still show [::1] — trust structured api.started.host.
   const port = Number(process.env.PORT ?? process.env.API_PORT ?? 3001);
-  const host = '0.0.0.0';
+  const host = (process.env.HOST ?? '0.0.0.0').trim() || '0.0.0.0';
   await app.listen(port, host);
   structuredLog.info('api.started', {
     event: 'api.started',

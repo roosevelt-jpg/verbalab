@@ -10,9 +10,11 @@
 | DNS `lugemi.com` AAAA | **`2a09:8280:1::1a9:e613:0`** (same API app) |
 | DNS `www.lugemi.com` | CNAME → `lugemi.com` → same API IPs |
 | DNS `api.lugemi.com` | Same IPs (correct for API) |
-| `lugemi-web.fly.dev` | Does **not** resolve — web Fly app not created / not deployed |
+| `lugemi-web.fly.dev` | May exist under Personal after Fly Launch, but often ships **Fly-generated junk** (not Lugemi Next.js) and fails health — redeploy with `infra/fly/web.jnb.toml` + `apps/web/Dockerfile` |
 
 **Root cause:** Cloudflare apex (`@`) and `www` point at the Nest Fly app (**verbalab** / API on port 3001). Nest has no `GET /`, so browsers see `Cannot GET /`. Marketing + admin must be served by **`lugemi-web`** (Next.js `apps/web`, port 3000).
+
+**Do not** merge Fly Launch “new files” PRs (Lubien / `fly-apps/…`) into `main` unless they are clearly harmless; keep our monorepo Fly configs.
 
 ## Target layout
 

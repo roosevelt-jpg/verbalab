@@ -75,14 +75,15 @@ describe('Boot without DATABASE_URL (Fly first boot)', () => {
     ]) {
       const toml = readFileSync(join(root, rel), 'utf8');
       expect(toml).toContain("PORT = '3001'");
+      expect(toml).toContain("HOST = '0.0.0.0'");
       expect(toml).toContain('internal_port = 3001');
       expect(toml).toContain("path = '/health'");
-      expect(toml).toContain("grace_period = '45s'");
+      expect(toml).toContain("grace_period = '60s'");
     }
 
     const main = readFileSync(join(root, 'apps/api/src/main.ts'), 'utf8');
     expect(main).toContain('await app.listen(port, host)');
-    expect(main).toContain("const host = '0.0.0.0'");
+    expect(main).toContain("process.env.HOST ?? '0.0.0.0'");
     expect(main).toContain('process.env.PORT');
   });
 });

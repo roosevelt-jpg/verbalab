@@ -15,6 +15,7 @@ primary_region = 'ams'
   NODE_ENV = 'production'
   API_PORT = '3001'
   PORT = '3001'
+  HOST = '0.0.0.0'
   LUGEMI_REGION = 'eu'
   # Resend From (domain must be verified in Resend). Secret: RESEND_API_KEY via fly secrets.
   EMAIL_FROM = 'Lugemi <noreply@lugemi.com>'
@@ -30,7 +31,8 @@ primary_region = 'ams'
   [[http_service.checks]]
     interval = '15s'
     timeout = '5s'
-    grace_period = '45s'
+    # Nest maps many routes before listen; short grace races Fly Doctor "not listening".
+    grace_period = '60s'
     method = 'GET'
     path = '/health'
 
