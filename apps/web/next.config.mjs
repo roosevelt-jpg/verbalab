@@ -31,10 +31,23 @@ const nextConfig = {
     'import-in-the-middle',
   ],
   // Live Clerk keys reject bare localhost Origin; local.lugemi.com (:443) is the supported path.
-  allowedDevOrigins: ['local.lugemi.com', '127.0.0.1', 'localhost'],
+  allowedDevOrigins: [
+    'local.lugemi.com',
+    'https://local.lugemi.com',
+    'clerk.lugemi.com',
+    'https://clerk.lugemi.com',
+    'accounts.lugemi.com',
+    '127.0.0.1',
+    'localhost',
+  ],
   experimental: {
     serverActions: {
-      allowedOrigins: ['local.lugemi.com', 'localhost:43125', '127.0.0.1:43125'],
+      allowedOrigins: [
+        'local.lugemi.com',
+        'https://local.lugemi.com',
+        'localhost:43125',
+        '127.0.0.1:43125',
+      ],
     },
   },
   webpack: (config) => {
@@ -64,18 +77,19 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.lugemi.com https://accounts.lugemi.com",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.lugemi.com https://accounts.lugemi.com https://local.lugemi.com",
               // Clerk + Next.pdf/devtools use blob: workers; without this, Next shows a CSP "1 Issue".
               "worker-src 'self' blob:",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https:",
               "media-src 'self' blob:",
               "font-src 'self' data:",
-              `connect-src 'self' https: ${apiConnectOrigins()}`,
+              // Explicit Clerk FAPI + local HTTPS proxy (https: already covers them; keep named for audits).
+              `connect-src 'self' https: https://clerk.lugemi.com https://accounts.lugemi.com https://local.lugemi.com ${apiConnectOrigins()}`,
               "frame-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.lugemi.com https://accounts.lugemi.com",
               "frame-ancestors 'none'",
               "base-uri 'self'",
-              "form-action 'self' https://accounts.lugemi.com https://clerk.lugemi.com",
+              "form-action 'self' https://accounts.lugemi.com https://clerk.lugemi.com https://local.lugemi.com",
             ].join('; '),
           },
         ],

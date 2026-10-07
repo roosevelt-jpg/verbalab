@@ -1,9 +1,12 @@
 import { ClerkProvider } from '@clerk/nextjs';
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 import { Noto_Sans, Noto_Sans_Mono } from 'next/font/google';
 import './globals.css';
 import '@/components/marketing/marketing.css';
 import { isClerkConfigured } from '@/lib/clerk-config';
+import { mustUseLiveClerkLocalOrigin } from '@/lib/live-clerk-local-origin';
+import { LiveKeyOriginGate } from '@/components/live-key-origin-gate';
 import { SentryInit } from '@/components/sentry-init';
 import { SupportChatWidget } from '@/components/support/support-chat';
 
@@ -34,30 +37,39 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const headerStore = await headers();
+  const hostHeader = headerStore.get('x-forwarded-host') || headerStore.get('host');
+  const blockClerkOnBareLocal = mustUseLiveClerkLocalOrigin({
+    publishableKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+    hostHeader,
+  });
+
   return (
     <html lang="en" className={`${noto.variable} ${notoMono.variable}`}>
       <body>
         <SentryInit />
         {isClerkConfigured() ? (
-          <ClerkProvider
-            localization={{
-              signIn: {
-                start: {
-                  title: 'Sign in to Lugemi',
-                  subtitle: 'Welcome back — continue to your workspace',
+          <LiveKeyOriginGate blockClerk={blockClerkOnBareLocal}>
+            <ClerkProvider
+              localization={{
+                signIn: {
+                  start: {
+                    title: 'Sign in to Lugemi',
+                    subtitle: 'Welcome back — continue to your workspace',
+                  },
                 },
-              },
-              signUp: {
-                start: {
-                  title: 'Create your Lugemi account',
-                  subtitle: 'Start building with Africa-first language intelligence',
+                signUp: {
+                  start: {
+                    title: 'Create your Lugemi account',
+                    subtitle: 'Start building with Africa-first language intelligence',
+                  },
                 },
-              },
-            }}
-          >
-            {children}
-          </ClerkProvider>
+              }}
+            >
+              {children}
+            </ClerkProvider>
+          </LiveKeyOriginGate>
         ) : (
           children
         )}

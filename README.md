@@ -35,7 +35,7 @@ pnpm dev
 - API health: http://localhost:3001/health
 - Without Clerk keys: http://localhost:3000/setup
 - **Skip setup after login (local):** open **`/dev-login`** (Skip setup checked by default) or visit `/onboarding?skipOnboarding=1` → Creative Studio; optional `NEXT_PUBLIC_SKIP_ONBOARDING=1` in web env
-- **Live Clerk keys on local:** production keys reject bare `localhost` Origin. Map `127.0.0.1 local.lugemi.com`, terminate HTTPS on **:443** (proxy to Next **:43125**), set `ALLOW_CLERK_DEV_LOGIN=true`, then use **`https://local.lugemi.com/dev-login`** (Frontend API `clerk.lugemi.com`). Prefer `pnpm --filter @lugemi/web dev:local` so empty shell `CLERK_*` overrides do not wipe `.env.local` and bounce you to `/setup`.
+- **Live Clerk keys on local:** production keys reject bare `localhost` / `127.0.0.1` Origin (`origin_invalid` from `clerk.lugemi.com`). Map `127.0.0.1 local.lugemi.com`, terminate HTTPS on **:443** (proxy to Next **:43125**), set `ALLOW_CLERK_DEV_LOGIN=true`, then open **`https://local.lugemi.com/dev-login`** only — middleware and the live-key origin gate force-redirect bare loopback document hits there. Prefer `pnpm --filter @lugemi/web dev:local` so empty shell `CLERK_*` overrides do not wipe `.env.local` and bounce you to `/setup`.
 - Marketing CMS: signed-in **Admin → CMS content** edits homepage, footer, `/p/*` pages, images, and videos (`GET/PUT /api/cms`, uploads to `/cms-media/`)
 
 ## Workspace scripts
