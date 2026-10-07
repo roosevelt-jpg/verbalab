@@ -33,5 +33,9 @@ describe('OpenAPI', () => {
     expect(res.body.paths['/v1/audio/speech']).toBeDefined();
     expect(res.body.paths['/v1/ocr']).toBeDefined();
     expect(res.body.info.title).toBe(openApiDocument.info.title);
+    expect(res.body.paths['/v1/pilot-requests']?.post).toBeDefined();
+    expect(res.body.paths['/v1/admin/voice-data/speakers']?.post).toBeDefined();
+    expect(res.body.servers[0].url).toBe('https://api.lugemi.com');
+    expect(res.body.tags.length).toBeGreaterThan(10);
   });
 });

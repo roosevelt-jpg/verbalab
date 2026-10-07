@@ -30,6 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function CmsMarketingPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   if (slug === 'enterprise') redirect('/enterprise');
+  if (slug === 'openapi-explorer') redirect('/docs/api');
   const [doc, page] = await Promise.all([getCmsDocument(), getCmsPage(slug)]);
   if (!page) notFound();
 

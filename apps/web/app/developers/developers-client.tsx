@@ -193,8 +193,11 @@ let (translated, audio) = try await client.videoVoiceLine(
             <Link href="/playground" className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none' }}>
               Playground
             </Link>
+            <Link href="/docs/api" className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none' }}>
+              API reference
+            </Link>
             <a href={`${API_URL}/v1/openapi.json`} className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none' }}>
-              OpenAPI
+              openapi.json
             </a>
             <Link href="/usage" className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none' }}>
               Usage

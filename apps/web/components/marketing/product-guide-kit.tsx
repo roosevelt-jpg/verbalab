@@ -5,7 +5,7 @@ const DEFAULT_LINKS = [
   { label: 'API docs', href: '/docs' },
   { label: 'Playground', href: '/playground' },
   { label: 'SDKs & CLI', href: '/developers' },
-  { label: 'OpenAPI', href: '/docs' },
+  { label: 'API reference', href: '/docs/api' },
 ];
 
 function GuideCard({ section }: { section: CmsPageSection }) {

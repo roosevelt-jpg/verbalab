@@ -447,7 +447,7 @@ export const CMS_DEFAULTS: CmsDocument = {
           { label: 'Baobab', href: '/baobab' },
           { label: 'MCP guide', href: '/docs/mcp' },
           { label: 'Builders', href: '/p/builders' },
-          { label: 'OpenAPI explorer', href: '/p/openapi-explorer' },
+          { label: 'API reference', href: '/docs/api' },
           { label: 'Playground', href: '/playground' },
           { label: 'Marketplace', href: '/p/marketplace' },
           { label: 'Pricing', href: '/pricing' },

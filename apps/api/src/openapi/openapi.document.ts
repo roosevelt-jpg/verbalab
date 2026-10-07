@@ -6,7 +6,7 @@ export const openApiDocument = {
     description:
       'Enterprise language-intelligence API. Core surface: languages, translate, API keys, and usage.',
   },
-  servers: [{ url: 'http://localhost:3001', description: 'Local' }],
+  servers: [{ url: 'https://api.lugemi.com', description: 'Production' }],
   components: {
     securitySchemes: {
       ApiKeyAuth: {

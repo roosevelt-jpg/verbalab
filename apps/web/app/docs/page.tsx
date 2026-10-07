@@ -55,6 +55,9 @@ LUGEMI_BASE_URL=${API_URL}`;
           <Link href="/docs/mcp">MCP guide</Link>
           <Link href="/coverage">Coverage</Link>
           <Link href="/developers">Developers</Link>
+          <Link href="/docs/api" className="vl-btn vl-btn-primary" style={{ textDecoration: 'none', padding: '0.45rem 0.9rem', minHeight: 40 }}>
+            API reference
+          </Link>
           <a href={specUrl} className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none', padding: '0.45rem 0.9rem', minHeight: 40 }}>
             openapi.json
           </a>
@@ -72,7 +75,8 @@ LUGEMI_BASE_URL=${API_URL}`;
         agents across languages and accents with cultural context. Africa-first completeness; LATAM, Southeast Asia,
         the Middle East, and the EU in scope. Authenticate with{' '}
         <code className="vl-code">Authorization: Bearer lg_live_...</code> or soft-sandbox{' '}
-        <code className="vl-code">lg_test_...</code>. OpenAPI at <code className="vl-code">/v1/openapi.json</code>.
+        <code className="vl-code">lg_test_...</code>. Browse every endpoint in the <Link href="/docs/api">API reference</Link>, or
+        download the OpenAPI document at <code className="vl-code">/v1/openapi.json</code>.
       </p>
 
       <div className="vl-endpoint-card" style={{ marginTop: '1.5rem' }}>
@@ -201,7 +205,13 @@ LUGEMI_BASE_URL=${API_URL}`;
           <p style={{ color: 'var(--bad)', marginBottom: 0 }}>Could not reach OpenAPI ({error}). Is the API running?</p>
         ): (
           <p style={{ color: 'var(--ok)', marginBottom: 0 }}>
-            {loaded ? 'OpenAPI reachable.': 'Checking OpenAPI…'}
+            {loaded ? (
+              <>
+                OpenAPI reachable — <Link href="/docs/api">open the API reference</Link>.
+              </>
+            ) : (
+              'Checking OpenAPI…'
+            )}
           </p>
         )}
       </div>
