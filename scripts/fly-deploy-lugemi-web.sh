@@ -22,7 +22,7 @@ CONFIG="${FLY_WEB_CONFIG:-infra/fly/web.jnb.toml}"
 DOCKERFILE="${FLY_WEB_DOCKERFILE:-apps/web/Dockerfile}"
 API_URL="${NEXT_PUBLIC_API_URL:-https://api.lugemi.com}"
 APP_URL="${APP_URL:-https://lugemi.com}"
-CLERK_PK="${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:-}"
+CLERK_PK="${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:-pk_live_Y2xlcmsubHVnZW1pLmNvbSQ}"
 
 # Known production API (verbalab) IPs — DO NOT change these for apex; keep on api.lugemi.com only.
 API_IPV4="${FLY_API_IPV4:-66.241.125.66}"
