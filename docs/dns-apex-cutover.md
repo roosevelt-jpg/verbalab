@@ -116,4 +116,4 @@ Open in a browser: `https://lugemi.com/` (marketing), `https://lugemi.com/admin`
 
 ## Agent / CI note
 
-Cloud Agent VMs without `FLY_API_TOKEN` cannot create `lugemi-web` or read its IPs. Add repository / environment secret `FLY_API_TOKEN`, then re-run `scripts/fly-deploy-lugemi-web.sh` (or the Deploy workflow with jnb web config). Until then only this runbook + script are landed in-repo.
+Cloud Agent VMs without `FLY_API_TOKEN` cannot create `lugemi-web` or read its IPs. You do **not** need to paste a token into Cursor: use the dashboard or `fly auth login` on your Mac — see [`docs/fly-web-no-token.md`](./fly-web-no-token.md). Optional: add repository secret `FLY_API_TOKEN` for CI, then re-run `scripts/fly-deploy-lugemi-web.sh`.
