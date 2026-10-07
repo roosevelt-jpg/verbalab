@@ -29,20 +29,21 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
         if: steps.fly.outputs.configured == 'true'
 
-      - name: Deploy API
+      - name: Deploy API (Africa jnb)
         if: steps.fly.outputs.configured == 'true'
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-        run: flyctl deploy -c infra/fly/api.toml --dockerfile apps/api/Dockerfile --remote-only
+        run: flyctl deploy -c infra/fly/api.jnb.toml --dockerfile apps/api/Dockerfile --remote-only
 
-      - name: Deploy Web
+      - name: Deploy Web (Africa jnb → lugemi.com)
         if: steps.fly.outputs.configured == 'true'
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         run: >
-          flyctl deploy -c infra/fly/web.toml --dockerfile apps/web/Dockerfile --remote-only
-          --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}
+          flyctl deploy -c infra/fly/web.jnb.toml --dockerfile apps/web/Dockerfile --remote-only
+          --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL || 'https://api.lugemi.com' }}
           --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+          --build-arg NEXT_PUBLIC_APP_URL=https://lugemi.com
 
       - name: Deploy API (EU island)
         if: steps.fly.outputs.configured == 'true' && vars.FLY_DEPLOY_EU == 'true'

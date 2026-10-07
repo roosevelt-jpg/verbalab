@@ -162,6 +162,8 @@ Playwright signed-in translate (optional): set `E2E_CLERK_USER_EMAIL` + `E2E_CLE
 
 Preferred Fly **app names** are `lugemi` / `lugemi-api` / `lugemi-web` (legacy `verbalab*` may need `fly apps rename` or new apps). That is an internal Fly identifier, **not** the public domain. Default `*.fly.dev` URLs appear until Cloudflare DNS + `fly certs add` are completed. See `docs/domain-setup.md`, `docs/fly.md`, and `docs/cloudflare.md`.
 
+If `https://lugemi.com/` returns Nest `Cannot GET /`, apex DNS still points at the API app — deploy web and move `@`/`www` to `lugemi-web` IPs: [`docs/dns-apex-cutover.md`](docs/dns-apex-cutover.md), `scripts/fly-deploy-lugemi-web.sh`.
+
 ## Vercel (web console)
 
 Production hostname: **lugemi.com**. The Next.js console (`apps/web`) can be configured for Vercel **or** Fly (`lugemi-web`). Prefer **one** origin for the apex. The Nest API stays on Fly / Docker — do not set this repo’s Root Directory to `apps/api`.

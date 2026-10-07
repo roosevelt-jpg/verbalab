@@ -2,6 +2,8 @@
 
 **Until Fly DNS is connected, open http://127.0.0.1:43125** (or Cursor’s port preview). Do **not** use https://lugemi.com — that hostname is not on Fly yet. `https://local.lugemi.com` is only for live Clerk keys inside the agent VM (`/etc/hosts` + HTTPS :443 proxy → Next :43125); it will not resolve on your laptop unless you add hosts and run the proxy yourself. For login on bare loopback with live keys, use **http://127.0.0.1:43125/dev-login** → hosted ticket (or switch to `pk_test_`/`sk_test_`).
 
+> **Incident:** If `https://lugemi.com/` returns Nest JSON `Cannot GET /`, apex DNS still points at the **API** Fly app (`verbalab`, IPs `66.241.125.66` / `2a09:8280:1::1a9:e613:0`). Deploy **`lugemi-web`** and move `@` / `www` A/AAAA to the **web** IPs — keep those API IPs on **`api` only**. Exact paste table + script: [`docs/dns-apex-cutover.md`](./dns-apex-cutover.md) / `scripts/fly-deploy-lugemi-web.sh`.
+
 **Audience:** operators who already registered `lugemi.com` on Cloudflare and want marketing + realtime admin on the brand domain.
 
 **Outcome after you finish these steps (not before):**

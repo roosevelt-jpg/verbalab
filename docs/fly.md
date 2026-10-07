@@ -66,6 +66,8 @@ Until `DATABASE_URL` is set, migrate logs show `[fly-migrate] DATABASE_URL unset
 
 Domain is on **Cloudflare Registrar** (`lugemi.com`). **Operator walkthrough (deploy → DNS → Clerk → admin):** [`docs/domain-setup.md`](./domain-setup.md). Full DNS / CF product table: [`docs/cloudflare.md`](./cloudflare.md).
 
+**Apex currently wrong?** If browsers hit Nest `Cannot GET /` on `lugemi.com`, `@`/`www` are still on the API Shared IPs — cutover runbook + one-shot deploy: [`docs/dns-apex-cutover.md`](./dns-apex-cutover.md), `scripts/fly-deploy-lugemi-web.sh`.
+
 ### 1. Allocate addresses + add certificates
 
 ```bash
