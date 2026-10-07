@@ -29,6 +29,8 @@ primary_region = 'jnb'
   API_PORT = '3001'
   PORT = '3001'
   LUGEMI_REGION = 'af'
+  # Resend From (domain must be verified in Resend). Secret: RESEND_API_KEY via fly secrets.
+  EMAIL_FROM = 'Lugemi <noreply@lugemi.com>'
 
 [http_service]
   internal_port = 3001

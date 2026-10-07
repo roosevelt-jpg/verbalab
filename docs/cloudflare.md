@@ -51,7 +51,7 @@ From `infra/DEPLOY.md`:
 | `apps/web` | Fly (`lugemi-web`) and/or Vercel | DNS + orange cloud (or CNAME to Vercel); Analytics; Turnstile. Public: **lugemi.com** |
 | `apps/api` | Fly (`lugemi-api` / `lugemi`) | Custom domain **api.lugemi.com**; WAF/DDoS; optional edge rate-limit |
 | Object files | Local disk / Fly volume | **R2** for multi-machine durability |
-| Email send | Resend | Keep Resend; use Email Routing for inbound only |
+| Email send | Resend | Keep Resend (`RESEND_API_KEY` + `EMAIL_FROM`); verify `lugemi.com` DKIM/SPF in Resend (see [`docs/fly.md`](./fly.md) § Resend email). Email Routing for inbound only |
 | Auth | Clerk | Turnstile ahead of public endpoints; Access for internal admin if desired; allow `lugemi.com` / `www` |
 
 ## Env placeholders (optional)

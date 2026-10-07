@@ -58,9 +58,41 @@ fly secrets set -a lugemi-api \
 # Recommended for BullMQ jobs + Redis-backed rate limits:
 fly secrets set -a lugemi-api \
   REDIS_URL='redis://...'
+
+# Transactional email (VL-080) — Nest NotificationsService / ResendAdapter:
+fly secrets set RESEND_API_KEY='re_...' -a lugemi-api
+# If the dashboard app is still named verbalab / verbalab-api:
+# fly secrets set RESEND_API_KEY='re_...' -a verbalab
+# fly secrets set RESEND_API_KEY='re_...' -a verbalab-api
+# EMAIL_FROM ships in API fly.toml [env] as: Lugemi <noreply@lugemi.com>
+# Override: fly secrets set EMAIL_FROM='Lugemi <noreply@lugemi.com>' -a lugemi-api
 ```
 
 Until `DATABASE_URL` is set, migrate logs show `[fly-migrate] DATABASE_URL unset — skipping prisma migrate deploy`. The proxy can still route once Nest listens on `0.0.0.0:3001` and `/health` returns 200.
+
+## Resend email (outbound)
+
+Nest reads `RESEND_API_KEY` + `EMAIL_FROM`. When either is unset, sends no-op (invites / job alerts still succeed). `NOTIFICATIONS_DISABLED=1` kills all sends.
+
+| Variable | Where | Example |
+| --- | --- | --- |
+| `RESEND_API_KEY` | Fly secret (API apps only) | `re_...` |
+| `EMAIL_FROM` | `fly.toml` `[env]` (or secret override) | `Lugemi <noreply@lugemi.com>` |
+
+**Domain verification (required before production From works):** In [Resend → Domains](https://resend.com/domains), add `lugemi.com` (or a send subdomain). Copy the **exact** DNS records from the domain’s Records tab into Cloudflare DNS. Resend generates unique values per domain — do not invent DKIM keys.
+
+Typical shapes (values are placeholders — use the dashboard):
+
+| Type | Name (Cloudflare) | Value (example shape) | Proxy |
+| --- | --- | --- | --- |
+| TXT | `resend._domainkey` | DKIM public key from Resend | DNS only (grey cloud) |
+| TXT | `send` | `v=spf1 include:amazonses.com ~all` (or exact Resend SPF) | DNS only |
+| MX | `send` | `feedback-smtp.<region>.amazonses.com` (priority from Resend) | DNS only |
+| CNAME | (if Resend shows CNAMEs instead of MX/TXT) | hosts from Resend Records tab | **DNS only** — do not orange-cloud |
+
+After records propagate, click **Verify** in Resend (often ~15 minutes; up to 72h). Optional DMARC on the root: `TXT` `_dmarc` → `v=DMARC1; p=none;`.
+
+Inbound `support@` / `hello@` stays on Cloudflare Email Routing; do not point root MX at Resend unless you intend Resend inbound.
 
 ## Custom domains (Fly certs + Cloudflare DNS)
 

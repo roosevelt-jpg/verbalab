@@ -46,7 +46,15 @@ fly secrets set -a lugemi-api \
   STRIPE_PRICE_ID_PRO='...' \
   BILLING_SUCCESS_URL='https://lugemi.com/billing?checkout=success' \
   BILLING_CANCEL_URL='https://lugemi.com/billing?checkout=cancel' \
-  BILLING_PORTAL_RETURN_URL='https://lugemi.com/billing'
+  BILLING_PORTAL_RETURN_URL='https://lugemi.com/billing' \
+  RESEND_API_KEY='re_...'
+
+# EMAIL_FROM is set in fly.toml [env] as Lugemi <noreply@lugemi.com>.
+# Override if needed: fly secrets set EMAIL_FROM='Lugemi <noreply@lugemi.com>' -a lugemi-api
+# If the live app is still named verbalab / verbalab-api:
+#   fly secrets set RESEND_API_KEY='re_...' -a verbalab
+#   fly secrets set RESEND_API_KEY='re_...' -a verbalab-api
+# lugemi-web does not send Resend mail — no RESEND_API_KEY needed there.
 
 # Web build args are set at deploy time; also set runtime Clerk secret if used server-side:
 fly secrets set -a lugemi-web CLERK_SECRET_KEY='...' APP_URL='https://lugemi.com'
