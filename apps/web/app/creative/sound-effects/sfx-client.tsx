@@ -70,7 +70,7 @@ function CreativeSfxClientAuthed() {
   return <CreativeSfxClientInner getToken={getToken} isLoaded={isLoaded} />;
 }
 
-function CreativeSfxClientInner({ getToken, isLoaded }: { getToken: any; isLoaded: any }) {
+function CreativeSfxClientInner({ getToken, isLoaded }: { getToken: () => Promise<string | null>; isLoaded: boolean }) {
   // auth via props: getToken, isLoaded
   const search = useSearchParams();
   const [engine, setEngine] = useState<Engine | null>(null);

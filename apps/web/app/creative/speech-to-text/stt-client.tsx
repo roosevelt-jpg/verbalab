@@ -41,7 +41,7 @@ function CreativeSpeechToTextClientAuthed() {
   return <CreativeSpeechToTextClientInner getToken={getToken} isLoaded={isLoaded} />;
 }
 
-function CreativeSpeechToTextClientInner({ getToken, isLoaded }: { getToken: any; isLoaded: any }) {
+function CreativeSpeechToTextClientInner({ getToken, isLoaded }: { getToken: () => Promise<string | null>; isLoaded: boolean }) {
   // auth via props: getToken, isLoaded
   const catalog = useLocaleCatalog();
   const credits = useCreativeCredits();

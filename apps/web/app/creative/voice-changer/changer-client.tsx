@@ -38,7 +38,7 @@ function CreativeVoiceChangerClientAuthed() {
   return <CreativeVoiceChangerClientInner getToken={getToken} isLoaded={isLoaded} />;
 }
 
-function CreativeVoiceChangerClientInner({ getToken, isLoaded }: { getToken: any; isLoaded: any }) {
+function CreativeVoiceChangerClientInner({ getToken, isLoaded }: { getToken: () => Promise<string | null>; isLoaded: boolean }) {
   // auth via props: getToken, isLoaded
   const credits = useCreativeCredits();
   const inputRef = useRef<HTMLInputElement>(null);

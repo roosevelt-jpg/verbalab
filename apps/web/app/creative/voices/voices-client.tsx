@@ -42,7 +42,7 @@ function CreativeVoicesClientAuthed() {
   return <CreativeVoicesClientInner getToken={getToken} isLoaded={isLoaded} />;
 }
 
-function CreativeVoicesClientInner({ getToken, isLoaded }: { getToken: any; isLoaded: any }) {
+function CreativeVoicesClientInner({ getToken, isLoaded }: { getToken: () => Promise<string | null>; isLoaded: boolean }) {
   // auth via props: getToken, isLoaded
   const [tab, setTab] = useState<'explore' | 'mine'>('explore');
   const [listings, setListings] = useState<Listing[]>([]);

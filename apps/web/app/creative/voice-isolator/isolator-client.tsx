@@ -40,7 +40,7 @@ function CreativeVoiceIsolatorClientAuthed() {
   return <CreativeVoiceIsolatorClientInner getToken={getToken} isLoaded={isLoaded} />;
 }
 
-function CreativeVoiceIsolatorClientInner({ getToken, isLoaded }: { getToken: any; isLoaded: any }) {
+function CreativeVoiceIsolatorClientInner({ getToken, isLoaded }: { getToken: () => Promise<string | null>; isLoaded: boolean }) {
   // auth via props: getToken, isLoaded
   const credits = useCreativeCredits();
   const inputRef = useRef<HTMLInputElement>(null);

@@ -5,7 +5,8 @@ app = 'lugemi-api-eu'
 primary_region = 'ams'
 
 [build]
-  dockerfile = 'apps/api/Dockerfile'
+  # flyctl resolves this relative to this file's directory (infra/fly/).
+  dockerfile = '../../apps/api/Dockerfile'
 
 [deploy]
   # Soft-skips when DATABASE_URL unset; applies prisma migrate deploy when set.

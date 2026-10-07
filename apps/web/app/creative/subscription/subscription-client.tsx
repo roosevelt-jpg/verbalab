@@ -104,7 +104,7 @@ function CreativeSubscriptionClientAuthed() {
   return <CreativeSubscriptionClientInner getToken={getToken} isLoaded={isLoaded} />;
 }
 
-function CreativeSubscriptionClientInner({ getToken, isLoaded }: { getToken: any; isLoaded: any }) {
+function CreativeSubscriptionClientInner({ getToken, isLoaded }: { getToken: () => Promise<string | null>; isLoaded: boolean }) {
   // auth via props: getToken, isLoaded
   const [tab, setTab] = useState<Tab>('creative');
   const [plans, setPlans] = useState<PlanCard[]>(WEB_BILLING_PLANS);

@@ -36,7 +36,7 @@ function CreativeDubbingClientAuthed() {
   return <CreativeDubbingClientInner getToken={getToken} isLoaded={isLoaded} />;
 }
 
-function CreativeDubbingClientInner({ getToken, isLoaded }: { getToken: any; isLoaded: any }) {
+function CreativeDubbingClientInner({ getToken, isLoaded }: { getToken: () => Promise<string | null>; isLoaded: boolean }) {
   // auth via props: getToken, isLoaded
   const catalog = useLocaleCatalog();
   const credits = useCreativeCredits();

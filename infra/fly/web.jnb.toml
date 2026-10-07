@@ -11,7 +11,8 @@ app = 'lugemi-web'
 primary_region = 'jnb'
 
 [build]
-  dockerfile = 'apps/web/Dockerfile'
+  # flyctl resolves this relative to this file's directory (infra/fly/).
+  dockerfile = '../../apps/web/Dockerfile'
 
 [env]
   NODE_ENV = 'production'

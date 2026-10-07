@@ -41,7 +41,7 @@ function CreativeTtsClientAuthed() {
   return <CreativeTtsClientInner getToken={getToken} isLoaded={isLoaded} />;
 }
 
-function CreativeTtsClientInner({ getToken, isLoaded }: { getToken: any; isLoaded: any }) {
+function CreativeTtsClientInner({ getToken, isLoaded }: { getToken: () => Promise<string | null>; isLoaded: boolean }) {
   // auth via props: getToken, isLoaded
   const search = useSearchParams();
   const [voices, setVoices] = useState<Voice[]>([]);

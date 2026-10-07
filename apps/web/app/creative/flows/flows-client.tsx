@@ -35,7 +35,7 @@ function CreativeFlowsClientAuthed() {
   return <CreativeFlowsClientInner getToken={getToken} isLoaded={isLoaded} />;
 }
 
-function CreativeFlowsClientInner({ getToken, isLoaded }: { getToken: any; isLoaded: any }) {
+function CreativeFlowsClientInner({ getToken, isLoaded }: { getToken: () => Promise<string | null>; isLoaded: boolean }) {
   // auth via props: getToken, isLoaded
   const [rows, setRows] = useState<Workflow[]>([]);
   const [error, setError] = useState<string | null>(null);
