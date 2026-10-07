@@ -21,12 +21,31 @@ const nextConfig = {
   // Lean production image for Fly / Docker (apps/web/Dockerfile).
   output: 'standalone',
   outputFileTracingRoot: path.join(__dirname, '../..'),
+  // Keep Sentry/OTel out of the webpack graph so require-in-the-middle does not
+  // show as Next.js "1 Issue" (Critical dependency) during `next dev`.
+  serverExternalPackages: [
+    '@sentry/nextjs',
+    '@sentry/node',
+    '@opentelemetry/instrumentation',
+    'require-in-the-middle',
+    'import-in-the-middle',
+  ],
   // Live Clerk keys reject bare localhost Origin; local.lugemi.com (:443) is the supported path.
   allowedDevOrigins: ['local.lugemi.com', '127.0.0.1', 'localhost'],
   experimental: {
     serverActions: {
       allowedOrigins: ['local.lugemi.com', 'localhost:43125', '127.0.0.1:43125'],
     },
+  },
+  webpack: (config) => {
+    config.ignoreWarnings = [
+      ...(config.ignoreWarnings ?? []),
+      {
+        module: /node_modules\/require-in-the-middle/,
+        message: /Critical dependency/,
+      },
+    ];
+    return config;
   },
   async headers() {
     return [
