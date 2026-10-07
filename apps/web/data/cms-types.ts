@@ -81,6 +81,8 @@ export type CmsHeroDemo = {
   title: string;
   badge: string;
   defaultText: string;
+  /** BCP-47 language of `defaultText`; each voice speaks it with its own local accent. Defaults to English. */
+  language?: string;
   playHint: string;
   voices: { id: string; label: string }[];
 };

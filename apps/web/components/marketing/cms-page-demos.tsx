@@ -8,25 +8,33 @@ import { VoiceChipRow } from '@/components/marketing/voice-chip-row';
 import { VoiceCloneFaqDemo } from '@/components/marketing/voice-clone-faq-demo';
 import { CMS_DEFAULTS } from '@/data/cms-defaults';
 
-const SAMPLE_VOICES = CMS_DEFAULTS.console.sampleVoices.map((v) => ({
-  id: v.id,
-  label: v.label,
-  sample: `Habari — ${v.label}. ${v.ethnicContext}.`,
-  lang:
-    v.id.startsWith('sw')
-      ? 'sw'
-      : v.id.startsWith('yo')
-        ? 'yo'
-        : v.id.startsWith('am')
-          ? 'am'
-          : v.id.startsWith('zu')
-            ? 'zu'
-            : v.id.startsWith('ar')
-              ? 'ar-EG'
-              : v.id.startsWith('fr')
-                ? 'fr-FR'
-                : 'en-US',
-}));
+/** A short welcome written in each voice's own language — never one script read by every voice. */
+const NATIVE_GREETINGS: Record<string, string> = {
+  sw: 'Habari, karibu Lugemi.',
+  yo: 'Ẹ káàbọ̀ sí Lugemi.',
+  am: 'እንኳን ወደ ሉገሚ በደህና መጡ።',
+  zu: 'Sawubona, wamukelekile kuLugemi.',
+  ar: 'أهلاً بيك في لوجيمي.',
+  fr: 'Bonjour, bienvenue sur Lugemi.',
+  ha: 'Sannu, barka da zuwa Lugemi.',
+  ak: 'Akwaaba, wo ho te sɛn?',
+};
+
+/** `own:fr-sn-female` → `fr-SN`. */
+function voiceLocale(voiceId: string): string {
+  const [lang = 'en', region] = voiceId.replace(/^own:/, '').split('-');
+  return region ? `${lang}-${region.toUpperCase()}` : lang;
+}
+
+const SAMPLE_VOICES = CMS_DEFAULTS.console.sampleVoices.map((v) => {
+  const lang = voiceLocale(v.voiceId);
+  return {
+    id: v.id,
+    label: v.label,
+    lang,
+    sample: NATIVE_GREETINGS[lang.split('-')[0]!] ?? `${v.label}.`,
+  };
+});
 
 const VOICE_DEMO_SLUGS = new Set([
   'products',
@@ -107,8 +115,10 @@ export function CmsPageDemos({ slug }: { slug: string }) {
             title="Agent transcript · builder product desk"
             userText="Can my agent greet customers in Twi and Kiswahili?"
             agentText="Aane — and karibu. Lugemi own:* voices carry both languages with local accent and cultural context."
-            userVoiceId="user"
-            agentVoiceId="abe"
+            userVoiceId="kwame"
+            agentVoiceId="ak-gh-female"
+            userLang="en-GH"
+            agentLang="en-GH"
           />
         </div>
         <div style={{ marginTop: '1.25rem' }}>
@@ -163,6 +173,10 @@ export function CmsPageDemos({ slug }: { slug: string }) {
           title="Agent transcript · East Africa trade desk"
           userText="Habari — naweza kupata bei za usafirishaji?"
           agentText="Karibu. Ninaweza kukusaidia na bei, malipo, na ratiba ya usafirishaji."
+          userVoiceId="sw-ke-female"
+          agentVoiceId="amara"
+          userLang="sw-KE"
+          agentLang="sw-KE"
         />
       </div>
     );
@@ -183,8 +197,10 @@ export function CmsPageDemos({ slug }: { slug: string }) {
           title="Speech → agent reply"
           userText="Habari, naomba msaada kwa lugha yangu."
           agentText="Karibu. Ninaweza kusikiliza na kujibu kwa Kiswahili au Kiingereza."
-          userVoiceId="user"
+          userVoiceId="sw-ke-female"
           agentVoiceId="amara"
+          userLang="sw-KE"
+          agentLang="sw-KE"
         />
         <div style={{ marginTop: '1.25rem' }}>
           <VoiceChipRow voices={SAMPLE_VOICES.slice(0, 4)} />
@@ -224,8 +240,10 @@ export function CmsPageDemos({ slug }: { slug: string }) {
           title="Disclosure-aware speaking turn"
           userText="Can you repeat that in Twi for my customer?"
           agentText="Aane — me bɛka bio wɔ Twi mu. Generated speech stays labeled when it could be mistaken for a live person."
-          userVoiceId="user"
-          agentVoiceId="abe"
+          userVoiceId="kwame"
+          agentVoiceId="ak-gh-female"
+          userLang="en-GH"
+          agentLang="ak-GH"
         />
       </div>
     );

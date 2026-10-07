@@ -1,5 +1,6 @@
 import { HttpStatus } from '@nestjs/common';
 import { ApiException } from '../common/errors/api-exception';
+import { nativeVoiceUnavailable } from './native-voice';
 import { TtsInput, TtsOutput, TtsProvider, TtsVoice } from './tts-provider';
 
 /**
@@ -74,9 +75,19 @@ export function isOwnTtsVoice(voice: string): boolean {
   return voice.startsWith('own:');
 }
 
+function ownTtsUrl(): string {
+  return process.env.OWN_TTS_URL?.trim() ?? '';
+}
+
+/** Fixture audio is placeholder noise, so production never uses it unless explicitly forced. */
+function ownTtsFixtureEnabled(): boolean {
+  if (process.env.OWN_TTS_FIXTURE === '1') return true;
+  if (process.env.OWN_TTS_FIXTURE === '0') return false;
+  return process.env.NODE_ENV !== 'production';
+}
+
 export function ownTtsConfigured(): boolean {
-  // Lugemi Echo Voice always has a local first-party path (fixture/local engine).
-  return true;
+  return Boolean(ownTtsUrl()) || ownTtsFixtureEnabled();
 }
 
 export function resolveOwnTtsVoice(voice: string): TtsVoice | undefined {
@@ -248,7 +259,7 @@ export class HttpOwnTtsAdapter implements TtsProvider {
   }
 }
 
-/** Lists catalog but refuses synthesis until OWN_TTS_URL or fixture is set. */
+/** Lists catalog but refuses synthesis until the native voice model (OWN_TTS_URL) is live. */
 export class UnconfiguredOwnTtsAdapter implements TtsProvider {
   readonly name = 'own_tts';
 
@@ -256,23 +267,16 @@ export class UnconfiguredOwnTtsAdapter implements TtsProvider {
     return OWN_TTS_VOICES;
   }
 
-  async synthesize(_input: TtsInput): Promise<TtsOutput> {
-    throw new ApiException(
-      'provider_not_configured',
-      'OWN_TTS_URL is not set. Deploy an open-weight TTS endpoint (e.g. on Modal), or set OWN_TTS_FIXTURE=1 for local/CI fixtures.',
-      HttpStatus.SERVICE_UNAVAILABLE,
-    );
+  async synthesize(input: TtsInput): Promise<TtsOutput> {
+    const voice = resolveOwnTtsVoice(input.voice);
+    throw nativeVoiceUnavailable(input.language ?? voice?.languages[0], 'native voice model not deployed');
   }
 }
 
 export function createOwnTtsAdapter(): TtsProvider {
-  const url = process.env.OWN_TTS_URL?.trim() ?? '';
+  const url = ownTtsUrl();
   if (url) {
     return new HttpOwnTtsAdapter(url, process.env.OWN_TTS_API_KEY?.trim() || undefined);
   }
-  // Default path = Lugemi Echo Voice local engine (no third-party keys).
-  if (process.env.OWN_TTS_FIXTURE === '0') {
-    return new UnconfiguredOwnTtsAdapter();
-  }
-  return new FixtureOwnTtsAdapter();
+  return ownTtsFixtureEnabled() ? new FixtureOwnTtsAdapter() : new UnconfiguredOwnTtsAdapter();
 }

@@ -1,122 +1,53 @@
-/** Client-side marketing demo speech — works without API keys via Web Speech API. */
+/**
+ * Marketing demo speech — always Lugemi native voices via the API (`POST /v1/demo/speech`).
+ * Never falls back to browser speech or stock voices: those sound like a foreigner
+ * speaking the language. If no native voice exists yet, the API refuses and we show why.
+ */
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
 
 export type DemoVoiceProfile = {
   id: string;
   label: string;
-  /** BCP-47 hint for speechSynthesis */
+  /** BCP-47 language this voice speaks natively (also sent with the request). */
   lang: string;
-  /** Preferred OpenAI TTS voice when server demo is available */
-  openaiVoice?: 'alloy' | 'echo' | 'fable' | 'onyx' | 'nova' | 'shimmer';
-  rate?: number;
-  pitch?: number;
+  /** Lugemi native voice (`own:*`) used when the requested language matches `lang`. */
+  voice?: string;
+  /** Local English accent for this speaker when the script is English, e.g. `en-NG`. */
+  englishLocale?: string;
 };
 
 export const DEMO_VOICE_PROFILES: Record<string, DemoVoiceProfile> = {
-  abe: {
-    id: 'abe',
-    label: 'Abe · Lagos',
-    lang: 'en-NG',
-    openaiVoice: 'onyx',
-    rate: 0.95,
-    pitch: 0.95,
-  },
-  amara: {
-    id: 'amara',
-    label: 'Amara · Nairobi',
-    lang: 'sw-KE',
-    openaiVoice: 'nova',
-    rate: 0.98,
-    pitch: 1.05,
-  },
-  thandi: {
-    id: 'thandi',
-    label: 'Thandi · Johannesburg',
-    lang: 'en-ZA',
-    openaiVoice: 'shimmer',
-    rate: 1,
-    pitch: 1.08,
-  },
-  kwame: {
-    id: 'kwame',
-    label: 'Kwame · Accra',
-    lang: 'en-GH',
-    openaiVoice: 'echo',
-    rate: 0.97,
-    pitch: 0.9,
-  },
-  'sw-ke-female': {
-    id: 'sw-ke-female',
-    label: 'Aisha · Nairobi',
-    lang: 'sw',
-    openaiVoice: 'nova',
-    rate: 0.98,
-    pitch: 1.05,
-  },
-  'yo-ng-male': {
-    id: 'yo-ng-male',
-    label: 'Tunde · Lagos',
-    lang: 'en-NG',
-    openaiVoice: 'onyx',
-    rate: 0.95,
-    pitch: 0.92,
-  },
-  'am-et-female': {
-    id: 'am-et-female',
-    label: 'Hanna · Addis',
-    lang: 'am',
-    openaiVoice: 'shimmer',
-    rate: 0.95,
-    pitch: 1.05,
-  },
-  'zu-za-female': {
-    id: 'zu-za-female',
-    label: 'Thandi · Durban',
-    lang: 'zu',
-    openaiVoice: 'nova',
-    rate: 1,
-    pitch: 1.05,
-  },
-  'ar-eg-male': {
-    id: 'ar-eg-male',
-    label: 'Omar · Cairo',
-    lang: 'ar-EG',
-    openaiVoice: 'onyx',
-    rate: 0.95,
-    pitch: 0.9,
-  },
-  'fr-sn-female': {
-    id: 'fr-sn-female',
-    label: 'Awa · Dakar',
-    lang: 'fr-FR',
-    openaiVoice: 'shimmer',
-    rate: 1,
-    pitch: 1.05,
-  },
-  agent: {
-    id: 'agent',
-    label: 'Agent',
-    lang: 'sw',
-    openaiVoice: 'nova',
-    rate: 0.98,
-    pitch: 1,
-  },
-  user: {
-    id: 'user',
-    label: 'User',
-    lang: 'sw',
-    openaiVoice: 'echo',
-    rate: 1,
-    pitch: 0.95,
-  },
+  abe: { id: 'abe', label: 'Abe · Lagos', lang: 'yo-NG', voice: 'own:yo-ng-male', englishLocale: 'en-NG' },
+  amara: { id: 'amara', label: 'Amara · Nairobi', lang: 'sw-KE', voice: 'own:sw-ke-female', englishLocale: 'en-KE' },
+  thandi: { id: 'thandi', label: 'Thandi · Johannesburg', lang: 'zu-ZA', voice: 'own:zu-za-female', englishLocale: 'en-ZA' },
+  kwame: { id: 'kwame', label: 'Kwame · Accra', lang: 'ak-GH', englishLocale: 'en-GH' },
+  'sw-ke-female': { id: 'sw-ke-female', label: 'Aisha · Nairobi', lang: 'sw-KE', voice: 'own:sw-ke-female', englishLocale: 'en-KE' },
+  'yo-ng-male': { id: 'yo-ng-male', label: 'Tunde · Lagos', lang: 'yo-NG', voice: 'own:yo-ng-male', englishLocale: 'en-NG' },
+  'am-et-female': { id: 'am-et-female', label: 'Hanna · Addis', lang: 'am-ET', voice: 'own:am-et-female' },
+  'zu-za-female': { id: 'zu-za-female', label: 'Thandi · Durban', lang: 'zu-ZA', voice: 'own:zu-za-female', englishLocale: 'en-ZA' },
+  'ar-eg-male': { id: 'ar-eg-male', label: 'Omar · Cairo', lang: 'ar-EG', voice: 'own:ar-eg-male' },
+  'fr-sn-female': { id: 'fr-sn-female', label: 'Awa · Dakar', lang: 'fr-SN', voice: 'own:fr-sn-female' },
+  'ha-ng-male': { id: 'ha-ng-male', label: 'Sani · Kano', lang: 'ha-NG', voice: 'own:ha-ng-male', englishLocale: 'en-NG' },
+  'ak-gh-female': { id: 'ak-gh-female', label: 'Akosua · Accra', lang: 'ak-GH', voice: 'own:ak-gh-female', englishLocale: 'en-GH' },
+  agent: { id: 'agent', label: 'Agent', lang: 'sw-KE' },
+  user: { id: 'user', label: 'User', lang: 'en' },
 };
 
+const LANG_ALIASES: Record<string, string> = { tw: 'ak', twi: 'ak', fat: 'ak' };
+
+function baseLang(lang: string): string {
+  const primary = lang.trim().toLowerCase().split(/[-_]/)[0] ?? '';
+  return LANG_ALIASES[primary] ?? primary;
+}
+
 let activeAudio: HTMLAudioElement | null = null;
-let activeUtterance: SpeechSynthesisUtterance | null = null;
+let activeRequest: AbortController | null = null;
 
 export function stopDemoSpeech() {
   if (typeof window === 'undefined') return;
-  window.speechSynthesis?.cancel();
-  activeUtterance = null;
+  activeRequest?.abort();
+  activeRequest = null;
   if (activeAudio) {
     activeAudio.pause();
     activeAudio.src = '';
@@ -124,110 +55,25 @@ export function stopDemoSpeech() {
   }
 }
 
-function pickBrowserVoice(lang: string): SpeechSynthesisVoice | null {
-  if (typeof window === 'undefined' || !window.speechSynthesis) return null;
-  const voices = window.speechSynthesis.getVoices();
-  if (!voices.length) return null;
-  const exact = voices.find((v) => v.lang.toLowerCase() === lang.toLowerCase());
-  if (exact) return exact;
-  const prefix = lang.split('-')[0]?.toLowerCase() ?? '';
-  const byPrefix = voices.find((v) => v.lang.toLowerCase().startsWith(prefix));
-  if (byPrefix) return byPrefix;
-  return voices.find((v) => v.lang.toLowerCase().startsWith('en')) ?? voices[0] ?? null;
-}
-
-async function playViaServer(
-  text: string,
-  profile: DemoVoiceProfile,
-  onStarted?: () => void,
-): Promise<boolean> {
-  try {
-    const res = await fetch('/api/demo/speech', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        text: text.slice(0, 500),
-        voiceId: profile.id,
-        openaiVoice: profile.openaiVoice ?? 'alloy',
-        lang: profile.lang,
-      }),
-    });
-    if (!res.ok) return false;
-    const contentType = res.headers.get('content-type') ?? '';
-    if (contentType.includes('application/json')) {
-      const body = (await res.json()) as { mode?: string };
-      return body.mode !== 'browser';
-    }
-    const blob = await res.blob();
-    if (!blob.size) return false;
-    stopDemoSpeech();
-    const url = URL.createObjectURL(blob);
-    const audio = new Audio(url);
-    activeAudio = audio;
-    await new Promise<void>((resolve, reject) => {
-      audio.onended = () => {
-        URL.revokeObjectURL(url);
-        if (activeAudio === audio) activeAudio = null;
-        resolve();
-      };
-      audio.onerror = () => {
-        URL.revokeObjectURL(url);
-        reject(new Error('Audio playback failed'));
-      };
-      void audio
-        .play()
-        .then(() => onStarted?.())
-        .catch(reject);
-    });
-    return true;
-  } catch {
-    return false;
+function resolveRequest(profile: DemoVoiceProfile, requestedLang: string | undefined) {
+  const lang = requestedLang ?? profile.lang;
+  const base = baseLang(lang);
+  if (base === 'en') {
+    const language = lang.includes('-') ? lang : profile.englishLocale ?? 'en';
+    return { language, voice: undefined };
   }
+  const voice = profile.voice && baseLang(profile.lang) === base ? profile.voice : undefined;
+  return { language: lang, voice };
 }
 
-function playViaBrowser(
-  text: string,
-  profile: DemoVoiceProfile,
-  onStarted?: () => void,
-): Promise<void> {
-  return new Promise((resolve, reject) => {
-    if (typeof window === 'undefined' || !window.speechSynthesis) {
-      reject(new Error('Speech synthesis unavailable in this browser'));
-      return;
-    }
-    stopDemoSpeech();
-    const utter = new SpeechSynthesisUtterance(text.slice(0, 500));
-    utter.lang = profile.lang;
-    utter.rate = profile.rate ?? 1;
-    utter.pitch = profile.pitch ?? 1;
-    const voice = pickBrowserVoice(profile.lang);
-    if (voice) utter.voice = voice;
-    activeUtterance = utter;
-    utter.onend = () => {
-      if (activeUtterance === utter) activeUtterance = null;
-      resolve();
-    };
-    utter.onerror = () => {
-      if (activeUtterance === utter) activeUtterance = null;
-      reject(new Error('Speech synthesis failed'));
-    };
-    // Chrome often needs voices loaded asynchronously
-    const speak = () => {
-      window.speechSynthesis.speak(utter);
-      onStarted?.();
-    };
-    if (window.speechSynthesis.getVoices().length === 0) {
-      window.speechSynthesis.onvoiceschanged = () => {
-        const v = pickBrowserVoice(profile.lang);
-        if (v) utter.voice = v;
-        speak();
-      };
-      // Fallback if event never fires
-      setTimeout(speak, 250);
-    } else {
-      speak();
-    }
-  });
+async function readError(res: Response): Promise<string> {
+  try {
+    const body = (await res.json()) as { error?: { message?: string } };
+    if (body.error?.message) return body.error.message;
+  } catch {
+    // non-JSON error body
+  }
+  return `Native voice playback failed (HTTP ${res.status})`;
 }
 
 export async function playDemoSpeech(input: {
@@ -236,21 +82,45 @@ export async function playDemoSpeech(input: {
   lang?: string;
   label?: string;
   onStarted?: () => void;
-}): Promise<{ mode: 'server' | 'browser'; profile: DemoVoiceProfile }> {
+}): Promise<{ mode: 'server'; profile: DemoVoiceProfile }> {
   const base =
     (input.voiceId && DEMO_VOICE_PROFILES[input.voiceId]) ||
     Object.values(DEMO_VOICE_PROFILES).find((p) => p.label === input.label) ||
     DEMO_VOICE_PROFILES.amara!;
+  const profile: DemoVoiceProfile = { ...base, label: input.label ?? base.label };
+  const { language, voice } = resolveRequest(profile, input.lang);
 
-  const profile: DemoVoiceProfile = {
-    ...base,
-    lang: input.lang ?? base.lang,
-    label: input.label ?? base.label,
-  };
+  stopDemoSpeech();
+  const controller = new AbortController();
+  activeRequest = controller;
+  const res = await fetch(`${API_URL}/v1/demo/speech`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: input.text.slice(0, 300), language, voice }),
+    signal: controller.signal,
+  });
+  if (!res.ok) throw new Error(await readError(res));
+  const blob = await res.blob();
+  if (activeRequest !== controller) return { mode: 'server', profile };
+  activeRequest = null;
 
-  const usedServer = await playViaServer(input.text, profile, input.onStarted);
-  if (usedServer) return { mode: 'server', profile };
-
-  await playViaBrowser(input.text, profile, input.onStarted);
-  return { mode: 'browser', profile };
+  const url = URL.createObjectURL(blob);
+  const audio = new Audio(url);
+  activeAudio = audio;
+  await new Promise<void>((resolve, reject) => {
+    audio.onended = () => {
+      URL.revokeObjectURL(url);
+      if (activeAudio === audio) activeAudio = null;
+      resolve();
+    };
+    audio.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error('Audio playback failed'));
+    };
+    void audio
+      .play()
+      .then(() => input.onStarted?.())
+      .catch(reject);
+  });
+  return { mode: 'server', profile };
 }

@@ -64,6 +64,7 @@ export function HeroTtsCard({ demo }: { demo: CmsHeroDemo }) {
               id: 'hero-tts',
               text,
               voiceId: voice,
+              lang: demo.language ?? 'en',
               label: selected?.label,
             });
           }}
@@ -81,6 +82,7 @@ export function HeroTtsCard({ demo }: { demo: CmsHeroDemo }) {
               id: previewId,
               text: text || demo.defaultText,
               voiceId: voice,
+              lang: demo.language ?? 'en',
               label: selected?.label,
             });
           }}

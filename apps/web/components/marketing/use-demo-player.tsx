@@ -40,13 +40,10 @@ export function useDemoPlayer() {
           },
         });
         if (token !== gen.current) return;
-        setStatus(
-          result.mode === 'server'
-            ? `Played with Lugemi demo TTS · ${result.profile.label}`
-            : `Played in browser · ${result.profile.label} (${result.profile.lang})`,
-        );
+        setStatus(`Played with a Lugemi native voice · ${result.profile.label}`);
       } catch (err) {
         if (token !== gen.current) return;
+        if (err instanceof DOMException && err.name === 'AbortError') return;
         setError(err instanceof Error ? err.message : 'Playback failed');
         setStatus(null);
       } finally {

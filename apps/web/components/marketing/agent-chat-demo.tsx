@@ -9,8 +9,8 @@ export function AgentChatDemo({
   agentText,
   userVoiceId = 'user',
   agentVoiceId = 'agent',
-  userLang = 'sw',
-  agentLang = 'sw',
+  userLang = 'en',
+  agentLang = 'en',
 }: {
   title: string;
   userText: string;

@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
 import { useDemoPlayer } from './use-demo-player';
 
@@ -11,21 +12,39 @@ export function StudioSampleDemo({
   chips: string[];
 }) {
   const { play, stop, playingId, loadingId, status, error } = useDemoPlayer();
-  const chipVoice: Record<string, { voiceId: string; lang: string }> = {
-    English: { voiceId: 'abe', lang: 'en-US' },
-    Swahili: { voiceId: 'amara', lang: 'sw' },
-    Yoruba: { voiceId: 'yo-ng-male', lang: 'yo' },
-    French: { voiceId: 'fr-sn-female', lang: 'fr-FR' },
-    Amharic: { voiceId: 'am-et-female', lang: 'am' },
+  const [script, setScript] = useState(sample);
+  // Each chip speaks a line written in that language, never the English draft read with a foreign accent.
+  const chipVoice: Record<string, { voiceId: string; lang: string; text: string }> = {
+    English: { voiceId: 'abe', lang: 'en-NG', text: sample },
+    Swahili: {
+      voiceId: 'amara',
+      lang: 'sw-KE',
+      text: 'Habari — chapa yako inaweza kuzungumza na wateja kwa Kiswahili, Kiyoruba na Kifaransa kutoka rasimu moja.',
+    },
+    Yoruba: {
+      voiceId: 'yo-ng-male',
+      lang: 'yo-NG',
+      text: 'Ẹ n lẹ — orúkọ ilé-iṣẹ́ rẹ lè bá àwọn oníbàárà sọ̀rọ̀ ní èdè Swahili, Yorùbá àti Faransé láti inú àkọsílẹ̀ kan ṣoṣo.',
+    },
+    French: {
+      voiceId: 'fr-sn-female',
+      lang: 'fr-SN',
+      text: 'Bonjour — votre marque peut parler à vos clients en swahili, en yoruba et en français à partir d’un seul brouillon.',
+    },
+    Amharic: {
+      voiceId: 'am-et-female',
+      lang: 'am-ET',
+      text: 'ሰላም — የእርስዎ ብራንድ ከአንድ ረቂቅ ብቻ ደንበኞችን በስዋሂሊ፣ በዮሩባ እና በፈረንሳይኛ ማነጋገር ይችላል።',
+    },
   };
 
   return (
     <div className="mkt-fake-ui mkt-studio-demo">
       <div className="mkt-fake-ui-bar">Studio sample</div>
-      <p className="mkt-fake-ui-script">{sample}</p>
+      <p className="mkt-fake-ui-script">{script}</p>
       <div className="mkt-fake-chips">
         {chips.map((chip, i) => {
-          const meta = chipVoice[chip] ?? { voiceId: 'amara', lang: 'en-US' };
+          const meta = chipVoice[chip] ?? { voiceId: 'abe', lang: 'en-NG', text: sample };
           const id = `studio-${chip}`;
           const active = playingId === id;
           const loading = loadingId === id;
@@ -41,9 +60,10 @@ export function StudioSampleDemo({
               ariaLabel={active || loading ? `Stop ${chip}` : `Play ${chip}`}
               onStop={stop}
               onPlay={() => {
+                setScript(meta.text);
                 void play({
                   id,
-                  text: sample,
+                  text: meta.text,
                   voiceId: meta.voiceId,
                   lang: meta.lang,
                   label: chip,
@@ -62,11 +82,12 @@ export function StudioSampleDemo({
           stopLabel="Stop"
           onStop={stop}
           onPlay={() => {
+            setScript(sample);
             void play({
               id: 'studio-main',
               text: sample,
-              voiceId: 'amara',
-              lang: 'sw',
+              voiceId: 'abe',
+              lang: 'en-NG',
             });
           }}
         />

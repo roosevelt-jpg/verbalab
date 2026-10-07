@@ -1,3 +1,4 @@
+import { baseTtsLanguage } from '../gateway/native-voice';
 import type { TtsVoice } from '../gateway/tts-provider';
 
 export type EnrichedTtsVoice = TtsVoice & {
@@ -92,7 +93,10 @@ export function filterEnrichedVoices(
 ): EnrichedTtsVoice[] {
   return voices.filter((v) => {
     if (filters.gender && v.gender !== filters.gender) return false;
-    if (filters.language && !v.languages.includes(filters.language)) return false;
+    if (filters.language) {
+      const wanted = baseTtsLanguage(filters.language);
+      if (!v.languages.some((l) => baseTtsLanguage(l) === wanted)) return false;
+    }
     if (filters.personality && v.personality !== filters.personality) return false;
     if (filters.dialect && v.dialect !== filters.dialect) return false;
     if (filters.accent && v.accent !== filters.accent) return false;

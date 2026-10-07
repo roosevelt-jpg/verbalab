@@ -8,7 +8,20 @@ import { Injectable, Logger } from '@nestjs/common';
 import { GoogleTranslateAdapter } from './google-translate.adapter';
 import { OpenAiWhisperAdapter } from './openai-whisper.adapter';
 import { OpenAiTtsAdapter } from './openai-tts.adapter';
-import { createOwnTtsAdapter, isOwnTtsVoice } from './own-tts.adapter';
+import {
+  createOwnTtsAdapter,
+  isOwnTtsVoice,
+  OWN_TTS_VOICES,
+  ownTtsConfigured,
+  resolveOwnTtsVoice,
+} from './own-tts.adapter';
+import {
+  baseTtsLanguage,
+  findNativeVoice,
+  nativeVoiceUnavailable,
+  ttsLanguageName,
+  voiceSpeaksNatively,
+} from './native-voice';
 import { GoogleVisionOcrAdapter } from './google-vision-ocr.adapter';
 import { GoogleDetectAdapter } from './google-detect.adapter';
 import { FrancDetectAdapter } from './franc-detect.adapter';
@@ -367,13 +380,37 @@ export class GatewayService {
     return [...this.ownTtsProvider.listVoices(), ...this.ttsProvider.listVoices()];
   }
 
-  async synthesize(input: TtsInput): Promise<TtsOutput> {
-    const useOwn = isOwnTtsVoice(input.voice) || !input.voice;
-    const result = useOwn
-      ? await this.ownTtsProvider.synthesize(
-          isOwnTtsVoice(input.voice) ? input : { ...input, voice: 'own:en-kofi' },
-        )
+  /** Enforces the native-speaker rule before any audio is produced. */
+  private resolveNativeInput(input: TtsInput): TtsInput {
+    const language = baseTtsLanguage(input.language);
+    if (!input.voice) {
+      if (!language || language === 'en') return { ...input, voice: 'own:en-kofi' };
+      const native = findNativeVoice(OWN_TTS_VOICES, language);
+      if (!native) throw nativeVoiceUnavailable(input.language);
+      return { ...input, voice: native.id };
+    }
+    if (isOwnTtsVoice(input.voice)) {
+      const voice = resolveOwnTtsVoice(input.voice);
+      if (voice && !voiceSpeaksNatively(voice, input.language)) {
+        throw nativeVoiceUnavailable(
+          input.language,
+          `${voice.name} is a native ${ttsLanguageName(voice.languages[0]!)} voice`,
+        );
+      }
+      return input;
+    }
+    if (language && language !== 'en') {
+      throw nativeVoiceUnavailable(input.language, `stock voice "${input.voice}" is not a native speaker`);
+    }
+    return input;
+  }
+
+  async synthesize(rawInput: TtsInput): Promise<TtsOutput> {
+    const input = this.resolveNativeInput(rawInput);
+    const result = isOwnTtsVoice(input.voice)
+      ? await this.ownTtsProvider.synthesize(input)
       : await this.ttsProvider.synthesize(input).catch(async (error) => {
+          if (!ownTtsConfigured()) throw error;
           this.logger.warn(
             JSON.stringify({
               event: 'gateway.synthesize.fallback_own',

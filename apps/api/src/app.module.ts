@@ -233,6 +233,7 @@ import { CallIntelligenceModule } from './call-intelligence/call-intelligence.mo
 import { SpeechAnalyticsModule } from './speech-analytics/speech-analytics.module';
 import { DialectsModule } from './dialects/dialects.module';
 import { AccentsModule } from './accents/accents.module';
+import { DemoSpeechModule } from './demo-speech/demo-speech.module';
 import { GrammarModule } from './grammar/grammar.module';
 import { StyleModule } from './style/style.module';
 import { LanguageIntelligenceModule } from './language-intelligence/language-intelligence.module';
@@ -439,6 +440,7 @@ import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
     LanguagesModule,
     DialectsModule,
     AccentsModule,
+    DemoSpeechModule,
     GrammarModule,
     StyleModule,
     LanguageIntelligenceModule,
