@@ -20,7 +20,17 @@ jobs:
       - name: Build test image (downloads the speech model)
         run: docker build --target test -t lugemi-tts-test services/tts
       - name: Run engine tests (real synthesis)
-        run: docker run --rm lugemi-tts-test
+        run: |
+          set +e
+          docker run --rm lugemi-tts-test pytest -q --tb=short -rf tests > pytest.log 2>&1
+          status=$?
+          cat pytest.log
+          if [ $status -ne 0 ]; then
+            grep -E "^(FAILED|ERROR)|Error:|error:|assert " pytest.log | head -20 | while IFS= read -r line; do
+              echo "::error title=engine test::${line}"
+            done
+          fi
+          exit $status
 
   deploy:
     needs: test
