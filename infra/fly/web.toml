@@ -1,6 +1,9 @@
-# Fly.io — Web (Next). Create with: fly apps create lugemi-web
-# Deploy from repo root: fly deploy -c infra/fly/web.toml --dockerfile apps/web/Dockerfile
-app = 'lugemi-web'
+# Fly.io — Web US residency island (Virginia).
+# Distinct app from Africa primary lugemi-web (jnb) so a US deploy cannot
+# spawn iad/ams Machines on production apex.
+# fly apps create lugemi-web-us
+# fly deploy -c infra/fly/web.toml --dockerfile apps/web/Dockerfile
+app = 'lugemi-web-us'
 primary_region = 'iad'
 
 [build]
@@ -10,6 +13,7 @@ primary_region = 'iad'
 [env]
   NODE_ENV = 'production'
   PORT = '3000'
+  HOSTNAME = '0.0.0.0'
   LUGEMI_REGION = 'us'
 
 [http_service]
@@ -23,7 +27,7 @@ primary_region = 'iad'
   [[http_service.checks]]
     interval = '15s'
     timeout = '5s'
-    grace_period = '20s'
+    grace_period = '60s'
     method = 'GET'
     path = '/health'
 

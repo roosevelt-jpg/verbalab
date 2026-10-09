@@ -60,6 +60,9 @@ const clerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
  * That hostname only works inside the agent VM (/etc/hosts + HTTPS :443 proxy).
  * Without Fly DNS, users must keep using http://127.0.0.1:43125 (or Cursor preview).
  * Live-key login on loopback uses /dev-login → Clerk hosted ticket URL instead.
+ *
+ * /health is also excluded from `config.matcher` so Fly Doctor
+ * servicecheck-00-http-3000 never waits on Clerk middleware.
  */
 export default clerkConfigured
   ? clerkMiddleware(async (auth, request) => {
@@ -96,7 +99,8 @@ export default clerkConfigured
 
 export const config = {
   matcher: [
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    // Skip static assets and /health so Fly/Docker liveness never waits on Clerk.
+    '/((?!_next|health(?:/.*)?$|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
     '/(api|trpc)(.*)',
     '/__clerk/:path*',
   ],

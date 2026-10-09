@@ -16,7 +16,7 @@ Enterprise Language Registry (VL-139), Localization Platform (VL-141), and Langu
 | --- | --- |
 | `lugemi` / `lugemi-api` | Nest API (`Dockerfile` at repo root + `apps/api/Dockerfile`) — Africa default `jnb`. **Public:** `https://api.lugemi.com` |
 | `lugemi-web` | Next console (`apps/web/Dockerfile`, standalone) — `jnb`. **Public:** `https://lugemi.com` |
-| `lugemi-api` / `lugemi-web` (+ `-eu`) | US/EU residency islands in `infra/fly/*.toml` / `*.eu.toml` |
+| `lugemi-api` / `lugemi-web-us` / `lugemi-*-eu` | US/EU residency islands in `infra/fly/*.toml` / `*.eu.toml` (do not share Africa `lugemi-web`) |
 | Postgres | Managed DB with **pgvector** (Neon / Supabase / Fly Postgres + `CREATE EXTENSION vector`) via `DATABASE_URL` |
 | Redis | Required for BullMQ + rate limits (`REDIS_URL`). Fly Redis or Upstash. Do **not** set `JOBS_INLINE=1` in production. |
 | Region | Africa-first: `jnb` (`infra/fly/*.jnb.toml`, root `fly.toml`). US `iad` / EU `ams` remain for residency islands. |
@@ -78,7 +78,7 @@ fly certs add api.lugemi.com -a lugemi-api
 # Then Cloudflare DNS — see docs/cloudflare.md / docs/fly.md
 ```
 
-US island (`infra/fly/api.toml` / `web.toml`) uses `lugemi-api` / `lugemi-web` and `*.fly.dev` until those hosts get their own custom domains.
+US island (`infra/fly/api.toml` / `web.toml`) uses `lugemi-api` / `lugemi-web-us` and `*.fly.dev` until those hosts get their own custom domains. Africa primary `lugemi-web` stays `jnb` only — prune orphans with `bash scripts/fly-prune-lugemi-web-non-jnb.sh`.
 
 API **release_command** runs `/bin/sh /app/apps/api/scripts/fly-migrate.sh` (`prisma migrate deploy` when `DATABASE_URL` is set; soft-skips when unset). See `docs/fly.md`.
 

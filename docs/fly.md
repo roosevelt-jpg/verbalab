@@ -36,11 +36,13 @@ Do **not** put the Nest API under `https://lugemi.com/api` — prefer the `api.`
 | `lugemi-web` | Next console (preferred) | **3000** | `infra/fly/web.jnb.toml` or `apps/web/fly.toml` |
 
 - **Primary region:** `jnb` (Johannesburg)
-- Health checks: `GET /health` on both services (`[[http_service.checks]]`; API grace **60s** — Nest maps many routes before listen)
+- Health checks: `GET /health` on both services (`[[http_service.checks]]`; API **and** web grace **60s** — Nest maps many routes before listen; Next standalone cold-starts similarly)
 - **API port pair:** `internal_port = 3001` **and** `[env] PORT = '3001'` / `HOST = '0.0.0.0'` (plus `API_PORT`). Nest binds `HOST:$PORT` in `apps/api/src/main.ts`. Keep these matched — a mismatch yields Fly `[PC01] instance refused connection` / Doctor “not listening on expected port”.
+- **Web port pair:** `internal_port = 3000` **and** `[env] PORT = '3000'` / `HOSTNAME = '0.0.0.0'`. Next standalone `server.js` binds `HOSTNAME:PORT`. Dockerfile also sets `HOSTNAME=0.0.0.0`. `/health` is excluded from Clerk middleware so Doctor `servicecheck-00-http-3000` stays fast.
 - Nest starts and serves `/health` **even when `DATABASE_URL` is unset** (Prisma connect + boot seeders soft-skip; health JSON includes `database: "skipped"`). Set secrets before relying on DB routes.
 - Without `REDIS_URL`, jobs / rate-limit / event-fabric use in-process / memory (no hang on `127.0.0.1:6379`).
-- US/EU residency islands remain in `infra/fly/api.toml`, `web.toml`, `*.eu.toml` (`lugemi-*` / `lugemi-*-eu` + `*.fly.dev` until those islands get custom hosts)
+- US/EU residency islands remain in `infra/fly/api.toml`, `web.toml` (`lugemi-web-us`), `*.eu.toml` (`lugemi-*-eu` + `*.fly.dev` until those islands get custom hosts). **Never** deploy US/EU configs onto Africa primary `lugemi-web`.
+- **Orphan non-jnb Machines** on `lugemi-web` (e.g. `ams`) fail health while 80/443 look intermittent. Prune: `bash scripts/fly-prune-lugemi-web-non-jnb.sh` (also runs after web deploy in `.github/workflows/deploy.yml`).
 
 ## Required secrets (first boot)
 
