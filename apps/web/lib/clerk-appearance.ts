@@ -104,6 +104,19 @@ export const lugemiClerkAppearance = {
     dividerText: {
       color: '#52647a',
     },
+    alert: {
+      borderRadius: '8px',
+      fontSize: '0.88rem',
+      lineHeight: '1.45',
+    },
+    alertText: {
+      fontSize: '0.88rem',
+      lineHeight: '1.45',
+    },
+    formFieldErrorText: {
+      fontSize: '0.85rem',
+      lineHeight: '1.4',
+    },
   },
 };
 
@@ -119,5 +132,11 @@ export const lugemiClerkLocalization = {
       title: 'Create your Lugemi account',
       subtitle: 'Then choose Creative or Agents, personalize, and pick a plan',
     },
+  },
+  unstable__errors: {
+    captcha_unavailable:
+      'Security verification could not load in your browser (often caused by ad blockers, privacy extensions, or domain protections). Try continuing with Google above, or disable blocking extensions and refresh.',
+    captcha_invalid:
+      'Security verification was unable to complete. Please try signing up with Google above or refresh the page.',
   },
 };

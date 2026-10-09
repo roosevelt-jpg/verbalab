@@ -21,6 +21,7 @@ export default function SignInPage() {
         </p>
       }
     >
+      <div id="clerk-captcha" />
       <SignIn
         appearance={lugemiClerkAppearance}
         forceRedirectUrl={afterAuth}

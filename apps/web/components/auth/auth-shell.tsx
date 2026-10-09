@@ -44,6 +44,11 @@ export function AuthShell({ mode, children, footer }: AuthShellProps) {
               : 'Sign in to continue. New workspaces go through Lugemi onboarding before Creative or Agents.'}
           </p>
           {isSignUp ? (
+            <p className="auth-shell__tip">
+              Tip: Use 15+ characters for password signup, or choose <strong>Continue with Google</strong> for instant access.
+            </p>
+          ) : null}
+          {isSignUp ? (
             <ol className="auth-shell__steps" aria-label="Setup path">
               <li className="is-active">Account</li>
               <li>Platform</li>
