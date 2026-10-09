@@ -9,6 +9,10 @@ import { API_URL, apiFetch } from '@/lib/api';
 import { CreativeShell } from '@/components/creative/creative-shell';
 import { CreativeIcon } from '@/components/creative/creative-icons';
 import { AudioPreviewBar } from '@/components/media/audio-preview-bar';
+import {
+  CulturalIdentitySelect,
+  type CulturalIdentityPack,
+} from '@/components/cultural-identity-select';
 import { loadTtsHistory, pushTtsHistory, type TtsHistoryItem } from '@/lib/creative-tts-history';
 
 type Voice = {
@@ -46,6 +50,8 @@ function CreativeTtsClientInner({ getToken, isLoaded }: { getToken: () => Promis
   const search = useSearchParams();
   const [voices, setVoices] = useState<Voice[]>([]);
   const [voiceId, setVoiceId] = useState('alloy');
+  const [accentId, setAccentId] = useState('');
+  const [identityPack, setIdentityPack] = useState<CulturalIdentityPack | null>(null);
   const [text, setText] = useState(
     () => search.get('text') || 'Type your text with audio tags like [laughs] to turn into expressive speech...',
   );
@@ -93,8 +99,11 @@ function CreativeTtsClientInner({ getToken, isLoaded }: { getToken: () => Promis
       if (!token) throw new Error('Sign in to generate speech.');
       const body = {
         text: text.trim(),
-        voice: voiceId,
+        voice: identityPack?.echoVoiceId || voiceId,
         format: 'mp3',
+        accentId: accentId || undefined,
+        speechVariety: identityPack?.speechVariety || undefined,
+        locale: identityPack?.bcp47 || undefined,
         // Stability / similarity are creative controls; forwarded when the Echo gateway accepts them.
         stability,
         similarity_boost: similarity,
@@ -126,7 +135,11 @@ function CreativeTtsClientInner({ getToken, isLoaded }: { getToken: () => Promis
         audioUrl: url,
       };
       setHistory(pushTtsHistory(item));
-      setNote('Generated with Lugemi Echo TTS (/v1/tts/synthesize).');
+      setNote(
+        identityPack
+          ? `Generated with Lugemi Echo · ${identityPack.culturalIdentity || identityPack.nameEn} (${identityPack.speechVariety}).`
+          : 'Generated with Lugemi Echo TTS (/v1/tts/synthesize).',
+      );
       setSideTab('history');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Generation failed');
@@ -210,6 +223,22 @@ function CreativeTtsClientInner({ getToken, isLoaded }: { getToken: () => Promis
 
           {sideTab === 'settings' ? (
             <>
+              <label>
+                Cultural accent / identity
+                <CulturalIdentitySelect
+                  value={accentId}
+                  allowEmpty
+                  emptyLabel="None — use voice only"
+                  onChange={(id, pack) => {
+                    setAccentId(id);
+                    setIdentityPack(pack);
+                    if (pack?.echoVoiceId) setVoiceId(pack.echoVoiceId);
+                    if (pack?.samplePhrase && (!text.trim() || text.includes('audio tags'))) {
+                      setText(pack.samplePhrase);
+                    }
+                  }}
+                />
+              </label>
               <label>
                 Voice
                 <select value={voiceId} onChange={(e) => setVoiceId(e.target.value)}>

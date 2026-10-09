@@ -9,6 +9,10 @@ import { CreativeShell } from '@/components/creative/creative-shell';
 import { CreativeIcon } from '@/components/creative/creative-icons';
 import { AudioPreviewBar } from '@/components/media/audio-preview-bar';
 import { LocaleSelect } from '@/components/language-locale-select';
+import {
+  CulturalIdentitySelect,
+  type CulturalIdentityPack,
+} from '@/components/cultural-identity-select';
 import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 import { useCreativeCredits } from '@/hooks/use-creative-credits';
 import { formatCredits } from '@/lib/creative-audio';
@@ -46,6 +50,8 @@ function CreativeDubbingClientInner({ getToken, isLoaded }: { getToken: () => Pr
   const [sourceLang, setSourceLang] = useState('auto');
   const [targetLang, setTargetLang] = useState('en');
   const [voiceId, setVoiceId] = useState('alloy');
+  const [accentId, setAccentId] = useState('');
+  const [identityPack, setIdentityPack] = useState<CulturalIdentityPack | null>(null);
   const [voices, setVoices] = useState<Voice[]>([]);
   const [query, setQuery] = useState('');
   const [history, setHistory] = useState<CreativeHistoryItem[]>([]);
@@ -112,14 +118,21 @@ function CreativeDubbingClientInner({ getToken, isLoaded }: { getToken: () => Pr
       if (!translated) throw new Error('Translation was empty.');
       setScript(translated);
 
-      // 3) Synthesize with Echo
+      // 3) Synthesize with Echo — prefer cultural identity pack for target locale
       const ttsRes = await fetch(`${API_URL}/v1/tts/synthesize`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ text: translated, voice: voiceId, format: 'mp3' }),
+        body: JSON.stringify({
+          text: translated,
+          voice: identityPack?.echoVoiceId || voiceId,
+          format: 'mp3',
+          accentId: accentId || undefined,
+          speechVariety: identityPack?.speechVariety || undefined,
+          locale: identityPack?.bcp47 || targetLang,
+        }),
       });
       if (!ttsRes.ok) {
         const msg = await ttsRes.text();
@@ -129,7 +142,11 @@ function CreativeDubbingClientInner({ getToken, isLoaded }: { getToken: () => Pr
       if (audioUrl) URL.revokeObjectURL(audioUrl);
       const url = URL.createObjectURL(blob);
       setAudioUrl(url);
-      setNote(`Dubbed ${detected} → ${targetLang} via STT · Translate · Echo TTS.`);
+      setNote(
+        identityPack
+          ? `Dubbed ${detected} → ${targetLang} with ${identityPack.culturalIdentity || identityPack.nameEn} (${identityPack.speechVariety}).`
+          : `Dubbed ${detected} → ${targetLang} via STT · Translate · Echo TTS.`,
+      );
       setHistory(
         pushCreativeHistory(HISTORY_KEYS.dubbing, {
           name: file.name.replace(/\.[^.]+$/, '') || 'Dub',
@@ -220,6 +237,20 @@ function CreativeDubbingClientInner({ getToken, isLoaded }: { getToken: () => Pr
                 locales={catalog.locales}
                 dialects={catalog.dialects}
                 accents={catalog.accents}
+              />
+            </label>
+            <label style={{ display: 'grid', gap: 4, fontSize: '0.75rem', color: 'var(--lc-muted)', fontWeight: 650, minWidth: '14rem' }}>
+              Cultural identity
+              <CulturalIdentitySelect
+                value={accentId}
+                allowEmpty
+                emptyLabel="Auto from target locale"
+                onChange={(id, pack) => {
+                  setAccentId(id);
+                  setIdentityPack(pack);
+                  if (pack?.echoVoiceId) setVoiceId(pack.echoVoiceId);
+                  if (pack?.bcp47) setTargetLang(pack.bcp47);
+                }}
               />
             </label>
             <label style={{ display: 'grid', gap: 4, fontSize: '0.75rem', color: 'var(--lc-muted)', fontWeight: 650 }}>

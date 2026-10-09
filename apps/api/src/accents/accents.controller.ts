@@ -66,12 +66,14 @@ export class AccentsController {
     @Query('region') region?: string,
     @Query('language') language?: string,
     @Query('q') q?: string,
+    @Query('speechVariety') speechVariety?: string,
   ) {
     return this.identity.list({
       country: country?.trim(),
       region: region?.trim(),
       language: language?.trim(),
       q: q?.trim(),
+      speechVariety: speechVariety?.trim(),
     });
   }
 

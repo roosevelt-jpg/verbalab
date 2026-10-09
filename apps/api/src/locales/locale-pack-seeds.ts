@@ -1531,10 +1531,48 @@ export const LOCALE_VARIANT_SEEDS: Array<{ languageCode: string; bcp47: string; 
   { languageCode: 'ar', bcp47: 'ar-TN', currencyCode: 'TND', culturalNotes: 'Tunisian Arabic contexts.' },
   { languageCode: 'ar', bcp47: 'ar-LY', currencyCode: 'LYD', culturalNotes: 'Libyan Arabic contexts.' },
   { languageCode: 'ar', bcp47: 'ar-SD', currencyCode: 'SDG', culturalNotes: 'Sudanese Arabic contexts.' },
-  { languageCode: 'en', bcp47: 'en-GH', currencyCode: 'GHS', culturalNotes: 'Ghanaian English.' },
-  { languageCode: 'en', bcp47: 'en-NG', currencyCode: 'NGN', culturalNotes: 'Nigerian English.' },
-  { languageCode: 'en', bcp47: 'en-KE', currencyCode: 'KES', culturalNotes: 'Kenyan English.' },
-  { languageCode: 'en', bcp47: 'en-ZA', currencyCode: 'ZAR', culturalNotes: 'South African English.' },
+  {
+    languageCode: 'en',
+    bcp47: 'en-GH',
+    currencyCode: 'GHS',
+    culturalNotes:
+      'Ghanaian English — Accra/Kumasi professional and media. Prefer accent identity gh-ghanaian-english (speech_variety=ghanaian_english). Distinct from Ghanaian Pidgin.',
+  },
+  {
+    languageCode: 'en',
+    bcp47: 'en-NG',
+    currencyCode: 'NGN',
+    culturalNotes:
+      'Nigerian English — Lagos/Abuja broadcast lifestyle. Prefer accent identity ng-nigerian-english (speech_variety=nigerian_english). Use pcm-NG / ng-pidgin for Naijá Pidgin.',
+  },
+  {
+    languageCode: 'en',
+    bcp47: 'en-PH',
+    currencyCode: 'PHP',
+    culturalNotes:
+      'Filipino English — Manila BPO/care culture with po/opo respect. Prefer accent identity ph-filipino-english (speech_variety=filipino_english).',
+  },
+  {
+    languageCode: 'en',
+    bcp47: 'en-KE',
+    currencyCode: 'KES',
+    culturalNotes:
+      'Kenyan English — Nairobi professional with Swahili loans. Prefer accent identity ke-english (speech_variety=kenyan_english).',
+  },
+  {
+    languageCode: 'en',
+    bcp47: 'en-ZA',
+    currencyCode: 'ZAR',
+    culturalNotes:
+      'South African English — national broadcast / rainbow-nation lifestyle. Prefer accent identity za-south-african-english (speech_variety=south_african_english).',
+  },
+  {
+    languageCode: 'pcm',
+    bcp47: 'pcm-NG',
+    currencyCode: 'NGN',
+    culturalNotes:
+      'Nigerian Pidgin (Naijá) — pan-ethnic urban speech. Prefer accent identity ng-pidgin (speech_variety=nigerian_pidgin).',
+  },
   { languageCode: 'fr', bcp47: 'fr-SN', currencyCode: 'XOF', culturalNotes: 'Senegalese French.' },
   { languageCode: 'fr', bcp47: 'fr-CI', currencyCode: 'XOF', culturalNotes: 'Ivorian French.' },
   { languageCode: 'fr', bcp47: 'fr-CD', currencyCode: 'CDF', culturalNotes: 'Congolese French.' },

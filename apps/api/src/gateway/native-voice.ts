@@ -91,6 +91,7 @@ const ENGLISH_REGIONS: Record<string, string> = {
   NG: 'Nigeria',
   KE: 'Kenya',
   ZA: 'South Africa',
+  PH: 'Philippines',
   IE: 'Ireland',
   IN: 'India',
 };

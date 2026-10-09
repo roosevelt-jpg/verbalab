@@ -92,7 +92,8 @@ export const MCP_TOOLS: McpToolDef[] = [
   },
   {
     name: 'lugemi_video_voice_line',
-    description: 'Video pipeline helper: Baobab translate then Echo synthesize in one call.',
+    description:
+      'Video pipeline helper: Baobab translate then Echo synthesize with cultural voice packs (accentId / speechVariety / locale).',
     inputSchema: {
       type: 'object',
       properties: {
@@ -100,10 +101,13 @@ export const MCP_TOOLS: McpToolDef[] = [
         source: { type: 'string' },
         target: { type: 'string' },
         voice: { type: 'string' },
+        accentId: { type: 'string' },
+        speechVariety: { type: 'string' },
+        locale: { type: 'string' },
         format: { type: 'string', enum: ['mp3', 'wav', 'opus', 'aac', 'flac'] },
         outPath: { type: 'string' },
       },
-      required: ['text', 'target', 'voice'],
+      required: ['text', 'target'],
     },
   },
   { name: 'lugemi_voices_list', description: 'List available Lugemi own:* voices for Echo Voice TTS.', inputSchema: { type: 'object', properties: {} } },

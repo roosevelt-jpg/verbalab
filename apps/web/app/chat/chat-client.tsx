@@ -30,6 +30,10 @@ import {
   type ConnectorInstall,
 } from '@/lib/connectors-catalog';
 import { LocaleSelect } from '@/components/language-locale-select';
+import {
+  CulturalIdentitySelect,
+  type CulturalIdentityPack,
+} from '@/components/cultural-identity-select';
 import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 
 type ChatTurn = {
@@ -220,6 +224,8 @@ export function ChatClient() {
   const [input, setInput] = useState('');
   const [translateReplyTo, setTranslateReplyTo] = useState('ak');
   const [liveTarget, setLiveTarget] = useState('ak');
+  const [culturalAccentId, setCulturalAccentId] = useState('');
+  const [culturalPack, setCulturalPack] = useState<CulturalIdentityPack | null>(null);
   const [uploadSource, setUploadSource] = useState('auto');
   const [uploadTarget, setUploadTarget] = useState('ak');
   const [mode, setMode] = useState<'chat' | 'live'>('chat');
@@ -400,10 +406,11 @@ export function ChatClient() {
     setPlayingMsgId(msgId);
     setLoadingMsgId(msgId);
     try {
+      const culturalVoice = culturalPack?.echoVoiceId?.replace(/^own:/, '');
       await playDemoSpeech({
         text,
-        lang,
-        voiceId: lang.startsWith('sw') ? 'amara' : 'abe',
+        lang: culturalPack?.bcp47 || lang,
+        voiceId: culturalVoice || (lang.startsWith('sw') ? 'amara' : 'abe'),
         onStarted: () => {
           if (token !== playbackGen.current) return;
           setLoadingMsgId(null);
@@ -1196,6 +1203,30 @@ export function ChatClient() {
                       accents={catalog.accents}
                     />
                   </label>
+                  <label className="vl-label lg-chat-inline-label">
+                    Cultural accent / identity
+                    <CulturalIdentitySelect
+                      value={culturalAccentId}
+                      allowEmpty
+                      emptyLabel="Default for target locale"
+                      onChange={(id, pack) => {
+                        setCulturalAccentId(id);
+                        setCulturalPack(pack);
+                        if (pack?.bcp47) {
+                          if (mode === 'live') setLiveTarget(pack.bcp47);
+                          else setTranslateReplyTo(pack.bcp47);
+                        }
+                      }}
+                    />
+                  </label>
+                  {culturalPack ? (
+                    <p className="lg-chat-lang-popover-title" style={{ marginTop: '0.35rem', opacity: 0.85 }}>
+                      {culturalPack.speechVariety}
+                      {(culturalPack.lifestyleTags || []).length
+                        ? ` · ${(culturalPack.lifestyleTags || []).slice(0, 2).join(', ')}`
+                        : ''}
+                    </p>
+                  ) : null}
                 </div>
               ) : null}
             </div>
