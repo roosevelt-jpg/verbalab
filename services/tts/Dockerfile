@@ -27,4 +27,4 @@ CMD ["python", "-m", "pytest", "-q", "tests"]
 
 FROM base AS runtime
 EXPOSE 8080
-CMD ["uvicorn", "app.main:app", "--host", "::", "--port", "8080", "--workers", "1"]
+CMD ["python", "-m", "app.serve"]

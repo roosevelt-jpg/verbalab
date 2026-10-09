@@ -73,6 +73,11 @@ def _startup() -> None:
     except Exception as error:  # storage outage must not stop the built-in voices
         log.warning("voice sync failed: %s", error)
     registry.load()
+    for voice in registry.list():
+        engine = registry.engine(voice.id)
+        if engine is not None and voice.engine == "kokoro":
+            engine.synthesize("Ready.", 1.0)
+            break
 
 
 @app.exception_handler(HTTPException)
