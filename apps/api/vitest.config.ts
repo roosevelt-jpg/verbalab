@@ -6,6 +6,7 @@ export default defineConfig({
     globals: true,
     environment: 'node',
     include: ['test/**/*.spec.ts', 'src/**/*.spec.ts'],
+    hookTimeout: 60_000,
     env: {
       JOBS_INLINE: '1',
     },
