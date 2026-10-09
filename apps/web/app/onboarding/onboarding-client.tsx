@@ -29,9 +29,11 @@ import {
   type OnboardingPlatform,
   type OnboardingState,
 } from '@/lib/onboarding';
+import { setOnboardingStatusCookie } from '@/lib/onboarding-status';
 import './onboarding.css';
 
 const STEPS = 4;
+const STEP_LABELS = ['Platform', 'Personalize', 'Persona', 'Plan'] as const;
 
 type ApiProfile = {
   platform: OnboardingPlatform | null;
@@ -211,6 +213,7 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
       setBusy(true);
       const next = markOnboardingSkipped(platform, stateRef.current);
       persistLocal(next);
+      setOnboardingStatusCookie('done');
       await saveRemote({ ...next, complete: true, planId: next.planId ?? 'free' });
       router.replace(destinationForPlatform(platform));
     },
@@ -222,6 +225,15 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
     setState(local);
     setHydrated(true);
   }, []);
+
+  useEffect(() => {
+    if (!hydrated || !isLoaded) return;
+    if (state.completed) {
+      setOnboardingStatusCookie('done');
+    } else if (isSignedIn) {
+      setOnboardingStatusCookie('pending');
+    }
+  }, [hydrated, isLoaded, isSignedIn, state.completed]);
 
   useEffect(() => {
     if (!hydrated || !isLoaded || skipHandled.current) return;
@@ -253,14 +265,17 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
       try {
         const remote = await apiFetch<ApiProfile>('/v1/onboarding', { token });
         if (remote.completed) {
+          setOnboardingStatusCookie('done');
           router.replace(destinationForPlatform(remote.platform));
           return;
         }
         const local = loadOnboardingLocal();
         if (local.completed) {
+          setOnboardingStatusCookie('done');
           router.replace(destinationForPlatform(local.platform));
           return;
         }
+        setOnboardingStatusCookie('pending');
         const merged: OnboardingState = {
           ...local,
           platform: remote.platform ?? local.platform,
@@ -299,6 +314,7 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
       step: STEPS - 1,
     };
     persistLocal(next);
+    setOnboardingStatusCookie('done');
     await saveRemote({ ...next, complete: true, planId });
 
     const paid = planId === 'pro' || planId === 'business';
@@ -705,14 +721,25 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
       ) : null}
 
       {!showCheckout ? (
-        <nav className="ob-dots" aria-label="Onboarding progress">
-          {Array.from({ length: STEPS }).map((_, i) => (
-            <span key={i} className={i === step ? 'is-current' : i < step ? 'is-done' : undefined} />
+        <nav className="ob-progress" aria-label="Onboarding progress">
+          {STEP_LABELS.map((label, i) => (
+            <span
+              key={label}
+              className={
+                i === step ? 'is-current' : i < step ? 'is-done' : undefined
+              }
+            >
+              <em aria-hidden>{i + 1}</em>
+              {label}
+            </span>
           ))}
         </nav>
       ) : (
-        <nav className="ob-dots" aria-label="Checkout">
-          <span className="is-current" />
+        <nav className="ob-progress" aria-label="Checkout">
+          <span className="is-current">
+            <em aria-hidden>✓</em>
+            Checkout
+          </span>
         </nav>
       )}
     </main>

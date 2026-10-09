@@ -1,4 +1,4 @@
-/* Lugemi auth chrome — teal/navy atmosphere around Clerk widgets */
+/* Lugemi auth chrome — brand panel + clean Clerk card */
 
 .auth-shell {
   position: relative;
@@ -9,29 +9,31 @@
   padding: 1.25rem 1.25rem 2.75rem;
   color: var(--brand-navy);
   background:
-    radial-gradient(ellipse 80% 50% at 50% -15%, rgba(0, 184, 174, 0.16), transparent 55%),
-    linear-gradient(180deg, #f7fbfc 0%, #ffffff 42%, #f3f7fa 100%);
+    radial-gradient(ellipse 70% 45% at 18% -10%, rgba(0, 184, 174, 0.18), transparent 55%),
+    radial-gradient(ellipse 55% 40% at 92% 12%, rgba(16, 38, 77, 0.08), transparent 50%),
+    linear-gradient(180deg, #f7fbfc 0%, #ffffff 48%, #f3f7fa 100%);
   overflow: hidden;
+  font-family: var(--font-ui), 'Noto Sans', sans-serif;
 }
 
 .auth-shell__glow {
   pointer-events: none;
   position: absolute;
-  inset: auto -20% 35% auto;
+  inset: auto -18% 28% auto;
   width: min(42rem, 90vw);
   height: min(42rem, 90vw);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(16, 38, 77, 0.06), transparent 68%);
+  background: radial-gradient(circle, rgba(0, 124, 120, 0.07), transparent 68%);
   animation: auth-drift 14s ease-in-out infinite alternate;
 }
 
 .auth-shell__top {
-  width: min(720px, 100%);
+  width: min(1040px, 100%);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  margin-bottom: 1.75rem;
+  margin-bottom: 1.5rem;
   animation: auth-rise 0.45s ease both;
   z-index: 1;
 }
@@ -52,43 +54,50 @@
   text-decoration: underline;
 }
 
-.auth-shell__stage {
-  width: min(720px, 100%);
+.auth-shell__grid {
+  width: min(1040px, 100%);
   display: grid;
-  gap: 1.5rem;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+  gap: 2.25rem 2.75rem;
+  align-items: center;
   z-index: 1;
   animation: auth-rise 0.55s ease 0.05s both;
 }
 
-.auth-shell__intro {
-  text-align: center;
+.auth-shell__brand {
   display: grid;
-  gap: 0.55rem;
-  justify-items: center;
+  gap: 0.85rem;
+  align-content: start;
 }
 
-.auth-shell__eyebrow {
+.auth-shell__brand-name {
   margin: 0;
-  font-size: 0.78rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--brand-teal);
+  font-family: var(--font-ui), 'Noto Sans', sans-serif;
+  font-size: clamp(2.35rem, 5.5vw, 3.35rem);
   font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1.05;
+  color: var(--brand-navy);
+  background: linear-gradient(120deg, #10264d 30%, #007c78 120%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: auth-rise 0.5s ease both;
 }
 
 .auth-shell__title {
   margin: 0;
-  font-family: var(--font-ui);
-  font-size: clamp(1.75rem, 4vw, 2.35rem);
-  letter-spacing: -0.03em;
-  font-weight: 700;
+  font-family: var(--font-ui), 'Noto Sans', sans-serif;
+  font-size: clamp(1.35rem, 2.8vw, 1.75rem);
+  letter-spacing: -0.025em;
+  font-weight: 650;
   color: var(--brand-navy);
-  line-height: 1.15;
+  line-height: 1.25;
 }
 
 .auth-shell__lede {
   margin: 0;
-  max-width: 34rem;
+  max-width: 28rem;
   color: var(--text-secondary);
   font-size: 1rem;
   line-height: 1.55;
@@ -96,12 +105,11 @@
 
 .auth-shell__steps {
   list-style: none;
-  margin: 0.85rem 0 0;
+  margin: 0.55rem 0 0;
   padding: 0;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.45rem 0.65rem;
+  gap: 0.45rem 0.55rem;
 }
 
 .auth-shell__steps li {
@@ -112,7 +120,7 @@
   padding: 0.28rem 0.7rem;
   border: 1px solid var(--border-subtle);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.75);
 }
 
 .auth-shell__steps li.is-active {
@@ -121,10 +129,48 @@
   background: color-mix(in oklab, var(--brand-teal) 14%, white);
 }
 
+.auth-shell__bullets {
+  list-style: none;
+  margin: 0.35rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.auth-shell__bullets li {
+  position: relative;
+  padding-left: 1.15rem;
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
+.auth-shell__bullets li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.45rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--brand-teal);
+}
+
+.auth-shell__card-col {
+  display: grid;
+  gap: 1rem;
+  justify-items: stretch;
+}
+
 .auth-shell__panel {
   width: 100%;
   display: grid;
   place-items: center;
+  padding: 1.35rem 1.25rem 1.15rem;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 16px;
+  box-shadow: 0 12px 36px rgba(16, 38, 77, 0.06);
   animation: auth-rise 0.6s ease 0.1s both;
 }
 
@@ -165,13 +211,42 @@
   }
 }
 
+@media (max-width: 860px) {
+  .auth-shell__grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .auth-shell__brand {
+    text-align: center;
+    justify-items: center;
+  }
+
+  .auth-shell__lede {
+    max-width: 34rem;
+  }
+
+  .auth-shell__steps,
+  .auth-shell__bullets {
+    justify-content: center;
+  }
+
+  .auth-shell__bullets li {
+    text-align: left;
+  }
+}
+
 @media (max-width: 560px) {
   .auth-shell__top {
     flex-direction: column;
     align-items: flex-start;
   }
 
-  .auth-shell__title {
-    font-size: 1.65rem;
+  .auth-shell__brand-name {
+    font-size: 2.15rem;
+  }
+
+  .auth-shell__panel {
+    padding: 1.1rem 0.85rem 1rem;
   }
 }

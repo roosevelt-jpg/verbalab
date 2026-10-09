@@ -30,8 +30,6 @@ import {
   saveInstalls,
   type ConnectorInstall,
 } from '@/lib/connectors-catalog';
-import { loadOnboardingLocal, ONBOARDING_STORAGE_KEY } from '@/lib/onboarding';
-import { useRouter } from 'next/navigation';
 import '@/components/media/anamorphic.css';
 import '@/components/stats/stat-charts.css';
 
@@ -177,7 +175,6 @@ function featureOnPlan(data: Overview, feature: string): boolean {
 
 export function DashboardClient() {
   const { getToken, isLoaded } = useAuth();
-  const router = useRouter();
   const [data, setData] = useState<Overview | null>(null);
   const [identity, setIdentity] = useState<IdentityOverview | null>(null);
   const [usage, setUsage] = useState<UsageSummary | null>(null);
@@ -205,54 +202,8 @@ export function DashboardClient() {
 
   useEffect(() => {
     if (!isLoaded) return;
-    let cancelled = false;
-
-    void (async () => {
-      // Resume incomplete onboarding (local draft and/or started API profile).
-      // Empty API profiles (legacy users who never started the wizard) are not forced.
-      try {
-        const raw = window.localStorage.getItem(ONBOARDING_STORAGE_KEY);
-        if (raw) {
-          const local = loadOnboardingLocal();
-          if (!local.completed) {
-            router.replace('/onboarding');
-            return;
-          }
-        }
-      } catch {
-        /* ignore */
-      }
-
-      try {
-        const token = await getToken();
-        if (token) {
-          const remote = await apiFetch<{
-            completed?: boolean;
-            step?: number;
-            platform?: string | null;
-            source?: string;
-          }>('/v1/onboarding', { token });
-          const started =
-            remote.source !== 'empty' &&
-            (Boolean(remote.platform) || (remote.step ?? 0) > 0);
-          if (!cancelled && started && remote.completed === false) {
-            router.replace('/onboarding');
-            return;
-          }
-        }
-      } catch {
-        /* local-only / API soft-fail — continue to dashboard */
-      }
-
-      if (!cancelled) {
-        void load().catch((err: Error) => setError(err.message));
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [getToken, isLoaded, load, router]);
+    void load().catch((err: Error) => setError(err.message));
+  }, [isLoaded, load]);
 
   useEffect(() => {
     setInstalls(loadInstalls());

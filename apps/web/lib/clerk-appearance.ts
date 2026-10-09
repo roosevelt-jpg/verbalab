@@ -1,17 +1,15 @@
 /**
  * Lugemi teal/navy theme for embedded Clerk SignIn / SignUp.
- * Clerk still owns the credential fields; Lugemi owns the surrounding chrome
- * and the multi-step /onboarding wizard after session creation.
+ * Clerk owns credential fields only; AuthShell owns brand chrome.
+ * Duplicate Clerk logo/titles are hidden so the first viewport is Lugemi-first.
  *
  * Development-instance “Development mode” / Clerk watermark cannot be removed
  * from application code — see docs/clerk-auth-branding.md.
  */
 export const lugemiClerkAppearance = {
   layout: {
-    logoImageUrl: '/brand/lugemi-symbol-teal.svg',
-    logoPlacement: 'inside' as const,
-    logoLinkUrl: '/',
-    socialButtonsPlacement: 'bottom' as const,
+    logoPlacement: 'none' as const,
+    socialButtonsPlacement: 'top' as const,
     socialButtonsVariant: 'blockButton' as const,
     showOptionalFields: true,
     animations: true,
@@ -41,26 +39,28 @@ export const lugemiClerkAppearance = {
   elements: {
     rootBox: {
       width: '100%',
-      maxWidth: '26rem',
+      maxWidth: '24rem',
       margin: '0 auto',
     },
     card: {
       boxShadow: 'none',
-      border: '1px solid #cbd5e1',
-      borderRadius: '12px',
-      background: '#ffffff',
-      padding: '1.5rem 1.35rem 1.25rem',
+      border: 'none',
+      borderRadius: '0',
+      background: 'transparent',
+      padding: '0',
+      width: '100%',
+    },
+    header: {
+      display: 'none',
     },
     headerTitle: {
-      fontFamily: 'var(--font-ui), "Noto Sans", sans-serif',
-      fontWeight: '700',
-      fontSize: '1.35rem',
-      letterSpacing: '-0.02em',
-      color: '#10264d',
+      display: 'none',
     },
     headerSubtitle: {
-      color: '#52647a',
-      fontSize: '0.92rem',
+      display: 'none',
+    },
+    logoBox: {
+      display: 'none',
     },
     socialButtonsBlockButton: {
       borderColor: '#cbd5e1',

@@ -11,7 +11,7 @@ type AuthShellProps = {
 
 /**
  * Lugemi-first chrome around Clerk credential widgets.
- * Brand + copy own the first viewport; Clerk fields sit inside the product shell.
+ * Brand owns the first viewport; Clerk fields sit in a clean auth card.
  */
 export function AuthShell({ mode, children, footer }: AuthShellProps) {
   const isSignUp = mode === 'sign-up';
@@ -23,26 +23,24 @@ export function AuthShell({ mode, children, footer }: AuthShellProps) {
         <BrandMark href="/" size={36} />
         {isSignUp ? (
           <p className="auth-shell__switch">
-            Already have an account?{' '}
-            <Link href="/sign-in">Sign in</Link>
+            Already have an account? <Link href="/sign-in">Sign in</Link>
           </p>
         ) : (
           <p className="auth-shell__switch">
-            New here?{' '}
-            <Link href="/sign-up">Create account</Link>
+            New here? <Link href="/sign-up">Create account</Link>
           </p>
         )}
       </header>
 
-      <div className="auth-shell__stage">
-        <div className="auth-shell__intro">
-          <p className="auth-shell__eyebrow">Lugemi</p>
+      <div className="auth-shell__grid">
+        <aside className="auth-shell__brand">
+          <p className="auth-shell__brand-name">Lugemi</p>
           <h1 className="auth-shell__title">
-            {isSignUp ? 'Start with Lugemi' : 'Welcome back'}
+            {isSignUp ? 'Create your account' : 'Welcome back'}
           </h1>
           <p className="auth-shell__lede">
             {isSignUp
-              ? 'Create your account, then finish Lugemi setup — Creative or Agents, personalization, persona, and plan.'
+              ? 'Email or Google, then finish Lugemi setup — Creative or Agents, personalization, persona, and plan — before your workspace opens.'
               : 'Sign in to continue. New workspaces go through Lugemi onboarding before Creative or Agents.'}
           </p>
           {isSignUp ? (
@@ -52,12 +50,19 @@ export function AuthShell({ mode, children, footer }: AuthShellProps) {
               <li>Personalize</li>
               <li>Plan</li>
             </ol>
-          ) : null}
+          ) : (
+            <ul className="auth-shell__bullets">
+              <li>LugemiCreative — speech, studio, and localization</li>
+              <li>LugemiAgents — voice and chat agents</li>
+              <li>Four plans — Free, Pro, Business, Enterprise</li>
+            </ul>
+          )}
+        </aside>
+
+        <div className="auth-shell__card-col">
+          <div className="auth-shell__panel">{children}</div>
+          {footer ? <div className="auth-shell__footer">{footer}</div> : null}
         </div>
-
-        <div className="auth-shell__panel">{children}</div>
-
-        {footer ? <div className="auth-shell__footer">{footer}</div> : null}
       </div>
     </main>
   );
