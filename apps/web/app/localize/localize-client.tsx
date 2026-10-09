@@ -30,8 +30,6 @@ type LocalizeResult = {
 };
 
 const MAX_PREVIEW_CHARS = 200_000;
-const ACCEPTED_EXT = ['.json', '.yaml', '.yml'] as const;
-
 function detectFormatFromName(name: string): LocalizeFormat | null {
   const lower = name.toLowerCase();
   if (lower.endsWith('.json')) return 'json';
