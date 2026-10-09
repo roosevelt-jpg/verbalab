@@ -7,6 +7,7 @@ import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { ApiKeysService } from '../src/api-keys/api-keys.service';
 import { GatewayService } from '../src/gateway/gateway.service';
+import type { TtsProvider } from '../src/gateway/tts-provider';
 import { ApiExceptionFilter } from '../src/common/errors/api-exception.filter';
 
 async function seedOrg(prisma: PrismaService, name: string) {
@@ -100,7 +101,7 @@ describe('Live interpreter', () => {
         };
       },
     });
-    gateway.setTtsProviderForTests({
+    const fixtureTts: TtsProvider = {
       name: 'fixture_tts',
       listVoices() {
         return [
@@ -109,6 +110,15 @@ describe('Live interpreter', () => {
             name: 'Alloy',
             gender: 'neutral',
             languages: ['en'],
+            provider: 'fixture_tts',
+          },
+          {
+            id: 'own:sw-ke-female',
+            name: 'Aisha · Nairobi',
+            gender: 'female',
+            languages: ['sw', 'en'],
+            locale: 'sw-KE',
+            status: 'live',
             provider: 'fixture_tts',
           },
         ];
@@ -124,7 +134,9 @@ describe('Live interpreter', () => {
           latencyMs: 1,
         };
       },
-    });
+    };
+    gateway.setTtsProviderForTests(fixtureTts);
+    gateway.setOwnTtsProviderForTests(fixtureTts);
   });
 
   afterAll(async () => {
@@ -144,7 +156,7 @@ describe('Live interpreter', () => {
       .post('/v1/interpret')
       .set('Authorization', `Bearer ${key.secret}`)
       .field('target', 'sw')
-      .field('voice', 'alloy')
+      .field('voice', 'own:sw-ke-female')
       .attach('file', tinyWav(), 'hello.wav')
       .expect(200);
 
