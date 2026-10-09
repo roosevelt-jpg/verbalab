@@ -1,72 +1,75 @@
-import { HttpStatus } from '@nestjs/common';
+import { HttpStatus, Logger } from '@nestjs/common';
 import { ApiException } from '../common/errors/api-exception';
 import { nativeVoiceUnavailable } from './native-voice';
 import { TtsInput, TtsOutput, TtsProvider, TtsVoice } from './tts-provider';
 
+type CatalogVoice = Omit<TtsVoice, 'provider' | 'status'> & { locale: string };
+
 /**
- * Intended production Lugemi Pulse catalog (`own:*`) via OWN_TTS_URL.
- * Region / ethnic labels are cultural metadata for pickers — not a claim of
- * perfect native-speaker acoustic cloning for every community.
+ * Lugemi voice catalog (`own:*`), spoken by Lugemi's own speech engine (OWN_TTS_URL,
+ * services/tts). Every voice is native to its `locale`; a voice is `live` only once the
+ * engine serves it — the rest are being trained on native-speaker recordings.
  */
-export const OWN_TTS_VOICES: TtsVoice[] = [
-  { id: 'own:sw-aisha', name: 'Aisha (Swahili)', gender: 'female', languages: ['sw', 'en'], provider: 'own_tts' },
-  { id: 'own:sw-ke-female', name: 'Aisha · Nairobi', gender: 'female', languages: ['sw', 'en'], provider: 'own_tts' },
-  { id: 'own:yo-tunde', name: 'Tunde (Yoruba)', gender: 'male', languages: ['yo', 'en'], provider: 'own_tts' },
-  { id: 'own:yo-ng-male', name: 'Tunde · Lagos', gender: 'male', languages: ['yo', 'en'], provider: 'own_tts' },
-  { id: 'own:am-hanna', name: 'Hanna (Amharic)', gender: 'female', languages: ['am', 'en'], provider: 'own_tts' },
-  { id: 'own:am-et-female', name: 'Hanna · Addis', gender: 'female', languages: ['am', 'en'], provider: 'own_tts' },
-  { id: 'own:en-kofi', name: 'Kofi (EN-Africa)', gender: 'male', languages: ['en'], provider: 'own_tts' },
-  { id: 'own:zu-za-female', name: 'Thandi · Durban', gender: 'female', languages: ['zu', 'en'], provider: 'own_tts' },
-  { id: 'own:ar-eg-male', name: 'Omar · Cairo', gender: 'male', languages: ['ar', 'en'], provider: 'own_tts' },
-  { id: 'own:fr-sn-female', name: 'Awa · Dakar', gender: 'female', languages: ['fr', 'wo', 'en'], provider: 'own_tts' },
-  { id: 'own:ha-ng-male', name: 'Sani · Kano', gender: 'male', languages: ['ha', 'en'], provider: 'own_tts' },
-  { id: 'own:ak-gh-female', name: 'Akosua · Accra', gender: 'female', languages: ['ak', 'en'], provider: 'own_tts' },
-  { id: 'own:ig-ng-female', name: 'Ada · Enugu', gender: 'female', languages: ['ig', 'en'], provider: 'own_tts' },
-  { id: 'own:so-so-male', name: 'Abdi · Mogadishu', gender: 'male', languages: ['so', 'en'], provider: 'own_tts' },
-  { id: 'own:wo-sn-male', name: 'Moussa · Dakar', gender: 'male', languages: ['wo', 'fr', 'en'], provider: 'own_tts' },
-  { id: 'own:lg-ug-female', name: 'Nakato · Kampala', gender: 'female', languages: ['lg', 'en'], provider: 'own_tts' },
-  { id: 'own:ln-cd-male', name: 'Jean · Kinshasa', gender: 'male', languages: ['ln', 'fr', 'en'], provider: 'own_tts' },
-  { id: 'own:om-et-female', name: 'Chaltu · Adama', gender: 'female', languages: ['om', 'en'], provider: 'own_tts' },
-  { id: 'own:rw-rw-female', name: 'Uwase · Kigali', gender: 'female', languages: ['rw', 'en'], provider: 'own_tts' },
-  { id: 'own:xh-za-male', name: 'Lunga · Cape Town', gender: 'male', languages: ['xh', 'en'], provider: 'own_tts' },
-  { id: 'own:pcm-ng-female', name: 'Blessing · Lagos', gender: 'female', languages: ['pcm', 'en'], provider: 'own_tts' },
-  { id: 'own:bm-ml-male', name: 'Sékou · Bamako', gender: 'male', languages: ['bm', 'fr', 'en'], provider: 'own_tts' },
-  { id: 'own:ee-gh-female', name: 'Ama · Ho', gender: 'female', languages: ['ee', 'en'], provider: 'own_tts' },
-  { id: 'own:ti-et-male', name: 'Yonas · Mekelle', gender: 'male', languages: ['ti', 'en'], provider: 'own_tts' },
-  { id: 'own:sn-zw-female', name: 'Rudo · Harare', gender: 'female', languages: ['sn', 'en'], provider: 'own_tts' },
-  { id: 'own:ny-mw-male', name: 'Chisomo · Lilongwe', gender: 'male', languages: ['ny', 'en'], provider: 'own_tts' },
-  { id: 'own:ff-sn-female', name: 'Aissatou · Saint-Louis', gender: 'female', languages: ['ff', 'fr', 'en'], provider: 'own_tts' },
-  { id: 'own:pt-ao-male', name: 'Nzinga · Luanda', gender: 'male', languages: ['pt', 'en'], provider: 'own_tts' },
-  { id: 'own:af-za-female', name: 'Annelie · Cape Town', gender: 'female', languages: ['af', 'en'], provider: 'own_tts' },
-  { id: 'own:tn-bw-male', name: 'Kagiso · Gaborone', gender: 'male', languages: ['tn', 'en'], provider: 'own_tts' },
+const CATALOG: CatalogVoice[] = [
+  { id: 'own:en-us-female', name: 'Ava · United States', gender: 'female', languages: ['en'], locale: 'en-US' },
+  { id: 'own:en-us-male', name: 'Michael · United States', gender: 'male', languages: ['en'], locale: 'en-US' },
+  { id: 'own:en-gb-female', name: 'Emma · United Kingdom', gender: 'female', languages: ['en'], locale: 'en-GB' },
+  { id: 'own:en-gb-male', name: 'George · United Kingdom', gender: 'male', languages: ['en'], locale: 'en-GB' },
+  { id: 'own:en-ca-female', name: 'Chloe · Canada', gender: 'female', languages: ['en'], locale: 'en-CA' },
+  { id: 'own:en-ca-male', name: 'Liam · Canada', gender: 'male', languages: ['en'], locale: 'en-CA' },
+  { id: 'own:en-au-female', name: 'Mia · Australia', gender: 'female', languages: ['en'], locale: 'en-AU' },
+  { id: 'own:en-au-male', name: 'Jack · Australia', gender: 'male', languages: ['en'], locale: 'en-AU' },
+  { id: 'own:en-nz-female', name: 'Ruby · New Zealand', gender: 'female', languages: ['en'], locale: 'en-NZ' },
+  { id: 'own:en-nz-male', name: 'Oliver · New Zealand', gender: 'male', languages: ['en'], locale: 'en-NZ' },
+  { id: 'own:en-kofi', name: 'Kofi · Ghanaian English', gender: 'male', languages: ['en'], locale: 'en-GH' },
+  { id: 'own:sw-aisha', name: 'Aisha (Swahili)', gender: 'female', languages: ['sw', 'en'], locale: 'sw-KE' },
+  { id: 'own:sw-ke-female', name: 'Aisha · Nairobi', gender: 'female', languages: ['sw', 'en'], locale: 'sw-KE' },
+  { id: 'own:yo-tunde', name: 'Tunde (Yoruba)', gender: 'male', languages: ['yo', 'en'], locale: 'yo-NG' },
+  { id: 'own:yo-ng-male', name: 'Tunde · Lagos', gender: 'male', languages: ['yo', 'en'], locale: 'yo-NG' },
+  { id: 'own:am-hanna', name: 'Hanna (Amharic)', gender: 'female', languages: ['am', 'en'], locale: 'am-ET' },
+  { id: 'own:am-et-female', name: 'Hanna · Addis', gender: 'female', languages: ['am', 'en'], locale: 'am-ET' },
+  { id: 'own:zu-za-female', name: 'Thandi · Durban', gender: 'female', languages: ['zu', 'en'], locale: 'zu-ZA' },
+  { id: 'own:ar-eg-male', name: 'Omar · Cairo', gender: 'male', languages: ['ar', 'en'], locale: 'ar-EG' },
+  { id: 'own:fr-sn-female', name: 'Awa · Dakar', gender: 'female', languages: ['fr', 'wo', 'en'], locale: 'fr-SN' },
+  { id: 'own:ha-ng-male', name: 'Sani · Kano', gender: 'male', languages: ['ha', 'en'], locale: 'ha-NG' },
+  { id: 'own:ak-gh-female', name: 'Akosua · Accra', gender: 'female', languages: ['ak', 'en'], locale: 'ak-GH' },
+  { id: 'own:ig-ng-female', name: 'Ada · Enugu', gender: 'female', languages: ['ig', 'en'], locale: 'ig-NG' },
+  { id: 'own:so-so-male', name: 'Abdi · Mogadishu', gender: 'male', languages: ['so', 'en'], locale: 'so-SO' },
+  { id: 'own:wo-sn-male', name: 'Moussa · Dakar', gender: 'male', languages: ['wo', 'fr', 'en'], locale: 'wo-SN' },
+  { id: 'own:lg-ug-female', name: 'Nakato · Kampala', gender: 'female', languages: ['lg', 'en'], locale: 'lg-UG' },
+  { id: 'own:ln-cd-male', name: 'Jean · Kinshasa', gender: 'male', languages: ['ln', 'fr', 'en'], locale: 'ln-CD' },
+  { id: 'own:om-et-female', name: 'Chaltu · Adama', gender: 'female', languages: ['om', 'en'], locale: 'om-ET' },
+  { id: 'own:rw-rw-female', name: 'Uwase · Kigali', gender: 'female', languages: ['rw', 'en'], locale: 'rw-RW' },
+  { id: 'own:xh-za-male', name: 'Lunga · Cape Town', gender: 'male', languages: ['xh', 'en'], locale: 'xh-ZA' },
+  { id: 'own:pcm-ng-female', name: 'Blessing · Lagos', gender: 'female', languages: ['pcm', 'en'], locale: 'pcm-NG' },
+  { id: 'own:bm-ml-male', name: 'Sékou · Bamako', gender: 'male', languages: ['bm', 'fr', 'en'], locale: 'bm-ML' },
+  { id: 'own:ee-gh-female', name: 'Ama · Ho', gender: 'female', languages: ['ee', 'en'], locale: 'ee-GH' },
+  { id: 'own:ti-et-male', name: 'Yonas · Mekelle', gender: 'male', languages: ['ti', 'en'], locale: 'ti-ET' },
+  { id: 'own:sn-zw-female', name: 'Rudo · Harare', gender: 'female', languages: ['sn', 'en'], locale: 'sn-ZW' },
+  { id: 'own:ny-mw-male', name: 'Chisomo · Lilongwe', gender: 'male', languages: ['ny', 'en'], locale: 'ny-MW' },
+  { id: 'own:ff-sn-female', name: 'Aissatou · Saint-Louis', gender: 'female', languages: ['ff', 'fr', 'en'], locale: 'ff-SN' },
+  { id: 'own:pt-ao-male', name: 'Nzinga · Luanda', gender: 'male', languages: ['pt', 'en'], locale: 'pt-AO' },
+  { id: 'own:af-za-female', name: 'Annelie · Cape Town', gender: 'female', languages: ['af', 'en'], locale: 'af-ZA' },
+  { id: 'own:tn-bw-male', name: 'Kagiso · Gaborone', gender: 'male', languages: ['tn', 'en'], locale: 'tn-BW' },
 ];
 
-/** Map region-aware CMS ids to synthesis keys sent to OWN_TTS_URL backends. */
+export const OWN_TTS_VOICES: TtsVoice[] = CATALOG.map((v) => ({ ...v, provider: 'own_tts' }));
+
+/** Legacy duplicate ids share one engine voice; every other `own:<key>` is served as `<key>`. */
 const OWN_TTS_SYNTH_KEY: Record<string, string> = {
   'own:sw-ke-female': 'sw-aisha',
-  'own:sw-aisha': 'sw-aisha',
   'own:yo-ng-male': 'yo-tunde',
-  'own:yo-tunde': 'yo-tunde',
   'own:am-et-female': 'am-hanna',
-  'own:am-hanna': 'am-hanna',
-  'own:en-kofi': 'en-kofi',
-  'own:zu-za-female': 'zu-za-female',
-  'own:ar-eg-male': 'ar-eg-male',
-  'own:fr-sn-female': 'fr-sn-female',
-  'own:ha-ng-male': 'ha-ng-male',
-  'own:ak-gh-female': 'ak-gh-female',
-  'own:ig-ng-female': 'ig-ng-female', 'own:so-so-male': 'so-so-male', 'own:wo-sn-male': 'wo-sn-male',
-  'own:lg-ug-female': 'lg-ug-female', 'own:ln-cd-male': 'ln-cd-male', 'own:om-et-female': 'om-et-female',
-  'own:rw-rw-female': 'rw-rw-female', 'own:xh-za-male': 'xh-za-male', 'own:pcm-ng-female': 'pcm-ng-female',
-  'own:bm-ml-male': 'bm-ml-male', 'own:ee-gh-female': 'ee-gh-female', 'own:ti-et-male': 'ti-et-male',
-  'own:sn-zw-female': 'sn-zw-female', 'own:ny-mw-male': 'ny-mw-male', 'own:ff-sn-female': 'ff-sn-female',
-  'own:pt-ao-male': 'pt-ao-male', 'own:af-za-female': 'af-za-female', 'own:tn-bw-male': 'tn-bw-male',
 };
+
+export function ownTtsSynthKey(voiceId: string): string {
+  return OWN_TTS_SYNTH_KEY[voiceId] ?? voiceId.replace(/^own:/, '');
+}
 
 const MIME: Record<string, string> = {
   mp3: 'audio/mpeg',
   wav: 'audio/wav',
-  opus: 'audio/opus',
+  opus: 'audio/ogg',
   aac: 'audio/aac',
   flac: 'audio/flac',
 };
@@ -94,7 +97,11 @@ export function resolveOwnTtsVoice(voice: string): TtsVoice | undefined {
   return OWN_TTS_VOICES.find((v) => v.id === voice);
 }
 
-/** Minimal RIFF/WAV for fixture playback without claiming a real GPU run. */
+function withStatus(provider: string, isLive: (voice: TtsVoice) => boolean): TtsVoice[] {
+  return OWN_TTS_VOICES.map((v) => ({ ...v, provider, status: isLive(v) ? 'live' : 'training' }));
+}
+
+/** Minimal RIFF/WAV for fixture playback without claiming a real engine run. */
 function tinyWav(seed: string): Buffer {
   const dataSize = 64;
   const buffer = Buffer.alloc(44 + dataSize);
@@ -121,7 +128,7 @@ export class FixtureOwnTtsAdapter implements TtsProvider {
   readonly name = 'own_tts_fixture';
 
   listVoices(): TtsVoice[] {
-    return OWN_TTS_VOICES.map((v) => ({ ...v, provider: this.name }));
+    return withStatus(this.name, () => true);
   }
 
   async synthesize(input: TtsInput): Promise<TtsOutput> {
@@ -133,12 +140,11 @@ export class FixtureOwnTtsAdapter implements TtsProvider {
         HttpStatus.BAD_REQUEST,
       );
     }
-    const format = input.format === 'wav' ? 'wav' : 'wav';
     const started = Date.now();
     return {
       audio: tinyWav(`${input.voice}:${input.text}`),
       mimeType: 'audio/wav',
-      format,
+      format: 'wav',
       voice: input.voice,
       characters: [...input.text].length,
       provider: this.name,
@@ -147,31 +153,64 @@ export class FixtureOwnTtsAdapter implements TtsProvider {
   }
 }
 
+const LIVE_TTL_MS = 60_000;
+
 /**
- * HTTP client for a rented GPU TTS endpoint (Modal/vLLM/XTTS/etc.).
- * Contract: POST JSON { text, voice, language?, format? } → audio bytes or { audioBase64, mimeType? }.
+ * Client for Lugemi's speech engine (services/tts).
+ * Contract: POST JSON { text, voice, language?, format? } → audio bytes; GET /voices → live voices.
  */
 export class HttpOwnTtsAdapter implements TtsProvider {
   readonly name = 'own_tts';
+  private readonly logger = new Logger(HttpOwnTtsAdapter.name);
+  private live: Set<string> | null = null;
+  private liveCheckedAt = 0;
+  private refreshing: Promise<void> | null = null;
 
   constructor(
     private readonly baseUrl: string,
     private readonly apiKey?: string,
   ) {}
 
+  private headers(extra: Record<string, string> = {}): Record<string, string> {
+    return this.apiKey ? { ...extra, Authorization: `Bearer ${this.apiKey}` } : extra;
+  }
+
+  private voicesUrl(): string {
+    return `${new URL(this.baseUrl).origin}/voices`;
+  }
+
+  /** Refreshes the set of engine voice keys that are live; keeps the last known set on failure. */
+  refreshLive(): Promise<void> {
+    this.refreshing ??= (async () => {
+      try {
+        const res = await fetch(this.voicesUrl(), {
+          headers: this.headers({ Accept: 'application/json' }),
+          signal: AbortSignal.timeout(5_000),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const body = (await res.json()) as { voices?: { id: string }[] };
+        this.live = new Set((body.voices ?? []).map((v) => v.id));
+        this.liveCheckedAt = Date.now();
+      } catch (error) {
+        this.logger.warn(`speech engine voices unavailable: ${error instanceof Error ? error.message : error}`);
+      } finally {
+        this.refreshing = null;
+      }
+    })();
+    return this.refreshing;
+  }
+
+  private stale(): boolean {
+    return Date.now() - this.liveCheckedAt > LIVE_TTL_MS;
+  }
+
   listVoices(): TtsVoice[] {
-    return OWN_TTS_VOICES;
+    if (this.stale()) void this.refreshLive();
+    const live = this.live;
+    return withStatus(this.name, (v) => Boolean(live?.has(ownTtsSynthKey(v.id))));
   }
 
   async synthesize(input: TtsInput): Promise<TtsOutput> {
-    if (!this.baseUrl) {
-      throw new ApiException(
-        'provider_not_configured',
-        'OWN_TTS_URL is not set. Deploy an open-weight TTS endpoint (e.g. Modal) or set OWN_TTS_FIXTURE=1 for tests.',
-        HttpStatus.SERVICE_UNAVAILABLE,
-      );
-    }
-
     const voice = resolveOwnTtsVoice(input.voice);
     if (!voice) {
       throw new ApiException(
@@ -186,20 +225,21 @@ export class HttpOwnTtsAdapter implements TtsProvider {
       throw new ApiException('validation_error', `Unsupported format: ${format}`, HttpStatus.BAD_REQUEST);
     }
 
+    if (this.stale()) await this.refreshLive();
+    const synthKey = ownTtsSynthKey(input.voice);
+    if (this.live && !this.live.has(synthKey)) {
+      throw nativeVoiceUnavailable(
+        input.language ?? voice.locale ?? voice.languages[0],
+        `${voice.name} is still being trained on native-speaker recordings`,
+      );
+    }
+
     const started = Date.now();
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-      Accept: 'audio/*, application/json',
-    };
-    if (this.apiKey) headers.Authorization = `Bearer ${this.apiKey}`;
-
-    const synthKey = OWN_TTS_SYNTH_KEY[input.voice] ?? input.voice.replace(/^own:/, '');
-
     let response: Response;
     try {
-      response = await fetch(this.baseUrl.replace(/\/$/, ''), {
+      response = await fetch(this.baseUrl, {
         method: 'POST',
-        headers,
+        headers: this.headers({ 'Content-Type': 'application/json', Accept: 'audio/*, application/json' }),
         body: JSON.stringify({
           text: input.text,
           voice: synthKey,
@@ -211,16 +251,20 @@ export class HttpOwnTtsAdapter implements TtsProvider {
     } catch (error) {
       throw new ApiException(
         'provider_error',
-        error instanceof Error ? error.message : 'Own TTS request failed',
+        error instanceof Error ? error.message : 'Lugemi speech engine request failed',
         HttpStatus.BAD_GATEWAY,
       );
     }
 
     if (!response.ok) {
       const detail = await response.text().catch(() => '');
+      if (response.status === 422) {
+        void this.refreshLive();
+        throw nativeVoiceUnavailable(input.language ?? voice.locale, 'voice is not live on the speech engine');
+      }
       throw new ApiException(
         'provider_error',
-        `Own TTS HTTP ${response.status}${detail ? `: ${detail.slice(0, 200)}` : ''}`,
+        `Lugemi speech engine HTTP ${response.status}${detail ? `: ${detail.slice(0, 200)}` : ''}`,
         HttpStatus.BAD_GATEWAY,
       );
     }
@@ -231,7 +275,7 @@ export class HttpOwnTtsAdapter implements TtsProvider {
       if (!body.audioBase64) {
         throw new ApiException(
           'provider_error',
-          'Own TTS JSON response missing audioBase64',
+          'Lugemi speech engine JSON response missing audioBase64',
           HttpStatus.BAD_GATEWAY,
         );
       }
@@ -259,17 +303,17 @@ export class HttpOwnTtsAdapter implements TtsProvider {
   }
 }
 
-/** Lists catalog but refuses synthesis until the native voice model (OWN_TTS_URL) is live. */
+/** Lists the catalog but refuses synthesis until the speech engine (OWN_TTS_URL) is connected. */
 export class UnconfiguredOwnTtsAdapter implements TtsProvider {
   readonly name = 'own_tts';
 
   listVoices(): TtsVoice[] {
-    return OWN_TTS_VOICES;
+    return withStatus(this.name, () => false);
   }
 
   async synthesize(input: TtsInput): Promise<TtsOutput> {
     const voice = resolveOwnTtsVoice(input.voice);
-    throw nativeVoiceUnavailable(input.language ?? voice?.languages[0], 'native voice model not deployed');
+    throw nativeVoiceUnavailable(input.language ?? voice?.locale, 'Lugemi speech engine not connected');
   }
 }
 

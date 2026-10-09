@@ -4,6 +4,10 @@ export type TtsVoice = {
   gender: 'female' | 'male' | 'neutral';
   languages: string[];
   provider: string;
+  /** Country/accent the speaker is native to, e.g. `en-AU`, `ak-GH`. */
+  locale?: string;
+  /** Lugemi voices: whether the speech engine can speak it now, or it is still being trained. */
+  status?: 'live' | 'training';
 };
 
 export type TtsInput = {

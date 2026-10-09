@@ -27,7 +27,15 @@ type Transcript = {
   provider: string;
 };
 
-type Voice = { id: string; name: string; gender: string; provider?: string; languages?: string[] };
+type Voice = {
+  id: string;
+  name: string;
+  gender: string;
+  provider?: string;
+  languages?: string[];
+  locale?: string;
+  status?: 'live' | 'training';
+};
 
 type VoiceClone = {
   id: string;
@@ -166,6 +174,7 @@ export function AudioClient() {
       .then((res) => {
         setVoices(res.data);
         const preferred =
+          res.data.find((v) => v.id.startsWith('own:') && v.status === 'live') ??
           res.data.find((v) => v.id === 'own:sw-ke-female') ??
           res.data.find((v) => v.id.startsWith('own:')) ??
           res.data[0];
@@ -623,12 +632,14 @@ export function AudioClient() {
                   group: 'Stock',
                   keywords: v.id,
                 })),
-                ...ownVoices.map((v) => ({
-                  value: v.id,
-                  label: v.name,
-                  group: 'Own TTS (Africa-first)',
-                  keywords: v.id,
-                })),
+                ...[...ownVoices]
+                  .sort((a, b) => Number(b.status === 'live') - Number(a.status === 'live'))
+                  .map((v) => ({
+                    value: v.id,
+                    label: v.status === 'training' ? `${v.name} — in training` : v.name,
+                    group: v.status === 'training' ? 'Lugemi voices · in training' : 'Lugemi voices · live',
+                    keywords: `${v.id} ${v.locale ?? ''}`,
+                  })),
                 ...usableClones.map((c) => ({
                   value: c.voice,
                   label: c.name,
@@ -641,9 +652,9 @@ export function AudioClient() {
             />
           </label>
           <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.8rem' }}>
-            Prefer <code className="vl-code">own:*</code> region voices for native accent metadata. Approved clones
-            use <code className="vl-code">clone:{'{id}'}</code>. Own TTS needs{' '}
-            <code className="vl-code">OWN_TTS_URL</code> or fixture mode.
+            Lugemi voices (<code className="vl-code">own:*</code>) are spoken by Lugemi&apos;s own speech engine and
+            are native to their country. Voices in training go live once enough native-speaker recordings are approved
+            and a native reviewer signs off. Approved clones use <code className="vl-code">clone:{'{id}'}</code>.
           </p>
 
           <label className="vl-label">

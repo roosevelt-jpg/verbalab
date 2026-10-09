@@ -3,8 +3,8 @@ import type { Request, Response } from 'express';
 import { ApiException } from '../common/errors/api-exception';
 import { clientIp } from '../common/http/client-ip';
 import { GatewayService } from '../gateway/gateway.service';
-import { baseTtsLanguage, findNativeVoice, nativeVoiceUnavailable } from '../gateway/native-voice';
-import { isOwnTtsVoice, OWN_TTS_VOICES } from '../gateway/own-tts.adapter';
+import { nativeVoiceUnavailable } from '../gateway/native-voice';
+import { isOwnTtsVoice } from '../gateway/own-tts.adapter';
 
 const MAX_CHARS = 300;
 const WINDOW_MS = 10 * 60_000;
@@ -51,9 +51,7 @@ export class DemoSpeechController {
     }
 
     const requested = typeof body.voice === 'string' && isOwnTtsVoice(body.voice) ? body.voice : undefined;
-    const voice =
-      requested ??
-      (baseTtsLanguage(language) === 'en' ? 'own:en-kofi' : findNativeVoice(OWN_TTS_VOICES, language)?.id);
+    const voice = requested ?? this.gateway.nativeVoiceFor(language)?.id;
     if (!voice) throw nativeVoiceUnavailable(language);
 
     const out = await this.gateway.synthesize({ text, voice, language, format: 'mp3' });

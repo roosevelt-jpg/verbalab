@@ -81,22 +81,62 @@ export function baseTtsLanguage(language: string | undefined | null): string | u
   return LANGUAGE_ALIASES[primary] ?? primary;
 }
 
-export function ttsLanguageName(language: string): string {
-  const base = baseTtsLanguage(language) ?? language;
-  return LANGUAGE_NAMES[base] ?? language;
+const ENGLISH_REGIONS: Record<string, string> = {
+  US: 'United States',
+  GB: 'United Kingdom',
+  CA: 'Canada',
+  AU: 'Australia',
+  NZ: 'New Zealand',
+  GH: 'Ghana',
+  NG: 'Nigeria',
+  KE: 'Kenya',
+  ZA: 'South Africa',
+  IE: 'Ireland',
+  IN: 'India',
+};
+
+/** `en-AU` → `AU`; `ak-gh-asante` → `GH`; `en` → undefined. */
+export function ttsRegion(language: string | undefined | null): string | undefined {
+  const region = language?.trim().split(/[-_]/)[1];
+  return region && /^[a-z]{2}$/i.test(region) ? region.toUpperCase() : undefined;
 }
 
+export function ttsLanguageName(language: string): string {
+  const base = baseTtsLanguage(language) ?? language;
+  const name = LANGUAGE_NAMES[base] ?? language;
+  const region = ttsRegion(language);
+  if (base === 'en' && region) return `${name} (${ENGLISH_REGIONS[region] ?? region})`;
+  return name;
+}
+
+/**
+ * English is spoken natively with many accents, so a regional English request (`en-AU`) only
+ * matches a speaker from that country. A voice's country is the region of its `locale`.
+ */
 export function voiceSpeaksNatively(voice: TtsVoice, language: string | undefined): boolean {
   const base = baseTtsLanguage(language);
   if (!base) return true;
-  return voice.languages.some((l) => baseTtsLanguage(l) === base);
+  if (!voice.languages.some((l) => baseTtsLanguage(l) === base)) return false;
+  const region = ttsRegion(language);
+  if (base === 'en' && region) return ttsRegion(voice.locale) === region;
+  return true;
 }
 
-/** First catalog voice whose primary (first-listed) language is the requested one. */
+/**
+ * Best native catalog voice for a language: primary language must match, a regional request
+ * prefers (and for English requires) a speaker from that country, plain `en` defaults to US
+ * English, and live voices win over ones still in training.
+ */
 export function findNativeVoice(voices: TtsVoice[], language: string): TtsVoice | undefined {
   const base = baseTtsLanguage(language);
   if (!base) return undefined;
-  return voices.find((v) => baseTtsLanguage(v.languages[0]) === base);
+  let candidates = voices.filter((v) => baseTtsLanguage(v.languages[0]) === base);
+  const region = ttsRegion(language) ?? (base === 'en' ? 'US' : undefined);
+  if (region) {
+    const regional = candidates.filter((v) => ttsRegion(v.locale) === region);
+    if (regional.length || base === 'en') candidates = regional;
+  }
+  return candidates.find((v) => v.status !== 'training') ?? candidates[0];
 }
 
 export function nativeVoiceUnavailable(language: string | undefined, detail?: string): ApiException {

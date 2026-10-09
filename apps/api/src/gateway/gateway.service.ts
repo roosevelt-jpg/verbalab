@@ -11,7 +11,6 @@ import { OpenAiTtsAdapter } from './openai-tts.adapter';
 import {
   createOwnTtsAdapter,
   isOwnTtsVoice,
-  OWN_TTS_VOICES,
   ownTtsConfigured,
   resolveOwnTtsVoice,
 } from './own-tts.adapter';
@@ -380,13 +379,17 @@ export class GatewayService {
     return [...this.ownTtsProvider.listVoices(), ...this.ttsProvider.listVoices()];
   }
 
+  /** Best native Lugemi voice for a language (live voices first), or undefined if none exists. */
+  nativeVoiceFor(language: string | undefined): TtsVoice | undefined {
+    return findNativeVoice(this.ownTtsProvider.listVoices(), language?.trim() || 'en');
+  }
+
   /** Enforces the native-speaker rule before any audio is produced. */
   private resolveNativeInput(input: TtsInput): TtsInput {
     const language = baseTtsLanguage(input.language);
     if (!input.voice) {
-      if (!language || language === 'en') return { ...input, voice: 'own:en-kofi' };
-      const native = findNativeVoice(OWN_TTS_VOICES, language);
-      if (!native) throw nativeVoiceUnavailable(input.language);
+      const native = this.nativeVoiceFor(input.language);
+      if (!native) throw nativeVoiceUnavailable(input.language ?? 'en');
       return { ...input, voice: native.id };
     }
     if (isOwnTtsVoice(input.voice)) {
@@ -394,7 +397,7 @@ export class GatewayService {
       if (voice && !voiceSpeaksNatively(voice, input.language)) {
         throw nativeVoiceUnavailable(
           input.language,
-          `${voice.name} is a native ${ttsLanguageName(voice.languages[0]!)} voice`,
+          `${voice.name} is a native ${ttsLanguageName(voice.locale ?? voice.languages[0]!)} voice`,
         );
       }
       return input;
@@ -417,7 +420,9 @@ export class GatewayService {
               reason: error instanceof Error ? error.message : 'stock tts failed',
             }),
           );
-          return this.ownTtsProvider.synthesize({ ...input, voice: 'own:en-kofi' });
+          const native = this.nativeVoiceFor(input.language);
+          if (!native) throw error;
+          return this.ownTtsProvider.synthesize({ ...input, voice: native.id });
         });
     this.logger.log(
       JSON.stringify({
