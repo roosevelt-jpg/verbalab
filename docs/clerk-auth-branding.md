@@ -38,7 +38,7 @@ Programmatic `useSignUp` / custom email-password forms are not used on productio
 | Surface | Removable from Lugemi code? | How to clear |
 | --- | --- | --- |
 | Clerk **development instance** “Development mode” badge | **No** | Use a **production** Clerk instance (`pk_live_` / `sk_live_`) for public deployments. |
-| “Secured by Clerk” / Clerk logo in component footer | **Not via `appearance` alone on free/dev** | Clerk Dashboard → Customization → Branding. Removing Clerk branding requires a **paid Clerk plan** on a production instance. |
+| “Secured by Clerk” / Clerk watermark & logo in component footer | **Not via `appearance` alone on free/dev** | Clerk Dashboard → Customization → Branding. Removing Clerk branding requires a **paid Clerk plan** on a production instance. |
 | Lugemi AuthShell / onboarding wizard chrome | Yes | Fully Lugemi-owned CSS. |
 
-Application theming (`appearance`, localization, AuthShell) cannot suppress Clerk’s development watermark. That badge is an instance/plan limitation, not a missing Lugemi prop. Do not claim unpaid Clerk badges were removed from the product.
+Application theming (`appearance`, localization, AuthShell) cannot suppress Clerk’s development watermark. That badge is an instance/plan limitation, not a missing Lugemi prop. Do not claim unpaid Clerk badges were removed from the product. Clerk watermark limits and branded styling boundaries are documented here for engineering reference.
