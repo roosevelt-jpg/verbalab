@@ -1,7 +1,7 @@
 /**
  * Marketing demo speech — always Lugemi native voices via the API (`POST /v1/demo/speech`).
  * Never falls back to browser speech or stock voices: those sound like a foreigner
- * speaking the language. If no native voice exists yet, the API refuses and we show why.
+ * speaking the language. Cultural English varieties (GH/NG/KE/PH/ZA) resolve to own:* Echo voices.
  */
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
@@ -21,7 +21,7 @@ export const DEMO_VOICE_PROFILES: Record<string, DemoVoiceProfile> = {
   abe: { id: 'abe', label: 'Abe · Lagos', lang: 'yo-NG', voice: 'own:yo-ng-male', englishLocale: 'en-NG' },
   amara: { id: 'amara', label: 'Amara · Nairobi', lang: 'sw-KE', voice: 'own:sw-ke-female', englishLocale: 'en-KE' },
   thandi: { id: 'thandi', label: 'Thandi · Johannesburg', lang: 'zu-ZA', voice: 'own:zu-za-female', englishLocale: 'en-ZA' },
-  kwame: { id: 'kwame', label: 'Kwame · Accra', lang: 'ak-GH', englishLocale: 'en-GH' },
+  kwame: { id: 'kwame', label: 'Kwame · Accra', lang: 'ak-GH', voice: 'own:ak-gh-female', englishLocale: 'en-GH' },
   'sw-ke-female': { id: 'sw-ke-female', label: 'Aisha · Nairobi', lang: 'sw-KE', voice: 'own:sw-ke-female', englishLocale: 'en-KE' },
   'yo-ng-male': { id: 'yo-ng-male', label: 'Tunde · Lagos', lang: 'yo-NG', voice: 'own:yo-ng-male', englishLocale: 'en-NG' },
   'am-et-female': { id: 'am-et-female', label: 'Hanna · Addis', lang: 'am-ET', voice: 'own:am-et-female' },
@@ -55,12 +55,32 @@ export function stopDemoSpeech() {
   }
 }
 
+/** Cultural English Echo voices for marketing demos (region → preferred own:*). */
+const ENGLISH_LOCALE_VOICE: Record<string, string> = {
+  'en-GH': 'own:en-gh-male',
+  'en-NG': 'own:en-ng-female',
+  'en-KE': 'own:en-ke-female',
+  'en-ZA': 'own:en-za-female',
+  'en-PH': 'own:en-ph-female',
+  'en-US': 'own:en-us-female',
+  'en-GB': 'own:en-gb-female',
+  'en-CA': 'own:en-ca-female',
+  'en-AU': 'own:en-au-female',
+  'en-NZ': 'own:en-nz-female',
+};
+
 function resolveRequest(profile: DemoVoiceProfile, requestedLang: string | undefined) {
   const lang = requestedLang ?? profile.lang;
   const base = baseLang(lang);
   if (base === 'en') {
-    const language = lang.includes('-') ? lang : profile.englishLocale ?? 'en';
-    return { language, voice: undefined };
+    const raw = (lang.includes('-') ? lang : profile.englishLocale ?? 'en').replace('_', '-');
+    const localeKey = /^en-[a-z]{2}$/i.test(raw)
+      ? `en-${raw.slice(3).toUpperCase()}`
+      : profile.englishLocale ?? raw;
+    return {
+      language: localeKey,
+      voice: ENGLISH_LOCALE_VOICE[localeKey],
+    };
   }
   const voice = profile.voice && baseLang(profile.lang) === base ? profile.voice : undefined;
   return { language: lang, voice };

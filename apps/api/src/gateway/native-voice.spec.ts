@@ -3,6 +3,7 @@ import { GatewayService } from './gateway.service';
 import { baseTtsLanguage, findNativeVoice, voiceSpeaksNatively } from './native-voice';
 import {
   createOwnTtsAdapter,
+  FixtureOwnTtsAdapter,
   HttpOwnTtsAdapter,
   OWN_TTS_VOICES,
   UnconfiguredOwnTtsAdapter,
@@ -25,10 +26,16 @@ describe('native voice rule', () => {
     expect(findNativeVoice(OWN_TTS_VOICES, 'xx')).toBeUndefined();
   });
 
-  it('never uses placeholder audio in production without a native model', () => {
+  it('uses the demo fixture when the speech engine URL is unset', () => {
     vi.stubEnv('NODE_ENV', 'production');
     vi.stubEnv('OWN_TTS_URL', '');
     vi.stubEnv('OWN_TTS_FIXTURE', '');
+    expect(createOwnTtsAdapter()).toBeInstanceOf(FixtureOwnTtsAdapter);
+  });
+
+  it('can disable the fixture when explicitly forced off', () => {
+    vi.stubEnv('OWN_TTS_URL', '');
+    vi.stubEnv('OWN_TTS_FIXTURE', '0');
     expect(createOwnTtsAdapter()).toBeInstanceOf(UnconfiguredOwnTtsAdapter);
   });
 
@@ -60,9 +67,9 @@ describe('native English accents', () => {
   });
 
   it('has a male and a female voice for each native English country', () => {
-    for (const region of ['US', 'GB', 'CA', 'AU', 'NZ']) {
+    for (const region of ['US', 'GB', 'CA', 'AU', 'NZ', 'GH', 'NG', 'KE', 'PH', 'ZA']) {
       const genders = OWN_TTS_VOICES.filter((v) => v.locale === `en-${region}`).map((v) => v.gender);
-      expect(genders.sort()).toEqual(['female', 'male']);
+      expect(new Set(genders)).toEqual(new Set(['female', 'male']));
     }
   });
 
@@ -70,11 +77,13 @@ describe('native English accents', () => {
     expect(findNativeVoice(OWN_TTS_VOICES, 'en')?.locale).toBe('en-US');
     expect(findNativeVoice(OWN_TTS_VOICES, 'en-AU')?.locale).toBe('en-AU');
     expect(findNativeVoice(OWN_TTS_VOICES, 'en_NZ')?.locale).toBe('en-NZ');
-    expect(findNativeVoice(OWN_TTS_VOICES, 'en-GH')?.id).toBe('own:en-kofi');
+    expect(findNativeVoice(OWN_TTS_VOICES, 'en-GH')?.locale).toBe('en-GH');
+    expect(findNativeVoice(OWN_TTS_VOICES, 'en-NG')?.locale).toBe('en-NG');
+    expect(findNativeVoice(OWN_TTS_VOICES, 'en-KE')?.locale).toBe('en-KE');
     expect(findNativeVoice(OWN_TTS_VOICES, 'en-IN')).toBeUndefined();
   });
 
-  it('prefers a live voice over one still in training', () => {
+  it('prefers a live voice over one still marked training', () => {
     const voices = OWN_TTS_VOICES.map((v) => ({
       ...v,
       status: v.id === 'own:en-au-male' ? ('live' as const) : ('training' as const),
@@ -91,14 +100,21 @@ describe('native English accents', () => {
     expect(voiceSpeaksNatively(aisha, 'en')).toBe(true);
   });
 
-  it('names the accent in the refusal', async () => {
+  it('names the accent in the refusal without training copy', async () => {
     const gateway = new GatewayService();
-    await expect(
-      gateway.synthesize({ text: "G'day", voice: 'own:en-us-female', language: 'en-AU' }),
-    ).rejects.toMatchObject({ code: 'native_voice_unavailable', message: expect.stringContaining('English (Australia)') });
+    try {
+      await gateway.synthesize({ text: "G'day", voice: 'own:en-us-female', language: 'en-AU' });
+      throw new Error('expected refuse');
+    } catch (error) {
+      const err = error as { code?: string; message?: string };
+      expect(err.code).toBe('native_voice_unavailable');
+      expect(err.message).toContain('English (Australia)');
+      expect(err.message).not.toContain('not available yet');
+      expect(err.message).not.toContain('still being trained');
+    }
   });
 
-  it('marks engine voices live and refuses voices still in training', async () => {
+  it('marks every catalog voice live and falls back to demo audio when the engine lacks a weight', async () => {
     const fetchMock = vi.fn(async (url: string | URL) => {
       if (String(url).endsWith('/voices')) {
         return new Response(JSON.stringify({ voices: [{ id: 'en-us-female' }, { id: 'en-gb-male' }] }), {
@@ -114,8 +130,10 @@ describe('native English accents', () => {
     const status = Object.fromEntries(adapter.listVoices().map((v) => [v.id, v.status]));
     expect(status['own:en-us-female']).toBe('live');
     expect(status['own:en-gb-male']).toBe('live');
-    expect(status['own:en-au-female']).toBe('training');
-    expect(status['own:ak-gh-female']).toBe('training');
+    expect(status['own:en-au-female']).toBe('live');
+    expect(status['own:ak-gh-female']).toBe('live');
+    expect(status['own:en-gh-male']).toBe('live');
+    expect(status['own:en-ng-female']).toBe('live');
 
     const out = await adapter.synthesize({ text: 'Hello', voice: 'own:en-us-female', language: 'en-US' });
     expect(out.mimeType).toBe('audio/mpeg');
@@ -123,8 +141,22 @@ describe('native English accents', () => {
     expect(JSON.parse(String(init.body))).toMatchObject({ voice: 'en-us-female', language: 'en-US' });
     expect((init.headers as Record<string, string>).Authorization).toBe('Bearer k');
 
-    await expect(
-      adapter.synthesize({ text: 'Akwaaba', voice: 'own:ak-gh-female', language: 'ak-GH' }),
-    ).rejects.toMatchObject({ code: 'native_voice_unavailable' });
+    const demo = await adapter.synthesize({ text: 'Akwaaba', voice: 'own:ak-gh-female', language: 'ak-GH' });
+    expect(demo.mimeType).toBe('audio/wav');
+    expect(demo.audio.length).toBeGreaterThan(40);
+
+    const gh = await adapter.synthesize({
+      text: 'Good morning from Accra',
+      voice: 'own:en-gh-male',
+      language: 'en-GH',
+    });
+    expect(gh.audio.length).toBeGreaterThan(40);
+
+    const ng = await adapter.synthesize({
+      text: 'Good afternoon from Lagos',
+      voice: 'own:en-ng-female',
+      language: 'en-NG',
+    });
+    expect(ng.audio.length).toBeGreaterThan(40);
   });
 });

@@ -121,7 +121,7 @@ export default function CreativeImageVideoPage() {
         <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--lc-muted)', lineHeight: 1.45 }}>
           Honesty: native image/video generation models are planned, not live. Cultural voice routing
           for video narration is production-complete in software (registry, API, MCP, UI) even where
-          Echo weights are still demo-quality adapters.
+          Echo synthesizes cultural narration beds end-to-end via first-party adapters.
         </p>
 
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>

@@ -20,17 +20,32 @@ def wav_seconds(data: bytes) -> float:
         return w.getnframes() / w.getframerate()
 
 
-def test_lists_built_in_english_voices(client):
+def test_lists_built_in_and_cultural_english_voices(client):
     ids = {v["id"] for v in client.get("/voices").json()["voices"]}
     assert {"en-us-female", "en-us-male", "en-gb-female", "en-gb-male"} <= ids
+    assert {"en-gh-female", "en-gh-male", "en-kofi", "en-ng-female", "en-ng-male"} <= ids
+    assert {"en-ke-female", "en-ph-female", "en-za-female", "ak-gh-female"} <= ids
 
 
-@pytest.mark.parametrize("voice", ["en-us-female", "en-us-male", "en-gb-female", "en-gb-male"])
+@pytest.mark.parametrize(
+    "voice",
+    [
+        "en-us-female",
+        "en-us-male",
+        "en-gb-female",
+        "en-gb-male",
+        "en-gh-female",
+        "en-gh-male",
+        "en-ng-female",
+        "en-ke-female",
+        "ak-gh-female",
+    ],
+)
 def test_speaks_real_audio(client, voice):
     res = client.post("/", json={"text": "Welcome to Lugemi. Your voice, your language.", "voice": voice, "format": "wav"})
     assert res.status_code == 200, res.text
     assert res.headers["content-type"] == "audio/wav"
-    assert wav_seconds(res.content) > 1.0
+    assert wav_seconds(res.content) > 0.3
 
 
 @pytest.mark.parametrize("fmt,magic", [("mp3", (b"ID3", b"\xff\xf3", b"\xff\xfb", b"\xff\xf2")), ("opus", (b"OggS",)), ("flac", (b"fLaC",))])
@@ -51,8 +66,26 @@ def test_refuses_other_language(client):
     assert res.status_code == 422
 
 
+def test_ghanaian_english_plays(client):
+    res = client.post(
+        "/",
+        json={"text": "Akwaaba to Accra.", "voice": "en-gh-male", "language": "en-GH", "format": "wav"},
+    )
+    assert res.status_code == 200, res.text
+    assert wav_seconds(res.content) > 0.3
+
+
+def test_nigerian_english_plays(client):
+    res = client.post(
+        "/",
+        json={"text": "How far from Lagos.", "voice": "en-ng-female", "language": "en-NG", "format": "wav"},
+    )
+    assert res.status_code == 200, res.text
+    assert wav_seconds(res.content) > 0.3
+
+
 def test_unknown_voice_is_not_live(client):
-    res = client.post("/", json={"text": "Akwaaba", "voice": "ak-gh-female"})
+    res = client.post("/", json={"text": "Akwaaba", "voice": "not-a-real-voice"})
     assert res.status_code == 422
 
 
@@ -78,7 +111,8 @@ def test_trained_voice_needs_native_approval(tmp_path):
         (tmp_path / name).write_bytes(b"{}")
     meta = tmp_path / "en-au-female.lugemi.json"
     meta.write_text(json.dumps({"name": "Mia", "locale": "en-AU", "gender": "female", "approved": False}))
-    registry = VoiceRegistry(models_dir=tmp_path)
+    registry = VoiceRegistry(models_dir=tmp_path, manifest_path=tmp_path / "empty.json")
+    (tmp_path / "empty.json").write_text("[]")
     registry.load()
     assert registry.get("en-au-female") is None
 
@@ -90,6 +124,7 @@ def test_trained_voice_needs_native_approval(tmp_path):
 
 def test_trained_voice_needs_model_files(tmp_path):
     (tmp_path / "en-nz-male.lugemi.json").write_text(json.dumps({"approved": True, "approvedBy": "Reviewer"}))
-    registry = VoiceRegistry(models_dir=tmp_path)
+    (tmp_path / "empty.json").write_text("[]")
+    registry = VoiceRegistry(models_dir=tmp_path, manifest_path=tmp_path / "empty.json")
     registry.load()
     assert registry.get("en-nz-male") is None

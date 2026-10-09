@@ -126,7 +126,7 @@ export function voiceSpeaksNatively(voice: TtsVoice, language: string | undefine
 /**
  * Best native catalog voice for a language: primary language must match, a regional request
  * prefers (and for English requires) a speaker from that country, plain `en` defaults to US
- * English, and live voices win over ones still in training.
+ * English, and shipped (`live`) voices win when status metadata is present.
  */
 export function findNativeVoice(voices: TtsVoice[], language: string): TtsVoice | undefined {
   const base = baseTtsLanguage(language);
@@ -144,7 +144,7 @@ export function nativeVoiceUnavailable(language: string | undefined, detail?: st
   const name = language ? ttsLanguageName(language) : 'this language';
   return new ApiException(
     'native_voice_unavailable',
-    `A native ${name} voice is not available yet. Lugemi only speaks a language with a voice from native speakers of it${detail ? ` (${detail})` : ''}.`,
+    `Cannot speak ${name} with the selected voice. Lugemi only uses a voice native to that language${detail ? ` (${detail})` : ''}.`,
     HttpStatus.UNPROCESSABLE_ENTITY,
   );
 }

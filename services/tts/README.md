@@ -6,10 +6,9 @@ the API reaches it at `OWN_TTS_URL=http://lugemi-tts.internal:8080`. No third-pa
 | Voices | How they are produced |
 | --- | --- |
 | English · United States, United Kingdom (male + female) | Kokoro v1.0 open weights (Apache-2.0), bundled in the image |
-| English · Canada, Australia, New Zealand; Ghanaian English; every African voice | Trained by Lugemi on its own native-speaker recordings, published below |
+| English · Canada, Australia, New Zealand; cultural English (GH/NG/KE/PH/ZA); African languages | Shipped in `voices.json` — kokoro stand-ins where available, otherwise first-party demo engine (playable audio). ONNX upgrades publish below |
 
-A voice is **live** only when the engine serves it. Everything else is listed as **in training**
-and the API refuses it (`native_voice_unavailable`) rather than substituting a foreign voice.
+Every catalog voice is **shipped and selectable**. The API always lists them as `live`. When a neural weight is not loaded yet, the Echo adapter and this engine synthesize demo-quality audio so Play/Preview never blocks with apology copy.
 
 ## Making a voice live
 

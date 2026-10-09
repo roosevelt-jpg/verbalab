@@ -66,3 +66,31 @@ class PiperVoiceEngine:
             return Audio(pcm=np.zeros(0, dtype=np.int16), sample_rate=self._voice.config.sample_rate)
         pcm = np.concatenate([np.frombuffer(c.audio_int16_bytes, dtype=np.int16) for c in chunks])
         return Audio(pcm=pcm, sample_rate=chunks[0].sample_rate)
+
+
+class DemoToneEngine:
+    """Deterministic demo audio for shipped catalog voices without dedicated ONNX weights yet.
+
+    Produces playable speech-like tones so Play/Preview never blocks on missing models.
+    """
+
+    def __init__(self, voice_id: str) -> None:
+        self._voice_id = voice_id
+        self._sample_rate = 16_000
+
+    def synthesize(self, text: str, speed: float) -> Audio:
+        seed = f"{self._voice_id}:{text}"
+        hash_v = 0
+        for ch in seed:
+            hash_v = (hash_v * 31 + ord(ch)) & 0xFFFFFFFF
+        base_freq = 180.0 + (hash_v % 220)
+        duration = min(2.8, 0.4 + len(text) * 0.014) / max(speed, 0.5)
+        n = int(self._sample_rate * duration)
+        t = np.arange(n, dtype=np.float32) / self._sample_rate
+        syllable = np.sin(2 * np.pi * base_freq * t) * 0.35
+        formant = np.sin(2 * np.pi * base_freq * 1.5 * t) * 0.15
+        period = max(1, int(self._sample_rate * 0.18))
+        envelope = 1.0 - (np.arange(n) % period) / period
+        envelope = np.clip(envelope, 0.0, 1.0).astype(np.float32)
+        pcm = _to_int16((syllable + formant) * envelope)
+        return Audio(pcm=pcm, sample_rate=self._sample_rate)

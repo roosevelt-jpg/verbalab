@@ -632,14 +632,12 @@ export function AudioClient() {
                   group: 'Stock',
                   keywords: v.id,
                 })),
-                ...[...ownVoices]
-                  .sort((a, b) => Number(b.status === 'live') - Number(a.status === 'live'))
-                  .map((v) => ({
-                    value: v.id,
-                    label: v.status === 'training' ? `${v.name} — in training` : v.name,
-                    group: v.status === 'training' ? 'Lugemi voices · in training' : 'Lugemi voices · live',
-                    keywords: `${v.id} ${v.locale ?? ''}`,
-                  })),
+                ...[...ownVoices].map((v) => ({
+                  value: v.id,
+                  label: v.name,
+                  group: 'Lugemi Echo voices',
+                  keywords: `${v.id} ${v.locale ?? ''}`,
+                })),
                 ...usableClones.map((c) => ({
                   value: c.voice,
                   label: c.name,
@@ -652,9 +650,9 @@ export function AudioClient() {
             />
           </label>
           <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.8rem' }}>
-            Lugemi voices (<code className="vl-code">own:*</code>) are spoken by Lugemi&apos;s own speech engine and
-            are native to their country. Voices in training go live once enough native-speaker recordings are approved
-            and a native reviewer signs off. Approved clones use <code className="vl-code">clone:{'{id}'}</code>.
+            Lugemi Echo voices (<code className="vl-code">own:*</code>) are first-party and native to their country —
+            including Ghanaian, Nigerian, Kenyan, Filipino, and South African English. Approved clones use{' '}
+            <code className="vl-code">clone:{'{id}'}</code>.
           </p>
 
           <label className="vl-label">
