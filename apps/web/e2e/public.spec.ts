@@ -15,7 +15,10 @@ test.describe('Public console surfaces', () => {
   test('docs page loads OpenAPI marketing surface', async ({ page }) => {
     await page.goto('/docs');
     await expect(page.getByRole('heading', { name: 'Lugemi API' })).toBeVisible();
-    await expect(page.getByRole('heading', { name: 'POST /v1/translate' })).toBeVisible();
+    const translateCard = page.locator('.vl-endpoint-card').first();
+    await expect(translateCard).toContainText('POST');
+    await expect(translateCard).toContainText('/v1/translate');
+    await expect(page.getByRole('link', { name: 'API reference' }).first()).toBeVisible();
   });
 
   test('coverage page is reachable', async ({ page }) => {
