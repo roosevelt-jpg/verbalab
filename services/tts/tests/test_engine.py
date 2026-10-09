@@ -84,9 +84,38 @@ def test_nigerian_english_plays(client):
     assert wav_seconds(res.content) > 0.3
 
 
-def test_unknown_voice_is_not_live(client):
+@pytest.mark.parametrize(
+    "voice,language,text",
+    [
+        ("ak-gh-female", "ak-GH", "Akwaaba"),
+        ("yo-tunde", "yo-NG", "E kaaro"),
+        ("sw-aisha", "sw-KE", "Habari"),
+        ("de-pack", "de", "Guten Tag"),
+        ("ja-pack", "ja", "Konnichiwa"),
+        ("th-pack", "th", "Sawasdee"),
+        ("hi-pack", "hi", "Namaste"),
+        ("vi-pack", "vi", "Xin chao"),
+    ],
+)
+def test_african_and_global_packs_synthesize(client, voice, language, text):
+    res = client.post("/", json={"text": text, "voice": voice, "language": language, "format": "wav"})
+    assert res.status_code == 200, res.text
+    assert wav_seconds(res.content) > 0.3
+
+
+def test_lists_language_default_packs(client):
+    ids = {v["id"] for v in client.get("/voices").json()["voices"]}
+    assert "de-pack" in ids
+    assert "th-pack" in ids
+    assert "ja-pack" in ids
+    assert len([i for i in ids if i.endswith("-pack")]) >= 100
+
+
+def test_unknown_voice_is_rejected(client):
     res = client.post("/", json={"text": "Akwaaba", "voice": "not-a-real-voice"})
     assert res.status_code == 422
+    assert "not available yet" not in res.text.lower()
+    assert "still being trained" not in res.text.lower()
 
 
 def test_requires_key_when_configured(client, monkeypatch):

@@ -125,8 +125,9 @@ export function voiceSpeaksNatively(voice: TtsVoice, language: string | undefine
 
 /**
  * Best native catalog voice for a language: primary language must match, a regional request
- * prefers (and for English requires) a speaker from that country, plain `en` defaults to US
- * English, and shipped (`live`) voices win when status metadata is present.
+ * prefers a speaker from that country, plain `en` defaults to US English, and shipped (`live`)
+ * voices win when status metadata is present. English regions without a dedicated pack fall
+ * back to the language-default (US) Echo voice so Play/Preview never blocks.
  */
 export function findNativeVoice(voices: TtsVoice[], language: string): TtsVoice | undefined {
   const base = baseTtsLanguage(language);
@@ -135,7 +136,12 @@ export function findNativeVoice(voices: TtsVoice[], language: string): TtsVoice 
   const region = ttsRegion(language) ?? (base === 'en' ? 'US' : undefined);
   if (region) {
     const regional = candidates.filter((v) => ttsRegion(v.locale) === region);
-    if (regional.length || base === 'en') candidates = regional;
+    if (regional.length) {
+      candidates = regional;
+    } else if (base === 'en') {
+      const defaults = candidates.filter((v) => ttsRegion(v.locale) === 'US');
+      if (defaults.length) candidates = defaults;
+    }
   }
   return candidates.find((v) => v.status !== 'training') ?? candidates[0];
 }

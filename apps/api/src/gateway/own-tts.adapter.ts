@@ -1,16 +1,22 @@
 import { HttpStatus, Logger } from '@nestjs/common';
 import { ApiException } from '../common/errors/api-exception';
-import { nativeVoiceUnavailable } from './native-voice';
+import { LANGUAGE_SEEDS, TOTAL_LANGUAGE_COUNT } from '../languages/language-seeds';
+import { baseTtsLanguage, nativeVoiceUnavailable } from './native-voice';
 import { TtsInput, TtsOutput, TtsProvider, TtsVoice } from './tts-provider';
 
 type CatalogVoice = Omit<TtsVoice, 'provider' | 'status'> & { locale: string };
 
+/** Language-default Echo id when a registry language has no curated own:* speaker yet. */
+export function languagePackVoiceId(code: string): string {
+  return `own:${code}-pack`;
+}
+
 /**
- * Lugemi Echo Voice catalog (`own:*`). Every entry is shipped and ready for synthesis via
+ * Curated Lugemi Echo speakers (`own:*`). Every entry is shipped and ready for synthesis via
  * the first-party speech engine (OWN_TTS_URL / services/tts) or the demo-quality fixture
  * adapter when the engine is offline or a specific weight is not loaded yet.
  */
-const CATALOG: CatalogVoice[] = [
+const CURATED: CatalogVoice[] = [
   { id: 'own:en-us-female', name: 'Ava · United States', gender: 'female', languages: ['en'], locale: 'en-US' },
   { id: 'own:en-us-male', name: 'Michael · United States', gender: 'male', languages: ['en'], locale: 'en-US' },
   { id: 'own:en-gb-female', name: 'Emma · United Kingdom', gender: 'female', languages: ['en'], locale: 'en-GB' },
@@ -63,11 +69,63 @@ const CATALOG: CatalogVoice[] = [
   { id: 'own:tn-bw-male', name: 'Kagiso · Gaborone', gender: 'male', languages: ['tn', 'en'], locale: 'tn-BW' },
 ];
 
+/** Primary language tags already covered by a curated speaker. */
+function curatedPrimaryLanguages(): Set<string> {
+  const covered = new Set<string>();
+  for (const voice of CURATED) {
+    const primary = baseTtsLanguage(voice.languages[0]) ?? voice.languages[0];
+    if (primary) covered.add(primary);
+  }
+  return covered;
+}
+
+/**
+ * Full Echo catalog: curated speakers plus one language-default `own:{code}-pack` voice for
+ * every LANGUAGE_SEEDS entry that lacks a dedicated pack — so Play/Preview never blocks.
+ */
+function buildCatalog(): CatalogVoice[] {
+  const covered = curatedPrimaryLanguages();
+  const packs: CatalogVoice[] = [];
+  for (const seed of LANGUAGE_SEEDS) {
+    const code = baseTtsLanguage(seed.code) ?? seed.code;
+    if (covered.has(code)) continue;
+    packs.push({
+      id: languagePackVoiceId(seed.code),
+      name: `${seed.nameEn} · Echo`,
+      gender: 'female',
+      languages: [seed.code],
+      locale: seed.code,
+    });
+    covered.add(code);
+  }
+  return [...CURATED, ...packs];
+}
+
+const CATALOG: CatalogVoice[] = buildCatalog();
+
 export const OWN_TTS_VOICES: TtsVoice[] = CATALOG.map((v) => ({
   ...v,
   provider: 'own_tts',
   status: 'live' as const,
 }));
+
+/** Languages with a playable first-party Echo path (curated or language-default pack). */
+export const OWN_TTS_LANGUAGE_COUNT = (() => {
+  const langs = new Set<string>();
+  for (const voice of OWN_TTS_VOICES) {
+    const primary = baseTtsLanguage(voice.languages[0]) ?? voice.languages[0];
+    if (primary) langs.add(primary);
+  }
+  return langs.size;
+})();
+
+export function assertOwnTtsCoversLanguageRegistry() {
+  if (OWN_TTS_LANGUAGE_COUNT < TOTAL_LANGUAGE_COUNT) {
+    throw new Error(
+      `Echo catalog covers ${OWN_TTS_LANGUAGE_COUNT} languages; expected ≥ ${TOTAL_LANGUAGE_COUNT}`,
+    );
+  }
+}
 
 /** Legacy duplicate ids share one engine voice; every other `own:<key>` is served as `<key>`. */
 const OWN_TTS_SYNTH_KEY: Record<string, string> = {
@@ -107,7 +165,25 @@ export function ownTtsConfigured(): boolean {
 }
 
 export function resolveOwnTtsVoice(voice: string): TtsVoice | undefined {
-  return OWN_TTS_VOICES.find((v) => v.id === voice);
+  const found = OWN_TTS_VOICES.find((v) => v.id === voice);
+  if (found) return found;
+  // Language-default pack ids stay synthesizable even when a curated speaker also exists.
+  const match = /^own:([a-z0-9]+)-pack$/i.exec(voice.trim());
+  if (!match) return undefined;
+  const code = match[1]!.toLowerCase();
+  const seed = LANGUAGE_SEEDS.find(
+    (s) => s.code === code || (baseTtsLanguage(s.code) ?? s.code) === code,
+  );
+  if (!seed) return undefined;
+  return {
+    id: languagePackVoiceId(seed.code),
+    name: `${seed.nameEn} · Echo`,
+    gender: 'female',
+    languages: [seed.code],
+    locale: seed.code,
+    provider: 'own_tts',
+    status: 'live',
+  };
 }
 
 function asLive(provider: string): TtsVoice[] {

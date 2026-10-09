@@ -113,6 +113,32 @@ class VoiceRegistry:
                     options={"model": str(onnx)},
                 )
 
+        # Language-default Echo packs: every registry language gets a playable demo path.
+        pack_path = APP_DIR / "pack_languages.json"
+        if pack_path.exists():
+            try:
+                packs = json.loads(pack_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as error:
+                log.warning("pack_languages.json unreadable: %s", error)
+                packs = []
+            for entry in packs:
+                code = str(entry.get("code", "")).strip()
+                if not code:
+                    continue
+                voice_id = f"{code}-pack"
+                if voice_id in voices:
+                    continue
+                name_en = str(entry.get("nameEn") or code)
+                voices[voice_id] = VoiceInfo(
+                    id=voice_id,
+                    name=f"{name_en} · Echo",
+                    locale=code,
+                    gender="female",
+                    engine="demo",
+                    approved_by="Lugemi language-default pack",
+                    options={},
+                )
+
         with self._lock:
             stale = [vid for vid in self._engines if vid not in voices]
             for vid in stale:

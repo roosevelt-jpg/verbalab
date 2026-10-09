@@ -21,9 +21,12 @@ describe('native voice rule', () => {
     expect(baseTtsLanguage('en-NG')).toBe('en');
   });
 
-  it('finds the native Twi voice', () => {
+  it('finds the native Twi voice and language-default packs', () => {
     expect(findNativeVoice(OWN_TTS_VOICES, 'tw')?.id).toBe('own:ak-gh-female');
     expect(findNativeVoice(OWN_TTS_VOICES, 'xx')).toBeUndefined();
+    expect(findNativeVoice(OWN_TTS_VOICES, 'de')?.id).toBe('own:de-pack');
+    expect(findNativeVoice(OWN_TTS_VOICES, 'ja')?.id).toBe('own:ja-pack');
+    expect(findNativeVoice(OWN_TTS_VOICES, 'th')?.id).toBe('own:th-pack');
   });
 
   it('uses the demo fixture when the speech engine URL is unset', () => {
@@ -80,7 +83,8 @@ describe('native English accents', () => {
     expect(findNativeVoice(OWN_TTS_VOICES, 'en-GH')?.locale).toBe('en-GH');
     expect(findNativeVoice(OWN_TTS_VOICES, 'en-NG')?.locale).toBe('en-NG');
     expect(findNativeVoice(OWN_TTS_VOICES, 'en-KE')?.locale).toBe('en-KE');
-    expect(findNativeVoice(OWN_TTS_VOICES, 'en-IN')).toBeUndefined();
+    // English regions without a dedicated pack fall back to language-default US Echo.
+    expect(findNativeVoice(OWN_TTS_VOICES, 'en-IN')?.locale).toBe('en-US');
   });
 
   it('prefers a live voice over one still marked training', () => {

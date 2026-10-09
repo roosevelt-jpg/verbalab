@@ -1,7 +1,8 @@
 /**
  * Marketing demo speech — always Lugemi native voices via the API (`POST /v1/demo/speech`).
  * Never falls back to browser speech or stock voices: those sound like a foreigner
- * speaking the language. Cultural English varieties (GH/NG/KE/PH/ZA) resolve to own:* Echo voices.
+ * speaking the language. Cultural English varieties (GH/NG/KE/PH/ZA) and every registry
+ * language resolve to a playable own:* Echo voice (curated or language-default pack).
  */
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';

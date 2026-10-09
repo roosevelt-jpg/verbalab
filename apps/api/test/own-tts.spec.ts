@@ -9,8 +9,16 @@ import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { ApiKeysService } from '../src/api-keys/api-keys.service';
 import { GatewayService } from '../src/gateway/gateway.service';
-import { FixtureOwnTtsAdapter } from '../src/gateway/own-tts.adapter';
+import {
+  assertOwnTtsCoversLanguageRegistry,
+  FixtureOwnTtsAdapter,
+  OWN_TTS_LANGUAGE_COUNT,
+  OWN_TTS_VOICES,
+  resolveOwnTtsVoice,
+} from '../src/gateway/own-tts.adapter';
+import { TOTAL_LANGUAGE_COUNT } from '../src/languages/language-seeds';
 import { ApiExceptionFilter } from '../src/common/errors/api-exception.filter';
+import { findNativeVoice } from '../src/gateway/native-voice';
 
 const root = join(__dirname, '../../..');
 
@@ -127,6 +135,83 @@ describe('Own TTS path', () => {
         .expect(200);
       expect(res.headers['content-type']).toMatch(/audio/);
       expect(Buffer.from(res.body).length).toBeGreaterThan(40);
+    }
+  });
+
+  it('covers the full language registry with playable Echo voices', () => {
+    assertOwnTtsCoversLanguageRegistry();
+    expect(OWN_TTS_LANGUAGE_COUNT).toBeGreaterThanOrEqual(TOTAL_LANGUAGE_COUNT);
+    expect(OWN_TTS_VOICES.every((v) => v.status === 'live')).toBe(true);
+    expect(resolveOwnTtsVoice('own:th-pack')?.status).toBe('live');
+    expect(resolveOwnTtsVoice('own:de-pack')?.languages).toContain('de');
+  });
+
+  it('synthesizes African and global language-default packs with HTTP 200', async () => {
+    const org = await seedOrg(prisma, `own_tts_full_${Date.now()}`);
+    const created = await apiKeys.create({
+      organizationId: org.id,
+      workspaceId: org.workspaces[0].id,
+      name: 'own-tts-full',
+      userId: org.memberships[0].userId,
+    });
+
+    const samples: { language: string; voice?: string; text: string }[] = [
+      { language: 'ak-GH', text: 'Akwaaba' },
+      { language: 'yo-NG', text: 'E kaaro' },
+      { language: 'sw-KE', text: 'Habari' },
+      { language: 'zu-ZA', text: 'Sawubona' },
+      { language: 'ha-NG', text: 'Sannu' },
+      { language: 'am-ET', text: 'Selam' },
+      { language: 'en-GH', text: 'Good morning from Accra' },
+      { language: 'en-NG', text: 'How far from Lagos' },
+      { language: 'de', text: 'Guten Tag' },
+      { language: 'ja', text: 'Konnichiwa' },
+      { language: 'th', text: 'Sawasdee' },
+      { language: 'vi', text: 'Xin chao' },
+      { language: 'hi', text: 'Namaste' },
+      { language: 'pt', text: 'Bom dia' },
+      { language: 'fr-SN', text: 'Bonjour' },
+    ];
+
+    for (const sample of samples) {
+      const voice = sample.voice ?? findNativeVoice(OWN_TTS_VOICES, sample.language)?.id;
+      expect(voice).toBeTruthy();
+      const res = await request(app.getHttpServer())
+        .post('/v1/audio/speech')
+        .set('Authorization', `Bearer ${created.secret}`)
+        .send({ text: sample.text, voice, language: sample.language, format: 'wav' })
+        .expect(200);
+      expect(res.headers['content-type']).toMatch(/audio/);
+      expect(Buffer.from(res.body).length).toBeGreaterThan(40);
+    }
+  });
+
+  it('scrubs user-facing training / not-available copy from Echo surfaces', () => {
+    const roots = [
+      join(root, 'apps/api/src/gateway/own-tts.adapter.ts'),
+      join(root, 'apps/api/src/gateway/native-voice.ts'),
+      join(root, 'apps/web/app/audio/audio-client.tsx'),
+      join(root, 'apps/web/lib/demo-speech.ts'),
+      join(root, 'apps/web/app/creative/text-to-speech/tts-client.tsx'),
+      join(root, 'apps/web/app/accent-identity/accent-identity-client.tsx'),
+      join(root, 'apps/web/app/chat/chat-client.tsx'),
+      join(root, 'apps/web/app/translate/translate-client.tsx'),
+      join(root, 'apps/web/app/voice-marketplace/voice-marketplace-client.tsx'),
+    ];
+    const banned = [
+      'not available yet',
+      'still being trained',
+      'Lugemi voices · in training',
+      'still being trained on native-speaker recordings',
+      'coming soon',
+      'native-speaker recordings',
+    ];
+    for (const file of roots) {
+      if (!existsSync(file)) continue;
+      const text = readFileSync(file, 'utf8').toLowerCase();
+      for (const phrase of banned) {
+        expect(text, `${file} must not contain "${phrase}"`).not.toContain(phrase.toLowerCase());
+      }
     }
   });
 });
