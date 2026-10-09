@@ -32,13 +32,13 @@ const isPublicRoute = createRouteMatcher([
   '/data-advantage(.*)',
   '/corridor-benchmarks(.*)',
   '/health(.*)',
-  '/p(.*)',
+  '/p/(.*)',
   '/enterprise',
   '/organizations',
-  '/pricing(.*)',
-  '/onboarding(.*)',
   '/record(.*)',
 ]);
+
+const isOnboardingRoute = createRouteMatcher(['/onboarding(.*)']);
 
 const clerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
@@ -53,6 +53,9 @@ export default clerkConfigured
       if (!isPublicRoute(request)) {
         const { userId } = await auth();
         if (!userId) {
+          if (isOnboardingRoute(request)) {
+            return NextResponse.redirect(new URL('/sign-up', request.url));
+          }
           const signIn = new URL('/sign-in', request.url);
           signIn.searchParams.set('redirect_url', request.nextUrl.pathname + request.nextUrl.search);
           return NextResponse.redirect(signIn);

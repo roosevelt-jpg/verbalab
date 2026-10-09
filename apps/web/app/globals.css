@@ -261,6 +261,45 @@ textarea {
   }
 }
 
+.vl-console-public-links {
+  display: none;
+  align-items: center;
+  gap: 1rem;
+  margin-left: 0.5rem;
+}
+
+.vl-console-public-links a {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.vl-console-public-links a:hover {
+  color: var(--brand-navy);
+}
+
+@media (min-width: 720px) {
+  .vl-console-public-links {
+    display: flex;
+  }
+}
+
+.vl-console-public-note {
+  margin: 0 0 1.25rem;
+  padding: 0.7rem 0.95rem;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-canvas);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+.vl-console-public-note a {
+  color: var(--action-primary);
+  font-weight: 600;
+}
+
 .vl-console-menu-btn {
   display: inline-flex;
   align-items: center;
