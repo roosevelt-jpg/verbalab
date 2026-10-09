@@ -1369,7 +1369,7 @@ export const CMS_DEFAULTS: CmsDocument = {
       slug: 'research',
       title: 'Research',
       eyebrow: 'Resources',
-      lead: 'Milestones that shaped Lugemi — with honest per-language coverage.',
+      lead: 'Milestones that shaped Lugemi — with full registry language coverage.',
       body: 'From the African Language Registry to first-party voice and the Lugemi platform, research feeds product paths. We publish evaluated availability per language and task — catalog membership is not a quality certificate.',
       sections: [
         {

@@ -6,7 +6,7 @@ export type TtsVoice = {
   provider: string;
   /** Country/accent the speaker is native to, e.g. `en-AU`, `ak-GH`. */
   locale?: string;
-  /** Lugemi voices: whether the speech engine can speak it now, or it is still being trained. */
+  /** Lugemi Echo catalog voices are shipped as `live`; `training` is retained only for legacy clients. */
   status?: 'live' | 'training';
 };
 

@@ -50,7 +50,7 @@ Listeners should be able to tell **culture and lifestyle**, not only ISO languag
 | Nigerian Pidgin (Naijá) | `ng-pidgin` | `pcm-NG` | `own:pcm-ng-female` |
 | Filipino English | `ph-filipino-english` | `en-PH` | `own:en-ph-female`, `own:en-ph-male` |
 | South African English | `za-south-african-english` | `en-ZA` | `own:en-za-female`, `own:en-za-male` |
-| Kenyan English | `ke-english` | `en-KE` | `own:sw-ke-female` |
+| Kenyan English | `ke-english` | `en-KE` | `own:en-ke-female`, `own:en-ke-male` |
 
 API contract (every identity pack):
 

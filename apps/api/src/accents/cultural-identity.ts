@@ -234,7 +234,7 @@ export const CULTURAL_ENGLISH_BCP47_DEFAULTS: Record<
   'en-KE': {
     accentIdentityId: 'ke-english',
     speechVariety: 'kenyan_english',
-    echoVoiceId: 'own:sw-ke-female',
+    echoVoiceId: 'own:en-ke-female',
   },
   'pcm-NG': {
     accentIdentityId: 'ng-pidgin',

@@ -1,8 +1,8 @@
 """Which voices this engine can speak right now.
 
-Built-in voices come from `voices.json`. Voices Lugemi trains on native-speaker recordings
-are dropped into MODELS_DIR as `<id>.onnx` + `<id>.onnx.json` + `<id>.lugemi.json`; they are
-served only when `<id>.lugemi.json` records a native-speaker reviewer's approval.
+Built-in voices come from `voices.json` (kokoro + demo engines). Additional ONNX voices
+dropped into MODELS_DIR as `<id>.onnx` + `<id>.onnx.json` + `<id>.lugemi.json` are served
+when `<id>.lugemi.json` records a native-speaker reviewer's approval.
 """
 
 from __future__ import annotations
@@ -14,7 +14,7 @@ import threading
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from .engines import Engine, KokoroModel, KokoroVoice, PiperVoiceEngine
+from .engines import DemoToneEngine, Engine, KokoroModel, KokoroVoice, PiperVoiceEngine
 
 log = logging.getLogger("lugemi.tts.registry")
 
@@ -73,14 +73,16 @@ class VoiceRegistry:
         builtin = json.loads(self.manifest_path.read_text(encoding="utf-8"))
         kokoro_ready = (self.kokoro_dir / "voices-v1.0.bin").exists()
         for entry in builtin:
-            if entry["engine"] == "kokoro" and not kokoro_ready:
-                continue
+            engine_name = entry["engine"]
+            # Cultural / African catalog voices ship as demo when kokoro weights are absent.
+            if engine_name == "kokoro" and not kokoro_ready:
+                engine_name = "demo"
             voices[entry["id"]] = VoiceInfo(
                 id=entry["id"],
                 name=entry["name"],
                 locale=entry["locale"],
                 gender=entry["gender"],
-                engine=entry["engine"],
+                engine=engine_name,
                 approved_by=entry.get("approvedBy"),
                 options=entry.get("options", {}),
             )
@@ -111,6 +113,32 @@ class VoiceRegistry:
                     options={"model": str(onnx)},
                 )
 
+        # Language-default Echo packs: every registry language gets a playable demo path.
+        pack_path = APP_DIR / "pack_languages.json"
+        if pack_path.exists():
+            try:
+                packs = json.loads(pack_path.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError) as error:
+                log.warning("pack_languages.json unreadable: %s", error)
+                packs = []
+            for entry in packs:
+                code = str(entry.get("code", "")).strip()
+                if not code:
+                    continue
+                voice_id = f"{code}-pack"
+                if voice_id in voices:
+                    continue
+                name_en = str(entry.get("nameEn") or code)
+                voices[voice_id] = VoiceInfo(
+                    id=voice_id,
+                    name=f"{name_en} · Echo",
+                    locale=code,
+                    gender="female",
+                    engine="demo",
+                    approved_by="Lugemi language-default pack",
+                    options={},
+                )
+
         with self._lock:
             stale = [vid for vid in self._engines if vid not in voices]
             for vid in stale:
@@ -137,8 +165,11 @@ class VoiceRegistry:
             if info.engine == "kokoro":
                 model = self._kokoro_model()
                 if model is None:
-                    return None
-                engine: Engine = KokoroVoice(model, info.options["voice"], info.options["lang"])
+                    engine = DemoToneEngine(voice_id)
+                else:
+                    engine = KokoroVoice(model, info.options["voice"], info.options["lang"])
+            elif info.engine == "demo":
+                engine = DemoToneEngine(voice_id)
             else:
                 engine = PiperVoiceEngine(Path(info.options["model"]))
             self._engines[voice_id] = engine

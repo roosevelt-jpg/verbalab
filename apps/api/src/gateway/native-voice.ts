@@ -125,8 +125,9 @@ export function voiceSpeaksNatively(voice: TtsVoice, language: string | undefine
 
 /**
  * Best native catalog voice for a language: primary language must match, a regional request
- * prefers (and for English requires) a speaker from that country, plain `en` defaults to US
- * English, and live voices win over ones still in training.
+ * prefers a speaker from that country, plain `en` defaults to US English, and shipped (`live`)
+ * voices win when status metadata is present. English regions without a dedicated pack fall
+ * back to the language-default (US) Echo voice so Play/Preview never blocks.
  */
 export function findNativeVoice(voices: TtsVoice[], language: string): TtsVoice | undefined {
   const base = baseTtsLanguage(language);
@@ -135,7 +136,12 @@ export function findNativeVoice(voices: TtsVoice[], language: string): TtsVoice 
   const region = ttsRegion(language) ?? (base === 'en' ? 'US' : undefined);
   if (region) {
     const regional = candidates.filter((v) => ttsRegion(v.locale) === region);
-    if (regional.length || base === 'en') candidates = regional;
+    if (regional.length) {
+      candidates = regional;
+    } else if (base === 'en') {
+      const defaults = candidates.filter((v) => ttsRegion(v.locale) === 'US');
+      if (defaults.length) candidates = defaults;
+    }
   }
   return candidates.find((v) => v.status !== 'training') ?? candidates[0];
 }
@@ -144,7 +150,7 @@ export function nativeVoiceUnavailable(language: string | undefined, detail?: st
   const name = language ? ttsLanguageName(language) : 'this language';
   return new ApiException(
     'native_voice_unavailable',
-    `A native ${name} voice is not available yet. Lugemi only speaks a language with a voice from native speakers of it${detail ? ` (${detail})` : ''}.`,
+    `Cannot speak ${name} with the selected voice. Lugemi only uses a voice native to that language${detail ? ` (${detail})` : ''}.`,
     HttpStatus.UNPROCESSABLE_ENTITY,
   );
 }

@@ -118,7 +118,7 @@ async def _synthesize(body: SynthesisRequest, authorization: str | None) -> Resp
 
     voice = registry.get(body.voice)
     if voice is None:
-        raise _error(422, "native_voice_unavailable", f'Voice "{body.voice}" is not live on this engine')
+        raise _error(422, "native_voice_unavailable", f'Unknown voice "{body.voice}" on this engine')
     if not language_matches(voice, body.language):
         raise _error(
             422,

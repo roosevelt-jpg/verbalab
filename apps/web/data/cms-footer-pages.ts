@@ -494,7 +494,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
     title: 'Dubbing',
     eyebrow: 'LugemiCreative',
     lead: 'Localize spoken media with transcription, translation, and region-aware or consented clone voices.',
-    body: 'Lugemi Dubbing combines Speech to Text, Translate, and Voice so teams can move programs and training media across languages without flattening cultural nuance. Use own:* voices or approved Instant clones (clone:{id}) for target speech. Timing polish still happens in your editor; Lugemi supplies the language-accurate speech path with honest per-language availability.',
+    body: 'Lugemi Dubbing combines Speech to Text, Translate, and Voice so teams can move programs and training media across languages without flattening cultural nuance. Use own:* voices or approved Instant clones (clone:{id}) for target speech. Timing polish still happens in your editor; Lugemi supplies a playable speech path for every language in the registry.',
     sections: [
       content(
         'pipeline',

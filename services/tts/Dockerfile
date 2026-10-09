@@ -14,6 +14,7 @@ RUN mkdir -p models/kokoro \
   && curl -fsSL -o models/kokoro/voices-v1.0.bin "$KOKORO_RELEASE/voices-v1.0.bin"
 
 COPY voices.json .
+COPY pack_languages.json .
 COPY app ./app
 
 ENV MODELS_DIR=/data/voices \

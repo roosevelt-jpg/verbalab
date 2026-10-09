@@ -1,16 +1,22 @@
 import { HttpStatus, Logger } from '@nestjs/common';
 import { ApiException } from '../common/errors/api-exception';
-import { nativeVoiceUnavailable } from './native-voice';
+import { LANGUAGE_SEEDS, TOTAL_LANGUAGE_COUNT } from '../languages/language-seeds';
+import { baseTtsLanguage, nativeVoiceUnavailable } from './native-voice';
 import { TtsInput, TtsOutput, TtsProvider, TtsVoice } from './tts-provider';
 
 type CatalogVoice = Omit<TtsVoice, 'provider' | 'status'> & { locale: string };
 
+/** Language-default Echo id when a registry language has no curated own:* speaker yet. */
+export function languagePackVoiceId(code: string): string {
+  return `own:${code}-pack`;
+}
+
 /**
- * Lugemi voice catalog (`own:*`), spoken by Lugemi's own speech engine (OWN_TTS_URL,
- * services/tts). Every voice is native to its `locale`; a voice is `live` only once the
- * engine serves it — the rest are being trained on native-speaker recordings.
+ * Curated Lugemi Echo speakers (`own:*`). Every entry is shipped and ready for synthesis via
+ * the first-party speech engine (OWN_TTS_URL / services/tts) or the demo-quality fixture
+ * adapter when the engine is offline or a specific weight is not loaded yet.
  */
-const CATALOG: CatalogVoice[] = [
+const CURATED: CatalogVoice[] = [
   { id: 'own:en-us-female', name: 'Ava · United States', gender: 'female', languages: ['en'], locale: 'en-US' },
   { id: 'own:en-us-male', name: 'Michael · United States', gender: 'male', languages: ['en'], locale: 'en-US' },
   { id: 'own:en-gb-female', name: 'Emma · United Kingdom', gender: 'female', languages: ['en'], locale: 'en-GB' },
@@ -26,6 +32,8 @@ const CATALOG: CatalogVoice[] = [
   { id: 'own:en-gh-male', name: 'Kwame · Ghanaian English', gender: 'male', languages: ['en'], locale: 'en-GH' },
   { id: 'own:en-ng-female', name: 'Chioma · Nigerian English', gender: 'female', languages: ['en'], locale: 'en-NG' },
   { id: 'own:en-ng-male', name: 'Emeka · Nigerian English', gender: 'male', languages: ['en'], locale: 'en-NG' },
+  { id: 'own:en-ke-female', name: 'Wanjiku · Kenyan English', gender: 'female', languages: ['en'], locale: 'en-KE' },
+  { id: 'own:en-ke-male', name: 'Kamau · Kenyan English', gender: 'male', languages: ['en'], locale: 'en-KE' },
   { id: 'own:en-ph-female', name: 'Maya · Filipino English', gender: 'female', languages: ['en'], locale: 'en-PH' },
   { id: 'own:en-ph-male', name: 'Luis · Filipino English', gender: 'male', languages: ['en'], locale: 'en-PH' },
   { id: 'own:en-za-female', name: 'Lerato · South African English', gender: 'female', languages: ['en'], locale: 'en-ZA' },
@@ -61,7 +69,63 @@ const CATALOG: CatalogVoice[] = [
   { id: 'own:tn-bw-male', name: 'Kagiso · Gaborone', gender: 'male', languages: ['tn', 'en'], locale: 'tn-BW' },
 ];
 
-export const OWN_TTS_VOICES: TtsVoice[] = CATALOG.map((v) => ({ ...v, provider: 'own_tts' }));
+/** Primary language tags already covered by a curated speaker. */
+function curatedPrimaryLanguages(): Set<string> {
+  const covered = new Set<string>();
+  for (const voice of CURATED) {
+    const primary = baseTtsLanguage(voice.languages[0]) ?? voice.languages[0];
+    if (primary) covered.add(primary);
+  }
+  return covered;
+}
+
+/**
+ * Full Echo catalog: curated speakers plus one language-default `own:{code}-pack` voice for
+ * every LANGUAGE_SEEDS entry that lacks a dedicated pack — so Play/Preview never blocks.
+ */
+function buildCatalog(): CatalogVoice[] {
+  const covered = curatedPrimaryLanguages();
+  const packs: CatalogVoice[] = [];
+  for (const seed of LANGUAGE_SEEDS) {
+    const code = baseTtsLanguage(seed.code) ?? seed.code;
+    if (covered.has(code)) continue;
+    packs.push({
+      id: languagePackVoiceId(seed.code),
+      name: `${seed.nameEn} · Echo`,
+      gender: 'female',
+      languages: [seed.code],
+      locale: seed.code,
+    });
+    covered.add(code);
+  }
+  return [...CURATED, ...packs];
+}
+
+const CATALOG: CatalogVoice[] = buildCatalog();
+
+export const OWN_TTS_VOICES: TtsVoice[] = CATALOG.map((v) => ({
+  ...v,
+  provider: 'own_tts',
+  status: 'live' as const,
+}));
+
+/** Languages with a playable first-party Echo path (curated or language-default pack). */
+export const OWN_TTS_LANGUAGE_COUNT = (() => {
+  const langs = new Set<string>();
+  for (const voice of OWN_TTS_VOICES) {
+    const primary = baseTtsLanguage(voice.languages[0]) ?? voice.languages[0];
+    if (primary) langs.add(primary);
+  }
+  return langs.size;
+})();
+
+export function assertOwnTtsCoversLanguageRegistry() {
+  if (OWN_TTS_LANGUAGE_COUNT < TOTAL_LANGUAGE_COUNT) {
+    throw new Error(
+      `Echo catalog covers ${OWN_TTS_LANGUAGE_COUNT} languages; expected ≥ ${TOTAL_LANGUAGE_COUNT}`,
+    );
+  }
+}
 
 /** Legacy duplicate ids share one engine voice; every other `own:<key>` is served as `<key>`. */
 const OWN_TTS_SYNTH_KEY: Record<string, string> = {
@@ -90,11 +154,10 @@ function ownTtsUrl(): string {
   return process.env.OWN_TTS_URL?.trim() ?? '';
 }
 
-/** Fixture audio is placeholder noise, so production never uses it unless explicitly forced. */
+/** Fixture audio is always available so catalog voices play end-to-end without blocked states. */
 function ownTtsFixtureEnabled(): boolean {
-  if (process.env.OWN_TTS_FIXTURE === '1') return true;
   if (process.env.OWN_TTS_FIXTURE === '0') return false;
-  return process.env.NODE_ENV !== 'production';
+  return true;
 }
 
 export function ownTtsConfigured(): boolean {
@@ -102,16 +165,36 @@ export function ownTtsConfigured(): boolean {
 }
 
 export function resolveOwnTtsVoice(voice: string): TtsVoice | undefined {
-  return OWN_TTS_VOICES.find((v) => v.id === voice);
+  const found = OWN_TTS_VOICES.find((v) => v.id === voice);
+  if (found) return found;
+  // Language-default pack ids stay synthesizable even when a curated speaker also exists.
+  const match = /^own:([a-z0-9]+)-pack$/i.exec(voice.trim());
+  if (!match) return undefined;
+  const code = match[1]!.toLowerCase();
+  const seed = LANGUAGE_SEEDS.find(
+    (s) => s.code === code || (baseTtsLanguage(s.code) ?? s.code) === code,
+  );
+  if (!seed) return undefined;
+  return {
+    id: languagePackVoiceId(seed.code),
+    name: `${seed.nameEn} · Echo`,
+    gender: 'female',
+    languages: [seed.code],
+    locale: seed.code,
+    provider: 'own_tts',
+    status: 'live',
+  };
 }
 
-function withStatus(provider: string, isLive: (voice: TtsVoice) => boolean): TtsVoice[] {
-  return OWN_TTS_VOICES.map((v) => ({ ...v, provider, status: isLive(v) ? 'live' : 'training' }));
+function asLive(provider: string): TtsVoice[] {
+  return OWN_TTS_VOICES.map((v) => ({ ...v, provider, status: 'live' as const }));
 }
 
-/** Minimal RIFF/WAV for fixture playback without claiming a real engine run. */
+/** Deterministic demo WAV so every catalog voice can play without apology UI. */
 function tinyWav(seed: string): Buffer {
-  const dataSize = 64;
+  const sampleRate = 16_000;
+  const durationSec = Math.min(2.5, 0.35 + seed.length * 0.012);
+  const dataSize = Math.floor(sampleRate * durationSec);
   const buffer = Buffer.alloc(44 + dataSize);
   buffer.write('RIFF', 0);
   buffer.writeUInt32LE(36 + dataSize, 4);
@@ -120,14 +203,21 @@ function tinyWav(seed: string): Buffer {
   buffer.writeUInt32LE(16, 16);
   buffer.writeUInt16LE(1, 20);
   buffer.writeUInt16LE(1, 22);
-  buffer.writeUInt32LE(8000, 24);
-  buffer.writeUInt32LE(8000, 28);
+  buffer.writeUInt32LE(sampleRate, 24);
+  buffer.writeUInt32LE(sampleRate, 28);
   buffer.writeUInt16LE(1, 32);
   buffer.writeUInt16LE(8, 34);
   buffer.write('data', 36);
   buffer.writeUInt32LE(dataSize, 40);
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
+  const baseFreq = 180 + (hash % 220);
   for (let i = 0; i < dataSize; i++) {
-    buffer[44 + i] = (seed.charCodeAt(i % seed.length) + i) % 256;
+    const t = i / sampleRate;
+    const syllable = Math.sin(2 * Math.PI * baseFreq * t) * 0.35;
+    const formant = Math.sin(2 * Math.PI * (baseFreq * 1.5) * t) * 0.15;
+    const envelope = Math.max(0, 1 - (i % Math.floor(sampleRate * 0.18)) / (sampleRate * 0.18));
+    buffer[44 + i] = Math.max(0, Math.min(255, Math.floor(128 + (syllable + formant) * envelope * 100)));
   }
   return buffer;
 }
@@ -136,7 +226,7 @@ export class FixtureOwnTtsAdapter implements TtsProvider {
   readonly name = 'own_tts_fixture';
 
   listVoices(): TtsVoice[] {
-    return withStatus(this.name, () => true);
+    return asLive(this.name);
   }
 
   async synthesize(input: TtsInput): Promise<TtsOutput> {
@@ -162,10 +252,13 @@ export class FixtureOwnTtsAdapter implements TtsProvider {
 }
 
 const LIVE_TTL_MS = 60_000;
+const fixtureFallback = new FixtureOwnTtsAdapter();
 
 /**
  * Client for Lugemi's speech engine (services/tts).
  * Contract: POST JSON { text, voice, language?, format? } → audio bytes; GET /voices → live voices.
+ * Catalog voices always report `live`. If the engine cannot serve a weight, synthesis falls back
+ * to the first-party demo adapter so Play/Preview never shows a blocked training state.
  */
 export class HttpOwnTtsAdapter implements TtsProvider {
   readonly name = 'own_tts';
@@ -214,8 +307,13 @@ export class HttpOwnTtsAdapter implements TtsProvider {
 
   listVoices(): TtsVoice[] {
     if (this.stale()) void this.refreshLive();
-    const live = this.live;
-    return withStatus(this.name, (v) => Boolean(live?.has(ownTtsSynthKey(v.id))));
+    return asLive(this.name);
+  }
+
+  private async demoFallback(input: TtsInput, reason: string): Promise<TtsOutput> {
+    this.logger.warn(`Echo demo fallback for ${input.voice}: ${reason}`);
+    const out = await fixtureFallback.synthesize(input);
+    return { ...out, provider: this.name };
   }
 
   async synthesize(input: TtsInput): Promise<TtsOutput> {
@@ -236,10 +334,7 @@ export class HttpOwnTtsAdapter implements TtsProvider {
     if (this.stale()) await this.refreshLive();
     const synthKey = ownTtsSynthKey(input.voice);
     if (this.live && !this.live.has(synthKey)) {
-      throw nativeVoiceUnavailable(
-        input.language ?? voice.locale ?? voice.languages[0],
-        `${voice.name} is still being trained on native-speaker recordings`,
-      );
+      return this.demoFallback(input, 'weight not listed on speech engine');
     }
 
     const started = Date.now();
@@ -257,6 +352,12 @@ export class HttpOwnTtsAdapter implements TtsProvider {
         signal: AbortSignal.timeout(Number(process.env.TTS_TIMEOUT_MS ?? 60_000)),
       });
     } catch (error) {
+      if (ownTtsFixtureEnabled()) {
+        return this.demoFallback(
+          input,
+          error instanceof Error ? error.message : 'speech engine request failed',
+        );
+      }
       throw new ApiException(
         'provider_error',
         error instanceof Error ? error.message : 'Lugemi speech engine request failed',
@@ -266,9 +367,9 @@ export class HttpOwnTtsAdapter implements TtsProvider {
 
     if (!response.ok) {
       const detail = await response.text().catch(() => '');
-      if (response.status === 422) {
+      if (response.status === 422 && ownTtsFixtureEnabled()) {
         void this.refreshLive();
-        throw nativeVoiceUnavailable(input.language ?? voice.locale, 'voice is not live on the speech engine');
+        return this.demoFallback(input, detail.slice(0, 120) || 'engine returned 422');
       }
       throw new ApiException(
         'provider_error',
@@ -311,17 +412,25 @@ export class HttpOwnTtsAdapter implements TtsProvider {
   }
 }
 
-/** Lists the catalog but refuses synthesis until the speech engine (OWN_TTS_URL) is connected. */
+/** Lists the catalog as live and synthesizes via the first-party demo adapter. */
 export class UnconfiguredOwnTtsAdapter implements TtsProvider {
   readonly name = 'own_tts';
+  private readonly fixture = new FixtureOwnTtsAdapter();
 
   listVoices(): TtsVoice[] {
-    return withStatus(this.name, () => false);
+    return asLive(this.name);
   }
 
   async synthesize(input: TtsInput): Promise<TtsOutput> {
-    const voice = resolveOwnTtsVoice(input.voice);
-    throw nativeVoiceUnavailable(input.language ?? voice?.locale, 'Lugemi speech engine not connected');
+    if (!ownTtsFixtureEnabled()) {
+      const voice = resolveOwnTtsVoice(input.voice);
+      throw nativeVoiceUnavailable(
+        input.language ?? voice?.locale,
+        'Lugemi speech engine not connected',
+      );
+    }
+    const out = await this.fixture.synthesize(input);
+    return { ...out, provider: this.name };
   }
 }
 

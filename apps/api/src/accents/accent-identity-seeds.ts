@@ -420,8 +420,11 @@ export const ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
       'Kenyan English — Bantu-influenced rhythm, British schooling legacy. Pole, sasa, and hakuna are common loanwords in English sentences.',
     pronunciationMarkers: ['sasa', 'pole', 'hakuna', 'niaje', 'mzungu', 'kwani'],
     samplePhrase: 'Sasa, pole for the delay. Kwani, did you get my message? Hakuna matata — we can reschedule.',
-    echoVoiceId: 'own:sw-ke-female',
+    echoVoiceId: 'own:en-ke-female',
     echoModelVariant: 'lugemi-echo-voice-ke-english',
+    culturalIdentity: 'Kenyan English · Nairobi professional · Swahili loans',
+    speechVariety: 'kenyan_english',
+    lifestyleTags: ['nairobi_professional', 'british_schooling', 'swahili_loans'],
     bcp47: 'en-KE',
   },
 
