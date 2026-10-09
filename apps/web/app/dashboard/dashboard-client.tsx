@@ -205,21 +205,54 @@ export function DashboardClient() {
 
   useEffect(() => {
     if (!isLoaded) return;
-    // Resume incomplete onboarding when a local draft exists; don't force legacy users.
-    try {
-      const raw = window.localStorage.getItem(ONBOARDING_STORAGE_KEY);
-      if (raw) {
-        const local = loadOnboardingLocal();
-        if (!local.completed) {
-          router.replace('/onboarding');
-          return;
+    let cancelled = false;
+
+    void (async () => {
+      // Resume incomplete onboarding (local draft and/or started API profile).
+      // Empty API profiles (legacy users who never started the wizard) are not forced.
+      try {
+        const raw = window.localStorage.getItem(ONBOARDING_STORAGE_KEY);
+        if (raw) {
+          const local = loadOnboardingLocal();
+          if (!local.completed) {
+            router.replace('/onboarding');
+            return;
+          }
         }
+      } catch {
+        /* ignore */
       }
-    } catch {
-      /* ignore */
-    }
-    void load().catch((err: Error) => setError(err.message));
-  }, [isLoaded, load, router]);
+
+      try {
+        const token = await getToken();
+        if (token) {
+          const remote = await apiFetch<{
+            completed?: boolean;
+            step?: number;
+            platform?: string | null;
+            source?: string;
+          }>('/v1/onboarding', { token });
+          const started =
+            remote.source !== 'empty' &&
+            (Boolean(remote.platform) || (remote.step ?? 0) > 0);
+          if (!cancelled && started && remote.completed === false) {
+            router.replace('/onboarding');
+            return;
+          }
+        }
+      } catch {
+        /* local-only / API soft-fail — continue to dashboard */
+      }
+
+      if (!cancelled) {
+        void load().catch((err: Error) => setError(err.message));
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [getToken, isLoaded, load, router]);
 
   useEffect(() => {
     setInstalls(loadInstalls());

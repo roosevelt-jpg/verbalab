@@ -4,6 +4,7 @@ import { headers } from 'next/headers';
 import { Noto_Sans, Noto_Sans_Mono } from 'next/font/google';
 import './globals.css';
 import '@/components/marketing/marketing.css';
+import { lugemiClerkAppearance, lugemiClerkLocalization } from '@/lib/clerk-appearance';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { mustUseLiveClerkLocalOrigin } from '@/lib/live-clerk-local-origin';
 import { LiveKeyOriginGate } from '@/components/live-key-origin-gate';
@@ -45,21 +46,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     hostHeader,
   });
 
-  const clerkLocalization = {
-    signIn: {
-      start: {
-        title: 'Sign in to Lugemi',
-        subtitle: 'Welcome back — continue to your workspace',
-      },
-    },
-    signUp: {
-      start: {
-        title: 'Create your Lugemi account',
-        subtitle: 'Start building with Africa-first language intelligence',
-      },
-    },
-  };
-
   return (
     <html lang="en" className={`${noto.variable} ${notoMono.variable}`}>
       <body className={noto.className}>
@@ -70,7 +56,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             // serve marketing /health /dev-login instructions on http://127.0.0.1:43125.
             <LiveKeyOriginGate blockClerk>{children}</LiveKeyOriginGate>
           ) : (
-            <ClerkProvider localization={clerkLocalization}>{children}</ClerkProvider>
+            <ClerkProvider
+              appearance={lugemiClerkAppearance}
+              localization={lugemiClerkLocalization}
+              afterSignOutUrl="/"
+            >
+              {children}
+            </ClerkProvider>
           )
         ) : (
           children
