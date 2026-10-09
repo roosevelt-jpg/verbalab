@@ -10,7 +10,12 @@
       "persistent": true
     },
     "lint": {},
-    "typecheck": {},
-    "test": {}
+    "typecheck": {
+      "dependsOn": ["^build"]
+    },
+    "test": {
+      "dependsOn": ["^build"],
+      "passThroughEnv": ["DATABASE_URL", "REDIS_URL", "JOBS_INLINE", "CI"]
+    }
   }
 }
