@@ -66,6 +66,7 @@ server.on('upgrade', (req, socket, head) => {
     }
     socket.write(lines.join('\r\n') + '\r\n\r\n');
     if (upHead?.length) socket.write(upHead);
+    if (head?.length) upSocket.write(head);
     upSocket.pipe(socket);
     socket.pipe(upSocket);
   });
