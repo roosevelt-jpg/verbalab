@@ -290,4 +290,4 @@ pnpm workspaces need the root `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.
 - End-to-end domain guide: [`docs/domain-setup.md`](./domain-setup.md)
 - Cloudflare DNS detail: [`docs/cloudflare.md`](./cloudflare.md)
 - Canonical longer runbook: [`infra/DEPLOY.md`](../infra/DEPLOY.md)
-- CI: `.github/workflows/deploy.yml` (skips without `FLY_API_TOKEN`)
+- CI auto-deploy: `.github/workflows/deploy.yml` — push to `main` deploys `verbalab` + `lugemi-web` (jnb); skips without `FLY_API_TOKEN` (see `infra/DEPLOY.md`)

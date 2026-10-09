@@ -91,11 +91,44 @@ API **release_command** runs `/bin/sh /app/apps/api/scripts/fly-migrate.sh` (`pr
 
 ## GitHub Actions deploy
 
-`.github/workflows/deploy.yml` runs on push to `main`/`master` when `FLY_API_TOKEN` is set as a repository secret. Without the token the job **skips** (no failure) so forks and local CI stay green.
+`.github/workflows/deploy.yml` **auto-deploys on every push to `main`/`master`** (and via **Actions → Deploy → Run workflow**). The job uses the `production` environment.
 
-Optional secrets: `FLY_API_TOKEN`, `NEXT_PUBLIC_API_URL` (set to `https://api.lugemi.com` for production), `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY`.
+| Fly app | Public URL | Config | Dockerfile |
+| --- | --- | --- | --- |
+| `verbalab` (override with `FLY_API_APP`) | `https://api.lugemi.com` | `infra/fly/api.jnb.toml` | `apps/api/Dockerfile` |
+| `lugemi-web` (override with `FLY_WEB_APP`) | `https://lugemi.com` | `infra/fly/web.jnb.toml` | `apps/web/Dockerfile` |
 
-Optional EU island (VL-075): set repository **variable** `FLY_DEPLOY_EU=true` and secret `NEXT_PUBLIC_API_URL_EU` to also deploy `infra/fly/*.eu.toml`.
+Without `FLY_API_TOKEN` the job **skips** (no failure) so forks stay green.
+
+### Required GitHub secret
+
+1. Create a Fly deploy token (org-level is fine — one token can deploy both apps):
+
+   ```bash
+   fly tokens create org -o personal
+   # or deploy-scoped: fly tokens create deploy -a verbalab
+   # and a second for lugemi-web, or use an org token for both
+   ```
+
+2. In GitHub: **Settings → Secrets and variables → Actions → New repository secret**  
+   (or **Environments → production → Environment secrets**)
+
+   | Name | Value |
+   | --- | --- |
+   | `FLY_API_TOKEN` | Fly token from step 1 |
+
+### Optional secrets / variables (Clerk + URLs)
+
+| Kind | Name | Default / purpose |
+| --- | --- | --- |
+| Secret | `NEXT_PUBLIC_API_URL` | Defaults to `https://api.lugemi.com` (web build-arg) |
+| Variable | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk `pk_live_…` / `pk_test_…` baked into the web image (fallback exists in workflow) |
+| Variable | `FLY_API_APP` | Defaults to `verbalab` (set to `lugemi-api` after rename) |
+| Variable | `FLY_WEB_APP` | Defaults to `lugemi-web` |
+| Variable | `FLY_DEPLOY_EU` | Set `true` to also deploy `infra/fly/*.eu.toml` |
+| Secret | `NEXT_PUBLIC_API_URL_EU` | Required when `FLY_DEPLOY_EU=true` |
+
+Clerk **secret** key stays on Fly (`fly secrets set CLERK_SECRET_KEY=… -a verbalab` / `-a lugemi-web`), not in GitHub Actions build args.
 
 ## Local Docker dry-run (no Fly secrets)
 

@@ -1,5 +1,11 @@
 name: Deploy
 
+# Auto-deploys production Africa (jnb) apps on every push to main:
+#   - verbalab (API → api.lugemi.com) from infra/fly/api.jnb.toml
+#   - lugemi-web (web → lugemi.com) from infra/fly/web.jnb.toml
+# Requires repository (or production-environment) secret FLY_API_TOKEN.
+# See infra/DEPLOY.md § "GitHub Actions deploy".
+
 on:
   push:
     branches: [main, master]
@@ -29,19 +35,27 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
         if: steps.fly.outputs.configured == 'true'
 
-      # Production API (api.lugemi.com) is the Fly app "verbalab", deployed from the root fly.toml.
+      # Live API Fly app is still named "verbalab" (jnb). Override via repo variable FLY_API_APP
+      # after renaming to lugemi-api. Config: infra/fly/api.jnb.toml (region jnb).
       - name: Deploy API (Africa jnb → api.lugemi.com)
         if: steps.fly.outputs.configured == 'true'
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-        run: flyctl deploy . -c fly.toml -a ${{ vars.FLY_API_APP || 'verbalab' }} --remote-only
+        run: >
+          flyctl deploy . -c infra/fly/api.jnb.toml
+          --dockerfile apps/api/Dockerfile
+          -a ${{ vars.FLY_API_APP || 'verbalab' }}
+          --remote-only
 
       - name: Deploy Web + admin (Africa jnb → lugemi.com)
         if: steps.fly.outputs.configured == 'true'
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         run: >
-          flyctl deploy . -c infra/fly/web.jnb.toml --dockerfile apps/web/Dockerfile --remote-only
+          flyctl deploy . -c infra/fly/web.jnb.toml
+          --dockerfile apps/web/Dockerfile
+          -a ${{ vars.FLY_WEB_APP || 'lugemi-web' }}
+          --remote-only
           --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL || 'https://api.lugemi.com' }}
           --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_live_Y2xlcmsubHVnZW1pLmNvbSQ' }}
           --build-arg NEXT_PUBLIC_APP_URL=https://lugemi.com
