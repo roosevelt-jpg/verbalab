@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Outfit } from 'next/font/google';
 import { apiFetch } from '@/lib/api';
 import { BrandMark } from '@/components/brand-mark';
 import { LocaleSelect } from '@/components/language-locale-select';
@@ -31,12 +30,6 @@ import {
   type OnboardingState,
 } from '@/lib/onboarding';
 import './onboarding.css';
-
-const outfit = Outfit({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-onboard',
-});
 
 const STEPS = 4;
 
@@ -365,7 +358,7 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
 
   if (!hydrated) {
     return (
-      <main className={`ob-root ${outfit.variable}`}>
+      <main className="ob-root">
         <p className="ob-loading">Loading…</p>
       </main>
     );
@@ -375,7 +368,7 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
   const selectedPlan = plans.find((p) => p.id === state.planId);
 
   return (
-    <main className={`ob-root ${outfit.variable}`}>
+    <main className="ob-root">
       <header className="ob-top">
         <BrandMark href="/" />
         <div className="ob-top-actions">

@@ -1,17 +1,9 @@
 import Link from 'next/link';
-import { Syne } from 'next/font/google';
 import { MarketingFooter } from './marketing-footer';
 import { MarketingNav } from './nav';
 import type { CmsDocument } from '@/data/cms-types';
 import { FEATURE_LABELS, WEB_BILLING_PLANS } from '@/data/billing-plans';
 import './enterprise.css';
-
-const syne = Syne({
-  subsets: ['latin'],
-  weight: ['500', '600', '700'],
-  variable: '--font-syne',
-  display: 'swap',
-});
 
 const enterprisePlan = WEB_BILLING_PLANS.find((p) => p.id === 'enterprise')!;
 
@@ -98,7 +90,7 @@ const FAQ: { q: string; a: string }[] = [
 
 export function EnterpriseMarketingPage({ content }: { content: CmsDocument }) {
   return (
-    <div className={`ent ${syne.variable}`}>
+    <div className="ent">
       <a className="ent-skip" href="#main">
         Skip to content
       </a>

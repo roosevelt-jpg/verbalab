@@ -62,7 +62,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang="en" className={`${noto.variable} ${notoMono.variable}`}>
-      <body>
+      <body className={noto.className}>
         <SentryInit />
         {isClerkConfigured() ? (
           blockClerkOnBareLocal ? (

@@ -6,7 +6,7 @@
   --bb-deep: #007c78;
   --bb-ink: #f7fafc;
   --bb-muted: rgba(182, 195, 213, 0.92);
-  --bb-display: var(--font-syne), var(--font-ui), sans-serif;
+  --bb-display: var(--font-display), var(--font-ui), sans-serif;
   position: relative;
   color: var(--bb-ink);
   background: #071018;

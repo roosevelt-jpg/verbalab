@@ -1,7 +1,7 @@
 /* Lugemi Enterprise marketing — teal/navy, one-job sections, full-bleed hero */
 
 .ent {
-  --ent-display: var(--font-syne), var(--font-ui), sans-serif;
+  --ent-display: var(--font-display), var(--font-ui), sans-serif;
   --ent-max: 1120px;
   min-height: 100vh;
   color: var(--text-primary);

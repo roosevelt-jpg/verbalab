@@ -1,18 +1,10 @@
 import Link from 'next/link';
-import { Syne } from 'next/font/google';
 import { MarketingFooter } from './marketing-footer';
 import { MarketingNav } from './nav';
 import { PilotRequestForm } from './pilot-request-form';
 import type { CmsDocument } from '@/data/cms-types';
 import './enterprise.css';
 import './organizations.css';
-
-const syne = Syne({
-  subsets: ['latin'],
-  weight: ['500', '600', '700'],
-  variable: '--font-syne',
-  display: 'swap',
-});
 
 const OFFERS = [
   {
@@ -109,7 +101,7 @@ const FAQ: { q: string; a: string }[] = [
 
 export function OrganizationsMarketingPage({ content }: { content: CmsDocument }) {
   return (
-    <div className={`ent org ${syne.variable}`}>
+    <div className="ent org">
       <a className="ent-skip" href="#main">
         Skip to content
       </a>

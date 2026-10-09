@@ -1,7 +1,7 @@
 /* Lugemi onboarding — teal/navy, airy whitespace, progress dots */
 
 .ob-root {
-  --ob-display: var(--font-onboard), var(--font-display), sans-serif;
+  --ob-display: var(--font-display), var(--font-ui), sans-serif;
   min-height: 100vh;
   display: flex;
   flex-direction: column;

@@ -76,7 +76,7 @@ export function LiveKeyOriginGate({
           borderBottom: '1px solid #fcd34d',
           color: '#78350f',
           padding: '0.85rem 1.25rem',
-          fontFamily: 'var(--font-noto), system-ui, sans-serif',
+          fontFamily: 'var(--font-ui)',
           fontSize: '0.92rem',
           lineHeight: 1.5,
         }}
