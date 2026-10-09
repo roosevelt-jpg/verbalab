@@ -175,9 +175,11 @@ Do **not** ship a production web image pointed at `localhost` or `*.fly.dev` onc
 
 In the Clerk production instance:
 
-1. **Domains / Allowed origins:** add `https://lugemi.com` and `https://www.lugemi.com` (keep `*.fly.dev` only if you still use Fly preview hostnames).
+1. **Domains / Allowed origins:** add `https://lugemi.com` and `https://www.lugemi.com` (keep `*.fly.dev` only if you still use Fly preview hostnames). Ensure CNAME for `clerk.lugemi.com` is active and verified so CAPTCHA / Turnstile can run on `lugemi.com`.
 2. **Sign-in / sign-up / redirect URLs:** allow paths under those hosts, e.g. `https://lugemi.com/sign-in`, `https://lugemi.com/sign-up`, and redirects back to `/admin` and `/admin/workspaces`.
-3. Use the same **live** publishable + secret keys you set on Fly (`NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` / `CLERK_SECRET_KEY`).
+3. **Attack Protection / CAPTCHA:** under User & Authentication → Attack Protection, configure bot detection. Ensure OAuth (Continue with Google) is enabled as a seamless bypass when Turnstile is blocked by user ad-blockers.
+4. **Password policy:** under User & Authentication → Email/Password, check password requirements (default 8 chars vs 15+).
+5. Use the same **live** publishable + secret keys you set on Fly (`NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` / `CLERK_SECRET_KEY`).
 
 Platform admin is gated by API allowlists (`ADMIN_EMAILS` / `LUGEMI_PLATFORM_ADMIN_EMAILS` / user IDs). Your Clerk user email must match those secrets or `/admin` will show “not on the platform admin allowlist”.
 

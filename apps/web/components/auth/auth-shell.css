@@ -103,6 +103,22 @@
   line-height: 1.55;
 }
 
+.auth-shell__tip {
+  margin: 0.25rem 0 0;
+  max-width: 28rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: #0d5c58;
+  background: rgba(0, 184, 174, 0.09);
+  border: 1px solid rgba(0, 124, 120, 0.22);
+  border-radius: 8px;
+  padding: 0.55rem 0.75rem;
+}
+
+.auth-shell__tip strong {
+  color: var(--brand-navy);
+}
+
 .auth-shell__steps {
   list-style: none;
   margin: 0.55rem 0 0;
