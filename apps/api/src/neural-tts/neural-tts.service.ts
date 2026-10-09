@@ -22,6 +22,8 @@ export type SynthesizeInput = {
   language?: string;
   accentId?: string;
   dialectId?: string;
+  speechVariety?: string;
+  locale?: string;
   format?: 'mp3' | 'wav' | 'opus' | 'aac' | 'flac';
   organizationId: string;
   workspaceId: string;
@@ -117,8 +119,34 @@ export class NeuralTtsService {
     language?: string;
     accentId?: string;
     dialectId?: string;
+    speechVariety?: string;
+    locale?: string;
   }) {
-    if (!input.accentId?.trim() && !input.dialectId?.trim()) {
+    const hasIdentity = Boolean(
+      input.accentId?.trim() ||
+        input.dialectId?.trim() ||
+        input.speechVariety?.trim() ||
+        input.locale?.trim(),
+    );
+
+    if (!hasIdentity) {
+      // Prefer cultural English packs when language is a cultural BCP-47 tag.
+      const localeHint = input.language?.trim();
+      if (localeHint) {
+        const preferred = this.accentIdentity.resolveForLocale(localeHint);
+        if (preferred) {
+          return {
+            text: input.text ?? '',
+            voice: input.voice?.trim() || preferred.echoVoiceId || 'own:en-kofi',
+            language: input.language,
+            accentIdentityId: preferred.id,
+            accentIdentityName: preferred.nameEn,
+            culturalIdentity: preferred.culturalIdentity,
+            speechVariety: preferred.speechVariety,
+            lifestyleTags: preferred.lifestyleTags,
+          };
+        }
+      }
       return {
         text: input.text ?? '',
         voice: input.voice ?? '',
@@ -130,14 +158,19 @@ export class NeuralTtsService {
     const pack = this.accentIdentity.resolveForPlayback({
       accentId: input.accentId,
       dialectId: input.dialectId,
+      speechVariety: input.speechVariety,
+      locale: input.locale,
     });
 
     return {
       text: input.text?.trim() || pack.samplePhrase,
       voice: input.voice?.trim() || pack.echoVoiceId || 'own:en-kofi',
-      language: input.language?.trim() || pack.languageCode,
+      language: input.language?.trim() || pack.bcp47 || pack.languageCode,
       accentIdentityId: pack.id,
       accentIdentityName: pack.nameEn,
+      culturalIdentity: pack.culturalIdentity,
+      speechVariety: pack.speechVariety,
+      lifestyleTags: pack.lifestyleTags,
     };
   }
 
@@ -185,6 +218,14 @@ export class NeuralTtsService {
       accentIdentityId: resolved.accentIdentityId,
       accentIdentityName:
         'accentIdentityName' in resolved ? resolved.accentIdentityName : undefined,
+      culturalIdentity:
+        'culturalIdentity' in resolved ? resolved.culturalIdentity : undefined,
+      speechVariety: 'speechVariety' in resolved ? resolved.speechVariety : undefined,
+      lifestyleTags: 'lifestyleTags' in resolved ? resolved.lifestyleTags : undefined,
+      cultural_identity:
+        'culturalIdentity' in resolved ? resolved.culturalIdentity : undefined,
+      speech_variety: 'speechVariety' in resolved ? resolved.speechVariety : undefined,
+      lifestyle_tags: 'lifestyleTags' in resolved ? resolved.lifestyleTags : undefined,
     };
   }
 

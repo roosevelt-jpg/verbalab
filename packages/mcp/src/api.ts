@@ -193,12 +193,50 @@ export async function handleMcpTool(
           source: String(args.source ?? 'auto'),
           target,
         })) as { text: string; source?: string; characters?: number };
+        const locale = args.locale ? String(args.locale) : target;
+        const accentId = args.accentId ? String(args.accentId) : undefined;
+        const speechVariety = args.speechVariety ? String(args.speechVariety) : undefined;
+        let pack: {
+          id?: string;
+          echoVoiceId?: string;
+          bcp47?: string;
+          cultural_identity?: string;
+          speech_variety?: string;
+          lifestyle_tags?: string[];
+        } | null = null;
+        try {
+          if (accentId) {
+            pack = (await api.json('GET', `/v1/accents/identity/${encodeURIComponent(accentId)}`)) as typeof pack;
+          } else if (speechVariety) {
+            const list = (await api.json('GET', '/v1/accents/identity', undefined, {
+              speechVariety,
+            })) as { data?: Array<NonNullable<typeof pack>> };
+            pack = list.data?.[0] ?? null;
+          } else {
+            const list = (await api.json('GET', '/v1/accents/identity', undefined, {
+              q: locale,
+            })) as { data?: Array<NonNullable<typeof pack> & { bcp47?: string }>; culturalEnglishDefaults?: Record<string, { accentIdentityId: string }> };
+            const defaults = list.culturalEnglishDefaults?.[locale];
+            if (defaults?.accentIdentityId) {
+              pack = (await api.json(
+                'GET',
+                `/v1/accents/identity/${encodeURIComponent(defaults.accentIdentityId)}`,
+              )) as typeof pack;
+            } else {
+              pack = list.data?.find((p) => p.bcp47 === locale) ?? list.data?.[0] ?? null;
+            }
+          }
+        } catch {
+          pack = null;
+        }
+        const voice = (args.voice ? String(args.voice) : undefined) || pack?.echoVoiceId || 'own:ak-gh-female';
         const audio = await synthesize({
           text: translated.text,
-          voice: args.voice,
-          language: target,
+          voice,
+          language: pack?.bcp47 || target,
           format: args.format,
           outPath: args.outPath,
+          accentId: pack?.id ?? accentId,
         });
         return {
           content: [{
@@ -209,6 +247,11 @@ export async function handleMcpTool(
               target,
               characters: translated.characters,
               modelFamily: 'Baobab + Echo',
+              cultural_identity: pack?.cultural_identity ?? null,
+              speech_variety: pack?.speech_variety ?? null,
+              lifestyle_tags: pack?.lifestyle_tags ?? null,
+              accentIdentityId: pack?.id ?? null,
+              voice,
               audio,
             }, null, 2),
           }],

@@ -253,24 +253,46 @@ const CURATED_DIALECT_SEEDS: DialectSeed[] = [
     nameEn: 'Ghanaian English (Ghana)',
     nameNative: 'Ghanaian English',
     region: 'GH',
-    cueTerms: ["ghanaian"],
-    notes: 'Ethnic/locale variety from Africa catalog — Ghana.',
+    cueTerms: ['please', 'somehow', 'at all', 'you are welcome', 'medaase'],
+    notes:
+      'Cultural English variety — Accra/Kumasi professional and media. Distinct from Ghanaian Pidgin; listeners hear Ghanaian lifestyle.',
+  },
+  {
+    code: 'en-gh-ghanaian-pidgin',
+    languageCode: 'en',
+    nameEn: 'Ghanaian Pidgin (Ghana)',
+    nameNative: 'Ghanaian Pidgin',
+    region: 'GH',
+    cueTerms: ['chale', 'charley', 'small small', 'how far'],
+    notes: 'Urban Ghanaian Pidgin — street and market speech across Accra, Kumasi, Takoradi.',
   },
   {
     code: 'en-ng',
     languageCode: 'en',
     nameEn: 'Nigerian English',
     region: 'NG',
-    cueTerms: ["abi","na wa","how far","oya","wetin"],
-    notes: 'Lexical cues only.',
+    cueTerms: ['please', 'somehow', 'at all', 'you people', 'abi', 'na wa', 'how far', 'oya'],
+    notes:
+      'Cultural English variety — Lagos/Abuja broadcast and professional speech. Distinct from Nigerian Pidgin (pcm).',
+  },
+  {
+    code: 'en-ph-filipino-english',
+    languageCode: 'en',
+    nameEn: 'Filipino English (Philippines)',
+    nameNative: 'Filipino English',
+    region: 'PH',
+    cueTerms: ['po', 'opo', 'already', 'for a while', 'comfort room', 'salamat po'],
+    notes:
+      'Cultural English variety — Manila BPO, nursing, and diaspora. Tagalog substrate with po/opo respect.',
   },
   {
     code: 'en-za',
     languageCode: 'en',
     nameEn: 'South African English',
     region: 'ZA',
-    cueTerms: ["lekker","braai","robot","just now","howzit"],
-    notes: 'Lexical cues only.',
+    cueTerms: ['lekker', 'braai', 'robot', 'just now', 'howzit', 'sharp', 'eish'],
+    notes:
+      'Cultural English variety — national broadcast and urban professional. Distinct from Zulu/Xhosa/Afrikaans-influenced packs.',
   },
   {
     code: 'es-gq-equatoguinean-spanish',

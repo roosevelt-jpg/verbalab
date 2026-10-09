@@ -148,7 +148,7 @@ describe('Corridor Benchmarks (09_BENCHMARKS)', () => {
         corridorTask: 'twi',
         lugemiVersion: 'v1',
         definedError: 'err',
-        measuredChange: 'better than ElevenLabs at everything',
+        measuredChange: 'better than a leading voice platform at everything',
         comparator: 'baseline',
         coverageLatencyCost: 'ok',
         testedDate: '2026-10-06',

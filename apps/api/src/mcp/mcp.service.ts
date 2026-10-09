@@ -215,8 +215,33 @@ export class McpService {
           userId: meta?.userId,
           ip: meta?.ip,
         });
+        const accentId = args.accentId ? String(args.accentId) : undefined;
+        const speechVariety = args.speechVariety ? String(args.speechVariety) : undefined;
+        const locale = args.locale ? String(args.locale) : target;
+        let culturalPack: ReturnType<AccentIdentityService['resolveForLocale']> = null;
+        try {
+          if (accentId || speechVariety || locale) {
+            culturalPack = this.identity.resolveForPlayback({
+              accentId,
+              speechVariety,
+              locale,
+            });
+          }
+        } catch {
+          culturalPack = this.identity.resolveForLocale(locale) ?? this.identity.resolveForLocale(target);
+        }
+        const voice =
+          (args.voice ? String(args.voice) : undefined) ||
+          culturalPack?.echoVoiceId ||
+          'own:ak-gh-female';
         const audio = await this.synthesize(
-          { text: translated.text, voice: args.voice, language: target, format: args.format },
+          {
+            text: translated.text,
+            voice,
+            language: culturalPack?.bcp47 || target,
+            format: args.format,
+            accentId: culturalPack?.id ?? accentId,
+          },
           auth,
           meta,
         );
@@ -226,6 +251,11 @@ export class McpService {
           target,
           characters: translated.characters,
           modelFamily: 'Baobab + Echo',
+          cultural_identity: culturalPack?.cultural_identity ?? null,
+          speech_variety: culturalPack?.speech_variety ?? null,
+          lifestyle_tags: culturalPack?.lifestyle_tags ?? null,
+          accentIdentityId: culturalPack?.id ?? null,
+          voice,
           audio,
         });
       }

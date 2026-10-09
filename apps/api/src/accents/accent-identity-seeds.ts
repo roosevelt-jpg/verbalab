@@ -1,8 +1,10 @@
 /**
- * Accent Identity Packs — tribe/culture/religion-linked speech identity for Lugemi Echo Voice demos.
+ * Accent Identity Packs — tribe/culture/religion-linked speech identity for Lugemi Echo Voice.
  * Plain-text metadata; pronunciation markers are illustrative, not phonetic transcriptions.
+ * culturalIdentity / speechVariety / lifestyleTags make cultural nativeness first-class in routing.
  */
 import { ISO_COUNTRY_BY_CODE, isoCountryName } from '../country-packs/iso-countries';
+
 export type AccentIdentitySeed = {
   id: string;
   nameEn: string;
@@ -20,6 +22,18 @@ export type AccentIdentitySeed = {
   /** Model registry variant slug */
   echoModelVariant?: string;
   bcp47?: string;
+  /**
+   * Human cultural identity label (e.g. "Ghanaian English · Accra professional").
+   * When omitted, derived at DTO time from name + region tags.
+   */
+  culturalIdentity?: string;
+  /**
+   * Machine speech variety slug (e.g. ghanaian_english, nigerian_pidgin, filipino_english).
+   * When omitted, derived at DTO time.
+   */
+  speechVariety?: string;
+  /** Lifestyle / culture tags a listener associates with this speech identity. */
+  lifestyleTags?: string[];
 };
 
 export const ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
@@ -41,20 +55,43 @@ export const ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
     bcp47: 'ak-GH',
   },
   {
+    id: 'gh-ghanaian-english',
+    nameEn: 'Ghanaian English',
+    languageCode: 'en',
+    country: 'GH',
+    regionTags: ['Ghana', 'West Africa', 'Ghanaian English'],
+    accentCode: 'en-gh',
+    dialectCode: 'en-gh-ghanaian-english',
+    identityProfile:
+      'Standard Ghanaian English — Accra and Kumasi professional, media, and classroom speech. Akan-influenced rhythm and polite register; listeners hear Ghanaian lifestyle (church, market, family honorifics) without Pidgin slang.',
+    pronunciationMarkers: ['please', 'somehow', 'at all', 'medaase', 'you are welcome', 'small'],
+    samplePhrase:
+      'Good morning. You are welcome — somehow we can start now. Please, take your time; we will finish at all before lunch.',
+    echoVoiceId: 'own:en-gh-female',
+    echoModelVariant: 'lugemi-echo-voice-gh-english',
+    bcp47: 'en-GH',
+    culturalIdentity: 'Ghanaian English · Accra professional · Akan etiquette',
+    speechVariety: 'ghanaian_english',
+    lifestyleTags: ['accra_professional', 'akan_etiquette', 'west_african_english', 'church_and_market'],
+  },
+  {
     id: 'gh-pidgin',
     nameEn: 'Ghanaian Pidgin',
     languageCode: 'en',
     country: 'GH',
     regionTags: ['Ghana', 'West Africa', 'Pidgin'],
     accentCode: 'en-gh',
-    dialectCode: 'en-gh-ghanaian-english',
+    dialectCode: 'en-gh-ghanaian-pidgin',
     identityProfile:
       'Urban Ghanaian Pidgin English — chale, charley, small-small rhythm. Cross-tribal street and market speech in Accra, Kumasi, and Takoradi.',
     pronunciationMarkers: ['chale', 'charley', 'small small', 'ɛ', 'please', 'how far'],
     samplePhrase: 'Chale, how far? I dey come small small. Charley, the thing be sweet paa!',
-    echoVoiceId: 'own:en-kofi',
+    echoVoiceId: 'own:en-gh-male',
     echoModelVariant: 'lugemi-echo-voice-gh-pidgin',
     bcp47: 'en-GH',
+    culturalIdentity: 'Ghanaian Pidgin · Accra street · Cross-tribal',
+    speechVariety: 'ghanaian_pidgin',
+    lifestyleTags: ['chale_street', 'urban_ghana', 'market_rhythm', 'cross_tribal'],
   },
   {
     id: 'gh-fante',
@@ -74,6 +111,26 @@ export const ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
 
   // —— Nigeria ——
   {
+    id: 'ng-nigerian-english',
+    nameEn: 'Nigerian English',
+    languageCode: 'en',
+    country: 'NG',
+    regionTags: ['Nigeria', 'West Africa', 'Nigerian English'],
+    accentCode: 'en-ng',
+    dialectCode: 'en-ng',
+    identityProfile:
+      'Standard Nigerian English — Lagos, Abuja, and national media. Distinct from Pidgin and from UK/US English; listeners hear Naija lifestyle (traffic, family address, broadcast cadence) without requiring ethnic substrate markers.',
+    pronunciationMarkers: ['please', 'somehow', 'at all', 'you people', 'I dey', 'ok na'],
+    samplePhrase:
+      'Good afternoon. Somehow we can begin now — please, you people should take your seats. We will finish at all before five.',
+    echoVoiceId: 'own:en-ng-female',
+    echoModelVariant: 'lugemi-echo-voice-ng-english',
+    bcp47: 'en-NG',
+    culturalIdentity: 'Nigerian English · Lagos / Abuja broadcast · Naija lifestyle',
+    speechVariety: 'nigerian_english',
+    lifestyleTags: ['lagos_professional', 'naija_english', 'west_african_english', 'media_broadcast'],
+  },
+  {
     id: 'ng-pidgin',
     nameEn: 'Nigerian Pidgin (Naijá)',
     languageCode: 'pcm',
@@ -88,6 +145,9 @@ export const ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
     echoVoiceId: 'own:pcm-ng-female',
     echoModelVariant: 'lugemi-echo-voice-ng-pidgin',
     bcp47: 'pcm-NG',
+    culturalIdentity: 'Nigerian Pidgin · Lagos street · Pan-ethnic Naijá',
+    speechVariety: 'nigerian_pidgin',
+    lifestyleTags: ['naija', 'lagos_street', 'pan_ethnic', 'jollof_culture'],
   },
   {
     id: 'ng-yoruba-influence',
@@ -101,9 +161,12 @@ export const ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
       'Yoruba-first speakers in Lagos and southwest Nigeria. English carries Yoruba tone patterns, syllable timing, and honorifics (Ẹ káàárọ̀, Bàbá, Ìyá).',
     pronunciationMarkers: ['abi', 'na wa', 'jare', 'sef', 'oya', 'wetin dey'],
     samplePhrase: 'Good morning o! Abi you don hear the news? Oya make we go before traffic catch us.',
-    echoVoiceId: 'own:yo-ng-male',
+    echoVoiceId: 'own:en-ng-male',
     echoModelVariant: 'lugemi-echo-voice-ng-yoruba',
     bcp47: 'en-NG',
+    culturalIdentity: 'Yoruba-influenced English · Lagos · Southwest Nigeria',
+    speechVariety: 'yoruba_influenced_english',
+    lifestyleTags: ['lagos', 'yoruba_honorifics', 'southwest_nigeria'],
   },
   {
     id: 'ng-igbo-influence',
@@ -120,6 +183,9 @@ export const ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
     echoVoiceId: 'own:ig-ng-female',
     echoModelVariant: 'lugemi-echo-voice-ng-igbo',
     bcp47: 'en-NG',
+    culturalIdentity: 'Igbo-influenced English · Enugu · Southeast Nigeria',
+    speechVariety: 'igbo_influenced_english',
+    lifestyleTags: ['southeast_nigeria', 'market_clarity', 'enugu'],
   },
   {
     id: 'ng-hausa-influence',
@@ -136,6 +202,9 @@ export const ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
     echoVoiceId: 'own:ha-ng-male',
     echoModelVariant: 'lugemi-echo-voice-ng-hausa',
     bcp47: 'en-NG',
+    culturalIdentity: 'Hausa-influenced English · Kano · Northern Nigeria',
+    speechVariety: 'hausa_influenced_english',
+    lifestyleTags: ['kano', 'islamic_greetings', 'northern_nigeria'],
   },
   {
     id: 'ng-yoruba-native',
@@ -156,20 +225,23 @@ export const ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
   // —— Philippines ——
   {
     id: 'ph-filipino-english',
-    nameEn: 'Filipino English accent',
+    nameEn: 'Filipino English',
     languageCode: 'en',
     country: 'PH',
     regionTags: ['Philippines', 'Southeast Asia', 'Filipino English'],
-    accentCode: 'fil-ph',
-    dialectCode: 'fil-ph-manila',
+    accentCode: 'en-ph',
+    dialectCode: 'en-ph-filipino-english',
     identityProfile:
-      'Filipino English — Tagalog substrate, Spanish loanwords, and American English schooling. Po/opo honorifics signal respect; common in BPO, nursing, and diaspora.',
+      'Filipino English — Tagalog substrate, Spanish loanwords, and American English schooling. Po/opo honorifics signal respect; common in BPO, nursing, and diaspora. Listeners immediately hear Philippine lifestyle and care culture.',
     pronunciationMarkers: ['po', 'opo', 'already', 'for a while', 'comfort room', 'salamat po'],
     samplePhrase:
       'Good morning po! I am already here for a while. Salamat po for waiting — shall we start the briefing now?',
-    echoVoiceId: 'own:en-kofi',
+    echoVoiceId: 'own:en-ph-female',
     echoModelVariant: 'lugemi-echo-voice-ph-english',
     bcp47: 'en-PH',
+    culturalIdentity: 'Filipino English · Manila BPO / care · Po/opo respect',
+    speechVariety: 'filipino_english',
+    lifestyleTags: ['manila_bpo', 'po_opo_respect', 'nursing_diaspora', 'tagalog_substrate'],
   },
   {
     id: 'ph-tagalog',
@@ -182,9 +254,12 @@ export const ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
       'Manila Tagalog — national Filipino base with po/opo respect particles. Catholic and folk-Catholic cultural references in daily speech.',
     pronunciationMarkers: ['po', 'opo', 'salamat', 'kumusta', 'magandang umaga'],
     samplePhrase: 'Magandang umaga po! Kumusta po kayo? Salamat po sa inyong oras ngayong umaga.',
-    echoVoiceId: 'own:en-kofi',
+    echoVoiceId: 'own:en-ph-female',
     echoModelVariant: 'lugemi-echo-voice-ph-tagalog',
     bcp47: 'fil-PH',
+    culturalIdentity: 'Tagalog · Manila · National Filipino',
+    speechVariety: 'tagalog',
+    lifestyleTags: ['manila', 'catholic_folk', 'national_filipino'],
   },
   {
     id: 'ph-cebuano',
@@ -197,12 +272,35 @@ export const ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
       'Cebuano speakers from Cebu City and Central Visayas. Distinct from Tagalog in rhythm and vocabulary; strong regional pride and Sinulog cultural identity.',
     pronunciationMarkers: ['salamat', 'kumusta', 'day', 'dong', 'palangga'],
     samplePhrase: 'Kumusta day! Salamat kaayo sa imong pag-abot. Andam na ta sa atong meeting.',
-    echoVoiceId: 'own:en-kofi',
+    echoVoiceId: 'own:en-ph-male',
     echoModelVariant: 'lugemi-echo-voice-ph-cebuano',
     bcp47: 'ceb-PH',
+    culturalIdentity: 'Cebuano · Visayas · Sinulog regional pride',
+    speechVariety: 'cebuano',
+    lifestyleTags: ['visayas', 'sinulog', 'regional_pride'],
   },
 
   // —— South Africa ——
+  {
+    id: 'za-south-african-english',
+    nameEn: 'South African English',
+    languageCode: 'en',
+    country: 'ZA',
+    regionTags: ['South Africa', 'Southern Africa', 'South African English'],
+    accentCode: 'en-za',
+    dialectCode: 'en-za',
+    identityProfile:
+      'General South African English — Johannesburg, Cape Town, and national broadcast. Distinct vowel system and lexical markers (howzit, robot, just now); listeners hear rainbow-nation lifestyle without requiring a single ethnic substrate.',
+    pronunciationMarkers: ['howzit', 'lekker', 'robot', 'just now', 'sharp', 'eish'],
+    samplePhrase:
+      'Howzit! Sharp — we can start just now. Turn left at the robot; the coffee is lekker today.',
+    echoVoiceId: 'own:en-za-female',
+    echoModelVariant: 'lugemi-echo-voice-za-english',
+    bcp47: 'en-ZA',
+    culturalIdentity: 'South African English · National broadcast · Rainbow lifestyle',
+    speechVariety: 'south_african_english',
+    lifestyleTags: ['rainbow_nation', 'howzit', 'urban_professional', 'southern_africa'],
+  },
   {
     id: 'za-zulu-english',
     nameEn: 'Zulu-influenced English',
@@ -215,9 +313,12 @@ export const ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
       'isiZulu-first speakers in Durban and KZN. English carries Zulu click-adjacent consonants and rhythmic stress; ubuntu values shape polite address.',
     pronunciationMarkers: ['sawubona', 'yebo', 'sharp sharp', 'howzit', 'lekker', 'just now'],
     samplePhrase: 'Sawubona! Howzit, my friend? Sharp sharp — we can start just now, it will be lekker.',
-    echoVoiceId: 'own:zu-za-female',
+    echoVoiceId: 'own:en-za-female',
     echoModelVariant: 'lugemi-echo-voice-za-zulu',
     bcp47: 'en-ZA',
+    culturalIdentity: 'Zulu-influenced English · Durban / KZN · Ubuntu',
+    speechVariety: 'zulu_influenced_english',
+    lifestyleTags: ['kwazulu_natal', 'ubuntu', 'durban'],
   },
   {
     id: 'za-xhosa-english',
@@ -231,9 +332,12 @@ export const ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
       'isiXhosa speakers from Eastern Cape and Cape Town townships. Distinct click consonants influence English; strong oral tradition and clan identity (Molo, Unjani).',
     pronunciationMarkers: ['molo', 'enkosi', 'unjani', 'sharp', 'eish', 'now now'],
     samplePhrase: 'Molo! Unjani? Enkosi for coming — eish, the taxi was late but we are here now now.',
-    echoVoiceId: 'own:xh-za-male',
+    echoVoiceId: 'own:en-za-male',
     echoModelVariant: 'lugemi-echo-voice-za-xhosa',
     bcp47: 'en-ZA',
+    culturalIdentity: 'Xhosa-influenced English · Eastern Cape · Clan identity',
+    speechVariety: 'xhosa_influenced_english',
+    lifestyleTags: ['eastern_cape', 'clan_identity', 'oral_tradition'],
   },
   {
     id: 'za-afrikaans-english',
@@ -249,6 +353,9 @@ export const ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
     echoVoiceId: 'own:af-za-female',
     echoModelVariant: 'lugemi-echo-voice-za-afrikaans',
     bcp47: 'en-ZA',
+    culturalIdentity: 'Afrikaans-influenced English · Western Cape · Braai culture',
+    speechVariety: 'afrikaans_influenced_english',
+    lifestyleTags: ['western_cape', 'braai', 'cape_town'],
   },
   {
     id: 'za-township',
@@ -261,9 +368,12 @@ export const ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
       'Urban township English — Soweto, Alexandra, Khayelitsha. Multilingual code-mixing (Zulu, Sotho, Tswana, Afrikaans) with distinct rhythm and slang (sharp sharp, eish, yebo).',
     pronunciationMarkers: ['sharp sharp', 'eish', 'yebo', 'howzit', 'chommie', 'now now'],
     samplePhrase: 'Eish chommie, sharp sharp! Yebo, I am on my way — howzit, are you still at the spot?',
-    echoVoiceId: 'own:zu-za-female',
+    echoVoiceId: 'own:en-za-male',
     echoModelVariant: 'lugemi-echo-voice-za-township',
     bcp47: 'en-ZA',
+    culturalIdentity: 'Township English · Soweto · Multilingual urban youth',
+    speechVariety: 'township_english',
+    lifestyleTags: ['soweto', 'multilingual_mix', 'urban_youth'],
   },
   {
     id: 'za-zulu-native',

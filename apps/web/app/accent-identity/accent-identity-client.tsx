@@ -21,6 +21,12 @@ type IdentityPack = {
   echoModelDisplayName: string | null;
   demoVoiceKey: string | null;
   bcp47?: string;
+  culturalIdentity?: string;
+  cultural_identity?: string;
+  speechVariety?: string;
+  speech_variety?: string;
+  lifestyleTags?: string[];
+  lifestyle_tags?: string[];
 };
 
 type IdentityList = {
@@ -152,9 +158,10 @@ export function AccentIdentityClient() {
         Accent Identity
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.25rem', maxWidth: '44rem' }}>
-        Hear how tribe, culture, and region shape pronunciation. Each pack links to a Lugemi Echo Voice
-        variant — first-party TTS with plain-text identity notes and sample phrases. Search by country,
-        culture, or accent name, then press Play to demo.
+        Hear how tribe, culture, and lifestyle shape speech. Each pack exposes{' '}
+        <code>cultural_identity</code>, <code>speech_variety</code> (e.g. ghanaian_english,
+        nigerian_pidgin, filipino_english), and lifestyle tags — linked to Lugemi Echo Voice. Search by
+        country, culture, or variety, then press Play to demo.
       </p>
 
       <div
@@ -267,13 +274,12 @@ export function AccentIdentityClient() {
                           fontFamily: 'var(--font-display)',
                         }}
                       >
-                        {pack.nameEn}
+                        {pack.culturalIdentity || pack.cultural_identity || pack.nameEn}
                       </h3>
-                      {pack.echoModelDisplayName ? (
-                        <p style={{ margin: '0.2rem 0 0', fontSize: '0.78rem', color: 'var(--muted)' }}>
-                          {pack.echoModelDisplayName}
-                        </p>
-                      ) : null}
+                      <p style={{ margin: '0.2rem 0 0', fontSize: '0.78rem', color: 'var(--muted)' }}>
+                        <code>{pack.speechVariety || pack.speech_variety || pack.id}</code>
+                        {pack.echoModelDisplayName ? ` · ${pack.echoModelDisplayName}` : ''}
+                      </p>
                     </div>
                     <DemoPlayStopButton
                       active={isActive}
@@ -288,7 +294,7 @@ export function AccentIdentityClient() {
                   </div>
 
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.35rem' }}>
-                    {pack.regionTags.slice(0, 4).map((tag) => (
+                    {(pack.lifestyleTags || pack.lifestyle_tags || []).slice(0, 4).map((tag) => (
                       <span
                         key={tag}
                         style={{
@@ -298,6 +304,21 @@ export function AccentIdentityClient() {
                           background: `${accentColor}18`,
                           color: accentColor,
                           border: `1px solid ${accentColor}44`,
+                        }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                    {pack.regionTags.slice(0, 2).map((tag) => (
+                      <span
+                        key={`r-${tag}`}
+                        style={{
+                          fontSize: '0.72rem',
+                          padding: '0.15rem 0.45rem',
+                          borderRadius: '999px',
+                          background: 'var(--bg, rgba(0,0,0,0.04))',
+                          color: 'var(--muted)',
+                          border: '1px solid var(--border)',
                         }}
                       >
                         {tag}
@@ -353,7 +374,9 @@ export function AccentIdentityClient() {
           {catalog.note} API:{' '}
           <code style={{ fontSize: '0.8rem' }}>GET /v1/accents/identity</code> · TTS:{' '}
           <code style={{ fontSize: '0.8rem' }}>POST /v1/tts/synthesize</code> with{' '}
-          <code style={{ fontSize: '0.8rem' }}>accentId</code>.
+          <code style={{ fontSize: '0.8rem' }}>accentId</code>,{' '}
+          <code style={{ fontSize: '0.8rem' }}>speechVariety</code>, or{' '}
+          <code style={{ fontSize: '0.8rem' }}>locale</code>.
         </p>
       ) : null}
     </AppShell>
