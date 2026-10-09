@@ -56,9 +56,20 @@ jobs:
           --dockerfile apps/web/Dockerfile
           -a ${{ vars.FLY_WEB_APP || 'lugemi-web' }}
           --remote-only
+          --region jnb
           --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL || 'https://api.lugemi.com' }}
           --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_live_Y2xlcmsubHVnZW1pLmNvbSQ' }}
           --build-arg NEXT_PUBLIC_APP_URL=https://lugemi.com
+
+      # Orphan ams/iad Machines on lugemi-web fail servicecheck-00-http-3000 and
+      # make 80/443 look intermittent. Africa primary keeps jnb only.
+      - name: Prune non-jnb lugemi-web Machines
+        if: steps.fly.outputs.configured == 'true'
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          FLY_WEB_APP: ${{ vars.FLY_WEB_APP || 'lugemi-web' }}
+          FLY_KEEP_REGION: jnb
+        run: bash scripts/fly-prune-lugemi-web-non-jnb.sh
 
       - name: Deploy API (EU island)
         if: steps.fly.outputs.configured == 'true' && vars.FLY_DEPLOY_EU == 'true'

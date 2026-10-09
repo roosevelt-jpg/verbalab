@@ -78,7 +78,12 @@ else
 fi
 
 echo "==> Deploy ($CONFIG → $DOCKERFILE, region $REGION)"
-"$FLY" deploy . -c "$CONFIG" --dockerfile "$DOCKERFILE" --remote-only "${BUILD_ARGS[@]}"
+"$FLY" deploy . -c "$CONFIG" --dockerfile "$DOCKERFILE" --remote-only --region "$REGION" "${BUILD_ARGS[@]}"
+
+if [[ "$REGION" == "jnb" && "$APP" == "lugemi-web" ]]; then
+  echo "==> Prune non-jnb Machines (Africa-first)"
+  FLY_WEB_APP="$APP" FLY_KEEP_REGION=jnb bash "$ROOT/scripts/fly-prune-lugemi-web-non-jnb.sh" || true
+fi
 
 echo "==> Add TLS certificate hosts (DNS must point here before issuance completes)"
 "$FLY" certs add lugemi.com -a "$APP" 2>/dev/null || true
