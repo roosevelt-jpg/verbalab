@@ -56,7 +56,6 @@ jobs:
           --dockerfile apps/web/Dockerfile
           -a ${{ vars.FLY_WEB_APP || 'lugemi-web' }}
           --remote-only
-          --region jnb
           --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL || 'https://api.lugemi.com' }}
           --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_live_Y2xlcmsubHVnZW1pLmNvbSQ' }}
           --build-arg NEXT_PUBLIC_APP_URL=https://lugemi.com

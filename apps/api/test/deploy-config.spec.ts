@@ -69,7 +69,7 @@ describe('Production deploy config', () => {
     expect(webDocker).toContain('HOSTNAME=0.0.0.0');
     const yml = readFileSync(join(root, '.github/workflows/deploy.yml'), 'utf8');
     expect(yml).toContain('fly-prune-lugemi-web-non-jnb.sh');
-    expect(yml).toContain('--region jnb');
+    expect(yml).not.toContain('--region jnb');
     const mw = readFileSync(join(root, 'apps/web/middleware.ts'), 'utf8');
     expect(mw).toContain('health(?:/.*)?$');
   });

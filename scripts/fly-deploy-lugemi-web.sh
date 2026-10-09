@@ -77,8 +77,8 @@ else
   echo "WARN: NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY unset — Clerk UI will not work in production." >&2
 fi
 
-echo "==> Deploy ($CONFIG → $DOCKERFILE, region $REGION)"
-"$FLY" deploy . -c "$CONFIG" --dockerfile "$DOCKERFILE" --remote-only --region "$REGION" "${BUILD_ARGS[@]}"
+echo "==> Deploy ($CONFIG → $DOCKERFILE)"
+"$FLY" deploy . -c "$CONFIG" --dockerfile "$DOCKERFILE" --remote-only "${BUILD_ARGS[@]}"
 
 if [[ "$REGION" == "jnb" && "$APP" == "lugemi-web" ]]; then
   echo "==> Prune non-jnb Machines (Africa-first)"
