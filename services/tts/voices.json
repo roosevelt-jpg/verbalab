@@ -1,0 +1,34 @@
+[
+  {
+    "id": "en-us-female",
+    "name": "Ava · United States",
+    "locale": "en-US",
+    "gender": "female",
+    "engine": "kokoro",
+    "options": { "voice": "af_heart", "lang": "en-us" }
+  },
+  {
+    "id": "en-us-male",
+    "name": "Michael · United States",
+    "locale": "en-US",
+    "gender": "male",
+    "engine": "kokoro",
+    "options": { "voice": "am_michael", "lang": "en-us" }
+  },
+  {
+    "id": "en-gb-female",
+    "name": "Emma · United Kingdom",
+    "locale": "en-GB",
+    "gender": "female",
+    "engine": "kokoro",
+    "options": { "voice": "bf_emma", "lang": "en-gb" }
+  },
+  {
+    "id": "en-gb-male",
+    "name": "George · United Kingdom",
+    "locale": "en-GB",
+    "gender": "male",
+    "engine": "kokoro",
+    "options": { "voice": "bm_george", "lang": "en-gb" }
+  }
+]
