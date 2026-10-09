@@ -196,32 +196,33 @@ export async function handleMcpTool(
         const locale = args.locale ? String(args.locale) : target;
         const accentId = args.accentId ? String(args.accentId) : undefined;
         const speechVariety = args.speechVariety ? String(args.speechVariety) : undefined;
-        let pack: {
+        type IdentityPack = {
           id?: string;
           echoVoiceId?: string;
           bcp47?: string;
           cultural_identity?: string;
           speech_variety?: string;
           lifestyle_tags?: string[];
-        } | null = null;
+        };
+        let pack: IdentityPack | null = null;
         try {
           if (accentId) {
-            pack = (await api.json('GET', `/v1/accents/identity/${encodeURIComponent(accentId)}`)) as typeof pack;
+            pack = (await api.json('GET', `/v1/accents/identity/${encodeURIComponent(accentId)}`)) as IdentityPack;
           } else if (speechVariety) {
             const list = (await api.json('GET', '/v1/accents/identity', undefined, {
               speechVariety,
-            })) as { data?: Array<NonNullable<typeof pack>> };
+            })) as { data?: IdentityPack[] };
             pack = list.data?.[0] ?? null;
           } else {
             const list = (await api.json('GET', '/v1/accents/identity', undefined, {
               q: locale,
-            })) as { data?: Array<NonNullable<typeof pack> & { bcp47?: string }>; culturalEnglishDefaults?: Record<string, { accentIdentityId: string }> };
+            })) as { data?: IdentityPack[]; culturalEnglishDefaults?: Record<string, { accentIdentityId: string }> };
             const defaults = list.culturalEnglishDefaults?.[locale];
             if (defaults?.accentIdentityId) {
               pack = (await api.json(
                 'GET',
                 `/v1/accents/identity/${encodeURIComponent(defaults.accentIdentityId)}`,
-              )) as typeof pack;
+              )) as IdentityPack;
             } else {
               pack = list.data?.find((p) => p.bcp47 === locale) ?? list.data?.[0] ?? null;
             }
