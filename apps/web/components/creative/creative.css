@@ -1507,7 +1507,11 @@
 
 @media (max-width: 480px) {
   .lg-creative-quick {
-    grid-template-columns: 1fr;
+    gap: 0.65rem 0.5rem;
+  }
+
+  .lg-creative-quick a {
+    width: 4rem;
   }
 
   .lg-creative-promo,
