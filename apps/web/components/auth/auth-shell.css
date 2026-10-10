@@ -201,6 +201,14 @@
   width: 100%;
 }
 
+.lugemi-auth-captcha {
+  min-height: 0;
+}
+
+.lugemi-auth-captcha:empty {
+  display: none;
+}
+
 .lugemi-auth-google-btn {
   display: flex;
   align-items: center;
