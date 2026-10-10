@@ -12,7 +12,6 @@ import {
   WEB_BILLING_PLANS,
   formatWorkspaceLimit,
   planById,
-  type WebPlan,
 } from '@/data/billing-plans';
 import { formatCredits } from '@/lib/creative-audio';
 
@@ -42,11 +41,8 @@ type BillingSummary = {
 
 type Tab = 'creative' | 'agents' | 'api';
 
-const CANONICAL = new Set(WEB_BILLING_PLANS.map((p) => p.id));
-
-function onlyFour(plans: PlanCard[]): PlanCard[] {
-  const filtered = plans.filter((p) => CANONICAL.has(p.id as WebPlan['id']));
-  return filtered.length === 4 ? filtered : WEB_BILLING_PLANS;
+function catalogOrFallback(plans: PlanCard[]): PlanCard[] {
+  return plans?.length ? plans : WEB_BILLING_PLANS;
 }
 
 const AGENTS_FEATURES = [
@@ -117,7 +113,7 @@ function CreativeSubscriptionClientInner({ getToken, isLoaded }: { getToken: () 
     setPlans(WEB_BILLING_PLANS);
     try {
       const planRes = await apiFetch<{ plans: PlanCard[] }>('/v1/billing/plans');
-      setPlans(onlyFour(planRes.plans));
+      setPlans(catalogOrFallback(planRes.plans));
     } catch {
       setPlans(WEB_BILLING_PLANS);
     }

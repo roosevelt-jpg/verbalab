@@ -1,20 +1,51 @@
 import Foundation
 
-/// Official Swift client for Lugemi speech + translate on iOS / macOS.
+/// Official Swift client for Lugemi speech, translate, VoiceBridge, and DealBridge on iOS / macOS.
 /// Same REST contracts as `@lugemi/sdk` — ready for video and mobile apps.
 public struct LugemiClient: Sendable {
   public var apiKey: String
   public var baseURL: URL
   public var session: URLSession
+  public var actorId: String?
+  public var organizationId: String?
+  public var workspaceId: String?
 
   public init(
     apiKey: String,
     baseURL: URL = URL(string: "https://api.lugemi.com")!,
-    session: URLSession = .shared
+    session: URLSession = .shared,
+    actorId: String? = nil,
+    organizationId: String? = nil,
+    workspaceId: String? = nil
   ) {
     self.apiKey = apiKey
     self.baseURL = baseURL
     self.session = session
+    self.actorId = actorId
+    self.organizationId = organizationId
+    self.workspaceId = workspaceId
+  }
+
+  public var voiceBridge: VoiceBridgeClient {
+    VoiceBridgeClient(
+      apiKey: apiKey,
+      baseURL: baseURL,
+      session: session,
+      actorId: actorId,
+      organizationId: organizationId,
+      workspaceId: workspaceId
+    )
+  }
+
+  public var dealBridge: DealBridgeClient {
+    DealBridgeClient(
+      apiKey: apiKey,
+      baseURL: baseURL,
+      session: session,
+      actorId: actorId,
+      organizationId: organizationId,
+      workspaceId: workspaceId
+    )
   }
 
   public struct SpeechResult: Sendable {

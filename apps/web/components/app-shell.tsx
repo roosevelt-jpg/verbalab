@@ -4,8 +4,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { UserButton, useAuth } from '@clerk/nextjs';
-import { apiFetch } from '@/lib/api';
 import { isClerkConfigured } from '@/lib/clerk-config';
+import { usePlatformAdmin } from '@/lib/use-platform-admin';
 import { WorkspaceSwitcher } from '@/components/workspace-switcher';
 import { BrandMark } from '@/components/brand-mark';
 
@@ -32,6 +32,8 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/chat', label: 'Chat Studio' },
       { href: '/models', label: 'Models' },
       { href: '/verified-interpreter', label: 'Verified Interpreter' },
+      { href: '/dealbridge', label: 'DealBridge' },
+      { href: '/voicebridge', label: 'VoiceBridge' },
       { href: '/translate', label: 'Translate' },
       { href: '/data', label: 'Data & branding' },
       { href: '/connectors', label: 'Connectors' },
@@ -133,6 +135,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/admin/workspaces', label: 'Workspace admin', adminOnly: true },
       { href: '/admin/voice-data', label: 'Voice data', adminOnly: true },
       { href: '/admin/pilot-requests', label: 'Pilot requests', adminOnly: true },
+      { href: '/admin/dealbridge', label: 'DealBridge pilot', adminOnly: true },
       { href: '/enterprise/console', label: 'Enterprise console' },
       { href: '/enterprise', label: 'Enterprise plan' },
     ],
@@ -150,46 +153,6 @@ function linkActive(href: string, pathname: string) {
 
 function groupContainsPath(group: NavGroup, pathname: string) {
   return group.links.some((link) => linkActive(link.href, pathname));
-}
-
-/** Platform-admin status is per user, so cache it across page navigations within the tab. */
-const adminStatusCache = new Map<string, boolean>();
-
-function usePlatformAdmin(userId: string | null | undefined, getToken: () => Promise<string | null>) {
-  const [isAdmin, setIsAdmin] = useState<boolean>(() => (userId ? adminStatusCache.get(userId) ?? false : false));
-
-  useEffect(() => {
-    if (!userId) {
-      setIsAdmin(false);
-      return;
-    }
-    const cached = adminStatusCache.get(userId);
-    if (cached !== undefined) {
-      setIsAdmin(cached);
-      return;
-    }
-    let cancelled = false;
-    void (async () => {
-      try {
-        const token = await getToken();
-        if (!token) return;
-        const status = await apiFetch<{ admin: boolean }>('/v1/admin/status', { token });
-        adminStatusCache.set(userId, Boolean(status.admin));
-        if (typeof document !== 'undefined') {
-          const secure = window.location.protocol === 'https:' ? '; Secure' : '';
-          document.cookie = `lugemi_platform_admin=${status.admin ? '1' : '0'}; Path=/; Max-Age=${60 * 60 * 24 * 400}; SameSite=Lax${secure}`;
-        }
-        if (!cancelled) setIsAdmin(Boolean(status.admin));
-      } catch {
-        if (!cancelled) setIsAdmin(false);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [userId, getToken]);
-
-  return isAdmin;
 }
 
 export function AppShell({ children }: { children: React.ReactNode }) {

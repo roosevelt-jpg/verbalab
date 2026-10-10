@@ -5,6 +5,8 @@ export type PlanFeature =
   | 'translate'
   | 'playground'
   | 'commercial'
+  | 'dealBridge'
+  | 'voiceBridge'
   | 'voiceClones'
   | 'marketplace'
   | 'fineTunes'
@@ -101,6 +103,8 @@ function proPlan(): PlanDefinition {
     features: [
       ...ALL_CORE,
       'commercial',
+      'dealBridge',
+      'voiceBridge',
       'voiceClones',
       'marketplace',
       'fineTunes',
@@ -132,6 +136,8 @@ function businessPlan(): PlanDefinition {
     features: [
       ...ALL_CORE,
       'commercial',
+      'dealBridge',
+      'voiceBridge',
       'voiceClones',
       'marketplace',
       'fineTunes',
@@ -163,6 +169,8 @@ function enterprisePlan(): PlanDefinition {
     features: [
       ...ALL_CORE,
       'commercial',
+      'dealBridge',
+      'voiceBridge',
       'voiceClones',
       'marketplace',
       'fineTunes',

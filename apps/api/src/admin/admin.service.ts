@@ -5,7 +5,7 @@ import { ApiException } from '../common/errors/api-exception';
 import { AuditService } from '../audit/audit.service';
 import { ApiKeysService } from '../api-keys/api-keys.service';
 import { UsageService } from '../usage/usage.service';
-import { normalizePlanId, PLAN_IDS, planFromId, type PlanId } from '../billing/plans';
+import { normalizePlanId, type PlanId } from '../billing/plans';
 import { BillingService } from '../billing/billing.service';
 import { FeatureFlagsService } from '../cloud-foundation/feature-flags.service';
 
@@ -46,8 +46,9 @@ export class AdminService {
     return this.billing.adminListPlans();
   }
 
-  listPlanFilters() {
-    return PLAN_IDS.map((id) => ({ id, name: planFromId(id).name }));
+  async listPlanFilters() {
+    const plans = await this.billing.adminListPlans();
+    return plans.map((p) => ({ id: p.id, name: p.name }));
   }
 
   createPlan(input: Parameters<BillingService['adminCreatePlan']>[0]) {
@@ -236,7 +237,7 @@ export class AdminService {
       id: org.id,
       name: org.name,
       plan: org.plan,
-      planName: planFromId(org.plan).name,
+      planName: (await this.billing.resolvePlan(org.plan)).name,
       billingStatus: org.billingStatus,
       characterQuota: org.characterQuota,
       dataRegion: org.dataRegion,
@@ -334,7 +335,7 @@ export class AdminService {
       data.name = body.name.trim();
     }
     if (typeof body.plan === 'string' && body.plan.trim()) {
-      const plan = planFromId(body.plan.trim());
+      const plan = await this.billing.resolvePlan(body.plan.trim());
       data.plan = plan.id;
       if (body.characterQuota === undefined) {
         data.characterQuota = plan.characterQuota;
@@ -805,7 +806,7 @@ export class AdminService {
     if (!name) {
       throw new ApiException('validation_error', 'name is required', HttpStatus.BAD_REQUEST);
     }
-    const plan = planFromId((input.plan ?? 'free') as PlanId);
+    const plan = await this.billing.resolvePlan((input.plan ?? 'free') as PlanId);
     const ownerEmail = input.ownerEmail?.trim().toLowerCase();
 
     let ownerUserId = input.actorUserId;

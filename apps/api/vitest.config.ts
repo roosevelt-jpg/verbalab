@@ -9,6 +9,11 @@ export default defineConfig({
     hookTimeout: 60_000,
     env: {
       JOBS_INLINE: '1',
+      DEALBRIDGE_OPEN: '1',
+      DEALBRIDGE_ALLOW_FIXTURE_ASR: '1',
+      DEALBRIDGE_ALLOW_FIXTURE_MT: '1',
+      DEALBRIDGE_ALLOW_FIXTURE_TTS: '1',
+      DEALBRIDGE_ALLOW_TEST_ACTORS: '1',
     },
   },
   plugins: [

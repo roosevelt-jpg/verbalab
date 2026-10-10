@@ -307,9 +307,8 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
       try {
         const planRes = await apiFetch<{ plans: PlanCard[] }>('/v1/billing/plans');
         if (planRes.plans?.length) {
-          const ids = new Set(WEB_BILLING_PLANS.map((p) => p.id));
-          const filtered = planRes.plans.filter((p) => ids.has(p.id as OnboardingPlanId));
-          setPlans(filtered.length === 4 ? filtered : WEB_BILLING_PLANS);
+          // Prefer live admin catalog (includes custom plans); keep hardcoded fallback only if empty.
+          setPlans(planRes.plans.length > 0 ? planRes.plans : WEB_BILLING_PLANS);
         }
       } catch {
         setPlans(WEB_BILLING_PLANS);

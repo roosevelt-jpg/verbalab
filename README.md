@@ -2,6 +2,16 @@
 
 First-party **language intelligence infrastructure**. Site: [lugemi.com](https://lugemi.com).
 
+## DealBridge
+
+Flagship commercial workflow: **Speak your language. Confirm the same deal.**
+
+- Console: `/dealbridge` (merchant home), `/dealbridge/join/[token]`, `/dealbridge/sessions/[id]`
+- Admin pilot: `/admin/dealbridge`
+- API: `/v1/dealbridge/*` — see `docs/dealbridge/RUNBOOK.md` and ADR `docs/adr/0256-dealbridge.md`
+- Simulated investor demo: `POST /v1/dealbridge/demo/run` (always labeled; never unmarked)
+- Local entitlement bypass for pilots: `DEALBRIDGE_OPEN=1`
+
 Lugemi is in the a first-party speech and language API platform: **our API** and **our models** — generate speech, transcribe, and translate. We do not position the product as a wrapper around Google Translate, OpenAI, or other vendor APIs.
 
 **Africa first:** Lugemi is a fully built Africa-first language intelligence platform covering languages and dialects across **all African countries and ethnic communities**. We also support **Latin America, Southeast Asia, the Middle East, the EU**, and other global markets. The Africa language catalog documents product scope; live API seed and eval pairs publish gateway availability. Do not treat Africa as one culture or use flags as language selectors.

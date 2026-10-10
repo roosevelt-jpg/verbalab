@@ -2,12 +2,8 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { ownTtsConfigured } from '../gateway/own-tts.adapter';
-import {
-  isProOrAbove,
-  planFromId,
-  planHasFeature,
-  type PlanFeature,
-} from '../billing/plans';
+import { BillingService } from '../billing/billing.service';
+import type { PlanFeature } from '../billing/plans';
 import { ApiException } from '../common/errors/api-exception';
 
 /** Plan entitlement keys operators can toggle when their plan includes them. */
@@ -16,6 +12,8 @@ export const TOGGLEABLE_FEATURES: PlanFeature[] = [
   'translate',
   'playground',
   'commercial',
+  'dealBridge',
+  'voiceBridge',
   'voiceClones',
   'marketplace',
   'fineTunes',
@@ -27,16 +25,21 @@ export const TOGGLEABLE_FEATURES: PlanFeature[] = [
 
 @Injectable()
 export class FeatureFlagsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly billing: BillingService,
+  ) {}
 
   async forOrganization(organizationId: string) {
     const org = await this.prisma.organization.findUniqueOrThrow({
       where: { id: organizationId },
       select: { plan: true, disabledAt: true, featureOverrides: true },
     });
-    const plan = planFromId(org.plan);
+    // Resolve through billing so platform-admin Plan catalog edits apply live.
+    const plan = await this.billing.resolvePlan(org.plan);
+    const pro = await this.billing.resolvePlan('pro');
     const orgEnabled = !org.disabledAt;
-    const proPlus = isProOrAbove(org.plan);
+    const proPlus = plan.rank >= pro.rank;
     const workspaceUsed = await this.prisma.workspace.count({ where: { organizationId } });
     const overrides = this.parseOverrides(org.featureOverrides);
 
@@ -44,7 +47,7 @@ export class FeatureFlagsService {
       typeof overrides[key] === 'boolean' ? overrides[key]! : base;
 
     const planFeatureFlags = Object.fromEntries(
-      TOGGLEABLE_FEATURES.map((key) => [key, flag(key, planHasFeature(org.plan, key))]),
+      TOGGLEABLE_FEATURES.map((key) => [key, flag(key, plan.features.includes(key))]),
     ) as Record<PlanFeature, boolean>;
 
     const flags = {
@@ -59,6 +62,10 @@ export class FeatureFlagsService {
       translate: planFeatureFlags.translate,
       playground: planFeatureFlags.playground,
       commercial: planFeatureFlags.commercial,
+      dealBridge:
+        planFeatureFlags.dealBridge && process.env.DEALBRIDGE_DISABLED !== '1',
+      voiceBridge:
+        planFeatureFlags.voiceBridge && process.env.VOICEBRIDGE_DISABLED !== '1',
       marketplace:
         planFeatureFlags.marketplace && process.env.MARKETPLACE_DISABLED !== '1',
       voiceClones:
@@ -119,6 +126,7 @@ export class FeatureFlagsService {
       where: { id: input.organizationId },
       select: { plan: true, featureOverrides: true },
     });
+    const plan = await this.billing.resolvePlan(org.plan);
     const current = this.parseOverrides(org.featureOverrides);
     const next = { ...current };
 
@@ -126,7 +134,7 @@ export class FeatureFlagsService {
       if (!TOGGLEABLE_FEATURES.includes(key as PlanFeature)) {
         throw new ApiException('validation_error', `Unknown entitlement feature: ${key}`);
       }
-      const onPlan = planHasFeature(org.plan, key as PlanFeature);
+      const onPlan = plan.features.includes(key as PlanFeature);
       if (value === true && !onPlan) {
         throw new ApiException(
           'plan_required',
@@ -153,11 +161,11 @@ export class FeatureFlagsService {
     return this.forOrganization(input.organizationId);
   }
 
-  private parseOverrides(raw: Prisma.JsonValue | null | undefined): Record<string, boolean> {
+  private parseOverrides(raw: unknown): Record<string, boolean> {
     if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return {};
     const out: Record<string, boolean> = {};
-    for (const [key, value] of Object.entries(raw as Record<string, unknown>)) {
-      if (typeof value === 'boolean') out[key] = value;
+    for (const [k, v] of Object.entries(raw as Record<string, unknown>)) {
+      if (typeof v === 'boolean') out[k] = v;
     }
     return out;
   }

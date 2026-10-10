@@ -565,3 +565,5 @@ Last updated: 2026-10-03 (VL-353 Done — Enterprise Engineering System Producti
 | 2026-10-03 | VL-343 Done: VAIOS Production Audit (Phase 210) — evidence pack; ADR-0245. Volume 19 closed. Enterprise Engineering System deferred past Volume 19. |
 | 2026-10-03 | VL-344–352 Done: Enterprise Engineering System hubs (Phases 211–219) — foundation through Infrastructure Standards; ADR-0246–0254. Standards/governance for humans+Cursor; architectureKnowledgeBaseOs/adrFactoryOs=false. |
 | 2026-10-03 | VL-353 Done: EES Production Audit (Phase 220) — evidence pack; ADR-0255. Volume 20 closed. Architecture Knowledge Base / mass ADR factory deferred past Volume 20. |
+
+| 2026-10-10 | DealBridge MVP: domain/API/UI/pilot/demo wired per LUGEMI_DEALBRIDGE_CURSOR_BUILD_SPEC r1.1; ADR-0256; tests in apps/api/test/dealbridge.spec.ts. |

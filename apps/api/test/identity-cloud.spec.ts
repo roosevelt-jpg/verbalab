@@ -122,6 +122,22 @@ describe('Identity Cloud', () => {
     expect(synced.role).toBe('admin');
   });
 
+  it('pins platform admin home org to enterprise entitlements', async () => {
+    const session = await identity.ensureSessionIdentity({
+      clerkUserId: `clerk_platform_admin_${Date.now()}`,
+      email: 'platform.admin@lugemi.test',
+      name: 'Platform Admin',
+      platformAdmin: true,
+    });
+    expect(session.platformAdmin).toBe(true);
+
+    const org = await prisma.organization.findUniqueOrThrow({
+      where: { id: session.organizationId },
+    });
+    expect(org.plan).toBe('enterprise');
+    expect(org.billingStatus).toBe('active');
+  });
+
   it('creates, lists, and revokes org invites; rejects members', async () => {
     const org = await seedOrg(prisma, `id_invite_${Date.now()}`);
     const ownerId = org.memberships[0].userId;

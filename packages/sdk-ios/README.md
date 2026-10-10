@@ -1,8 +1,8 @@
 # Lugemi iOS SDK (Swift)
 
-Official Swift Package for Lugemi speech, translate, and video voice lines on iOS / macOS.
+Official Swift Package for Lugemi speech, translate, video voice lines, **VoiceBridge**, and **DealBridge** on iOS / macOS.
 
-## APIs
+## Core APIs
 
 | Method | HTTP |
 | --- | --- |
@@ -12,6 +12,27 @@ Official Swift Package for Lugemi speech, translate, and video voice lines on iO
 | `voices` | `GET /v1/audio/voices` |
 | `videoVoiceLine` | translate + speech (dubbing helper) |
 
+## VoiceBridge (`client.voiceBridge`)
+
+| Method | HTTP |
+| --- | --- |
+| `createThread` / `listThreads` / `getThread` | `/v1/voicebridge/threads` |
+| `createInvite` / `join` / `patchMemberMe` | invites + membership |
+| `createTextDraft` / `createAudioDraft` | `POST .../messages` |
+| `publishMessage` / `correctMessage` | publish + corrections |
+| `acknowledgeRevision` / `recordPlayback` | revision telemetry |
+| `createDealDraft` | DealBridge draft handoff |
+
+## DealBridge (`client.dealBridge`)
+
+| Method | HTTP |
+| --- | --- |
+| `createSession` / `listSessions` / `getSession` | `/v1/dealbridge/sessions` |
+| `createInvite` / `join` / `recordConsent` | membership |
+| `createTextTurn` / `createAudioTurn` / `correctTurn` | conversation turns |
+| `proposeSnapshot` / `submitCheck` / `confirm` | deal flow |
+| `getReceipt` / `startRevision` / `requestDeletion` | receipt + lifecycle |
+
 ## Install
 
 Swift Package Manager — add the local package `packages/sdk-ios` or publish when ready.
@@ -19,7 +40,12 @@ Swift Package Manager — add the local package `packages/sdk-ios` or publish wh
 ```swift
 import Lugemi
 
-let client = LugemiClient(apiKey: ProcessInfo.processInfo.environment["LUGEMI_API_KEY"] ?? "")
+let client = LugemiClient(
+  apiKey: ProcessInfo.processInfo.environment["LUGEMI_API_KEY"] ?? "",
+  actorId: "merchant-user-1",
+  organizationId: orgId,
+  workspaceId: workspaceId
+)
 
 let (translated, audio) = try await client.videoVoiceLine(
   text: "Welcome to Accra",
@@ -27,7 +53,18 @@ let (translated, audio) = try await client.videoVoiceLine(
   voice: "own:ak-gh-female",
   source: "en"
 )
-// audio.audio → Data (mp3) for AVAudioPlayer / AVFoundation
+
+let thread = try await client.voiceBridge.createThread(
+  title: "East Africa rice desk",
+  language: "en",
+  category: "wholesale_rice"
+)
+
+let session = try await client.dealBridge.createSession(
+  merchantLanguage: "en",
+  buyerLanguage: "fr",
+  category: "wholesale_rice"
+)
 ```
 
 Auth: `Authorization: Bearer lg_live_…` (or `lg_test_…`).

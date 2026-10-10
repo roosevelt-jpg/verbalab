@@ -102,6 +102,12 @@ model Organization {
   costBudgets                  CostBudget[]
   costSpendEvents              CostSpendEvent[]
   topUpPurchases               TopUpPurchase[]
+  dealSessions                 DealSession[]
+  dealPilotConfigs             DealPilotConfig[]
+  dealPilotEvents              DealPilotEvent[]
+  dealAuditEvents              DealAuditEvent[]
+  voiceThreads                 VoiceThread[]
+  voiceAuditEvents             VoiceAuditEvent[]
 
   @@index([plan])
   @@index([billingStatus])
@@ -1830,6 +1836,7 @@ model PlanCatalogEntry {
   blurb            String   @default("")
   features         Json     @default("[]")
   stripePriceId    String?  @map("stripe_price_id")
+  highlight        Boolean  @default(false)
   active           Boolean  @default(true)
   isCustom         Boolean  @default(false) @map("is_custom")
   createdAt        DateTime @default(now()) @map("created_at")
@@ -1860,5 +1867,702 @@ model TopUpPurchase {
   @@map("top_up_purchases")
 }
 
+/// DealBridge — bilingual commercial negotiation with dual confirmation + signed receipt.
+model DealSession {
+  id                 String    @id @default(cuid())
+  organizationId     String    @map("organization_id")
+  workspaceId        String    @map("workspace_id")
+  category           String    @default("wholesale_rice")
+  corridor           String    @default("en-fr")
+  merchantLanguage   String    @map("merchant_language")
+  buyerLanguage      String    @map("buyer_language")
+  timeZone           String    @default("Africa/Accra") @map("time_zone")
+  /// draft | invited | active | reviewing | clarifying | awaiting_confirmations | issued | declined | cancelled | expired
+  state              String    @default("draft")
+  revisionCounter    Int       @default(0) @map("revision_counter")
+  activeRevision     Int       @default(0) @map("active_revision")
+  expiresAt          DateTime  @map("expires_at")
+  idempotencyKey     String?   @map("idempotency_key")
+  featureFlag        String    @default("dealbridge") @map("feature_flag")
+  isDemo             Boolean   @default(false) @map("is_demo")
+  isFixture          Boolean   @default(false) @map("is_fixture")
+  pilotCohort        String?   @map("pilot_cohort") // baseline | dealbridge | null
+  retentionPolicy    String    @default("default_90d") @map("retention_policy")
+  deletedAt          DateTime? @map("deleted_at")
+  deletionOutcome    String?   @map("deletion_outcome")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  participants DealParticipant[]
+  invites      DealInvite[]
+  consents     DealConsentEvent[]
+  turns        DealConversationTurn[]
+  candidates   DealTermCandidate[]
+  snapshots    DealTermSnapshot[]
+  checks       DealUnderstandingCheck[]
+  confirmations DealConfirmation[]
+  receipts     DealReceipt[]
+  events       DealSessionEvent[]
+  auditEvents  DealAuditEvent[]
+  costEvents   DealUsageCostEvent[]
+
+  @@unique([organizationId, idempotencyKey])
+  @@index([organizationId, state, createdAt])
+  @@index([workspaceId, createdAt])
+  @@index([isDemo, isFixture])
+  @@map("deal_sessions")
+}
+
+model DealParticipant {
+  id                   String   @id @default(cuid())
+  sessionId            String   @map("session_id")
+  userId               String   @map("user_id")
+  /// merchant | buyer
+  role                 String
+  language             String
+  variety              String?
+  authContext          String   @default("session") @map("auth_context")
+  identityAssurance    String   @default("authenticated_session") @map("identity_assurance")
+  active               Boolean  @default(true)
+  joinedAt             DateTime @default(now()) @map("joined_at")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  session DealSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  consents DealConsentEvent[]
+  turns    DealConversationTurn[]
+  checks   DealUnderstandingCheck[]
+  confirmations DealConfirmation[]
+  presentations DealReviewPresentation[]
+
+  @@unique([sessionId, role])
+  @@unique([sessionId, userId])
+  @@index([userId])
+  @@map("deal_participants")
+}
+
+model DealInvite {
+  id              String    @id @default(cuid())
+  sessionId       String    @map("session_id")
+  tokenHash       String    @unique @map("token_hash")
+  /// Single-use; null until redeemed.
+  redeemedAt      DateTime? @map("redeemed_at")
+  redeemedByUserId String?  @map("redeemed_by_user_id")
+  expiresAt       DateTime  @map("expires_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  session DealSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, expiresAt])
+  @@map("deal_invites")
+}
+
+model DealConsentEvent {
+  id            String   @id @default(cuid())
+  sessionId     String   @map("session_id")
+  participantId String   @map("participant_id")
+  /// processing | recording | retention | training
+  purpose       String
+  noticeVersion String   @map("notice_version")
+  /// granted | denied
+  decision      String
+  timestamp     DateTime @default(now())
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  session     DealSession     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  participant DealParticipant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, purpose])
+  @@index([participantId, purpose])
+  @@map("deal_consent_events")
+}
+
+model DealConversationTurn {
+  id                 String   @id @default(cuid())
+  sessionId          String   @map("session_id")
+  speakerId          String   @map("speaker_id")
+  sequence           Int
+  sourceLanguage     String   @map("source_language")
+  audioStorageKey    String?  @map("audio_storage_key")
+  audioMimeType      String?  @map("audio_mime_type")
+  audioBytes         Int?     @map("audio_bytes")
+  /// received | processing | ready | failed
+  status             String   @default("received")
+  asrProvider        String?  @map("asr_provider")
+  asrModelVersion    String?  @map("asr_model_version")
+  processingError    String?  @map("processing_error")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  session     DealSession     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  speaker     DealParticipant @relation(fields: [speakerId], references: [id], onDelete: Cascade)
+  transcripts DealTranscriptRevision[]
+  translations DealTranslationRevision[]
+
+  @@unique([sessionId, sequence])
+  @@index([sessionId, createdAt])
+  @@map("deal_conversation_turns")
+}
+
+model DealTranscriptRevision {
+  id          String   @id @default(cuid())
+  turnId      String   @map("turn_id")
+  text        String
+  editor      String // asr | participant | system
+  supersedesId String? @map("supersedes_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  turn DealConversationTurn @relation(fields: [turnId], references: [id], onDelete: Cascade)
+
+  @@index([turnId, createdAt])
+  @@map("deal_transcript_revisions")
+}
+
+model DealTranslationRevision {
+  id               String   @id @default(cuid())
+  turnId           String   @map("turn_id")
+  sourceRevisionId String   @map("source_revision_id")
+  targetLanguage   String   @map("target_language")
+  text             String
+  modelVersion     String   @map("model_version")
+  provider         String
+  reviewer         String? // null until human review
+  /// draft | reviewed | superseded
+  status           String   @default("draft")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  turn DealConversationTurn @relation(fields: [turnId], references: [id], onDelete: Cascade)
+
+  @@index([turnId, targetLanguage, createdAt])
+  @@map("deal_translation_revisions")
+}
+
+model DealTermCandidate {
+  id               String   @id @default(cuid())
+  sessionId        String   @map("session_id")
+  field            String
+  value            Json
+  sourceSpanIds    String[] @map("source_span_ids")
+  speakerId        String   @map("speaker_id")
+  confidence       Float
+  uncertaintyReason String? @map("uncertainty_reason")
+  extractorVersion String   @map("extractor_version")
+  accepted         Boolean  @default(false)
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  session DealSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, field])
+  @@map("deal_term_candidates")
+}
+
+model DealTermSnapshot {
+  id               String   @id @default(cuid())
+  sessionId        String   @map("session_id")
+  revision         Int
+  normalizedTerms  Json     @map("normalized_terms")
+  provenance       Json
+  unresolvedFields String[] @map("unresolved_fields")
+  schemaVersion    String   @map("schema_version")
+  contentHash      String   @map("content_hash")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  session       DealSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  presentations DealReviewPresentation[]
+  checks        DealUnderstandingCheck[]
+  confirmations DealConfirmation[]
+  receipts      DealReceipt[]
+
+  @@unique([sessionId, revision])
+  @@index([contentHash])
+  @@map("deal_term_snapshots")
+}
+
+model DealReviewPresentation {
+  id                 String   @id @default(cuid())
+  snapshotId         String   @map("snapshot_id")
+  participantId      String   @map("participant_id")
+  language           String
+  summaryText        String   @map("summary_text")
+  audioStorageKey    String?  @map("audio_storage_key")
+  audioHash          String?  @map("audio_hash")
+  translationVersion String   @map("translation_version")
+  modelVersion       String   @map("model_version")
+  presentationHash   String   @map("presentation_hash")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  snapshot    DealTermSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+  participant DealParticipant  @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  checks      DealUnderstandingCheck[]
+  confirmations DealConfirmation[]
+
+  @@unique([snapshotId, participantId])
+  @@index([presentationHash])
+  @@map("deal_review_presentations")
+}
+
+model DealUnderstandingCheck {
+  id                 String   @id @default(cuid())
+  sessionId          String   @map("session_id")
+  participantId      String   @map("participant_id")
+  snapshotId         String   @map("snapshot_id")
+  presentationId     String   @map("presentation_id")
+  presentationHash   String   @map("presentation_hash")
+  responseText       String?  @map("response_text")
+  responseTurnId     String?  @map("response_turn_id")
+  comparisons        Json
+  /// not_assessed | needs_clarification | check_completed | human_review_required
+  state              String   @default("not_assessed")
+  verifierVersion    String   @map("verifier_version")
+  clarificationField String?  @map("clarification_field")
+  clarificationQuestion String? @map("clarification_question")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  session      DealSession            @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  participant  DealParticipant        @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  snapshot     DealTermSnapshot       @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+  presentation DealReviewPresentation @relation(fields: [presentationId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, snapshotId])
+  @@index([participantId, snapshotId])
+  @@map("deal_understanding_checks")
+}
+
+model DealConfirmation {
+  id               String   @id @default(cuid())
+  sessionId        String   @map("session_id")
+  participantId    String   @map("participant_id")
+  snapshotId       String   @map("snapshot_id")
+  presentationId   String   @map("presentation_id")
+  contentHash      String   @map("content_hash")
+  presentationHash String   @map("presentation_hash")
+  /// confirm | change | decline
+  action           String
+  authContext      String   @map("auth_context")
+  idempotencyKey   String   @map("idempotency_key")
+  serverTimestamp  DateTime @default(now()) @map("server_timestamp")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  session      DealSession            @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  participant  DealParticipant        @relation(fields: [participantId], references: [id], onDelete: Cascade)
+  snapshot     DealTermSnapshot       @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+  presentation DealReviewPresentation @relation(fields: [presentationId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, participantId, snapshotId, action, idempotencyKey])
+  @@index([sessionId, snapshotId, action])
+  @@map("deal_confirmations")
+}
+
+model DealReceipt {
+  id                   String   @id @default(cuid())
+  sessionId            String   @map("session_id")
+  snapshotId           String   @map("snapshot_id")
+  merchantConfirmationId String @map("merchant_confirmation_id")
+  buyerConfirmationId  String   @map("buyer_confirmation_id")
+  payload              Json
+  contentHash          String   @map("content_hash")
+  signature            String
+  keyId                String   @map("key_id")
+  issuedAt             DateTime @default(now()) @map("issued_at")
+  supersedesReceiptId  String?  @map("supersedes_receipt_id")
+  supersededByReceiptId String? @map("superseded_by_receipt_id")
+  retentionPolicy      String   @map("retention_policy")
+  shareTokenHash       String?  @map("share_token_hash")
+  shareExpiresAt       DateTime? @map("share_expires_at")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  session  DealSession     @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  snapshot DealTermSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, snapshotId])
+  @@index([contentHash])
+  @@map("deal_receipts")
+}
+
+model DealSessionEvent {
+  id             String   @id @default(cuid())
+  sessionId      String   @map("session_id")
+  organizationId String   @map("organization_id")
+  serverSequence Int      @map("server_sequence")
+  type           String
+  sourceRevision Int?     @map("source_revision")
+  activeRevision Int?     @map("active_revision")
+  correlationId  String?  @map("correlation_id")
+  payload        Json
+  occurredAt     DateTime @default(now()) @map("occurred_at")
+
+  session DealSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, serverSequence])
+  @@index([sessionId, occurredAt])
+  @@index([organizationId, occurredAt])
+  @@map("deal_session_events")
+}
+
+model DealAuditEvent {
+  id               String   @id @default(cuid())
+  organizationId   String   @map("organization_id")
+  sessionId        String?  @map("session_id")
+  actorUserId      String?  @map("actor_user_id")
+  operation        String
+  affectedRevision Int?     @map("affected_revision")
+  metadata         Json?
+  serverTimestamp  DateTime @default(now()) @map("server_timestamp")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  session      DealSession? @relation(fields: [sessionId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, serverTimestamp])
+  @@index([sessionId, serverTimestamp])
+  @@map("deal_audit_events")
+}
+
+model DealPilotConfig {
+  id                 String   @id @default(cuid())
+  organizationId     String   @map("organization_id")
+  version            String
+  category           String
+  corridor           String
+  merchantVariety    String   @map("merchant_variety")
+  buyerVariety       String   @map("buyer_variety")
+  enrollmentStartsAt DateTime @map("enrollment_starts_at")
+  enrollmentEndsAt   DateTime @map("enrollment_ends_at")
+  cohortAssignment   Json     @map("cohort_assignment")
+  metricDefinitions  Json     @map("metric_definitions")
+  costBudgets        Json     @map("cost_budgets")
+  thresholds         Json
+  evaluationProtocol Json     @map("evaluation_protocol")
+  active             Boolean  @default(true)
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, version])
+  @@index([organizationId, active])
+  @@map("deal_pilot_configs")
+}
+
+model DealPilotEvent {
+  id               String   @id @default(cuid())
+  organizationId   String   @map("organization_id")
+  sessionId        String?  @map("session_id")
+  merchantPseudoId String   @map("merchant_pseudo_id")
+  cohort           String
+  corridor         String
+  schemaVersion    String   @map("schema_version")
+  revision         Int?
+  type             String
+  payload          Json
+  occurredAt       DateTime @default(now()) @map("occurred_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, type, occurredAt])
+  @@index([merchantPseudoId, occurredAt])
+  @@index([cohort, occurredAt])
+  @@map("deal_pilot_events")
+}
+
+model DealUsageCostEvent {
+  id             String   @id @default(cuid())
+  sessionId      String   @map("session_id")
+  organizationId String   @map("organization_id")
+  component      String // asr | translation | extraction | verification | tts | storage | retry
+  amountUsdMicros Int     @map("amount_usd_micros")
+  units          Int      @default(1)
+  meta           Json?
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  session DealSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, component])
+  @@index([organizationId, createdAt])
+  @@map("deal_usage_cost_events")
+}
 
 
+
+
+/// VoiceBridge — private multilingual voice threads with immutable revisions.
+model VoiceThread {
+  id              String    @id @default(cuid())
+  organizationId  String    @map("organization_id")
+  workspaceId     String    @map("workspace_id")
+  creatorId       String    @map("creator_id")
+  title           String
+  category        String?
+  /// active | archived
+  state           String    @default("active")
+  sequence        Int       @default(0)
+  retentionPolicy String    @default("default_90d") @map("retention_policy")
+  maxParticipants Int       @default(10) @map("max_participants")
+  corridor        String    @default("en-fr")
+  featureFlag     String    @default("voicebridge") @map("feature_flag")
+  deletedAt       DateTime? @map("deleted_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  organization Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  memberships  VoiceMembership[]
+  invitations  VoiceInvitation[]
+  messages     VoiceMessage[]
+  events       VoiceThreadEvent[]
+  consents     VoiceConsent[]
+  auditEvents  VoiceAuditEvent[]
+  dealLinks    VoiceDealDraftLink[]
+  jobs         VoiceProcessingJob[]
+
+  @@index([organizationId, state, createdAt])
+  @@index([workspaceId, createdAt])
+  @@index([creatorId])
+  @@map("voice_threads")
+}
+
+model VoiceMembership {
+  id                   String   @id @default(cuid())
+  threadId             String   @map("thread_id")
+  userId               String   @map("user_id")
+  /// creator | moderator | member
+  role                 String   @default("member")
+  active               Boolean  @default(true)
+  language             String
+  variety              String?
+  languagePrefVersion  Int      @default(1) @map("language_pref_version")
+  notificationsEnabled Boolean  @default(true) @map("notifications_enabled")
+  joinedAt             DateTime @default(now()) @map("joined_at")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  thread    VoiceThread           @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  deliveries VoiceDeliveryRecord[]
+  consents  VoiceConsent[]
+
+  @@unique([threadId, userId])
+  @@index([userId, active])
+  @@map("voice_memberships")
+}
+
+model VoiceInvitation {
+  id               String    @id @default(cuid())
+  threadId         String    @map("thread_id")
+  tokenHash        String    @unique @map("token_hash")
+  expiresAt        DateTime  @map("expires_at")
+  redeemedAt       DateTime? @map("redeemed_at")
+  redeemedByUserId String?   @map("redeemed_by_user_id")
+  scope            String    @default("member")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  thread VoiceThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  @@index([threadId, expiresAt])
+  @@map("voice_invitations")
+}
+
+model VoiceMessage {
+  id                 String    @id @default(cuid())
+  threadId           String    @map("thread_id")
+  authorId           String    @map("author_id")
+  activeRevisionId   String?   @unique @map("active_revision_id")
+  replyToMessageId   String?   @map("reply_to_message_id")
+  replyToRevisionId  String?   @map("reply_to_revision_id")
+  /// draft | uploading | transcribing | awaiting_review | published | withdrawn | deleted
+  state              String    @default("draft")
+  idempotencyKey     String?   @map("idempotency_key")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+  deletedAt          DateTime? @map("deleted_at")
+
+  thread    VoiceThread           @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  revisions VoiceSourceRevision[]
+  activeRevision VoiceSourceRevision? @relation("VoiceMessageActiveRevision", fields: [activeRevisionId], references: [id], onDelete: SetNull)
+
+  @@unique([threadId, idempotencyKey])
+  @@index([threadId, createdAt])
+  @@index([authorId])
+  @@map("voice_messages")
+}
+
+model VoiceSourceRevision {
+  id                String   @id @default(cuid())
+  messageId         String   @map("message_id")
+  revisionNumber    Int      @map("revision_number")
+  originalAudioKey  String?  @map("original_audio_key")
+  originalAudioMime String?  @map("original_audio_mime")
+  reviewedTranscript String  @map("reviewed_transcript")
+  language          String
+  variety           String?
+  supersedesId      String?  @map("supersedes_id")
+  correctionReason  String?  @map("correction_reason")
+  authorId          String   @map("author_id")
+  contentHash       String   @map("content_hash")
+  /// current | superseded
+  status            String   @default("current")
+  publishedAt       DateTime @default(now()) @map("published_at")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  message   VoiceMessage            @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  activeFor VoiceMessage?           @relation("VoiceMessageActiveRevision")
+  variants  VoiceLanguageVariant[]
+  jobs      VoiceProcessingJob[]
+  deliveries VoiceDeliveryRecord[]
+
+  @@unique([messageId, revisionNumber])
+  @@index([messageId, status])
+  @@map("voice_source_revisions")
+}
+
+model VoiceLanguageVariant {
+  id                 String   @id @default(cuid())
+  sourceRevisionId   String   @map("source_revision_id")
+  targetLanguage     String   @map("target_language")
+  targetVariety      String?  @map("target_variety")
+  text               String
+  audioKey           String?  @map("audio_key")
+  audioMime          String?  @map("audio_mime")
+  /// queued | translating | verifying | text_ready | synthesizing | ready | needs_clarification | failed | unsupported
+  state              String   @default("queued")
+  modelVersions      Json?    @map("model_versions")
+  verificationState  String   @default("not_assessed") @map("verification_state")
+  verificationIssues Json?    @map("verification_issues")
+  contentHash        String   @map("content_hash")
+  supersedesVariantId String? @map("supersedes_variant_id")
+  version            Int      @default(1)
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  sourceRevision VoiceSourceRevision  @relation(fields: [sourceRevisionId], references: [id], onDelete: Cascade)
+  deliveries     VoiceDeliveryRecord[]
+
+  @@unique([sourceRevisionId, targetLanguage, targetVariety, version])
+  @@index([sourceRevisionId, state])
+  @@map("voice_language_variants")
+}
+
+model VoiceDeliveryRecord {
+  id               String    @id @default(cuid())
+  membershipId     String    @map("membership_id")
+  revisionId       String    @map("revision_id")
+  variantId        String?   @map("variant_id")
+  availableAt      DateTime? @map("available_at")
+  firstPlayedAt    DateTime? @map("first_played_at")
+  acknowledgmentAt DateTime? @map("acknowledgment_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  membership VoiceMembership       @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+  revision   VoiceSourceRevision   @relation(fields: [revisionId], references: [id], onDelete: Cascade)
+  variant    VoiceLanguageVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+
+  @@unique([membershipId, revisionId])
+  @@index([revisionId])
+  @@map("voice_delivery_records")
+}
+
+model VoiceProcessingJob {
+  id                      String   @id @default(cuid())
+  threadId                String   @map("thread_id")
+  sourceRevisionId        String   @map("source_revision_id")
+  expectedActiveRevisionId String  @map("expected_active_revision_id")
+  idempotencyKey          String   @unique @map("idempotency_key")
+  /// translate | verify | synthesize | notify
+  stage                   String
+  targetLanguage          String?  @map("target_language")
+  attempts                Int      @default(0)
+  /// queued | running | succeeded | failed | stale | dead_letter
+  status                  String   @default("queued")
+  costUsdMicros           Int      @default(0) @map("cost_usd_micros")
+  errorClass              String?  @map("error_class")
+  errorMessage            String?  @map("error_message")
+  createdAt               DateTime @default(now()) @map("created_at")
+  updatedAt               DateTime @updatedAt @map("updated_at")
+
+  thread         VoiceThread         @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  sourceRevision VoiceSourceRevision @relation(fields: [sourceRevisionId], references: [id], onDelete: Cascade)
+
+  @@index([threadId, status])
+  @@index([sourceRevisionId, stage])
+  @@map("voice_processing_jobs")
+}
+
+model VoiceConsent {
+  id            String   @id @default(cuid())
+  threadId      String   @map("thread_id")
+  membershipId  String   @map("membership_id")
+  userId        String   @map("user_id")
+  /// processing | recording | retention | training
+  purpose       String
+  noticeVersion String   @map("notice_version")
+  /// granted | denied
+  decision      String
+  timestamp     DateTime @default(now())
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  thread     VoiceThread     @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  membership VoiceMembership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+
+  @@index([userId, purpose])
+  @@index([threadId])
+  @@map("voice_consents")
+}
+
+model VoiceThreadEvent {
+  id               String   @id @default(cuid())
+  threadId         String   @map("thread_id")
+  sequence         Int
+  eventId          String   @unique @map("event_id")
+  type             String
+  messageId        String?  @map("message_id")
+  sourceRevisionId String?  @map("source_revision_id")
+  variantVersion   Int?     @map("variant_version")
+  correlationId    String?  @map("correlation_id")
+  payload          Json?
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  thread VoiceThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  @@unique([threadId, sequence])
+  @@index([threadId, createdAt])
+  @@map("voice_thread_events")
+}
+
+model VoiceAuditEvent {
+  id             String   @id @default(cuid())
+  organizationId String   @map("organization_id")
+  threadId       String?  @map("thread_id")
+  actorId        String   @map("actor_id")
+  operation      String
+  revisionId     String?  @map("revision_id")
+  meta           Json?
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  thread       VoiceThread? @relation(fields: [threadId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, createdAt])
+  @@index([threadId, createdAt])
+  @@map("voice_audit_events")
+}
+
+model VoiceDealDraftLink {
+  id                    String    @id @default(cuid())
+  threadId              String    @map("thread_id")
+  initiatorId           String    @map("initiator_id")
+  dealSessionId         String?   @map("deal_session_id")
+  selectedRevisionIds   Json      @map("selected_revision_ids")
+  selectedRevisionHashes Json     @map("selected_revision_hashes")
+  partyAUserId          String    @map("party_a_user_id")
+  partyBUserId          String    @map("party_b_user_id")
+  category              String?
+  handoffKey            String    @unique @map("handoff_key")
+  staleSince            DateTime? @map("stale_since")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  thread VoiceThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  @@index([threadId, createdAt])
+  @@index([dealSessionId])
+  @@map("voice_deal_draft_links")
+}

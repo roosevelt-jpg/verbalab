@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { apiFetch, getStoredWorkspaceId, setStoredWorkspaceId } from '@/lib/api';
 import { isClerkConfigured } from '@/lib/clerk-config';
+import { usePlatformAdmin } from '@/lib/use-platform-admin';
 import { formatWorkspaceLimit } from '@/data/billing-plans';
 
 type WorkspaceRow = {
@@ -33,7 +34,8 @@ export function WorkspaceSwitcher() {
 }
 
 function WorkspaceSwitcherAuthed() {
-  const { getToken, isLoaded } = useAuth();
+  const { getToken, isLoaded, userId } = useAuth();
+  const platformAdmin = usePlatformAdmin(userId, getToken);
   const [workspaces, setWorkspaces] = useState<WorkspaceRow[]>([]);
   const [entitlements, setEntitlements] = useState<WorkspaceEntitlements | null>(null);
   const [selected, setSelected] = useState<string>('');
@@ -76,7 +78,7 @@ function WorkspaceSwitcherAuthed() {
   }
 
   async function createWorkspace() {
-    if (entitlements && !entitlements.canCreate) {
+    if (entitlements && !entitlements.canCreate && !platformAdmin) {
       window.alert(
         `Your ${entitlements.planName} plan includes ${formatWorkspaceLimit(entitlements.workspaceLimit)} workspace${entitlements.workspaceLimit === 1 ? '' : 's'}. Upgrade under Billing for more.`,
       );
@@ -101,7 +103,7 @@ function WorkspaceSwitcherAuthed() {
     }
   }
 
-  const atLimit = entitlements ? !entitlements.canCreate : false;
+  const atLimit = platformAdmin ? false : entitlements ? !entitlements.canCreate : false;
   const limitHint = entitlements
     ? `${entitlements.workspaceUsed}/${formatWorkspaceLimit(entitlements.workspaceLimit)}`
     : null;
@@ -155,7 +157,7 @@ function WorkspaceSwitcherAuthed() {
       >
         +
       </button>
-      {atLimit ? (
+      {atLimit && !platformAdmin ? (
         <Link
           href="/pricing"
           style={{ fontSize: '0.7rem', color: 'var(--action-primary)', fontWeight: 600, whiteSpace: 'nowrap' }}

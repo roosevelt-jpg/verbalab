@@ -1,7 +1,6 @@
 'use client';
 
 import { CSSProperties } from 'react';
-import Link from 'next/link';
 import { AppShell } from '@/components/app-shell';
 import { API_URL } from '@/lib/api';
 
@@ -37,13 +36,14 @@ export function GraphqlClient() {
           <code>POST {API_URL}/graphql</code>
         </p>
         <p style={{ margin: '0.35rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
-          Mutations require <code>Authorization: Bearer</code> (API key or Clerk). Send{' '}
-          <code>apollo-require-preflight: true</code> for browser clients when CSRF prevention is on.
+          Use <code>POST</code> with <code>Content-Type: application/json</code>. Mutations need{' '}
+          <code>Authorization: Bearer</code> (API key or Clerk). Opening the URL in a bare browser tab
+          used to show a CSRF error — the API now serves Apollo Sandbox there for exploration.
         </p>
         <p style={{ margin: '0.75rem 0 0' }}>
-          <Link href={`${API_URL}/graphql`} style={{ color: 'var(--ink)', fontWeight: 600 }}>
-            Open Apollo landing / schema →
-          </Link>
+          <a href={`${API_URL}/graphql`} style={{ color: 'var(--ink)', fontWeight: 600 }}>
+            Open Apollo Sandbox →
+          </a>
         </p>
       </section>
 

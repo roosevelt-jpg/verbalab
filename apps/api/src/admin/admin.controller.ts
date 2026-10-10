@@ -67,6 +67,8 @@ export class AdminController {
       priceLabel?: string;
       blurb?: string;
       features?: string[];
+      stripePriceId?: string | null;
+      highlight?: boolean;
     },
   ) {
     return this.admin.createPlan({
@@ -98,6 +100,8 @@ export class AdminController {
       priceLabel?: string;
       blurb?: string;
       features?: string[];
+      stripePriceId?: string | null;
+      highlight?: boolean;
       active?: boolean;
     },
   ) {
