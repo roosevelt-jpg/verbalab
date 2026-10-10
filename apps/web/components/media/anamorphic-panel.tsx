@@ -43,11 +43,15 @@ export function AnamorphicPanel({
       role={label ? 'img' : undefined}
       aria-label={label}
     >
-      <div className="lg-ana__stage">
+      <div className={`lg-ana__stage${imageUrl || videoUrl ? ' lg-ana__stage--photo' : ''}`}>
         {videoUrl ? (
           <video className="lg-ana__media" src={videoUrl} autoPlay muted loop playsInline />
         ) : imageUrl ? (
-          <img className="lg-ana__media" src={imageUrl} alt="" />
+          <>
+            <img className="lg-ana__media" src={imageUrl} alt="" />
+            <div className="lg-ana__photo-veil" />
+            <div className="lg-ana__photo-frame" />
+          </>
         ) : (
           <>
             <AnamorphicCanopyCanvas

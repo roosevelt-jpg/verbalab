@@ -219,6 +219,10 @@ export const CMS_DEFAULTS: CmsDocument = {
         body: 'Resonant, region-aware speech and consent-gated cloning — the sound layer for creative work and speaking agents.',
         href: '/p/lugemi-voice',
         art: 'voice',
+        media: {
+          imageUrl: '/brand/media/products/product-voice.jpg',
+          alt: 'Lugemi Voice — 3D anamorphic sound ribbon',
+        },
       },
       {
         id: 'speech',
@@ -227,6 +231,10 @@ export const CMS_DEFAULTS: CmsDocument = {
         body: 'Transcribe accents, dialects, and code-switching with research intelligence built for African and global languages.',
         href: '/p/lugemi-speech',
         art: 'speech',
+        media: {
+          imageUrl: '/brand/media/products/product-speech.jpg',
+          alt: 'Lugemi Speech — 3D anamorphic transcription plane',
+        },
       },
       {
         id: 'translate',
@@ -235,6 +243,10 @@ export const CMS_DEFAULTS: CmsDocument = {
         body: 'Move meaning across languages without flattening cultural nuance — registry-backed, reviewable, and metered.',
         href: '/p/lugemi-translate',
         art: 'translate',
+        media: {
+          imageUrl: '/brand/media/products/product-translate.jpg',
+          alt: 'Lugemi Translate — 3D anamorphic language bridge',
+        },
       },
     ],
   },
@@ -248,36 +260,60 @@ export const CMS_DEFAULTS: CmsDocument = {
         body: 'Close deals in the languages partners actually speak — with tone that holds trust.',
         tone: 'gold',
         art: 'agents',
+        media: {
+          imageUrl: '/brand/media/usecases/usecase-trade.jpg',
+          alt: 'Trade & negotiations — 3D anamorphic dialect bridge',
+        },
       },
       {
         title: 'Education',
         body: 'Teach and tutor across mother tongues so literacy and STEM travel further.',
         tone: 'blue',
         art: 'speech',
+        media: {
+          imageUrl: '/brand/media/usecases/usecase-education.jpg',
+          alt: 'Education — 3D anamorphic mother-tongue learning',
+        },
       },
       {
         title: 'Sales & marketing',
         body: 'Localize campaigns and product voice without flattening cultural nuance.',
         tone: 'rose',
         art: 'translate',
+        media: {
+          imageUrl: '/brand/media/usecases/usecase-sales.jpg',
+          alt: 'Sales & marketing — 3D anamorphic campaign voice',
+        },
       },
       {
         title: 'Public speech',
         body: 'Civic address, broadcast, and advocacy that sound native, not dubbed.',
         tone: 'teal',
         art: 'voice',
+        media: {
+          imageUrl: '/brand/media/usecases/usecase-public-speech.jpg',
+          alt: 'Public speech — 3D anamorphic civic podium',
+        },
       },
       {
         title: 'Customer experience',
         body: 'Support and IVR that understand accents, switches, and regional phrasing.',
         tone: 'green',
         art: 'agents',
+        media: {
+          imageUrl: '/brand/media/usecases/usecase-cx.jpg',
+          alt: 'Customer experience — 3D anamorphic support voice',
+        },
       },
       {
         title: 'Creative voice',
         body: 'Agencies and creators ship narration, ads, and character voices at production pace.',
         tone: 'violet',
         art: 'api',
+        media: {
+          imageUrl: '/brand/media/usecases/usecase-creative.jpg',
+          alt: 'Creative voice — 3D anamorphic studio production',
+        },
       },
     ],
   },
@@ -936,6 +972,10 @@ export const CMS_DEFAULTS: CmsDocument = {
       eyebrow: 'Text-to-speech',
       lead: 'Region-aware speech, Instant Voice Cloning, and extract/isolate — ready for videos, songs, and agents.',
       body: 'Lugemi Voice is the sound layer of the platform. Generate with own:* voices, enroll Instant clones from recorded samples (consent + review), extract tracks from uploads, and reuse approved clone:{id} in Studio, Dubbing, and developer tools. Native-accent pickers expose country, ethnic/community context, gender, and tone/emotion style — Africa-first. Realtime means instant enroll — not live training theater.',
+      media: {
+        imageUrl: '/brand/media/products/product-voice.jpg',
+        alt: 'Lugemi Voice — 3D anamorphic sound ribbon',
+      },
       sections: [
         {
           id: 'tts',
@@ -997,6 +1037,10 @@ export const CMS_DEFAULTS: CmsDocument = {
       eyebrow: 'Speech-to-text',
       lead: 'Transcribe accents, dialects, and code-switching built for African and global languages.',
       body: 'Lugemi Speech turns spoken audio into text that respects regional phrasing. Pair STT with Translate and Agents for end-to-end speaking-agent pipelines.',
+      media: {
+        imageUrl: '/brand/media/products/product-speech.jpg',
+        alt: 'Lugemi Speech — 3D anamorphic transcription plane',
+      },
       sections: [
         {
           id: 'stt',
@@ -1051,6 +1095,10 @@ export const CMS_DEFAULTS: CmsDocument = {
       eyebrow: 'Translation',
       lead: 'Move meaning across languages without flattening cultural nuance.',
       body: 'Registry-backed translation with review, glossaries, and metering. Built for African languages first, with the same API surface for LATAM, SEA, the Middle East, and the EU.',
+      media: {
+        imageUrl: '/brand/media/products/product-translate.jpg',
+        alt: 'Lugemi Translate — 3D anamorphic language bridge',
+      },
       sections: [
         {
           id: 'registry',

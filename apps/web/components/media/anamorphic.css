@@ -48,6 +48,34 @@
   border-radius: 14px;
 }
 
+/* Real uploaded 3D stills — keep anamorphic tilt + glass frame */
+.lg-ana__stage--photo {
+  transform: rotateX(8deg) rotateY(-12deg) scale(1.06);
+}
+
+.lg-ana__photo-veil {
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.1), transparent 42%),
+    linear-gradient(0deg, rgba(11, 26, 54, 0.35), transparent 55%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.lg-ana__photo-frame {
+  position: absolute;
+  inset: 7% 6%;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 184, 174, 0.28);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 10px 28px rgba(0, 0, 0, 0.28);
+  pointer-events: none;
+  z-index: 2;
+}
+
 .lg-ana__canvas {
   position: absolute;
   inset: 0;

@@ -247,7 +247,8 @@
   border: 1px solid rgba(16, 38, 77, 0.06);
   box-shadow: 0 12px 28px rgba(16, 38, 77, 0.06);
 }
-.mkt-usecase-media { border-radius: 12px; min-height: 110px; }
+.mkt-usecase-media { border-radius: 12px; min-height: 148px; }
+.mkt-product-media { min-height: 168px; }
 .mkt-usecase h3 { color: #10264d; }
 .mkt-usecase p { color: rgba(16, 38, 77, 0.78); padding: 0 6px 8px; }
 .mkt-usecase-gold { background: linear-gradient(160deg, #fff8ea, #f7e2b0); }

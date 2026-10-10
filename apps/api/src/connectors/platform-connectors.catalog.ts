@@ -44,7 +44,7 @@ export const PLATFORM_CONNECTOR_CATEGORIES: { id: PlatformConnectorCategory; lab
   { id: 'video', label: 'Video generation', lead: 'Drive lip-sync and localized video from Lugemi voice without stacking external audio noise.' },
   { id: 'messaging', label: 'Messaging & CPaaS', lead: 'WhatsApp-class and African USSD/SMS stacks that need dialect-aware reply audio and text.' },
   { id: 'contact-center', label: 'Contact centers', lead: 'Ingest call audio, transcribe dialects, coach agents, and speak back in the caller language.' },
-  { id: 'crm', label: 'CRM', lead: 'Localize tickets, call notes, and outreach scripts for African and multilingual desks.' },
+  { id: 'crm', label: 'CRM', lead: 'Major CRMs — Salesforce, HubSpot, Dynamics, Zoho, Pipedrive, Zendesk, and more — with Lugemi localize, STT, and dialect-aware notes.' },
   { id: 'lms', label: 'LMS & edtech', lead: 'Dub training media, caption courses, and serve learners in local languages.' },
   { id: 'healthcare', label: 'Healthcare & government', lead: 'Patient and citizen language integrity — translate, speak, and attest official wording.' },
   { id: 'conferencing', label: 'Conferencing', lead: 'Live captions, interpret bridges, and meeting summaries across dialects.' },
