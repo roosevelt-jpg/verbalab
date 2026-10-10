@@ -148,25 +148,32 @@ jobs:
         run: |
           set -euo pipefail
           echo "API health"
-          curl -fsS --retry 5 --retry-delay 5 --retry-all-errors \
+          curl -fsS --retry 8 --retry-delay 5 --retry-all-errors \
             "https://api.lugemi.com/health" | tee /tmp/api-health.json
           echo
           echo "Web health"
-          curl -fsS --retry 5 --retry-delay 5 --retry-all-errors \
+          curl -fsS --retry 8 --retry-delay 5 --retry-all-errors \
             "https://lugemi.com/health" | tee /tmp/web-health.json
           echo
-          echo "Coverage page (must not be Next.js 404)"
-          code="$(curl -sS --retry 5 --retry-delay 5 --retry-all-errors \
+          echo "Coverage page (HTTP 200 + Language coverage title)"
+          # Do not grep for "This page could not be found" — Next.js RSC payloads
+          # embed the not-found template even on successful pages.
+          code="$(curl -sS --retry 8 --retry-delay 5 --retry-all-errors \
             -o /tmp/coverage.html -w '%{http_code}' "https://lugemi.com/coverage")"
           echo "HTTP ${code}"
           if [ "${code}" != "200" ]; then
             echo "::error::https://lugemi.com/coverage returned HTTP ${code}"
             exit 1
           fi
-          if grep -q 'This page could not be found' /tmp/coverage.html; then
-            echo "::error::https://lugemi.com/coverage still serves Next.js 404 — check .dockerignore / image contents."
+          if ! grep -q 'Language coverage' /tmp/coverage.html; then
+            echo "::error::https://lugemi.com/coverage missing expected page title — check .dockerignore / image contents."
             exit 1
           fi
+          echo "Billing plans must be a JSON array (not Promise/{})"
+          plans_type="$(curl -fsS --retry 5 --retry-delay 3 --retry-all-errors \
+            "https://api.lugemi.com/v1/billing/plans" \
+            | python3 -c 'import sys,json; p=json.load(sys.stdin).get("plans"); print("list" if isinstance(p,list) else type(p).__name__); sys.exit(0 if isinstance(p,list) and len(p)>=4 else 1)')"
+          echo "plans type ok (${plans_type})"
           echo "Production smoke OK"
 
       - name: Skip notice
