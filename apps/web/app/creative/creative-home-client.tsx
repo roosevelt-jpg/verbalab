@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 import { CreativeShell } from '@/components/creative/creative-shell';
 import { CreativeIcon } from '@/components/creative/creative-icons';
-import { AnamorphicCanopyCanvas } from '@/components/media/anamorphic-canopy-canvas';
+import { ANAMORPHIC_STILLS } from '@/lib/anamorphic-stills';
 import { CREATIVE_QUICK_TOOLS } from '@/lib/creative-nav';
 
 const PROMPT_HINTS = [
@@ -96,10 +96,11 @@ export function CreativeHomeClient() {
       </nav>
 
       <aside className="lg-creative-promo">
-        <AnamorphicCanopyCanvas
+        <img
           className="lg-creative-promo-canvas"
-          intensity={0.65}
-          showRings={false}
+          src={ANAMORPHIC_STILLS.hero}
+          alt=""
+          aria-hidden
         />
         <div style={{ position: 'relative', zIndex: 1 }}>
           <h2>Baobab is here. Try it now in LugemiCreative</h2>

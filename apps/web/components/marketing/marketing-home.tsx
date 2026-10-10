@@ -40,7 +40,9 @@ export function MarketingHome({ content }: { content: CmsDocument }) {
       <main id="main">
         <section className="mkt-hero" aria-labelledby="mkt-hero-title">
           <div className="mkt-hero-anamorphic-bg" aria-hidden="true">
-            <AnamorphicCanopyCanvas className="mkt-hero-anamorphic-canvas" intensity={1.1} />
+            {hero.media?.videoUrl || hero.media?.imageUrl ? null : (
+              <AnamorphicCanopyCanvas className="mkt-hero-anamorphic-canvas" intensity={1.1} />
+            )}
           </div>
           {hero.media?.videoUrl || hero.media?.imageUrl ? (
             <div className="mkt-hero-media" aria-hidden="true">
