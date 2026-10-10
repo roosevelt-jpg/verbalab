@@ -13,8 +13,10 @@ export class BillingController {
   constructor(private readonly billing: BillingService) {}
 
   @Get('plans')
-  plans() {
-    return { plans: this.billing.listPublicPlans(), stripeConfigured: this.billing.isConfigured() };
+  async plans() {
+    // listPublicPlans is async — must await or Nest serializes the Promise as {}.
+    const plans = await this.billing.listPublicPlans();
+    return { plans, stripeConfigured: this.billing.isConfigured() };
   }
 
   @Get('summary')
