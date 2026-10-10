@@ -7,7 +7,6 @@ import { HeroTtsCard } from './hero-tts-card';
 import { LanguageBar } from './language-bar';
 import { MarketingFooter } from './marketing-footer';
 import { MarketingNav } from './nav';
-import { PricingTeaser } from './pricing-teaser';
 import { StudioSampleDemo } from './studio-sample-demo';
 import { TranslatePlayDemo } from './translate-play-demo';
 import { VoiceChipRow } from './voice-chip-row';
@@ -376,8 +375,6 @@ export function MarketingHome({ content }: { content: CmsDocument }) {
             </div>
           </div>
         </section>
-
-        <PricingTeaser />
 
         <section className="mkt-banner" aria-labelledby="mkt-banner-title">
           <div className="mkt-wrap mkt-banner-inner">
