@@ -78,7 +78,7 @@ describe('cms-seo', () => {
     const seo = resolveCmsSeo(DOC, '/pricing');
     const meta = buildMetadataFromSeo({ path: '/pricing', seo, siteName: 'Lugemi' });
     expect(meta.openGraph?.title).toBe(seo.title);
-    expect(meta.twitter?.card).toBe('summary_large_image');
+    expect(meta.twitter).toMatchObject({ card: 'summary_large_image' });
     expect(absolutize('/brand/x.png')).toBe('https://lugemi.com/brand/x.png');
   });
 
