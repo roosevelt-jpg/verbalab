@@ -1,6 +1,6 @@
 # Lugemi iOS SDK (Swift)
 
-Official Swift Package for Lugemi speech, translate, ASR, detect, streaming translate, **VoiceBridge**, and **DealBridge** on iOS / macOS.
+Official Swift Package for Lugemi speech, translate, ASR, detect, streaming translate, **VoiceBridge**, **DealBridge**, and **Voice Studio** on iOS / macOS.
 
 ## Install (SPM)
 
@@ -28,6 +28,17 @@ Product: `Lugemi` (library). Platforms: iOS 15+, macOS 12+.
 
 Typed results: `SpeechResult`, `TranslateResult`, `DetectResult`, `TranscribeResult`, `SpeechRecognizeResult`.  
 Errors: `LugemiError.api` with `isConflict`, `isFeatureDisabled`, `isAuthError`.
+
+## Voice Studio
+
+`client.voiceStudio` — collaborative workspace (projects → script → edition → generate → native review → assemble → release → export).  
+`takeAudio` / `assemblyAudio` / `preview` reject non-audio error bodies.
+
+```swift
+let studio = client.voiceStudio
+let caps = try await studio.capabilities()
+let project = try await studio.createProject(name: "Market announcement", sourceLanguage: "en")
+```
 
 ## VoiceBridge / DealBridge
 
