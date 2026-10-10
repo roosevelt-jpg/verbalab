@@ -664,7 +664,7 @@ export class BillingService implements OnModuleInit {
       throw new ApiException('not_found', `Top-up pack '${input.packId}' not found`, HttpStatus.NOT_FOUND);
     }
 
-    const org = await this.prisma.organization.findUniqueOrThrow({
+    await this.prisma.organization.findUniqueOrThrow({
       where: { id: input.organizationId },
     });
 
@@ -844,7 +844,7 @@ export class BillingService implements OnModuleInit {
         features: input.features ?? ['speech', 'translate', 'playground'],
         stripePriceId: input.stripePriceId?.trim() || null,
         highlight: Boolean(input.highlight),
-        isCustom: !BASE_PLAN_IDS.includes(slug as any),
+        isCustom: !(BASE_PLAN_IDS as readonly string[]).includes(slug),
         active: true,
       },
     });
@@ -902,7 +902,10 @@ export class BillingService implements OnModuleInit {
       priceMonthlyUsd: input.priceMonthlyUsd !== undefined ? input.priceMonthlyUsd : (existing?.priceMonthlyUsd ?? fallback.priceMonthlyUsd),
       priceLabel: input.priceLabel ?? existing?.priceLabel ?? fallback.priceLabel,
       blurb: input.blurb ?? existing?.blurb ?? fallback.blurb,
-      features: (input.features ?? existing?.features ?? fallback.features) as any,
+      features: (input.features ??
+        (Array.isArray(existing?.features)
+          ? (existing.features as PlanFeature[])
+          : fallback.features)) as PlanFeature[],
       stripePriceId:
         input.stripePriceId !== undefined
           ? input.stripePriceId
@@ -912,7 +915,7 @@ export class BillingService implements OnModuleInit {
           ? Boolean(input.highlight)
           : (existing?.highlight ?? Boolean(fallback.highlight)),
       active: input.active ?? existing?.active ?? true,
-      isCustom: !BASE_PLAN_IDS.includes(slug as any),
+      isCustom: !(BASE_PLAN_IDS as readonly string[]).includes(slug),
     };
 
     const saved = await this.prisma.planCatalogEntry.upsert({

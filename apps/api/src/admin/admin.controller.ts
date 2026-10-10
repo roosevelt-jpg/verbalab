@@ -17,6 +17,7 @@ import { CurrentSession } from '../common/decorators/auth.decorators';
 import { clientIp } from '../common/http/client-ip';
 import { PrismaService } from '../prisma/prisma.service';
 import { isPlatformAdmin } from '../common/admin/platform-admin';
+import type { PlanFeature } from '../billing/plans';
 
 @Controller('v1/admin')
 export class AdminController {
@@ -66,14 +67,14 @@ export class AdminController {
       priceMonthlyUsd?: number | null;
       priceLabel?: string;
       blurb?: string;
-      features?: string[];
+      features?: PlanFeature[];
       stripePriceId?: string | null;
       highlight?: boolean;
     },
   ) {
     return this.admin.createPlan({
       ...body,
-      features: body.features as any,
+      features: body.features,
       actorUserId: session.userId,
       ip: clientIp(req),
     });
@@ -99,13 +100,13 @@ export class AdminController {
       priceMonthlyUsd?: number | null;
       priceLabel?: string;
       blurb?: string;
-      features?: string[];
+      features?: PlanFeature[];
       stripePriceId?: string | null;
       highlight?: boolean;
       active?: boolean;
     },
   ) {
-    return this.admin.updatePlan(id, body as any, session.userId, clientIp(req));
+    return this.admin.updatePlan(id, body, session.userId, clientIp(req));
   }
 
   @Post('workspaces/:id/plan')
