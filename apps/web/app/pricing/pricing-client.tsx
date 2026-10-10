@@ -73,10 +73,13 @@ const FAQ: { q: string; a: string }[] = [
   },
 ];
 
-function onlyFourPlans(plans: PlanCard[]): PlanCard[] {
+function onlyFourPlans(plans: unknown): PlanCard[] {
+  // Guard: API used to return a bare Promise (serialized as {}) when not awaited.
+  if (!Array.isArray(plans) || plans.length === 0) return WEB_BILLING_PLANS;
+  const list = plans as PlanCard[];
   // If plans from backend contains custom plans or the 4 base plans, preserve them
-  if (plans && plans.length >= 4) return plans;
-  const filtered = plans.filter((p) => CANONICAL_IDS.has(p.id as WebPlan['id']));
+  if (list.length >= 4) return list;
+  const filtered = list.filter((p) => CANONICAL_IDS.has(p.id as WebPlan['id']));
   if (filtered.length === 4) return filtered;
   return WEB_BILLING_PLANS;
 }
