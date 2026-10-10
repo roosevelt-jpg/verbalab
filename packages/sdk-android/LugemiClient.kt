@@ -2,50 +2,26 @@ package com.lugemi.sdk
 
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.io.OutputStreamWriter
-import java.net.HttpURLConnection
-import java.net.URL
-import java.nio.charset.StandardCharsets
 
 /**
- * Official Android / Kotlin client for Lugemi speech, translate, VoiceBridge, and DealBridge.
- * Same REST contracts as @lugemi/sdk — ready for video and mobile apps.
+ * Official Android / Kotlin client for Lugemi.
+ * Core: speech, translate, detect, ASR; plus VoiceBridge and DealBridge.
  */
-data class SpeechRequest(
-  val text: String,
-  val voice: String,
-  val language: String? = null,
-  val format: String = "mp3",
-)
-
-data class SpeechResult(
-  val audio: ByteArray,
-  val mimeType: String,
-  val voice: String? = null,
-  val provider: String? = null,
-  val characters: Int? = null,
-)
-
-data class TranslateRequest(
-  val text: String,
-  val source: String = "auto",
-  val target: String,
-)
-
-data class TranslateResult(
-  val text: String,
-  val source: String,
-  val characters: Int? = null,
-)
-
-class LugemiException(message: String, val code: String? = null, val status: Int? = null) :
-  RuntimeException(message)
-
 interface LugemiClient {
   fun speech(request: SpeechRequest): SpeechResult
+  fun speechStream(request: SpeechRequest, onChunk: (ByteArray) -> Unit): SpeechResult
   fun translate(request: TranslateRequest): TranslateResult
+  fun translateStream(request: TranslateRequest): Sequence<TranslateStreamEvent>
+  fun detect(text: String): DetectResult
+  fun transcribe(audio: ByteArray, filename: String, mimeType: String, language: String? = null): TranscribeResult
+  fun recognizeSpeech(
+    audio: ByteArray,
+    filename: String,
+    mimeType: String,
+    language: String? = null,
+    industryPacks: List<String>? = null,
+    vocabulary: List<String>? = null,
+  ): SpeechRecognizeResult
   fun languages(): List<Map<String, Any?>>
   fun voices(): List<Map<String, Any?>>
   fun videoVoiceLine(
@@ -57,28 +33,34 @@ interface LugemiClient {
 
   val voiceBridge: VoiceBridgeClient
   val dealBridge: DealBridgeClient
+  val uploads: ResumableUploader
 }
 
 class LugemiHttpClient(
-  private val apiKey: String,
-  private val baseUrl: String = "https://api.lugemi.com",
+  apiKey: String,
+  baseUrl: String = "https://api.lugemi.com",
   actorId: String? = null,
   organizationId: String? = null,
   workspaceId: String? = null,
 ) : LugemiClient {
-  override val voiceBridge = VoiceBridgeClient(
+  private val http = LugemiHttp(
     apiKey = apiKey,
     baseUrl = baseUrl,
-    actorId = actorId,
     organizationId = organizationId,
     workspaceId = workspaceId,
   )
-  override val dealBridge = DealBridgeClient(
-    apiKey = apiKey,
-    baseUrl = baseUrl,
+
+  override val uploads = ResumableUploader(http)
+
+  override val voiceBridge = VoiceBridgeClient(
+    http = http,
     actorId = actorId,
-    organizationId = organizationId,
-    workspaceId = workspaceId,
+    uploader = uploads,
+  )
+  override val dealBridge = DealBridgeClient(
+    http = http,
+    actorId = actorId,
+    uploader = uploads,
   )
 
   override fun speech(request: SpeechRequest): SpeechResult {
@@ -87,13 +69,23 @@ class LugemiHttpClient(
       .put("voice", request.voice)
       .put("format", request.format)
     if (request.language != null) body.put("language", request.language)
+    val (bytes, conn) = http.requestBytes("POST", "/v1/audio/speech", body)
+    return SpeechResult(
+      audio = bytes,
+      mimeType = conn.contentType ?: "audio/mpeg",
+      voice = conn.getHeaderField("x-lugemi-voice"),
+      provider = conn.getHeaderField("x-lugemi-provider"),
+      characters = conn.getHeaderField("x-lugemi-characters")?.toIntOrNull(),
+    )
+  }
 
-    val conn = open("POST", "/v1/audio/speech")
-    conn.setRequestProperty("Accept", "*/*")
-    writeJson(conn, body)
-    val code = conn.responseCode
-    if (code !in 200..299) throw httpError(conn, code)
-    val bytes = conn.inputStream.readBytes()
+  override fun speechStream(request: SpeechRequest, onChunk: (ByteArray) -> Unit): SpeechResult {
+    val body = JSONObject()
+      .put("text", request.text)
+      .put("voice", request.voice)
+      .put("format", request.format)
+    if (request.language != null) body.put("language", request.language)
+    val (bytes, conn) = http.requestBytes("POST", "/v1/audio/speech", body, onBytes = onChunk)
     return SpeechResult(
       audio = bytes,
       mimeType = conn.contentType ?: "audio/mpeg",
@@ -108,21 +100,74 @@ class LugemiHttpClient(
       .put("text", request.text)
       .put("source", request.source)
       .put("target", request.target)
-    val json = requestJson("POST", "/v1/translate", body)
-    return TranslateResult(
-      text = json.optString("text"),
-      source = json.optString("source", request.source),
-      characters = if (json.has("characters")) json.optInt("characters") else null,
+    val json = http.requestJson("POST", "/v1/translate", body)
+    return TranslateResult.from(json, request.source, request.target)
+  }
+
+  override fun translateStream(request: TranslateRequest): Sequence<TranslateStreamEvent> {
+    val body = JSONObject()
+      .put("text", request.text)
+      .put("source", request.source)
+      .put("target", request.target)
+    return http.readSseEvents("POST", "/v1/translate/stream", body).map { TranslateStreamEvent.from(it) }
+  }
+
+  override fun detect(text: String): DetectResult {
+    val json = http.requestJson("POST", "/v1/detect", JSONObject().put("text", text))
+    return DetectResult.from(json)
+  }
+
+  override fun transcribe(
+    audio: ByteArray,
+    filename: String,
+    mimeType: String,
+    language: String?,
+  ): TranscribeResult {
+    val fields = LinkedHashMap<String, String>()
+    if (language != null) fields["language"] = language
+    val json = http.multipartJson(
+      "POST",
+      "/v1/audio/transcriptions",
+      fields,
+      "file",
+      filename,
+      mimeType,
+      audio,
     )
+    return TranscribeResult.from(json)
+  }
+
+  override fun recognizeSpeech(
+    audio: ByteArray,
+    filename: String,
+    mimeType: String,
+    language: String?,
+    industryPacks: List<String>?,
+    vocabulary: List<String>?,
+  ): SpeechRecognizeResult {
+    val fields = LinkedHashMap<String, String>()
+    if (language != null) fields["language"] = language
+    if (!industryPacks.isNullOrEmpty()) fields["industryPacks"] = industryPacks.joinToString(",")
+    if (!vocabulary.isNullOrEmpty()) fields["vocabulary"] = vocabulary.joinToString(",")
+    val json = http.multipartJson(
+      "POST",
+      "/v1/speech/recognize",
+      fields,
+      "file",
+      filename,
+      mimeType,
+      audio,
+    )
+    return SpeechRecognizeResult.from(json)
   }
 
   override fun languages(): List<Map<String, Any?>> {
-    val json = requestJson("GET", "/v1/languages", null)
+    val json = http.requestJson("GET", "/v1/languages", null)
     return jsonArrayToMaps(json.optJSONArray("data") ?: JSONArray())
   }
 
   override fun voices(): List<Map<String, Any?>> {
-    val json = requestJson("GET", "/v1/audio/voices", null)
+    val json = http.requestJson("GET", "/v1/audio/voices", null)
     return jsonArrayToMaps(json.optJSONArray("data") ?: JSONArray())
   }
 
@@ -133,53 +178,8 @@ class LugemiHttpClient(
     source: String,
   ): Pair<TranslateResult, SpeechResult> {
     val translated = translate(TranslateRequest(text = text, source = source, target = target))
-    val audio = speech(
-      SpeechRequest(text = translated.text, voice = voice, language = target),
-    )
+    val audio = speech(SpeechRequest(text = translated.text, voice = voice, language = target))
     return translated to audio
-  }
-
-  private fun open(method: String, path: String): HttpURLConnection {
-    val url = URL(baseUrl.trimEnd('/') + path)
-    val conn = url.openConnection() as HttpURLConnection
-    conn.requestMethod = method
-    conn.connectTimeout = 30_000
-    conn.readTimeout = 120_000
-    conn.setRequestProperty("Authorization", "Bearer $apiKey")
-    conn.setRequestProperty("Content-Type", "application/json")
-    conn.doInput = true
-    return conn
-  }
-
-  private fun writeJson(conn: HttpURLConnection, body: JSONObject) {
-    conn.doOutput = true
-    OutputStreamWriter(conn.outputStream, StandardCharsets.UTF_8).use { it.write(body.toString()) }
-  }
-
-  private fun requestJson(method: String, path: String, body: JSONObject?): JSONObject {
-    val conn = open(method, path)
-    if (body != null) writeJson(conn, body)
-    val code = conn.responseCode
-    val stream = if (code in 200..299) conn.inputStream else conn.errorStream
-    val text = stream?.bufferedReader(StandardCharsets.UTF_8)?.use(BufferedReader::readText).orEmpty()
-    if (code !in 200..299) {
-      val err = runCatching { JSONObject(text) }.getOrNull()
-      val message = err?.optJSONObject("error")?.optString("message")
-        ?: text.ifBlank { "Request failed ($code)" }
-      val errCode = err?.optJSONObject("error")?.optString("code")
-      throw LugemiException(message, errCode, code)
-    }
-    return if (text.isBlank()) JSONObject() else JSONObject(text)
-  }
-
-  private fun httpError(conn: HttpURLConnection, code: Int): LugemiException {
-    val text = conn.errorStream?.bufferedReader(StandardCharsets.UTF_8)?.use(BufferedReader::readText).orEmpty()
-    val err = runCatching { JSONObject(text) }.getOrNull()
-    return LugemiException(
-      err?.optJSONObject("error")?.optString("message") ?: "Request failed ($code)",
-      err?.optJSONObject("error")?.optString("code"),
-      code,
-    )
   }
 
   private fun jsonArrayToMaps(arr: JSONArray): List<Map<String, Any?>> {

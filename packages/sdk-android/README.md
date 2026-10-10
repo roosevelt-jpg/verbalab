@@ -1,87 +1,63 @@
 # Lugemi Android SDK (Kotlin)
 
-Official Android / Kotlin client for Lugemi speech, translate, video voice lines, **VoiceBridge**, and **DealBridge**.
+Official Android / Kotlin client for Lugemi speech, translate, ASR, detect, streaming translate, **VoiceBridge**, and **DealBridge**.
+
+## Install
+
+**Option A — copy sources** into your app module (`com.lugemi.sdk` package).
+
+**Option B — Maven publish** from this folder:
+
+```bash
+cd packages/sdk-android
+gradle publishToMavenLocal
+```
+
+Then in your app:
+
+```kotlin
+dependencies {
+  implementation("com.lugemi:sdk-android:0.2.0")
+}
+```
+
+Requires `INTERNET` permission. On Android, `org.json` is bundled.
 
 ## Core APIs
 
 | Method | HTTP |
 | --- | --- |
-| `speech` | `POST /v1/audio/speech` |
-| `translate` | `POST /v1/translate` |
-| `languages` | `GET /v1/languages` |
-| `voices` | `GET /v1/audio/voices` |
-| `videoVoiceLine` | translate + speech (dubbing helper) |
+| `speech` / `speechStream` | `POST /v1/audio/speech` |
+| `translate` / `translateStream` | `POST /v1/translate` (+ SSE `/stream`) |
+| `detect` | `POST /v1/detect` |
+| `transcribe` | `POST /v1/audio/transcriptions` |
+| `recognizeSpeech` | `POST /v1/speech/recognize` |
+| `languages` / `voices` | catalog |
+| `videoVoiceLine` | translate + speech |
 
-## VoiceBridge (`client.voiceBridge`)
+Typed results: `SpeechResult`, `TranslateResult`, `DetectResult`, `TranscribeResult`, `SpeechRecognizeResult`.  
+Errors: `LugemiException` with `code`, `status`, `isConflict`, `isFeatureDisabled`, `isAuthError`.
 
-Threads, invites, join, text/audio drafts, publish, corrections, acknowledgments, DealBridge handoff.
+## VoiceBridge / DealBridge
 
-| Method | HTTP |
-| --- | --- |
-| `createThread` / `listThreads` / `getThread` | `/v1/voicebridge/threads` |
-| `createInvite` / `join` / `patchMemberMe` | invites + membership |
-| `createTextDraft` / `createAudioDraft` | `POST .../messages` |
-| `publishMessage` / `correctMessage` | publish + corrections |
-| `acknowledgeRevision` / `recordPlayback` | revision telemetry |
-| `createDealDraft` | DealBridge draft handoff |
-
-Set `actorId` (and optional org/workspace ids) on `LugemiHttpClient` for API-key actors.
-
-## DealBridge (`client.dealBridge`)
-
-Sessions, consents, turns, snapshots, checks, confirmations, receipts.
-
-| Method | HTTP |
-| --- | --- |
-| `createSession` / `listSessions` / `getSession` | `/v1/dealbridge/sessions` |
-| `createInvite` / `join` / `recordConsent` | membership |
-| `createTextTurn` / `createAudioTurn` / `correctTurn` | conversation turns |
-| `proposeSnapshot` / `submitCheck` / `confirm` | deal flow |
-| `getReceipt` / `startRevision` / `requestDeletion` | receipt + lifecycle |
-
-## Install
-
-Copy the Kotlin sources in this folder into your app module, or publish as `com.lugemi:sdk` when ready.
-
-Requires `org.json` (bundled on Android) and `INTERNET` permission.
+`client.voiceBridge` and `client.dealBridge` cover threads/sessions, invites, drafts/turns (text + audio), publish/correct, acknowledgments, deal confirmations.  
+Use `createAudioDraftResumable` / `createAudioTurnResumable` for retry + progress (honors upload-auth limits).
 
 ```kotlin
 val client = LugemiHttpClient(
   apiKey = BuildConfig.LUGEMI_API_KEY,
-  baseUrl = "https://api.lugemi.com",
   actorId = "merchant-user-1",
   organizationId = orgId,
   workspaceId = workspaceId,
 )
 
-// Speech / dubbing
-val (translated, audio) = client.videoVoiceLine(
-  text = "Welcome to Accra",
-  target = "ak",
-  voice = "own:ak-gh-female",
-  source = "en",
-)
+val lang = client.detect("Bonjour le monde")
+val asr = client.transcribe(bytes, "clip.m4a", "audio/mp4", language = "fr")
+client.translateStream(TranslateRequest(text = "Hello", source = "en", target = "fr")).forEach { ev ->
+  // TranslateStreamEvent.Chunk / Done / …
+}
 
-// VoiceBridge
-val thread = client.voiceBridge.createThread(
-  title = "East Africa rice desk",
-  language = "en",
-  category = "wholesale_rice",
-)
-val draft = client.voiceBridge.createTextDraft(
-  threadId = thread.getJSONObject("thread").getString("id"),
-  text = "We can deliver 50 bags",
-)
-// review → publishMessage → correctMessage as needed
-
-// DealBridge
-val session = client.dealBridge.createSession(
-  merchantLanguage = "en",
-  buyerLanguage = "fr",
-  category = "wholesale_rice",
-)
+val thread = client.voiceBridge.createThread(title = "Rice desk", language = "en")
 ```
 
-Auth: `Authorization: Bearer lg_live_…` (or `lg_test_…`).
-
-Same contracts as `@lugemi/sdk`, `@lugemi/cli`, and `@lugemi/mcp`.
+Auth: `Authorization: Bearer lg_live_…` / `lg_test_…`.
