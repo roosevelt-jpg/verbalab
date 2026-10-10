@@ -15,6 +15,7 @@ primary_region = 'iad'
   PORT = '3000'
   HOSTNAME = '0.0.0.0'
   LUGEMI_REGION = 'us'
+  NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED = 'true'
 
 [http_service]
   internal_port = 3000

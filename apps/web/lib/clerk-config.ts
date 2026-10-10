@@ -3,11 +3,12 @@ export function isClerkConfigured() {
 }
 
 /**
- * Check whether Google OAuth is enabled in Clerk.
- * In production Clerk environments, Social Connections (Google) are configured in the
- * Clerk Dashboard using Google Cloud OAuth Client ID & Secret.
+ * Whether to show "Continue with Google" on /sign-up and /sign-in.
+ * Clerk Dashboard must have Social Connections → Google enabled (custom GCP credentials
+ * for lugemi.com). Production Fly builds set NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED=true.
  *
- * Requirements: Hide Google if NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED=false or unconfigured.
+ * Hide the button with NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED=false (or 0), or
+ * NEXT_PUBLIC_CLERK_ENABLE_GOOGLE=false.
  */
 export function isClerkGoogleOAuthEnabled(): boolean {
   const envVal = process.env.NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED;

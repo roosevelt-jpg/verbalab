@@ -134,9 +134,11 @@ This occurs when Clerk has Google social sign-in enabled in the instance, but th
    - Verify the **Authorized redirect URI** matches what was entered in Google Cloud Console.
 6. Click **Save Changes**.
 
-#### Step 3: Optional toggle via Environment Variable in Lugemi Web
-If Google OAuth credentials are not yet ready or being refreshed in GCP, you can temporarily suppress the broken Google button by setting:
+#### Step 3: Enable the Google button in Lugemi Web
+Production Fly deploys bake `NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED=true` into the web image (Dockerfile build-arg + `infra/fly/web.jnb.toml`). After Steps 1–2, redeploy web so `/sign-up` and `/sign-in` show **Continue with Google**.
+
+To temporarily hide the button (e.g. while rotating GCP credentials):
 ```bash
 NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED=false
 ```
-When set to `false`, `AuthShell` and `SignUp`/`SignIn` automatically hide the Google button and divider line, prompting users to proceed with email/password signup without facing OAuth 400 errors.
+When set to `false`, `AuthShell` and `SignUp`/`SignIn` hide the Google button and divider so users only see email/password.
