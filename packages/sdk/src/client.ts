@@ -1,6 +1,7 @@
 import { LugemiError } from './errors.js';
 import { VoiceBridgeClient } from './voicebridge.js';
 import { DealBridgeClient } from './dealbridge.js';
+import { AccessLineClient } from './accessline.js';
 import type { BridgeTransport } from './bridge-transport.js';
 import type {
   ChatCompletionRequest,
@@ -148,6 +149,7 @@ export class Lugemi {
   private workspaceId?: string;
   private _voiceBridge?: VoiceBridgeClient;
   private _dealBridge?: DealBridgeClient;
+  private _accessLine?: AccessLineClient;
 
   constructor(options: LugemiClientOptions) {
     const key = options.apiKey ?? '';
@@ -169,13 +171,14 @@ export class Lugemi {
     this.workspaceId = options.workspaceId;
   }
 
-  /** Update actor / tenant context used by VoiceBridge and DealBridge. */
+  /** Update actor / tenant context used by VoiceBridge, DealBridge, and AccessLine. */
   setBridgeContext(next: { actorId?: string; organizationId?: string; workspaceId?: string }) {
     if (next.actorId !== undefined) this.actorId = next.actorId;
     if (next.organizationId !== undefined) this.organizationId = next.organizationId;
     if (next.workspaceId !== undefined) this.workspaceId = next.workspaceId;
     this._voiceBridge?.setContext(next);
     this._dealBridge?.setContext(next);
+    this._accessLine?.setContext(next);
   }
 
   get voiceBridge(): VoiceBridgeClient {
@@ -204,6 +207,20 @@ export class Lugemi {
       });
     }
     return this._dealBridge;
+  }
+
+  get accessLine(): AccessLineClient {
+    if (!this._accessLine) {
+      this._accessLine = new AccessLineClient({
+        transport: this.bridgeTransport(),
+        headers: {
+          actorId: this.actorId,
+          organizationId: this.organizationId,
+          workspaceId: this.workspaceId,
+        },
+      });
+    }
+    return this._accessLine;
   }
 
   private bridgeTransport(): BridgeTransport {

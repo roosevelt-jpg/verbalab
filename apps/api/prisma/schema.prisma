@@ -116,6 +116,9 @@ model Organization {
   dealAuditEvents              DealAuditEvent[]
   voiceThreads                 VoiceThread[]
   voiceAuditEvents             VoiceAuditEvent[]
+  accessLines                  AccessLineBusinessLine[]
+  accessCalls                  AccessLineCallSession[]
+  accesslineAuditEvents        AccessLineAuditEvent[]
 
   @@index([plan])
   @@index([billingStatus])
@@ -2813,4 +2816,242 @@ model VoiceDealDraftLink {
   @@index([threadId, createdAt])
   @@index([dealSessionId])
   @@map("voice_deal_draft_links")
+}
+
+// --- AccessLine (native-language telephone logistics MVP) ---
+
+model AccessLineBusinessLine {
+  id                       String   @id @default(cuid())
+  organizationId           String   @map("organization_id")
+  workspaceId              String   @map("workspace_id")
+  name                     String
+  /// E.164 or labeled simulator number (e.g. +254700000001 / sim:+254700000001)
+  inboundNumber            String   @map("inbound_number")
+  jurisdiction             String   @default("KE")
+  timeZone                 String   @default("Africa/Nairobi") @map("time_zone")
+  enabledLanguages         Json     @default("[\"sw-KE\",\"en\"]") @map("enabled_languages")
+  greetingNoticeVersion    String   @default("al-notice-v1") @map("greeting_notice_version")
+  recordingEnabled         Boolean  @default(false) @map("recording_enabled")
+  /// Allowlisted staff destinations (E.164 or sim:…); never caller-supplied
+  transferDestinations     Json     @default("[]") @map("transfer_destinations")
+  /// Registered customer contacts for OTP (phone → customerScope); never accept arbitrary call-time numbers
+  registeredContacts       Json     @default("[]") @map("registered_contacts")
+  openingHours             Json     @default("{}") @map("opening_hours")
+  knowledgeSnippet         String   @default("") @map("knowledge_snippet")
+  featureFlag              String   @default("accessLine") @map("feature_flag")
+  maxConcurrentCalls       Int      @default(5) @map("max_concurrent_calls")
+  maxCallDurationSec       Int      @default(900) @map("max_call_duration_sec")
+  deliveryFreshnessMinutes Int      @default(30) @map("delivery_freshness_minutes")
+  /// simulated | twilio — live PSTN requires TWILIO_* + authorization
+  integrationMode          String   @default("simulated") @map("integration_mode")
+  active                   Boolean  @default(true)
+  createdAt                DateTime @default(now()) @map("created_at")
+  updatedAt                DateTime @updatedAt @map("updated_at")
+
+  organization Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  calls        AccessLineCallSession[]
+
+  @@unique([organizationId, inboundNumber])
+  @@index([workspaceId])
+  @@index([inboundNumber])
+  @@map("accessline_business_lines")
+}
+
+model AccessLineCallSession {
+  id                   String    @id @default(cuid())
+  organizationId       String    @map("organization_id")
+  workspaceId          String    @map("workspace_id")
+  lineId               String    @map("line_id")
+  providerCallId       String?   @unique @map("provider_call_id")
+  /// ringing | disclosure | language_selection | unauthenticated | authenticating | assisting | clarifying | handoff_pending | human_connected | ending | ended | failed
+  state                String    @default("ringing")
+  selectedVariety      String?   @map("selected_variety")
+  activeTurnGeneration Int       @default(0) @map("active_turn_generation")
+  authState            String    @default("none") @map("auth_state")
+  /// Scoped customer id after successful auth — not a secret
+  customerScope        String?   @map("customer_scope")
+  orderReference       String?   @map("order_reference")
+  lastDeliveryStatus   String?   @map("last_delivery_status")
+  lastDeliveryFreshness String?  @map("last_delivery_freshness")
+  policyVersion        String    @default("accessline-policy-v1") @map("policy_version")
+  modelVersions        Json      @default("{}") @map("model_versions")
+  isSimulator          Boolean   @default(true) @map("is_simulator")
+  callerIdMasked       String?   @map("caller_id_masked")
+  startedAt            DateTime  @default(now()) @map("started_at")
+  endedAt              DateTime? @map("ended_at")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  organization Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  line         AccessLineBusinessLine @relation(fields: [lineId], references: [id], onDelete: Cascade)
+  turns        AccessLineCallTurn[]
+  authAttempts AccessLineAuthAttempt[]
+  tools        AccessLineToolInvocation[]
+  confirmations AccessLineConfirmation[]
+  handoffs     AccessLineHandoff[]
+  cases        AccessLineSupportCase[]
+  consents     AccessLineConsentEvent[]
+
+  @@index([organizationId, startedAt])
+  @@index([workspaceId, state])
+  @@index([lineId, state])
+  @@map("accessline_call_sessions")
+}
+
+model AccessLineCallTurn {
+  id                String   @id @default(cuid())
+  callId            String   @map("call_id")
+  sequence          Int
+  role              String
+  transcript        String   @default("")
+  language          String?
+  stage             String?
+  cancelled         Boolean  @default(false)
+  generation        Int      @default(0)
+  dtmfDigitsMasked  String?  @map("dtmf_digits_masked")
+  audioRef          String?  @map("audio_ref")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  call AccessLineCallSession @relation(fields: [callId], references: [id], onDelete: Cascade)
+
+  @@unique([callId, sequence])
+  @@index([callId, generation])
+  @@map("accessline_call_turns")
+}
+
+model AccessLineAuthAttempt {
+  id            String    @id @default(cuid())
+  callId        String    @map("call_id")
+  method        String    @default("registered_otp_dtmf")
+  /// Hashed OTP only — never store plaintext codes
+  secretHash    String?   @map("secret_hash")
+  customerScope String?   @map("customer_scope")
+  attempts      Int       @default(0)
+  maxAttempts   Int       @default(3) @map("max_attempts")
+  verified      Boolean   @default(false)
+  expiresAt     DateTime  @map("expires_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  call AccessLineCallSession @relation(fields: [callId], references: [id], onDelete: Cascade)
+
+  @@index([callId])
+  @@map("accessline_auth_attempts")
+}
+
+model AccessLineToolInvocation {
+  id            String   @id @default(cuid())
+  callId        String   @map("call_id")
+  turnId        String?  @map("turn_id")
+  tool          String
+  authorizedScope String @map("authorized_scope")
+  requestHash   String   @map("request_hash")
+  resultState   String   @map("result_state")
+  freshness     String?
+  source        String?
+  status        String
+  resultSummary Json     @default("{}") @map("result_summary")
+  idempotencyKey String? @map("idempotency_key")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  call AccessLineCallSession @relation(fields: [callId], references: [id], onDelete: Cascade)
+
+  @@unique([callId, idempotencyKey])
+  @@index([callId, tool])
+  @@map("accessline_tool_invocations")
+}
+
+model AccessLineConfirmation {
+  id        String   @id @default(cuid())
+  callId    String   @map("call_id")
+  turnId    String?  @map("turn_id")
+  field     String
+  valueRepr String   @map("value_repr")
+  response  String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  call AccessLineCallSession @relation(fields: [callId], references: [id], onDelete: Cascade)
+
+  @@index([callId])
+  @@map("accessline_confirmations")
+}
+
+model AccessLineHandoff {
+  id              String    @id @default(cuid())
+  callId          String    @map("call_id")
+  organizationId  String    @map("organization_id")
+  destination     String
+  reason          String
+  authLevel       String    @map("auth_level")
+  summary         Json      @default("{}")
+  status          String    @default("requested")
+  idempotencyKey  String    @unique @map("idempotency_key")
+  acceptedAt      DateTime? @map("accepted_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  call AccessLineCallSession @relation(fields: [callId], references: [id], onDelete: Cascade)
+
+  @@index([callId])
+  @@map("accessline_handoffs")
+}
+
+model AccessLineSupportCase {
+  id             String   @id @default(cuid())
+  callId         String   @map("call_id")
+  organizationId String   @map("organization_id")
+  caseReference  String   @map("case_reference")
+  customerScope  String?  @map("customer_scope")
+  language       String?
+  summary        String
+  permissionState String  @default("requires_reauth") @map("permission_state")
+  idempotencyKey String   @unique @map("idempotency_key")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  call AccessLineCallSession @relation(fields: [callId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, caseReference])
+  @@index([callId])
+  @@map("accessline_support_cases")
+}
+
+model AccessLineConsentEvent {
+  id            String   @id @default(cuid())
+  callId        String   @map("call_id")
+  purpose       String
+  noticeVersion String   @map("notice_version")
+  action        String
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  call AccessLineCallSession @relation(fields: [callId], references: [id], onDelete: Cascade)
+
+  @@index([callId])
+  @@map("accessline_consent_events")
+}
+
+model AccessLineAuditEvent {
+  id             String   @id @default(cuid())
+  organizationId String   @map("organization_id")
+  callId         String?  @map("call_id")
+  actorId        String   @map("actor_id")
+  action         String
+  policyRevision String?  @map("policy_revision")
+  meta           Json?
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, createdAt])
+  @@index([callId])
+  @@map("accessline_audit_events")
+}
+
+model AccessLineProviderEvent {
+  id             String   @id @default(cuid())
+  providerEventId String  @unique @map("provider_event_id")
+  callId         String?  @map("call_id")
+  eventType      String   @map("event_type")
+  payloadHash    String   @map("payload_hash")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  @@index([callId])
+  @@map("accessline_provider_events")
 }

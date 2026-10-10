@@ -119,6 +119,7 @@ Last updated: 2026-10-03 (VL-353 Done — Enterprise Engineering System Producti
 | VL-082 | Connectors (one tool) | Done | Slack slash → translate; console `/connectors` (ADR-0026). |
 | VL-083 | Workflows | Done | JSON steps via job runner; console `/workflows` (ADR-0027). |
 | VL-084 | Voice agents | Done | Twilio bilingual FAQ; simulate + signed webhooks (ADR-0028). |
+| VL-084b | AccessLine | Done | Native-language phone logistics MVP; simulator E2E + Twilio signature webhooks; Android/iOS/TS SDK v0.4.0; `/accessline`; docs/ACCESSLINE.md. |
 | VL-085 | Analytics | Done | Overview SQL: features, lang pairs, est. cost, job errors (ADR-0029). |
 | VL-086 | Prompt management | Done | Versioned chat/RAG/voice_faq prompts + rollback; `/prompts` (ADR-0030). |
 
@@ -567,3 +568,4 @@ Last updated: 2026-10-03 (VL-353 Done — Enterprise Engineering System Producti
 | 2026-10-03 | VL-353 Done: EES Production Audit (Phase 220) — evidence pack; ADR-0255. Volume 20 closed. Architecture Knowledge Base / mass ADR factory deferred past Volume 20. |
 
 | 2026-10-10 | DealBridge MVP: domain/API/UI/pilot/demo wired per LUGEMI_DEALBRIDGE_CURSOR_BUILD_SPEC r1.1; ADR-0256; tests in apps/api/test/dealbridge.spec.ts. |
+| 2026-10-10 | AccessLine MVP: tenant lines, call state machine, registered OTP auth, grounded delivery lookup, allowlisted handoff; simulator + Twilio hooks; mobile SDKs `client.accessLine`; tests in apps/api/test/accessline.spec.ts. |

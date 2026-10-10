@@ -7,6 +7,7 @@ export type PlanFeature =
   | 'commercial'
   | 'dealBridge'
   | 'voiceBridge'
+  | 'accessLine'
   | 'voiceClones'
   | 'marketplace'
   | 'fineTunes'
@@ -105,6 +106,7 @@ function proPlan(): PlanDefinition {
       'commercial',
       'dealBridge',
       'voiceBridge',
+      'accessLine',
       'voiceClones',
       'marketplace',
       'fineTunes',
@@ -138,6 +140,7 @@ function businessPlan(): PlanDefinition {
       'commercial',
       'dealBridge',
       'voiceBridge',
+      'accessLine',
       'voiceClones',
       'marketplace',
       'fineTunes',
@@ -171,6 +174,7 @@ function enterprisePlan(): PlanDefinition {
       'commercial',
       'dealBridge',
       'voiceBridge',
+      'accessLine',
       'voiceClones',
       'marketplace',
       'fineTunes',

@@ -1,6 +1,6 @@
 # Lugemi Android SDK (Kotlin)
 
-Official Android / Kotlin client for Lugemi speech, translate, ASR, detect, streaming translate, **VoiceBridge**, **DealBridge**, and **Voice Studio**.
+Official Android / Kotlin client for Lugemi speech, translate, ASR, detect, streaming translate, **VoiceBridge**, **DealBridge**, **Voice Studio**, and **AccessLine**.
 
 ## Install
 
@@ -17,7 +17,7 @@ Then in your app:
 
 ```kotlin
 dependencies {
-  implementation("com.lugemi:sdk-android:0.3.0")
+  implementation("com.lugemi:sdk-android:0.4.0")
 }
 ```
 
@@ -54,6 +54,13 @@ val edition = studio.createEdition(
   voiceId = "own:sw-ke-female",
 )
 ```
+
+
+
+## AccessLine
+
+`client.accessLine` — business lines, simulator call journey (DTMF/speech), grounded delivery lookup, allowlisted handoff.
+Live PSTN webhooks require Twilio credentials and separate pilot authorization.
 
 ## VoiceBridge / DealBridge
 

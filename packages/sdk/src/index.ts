@@ -2,12 +2,14 @@ export { Lugemi } from './client.js';
 export { LugemiError } from './errors.js';
 export { VoiceBridgeClient } from './voicebridge.js';
 export { DealBridgeClient } from './dealbridge.js';
+export { AccessLineClient } from './accessline.js';
 export type {
   CreateVoiceThreadInput,
   VoiceBridgeConsent,
   VoiceBridgeClientOptions,
 } from './voicebridge.js';
 export type { CreateDealSessionInput, DealBridgeClientOptions } from './dealbridge.js';
+export type { AccessLineClientOptions } from './accessline.js';
 export type { UploadAuth, UploadProgress, BridgeTransport } from './bridge-transport.js';
 export type {
   ChatCompletionRequest,

@@ -43,7 +43,14 @@ await client.voiceStudioWorkspaceProjects();
 
 Android / iOS expose the full workflow via `client.voiceStudio` (v0.3.0).
 
-### VoiceBridge & DealBridge
+#
+
+## AccessLine
+
+`client.accessLine` — business lines, simulator call journey (DTMF/speech), grounded delivery lookup, allowlisted handoff.
+Live PSTN webhooks require Twilio credentials and separate pilot authorization.
+
+## VoiceBridge & DealBridge
 
 Same REST surface as the Android/iOS SDKs:
 

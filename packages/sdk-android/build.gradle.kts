@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "com.lugemi"
-version = "0.3.0"
+version = "0.4.0"
 
 java {
   sourceCompatibility = JavaVersion.VERSION_17
@@ -42,7 +42,7 @@ publishing {
       version = project.version.toString()
       pom {
         name.set("Lugemi Android SDK")
-        description.set("Kotlin client for Lugemi speech, translate, ASR, VoiceBridge, DealBridge, and Voice Studio")
+        description.set("Kotlin client for Lugemi speech, translate, ASR, VoiceBridge, DealBridge, Voice Studio, and AccessLine")
         url.set("https://lugemi.com")
       }
     }
