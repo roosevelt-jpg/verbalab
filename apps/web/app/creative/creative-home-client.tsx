@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 import { CreativeShell } from '@/components/creative/creative-shell';
 import { CreativeIcon } from '@/components/creative/creative-icons';
+import { AnamorphicCanopyCanvas } from '@/components/media/anamorphic-canopy-canvas';
 import { CREATIVE_QUICK_TOOLS } from '@/lib/creative-nav';
 
 const PROMPT_HINTS = [
@@ -95,11 +96,16 @@ export function CreativeHomeClient() {
       </nav>
 
       <aside className="lg-creative-promo">
-        <div>
+        <AnamorphicCanopyCanvas
+          className="lg-creative-promo-canvas"
+          intensity={0.65}
+          showRings={false}
+        />
+        <div style={{ position: 'relative', zIndex: 1 }}>
           <h2>Baobab is here. Try it now in LugemiCreative</h2>
           <p>Next-model language intelligence — translate, speech, and agents on one foundation.</p>
         </div>
-        <div className="lg-creative-promo-actions">
+        <div className="lg-creative-promo-actions" style={{ position: 'relative', zIndex: 1 }}>
           <Link href="/baobab" className="primary">
             Try it
           </Link>

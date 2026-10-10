@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { BaobabPlane } from '@/components/marketing/baobab-plane';
+import { AnamorphicCanopyCanvas } from '@/components/media/anamorphic-canopy-canvas';
 import '@/components/marketing/baobab.css';
 
 const ENGINES = [
@@ -164,6 +165,7 @@ export function BaobabClient({ brandName }: { brandName: string }) {
             </ul>
           </div>
           <div className="baobab-depth" aria-hidden>
+            <AnamorphicCanopyCanvas className="baobab-depth-canvas" intensity={1.25} />
             <div className="baobab-depth__layer baobab-depth__layer--a" />
             <div className="baobab-depth__layer baobab-depth__layer--b" />
             <div className="baobab-depth__layer baobab-depth__layer--c" />

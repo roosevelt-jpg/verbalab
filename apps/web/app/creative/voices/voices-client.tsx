@@ -52,7 +52,7 @@ function CreativeVoicesClientInner({ getToken, isLoaded }: { getToken: () => Pro
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const { play, stop, playingId, loadingId, status, error: playError } = useDemoPlayer();
+  const { play, stop, playingId, loadingId } = useDemoPlayer();
 
   const load = useCallback(async () => {
     const token = await getToken();

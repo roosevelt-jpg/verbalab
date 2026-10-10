@@ -1,5 +1,6 @@
 'use client';
 
+import { AnamorphicCanopyCanvas } from './anamorphic-canopy-canvas';
 import './anamorphic.css';
 
 type Variant = 'voice' | 'speech' | 'translate' | 'agents' | 'api' | 'coverage' | 'hub' | 'hero';
@@ -49,6 +50,11 @@ export function AnamorphicPanel({
           <img className="lg-ana__media" src={imageUrl} alt="" />
         ) : (
           <>
+            <AnamorphicCanopyCanvas
+              className="lg-ana__canvas"
+              intensity={size === 'sm' ? 0.75 : 1.0}
+              showRings={size !== 'sm'}
+            />
             <div className="lg-ana__layer lg-ana__layer--back" />
             <div className="lg-ana__layer lg-ana__layer--mid" />
             <div className="lg-ana__layer lg-ana__layer--front" />

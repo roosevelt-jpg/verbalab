@@ -115,6 +115,7 @@ export function BaobabPlane({ className = '' }: { className?: string }) {
       ctx.lineWidth = 1.5;
       ctx.stroke();
     }
+    // Dynamic anamorphic canopy trunk & roots geometry
     ctx.beginPath();
     ctx.moveTo(-18, 20);
     ctx.quadraticCurveTo(0 + nx * 12, 90, 22, h * 0.38);
@@ -122,6 +123,20 @@ export function BaobabPlane({ className = '' }: { className?: string }) {
     ctx.quadraticCurveTo(0 - nx * 8, 100, 14, 20);
     ctx.fillStyle = 'rgba(16, 38, 77, 0.55)';
     ctx.fill();
+
+    // Harmonic pulse wave nodes on canopy branches
+    for (let k = 0; k < 8; k++) {
+      const ang = (k / 8) * Math.PI * 2;
+      const rad = 130 + Math.sin(ang * 3 + nx * 2) * 20;
+      const bx = Math.cos(ang) * rad;
+      const by = Math.sin(ang) * (rad * 0.4);
+      ctx.beginPath();
+      ctx.arc(bx, by, 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = k % 2 === 0 ? 'rgba(0, 184, 174, 0.9)' : 'rgba(127, 245, 239, 0.9)';
+      ctx.shadowColor = 'rgba(0, 184, 174, 0.8)';
+      ctx.shadowBlur = 8;
+      ctx.fill();
+    }
     ctx.restore();
   }, []);
 

@@ -1,5 +1,6 @@
 import type { CmsDocument, CmsPage } from './cms-types';
 import { FOOTER_CMS_PAGES } from './cms-footer-pages';
+import { API_URL } from '@/lib/api';
 
 const API_SNIPPET = `import { Lugemi } from '@lugemi/sdk';
 
@@ -86,13 +87,13 @@ export const CMS_DEFAULTS: CmsDocument = {
     },
   },
   hero: {
-    eyebrow: "Africa's voice, speech, and language platform",
+    eyebrow: "The leading voice, speech, and language platform",
     brand: 'Lugemi',
-    headline: 'Own every African voice.',
+    headline: 'The voice foundation for speaking agents and creative workflows.',
     lead:
-      'Speak, translate, and ship first-party speaking agents across African languages, accents, and cultural contexts — then into LATAM, Southeast Asia, the Middle East, and the EU. Our API and our models, not a vendor wrapper.',
-    primaryCta: { label: 'Start free', href: '/sign-up' },
-    secondaryCta: { label: 'Open console', href: '/dashboard' },
+      'Speak, transcribe, and translate across African and global corridors with resonant first-party Echo voices, real-time dubbing, and cultural understanding. First-party API and models, built for speed and regional fidelity.',
+    primaryCta: { label: 'Get started free', href: '/sign-up' },
+    secondaryCta: { label: 'Explore Baobab', href: '/baobab' },
     media: { alt: 'Lugemi hero atmosphere' },
     demo: {
       title: 'Text to speech',
@@ -1125,6 +1126,7 @@ export const CMS_DEFAULTS: CmsDocument = {
           ],
           links: [
             { label: 'API keys', href: '/keys' },
+            { label: 'Interactive OpenAPI docs', href: `${API_URL}/docs` },
             { label: 'Playground', href: '/playground' },
             { label: 'Coverage', href: '/coverage' },
           ],
@@ -1141,6 +1143,7 @@ export const CMS_DEFAULTS: CmsDocument = {
           ],
           links: [
             { label: 'API docs', href: '/docs' },
+            { label: 'Interactive OpenAPI docs', href: `${API_URL}/docs` },
             { label: 'Playground', href: '/playground' },
             { label: 'Developers / SDKs', href: '/developers' },
             { label: 'API keys', href: '/keys' },

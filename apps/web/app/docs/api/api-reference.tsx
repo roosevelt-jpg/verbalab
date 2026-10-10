@@ -134,6 +134,9 @@ export function ApiReference() {
           <Link href="/playground">Playground</Link>
           <Link href="/keys">API keys</Link>
           <Link href="/developers">Developers</Link>
+          <a href={`${API_URL}/docs`} target="_blank" rel="noopener noreferrer" className="vl-btn vl-btn-secondary">
+            Interactive docs
+          </a>
           <a href={SPEC_URL} className="vl-btn vl-btn-secondary" download="lugemi-openapi.json">
             Download openapi.json
           </a>

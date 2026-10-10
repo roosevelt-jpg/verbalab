@@ -1,11 +1,13 @@
 import Link from 'next/link';
 import { AnamorphicPanel } from '@/components/media/anamorphic-panel';
+import { AnamorphicCanopyCanvas } from '@/components/media/anamorphic-canopy-canvas';
 import type { CmsDocument } from '@/data/cms-types';
 import { AgentChatDemo } from './agent-chat-demo';
 import { HeroTtsCard } from './hero-tts-card';
 import { LanguageBar } from './language-bar';
 import { MarketingFooter } from './marketing-footer';
 import { MarketingNav } from './nav';
+import { PricingTeaser } from './pricing-teaser';
 import { StudioSampleDemo } from './studio-sample-demo';
 import { TranslatePlayDemo } from './translate-play-demo';
 import { VoiceChipRow } from './voice-chip-row';
@@ -38,6 +40,9 @@ export function MarketingHome({ content }: { content: CmsDocument }) {
       <MarketingNav nav={nav} />
       <main id="main">
         <section className="mkt-hero" aria-labelledby="mkt-hero-title">
+          <div className="mkt-hero-anamorphic-bg" aria-hidden="true">
+            <AnamorphicCanopyCanvas className="mkt-hero-anamorphic-canvas" intensity={1.1} />
+          </div>
           {hero.media?.videoUrl || hero.media?.imageUrl ? (
             <div className="mkt-hero-media" aria-hidden="true">
               {hero.media.videoUrl ? (
@@ -371,6 +376,8 @@ export function MarketingHome({ content }: { content: CmsDocument }) {
             </div>
           </div>
         </section>
+
+        <PricingTeaser />
 
         <section className="mkt-banner" aria-labelledby="mkt-banner-title">
           <div className="mkt-wrap mkt-banner-inner">

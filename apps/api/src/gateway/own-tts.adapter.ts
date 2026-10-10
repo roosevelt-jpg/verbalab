@@ -312,7 +312,7 @@ function acousticFormantWav(text: string, voiceId: string): Buffer {
   if (cleanVoice.includes('za')) f0 *= 0.98;
 
   // Formant frequencies for phonetic resonances (F1, F2, F3)
-  const formants = [
+  const formants: [number, number, number][] = [
     [730, 1090, 2440], // /a/
     [530, 1840, 2480], // /e/
     [270, 2290, 3010], // /i/
@@ -327,7 +327,7 @@ function acousticFormantWav(text: string, voiceId: string): Buffer {
     const wordTime = t - wordIdx * wordDuration;
     const w = words[wordIdx] || 'a';
     const fIdx = (w.charCodeAt(0) || 0) % formants.length;
-    const [f1, f2, f3] = formants[fIdx]!;
+    const [f1, f2, f3] = formants[fIdx] ?? [500, 1500, 2500];
 
     // Glottal excitation: fundamental + harmonics
     const glottal =
@@ -356,7 +356,7 @@ function acousticFormantWav(text: string, voiceId: string): Buffer {
 }
 
 /** Legacy alias for backwards compatibility */
-const tinyWav = (seed: string): Buffer => {
+const _tinyWav = (seed: string): Buffer => {
   const parts = seed.split(':');
   const voice = parts[0] || 'own:en-us-female';
   const text = parts.slice(1).join(':') || 'Hello';

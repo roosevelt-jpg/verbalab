@@ -45,7 +45,6 @@ const isPublicRoute = createRouteMatcher([
 ]);
 
 const isOnboardingRoute = createRouteMatcher(['/onboarding(.*)']);
-const isAdminRoute = createRouteMatcher(['/admin(.*)']);
 const isBypassOnboardingGate = createRouteMatcher([
   '/api(.*)',
   '/__clerk(.*)',

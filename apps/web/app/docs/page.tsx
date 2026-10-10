@@ -58,6 +58,9 @@ LUGEMI_BASE_URL=${API_URL}`;
           <Link href="/docs/api" className="vl-btn vl-btn-primary" style={{ textDecoration: 'none', padding: '0.45rem 0.9rem', minHeight: 40 }}>
             API reference
           </Link>
+          <a href={`${API_URL}/docs`} target="_blank" rel="noopener noreferrer" className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none', padding: '0.45rem 0.9rem', minHeight: 40 }}>
+            Interactive docs
+          </a>
           <a href={specUrl} className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none', padding: '0.45rem 0.9rem', minHeight: 40 }}>
             openapi.json
           </a>
@@ -75,7 +78,8 @@ LUGEMI_BASE_URL=${API_URL}`;
         agents across languages and accents with cultural context. Africa-first completeness; LATAM, Southeast Asia,
         the Middle East, and the EU in scope. Authenticate with{' '}
         <code className="vl-code">Authorization: Bearer lg_live_...</code> or soft-sandbox{' '}
-        <code className="vl-code">lg_test_...</code>. Browse every endpoint in the <Link href="/docs/api">API reference</Link>, or
+        <code className="vl-code">lg_test_...</code>. Browse every endpoint in the <Link href="/docs/api">API reference</Link> or{' '}
+        <a href={`${API_URL}/docs`} target="_blank" rel="noopener noreferrer">interactive OpenAPI docs</a>, or
         download the OpenAPI document at <code className="vl-code">/v1/openapi.json</code>.
       </p>
 
