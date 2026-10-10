@@ -204,7 +204,7 @@ export function SignInForm({ hasSocial = false, onSuccess }: SignInFormProps) {
                 id="password"
                 type={showPassword ? 'text' : 'password'}
                 autoComplete="current-password"
-                className="lugemi-auth-input"
+                className="lugemi-auth-input lugemi-auth-input-with-toggle"
                 placeholder="Enter your password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

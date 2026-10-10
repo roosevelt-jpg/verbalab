@@ -51,19 +51,17 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className={noto.className}>
         <SentryInit />
         {isClerkConfigured() ? (
-          blockClerkOnBareLocal ? (
-            // Live keys + bare loopback: skip ClerkProvider (FAPI origin_invalid) but still
-            // serve marketing /health /dev-login instructions on http://127.0.0.1:43125.
-            <LiveKeyOriginGate blockClerk>{children}</LiveKeyOriginGate>
-          ) : (
-            <ClerkProvider
-              appearance={lugemiClerkAppearance}
-              localization={lugemiClerkLocalization}
-              afterSignOutUrl="/"
-            >
-              {children}
-            </ClerkProvider>
-          )
+          <ClerkProvider
+            appearance={lugemiClerkAppearance}
+            localization={lugemiClerkLocalization}
+            afterSignOutUrl="/"
+          >
+            {blockClerkOnBareLocal ? (
+              <LiveKeyOriginGate blockClerk>{children}</LiveKeyOriginGate>
+            ) : (
+              children
+            )}
+          </ClerkProvider>
         ) : (
           children
         )}
