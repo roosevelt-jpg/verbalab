@@ -26,8 +26,8 @@ Env mirrors (optional, for Clerk dashboard defaults):
 
 - `NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in`
 - `NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up`
-- `NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/onboarding`
-- `NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/onboarding`
+- `NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/post-auth`
+- `NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/post-auth`
 
 ## Appearance
 
@@ -54,12 +54,12 @@ This is **Clerk bot protection** (Cloudflare Turnstile), not a Lugemi bug. It of
 
 ### Prefer the Lugemi app signup
 
-Always sign up at **`https://lugemi.com/sign-up`** (teal Lugemi AuthShell). Google OAuth from there returns to `/sso-callback` → `/onboarding` and does not need the Account Portal form.
+Always sign up at **`https://lugemi.com/sign-up`** (teal Lugemi AuthShell). Google OAuth from there returns to `/sso-callback` → `/post-auth` (admins → `/admin`, others → `/onboarding`) and does not need the Account Portal form.
 
 **Do not try to edit Account Portal → Overview URLs.**  
 `https://accounts.lugemi.com/sign-in` and `/sign-up` are Clerk’s hosted portal addresses for your production custom domain. They are **read-only** and correct as-is. Lugemi already uses custom auth at `/sign-in` and `/sign-up` via env (`NEXT_PUBLIC_CLERK_SIGN_*_URL`) — you do not need the Account Portal for product signup.
 
-Optional: **Account Portal → Redirects** tab — set fallback after sign-in / sign-up to `https://lugemi.com/onboarding` so anyone who still hits `accounts.lugemi.com` returns to Lugemi.
+Optional: **Account Portal → Redirects** tab — set fallback after sign-in / sign-up to `https://lugemi.com/post-auth` so anyone who still hits `accounts.lugemi.com` returns to Lugemi.
 
 ### Fixes in Clerk Dashboard
 
