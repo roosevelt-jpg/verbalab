@@ -14,8 +14,8 @@ ARG NEXT_PUBLIC_API_URL=http://localhost:3001
 ARG NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
 ARG NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
 ARG NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
-ARG NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/onboarding
-ARG NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/onboarding
+ARG NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/post-auth
+ARG NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/post-auth
 # Show Continue with Google when Clerk Social Connection (Google) is configured.
 # Pass false to hide the button without a redeploy of Clerk settings.
 ARG NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED=true

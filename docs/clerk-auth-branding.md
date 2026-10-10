@@ -6,8 +6,8 @@ Clerk is used for **authentication only**. Product onboarding (Creative vs Agent
 
 1. Marketing CTA (`Sign up` / `Start free`) → `/sign-up`.
 2. `/sign-up` or `/sign-in` — Lugemi AuthShell (brand hero + teal/navy card) wrapping Lugemi-native forms powered by Clerk custom flows (`useSignIn`, `useSignUp`, `authenticateWithRedirect`). No Clerk prebuilt chrome or "Secured by clerk" watermarks.
-3. On success, Clerk redirects to `/onboarding` (or `/admin` if platform admin).
-4. `/onboarding` multi-step wizard:
+3. On success, Clerk redirects to `/post-auth`, which checks platform admin first and sends admins to `/admin` without showing the onboarding wizard. Everyone else continues to `/onboarding` (or their workspace if already completed).
+4. `/onboarding` multi-step wizard (regular users only):
    - Platform (LugemiCreative vs LugemiAgents)
    - Personalize
    - Persona

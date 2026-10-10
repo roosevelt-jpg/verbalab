@@ -172,6 +172,9 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
   const [plans, setPlans] = useState<PlanCard[]>(WEB_BILLING_PLANS);
   const [checkoutNote, setCheckoutNote] = useState<string | null>(null);
   const [showCheckout, setShowCheckout] = useState(false);
+  /** False until admin/completed routing is resolved — avoids wizard flash for admins. */
+  const [gateReady, setGateReady] = useState(false);
+  const [gateMessage, setGateMessage] = useState('Loading…');
   const skipHandled = useRef(false);
   const stateRef = useRef(state);
   stateRef.current = state;
@@ -230,19 +233,12 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
   }, []);
 
   useEffect(() => {
-    if (!hydrated || !isLoaded) return;
-    if (state.completed) {
-      setOnboardingStatusCookie('done');
-    } else if (isSignedIn) {
-      setOnboardingStatusCookie('pending');
-    }
-  }, [hydrated, isLoaded, isSignedIn, state.completed]);
-
-  useEffect(() => {
     if (!hydrated || !isLoaded || skipHandled.current) return;
     const skip = searchParams.get('skipOnboarding') === '1';
     if (!skip) return;
     skipHandled.current = true;
+    setGateReady(false);
+    setGateMessage('Skipping setup…');
     const platformParam = searchParams.get('platform');
     const platform: OnboardingPlatform = platformParam === 'agents' ? 'agents' : 'creative';
     void skipAll(platform);
@@ -251,6 +247,63 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
   useEffect(() => {
     if (!isLoaded || !hydrated || skipHandled.current) return;
     void (async () => {
+      setGateReady(false);
+      setGateMessage('Checking your account…');
+
+      // Prefer admin check before painting the wizard or fetching plans.
+      const token = await getToken();
+      if (token) {
+        try {
+          const adminRes = await apiFetch<{ admin: boolean }>('/v1/admin/status', { token });
+          if (adminRes?.admin) {
+            skipHandled.current = true;
+            setPlatformAdminCookie(true);
+            setOnboardingStatusCookie('done');
+            setGateMessage('Opening admin…');
+            router.replace('/admin');
+            return;
+          }
+          setPlatformAdminCookie(false);
+        } catch {
+          setPlatformAdminCookie(false);
+        }
+
+        try {
+          const remote = await apiFetch<ApiProfile>('/v1/onboarding', { token });
+          if (remote.completed) {
+            setOnboardingStatusCookie('done');
+            setGateMessage('Opening workspace…');
+            router.replace(destinationForPlatform(remote.platform));
+            return;
+          }
+          const local = loadOnboardingLocal();
+          if (local.completed) {
+            setOnboardingStatusCookie('done');
+            router.replace(destinationForPlatform(local.platform));
+            return;
+          }
+          setOnboardingStatusCookie('pending');
+          const merged: OnboardingState = {
+            ...local,
+            platform: remote.platform ?? local.platform,
+            displayName: remote.displayName ?? local.displayName,
+            preferredLanguage: remote.preferredLanguage ?? local.preferredLanguage ?? 'en',
+            referralSource: remote.referralSource ?? local.referralSource,
+            ageConfirmed: remote.ageConfirmed || local.ageConfirmed,
+            persona: remote.persona ?? local.persona,
+            planId: remote.planId ?? local.planId,
+            billingInterval: remote.billingInterval ?? 'monthly',
+            completed: false,
+            step: Math.max(remote.step ?? 0, local.step),
+          };
+          persistLocal(merged);
+        } catch {
+          if (isSignedIn) setOnboardingStatusCookie('pending');
+        }
+      } else if (isSignedIn) {
+        setOnboardingStatusCookie('pending');
+      }
+
       try {
         const planRes = await apiFetch<{ plans: PlanCard[] }>('/v1/billing/plans');
         if (planRes.plans?.length) {
@@ -262,58 +315,9 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
         setPlans(WEB_BILLING_PLANS);
       }
 
-      const token = await getToken();
-      if (!token) return;
-      if (skipHandled.current) return;
-
-      // Platform admins skip onboarding entirely: redirect to /admin immediately.
-      try {
-        const adminRes = await apiFetch<{ admin: boolean }>('/v1/admin/status', { token });
-        if (adminRes?.admin) {
-          skipHandled.current = true;
-          setPlatformAdminCookie(true);
-          setOnboardingStatusCookie('done');
-          router.replace('/admin');
-          return;
-        }
-        setPlatformAdminCookie(false);
-      } catch {
-        /* proceed to standard onboarding checks */
-      }
-
-      try {
-        const remote = await apiFetch<ApiProfile>('/v1/onboarding', { token });
-        if (remote.completed) {
-          setOnboardingStatusCookie('done');
-          router.replace(destinationForPlatform(remote.platform));
-          return;
-        }
-        const local = loadOnboardingLocal();
-        if (local.completed) {
-          setOnboardingStatusCookie('done');
-          router.replace(destinationForPlatform(local.platform));
-          return;
-        }
-        setOnboardingStatusCookie('pending');
-        const merged: OnboardingState = {
-          ...local,
-          platform: remote.platform ?? local.platform,
-          displayName: remote.displayName ?? local.displayName,
-          preferredLanguage: remote.preferredLanguage ?? local.preferredLanguage ?? 'en',
-          referralSource: remote.referralSource ?? local.referralSource,
-          ageConfirmed: remote.ageConfirmed || local.ageConfirmed,
-          persona: remote.persona ?? local.persona,
-          planId: remote.planId ?? local.planId,
-          billingInterval: remote.billingInterval ?? 'monthly',
-          completed: false,
-          step: Math.max(remote.step ?? 0, local.step),
-        };
-        persistLocal(merged);
-      } catch {
-        /* local-only ok */
-      }
+      if (!skipHandled.current) setGateReady(true);
     })();
-  }, [isLoaded, hydrated, getToken, persistLocal, router]);
+  }, [isLoaded, hydrated, getToken, persistLocal, router, isSignedIn]);
 
   function go(step: number) {
     persistLocal({ ...state, step });
@@ -391,10 +395,10 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
     }
   }
 
-  if (!hydrated) {
+  if (!hydrated || (isSignedIn && !gateReady)) {
     return (
       <main className="ob-root">
-        <p className="ob-loading">Loading…</p>
+        <p className="ob-loading">{gateMessage}</p>
       </main>
     );
   }
