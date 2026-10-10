@@ -107,7 +107,8 @@ function StudioInner({ auth }: { auth: CreativeAuth }) {
     else if (key) headers.Authorization = `Bearer ${key}`;
     else throw new Error('Sign in or add an API key to use Voice Studio.');
     return headers;
-  }, [auth, apiKeyTick]);
+  // apiKeyTick forces re-auth after key paste
+  }, [auth, apiKeyTick]); // eslint-disable-line react-hooks/exhaustive-deps -- apiKeyTick busts auth headers after key paste
 
   const loadProjects = useCallback(async () => {
     const headers = await authHeaders();

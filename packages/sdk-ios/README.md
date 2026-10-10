@@ -1,6 +1,6 @@
 # Lugemi iOS SDK (Swift)
 
-Official Swift Package for Lugemi speech, translate, ASR, detect, streaming translate, **VoiceBridge**, **DealBridge**, and **Voice Studio** on iOS / macOS.
+Official Swift Package for Lugemi speech, translate, ASR, detect, streaming translate, **VoiceBridge**, **DealBridge**, and **Voice Studio** on iOS / macOS (**v0.3.0**).
 
 ## Install (SPM)
 
