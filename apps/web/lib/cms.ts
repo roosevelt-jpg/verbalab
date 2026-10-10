@@ -1,7 +1,7 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import { CMS_DEFAULTS } from '@/data/cms-defaults';
-import type { CmsDocument, CmsNavLink, CmsPage } from '@/data/cms-types';
+import type { CmsDocument, CmsFooterColumn, CmsNavLink, CmsPage } from '@/data/cms-types';
 
 const STORE_PATH = path.join(process.cwd(), 'data', 'cms-store.json');
 
@@ -68,12 +68,31 @@ function stripFooterLinksFromHeaderNav(links: CmsNavLink[]): CmsNavLink[] {
     });
 }
 
+/** Keep the first footer link for each destination; drop later duplicates across columns. */
+function dedupeFooterColumns(columns: CmsFooterColumn[]): CmsFooterColumn[] {
+  const seen = new Set<string>();
+  return columns.map((col) => ({
+    ...col,
+    links: (col.links ?? []).filter((link) => {
+      const key = normalizeNavHref(link.href) || link.href.trim();
+      if (!key) return false;
+      if (seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    }),
+  }));
+}
+
 function withHeaderFooterDedup(doc: CmsDocument): CmsDocument {
   return {
     ...doc,
     nav: {
       ...doc.nav,
       centerLinks: stripFooterLinksFromHeaderNav(doc.nav.centerLinks ?? []),
+    },
+    footer: {
+      ...doc.footer,
+      columns: dedupeFooterColumns(doc.footer.columns ?? []),
     },
   };
 }
