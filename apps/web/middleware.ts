@@ -2,6 +2,8 @@ import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { NextResponse, type NextRequest } from 'next/server';
 import {
   ONBOARDING_STATUS_COOKIE,
+  PLATFORM_ADMIN_COOKIE,
+  isPlatformAdminFromCookie,
   shouldForceOnboardingFromCookie,
 } from '@/lib/onboarding-status';
 
@@ -43,6 +45,7 @@ const isPublicRoute = createRouteMatcher([
 ]);
 
 const isOnboardingRoute = createRouteMatcher(['/onboarding(.*)']);
+const isAdminRoute = createRouteMatcher(['/admin(.*)']);
 const isBypassOnboardingGate = createRouteMatcher([
   '/api(.*)',
   '/__clerk(.*)',
@@ -51,6 +54,7 @@ const isBypassOnboardingGate = createRouteMatcher([
   '/setup(.*)',
   '/dev-login(.*)',
   '/onboarding(.*)',
+  '/admin(.*)',
 ]);
 
 const clerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
@@ -82,9 +86,14 @@ export default clerkConfigured
         }
       }
 
-      // Post-auth: incomplete Lugemi setup cannot enter product routes.
+      // Post-auth: incomplete Lugemi setup cannot enter product routes (unless platform admin).
+      const isAdmin = isPlatformAdminFromCookie(
+        request.cookies.get(PLATFORM_ADMIN_COOKIE)?.value,
+      );
+
       if (
         userId &&
+        !isAdmin &&
         !isBypassOnboardingGate(request) &&
         shouldForceOnboardingFromCookie(
           request.cookies.get(ONBOARDING_STATUS_COOKIE)?.value,

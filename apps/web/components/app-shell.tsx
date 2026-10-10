@@ -178,6 +178,10 @@ function usePlatformAdmin(userId: string | null | undefined, getToken: () => Pro
         if (!token) return;
         const status = await apiFetch<{ admin: boolean }>('/v1/admin/status', { token });
         adminStatusCache.set(userId, Boolean(status.admin));
+        if (typeof document !== 'undefined') {
+          const secure = window.location.protocol === 'https:' ? '; Secure' : '';
+          document.cookie = `lugemi_platform_admin=${status.admin ? '1' : '0'}; Path=/; Max-Age=${60 * 60 * 24 * 400}; SameSite=Lax${secure}`;
+        }
         if (!cancelled) setIsAdmin(Boolean(status.admin));
       } catch {
         if (!cancelled) setIsAdmin(false);

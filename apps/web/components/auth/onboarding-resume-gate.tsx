@@ -9,7 +9,10 @@ import {
   loadOnboardingLocal,
   ONBOARDING_STORAGE_KEY,
 } from '@/lib/onboarding';
-import { setOnboardingStatusCookie } from '@/lib/onboarding-status';
+import {
+  setOnboardingStatusCookie,
+  setPlatformAdminCookie,
+} from '@/lib/onboarding-status';
 
 /**
  * After Clerk auth, incomplete Lugemi onboarding must finish before product homes
@@ -35,6 +38,23 @@ function OnboardingResumeGateAuthed({ children }: { children: ReactNode }) {
       if (!isSignedIn) {
         if (!cancelled) setAllowed(true);
         return;
+      }
+
+      // Check platform admin status first. Platform admins skip user onboarding entirely.
+      try {
+        const token = await getToken();
+        if (token) {
+          const status = await apiFetch<{ admin: boolean }>('/v1/admin/status', { token });
+          if (status?.admin) {
+            setPlatformAdminCookie(true);
+            setOnboardingStatusCookie('done');
+            if (!cancelled) setAllowed(true);
+            return;
+          }
+          setPlatformAdminCookie(false);
+        }
+      } catch {
+        /* proceed to standard onboarding checks */
       }
 
       try {

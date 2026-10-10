@@ -63,6 +63,10 @@ export function AdminClient() {
     try {
       const status = await apiFetch<{ admin: boolean }>('/v1/admin/status', { token });
       setIsAdmin(status.admin);
+      if (typeof document !== 'undefined') {
+        const secure = window.location.protocol === 'https:' ? '; Secure' : '';
+        document.cookie = `lugemi_platform_admin=${status.admin ? '1' : '0'}; Path=/; Max-Age=${60 * 60 * 24 * 400}; SameSite=Lax${secure}`;
+      }
     } catch (err) {
       // CMS remains available via Next /api/cms when Clerk allowlist is empty in local/dev.
       setIsAdmin(false);

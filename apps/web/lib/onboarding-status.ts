@@ -8,6 +8,7 @@
  */
 
 export const ONBOARDING_STATUS_COOKIE = 'lugemi_onboarding';
+export const PLATFORM_ADMIN_COOKIE = 'lugemi_platform_admin';
 
 export type OnboardingStatusCookie = 'pending' | 'done';
 
@@ -35,4 +36,18 @@ export function setOnboardingStatusCookie(status: OnboardingStatusCookie): void 
       ? '; Secure'
       : '';
   document.cookie = `${ONBOARDING_STATUS_COOKIE}=${status}; Path=/; Max-Age=${COOKIE_MAX_AGE_SEC}; SameSite=Lax${secure}`;
+}
+
+export function setPlatformAdminCookie(isAdmin: boolean): void {
+  if (typeof document === 'undefined') return;
+  const secure =
+    typeof window !== 'undefined' && window.location.protocol === 'https:'
+      ? '; Secure'
+      : '';
+  const value = isAdmin ? '1' : '0';
+  document.cookie = `${PLATFORM_ADMIN_COOKIE}=${value}; Path=/; Max-Age=${COOKIE_MAX_AGE_SEC}; SameSite=Lax${secure}`;
+}
+
+export function isPlatformAdminFromCookie(value: string | undefined | null): boolean {
+  return value === '1' || value === 'true';
 }

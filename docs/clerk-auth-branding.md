@@ -16,7 +16,9 @@ Clerk is used for **authentication only**. Product onboarding (Creative vs Agent
 6. Middleware:
    - Unauthenticated product routes → `/sign-in` (onboarding without session → `/sign-up`).
    - Cookie `lugemi_onboarding=pending` → force `/onboarding` until setup finishes (`done`).
-7. Product layouts (`/creative`, `/chat`, `/dashboard`) also resume incomplete drafts via `OnboardingResumeGate`.
+   - Routes under `/admin*` never force onboarding.
+   - Platform admins (identified via `lugemi_platform_admin=1` cookie or `GET /v1/admin/status` with `ADMIN_EMAILS`) bypass user onboarding and are redirected immediately to `/admin` instead of the Creative/Agents plan wizard.
+7. Product layouts (`/creative`, `/chat`, `/dashboard`) also resume incomplete drafts via `OnboardingResumeGate` (while letting platform admins through without forced onboarding).
 
 Local/dev skip: `NEXT_PUBLIC_SKIP_ONBOARDING=1` or `/onboarding?skipOnboarding=1` (also used by `/dev-login`).
 

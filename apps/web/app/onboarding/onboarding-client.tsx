@@ -29,7 +29,10 @@ import {
   type OnboardingPlatform,
   type OnboardingState,
 } from '@/lib/onboarding';
-import { setOnboardingStatusCookie } from '@/lib/onboarding-status';
+import {
+  setOnboardingStatusCookie,
+  setPlatformAdminCookie,
+} from '@/lib/onboarding-status';
 import './onboarding.css';
 
 const STEPS = 4;
@@ -262,6 +265,22 @@ function OnboardingFlow({ getToken, isLoaded, isSignedIn }: AuthBag) {
       const token = await getToken();
       if (!token) return;
       if (skipHandled.current) return;
+
+      // Platform admins skip onboarding entirely: redirect to /admin immediately.
+      try {
+        const adminRes = await apiFetch<{ admin: boolean }>('/v1/admin/status', { token });
+        if (adminRes?.admin) {
+          skipHandled.current = true;
+          setPlatformAdminCookie(true);
+          setOnboardingStatusCookie('done');
+          router.replace('/admin');
+          return;
+        }
+        setPlatformAdminCookie(false);
+      } catch {
+        /* proceed to standard onboarding checks */
+      }
+
       try {
         const remote = await apiFetch<ApiProfile>('/v1/onboarding', { token });
         if (remote.completed) {
