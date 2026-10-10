@@ -1,12 +1,15 @@
 import { Module } from '@nestjs/common';
 import { VoiceStudioController } from './voice-studio.controller';
 import { VoiceStudioService } from './voice-studio.service';
+import { StudioWorkflowController } from './studio-workflow.controller';
+import { StudioWorkflowService } from './studio-workflow.service';
 import { AudioModule } from '../audio/audio.module';
 import { AuditCoreModule } from '../audit/audit-core.module';
 import { UsageModule } from '../usage/usage.module';
 import { ApiKeysModule } from '../api-keys/api-keys.module';
 import { IdentityModule } from '../identity/identity.module';
 import { NeuralTtsModule } from '../neural-tts/neural-tts.module';
+import { TranslateModule } from '../translate/translate.module';
 import { TranslateAuthGuard } from '../common/guards/translate-auth.guard';
 
 @Module({
@@ -17,9 +20,10 @@ import { TranslateAuthGuard } from '../common/guards/translate-auth.guard';
     ApiKeysModule,
     IdentityModule,
     NeuralTtsModule,
+    TranslateModule,
   ],
-  controllers: [VoiceStudioController],
-  providers: [VoiceStudioService, TranslateAuthGuard],
-  exports: [VoiceStudioService],
+  controllers: [VoiceStudioController, StudioWorkflowController],
+  providers: [VoiceStudioService, StudioWorkflowService, TranslateAuthGuard],
+  exports: [VoiceStudioService, StudioWorkflowService],
 })
 export class VoiceStudioModule {}

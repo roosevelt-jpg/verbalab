@@ -4949,6 +4949,32 @@ export class Lugemi {
     return this.requestJson('/v1/voice-studio/library', { method: 'GET' });
   }
 
+  /** Collaborative Voice Studio workspace capabilities (public). */
+  async voiceStudioWorkspaceCapabilities(): Promise<{
+    product: string;
+    workflow: string[];
+    deferred: string[];
+    honesty: string;
+  }> {
+    return this.requestJson('/v1/voice-studio/workspace/capabilities', { method: 'GET' });
+  }
+
+  async voiceStudioWorkspaceProjects(): Promise<{ projects: unknown[] }> {
+    return this.requestJson('/v1/voice-studio/workspace/projects', { method: 'GET' });
+  }
+
+  async createVoiceStudioWorkspaceProject(body: {
+    name: string;
+    sourceLanguage?: string;
+    reviewPolicy?: string;
+    description?: string;
+  }): Promise<unknown> {
+    return this.requestJson('/v1/voice-studio/workspace/projects', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+
   async voiceEnhancementEngine(): Promise<{
     product: string;
     note: string;
