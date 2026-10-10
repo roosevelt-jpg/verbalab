@@ -56,9 +56,10 @@ This is **Clerk bot protection** (Cloudflare Turnstile), not a Lugemi bug. It of
 
 Always sign up at **`https://lugemi.com/sign-up`** (teal Lugemi AuthShell). Google OAuth from there returns to `/sso-callback` → `/onboarding` and does not need the Account Portal form.
 
-In **Clerk Dashboard → Account Portal** (or **Customization → Account Portal**):
-- Set the application home URL to `https://lugemi.com`
-- Point Sign-in / Sign-up paths to `https://lugemi.com/sign-in` and `https://lugemi.com/sign-up` so users are not sent to `accounts.lugemi.com`
+**Do not try to edit Account Portal → Overview URLs.**  
+`https://accounts.lugemi.com/sign-in` and `/sign-up` are Clerk’s hosted portal addresses for your production custom domain. They are **read-only** and correct as-is. Lugemi already uses custom auth at `/sign-in` and `/sign-up` via env (`NEXT_PUBLIC_CLERK_SIGN_*_URL`) — you do not need the Account Portal for product signup.
+
+Optional: **Account Portal → Redirects** tab — set fallback after sign-in / sign-up to `https://lugemi.com/onboarding` so anyone who still hits `accounts.lugemi.com` returns to Lugemi.
 
 ### Fixes in Clerk Dashboard
 
