@@ -92,6 +92,7 @@ export const FEATURE_LABELS: Record<string, string> = {
   playground: 'Playground',
   commercial: 'Commercial use',
   dealBridge: 'DealBridge',
+  voiceBridge: 'VoiceBridge',
   voiceClones: 'Voice clones',
   marketplace: 'Marketplace',
   fineTunes: 'Fine-tunes',

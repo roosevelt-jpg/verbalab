@@ -23,6 +23,7 @@ import { LocalizeModule } from './localize/localize.module';
 import { ChatModule } from './chat/chat.module';
 import { InterpretModule } from './interpret/interpret.module';
 import { DealBridgeModule } from './dealbridge/dealbridge.module';
+import { VoiceBridgeModule } from './voicebridge/voicebridge.module';
 import { EmbeddingsModule } from './embeddings/embeddings.module';
 import { KnowledgeModule } from './knowledge/knowledge.module';
 import { ObservabilityModule } from './observability/observability.module';
@@ -470,6 +471,7 @@ import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
     ChatModule,
     InterpretModule,
     DealBridgeModule,
+    VoiceBridgeModule,
     EmbeddingsModule,
     KnowledgeModule,
     GovernanceModule,

@@ -106,6 +106,8 @@ model Organization {
   dealPilotConfigs             DealPilotConfig[]
   dealPilotEvents              DealPilotEvent[]
   dealAuditEvents              DealAuditEvent[]
+  voiceThreads                 VoiceThread[]
+  voiceAuditEvents             VoiceAuditEvent[]
 
   @@index([plan])
   @@index([billingStatus])
@@ -2282,3 +2284,285 @@ model DealUsageCostEvent {
 
 
 
+
+/// VoiceBridge — private multilingual voice threads with immutable revisions.
+model VoiceThread {
+  id              String    @id @default(cuid())
+  organizationId  String    @map("organization_id")
+  workspaceId     String    @map("workspace_id")
+  creatorId       String    @map("creator_id")
+  title           String
+  category        String?
+  /// active | archived
+  state           String    @default("active")
+  sequence        Int       @default(0)
+  retentionPolicy String    @default("default_90d") @map("retention_policy")
+  maxParticipants Int       @default(10) @map("max_participants")
+  corridor        String    @default("en-fr")
+  featureFlag     String    @default("voicebridge") @map("feature_flag")
+  deletedAt       DateTime? @map("deleted_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  organization Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  memberships  VoiceMembership[]
+  invitations  VoiceInvitation[]
+  messages     VoiceMessage[]
+  events       VoiceThreadEvent[]
+  consents     VoiceConsent[]
+  auditEvents  VoiceAuditEvent[]
+  dealLinks    VoiceDealDraftLink[]
+  jobs         VoiceProcessingJob[]
+
+  @@index([organizationId, state, createdAt])
+  @@index([workspaceId, createdAt])
+  @@index([creatorId])
+  @@map("voice_threads")
+}
+
+model VoiceMembership {
+  id                   String   @id @default(cuid())
+  threadId             String   @map("thread_id")
+  userId               String   @map("user_id")
+  /// creator | moderator | member
+  role                 String   @default("member")
+  active               Boolean  @default(true)
+  language             String
+  variety              String?
+  languagePrefVersion  Int      @default(1) @map("language_pref_version")
+  notificationsEnabled Boolean  @default(true) @map("notifications_enabled")
+  joinedAt             DateTime @default(now()) @map("joined_at")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  thread    VoiceThread           @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  deliveries VoiceDeliveryRecord[]
+  consents  VoiceConsent[]
+
+  @@unique([threadId, userId])
+  @@index([userId, active])
+  @@map("voice_memberships")
+}
+
+model VoiceInvitation {
+  id               String    @id @default(cuid())
+  threadId         String    @map("thread_id")
+  tokenHash        String    @unique @map("token_hash")
+  expiresAt        DateTime  @map("expires_at")
+  redeemedAt       DateTime? @map("redeemed_at")
+  redeemedByUserId String?   @map("redeemed_by_user_id")
+  scope            String    @default("member")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  thread VoiceThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  @@index([threadId, expiresAt])
+  @@map("voice_invitations")
+}
+
+model VoiceMessage {
+  id                 String    @id @default(cuid())
+  threadId           String    @map("thread_id")
+  authorId           String    @map("author_id")
+  activeRevisionId   String?   @unique @map("active_revision_id")
+  replyToMessageId   String?   @map("reply_to_message_id")
+  replyToRevisionId  String?   @map("reply_to_revision_id")
+  /// draft | uploading | transcribing | awaiting_review | published | withdrawn | deleted
+  state              String    @default("draft")
+  idempotencyKey     String?   @map("idempotency_key")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+  deletedAt          DateTime? @map("deleted_at")
+
+  thread    VoiceThread           @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  revisions VoiceSourceRevision[]
+  activeRevision VoiceSourceRevision? @relation("VoiceMessageActiveRevision", fields: [activeRevisionId], references: [id], onDelete: SetNull)
+
+  @@unique([threadId, idempotencyKey])
+  @@index([threadId, createdAt])
+  @@index([authorId])
+  @@map("voice_messages")
+}
+
+model VoiceSourceRevision {
+  id                String   @id @default(cuid())
+  messageId         String   @map("message_id")
+  revisionNumber    Int      @map("revision_number")
+  originalAudioKey  String?  @map("original_audio_key")
+  originalAudioMime String?  @map("original_audio_mime")
+  reviewedTranscript String  @map("reviewed_transcript")
+  language          String
+  variety           String?
+  supersedesId      String?  @map("supersedes_id")
+  correctionReason  String?  @map("correction_reason")
+  authorId          String   @map("author_id")
+  contentHash       String   @map("content_hash")
+  /// current | superseded
+  status            String   @default("current")
+  publishedAt       DateTime @default(now()) @map("published_at")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  message   VoiceMessage            @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  activeFor VoiceMessage?           @relation("VoiceMessageActiveRevision")
+  variants  VoiceLanguageVariant[]
+  jobs      VoiceProcessingJob[]
+  deliveries VoiceDeliveryRecord[]
+
+  @@unique([messageId, revisionNumber])
+  @@index([messageId, status])
+  @@map("voice_source_revisions")
+}
+
+model VoiceLanguageVariant {
+  id                 String   @id @default(cuid())
+  sourceRevisionId   String   @map("source_revision_id")
+  targetLanguage     String   @map("target_language")
+  targetVariety      String?  @map("target_variety")
+  text               String
+  audioKey           String?  @map("audio_key")
+  audioMime          String?  @map("audio_mime")
+  /// queued | translating | verifying | text_ready | synthesizing | ready | needs_clarification | failed | unsupported
+  state              String   @default("queued")
+  modelVersions      Json?    @map("model_versions")
+  verificationState  String   @default("not_assessed") @map("verification_state")
+  verificationIssues Json?    @map("verification_issues")
+  contentHash        String   @map("content_hash")
+  supersedesVariantId String? @map("supersedes_variant_id")
+  version            Int      @default(1)
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  sourceRevision VoiceSourceRevision  @relation(fields: [sourceRevisionId], references: [id], onDelete: Cascade)
+  deliveries     VoiceDeliveryRecord[]
+
+  @@unique([sourceRevisionId, targetLanguage, targetVariety, version])
+  @@index([sourceRevisionId, state])
+  @@map("voice_language_variants")
+}
+
+model VoiceDeliveryRecord {
+  id               String    @id @default(cuid())
+  membershipId     String    @map("membership_id")
+  revisionId       String    @map("revision_id")
+  variantId        String?   @map("variant_id")
+  availableAt      DateTime? @map("available_at")
+  firstPlayedAt    DateTime? @map("first_played_at")
+  acknowledgmentAt DateTime? @map("acknowledgment_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  membership VoiceMembership       @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+  revision   VoiceSourceRevision   @relation(fields: [revisionId], references: [id], onDelete: Cascade)
+  variant    VoiceLanguageVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+
+  @@unique([membershipId, revisionId])
+  @@index([revisionId])
+  @@map("voice_delivery_records")
+}
+
+model VoiceProcessingJob {
+  id                      String   @id @default(cuid())
+  threadId                String   @map("thread_id")
+  sourceRevisionId        String   @map("source_revision_id")
+  expectedActiveRevisionId String  @map("expected_active_revision_id")
+  idempotencyKey          String   @unique @map("idempotency_key")
+  /// translate | verify | synthesize | notify
+  stage                   String
+  targetLanguage          String?  @map("target_language")
+  attempts                Int      @default(0)
+  /// queued | running | succeeded | failed | stale | dead_letter
+  status                  String   @default("queued")
+  costUsdMicros           Int      @default(0) @map("cost_usd_micros")
+  errorClass              String?  @map("error_class")
+  errorMessage            String?  @map("error_message")
+  createdAt               DateTime @default(now()) @map("created_at")
+  updatedAt               DateTime @updatedAt @map("updated_at")
+
+  thread         VoiceThread         @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  sourceRevision VoiceSourceRevision @relation(fields: [sourceRevisionId], references: [id], onDelete: Cascade)
+
+  @@index([threadId, status])
+  @@index([sourceRevisionId, stage])
+  @@map("voice_processing_jobs")
+}
+
+model VoiceConsent {
+  id            String   @id @default(cuid())
+  threadId      String   @map("thread_id")
+  membershipId  String   @map("membership_id")
+  userId        String   @map("user_id")
+  /// processing | recording | retention | training
+  purpose       String
+  noticeVersion String   @map("notice_version")
+  /// granted | denied
+  decision      String
+  timestamp     DateTime @default(now())
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  thread     VoiceThread     @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  membership VoiceMembership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+
+  @@index([userId, purpose])
+  @@index([threadId])
+  @@map("voice_consents")
+}
+
+model VoiceThreadEvent {
+  id               String   @id @default(cuid())
+  threadId         String   @map("thread_id")
+  sequence         Int
+  eventId          String   @unique @map("event_id")
+  type             String
+  messageId        String?  @map("message_id")
+  sourceRevisionId String?  @map("source_revision_id")
+  variantVersion   Int?     @map("variant_version")
+  correlationId    String?  @map("correlation_id")
+  payload          Json?
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  thread VoiceThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  @@unique([threadId, sequence])
+  @@index([threadId, createdAt])
+  @@map("voice_thread_events")
+}
+
+model VoiceAuditEvent {
+  id             String   @id @default(cuid())
+  organizationId String   @map("organization_id")
+  threadId       String?  @map("thread_id")
+  actorId        String   @map("actor_id")
+  operation      String
+  revisionId     String?  @map("revision_id")
+  meta           Json?
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  thread       VoiceThread? @relation(fields: [threadId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, createdAt])
+  @@index([threadId, createdAt])
+  @@map("voice_audit_events")
+}
+
+model VoiceDealDraftLink {
+  id                    String    @id @default(cuid())
+  threadId              String    @map("thread_id")
+  initiatorId           String    @map("initiator_id")
+  dealSessionId         String?   @map("deal_session_id")
+  selectedRevisionIds   Json      @map("selected_revision_ids")
+  selectedRevisionHashes Json     @map("selected_revision_hashes")
+  partyAUserId          String    @map("party_a_user_id")
+  partyBUserId          String    @map("party_b_user_id")
+  category              String?
+  handoffKey            String    @unique @map("handoff_key")
+  staleSince            DateTime? @map("stale_since")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  thread VoiceThread @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  @@index([threadId, createdAt])
+  @@index([dealSessionId])
+  @@map("voice_deal_draft_links")
+}
