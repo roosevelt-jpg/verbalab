@@ -5,8 +5,8 @@ Clerk is used for **authentication only**. Product onboarding (Creative vs Agent
 ## End-to-end flow
 
 1. Marketing CTA (`Sign up` / `Start free`) → `/sign-up`.
-2. `/sign-up` or `/sign-in` — Lugemi AuthShell (brand hero + teal/navy card) wrapping Clerk `<SignUp />` / `<SignIn />` (email / Google).
-3. On success, Clerk redirects to `/onboarding` (`forceRedirectUrl` / `fallbackRedirectUrl` via `afterClerkAuthPath()`).
+2. `/sign-up` or `/sign-in` — Lugemi AuthShell (brand hero + teal/navy card) wrapping Lugemi-native forms powered by Clerk custom flows (`useSignIn`, `useSignUp`, `authenticateWithRedirect`). No Clerk prebuilt chrome or "Secured by clerk" watermarks.
+3. On success, Clerk redirects to `/onboarding` (or `/admin` if platform admin).
 4. `/onboarding` multi-step wizard:
    - Platform (LugemiCreative vs LugemiAgents)
    - Personalize
@@ -31,9 +31,9 @@ Env mirrors (optional, for Clerk dashboard defaults):
 
 ## Appearance
 
-`apps/web/lib/clerk-appearance.ts` applies Lugemi teal (`#00b8ae` / `#007c78`) and navy (`#10264d`) plus Noto Sans to Clerk widgets. AuthShell owns the Lugemi brand name, headline, and setup-step chrome; Clerk logo/titles are hidden so the first viewport is not a bare auth widget.
+AuthShell owns the Lugemi brand name, headline, setup-step chrome, and form cards. Forms are custom Lugemi React components using Clerk's `useSignIn` and `useSignUp` flows, running Clerk behind Lugemi's UI without prebuilt cards or Clerk footer watermarks.
 
-Programmatic `useSignUp` / custom email-password forms are not used on production sign-up; `/dev-login` already uses `useSignIn` for ticket/password local review.
+`apps/web/lib/clerk-appearance.ts` retains appearance configuration for any auxiliary Clerk components.
 
 ## Watermark / “Development mode” badge
 

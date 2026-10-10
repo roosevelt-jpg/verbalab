@@ -5,6 +5,7 @@ import { AuditService } from '../audit/audit.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiException } from '../common/errors/api-exception';
 import { VoiceClonesService, voiceCloneIdFromVoice } from '../voice-clones/voice-clones.service';
+import { BillingService } from '../billing/billing.service';
 import { audioMaxBytes } from './audio-limits';
 
 export { audioMaxBytes };
@@ -19,6 +20,7 @@ export class AudioService {
     private readonly audit: AuditService,
     private readonly prisma: PrismaService,
     private readonly voiceClones: VoiceClonesService,
+    private readonly billing: BillingService,
   ) {}
 
   assertAllowedAudio(file: { size: number; originalname: string; mimetype: string }) {
@@ -52,6 +54,7 @@ export class AudioService {
     ip?: string;
   }) {
     this.assertAllowedAudio(input.file);
+    await this.billing.assertProductQuota(input.organizationId, 'stt', 60);
 
     const result = await this.gateway.transcribe({
       buffer: input.file.buffer,
@@ -137,6 +140,7 @@ export class AudioService {
     if (!input.voice) {
       throw new ApiException('validation_error', 'voice is required', HttpStatus.BAD_REQUEST);
     }
+    await this.billing.assertProductQuota(input.organizationId, 'tts', [...text].length);
 
     let result;
     let watermarkApplied = false;

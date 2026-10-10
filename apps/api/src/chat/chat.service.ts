@@ -7,6 +7,7 @@ import { TranslateService } from '../translate/translate.service';
 import { ApiException } from '../common/errors/api-exception';
 import { ChatMessage, ChatRole } from '../gateway/chat-provider';
 import { PromptsService } from '../prompts/prompts.service';
+import { BillingService } from '../billing/billing.service';
 
 export { LUGEMI_CHAT_SYSTEM } from './chat-prompt';
 export function chatMaxMessages(): number {
@@ -28,6 +29,7 @@ export class ChatService {
     private readonly prisma: PrismaService,
     private readonly translate: TranslateService,
     private readonly prompts: PromptsService,
+    private readonly billing: BillingService,
   ) {}
 
   private normalizeMessages(raw: unknown): ChatMessage[] {
@@ -112,6 +114,8 @@ export class ChatService {
     if (input.model !== undefined && (typeof input.model !== 'string' || !input.model.trim())) {
       throw new ApiException('validation_error', 'model must be a non-empty string', HttpStatus.BAD_REQUEST);
     }
+
+    await this.billing.assertProductQuota(input.organizationId, 'chat', 100);
 
     const result = await this.gateway.chat({
       messages,

@@ -1,4 +1,4 @@
-export type PlanId = 'free' | 'pro' | 'business' | 'enterprise';
+export type PlanId = 'free' | 'pro' | 'business' | 'enterprise' | (string & {});
 
 export type PlanFeature =
   | 'speech'
@@ -13,12 +13,20 @@ export type PlanFeature =
   | 'dedicated'
   | 'workspacesExtra';
 
-export type PlanDefinition = {
-  id: PlanId;
+export type PlanProductQuotas = {
+  characterQuota: number; // General / combined quota
+  sttMinutesQuota: number;
+  ttsCharsQuota: number;
+  translateCharsQuota: number;
+  chatTokensQuota: number;
+  ocrPagesQuota: number;
+};
+
+export type PlanDefinition = PlanProductQuotas & {
+  id: string;
   name: string;
   /** Higher = more entitlement. free=0 … enterprise=3 */
   rank: number;
-  characterQuota: number;
   rateLimitPerKey: number;
   rateLimitPerOrg: number;
   /**
@@ -31,13 +39,15 @@ export type PlanDefinition = {
   blurb: string;
   features: PlanFeature[];
   highlight?: boolean;
+  isCustom?: boolean;
   stripePriceEnv?: 'STRIPE_PRICE_ID_PRO' | 'STRIPE_PRICE_ID_BUSINESS';
+  stripePriceId?: string;
 };
 
 const ALL_CORE: PlanFeature[] = ['speech', 'translate', 'playground'];
 
 /** Legacy plan ids (removed SKUs) → current PlanId. */
-const LEGACY_PLAN_MAP: Record<string, PlanId> = {
+const LEGACY_PLAN_MAP: Record<string, string> = {
   starter: 'pro',
   creator: 'pro',
   scale: 'business',
@@ -49,11 +59,17 @@ function envQuota(key: string, fallback: number) {
 }
 
 function freePlan(): PlanDefinition {
+  const chars = envQuota('BILLING_FREE_CHARACTER_QUOTA', 50_000);
   return {
     id: 'free',
     name: 'Free',
     rank: 0,
-    characterQuota: envQuota('BILLING_FREE_CHARACTER_QUOTA', 50_000),
+    characterQuota: chars,
+    sttMinutesQuota: envQuota('BILLING_FREE_STT_MINUTES_QUOTA', 30),
+    ttsCharsQuota: envQuota('BILLING_FREE_TTS_CHARS_QUOTA', 50_000),
+    translateCharsQuota: envQuota('BILLING_FREE_TRANSLATE_CHARS_QUOTA', 50_000),
+    chatTokensQuota: envQuota('BILLING_FREE_CHAT_TOKENS_QUOTA', 50_000),
+    ocrPagesQuota: envQuota('BILLING_FREE_OCR_PAGES_QUOTA', 25),
     rateLimitPerKey: Number(process.env.RATE_LIMIT_FREE_PER_KEY ?? 60),
     rateLimitPerOrg: Number(process.env.RATE_LIMIT_FREE_PER_ORG ?? 120),
     workspaceLimit: 1,
@@ -65,11 +81,17 @@ function freePlan(): PlanDefinition {
 }
 
 function proPlan(): PlanDefinition {
+  const chars = envQuota('BILLING_PRO_CHARACTER_QUOTA', 2_000_000);
   return {
     id: 'pro',
     name: 'Pro',
     rank: 1,
-    characterQuota: envQuota('BILLING_PRO_CHARACTER_QUOTA', 2_000_000),
+    characterQuota: chars,
+    sttMinutesQuota: envQuota('BILLING_PRO_STT_MINUTES_QUOTA', 300),
+    ttsCharsQuota: envQuota('BILLING_PRO_TTS_CHARS_QUOTA', 2_000_000),
+    translateCharsQuota: envQuota('BILLING_PRO_TRANSLATE_CHARS_QUOTA', 2_000_000),
+    chatTokensQuota: envQuota('BILLING_PRO_CHAT_TOKENS_QUOTA', 1_000_000),
+    ocrPagesQuota: envQuota('BILLING_PRO_OCR_PAGES_QUOTA', 500),
     rateLimitPerKey: Number(process.env.RATE_LIMIT_PRO_PER_KEY ?? 300),
     rateLimitPerOrg: Number(process.env.RATE_LIMIT_PRO_PER_ORG ?? 1_000),
     workspaceLimit: 1,
@@ -90,11 +112,17 @@ function proPlan(): PlanDefinition {
 }
 
 function businessPlan(): PlanDefinition {
+  const chars = envQuota('BILLING_BUSINESS_CHARACTER_QUOTA', 11_000_000);
   return {
     id: 'business',
     name: 'Business',
     rank: 2,
-    characterQuota: envQuota('BILLING_BUSINESS_CHARACTER_QUOTA', 11_000_000),
+    characterQuota: chars,
+    sttMinutesQuota: envQuota('BILLING_BUSINESS_STT_MINUTES_QUOTA', 1_500),
+    ttsCharsQuota: envQuota('BILLING_BUSINESS_TTS_CHARS_QUOTA', 11_000_000),
+    translateCharsQuota: envQuota('BILLING_BUSINESS_TRANSLATE_CHARS_QUOTA', 11_000_000),
+    chatTokensQuota: envQuota('BILLING_BUSINESS_CHAT_TOKENS_QUOTA', 5_000_000),
+    ocrPagesQuota: envQuota('BILLING_BUSINESS_OCR_PAGES_QUOTA', 2_500),
     rateLimitPerKey: Number(process.env.RATE_LIMIT_BUSINESS_PER_KEY ?? 600),
     rateLimitPerOrg: Number(process.env.RATE_LIMIT_BUSINESS_PER_ORG ?? 3_000),
     workspaceLimit: 3,
@@ -115,11 +143,17 @@ function businessPlan(): PlanDefinition {
 }
 
 function enterprisePlan(): PlanDefinition {
+  const chars = envQuota('BILLING_ENTERPRISE_CHARACTER_QUOTA', 50_000_000);
   return {
     id: 'enterprise',
     name: 'Enterprise',
     rank: 3,
-    characterQuota: envQuota('BILLING_ENTERPRISE_CHARACTER_QUOTA', 50_000_000),
+    characterQuota: chars,
+    sttMinutesQuota: envQuota('BILLING_ENTERPRISE_STT_MINUTES_QUOTA', 10_000),
+    ttsCharsQuota: envQuota('BILLING_ENTERPRISE_TTS_CHARS_QUOTA', 50_000_000),
+    translateCharsQuota: envQuota('BILLING_ENTERPRISE_TRANSLATE_CHARS_QUOTA', 50_000_000),
+    chatTokensQuota: envQuota('BILLING_ENTERPRISE_CHAT_TOKENS_QUOTA', 25_000_000),
+    ocrPagesQuota: envQuota('BILLING_ENTERPRISE_OCR_PAGES_QUOTA', 10_000),
     rateLimitPerKey: Number(process.env.RATE_LIMIT_ENTERPRISE_PER_KEY ?? 2_000),
     rateLimitPerOrg: Number(process.env.RATE_LIMIT_ENTERPRISE_PER_ORG ?? 10_000),
     workspaceLimit: -1,
@@ -140,16 +174,23 @@ function enterprisePlan(): PlanDefinition {
   };
 }
 
-const BUILDERS: Record<PlanId, () => PlanDefinition> = {
+const BUILDERS: Record<string, () => PlanDefinition> = {
   free: freePlan,
   pro: proPlan,
   business: businessPlan,
   enterprise: enterprisePlan,
 };
 
-export const PLAN_IDS: PlanId[] = ['free', 'pro', 'business', 'enterprise'];
+export const BASE_PLAN_IDS: ('free' | 'pro' | 'business' | 'enterprise')[] = [
+  'free',
+  'pro',
+  'business',
+  'enterprise',
+];
 
-export const PLANS: Record<PlanId, PlanDefinition> = {
+export const PLAN_IDS = BASE_PLAN_IDS;
+
+export const PLANS: Record<string, PlanDefinition> = {
   get free() {
     return freePlan();
   },
@@ -164,18 +205,41 @@ export const PLANS: Record<PlanId, PlanDefinition> = {
   },
 };
 
-export function normalizePlanId(id: string | null | undefined): PlanId {
+export function normalizePlanId(id: string | null | undefined): string {
   if (!id) return 'free';
-  if (id in BUILDERS) return id as PlanId;
-  return LEGACY_PLAN_MAP[id] ?? 'free';
+  if (id in BUILDERS) return id;
+  return LEGACY_PLAN_MAP[id] ?? id;
 }
 
 export function listPlans(): PlanDefinition[] {
-  return PLAN_IDS.map((id) => BUILDERS[id]());
+  return BASE_PLAN_IDS.map((id) => BUILDERS[id]!());
 }
 
 export function planFromId(id: string): PlanDefinition {
-  return BUILDERS[normalizePlanId(id)]();
+  const norm = normalizePlanId(id);
+  if (norm in BUILDERS) {
+    return BUILDERS[norm]!();
+  }
+  // Fallback for custom plan when loaded statically
+  return {
+    id: norm,
+    name: norm.charAt(0).toUpperCase() + norm.slice(1),
+    rank: 1,
+    characterQuota: 2_000_000,
+    sttMinutesQuota: 300,
+    ttsCharsQuota: 2_000_000,
+    translateCharsQuota: 2_000_000,
+    chatTokensQuota: 1_000_000,
+    ocrPagesQuota: 500,
+    rateLimitPerKey: 300,
+    rateLimitPerOrg: 1_000,
+    workspaceLimit: 1,
+    priceLabel: '$99',
+    priceMonthlyUsd: 99,
+    blurb: 'Custom platform plan',
+    features: [...ALL_CORE],
+    isCustom: true,
+  };
 }
 
 /** True when org plan rank is at least the required plan. */

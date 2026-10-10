@@ -1,36 +1,11 @@
-import { SignIn } from '@clerk/nextjs';
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { AuthShell } from '@/components/auth/auth-shell';
-import { afterClerkAuthPath } from '@/lib/auth-redirect';
-import { lugemiClerkAppearance } from '@/lib/clerk-appearance';
 import { isClerkConfigured, isClerkGoogleOAuthEnabled } from '@/lib/clerk-config';
-
-const afterAuth = afterClerkAuthPath();
+import { SignInClient } from './sign-in-client';
 
 export default function SignInPage() {
   if (!isClerkConfigured()) redirect('/setup');
 
   const hasSocial = isClerkGoogleOAuthEnabled();
 
-  return (
-    <AuthShell
-      mode="sign-in"
-      hasSocial={hasSocial}
-      footer={
-        <p>
-          Stuck on email OTP?{' '}
-          <Link href="/dev-login">Use local password/ticket login</Link>
-        </p>
-      }
-    >
-      <div id="clerk-captcha" />
-      <SignIn
-        appearance={lugemiClerkAppearance}
-        forceRedirectUrl={afterAuth}
-        fallbackRedirectUrl={afterAuth}
-        signUpUrl="/sign-up"
-      />
-    </AuthShell>
-  );
+  return <SignInClient hasSocial={hasSocial} />;
 }

@@ -8,6 +8,7 @@ import { IdentityModule } from '../identity/identity.module';
 import { AuditCoreModule } from '../audit/audit-core.module';
 import { TranslateModule } from '../translate/translate.module';
 import { PromptsModule } from '../prompts/prompts.module';
+import { BillingModule } from '../billing/billing.module';
 import { TranslateAuthGuard } from '../common/guards/translate-auth.guard';
 
 @Module({
@@ -19,6 +20,7 @@ import { TranslateAuthGuard } from '../common/guards/translate-auth.guard';
     AuditCoreModule,
     TranslateModule,
     PromptsModule,
+    BillingModule,
   ],
   controllers: [ChatController],
   providers: [ChatService, TranslateAuthGuard],

@@ -8,6 +8,7 @@ import { IdentityModule } from '../identity/identity.module';
 import { AuditCoreModule } from '../audit/audit-core.module';
 import { TranslateAuthGuard } from '../common/guards/translate-auth.guard';
 import { VoiceClonesModule } from '../voice-clones/voice-clones.module';
+import { BillingModule } from '../billing/billing.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { VoiceClonesModule } from '../voice-clones/voice-clones.module';
     IdentityModule,
     AuditCoreModule,
     VoiceClonesModule,
+    BillingModule,
   ],
   controllers: [AudioController],
   providers: [AudioService, TranslateAuthGuard],

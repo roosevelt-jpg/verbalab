@@ -73,10 +73,10 @@ describe('Billing', () => {
   });
 
 
-  it('exposes exactly four public plans', () => {
+  it('exposes exactly four public plans', async () => {
     const plans = listPlans();
     expect(plans.map((p) => p.id)).toEqual(['free', 'pro', 'business', 'enterprise']);
-    expect(billing.listPublicPlans()).toHaveLength(4);
+    expect(await billing.listPublicPlans()).toHaveLength(4);
   });
 
   it('maps legacy starter/creator/scale ids onto the four-plan catalog', () => {
@@ -207,5 +207,100 @@ describe('Billing', () => {
 
   it('webhook without signature fails', async () => {
     await request(app.getHttpServer()).post('/v1/billing/webhook').send({ hello: 'stripe' }).expect(400);
+  });
+
+  it('enforces product-level quotas on TTS, STT, and Chat', async () => {
+    const org = await seedOrg(prisma, 'productQuotas');
+    await billing.applyEntitlementForTests({
+      organizationId: org.id,
+      plan: 'free',
+      characterQuota: 100,
+    });
+
+    // Should succeed within limits
+    await expect(billing.assertProductQuota(org.id, 'tts', 100)).resolves.not.toThrow();
+
+    // Over limits throws quota_exceeded
+    await expect(billing.assertProductQuota(org.id, 'tts', 100_000_000)).rejects.toMatchObject({
+      code: 'quota_exceeded',
+    });
+    await expect(billing.assertProductQuota(org.id, 'stt', 100_000)).rejects.toMatchObject({
+      code: 'quota_exceeded',
+    });
+    await expect(billing.assertProductQuota(org.id, 'chat', 100_000_000)).rejects.toMatchObject({
+      code: 'quota_exceeded',
+    });
+  });
+
+  it('allows platform admin to create, update, and assign plans', async () => {
+    const adminUserId = 'usr_admin_test_1';
+    const planSlug = `custom-partner-${Date.now()}`;
+    const plan = await billing.adminCreatePlan({
+      id: planSlug,
+      name: 'Custom Partner',
+      rank: 2,
+      characterQuota: 5_000_000,
+      sttMinutesQuota: 800,
+      ttsCharsQuota: 5_000_000,
+      translateCharsQuota: 5_000_000,
+      chatTokensQuota: 2_000_000,
+      priceMonthlyUsd: 199,
+      priceLabel: '$199',
+      actorUserId: adminUserId,
+    });
+
+    expect(plan.id).toBe(planSlug);
+    expect(plan.sttMinutesQuota).toBe(800);
+
+    const updated = await billing.adminUpdatePlan(
+      planSlug,
+      { sttMinutesQuota: 1200 },
+      adminUserId,
+    );
+    expect(updated.sttMinutesQuota).toBe(1200);
+
+    const org = await seedOrg(prisma, 'adminAssign');
+    const assigned = await billing.adminAssignPlan({
+      organizationId: org.id,
+      planId: planSlug,
+      actorUserId: adminUserId,
+    });
+    expect(assigned.plan).toBe(planSlug);
+
+    const summary = await billing.getSummary(org.id);
+    expect(summary.plan).toBe(planSlug);
+    expect(summary.quotas.stt.quotaMinutes).toBe(1200);
+
+    // Clean up created plan so other tests see clean 4 base plans
+    await prisma.planCatalogEntry.delete({ where: { id: planSlug } });
+  });
+
+  it('purchases and applies top-up credits upon plan quota exhaustion', async () => {
+    const org = await seedOrg(prisma, 'topupTest');
+    await billing.applyEntitlementForTests({
+      organizationId: org.id,
+      plan: 'free',
+      characterQuota: 10,
+    });
+
+    // Verify mock purchase grants credits immediately
+    const res = await billing.purchaseTopUp({
+      organizationId: org.id,
+      userId: org.memberships[0]!.userId,
+      packId: 'topup_tts_100k',
+    });
+
+    expect(res.mode).toBe('mock');
+    expect(res.unitsGranted).toBe(100_000);
+
+    const credits = await billing.getTopUpCredits(org.id);
+    expect(credits.tts).toBe(100_000);
+
+    // Now assertProductQuota for 50,000 tts chars succeeds due to top-up
+    await expect(billing.assertProductQuota(org.id, 'tts', 50_000)).resolves.not.toThrow();
+
+    const summary = await billing.getSummary(org.id);
+    expect(summary.topUps.tts).toBe(100_000);
+    expect(summary.quotas.tts.quotaChars).toBeGreaterThanOrEqual(100_000);
   });
 });

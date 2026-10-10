@@ -101,6 +101,7 @@ model Organization {
   cacheEntries                 CacheEntry[]
   costBudgets                  CostBudget[]
   costSpendEvents              CostSpendEvent[]
+  topUpPurchases               TopUpPurchase[]
 
   @@index([plan])
   @@index([billingStatus])
@@ -1811,5 +1812,53 @@ model PilotRequest {
   @@index([status, createdAt])
   @@map("pilot_requests")
 }
+
+/// Custom plan configuration created or edited by platform admin.
+model PlanCatalogEntry {
+  id               String   @id // plan slug, e.g. 'custom-tier'
+  name             String
+  rank             Int      @default(1)
+  characterQuota   Int      @default(2000000) @map("character_quota")
+  sttMinutesQuota  Int      @default(120) @map("stt_minutes_quota")
+  ttsCharsQuota    Int      @default(2000000) @map("tts_chars_quota")
+  translateCharsQuota Int   @default(2000000) @map("translate_chars_quota")
+  chatTokensQuota  Int      @default(500000) @map("chat_tokens_quota")
+  ocrPagesQuota    Int      @default(500) @map("ocr_pages_quota")
+  workspaceLimit   Int      @default(1) @map("workspace_limit")
+  priceMonthlyUsd  Float?   @map("price_monthly_usd")
+  priceLabel       String   @default("$99") @map("price_label")
+  blurb            String   @default("")
+  features         Json     @default("[]")
+  stripePriceId    String?  @map("stripe_price_id")
+  active           Boolean  @default(true)
+  isCustom         Boolean  @default(false) @map("is_custom")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  @@map("plan_catalog_entries")
+}
+
+/// Quota top-up purchase ledger (extra tokens/chars/minutes).
+model TopUpPurchase {
+  id                      String   @id @default(cuid())
+  organizationId          String   @map("organization_id")
+  packId                  String   @map("pack_id")
+  productKind             String   @map("product_kind") // 'tts' | 'stt' | 'translate' | 'chat' | 'general'
+  unitsGranted            Int      @map("units_granted")
+  amountCents             Int      @map("amount_cents")
+  currency                String   @default("usd")
+  status                  String   @default("completed") // pending | completed | failed
+  stripePaymentIntentId   String?  @unique @map("stripe_payment_intent_id")
+  stripeSessionId         String?  @unique @map("stripe_session_id")
+  createdAt               DateTime @default(now()) @map("created_at")
+  updatedAt               DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, status])
+  @@index([organizationId, productKind])
+  @@map("top_up_purchases")
+}
+
 
 

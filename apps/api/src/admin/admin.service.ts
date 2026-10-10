@@ -6,6 +6,7 @@ import { AuditService } from '../audit/audit.service';
 import { ApiKeysService } from '../api-keys/api-keys.service';
 import { UsageService } from '../usage/usage.service';
 import { normalizePlanId, PLAN_IDS, planFromId, type PlanId } from '../billing/plans';
+import { BillingService } from '../billing/billing.service';
 import { FeatureFlagsService } from '../cloud-foundation/feature-flags.service';
 
 const OVERRIDEABLE_FLAGS = [
@@ -38,10 +39,32 @@ export class AdminService {
     private readonly apiKeys: ApiKeysService,
     private readonly usage: UsageService,
     private readonly featureFlags: FeatureFlagsService,
+    private readonly billing: BillingService,
   ) {}
+
+  async listPlans() {
+    return this.billing.adminListPlans();
+  }
 
   listPlanFilters() {
     return PLAN_IDS.map((id) => ({ id, name: planFromId(id).name }));
+  }
+
+  createPlan(input: Parameters<BillingService['adminCreatePlan']>[0]) {
+    return this.billing.adminCreatePlan(input);
+  }
+
+  updatePlan(
+    id: string,
+    input: Parameters<BillingService['adminUpdatePlan']>[1],
+    actorUserId: string,
+    ip?: string,
+  ) {
+    return this.billing.adminUpdatePlan(id, input, actorUserId, ip);
+  }
+
+  assignPlan(input: Parameters<BillingService['adminAssignPlan']>[0]) {
+    return this.billing.adminAssignPlan(input);
   }
 
   /** Legacy alias used by existing tests and OpenAPI paths. */

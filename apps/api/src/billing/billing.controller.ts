@@ -62,6 +62,33 @@ export class BillingController {
     });
   }
 
+  @Get('topups')
+  topUps() {
+    return { packs: this.billing.getAvailableTopUpPacks() };
+  }
+
+  @Post('topups/purchase')
+  @UseGuards(ClerkAuthGuard)
+  purchaseTopUp(
+    @CurrentSession() session: SessionContext,
+    @Req() req: Request,
+    @Body() body: { packId: string },
+  ) {
+    if (session.role !== 'owner' && session.role !== 'admin') {
+      throw new ApiException(
+        'forbidden',
+        'Only owners and admins can purchase top-ups',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+    return this.billing.purchaseTopUp({
+      organizationId: session.organizationId,
+      userId: session.userId,
+      packId: body.packId,
+      ip: clientIp(req),
+    });
+  }
+
   @Post('webhook')
   async webhook(
     @Req() req: Request & { rawBody?: Buffer },

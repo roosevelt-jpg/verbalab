@@ -1,11 +1,16 @@
-/** Client-side plan catalog mirroring apps/api billing plans (exactly 4). */
-export type WebPlanId = 'free' | 'pro' | 'business' | 'enterprise';
+/** Client-side plan catalog mirroring apps/api billing plans (exactly 4 base plans). */
+export type WebPlanId = 'free' | 'pro' | 'business' | 'enterprise' | (string & {});
 
 export type WebPlan = {
-  id: WebPlanId;
+  id: string;
   name: string;
   rank: number;
   characterQuota: number;
+  sttMinutesQuota?: number;
+  ttsCharsQuota?: number;
+  translateCharsQuota?: number;
+  chatTokensQuota?: number;
+  ocrPagesQuota?: number;
   /** -1 = unlimited */
   workspaceLimit: number;
   priceLabel: string;
@@ -14,7 +19,72 @@ export type WebPlan = {
   features: string[];
   highlight: boolean;
   checkoutAvailable: boolean;
+  isCustom?: boolean;
 };
+
+export type TopUpPack = {
+  id: string;
+  name: string;
+  productKind: 'tts' | 'stt' | 'translate' | 'chat' | 'general';
+  units: number;
+  unitLabel: string;
+  priceCents: number;
+  priceLabel: string;
+  blurb: string;
+};
+
+export const WEB_TOP_UP_PACKS: TopUpPack[] = [
+  {
+    id: 'topup_tts_100k',
+    name: '100,000 Voice / TTS Characters',
+    productKind: 'tts',
+    units: 100_000,
+    unitLabel: 'chars',
+    priceCents: 1000,
+    priceLabel: '$10',
+    blurb: 'Instant top-up for speech synthesis and voice turns when plan quota is exhausted.',
+  },
+  {
+    id: 'topup_tts_500k',
+    name: '500,000 Voice / TTS Characters',
+    productKind: 'tts',
+    units: 500_000,
+    unitLabel: 'chars',
+    priceCents: 4500,
+    priceLabel: '$45',
+    blurb: 'High-volume character refill with 10% volume discount.',
+  },
+  {
+    id: 'topup_stt_60m',
+    name: '60 STT / Transcription Minutes',
+    productKind: 'stt',
+    units: 60,
+    unitLabel: 'minutes',
+    priceCents: 1200,
+    priceLabel: '$12',
+    blurb: 'Extra hours of speech recognition and audio transcription.',
+  },
+  {
+    id: 'topup_translate_200k',
+    name: '200,000 Translation Characters',
+    productKind: 'translate',
+    units: 200_000,
+    unitLabel: 'chars',
+    priceCents: 1500,
+    priceLabel: '$15',
+    blurb: 'Extra translation characters across all registered language pairs.',
+  },
+  {
+    id: 'topup_chat_500k',
+    name: '500,000 Conversational Tokens',
+    productKind: 'chat',
+    units: 500_000,
+    unitLabel: 'tokens',
+    priceCents: 1000,
+    priceLabel: '$10',
+    blurb: 'Additional agent and chat reasoning tokens.',
+  },
+];
 
 export const FEATURE_LABELS: Record<string, string> = {
   speech: 'Speech & TTS',
@@ -58,6 +128,11 @@ export const WEB_BILLING_PLANS: WebPlan[] = [
     name: 'Free',
     rank: 0,
     characterQuota: 50_000,
+    sttMinutesQuota: 30,
+    ttsCharsQuota: 50_000,
+    translateCharsQuota: 50_000,
+    chatTokensQuota: 50_000,
+    ocrPagesQuota: 25,
     workspaceLimit: 1,
     priceLabel: '$0',
     priceMonthlyUsd: 0,
@@ -71,6 +146,11 @@ export const WEB_BILLING_PLANS: WebPlan[] = [
     name: 'Pro',
     rank: 1,
     characterQuota: 2_000_000,
+    sttMinutesQuota: 300,
+    ttsCharsQuota: 2_000_000,
+    translateCharsQuota: 2_000_000,
+    chatTokensQuota: 1_000_000,
+    ocrPagesQuota: 500,
     workspaceLimit: 1,
     priceLabel: '$99',
     priceMonthlyUsd: 99,
@@ -93,6 +173,11 @@ export const WEB_BILLING_PLANS: WebPlan[] = [
     name: 'Business',
     rank: 2,
     characterQuota: 11_000_000,
+    sttMinutesQuota: 1_500,
+    ttsCharsQuota: 11_000_000,
+    translateCharsQuota: 11_000_000,
+    chatTokensQuota: 5_000_000,
+    ocrPagesQuota: 2_500,
     workspaceLimit: 3,
     priceLabel: '$330',
     priceMonthlyUsd: 330,
@@ -116,6 +201,11 @@ export const WEB_BILLING_PLANS: WebPlan[] = [
     name: 'Enterprise',
     rank: 3,
     characterQuota: 50_000_000,
+    sttMinutesQuota: 10_000,
+    ttsCharsQuota: 50_000_000,
+    translateCharsQuota: 50_000_000,
+    chatTokensQuota: 25_000_000,
+    ocrPagesQuota: 10_000,
     workspaceLimit: -1,
     priceLabel: 'Custom',
     priceMonthlyUsd: null,

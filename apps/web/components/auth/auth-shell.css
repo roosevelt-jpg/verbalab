@@ -1,4 +1,4 @@
-/* Lugemi auth chrome — brand panel + clean Clerk card */
+/* Lugemi auth chrome — brand panel + clean form card */
 
 .auth-shell {
   position: relative;
@@ -193,36 +193,219 @@
   animation: auth-rise 0.6s ease 0.1s both;
 }
 
-/* Ensure Clerk internal form layout, grids, and name inputs align neatly */
-.auth-shell__panel .cl-rootBox,
-.auth-shell__panel .cl-card,
-.auth-shell__panel .cl-form {
-  width: 100% !important;
-  max-width: 100% !important;
+/* Lugemi native auth form styles */
+.lugemi-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  width: 100%;
 }
 
-/* When Clerk renders First name and Last name side-by-side or stacked */
-.auth-shell__panel .cl-formFieldRow {
-  display: grid !important;
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-  gap: 0.75rem !important;
-  width: 100% !important;
+.lugemi-auth-google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  width: 100%;
+  padding: 0.7rem 1rem;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: #172b4d;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
-.auth-shell__panel .cl-formField {
-  width: 100% !important;
+.lugemi-auth-google-btn:hover:not(:disabled) {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
 }
 
-.auth-shell__panel .cl-formFieldInput {
-  width: 100% !important;
-  box-sizing: border-box !important;
+.lugemi-auth-google-btn:focus-visible {
+  outline: none;
+  border-color: var(--action-primary);
+  box-shadow: 0 0 0 3px rgba(0, 184, 174, 0.22);
 }
 
-/* When Google OAuth is intentionally hidden or unavailable */
-.auth-shell--no-social .cl-socialButtonsBlockButton,
-.auth-shell--no-social .cl-socialButtons,
-.auth-shell--no-social .cl-dividerRow {
-  display: none !important;
+.lugemi-auth-google-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.lugemi-auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  color: #64748b;
+  font-size: 0.82rem;
+  text-transform: lowercase;
+}
+
+.lugemi-auth-divider::before,
+.lugemi-auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e2e8f0;
+}
+
+.lugemi-auth-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  width: 100%;
+}
+
+.lugemi-auth-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+}
+
+.lugemi-auth-field-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lugemi-auth-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #172b4d;
+}
+
+.lugemi-auth-optional {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: normal;
+}
+
+.lugemi-auth-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.lugemi-auth-input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.93rem;
+  color: #172b4d;
+  background: #ffffff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  font-family: inherit;
+}
+
+.lugemi-auth-input::placeholder {
+  color: #94a3b8;
+}
+
+.lugemi-auth-input:focus {
+  outline: none;
+  border-color: #00b8ae;
+  box-shadow: 0 0 0 3px rgba(0, 184, 174, 0.22);
+}
+
+.lugemi-auth-input:disabled {
+  background: #f8fafc;
+  cursor: not-allowed;
+}
+
+.lugemi-auth-password-toggle {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0.35rem;
+  cursor: pointer;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.lugemi-auth-password-toggle:hover {
+  color: #172b4d;
+}
+
+.lugemi-auth-submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background-color: #007c78;
+  border: 1px solid #007c78;
+  border-radius: 8px;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+  margin-top: 0.25rem;
+}
+
+.lugemi-auth-submit-btn:hover:not(:disabled) {
+  background-color: #006662;
+  border-color: #006662;
+}
+
+.lugemi-auth-submit-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 184, 174, 0.35);
+}
+
+.lugemi-auth-submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.lugemi-auth-error-alert {
+  padding: 0.65rem 0.85rem;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #b42318;
+  font-size: 0.86rem;
+  line-height: 1.4;
+}
+
+.lugemi-auth-info-alert {
+  padding: 0.65rem 0.85rem;
+  background-color: #f0fdfa;
+  border: 1px solid #99f6e4;
+  border-radius: 8px;
+  color: #0f766e;
+  font-size: 0.86rem;
+  line-height: 1.4;
+}
+
+.lugemi-auth-sub-action {
+  text-align: center;
+  font-size: 0.88rem;
+  color: #64748b;
+  margin-top: 0.25rem;
+}
+
+.lugemi-auth-sub-action a {
+  color: #007c78;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.lugemi-auth-sub-action a:hover {
+  text-decoration: underline;
 }
 
 .auth-shell__footer {
@@ -301,8 +484,8 @@
     padding: 1.25rem 1rem 1.15rem;
   }
 
-  .auth-shell__panel .cl-formFieldRow {
-    grid-template-columns: 1fr !important;
-    gap: 0.85rem !important;
+  .lugemi-auth-row {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
   }
 }

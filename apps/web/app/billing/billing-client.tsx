@@ -24,8 +24,26 @@ type BillingSummary = {
   planName: string;
   billingStatus: string;
   characterQuota: number;
+  baseCharacterQuota?: number;
   charactersUsed: number;
   charactersRemaining: number;
+  quotas?: {
+    tts: { quotaChars: number; usedChars: number; remainingChars: number };
+    stt: { quotaMinutes: number; usedMinutes: number; remainingMinutes: number };
+    translate: { quotaChars: number; usedChars: number; remainingChars: number };
+    chat: { quotaTokens: number; usedTokens: number; remainingTokens: number };
+  };
+  topUps?: Record<string, number>;
+  availableTopUpPacks?: Array<{
+    id: string;
+    name: string;
+    productKind: string;
+    units: number;
+    unitLabel: string;
+    priceCents: number;
+    priceLabel: string;
+    blurb: string;
+  }>;
   periodStart: string;
   requests: number;
   stripeConfigured: boolean;
@@ -88,8 +106,9 @@ function isNetworkLoadError(err: unknown): boolean {
   );
 }
 
-/** Keep only Free / Pro / Business / Enterprise cards (drop stale API SKUs). */
+/** Keep base plans and custom CMS/admin created plans */
 function onlyFourPlans(plans: PlanCard[]): PlanCard[] {
+  if (plans && plans.length >= 4) return plans;
   const filtered = plans.filter((p) => CANONICAL_PLAN_IDS.has(p.id as (typeof WEB_BILLING_PLANS)[number]['id']));
   if (filtered.length === 4) return filtered;
   return WEB_BILLING_PLANS;
@@ -112,6 +131,7 @@ export function BillingClient() {
   const [plans, setPlans] = useState<PlanCard[]>(WEB_BILLING_PLANS);
   const [members, setMembers] = useState<MemberRow[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [successMsg, setSuccessMsg] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [usingLocalBilling, setUsingLocalBilling] = useState(false);
 
@@ -193,6 +213,39 @@ export function BillingClient() {
     }
   }
 
+  async function buyTopUp(packId: string) {
+    setError(null);
+    setSuccessMsg(null);
+    setBusy(true);
+    try {
+      const token = await getToken();
+      if (!token) throw new Error('Not signed in');
+      const res = await apiFetch<{
+        url: string | null;
+        mode: 'stripe' | 'mock';
+        unitsGranted?: number;
+        productKind?: string;
+      }>('/v1/billing/topups/purchase', {
+        method: 'POST',
+        token,
+        body: JSON.stringify({ packId }),
+      });
+
+      if (res.url) {
+        window.location.href = res.url;
+      } else {
+        setSuccessMsg(
+          `Top-up successful! Added ${res.unitsGranted?.toLocaleString()} ${res.productKind} credits directly to your organization.`,
+        );
+        await load();
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Top-up purchase failed');
+    } finally {
+      setBusy(false);
+    }
+  }
+
   async function openPortal() {
     setError(null);
     setBusy(true);
@@ -242,6 +295,11 @@ export function BillingClient() {
       ) : null}
 
       {error ? <p style={{ color: 'var(--bad)' }}>{error}</p> : null}
+      {successMsg ? (
+        <p style={{ color: 'var(--accent-teal)', fontWeight: 600, padding: '0.75rem', background: 'rgba(20, 184, 166, 0.1)', borderRadius: '6px' }}>
+          {successMsg}
+        </p>
+      ) : null}
 
       {summary ? (
         <div style={{ marginTop: '1.5rem', display: 'grid', gap: '1.25rem' }}>
@@ -264,16 +322,28 @@ export function BillingClient() {
             />
             <div className="lg-studio-overview">
               <UsageMeter
-                label="Character quota"
-                value={summary.charactersUsed}
-                max={summary.characterQuota}
+                label="Voice & TTS quota"
+                value={summary.quotas?.tts.usedChars ?? summary.charactersUsed}
+                max={summary.quotas?.tts.quotaChars ?? summary.characterQuota}
                 unit="chars"
               />
               <UsageMeter
-                label="Requests this period"
-                value={summary.requests}
-                max={Math.max(summary.requests, 100)}
-                unit="calls"
+                label="STT transcription"
+                value={Math.round(summary.quotas?.stt.usedMinutes ?? 0)}
+                max={summary.quotas?.stt.quotaMinutes ?? 120}
+                unit="mins"
+              />
+              <UsageMeter
+                label="Translate quota"
+                value={summary.quotas?.translate.usedChars ?? summary.charactersUsed}
+                max={summary.quotas?.translate.quotaChars ?? summary.characterQuota}
+                unit="chars"
+              />
+              <UsageMeter
+                label="Chat & Agent tokens"
+                value={summary.quotas?.chat.usedTokens ?? 0}
+                max={summary.quotas?.chat.quotaTokens ?? 500000}
+                unit="tokens"
               />
               <StatusRing
                 status={
@@ -373,6 +443,56 @@ export function BillingClient() {
                 </article>
               );
             })}
+          </div>
+
+          {/* Quota Top-Ups Refill Section */}
+          <div className="vl-endpoint-card" style={{ display: 'grid', gap: '1rem' }}>
+            <div>
+              <h2 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--brand-navy)' }}>
+                Quota Top-Ups (Buy More Pay-As-You-Go)
+              </h2>
+              <p style={{ color: 'var(--muted)', fontSize: '0.9rem', margin: '0.35rem 0 0' }}>
+                Exhausted your monthly plan limits? Purchase additional token or character packs instantly.
+                Top-up credits never expire and apply automatically whenever your base monthly plan quota runs out.
+              </p>
+            </div>
+
+            <div
+              style={{
+                display: 'grid',
+                gap: '1rem',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(14rem, 1fr))',
+              }}
+            >
+              {(summary.availableTopUpPacks ?? []).map((pack) => (
+                <div
+                  key={pack.id}
+                  style={{
+                    border: '1px solid var(--line)',
+                    borderRadius: '8px',
+                    padding: '1rem',
+                    display: 'grid',
+                    gap: '0.5rem',
+                    background: 'var(--card-bg, #fff)',
+                  }}
+                >
+                  <div style={{ fontWeight: 650, fontSize: '0.95rem' }}>{pack.name}</div>
+                  <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.4rem', fontWeight: 700 }}>
+                    {pack.priceLabel}
+                  </div>
+                  <p style={{ color: 'var(--muted)', fontSize: '0.85rem', margin: 0 }}>{pack.blurb}</p>
+                  <button
+                    type="button"
+                    className="vl-btn vl-btn-primary"
+                    style={{ marginTop: '0.5rem' }}
+                    disabled={busy || usingLocalBilling}
+                    onClick={() => void buyTopUp(pack.id)}
+                  >
+                    Buy Top-Up Pack
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className="vl-endpoint-card">

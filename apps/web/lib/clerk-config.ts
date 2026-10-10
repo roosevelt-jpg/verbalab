@@ -7,14 +7,14 @@ export function isClerkConfigured() {
  * In production Clerk environments, Social Connections (Google) are configured in the
  * Clerk Dashboard using Google Cloud OAuth Client ID & Secret.
  *
- * If NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED is explicitly set to 'false' or '0',
- * or if NEXT_PUBLIC_CLERK_ENABLE_GOOGLE is set to 'false', social sign-in can be hidden
- * to prevent broken Google OAuth 400 invalid_request (missing client_id).
+ * Requirements: Hide Google if NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED=false or unconfigured.
  */
 export function isClerkGoogleOAuthEnabled(): boolean {
+  const envVal = process.env.NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED;
+  if (!envVal || envVal === 'false' || envVal === '0') {
+    return false;
+  }
   if (
-    process.env.NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED === 'false' ||
-    process.env.NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED === '0' ||
     process.env.NEXT_PUBLIC_CLERK_ENABLE_GOOGLE === 'false' ||
     process.env.NEXT_PUBLIC_CLERK_ENABLE_GOOGLE === '0'
   ) {

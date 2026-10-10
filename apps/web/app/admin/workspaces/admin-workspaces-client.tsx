@@ -97,7 +97,23 @@ type AuditRow = {
   actor: { email: string | null; name: string | null } | null;
 };
 
-type Tab = 'directory' | 'analytics' | 'audit' | 'create';
+type AdminPlan = {
+  id: string;
+  name: string;
+  rank: number;
+  characterQuota: number;
+  sttMinutesQuota: number;
+  ttsCharsQuota: number;
+  translateCharsQuota: number;
+  chatTokensQuota: number;
+  ocrPagesQuota: number;
+  workspaceLimit: number;
+  priceMonthlyUsd: number;
+  priceLabel: string;
+  blurb?: string;
+};
+
+type Tab = 'directory' | 'analytics' | 'audit' | 'create' | 'plans';
 
 const PLANS = ['', 'free', 'pro', 'business', 'enterprise'];
 const STATUSES = ['', 'active', 'suspended'];
@@ -146,6 +162,23 @@ export function AdminWorkspacesClient() {
   const [editResidencyCountry, setEditResidencyCountry] = useState('');
   const [editResidencyRegion, setEditResidencyRegion] = useState('');
   const [editRegisteredFrom, setEditRegisteredFrom] = useState('');
+  const [plansList, setPlansList] = useState<AdminPlan[]>([]);
+  const [editingPlan, setEditingPlan] = useState<AdminPlan | null>(null);
+  const [newPlanForm, setNewPlanForm] = useState({
+    id: '',
+    name: '',
+    rank: 1,
+    characterQuota: 2000000,
+    sttMinutesQuota: 300,
+    ttsCharsQuota: 2000000,
+    translateCharsQuota: 2000000,
+    chatTokensQuota: 1000000,
+    ocrPagesQuota: 500,
+    workspaceLimit: 1,
+    priceMonthlyUsd: 99,
+    priceLabel: '$99',
+    blurb: '',
+  });
 
   const tokenFn = useCallback(async () => {
     const token = await getToken();
@@ -202,6 +235,12 @@ export function AdminWorkspacesClient() {
         .then((token) => apiFetch<AuditRow[]>('/v1/admin/workspaces/audit?limit=80', { token }))
         .then(setAuditRows)
         .catch((e) => setError(softFailMessage(e, 'Audit load failed')));
+    }
+    if (tab === 'plans') {
+      void tokenFn()
+        .then((token) => apiFetch<AdminPlan[]>('/v1/admin/plans', { token }))
+        .then(setPlansList)
+        .catch((e) => setError(softFailMessage(e, 'Plans load failed')));
     }
   }, [isAdmin, tab, loadList, tokenFn]);
 
@@ -359,6 +398,7 @@ export function AdminWorkspacesClient() {
               {(
                 [
                   ['directory', 'Directory'],
+                  ['plans', 'Plan catalog'],
                   ['analytics', 'Usage analytics'],
                   ['audit', 'Audit log'],
                   ['create', 'Create workspace'],
@@ -603,6 +643,202 @@ export function AdminWorkspacesClient() {
                   )}
                 </section>
               </div>
+            ) : null}
+
+            {tab === 'plans' ? (
+              <section className="vl-panel" style={{ padding: '1.25rem', display: 'grid', gap: '1.5rem' }}>
+                <div>
+                  <h2 style={{ margin: 0, fontSize: '1.3rem', color: 'var(--brand-navy)' }}>
+                    Platform Plan Catalog & Product Quotas
+                  </h2>
+                  <p style={{ color: 'var(--muted)', fontSize: '0.9rem', margin: '0.4rem 0 0' }}>
+                    Configure per-product limits (TTS characters, STT minutes, translation characters, chat tokens) for each plan,
+                    or add custom client enterprise plans.
+                  </p>
+                </div>
+
+                <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fit, minmax(18rem, 1fr))' }}>
+                  {plansList.map((p) => (
+                    <div
+                      key={p.id}
+                      style={{
+                        border: '1px solid var(--line)',
+                        borderRadius: '8px',
+                        padding: '1rem',
+                        display: 'grid',
+                        gap: '0.5rem',
+                        background: 'var(--card-bg, #fff)',
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>{p.name}</span>
+                        <span className="vl-code" style={{ fontSize: '0.8rem' }}>{p.id}</span>
+                      </div>
+                      <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', fontWeight: 700 }}>
+                        {p.priceLabel}
+                      </div>
+                      <p style={{ color: 'var(--muted)', fontSize: '0.85rem', margin: 0 }}>{p.blurb}</p>
+                      <div style={{ fontSize: '0.85rem', display: 'grid', gap: '0.25rem', marginTop: '0.5rem' }}>
+                        <div><strong>TTS Chars:</strong> {p.ttsCharsQuota?.toLocaleString()}</div>
+                        <div><strong>STT Minutes:</strong> {p.sttMinutesQuota?.toLocaleString()} mins</div>
+                        <div><strong>Translate Chars:</strong> {p.translateCharsQuota?.toLocaleString()}</div>
+                        <div><strong>Chat Tokens:</strong> {p.chatTokensQuota?.toLocaleString()}</div>
+                        <div><strong>Workspaces:</strong> {p.workspaceLimit < 0 ? 'Unlimited' : p.workspaceLimit}</div>
+                      </div>
+                      <button
+                        type="button"
+                        className="vl-btn"
+                        style={{ marginTop: '0.5rem' }}
+                        onClick={() => setEditingPlan({ ...p })}
+                      >
+                        Edit Plan Quotas
+                      </button>
+                    </div>
+                  ))}
+                </div>
+
+                {editingPlan ? (
+                  <div style={{ borderTop: '2px solid var(--line)', paddingTop: '1.25rem', display: 'grid', gap: '0.75rem' }}>
+                    <h3 style={{ margin: 0 }}>Edit Plan: {editingPlan.name} ({editingPlan.id})</h3>
+                    <div style={{ display: 'grid', gap: '0.75rem', gridTemplateColumns: 'repeat(auto-fit, minmax(12rem, 1fr))' }}>
+                      <label>
+                        Name
+                        <input className="vl-input" value={editingPlan.name} onChange={(e) => setEditingPlan({ ...editingPlan, name: e.target.value })} />
+                      </label>
+                      <label>
+                        Price Label
+                        <input className="vl-input" value={editingPlan.priceLabel} onChange={(e) => setEditingPlan({ ...editingPlan, priceLabel: e.target.value })} />
+                      </label>
+                      <label>
+                        Monthly USD
+                        <input className="vl-input" type="number" value={editingPlan.priceMonthlyUsd ?? 0} onChange={(e) => setEditingPlan({ ...editingPlan, priceMonthlyUsd: Number(e.target.value) })} />
+                      </label>
+                      <label>
+                        TTS Chars Quota
+                        <input className="vl-input" type="number" value={editingPlan.ttsCharsQuota ?? 0} onChange={(e) => setEditingPlan({ ...editingPlan, ttsCharsQuota: Number(e.target.value) })} />
+                      </label>
+                      <label>
+                        STT Minutes Quota
+                        <input className="vl-input" type="number" value={editingPlan.sttMinutesQuota ?? 0} onChange={(e) => setEditingPlan({ ...editingPlan, sttMinutesQuota: Number(e.target.value) })} />
+                      </label>
+                      <label>
+                        Translate Chars Quota
+                        <input className="vl-input" type="number" value={editingPlan.translateCharsQuota ?? 0} onChange={(e) => setEditingPlan({ ...editingPlan, translateCharsQuota: Number(e.target.value) })} />
+                      </label>
+                      <label>
+                        Chat Tokens Quota
+                        <input className="vl-input" type="number" value={editingPlan.chatTokensQuota ?? 0} onChange={(e) => setEditingPlan({ ...editingPlan, chatTokensQuota: Number(e.target.value) })} />
+                      </label>
+                    </div>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <button
+                        type="button"
+                        className="vl-btn vl-btn-primary"
+                        disabled={busy}
+                        onClick={() => void (async () => {
+                          setBusy(true);
+                          try {
+                            const token = await tokenFn();
+                            await apiFetch(`/v1/admin/plans/${editingPlan.id}`, {
+                              method: 'PATCH',
+                              token,
+                              body: JSON.stringify(editingPlan),
+                            });
+                            setMessage(`Updated plan ${editingPlan.id}`);
+                            setEditingPlan(null);
+                            const updated = await apiFetch<AdminPlan[]>('/v1/admin/plans', { token });
+                            setPlansList(updated);
+                          } catch (err) {
+                            setError(softFailMessage(err, 'Plan update failed'));
+                          } finally {
+                            setBusy(false);
+                          }
+                        })()}
+                      >
+                        Save Quotas
+                      </button>
+                      <button type="button" className="vl-btn" onClick={() => setEditingPlan(null)}>
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : null}
+
+                <div style={{ borderTop: '2px solid var(--line)', paddingTop: '1.25rem' }}>
+                  <h3>Create New Plan</h3>
+                  <div style={{ display: 'grid', gap: '0.75rem', gridTemplateColumns: 'repeat(auto-fit, minmax(12rem, 1fr))' }}>
+                    <label>
+                      Plan Slug (ID)
+                      <input className="vl-input" placeholder="e.g. enterprise-plus" value={newPlanForm.id} onChange={(e) => setNewPlanForm({ ...newPlanForm, id: e.target.value })} />
+                    </label>
+                    <label>
+                      Name
+                      <input className="vl-input" placeholder="e.g. Enterprise Plus" value={newPlanForm.name} onChange={(e) => setNewPlanForm({ ...newPlanForm, name: e.target.value })} />
+                    </label>
+                    <label>
+                      Price Label
+                      <input className="vl-input" placeholder="$499" value={newPlanForm.priceLabel} onChange={(e) => setNewPlanForm({ ...newPlanForm, priceLabel: e.target.value })} />
+                    </label>
+                    <label>
+                      TTS Chars Quota
+                      <input className="vl-input" type="number" value={newPlanForm.ttsCharsQuota} onChange={(e) => setNewPlanForm({ ...newPlanForm, ttsCharsQuota: Number(e.target.value) })} />
+                    </label>
+                    <label>
+                      STT Minutes Quota
+                      <input className="vl-input" type="number" value={newPlanForm.sttMinutesQuota} onChange={(e) => setNewPlanForm({ ...newPlanForm, sttMinutesQuota: Number(e.target.value) })} />
+                    </label>
+                    <label>
+                      Translate Chars Quota
+                      <input className="vl-input" type="number" value={newPlanForm.translateCharsQuota} onChange={(e) => setNewPlanForm({ ...newPlanForm, translateCharsQuota: Number(e.target.value) })} />
+                    </label>
+                    <label>
+                      Chat Tokens Quota
+                      <input className="vl-input" type="number" value={newPlanForm.chatTokensQuota} onChange={(e) => setNewPlanForm({ ...newPlanForm, chatTokensQuota: Number(e.target.value) })} />
+                    </label>
+                  </div>
+                  <button
+                    type="button"
+                    className="vl-btn vl-btn-primary"
+                    style={{ marginTop: '0.75rem' }}
+                    disabled={busy || !newPlanForm.id.trim() || !newPlanForm.name.trim()}
+                    onClick={() => void (async () => {
+                      setBusy(true);
+                      try {
+                        const token = await tokenFn();
+                        await apiFetch('/v1/admin/plans', {
+                          method: 'POST',
+                          token,
+                          body: JSON.stringify(newPlanForm),
+                        });
+                        setMessage(`Created plan ${newPlanForm.id}`);
+                        setNewPlanForm({
+                          id: '',
+                          name: '',
+                          rank: 1,
+                          characterQuota: 2000000,
+                          sttMinutesQuota: 300,
+                          ttsCharsQuota: 2000000,
+                          translateCharsQuota: 2000000,
+                          chatTokensQuota: 1000000,
+                          ocrPagesQuota: 500,
+                          workspaceLimit: 1,
+                          priceMonthlyUsd: 99,
+                          priceLabel: '$99',
+                          blurb: '',
+                        });
+                        const updated = await apiFetch<AdminPlan[]>('/v1/admin/plans', { token });
+                        setPlansList(updated);
+                      } catch (err) {
+                        setError(softFailMessage(err, 'Create plan failed'));
+                      } finally {
+                        setBusy(false);
+                      }
+                    })()}
+                  >
+                    Create Plan
+                  </button>
+                </div>
+              </section>
             ) : null}
 
             {tab === 'analytics' ? (

@@ -4,6 +4,7 @@ import { UsageService } from '../usage/usage.service';
 import { AuditService } from '../audit/audit.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { AudioService } from '../audio/audio.service';
+import { BillingService } from '../billing/billing.service';
 import { ApiException } from '../common/errors/api-exception';
 import type { SttSegment } from '../gateway/stt-provider';
 import { speechEngineCatalog } from './speech-engine.catalog';
@@ -58,6 +59,7 @@ export class SpeechRecognitionService {
     private readonly audit: AuditService,
     private readonly prisma: PrismaService,
     private readonly audio: AudioService,
+    private readonly billing: BillingService,
   ) {}
 
   engine() {
@@ -208,6 +210,8 @@ export class SpeechRecognitionService {
       input.detectLanguage === false && !input.language
         ? undefined
         : input.language?.trim() || undefined;
+
+    await this.billing.assertProductQuota(input.organizationId, 'stt', 60);
 
     const result = await this.gateway.transcribe({
       buffer: input.file.buffer,

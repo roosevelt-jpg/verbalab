@@ -43,7 +43,88 @@ export class AdminController {
   @Get('plans')
   @UseGuards(PlatformAdminGuard)
   plans() {
-    return this.admin.listPlanFilters();
+    return this.admin.listPlans();
+  }
+
+  @Post('plans')
+  @UseGuards(PlatformAdminGuard)
+  createPlan(
+    @CurrentSession() session: SessionContext,
+    @Req() req: Request,
+    @Body()
+    body: {
+      id: string;
+      name: string;
+      rank?: number;
+      characterQuota?: number;
+      sttMinutesQuota?: number;
+      ttsCharsQuota?: number;
+      translateCharsQuota?: number;
+      chatTokensQuota?: number;
+      ocrPagesQuota?: number;
+      workspaceLimit?: number;
+      priceMonthlyUsd?: number | null;
+      priceLabel?: string;
+      blurb?: string;
+      features?: string[];
+    },
+  ) {
+    return this.admin.createPlan({
+      ...body,
+      features: body.features as any,
+      actorUserId: session.userId,
+      ip: clientIp(req),
+    });
+  }
+
+  @Patch('plans/:id')
+  @UseGuards(PlatformAdminGuard)
+  updatePlan(
+    @Param('id') id: string,
+    @CurrentSession() session: SessionContext,
+    @Req() req: Request,
+    @Body()
+    body: {
+      name?: string;
+      rank?: number;
+      characterQuota?: number;
+      sttMinutesQuota?: number;
+      ttsCharsQuota?: number;
+      translateCharsQuota?: number;
+      chatTokensQuota?: number;
+      ocrPagesQuota?: number;
+      workspaceLimit?: number;
+      priceMonthlyUsd?: number | null;
+      priceLabel?: string;
+      blurb?: string;
+      features?: string[];
+      active?: boolean;
+    },
+  ) {
+    return this.admin.updatePlan(id, body as any, session.userId, clientIp(req));
+  }
+
+  @Post('workspaces/:id/plan')
+  @UseGuards(PlatformAdminGuard)
+  assignPlan(
+    @Param('id') id: string,
+    @CurrentSession() session: SessionContext,
+    @Req() req: Request,
+    @Body()
+    body: {
+      planId: string;
+      characterQuota?: number;
+      billingStatus?: string;
+    },
+  ) {
+    return this.admin.assignPlan({
+      organizationId: id,
+      planId: body.planId,
+      characterQuota: body.characterQuota,
+      billingStatus: body.billingStatus,
+      actorUserId: session.userId,
+      ip: clientIp(req),
+    });
   }
 
   @Get('workspaces')
