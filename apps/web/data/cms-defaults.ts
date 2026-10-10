@@ -74,6 +74,7 @@ export const CMS_DEFAULTS: CmsDocument = {
         ],
       },
       { label: 'Baobab', href: '/baobab' },
+      { label: 'Coverage', href: '/coverage' },
       { label: 'Research', href: '/p/research' },
       { label: 'Safety', href: '/p/safety' },
       { label: 'Pricing', href: '/pricing' },
