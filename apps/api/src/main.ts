@@ -81,6 +81,8 @@ async function bootstrap() {
       'X-Lugemi-Organization-Id',
       'X-Request-Id',
       'X-Api-Key',
+      'X-DealBridge-Actor-Id',
+      'X-VoiceBridge-Actor-Id',
     ],
   });
 
