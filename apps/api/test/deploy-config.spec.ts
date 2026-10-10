@@ -27,6 +27,8 @@ describe('Production deploy config', () => {
     expect(yml).toContain('roosevelt-jpg/verbalab');
     expect(yml).toContain('Verify token can manage API + web apps');
     expect(yml).toContain('Smoke production health + /coverage');
+    expect(yml).toContain('Language coverage');
+    expect(yml).toContain('/v1/billing/plans');
     expect(yml).toContain('infra/fly/api.jnb.toml');
     expect(yml).toContain('infra/fly/web.jnb.toml');
     expect(yml).toContain('superfly/flyctl-actions/setup-flyctl@master');
