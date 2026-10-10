@@ -26,6 +26,12 @@ test.describe('Public console surfaces', () => {
     await expect(page.getByRole('heading', { name: /coverage/i })).toBeVisible();
   });
 
+  test('coverage typo redirects to /coverage', async ({ page }) => {
+    await page.goto('/coveareg');
+    await expect(page).toHaveURL(/\/coverage/);
+    await expect(page.getByRole('heading', { name: /coverage/i })).toBeVisible();
+  });
+
   test('web health endpoint is ok', async ({ request }) => {
     const res = await request.get('/health');
     expect(res.ok()).toBeTruthy();

@@ -60,6 +60,25 @@ const nextConfig = {
     ];
     return config;
   },
+  async redirects() {
+    return [
+      {
+        source: '/coveareg',
+        destination: '/coverage',
+        permanent: false,
+      },
+      {
+        source: '/languages',
+        destination: '/coverage',
+        permanent: false,
+      },
+      {
+        source: '/language-coverage',
+        destination: '/coverage',
+        permanent: false,
+      },
+    ];
+  },
   async headers() {
     return [
       {
