@@ -2893,3 +2893,370 @@ textarea.vl-field {
     transform: none;
   }
 }
+
+/* ============================================================
+   Platform responsiveness — console + shared surfaces
+   Breakpoints: 480 / 720 / 960 (aligned with marketing 800/980)
+   ============================================================ */
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  overflow-x: clip;
+}
+
+.vl-console,
+.vl-console-main,
+.lg-page,
+.lg-card,
+.lg-feature,
+.lg-stat {
+  min-width: 0;
+}
+
+img,
+video,
+canvas,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.vl-player-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.vl-player-bar > * {
+  min-width: 0;
+}
+
+.vl-console-header {
+  flex-wrap: wrap;
+  row-gap: 0.5rem;
+  padding-left: max(0.85rem, env(safe-area-inset-left));
+  padding-right: max(0.85rem, env(safe-area-inset-right));
+}
+
+.vl-console-header-left,
+.vl-console-header-right {
+  flex-wrap: wrap;
+  min-width: 0;
+}
+
+.vl-console-main {
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+  padding-bottom: max(3rem, env(safe-area-inset-bottom));
+}
+
+.vl-console-sidebar {
+  padding-bottom: max(2rem, env(safe-area-inset-bottom));
+}
+
+.lg-page-header__actions {
+  width: 100%;
+}
+
+.lg-page-header__actions .vl-btn,
+.lg-page-header__actions form {
+  flex: 0 1 auto;
+}
+
+.lg-hub-catalog {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+}
+
+@media (max-width: 959px) {
+  .vl-console-main {
+    max-width: none;
+    padding-top: 1.25rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .lg-page {
+    gap: var(--space-5);
+  }
+
+  .lg-type-page {
+    font-size: clamp(1.55rem, 5.5vw, 2rem);
+  }
+
+  .lg-type-section {
+    font-size: clamp(1.2rem, 4vw, 1.45rem);
+  }
+
+  .lg-card,
+  .lg-feature {
+    padding: 1.1rem 1.05rem;
+  }
+
+  .lg-stat {
+    min-height: 5.75rem;
+    padding: 0.95rem 1rem;
+  }
+
+  .lg-stat__value {
+    font-size: clamp(1.35rem, 5vw, 1.75rem);
+  }
+
+  /* Stack labeled field rows inside cards / player bars */
+  .vl-field-label {
+    width: 100%;
+  }
+}
+
+@media (max-width: 719px) {
+  .vl-console-header {
+    min-height: 3.25rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .vl-console-body {
+    min-height: calc(100vh - 3.25rem);
+  }
+
+  .vl-console-sidebar {
+    top: 3.25rem;
+    width: min(18rem, 92vw);
+  }
+
+  .vl-console-backdrop {
+    inset: 3.25rem 0 0 0;
+  }
+
+  .vl-console-main {
+    padding: 1rem max(0.85rem, env(safe-area-inset-right)) 3.25rem max(0.85rem, env(safe-area-inset-left));
+  }
+
+  .lg-grid-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .lg-hub-hero {
+    gap: 1rem;
+  }
+
+  .lg-page-header__actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .lg-page-header__actions .vl-btn,
+  .lg-page-header__actions form,
+  .lg-page-header__actions a.vl-btn {
+    width: 100%;
+  }
+
+  .lg-page-header__actions .vl-btn {
+    justify-content: center;
+  }
+
+  .vl-player-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .vl-player-bar .vl-btn {
+    width: 100%;
+  }
+
+  .lg-card__footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .lg-card__footer .vl-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Inline flex field + button rows (AccessLine etc.) */
+  .lg-card .vl-field-label > div {
+    flex-direction: column;
+  }
+
+  .lg-card .vl-field-label > div .vl-btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 479px) {
+  .lg-grid-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .lg-hub-catalog {
+    grid-template-columns: 1fr;
+  }
+
+  .vl-btn {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .lg-type-hero {
+    font-size: clamp(1.75rem, 8vw, 2.25rem);
+  }
+}
+
+/* Tables / wide panels: scroll instead of blowing the viewport */
+.vl-code-panel,
+.vl-endpoint-card,
+.lg-admin-table-wrap,
+table.vl-table {
+  max-width: 100%;
+}
+
+.vl-code-panel {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+@media (max-width: 719px) {
+  .vl-console-public-links a {
+    font-size: 0.8rem;
+  }
+
+  .vl-console-header-right .vl-btn {
+    min-height: 40px;
+    padding: 0.45rem 0.85rem;
+  }
+
+  .vl-workspace-switcher__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .vl-workspace-switcher__select {
+    max-width: min(8.5rem, 36vw);
+  }
+
+  .lg-chat-history.is-open,
+  .lg-chat-library-backdrop {
+    top: 3.25rem;
+  }
+
+  .vl-console-header-right .vl-btn-secondary {
+    padding-left: 0.7rem;
+    padding-right: 0.7rem;
+  }
+}
+
+/* Workspace switcher (console header) */
+.vl-workspace-switcher {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+  flex-shrink: 1;
+}
+
+.vl-workspace-switcher__label {
+  font-size: 0.75rem;
+  color: var(--muted);
+  flex-shrink: 0;
+}
+
+.vl-workspace-switcher__select {
+  font-size: 0.85rem;
+  padding: 0.35rem 0.55rem;
+  border-radius: 0.4rem;
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  max-width: 10rem;
+  min-width: 0;
+}
+
+.vl-workspace-switcher__add {
+  font-size: 0.85rem;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.4rem;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.vl-workspace-switcher__add:disabled {
+  cursor: wait;
+}
+
+.vl-workspace-switcher__add[data-at-limit='true'] {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.vl-workspace-switcher__upgrade {
+  font-size: 0.7rem;
+  color: var(--action-primary);
+  font-weight: 600;
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+/* Forms / panels never force horizontal scroll */
+input.vl-field,
+select.vl-field,
+textarea.vl-field,
+.vl-field {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.vl-panel,
+.vl-endpoint-card,
+.lg-card,
+.lg-feature {
+  overflow-wrap: anywhere;
+}
+
+.lg-admin-table-wrap,
+.vl-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table.vl-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+@media (max-width: 479px) {
+  .vl-console-header-right {
+    gap: 0.45rem;
+  }
+
+  .vl-workspace-switcher__upgrade {
+    display: none;
+  }
+
+  .lg-admin-hero-links {
+    width: 100%;
+  }
+
+  .lg-admin-hero-links .vl-btn {
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .lg-admin-stat-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}

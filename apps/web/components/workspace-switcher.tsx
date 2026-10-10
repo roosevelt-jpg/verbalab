@@ -109,23 +109,16 @@ function WorkspaceSwitcherAuthed() {
     : null;
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-      <label htmlFor="vl-workspace" style={{ fontSize: '0.75rem', color: 'var(--muted)' }}>
+    <div className="vl-workspace-switcher">
+      <label htmlFor="vl-workspace" className="vl-workspace-switcher__label">
         Workspace
       </label>
       <select
         id="vl-workspace"
+        className="vl-workspace-switcher__select"
         value={selected}
         onChange={(e) => void onChange(e.target.value)}
-        style={{
-          fontSize: '0.85rem',
-          padding: '0.35rem 0.55rem',
-          borderRadius: '0.4rem',
-          border: '1px solid var(--line)',
-          background: 'var(--bg)',
-          color: 'var(--ink)',
-          maxWidth: '10rem',
-        }}
+        aria-label="Workspace"
       >
         {workspaces.map((w) => (
           <option key={w.id} value={w.id}>
@@ -135,8 +128,10 @@ function WorkspaceSwitcherAuthed() {
       </select>
       <button
         type="button"
+        className="vl-workspace-switcher__add"
         onClick={() => void createWorkspace()}
         disabled={creating}
+        aria-label="Create workspace"
         title={
           atLimit
             ? `Plan limit reached (${limitHint}). Upgrade for more workspaces.`
@@ -144,24 +139,12 @@ function WorkspaceSwitcherAuthed() {
               ? `Create workspace (${limitHint})`
               : 'Create workspace'
         }
-        style={{
-          fontSize: '0.85rem',
-          padding: '0.3rem 0.5rem',
-          borderRadius: '0.4rem',
-          border: '1px solid var(--line)',
-          background: 'transparent',
-          color: atLimit ? 'var(--muted)' : 'var(--muted)',
-          cursor: creating ? 'wait' : atLimit ? 'not-allowed' : 'pointer',
-          opacity: atLimit ? 0.55 : 1,
-        }}
+        data-at-limit={atLimit ? 'true' : undefined}
       >
         +
       </button>
       {atLimit && !platformAdmin ? (
-        <Link
-          href="/pricing"
-          style={{ fontSize: '0.7rem', color: 'var(--action-primary)', fontWeight: 600, whiteSpace: 'nowrap' }}
-        >
+        <Link href="/pricing" className="vl-workspace-switcher__upgrade">
           Upgrade
         </Link>
       ) : null}

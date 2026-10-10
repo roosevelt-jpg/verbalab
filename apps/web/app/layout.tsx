@@ -1,5 +1,5 @@
 import { ClerkProvider } from '@clerk/nextjs';
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { headers } from 'next/headers';
 import { Noto_Sans, Noto_Sans_Mono } from 'next/font/google';
 import './globals.css';
@@ -10,6 +10,12 @@ import { mustUseLiveClerkLocalOrigin } from '@/lib/live-clerk-local-origin';
 import { LiveKeyOriginGate } from '@/components/live-key-origin-gate';
 import { SentryInit } from '@/components/sentry-init';
 import { SupportChatWidget } from '@/components/support/support-chat';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+};
 
 const noto = Noto_Sans({
   subsets: ['latin', 'latin-ext', 'cyrillic'],

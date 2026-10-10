@@ -1480,7 +1480,8 @@
 
 @media (max-width: 640px) {
   .lg-creative-content {
-    padding: 1rem 0.85rem 2rem;
+    padding: 1rem max(0.85rem, env(safe-area-inset-right)) max(2rem, env(safe-area-inset-bottom))
+      max(0.85rem, env(safe-area-inset-left));
   }
 
   .lg-creative-hero {
@@ -1490,6 +1491,28 @@
   .lg-creative-sfx-row {
     grid-template-columns: auto 1fr;
     gap: 0.45rem;
+  }
+
+  .lg-creative-top {
+    padding-left: max(0.65rem, env(safe-area-inset-left));
+    padding-right: max(0.65rem, env(safe-area-inset-right));
+  }
+
+  .lg-creative-banner {
+    padding-left: max(0.75rem, env(safe-area-inset-left));
+    padding-right: max(0.75rem, env(safe-area-inset-right));
+    font-size: 0.82rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .lg-creative-quick {
+    grid-template-columns: 1fr;
+  }
+
+  .lg-creative-promo,
+  .lg-creative-palette-panel {
+    padding: 1rem;
   }
 }
 
