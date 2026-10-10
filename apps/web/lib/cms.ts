@@ -1,9 +1,21 @@
 import { promises as fs } from 'fs';
 import path from 'path';
 import { CMS_DEFAULTS } from '@/data/cms-defaults';
-import type { CmsDocument, CmsPage } from '@/data/cms-types';
+import type { CmsDocument, CmsNavLink, CmsPage } from '@/data/cms-types';
 
 const STORE_PATH = path.join(process.cwd(), 'data', 'cms-store.json');
+
+/** Footer destinations must not also appear as top-level (or nested) header links. */
+const FOOTER_ONLY_HEADER_HREFS = new Set([
+  '/pricing',
+  '/docs',
+  '/docs/api',
+  '/docs/mcp',
+  '/baobab',
+  '/p/safety',
+  '/enterprise',
+  '/coverage',
+]);
 
 function deepMerge<T>(base: T, override: unknown): T {
   if (override === null || override === undefined) return base;
@@ -22,6 +34,50 @@ function deepMerge<T>(base: T, override: unknown): T {
   return result as T;
 }
 
+function normalizeNavHref(href: string | undefined): string {
+  if (!href) return '';
+  const trimmed = href.trim();
+  if (!trimmed || trimmed === '#') return '';
+  try {
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+      return new URL(trimmed).pathname.replace(/\/$/, '') || '/';
+    }
+  } catch {
+    /* keep path as-is */
+  }
+  return trimmed.replace(/\/$/, '') || '/';
+}
+
+function stripFooterLinksFromHeaderNav(links: CmsNavLink[]): CmsNavLink[] {
+  return links
+    .map((item) => {
+      const children = item.children?.length
+        ? stripFooterLinksFromHeaderNav(item.children)
+        : undefined;
+      return {
+        ...item,
+        children: children?.length ? children : undefined,
+      };
+    })
+    .filter((item) => {
+      const href = normalizeNavHref(item.href);
+      if (href && FOOTER_ONLY_HEADER_HREFS.has(href)) return false;
+      // Drop empty mega parents that only existed to host footer-only children.
+      if (!href && !(item.children && item.children.length > 0)) return false;
+      return true;
+    });
+}
+
+function withHeaderFooterDedup(doc: CmsDocument): CmsDocument {
+  return {
+    ...doc,
+    nav: {
+      ...doc.nav,
+      centerLinks: stripFooterLinksFromHeaderNav(doc.nav.centerLinks ?? []),
+    },
+  };
+}
+
 async function readStore(): Promise<Partial<CmsDocument> | null> {
   try {
     const raw = await fs.readFile(STORE_PATH, 'utf8');
@@ -33,16 +89,18 @@ async function readStore(): Promise<Partial<CmsDocument> | null> {
 
 export async function getCmsDocument(): Promise<CmsDocument> {
   const stored = await readStore();
-  if (!stored) return structuredClone(CMS_DEFAULTS);
-  return deepMerge(structuredClone(CMS_DEFAULTS), stored);
+  const merged = stored
+    ? deepMerge(structuredClone(CMS_DEFAULTS), stored)
+    : structuredClone(CMS_DEFAULTS);
+  return withHeaderFooterDedup(merged);
 }
 
 export async function saveCmsDocument(doc: CmsDocument): Promise<CmsDocument> {
-  const next: CmsDocument = {
+  const next = withHeaderFooterDedup({
     ...doc,
     version: typeof doc.version === 'number' ? doc.version : 1,
     updatedAt: new Date().toISOString(),
-  };
+  });
   await fs.mkdir(path.dirname(STORE_PATH), { recursive: true });
   await fs.writeFile(STORE_PATH, JSON.stringify(next, null, 2), 'utf8');
   return next;

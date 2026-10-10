@@ -37,7 +37,6 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/data', label: 'Data & branding' },
       { href: '/connectors', label: 'Connectors' },
       { href: '/billing', label: 'Billing' },
-      { href: '/pricing', label: 'Pricing' },
     ],
   },
   {
@@ -87,7 +86,6 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/accent-identity', label: 'Accent Identity' },
       { href: '/accent-intelligence', label: 'Accent Intelligence' },
       { href: '/african-language-registry', label: 'Language registry' },
-      { href: '/coverage', label: 'Coverage' },
       { href: '/locales', label: 'Locales' },
     ],
   },
@@ -144,8 +142,7 @@ const NAV_GROUPS: NavGroup[] = [
 ];
 
 const PUBLIC_LINKS: NavLink[] = [
-  { href: '/docs', label: 'Docs' },
-  { href: '/pricing', label: 'Pricing' },
+  // Docs/Pricing live in the marketing footer — keep the public shell header lean.
   { href: '/developers', label: 'Developers' },
 ];
 

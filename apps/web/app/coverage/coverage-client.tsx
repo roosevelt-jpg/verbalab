@@ -1,8 +1,6 @@
 'use client';
 
-import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
-import { BrandMark } from '@/components/brand-mark';
 import { AnamorphicPanel } from '@/components/media/anamorphic-panel';
 import {
   AFRICA_LANGUAGE_CATALOG,
@@ -128,19 +126,7 @@ export function CoverageClient() {
 
   return (
     <div className="vl-fade-up" style={{ maxWidth: '56rem', margin: '0 auto', padding: '2.25rem 1.5rem 4rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '1rem' }}>
-        <BrandMark />
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-          <Link href="/docs" style={{ color: 'var(--muted)', textDecoration: 'none' }}>
-            Docs
-          </Link>
-          <Link href="/playground" style={{ color: 'var(--muted)', textDecoration: 'none' }}>
-            Playground
-          </Link>
-        </div>
-      </div>
-
-      <div className="lg-hub-hero" style={{ marginTop: '1.75rem' }}>
+      <div className="lg-hub-hero">
         <div>
           <h1 style={{ margin: 0, fontFamily: 'var(--font-ui)', letterSpacing: '-0.03em', fontSize: '2.35rem' }}>
             Language coverage
