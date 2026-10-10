@@ -212,5 +212,19 @@ describe('VoiceBridge HTTP', () => {
     const frMsg = frView.body.messages.find((m: { id: string }) => m.id === draft.body.messageId);
     expect(frMsg.activeRevision.reviewedTranscript).toContain('15 bags');
     expect(frMsg.myVariant.targetLanguage).toBe('fr');
+
+    const activeId = correctedMsg.activeRevisionId as string;
+    const handoff = await request(app.getHttpServer())
+      .post(`/v1/voicebridge/threads/${threadId}/deal-drafts`)
+      .set(auth('vb-author'))
+      .send({
+        selectedRevisionIds: [activeId],
+        partyAUserId: 'vb-author',
+        partyBUserId: 'vb-fr',
+        category: 'wholesale_rice',
+      })
+      .expect(201);
+    expect(handoff.body.dealSessionId).toBeTruthy();
+    expect(handoff.body.note).toMatch(/draft/i);
   });
 });

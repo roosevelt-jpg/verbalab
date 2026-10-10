@@ -302,6 +302,7 @@ export class IdentityService {
     if (!org || org.plan === 'enterprise') return;
 
     const plan = PLANS.enterprise;
+    if (!plan) return;
     await this.prisma.organization.update({
       where: { id: organizationId },
       data: {
