@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useAuth } from '@clerk/nextjs';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { API_URL, apiFetch } from '@/lib/api';
 import { CreativeShell } from '@/components/creative/creative-shell';
 import { CreativeIcon } from '@/components/creative/creative-icons';
@@ -14,6 +14,16 @@ import {
   type CulturalIdentityPack,
 } from '@/components/cultural-identity-select';
 import { loadTtsHistory, pushTtsHistory, type TtsHistoryItem } from '@/lib/creative-tts-history';
+import { loadCreativeAssets, saveCreativeAssets, type CreativeAsset } from '@/lib/creative-assets';
+import {
+  blobToDataUrl,
+  createVideoProject,
+  downloadDataUrl,
+  slugifyFilename,
+  upsertVideoProject,
+} from '@/lib/creative-video-project';
+import { isLugemiApiKey, loadCreativeApiKey } from '@/lib/creative-auth';
+import { CreativeApiKeyField } from '@/components/creative/creative-api-key-field';
 
 type Voice = {
   id: string;
@@ -48,6 +58,7 @@ function CreativeTtsClientAuthed() {
 function CreativeTtsClientInner({ getToken, isLoaded }: { getToken: () => Promise<string | null>; isLoaded: boolean }) {
   // auth via props: getToken, isLoaded
   const search = useSearchParams();
+  const router = useRouter();
   const [voices, setVoices] = useState<Voice[]>([]);
   const [voiceId, setVoiceId] = useState('alloy');
   const [accentId, setAccentId] = useState('');
@@ -60,21 +71,31 @@ function CreativeTtsClientInner({ getToken, isLoaded }: { getToken: () => Promis
   const [sideTab, setSideTab] = useState<'settings' | 'history'>('settings');
   const [history, setHistory] = useState<TtsHistoryItem[]>([]);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
+  const [audioDataUrl, setAudioDataUrl] = useState<string | null>(null);
+  const [apiKey, setApiKey] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
 
   const selected = useMemo(() => voices.find((v) => v.id === voiceId) ?? null, [voices, voiceId]);
 
+  const resolveToken = useCallback(async () => {
+    const session = await getToken();
+    if (session) return session;
+    const key = apiKey || loadCreativeApiKey();
+    if (isLugemiApiKey(key)) return key;
+    return null;
+  }, [apiKey, getToken]);
+
   const load = useCallback(async () => {
-    const token = await getToken();
-    if (!token) throw new Error('Sign in to generate speech with Echo TTS.');
+    const token = await resolveToken();
+    if (!token) throw new Error('Sign in or paste a lg_test_ / lg_live_ API key.');
     const res = await apiFetch<{ data: Voice[] }>('/v1/tts/voices', { token });
     setVoices(res.data);
     if (res.data[0] && !res.data.some((v) => v.id === voiceId)) {
       setVoiceId(res.data[0].id);
     }
-  }, [getToken, voiceId]);
+  }, [resolveToken, voiceId]);
 
   useEffect(() => {
     setHistory(loadTtsHistory());
@@ -83,7 +104,7 @@ function CreativeTtsClientInner({ getToken, isLoaded }: { getToken: () => Promis
   useEffect(() => {
     if (!isLoaded) return;
     void load().catch((err: Error) => setError(err.message));
-  }, [isLoaded, load]);
+  }, [isLoaded, load, apiKey]);
 
   useEffect(() => {
     const seeded = search.get('text');
@@ -97,8 +118,8 @@ function CreativeTtsClientInner({ getToken, isLoaded }: { getToken: () => Promis
     setError(null);
     setNote(null);
     try {
-      const token = await getToken();
-      if (!token) throw new Error('Sign in to generate speech.');
+      const token = await resolveToken();
+      if (!token) throw new Error('Sign in or paste a lg_test_ / lg_live_ API key.');
       const body = {
         text: text.trim(),
         voice: identityPack?.echoVoiceId || voiceId,
@@ -125,7 +146,9 @@ function CreativeTtsClientInner({ getToken, isLoaded }: { getToken: () => Promis
       const blob = await res.blob();
       if (audioUrl) URL.revokeObjectURL(audioUrl);
       const url = URL.createObjectURL(blob);
+      const dataUrl = await blobToDataUrl(blob);
       setAudioUrl(url);
+      setAudioDataUrl(dataUrl);
       const item: TtsHistoryItem = {
         id: `tts_${Date.now()}`,
         text: text.trim().slice(0, 240),
@@ -137,10 +160,24 @@ function CreativeTtsClientInner({ getToken, isLoaded }: { getToken: () => Promis
         audioUrl: url,
       };
       setHistory(pushTtsHistory(item));
+
+      const asset: CreativeAsset = {
+        id: `ca_tts_${Date.now().toString(36)}`,
+        name: `tts-${slugifyFilename(text.trim().slice(0, 32))}.mp3`,
+        kind: 'file',
+        mimeType: blob.type || 'audio/mpeg',
+        sizeBytes: blob.size,
+        parentId: null,
+        createdAt: new Date().toISOString(),
+        previewUrl: dataUrl,
+        notes: 'Generated from Creative Text to Speech',
+      };
+      saveCreativeAssets([asset, ...loadCreativeAssets().filter((a) => a.id !== asset.id)]);
+
       setNote(
         identityPack
-          ? `Generated with Lugemi Echo · ${identityPack.culturalIdentity || identityPack.nameEn} (${identityPack.speechVariety}).`
-          : 'Generated with Lugemi Echo TTS (/v1/tts/synthesize).',
+          ? `Generated with Lugemi Echo · ${identityPack.culturalIdentity || identityPack.nameEn} (${identityPack.speechVariety}). Saved to Assets — download or open in a video project.`
+          : 'Generated with Lugemi Echo TTS. Saved to Assets — download or open in a video project.',
       );
       setSideTab('history');
     } catch (err) {
@@ -148,6 +185,40 @@ function CreativeTtsClientInner({ getToken, isLoaded }: { getToken: () => Promis
     } finally {
       setBusy(false);
     }
+  }
+
+  function downloadAudio() {
+    if (!audioDataUrl) return;
+    downloadDataUrl(audioDataUrl, `${slugifyFilename(text.trim().slice(0, 40) || 'lugemi-speech')}.mp3`);
+    setNote('MP3 downloaded — ready for CapCut, Premiere, DaVinci, or any external video project.');
+  }
+
+  function openInVideoProject() {
+    const project = createVideoProject({
+      title: text.trim().slice(0, 64) || 'TTS video',
+      script: text.trim(),
+      kind: 'video',
+      accentId: accentId || undefined,
+      voiceId: identityPack?.echoVoiceId || voiceId,
+    });
+    if (audioDataUrl) {
+      project.narration = {
+        mimeType: 'audio/mpeg',
+        audioDataUrl,
+        voiceId: identityPack?.echoVoiceId || voiceId,
+        voiceName: selected?.name ?? voiceId,
+        accentId: accentId || undefined,
+        speechVariety: identityPack?.speechVariety,
+        locale: identityPack?.bcp47,
+        characterCount: text.trim().length,
+        generatedAt: new Date().toISOString(),
+      };
+      project.culturalIdentity = identityPack?.culturalIdentity || identityPack?.nameEn;
+      project.speechVariety = identityPack?.speechVariety;
+      project.locale = identityPack?.bcp47;
+    }
+    upsertVideoProject(project);
+    router.push(`/creative/studio/${project.id}`);
   }
 
   return (
@@ -161,6 +232,14 @@ function CreativeTtsClientInner({ getToken, isLoaded }: { getToken: () => Promis
           <Link href="/neural-tts" className="lg-creative-btn">
             Full Neural TTS console
           </Link>
+          <button type="button" className="lg-creative-btn" disabled={!audioDataUrl} onClick={downloadAudio}>
+            <CreativeIcon name="download" width={16} height={16} />
+            Download MP3
+          </button>
+          <button type="button" className="lg-creative-btn" disabled={!text.trim()} onClick={openInVideoProject}>
+            <CreativeIcon name="video" width={16} height={16} />
+            Use in video
+          </button>
           <button type="button" className="lg-creative-btn primary" disabled={busy || !text.trim()} onClick={() => void generate()}>
             {busy ? 'Generating…' : 'Generate'}
           </button>
@@ -225,9 +304,9 @@ function CreativeTtsClientInner({ getToken, isLoaded }: { getToken: () => Promis
 
           {sideTab === 'settings' ? (
             <>
+              <CreativeApiKeyField onChange={setApiKey} />
               <label>
-                Cultural accent / identity
-                <CulturalIdentitySelect
+                Cultural accent / identity                <CulturalIdentitySelect
                   value={accentId}
                   allowEmpty
                   emptyLabel="None — use voice only"

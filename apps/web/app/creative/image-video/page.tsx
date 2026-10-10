@@ -1,21 +1,49 @@
 'use client';
 
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { CreativeShell } from '@/components/creative/creative-shell';
+import { CreativeIcon } from '@/components/creative/creative-icons';
 import {
   CulturalIdentitySelect,
   type CulturalIdentityPack,
 } from '@/components/cultural-identity-select';
+import {
+  createVideoProject,
+  defaultScenesFromScript,
+  upsertVideoProject,
+} from '@/lib/creative-video-project';
 
 /**
- * Image & Video companion surface.
- * Native image/video generation weights are not live; cultural voice sync for
- * narration beds is production-complete via Echo + Accent Identity packs.
+ * Image & Video entry: native-language narration → Studio project → download / WebM export.
+ * Full generative video models remain roadmap; voice + scene composition is fully wired.
  */
 export default function CreativeImageVideoPage() {
+  const router = useRouter();
   const [accentId, setAccentId] = useState('gh-ghanaian-english');
   const [pack, setPack] = useState<CulturalIdentityPack | null>(null);
+  const [title, setTitle] = useState('Product video');
+  const [script, setScript] = useState(
+    'Meet the product built for your market — hear it spoken the way your customers speak.',
+  );
+
+  function startProject(e?: FormEvent) {
+    e?.preventDefault();
+    const project = createVideoProject({
+      title: title.trim() || 'Video project',
+      script: script.trim() || pack?.samplePhrase || title,
+      kind: 'video',
+      accentId: accentId || undefined,
+      voiceId: pack?.echoVoiceId || 'alloy',
+    });
+    project.culturalIdentity = pack?.culturalIdentity || pack?.nameEn;
+    project.speechVariety = pack?.speechVariety;
+    project.locale = pack?.bcp47;
+    project.scenes = defaultScenesFromScript(project.script);
+    upsertVideoProject(project);
+    router.push(`/creative/studio/${project.id}`);
+  }
 
   return (
     <CreativeShell banner breadcrumb="Image & Video">
@@ -23,119 +51,90 @@ export default function CreativeImageVideoPage() {
         <div>
           <h1>Image & Video</h1>
           <p>
-            Pair localized narration with cultural voice packs for video pipelines. Visual generation
-            remains roadmap; voice sync for lip-sync / audio beds is live via Echo.
+            End-to-end path: write a script in your language → pick a cultural voice pack → generate narration in
+            Studio → download MP3 for CapCut/Premiere or export WebM on Lugemi.
           </p>
         </div>
         <div className="lg-creative-actions">
-          <Link href="/creative/text-to-speech" className="lg-creative-btn primary">
-            Open Text to Speech
+          <Link href="/creative/studio" className="lg-creative-btn">
+            Open Studio
           </Link>
-          <Link href="/creative/dubbing" className="lg-creative-btn">
-            Open Dubbing
-          </Link>
-          <Link href="/accent-identity" className="lg-creative-btn">
-            Accent Identity
-          </Link>
+          <button type="button" className="lg-creative-btn primary" onClick={() => startProject()}>
+            <CreativeIcon name="video" width={16} height={16} />
+            Start video project
+          </button>
         </div>
       </div>
 
-      <div
-        style={{
-          display: 'grid',
-          gap: '1rem',
-          maxWidth: '36rem',
-          padding: '1.25rem',
-          borderRadius: 12,
-          border: '1px solid var(--lc-line)',
-          background: 'var(--lc-bg)',
-        }}
-      >
-        <div>
-          <h2 style={{ margin: '0 0 0.35rem', fontSize: '1.05rem', color: 'var(--lc-navy)' }}>
-            Cultural voice sync for video
-          </h2>
-          <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--lc-muted)', lineHeight: 1.45 }}>
-            Choose a cultural accent / identity pack. Video connectors and MCP{' '}
-            <code>lugemi_video_voice_line</code> use the same packs so narration sounds native to the
-            target lifestyle — Ghanaian English, Nigerian Pidgin, Filipino English, and every Lugemi
-            identity pack.
-          </p>
-        </div>
+      <form className="lg-creative-video-entry" onSubmit={startProject}>
+        <label className="lg-creative-field-block">
+          <span>Project title</span>
+          <input value={title} onChange={(e) => setTitle(e.target.value)} aria-label="Project title" />
+        </label>
 
-        <label style={{ display: 'grid', gap: 6, fontSize: '0.8rem', fontWeight: 650, color: 'var(--lc-muted)' }}>
-          Cultural accent / identity
+        <label className="lg-creative-field-block">
+          <span>Script (native language welcome)</span>
+          <textarea
+            value={script}
+            onChange={(e) => setScript(e.target.value)}
+            rows={5}
+            aria-label="Video script"
+          />
+        </label>
+
+        <label className="lg-creative-field-block">
+          <span>Cultural accent / identity</span>
           <CulturalIdentitySelect
             value={accentId}
             onChange={(id, next) => {
               setAccentId(id);
               setPack(next);
+              if (next?.samplePhrase && (!script.trim() || script.includes('customers speak'))) {
+                setScript(next.samplePhrase);
+              }
             }}
           />
         </label>
 
         {pack ? (
-          <dl
-            style={{
-              margin: 0,
-              display: 'grid',
-              gap: '0.45rem',
-              fontSize: '0.85rem',
-              color: 'var(--lc-navy)',
-            }}
-          >
+          <dl className="lg-creative-pack-meta">
             <div>
-              <dt style={{ color: 'var(--lc-muted)', fontSize: '0.72rem', fontWeight: 650 }}>
-                cultural_identity
-              </dt>
-              <dd style={{ margin: 0 }}>{pack.culturalIdentity || pack.cultural_identity}</dd>
+              <dt>cultural_identity</dt>
+              <dd>{pack.culturalIdentity || pack.cultural_identity}</dd>
             </div>
             <div>
-              <dt style={{ color: 'var(--lc-muted)', fontSize: '0.72rem', fontWeight: 650 }}>
-                speech_variety
-              </dt>
-              <dd style={{ margin: 0 }}>
+              <dt>speech_variety</dt>
+              <dd>
                 <code>{pack.speechVariety || pack.speech_variety}</code>
               </dd>
             </div>
             <div>
-              <dt style={{ color: 'var(--lc-muted)', fontSize: '0.72rem', fontWeight: 650 }}>
-                Echo voice
-              </dt>
-              <dd style={{ margin: 0 }}>
+              <dt>Echo voice</dt>
+              <dd>
                 <code>{pack.echoVoiceId ?? '—'}</code>
                 {pack.bcp47 ? ` · ${pack.bcp47}` : ''}
-              </dd>
-            </div>
-            <div>
-              <dt style={{ color: 'var(--lc-muted)', fontSize: '0.72rem', fontWeight: 650 }}>
-                Lifestyle tags
-              </dt>
-              <dd style={{ margin: 0 }}>
-                {(pack.lifestyleTags || pack.lifestyle_tags || []).join(' · ') || '—'}
               </dd>
             </div>
           </dl>
         ) : null}
 
-        <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--lc-muted)', lineHeight: 1.45 }}>
-          Honesty: native image/video generation models are planned, not live. Cultural voice routing
-          for video narration is production-complete in software (registry, API, MCP, UI) even where
-          Echo synthesizes cultural narration beds end-to-end via first-party adapters.
+        <p className="lg-creative-note" style={{ marginTop: 0 }}>
+          Generative image/video models are still roadmap. Narration, scene stitched preview, MP3 download, and WebM
+          export are live end-to-end in Creative Studio.
         </p>
 
-        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+        <div className="lg-creative-actions">
+          <button type="submit" className="lg-creative-btn primary">
+            Continue to Studio → Generate voice
+          </button>
           <Link
-            href={`/creative/text-to-speech${pack?.samplePhrase ? `?text=${encodeURIComponent(pack.samplePhrase)}` : ''}`}
-            className="lg-creative-btn primary"
+            href={`/creative/text-to-speech?text=${encodeURIComponent(script)}`}
+            className="lg-creative-btn"
           >
-            Synthesize with this pack
-          </Link>
-          <Link href="/creative/assets" className="lg-creative-btn">
-            Open Assets
+            Quick TTS only
           </Link>
         </div>
-      </div>
+      </form>
     </CreativeShell>
   );
 }

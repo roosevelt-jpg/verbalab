@@ -1012,4 +1012,8 @@ export type LugemiClientOptions = {
   apiKey: string;
   baseUrl?: string;
   fetch?: typeof fetch;
+  /** Maps to X-VoiceBridge-Actor-Id / X-DealBridge-Actor-Id for API-key actors. */
+  actorId?: string;
+  organizationId?: string;
+  workspaceId?: string;
 };
