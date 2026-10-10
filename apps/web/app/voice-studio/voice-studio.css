@@ -314,7 +314,6 @@
 
 @media (max-width: 640px) {
   .vs-hero {
-    min-height: auto;
     min-height: min(70vh, 34rem);
     margin-bottom: 1.25rem;
   }
