@@ -313,13 +313,14 @@ function acousticFormantWav(text: string, voiceId: string): Buffer {
 
   // Formant frequencies for phonetic resonances (F1, F2, F3)
   const formants: [number, number, number][] = [
-    [730, 1090, 2440], // /a/
-    [530, 1840, 2480], // /e/
-    [270, 2290, 3010], // /i/
-    [510, 840, 2400],  // /o/
-    [300, 870, 2240],  // /u/
+    [730, 1090, 2440],
+    [530, 1840, 2480],
+    [270, 2290, 3010],
+    [510, 840, 2400],
+    [300, 870, 2240],
   ];
 
+  const defaultFormant: [number, number, number] = [500, 1500, 2500];
   const wordDuration = durationSec / wordCount;
   for (let i = 0; i < dataSize; i++) {
     const t = i / sampleRate;
@@ -327,7 +328,10 @@ function acousticFormantWav(text: string, voiceId: string): Buffer {
     const wordTime = t - wordIdx * wordDuration;
     const w = words[wordIdx] || 'a';
     const fIdx = (w.charCodeAt(0) || 0) % formants.length;
-    const [f1, f2, f3] = formants[fIdx] ?? [500, 1500, 2500];
+    const formantPair = formants[fIdx] ?? defaultFormant;
+    const f1 = formantPair[0];
+    const f2 = formantPair[1];
+    const f3 = formantPair[2];
 
     // Glottal excitation: fundamental + harmonics
     const glottal =
