@@ -14,6 +14,7 @@ export const TOGGLEABLE_FEATURES: PlanFeature[] = [
   'commercial',
   'dealBridge',
   'voiceBridge',
+  'accessLine',
   'voiceClones',
   'marketplace',
   'fineTunes',
@@ -66,6 +67,8 @@ export class FeatureFlagsService {
         planFeatureFlags.dealBridge && process.env.DEALBRIDGE_DISABLED !== '1',
       voiceBridge:
         planFeatureFlags.voiceBridge && process.env.VOICEBRIDGE_DISABLED !== '1',
+      accessLine:
+        planFeatureFlags.accessLine && process.env.ACCESSLINE_DISABLED !== '1',
       marketplace:
         planFeatureFlags.marketplace && process.env.MARKETPLACE_DISABLED !== '1',
       voiceClones:

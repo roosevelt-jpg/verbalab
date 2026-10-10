@@ -45,7 +45,7 @@ export function statusPrompt(
     unknown: { en: 'unknown in the logistics system', sw: 'haijulikani katika mfumo wa logistics' },
     not_found: { en: 'not found for your authenticated account', sw: 'haikupatikana kwa akaunti yako' },
   };
-  const phrase = statusPhrase[status] ?? statusPhrase.unknown;
+  const phrase = statusPhrase[status] ?? statusPhrase.unknown!;
   const when = updatedAt ? (sw ? ` Ilisasishwa ${updatedAt}.` : ` Last updated ${updatedAt}.`) : '';
   const fresh =
     freshness === 'stale'
