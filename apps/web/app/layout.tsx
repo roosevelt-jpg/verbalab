@@ -23,20 +23,45 @@ const notoMono = Noto_Sans_Mono({
   variable: '--font-noto-mono',
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL('https://lugemi.com'),
-  title: {
-    default: 'Lugemi',
-    template: '%s · Lugemi',
-  },
-  description:
-    'Lugemi is Africa-first language intelligence infrastructure with a first-party API and first-party models for speech, text, and translation. Built for African languages, dialects, accents, and scripts; also supporting LATAM, Southeast Asia, the Middle East, and the EU.',
-  applicationName: 'Lugemi',
-  icons: {
-    icon: '/brand/lugemi-symbol-teal.svg',
-    apple: '/brand/lugemi-symbol-teal.svg',
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { getCmsDocument } = await import('@/lib/cms');
+  const { absolutize, DEFAULT_OG_IMAGE, resolveCmsSeo, SITE_ORIGIN } = await import(
+    '@/lib/cms-seo'
+  );
+  const doc = await getCmsDocument();
+  const seo = resolveCmsSeo(doc, '/');
+  const image = absolutize(seo.ogImageUrl) ?? absolutize(DEFAULT_OG_IMAGE)!;
+  const brand = doc.brand?.name ?? 'Lugemi';
+
+  return {
+    metadataBase: new URL(SITE_ORIGIN),
+    title: {
+      default: seo.title,
+      template: `%s · ${brand}`,
+    },
+    description: seo.description,
+    applicationName: brand,
+    icons: {
+      icon: '/brand/lugemi-symbol-teal.svg',
+      apple: '/brand/lugemi-symbol-teal.svg',
+    },
+    openGraph: {
+      type: 'website',
+      locale: 'en_US',
+      siteName: brand,
+      title: seo.title,
+      description: seo.description,
+      url: SITE_ORIGIN,
+      images: [{ url: image, alt: seo.ogImageAlt }],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: seo.title,
+      description: seo.description,
+      images: [image],
+    },
+  };
+}
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const headerStore = await headers();

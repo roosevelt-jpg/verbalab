@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound, redirect } from 'next/navigation';
 import { AnamorphicPanel } from '@/components/media/anamorphic-panel';
@@ -7,24 +8,26 @@ import { MarketingFooter } from '@/components/marketing/marketing-footer';
 import { MarketingNav } from '@/components/marketing/nav';
 import '@/components/marketing/marketing.css';
 import { getCmsDocument, getCmsPage } from '@/lib/cms';
+import { buildCmsMetadata } from '@/lib/cms-seo';
 
 export const dynamic = 'force-dynamic';
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
   const { slug } = await params;
   if (slug === 'enterprise') {
-    return {
-      title: 'Enterprise · Lugemi',
-      description:
+    return buildCmsMetadata('/enterprise', {
+      fallbackTitle: 'Enterprise',
+      fallbackDescription:
         'Lugemi Enterprise — SSO, dedicated capacity, creative and agent platforms for organizational language AI.',
-    };
+    });
   }
   const page = await getCmsPage(slug);
   if (!page) return { title: 'Lugemi' };
-  return {
-    title: `${page.title} · Lugemi`,
-    description: page.lead,
-  };
+  return buildCmsMetadata(`/p/${slug}`, { page });
 }
 
 export default async function CmsMarketingPage({ params }: { params: Promise<{ slug: string }> }) {
