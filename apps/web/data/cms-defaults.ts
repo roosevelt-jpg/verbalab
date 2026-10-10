@@ -36,7 +36,6 @@ export const CMS_DEFAULTS: CmsDocument = {
         label: 'Products',
         href: '/p/products',
         children: [
-          { label: 'Baobab canopy', href: '/baobab' },
           { label: 'Lugemi Voice', href: '/p/lugemi-voice' },
           { label: 'Lugemi Speech', href: '/p/lugemi-speech' },
           { label: 'Lugemi Translate', href: '/p/lugemi-translate' },
@@ -73,13 +72,8 @@ export const CMS_DEFAULTS: CmsDocument = {
           { label: 'UN agencies & NGOs', href: '/organizations' },
         ],
       },
-      { label: 'Baobab', href: '/baobab' },
-      { label: 'Coverage', href: '/coverage' },
+      // Pricing, Docs, Baobab, Safety, Enterprise, and Coverage live in the footer only.
       { label: 'Research', href: '/p/research' },
-      { label: 'Safety', href: '/p/safety' },
-      { label: 'Pricing', href: '/pricing' },
-      { label: 'Enterprise', href: '/enterprise' },
-      { label: 'Docs', href: '/docs' },
     ],
     actions: {
       console: { label: 'Open console', href: '/dashboard' },
