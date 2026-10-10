@@ -21,12 +21,26 @@ describe('Production deploy config', () => {
   });
 
 
-  it('documents deploy skip-without-token workflow', () => {
+  it('requires FLY_API_TOKEN on the canonical repo and deploys both apps', () => {
     const yml = readFileSync(join(root, '.github/workflows/deploy.yml'), 'utf8');
     expect(yml).toContain('FLY_API_TOKEN');
-    expect(yml).toContain('skipping production deploy');
+    expect(yml).toContain('roosevelt-jpg/verbalab');
+    expect(yml).toContain('Verify token can manage API + web apps');
+    expect(yml).toContain('Smoke production health + /coverage');
     expect(yml).toContain('infra/fly/api.jnb.toml');
     expect(yml).toContain('infra/fly/web.jnb.toml');
+    expect(yml).toContain('superfly/flyctl-actions/setup-flyctl@master');
+    expect(yml).toContain('version: "0.4.115"');
+    // Soft-skip is only for forks — canonical repo must fail without a token.
+    expect(yml).toContain('exit 1');
+    expect(yml).toContain('Preflight — marketing /coverage must ship in Docker context');
+  });
+
+  it('does not dockerignore the marketing /coverage route', () => {
+    const dockerignore = readFileSync(join(root, '.dockerignore'), 'utf8');
+    expect(dockerignore).not.toMatch(/^\*\*\/coverage$/m);
+    expect(dockerignore).not.toMatch(/^\*\*\/coverage\//m);
+    expect(existsSync(join(root, 'apps/web/app/coverage/page.tsx'))).toBe(true);
   });
 
   it('ships EU residency island configs', () => {

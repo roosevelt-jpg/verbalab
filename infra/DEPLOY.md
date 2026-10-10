@@ -98,16 +98,19 @@ API **release_command** runs `/bin/sh /app/apps/api/scripts/fly-migrate.sh` (`pr
 | `verbalab` (override with `FLY_API_APP`) | `https://api.lugemi.com` | `infra/fly/api.jnb.toml` | `apps/api/Dockerfile` |
 | `lugemi-web` (override with `FLY_WEB_APP`) | `https://lugemi.com` | `infra/fly/web.jnb.toml` | `apps/web/Dockerfile` |
 
-Without `FLY_API_TOKEN` the job **skips** (no failure) so forks stay green.
+**Canonical repo (`roosevelt-jpg/verbalab`):** missing `FLY_API_TOKEN` **fails** the Deploy job (no silent green skip).  
+**Forks / other remotes:** still skip quietly when the secret is absent.
+
+Each run: preflight (dockerignore must not exclude `apps/web/app/coverage`) → auth whoami → `fly status` on **both** apps → deploy API → deploy web → prune non-`jnb` web Machines → smoke `api.lugemi.com/health`, `lugemi.com/health`, and `lugemi.com/coverage` (must not be a Next.js 404).
 
 ### Required GitHub secret
 
-1. Create a Fly deploy token (org-level is fine — one token can deploy both apps):
+1. Create a Fly **org or account** token that can manage **both** apps. Do **not** use a deploy token scoped only to `verbalab` — that cannot deploy `lugemi-web` and breaks auto-deploy for the marketing site.
 
    ```bash
-   fly tokens create org -o personal
-   # or deploy-scoped: fly tokens create deploy -a verbalab
-   # and a second for lugemi-web, or use an org token for both
+   fly auth login
+   fly tokens create org -o <your-org>     # preferred — covers verbalab + lugemi-web
+   # Avoid: fly tokens create deploy -a verbalab   # web deploys will fail
    ```
 
 2. In GitHub: **Settings → Secrets and variables → Actions → New repository secret**  
@@ -115,7 +118,9 @@ Without `FLY_API_TOKEN` the job **skips** (no failure) so forks stay green.
 
    | Name | Value |
    | --- | --- |
-   | `FLY_API_TOKEN` | Fly token from step 1 |
+   | `FLY_API_TOKEN` | Org/account Fly token from step 1 |
+
+3. **Environments → production:** turn off required reviewers / wait timers if you want every `main` push to deploy without a human click. Keep the environment for secret scoping; disable approval gates for true auto-deploy.
 
 ### Optional secrets / variables (Clerk + URLs)
 
@@ -129,6 +134,12 @@ Without `FLY_API_TOKEN` the job **skips** (no failure) so forks stay green.
 | Secret | `NEXT_PUBLIC_API_URL_EU` | Required when `FLY_DEPLOY_EU=true` |
 
 Clerk **secret** key stays on Fly (`fly secrets set CLERK_SECRET_KEY=… -a verbalab` / `-a lugemi-web`), not in GitHub Actions build args.
+
+### After every future commit on `main`
+
+1. Push to `roosevelt-jpg/verbalab` `main` (or merge a PR into `main`).
+2. Open **Actions → Deploy** — the run must stay green (token + dual-app auth + smoke).
+3. Confirm `https://lugemi.com/health` and `https://lugemi.com/coverage` (not 404).
 
 ## Local Docker dry-run (no Fly secrets)
 

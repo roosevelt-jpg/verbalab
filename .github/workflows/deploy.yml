@@ -1,9 +1,14 @@
 name: Deploy
 
-# Auto-deploys production Africa (jnb) apps on every push to main:
-#   - verbalab (API → api.lugemi.com) from infra/fly/api.jnb.toml
-#   - lugemi-web (web → lugemi.com) from infra/fly/web.jnb.toml
-# Requires repository (or production-environment) secret FLY_API_TOKEN.
+# Auto-deploys production Africa (jnb) apps on every push to main/master:
+#   - API  → api.lugemi.com  (Fly app: vars.FLY_API_APP || verbalab)
+#   - Web  → lugemi.com      (Fly app: vars.FLY_WEB_APP || lugemi-web)
+#
+# On the canonical repo (roosevelt-jpg/verbalab) a missing FLY_API_TOKEN fails
+# the job so "green" CI never means "deploy skipped". Forks still skip quietly.
+#
+# FLY_API_TOKEN must be an org/account token (or otherwise authorized for BOTH
+# apps). An app-scoped deploy token for only "verbalab" cannot deploy lugemi-web.
 # See infra/DEPLOY.md § "GitHub Actions deploy".
 
 on:
@@ -15,25 +20,73 @@ concurrency:
   group: deploy-production
   cancel-in-progress: false
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
     environment: production
+    env:
+      FLY_API_APP: ${{ vars.FLY_API_APP || 'verbalab' }}
+      FLY_WEB_APP: ${{ vars.FLY_WEB_APP || 'lugemi-web' }}
+      # Canonical production GitHub repo — must never soft-skip deploys.
+      CANONICAL_REPO: roosevelt-jpg/verbalab
     steps:
       - uses: actions/checkout@v4
 
+      - name: Preflight — marketing /coverage must ship in Docker context
+        run: |
+          set -euo pipefail
+          if grep -nE '^\*\*/coverage$|^\*\*/coverage/' .dockerignore; then
+            echo "::error::.dockerignore excludes **/coverage which drops apps/web/app/coverage from the Fly image (lugemi.com/coverage 404)."
+            exit 1
+          fi
+          if [ ! -f apps/web/app/coverage/page.tsx ]; then
+            echo "::error::apps/web/app/coverage/page.tsx missing — cannot deploy a working /coverage route."
+            exit 1
+          fi
+          echo "dockerignore + /coverage route OK"
+
       - name: Check Fly credentials
         id: fly
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
         run: |
-          if [ -n "${{ secrets.FLY_API_TOKEN }}" ]; then
+          set -euo pipefail
+          if [ -n "${FLY_API_TOKEN:-}" ]; then
             echo "configured=true" >> "$GITHUB_OUTPUT"
           else
             echo "configured=false" >> "$GITHUB_OUTPUT"
-            echo "FLY_API_TOKEN not set — skipping production deploy (documented in infra/DEPLOY.md)."
+            if [ "${{ github.repository }}" = "${CANONICAL_REPO}" ]; then
+              echo "::error::FLY_API_TOKEN is not set on ${CANONICAL_REPO}."
+              echo "Add an org/account Fly token (authorized for BOTH ${FLY_API_APP} and ${FLY_WEB_APP})"
+              echo "as a repository or production-environment secret named FLY_API_TOKEN."
+              echo "See infra/DEPLOY.md — app-scoped tokens for only one app break web deploys."
+              exit 1
+            fi
+            echo "FLY_API_TOKEN not set — skipping production deploy on fork/non-canonical repo."
           fi
 
+      # setup-flyctl only publishes @master; pin the flyctl binary version instead.
       - uses: superfly/flyctl-actions/setup-flyctl@master
         if: steps.fly.outputs.configured == 'true'
+        with:
+          version: "0.4.115"
+
+      - name: Verify token can manage API + web apps
+        if: steps.fly.outputs.configured == 'true'
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: |
+          set -euo pipefail
+          echo "Whoami:"
+          flyctl auth whoami
+          echo "Checking API app: ${FLY_API_APP}"
+          flyctl status -a "${FLY_API_APP}"
+          echo "Checking web app: ${FLY_WEB_APP}"
+          flyctl status -a "${FLY_WEB_APP}"
+          echo "Token can reach both apps."
 
       # Live API Fly app is still named "verbalab" (jnb). Override via repo variable FLY_API_APP
       # after renaming to lugemi-api. Config: infra/fly/api.jnb.toml (region jnb).
@@ -44,21 +97,26 @@ jobs:
         run: >
           flyctl deploy . -c infra/fly/api.jnb.toml
           --dockerfile apps/api/Dockerfile
-          -a ${{ vars.FLY_API_APP || 'verbalab' }}
+          -a "${FLY_API_APP}"
           --remote-only
 
       - name: Deploy Web + admin (Africa jnb → lugemi.com)
         if: steps.fly.outputs.configured == 'true'
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-        run: >
-          flyctl deploy . -c infra/fly/web.jnb.toml
-          --dockerfile apps/web/Dockerfile
-          -a ${{ vars.FLY_WEB_APP || 'lugemi-web' }}
-          --remote-only
-          --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL || 'https://api.lugemi.com' }}
-          --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_live_Y2xlcmsubHVnZW1pLmNvbSQ' }}
-          --build-arg NEXT_PUBLIC_APP_URL=https://lugemi.com
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+        run: |
+          set -euo pipefail
+          API_URL="${NEXT_PUBLIC_API_URL:-https://api.lugemi.com}"
+          CLERK_PK="${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:-pk_live_Y2xlcmsubHVnZW1pLmNvbSQ}"
+          flyctl deploy . -c infra/fly/web.jnb.toml \
+            --dockerfile apps/web/Dockerfile \
+            -a "${FLY_WEB_APP}" \
+            --remote-only \
+            --build-arg "NEXT_PUBLIC_API_URL=${API_URL}" \
+            --build-arg "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${CLERK_PK}" \
+            --build-arg "NEXT_PUBLIC_APP_URL=https://lugemi.com"
 
       # Orphan ams/iad Machines on lugemi-web fail servicecheck-00-http-3000 and
       # make 80/443 look intermittent. Africa primary keeps jnb only.
@@ -66,7 +124,6 @@ jobs:
         if: steps.fly.outputs.configured == 'true'
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-          FLY_WEB_APP: ${{ vars.FLY_WEB_APP || 'lugemi-web' }}
           FLY_KEEP_REGION: jnb
         run: bash scripts/fly-prune-lugemi-web-non-jnb.sh
 
@@ -80,11 +137,43 @@ jobs:
         if: steps.fly.outputs.configured == 'true' && vars.FLY_DEPLOY_EU == 'true'
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-        run: >
-          flyctl deploy . -c infra/fly/web.eu.toml --dockerfile apps/web/Dockerfile --remote-only
-          --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL_EU }}
-          --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_live_Y2xlcmsubHVnZW1pLmNvbSQ' }}
+          NEXT_PUBLIC_API_URL_EU: ${{ secrets.NEXT_PUBLIC_API_URL_EU }}
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
+        run: |
+          set -euo pipefail
+          CLERK_PK="${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:-pk_live_Y2xlcmsubHVnZW1pLmNvbSQ}"
+          flyctl deploy . -c infra/fly/web.eu.toml \
+            --dockerfile apps/web/Dockerfile \
+            --remote-only \
+            --build-arg "NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL_EU}" \
+            --build-arg "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${CLERK_PK}"
+
+      - name: Smoke production health + /coverage
+        if: steps.fly.outputs.configured == 'true'
+        run: |
+          set -euo pipefail
+          echo "API health"
+          curl -fsS --retry 5 --retry-delay 5 --retry-all-errors \
+            "https://api.lugemi.com/health" | tee /tmp/api-health.json
+          echo
+          echo "Web health"
+          curl -fsS --retry 5 --retry-delay 5 --retry-all-errors \
+            "https://lugemi.com/health" | tee /tmp/web-health.json
+          echo
+          echo "Coverage page (must not be Next.js 404)"
+          code="$(curl -sS --retry 5 --retry-delay 5 --retry-all-errors \
+            -o /tmp/coverage.html -w '%{http_code}' "https://lugemi.com/coverage")"
+          echo "HTTP ${code}"
+          if [ "${code}" != "200" ]; then
+            echo "::error::https://lugemi.com/coverage returned HTTP ${code}"
+            exit 1
+          fi
+          if grep -q 'This page could not be found' /tmp/coverage.html; then
+            echo "::error::https://lugemi.com/coverage still serves Next.js 404 — check .dockerignore / image contents."
+            exit 1
+          fi
+          echo "Production smoke OK"
 
       - name: Skip notice
         if: steps.fly.outputs.configured != 'true'
-        run: echo "Deploy skipped — add FLY_API_TOKEN to enable."
+        run: echo "Deploy skipped — non-canonical repo without FLY_API_TOKEN."
