@@ -25,6 +25,8 @@ describe('OpenAPI', () => {
 
   it('GET /v1/openapi.json returns OpenAPI 3 document with translate path', async () => {
     const res = await request(app.getHttpServer()).get('/v1/openapi.json').expect(200);
+    expect(res.headers['content-type']).toMatch(/application\/json/);
+    expect(res.text).toContain('\n');
     expect(res.body.openapi).toMatch(/^3\./);
     expect(res.body.paths['/v1/translate']).toBeDefined();
     expect(res.body.paths['/v1/languages']).toBeDefined();
@@ -37,5 +39,24 @@ describe('OpenAPI', () => {
     expect(res.body.paths['/v1/admin/voice-data/speakers']?.post).toBeDefined();
     expect(res.body.servers[0].url).toBe('https://api.lugemi.com');
     expect(res.body.tags.length).toBeGreaterThan(10);
+  });
+
+  it('GET /docs and /v1/docs serve interactive API docs UI', async () => {
+    const resDocs = await request(app.getHttpServer()).get('/docs').expect(200);
+    expect(resDocs.headers['content-type']).toMatch(/text\/html/);
+    expect(resDocs.text).toContain('@scalar/api-reference');
+    expect(resDocs.text).toContain('/v1/openapi.json');
+
+    const resV1Docs = await request(app.getHttpServer()).get('/v1/docs').expect(200);
+    expect(resV1Docs.headers['content-type']).toMatch(/text\/html/);
+    expect(resV1Docs.text).toContain('@scalar/api-reference');
+
+    const resSwagger = await request(app.getHttpServer()).get('/swagger').expect(200);
+    expect(resSwagger.headers['content-type']).toMatch(/text\/html/);
+    expect(resSwagger.text).toContain('swagger-ui');
+
+    const resV1Swagger = await request(app.getHttpServer()).get('/v1/swagger').expect(200);
+    expect(resV1Swagger.headers['content-type']).toMatch(/text\/html/);
+    expect(resV1Swagger.text).toContain('swagger-ui');
   });
 });

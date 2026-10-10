@@ -9,6 +9,10 @@ import { applyHttpSecurity } from './common/security/http-security';
 async function bootstrap() {
   const sentryOn = initApiSentry();
   const app = await NestFactory.create(AppModule, { rawBody: true });
+  const expressApp = app.getHttpAdapter().getInstance();
+  if (typeof expressApp?.set === 'function') {
+    expressApp.set('json spaces', 2);
+  }
   applyHttpSecurity(app);
   app.useGlobalFilters(new ApiExceptionFilter());
 

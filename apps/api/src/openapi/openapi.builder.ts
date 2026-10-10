@@ -66,7 +66,7 @@ function humanize(slug: string): string {
 export function tagForPath(path: string): string {
   const parts = path.split('/').filter(Boolean);
   const [version, area, sub] = parts;
-  if (version !== 'v1' || !area || area === 'openapi.json') return 'System';
+  if (version !== 'v1' || !area || area === 'openapi.json' || area === 'docs' || area === 'swagger') return 'System';
   if (area === 'admin') return sub && !sub.startsWith('{') ? `Admin · ${humanize(sub)}` : 'Admin';
   return humanize(area);
 }

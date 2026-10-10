@@ -132,7 +132,7 @@ describe('OpenAPI document', () => {
 
   it('serves the document from the live Nest controller registry', async () => {
     const moduleRef = await Test.createTestingModule({ imports: [OpenApiModule, ProbeModule] }).compile();
-    const served = moduleRef.get(OpenApiController).getOpenApi();
+    const served = moduleRef.get(OpenApiController).getOpenApiDocument();
     const probe = (served.paths['/v1/probe-widgets/{id}'] as Record<string, Op> | undefined)?.get;
     expect(probe?.parameters?.map((p) => `${p.in}:${p.name}`)).toEqual(['path:id', 'query:expand']);
     expect(served.paths['/v1/openapi.json']).toBeDefined();
