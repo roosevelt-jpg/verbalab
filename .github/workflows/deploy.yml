@@ -68,8 +68,11 @@ jobs:
             echo "FLY_API_TOKEN not set — skipping production deploy on fork/non-canonical repo."
           fi
 
-      - uses: superfly/flyctl-actions/setup-flyctl@1.5
+      # setup-flyctl only publishes @master; pin the flyctl binary version instead.
+      - uses: superfly/flyctl-actions/setup-flyctl@master
         if: steps.fly.outputs.configured == 'true'
+        with:
+          version: "0.4.115"
 
       - name: Verify token can manage API + web apps
         if: steps.fly.outputs.configured == 'true'

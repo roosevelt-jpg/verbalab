@@ -29,7 +29,8 @@ describe('Production deploy config', () => {
     expect(yml).toContain('Smoke production health + /coverage');
     expect(yml).toContain('infra/fly/api.jnb.toml');
     expect(yml).toContain('infra/fly/web.jnb.toml');
-    expect(yml).toContain('superfly/flyctl-actions/setup-flyctl@1.5');
+    expect(yml).toContain('superfly/flyctl-actions/setup-flyctl@master');
+    expect(yml).toContain('version: "0.4.115"');
     // Soft-skip is only for forks — canonical repo must fail without a token.
     expect(yml).toContain('exit 1');
     expect(yml).toContain('Preflight — marketing /coverage must ship in Docker context');
