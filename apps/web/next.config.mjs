@@ -96,7 +96,8 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.lugemi.com https://accounts.lugemi.com https://local.lugemi.com",
+              // Clerk CAPTCHA uses Cloudflare Turnstile (challenges.cloudflare.com).
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.lugemi.com https://accounts.lugemi.com https://local.lugemi.com https://challenges.cloudflare.com",
               // Clerk + Next.pdf/devtools use blob: workers; without this, Next shows a CSP "1 Issue".
               "worker-src 'self' blob:",
               "style-src 'self' 'unsafe-inline'",
@@ -104,11 +105,11 @@ const nextConfig = {
               "media-src 'self' blob:",
               "font-src 'self' data:",
               // Explicit Clerk FAPI + local HTTPS proxy (https: already covers them; keep named for audits).
-              `connect-src 'self' https: https://clerk.lugemi.com https://accounts.lugemi.com https://local.lugemi.com ${apiConnectOrigins()}`,
-              "frame-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.lugemi.com https://accounts.lugemi.com",
+              `connect-src 'self' https: https://clerk.lugemi.com https://accounts.lugemi.com https://local.lugemi.com https://challenges.cloudflare.com ${apiConnectOrigins()}`,
+              "frame-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.lugemi.com https://accounts.lugemi.com https://challenges.cloudflare.com",
               "frame-ancestors 'none'",
               "base-uri 'self'",
-              "form-action 'self' https://accounts.lugemi.com https://clerk.lugemi.com https://local.lugemi.com",
+              "form-action 'self' https://accounts.lugemi.com https://clerk.lugemi.com https://local.lugemi.com https://accounts.google.com",
             ].join('; '),
           },
         ],

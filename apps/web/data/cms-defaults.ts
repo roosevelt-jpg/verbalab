@@ -21,7 +21,7 @@ function page(
 
 /** Seed CMS document — Admin edits persist to cms-store.json over these defaults. */
 export const CMS_DEFAULTS: CmsDocument = {
-  version: 1,
+  version: 2,
   updatedAt: new Date().toISOString(),
   brand: {
     name: 'Lugemi',
@@ -29,6 +29,90 @@ export const CMS_DEFAULTS: CmsDocument = {
     tagline: 'Next-generation language intelligence for speaking agents.',
     positioning:
       'Developers build AI agents that speak and talk across languages and accents — with cultural understanding of countries, ethnic groups, and tribes. Africa-first completeness; LATAM, SEA, Middle East, and the EU in scope. Own API and own models.',
+  },
+  seo: {
+    title: 'Lugemi — Africa-first language intelligence for speaking agents',
+    description:
+      'Lugemi is Africa-first language intelligence infrastructure with a first-party API and first-party models for speech, text, and translation. Built for African languages, dialects, accents, and scripts; also supporting LATAM, Southeast Asia, the Middle East, and the EU.',
+    ogImageUrl: '/brand/lugemi-email-logo.png',
+    ogImageAlt: 'Lugemi',
+  },
+  routeSeo: {
+    '/': {
+      title: 'Lugemi — Africa-first language intelligence for speaking agents',
+      description:
+        'Speak, transcribe, and translate across African and global corridors with first-party Echo voices, real-time dubbing, and cultural understanding.',
+      ogImageUrl: '/brand/lugemi-email-logo.png',
+      ogImageAlt: 'Lugemi',
+    },
+    '/pricing': {
+      title: 'Pricing',
+      description:
+        'Lugemi plans for speech, translate, and speaking agents — Free, Pro, Business, and Enterprise. Transparent character quotas and workspace limits.',
+    },
+    '/coverage': {
+      title: 'Language coverage',
+      description:
+        'Lugemi public language coverage matrix — Africa-first completeness across speech, translate, and speaking-agent corridors.',
+    },
+    '/baobab': {
+      title: 'Baobab',
+      description:
+        'Lugemi Baobab — cinematic next-model canopy for Mix, Fidelity, Live, Edge, Grounded, Atlas, Baobab, and Echo.',
+    },
+    '/enterprise': {
+      title: 'Enterprise',
+      description:
+        'Lugemi Enterprise — SSO, dedicated capacity, LugemiCreative and LugemiAgents, residency, and honest security controls for organizational language AI.',
+    },
+    '/organizations': {
+      title: 'Lugemi for organisations',
+      description:
+        'Lugemi helps UN agencies, NGOs, and governments reach communities in their own languages — live meetings, multilingual messages, and documents, spoken by native voices.',
+    },
+    '/mcp': {
+      title: 'Lugemi MCP',
+      description:
+        'Connect Lugemi to your agent IDE — Baobab translate, Echo speech, Atlas models via Model Context Protocol.',
+    },
+    '/docs': {
+      title: 'Documentation',
+      description:
+        'Lugemi developer documentation — speech, translate, agents, authentication, and API guides.',
+    },
+    '/docs/api': {
+      title: 'API reference',
+      description:
+        'Every Lugemi API endpoint — parameters, request bodies, responses, authentication, curl examples, and a live Try it console.',
+    },
+    '/accent-identity': {
+      title: 'Accent Identity',
+      description:
+        'Hear how tribe, culture, and region shape pronunciation — Lugemi Echo Voice identity packs.',
+    },
+    '/developers': {
+      title: 'Developers',
+      description:
+        'Build with Lugemi — SDKs, API keys, OpenAPI, and first-party speech and translate endpoints.',
+    },
+    '/sign-up': {
+      title: 'Sign up',
+      description: 'Create your Lugemi account and start building speaking agents.',
+    },
+    '/sign-in': {
+      title: 'Sign in',
+      description: 'Sign in to Lugemi Creative, Agents, and the developer console.',
+    },
+    '/onboarding': {
+      title: 'Welcome',
+      description: 'Choose your Lugemi platform and personalize your workspace.',
+      noIndex: true,
+    },
+    '/dealbridge': {
+      title: 'DealBridge',
+      description:
+        'Lugemi DealBridge — bilingual negotiation sessions with live speech and translation.',
+    },
   },
   nav: {
     centerLinks: [

@@ -50,25 +50,33 @@ Application theming (`appearance`, localization, AuthShell) cannot suppress Cler
 When users encounter:
 > *"The CAPTCHA failed to load. This may be due to an unsupported browser or a browser extension..."*
 
-This occurs when Clerk's embedded bot protection (Cloudflare Turnstile) cannot initialize on the current domain or is blocked by client-side extensions/ad-blockers.
+This is **Clerk bot protection** (Cloudflare Turnstile), not a Lugemi bug. It often appears on the purple Clerk **Account Portal** at `https://accounts.lugemi.com/sign-up` — that is Clerk-hosted UI, not Lugemi’s branded `/sign-up`.
 
-### Fixes & Configuration in Clerk Dashboard
+### Prefer the Lugemi app signup
 
-1. **Custom Domain Allowlist (Crucial):**
-   - Go to **Clerk Dashboard → Configure → Domains** (or **Settings → Domains**).
-   - Ensure `lugemi.com` and `clerk.lugemi.com` are properly verified with green DNS statuses (CNAME records pointed to Clerk).
-   - Under **Allowed Origins / Redirect URLs**, ensure `https://lugemi.com`, `https://www.lugemi.com`, and `https://clerk.lugemi.com` are listed.
-   - If running locally with live keys, note that live keys will reject bare `127.0.0.1` / `localhost` origins; use `/dev-login` or the HTTPS reverse proxy on `local.lugemi.com`.
+Always sign up at **`https://lugemi.com/sign-up`** (teal Lugemi AuthShell). Google OAuth from there returns to `/sso-callback` → `/onboarding` and does not need the Account Portal form.
 
-2. **Attack Protection / Bot Protection:**
-   - In Clerk Dashboard, navigate to **User & Authentication → Attack Protection** (or **Security → Bot Detection**).
-   - Clerk supports Turnstile or Google reCAPTCHA. If Turnstile is blocked by certain ISPs or browser shields, you can switch widget behavior or configure threshold settings.
-   - If bot protection on sign-up is failing during testing or domain cutover, it can be temporarily set to "Smart" or toggled while DNS propagates.
-   - Note: Social signup (e.g. **Continue with Google**) bypasses CAPTCHA challenges because identity verification is delegated to the OAuth provider.
+In **Clerk Dashboard → Account Portal** (or **Customization → Account Portal**):
+- Set the application home URL to `https://lugemi.com`
+- Point Sign-in / Sign-up paths to `https://lugemi.com/sign-in` and `https://lugemi.com/sign-up` so users are not sent to `accounts.lugemi.com`
 
-3. **Cloudflare WAF / Bot Management:**
-   - If `lugemi.com` is behind Cloudflare in "orange cloud" (proxied) mode, ensure Cloudflare's Bot Fight Mode or WAF Managed Rules do not block scripts loaded from `clerk.lugemi.com` or `challenges.cloudflare.com`.
-   - In Cloudflare Dashboard → **Security → WAF**, create an allowlist rule or skip Managed Challenge for paths matching `/_clerk/*` and auth pages.
+### Fixes in Clerk Dashboard
+
+1. **Domains**
+   - **Configure → Domains**: `lugemi.com`, `clerk.lugemi.com`, and `accounts.lugemi.com` verified.
+   - Allowed origins / redirect URLs include `https://lugemi.com`, `https://www.lugemi.com`, `https://clerk.lugemi.com`, `https://accounts.lugemi.com`.
+
+2. **Attack Protection / Bot sign-up protection**
+   - **User & Authentication → Attack Protection** (or **Security → Bot Detection**).
+   - If CAPTCHA fails on `accounts.lugemi.com` or behind privacy extensions, temporarily **disable Bot sign-up protection** (or set to a less aggressive mode) until domains are stable.
+   - **Continue with Google** normally skips password CAPTCHA once OAuth starts; the error on Account Portal usually blocks the page *before* Google runs.
+
+3. **Browser / extensions**
+   - Ad blockers, Privacy Badger, uBlock, and “strict” tracking protection often block `challenges.cloudflare.com`. Try a clean window or disable those extensions on `lugemi.com` / `accounts.lugemi.com`.
+
+4. **Cloudflare WAF (apex)**
+   - If `lugemi.com` is orange-clouded, do not challenge scripts from `clerk.lugemi.com`, `accounts.lugemi.com`, or `challenges.cloudflare.com`.
+   - Lugemi’s CSP allows Turnstile (`challenges.cloudflare.com`) on the app origin; Account Portal CSP is owned by Clerk.
 
 ## Password requirements (Clerk Dashboard)
 

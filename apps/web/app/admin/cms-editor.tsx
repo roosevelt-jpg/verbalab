@@ -1,11 +1,12 @@
 'use client';
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { CmsDocument, CmsPage } from '@/data/cms-types';
+import type { CmsDocument, CmsPage, CmsSeo } from '@/data/cms-types';
 import { parseCmsSections, serializeCmsSections } from '@/lib/cms-section-text';
 import { CmsMediaField } from '@/components/admin/cms-media-field';
 
 type Tab =
+  | 'seo'
   | 'hero'
   | 'nav'
   | 'products'
@@ -17,6 +18,7 @@ type Tab =
   | 'raw';
 
 const TABS: { id: Tab; label: string }[] = [
+  { id: 'seo', label: 'SEO & share' },
   { id: 'hero', label: 'Hero' },
   { id: 'nav', label: 'Nav' },
   { id: 'products', label: 'Products' },
@@ -27,6 +29,73 @@ const TABS: { id: Tab; label: string }[] = [
   { id: 'console', label: 'Console copy' },
   { id: 'raw', label: 'Raw JSON' },
 ];
+
+const ROUTE_SEO_KEYS = [
+  '/',
+  '/pricing',
+  '/coverage',
+  '/baobab',
+  '/enterprise',
+  '/organizations',
+  '/mcp',
+  '/docs',
+  '/docs/api',
+  '/accent-identity',
+  '/developers',
+  '/sign-up',
+  '/sign-in',
+  '/onboarding',
+  '/dealbridge',
+] as const;
+
+function emptySeo(): CmsSeo {
+  return { title: '', description: '', ogImageUrl: '', ogImageAlt: '', noIndex: false };
+}
+
+function SeoFields({
+  value,
+  onChange,
+  heading,
+}: {
+  value: CmsSeo;
+  onChange: (next: CmsSeo) => void;
+  heading?: string;
+}) {
+  const v = { ...emptySeo(), ...value };
+  return (
+    <div style={{ display: 'grid', gap: '0.75rem' }}>
+      {heading ? (
+        <h3 style={{ margin: '0.5rem 0 0', fontSize: '1rem' }}>{heading}</h3>
+      ) : null}
+      <Field label="SEO title" value={v.title ?? ''} onChange={(t) => onChange({ ...v, title: t })} />
+      <Field
+        label="Meta description"
+        value={v.description ?? ''}
+        multiline
+        rows={3}
+        onChange={(d) => onChange({ ...v, description: d })}
+      />
+      <Field
+        label="OG / share image URL"
+        value={v.ogImageUrl ?? ''}
+        onChange={(u) => onChange({ ...v, ogImageUrl: u })}
+      />
+      <Field
+        label="OG image alt"
+        value={v.ogImageAlt ?? ''}
+        onChange={(a) => onChange({ ...v, ogImageAlt: a })}
+      />
+      <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}>
+        <input
+          type="checkbox"
+          checked={Boolean(v.noIndex)}
+          onChange={(e) => onChange({ ...v, noIndex: e.target.checked })}
+        />
+        Hide from search engines (noindex)
+      </label>
+    </div>
+  );
+}
 
 function Field({
   label,
@@ -61,8 +130,9 @@ function Field({
 
 export function CmsEditor() {
   const [doc, setDoc] = useState<CmsDocument | null>(null);
-  const [tab, setTab] = useState<Tab>('hero');
+  const [tab, setTab] = useState<Tab>('seo');
   const [pageSlug, setPageSlug] = useState<string>('');
+  const [routeKey, setRouteKey] = useState<string>('/');
   const [raw, setRaw] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
@@ -166,6 +236,98 @@ export function CmsEditor() {
       {status ? <p style={{ color: 'var(--muted)', margin: 0 }}>{status}</p> : null}
 
       <div className="vl-panel" style={{ padding: '1.25rem', display: 'grid', gap: '1rem' }}>
+        {tab === 'seo' ? (
+          <>
+            <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.5 }}>
+              Controls browser titles, meta descriptions, and Open Graph / Twitter cards when pages
+              are shared. Site defaults apply everywhere; route overrides cover first-class URLs;
+              each CMS page can also set its own SEO under the Pages tab.
+            </p>
+            <Field
+              label="Brand name"
+              value={doc.brand.name}
+              onChange={(v) => setDoc({ ...doc, brand: { ...doc.brand, name: v } })}
+            />
+            <Field
+              label="Brand domain"
+              value={doc.brand.domain}
+              onChange={(v) => setDoc({ ...doc, brand: { ...doc.brand, domain: v } })}
+            />
+            <Field
+              label="Brand tagline"
+              value={doc.brand.tagline}
+              onChange={(v) => setDoc({ ...doc, brand: { ...doc.brand, tagline: v } })}
+            />
+            <Field
+              label="Brand positioning (fallback description)"
+              value={doc.brand.positioning}
+              multiline
+              rows={3}
+              onChange={(v) => setDoc({ ...doc, brand: { ...doc.brand, positioning: v } })}
+            />
+            <SeoFields
+              heading="Site-wide SEO defaults"
+              value={doc.seo ?? emptySeo()}
+              onChange={(seo) => setDoc({ ...doc, seo })}
+            />
+            <CmsMediaField
+              label="Default share / OG image"
+              uploadLabel="SEO default OG"
+              value={{
+                imageUrl: doc.seo?.ogImageUrl,
+                alt: doc.seo?.ogImageAlt,
+              }}
+              onChange={(media) =>
+                setDoc({
+                  ...doc,
+                  seo: {
+                    ...(doc.seo ?? {}),
+                    ogImageUrl: media?.imageUrl ?? '',
+                    ogImageAlt: media?.alt ?? doc.seo?.ogImageAlt,
+                  },
+                })
+              }
+              onUploaded={() => void load()}
+            />
+            <label style={{ display: 'grid', gap: '0.35rem' }}>
+              <span style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--muted)' }}>
+                Route SEO override
+              </span>
+              <select
+                className="vl-input"
+                value={routeKey}
+                onChange={(e) => setRouteKey(e.target.value)}
+              >
+                {ROUTE_SEO_KEYS.map((key) => (
+                  <option key={key} value={key}>
+                    {key}
+                  </option>
+                ))}
+                {Object.keys(doc.routeSeo ?? {})
+                  .filter((k) => !(ROUTE_SEO_KEYS as readonly string[]).includes(k))
+                  .map((key) => (
+                    <option key={key} value={key}>
+                      {key}
+                    </option>
+                  ))}
+              </select>
+            </label>
+            <SeoFields
+              heading={`SEO for ${routeKey}`}
+              value={doc.routeSeo?.[routeKey] ?? emptySeo()}
+              onChange={(seo) =>
+                setDoc({
+                  ...doc,
+                  routeSeo: {
+                    ...(doc.routeSeo ?? {}),
+                    [routeKey]: seo,
+                  },
+                })
+              }
+            />
+          </>
+        ) : null}
+
         {tab === 'hero' ? (
           <>
             <Field
@@ -645,6 +807,11 @@ export function CmsEditor() {
               value={selectedPage.media}
               onChange={(media) => updatePage((p) => ({ ...p, media }))}
               onUploaded={() => void load()}
+            />
+            <SeoFields
+              heading="Page SEO & share (optional — falls back to title / lead / hero media)"
+              value={selectedPage.seo ?? emptySeo()}
+              onChange={(seo) => updatePage((p) => ({ ...p, seo }))}
             />
             <Field
               label="Primary CTA label"

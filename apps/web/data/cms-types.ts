@@ -57,6 +57,18 @@ export type CmsPageSection = {
   links?: CmsLink[];
 };
 
+/** Search / social share fields — editable in Admin → CMS → SEO. */
+export type CmsSeo = {
+  /** Document title segment (root layout appends " · Lugemi" except home absolute titles). */
+  title?: string;
+  description?: string;
+  /** Absolute or site-relative image for Open Graph / Twitter cards. */
+  ogImageUrl?: string;
+  ogImageAlt?: string;
+  /** When true, emit robots noindex,nofollow. */
+  noIndex?: boolean;
+};
+
 export type CmsPage = {
   slug: string;
   title: string;
@@ -69,6 +81,8 @@ export type CmsPage = {
   secondaryCta?: CmsLink;
   showInFooter?: boolean;
   footerColumn?: string;
+  /** Optional SEO overrides for /p/{slug}. Falls back to title/lead/media. */
+  seo?: CmsSeo;
 };
 
 export type CmsFooterColumn = {
@@ -96,6 +110,13 @@ export type CmsDocument = {
     tagline: string;
     positioning: string;
   };
+  /** Site-wide SEO defaults (homepage + fallback for every public page). */
+  seo: CmsSeo;
+  /**
+   * First-class route SEO keyed by pathname (`/`, `/pricing`, `/coverage`, …).
+   * Admin can edit these without a code deploy.
+   */
+  routeSeo: Record<string, CmsSeo>;
   nav: {
     centerLinks: CmsNavLink[];
     actions: {

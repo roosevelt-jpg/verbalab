@@ -108,6 +108,8 @@ export function SignInForm({ hasSocial = false, onSuccess }: SignInFormProps) {
 
   return (
     <form className="lugemi-auth-form" onSubmit={handleSubmit} noValidate>
+      {/* Clerk bot-protection widget (Turnstile). Required when Attack Protection CAPTCHA is on. */}
+      <div id="clerk-captcha" className="lugemi-auth-captcha" />
       {hasSocial && !needsCode && (
         <>
           <button

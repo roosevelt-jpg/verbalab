@@ -2,16 +2,19 @@ import type { Metadata } from 'next';
 import { MarketingFooter } from '@/components/marketing/marketing-footer';
 import { MarketingNav } from '@/components/marketing/nav';
 import { getCmsDocument } from '@/lib/cms';
+import { buildCmsMetadata } from '@/lib/cms-seo';
 import { BaobabClient } from './baobab-client';
 import '@/components/marketing/marketing.css';
 
 export const dynamic = 'force-dynamic';
 
-export const metadata: Metadata = {
-  title: 'Baobab',
-  description:
-    'Lugemi Baobab — cinematic next-model canopy for Mix, Fidelity, Live, Edge, Grounded, Atlas, Baobab, and Echo. Africa-first language intelligence in navy and teal depth.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  return buildCmsMetadata('/baobab', {
+    fallbackTitle: 'Baobab',
+    fallbackDescription:
+      'Lugemi Baobab — cinematic next-model canopy for Mix, Fidelity, Live, Edge, Grounded, Atlas, Baobab, and Echo. Africa-first language intelligence in navy and teal depth.',
+  });
+}
 
 export default async function BaobabPage() {
   const doc = await getCmsDocument();
