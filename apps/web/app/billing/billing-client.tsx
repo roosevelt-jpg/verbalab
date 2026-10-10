@@ -3,6 +3,7 @@
 import { useAuth } from '@clerk/nextjs';
 import { useCallback, useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
+import { usePlatformAdmin } from '@/lib/use-platform-admin';
 import { AppShell } from '@/components/app-shell';
 import { ProgressRing, LineChart, seedUsageSeries } from '@/components/stats/stat-charts';
 import {
@@ -126,7 +127,8 @@ function normalizeSummary(summary: BillingSummary): BillingSummary {
 }
 
 export function BillingClient() {
-  const { getToken, isLoaded } = useAuth();
+  const { getToken, isLoaded, userId } = useAuth();
+  const platformAdmin = usePlatformAdmin(userId, getToken);
   const [summary, setSummary] = useState<BillingSummary | null>(null);
   const [plans, setPlans] = useState<PlanCard[]>(WEB_BILLING_PLANS);
   const [members, setMembers] = useState<MemberRow[]>([]);
@@ -414,7 +416,15 @@ export function BillingClient() {
                       <li key={f}>{FEATURE_LABELS[f] ?? f}</li>
                     ))}
                   </ul>
-                  {plan.id === 'free' ? (
+                  {platformAdmin ? (
+                    <button type="button" className="vl-btn" disabled>
+                      {isCurrent ? 'Full access' : 'Managed in Admin'}
+                    </button>
+                  ) : isCurrent ? (
+                    <button type="button" className="vl-btn" disabled>
+                      {plan.id === 'free' ? 'Included' : 'Active'}
+                    </button>
+                  ) : plan.id === 'free' ? (
                     <button type="button" className="vl-btn" disabled>
                       Included
                     </button>
@@ -424,12 +434,8 @@ export function BillingClient() {
                       href="/enterprise"
                       style={{ textDecoration: 'none', textAlign: 'center' }}
                     >
-                      Upgrade Enterprise
+                      Talk to sales
                     </a>
-                  ) : isCurrent ? (
-                    <button type="button" className="vl-btn" disabled>
-                      Active
-                    </button>
                   ) : (
                     <button
                       type="button"

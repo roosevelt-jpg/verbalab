@@ -6,8 +6,6 @@ import { PrismaService } from '../prisma/prisma.service';
 import { ApiException } from '../common/errors/api-exception';
 import {
   planFromId,
-  planHasFeature,
-  isProOrAbove,
   listPlans,
   normalizePlanId,
   BASE_PLAN_IDS,
@@ -354,7 +352,9 @@ export class BillingService {
     const org = await this.prisma.organization.findUniqueOrThrow({
       where: { id: organizationId },
     });
-    if (!isProOrAbove(org.plan)) {
+    const plan = await this.resolvePlan(org.plan);
+    const pro = await this.resolvePlan('pro');
+    if (plan.rank < pro.rank) {
       throw new ApiException(
         'plan_required',
         'This feature requires a Pro plan or higher. Upgrade under Billing.',
@@ -363,12 +363,13 @@ export class BillingService {
     }
   }
 
-  /** Gate by named entitlement feature on the org plan. */
+  /** Gate by named entitlement feature on the org plan (honors admin catalog overrides). */
   async assertFeature(organizationId: string, feature: PlanFeature, message?: string) {
     const org = await this.prisma.organization.findUniqueOrThrow({
       where: { id: organizationId },
     });
-    if (!planHasFeature(org.plan, feature)) {
+    const plan = await this.resolvePlan(org.plan);
+    if (!plan.features.includes(feature)) {
       throw new ApiException(
         'plan_required',
         message ?? `Plan does not include "${feature}". Upgrade under Billing.`,
@@ -687,8 +688,59 @@ export class BillingService {
   }
 
   // --- Platform Admin Plans CRUD ---
+  /** Full catalog for platform admins (includes inactive entries). */
   async adminListPlans() {
-    return this.listAllPlans();
+    const dbPlans = await this.prisma.planCatalogEntry.findMany();
+    const customMap = new Map(dbPlans.map((p) => [p.id, p]));
+    const base = listPlans().map((p) => {
+      const override = customMap.get(p.id);
+      if (!override) return { ...p, active: true, isCustom: false };
+      return {
+        ...p,
+        name: override.name,
+        rank: override.rank,
+        characterQuota: override.characterQuota,
+        sttMinutesQuota: override.sttMinutesQuota,
+        ttsCharsQuota: override.ttsCharsQuota,
+        translateCharsQuota: override.translateCharsQuota,
+        chatTokensQuota: override.chatTokensQuota,
+        ocrPagesQuota: override.ocrPagesQuota,
+        workspaceLimit: override.workspaceLimit,
+        priceMonthlyUsd: override.priceMonthlyUsd,
+        priceLabel: override.priceLabel,
+        blurb: override.blurb,
+        features: (override.features as PlanFeature[]) ?? p.features,
+        stripePriceId: override.stripePriceId ?? undefined,
+        active: override.active,
+        isCustom: false,
+      };
+    });
+
+    const customs = dbPlans
+      .filter((p) => p.isCustom)
+      .map((override) => ({
+        id: override.id,
+        name: override.name,
+        rank: override.rank,
+        characterQuota: override.characterQuota,
+        sttMinutesQuota: override.sttMinutesQuota,
+        ttsCharsQuota: override.ttsCharsQuota,
+        translateCharsQuota: override.translateCharsQuota,
+        chatTokensQuota: override.chatTokensQuota,
+        ocrPagesQuota: override.ocrPagesQuota,
+        workspaceLimit: override.workspaceLimit,
+        priceMonthlyUsd: override.priceMonthlyUsd,
+        priceLabel: override.priceLabel,
+        blurb: override.blurb,
+        features: (override.features as PlanFeature[]) ?? ['speech', 'translate', 'playground'],
+        stripePriceId: override.stripePriceId ?? undefined,
+        rateLimitPerKey: 300,
+        rateLimitPerOrg: 1000,
+        active: override.active,
+        isCustom: true,
+      }));
+
+    return [...base, ...customs];
   }
 
   async adminCreatePlan(input: {
@@ -768,6 +820,7 @@ export class BillingService {
       priceLabel: string;
       blurb: string;
       features: PlanFeature[];
+      stripePriceId: string | null;
       active: boolean;
     }>,
     actorUserId: string,
@@ -791,6 +844,10 @@ export class BillingService {
       priceLabel: input.priceLabel ?? existing?.priceLabel ?? fallback.priceLabel,
       blurb: input.blurb ?? existing?.blurb ?? fallback.blurb,
       features: (input.features ?? existing?.features ?? fallback.features) as any,
+      stripePriceId:
+        input.stripePriceId !== undefined
+          ? input.stripePriceId
+          : (existing?.stripePriceId ?? null),
       active: input.active ?? existing?.active ?? true,
       isCustom: !BASE_PLAN_IDS.includes(slug as any),
     };

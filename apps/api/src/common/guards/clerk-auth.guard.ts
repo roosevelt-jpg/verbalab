@@ -15,6 +15,8 @@ export type SessionContext = {
   workspaceId: string;
   clerkUserId: string;
   role: 'owner' | 'admin' | 'member';
+  /** True when the caller is on the platform admin allowlist (full platform control). */
+  platformAdmin?: boolean;
 };
 
 @Injectable()

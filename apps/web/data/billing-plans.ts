@@ -91,6 +91,7 @@ export const FEATURE_LABELS: Record<string, string> = {
   translate: 'Translate',
   playground: 'Playground',
   commercial: 'Commercial use',
+  dealBridge: 'DealBridge',
   voiceClones: 'Voice clones',
   marketplace: 'Marketplace',
   fineTunes: 'Fine-tunes',
@@ -99,6 +100,9 @@ export const FEATURE_LABELS: Record<string, string> = {
   sso: 'SSO',
   dedicated: 'Dedicated capacity',
 };
+
+/** All entitlement features a platform admin can attach to a plan. */
+export const PLAN_FEATURE_KEYS = Object.keys(FEATURE_LABELS);
 
 /** Min plan rank that unlocks a named entitlement feature. */
 export const FEATURE_MIN_PLAN: Record<string, WebPlanId> = {

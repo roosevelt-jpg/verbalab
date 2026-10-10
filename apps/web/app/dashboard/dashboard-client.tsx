@@ -23,6 +23,7 @@ import {
   WEB_BILLING_PLANS,
 } from '@/data/billing-plans';
 import { PlanGate } from '@/components/billing/plan-gate';
+import { usePlatformAdmin } from '@/lib/use-platform-admin';
 import {
   PLATFORM_CONNECTORS,
   countConnected,
@@ -174,7 +175,8 @@ function featureOnPlan(data: Overview, feature: string): boolean {
 }
 
 export function DashboardClient() {
-  const { getToken, isLoaded } = useAuth();
+  const { getToken, isLoaded, userId } = useAuth();
+  const platformAdmin = usePlatformAdmin(userId, getToken);
   const [data, setData] = useState<Overview | null>(null);
   const [identity, setIdentity] = useState<IdentityOverview | null>(null);
   const [usage, setUsage] = useState<UsageSummary | null>(null);
@@ -635,8 +637,8 @@ export function DashboardClient() {
               </p>
               <ul className="lg-workspace-flags">
                 {ENTITLEMENT_FEATURES.map((feature) => {
-                  const onPlan = featureOnPlan(data, feature);
-                  const on = featureOn(data, feature);
+                  const onPlan = platformAdmin || featureOnPlan(data, feature);
+                  const on = platformAdmin ? true : featureOn(data, feature);
                   const locked = !onPlan;
                   const busy = toggleBusy === feature;
                   const minPlan = FEATURE_MIN_PLAN[feature];
@@ -651,6 +653,10 @@ export function DashboardClient() {
                             Requires {minPlan ? planById(minPlan).name : 'upgrade'} ·{' '}
                             <Link href="/billing">Upgrade</Link>
                           </span>
+                        ) : platformAdmin ? (
+                          <span className="lg-workspace-flag__hint">
+                            Full access · manage catalog under Admin → Plans
+                          </span>
                         ) : (
                           <span className="lg-workspace-flag__hint">
                             {on ? 'Enabled for this workspace' : 'Disabled for this workspace'}
@@ -663,7 +669,7 @@ export function DashboardClient() {
                         aria-checked={locked ? false : on}
                         aria-label={`${FEATURE_LABELS[feature] ?? feature}${locked ? ' (plan locked)' : ''}`}
                         className={`lg-toggle${on && !locked ? ' is-on' : ''}`}
-                        disabled={locked || busy || !canManageFlags}
+                        disabled={locked || busy || !canManageFlags || platformAdmin}
                         onClick={() => void toggleEntitlement(feature, !on)}
                       >
                         <span className="lg-toggle__thumb" />

@@ -1,12 +1,15 @@
 'use client';
 
 import Link from 'next/link';
+import { useAuth } from '@clerk/nextjs';
 import {
   FEATURE_LABELS,
   FEATURE_MIN_PLAN,
   planById,
   type WebPlanId,
 } from '@/data/billing-plans';
+import { isClerkConfigured } from '@/lib/clerk-config';
+import { usePlatformAdmin } from '@/lib/use-platform-admin';
 
 type PlanGateProps = {
   /** Named plan feature required (e.g. marketplace, voiceClones). */
@@ -29,7 +32,20 @@ function requiredPlanLabel(feature?: string, minPlan?: WebPlanId): string {
   return 'a higher';
 }
 
-export function PlanGate({
+export function PlanGate(props: PlanGateProps) {
+  if (!isClerkConfigured()) {
+    return <PlanGateBody {...props} platformAdmin={false} />;
+  }
+  return <PlanGateAuthed {...props} />;
+}
+
+function PlanGateAuthed(props: PlanGateProps) {
+  const { userId, getToken } = useAuth();
+  const platformAdmin = usePlatformAdmin(userId, getToken);
+  return <PlanGateBody {...props} platformAdmin={platformAdmin} />;
+}
+
+function PlanGateBody({
   feature,
   minPlan,
   currentPlan,
@@ -37,10 +53,11 @@ export function PlanGate({
   title,
   children,
   compact,
-}: PlanGateProps) {
+  platformAdmin,
+}: PlanGateProps & { platformAdmin: boolean }) {
   const plan = planById(currentPlan ?? 'free');
-  let unlocked = allowed === true;
-  if (allowed == null) {
+  let unlocked = platformAdmin || allowed === true;
+  if (!unlocked && allowed == null) {
     if (feature) unlocked = plan.features.includes(feature);
     else if (minPlan) unlocked = plan.rank >= planById(minPlan).rank;
     else unlocked = true;
@@ -106,7 +123,45 @@ export function PlanLockBadge({
   currentPlan?: string | null;
   flags?: Record<string, boolean> | null;
 }) {
-  if (!feature) return null;
+  if (!isClerkConfigured()) {
+    return <PlanLockBadgeBody feature={feature} currentPlan={currentPlan} flags={flags} platformAdmin={false} />;
+  }
+  return <PlanLockBadgeAuthed feature={feature} currentPlan={currentPlan} flags={flags} />;
+}
+
+function PlanLockBadgeAuthed({
+  feature,
+  currentPlan,
+  flags,
+}: {
+  feature?: string;
+  currentPlan?: string | null;
+  flags?: Record<string, boolean> | null;
+}) {
+  const { userId, getToken } = useAuth();
+  const platformAdmin = usePlatformAdmin(userId, getToken);
+  return (
+    <PlanLockBadgeBody
+      feature={feature}
+      currentPlan={currentPlan}
+      flags={flags}
+      platformAdmin={platformAdmin}
+    />
+  );
+}
+
+function PlanLockBadgeBody({
+  feature,
+  currentPlan,
+  flags,
+  platformAdmin,
+}: {
+  feature?: string;
+  currentPlan?: string | null;
+  flags?: Record<string, boolean> | null;
+  platformAdmin: boolean;
+}) {
+  if (!feature || platformAdmin) return null;
   const fromFlag = flags?.[feature];
   const unlocked =
     fromFlag === true || (fromFlag == null && planById(currentPlan ?? 'free').features.includes(feature));

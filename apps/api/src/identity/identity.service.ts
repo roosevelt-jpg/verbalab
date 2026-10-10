@@ -8,6 +8,7 @@ import {
   normalizeCountry,
   regionLabelForCountry,
 } from '../residency/residency.catalog';
+import { PLANS } from '../billing/plans';
 
 @Injectable()
 export class IdentityService {
@@ -126,12 +127,14 @@ export class IdentityService {
           },
         });
 
+        // Do not rewrite the target customer org's plan when switching context.
         return {
           userId: user.id,
           organizationId: preferredOrg.id,
           workspaceId: workspace.id,
           clerkUserId: user.clerkUserId,
           role: membership.role,
+          platformAdmin: true,
         };
       }
     }
@@ -273,13 +276,40 @@ export class IdentityService {
       },
     });
 
+    if (input.platformAdmin) {
+      await this.ensurePlatformAdminEntitlements(organization.id);
+    }
+
     return {
       userId: user.id,
       organizationId: organization.id,
       workspaceId: workspace.id,
       clerkUserId: user.clerkUserId,
       role: membership.role,
+      platformAdmin: Boolean(input.platformAdmin),
     };
+  }
+
+  /**
+   * Platform admins hold full product control — pin their home org to enterprise
+   * so API feature/quota gates never surface Upgrade prompts for them.
+   */
+  private async ensurePlatformAdminEntitlements(organizationId: string) {
+    const org = await this.prisma.organization.findUnique({
+      where: { id: organizationId },
+      select: { plan: true },
+    });
+    if (!org || org.plan === 'enterprise') return;
+
+    const plan = PLANS.enterprise;
+    await this.prisma.organization.update({
+      where: { id: organizationId },
+      data: {
+        plan: 'enterprise',
+        characterQuota: plan.characterQuota,
+        billingStatus: 'active',
+      },
+    });
   }
 
   /** Accept pending org invites matching the user's email (workspace RBAC invites). */

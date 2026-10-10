@@ -2,17 +2,15 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ApiException } from '../common/errors/api-exception';
 import { AuditService } from '../audit/audit.service';
-import {
-  planAllowsAnotherWorkspace,
-  planFromId,
-  planWorkspaceLimit,
-} from '../billing/plans';
+import { BillingService } from '../billing/billing.service';
+import { normalizePlanId } from '../billing/plans';
 
 @Injectable()
 export class WorkspacesService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly audit: AuditService,
+    private readonly billing: BillingService,
   ) {}
 
   private toDto(row: {
@@ -41,8 +39,9 @@ export class WorkspacesService {
       where: { id: organizationId },
       select: { id: true, plan: true, characterQuota: true },
     });
-    const plan = planFromId(org.plan);
-    if (org.plan !== plan.id) {
+    const canonical = normalizePlanId(org.plan);
+    const plan = await this.billing.resolvePlan(org.plan);
+    if (org.plan !== canonical && canonical === plan.id) {
       await this.prisma.organization.update({
         where: { id: org.id },
         data: {
@@ -60,7 +59,7 @@ export class WorkspacesService {
       workspaceLimit: limit,
       workspaceUsed: used,
       workspaceRemaining: limit < 0 ? null : Math.max(0, limit - used),
-      canCreate: planAllowsAnotherWorkspace(plan.id, used),
+      canCreate: limit < 0 || used < limit,
       unlimited: limit < 0,
     };
   }
@@ -117,12 +116,12 @@ export class WorkspacesService {
     const used = await this.prisma.workspace.count({
       where: { organizationId: input.organizationId },
     });
-    const limit = planWorkspaceLimit(org.plan);
-    if (!planAllowsAnotherWorkspace(org.plan, used)) {
-      const plan = planFromId(org.plan);
+    const plan = await this.billing.resolvePlan(org.plan);
+    const limit = plan.workspaceLimit;
+    if (!(limit < 0 || used < limit)) {
       throw new ApiException(
         'plan_required',
-        `Your ${plan.name} plan includes ${limit} workspace${limit === 1 ? '' : 's'}. Upgrade to Scale or Enterprise for more workspaces.`,
+        `Your ${plan.name} plan includes ${limit} workspace${limit === 1 ? '' : 's'}. Upgrade under Billing for more workspaces.`,
         HttpStatus.PAYMENT_REQUIRED,
       );
     }

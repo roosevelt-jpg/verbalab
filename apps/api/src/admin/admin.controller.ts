@@ -98,6 +98,7 @@ export class AdminController {
       priceLabel?: string;
       blurb?: string;
       features?: string[];
+      stripePriceId?: string | null;
       active?: boolean;
     },
   ) {

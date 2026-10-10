@@ -275,6 +275,37 @@ describe('Billing', () => {
     await prisma.planCatalogEntry.delete({ where: { id: planSlug } });
   });
 
+  it('applies admin catalog feature edits to assertFeature for orgs on that plan', async () => {
+    const adminUserId = 'usr_admin_features_1';
+    const org = await seedOrg(prisma, 'adminFeaturesLive');
+    await billing.applyEntitlementForTests({ organizationId: org.id, plan: 'free' });
+
+    await expect(billing.assertFeature(org.id, 'marketplace')).rejects.toMatchObject({
+      code: 'plan_required',
+    });
+
+    await billing.adminUpdatePlan(
+      'free',
+      {
+        features: ['speech', 'translate', 'playground', 'marketplace', 'voiceClones'],
+        priceLabel: '$0',
+        priceMonthlyUsd: 0,
+      },
+      adminUserId,
+    );
+
+    await expect(billing.assertFeature(org.id, 'marketplace')).resolves.not.toThrow();
+    await expect(billing.assertFeature(org.id, 'voiceClones')).resolves.not.toThrow();
+    await expect(billing.assertFeature(org.id, 'sso')).rejects.toMatchObject({
+      code: 'plan_required',
+    });
+
+    const resolved = await billing.resolvePlan('free');
+    expect(resolved.features).toContain('marketplace');
+
+    await prisma.planCatalogEntry.delete({ where: { id: 'free' } }).catch(() => undefined);
+  });
+
   it('purchases and applies top-up credits upon plan quota exhaustion', async () => {
     const org = await seedOrg(prisma, 'topupTest');
     await billing.applyEntitlementForTests({
