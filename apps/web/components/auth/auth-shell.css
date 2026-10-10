@@ -185,7 +185,7 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  padding: 1.5rem 1.75rem 1.35rem;
+  padding: 2rem 2rem 1.75rem;
   background: #ffffff;
   border: 1px solid #cbd5e1;
   border-radius: 16px;
@@ -293,7 +293,7 @@
 .lugemi-auth-input {
   width: 100%;
   box-sizing: border-box;
-  padding: 0.65rem 0.85rem;
+  padding: 0.72rem 0.85rem;
   border: 1px solid #cbd5e1;
   border-radius: 8px;
   font-size: 0.93rem;
@@ -301,15 +301,20 @@
   background: #ffffff;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
   font-family: inherit;
+  display: block;
 }
 
 .lugemi-auth-input::placeholder {
   color: #94a3b8;
 }
 
+.lugemi-auth-input-with-toggle {
+  padding-right: 2.5rem;
+}
+
 .lugemi-auth-input:focus {
   outline: none;
-  border-color: #00b8ae;
+  border-color: #007c78;
   box-shadow: 0 0 0 3px rgba(0, 184, 174, 0.22);
 }
 
@@ -344,16 +349,16 @@
   justify-content: center;
   gap: 0.5rem;
   width: 100%;
-  padding: 0.75rem 1rem;
-  background-color: #007c78;
-  border: 1px solid #007c78;
+  padding: 0.8rem 1rem;
+  background-color: var(--action-primary);
+  border: 1px solid var(--action-primary);
   border-radius: 8px;
   color: #ffffff;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.15s ease, box-shadow 0.15s ease;
-  margin-top: 0.25rem;
+  margin-top: 0.35rem;
 }
 
 .lugemi-auth-submit-btn:hover:not(:disabled) {
