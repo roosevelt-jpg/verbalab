@@ -1,13 +1,12 @@
 'use client';
 
 import { FormEvent, useEffect, useState } from 'react';
-import { useAuth } from '@clerk/nextjs';
 import { apiFetch } from '@/lib/api';
-import { isClerkConfigured } from '@/lib/clerk-config';
+import { VoiceBridgeAuthGate, type VoiceBridgeAuth } from '@/lib/voicebridge-auth';
 
-export function VoiceBridgeJoinClient({ token }: { token: string }) {
-  const { getToken, isSignedIn } = useAuth();
-  const [peek, setPeek] = useState<{ title: string; noticeVersion: string } | null>(null);
+function VoiceBridgeJoinInner({ token, auth }: { token: string; auth: VoiceBridgeAuth }) {
+  const { getToken, isSignedIn, clerkReady } = auth;
+  const [peek, setPeek] = useState<{ title: string; noticeVersion: string; threadId: string } | null>(null);
   const [language, setLanguage] = useState('fr');
   const [apiKey, setApiKey] = useState('');
   const [actorId, setActorId] = useState('vb-member-2');
@@ -22,7 +21,7 @@ export function VoiceBridgeJoinClient({ token }: { token: string }) {
         const data = await apiFetch<{ title: string; noticeVersion: string; threadId: string }>(
           `/v1/voicebridge/invites/${token}`,
         );
-        setPeek({ title: data.title, noticeVersion: data.noticeVersion });
+        setPeek({ title: data.title, noticeVersion: data.noticeVersion, threadId: data.threadId });
       } catch (e) {
         setError(e instanceof Error ? e.message : 'Invite unavailable');
       }
@@ -34,10 +33,11 @@ export function VoiceBridgeJoinClient({ token }: { token: string }) {
     setError(null);
     try {
       const authToken =
-        isClerkConfigured() && isSignedIn ? ((await getToken()) ?? undefined) : apiKey.trim() || undefined;
+        clerkReady && isSignedIn ? ((await getToken()) ?? undefined) : apiKey.trim() || undefined;
       const headers: Record<string, string> = {};
-      if (!isClerkConfigured() || !isSignedIn) headers['X-VoiceBridge-Actor-Id'] = actorId;
-      const view = await apiFetch<{ thread: { id: string } }>(`/v1/voicebridge/threads/_/join`, {
+      if (!clerkReady || !isSignedIn) headers['X-VoiceBridge-Actor-Id'] = actorId;
+      const threadId = peek?.threadId ?? '_';
+      const view = await apiFetch<{ thread: { id: string } }>(`/v1/voicebridge/threads/${threadId}/join`, {
         method: 'POST',
         token: authToken,
         headers,
@@ -71,7 +71,7 @@ export function VoiceBridgeJoinClient({ token }: { token: string }) {
         Processing may access plaintext audio/transcripts on Lugemi servers and model providers. Training consent is
         optional and separate — denying training does not block normal service.
       </p>
-      {!isClerkConfigured() || !isSignedIn ? (
+      {!clerkReady || !isSignedIn ? (
         <div style={{ display: 'grid', gap: 8, marginBottom: 12 }}>
           <input className="vl-input" placeholder="API key" value={apiKey} onChange={(e) => setApiKey(e.target.value)} />
           <input className="vl-input" placeholder="Actor id" value={actorId} onChange={(e) => setActorId(e.target.value)} />
@@ -98,7 +98,13 @@ export function VoiceBridgeJoinClient({ token }: { token: string }) {
           Join thread
         </button>
       </form>
-      {error ? <p style={{ color: 'crimson' }}>{error}</p> : null}
+      {error ? <p role="alert" style={{ color: 'crimson' }}>{error}</p> : null}
     </main>
+  );
+}
+
+export function VoiceBridgeJoinClient({ token }: { token: string }) {
+  return (
+    <VoiceBridgeAuthGate>{(auth) => <VoiceBridgeJoinInner token={token} auth={auth} />}</VoiceBridgeAuthGate>
   );
 }

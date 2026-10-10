@@ -2,9 +2,8 @@
 
 import Link from 'next/link';
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
-import { useAuth } from '@clerk/nextjs';
 import { apiFetch } from '@/lib/api';
-import { isClerkConfigured } from '@/lib/clerk-config';
+import { VoiceBridgeAuthGate, type VoiceBridgeAuth } from '@/lib/voicebridge-auth';
 
 type ThreadView = {
   thread: { id: string; title: string; sequence: number; corridor: string };
@@ -44,8 +43,8 @@ function pickRecorderMime(): string | undefined {
   return candidates.find((t) => MediaRecorder.isTypeSupported(t));
 }
 
-export function VoiceBridgeThreadClient({ threadId }: { threadId: string }) {
-  const { getToken, isSignedIn } = useAuth();
+function VoiceBridgeThreadInner({ threadId, auth }: { threadId: string; auth: VoiceBridgeAuth }) {
+  const { getToken, isSignedIn, clerkReady } = auth;
   const [view, setView] = useState<ThreadView | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [text, setText] = useState('');
@@ -65,15 +64,15 @@ export function VoiceBridgeThreadClient({ threadId }: { threadId: string }) {
   const chunksRef = useRef<Blob[]>([]);
 
   const tokenFn = useCallback(async () => {
-    if (isClerkConfigured() && isSignedIn) return (await getToken()) ?? undefined;
+    if (clerkReady && isSignedIn) return (await getToken()) ?? undefined;
     return apiKey.trim() || undefined;
-  }, [apiKey, getToken, isSignedIn]);
+  }, [apiKey, clerkReady, getToken, isSignedIn]);
 
   const headers = useCallback(() => {
     const h: Record<string, string> = {};
-    if (!isClerkConfigured() || !isSignedIn) h['X-VoiceBridge-Actor-Id'] = actorId;
+    if (!clerkReady || !isSignedIn) h['X-VoiceBridge-Actor-Id'] = actorId;
     return h;
-  }, [actorId, isSignedIn]);
+  }, [actorId, clerkReady, isSignedIn]);
 
   const reload = useCallback(async () => {
     setError(null);
@@ -317,7 +316,7 @@ export function VoiceBridgeThreadClient({ threadId }: { threadId: string }) {
         </p>
       ) : null}
 
-      {!isClerkConfigured() || !isSignedIn ? (
+      {!clerkReady || !isSignedIn ? (
         <div className="vl-panel" style={{ padding: '0.85rem', marginBottom: '1rem', display: 'grid', gap: 8 }}>
           <input className="vl-input" placeholder="API key" value={apiKey} onChange={(e) => setApiKey(e.target.value)} />
           <input className="vl-input" placeholder="Actor id" value={actorId} onChange={(e) => setActorId(e.target.value)} />
@@ -512,5 +511,13 @@ export function VoiceBridgeThreadClient({ threadId }: { threadId: string }) {
         </form>
       )}
     </main>
+  );
+}
+
+export function VoiceBridgeThreadClient({ threadId }: { threadId: string }) {
+  return (
+    <VoiceBridgeAuthGate>
+      {(auth) => <VoiceBridgeThreadInner threadId={threadId} auth={auth} />}
+    </VoiceBridgeAuthGate>
   );
 }

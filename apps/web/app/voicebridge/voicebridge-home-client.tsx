@@ -2,9 +2,8 @@
 
 import Link from 'next/link';
 import { FormEvent, useCallback, useEffect, useState } from 'react';
-import { useAuth } from '@clerk/nextjs';
 import { apiFetch } from '@/lib/api';
-import { isClerkConfigured } from '@/lib/clerk-config';
+import { VoiceBridgeAuthGate, type VoiceBridgeAuth } from '@/lib/voicebridge-auth';
 
 type ThreadRow = {
   id: string;
@@ -17,8 +16,8 @@ type ThreadRow = {
   createdAt: string;
 };
 
-export function VoiceBridgeHomeClient() {
-  const { getToken, isSignedIn } = useAuth();
+function VoiceBridgeHomeInner({ auth }: { auth: VoiceBridgeAuth }) {
+  const { getToken, isSignedIn, clerkReady } = auth;
   const [threads, setThreads] = useState<ThreadRow[]>([]);
   const [title, setTitle] = useState('');
   const [language, setLanguage] = useState('en');
@@ -29,19 +28,19 @@ export function VoiceBridgeHomeClient() {
   const [actorId, setActorId] = useState('vb-creator-1');
 
   const tokenFn = useCallback(async () => {
-    if (isClerkConfigured() && isSignedIn) {
+    if (clerkReady && isSignedIn) {
       return (await getToken()) ?? undefined;
     }
     return apiKey.trim() || undefined;
-  }, [apiKey, getToken, isSignedIn]);
+  }, [apiKey, clerkReady, getToken, isSignedIn]);
 
   const headers = useCallback(() => {
     const h: Record<string, string> = {};
-    if (!isClerkConfigured() || !isSignedIn) {
+    if (!clerkReady || !isSignedIn) {
       h['X-VoiceBridge-Actor-Id'] = actorId;
     }
     return h;
-  }, [actorId, isSignedIn]);
+  }, [actorId, clerkReady, isSignedIn]);
 
   const reload = useCallback(async () => {
     setError(null);
@@ -93,7 +92,7 @@ export function VoiceBridgeHomeClient() {
         language. Corrections supersede outdated versions for every authorized member.
       </p>
 
-      {!isClerkConfigured() || !isSignedIn ? (
+      {!clerkReady || !isSignedIn ? (
         <div className="vl-panel" style={{ padding: '1rem', marginTop: '1.25rem', display: 'grid', gap: '0.5rem' }}>
           <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--muted)' }}>
             Local/dev: use an API key and actor id (set <code>VOICEBRIDGE_OPEN=1</code> and fixture ASR/MT/TTS as needed).
@@ -125,7 +124,7 @@ export function VoiceBridgeHomeClient() {
         </button>
       </form>
 
-      {error ? <p style={{ color: 'crimson' }}>{error}</p> : null}
+      {error ? <p role="alert" style={{ color: 'crimson' }}>{error}</p> : null}
 
       <section style={{ marginTop: '2rem' }}>
         <h2 style={{ fontSize: '1.15rem' }}>Your threads</h2>
@@ -149,4 +148,8 @@ export function VoiceBridgeHomeClient() {
       </section>
     </main>
   );
+}
+
+export function VoiceBridgeHomeClient() {
+  return <VoiceBridgeAuthGate>{(auth) => <VoiceBridgeHomeInner auth={auth} />}</VoiceBridgeAuthGate>;
 }
