@@ -1,0 +1,310 @@
+import { HttpStatus, Injectable } from '@nestjs/common';
+import { ApiException } from '../common/errors/api-exception';
+import { AccentIdentityService } from '../accents/accent-identity.service';
+import { GatewayService } from '../gateway/gateway.service';
+import { UsageService } from '../usage/usage.service';
+import { AuditService } from '../audit/audit.service';
+import { PrismaService } from '../prisma/prisma.service';
+import { AudioService } from '../audio/audio.service';
+import { neuralTtsEngineCatalog } from './neural-tts.catalog';
+import {
+  enrichVoice,
+  filterEnrichedVoices,
+  VoiceListFilters,
+  EnrichedTtsVoice,
+} from './voice-enrichment';
+
+const STREAM_CHUNK_BYTES = 8 * 1024;
+
+export type SynthesizeInput = {
+  text?: string;
+  voice?: string;
+  language?: string;
+  accentId?: string;
+  dialectId?: string;
+  speechVariety?: string;
+  locale?: string;
+  format?: 'mp3' | 'wav' | 'opus' | 'aac' | 'flac';
+  organizationId: string;
+  workspaceId: string;
+  apiKeyId?: string;
+  userId?: string;
+  ip?: string;
+};
+
+@Injectable()
+export class NeuralTtsService {
+  constructor(
+    private readonly gateway: GatewayService,
+    private readonly usage: UsageService,
+    private readonly audit: AuditService,
+    private readonly prisma: PrismaService,
+    private readonly audio: AudioService,
+    private readonly accentIdentity: AccentIdentityService,
+  ) {}
+
+  engine() {
+    return neuralTtsEngineCatalog();
+  }
+
+  async analytics(organizationId: string) {
+    const summary = await this.usage.summary(organizationId);
+    return {
+      periodStart: summary.periodStart,
+      tts: summary.tts,
+      product: 'Lugemi Neural TTS',
+      note: 'Usage metering for TTS characters. Full Voice Analytics = voice-analytics.',
+      docs: '/docs/NEURAL_TTS.md',
+    };
+  }
+
+  async listVoices(
+    filters: VoiceListFilters = {},
+    workspace?: { organizationId: string; workspaceId: string },
+  ) {
+    const stock = this.gateway.listVoices().map((v) => enrichVoice(v));
+    const clones: EnrichedTtsVoice[] = [];
+    if (workspace) {
+      const rows = await this.prisma.voiceClone.findMany({
+        where: {
+          organizationId: workspace.organizationId,
+          workspaceId: workspace.workspaceId,
+          status: 'approved',
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 50,
+      });
+      for (const row of rows) {
+        clones.push(
+          enrichVoice(
+            {
+              id: `clone:${row.id}`,
+              name: row.name,
+              gender: 'neutral',
+              languages: ['en'],
+              provider: 'vendor_clone',
+            },
+            { enterprise: true, category: 'clone' },
+          ),
+        );
+      }
+    }
+
+    const all = [...stock, ...clones];
+    const data = filterEnrichedVoices(all, filters);
+    const countries = [...new Set(all.map((v) => v.country).filter(Boolean))] as string[];
+    const accents = [...new Set(all.map((v) => v.accent).filter(Boolean))] as string[];
+    const regions = [...new Set(all.map((v) => v.region).filter(Boolean))] as string[];
+    const toneStyles = [...new Set(all.flatMap((v) => v.toneStyles))];
+    return {
+      data,
+      facets: {
+        genders: ['male', 'female', 'neutral'],
+        ageGroups: ['adult', 'child', 'unknown'],
+        categories: ['stock', 'own', 'clone'],
+        countries: countries.sort(),
+        accents: accents.sort(),
+        regions: regions.sort(),
+        toneStyles: toneStyles.sort(),
+        note:
+          'Children voices deferred. Country/accent/ethnic tags are cultural metadata on own:* voices for agent builders — not acoustic accent control. Approved clones appear when authenticated.',
+      },
+      docs: '/docs/NEURAL_TTS.md',
+    };
+  }
+
+  resolveIdentityPlayback(input: {
+    text?: string;
+    voice?: string;
+    language?: string;
+    accentId?: string;
+    dialectId?: string;
+    speechVariety?: string;
+    locale?: string;
+  }) {
+    const hasIdentity = Boolean(
+      input.accentId?.trim() ||
+        input.dialectId?.trim() ||
+        input.speechVariety?.trim() ||
+        input.locale?.trim(),
+    );
+
+    if (!hasIdentity) {
+      // Prefer cultural English packs when language is a cultural BCP-47 tag.
+      const localeHint = input.language?.trim();
+      if (localeHint) {
+        const preferred = this.accentIdentity.resolveForLocale(localeHint);
+        if (preferred) {
+          return {
+            text: input.text ?? '',
+            voice: input.voice?.trim() || preferred.echoVoiceId || 'own:en-kofi',
+            language: input.language,
+            accentIdentityId: preferred.id,
+            accentIdentityName: preferred.nameEn,
+            culturalIdentity: preferred.culturalIdentity,
+            speechVariety: preferred.speechVariety,
+            lifestyleTags: preferred.lifestyleTags,
+          };
+        }
+      }
+      return {
+        text: input.text ?? '',
+        voice: input.voice ?? '',
+        language: input.language,
+        accentIdentityId: null as string | null,
+      };
+    }
+
+    const pack = this.accentIdentity.resolveForPlayback({
+      accentId: input.accentId,
+      dialectId: input.dialectId,
+      speechVariety: input.speechVariety,
+      locale: input.locale,
+    });
+
+    return {
+      text: input.text?.trim() || pack.samplePhrase,
+      voice: input.voice?.trim() || pack.echoVoiceId || 'own:en-kofi',
+      language: input.language?.trim() || pack.bcp47 || pack.languageCode,
+      accentIdentityId: pack.id,
+      accentIdentityName: pack.nameEn,
+      culturalIdentity: pack.culturalIdentity,
+      speechVariety: pack.speechVariety,
+      lifestyleTags: pack.lifestyleTags,
+    };
+  }
+
+  async synthesize(input: SynthesizeInput) {
+    const resolved = this.resolveIdentityPlayback(input);
+    if (!resolved.text?.trim()) {
+      throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
+    }
+    if (!resolved.voice?.trim()) {
+      throw new ApiException('validation_error', 'voice is required', HttpStatus.BAD_REQUEST);
+    }
+
+    const result = await this.audio.speak({
+      text: resolved.text,
+      voice: resolved.voice,
+      language: resolved.language,
+      format: input.format,
+      organizationId: input.organizationId,
+      workspaceId: input.workspaceId,
+      apiKeyId: input.apiKeyId,
+      userId: input.userId,
+      ip: input.ip,
+    });
+
+    await this.audit.record({
+      organizationId: input.organizationId,
+      userId: input.userId,
+      action: 'tts.synthesized',
+      route: 'POST /v1/tts/synthesize',
+      ip: input.ip,
+      metadata: {
+        provider: result.provider,
+        voice: result.voice,
+        characters: result.characters,
+        format: result.format,
+        bytes: result.audio.length,
+        mode: 'batch',
+        watermarkApplied: result.watermarkApplied,
+        accentIdentityId: resolved.accentIdentityId,
+      },
+    });
+
+    return {
+      ...result,
+      accentIdentityId: resolved.accentIdentityId,
+      accentIdentityName:
+        'accentIdentityName' in resolved ? resolved.accentIdentityName : undefined,
+      culturalIdentity:
+        'culturalIdentity' in resolved ? resolved.culturalIdentity : undefined,
+      speechVariety: 'speechVariety' in resolved ? resolved.speechVariety : undefined,
+      lifestyleTags: 'lifestyleTags' in resolved ? resolved.lifestyleTags : undefined,
+      cultural_identity:
+        'culturalIdentity' in resolved ? resolved.culturalIdentity : undefined,
+      speech_variety: 'speechVariety' in resolved ? resolved.speechVariety : undefined,
+      lifestyle_tags: 'lifestyleTags' in resolved ? resolved.lifestyleTags : undefined,
+    };
+  }
+
+  async *streamSynthesize(input: SynthesizeInput): AsyncGenerator<{
+    event: 'meta' | 'audio' | 'done' | 'error';
+    [key: string]: unknown;
+  }> {
+    try {
+      const resolved = this.resolveIdentityPlayback(input);
+      if (!resolved.text?.trim() || !resolved.voice?.trim()) {
+        yield { event: 'error', message: 'text and voice are required' };
+        return;
+      }
+
+      const result = await this.audio.speak({
+        text: resolved.text,
+        voice: resolved.voice,
+        language: resolved.language,
+        format: input.format,
+        organizationId: input.organizationId,
+        workspaceId: input.workspaceId,
+        apiKeyId: input.apiKeyId,
+        userId: input.userId,
+        ip: input.ip,
+      });
+
+      yield {
+        event: 'meta',
+        provider: result.provider,
+        voice: result.voice,
+        characters: result.characters,
+        format: result.format,
+        mimeType: result.mimeType,
+        bytes: result.audio.length,
+        watermarkApplied: result.watermarkApplied,
+        streaming: 'chunk_sse_after_synthesis',
+        note: 'Audio is synthesized fully first, then delivered as SSE base64 chunks. Not vendor token streaming.',
+      };
+
+      let index = 0;
+      for (let offset = 0; offset < result.audio.length; offset += STREAM_CHUNK_BYTES) {
+        const slice = result.audio.subarray(offset, offset + STREAM_CHUNK_BYTES);
+        yield {
+          event: 'audio',
+          index,
+          encoding: 'base64',
+          data: slice.toString('base64'),
+          bytes: slice.length,
+        };
+        index += 1;
+      }
+
+      await this.audit.record({
+        organizationId: input.organizationId,
+        userId: input.userId,
+        action: 'tts.streamed',
+        route: 'POST /v1/tts/stream',
+        ip: input.ip,
+        metadata: {
+          provider: result.provider,
+          voice: result.voice,
+          characters: result.characters,
+          format: result.format,
+          bytes: result.audio.length,
+          chunks: index,
+          mode: 'chunk_sse',
+          watermarkApplied: result.watermarkApplied,
+        },
+      });
+
+      yield {
+        event: 'done',
+        chunks: index,
+        bytes: result.audio.length,
+        provider: result.provider,
+      };
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'TTS stream failed';
+      yield { event: 'error', message };
+    }
+  }
+}

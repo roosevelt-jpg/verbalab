@@ -1,0 +1,129 @@
+/* Shared demo Play / Stop icon buttons — marketing + console */
+
+.lg-demo-play-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+  border: 1px solid var(--border-subtle, rgba(16, 38, 77, 0.12));
+  background: var(--surface-canvas, #fff);
+  color: var(--action-primary, #007c78);
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.lg-demo-play-btn:focus-visible {
+  outline: 2px solid var(--action-primary, #007c78);
+  outline-offset: 2px;
+}
+
+.lg-demo-play-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.lg-demo-play-btn__icon {
+  display: inline-flex;
+  width: 1.1em;
+  height: 1.1em;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.lg-demo-play-btn--icon {
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  padding: 0;
+  border-radius: 999px;
+}
+
+.lg-demo-play-btn--chip {
+  min-height: 36px;
+  padding: 0.35rem 0.75rem 0.35rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+}
+
+.lg-demo-play-btn--primary,
+.lg-demo-play-btn--secondary {
+  min-height: 42px;
+  padding: 0.45rem 0.95rem 0.45rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+}
+
+.lg-demo-play-btn--primary {
+  background: var(--action-primary, #007c78);
+  border-color: var(--action-primary, #007c78);
+  color: #fff;
+}
+
+.lg-demo-play-btn--secondary {
+  background: var(--surface-muted, #f5f5f4);
+  color: var(--brand-navy, #10264d);
+}
+
+.lg-demo-play-btn.is-active {
+  border-color: var(--action-primary, #007c78);
+  background: rgba(0, 124, 120, 0.12);
+  color: var(--action-primary, #007c78);
+}
+
+.lg-demo-play-btn--primary.is-active {
+  background: #b42318;
+  border-color: #b42318;
+  color: #fff;
+}
+
+.lg-demo-play-btn:hover:not(:disabled) {
+  border-color: var(--action-primary, #007c78);
+}
+
+.lg-demo-play-spin {
+  animation: lg-demo-play-spin 0.75s linear infinite;
+}
+
+@keyframes lg-demo-play-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.lg-audio-preview-bar {
+  display: grid;
+  gap: 0.65rem;
+  width: 100%;
+}
+
+.lg-audio-preview-bar__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.lg-audio-preview-bar__status {
+  margin: 0;
+  color: #b42318;
+  font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+  .lg-demo-play-btn--icon {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  .lg-demo-play-btn--chip,
+  .lg-demo-play-btn--primary,
+  .lg-demo-play-btn--secondary {
+    min-height: 44px;
+  }
+}

@@ -1,0 +1,90 @@
+name: Deploy
+
+# Auto-deploys production Africa (jnb) apps on every push to main:
+#   - verbalab (API → api.lugemi.com) from infra/fly/api.jnb.toml
+#   - lugemi-web (web → lugemi.com) from infra/fly/web.jnb.toml
+# Requires repository (or production-environment) secret FLY_API_TOKEN.
+# See infra/DEPLOY.md § "GitHub Actions deploy".
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check Fly credentials
+        id: fly
+        run: |
+          if [ -n "${{ secrets.FLY_API_TOKEN }}" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+            echo "FLY_API_TOKEN not set — skipping production deploy (documented in infra/DEPLOY.md)."
+          fi
+
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+        if: steps.fly.outputs.configured == 'true'
+
+      # Live API Fly app is still named "verbalab" (jnb). Override via repo variable FLY_API_APP
+      # after renaming to lugemi-api. Config: infra/fly/api.jnb.toml (region jnb).
+      - name: Deploy API (Africa jnb → api.lugemi.com)
+        if: steps.fly.outputs.configured == 'true'
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: >
+          flyctl deploy . -c infra/fly/api.jnb.toml
+          --dockerfile apps/api/Dockerfile
+          -a ${{ vars.FLY_API_APP || 'verbalab' }}
+          --remote-only
+
+      - name: Deploy Web + admin (Africa jnb → lugemi.com)
+        if: steps.fly.outputs.configured == 'true'
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: >
+          flyctl deploy . -c infra/fly/web.jnb.toml
+          --dockerfile apps/web/Dockerfile
+          -a ${{ vars.FLY_WEB_APP || 'lugemi-web' }}
+          --remote-only
+          --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL || 'https://api.lugemi.com' }}
+          --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_live_Y2xlcmsubHVnZW1pLmNvbSQ' }}
+          --build-arg NEXT_PUBLIC_APP_URL=https://lugemi.com
+
+      # Orphan ams/iad Machines on lugemi-web fail servicecheck-00-http-3000 and
+      # make 80/443 look intermittent. Africa primary keeps jnb only.
+      - name: Prune non-jnb lugemi-web Machines
+        if: steps.fly.outputs.configured == 'true'
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          FLY_WEB_APP: ${{ vars.FLY_WEB_APP || 'lugemi-web' }}
+          FLY_KEEP_REGION: jnb
+        run: bash scripts/fly-prune-lugemi-web-non-jnb.sh
+
+      - name: Deploy API (EU island)
+        if: steps.fly.outputs.configured == 'true' && vars.FLY_DEPLOY_EU == 'true'
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: flyctl deploy . -c infra/fly/api.eu.toml --dockerfile apps/api/Dockerfile --remote-only
+
+      - name: Deploy Web (EU island)
+        if: steps.fly.outputs.configured == 'true' && vars.FLY_DEPLOY_EU == 'true'
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        run: >
+          flyctl deploy . -c infra/fly/web.eu.toml --dockerfile apps/web/Dockerfile --remote-only
+          --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL_EU }}
+          --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_live_Y2xlcmsubHVnZW1pLmNvbSQ' }}
+
+      - name: Skip notice
+        if: steps.fly.outputs.configured != 'true'
+        run: echo "Deploy skipped — add FLY_API_TOKEN to enable."

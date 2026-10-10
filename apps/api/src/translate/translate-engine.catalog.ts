@@ -1,0 +1,196 @@
+export type TranslateCapabilityStatus = 'shipped' | 'partial' | 'deferred';
+
+export type TranslateCapability = {
+  id: string;
+  name: string;
+  status: TranslateCapabilityStatus;
+  api: string | null;
+  notes: string;
+};
+
+/** Lugemi Translate. */
+export function translateEngineCatalog() {
+  return {
+    product: 'Lugemi Baobab Translate',
+    note:
+      'Proprietary Lugemi Baobab MT for complex multilingual and dialect-aware translation, with TM/glossary/quality. Africa-first pairs (default English → Twi). Not a website/WhatsApp localization platform.',
+    capabilities: [
+      {
+        id: 'realtime',
+        name: 'Realtime translation',
+        status: 'shipped',
+        api: 'POST /v1/translate',
+        notes: 'Synchronous text MT with glossary/TM/locale DNT.',
+      },
+      {
+        id: 'batch',
+        name: 'Batch translation',
+        status: 'shipped',
+        api: 'POST /v1/jobs type=batch_translate',
+        notes: 'Up to 100 items per job; webhooks optional.',
+      },
+      {
+        id: 'streaming',
+        name: 'Streaming translation',
+        status: 'shipped',
+        api: 'POST /v1/translate/stream',
+        notes: 'SSE chunked paragraph/sentence stream.',
+      },
+      {
+        id: 'document',
+        name: 'Document translation',
+        status: 'shipped',
+        api: 'POST /v1/documents/translate',
+        notes: 'DOCX/PDF/TXT in; DOCX or plain text out. Not layout-faithful PDF.',
+      },
+      {
+        id: 'json',
+        name: 'JSON translation',
+        status: 'shipped',
+        api: 'POST /v1/localize',
+        notes: 'Key-stable; ICU passthrough.',
+      },
+      {
+        id: 'yaml',
+        name: 'YAML translation',
+        status: 'shipped',
+        api: 'POST /v1/localize',
+        notes: 'Same localize pipeline as JSON.',
+      },
+      {
+        id: 'html',
+        name: 'HTML format (API)',
+        status: 'shipped',
+        api: 'POST /v1/translate/formats',
+        notes: 'API format option: tag-preserving text-node MT. Studio Translate I/O stays plain text.',
+      },
+      {
+        id: 'markdown',
+        name: 'Markdown translation',
+        status: 'shipped',
+        api: 'POST /v1/translate/formats',
+        notes: 'Code fences preserved.',
+      },
+      {
+        id: 'xml',
+        name: 'XML translation',
+        status: 'shipped',
+        api: 'POST /v1/translate/formats',
+        notes: 'Markup-preserving text MT.',
+      },
+      {
+        id: 'csv',
+        name: 'CSV translation',
+        status: 'shipped',
+        api: 'POST /v1/translate/formats',
+        notes: 'Cell MT. Not Excel/XLSX.',
+      },
+      {
+        id: 'srt',
+        name: 'Subtitle translation (SRT)',
+        status: 'shipped',
+        api: 'POST /v1/translate/formats',
+        notes: 'Cue text MT; timestamps preserved.',
+      },
+      {
+        id: 'word',
+        name: 'Word (DOCX)',
+        status: 'shipped',
+        api: 'POST /v1/documents/translate',
+        notes: 'Extract + re-pack; styles limited.',
+      },
+      {
+        id: 'pdf',
+        name: 'PDF',
+        status: 'shipped',
+        api: 'POST /v1/documents/translate',
+        notes: 'Text extract; output is text/DOCX, not PDF.',
+      },
+      {
+        id: 'chat',
+        name: 'Chat translation',
+        status: 'shipped',
+        api: 'POST /v1/translate/chat',
+        notes: 'Translates message content array. Full LLM chat is /v1/chat/completions.',
+      },
+      {
+        id: 'slack',
+        name: 'Slack',
+        status: 'shipped',
+        api: 'POST /v1/connectors/slack/commands',
+        notes: 'Slash-command MT. Not Events API file pipeline.',
+      },
+      {
+        id: 'website',
+        name: 'Website translation',
+        status: 'deferred',
+        api: null,
+        notes: 'No crawl/proxy product.',
+      },
+      {
+        id: 'email',
+        name: 'Email translation',
+        status: 'deferred',
+        api: null,
+        notes: 'Outbound Resend notifications only — not MIME body MT.',
+      },
+      {
+        id: 'powerpoint',
+        name: 'PowerPoint',
+        status: 'deferred',
+        api: null,
+        notes: 'Use CSV/HTML export or document path later.',
+      },
+      {
+        id: 'excel',
+        name: 'Excel',
+        status: 'deferred',
+        api: null,
+        notes: 'CSV supported; XLSX deferred.',
+      },
+      {
+        id: 'sms',
+        name: 'SMS',
+        status: 'deferred',
+        api: null,
+        notes: 'No SMS gateway product.',
+      },
+      {
+        id: 'whatsapp',
+        name: 'WhatsApp',
+        status: 'deferred',
+        api: null,
+        notes: 'No WhatsApp Business API product.',
+      },
+      {
+        id: 'teams',
+        name: 'Microsoft Teams',
+        status: 'deferred',
+        api: null,
+        notes: 'Slack connector only for now.',
+      },
+    ] satisfies TranslateCapability[],
+    engines: {
+      translation: { status: 'shipped', api: 'POST /v1/translate' },
+      translationMemory: { status: 'shipped', api: '/v1/tm', notes: 'Exact hash matches' },
+      terminologyGlossary: { status: 'shipped', api: '/v1/glossary' },
+      quality: { status: 'shipped', api: '/v1/reviews', notes: 'Heuristic QE' },
+      rest: { status: 'shipped' },
+      graphql: { status: 'shipped', api: 'mutation translate', notes: '' },
+      sdk: { status: 'shipped', package: '@lugemi/sdk' },
+      cli: { status: 'shipped', package: '@lugemi/cli' },
+      monitoring: { status: 'shipped', api: 'GET /v1/metrics/translate' },
+      analytics: { status: 'shipped', api: 'GET /v1/analytics/overview' },
+    },
+    links: {
+      translate: '/translate',
+      formats: '/translate/formats',
+      documents: '/documents',
+      localize: '/localize',
+      glossary: '/glossary',
+      tm: '/tm',
+      reviews: '/reviews',
+      docs: '/docs/TRANSLATE.md',
+    },
+  };
+}

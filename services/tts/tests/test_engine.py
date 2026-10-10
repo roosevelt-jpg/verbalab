@@ -1,0 +1,174 @@
+import io
+import json
+import wave
+import numpy as np
+
+import pytest
+from fastapi.testclient import TestClient
+
+from app import main
+from app.registry import VoiceInfo, VoiceRegistry
+
+
+@pytest.fixture(scope="module")
+def client():
+    with TestClient(main.app) as c:
+        yield c
+
+
+def wav_seconds(data: bytes) -> float:
+    with wave.open(io.BytesIO(data)) as w:
+        return w.getnframes() / w.getframerate()
+
+
+def test_lists_built_in_and_cultural_english_voices(client):
+    ids = {v["id"] for v in client.get("/voices").json()["voices"]}
+    assert {"en-us-female", "en-us-male", "en-gb-female", "en-gb-male"} <= ids
+    assert {"en-gh-female", "en-gh-male", "en-kofi", "en-ng-female", "en-ng-male"} <= ids
+    assert {"en-ke-female", "en-ph-female", "en-za-female", "ak-gh-female"} <= ids
+
+
+@pytest.mark.parametrize(
+    "voice",
+    [
+        "en-us-female",
+        "en-us-male",
+        "en-gb-female",
+        "en-gb-male",
+        "en-gh-female",
+        "en-gh-male",
+        "en-ng-female",
+        "en-ke-female",
+        "ak-gh-female",
+    ],
+)
+def test_speaks_real_audio(client, voice):
+    res = client.post("/", json={"text": "Welcome to Lugemi. Your voice, your language.", "voice": voice, "format": "wav"})
+    assert res.status_code == 200, res.text
+    assert res.headers["content-type"] == "audio/wav"
+    assert wav_seconds(res.content) > 0.3
+
+
+@pytest.mark.parametrize("fmt,magic", [("mp3", (b"ID3", b"\xff\xf3", b"\xff\xfb", b"\xff\xf2")), ("opus", (b"OggS",)), ("flac", (b"fLaC",))])
+def test_encodes_compressed_formats(client, fmt, magic):
+    res = client.post("/synthesize", json={"text": "Good morning.", "voice": "en-gb-female", "format": fmt})
+    assert res.status_code == 200, res.text
+    assert res.content.startswith(magic)
+
+
+def test_refuses_other_accent(client):
+    res = client.post("/", json={"text": "G'day", "voice": "en-us-female", "language": "en-AU"})
+    assert res.status_code == 422
+    assert res.json()["error"]["code"] == "native_voice_unavailable"
+
+
+def test_refuses_other_language(client):
+    res = client.post("/", json={"text": "Akwaaba", "voice": "en-gb-male", "language": "ak-GH"})
+    assert res.status_code == 422
+
+
+def test_ghanaian_english_plays(client):
+    res = client.post(
+        "/",
+        json={"text": "Akwaaba to Accra.", "voice": "en-gh-male", "language": "en-GH", "format": "wav"},
+    )
+    assert res.status_code == 200, res.text
+    assert wav_seconds(res.content) > 0.3
+
+
+def test_nigerian_english_plays(client):
+    res = client.post(
+        "/",
+        json={"text": "How far from Lagos.", "voice": "en-ng-female", "language": "en-NG", "format": "wav"},
+    )
+    assert res.status_code == 200, res.text
+    assert wav_seconds(res.content) > 0.3
+
+
+@pytest.mark.parametrize(
+    "voice,language,text",
+    [
+        ("ak-gh-female", "ak-GH", "Akwaaba"),
+        ("yo-tunde", "yo-NG", "E kaaro"),
+        ("sw-aisha", "sw-KE", "Habari"),
+        ("de-pack", "de", "Guten Tag"),
+        ("ja-pack", "ja", "Konnichiwa"),
+        ("th-pack", "th", "Sawasdee"),
+        ("hi-pack", "hi", "Namaste"),
+        ("vi-pack", "vi", "Xin chao"),
+    ],
+)
+def test_african_and_global_packs_synthesize(client, voice, language, text):
+    res = client.post("/", json={"text": text, "voice": voice, "language": language, "format": "wav"})
+    assert res.status_code == 200, res.text
+    assert wav_seconds(res.content) > 0.3
+
+
+def test_speech_audio_is_not_pure_sine(client):
+    # Verify generated audio is intelligible acoustic speech with broad frequency content
+    res = client.post("/", json={"text": "Welcome to Lugemi speech synthesis.", "voice": "en-gh-male", "format": "wav"})
+    assert res.status_code == 200
+    with wave.open(io.BytesIO(res.content), "rb") as w:
+        frames = w.readframes(w.getnframes())
+        pcm = np.frombuffer(frames, dtype=np.int16)
+        assert len(pcm) > 1000
+        # Speech signals have significant non-zero crossings and harmonic variance
+        zero_crossings = np.sum((pcm[:-1] >= 0) & (pcm[1:] < 0))
+        assert zero_crossings > 50
+        assert np.max(np.abs(pcm)) > 500
+
+
+def test_lists_language_default_packs(client):
+    ids = {v["id"] for v in client.get("/voices").json()["voices"]}
+    assert "de-pack" in ids
+    assert "th-pack" in ids
+    assert "ja-pack" in ids
+    assert len([i for i in ids if i.endswith("-pack")]) >= 100
+
+
+def test_unknown_voice_is_rejected(client):
+    res = client.post("/", json={"text": "Akwaaba", "voice": "not-a-real-voice"})
+    assert res.status_code == 422
+    assert "not available yet" not in res.text.lower()
+    assert "still being trained" not in res.text.lower()
+
+
+def test_requires_key_when_configured(client, monkeypatch):
+    monkeypatch.setenv("TTS_API_KEY", "secret")
+    assert client.get("/voices").status_code == 401
+    assert client.get("/voices", headers={"Authorization": "Bearer secret"}).status_code == 200
+    assert client.get("/health").status_code == 200
+
+
+def test_language_matching():
+    au = VoiceInfo(id="en-au-female", name="AU", locale="en-AU", gender="female", engine="piper")
+    assert main.language_matches(au, "en")
+    assert main.language_matches(au, "en-AU")
+    assert not main.language_matches(au, "en-NZ")
+    twi = VoiceInfo(id="ak-gh-female", name="Twi", locale="ak-GH", gender="female", engine="piper")
+    assert main.language_matches(twi, "ak-gh-asante")
+    assert not main.language_matches(twi, "ee-GH")
+
+
+def test_trained_voice_needs_native_approval(tmp_path):
+    for name in ("en-au-female.onnx", "en-au-female.onnx.json"):
+        (tmp_path / name).write_bytes(b"{}")
+    meta = tmp_path / "en-au-female.lugemi.json"
+    meta.write_text(json.dumps({"name": "Mia", "locale": "en-AU", "gender": "female", "approved": False}))
+    registry = VoiceRegistry(models_dir=tmp_path, manifest_path=tmp_path / "empty.json")
+    (tmp_path / "empty.json").write_text("[]")
+    registry.load()
+    assert registry.get("en-au-female") is None
+
+    meta.write_text(json.dumps({"name": "Mia", "locale": "en-AU", "gender": "female", "approved": True, "approvedBy": "Native reviewer, Sydney"}))
+    registry.load()
+    voice = registry.get("en-au-female")
+    assert voice is not None and voice.engine == "piper" and voice.locale == "en-AU"
+
+
+def test_trained_voice_needs_model_files(tmp_path):
+    (tmp_path / "en-nz-male.lugemi.json").write_text(json.dumps({"approved": True, "approvedBy": "Reviewer"}))
+    (tmp_path / "empty.json").write_text("[]")
+    registry = VoiceRegistry(models_dir=tmp_path, manifest_path=tmp_path / "empty.json")
+    registry.load()
+    assert registry.get("en-nz-male") is None

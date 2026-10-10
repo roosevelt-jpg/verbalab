@@ -1,0 +1,37 @@
+# Fly.io — Web US residency island (Virginia).
+# Distinct app from Africa primary lugemi-web (jnb) so a US deploy cannot
+# spawn iad/ams Machines on production apex.
+# fly apps create lugemi-web-us
+# fly deploy -c infra/fly/web.toml --dockerfile apps/web/Dockerfile
+app = 'lugemi-web-us'
+primary_region = 'iad'
+
+[build]
+  # flyctl resolves this relative to this file's directory (infra/fly/).
+  dockerfile = '../../apps/web/Dockerfile'
+
+[env]
+  NODE_ENV = 'production'
+  PORT = '3000'
+  HOSTNAME = '0.0.0.0'
+  LUGEMI_REGION = 'us'
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ['app']
+
+  [[http_service.checks]]
+    interval = '15s'
+    timeout = '5s'
+    grace_period = '60s'
+    method = 'GET'
+    path = '/health'
+
+[[vm]]
+  memory = '512mb'
+  cpu_kind = 'shared'
+  cpus = 1

@@ -1,0 +1,43 @@
+# Fly.io — API EU residency island (VL-075). Separate app + DATABASE_URL from US.
+# fly apps create lugemi-api-eu
+# fly deploy -c infra/fly/api.eu.toml --dockerfile apps/api/Dockerfile
+app = 'lugemi-api-eu'
+primary_region = 'ams'
+
+[build]
+  # flyctl resolves this relative to this file's directory (infra/fly/).
+  dockerfile = '../../apps/api/Dockerfile'
+
+[deploy]
+  # Soft-skips when DATABASE_URL unset; applies prisma migrate deploy when set.
+  release_command = '/bin/sh /app/apps/api/scripts/fly-migrate.sh'
+
+[env]
+  NODE_ENV = 'production'
+  API_PORT = '3001'
+  PORT = '3001'
+  HOST = '0.0.0.0'
+  LUGEMI_REGION = 'eu'
+  # Resend From (domain must be verified in Resend). Secret: RESEND_API_KEY via fly secrets.
+  EMAIL_FROM = 'Lugemi <noreply@lugemi.com>'
+
+[http_service]
+  internal_port = 3001
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ['app']
+
+  [[http_service.checks]]
+    interval = '15s'
+    timeout = '5s'
+    # Nest maps many routes before listen; short grace races Fly Doctor "not listening".
+    grace_period = '60s'
+    method = 'GET'
+    path = '/health'
+
+[[vm]]
+  memory = '512mb'
+  cpu_kind = 'shared'
+  cpus = 1

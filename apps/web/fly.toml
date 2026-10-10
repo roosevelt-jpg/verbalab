@@ -1,0 +1,40 @@
+# lugemi-web (Next.js) — Africa-first primary region Johannesburg.
+# Deploy from repo root (build context = monorepo root):
+#   fly deploy -c apps/web/fly.toml --dockerfile apps/web/Dockerfile \
+#     --build-arg NEXT_PUBLIC_API_URL=https://api.lugemi.com \
+#     --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_...
+# Existing Fly app verbalab-web: fly apps rename verbalab-web lugemi-web (or create lugemi-web).
+# Custom domain: fly certs add lugemi.com -a lugemi-web && fly certs add www.lugemi.com -a lugemi-web
+# Prefer infra/fly/web.jnb.toml for production Africa deploys.
+app = 'lugemi-web'
+primary_region = 'jnb'
+
+[build]
+  # Overridden by --dockerfile when deploying from repo root (required for pnpm workspace COPY).
+  dockerfile = 'apps/web/Dockerfile'
+
+[env]
+  NODE_ENV = 'production'
+  PORT = '3000'
+  HOSTNAME = '0.0.0.0'
+  LUGEMI_REGION = 'af'
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ['app']
+
+  [[http_service.checks]]
+    interval = '15s'
+    timeout = '5s'
+    grace_period = '60s'
+    method = 'GET'
+    path = '/health'
+
+[[vm]]
+  memory = '512mb'
+  cpu_kind = 'shared'
+  cpus = 1

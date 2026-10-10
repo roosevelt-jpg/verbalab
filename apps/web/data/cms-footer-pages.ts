@@ -1,0 +1,1697 @@
+import type { CmsLink, CmsPage, CmsPageSection } from './cms-types';
+
+function page(
+  partial: Omit<CmsPage, 'showInFooter'> & { showInFooter?: boolean },
+): CmsPage {
+  return { showInFooter: true, ...partial };
+}
+
+function guide(
+  id: string,
+  title: string,
+  body: string,
+  steps: string[],
+  links: CmsLink[],
+  kind: 'guide' | 'api' = 'guide',
+): CmsPageSection {
+  return { id, kind, title, body, steps, links };
+}
+
+function content(id: string, title: string, body: string): CmsPageSection {
+  return { id, title, body };
+}
+
+/** Expanded footer marketing pages (Creative, Agents, API, Resources). */
+export const FOOTER_CMS_PAGES: CmsPage[] = [
+  // ── LugemiCreative ──────────────────────────────────────────────
+  page({
+    slug: 'text-to-speech',
+    title: 'Text to Speech',
+    eyebrow: 'LugemiCreative',
+    lead: 'Turn scripts into resonant, region-aware speech with first-party own:* voices.',
+    body: 'Lugemi Text to Speech is the voice path for narration, ads, and speaking agents. Africa-first accents and dialects are first-class; availability is published per language and task — never assumed. Generate in the Voice console or call the same /v1 synthesize surface from your app.',
+    sections: [
+      content(
+        'usecases',
+        'Where teams use it',
+        'Product narration, classroom audio, IVR prompts, and creative spots that need literacy and presence across African and global languages.',
+      ),
+      content(
+        'controls',
+        'Controls that ship',
+        'Registry language chips, synthetic disclosure, workspace metering, and consent when you graduate to cloning.',
+      ),
+      guide(
+        'guide-tts',
+        'Try Text to Speech',
+        'Hear an own:* sample, then wire the same path into Studio or Agents.',
+        [
+          'Play the interactive demo on this page with a region voice.',
+          'Open the Voice console (/audio) after sign-in for full generation.',
+          'Call POST /v1/speech/synthesize with an lg_live_ key or @lugemi/sdk.',
+        ],
+        [
+          { label: 'Voice console', href: '/audio' },
+          { label: 'Lugemi Voice', href: '/p/lugemi-voice' },
+          { label: 'TTS API', href: '/p/tts-api' },
+          { label: 'Docs', href: '/docs' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Voice', href: '/audio' },
+    secondaryCta: { label: 'Start free', href: '/sign-up' },
+    footerColumn: 'creative',
+  }),
+  page({
+    slug: 'speech-to-text',
+    title: 'Speech to Text',
+    eyebrow: 'LugemiCreative',
+    lead: 'Transcribe accents, dialects, and code-switching built for African and global languages.',
+    body: 'Lugemi Speech to Text turns spoken audio into text that respects regional phrasing. Pair transcripts with Translate and Agents for captions, dubbing scripts, and speaking-agent pipelines. Catalog membership is not a quality certificate — check Coverage for task status.',
+    sections: [
+      content(
+        'usecases',
+        'Use cases',
+        'Call-center transcripts, classroom capture, media captions, and agent listen turns that must survive code-switching.',
+      ),
+      content(
+        'pipeline',
+        'Pipeline ready',
+        'STT feeds FAQ and agent runtimes so replies can go back out as Lugemi Voice on the same /v1 surface.',
+      ),
+      guide(
+        'guide-stt',
+        'Speech to Text guide',
+        'Upload audio, transcribe, then hand off to Translate or Agents.',
+        [
+          'Use the Speech console or POST /v1/speech/recognize.',
+          'Pair transcripts with Translate for captions and dubbing scripts.',
+          'Ship speaking agents that listen and reply aloud.',
+        ],
+        [
+          { label: 'Speech console', href: '/speech' },
+          { label: 'Lugemi Speech', href: '/p/lugemi-speech' },
+          { label: 'STT API', href: '/p/stt-api' },
+          { label: 'Coverage', href: '/coverage' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Speech', href: '/speech' },
+    secondaryCta: { label: 'Coverage', href: '/coverage' },
+    footerColumn: 'creative',
+  }),
+  page({
+    slug: 'voice-changer',
+    title: 'Voice Changer',
+    eyebrow: 'LugemiCreative',
+    lead: 'Shape delivery with enhancement profiles — without inventing a second identity.',
+    body: 'Lugemi positions voice change as enhancement and delivery control on top of first-party speech, not as a deepfake toy. The Voice Enhancement console ships profiles for clarity and presence. Full “transform into any celebrity voice” entertainment tools are not a Lugemi promise; consent-gated cloning covers authorized identity work.',
+    sections: [
+      content(
+        'available',
+        'What is available today',
+        'Voice Enhancement profiles in the console for clarity, loudness, and delivery shaping on workspace audio paths.',
+      ),
+      content(
+        'honest',
+        'Honest positioning',
+        'Dramatic persona swaps without consent are out of scope. Use Voice Cloning when you have authorization, and Voice for own:* narration.',
+      ),
+      guide(
+        'guide-changer',
+        'Enhancement path',
+        'Start from Enhancement, then graduate to Voice or Cloning as needed.',
+        [
+          'Open Voice Enhancement after sign-in.',
+          'Compare with an own:* sample in the Voice console.',
+          'For authorized identity work, use Voice Cloning with review states.',
+        ],
+        [
+          { label: 'Voice Enhancement', href: '/voice-enhancement' },
+          { label: 'Voice console', href: '/audio' },
+          { label: 'Voice Cloning', href: '/p/voice-cloning' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Enhancement', href: '/voice-enhancement' },
+    secondaryCta: { label: 'Voice console', href: '/audio' },
+    footerColumn: 'creative',
+  }),
+  page({
+    slug: 'text-to-sound-effects',
+    title: 'Text to Sound Effects',
+    eyebrow: 'LugemiCreative',
+    lead: 'Sound design for stories that already speak African and global languages.',
+    body: 'Lugemi’s primary surface is speech and language intelligence — not a general Foley generator. Text to Sound Effects is positioned as a creative companion roadmap: pair Studio narration with your existing audio stack today, and treat generative SFX as planned capability rather than a live, metered product.',
+    sections: [
+      content(
+        'today',
+        'Ship today',
+        'Produce narration and ads with Lugemi Voice and Studio, then layer effects in your DAW or game engine.',
+      ),
+      content(
+        'roadmap',
+        'Roadmap honesty',
+        'A dedicated text-to-SFX API is not marketed as production-ready. When it ships, it will follow the same metering, disclosure, and coverage rules as other generative audio.',
+      ),
+      guide(
+        'guide-sfx',
+        'Creative audio path',
+        'Use speech tools now; watch Updates for SFX availability.',
+        [
+          'Generate narration in Voice / Studio.',
+          'Localize scripts with Translate before final mix.',
+          'Check Latest updates and Docs when SFX endpoints publish.',
+        ],
+        [
+          { label: 'Studio', href: '/p/lugemi-studio' },
+          { label: 'Voice', href: '/audio' },
+          { label: 'Updates', href: '/p/updates' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Studio', href: '/sign-up' },
+    secondaryCta: { label: 'Voice console', href: '/audio' },
+    footerColumn: 'creative',
+  }),
+  page({
+    slug: 'voice-cloning',
+    title: 'Voice Cloning',
+    eyebrow: 'LugemiCreative',
+    lead: 'Instant clone from short consent samples — then use clone:{id} in speech, video dubbing, and Studio projects.',
+    body: 'Lugemi ships Instant Voice Cloning: upload or record consent samples, attest rights, pass abuse review, and synthesize with required watermarking. This is not live end-to-end model training over a realtime stream. Extract a track from video/audio first if you need a cleaner sample. Approved clones plug into TTS, Dubbing, Chat Studio, Voice Studio, MCP, and CLI as clone:{id}.',
+    sections: [
+      content(
+        'realtime',
+        'Realtime cloning — honest answer',
+        'Closest product today: instant clone from a short sample after consent (seconds to enroll, then review). SSE enrollment progress exists. Live streaming model training is not claimed.',
+      ),
+      content(
+        'upload',
+        'Upload a recorded voice',
+        'Yes. Voice Studio accepts 1–5 recorded samples (or in-browser mic capture) with consent attestation and notes. Pro plan + review before production speak.',
+      ),
+      content(
+        'extract',
+        'Extract voice from uploaded files',
+        'Yes for audio-track extract (browser decode) and Lugemi energy-VAD isolate. Neural stem-separation entertainment tools are not on this surface.',
+      ),
+      content(
+        'projects',
+        'Use in videos & songs',
+        'After approve, speak with clone:{id} in Voice Studio, hand off to Dubbing (STT → Translate → TTS), Chat Studio, and developer MCP/CLI. Music composition stays in your DAW; Lugemi supplies the consented vocal/narration path.',
+      ),
+      guide(
+        'guide-clone',
+        'Cloning workflow',
+        'Authorize, extract if needed, review, then ship into a project.',
+        [
+          'Open Voice Studio (/audio) — Instant clone tab — record or upload consent samples.',
+          'Optional: Extract / isolate tab to pull a track from video/audio before enroll.',
+          'Approve in workspace review, then Use in projects → Speak, Dubbing, Studio, or copy clone:{id} for API/MCP/CLI.',
+        ],
+        [
+          { label: 'Voice Studio', href: '/audio' },
+          { label: 'Voice Cloning console', href: '/voice-cloning' },
+          { label: 'Dubbing', href: '/p/dubbing' },
+          { label: 'Developers', href: '/developers' },
+          { label: 'Policies', href: '/p/policies' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Voice Studio', href: '/audio' },
+    secondaryCta: { label: 'Read policies', href: '/p/policies' },
+    footerColumn: 'creative',
+  }),
+  page({
+    slug: 'voice-isolator',
+    title: 'Voice Isolator',
+    eyebrow: 'LugemiCreative',
+    lead: 'Extract and isolate speech from uploads before cloning, captions, or agents.',
+    body: 'Lugemi Voice Isolator is the honest isolation path: client-side audio-track extract from video/audio the browser can decode, plus POST /v1/audio-intelligence/isolate (energy VAD). Use the cleaned WAV as a clone sample or feed Speech / Enhancement. Neural stem-separation OS is not implied by this page.',
+    sections: [
+      content(
+        'available',
+        'What is available',
+        'Voice Studio Extract tab, Audio Intelligence isolate, and Voice Enhancement profiles that include an isolate step.',
+      ),
+      content(
+        'roadmap',
+        'What is not on this surface',
+        'Entertainment-grade neural stem separation and karaoke-style vocal removers are not offered here.',
+      ),
+      content(
+        'usecases',
+        'Use cases',
+        'Prep field recordings for Instant Voice Cloning, clean noisy calls before STT, and pull a speakable track from interview video.',
+      ),
+      guide(
+        'guide-isolator',
+        'Extract → isolate → clone or transcribe',
+        'Pull a track, attenuate non-speech, then continue.',
+        [
+          'Open Voice Studio → Extract / isolate (or Audio Intelligence).',
+          'Extract audio track from your video/audio, then run Lugemi isolate.',
+          'Use as clone sample (with consent) or transcribe in Speech / Chat Studio.',
+        ],
+        [
+          { label: 'Voice Studio extract', href: '/audio?tab=extract' },
+          { label: 'Audio intelligence', href: '/audio-intelligence' },
+          { label: 'Voice Enhancement', href: '/voice-enhancement' },
+          { label: 'Voice Cloning', href: '/p/voice-cloning' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Extract', href: '/audio?tab=extract' },
+    secondaryCta: { label: 'Audio Intelligence', href: '/audio-intelligence' },
+    footerColumn: 'creative',
+  }),
+  page({
+    slug: 'ai-music-generator',
+    title: 'AI Music Generator',
+    eyebrow: 'LugemiCreative',
+    lead: 'Music composition stays in your DAW — Lugemi supplies consented vocals and narration.',
+    body: 'Lugemi is a language intelligence platform. A full AI music studio is not claimed as a live, metered product. Creative teams score and bed music in their existing tools while using Lugemi Instant Voice Cloning and Voice for authorized vocals, hooks, and localized messaging (clone:{id} after consent + review). Any future Music API will be announced with honest coverage — not implied by footer presence alone.',
+    sections: [
+      content(
+        'position',
+        'Brand position',
+        'Africa-first speech and translation are the investment priority. Generative music is roadmap-adjacent, not a substitute for Voice and Studio.',
+      ),
+      content(
+        'today',
+        'What to use today',
+        'Lugemi Voice for sung or spoken hooks when speech synthesis fits; Studio for script localization; your DAW for composition.',
+      ),
+      guide(
+        'guide-music',
+        'Creative path without faking music GA',
+        'Ship voice-led campaigns now; track Music API separately.',
+        [
+          'Produce narration or ads with Voice / Studio.',
+          'Localize copy with Translate.',
+          'Watch Docs and Updates if a Music endpoint publishes.',
+        ],
+        [
+          { label: 'Studio', href: '/p/lugemi-studio' },
+          { label: 'Ads Engine', href: '/p/ads-engine' },
+          { label: 'Updates', href: '/p/updates' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Voice', href: '/audio' },
+    secondaryCta: { label: 'Latest updates', href: '/p/updates' },
+    footerColumn: 'creative',
+  }),
+  page({
+    slug: 'voice-design',
+    title: 'Voice Design',
+    eyebrow: 'LugemiCreative',
+    lead: 'Design speaking personas with cultural metadata — not a flat vendor catalog.',
+    body: 'Voice Design in Lugemi means choosing and refining region-aware own:* voices, accents, and delivery for a character or brand. Start from the sample registry and Studio, apply enhancement where needed, and only clone with consent.',
+    sections: [
+      content(
+        'personas',
+        'Personas with context',
+        'Ethnic and regional metadata travel with voices so agents and ads sound locally grounded.',
+      ),
+      content(
+        'library',
+        'Library + Studio',
+        'Browse sample voices, generate in Voice, and keep review before public release.',
+      ),
+      guide(
+        'guide-design',
+        'Design a speaking persona',
+        'Pick a region voice, refine delivery, then ship through Studio or Agents.',
+        [
+          'Play region voices in the demo above.',
+          'Generate in the Voice console with an own:* id.',
+          'Attach the persona to an agent script or Studio project.',
+        ],
+        [
+          { label: 'Voice console', href: '/audio' },
+          { label: 'Voice Studio', href: '/voice-studio' },
+          { label: 'Studio page', href: '/p/lugemi-studio' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Voice', href: '/audio' },
+    secondaryCta: { label: 'Voice Studio', href: '/voice-studio' },
+    footerColumn: 'creative',
+  }),
+  page({
+    slug: 'ai-voice-generator',
+    title: 'AI Voice Generator',
+    eyebrow: 'LugemiCreative',
+    lead: 'First-party generative speech for creators and speaking agents.',
+    body: 'AI Voice Generator is the marketing name for Lugemi Voice synthesis: own:* voices, Africa-first accents, and the same API used by Studio and Agents. No third-party reseller wrapper story — production path is Lugemi endpoints and workspace keys.',
+    sections: [
+      content(
+        'generate',
+        'Generate with control',
+        'Script in, speech out, with language chips tied to the published coverage matrix.',
+      ),
+      content(
+        'agents',
+        'Into agents',
+        'The same voices power speaking-agent replies so brand sound stays consistent.',
+      ),
+      guide(
+        'guide-aivoice',
+        'Generate then integrate',
+        'Demo → console → /v1.',
+        [
+          'Try the TTS demo on this page.',
+          'Open /audio for authenticated generation.',
+          'Integrate POST /v1/speech/synthesize or @lugemi/sdk.',
+        ],
+        [
+          { label: 'Voice console', href: '/audio' },
+          { label: 'TTS API', href: '/p/tts-api' },
+          { label: 'Developers', href: '/developers' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Voice', href: '/audio' },
+    secondaryCta: { label: 'Start free', href: '/sign-up' },
+    footerColumn: 'creative',
+  }),
+  page({
+    slug: 'ai-image-generator',
+    title: 'AI Image Generator',
+    eyebrow: 'LugemiCreative',
+    lead: 'Imagery is adjacent — Lugemi leads with language, speech, and speaking agents.',
+    body: 'Lugemi does not claim a production AI image studio as a core product. Brand and console surfaces may show illustrative media; generative image APIs are not the Africa-first investment priority. Use your existing design tools for stills, and Lugemi for the voice and translation layer of campaigns.',
+    sections: [
+      content(
+        'honest',
+        'Honest capability',
+        'Footer presence explains positioning and adjacent creative workflows — it does not invent a live image model SLA.',
+      ),
+      content(
+        'pair',
+        'Pair with speech',
+        'When campaigns need both picture and voice, generate speech with Lugemi and compose visuals elsewhere.',
+      ),
+      guide(
+        'guide-image',
+        'Campaign path',
+        'Localize and voice the message; keep image gen external until Lugemi ships it.',
+        [
+          'Draft and localize copy in Studio / Translate.',
+          'Generate narration with Voice.',
+          'Watch Updates if image endpoints are ever published.',
+        ],
+        [
+          { label: 'Studio', href: '/p/lugemi-studio' },
+          { label: 'Ads Engine', href: '/p/ads-engine' },
+          { label: 'Updates', href: '/p/updates' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Studio', href: '/sign-up' },
+    secondaryCta: { label: 'Creative voice', href: '/p/creative' },
+    footerColumn: 'creative',
+  }),
+  page({
+    slug: 'ai-video-generator',
+    title: 'AI Video Generator',
+    eyebrow: 'LugemiCreative',
+    lead: 'Video voice and localization first — full generative video is not claimed as GA.',
+    body: 'Lugemi helps teams put accurate speech and translation onto video workflows (dubbing scripts, voice-over, agent video voice via MCP/CLI helpers). A complete text-to-video foundation model is not marketed as ready. Use Lugemi for the language layer; compose picture in your editor.',
+    sections: [
+      content(
+        'voice-on-video',
+        'Voice on video',
+        'Synthesize narration, clone with consent, and localize scripts before mix — Lugemi’s contribution to video.',
+      ),
+      content(
+        'roadmap',
+        'Roadmap honesty',
+        'End-to-end generative video remains adjacent. Product claims follow published endpoints and coverage.',
+      ),
+      guide(
+        'guide-video',
+        'Video localization path',
+        'Script → translate → voice → your editor.',
+        [
+          'Localize the script with Translate.',
+          'Generate voice-over in Voice / Studio.',
+          'For agents, explore Developers MCP/CLI video voice helpers.',
+        ],
+        [
+          { label: 'Dubbing', href: '/p/dubbing' },
+          { label: 'Voice', href: '/audio' },
+          { label: 'Developers', href: '/developers' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Voice', href: '/audio' },
+    secondaryCta: { label: 'Dubbing', href: '/p/dubbing' },
+    footerColumn: 'creative',
+  }),
+  page({
+    slug: 'ads-engine',
+    title: 'Ads Engine',
+    eyebrow: 'LugemiCreative',
+    lead: 'Multilingual ad voice and copy that sound native across African markets.',
+    body: 'The Lugemi Ads Engine is a creative workflow on top of Voice, Studio, and Translate: draft spots, pick region voices, localize scripts, disclose synthetic speech, and review before flight. It is not a media-buying DSP — Lugemi owns the language layer.',
+    sections: [
+      content(
+        'spots',
+        'Produce spots',
+        'Narration and character lines with own:* voices, then localize for each market from the coverage matrix.',
+      ),
+      content(
+        'governance',
+        'Governance',
+        'Consent for clones, synthetic disclosure, and workspace review keep brand risk visible.',
+      ),
+      guide(
+        'guide-ads',
+        'Ad production path',
+        'Draft → voice → localize → disclose.',
+        [
+          'Play region voices in the demo.',
+          'Generate narration in Voice; localize in Translate.',
+          'Review Policies before publishing generative speech.',
+        ],
+        [
+          { label: 'Voice', href: '/audio' },
+          { label: 'Studio', href: '/p/lugemi-studio' },
+          { label: 'Creative', href: '/p/creative' },
+          { label: 'Policies', href: '/p/policies' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Voice', href: '/audio' },
+    secondaryCta: { label: 'Creative guide', href: '/p/creative' },
+    footerColumn: 'creative',
+  }),
+  page({
+    slug: 'dubbing',
+    title: 'Dubbing',
+    eyebrow: 'LugemiCreative',
+    lead: 'Localize spoken media with transcription, translation, and region-aware or consented clone voices.',
+    body: 'Lugemi Dubbing combines Speech to Text, Translate, and Voice so teams can move programs and training media across languages without flattening cultural nuance. Use own:* voices or approved Instant clones (clone:{id}) for target speech. Timing polish still happens in your editor; Lugemi supplies a playable speech path for every language in the registry.',
+    sections: [
+      content(
+        'pipeline',
+        'Dubbing pipeline',
+        'Transcribe source → translate with review → synthesize target voice (own:* or clone:{id}) → mix externally.',
+      ),
+      content(
+        'clones',
+        'Consented clone voices',
+        'Enroll Instant clones in Voice Studio with attestation, approve review, then pass voice=clone:{id} into speech for dubbed takes — watermark required.',
+      ),
+      content(
+        'usecases',
+        'Use cases',
+        'Training films, public-service spots, product videos, and education modules across African and global languages.',
+      ),
+      guide(
+        'guide-dubbing',
+        'Dubbing guide',
+        'Use consoles end to end.',
+        [
+          'Optional: Extract / isolate source audio in Voice Studio, then Instant clone with consent.',
+          'Transcribe with Speech; localize with Translate.',
+          'Generate target audio in Voice with own:* or clone:{id}; review disclosure.',
+        ],
+        [
+          { label: 'Voice Studio projects', href: '/audio?tab=projects' },
+          { label: 'Speech', href: '/speech' },
+          { label: 'Translate', href: '/translate' },
+          { label: 'Voice', href: '/audio' },
+          { label: 'Dubbing API', href: '/p/dubbing-api' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Voice Studio', href: '/audio' },
+    secondaryCta: { label: 'Translate', href: '/translate' },
+    footerColumn: 'creative',
+  }),
+
+  // ── LugemiAgents ────────────────────────────────────────────────
+  page({
+    slug: 'voice-agents',
+    title: 'Voice Agents',
+    eyebrow: 'LugemiAgents',
+    lead: 'Deploy agents that listen, reason, and reply aloud with cultural context.',
+    body: 'Voice Agents are Lugemi’s speaking-agent product: STT → model → TTS turns with Agent Runtime permission allowlists. Built for African languages, accents, and cultural contexts first, with the same /v1 surface for global markets. Builders pick gender, tone/emotion style, and native-accent own:* voices; Emotion Intelligence exposes emotional state, sentiment, and tone on speech or text — honestly as heuristics, not NIST SER.',
+    sections: [
+      content(
+        'turns',
+        'Speaking turns',
+        'Simulate Voice FAQ turns, then graduate to production with metering and RBAC.',
+      ),
+      content(
+        'culture',
+        'Cultural context',
+        'Countries, ethnic groups, and tribes are product metadata — not afterthoughts.',
+      ),
+      content(
+        'voice-controls',
+        'Voice, tone & accent controls',
+        'Agent builders select male/female (or neutral) voices, delivery tone/emotion profiles, language, and country/region accent from the own:* registry — Africa-first, with cultural metadata on every pick.',
+      ),
+      content(
+        'emotion-detect',
+        'Emotion, sentiment & tone',
+        'POST /v1/emotion/detect returns emotional state, sentiment polarity, and delivery-tone labels with confidence and honesty notes. Soft audio proxies only — not trained speech-emotion recognition.',
+      ),
+      guide(
+        'guide-voice-agents',
+        'Agent integration guide',
+        'From transcript demo to production speaking agent.',
+        [
+          'Open Agents (/voice) and pick gender, tone, accent, and an own:* voice.',
+          'Simulate a turn with POST /v1/voice/turn or POST /v1/voice/simulate (optional emotion profile for soft prosody).',
+          'Detect utterance affect via POST /v1/emotion/detect or the Emotion Intelligence console.',
+        ],
+        [
+          { label: 'Agents console', href: '/voice' },
+          { label: 'Emotion Intelligence', href: '/emotion-intelligence' },
+          { label: 'Voice console', href: '/audio' },
+          { label: 'Lugemi Agents', href: '/p/lugemi-agents' },
+          { label: 'Agents API', href: '/p/agents-api' },
+          { label: 'Docs', href: '/docs' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Agents', href: '/voice' },
+    secondaryCta: { label: 'Emotion console', href: '/emotion-intelligence' },
+    footerColumn: 'agents',
+  }),
+  page({
+    slug: 'conversational-ai',
+    title: 'Conversational AI',
+    eyebrow: 'LugemiAgents',
+    lead: 'Chat and voice on one foundation — text when you type, speech when you talk.',
+    body: 'Lugemi Conversational AI spans Chat Studio, speaking agents, and translate-in-the-loop workflows. Teams can start in text, add voice, and keep the same workspace keys, coverage matrix, and review controls.',
+    sections: [
+      content(
+        'chat-studio',
+        'Chat Studio',
+        'Realtime phrase translation, document and voice upload, and office plugins for day-to-day work.',
+      ),
+      content(
+        'voice',
+        'Voice when needed',
+        'Promote a chat workflow to a speaking agent without changing your language registry.',
+      ),
+      guide(
+        'guide-conversational',
+        'Conversation rollout',
+        'Text first, then voice.',
+        [
+          'Try Translate and Chat Studio.',
+          'Simulate a speaking turn in Agents.',
+          'Integrate /v1 chat completions + speech from Docs.',
+        ],
+        [
+          { label: 'Chat Studio', href: '/chat' },
+          { label: 'Agents', href: '/voice' },
+          { label: 'Playground', href: '/playground' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Chat Studio', href: '/chat' },
+    secondaryCta: { label: 'Agents', href: '/voice' },
+    footerColumn: 'agents',
+  }),
+  page({
+    slug: 'integrations',
+    title: 'Integrations',
+    eyebrow: 'LugemiAgents',
+    lead: 'Connect Lugemi language intelligence to the systems you already run.',
+    body: 'Integrations cover connectors, connector marketplace listings, webhooks, and SDK/CLI/MCP helpers. Lugemi owns the speech and translation layer; telephony, CRM, and LMS systems stay in your stack with clear API boundaries.',
+    sections: [
+      content(
+        'connectors',
+        'Connectors',
+        'Browse and configure connectors from the console; prefer documented /v1 routes over brittle scrapers.',
+      ),
+      content(
+        'sdk',
+        'SDK & MCP',
+        '@lugemi/sdk, CLI, and MCP helpers keep video voice and agent tooling on the same keys.',
+      ),
+      guide(
+        'guide-integrations',
+        'Integration checklist',
+        'Pick a surface, authenticate, meter.',
+        [
+          'Create an lg_live_ or lg_test_ key.',
+          'Explore Connectors and the Developer hub.',
+          'Call OpenAPI routes from Docs or Playground.',
+        ],
+        [
+          { label: 'Connectors', href: '/connectors' },
+          { label: 'Connector marketplace', href: '/connector-marketplace' },
+          { label: 'Developers', href: '/developers' },
+          { label: 'Docs', href: '/docs' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Connectors', href: '/connectors' },
+    secondaryCta: { label: 'Developers', href: '/developers' },
+    footerColumn: 'agents',
+  }),
+  page({
+    slug: 'telecommunications',
+    title: 'Telecommunications',
+    eyebrow: 'LugemiAgents',
+    lead: 'Language intelligence for carriers and CPaaS — Lugemi does not replace your switch.',
+    body: 'Telco and CPaaS teams use Lugemi for STT, TTS, translation, and speaking agents on top of existing call infrastructure. We do not claim certified carrier switching; we publish language-task availability and workspace controls for the AI layer.',
+    sections: [
+      content(
+        'layer',
+        'The language layer',
+        'Inbound audio → recognize → reason → synthesize reply. Connect SIP/CPaaS via your stack.',
+      ),
+      content(
+        'governance',
+        'Governance',
+        'Usage logs, RBAC, and soft-sandbox keys support regulated environments — validate sector fit separately.',
+      ),
+      guide(
+        'guide-telecom',
+        'Telco pilot',
+        'Prove one language pair on one queue.',
+        [
+          'Simulate a support turn in Agents.',
+          'Wire /v1 speech endpoints behind your media server.',
+          'Review Safety and Policies with your compliance team.',
+        ],
+        [
+          { label: 'Agents', href: '/voice' },
+          { label: 'Speech', href: '/speech' },
+          { label: 'Safety', href: '/p/safety' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Agents', href: '/voice' },
+    secondaryCta: { label: 'Talk to us', href: '/sign-up' },
+    footerColumn: 'agents',
+  }),
+  page({
+    slug: 'financial-services',
+    title: 'Financial Services',
+    eyebrow: 'LugemiAgents',
+    lead: 'Serve customers in the languages they bank in — with reviewable transcripts.',
+    body: 'Banks and fintechs can pilot Lugemi speaking agents and translation for onboarding FAQ, collections reminders, and multilingual support. Lugemi does not claim banking licenses or automated credit decisions; sector suitability must be validated with your risk team.',
+    sections: [
+      content(
+        'support',
+        'Multilingual support',
+        'Voice FAQ with Africa-first accents and code-switching for retail and SME channels.',
+      ),
+      content(
+        'review',
+        'Human review',
+        'High-stakes copy and disclosures should use Translate review paths before customer contact.',
+      ),
+      guide(
+        'guide-fin',
+        'FS pilot plan',
+        'One product FAQ, one language pair.',
+        [
+          'Simulate agent turns for a known FAQ.',
+          'Invite compliance reviewers via Identity RBAC.',
+          'Integrate /v1 with workspace metering and audit logs.',
+        ],
+        [
+          { label: 'Agents', href: '/voice' },
+          { label: 'Identity', href: '/identity' },
+          { label: 'Policies', href: '/p/policies' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Agents', href: '/voice' },
+    secondaryCta: { label: 'Talk to us', href: '/sign-up' },
+    footerColumn: 'agents',
+  }),
+  page({
+    slug: 'healthcare',
+    title: 'Healthcare',
+    eyebrow: 'LugemiAgents',
+    lead: 'Language access for care teams — not a clinical device claim.',
+    body: 'Lugemi can help clinics and health platforms communicate across languages with speech and translation. We do not claim medical-device certification, diagnosis, or treatment. Validate clinical and privacy requirements separately; use human review for patient-facing copy.',
+    sections: [
+      content(
+        'access',
+        'Language access',
+        'Appointment reminders, wayfinding, and admin FAQ in mother tongues with honest coverage checks.',
+      ),
+      content(
+        'limits',
+        'Clear limits',
+        'No autonomous clinical advice. Keep clinicians and approved scripts in the loop.',
+      ),
+      guide(
+        'guide-health',
+        'Care-language pilot',
+        'Admin and access workflows first.',
+        [
+          'Pick non-clinical FAQ content to localize.',
+          'Use Translate review + Voice for outbound messages.',
+          'Engage Safety/Policies with your privacy office.',
+        ],
+        [
+          { label: 'Translate', href: '/translate' },
+          { label: 'Agents', href: '/voice' },
+          { label: 'Safety', href: '/p/safety' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Talk to us', href: '/sign-up' },
+    secondaryCta: { label: 'Coverage', href: '/coverage' },
+    footerColumn: 'agents',
+  }),
+  page({
+    slug: 'government',
+    title: 'Government',
+    eyebrow: 'LugemiAgents',
+    lead: 'Public-service language access with accountability controls.',
+    body: 'Civic helpers and agency hotlines can use Lugemi speaking agents for hours, documents, and multilingual FAQ. Procurement, residency, and classification requirements vary by jurisdiction — Lugemi publishes product controls (RBAC, logs, coverage) without inventing certifications.',
+    sections: [
+      content(
+        'civic',
+        'Civic FAQ',
+        'Amharic, Kiswahili, Hausa, and other mother-tongue turns for service navigation — availability per coverage matrix.',
+      ),
+      content(
+        'accountability',
+        'Accountability',
+        'Workspace keys, usage logs, and review states support audit conversations with public-sector buyers.',
+      ),
+      guide(
+        'guide-gov',
+        'Public-sector pilot',
+        'One service line, one language pair — plus integrity when speech may be synthetic.',
+        [
+          'Simulate a civic helper turn.',
+          'Review Safety, Legal integrity, and Policies with stakeholders.',
+          'Require Lugemi attestation for generative speech; human review for official bilingual notices.',
+          'Deploy behind your authenticated channels.',
+        ],
+        [
+          { label: 'Agents', href: '/voice' },
+          { label: 'Legal integrity', href: '/p/legal-integrity' },
+          { label: 'Safety', href: '/p/safety' },
+          { label: 'Enterprise', href: '/enterprise' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Legal integrity', href: '/p/legal-integrity' },
+    secondaryCta: { label: 'Enterprise', href: '/enterprise' },
+    footerColumn: 'agents',
+  }),
+  page({
+    slug: 'technology',
+    title: 'Technology',
+    eyebrow: 'LugemiAgents',
+    lead: 'Product teams ship speaking features with first-party APIs and SDKs.',
+    body: 'Technology companies embed Lugemi translate, speech, and agents into apps, devices, and platforms. Own endpoints and own:* voices — not a reseller wrapper — with Playground and OpenAPI for fast integration.',
+    sections: [
+      content(
+        'embed',
+        'Embed language intelligence',
+        'Add speech and translation without rebuilding an Africa-first registry yourself.',
+      ),
+      content(
+        'dx',
+        'Developer experience',
+        'Docs, Playground, @lugemi/sdk, Android/iOS HTTP helpers, and MCP/CLI tooling.',
+      ),
+      guide(
+        'guide-tech',
+        'Build path',
+        'Key → Playground → production.',
+        [
+          'Create an API key in the console.',
+          'Try Playground and sample SDKs.',
+          'Ship against /v1 with metering.',
+        ],
+        [
+          { label: 'Developers', href: '/developers' },
+          { label: 'Playground', href: '/playground' },
+          { label: 'API docs', href: '/docs' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Developers', href: '/developers' },
+    secondaryCta: { label: 'Playground', href: '/playground' },
+    footerColumn: 'agents',
+  }),
+  page({
+    slug: 'retail',
+    title: 'Retail & E-commerce',
+    eyebrow: 'LugemiAgents',
+    lead: 'Store and commerce agents that greet, quote, and escalate in local languages.',
+    body: 'Retail teams use Lugemi for multilingual store assistants, WhatsApp/voice FAQ, and localized product copy. Pair Agents with Translate review for promotions that must stay on-brand.',
+    sections: [
+      content(
+        'assistant',
+        'Store assistants',
+        'Speaking agents for hours, stock FAQ, and bilingual checkout help.',
+      ),
+      content(
+        'catalog',
+        'Catalog localization',
+        'Translate product sheets with glossary and human review before publish.',
+      ),
+      guide(
+        'guide-retail',
+        'Retail pilot',
+        'One store FAQ, one market language.',
+        [
+          'Simulate a shopper turn in Agents.',
+          'Localize a product blurb in Translate.',
+          'Connect via Integrations / Developers.',
+        ],
+        [
+          { label: 'Agents', href: '/voice' },
+          { label: 'Translate', href: '/translate' },
+          { label: 'Integrations', href: '/p/integrations' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Agents', href: '/voice' },
+    secondaryCta: { label: 'Start free', href: '/sign-up' },
+    footerColumn: 'agents',
+  }),
+  page({
+    slug: 'travel',
+    title: 'Travel & Hospitality',
+    eyebrow: 'LugemiAgents',
+    lead: 'Guest journeys that speak the languages travelers actually use.',
+    body: 'Hotels, airlines, and mobility apps can offer speaking agents and localized guest messaging across African hubs and global routes. Availability follows the coverage matrix; tone and etiquette stay configurable.',
+    sections: [
+      content(
+        'guest',
+        'Guest FAQ',
+        'Arrivals, amenities, and itinerary help with code-switching when guests switch languages mid-turn.',
+      ),
+      content(
+        'ops',
+        'Ops messaging',
+        'Translate crew and partner notices with review for high-stakes operational copy.',
+      ),
+      guide(
+        'guide-travel',
+        'Hospitality pilot',
+        'One property or route, one language pair.',
+        [
+          'Simulate a guest turn.',
+          'Localize a confirmation SMS/email body.',
+          'Integrate /v1 behind your booking stack.',
+        ],
+        [
+          { label: 'Agents', href: '/voice' },
+          { label: 'Translate', href: '/translate' },
+          { label: 'Developers', href: '/developers' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Agents', href: '/voice' },
+    secondaryCta: { label: 'Coverage', href: '/coverage' },
+    footerColumn: 'agents',
+  }),
+  page({
+    slug: 'customer-support',
+    title: 'Customer Support',
+    eyebrow: 'LugemiAgents',
+    lead: 'Support and IVR that understand accents, switches, and regional phrasing.',
+    body: 'Replace brittle IVR trees with Lugemi speaking agents that listen and reply in the languages customers already use — with metering, RBAC workspaces, and review for production support desks.',
+    sections: [
+      content(
+        'support',
+        'Support agents',
+        'Voice FAQ and escalation scripts tuned for African and global language communities.',
+      ),
+      content(
+        'ivr',
+        'Inbound voice',
+        'Hotline-ready STT → reason → TTS. Connect telephony via your stack; Lugemi owns the language layer.',
+      ),
+      guide(
+        'guide-support',
+        'CX pilot plan',
+        'Prove one queue in one language pair before scaling.',
+        [
+          'Simulate a support turn in the Agents console.',
+          'Invite teammates under org RBAC.',
+          'Wire /v1 speech + chat completions into your contact center.',
+        ],
+        [
+          { label: 'Agents', href: '/voice' },
+          { label: 'Customer experience', href: '/p/customer-experience' },
+          { label: 'Identity', href: '/identity' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Agents', href: '/voice' },
+    secondaryCta: { label: 'Talk to us', href: '/sign-up' },
+    footerColumn: 'agents',
+  }),
+  page({
+    slug: 'chatbots',
+    title: 'Chatbots',
+    eyebrow: 'LugemiAgents',
+    lead: 'Text bots that can graduate to voice without changing your language foundation.',
+    body: 'Lugemi chatbots start in Chat Studio and Playground, then promote to speaking agents when voice is required. Same registry, same keys, same honest coverage — so you do not maintain two language stacks.',
+    sections: [
+      content(
+        'text',
+        'Text first',
+        'FAQ and guided flows in Chat Studio with translate-in-the-loop.',
+      ),
+      content(
+        'voice',
+        'Add voice',
+        'Reuse scripts and permissions when you enable speaking turns.',
+      ),
+      guide(
+        'guide-chatbots',
+        'Bot to agent path',
+        'Prototype in chat, then enable voice.',
+        [
+          'Build a FAQ flow in Chat Studio.',
+          'Test translate defaults (English → Twi) or any pair.',
+          'Enable Agents simulate for spoken replies.',
+        ],
+        [
+          { label: 'Chat Studio', href: '/chat' },
+          { label: 'Agents', href: '/voice' },
+          { label: 'Playground', href: '/playground' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Chat Studio', href: '/chat' },
+    secondaryCta: { label: 'Agents', href: '/voice' },
+    footerColumn: 'agents',
+  }),
+
+  // ── LugemiAPI ───────────────────────────────────────────────────
+  page({
+    slug: 'agents-api',
+    title: 'Agents API',
+    eyebrow: 'LugemiAPI',
+    lead: 'Simulate and ship speaking agents on first-party /v1 endpoints.',
+    body: 'The Agents API exposes sandbox speaking turns (POST /v1/voice/simulate) and connects to Agent Runtime allowlists. Authenticate with Bearer lg_live_… or soft-sandbox lg_test_…. Production path is Lugemi endpoints — not a reseller wrapper.',
+    sections: [
+      content(
+        'simulate',
+        'Simulate',
+        'Prototype STT → reason → TTS turns before you attach telephony or chat channels.',
+      ),
+      content(
+        'runtime',
+        'Runtime',
+        'Hard permission allowlists keep agents inside approved tool boundaries.',
+      ),
+      guide(
+        'api-agents',
+        'Agents API checklist',
+        'Authenticate, simulate, then harden permissions.',
+        [
+          'Create an lg_live_ or lg_test_ key.',
+          'POST /v1/voice/simulate from Docs or curl.',
+          'Configure Agent Runtime before production traffic.',
+        ],
+        [
+          { label: 'OpenAPI docs', href: '/docs' },
+          { label: 'Playground', href: '/playground' },
+          { label: 'API keys', href: '/keys' },
+          { label: 'SDKs', href: '/developers' },
+        ],
+        'api',
+      ),
+    ],
+    primaryCta: { label: 'Explore docs', href: '/docs' },
+    secondaryCta: { label: 'API keys', href: '/keys' },
+    footerColumn: 'api',
+  }),
+  page({
+    slug: 'speech-engine',
+    title: 'Speech Engine',
+    eyebrow: 'LugemiAPI',
+    lead: 'Recognize and synthesize speech on the same first-party engine.',
+    body: 'The Lugemi Speech Engine covers STT and TTS under /v1/speech with registry languages, workspace metering, and own:* voices. Use Speech and Voice consoles to evaluate quality, then call the API from @lugemi/sdk or OpenAPI clients.',
+    sections: [
+      content(
+        'recognize',
+        'Recognize',
+        'POST audio for transcripts that respect accents and code-switching.',
+      ),
+      content(
+        'synthesize',
+        'Synthesize',
+        'Generate speech with own:* voice ids and disclosure where required.',
+      ),
+      guide(
+        'api-speech-engine',
+        'Speech Engine integration',
+        'Console → Playground → production.',
+        [
+          'Try /speech and /audio consoles.',
+          'Call /v1/speech/recognize and /v1/speech/synthesize.',
+          'Meter with lg_live_ keys; soft-sandbox with lg_test_.',
+        ],
+        [
+          { label: 'Docs', href: '/docs' },
+          { label: 'STT API', href: '/p/stt-api' },
+          { label: 'TTS API', href: '/p/tts-api' },
+          { label: 'Developers', href: '/developers' },
+        ],
+        'api',
+      ),
+    ],
+    primaryCta: { label: 'Open docs', href: '/docs' },
+    secondaryCta: { label: 'Playground', href: '/playground' },
+    footerColumn: 'api',
+  }),
+  page({
+    slug: 'dubbing-api',
+    title: 'Dubbing API',
+    eyebrow: 'LugemiAPI',
+    lead: 'Compose transcription, translation, and synthesis for localization pipelines.',
+    body: 'There is no single magic “dub in one call” claim. The Dubbing API story is the composed /v1 surface: speech recognize → translate → speech synthesize, with optional document jobs and human review. Timing alignment remains in your media toolchain.',
+    sections: [
+      content(
+        'compose',
+        'Composed pipeline',
+        'Chain documented endpoints with workspace metering instead of opaque black-box dubbing.',
+      ),
+      content(
+        'review',
+        'Review hooks',
+        'Keep translators in the loop for regulated or brand-sensitive media.',
+      ),
+      guide(
+        'api-dubbing',
+        'Dubbing API path',
+        'Wire the three calls, then automate.',
+        [
+          'Recognize source audio.',
+          'Translate text with glossary/review as needed.',
+          'Synthesize target speech with own:* voices.',
+        ],
+        [
+          { label: 'Docs', href: '/docs' },
+          { label: 'Dubbing product', href: '/p/dubbing' },
+          { label: 'Playground', href: '/playground' },
+        ],
+        'api',
+      ),
+    ],
+    primaryCta: { label: 'Open docs', href: '/docs' },
+    secondaryCta: { label: 'Dubbing guide', href: '/p/dubbing' },
+    footerColumn: 'api',
+  }),
+  page({
+    slug: 'tts-api',
+    title: 'Text to Speech API',
+    eyebrow: 'LugemiAPI',
+    lead: 'POST /v1/speech/synthesize with own:* voices and workspace keys.',
+    body: 'The TTS API is the programmatic surface for Lugemi Voice. Pass text and a voice id, receive speech, meter usage, and disclose synthetic output where listeners could assume a live person.',
+    sections: [
+      content(
+        'auth',
+        'Auth',
+        'Authorization: Bearer lg_live_… for production; lg_test_… for soft sandbox.',
+      ),
+      content(
+        'voices',
+        'Voices',
+        'Use own:* identifiers from the sample registry and Voice console.',
+      ),
+      guide(
+        'api-tts',
+        'TTS API quickstart',
+        'Key → synthesize → ship.',
+        [
+          'Create a key under /keys.',
+          'Call synthesize from Docs, Playground, or @lugemi/sdk.',
+          'Attach disclosure for customer-facing audio.',
+        ],
+        [
+          { label: 'Docs', href: '/docs' },
+          { label: 'API keys', href: '/keys' },
+          { label: 'Developers', href: '/developers' },
+          { label: 'Text to Speech', href: '/p/text-to-speech' },
+        ],
+        'api',
+      ),
+    ],
+    primaryCta: { label: 'Open docs', href: '/docs' },
+    secondaryCta: { label: 'API keys', href: '/keys' },
+    footerColumn: 'api',
+  }),
+  page({
+    slug: 'stt-api',
+    title: 'Speech to Text API',
+    eyebrow: 'LugemiAPI',
+    lead: 'POST /v1/speech/recognize for accents, dialects, and code-switching.',
+    body: 'The STT API powers Lugemi Speech. Send audio, receive text, then optionally chain Translate or Agents. Check Coverage for language × task status before promising a locale in production.',
+    sections: [
+      content(
+        'recognize',
+        'Recognize',
+        'Workspace-metered recognition with registry language codes.',
+      ),
+      content(
+        'chain',
+        'Chain',
+        'Pipe transcripts into translate or voice simulate on the same /v1 host.',
+      ),
+      guide(
+        'api-stt',
+        'STT API quickstart',
+        'Console → API → agent pipeline.',
+        [
+          'Try the Speech console.',
+          'POST audio to /v1/speech/recognize.',
+          'Hand text to Translate or Agents as needed.',
+        ],
+        [
+          { label: 'Docs', href: '/docs' },
+          { label: 'Speech console', href: '/speech' },
+          { label: 'Coverage', href: '/coverage' },
+        ],
+        'api',
+      ),
+    ],
+    primaryCta: { label: 'Open docs', href: '/docs' },
+    secondaryCta: { label: 'Speech console', href: '/speech' },
+    footerColumn: 'api',
+  }),
+  page({
+    slug: 'sound-effects-api',
+    title: 'Sound Effects API',
+    eyebrow: 'LugemiAPI',
+    lead: 'SFX generation is roadmap-adjacent — speech APIs ship today.',
+    body: 'A dedicated Sound Effects API is not advertised as production-ready. Developers building sound-rich apps should use Lugemi speech endpoints for voice and keep Foley in specialized tools until Lugemi publishes an SFX route with metering and docs.',
+    sections: [
+      content(
+        'today',
+        'Use today',
+        'Speech synthesize/recognize and Translate on /v1.',
+      ),
+      content(
+        'later',
+        'When it ships',
+        'Expect OpenAPI entries, workspace metering, and honest capability notes — the same bar as other generative audio.',
+      ),
+      guide(
+        'api-sfx',
+        'Audio API path now',
+        'Build on speech; watch Updates for SFX.',
+        [
+          'Integrate TTS/STT from Docs.',
+          'Use Playground for request shapes.',
+          'Follow Latest updates for new audio endpoints.',
+        ],
+        [
+          { label: 'Docs', href: '/docs' },
+          { label: 'Speech Engine', href: '/p/speech-engine' },
+          { label: 'Updates', href: '/p/updates' },
+        ],
+        'api',
+      ),
+    ],
+    primaryCta: { label: 'Open docs', href: '/docs' },
+    secondaryCta: { label: 'Updates', href: '/p/updates' },
+    footerColumn: 'api',
+  }),
+  page({
+    slug: 'music-api',
+    title: 'Music API',
+    eyebrow: 'LugemiAPI',
+    lead: 'Music generation is not a live Lugemi /v1 product claim.',
+    body: 'The Music API page exists so footer navigation stays complete and honest. Lugemi’s developer surface is speech, translation, detect, and agent simulate. Compose music elsewhere; use Lugemi for vocals and localized messaging.',
+    sections: [
+      content(
+        'scope',
+        'Scope',
+        'Language intelligence first. Music endpoints will be documented only when they exist.',
+      ),
+      content(
+        'adjacent',
+        'Adjacent work',
+        'Voice API for sung/spoken hooks when speech synthesis fits the creative brief.',
+      ),
+      guide(
+        'api-music',
+        'Developer path',
+        'Ship speech features now.',
+        [
+          'Integrate TTS and Translate.',
+          'Use Agents API for interactive voice.',
+          'Monitor Docs/Updates for music routes.',
+        ],
+        [
+          { label: 'Docs', href: '/docs' },
+          { label: 'TTS API', href: '/p/tts-api' },
+          { label: 'Updates', href: '/p/updates' },
+        ],
+        'api',
+      ),
+    ],
+    primaryCta: { label: 'Open docs', href: '/docs' },
+    secondaryCta: { label: 'TTS API', href: '/p/tts-api' },
+    footerColumn: 'api',
+  }),
+  page({
+    slug: 'translate-api',
+    title: 'Translate API',
+    eyebrow: 'LugemiAPI',
+    lead: 'POST /v1/translate with registry locale codes and optional document jobs.',
+    body: 'The Translate API moves meaning across languages with Africa-first investment and global scope. Default demos often use English → Twi (Akan, Ghana); any published pair works. Pair with review workflows for high-stakes copy.',
+    sections: [
+      content(
+        'text',
+        'Text translate',
+        'Source/target codes from the same registry as the console.',
+      ),
+      content(
+        'documents',
+        'Documents',
+        'Longer assets via document translate jobs with workspace metering.',
+      ),
+      guide(
+        'api-translate',
+        'Translate API quickstart',
+        'Demo → SDK → production.',
+        [
+          'Try the interactive translate demo.',
+          'Call POST /v1/translate with @lugemi/sdk.',
+          'Add review for regulated content.',
+        ],
+        [
+          { label: 'Docs', href: '/docs' },
+          { label: 'Playground', href: '/playground' },
+          { label: 'Translate console', href: '/translate' },
+          { label: 'Coverage', href: '/coverage' },
+        ],
+        'api',
+      ),
+    ],
+    primaryCta: { label: 'Open docs', href: '/docs' },
+    secondaryCta: { label: 'Playground', href: '/playground' },
+    footerColumn: 'api',
+  }),
+  page({
+    slug: 'ios-sdk',
+    title: 'iOS SDK',
+    eyebrow: 'LugemiAPI',
+    lead: 'Mobile apps call the same REST APIs — Swift helpers documented in the Developer hub.',
+    body: 'Lugemi iOS integration uses HTTPS against /v1 (speech, translate, agents) with your workspace API key. Dedicated Swift package maturity tracks the Developer hub; HTTP clients are supported today. Prefer lg_test_ keys in development builds.',
+    sections: [
+      content(
+        'rest',
+        'REST first',
+        'Any Swift networking stack can call OpenAPI routes; see Developers for current helper status.',
+      ),
+      content(
+        'safety',
+        'Key safety',
+        'Never ship production secrets in client binaries without a backend proxy when policy requires it.',
+      ),
+      guide(
+        'guide-ios',
+        'iOS integration',
+        'Read Developers, then call /v1.',
+        [
+          'Open the Developer hub Android & iOS section.',
+          'Create a sandbox key.',
+          'Call speech or translate from a thin Swift client or via your API gateway.',
+        ],
+        [
+          { label: 'Developers', href: '/developers' },
+          { label: 'OpenAPI docs', href: '/docs' },
+          { label: 'API keys', href: '/keys' },
+        ],
+        'api',
+      ),
+    ],
+    primaryCta: { label: 'Developer hub', href: '/developers' },
+    secondaryCta: { label: 'Docs', href: '/docs' },
+    footerColumn: 'api',
+  }),
+  page({
+    slug: 'android-sdk',
+    title: 'Android SDK',
+    eyebrow: 'LugemiAPI',
+    lead: 'Kotlin/Java apps use the same Lugemi /v1 REST surface.',
+    body: 'Android integration mirrors iOS: call speech, translate, and agent endpoints with workspace keys. Helper libraries are documented on the Developer hub; raw OpenAPI clients work today. Use soft-sandbox keys while prototyping.',
+    sections: [
+      content(
+        'rest',
+        'REST first',
+        'OkHttp/Ktor/Retrofit against OpenAPI — same contracts as web and Node.',
+      ),
+      content(
+        'voice',
+        'On-device capture',
+        'Capture audio on device, send to STT, play TTS responses with disclosure when needed.',
+      ),
+      guide(
+        'guide-android',
+        'Android integration',
+        'Hub → key → /v1.',
+        [
+          'Read Developers → Android & iOS.',
+          'Create lg_test_ key.',
+          'Wire recognize/synthesize or translate calls.',
+        ],
+        [
+          { label: 'Developers', href: '/developers' },
+          { label: 'Docs', href: '/docs' },
+          { label: 'API keys', href: '/keys' },
+        ],
+        'api',
+      ),
+    ],
+    primaryCta: { label: 'Developer hub', href: '/developers' },
+    secondaryCta: { label: 'API keys', href: '/keys' },
+    footerColumn: 'api',
+  }),
+  page({
+    slug: 'api-key',
+    title: 'API Key',
+    eyebrow: 'LugemiAPI',
+    lead: 'Create lg_live_ and lg_test_ keys in the console — meter every /v1 call.',
+    body: 'Lugemi API keys authenticate workspace traffic. Production keys use the lg_live_ prefix; soft-sandbox keys use lg_test_. Rotate and revoke from the Keys console. Never commit secrets to git.',
+    sections: [
+      content(
+        'prefixes',
+        'Key prefixes',
+        'lg_live_ for production metering; lg_test_ for safe experimentation.',
+      ),
+      content(
+        'usage',
+        'Usage',
+        'Pass Authorization: Bearer <key> on OpenAPI routes; inspect usage in the console.',
+      ),
+      guide(
+        'guide-keys',
+        'Get a key',
+        'Sign in → Keys → call Docs.',
+        [
+          'Open /keys after authentication.',
+          'Create a test key and try Playground.',
+          'Graduate to live keys when ready.',
+        ],
+        [
+          { label: 'API keys console', href: '/keys' },
+          { label: 'Docs', href: '/docs' },
+          { label: 'Playground', href: '/playground' },
+        ],
+        'api',
+      ),
+    ],
+    primaryCta: { label: 'Open API keys', href: '/keys' },
+    secondaryCta: { label: 'Docs', href: '/docs' },
+    footerColumn: 'api',
+  }),
+
+  // ── Resources extras ────────────────────────────────────────────
+  page({
+    slug: 'openapi-explorer',
+    title: 'OpenAPI explorer',
+    eyebrow: 'Resources',
+    lead: 'Browse Lugemi /v1 contracts from Docs — the live OpenAPI document backs every route.',
+    body: 'Use the Docs console and Developer hub OpenAPI link to inspect request shapes for speech, translate, detect, and voice simulate. The explorer is the contract source of truth; marketing pages never invent paths that are missing from OpenAPI.',
+    sections: [
+      content(
+        'docs',
+        'Docs console',
+        'Interactive documentation for authenticated workspaces.',
+      ),
+      content(
+        'raw',
+        'Raw OpenAPI',
+        'Developers can download/open the OpenAPI JSON from the API origin listed in the Developer hub.',
+      ),
+      guide(
+        'guide-openapi',
+        'Explore the contract',
+        'Docs → try a call → SDK.',
+        [
+          'Open /docs and browse /v1 routes.',
+          'Copy a curl or SDK snippet.',
+          'Run the same shape in Playground.',
+        ],
+        [
+          { label: 'Docs', href: '/docs' },
+          { label: 'Developers', href: '/developers' },
+          { label: 'Playground', href: '/playground' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open docs', href: '/docs' },
+    secondaryCta: { label: 'Developers', href: '/developers' },
+    footerColumn: 'resources',
+  }),
+  page({
+    slug: 'trust-center',
+    title: 'Trust Center',
+    eyebrow: 'Resources',
+    lead: 'Safety, accountability, and product controls — without invented compliance badges.',
+    body: 'The Lugemi Trust Center gathers Safety, Policies, and trust console surfaces. We show controls that exist: moderation on generative speech, workspace RBAC, synthetic provenance, consent for clones, and usage logs. We do not display certifications without published evidence.',
+    sections: [
+      content(
+        'controls',
+        'Product controls',
+        'Moderation, disclosure, consent, retention, and residency pins under Data settings.',
+      ),
+      content(
+        'consoles',
+        'Trust consoles',
+        'Trust Cloud and Trust Analytics for workspace operators exploring governance tooling.',
+      ),
+      guide(
+        'guide-trust',
+        'Trust tour',
+        'Read policy, then inspect product paths.',
+        [
+          'Read Safety, Legal integrity, and Policies.',
+          'Review Identity RBAC and Data branding/retention.',
+          'Open Language Integrity and Trust Cloud consoles.',
+        ],
+        [
+          { label: 'Safety', href: '/p/safety' },
+          { label: 'Legal integrity', href: '/p/legal-integrity' },
+          { label: 'Policies', href: '/p/policies' },
+          { label: 'Integrity console', href: '/language-integrity' },
+          { label: 'Trust Cloud', href: '/trust-cloud' },
+          { label: 'Data', href: '/data' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Legal integrity', href: '/p/legal-integrity' },
+    secondaryCta: { label: 'Policies', href: '/p/policies' },
+    footerColumn: 'resources',
+  }),
+  page({
+    slug: 'enterprise',
+    title: 'Enterprise',
+    eyebrow: 'Resources',
+    lead: 'SSO, dedicated capacity, LugemiCreative, LugemiAgents, and honest security controls for organizational language AI.',
+    body: 'Lugemi Enterprise is the organizational path: SSO and RBAC, dedicated capacity, residency controls, custom SLA packaging, and speaking agents for multi-team rollouts. Open the full Enterprise page for feature coverage, or the console for live governance.',
+    sections: [
+      content(
+        'workspace',
+        'Workspaces',
+        'Invite teammates, assign roles, and meter API usage per organization — unlimited workspaces on Enterprise.',
+      ),
+      content(
+        'security',
+        'Security that exists',
+        'Retention, residency pins, audit logs, Language Integrity, and consent-gated cloning. Compliance pathway available via sales — we do not invent SOC 2 badges.',
+      ),
+      guide(
+        'guide-enterprise',
+        'Enterprise start',
+        'Enterprise page → Billing → Console.',
+        [
+          'Read the Enterprise plan page.',
+          'Upgrade or contact sales from Billing.',
+          'Open the Enterprise console for governance.',
+        ],
+        [
+          { label: 'Enterprise page', href: '/enterprise' },
+          { label: 'Billing', href: '/billing' },
+          { label: 'Enterprise console', href: '/enterprise/console' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Enterprise page', href: '/enterprise' },
+    secondaryCta: { label: 'Contact sales', href: '/p/about' },
+    footerColumn: 'resources',
+  }),
+  page({
+    slug: 'marketplace',
+    title: 'Marketplace',
+    eyebrow: 'Resources',
+    lead: 'Discover agents, models, connectors, and workflows on Lugemi marketplaces.',
+    body: 'Lugemi Marketplace surfaces (and specialized agent/model/connector marketplaces) help teams find reusable assets. Listings are workspace-scoped tooling — evaluate coverage and permissions before production.',
+    sections: [
+      content(
+        'browse',
+        'Browse',
+        'Start at /marketplace or specialized hubs for agents, models, and connectors.',
+      ),
+      content(
+        'ship',
+        'Ship responsibly',
+        'Prefer assets that declare language coverage and required permissions.',
+      ),
+      guide(
+        'guide-marketplace',
+        'Marketplace path',
+        'Browse → evaluate → integrate.',
+        [
+          'Open the Marketplace console.',
+          'Compare Agent and Connector marketplaces.',
+          'Integrate chosen assets via Developers/Docs.',
+        ],
+        [
+          { label: 'Marketplace', href: '/marketplace' },
+          { label: 'Agent marketplace', href: '/agent-marketplace' },
+          { label: 'Developers', href: '/developers' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Marketplace', href: '/marketplace' },
+    secondaryCta: { label: 'Agents', href: '/p/voice-agents' },
+    footerColumn: 'resources',
+  }),
+
+  // ── Builders / Infrastructure ───────────────────────────────────
+  page({
+    slug: 'builders',
+    title: 'Builders',
+    eyebrow: 'Language Intelligence Infrastructure',
+    lead:
+      'The go-to voice layer for people launching agents, video products, and apps that must sound human — in native languages, Africa-first.',
+    body:
+      'Builders are shipping AI agents, video pipelines, and creator tools that need speech that carries real accents, dialects, and cultural density — not a thin TTS gadget. Lugemi is Language Intelligence infrastructure: first-party own:* voices, speech synthesize, translate, speaking agents, connectors, MCP/CLI, and metered /v1 APIs under one workspace. Pick a native voice, wire keys, and launch products that sound like people.',
+    sections: [
+      content(
+        'agents',
+        'Voice agents that sound local',
+        'Ship STT → reason → TTS agents with NativeAccentVoicePicker controls: gender, tone/emotion, language, and country/region accent from the Africa-first own:* registry. Cultural metadata stays on every pick.',
+      ),
+      content(
+        'video',
+        'Video & dubbing voice',
+        'Narration and dubbed takes for product videos, training films, and creator pipelines — synthesize with speech, localize with Translate, route through Connectors or MCP/CLI without stacking noisy vendor audio.',
+      ),
+      content(
+        'catalog',
+        'Human-sounding native catalog',
+        'own:* voices across Kiswahili, Yorùbá, Amharic, isiZulu, Twi, Hausa, Arabic, French, and more — with region and ethnic context, not generic accent placeholders.',
+      ),
+      content(
+        'infra',
+        'Infrastructure, not a toy',
+        'API keys, Playground, Docs, OpenAPI, @lugemi/sdk, CLI, MCP, Connectors, and Chat Studio share one surface. Soft lg_test_ keys for pilots; lg_live_ for production. Coverage stays honest per language × task.',
+      ),
+      guide(
+        'guide-builders',
+        'Builder launch path',
+        'From demo to product voice.',
+        [
+          'Hear region voices on this page, then open the Builders console hub.',
+          'Path A: Agents (/voice) with native accent + tone picker.',
+          'Path B: Voice Studio (/audio) + Connectors/MCP for video/dubbing lines.',
+          'Path C: Create keys, hit Playground, ship with @lugemi/sdk or CLI.',
+        ],
+        [
+          { label: 'Builders console', href: '/builders' },
+          { label: 'Developers', href: '/developers' },
+          { label: 'Docs', href: '/docs' },
+          { label: 'Voice Studio', href: '/audio' },
+          { label: 'Agents', href: '/voice' },
+          { label: 'Connectors', href: '/connectors' },
+        ],
+      ),
+      guide(
+        'api-builders',
+        'API · SDK · MCP kit',
+        'Same contracts agents and video share.',
+        [
+          'POST /v1/speech/synthesize with own:* or clone:{id}.',
+          'POST /v1/voice/simulate for speaking-agent turns.',
+          'POST /v1/translate for scripts and dubbing lines.',
+          'MCP/CLI: lugemi speech · lugemi video-voice · lugemi voices.',
+        ],
+        [
+          { label: 'API docs', href: '/docs' },
+          { label: 'Playground', href: '/playground' },
+          { label: 'API keys', href: '/keys' },
+          { label: 'TTS API', href: '/p/tts-api' },
+          { label: 'Agents API', href: '/p/agents-api' },
+          { label: 'Infrastructure', href: '/p/infrastructure' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Open Builders hub', href: '/builders' },
+    secondaryCta: { label: 'Start free', href: '/sign-up' },
+    footerColumn: 'resources',
+  }),
+  page({
+    slug: 'infrastructure',
+    title: 'Infrastructure',
+    eyebrow: 'Language Intelligence',
+    lead:
+      'Lugemi is the voice and language layer under products that speak — agents, video, and apps built for native languages.',
+    body:
+      'Teams building AI agents and video products need infrastructure that delivers human-sounding speech in the languages their users actually speak. Lugemi owns the speech, translate, and speaking-agent stack: Africa-first completeness, own:* native accents, connectors into video/voice platforms, and developer surfaces (API, SDK, MCP, CLI) so you launch powerful products — not demo gadgets.',
+    sections: [
+      content(
+        'layer',
+        'The language layer',
+        'Recognize → translate → synthesize → speak. Lugemi sits under your agent runtime or video pipeline; you keep product UX and media orchestration.',
+      ),
+      content(
+        'native',
+        'Native languages, human presence',
+        'Region-aware voices with cultural context so agents and dubbed video sound like people from Nairobi, Lagos, Accra, Addis — not a single generic voice bank.',
+      ),
+      content(
+        'surfaces',
+        'Surfaces that ship',
+        'Builders console, Developers hub, Docs, Playground, Voice Studio, Agents, Connectors, Chat Studio — one workspace, one key model.',
+      ),
+      guide(
+        'guide-infra',
+        'Adopt Lugemi as infrastructure',
+        'Wire the layer, then scale languages.',
+        [
+          'Open /p/builders for positioning, demos, and the launch kit.',
+          'Use the Builders console for Agents, Video voice, and Keys paths.',
+          'Authenticate with lg_live_ / lg_test_ and call published /v1 routes.',
+        ],
+        [
+          { label: 'Builders', href: '/p/builders' },
+          { label: 'Builders console', href: '/builders' },
+          { label: 'Developers', href: '/developers' },
+          { label: 'Docs', href: '/docs' },
+          { label: 'Coverage', href: '/coverage' },
+        ],
+      ),
+    ],
+    primaryCta: { label: 'Builders', href: '/p/builders' },
+    secondaryCta: { label: 'Open console hub', href: '/builders' },
+    footerColumn: 'api',
+  }),
+];
+
+export const FOOTER_PAGE_SLUGS = FOOTER_CMS_PAGES.map((p) => p.slug);

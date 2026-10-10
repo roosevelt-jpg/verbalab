@@ -1,0 +1,33 @@
+# Requires an Ingress controller (AWS Load Balancer Controller recommended on EKS).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lugemi
+  namespace: lugemi
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+spec:
+  rules:
+    - host: api.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: lugemi-api
+                port:
+                  number: 80
+    - host: app.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: lugemi-web
+                port:
+                  number: 80

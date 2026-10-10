@@ -1,0 +1,30 @@
+node_modules
+agent-tools
+.vercel
+
+.turbo
+dist
+.next
+# Test coverage reports. Keep the Next.js public /coverage route commitable.
+coverage
+!apps/web/app/coverage
+!apps/web/app/coverage/**
+.env
+.env.local
+apps/*/.env
+apps/*/.env.local
+*.log
+.DS_Store
+apps/api/prisma/*.db
+apps/api/prisma/*.db-journal
+apps/api/storage/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+scripts/__pycache__/
+
+# Local secrets (never commit)
+.local/
+**/firebase-adminsdk*.json
+.data/

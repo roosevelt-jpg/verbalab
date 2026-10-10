@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: lugemi-api
+  namespace: lugemi
+spec:
+  selector:
+    app: lugemi-api
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: lugemi-web
+  namespace: lugemi
+spec:
+  selector:
+    app: lugemi-web
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

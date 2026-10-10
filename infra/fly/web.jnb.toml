@@ -1,0 +1,47 @@
+# Fly.io — Web Africa residency island (Johannesburg).
+# Fly app name lugemi-web ≠ public hostname https://lugemi.com
+# Point NEXT_PUBLIC_API_URL at https://api.lugemi.com
+# fly apps create lugemi-web
+# (If an older verbalab-web app exists: fly apps rename verbalab-web lugemi-web — or create lugemi-web.)
+# fly deploy -c infra/fly/web.jnb.toml --dockerfile apps/web/Dockerfile \
+#   --build-arg NEXT_PUBLIC_API_URL=https://api.lugemi.com
+# fly certs add lugemi.com -a lugemi-web
+# fly certs add www.lugemi.com -a lugemi-web
+#
+# Africa-first: keep Machines in jnb only. Orphan ams/iad Machines fail
+# servicecheck-00-http-3000 and make 80/443 look intermittent — prune with:
+#   bash scripts/fly-prune-lugemi-web-non-jnb.sh
+app = 'lugemi-web'
+primary_region = 'jnb'
+
+[build]
+  # flyctl resolves this relative to this file's directory (infra/fly/).
+  dockerfile = '../../apps/web/Dockerfile'
+
+[env]
+  NODE_ENV = 'production'
+  PORT = '3000'
+  # Next standalone server.js binds HOSTNAME:PORT (must be 0.0.0.0 for Fly proxy).
+  HOSTNAME = '0.0.0.0'
+  LUGEMI_REGION = 'af'
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ['app']
+
+  [[http_service.checks]]
+    interval = '15s'
+    timeout = '5s'
+    # Next + standalone cold start can exceed 25s; match API grace to avoid Doctor races.
+    grace_period = '60s'
+    method = 'GET'
+    path = '/health'
+
+[[vm]]
+  memory = '512mb'
+  cpu_kind = 'shared'
+  cpus = 1

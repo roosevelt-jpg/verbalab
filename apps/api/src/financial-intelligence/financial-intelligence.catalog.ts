@@ -1,0 +1,74 @@
+export type DomainStatus = 'shipped' | 'partial' | 'deferred';
+
+export type DomainTerm = {
+  id: string;
+  name: string;
+  status: DomainStatus;
+  api: string | null;
+  notes: string;
+};
+
+/**
+ * Financial Intelligence.
+ * Domain vocabulary + safety flags for African Intelligence Cloud.
+ */
+export function financialIntelligenceEngineCatalog() {
+  const terms: DomainTerm[] = [
+      {
+        id: 'fin-literacy',
+        name: 'Financial literacy terms',
+        status: 'shipped' as const,
+        api: 'GET /v1/financial-intelligence/terms',
+        notes: 'Educational — not investment advice.',
+      },
+      {
+        id: 'fin-payments',
+        name: 'Payments vocabulary',
+        status: 'shipped' as const,
+        api: 'GET /v1/financial-intelligence/terms',
+        notes: 'Mobile money / banking terms catalog.',
+      },
+      {
+        id: 'fin-credit',
+        name: 'Credit vocabulary',
+        status: 'shipped' as const,
+        api: 'GET /v1/financial-intelligence/terms',
+        notes: 'Fair-lending considerations flagged — not a credit decision engine.',
+      },
+      {
+        id: 'fin-insurance',
+        name: 'Insurance vocabulary',
+        status: 'shipped' as const,
+        api: 'GET /v1/financial-intelligence/terms',
+        notes: 'Product terms — not personalized recommendations.',
+      }
+  ];
+  return {
+    product: 'Lugemi Financial Intelligence',
+    note:
+      'Financial Intelligence. Domain terms/services catalog for African Intelligence Cloud with domain-specific safety flags. Extends Knowledge/Intelligence clouds — not a vertical operations OS.',
+    capabilities: terms,
+    terms,
+    architecture: {
+      style: 'nest_modular_monolith',
+      cqrs: true,
+      hexagonalRewrite: false,
+      regeneratesPriorLayers: false,
+      domain: 'financial',
+    },
+    honesty: {
+      regeneratesPriorLayers: false,
+      coverageComplete: false,
+      verticalOperationsOs: false,
+      notInvestmentAdvice: true,
+      fairLendingConsiderationsFlagged: true,
+    },
+    safety: {
+      notInvestmentAdvice: true,
+      fairLendingConsiderationsFlagged: true,
+      note:
+        'Educational/financial vocabulary only — not investment, lending, or credit advice. Fair-lending considerations apply if credit data is later connected.',
+    },
+    docs: '/docs/FINANCIAL_INTELLIGENCE.md',
+  };
+}

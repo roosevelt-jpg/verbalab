@@ -1,0 +1,57 @@
+name: Speech engine
+
+on:
+  push:
+    paths:
+      - 'services/tts/**'
+      - 'infra/fly/tts.toml'
+      - '.github/workflows/tts.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: tts-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build test image (downloads the speech model)
+        run: docker build --target test -t lugemi-tts-test services/tts
+      - name: Run engine tests (real synthesis)
+        run: |
+          set +e
+          docker run --rm lugemi-tts-test python -m pytest -q --tb=short -rf tests > pytest.log 2>&1
+          status=$?
+          cat pytest.log
+          if [ $status -ne 0 ]; then
+            grep -E "^(FAILED|ERROR)|Error:|error:|assert " pytest.log | head -20 | while IFS= read -r line; do
+              echo "::error title=engine test::${line}"
+            done
+          fi
+          exit $status
+
+  deploy:
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check Fly credentials
+        id: fly
+        run: |
+          if [ -n "${{ secrets.FLY_API_TOKEN }}" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "configured=false" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+        if: steps.fly.outputs.configured == 'true'
+      - name: Deploy speech engine (private, jnb)
+        if: steps.fly.outputs.configured == 'true'
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+        working-directory: services/tts
+        run: flyctl deploy . -c ../../infra/fly/tts.toml --remote-only --ha=false

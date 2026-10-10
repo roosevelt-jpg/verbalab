@@ -1,0 +1,188 @@
+# Production deploy
+
+Three supported paths:
+
+1. **Fly.io (default PaaS)** — this document (VL-074 / ADR-0023)  
+2. **AWS EKS `af-south-1`** — [`AWS_EKS.md`](./AWS_EKS.md) + Terraform under `infra/terraform/aws-eks/` (VL-138 / ADR-0059)
+3. **Vercel (web console only)** — import the Lugemi monorepo (GitHub may still be `roosevelt-jpg/verbalab`; product brand is **Lugemi**), Root Directory `apps/web`. See the Vercel section in `README.md`. Keep the API on Fly or Compose.
+
+PaaS choice for day-to-day API: **Fly.io**. EKS is optional when AWS/K8s is required. Vercel hosts the Next.js console.
+
+Enterprise Language Registry (VL-139), Localization Platform (VL-141), and Language Analytics (VL-146) ship with the API database/migrations + boot seed / Intl helpers. Language Cloud production audit evidence: [`docs/language-cloud-audit/`](../docs/language-cloud-audit/) (VL-147). Speech Cloud production audit evidence: [`docs/speech-cloud-audit/`](../docs/speech-cloud-audit/) (VL-160). Voice Cloud production audit evidence: [`docs/voice-cloud-audit/`](../docs/voice-cloud-audit/) (VL-179). Cloud blueprint: [`docs/CLOUD_BLUEPRINT.md`](../docs/CLOUD_BLUEPRINT.md) (ADR-0080).
+
+## Architecture (Fly)
+
+| Piece | What |
+| --- | --- |
+| `lugemi` / `lugemi-api` | Nest API (`Dockerfile` at repo root + `apps/api/Dockerfile`) — Africa default `jnb`. **Public:** `https://api.lugemi.com` |
+| `lugemi-web` | Next console (`apps/web/Dockerfile`, standalone) — `jnb`. **Public:** `https://lugemi.com` |
+| `lugemi-api` / `lugemi-web-us` / `lugemi-*-eu` | US/EU residency islands in `infra/fly/*.toml` / `*.eu.toml` (do not share Africa `lugemi-web`) |
+| Postgres | Managed DB with **pgvector** (Neon / Supabase / Fly Postgres + `CREATE EXTENSION vector`) via `DATABASE_URL` |
+| Redis | Required for BullMQ + rate limits (`REDIS_URL`). Fly Redis or Upstash. Do **not** set `JOBS_INLINE=1` in production. |
+| Region | Africa-first: `jnb` (`infra/fly/*.jnb.toml`, root `fly.toml`). US `iad` / EU `ams` remain for residency islands. |
+
+**App name ≠ domain.** Fly apps can stay named `lugemi*`; users hit **lugemi.com** / **api.lugemi.com** after Cloudflare DNS + `fly certs`. Until then only `*.fly.dev` works. Operator walkthrough: [`docs/domain-setup.md`](../docs/domain-setup.md). Also [`docs/fly.md`](../docs/fly.md), [`docs/cloudflare.md`](../docs/cloudflare.md).
+
+## First-time setup (manual; needs Fly account)
+
+```bash
+# Install flyctl, then:
+fly auth login
+fly apps create lugemi-api   # Africa primary (or: fly apps rename verbalab-api lugemi-api)
+fly apps create lugemi-web   # or rename verbalab-web
+
+# Attach or set secrets (examples — use your real values; brand URLs)
+fly secrets set -a lugemi-api \
+  DATABASE_URL='postgresql://...' \
+  REDIS_URL='redis://...' \
+  CORS_ORIGIN='https://lugemi.com,https://www.lugemi.com' \
+  APP_URL='https://lugemi.com' \
+  APP_PUBLIC_URL='https://lugemi.com' \
+  CLERK_SECRET_KEY='...' \
+  GOOGLE_TRANSLATE_API_KEY='...' \
+  OPENAI_API_KEY='...' \
+  STRIPE_SECRET_KEY='...' \
+  STRIPE_WEBHOOK_SECRET='...' \
+  STRIPE_PRICE_ID_PRO='...' \
+  BILLING_SUCCESS_URL='https://lugemi.com/billing?checkout=success' \
+  BILLING_CANCEL_URL='https://lugemi.com/billing?checkout=cancel' \
+  BILLING_PORTAL_RETURN_URL='https://lugemi.com/billing' \
+  RESEND_API_KEY='re_...'
+
+# EMAIL_FROM is set in fly.toml [env] as Lugemi <noreply@lugemi.com>.
+# Override if needed: fly secrets set EMAIL_FROM='Lugemi <noreply@lugemi.com>' -a lugemi-api
+# If the live app is still named verbalab / verbalab-api:
+#   fly secrets set RESEND_API_KEY='re_...' -a verbalab
+#   fly secrets set RESEND_API_KEY='re_...' -a verbalab-api
+# lugemi-web does not send Resend mail — no RESEND_API_KEY needed there.
+
+# Web build args are set at deploy time; also set runtime Clerk secret if used server-side:
+fly secrets set -a lugemi-web CLERK_SECRET_KEY='...' APP_URL='https://lugemi.com'
+```
+
+Deploy (from repo root) — Africa preferred:
+
+```bash
+fly deploy -c infra/fly/api.jnb.toml --dockerfile apps/api/Dockerfile
+fly deploy -c infra/fly/web.jnb.toml --dockerfile apps/web/Dockerfile \
+  --build-arg NEXT_PUBLIC_API_URL=https://api.lugemi.com \
+  --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_live_...
+```
+
+Custom domains (after deploy):
+
+```bash
+fly certs add lugemi.com -a lugemi-web
+fly certs add www.lugemi.com -a lugemi-web
+fly certs add api.lugemi.com -a lugemi-api
+# Then Cloudflare DNS — see docs/cloudflare.md / docs/fly.md
+```
+
+US island (`infra/fly/api.toml` / `web.toml`) uses `lugemi-api` / `lugemi-web-us` and `*.fly.dev` until those hosts get their own custom domains. Africa primary `lugemi-web` stays `jnb` only — prune orphans with `bash scripts/fly-prune-lugemi-web-non-jnb.sh`.
+
+API **release_command** runs `/bin/sh /app/apps/api/scripts/fly-migrate.sh` (`prisma migrate deploy` when `DATABASE_URL` is set; soft-skips when unset). See `docs/fly.md`.
+
+## Migrations
+
+- Local authoring: `pnpm db:migrate:dev`
+- CI + production: `pnpm db:migrate` (`prisma migrate deploy`)
+- CI already migrates against ephemeral Postgres on every PR (`ci.yml`)
+- Production migrate: Fly API `release_command` (and optional GitHub deploy job)
+
+## GitHub Actions deploy
+
+`.github/workflows/deploy.yml` **auto-deploys on every push to `main`/`master`** (and via **Actions → Deploy → Run workflow**). The job uses the `production` environment.
+
+| Fly app | Public URL | Config | Dockerfile |
+| --- | --- | --- | --- |
+| `verbalab` (override with `FLY_API_APP`) | `https://api.lugemi.com` | `infra/fly/api.jnb.toml` | `apps/api/Dockerfile` |
+| `lugemi-web` (override with `FLY_WEB_APP`) | `https://lugemi.com` | `infra/fly/web.jnb.toml` | `apps/web/Dockerfile` |
+
+Without `FLY_API_TOKEN` the job **skips** (no failure) so forks stay green.
+
+### Required GitHub secret
+
+1. Create a Fly deploy token (org-level is fine — one token can deploy both apps):
+
+   ```bash
+   fly tokens create org -o personal
+   # or deploy-scoped: fly tokens create deploy -a verbalab
+   # and a second for lugemi-web, or use an org token for both
+   ```
+
+2. In GitHub: **Settings → Secrets and variables → Actions → New repository secret**  
+   (or **Environments → production → Environment secrets**)
+
+   | Name | Value |
+   | --- | --- |
+   | `FLY_API_TOKEN` | Fly token from step 1 |
+
+### Optional secrets / variables (Clerk + URLs)
+
+| Kind | Name | Default / purpose |
+| --- | --- | --- |
+| Secret | `NEXT_PUBLIC_API_URL` | Defaults to `https://api.lugemi.com` (web build-arg) |
+| Variable | `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` | Clerk `pk_live_…` / `pk_test_…` baked into the web image (fallback exists in workflow) |
+| Variable | `FLY_API_APP` | Defaults to `verbalab` (set to `lugemi-api` after rename) |
+| Variable | `FLY_WEB_APP` | Defaults to `lugemi-web` |
+| Variable | `FLY_DEPLOY_EU` | Set `true` to also deploy `infra/fly/*.eu.toml` |
+| Secret | `NEXT_PUBLIC_API_URL_EU` | Required when `FLY_DEPLOY_EU=true` |
+
+Clerk **secret** key stays on Fly (`fly secrets set CLERK_SECRET_KEY=… -a verbalab` / `-a lugemi-web`), not in GitHub Actions build args.
+
+## Local Docker dry-run (no Fly secrets)
+
+```bash
+docker build -f apps/api/Dockerfile -t lugemi-api .
+docker build -f apps/web/Dockerfile -t lugemi-web \
+  --build-arg NEXT_PUBLIC_API_URL=http://localhost:3001 .
+```
+
+### Smoke health checks
+
+Both apps expose `GET /health` (Fly `http_service.checks` + Docker `HEALTHCHECK`).
+
+With API + web already running (`pnpm dev` or containers):
+
+```bash
+pnpm smoke
+```
+
+Web-only Docker smoke (builds + runs web, skips needing a live API if you set the flag):
+
+```bash
+SMOKE_DOCKER_WEB=1 SMOKE_SKIP_API=1 pnpm smoke
+```
+
+Full container smoke for API needs Compose Postgres/Redis reachable from the container (`host.docker.internal` on Docker Desktop) plus `DATABASE_URL` / `REDIS_URL` / `JOBS_INLINE=1`.
+
+## Preview deploys
+
+Deferred. Ship one production pair first; add Fly preview apps later if needed.
+
+- Global mesh / multi-master Postgres / automatic geo-failover
+- Separate worker process (jobs run inside the API today)
+- Object storage for multi-instance document disks (single machine / volume is enough for MVP)
+
+## Multi-region residency (VL-075)
+
+Each region is a **separate deploy + database** (residency island), not a mesh.
+
+| Island | Fly configs | `LUGEMI_REGION` | Fly `primary_region` |
+| --- | --- | --- | --- |
+| AF (Lugemi default) | root `fly.toml`, `infra/fly/*.jnb.toml`, `apps/*/fly.toml` | `af` | `jnb` |
+| US | `infra/fly/api.toml`, `web.toml` | `us` | `iad` |
+| EU | `infra/fly/api.eu.toml`, `web.eu.toml` | `eu` | `ams` |
+
+```bash
+fly apps create lugemi-api-eu
+fly apps create lugemi-web-eu
+# Attach a *separate* EU Postgres + Redis, then:
+fly secrets set -a lugemi-api-eu DATABASE_URL='...' REDIS_URL='...' LUGEMI_REGION=eu ...
+fly deploy -c infra/fly/api.eu.toml --dockerfile apps/api/Dockerfile
+fly deploy -c infra/fly/web.eu.toml --dockerfile apps/web/Dockerfile \
+  --build-arg NEXT_PUBLIC_API_URL=https://lugemi-api-eu.fly.dev \
+  --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=...
+```
+
+Orgs may pin `dataRegion` via `PATCH /v1/organization/residency`. A pin to `eu` rejects API calls on the US island (`residency_mismatch`). **Pinning does not migrate data.**

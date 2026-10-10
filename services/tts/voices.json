@@ -1,0 +1,415 @@
+[
+  {
+    "id": "en-us-female",
+    "name": "Ava · United States",
+    "locale": "en-US",
+    "gender": "female",
+    "engine": "kokoro",
+    "options": { "voice": "af_heart", "lang": "en-us" }
+  },
+  {
+    "id": "en-us-male",
+    "name": "Michael · United States",
+    "locale": "en-US",
+    "gender": "male",
+    "engine": "kokoro",
+    "options": { "voice": "am_michael", "lang": "en-us" }
+  },
+  {
+    "id": "en-gb-female",
+    "name": "Emma · United Kingdom",
+    "locale": "en-GB",
+    "gender": "female",
+    "engine": "kokoro",
+    "options": { "voice": "bf_emma", "lang": "en-gb" }
+  },
+  {
+    "id": "en-gb-male",
+    "name": "George · United Kingdom",
+    "locale": "en-GB",
+    "gender": "male",
+    "engine": "kokoro",
+    "options": { "voice": "bm_george", "lang": "en-gb" }
+  },
+  {
+    "id": "en-ca-female",
+    "name": "Chloe · Canada",
+    "locale": "en-CA",
+    "gender": "female",
+    "engine": "kokoro",
+    "options": { "voice": "af_heart", "lang": "en-us" }
+  },
+  {
+    "id": "en-ca-male",
+    "name": "Liam · Canada",
+    "locale": "en-CA",
+    "gender": "male",
+    "engine": "kokoro",
+    "options": { "voice": "am_michael", "lang": "en-us" }
+  },
+  {
+    "id": "en-au-female",
+    "name": "Mia · Australia",
+    "locale": "en-AU",
+    "gender": "female",
+    "engine": "kokoro",
+    "options": { "voice": "bf_emma", "lang": "en-gb" }
+  },
+  {
+    "id": "en-au-male",
+    "name": "Jack · Australia",
+    "locale": "en-AU",
+    "gender": "male",
+    "engine": "kokoro",
+    "options": { "voice": "bm_george", "lang": "en-gb" }
+  },
+  {
+    "id": "en-nz-female",
+    "name": "Ruby · New Zealand",
+    "locale": "en-NZ",
+    "gender": "female",
+    "engine": "kokoro",
+    "options": { "voice": "bf_emma", "lang": "en-gb" }
+  },
+  {
+    "id": "en-nz-male",
+    "name": "Oliver · New Zealand",
+    "locale": "en-NZ",
+    "gender": "male",
+    "engine": "kokoro",
+    "options": { "voice": "bm_george", "lang": "en-gb" }
+  },
+  {
+    "id": "en-kofi",
+    "name": "Kofi · Ghanaian English",
+    "locale": "en-GH",
+    "gender": "male",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "en-gh-female",
+    "name": "Ama · Ghanaian English",
+    "locale": "en-GH",
+    "gender": "female",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "en-gh-male",
+    "name": "Kwame · Ghanaian English",
+    "locale": "en-GH",
+    "gender": "male",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "en-ng-female",
+    "name": "Chioma · Nigerian English",
+    "locale": "en-NG",
+    "gender": "female",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "en-ng-male",
+    "name": "Emeka · Nigerian English",
+    "locale": "en-NG",
+    "gender": "male",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "en-ke-female",
+    "name": "Wanjiku · Kenyan English",
+    "locale": "en-KE",
+    "gender": "female",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "en-ke-male",
+    "name": "Kamau · Kenyan English",
+    "locale": "en-KE",
+    "gender": "male",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "en-ph-female",
+    "name": "Maya · Filipino English",
+    "locale": "en-PH",
+    "gender": "female",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "en-ph-male",
+    "name": "Luis · Filipino English",
+    "locale": "en-PH",
+    "gender": "male",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "en-za-female",
+    "name": "Lerato · South African English",
+    "locale": "en-ZA",
+    "gender": "female",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "en-za-male",
+    "name": "Sipho · South African English",
+    "locale": "en-ZA",
+    "gender": "male",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "sw-aisha",
+    "name": "Aisha (Swahili)",
+    "locale": "sw-KE",
+    "gender": "female",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "yo-tunde",
+    "name": "Tunde (Yoruba)",
+    "locale": "yo-NG",
+    "gender": "male",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "am-hanna",
+    "name": "Hanna (Amharic)",
+    "locale": "am-ET",
+    "gender": "female",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "zu-za-female",
+    "name": "Thandi · Durban",
+    "locale": "zu-ZA",
+    "gender": "female",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "ak-gh-female",
+    "name": "Akosua · Accra",
+    "locale": "ak-GH",
+    "gender": "female",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "ha-ng-male",
+    "name": "Sani · Kano",
+    "locale": "ha-NG",
+    "gender": "male",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "ig-ng-female",
+    "name": "Ada · Enugu",
+    "locale": "ig-NG",
+    "gender": "female",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "ar-eg-male",
+    "name": "Omar · Cairo",
+    "locale": "ar-EG",
+    "gender": "male",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "fr-sn-female",
+    "name": "Awa · Dakar",
+    "locale": "fr-SN",
+    "gender": "female",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "pcm-ng-female",
+    "name": "Blessing · Lagos",
+    "locale": "pcm-NG",
+    "gender": "female",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "so-so-male",
+    "name": "Abdi · Mogadishu",
+    "locale": "so-SO",
+    "gender": "male",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "wo-sn-male",
+    "name": "Moussa · Dakar",
+    "locale": "wo-SN",
+    "gender": "male",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "lg-ug-female",
+    "name": "Nakato · Kampala",
+    "locale": "lg-UG",
+    "gender": "female",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "ln-cd-male",
+    "name": "Jean · Kinshasa",
+    "locale": "ln-CD",
+    "gender": "male",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "om-et-female",
+    "name": "Chaltu · Adama",
+    "locale": "om-ET",
+    "gender": "female",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "rw-rw-female",
+    "name": "Uwase · Kigali",
+    "locale": "rw-RW",
+    "gender": "female",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "xh-za-male",
+    "name": "Lunga · Cape Town",
+    "locale": "xh-ZA",
+    "gender": "male",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "bm-ml-male",
+    "name": "Sékou · Bamako",
+    "locale": "bm-ML",
+    "gender": "male",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "ee-gh-female",
+    "name": "Ama · Ho",
+    "locale": "ee-GH",
+    "gender": "female",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "ti-et-male",
+    "name": "Yonas · Mekelle",
+    "locale": "ti-ET",
+    "gender": "male",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "sn-zw-female",
+    "name": "Rudo · Harare",
+    "locale": "sn-ZW",
+    "gender": "female",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "ny-mw-male",
+    "name": "Chisomo · Lilongwe",
+    "locale": "ny-MW",
+    "gender": "male",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "ff-sn-female",
+    "name": "Aissatou · Saint-Louis",
+    "locale": "ff-SN",
+    "gender": "female",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "pt-ao-male",
+    "name": "Nzinga · Luanda",
+    "locale": "pt-AO",
+    "gender": "male",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "af-za-female",
+    "name": "Annelie · Cape Town",
+    "locale": "af-ZA",
+    "gender": "female",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  },
+  {
+    "id": "tn-bw-male",
+    "name": "Kagiso · Gaborone",
+    "locale": "tn-BW",
+    "gender": "male",
+    "engine": "demo",
+    "approvedBy": "Lugemi catalog · shipped",
+    "options": {}
+  }
+]

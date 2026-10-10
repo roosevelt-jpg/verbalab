@@ -1,0 +1,52 @@
+# Lugemi Voice & Language Marketplace
+
+**Status:** Shipped (VL-257 / library Phase 124)  
+**Rule:** Entitlement SKUs over VL-177 voice marketplace + Volume 1 language/dialect/glossary/locale packs — **not** vendor voice clone, voice CDN, or celebrity without rights. Real-money honesty: Stripe (or equivalent); `storesRawCardData: false`. Roadmap: [`docs/roadmap/volume11-ecosystem-cloud/`](./roadmap/volume11-ecosystem-cloud/).
+
+---
+
+## Library term → Lugemi
+
+| Library ask | Lugemi reality |
+| --- | --- |
+| Voice Packs | **Shipped** — `packType=voice` over VL-177 packs |
+| Language Packs | One pack per registry language (204) over Voice Marketplace language packs |
+| Dialect Packs | **Shipped** — metadata entitlement over dialect registry |
+| Accent Packs | **Partial** — metadata entitlement; acoustic models deferred |
+| Grammar Packs | **Partial** — metadata only; grammar OS deferred |
+| Terminology Packs | **Shipped** — over vertical glossaries |
+| Localization Packs | **Shipped** — over locales / country packs |
+| Analytics / Monitoring / Docs | **Shipped** (analytics partial) |
+| vendor voice clone / voice CDN OS | **Forbidden** — `thirdPartyVoiceOs: false`, `voiceCdnOs: false` |
+
+---
+
+## Surfaces
+
+| Surface | Path |
+| --- | --- |
+| Console | `/voice-language-marketplace` |
+| Prior voice marketplace | `/voice-marketplace` (VL-177, unchanged) |
+| REST engine | `GET /v1/voice-language-marketplace/engine` |
+| Listings | `GET/POST /v1/voice-language-marketplace/listings` |
+| Install | `POST /v1/voice-language-marketplace/listings/:id/install` |
+| Reviews / sales / analytics | under `/v1/voice-language-marketplace/*` |
+| GraphQL | `voiceLanguageMarketplaceEngine` |
+| SDK | `voiceLanguageMarketplaceEngine()` |
+| CLI | `lugemi voice-language-marketplace-engine` |
+
+## Honesty
+
+| Flag | Value |
+| --- | --- |
+| `thirdPartyVoiceOs` / `voiceCdnOs` | false |
+| `celebrityWithoutRights` | false |
+| `crossTenantCloneSynthesis` | false |
+| `regeneratesVoiceCloud` / `regeneratesVoiceMarketplace` | false |
+| `storesRawCardData` | false |
+| `stripeOrEquivalentRequired` | true |
+| `fabricPolicyHardGateRequired` | true |
+| `realMoneyRiskCategory` | true |
+| `creatorPayoutMathVerifiedLive` | false |
+
+Prior surface: [`VOICE_MARKETPLACE.md`](./VOICE_MARKETPLACE.md). Ecosystem: [`ECOSYSTEM_CLOUD.md`](./ECOSYSTEM_CLOUD.md).

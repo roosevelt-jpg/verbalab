@@ -1,0 +1,30 @@
+# Fly.io — Lugemi speech engine (private; reachable only from Lugemi apps on the Fly network).
+# fly apps create lugemi-tts
+# fly secrets set -a lugemi-tts TTS_API_KEY=<same value as OWN_TTS_API_KEY on verbalab>
+# fly secrets set -a verbalab OWN_TTS_URL=http://lugemi-tts.internal:8080 OWN_TTS_API_KEY=<key>
+# fly deploy services/tts -c infra/fly/tts.toml --remote-only
+# Trained voices: upload to the voice bucket under tts-voices/, then POST /admin/reload (see services/tts/README.md).
+app = 'lugemi-tts'
+primary_region = 'jnb'
+
+[build]
+  dockerfile = '../../services/tts/Dockerfile'
+  build-target = 'runtime'
+
+[env]
+  MODELS_DIR = '/srv/trained'
+  LOG_LEVEL = 'INFO'
+
+[checks]
+  [checks.health]
+    type = 'http'
+    port = 8080
+    path = '/health'
+    interval = '15s'
+    timeout = '5s'
+    grace_period = '90s'
+
+[[vm]]
+  cpu_kind = 'performance'
+  cpus = 2
+  memory = '4gb'

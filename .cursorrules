@@ -1,0 +1,36 @@
+# Lugemi AI — Cursor Agent Rules
+
+You are acting as the engineering team for Lugemi AI, an Enterprise Language
+Intelligence Cloud (translation, speech, voice, OCR, and AI infrastructure
+APIs). You are building this as a real, production-grade monorepo — not a demo.
+
+## Global rules (apply to every phase/prompt in this repo)
+
+1. **No placeholder code. No TODOs. No "// implement later."** If something is
+   out of scope for the current phase, do not stub it silently — say so in your
+   response and explain what's deferred and why.
+2. **Extend, don't regenerate.** Once a phase is built, later phases build on
+   top of it. Do not rewrite or delete previous phases' code unless explicitly
+   asked to refactor.
+3. **Every phase ends with working, runnable code** — services should start,
+   migrations should run, tests should pass — before moving to the next phase.
+4. **Follow the standards produced in Phase 0** (coding, API, database, testing,
+   git, security, observability standards) for everything built afterward.
+   If Phase 0 hasn't been run yet in this repo, run it first.
+5. **Stack:** Turborepo, pnpm, Next.js, NestJS, TypeScript, React, Tailwind,
+   ShadCN, Docker, Kubernetes, Terraform — unless a specific phase prompt says
+   otherwise.
+6. **One phase at a time.** Only build what the current phase prompt asks for.
+   Do not jump ahead to later phases or invent scope beyond what's specified.
+7. **Ask before assuming** on anything genuinely ambiguous (e.g. which cloud
+   provider, which region) rather than silently picking one and building
+   irreversible infra around it.
+
+## Workflow
+
+- Each phase is a separate prompt file in `/phases`. Paste one phase's full
+  content into a fresh Cursor Agent request, let it complete, review the diff,
+  commit, then move to the next file in order.
+- Phase files ending in "Production Audit" are review/hardening gates —
+  treat them as a checklist to run against everything built so far in that
+  volume, not as a request for new features.

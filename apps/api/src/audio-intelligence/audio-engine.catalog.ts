@@ -1,0 +1,113 @@
+export type AudioCapabilityStatus = 'shipped' | 'partial' | 'deferred';
+
+export type AudioCapability = {
+  id: string;
+  name: string;
+  status: AudioCapabilityStatus;
+  api: string | null;
+  notes: string;
+};
+
+/** Audio Intelligence. */
+export function audioEngineCatalog() {
+  return {
+    product: 'Lugemi Audio Intelligence',
+    note:
+      'PCM heuristic noise/silence analysis, noise-gate enhancement, linear upsampling, energy VAD isolation, and Lugemi multi-band stem split. Honest DSP scope — not a vendor neural enhance/demucs OS.',
+    capabilities: [
+      {
+        id: 'noise-detection',
+        name: 'Noise Detection',
+        status: 'shipped',
+        api: 'POST /v1/audio-intelligence/analyze',
+        notes: 'Noise floor + estimated SNR from energy heuristics.',
+      },
+      {
+        id: 'silence-detection',
+        name: 'Silence Detection',
+        status: 'shipped',
+        api: 'POST /v1/audio-intelligence/silence',
+        notes: 'Silence regions via frame energy thresholding.',
+      },
+      {
+        id: 'noise-removal',
+        name: 'Noise Removal',
+        status: 'shipped',
+        api: 'POST /v1/audio-intelligence/enhance',
+        notes: 'Noise gate + mild high-pass + normalize — not spectral subtraction ML.',
+      },
+      {
+        id: 'audio-enhancement',
+        name: 'Audio Enhancement',
+        status: 'shipped',
+        api: 'POST /v1/audio-intelligence/enhance',
+        notes: 'Same enhance pipeline as noise removal.',
+      },
+      {
+        id: 'audio-upscaling',
+        name: 'Audio Upscaling',
+        status: 'shipped',
+        api: 'POST /v1/audio-intelligence/upscale',
+        notes: 'Linear sample-rate interpolation — not generative bandwidth extension.',
+      },
+      {
+        id: 'voice-isolation',
+        name: 'Voice Isolation',
+        status: 'shipped',
+        api: 'POST /v1/audio-intelligence/isolate',
+        notes: 'Energy VAD attenuation of low-energy frames.',
+      },
+      {
+        id: 'background-separation',
+        name: 'Background Separation',
+        status: 'shipped',
+        api: 'POST /v1/audio-intelligence/stems',
+        notes: 'Multi-band stem split returns voice / low / high / residual WAVs.',
+      },
+      {
+        id: 'stem-separation',
+        name: 'Stem Separation',
+        status: 'shipped',
+        api: 'POST /v1/audio-intelligence/stems',
+        notes: 'Lugemi-native band + VAD stems for clone prep and extract workflows.',
+      },
+      {
+        id: 'echo-cancellation',
+        name: 'Echo Cancellation',
+        status: 'deferred',
+        api: null,
+        notes: 'Requires AEC reference signal / vendor — not claimed.',
+      },
+      {
+        id: 'realtime',
+        name: 'Realtime APIs',
+        status: 'shipped',
+        api: 'POST /v1/audio-intelligence/analyze/stream',
+        notes: 'SSE analysis progress — not live AEC stream.',
+      },
+      {
+        id: 'monitoring',
+        name: 'Monitoring',
+        status: 'shipped',
+        api: 'shared observability',
+        notes: 'Request IDs + audio_intelligence.* audit actions.',
+      },
+    ] satisfies AudioCapability[],
+    links: {
+      console: '/audio-intelligence',
+      hub: '/speech',
+      openapi: '/v1/openapi.json',
+      docs: '/docs/AUDIO_INTELLIGENCE.md',
+    },
+    architecture: {
+      rest: true,
+      sdk: '@lugemi/sdk',
+      cli: '@lugemi/cli',
+      docker: true,
+      terraform: true,
+      kubernetes: true,
+      primaryRegion: 'af-south-1',
+      deployment: 'Fly default; optional EKS af-south-1 (shared platform)',
+    },
+  };
+}

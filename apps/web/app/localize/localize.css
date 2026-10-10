@@ -1,0 +1,237 @@
+.lg-localize {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 0 0 3rem;
+  font-family: var(--font-ui);
+}
+
+.lg-localize-head {
+  margin-bottom: 1.5rem;
+}
+
+.lg-localize-head h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 2.5vw, 2.15rem);
+  font-weight: 720;
+  letter-spacing: -0.03em;
+  color: var(--brand-navy);
+}
+
+.lg-localize-head p {
+  margin: 0.45rem 0 0;
+  color: var(--muted);
+  line-height: 1.55;
+  max-width: 40rem;
+}
+
+.lg-localize-form {
+  display: grid;
+  gap: 1.15rem;
+  padding: 1.35rem;
+}
+
+.lg-localize-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .lg-localize-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.lg-localize-drop {
+  border: 1.5px dashed var(--border-subtle);
+  border-radius: var(--radius-card);
+  background:
+    linear-gradient(180deg, rgba(0, 184, 174, 0.06), transparent 70%),
+    var(--surface-muted);
+  transition: border-color 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+.lg-localize-drop.is-drag {
+  border-color: var(--brand-teal);
+  background: rgba(0, 184, 174, 0.12);
+  box-shadow: 0 0 0 3px rgba(0, 184, 174, 0.18);
+}
+
+.lg-localize-drop.is-ready {
+  border-style: solid;
+  border-color: rgba(0, 124, 120, 0.45);
+  background: var(--surface-canvas);
+}
+
+.lg-localize-drop-zone {
+  display: grid;
+  gap: 0.35rem;
+  justify-items: center;
+  text-align: center;
+  padding: 2rem 1.25rem;
+  cursor: pointer;
+  color: var(--brand-navy);
+}
+
+.lg-localize-drop-zone:focus-visible {
+  outline: 2px solid var(--action-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-card);
+}
+
+.lg-localize-drop-zone strong {
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.lg-localize-drop-zone span {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.lg-localize-drop-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1rem 1.15rem;
+}
+
+.lg-localize-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.lg-localize-status {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.lg-localize-status.is-error {
+  color: var(--bad);
+}
+
+.lg-localize-status.is-ok {
+  color: var(--ok);
+}
+
+.lg-localize-status.is-loading {
+  color: var(--action-primary);
+  animation: vl-soft-pulse 1.2s ease-in-out infinite;
+}
+
+.lg-localize-preview {
+  margin-top: 1.25rem;
+  padding: 1.15rem 1.25rem;
+}
+
+.lg-localize-preview h2 {
+  margin: 0 0 0.65rem;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 650;
+  color: var(--brand-navy);
+}
+
+.lg-localize-preview-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-bottom: 0.85rem;
+}
+
+.lg-localize-tree {
+  margin: 0;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--border-subtle);
+  background: var(--surface-muted);
+  max-height: 28rem;
+  overflow: auto;
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--text-primary);
+}
+
+.lg-localize-tree details {
+  margin-left: 0.85rem;
+}
+
+.lg-localize-tree > details {
+  margin-left: 0;
+}
+
+.lg-localize-tree summary {
+  cursor: pointer;
+  list-style: none;
+  color: var(--brand-navy);
+  font-weight: 600;
+}
+
+.lg-localize-tree summary::-webkit-details-marker {
+  display: none;
+}
+
+.lg-localize-tree summary::before {
+  content: '▸';
+  display: inline-block;
+  width: 1rem;
+  color: var(--brand-teal);
+}
+
+.lg-localize-tree details[open] > summary::before {
+  content: '▾';
+}
+
+.lg-localize-tree .lg-localize-key {
+  color: var(--action-primary);
+}
+
+.lg-localize-tree .lg-localize-str {
+  color: #0f5c4c;
+}
+
+.lg-localize-tree .lg-localize-num {
+  color: #1d4ed8;
+}
+
+.lg-localize-tree .lg-localize-bool {
+  color: #9a3412;
+}
+
+.lg-localize-tree .lg-localize-null {
+  color: var(--muted);
+}
+
+.lg-localize-empty {
+  margin: 1.25rem 0 0;
+  padding: 1.25rem;
+  border-radius: var(--radius-card);
+  border: 1px dashed var(--border-subtle);
+  color: var(--muted);
+  text-align: center;
+  background: var(--surface-muted);
+}
+
+.lg-localize-paste {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.lg-localize-paste summary {
+  cursor: pointer;
+  color: var(--brand-navy);
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.lg-localize-paste textarea {
+  min-height: 8rem;
+  resize: vertical;
+}

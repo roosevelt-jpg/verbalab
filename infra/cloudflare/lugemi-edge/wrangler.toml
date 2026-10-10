@@ -1,0 +1,27 @@
+name = "lugemi-edge"
+main = "src/index.js"
+compatibility_date = "2025-10-01"
+
+# Free Workers: 10 ms CPU / request — keep this Worker thin.
+limits = { cpu_ms = 10 }
+
+workers_dev = true
+
+# Production: uncomment after DNS + zone are ready (does not change Fly apps).
+# routes = [{ pattern = "api.lugemi.com/*", zone_name = "lugemi.com" }]
+
+[vars]
+ORIGIN_API_URL = "https://lugemi-api.fly.dev"
+CORS_ORIGINS = "https://lugemi.com,https://www.lugemi.com"
+CACHE_TTL_SECONDS = "120"
+# Optional CSV of POST paths that require Turnstile when TURNSTILE_SECRET_KEY is set.
+# TURNSTILE_REQUIRED_PATHS = "/v1/contact,/v1/demo"
+
+# Optional per-location rate limit (Workers binding — not zone Advanced Rate Limiting).
+# Every request still counts toward the free 100k/day quota.
+# [[ratelimits]]
+# name = "RATE_LIMITER"
+# namespace_id = "1001"
+# [ratelimits.simple]
+# limit = 120
+# period = 60

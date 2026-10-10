@@ -1,0 +1,55 @@
+{
+  "sourceLang": "en",
+  "targetLang": "sw",
+  "baseModel": "nllb-200-distilled-600M",
+  "entries": [
+    {
+      "source": "Hello",
+      "target": "Habari"
+    },
+    {
+      "source": "Thank you",
+      "target": "Asante"
+    },
+    {
+      "source": "How are you?",
+      "target": "Habari yako?"
+    },
+    {
+      "source": "Good morning",
+      "target": "Habari za asubuhi"
+    },
+    {
+      "source": "Where is the clinic?",
+      "target": "Kliniki iko wapi?"
+    },
+    {
+      "source": "Please wait here",
+      "target": "Tafadhali subiri hapa"
+    },
+    {
+      "source": "I need help",
+      "target": "Nahitaji msaada"
+    },
+    {
+      "source": "The office is closed",
+      "target": "Ofisi imefungwa"
+    },
+    {
+      "source": "Bring your identity card",
+      "target": "Lete kitambulisho chako"
+    },
+    {
+      "source": "Water is available",
+      "target": "Maji yanapatikana"
+    },
+    {
+      "source": "School starts tomorrow",
+      "target": "Shule inaanza kesho"
+    },
+    {
+      "source": "The meeting is at noon",
+      "target": "Mkutano ni saa sita mchana"
+    }
+  ]
+}
