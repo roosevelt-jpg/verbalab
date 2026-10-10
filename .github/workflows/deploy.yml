@@ -112,6 +112,7 @@ jobs:
           --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL || 'https://api.lugemi.com' }}
           --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_live_Y2xlcmsubHVnZW1pLmNvbSQ' }}
           --build-arg NEXT_PUBLIC_APP_URL=https://lugemi.com
+          --build-arg NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED=${{ vars.NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED || 'true' }}
 
       # Orphan ams/iad Machines on lugemi-web fail servicecheck-00-http-3000 and
       # make 80/443 look intermittent. Africa primary keeps jnb only.
@@ -141,7 +142,8 @@ jobs:
             --dockerfile apps/web/Dockerfile \
             --remote-only \
             --build-arg "NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL_EU}" \
-            --build-arg "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${CLERK_PK}"
+            --build-arg "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${CLERK_PK}" \
+            --build-arg "NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED=${NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED:-true}"
 
       - name: Smoke production health + /coverage
         if: steps.fly.outputs.configured == 'true'

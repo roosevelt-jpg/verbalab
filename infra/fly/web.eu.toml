@@ -13,6 +13,7 @@ primary_region = 'ams'
   PORT = '3000'
   HOSTNAME = '0.0.0.0'
   LUGEMI_REGION = 'eu'
+  NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED = 'true'
 
 [http_service]
   internal_port = 3000

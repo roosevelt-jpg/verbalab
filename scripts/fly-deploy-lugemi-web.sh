@@ -67,9 +67,11 @@ else
   echo "    fly secrets set -a $APP CLERK_SECRET_KEY=... APP_URL=$APP_URL"
 fi
 
+GOOGLE_OAUTH="${NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED:-true}"
 BUILD_ARGS=(
   --build-arg "NEXT_PUBLIC_API_URL=${API_URL}"
   --build-arg "NEXT_PUBLIC_APP_URL=${APP_URL}"
+  --build-arg "NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED=${GOOGLE_OAUTH}"
 )
 if [[ -n "$CLERK_PK" ]]; then
   BUILD_ARGS+=(--build-arg "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${CLERK_PK}")

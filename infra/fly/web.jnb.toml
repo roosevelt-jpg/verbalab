@@ -24,6 +24,8 @@ primary_region = 'jnb'
   # Next standalone server.js binds HOSTNAME:PORT (must be 0.0.0.0 for Fly proxy).
   HOSTNAME = '0.0.0.0'
   LUGEMI_REGION = 'af'
+  # Requires Google Social Connection enabled in Clerk Dashboard.
+  NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED = 'true'
 
 [http_service]
   internal_port = 3000
