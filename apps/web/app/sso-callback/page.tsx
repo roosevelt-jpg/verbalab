@@ -11,7 +11,10 @@ export default function SsoCallbackPage() {
         background: '#f8fafc',
       }}
     >
-      <AuthenticateWithRedirectCallback signInForceRedirectUrl="/onboarding" signUpForceRedirectUrl="/onboarding" />
+      <AuthenticateWithRedirectCallback
+        signInForceRedirectUrl="/post-auth"
+        signUpForceRedirectUrl="/post-auth"
+      />
     </div>
   );
 }

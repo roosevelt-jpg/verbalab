@@ -32,7 +32,7 @@ export function SignUpForm({ hasSocial = false, onSuccess }: SignUpFormProps) {
       await signUp.authenticateWithRedirect({
         strategy: 'oauth_google',
         redirectUrl: '/sso-callback',
-        redirectUrlComplete: '/onboarding',
+        redirectUrlComplete: '/post-auth',
       });
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
