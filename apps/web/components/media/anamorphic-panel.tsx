@@ -1,9 +1,9 @@
 'use client';
 
-import { AnamorphicCanopyCanvas } from './anamorphic-canopy-canvas';
+import { stillForVariant, type AnamorphicStillVariant } from '@/lib/anamorphic-stills';
 import './anamorphic.css';
 
-type Variant = 'voice' | 'speech' | 'translate' | 'agents' | 'api' | 'coverage' | 'hub' | 'hero';
+type Variant = AnamorphicStillVariant;
 type Size = 'sm' | 'md' | 'lg' | 'hero';
 
 const LABELS: Record<Variant, string> = {
@@ -34,6 +34,7 @@ export function AnamorphicPanel({
 }) {
   const sizeClass =
     size === 'sm' ? 'lg-ana--sm' : size === 'lg' ? 'lg-ana--lg' : size === 'hero' ? 'lg-ana--hero' : '';
+  const resolvedImage = videoUrl ? undefined : imageUrl || stillForVariant(variant);
 
   return (
     <div
@@ -43,30 +44,16 @@ export function AnamorphicPanel({
       role={label ? 'img' : undefined}
       aria-label={label}
     >
-      <div className={`lg-ana__stage${imageUrl || videoUrl ? ' lg-ana__stage--photo' : ''}`}>
+      <div className={`lg-ana__stage${resolvedImage || videoUrl ? ' lg-ana__stage--photo' : ''}`}>
         {videoUrl ? (
           <video className="lg-ana__media" src={videoUrl} autoPlay muted loop playsInline />
-        ) : imageUrl ? (
+        ) : resolvedImage ? (
           <>
-            <img className="lg-ana__media" src={imageUrl} alt="" />
+            <img className="lg-ana__media" src={resolvedImage} alt="" />
             <div className="lg-ana__photo-veil" />
             <div className="lg-ana__photo-frame" />
           </>
-        ) : (
-          <>
-            <AnamorphicCanopyCanvas
-              className="lg-ana__canvas"
-              intensity={size === 'sm' ? 0.75 : 1.0}
-              showRings={size !== 'sm'}
-            />
-            <div className="lg-ana__layer lg-ana__layer--back" />
-            <div className="lg-ana__layer lg-ana__layer--mid" />
-            <div className="lg-ana__layer lg-ana__layer--front" />
-            <div className="lg-ana__orb" />
-            <div className="lg-ana__orb lg-ana__orb--alt" />
-            <div className="lg-ana__beam" />
-          </>
-        )}
+        ) : null}
       </div>
       <span className="lg-ana__label">{label ?? LABELS[variant]}</span>
     </div>
