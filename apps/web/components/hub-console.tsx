@@ -3,12 +3,13 @@
 import type { ReactNode } from 'react';
 import { AppShell } from '@/components/app-shell';
 import { AnamorphicPanel } from '@/components/media/anamorphic-panel';
+import { FeaturePanel, PageHeader } from '@/components/platform';
 import { SITE_CONTENT, type HubCatalogItem } from '@/data/site-content';
 import './media/anamorphic.css';
 
 /**
- * Shared console shell for hub surfaces: prefilled catalog + Lugemi 3D panel
- * so pages never look abandoned while waiting on API or keys.
+ * Shared console shell for hub surfaces: unified page chrome, catalog cards,
+ * and Lugemi visual panel so pages stay brand-aligned while waiting on API or keys.
  */
 export function HubConsole({
   title,
@@ -25,76 +26,57 @@ export function HubConsole({
   catalogItems?: HubCatalogItem[];
   children?: ReactNode;
 }) {
+  const featurePreview = catalogItems.slice(0, 3);
+
   return (
     <AppShell>
-      <div className="lg-hub-hero">
-        <div>
-          <h1
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontSize: '1.85rem',
-              fontWeight: 720,
-              letterSpacing: '-0.03em',
-              margin: '0 0 0.35rem',
-              color: 'var(--brand-navy)',
-            }}
-          >
-            {title}
-          </h1>
-          <p style={{ color: 'var(--muted)', margin: 0, maxWidth: '42rem', lineHeight: 1.6 }}>{lede}</p>
+      <div className="lg-page">
+        <div className="lg-hub-hero">
+          <PageHeader eyebrow="Lugemi" title={title} lede={lede} compact />
+          <AnamorphicPanel variant="hub" size="sm" label={title} />
         </div>
-        <AnamorphicPanel variant="hub" size="sm" label={title} />
+
+        {featurePreview.length > 0 ? (
+          <section className="lg-page-section" aria-label="Capabilities">
+            <div className="lg-page-section__head">
+              <h2 className="lg-type-section">What you can do here</h2>
+              <p className="lg-type-body">
+                These capabilities describe the product surface. Availability depends on your plan,
+                workspace flags, and model coverage for each language.
+              </p>
+            </div>
+            <div className="lg-grid-3">
+              {featurePreview.map((item, index) => (
+                <FeaturePanel
+                  key={item.id}
+                  icon={index === 0 ? 'speech' : index === 1 ? 'translate' : 'model'}
+                  title={item.title}
+                  body={item.body}
+                />
+              ))}
+            </div>
+          </section>
+        ) : null}
+
+        <section className="lg-page-section" aria-labelledby="lg-hub-catalog-title">
+          <div className="lg-page-section__head">
+            <h2 id="lg-hub-catalog-title" className="lg-type-section">
+              {catalogTitle}
+            </h2>
+            <p className="lg-type-body">{catalogLead}</p>
+          </div>
+          <ul className="lg-hub-catalog">
+            {catalogItems.map((item) => (
+              <li key={item.id}>
+                <strong>{item.title}</strong>
+                <span>{item.body}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {children}
       </div>
-
-      <section
-        className="vl-endpoint-card"
-        style={{ marginBottom: '1.25rem' }}
-        aria-labelledby="lg-hub-catalog-title"
-      >
-        <h2
-          id="lg-hub-catalog-title"
-          style={{
-            fontSize: '0.75rem',
-            textTransform: 'uppercase',
-            letterSpacing: '0.06em',
-            color: 'var(--muted)',
-            margin: '0 0 0.35rem',
-            fontWeight: 700,
-          }}
-        >
-          {catalogTitle}
-        </h2>
-        <p style={{ color: 'var(--muted)', margin: '0 0 0.85rem', fontSize: '0.9rem', lineHeight: 1.55 }}>
-          {catalogLead}
-        </p>
-        <ul
-          style={{
-            margin: 0,
-            padding: 0,
-            listStyle: 'none',
-            display: 'grid',
-            gap: '0.65rem',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(14rem, 1fr))',
-          }}
-        >
-          {catalogItems.map((item) => (
-            <li
-              key={item.id}
-              style={{
-                borderTop: '1px solid var(--line)',
-                paddingTop: '0.55rem',
-              }}
-            >
-              <div style={{ fontWeight: 600, color: 'var(--brand-navy)', fontSize: '0.95rem' }}>{item.title}</div>
-              <div style={{ color: 'var(--muted)', fontSize: '0.85rem', marginTop: '0.2rem', lineHeight: 1.45 }}>
-                {item.body}
-              </div>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      {children}
     </AppShell>
   );
 }

@@ -5,6 +5,7 @@ import { useAuth } from '@clerk/nextjs';
 import { useCallback, useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
+import { FeaturePanel, PageHeader, PremiumCard, StatCard } from '@/components/platform';
 
 type Catalog = {
   name: string;
@@ -182,53 +183,119 @@ export function AccessLineClient() {
     }
   }
 
+  const activeLine = lines.find((l) => l.id === lineId);
+
   return (
     <AppShell>
-      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6">
-        <header className="mb-8 border-b border-zinc-200 pb-6">
-          <p className="text-sm font-medium tracking-wide text-teal-800">Lugemi AccessLine</p>
-          <h1 className="mt-2 font-serif text-3xl tracking-tight text-zinc-900 sm:text-4xl">
-            {catalog?.headline ?? 'Call in your language. Get grounded delivery answers.'}
-          </h1>
-          <p className="mt-3 max-w-2xl text-base text-zinc-600">
-            {catalog?.description ??
-              'Native-language telephone service for logistics delivery-status. Simulator runs end-to-end without carrier credentials.'}
+      <div className="lg-page">
+        <PageHeader
+          eyebrow="AccessLine"
+          title={catalog?.headline ?? 'Call in your language. Get grounded delivery answers.'}
+          lede={
+            catalog?.description ??
+            'Native-language telephone service for logistics delivery-status. The simulator runs the full journey without carrier credentials.'
+          }
+        >
+          <p>
+            Callers use an ordinary business number—no smartphone app required. Private order details
+            always require registered-customer authentication. Live PSTN and number purchase need
+            separate authorization.
           </p>
-          {catalog && (
-            <p className="mt-3 text-sm text-zinc-500">
-              Pilot: {catalog.pilot.corridor.label}. Telephony:{' '}
-              <span className="font-medium text-zinc-700">{catalog.telephony.mode}</span> —{' '}
-              {catalog.telephony.note}
-            </p>
-          )}
-        </header>
+        </PageHeader>
 
-        {error && (
-          <div className="mb-4 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800">
-            {error}
+        <div className="lg-grid-stats">
+          <StatCard
+            label="Telephony"
+            value={catalog?.telephony.configured ? 'Ready' : 'Sim'}
+            hint={catalog?.telephony.mode ?? 'simulated_only'}
+          />
+          <StatCard label="Lines" value={lines.length} hint="Business lines in this workspace" />
+          <StatCard
+            label="Call state"
+            value={call?.state ?? 'idle'}
+            hint={call ? `Auth: ${call.authState ?? 'none'}` : 'Start a simulator call'}
+          />
+          <StatCard
+            label="Corridor"
+            value="KE"
+            hint={catalog?.pilot.corridor.label ?? 'Kenya logistics pilot'}
+          />
+        </div>
+
+        <section className="lg-page-section" aria-label="How AccessLine works">
+          <div className="lg-page-section__head">
+            <h2 className="lg-type-section">How the journey works</h2>
+            <p className="lg-type-body">
+              Each step is policy-controlled. The model may phrase approved facts; it cannot invent
+              status, skip authentication, or dial arbitrary numbers.
+            </p>
           </div>
-        )}
+          <div className="lg-grid-3">
+            <FeaturePanel
+              icon="phone"
+              title="Language & intent"
+              body="DTMF or speech selects a supported variety, then recognizes delivery status, hours, repeat, or human help."
+            />
+            <FeaturePanel
+              icon="shield"
+              title="Registered auth"
+              body="OTP to a pre-registered contact only. Caller ID and order references never unlock private data alone."
+            />
+            <FeaturePanel
+              icon="wave"
+              title="Grounded answers"
+              body="Delivery lookup returns structured facts. Null ETA stays unavailable—never invented."
+            />
+          </div>
+        </section>
 
-        <section className="mb-10 grid gap-8 lg:grid-cols-[1fr_1fr]">
-          <div>
-            <h2 className="text-lg font-semibold text-zinc-900">Business line</h2>
-            <p className="mt-1 text-sm text-zinc-600">
-              Simulated lines are labeled. Live Twilio numbers require separate authorization.
+        {error ? (
+          <div
+            className="lg-card lg-card--flat"
+            style={{ borderColor: 'color-mix(in srgb, var(--bad) 35%, var(--border-subtle))' }}
+            role="alert"
+          >
+            <p className="lg-card__body" style={{ color: 'var(--bad)', margin: 0 }}>
+              {error}
             </p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <button
-                type="button"
-                disabled={busy}
-                onClick={() => void createLine()}
-                className="rounded bg-teal-800 px-3 py-2 text-sm font-medium text-white hover:bg-teal-900 disabled:opacity-50"
-              >
-                Create simulated line
-              </button>
-              <select
-                className="rounded border border-zinc-300 px-2 py-2 text-sm"
-                value={lineId}
-                onChange={(e) => setLineId(e.target.value)}
-              >
+          </div>
+        ) : null}
+
+        <div className="lg-grid-2">
+          <PremiumCard
+            title="Business line"
+            meta={<span className="vl-tag">Simulator</span>}
+            footer={
+              <>
+                <button type="button" className="vl-btn vl-btn-primary" disabled={busy} onClick={() => void createLine()}>
+                  Create simulated line
+                </button>
+                <button
+                  type="button"
+                  className="vl-btn vl-btn-secondary"
+                  disabled={busy || !lineId}
+                  onClick={() => void startCall()}
+                >
+                  Start call
+                </button>
+                <button
+                  type="button"
+                  className="vl-btn vl-btn-secondary"
+                  disabled={busy || !call || call.state === 'ended'}
+                  onClick={() => void hangup()}
+                >
+                  Hang up
+                </button>
+              </>
+            }
+          >
+            <p className="lg-card__body">
+              Simulated lines are labeled and safe for pilot testing. Map a Twilio DID only after
+              provisioning is authorized.
+            </p>
+            <label className="vl-field-label" style={{ marginTop: '0.75rem' }}>
+              Active line
+              <select className="vl-field" value={lineId} onChange={(e) => setLineId(e.target.value)}>
                 <option value="">Select line…</option>
                 {lines.map((l) => (
                   <option key={l.id} value={l.id}>
@@ -236,138 +303,136 @@ export function AccessLineClient() {
                   </option>
                 ))}
               </select>
-            </div>
-            {lines.find((l) => l.id === lineId)?.honesty && (
-              <p className="mt-2 text-xs text-amber-800">{lines.find((l) => l.id === lineId)?.honesty}</p>
-            )}
+            </label>
+            {activeLine?.honesty ? <p className="vl-field-hint">{activeLine.honesty}</p> : null}
 
-            <h2 className="mt-8 text-lg font-semibold text-zinc-900">Simulator call</h2>
-            <div className="mt-3 flex flex-wrap gap-2">
-              <button
-                type="button"
-                disabled={busy || !lineId}
-                onClick={() => void startCall()}
-                className="rounded bg-zinc-900 px-3 py-2 text-sm font-medium text-white disabled:opacity-50"
-              >
-                Start call
-              </button>
-              <button
-                type="button"
-                disabled={busy || !call || call.state === 'ended'}
-                onClick={() => void hangup()}
-                className="rounded border border-zinc-300 px-3 py-2 text-sm disabled:opacity-50"
-              >
-                Hang up
-              </button>
-            </div>
-
-            <div className="mt-4 space-y-3">
-              <label className="block text-sm">
-                <span className="text-zinc-600">DTMF digits</span>
-                <div className="mt-1 flex gap-2">
-                  <input
-                    className="w-full rounded border border-zinc-300 px-2 py-1.5 font-mono text-sm"
-                    value={digits}
-                    onChange={(e) => setDigits(e.target.value)}
-                  />
-                  <button
-                    type="button"
-                    disabled={busy || !call}
-                    onClick={() => void sendDtmf()}
-                    className="rounded bg-teal-700 px-3 py-1.5 text-sm text-white disabled:opacity-50"
-                  >
+            <div style={{ display: 'grid', gap: '0.85rem', marginTop: '1rem' }}>
+              <label className="vl-field-label">
+                DTMF digits
+                <span className="vl-field-hint">Language (1/2), OTP, or order reference with leading zeros.</span>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <input className="vl-field" value={digits} onChange={(e) => setDigits(e.target.value)} />
+                  <button type="button" className="vl-btn vl-btn-primary" disabled={busy || !call} onClick={() => void sendDtmf()}>
                     Send
                   </button>
                 </div>
               </label>
-              <label className="block text-sm">
-                <span className="text-zinc-600">Speech (intent / reference)</span>
-                <div className="mt-1 flex gap-2">
-                  <input
-                    className="w-full rounded border border-zinc-300 px-2 py-1.5 text-sm"
-                    value={speech}
-                    onChange={(e) => setSpeech(e.target.value)}
-                  />
-                  <button
-                    type="button"
-                    disabled={busy || !call}
-                    onClick={() => void sendSpeech()}
-                    className="rounded bg-teal-700 px-3 py-1.5 text-sm text-white disabled:opacity-50"
-                  >
+              <label className="vl-field-label">
+                Speech
+                <span className="vl-field-hint">Ask for delivery status, hours, repeat, or a human agent.</span>
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <input className="vl-field" value={speech} onChange={(e) => setSpeech(e.target.value)} />
+                  <button type="button" className="vl-btn vl-btn-primary" disabled={busy || !call} onClick={() => void sendSpeech()}>
                     Say
                   </button>
                 </div>
               </label>
             </div>
-
-            <p className="mt-4 text-xs text-zinc-500">
-              Journey: language DTMF → ask delivery status → OTP (simulator) → order ref with leading zeros →
-              grounded status (null ETA stays null).{' '}
-              <Link href="/docs/ACCESSLINE.md" className="underline">
-                Docs
+            <p className="vl-field-hint" style={{ marginTop: '0.75rem' }}>
+              Docs:{' '}
+              <Link href="/docs/ACCESSLINE.md" style={{ color: 'var(--action-primary)', fontWeight: 600 }}>
+                AccessLine guide
               </Link>
             </p>
-          </div>
+          </PremiumCard>
 
-          <div>
-            <h2 className="text-lg font-semibold text-zinc-900">Live call state</h2>
-            {!call && <p className="mt-2 text-sm text-zinc-500">No active simulator call.</p>}
-            {call && (
-              <div className="mt-3 space-y-3 rounded-lg border border-zinc-200 bg-gradient-to-b from-teal-50/40 to-white p-4">
-                <dl className="grid grid-cols-2 gap-2 text-sm">
+          <PremiumCard
+            title="Live call state"
+            meta={call ? <span className="vl-tag">{call.state}</span> : <span className="vl-tag">Idle</span>}
+          >
+            {!call ? (
+              <p className="lg-card__body">No active simulator call. Create a line and start a call to begin.</p>
+            ) : (
+              <>
+                <div className="lg-grid-2" style={{ gap: '0.65rem' }}>
                   <div>
-                    <dt className="text-zinc-500">State</dt>
-                    <dd className="font-medium">{call.state}</dd>
+                    <div className="lg-type-caption">Language</div>
+                    <div style={{ fontWeight: 600, color: 'var(--brand-navy)' }}>{call.selectedVariety ?? '—'}</div>
                   </div>
                   <div>
-                    <dt className="text-zinc-500">Auth</dt>
-                    <dd className="font-medium">{call.authState ?? '—'}</dd>
+                    <div className="lg-type-caption">Auth</div>
+                    <div style={{ fontWeight: 600, color: 'var(--brand-navy)' }}>{call.authState ?? '—'}</div>
                   </div>
                   <div>
-                    <dt className="text-zinc-500">Language</dt>
-                    <dd className="font-medium">{call.selectedVariety ?? '—'}</dd>
+                    <div className="lg-type-caption">Order</div>
+                    <div style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem' }}>
+                      {call.orderReference ?? '—'}
+                    </div>
                   </div>
                   <div>
-                    <dt className="text-zinc-500">Order</dt>
-                    <dd className="font-mono text-xs">{call.orderReference ?? '—'}</dd>
+                    <div className="lg-type-caption">Delivery</div>
+                    <div style={{ fontWeight: 600, color: 'var(--brand-navy)' }}>
+                      {call.lastDeliveryStatus ?? '—'}
+                    </div>
                   </div>
-                </dl>
-                {call.prompt && (
-                  <p className="rounded bg-white/80 p-3 text-sm leading-relaxed text-zinc-800">{call.prompt}</p>
-                )}
-                {call.delivery && (
-                  <p className="text-sm text-zinc-700">
-                    Delivery: <strong>{call.delivery.status}</strong> ({call.delivery.resultState})
-                    {call.delivery.estimatedDelivery == null ? ' · no ETA' : ` · ETA ${call.delivery.estimatedDelivery}`}
+                </div>
+                {call.prompt ? (
+                  <p
+                    className="lg-card__body"
+                    style={{
+                      marginTop: '0.85rem',
+                      padding: '0.85rem 1rem',
+                      borderRadius: 'var(--radius-control)',
+                      background: 'var(--surface-muted)',
+                      color: 'var(--text-primary)',
+                    }}
+                  >
+                    {call.prompt}
                   </p>
-                )}
-                {call.simulator?.note && (
-                  <p className="text-xs text-amber-800">{call.simulator.note}</p>
-                )}
-              </div>
+                ) : null}
+                {call.delivery ? (
+                  <p className="vl-field-hint">
+                    Result <strong>{call.delivery.status}</strong> ({call.delivery.resultState})
+                    {call.delivery.estimatedDelivery == null
+                      ? ' · no ETA'
+                      : ` · ETA ${call.delivery.estimatedDelivery}`}
+                  </p>
+                ) : null}
+                {call.simulator?.note ? <p className="vl-field-hint">{call.simulator.note}</p> : null}
+              </>
             )}
 
-            <h3 className="mt-6 text-sm font-semibold text-zinc-800">Event log</h3>
-            <ul className="mt-2 max-h-48 space-y-1 overflow-auto text-xs text-zinc-600">
-              {log.map((entry, i) => (
-                <li key={`${entry}-${i}`} className="font-mono">
-                  {entry}
-                </li>
-              ))}
-            </ul>
+            <div style={{ marginTop: '1rem' }}>
+              <h3 className="lg-type-card" style={{ fontSize: '1rem' }}>
+                Event log
+              </h3>
+              <ul
+                style={{
+                  margin: '0.5rem 0 0',
+                  padding: 0,
+                  listStyle: 'none',
+                  maxHeight: '10rem',
+                  overflow: 'auto',
+                  fontFamily: 'var(--font-mono)',
+                  fontSize: '0.75rem',
+                  color: 'var(--text-secondary)',
+                }}
+              >
+                {log.length === 0 ? <li>Waiting for actions…</li> : null}
+                {log.map((entry, i) => (
+                  <li key={`${entry}-${i}`} style={{ padding: '0.2rem 0' }}>
+                    {entry}
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-            {catalog && (
-              <div className="mt-6">
-                <h3 className="text-sm font-semibold text-zinc-800">Honesty</h3>
-                <ul className="mt-2 list-disc space-y-1 pl-5 text-xs text-zinc-600">
+            {catalog ? (
+              <div style={{ marginTop: '1rem' }}>
+                <h3 className="lg-type-card" style={{ fontSize: '1rem' }}>
+                  Honesty
+                </h3>
+                <ul className="lg-prose" style={{ margin: '0.5rem 0 0', paddingLeft: '1.1rem' }}>
                   {catalog.honesty.map((h) => (
-                    <li key={h}>{h}</li>
+                    <li key={h} style={{ marginBottom: '0.35rem' }}>
+                      {h}
+                    </li>
                   ))}
                 </ul>
               </div>
-            )}
-          </div>
-        </section>
+            ) : null}
+          </PremiumCard>
+        </div>
       </div>
     </AppShell>
   );

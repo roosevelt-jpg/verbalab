@@ -6,6 +6,7 @@ import { useAuth } from '@clerk/nextjs';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
 import { CodePanel } from '@/components/code-panel';
+import { PageHeader, PremiumCard } from '@/components/platform';
 
 type ApiKeyRow = {
   id: string;
@@ -71,105 +72,103 @@ export function KeysClient() {
 
   return (
     <AppShell>
-      <p className="vl-tag" style={{ margin: 0 }}>
-        Lugemi API
-      </p>
-      <h1
-        style={{
-          margin: '0.55rem 0 0',
-          fontFamily: 'var(--font-display)',
-          letterSpacing: '-0.03em',
-          fontSize: '2rem',
-          color: 'var(--brand-navy)',
-        }}
+      <div className="lg-page">
+      <PageHeader
+        eyebrow="Lugemi API"
+        title="API keys"
+        lede="Create live or test keys for your workspace. Secrets are shown once at creation—store them securely before you leave the page."
       >
-        API keys
-      </h1>
-      <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0', lineHeight: 1.6, maxWidth: '40rem' }}>
-        Secrets are shown once. Use <code className="vl-code">lg_live_</code> or soft-sandbox{' '}
-        <code className="vl-code">lg_test_</code> (same cluster & quota). See{' '}
-        <Link href="/developers" style={{ color: 'var(--action-primary)' }}>
-          Developers
-        </Link>
-        .
-      </p>
+        <p>
+          Use <code className="vl-code">lg_live_</code> for production traffic or soft-sandbox{' '}
+          <code className="vl-code">lg_test_</code> for the same cluster and quota. See{' '}
+          <Link href="/developers" style={{ color: 'var(--action-primary)', fontWeight: 600 }}>
+            Developers
+          </Link>{' '}
+          for authentication headers and SDK examples.
+        </p>
+      </PageHeader>
 
-      <form
-        onSubmit={onCreate}
-        className="vl-player-bar"
-        style={{ margin: '1.5rem 0', alignItems: 'stretch' }}
-      >
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Key name"
-          className="vl-field"
-          style={{ flex: '1 1 10rem', minWidth: '8rem' }}
-          required
-        />
-        <select
-          className="vl-field"
-          value={environment}
-          onChange={(e) => setEnvironment(e.target.value as 'live' | 'test')}
-          style={{ width: 'auto', minWidth: '10rem' }}
+      <PremiumCard title="Create a key" meta={<span className="vl-tag">Workspace</span>}>
+        <form
+          onSubmit={onCreate}
+          className="vl-player-bar"
+          style={{ margin: 0, alignItems: 'stretch' }}
         >
-          <option value="live">live (lg_live_)</option>
-          <option value="test">test (lg_test_)</option>
-        </select>
-        <button type="submit" className="vl-btn vl-btn-primary">
-          Create
-        </button>
-      </form>
+          <label className="vl-field-label" style={{ flex: '1 1 10rem', minWidth: '8rem' }}>
+            Name
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Key name"
+              className="vl-field"
+              required
+            />
+          </label>
+          <label className="vl-field-label" style={{ minWidth: '10rem' }}>
+            Environment
+            <select
+              className="vl-field"
+              value={environment}
+              onChange={(e) => setEnvironment(e.target.value as 'live' | 'test')}
+            >
+              <option value="live">live (lg_live_)</option>
+              <option value="test">test (lg_test_)</option>
+            </select>
+          </label>
+          <button type="submit" className="vl-btn vl-btn-primary" style={{ alignSelf: 'end' }}>
+            Create
+          </button>
+        </form>
+      </PremiumCard>
 
       {secretOnce ? (
-        <div style={{ marginBottom: '1rem' }}>
-          <p style={{ margin: '0 0 0.5rem', fontWeight: 600, color: 'var(--brand-navy)' }}>
-            Copy now — shown once
-          </p>
+        <PremiumCard title="Copy now — shown once" meta={<span className="vl-tag">Secret</span>}>
           <CodePanel code={secretOnce} label="Secret" />
-        </div>
+        </PremiumCard>
       ) : null}
 
-      {error ? <p style={{ color: 'var(--bad)' }}>{error}</p> : null}
-
-      {keys.length === 0 ? (
-        <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0' }}>
-          No API keys yet. Create one above — the secret is shown once.
+      {error ? (
+        <p role="alert" style={{ color: 'var(--bad)', margin: 0 }}>
+          {error}
         </p>
-      ) : (
-        <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.75rem' }}>
-          {keys.map((key) => (
-            <li
-              key={key.id}
-              className="vl-endpoint-card"
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                gap: '1rem',
-                alignItems: 'center',
-              }}
-            >
-              <div>
-                <div style={{ fontWeight: 600, color: 'var(--brand-navy)' }}>
-                  {key.name}{' '}
-                  <span className="vl-tag" style={{ marginLeft: '0.35rem' }}>
-                    {key.environment}
-                  </span>
-                </div>
-                <div className="vl-code" style={{ color: 'var(--muted)', marginTop: '0.35rem' }}>
-                  {key.prefix}…{key.revokedAt ? ' · revoked' : ''}
-                  {key.lastUsedAt ? ` · last used ${new Date(key.lastUsedAt).toLocaleString()}` : ' · never used'}
-                </div>
-              </div>
-              {!key.revokedAt ? (
-                <button type="button" className="vl-btn vl-btn-danger" onClick={() => void onRevoke(key.id)}>
-                  Revoke
-                </button>
-              ) : null}
-            </li>
-          ))}
-        </ul>
-      )}
+      ) : null}
+
+      <section className="lg-page-section">
+        <div className="lg-page-section__head">
+          <h2 className="lg-type-section">Your keys</h2>
+          <p className="lg-type-body">Revoke unused keys promptly. Prefixes help you identify keys without revealing the secret.</p>
+        </div>
+        {keys.length === 0 ? (
+          <p className="lg-type-compact">No API keys yet. Create one above — the secret is shown once.</p>
+        ) : (
+          <div className="lg-grid-2">
+            {keys.map((key) => (
+              <PremiumCard
+                key={key.id}
+                title={key.name}
+                meta={<span className="vl-tag">{key.environment}</span>}
+                footer={
+                  !key.revokedAt ? (
+                    <button type="button" className="vl-btn vl-btn-danger" onClick={() => void onRevoke(key.id)}>
+                      Revoke
+                    </button>
+                  ) : (
+                    <span className="vl-tag">Revoked</span>
+                  )
+                }
+              >
+                <p className="lg-card__body" style={{ fontFamily: 'var(--font-mono)', fontSize: '0.85rem' }}>
+                  {key.prefix}…
+                  {key.lastUsedAt
+                    ? ` · last used ${new Date(key.lastUsedAt).toLocaleString()}`
+                    : ' · never used'}
+                </p>
+              </PremiumCard>
+            ))}
+          </div>
+        )}
+      </section>
+      </div>
     </AppShell>
   );
 }

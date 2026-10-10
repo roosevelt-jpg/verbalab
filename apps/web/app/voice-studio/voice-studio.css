@@ -39,7 +39,7 @@
 
 .vs-brand {
   margin: 0;
-  font-family: var(--font-display), 'Fraunces', Georgia, serif;
+  font-family: var(--font-ui);
   font-size: clamp(2.4rem, 6vw, 4rem);
   font-weight: 700;
   letter-spacing: -0.04em;
@@ -49,7 +49,7 @@
 
 .vs-title {
   margin: 0.35rem 0 0.75rem;
-  font-family: var(--font-display), 'Fraunces', Georgia, serif;
+  font-family: var(--font-ui);
   font-size: clamp(1.35rem, 3vw, 1.85rem);
   font-weight: 550;
   letter-spacing: -0.02em;
@@ -101,7 +101,7 @@
 }
 
 .vs-panel h2 {
-  font-family: var(--font-display), Georgia, serif;
+  font-family: var(--font-ui);
   font-size: 1.35rem;
   margin: 0 0 0.35rem;
   letter-spacing: -0.02em;
@@ -233,7 +233,7 @@
 }
 
 .vs-mono {
-  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-family: var(--font-mono);
   font-size: 0.82rem;
   color: var(--muted);
 }

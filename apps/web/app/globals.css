@@ -2380,3 +2380,516 @@ textarea {
 @media (prefers-reduced-motion: reduce) {
   .lg-mcp-hero, .lg-mcp-hero h1, .lg-mcp-lede, .lg-mcp-cta, .lg-mcp-orbit { animation: none; }
 }
+
+/* ============================================================
+   Platform UI system — unified type, cards, fields, stats, pages
+   Brand guide: docs/brand/LUGEMI_BRAND_GUIDELINES.md
+   ============================================================ */
+
+:root {
+  --type-hero: clamp(2rem, 4.5vw, 3rem);
+  --type-page: clamp(1.75rem, 3vw, 2.25rem);
+  --type-section: clamp(1.35rem, 2.2vw, 1.75rem);
+  --type-card: 1.25rem;
+  --type-body: 1rem;
+  --type-compact: 0.875rem;
+  --type-caption: 0.75rem;
+  --leading-hero: 1.15;
+  --leading-page: 1.2;
+  --leading-body: 1.65;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --gradient-action: linear-gradient(135deg, #007c78 0%, #00a39a 55%, #00b8ae 100%);
+  --gradient-action-hover: linear-gradient(135deg, #006863 0%, #008f88 55%, #00a39a 100%);
+  --gradient-card: linear-gradient(165deg, #ffffff 0%, #f4f8fa 100%);
+  --gradient-stat: linear-gradient(145deg, rgba(0, 184, 174, 0.1) 0%, rgba(16, 38, 77, 0.04) 100%);
+  --shadow-card: 0 1px 2px rgba(16, 38, 77, 0.04), 0 10px 28px rgba(16, 38, 77, 0.07);
+  --shadow-card-hover: 0 2px 6px rgba(16, 38, 77, 0.06), 0 16px 40px rgba(16, 38, 77, 0.1);
+}
+
+/* —— Typography —— */
+.lg-type-hero {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--type-hero);
+  font-weight: 700;
+  line-height: var(--leading-hero);
+  letter-spacing: -0.035em;
+  color: var(--brand-navy);
+}
+
+.lg-type-page {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--type-page);
+  font-weight: 700;
+  line-height: var(--leading-page);
+  letter-spacing: -0.03em;
+  color: var(--brand-navy);
+}
+
+.lg-type-section {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--type-section);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.025em;
+  color: var(--brand-navy);
+}
+
+.lg-type-card {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--type-card);
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: var(--brand-navy);
+}
+
+.lg-type-body {
+  margin: 0;
+  font-family: var(--font-ui);
+  font-size: var(--type-body);
+  font-weight: 400;
+  line-height: var(--leading-body);
+  color: var(--text-secondary);
+}
+
+.lg-type-compact {
+  margin: 0;
+  font-size: var(--type-compact);
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+.lg-type-caption {
+  margin: 0;
+  font-size: var(--type-caption);
+  font-weight: 500;
+  line-height: 1.4;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.lg-prose {
+  max-width: 42rem;
+  color: var(--text-secondary);
+  font-size: var(--type-body);
+  line-height: var(--leading-body);
+}
+
+.lg-prose p {
+  margin: 0 0 0.85rem;
+}
+
+.lg-prose p:last-child {
+  margin-bottom: 0;
+}
+
+/* —— Page structure —— */
+.lg-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  width: 100%;
+}
+
+.lg-page-header {
+  display: grid;
+  gap: var(--space-3);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid color-mix(in srgb, var(--border-subtle) 85%, transparent);
+}
+
+.lg-page-header__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: fit-content;
+}
+
+.lg-page-header__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-top: var(--space-2);
+}
+
+.lg-page-section {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.lg-page-section__head {
+  display: grid;
+  gap: 0.35rem;
+  max-width: 44rem;
+}
+
+.lg-grid-2 {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: 1fr;
+}
+
+.lg-grid-3 {
+  display: grid;
+  gap: var(--space-4);
+  grid-template-columns: 1fr;
+}
+
+.lg-grid-stats {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (min-width: 720px) {
+  .lg-grid-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .lg-grid-stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 960px) {
+  .lg-grid-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .vl-console-main {
+    max-width: 72rem;
+  }
+}
+
+/* —— Buttons (gradient primary) —— */
+.vl-btn-primary {
+  background: var(--gradient-action);
+  color: var(--on-action-primary);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.18) inset, 0 6px 16px rgba(0, 124, 120, 0.22);
+}
+
+.vl-btn-primary:hover {
+  background: var(--gradient-action-hover);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.14) inset, 0 8px 20px rgba(0, 124, 120, 0.28);
+}
+
+.vl-btn-primary:active {
+  transform: translateY(1px);
+}
+
+.vl-btn-gradient {
+  background: var(--gradient-action);
+  color: var(--on-action-primary);
+  box-shadow: 0 6px 16px rgba(0, 124, 120, 0.22);
+}
+
+.vl-btn-gradient:hover {
+  background: var(--gradient-action-hover);
+}
+
+/* —— Fields —— */
+.vl-field {
+  min-height: 44px;
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-control);
+  border: 1px solid var(--border-subtle);
+  background:
+    linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
+  color: var(--text-primary);
+  box-shadow: inset 0 1px 2px rgba(16, 38, 77, 0.03);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.vl-field::placeholder {
+  color: color-mix(in srgb, var(--text-secondary) 75%, transparent);
+}
+
+.vl-field:hover:not(:disabled):not(:focus) {
+  border-color: color-mix(in srgb, var(--action-primary) 35%, var(--border-subtle));
+}
+
+.vl-field:focus {
+  border-color: var(--action-primary);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(0, 124, 120, 0.16), inset 0 1px 2px rgba(16, 38, 77, 0.02);
+}
+
+.vl-field-label {
+  display: grid;
+  gap: 0.4rem;
+  font-size: var(--type-compact);
+  font-weight: 600;
+  color: var(--brand-navy);
+}
+
+.vl-field-hint {
+  font-size: var(--type-caption);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+select.vl-field {
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--text-secondary) 50%),
+    linear-gradient(135deg, var(--text-secondary) 50%, transparent 50%),
+    linear-gradient(180deg, #ffffff 0%, #fbfcfd 100%);
+  background-position:
+    calc(100% - 16px) calc(50% - 3px),
+    calc(100% - 11px) calc(50% - 3px),
+    0 0;
+  background-size: 5px 5px, 5px 5px, 100% 100%;
+  background-repeat: no-repeat;
+  padding-right: 2.25rem;
+}
+
+textarea.vl-field {
+  min-height: 7rem;
+  resize: vertical;
+  line-height: 1.55;
+}
+
+/* —— Premium cards —— */
+.lg-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem 1.3rem;
+  border-radius: var(--radius-card);
+  border: 1px solid color-mix(in srgb, var(--border-subtle) 90%, transparent);
+  background: var(--gradient-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.lg-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--action-primary), var(--brand-teal));
+  opacity: 0.85;
+}
+
+.lg-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  border-color: color-mix(in srgb, var(--action-primary) 28%, var(--border-subtle));
+}
+
+.lg-card--interactive {
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
+.lg-card--interactive:hover {
+  transform: translateY(-2px);
+}
+
+.lg-card--flat {
+  box-shadow: none;
+  background: var(--surface-canvas);
+}
+
+.lg-card--flat::before {
+  display: none;
+}
+
+.lg-card__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.lg-card__body {
+  color: var(--text-secondary);
+  font-size: 0.925rem;
+  line-height: 1.55;
+  margin: 0;
+}
+
+.lg-card__footer {
+  margin-top: auto;
+  padding-top: 0.35rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* —— Stats —— */
+.lg-stat {
+  position: relative;
+  display: grid;
+  gap: 0.35rem;
+  padding: 1.1rem 1.15rem;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-subtle);
+  background: var(--gradient-stat);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  min-height: 6.5rem;
+}
+
+.lg-stat::after {
+  content: '';
+  position: absolute;
+  right: -1.25rem;
+  bottom: -1.25rem;
+  width: 5.5rem;
+  height: 5.5rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 184, 174, 0.18), transparent 68%);
+  pointer-events: none;
+}
+
+.lg-stat__label {
+  font-size: var(--type-caption);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.lg-stat__value {
+  font-family: var(--font-ui);
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: var(--brand-navy);
+  font-variant-numeric: tabular-nums;
+}
+
+.lg-stat__hint {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  max-width: 14rem;
+}
+
+/* —— Feature illustrations —— */
+.lg-feature {
+  display: grid;
+  gap: 0.85rem;
+  padding: 1.35rem 1.35rem 1.4rem;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-subtle);
+  background:
+    radial-gradient(ellipse 80% 60% at 100% 0%, rgba(0, 184, 174, 0.12), transparent 55%),
+    var(--surface-canvas);
+  box-shadow: var(--shadow-card);
+  min-height: 11rem;
+}
+
+.lg-feature__visual {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 0.85rem;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(145deg, rgba(0, 124, 120, 0.14), rgba(0, 184, 174, 0.22));
+  color: var(--action-primary);
+  border: 1px solid color-mix(in srgb, var(--brand-teal) 35%, transparent);
+}
+
+.lg-feature__visual svg {
+  width: 1.4rem;
+  height: 1.4rem;
+}
+
+.lg-feature__title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--brand-navy);
+}
+
+.lg-feature__body {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+/* —— Console nav polish —— */
+.vl-console-nav-group-btn {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.vl-console-nav-link {
+  font-size: 0.9rem;
+  border-radius: 0.55rem;
+  padding: 0.45rem 0.65rem;
+}
+
+.vl-console-nav-link.is-active {
+  background: color-mix(in srgb, var(--action-primary) 12%, var(--surface-canvas));
+  color: var(--brand-navy);
+  font-weight: 600;
+  box-shadow: inset 3px 0 0 var(--action-primary);
+}
+
+/* Hub catalog cards via shared system */
+.lg-hub-catalog {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.lg-hub-catalog li {
+  padding: 0.95rem 1rem;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--border-subtle);
+  background: var(--gradient-card);
+  box-shadow: var(--shadow-card);
+}
+
+.lg-hub-catalog strong {
+  display: block;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--brand-navy);
+  letter-spacing: -0.015em;
+}
+
+.lg-hub-catalog span {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: var(--text-secondary);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lg-card,
+  .lg-card--interactive,
+  .vl-btn-primary {
+    transition: none;
+    transform: none;
+  }
+}

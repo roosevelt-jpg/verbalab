@@ -298,8 +298,8 @@
   display: grid;
   gap: 1.25rem;
   grid-template-columns: minmax(0, 1.2fr) minmax(12rem, 0.8fr);
-  align-items: start;
-  margin-bottom: 1.5rem;
+  align-items: center;
+  margin-bottom: 0;
 }
 
 @media (max-width: 720px) {

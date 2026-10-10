@@ -5,6 +5,8 @@ import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { apiFetch } from '@/lib/api';
 import { isClerkConfigured } from '@/lib/clerk-config';
+import { AppShell } from '@/components/app-shell';
+import { FeaturePanel, PageHeader, PremiumCard, StatCard } from '@/components/platform';
 
 type SessionRow = {
   id: string;
@@ -160,102 +162,141 @@ export function DealBridgeHomeClient() {
     }
   }
 
+  const issued = sessions.filter((s) => Boolean(s.latestReceiptId) && !s.superseded).length;
+  const active = sessions.filter((s) => !['draft', 'closed', 'expired'].includes(s.state)).length;
+
   return (
-    <main className="vl-page" style={{ maxWidth: 960, margin: '0 auto', padding: '1.5rem 1rem 3rem' }}>
-      <header style={{ marginBottom: '1.5rem' }}>
-        <p style={{ color: 'var(--muted)', margin: 0, fontSize: '0.85rem' }}>Lugemi DealBridge</p>
-        <h1 style={{ margin: '0.35rem 0', fontSize: 'clamp(1.8rem, 4vw, 2.6rem)', lineHeight: 1.15 }}>
-          {headline}
-        </h1>
-        <p style={{ color: 'var(--muted)', maxWidth: 640 }}>
-          Discuss trade in your preferred language, clarify important terms, and keep a shared record of
-          what both parties confirmed.
-        </p>
-      </header>
+    <AppShell>
+      <div className="lg-page">
+        <PageHeader
+          eyebrow="DealBridge"
+          title={headline}
+          lede="Discuss trade in your preferred language, clarify important terms, and keep a shared record of what both parties confirmed."
+          actions={
+            <>
+              <form onSubmit={onCreate}>
+                <button className="vl-btn vl-btn-primary" type="submit" disabled={creating}>
+                  {creating ? 'Creating…' : 'New deal'}
+                </button>
+              </form>
+              <button className="vl-btn vl-btn-secondary" type="button" onClick={() => void refresh()} disabled={loading}>
+                {loading ? 'Refreshing…' : 'Refresh'}
+              </button>
+              <button className="vl-btn vl-btn-secondary" type="button" onClick={() => void onDemo()} disabled={demoRunning}>
+                {demoRunning ? 'Running demo…' : 'Run simulated demo'}
+              </button>
+              <Link className="vl-btn vl-btn-secondary" href="/admin/dealbridge">
+                Pilot admin
+              </Link>
+            </>
+          }
+        >
+          <p>
+            Receipts prove integrity of the issued record—not translation accuracy or legal
+            enforceability. Demo and fixture sessions stay labeled.
+          </p>
+        </PageHeader>
 
-      {!isSignedIn && (
-        <section className="vl-panel" style={{ padding: '1rem', marginBottom: '1rem', display: 'grid', gap: '0.75rem' }}>
-          <label style={{ display: 'grid', gap: '0.25rem' }}>
-            <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>API key (local / key auth)</span>
-            <input className="vl-field" value={apiKey} onChange={(e) => setApiKey(e.target.value)} />
-          </label>
-          <label style={{ display: 'grid', gap: '0.25rem' }}>
-            <span style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>Actor id header</span>
-            <input className="vl-field" value={actorId} onChange={(e) => setActorId(e.target.value)} />
-          </label>
+        <div className="lg-grid-stats">
+          <StatCard label="Sessions" value={sessions.length} hint="In this workspace" />
+          <StatCard label="Active" value={active} hint="Not draft or closed" />
+          <StatCard label="Receipts" value={issued} hint="Issued and current" />
+          <StatCard label="Corridor" value="Pilot" hint="Gated by ASR / translate / TTS" />
+        </div>
+
+        <section className="lg-page-section" aria-label="DealBridge pillars">
+          <div className="lg-page-section__head">
+            <h2 className="lg-type-section">Built for bilingual trade</h2>
+            <p className="lg-type-body">
+              Merchants and buyers keep their languages. Lugemi helps you clarify terms and capture a
+              shared confirmation trail.
+            </p>
+          </div>
+          <div className="lg-grid-3">
+            <FeaturePanel
+              icon="translate"
+              title="Same meaning, two languages"
+              body="Each party works in their preferred language while reviewing the same deal facts."
+            />
+            <FeaturePanel
+              icon="shield"
+              title="Dual confirmation"
+              body="Critical terms require explicit confirmation from both sides before a receipt can issue."
+            />
+            <FeaturePanel
+              icon="model"
+              title="Honest demos"
+              body="Fixture corridors are labeled. Unsupported language pairs return errors—never silent fake translation."
+            />
+          </div>
         </section>
-      )}
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginBottom: '1.25rem' }}>
-        <form onSubmit={onCreate}>
-          <button className="vl-btn" type="submit" disabled={creating}>
-            {creating ? 'Creating…' : 'New deal'}
-          </button>
-        </form>
-        <button className="vl-btn" type="button" onClick={() => void refresh()} disabled={loading}>
-          {loading ? 'Refreshing…' : 'Refresh'}
-        </button>
-        <button className="vl-btn" type="button" onClick={() => void onDemo()} disabled={demoRunning}>
-          {demoRunning ? 'Running demo…' : 'Run simulated investor demo'}
-        </button>
-        <Link className="vl-btn" href="/admin/dealbridge">
-          Pilot admin
-        </Link>
-      </div>
+        {!isSignedIn ? (
+          <PremiumCard title="API key auth" meta={<span className="vl-tag">Local / key</span>}>
+            <p className="lg-card__body">
+              Sign in with Clerk for the full console, or paste a Lugemi API key for local actor-based
+              testing.
+            </p>
+            <label className="vl-field-label" style={{ marginTop: '0.75rem' }}>
+              API key
+              <input className="vl-field" value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder="lg_test_…" />
+            </label>
+            <label className="vl-field-label" style={{ marginTop: '0.75rem' }}>
+              Actor id header
+              <input className="vl-field" value={actorId} onChange={(e) => setActorId(e.target.value)} />
+            </label>
+          </PremiumCard>
+        ) : null}
 
-      {error && (
-        <p role="alert" style={{ color: 'crimson', marginBottom: '1rem' }}>
-          {error}
-        </p>
-      )}
-      {demoResult && (
-        <p className="vl-panel" style={{ padding: '0.75rem 1rem', marginBottom: '1rem' }}>
-          <strong>SIMULATED / FIXTURE DEMO</strong> — {demoResult}
-        </p>
-      )}
+        {error ? (
+          <p role="alert" style={{ color: 'var(--bad)', margin: 0 }}>
+            {error}
+          </p>
+        ) : null}
+        {demoResult ? (
+          <PremiumCard title="Simulated / fixture demo" flat>
+            <p className="lg-card__body">{demoResult}</p>
+          </PremiumCard>
+        ) : null}
 
-      {STATE_BUCKETS.map((bucket) => {
-        const rows = sessions.filter(bucket.match);
-        return (
-          <section key={bucket.id} style={{ marginBottom: '1.5rem' }}>
-            <h2 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>
-              {bucket.label}{' '}
-              <span style={{ color: 'var(--muted)', fontWeight: 400 }}>({rows.length})</span>
-            </h2>
-            {rows.length === 0 ? (
-              <p style={{ color: 'var(--muted)', margin: 0 }}>None</p>
-            ) : (
-              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'grid', gap: '0.5rem' }}>
-                {rows.map((s) => (
-                  <li key={s.id}>
-                    <Link
+        {STATE_BUCKETS.map((bucket) => {
+          const rows = sessions.filter(bucket.match);
+          return (
+            <section key={bucket.id} className="lg-page-section">
+              <div className="lg-page-section__head">
+                <h2 className="lg-type-section">
+                  {bucket.label}{' '}
+                  <span style={{ color: 'var(--text-secondary)', fontWeight: 500 }}>({rows.length})</span>
+                </h2>
+              </div>
+              {rows.length === 0 ? (
+                <p className="lg-type-compact">No sessions in this stage yet.</p>
+              ) : (
+                <div className="lg-grid-2">
+                  {rows.map((s) => (
+                    <PremiumCard
+                      key={s.id}
                       href={`/dealbridge/sessions/${s.id}`}
-                      className="vl-panel"
-                      style={{
-                        display: 'block',
-                        padding: '0.85rem 1rem',
-                        textDecoration: 'none',
-                        color: 'inherit',
-                      }}
+                      title={s.category}
+                      meta={
+                        <>
+                          <span className="vl-tag">{s.state}</span>
+                          {(s.isDemo || s.isFixture) && <span className="vl-tag">Simulated</span>}
+                        </>
+                      }
                     >
-                      <strong>{s.category}</strong> · {s.corridor} · {s.state}
-                      {(s.isDemo || s.isFixture) && (
-                        <span style={{ marginLeft: '0.5rem', color: 'var(--muted)' }}>
-                          SIMULATED / FIXTURE DEMO
-                        </span>
-                      )}
-                      <div style={{ fontSize: '0.85rem', color: 'var(--muted)' }}>
-                        {s.merchantLanguage} → {s.buyerLanguage} · rev {s.activeRevision}
+                      <p className="lg-card__body">
+                        {s.corridor} · {s.merchantLanguage} → {s.buyerLanguage} · rev {s.activeRevision}
                         {s.latestReceiptId ? ` · receipt ${s.latestReceiptId.slice(0, 8)}…` : ''}
-                      </div>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </section>
-        );
-      })}
-    </main>
+                      </p>
+                    </PremiumCard>
+                  ))}
+                </div>
+              )}
+            </section>
+          );
+        })}
+      </div>
+    </AppShell>
   );
 }
