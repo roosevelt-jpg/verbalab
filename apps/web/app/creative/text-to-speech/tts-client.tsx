@@ -194,14 +194,17 @@ function CreativeTtsClientInner({ getToken, isLoaded }: { getToken: () => Promis
   }
 
   function openInVideoProject() {
+    const script = text.trim();
+    const placeholdery =
+      /audio tags|type your text|expressive speech/i.test(script) || script.length < 4;
     const project = createVideoProject({
-      title: text.trim().slice(0, 64) || 'TTS video',
-      script: text.trim(),
+      title: placeholdery ? 'TTS video' : script.slice(0, 64),
+      script: placeholdery ? '' : script,
       kind: 'video',
       accentId: accentId || undefined,
       voiceId: identityPack?.echoVoiceId || voiceId,
     });
-    if (audioDataUrl) {
+    if (audioDataUrl && project.script) {
       project.narration = {
         mimeType: 'audio/mpeg',
         audioDataUrl,
@@ -210,7 +213,7 @@ function CreativeTtsClientInner({ getToken, isLoaded }: { getToken: () => Promis
         accentId: accentId || undefined,
         speechVariety: identityPack?.speechVariety,
         locale: identityPack?.bcp47,
-        characterCount: text.trim().length,
+        characterCount: project.script.length,
         generatedAt: new Date().toISOString(),
       };
       project.culturalIdentity = identityPack?.culturalIdentity || identityPack?.nameEn;
