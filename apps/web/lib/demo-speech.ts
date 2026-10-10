@@ -1,8 +1,10 @@
 /**
- * Marketing demo speech — always Lugemi native voices via the API (`POST /v1/demo/speech`).
- * Never falls back to browser speech or stock voices: those sound like a foreigner
- * speaking the language. Cultural English varieties (GH/NG/KE/PH/ZA) and every registry
- * language resolve to a playable own:* Echo voice (curated or language-default pack).
+ * Marketing demo speech — Lugemi Echo voices via `POST /v1/demo/speech`.
+ *
+ * Only demo-safe varieties (eSpeak-backed or neural-live) are listed here.
+ * Voices without verified intelligible synthesis (Yoruba, Zulu, Akan, etc. until
+ * neural weights publish) are omitted — the API returns capability_unavailable
+ * rather than formant/beep placeholders.
  */
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
@@ -18,21 +20,113 @@ export type DemoVoiceProfile = {
   englishLocale?: string;
 };
 
+/** Customer-facing profiles — must stay aligned with apps/api demo-catalogue. */
 export const DEMO_VOICE_PROFILES: Record<string, DemoVoiceProfile> = {
-  abe: { id: 'abe', label: 'Abe · Lagos', lang: 'yo-NG', voice: 'own:yo-ng-male', englishLocale: 'en-NG' },
-  amara: { id: 'amara', label: 'Amara · Nairobi', lang: 'sw-KE', voice: 'own:sw-ke-female', englishLocale: 'en-KE' },
-  thandi: { id: 'thandi', label: 'Thandi · Johannesburg', lang: 'zu-ZA', voice: 'own:zu-za-female', englishLocale: 'en-ZA' },
-  kwame: { id: 'kwame', label: 'Kwame · Accra', lang: 'ak-GH', voice: 'own:ak-gh-female', englishLocale: 'en-GH' },
-  'sw-ke-female': { id: 'sw-ke-female', label: 'Aisha · Nairobi', lang: 'sw-KE', voice: 'own:sw-ke-female', englishLocale: 'en-KE' },
-  'yo-ng-male': { id: 'yo-ng-male', label: 'Tunde · Lagos', lang: 'yo-NG', voice: 'own:yo-ng-male', englishLocale: 'en-NG' },
-  'am-et-female': { id: 'am-et-female', label: 'Hanna · Addis', lang: 'am-ET', voice: 'own:am-et-female' },
-  'zu-za-female': { id: 'zu-za-female', label: 'Thandi · Durban', lang: 'zu-ZA', voice: 'own:zu-za-female', englishLocale: 'en-ZA' },
-  'ar-eg-male': { id: 'ar-eg-male', label: 'Omar · Cairo', lang: 'ar-EG', voice: 'own:ar-eg-male' },
-  'fr-sn-female': { id: 'fr-sn-female', label: 'Awa · Dakar', lang: 'fr-SN', voice: 'own:fr-sn-female' },
-  'ha-ng-male': { id: 'ha-ng-male', label: 'Sani · Kano', lang: 'ha-NG', voice: 'own:ha-ng-male', englishLocale: 'en-NG' },
-  'ak-gh-female': { id: 'ak-gh-female', label: 'Akosua · Accra', lang: 'ak-GH', voice: 'own:ak-gh-female', englishLocale: 'en-GH' },
-  agent: { id: 'agent', label: 'Agent', lang: 'sw-KE' },
-  user: { id: 'user', label: 'User', lang: 'en' },
+  amara: {
+    id: 'amara',
+    label: 'Aisha · Nairobi',
+    lang: 'sw-KE',
+    voice: 'own:sw-ke-female',
+    englishLocale: 'en-KE',
+  },
+  'sw-ke-female': {
+    id: 'sw-ke-female',
+    label: 'Aisha · Nairobi',
+    lang: 'sw-KE',
+    voice: 'own:sw-ke-female',
+    englishLocale: 'en-KE',
+  },
+  'am-et-female': {
+    id: 'am-et-female',
+    label: 'Hanna · Addis',
+    lang: 'am-ET',
+    voice: 'own:am-et-female',
+  },
+  'ar-eg-male': {
+    id: 'ar-eg-male',
+    label: 'Omar · Cairo',
+    lang: 'ar-EG',
+    voice: 'own:ar-eg-male',
+  },
+  'fr-fr-female': {
+    id: 'fr-fr-female',
+    label: 'Camille · France',
+    lang: 'fr-FR',
+    voice: 'own:fr-fr-female',
+  },
+  'fr-sn-female': {
+    id: 'fr-sn-female',
+    label: 'Awa · Dakar',
+    lang: 'fr-SN',
+    voice: 'own:fr-sn-female',
+  },
+  'en-us-female': {
+    id: 'en-us-female',
+    label: 'Ava · United States',
+    lang: 'en-US',
+    voice: 'own:en-us-female',
+    englishLocale: 'en-US',
+  },
+  'en-gb-female': {
+    id: 'en-gb-female',
+    label: 'Emma · United Kingdom',
+    lang: 'en-GB',
+    voice: 'own:en-gb-female',
+    englishLocale: 'en-GB',
+  },
+  'en-au-female': {
+    id: 'en-au-female',
+    label: 'Mia · Australia',
+    lang: 'en-AU',
+    voice: 'own:en-au-female',
+    englishLocale: 'en-AU',
+  },
+  'en-nz-female': {
+    id: 'en-nz-female',
+    label: 'Ruby · New Zealand',
+    lang: 'en-NZ',
+    voice: 'own:en-nz-female',
+    englishLocale: 'en-NZ',
+  },
+  'en-gh-female': {
+    id: 'en-gh-female',
+    label: 'Ama · Ghanaian English',
+    lang: 'en-GH',
+    voice: 'own:en-gh-female',
+    englishLocale: 'en-GH',
+  },
+  'en-ng-female': {
+    id: 'en-ng-female',
+    label: 'Chioma · Nigerian English',
+    lang: 'en-NG',
+    voice: 'own:en-ng-female',
+    englishLocale: 'en-NG',
+  },
+  'af-za-female': {
+    id: 'af-za-female',
+    label: 'Annelie · Afrikaans',
+    lang: 'af-ZA',
+    voice: 'own:af-za-female',
+    englishLocale: 'en-ZA',
+  },
+  // Legacy chip ids remapped to demo-safe English varieties (not fabricated native L1).
+  abe: { id: 'abe', label: 'Chioma · Nigerian English', lang: 'en-NG', voice: 'own:en-ng-female', englishLocale: 'en-NG' },
+  thandi: {
+    id: 'thandi',
+    label: 'Lerato · South African English',
+    lang: 'en-ZA',
+    voice: 'own:en-za-female',
+    englishLocale: 'en-ZA',
+  },
+  kwame: {
+    id: 'kwame',
+    label: 'Ama · Ghanaian English',
+    lang: 'en-GH',
+    voice: 'own:en-gh-female',
+    englishLocale: 'en-GH',
+  },
+  agent: { id: 'agent', label: 'Aisha · Nairobi', lang: 'sw-KE', voice: 'own:sw-ke-female' },
+  user: { id: 'user', label: 'Ava · United States', lang: 'en-US', voice: 'own:en-us-female' },
 };
 
 const LANG_ALIASES: Record<string, string> = { tw: 'ak', twi: 'ak', fat: 'ak' };
@@ -58,7 +152,7 @@ export function stopDemoSpeech() {
 
 /** Cultural English Echo voices for marketing demos (region → preferred own:*). */
 const ENGLISH_LOCALE_VOICE: Record<string, string> = {
-  'en-GH': 'own:en-gh-male',
+  'en-GH': 'own:en-gh-female',
   'en-NG': 'own:en-ng-female',
   'en-KE': 'own:en-ke-female',
   'en-ZA': 'own:en-za-female',
@@ -80,16 +174,16 @@ function resolveRequest(profile: DemoVoiceProfile, requestedLang: string | undef
       : profile.englishLocale ?? raw;
     return {
       language: localeKey,
-      voice: ENGLISH_LOCALE_VOICE[localeKey],
+      voice: ENGLISH_LOCALE_VOICE[localeKey] ?? profile.voice,
     };
   }
-  const voice = profile.voice && baseLang(profile.lang) === base ? profile.voice : undefined;
+  const voice = profile.voice && baseLang(profile.lang) === base ? profile.voice : profile.voice;
   return { language: lang, voice };
 }
 
 async function readError(res: Response): Promise<string> {
   try {
-    const body = (await res.json()) as { error?: { message?: string } };
+    const body = (await res.json()) as { error?: { message?: string; code?: string } };
     if (body.error?.message) return body.error.message;
   } catch {
     // non-JSON error body
@@ -121,7 +215,14 @@ export async function playDemoSpeech(input: {
     signal: controller.signal,
   });
   if (!res.ok) throw new Error(await readError(res));
+
+  const contentType = res.headers.get('content-type') ?? '';
+  if (contentType.includes('json') || contentType.includes('text')) {
+    throw new Error('Speech endpoint returned non-audio content');
+  }
+
   const blob = await res.blob();
+  if (blob.size < 64) throw new Error('Speech audio payload too small');
   if (activeRequest !== controller) return { mode: 'server', profile };
   activeRequest = null;
 

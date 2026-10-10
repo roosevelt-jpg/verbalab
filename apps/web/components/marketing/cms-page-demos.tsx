@@ -116,7 +116,7 @@ export function CmsPageDemos({ slug }: { slug: string }) {
             userText="Can my agent greet customers in Twi and Kiswahili?"
             agentText="Aane — and karibu. Lugemi own:* voices carry both languages with local accent and cultural context."
             userVoiceId="kwame"
-            agentVoiceId="ak-gh-female"
+            agentVoiceId="en-gh-female"
             userLang="en-GH"
             agentLang="en-GH"
           />
@@ -241,7 +241,7 @@ export function CmsPageDemos({ slug }: { slug: string }) {
           userText="Can you repeat that in Twi for my customer?"
           agentText="Aane — me bɛka bio wɔ Twi mu. Generated speech stays labeled when it could be mistaken for a live person."
           userVoiceId="kwame"
-          agentVoiceId="ak-gh-female"
+          agentVoiceId="en-gh-female"
           userLang="en-GH"
           agentLang="ak-GH"
         />

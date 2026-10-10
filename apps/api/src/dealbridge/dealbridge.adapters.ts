@@ -159,11 +159,21 @@ export class DealBridgeAdapters {
       };
     } catch {
       if (process.env.DEALBRIDGE_ALLOW_FIXTURE_TTS === '1' || process.env.NODE_ENV === 'test') {
+        // Never return text bytes as audio — that produces browser beeps/noise.
+        const { generateSpeechWav } = await import('../gateway/own-tts.adapter');
+        const wav = generateSpeechWav(
+          input.text,
+          process.env.DEALBRIDGE_TTS_VOICE?.startsWith('own:')
+            ? process.env.DEALBRIDGE_TTS_VOICE
+            : 'own:en-us-female',
+          'en-US',
+          { allowFormant: true },
+        );
         return {
-          audio: Buffer.from(`FIXTURE_TTS:${input.text}`),
-          mimeType: 'audio/mpeg',
+          audio: wav.audio,
+          mimeType: 'audio/wav',
           provider: 'dealbridge-fixture-tts',
-          modelVersion: 'fixture-v1',
+          modelVersion: `fixture-${wav.engine}`,
           status: 'fixture',
         };
       }

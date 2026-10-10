@@ -236,6 +236,7 @@ import { SpeechAnalyticsModule } from './speech-analytics/speech-analytics.modul
 import { DialectsModule } from './dialects/dialects.module';
 import { AccentsModule } from './accents/accents.module';
 import { DemoSpeechModule } from './demo-speech/demo-speech.module';
+import { SpeechReviewModule } from './speech-review/speech-review.module';
 import { VoiceDataModule } from './voice-data/voice-data.module';
 import { PilotRequestsModule } from './pilot-requests/pilot-requests.module';
 import { GrammarModule } from './grammar/grammar.module';
@@ -445,6 +446,7 @@ import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
     DialectsModule,
     AccentsModule,
     DemoSpeechModule,
+    SpeechReviewModule,
     VoiceDataModule,
     PilotRequestsModule,
     GrammarModule,
