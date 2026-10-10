@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useMemo, useState } from 'react';
 import { AnamorphicPanel } from '@/components/media/anamorphic-panel';
 import {

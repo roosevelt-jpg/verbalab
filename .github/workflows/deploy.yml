@@ -104,19 +104,14 @@ jobs:
         if: steps.fly.outputs.configured == 'true'
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
-          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY }}
-        run: |
-          set -euo pipefail
-          API_URL="${NEXT_PUBLIC_API_URL:-https://api.lugemi.com}"
-          CLERK_PK="${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:-pk_live_Y2xlcmsubHVnZW1pLmNvbSQ}"
-          flyctl deploy . -c infra/fly/web.jnb.toml \
-            --dockerfile apps/web/Dockerfile \
-            -a "${FLY_WEB_APP}" \
-            --remote-only \
-            --build-arg "NEXT_PUBLIC_API_URL=${API_URL}" \
-            --build-arg "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${CLERK_PK}" \
-            --build-arg "NEXT_PUBLIC_APP_URL=https://lugemi.com"
+        run: >
+          flyctl deploy . -c infra/fly/web.jnb.toml
+          --dockerfile apps/web/Dockerfile
+          -a ${{ vars.FLY_WEB_APP || 'lugemi-web' }}
+          --remote-only
+          --build-arg NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL || 'https://api.lugemi.com' }}
+          --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${{ vars.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_live_Y2xlcmsubHVnZW1pLmNvbSQ' }}
+          --build-arg NEXT_PUBLIC_APP_URL=https://lugemi.com
 
       # Orphan ams/iad Machines on lugemi-web fail servicecheck-00-http-3000 and
       # make 80/443 look intermittent. Africa primary keeps jnb only.
