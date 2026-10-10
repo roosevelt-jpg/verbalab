@@ -218,8 +218,9 @@ export async function exportProjectWebM(
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) throw new Error('Canvas unavailable');
+  const maybeCtx = canvas.getContext('2d');
+  if (!maybeCtx) throw new Error('Canvas unavailable');
+  const ctx: CanvasRenderingContext2D = maybeCtx;
 
   const audio = new Audio(project.narration.audioDataUrl);
   audio.crossOrigin = 'anonymous';
