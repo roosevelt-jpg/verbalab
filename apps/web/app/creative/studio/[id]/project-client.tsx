@@ -346,7 +346,6 @@ function ProjectInner({
 
           <div className="lg-creative-video-preview" style={{ background: activeScene?.background }}>
             {activeScene?.imageDataUrl ? (
-              // eslint-disable-next-line @next/next/no-img-element
               <img src={activeScene.imageDataUrl} alt="" className="lg-creative-video-preview__img" />
             ) : null}
             <div className="lg-creative-video-preview__overlay">
