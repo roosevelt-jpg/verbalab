@@ -1,31 +1,25 @@
 package com.lugemi.sdk
 
 import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.DataOutputStream
-import java.net.HttpURLConnection
-import java.net.ProtocolException
-import java.net.URL
-import java.nio.charset.StandardCharsets
-import java.util.UUID
 
 /**
  * DealBridge REST client — proposed multilingual deal sessions.
  * Set [actorId] for X-DealBridge-Actor-Id when using API keys.
  */
 class DealBridgeClient(
-  private val apiKey: String,
-  private val baseUrl: String = "https://api.lugemi.com",
+  private val http: LugemiHttp,
   var actorId: String? = null,
-  var organizationId: String? = null,
-  var workspaceId: String? = null,
+  private val uploader: ResumableUploader = ResumableUploader(http),
 ) {
-  fun catalog(): JSONObject = requestJson("GET", "/v1/dealbridge/catalog", null)
+  private fun headers(): Map<String, String> =
+    actorId?.let { mapOf("X-DealBridge-Actor-Id" to it) } ?: emptyMap()
+
+  fun catalog(): JSONObject = http.requestJson("GET", "/v1/dealbridge/catalog", null, headers())
 
   fun peekInvite(token: String): JSONObject =
-    requestJson("GET", "/v1/dealbridge/invites/${enc(token)}", null)
+    http.requestJson("GET", "/v1/dealbridge/invites/${enc(token)}", null, headers())
 
-  fun listSessions(): JSONObject = requestJson("GET", "/v1/dealbridge/sessions", null)
+  fun listSessions(): JSONObject = http.requestJson("GET", "/v1/dealbridge/sessions", null, headers())
 
   fun createSession(
     merchantLanguage: String,
@@ -44,22 +38,22 @@ class DealBridgeClient(
     if (expiresInHours != null) body.put("expiresInHours", expiresInHours)
     if (idempotencyKey != null) body.put("idempotencyKey", idempotencyKey)
     if (isDemo != null) body.put("isDemo", isDemo)
-    return requestJson("POST", "/v1/dealbridge/sessions", body)
+    return http.requestJson("POST", "/v1/dealbridge/sessions", body, headers())
   }
 
   fun getSession(sessionId: String): JSONObject =
-    requestJson("GET", "/v1/dealbridge/sessions/${enc(sessionId)}", null)
+    http.requestJson("GET", "/v1/dealbridge/sessions/${enc(sessionId)}", null, headers())
 
   fun createInvite(sessionId: String, expiresInHours: Int? = null): JSONObject {
     val body = JSONObject()
     if (expiresInHours != null) body.put("expiresInHours", expiresInHours)
-    return requestJson("POST", "/v1/dealbridge/sessions/${enc(sessionId)}/invites", body)
+    return http.requestJson("POST", "/v1/dealbridge/sessions/${enc(sessionId)}/invites", body, headers())
   }
 
   fun join(sessionId: String, token: String, language: String, variety: String? = null): JSONObject {
     val body = JSONObject().put("token", token).put("language", language)
     if (variety != null) body.put("variety", variety)
-    return requestJson("POST", "/v1/dealbridge/sessions/${enc(sessionId)}/join", body)
+    return http.requestJson("POST", "/v1/dealbridge/sessions/${enc(sessionId)}/join", body, headers())
   }
 
   fun recordConsent(
@@ -70,11 +64,13 @@ class DealBridgeClient(
   ): JSONObject {
     val body = JSONObject().put("purpose", purpose).put("decision", decision)
     if (noticeVersion != null) body.put("noticeVersion", noticeVersion)
-    return requestJson("POST", "/v1/dealbridge/sessions/${enc(sessionId)}/consents", body)
+    return http.requestJson("POST", "/v1/dealbridge/sessions/${enc(sessionId)}/consents", body, headers())
   }
 
-  fun issueUploadAuth(sessionId: String): JSONObject =
-    requestJson("POST", "/v1/dealbridge/sessions/${enc(sessionId)}/turns/uploads", JSONObject())
+  fun issueUploadAuth(sessionId: String): UploadAuth =
+    UploadAuth.from(
+      http.requestJson("POST", "/v1/dealbridge/sessions/${enc(sessionId)}/turns/uploads", JSONObject(), headers()),
+    )
 
   fun createTextTurn(
     sessionId: String,
@@ -85,7 +81,7 @@ class DealBridgeClient(
     val body = JSONObject().put("text", text)
     if (language != null) body.put("language", language)
     if (expectedRevision != null) body.put("expectedRevision", expectedRevision)
-    return requestJson("POST", "/v1/dealbridge/sessions/${enc(sessionId)}/turns", body)
+    return http.requestJson("POST", "/v1/dealbridge/sessions/${enc(sessionId)}/turns", body, headers())
   }
 
   fun createAudioTurn(
@@ -99,7 +95,7 @@ class DealBridgeClient(
     val fields = LinkedHashMap<String, String>()
     if (language != null) fields["language"] = language
     if (expectedRevision != null) fields["expectedRevision"] = expectedRevision.toString()
-    return multipart(
+    return http.multipartJson(
       "POST",
       "/v1/dealbridge/sessions/${enc(sessionId)}/turns",
       fields,
@@ -107,6 +103,33 @@ class DealBridgeClient(
       filename,
       mimeType,
       audio,
+      headers(),
+    )
+  }
+
+  fun createAudioTurnResumable(
+    sessionId: String,
+    audio: ByteArray,
+    filename: String,
+    mimeType: String,
+    language: String? = null,
+    expectedRevision: Int? = null,
+    onProgress: ((UploadProgress) -> Unit)? = null,
+  ): JSONObject {
+    val auth = issueUploadAuth(sessionId)
+    val fields = LinkedHashMap<String, String>()
+    if (language != null) fields["language"] = language
+    if (expectedRevision != null) fields["expectedRevision"] = expectedRevision.toString()
+    return uploader.uploadMultipart(
+      path = "/v1/dealbridge/sessions/${enc(sessionId)}/turns",
+      fields = fields,
+      fileField = "file",
+      filename = filename,
+      mimeType = mimeType,
+      fileBytes = audio,
+      maxBytes = auth.maxBytes.takeIf { it > 0 },
+      extraHeaders = headers(),
+      onProgress = onProgress,
     )
   }
 
@@ -118,10 +141,11 @@ class DealBridgeClient(
   ): JSONObject {
     val body = JSONObject().put("text", text)
     if (expectedRevision != null) body.put("expectedRevision", expectedRevision)
-    return requestJson(
+    return http.requestJson(
       "PATCH",
       "/v1/dealbridge/sessions/${enc(sessionId)}/turns/${enc(turnId)}",
       body,
+      headers(),
     )
   }
 
@@ -133,7 +157,7 @@ class DealBridgeClient(
     val body = JSONObject()
     if (expectedRevision != null) body.put("expectedRevision", expectedRevision)
     if (overrides != null) body.put("overrides", overrides)
-    return requestJson("POST", "/v1/dealbridge/sessions/${enc(sessionId)}/snapshots", body)
+    return http.requestJson("POST", "/v1/dealbridge/sessions/${enc(sessionId)}/snapshots", body, headers())
   }
 
   fun submitCheck(
@@ -148,7 +172,7 @@ class DealBridgeClient(
       .put("presentationHash", presentationHash)
       .put("responseText", responseText)
     if (responseTurnId != null) body.put("responseTurnId", responseTurnId)
-    return requestJson("POST", "/v1/dealbridge/sessions/${enc(sessionId)}/checks", body)
+    return http.requestJson("POST", "/v1/dealbridge/sessions/${enc(sessionId)}/checks", body, headers())
   }
 
   fun confirm(
@@ -165,108 +189,26 @@ class DealBridgeClient(
       .put("presentationHash", presentationHash)
       .put("action", action)
       .put("idempotencyKey", idempotencyKey)
-    return requestJson("POST", "/v1/dealbridge/sessions/${enc(sessionId)}/confirmations", body)
+    return http.requestJson("POST", "/v1/dealbridge/sessions/${enc(sessionId)}/confirmations", body, headers())
   }
 
   fun getReceipt(sessionId: String): JSONObject =
-    requestJson("GET", "/v1/dealbridge/sessions/${enc(sessionId)}/receipt", null)
+    http.requestJson("GET", "/v1/dealbridge/sessions/${enc(sessionId)}/receipt", null, headers())
 
   fun startRevision(sessionId: String, reason: String? = null, expectedRevision: Int? = null): JSONObject {
     val body = JSONObject()
     if (reason != null) body.put("reason", reason)
     if (expectedRevision != null) body.put("expectedRevision", expectedRevision)
-    return requestJson("POST", "/v1/dealbridge/sessions/${enc(sessionId)}/revisions", body)
+    return http.requestJson("POST", "/v1/dealbridge/sessions/${enc(sessionId)}/revisions", body, headers())
   }
 
   fun requestDeletion(sessionId: String): JSONObject =
-    requestJson("DELETE", "/v1/dealbridge/sessions/${enc(sessionId)}", null)
+    http.requestJson("DELETE", "/v1/dealbridge/sessions/${enc(sessionId)}", null, headers())
 
   fun listEvents(sessionId: String, cursor: String? = null): JSONObject {
     val q = if (cursor.isNullOrBlank()) "" else "?cursor=${enc(cursor)}"
-    return requestJson("GET", "/v1/dealbridge/sessions/${enc(sessionId)}/events$q", null)
+    return http.requestJson("GET", "/v1/dealbridge/sessions/${enc(sessionId)}/events$q", null, headers())
   }
 
   private fun enc(s: String): String = java.net.URLEncoder.encode(s, "UTF-8").replace("+", "%20")
-
-  private fun open(method: String, path: String): HttpURLConnection {
-    val url = URL(baseUrl.trimEnd('/') + path)
-    val conn = url.openConnection() as HttpURLConnection
-    conn.connectTimeout = 30_000
-    conn.readTimeout = 180_000
-    conn.doInput = true
-    conn.setRequestProperty("Authorization", "Bearer $apiKey")
-    actorId?.let { conn.setRequestProperty("X-DealBridge-Actor-Id", it) }
-    organizationId?.let { conn.setRequestProperty("X-Lugemi-Organization-Id", it) }
-    workspaceId?.let { conn.setRequestProperty("X-Lugemi-Workspace-Id", it) }
-    try {
-      conn.requestMethod = method
-    } catch (e: ProtocolException) {
-      if (method == "PATCH" || method == "DELETE") {
-        conn.requestMethod = "POST"
-        conn.setRequestProperty("X-HTTP-Method-Override", method)
-      } else {
-        throw e
-      }
-    }
-    return conn
-  }
-
-  private fun requestJson(method: String, path: String, body: JSONObject?): JSONObject {
-    val conn = open(method, path)
-    conn.setRequestProperty("Content-Type", "application/json")
-    conn.setRequestProperty("Accept", "application/json")
-    if (body != null || method == "POST" || method == "PATCH" || method == "DELETE") {
-      if (body != null) {
-        conn.doOutput = true
-        conn.outputStream.use { it.write(body.toString().toByteArray(StandardCharsets.UTF_8)) }
-      }
-    }
-    return readJson(conn)
-  }
-
-  private fun multipart(
-    method: String,
-    path: String,
-    fields: Map<String, String>,
-    fileField: String,
-    filename: String,
-    mimeType: String,
-    fileBytes: ByteArray,
-  ): JSONObject {
-    val boundary = "----LugemiDB" + UUID.randomUUID().toString().replace("-", "")
-    val conn = open(method, path)
-    conn.doOutput = true
-    conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=$boundary")
-    conn.setRequestProperty("Accept", "application/json")
-    DataOutputStream(conn.outputStream).use { out ->
-      for ((k, v) in fields) {
-        out.writeBytes("--$boundary\r\n")
-        out.writeBytes("Content-Disposition: form-data; name=\"$k\"\r\n\r\n")
-        out.writeBytes("$v\r\n")
-      }
-      out.writeBytes("--$boundary\r\n")
-      out.writeBytes(
-        "Content-Disposition: form-data; name=\"$fileField\"; filename=\"$filename\"\r\n",
-      )
-      out.writeBytes("Content-Type: $mimeType\r\n\r\n")
-      out.write(fileBytes)
-      out.writeBytes("\r\n--$boundary--\r\n")
-    }
-    return readJson(conn)
-  }
-
-  private fun readJson(conn: HttpURLConnection): JSONObject {
-    val code = conn.responseCode
-    val stream = if (code in 200..299) conn.inputStream else conn.errorStream
-    val text = stream?.bufferedReader(StandardCharsets.UTF_8)?.use(BufferedReader::readText).orEmpty()
-    if (code !in 200..299) {
-      val err = runCatching { JSONObject(text) }.getOrNull()
-      throw LugemiException(
-        err?.optJSONObject("error")?.optString("message") ?: text.ifBlank { "Request failed ($code)" },
-        err?.optJSONObject("error")?.optString("code"),
-        code,
-      )
-    }
-    return if (text.isBlank()) JSONObject() else JSONObject(text)
-  }
 }

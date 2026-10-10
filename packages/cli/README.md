@@ -30,6 +30,7 @@ Hosted: `POST https://api.lugemi.com/v1/mcp` with Bearer `lg_live_…`. See `doc
 - Android (Kotlin): `packages/sdk-android`
 - iOS (Swift): `packages/sdk-ios`
 
-Same REST surface: speech, translate, voices, languages, `videoVoiceLine`, plus VoiceBridge and DealBridge clients.
+Same REST surface: speech, translate, detect, ASR (`transcribe` / `recognizeSpeech`), streaming translate,
+voices, languages, `videoVoiceLine`, plus VoiceBridge and DealBridge clients with resumable media uploads.
 
 See `/developers` in the console and `docs/DEVELOPER_CLOUD.md`.

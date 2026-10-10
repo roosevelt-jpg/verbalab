@@ -11,6 +11,10 @@ let package = Package(
     .library(name: "Lugemi", targets: ["Lugemi"]),
   ],
   targets: [
-    .target(name: "Lugemi", path: "Sources/Lugemi"),
+    .target(
+      name: "Lugemi",
+      path: "Sources/Lugemi",
+      exclude: []
+    ),
   ]
 )

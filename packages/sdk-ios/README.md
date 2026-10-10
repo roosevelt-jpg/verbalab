@@ -1,41 +1,38 @@
 # Lugemi iOS SDK (Swift)
 
-Official Swift Package for Lugemi speech, translate, video voice lines, **VoiceBridge**, and **DealBridge** on iOS / macOS.
+Official Swift Package for Lugemi speech, translate, ASR, detect, streaming translate, **VoiceBridge**, and **DealBridge** on iOS / macOS.
+
+## Install (SPM)
+
+Add the local package path `packages/sdk-ios`, or a git URL when published:
+
+```swift
+dependencies: [
+  .package(path: "../packages/sdk-ios")
+]
+```
+
+Product: `Lugemi` (library). Platforms: iOS 15+, macOS 12+.
 
 ## Core APIs
 
 | Method | HTTP |
 | --- | --- |
-| `speech` | `POST /v1/audio/speech` |
-| `translate` | `POST /v1/translate` |
-| `languages` | `GET /v1/languages` |
-| `voices` | `GET /v1/audio/voices` |
-| `videoVoiceLine` | translate + speech (dubbing helper) |
+| `speech` / `speechStream` | `POST /v1/audio/speech` |
+| `translate` / `translateStream` | `POST /v1/translate` (+ SSE `/stream`) |
+| `detect` | `POST /v1/detect` |
+| `transcribe` | `POST /v1/audio/transcriptions` |
+| `recognizeSpeech` | `POST /v1/speech/recognize` |
+| `languages` / `voices` | catalog |
+| `videoVoiceLine` | translate + speech |
 
-## VoiceBridge (`client.voiceBridge`)
+Typed results: `SpeechResult`, `TranslateResult`, `DetectResult`, `TranscribeResult`, `SpeechRecognizeResult`.  
+Errors: `LugemiError.api` with `isConflict`, `isFeatureDisabled`, `isAuthError`.
 
-| Method | HTTP |
-| --- | --- |
-| `createThread` / `listThreads` / `getThread` | `/v1/voicebridge/threads` |
-| `createInvite` / `join` / `patchMemberMe` | invites + membership |
-| `createTextDraft` / `createAudioDraft` | `POST .../messages` |
-| `publishMessage` / `correctMessage` | publish + corrections |
-| `acknowledgeRevision` / `recordPlayback` | revision telemetry |
-| `createDealDraft` | DealBridge draft handoff |
+## VoiceBridge / DealBridge
 
-## DealBridge (`client.dealBridge`)
-
-| Method | HTTP |
-| --- | --- |
-| `createSession` / `listSessions` / `getSession` | `/v1/dealbridge/sessions` |
-| `createInvite` / `join` / `recordConsent` | membership |
-| `createTextTurn` / `createAudioTurn` / `correctTurn` | conversation turns |
-| `proposeSnapshot` / `submitCheck` / `confirm` | deal flow |
-| `getReceipt` / `startRevision` / `requestDeletion` | receipt + lifecycle |
-
-## Install
-
-Swift Package Manager — add the local package `packages/sdk-ios` or publish when ready.
+`client.voiceBridge` / `client.dealBridge` — full session/thread lifecycle.  
+`createAudioDraftResumable` / `createAudioTurnResumable` retry with backoff and progress callbacks.
 
 ```swift
 import Lugemi
@@ -47,26 +44,14 @@ let client = LugemiClient(
   workspaceId: workspaceId
 )
 
-let (translated, audio) = try await client.videoVoiceLine(
-  text: "Welcome to Accra",
-  target: "ak",
-  voice: "own:ak-gh-female",
-  source: "en"
-)
+let detected = try await client.detect(text: "Bonjour le monde")
+let asr = try await client.transcribe(audio: data, filename: "clip.m4a", mimeType: "audio/mp4", language: "fr")
 
-let thread = try await client.voiceBridge.createThread(
-  title: "East Africa rice desk",
-  language: "en",
-  category: "wholesale_rice"
-)
+for try await event in client.translateStream(TranslateRequest(text: "Hello", source: "en", target: "fr")) {
+  // TranslateStreamEvent
+}
 
-let session = try await client.dealBridge.createSession(
-  merchantLanguage: "en",
-  buyerLanguage: "fr",
-  category: "wholesale_rice"
-)
+let thread = try await client.voiceBridge.createThread(title: "Rice desk", language: "en")
 ```
 
-Auth: `Authorization: Bearer lg_live_…` (or `lg_test_…`).
-
-Same contracts as `@lugemi/sdk`, `@lugemi/cli`, and `@lugemi/mcp`.
+Auth: `Authorization: Bearer lg_live_…` / `lg_test_…`.

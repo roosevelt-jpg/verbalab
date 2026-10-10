@@ -1,8 +1,7 @@
 import Foundation
 
-/// Official Swift client for Lugemi speech, translate, VoiceBridge, and DealBridge on iOS / macOS.
-/// Same REST contracts as `@lugemi/sdk` — ready for video and mobile apps.
-public struct LugemiClient: Sendable {
+/// Official Swift client for Lugemi on iOS / macOS.
+public struct LugemiClient: @unchecked Sendable {
   public var apiKey: String
   public var baseURL: URL
   public var session: URLSession
@@ -26,150 +25,173 @@ public struct LugemiClient: Sendable {
     self.workspaceId = workspaceId
   }
 
-  public var voiceBridge: VoiceBridgeClient {
-    VoiceBridgeClient(
+  private var http: LugemiHttp {
+    LugemiHttp(
       apiKey: apiKey,
       baseURL: baseURL,
       session: session,
-      actorId: actorId,
       organizationId: organizationId,
       workspaceId: workspaceId
+    )
+  }
+
+  public var uploads: ResumableUploader { ResumableUploader(http: http) }
+
+  public var voiceBridge: VoiceBridgeClient {
+    VoiceBridgeClient(
+      http: http,
+      actorId: actorId,
+      uploader: uploads
     )
   }
 
   public var dealBridge: DealBridgeClient {
     DealBridgeClient(
-      apiKey: apiKey,
-      baseURL: baseURL,
-      session: session,
+      http: http,
       actorId: actorId,
-      organizationId: organizationId,
-      workspaceId: workspaceId
+      uploader: uploads
     )
   }
 
-  public struct SpeechResult: Sendable {
-    public let audio: Data
-    public let mimeType: String
-    public let voice: String?
-    public let provider: String?
-    public let characters: Int?
-  }
-
-  public struct TranslateResult: Sendable {
-    public let text: String
-    public let source: String
-    public let characters: Int?
-  }
-
-  /// POST /v1/audio/speech — synthesize voice for video/content scripts.
-  public func speech(
-    text: String,
-    voice: String,
-    language: String? = nil,
-    format: String = "mp3"
-  ) async throws -> SpeechResult {
-    var body: [String: Any] = ["text": text, "voice": voice, "format": format]
-    if let language { body["language"] = language }
-    let (data, response) = try await send(path: "/v1/audio/speech", method: "POST", json: body, accept: "*/*")
-    guard let http = response as? HTTPURLResponse else {
-      throw LugemiError.invalidResponse
-    }
-    if !(200...299).contains(http.statusCode) {
-      throw try Self.decodeError(data: data, status: http.statusCode)
-    }
+  public func speech(_ request: SpeechRequest) async throws -> SpeechResult {
+    var body: [String: Any] = [
+      "text": request.text,
+      "voice": request.voice,
+      "format": request.format,
+    ]
+    if let language = request.language { body["language"] = language }
+    let (data, httpResp) = try await http.requestBytes(
+      path: "/v1/audio/speech",
+      method: "POST",
+      json: body
+    )
     return SpeechResult(
       audio: data,
-      mimeType: http.value(forHTTPHeaderField: "Content-Type") ?? "audio/mpeg",
-      voice: http.value(forHTTPHeaderField: "x-lugemi-voice"),
-      provider: http.value(forHTTPHeaderField: "x-lugemi-provider"),
-      characters: Int(http.value(forHTTPHeaderField: "x-lugemi-characters") ?? "")
+      mimeType: httpResp.value(forHTTPHeaderField: "Content-Type") ?? "audio/mpeg",
+      voice: httpResp.value(forHTTPHeaderField: "x-lugemi-voice"),
+      provider: httpResp.value(forHTTPHeaderField: "x-lugemi-provider"),
+      characters: Int(httpResp.value(forHTTPHeaderField: "x-lugemi-characters") ?? "")
     )
   }
 
-  /// POST /v1/translate
-  public func translate(
-    text: String,
-    source: String = "auto",
-    target: String
-  ) async throws -> TranslateResult {
-    let json = try await requestJSON(
+  /// Incremental read of the speech response body (chunked delivery to the callback).
+  public func speechStream(
+    _ request: SpeechRequest,
+    onChunk: @Sendable (Data) -> Void
+  ) async throws -> SpeechResult {
+    let result = try await speech(request)
+    // URLSession returns the full body; deliver in paced chunks for player buffering.
+    let chunkSize = 16 * 1024
+    var offset = 0
+    while offset < result.audio.count {
+      let end = min(offset + chunkSize, result.audio.count)
+      onChunk(result.audio.subdata(in: offset..<end))
+      offset = end
+    }
+    return result
+  }
+
+  public func translate(_ request: TranslateRequest) async throws -> TranslateResult {
+    let json = try await http.requestJSON(
       path: "/v1/translate",
       method: "POST",
-      json: ["text": text, "source": source, "target": target]
+      json: ["text": request.text, "source": request.source, "target": request.target]
     )
-    return TranslateResult(
-      text: json["text"] as? String ?? "",
-      source: json["source"] as? String ?? source,
-      characters: json["characters"] as? Int
-    )
+    return TranslateResult(json: json, fallbackSource: request.source, fallbackTarget: request.target)
   }
 
-  /// GET /v1/languages
+  public func translateStream(_ request: TranslateRequest) -> AsyncThrowingStream<TranslateStreamEvent, Error> {
+    let stream = http.streamSSE(
+      path: "/v1/translate/stream",
+      json: ["text": request.text, "source": request.source, "target": request.target]
+    )
+    return AsyncThrowingStream { continuation in
+      Task {
+        do {
+          for try await obj in stream {
+            continuation.yield(TranslateStreamEvent(json: obj))
+          }
+          continuation.finish()
+        } catch {
+          continuation.finish(throwing: error)
+        }
+      }
+    }
+  }
+
+  public func detect(text: String) async throws -> DetectResult {
+    let json = try await http.requestJSON(
+      path: "/v1/detect",
+      method: "POST",
+      json: ["text": text]
+    )
+    return DetectResult(json: json)
+  }
+
+  public func transcribe(
+    audio: Data,
+    filename: String,
+    mimeType: String,
+    language: String? = nil
+  ) async throws -> TranscribeResult {
+    var fields: [String: String] = [:]
+    if let language { fields["language"] = language }
+    let json = try await http.multipartJSON(
+      path: "/v1/audio/transcriptions",
+      fields: fields,
+      fileField: "file",
+      filename: filename,
+      mimeType: mimeType,
+      fileData: audio
+    )
+    return TranscribeResult(json: json)
+  }
+
+  public func recognizeSpeech(
+    audio: Data,
+    filename: String,
+    mimeType: String,
+    language: String? = nil,
+    industryPacks: [String]? = nil,
+    vocabulary: [String]? = nil
+  ) async throws -> SpeechRecognizeResult {
+    var fields: [String: String] = [:]
+    if let language { fields["language"] = language }
+    if let industryPacks, !industryPacks.isEmpty {
+      fields["industryPacks"] = industryPacks.joined(separator: ",")
+    }
+    if let vocabulary, !vocabulary.isEmpty {
+      fields["vocabulary"] = vocabulary.joined(separator: ",")
+    }
+    let json = try await http.multipartJSON(
+      path: "/v1/speech/recognize",
+      fields: fields,
+      fileField: "file",
+      filename: filename,
+      mimeType: mimeType,
+      fileData: audio
+    )
+    return SpeechRecognizeResult(json: json)
+  }
+
   public func languages() async throws -> [[String: Any]] {
-    let json = try await requestJSON(path: "/v1/languages", method: "GET", json: nil)
+    let json = try await http.requestJSON(path: "/v1/languages", method: "GET", json: nil)
     return json["data"] as? [[String: Any]] ?? []
   }
 
-  /// GET /v1/audio/voices
   public func voices() async throws -> [[String: Any]] {
-    let json = try await requestJSON(path: "/v1/audio/voices", method: "GET", json: nil)
+    let json = try await http.requestJSON(path: "/v1/audio/voices", method: "GET", json: nil)
     return json["data"] as? [[String: Any]] ?? []
   }
 
-  /// Translate then synthesize — dubbing / video voice line helper.
   public func videoVoiceLine(
     text: String,
     target: String,
     voice: String,
     source: String = "auto"
   ) async throws -> (TranslateResult, SpeechResult) {
-    let translated = try await translate(text: text, source: source, target: target)
-    let audio = try await speech(text: translated.text, voice: voice, language: target)
+    let translated = try await translate(TranslateRequest(text: text, source: source, target: target))
+    let audio = try await speech(SpeechRequest(text: translated.text, voice: voice, language: target))
     return (translated, audio)
   }
-
-  private func requestJSON(path: String, method: String, json: [String: Any]?) async throws -> [String: Any] {
-    let (data, response) = try await send(path: path, method: method, json: json, accept: "application/json")
-    guard let http = response as? HTTPURLResponse else { throw LugemiError.invalidResponse }
-    if !(200...299).contains(http.statusCode) {
-      throw try Self.decodeError(data: data, status: http.statusCode)
-    }
-    if data.isEmpty { return [:] }
-    let obj = try JSONSerialization.jsonObject(with: data)
-    return obj as? [String: Any] ?? [:]
-  }
-
-  private func send(
-    path: String,
-    method: String,
-    json: [String: Any]?,
-    accept: String
-  ) async throws -> (Data, URLResponse) {
-    let root = baseURL.absoluteString.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
-    guard let url = URL(string: root + path) else { throw LugemiError.invalidResponse }
-    var request = URLRequest(url: url)
-    request.httpMethod = method
-    request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    request.setValue(accept, forHTTPHeaderField: "Accept")
-    if let json {
-      request.httpBody = try JSONSerialization.data(withJSONObject: json)
-    }
-    return try await session.data(for: request)
-  }
-
-  private static func decodeError(data: Data, status: Int) throws -> LugemiError {
-    if let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-       let err = obj["error"] as? [String: Any],
-       let message = err["message"] as? String {
-      return .api(message: message, code: err["code"] as? String, status: status)
-    }
-    return .api(message: "Request failed (\(status))", code: nil, status: status)
-  }
-}
-
-public enum LugemiError: Error, Sendable {
-  case invalidResponse
-  case api(message: String, code: String?, status: Int)
 }
