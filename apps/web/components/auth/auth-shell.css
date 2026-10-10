@@ -12,7 +12,7 @@
     radial-gradient(ellipse 70% 45% at 18% -10%, rgba(0, 184, 174, 0.18), transparent 55%),
     radial-gradient(ellipse 55% 40% at 92% 12%, rgba(16, 38, 77, 0.08), transparent 50%),
     linear-gradient(180deg, #f7fbfc 0%, #ffffff 48%, #f3f7fa 100%);
-  overflow: hidden;
+  overflow-x: hidden;
   font-family: var(--font-ui), 'Noto Sans', sans-serif;
 }
 
@@ -180,14 +180,49 @@
 
 .auth-shell__panel {
   width: 100%;
-  display: grid;
-  place-items: center;
-  padding: 1.35rem 1.25rem 1.15rem;
+  max-width: 440px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  padding: 1.5rem 1.75rem 1.35rem;
   background: #ffffff;
   border: 1px solid #cbd5e1;
   border-radius: 16px;
   box-shadow: 0 12px 36px rgba(16, 38, 77, 0.06);
   animation: auth-rise 0.6s ease 0.1s both;
+}
+
+/* Ensure Clerk internal form layout, grids, and name inputs align neatly */
+.auth-shell__panel .cl-rootBox,
+.auth-shell__panel .cl-card,
+.auth-shell__panel .cl-form {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* When Clerk renders First name and Last name side-by-side or stacked */
+.auth-shell__panel .cl-formFieldRow {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  gap: 0.75rem !important;
+  width: 100% !important;
+}
+
+.auth-shell__panel .cl-formField {
+  width: 100% !important;
+}
+
+.auth-shell__panel .cl-formFieldInput {
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* When Google OAuth is intentionally hidden or unavailable */
+.auth-shell--no-social .cl-socialButtonsBlockButton,
+.auth-shell--no-social .cl-socialButtons,
+.auth-shell--no-social .cl-dividerRow {
+  display: none !important;
 }
 
 .auth-shell__footer {
@@ -263,6 +298,11 @@
   }
 
   .auth-shell__panel {
-    padding: 1.1rem 0.85rem 1rem;
+    padding: 1.25rem 1rem 1.15rem;
+  }
+
+  .auth-shell__panel .cl-formFieldRow {
+    grid-template-columns: 1fr !important;
+    gap: 0.85rem !important;
   }
 }

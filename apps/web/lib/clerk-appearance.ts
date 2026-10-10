@@ -39,7 +39,7 @@ export const lugemiClerkAppearance = {
   elements: {
     rootBox: {
       width: '100%',
-      maxWidth: '24rem',
+      maxWidth: '100%',
       margin: '0 auto',
     },
     card: {
@@ -48,6 +48,24 @@ export const lugemiClerkAppearance = {
       borderRadius: '0',
       background: 'transparent',
       padding: '0',
+      width: '100%',
+    },
+    form: {
+      width: '100%',
+    },
+    formFieldRow: {
+      display: 'grid',
+      gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+      gap: '0.75rem',
+      width: '100%',
+    },
+    formField: {
+      width: '100%',
+    },
+    formFieldLabelRow: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'space-between',
       width: '100%',
     },
     header: {

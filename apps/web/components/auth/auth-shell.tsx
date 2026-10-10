@@ -7,17 +7,18 @@ type AuthShellProps = {
   mode: 'sign-up' | 'sign-in';
   children: ReactNode;
   footer?: ReactNode;
+  hasSocial?: boolean;
 };
 
 /**
  * Lugemi-first chrome around Clerk credential widgets.
  * Brand owns the first viewport; Clerk fields sit in a clean auth card.
  */
-export function AuthShell({ mode, children, footer }: AuthShellProps) {
+export function AuthShell({ mode, children, footer, hasSocial = true }: AuthShellProps) {
   const isSignUp = mode === 'sign-up';
 
   return (
-    <main className="auth-shell">
+    <main className={`auth-shell ${!hasSocial ? 'auth-shell--no-social' : ''}`}>
       <div className="auth-shell__glow" aria-hidden />
       <header className="auth-shell__top">
         <BrandMark href="/" size={36} />
@@ -40,12 +41,18 @@ export function AuthShell({ mode, children, footer }: AuthShellProps) {
           </h1>
           <p className="auth-shell__lede">
             {isSignUp
-              ? 'Email or Google, then finish Lugemi setup — Creative or Agents, personalization, persona, and plan — before your workspace opens.'
+              ? (hasSocial
+                  ? 'Email or Google, then finish Lugemi setup — Creative or Agents, personalization, persona, and plan — before your workspace opens.'
+                  : 'Enter your name, email, and password to create your Lugemi account, then finish workspace setup.')
               : 'Sign in to continue. New workspaces go through Lugemi onboarding before Creative or Agents.'}
           </p>
           {isSignUp ? (
             <p className="auth-shell__tip">
-              Tip: Use 15+ characters for password signup, or choose <strong>Continue with Google</strong> for instant access.
+              {hasSocial ? (
+                <>Tip: Use 15+ characters for password signup, or choose <strong>Continue with Google</strong> for instant access.</>
+              ) : (
+                <>Tip: Use 15+ characters for password signup to meet enterprise security standards.</>
+              )}
             </p>
           ) : null}
           {isSignUp ? (

@@ -84,3 +84,57 @@ Clerk defaults to a minimum password length of 8 characters, but instances confi
    - Configure character complexity rules (uppercase, lowercase, numbers, special characters) or have HaveIBeenPwned checks enabled.
 4. Click **Save Changes**.
 5. *Code experience:* Lugemi's AuthShell displays a proactive tip ("Use 15+ characters for password signup, or choose Continue with Google for instant access") and localized error messages so users are never surprised.
+
+## Social Connections — Google OAuth (`Missing required parameter: client_id` Error 400)
+
+When users click **Continue with Google** and see:
+> *"Access blocked: Authorization Error — Missing required parameter: client_id — Error 400: invalid_request"*
+
+This occurs when Clerk has Google social sign-in enabled in the instance, but the **Google Cloud OAuth Client ID** and **Client Secret** have not yet been provided in the Clerk Dashboard (or Clerk's shared development credentials cannot be used on a custom domain / production instance `pk_live_*`).
+
+### How to configure Google OAuth in Google Cloud Console & Clerk Dashboard
+
+#### Step 1: Create OAuth Credentials in Google Cloud Console
+1. Navigate to [Google Cloud Console](https://console.cloud.google.com/).
+2. Select your Lugemi project (or create `lugemi-production`).
+3. Go to **APIs & Services → OAuth consent screen**:
+   - User Type: **External**.
+   - App Name: `Lugemi`.
+   - User support email & developer contact email: `admin@lugemi.com` (or your domain admin).
+   - App domain URLs:
+     - Application home page: `https://lugemi.com`
+     - Application privacy policy link: `https://lugemi.com/privacy`
+     - Application terms of service link: `https://lugemi.com/terms`
+     - Authorized domains: `lugemi.com`, `clerk.lugemi.com`.
+   - Scopes: `.../auth/userinfo.email`, `.../auth/userinfo.profile`, `openid`.
+   - Publish the app (or leave in testing if only testing with specific accounts).
+4. Go to **APIs & Services → Credentials**:
+   - Click **+ CREATE CREDENTIALS → OAuth client ID**.
+   - Application type: **Web application**.
+   - Name: `Lugemi Clerk Auth`.
+   - **Authorized JavaScript origins**:
+     - `https://lugemi.com`
+     - `https://clerk.lugemi.com`
+   - **Authorized redirect URIs** (get this exact URI from Clerk Dashboard in Step 2, e.g.):
+     - `https://clerk.lugemi.com/v1/oauth_callback`
+   - Click **Create**.
+   - Copy the generated **Client ID** and **Client Secret**.
+
+#### Step 2: Configure in Clerk Dashboard
+1. Open [Clerk Dashboard](https://dashboard.clerk.com/) and select your application.
+2. In the navigation sidebar, go to **User & Authentication → Social Connections**.
+3. Locate **Google** and click the gear/settings icon.
+4. Toggle **Enable for sign-up and sign-in** ON.
+5. Under **Configuration**:
+   - Select **Use custom credentials** (required for production domains like `lugemi.com`).
+   - Paste the **Client ID** from Google Cloud Console.
+   - Paste the **Client Secret** from Google Cloud Console.
+   - Verify the **Authorized redirect URI** matches what was entered in Google Cloud Console.
+6. Click **Save Changes**.
+
+#### Step 3: Optional toggle via Environment Variable in Lugemi Web
+If Google OAuth credentials are not yet ready or being refreshed in GCP, you can temporarily suppress the broken Google button by setting:
+```bash
+NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED=false
+```
+When set to `false`, `AuthShell` and `SignUp`/`SignIn` automatically hide the Google button and divider line, prompting users to proceed with email/password signup without facing OAuth 400 errors.

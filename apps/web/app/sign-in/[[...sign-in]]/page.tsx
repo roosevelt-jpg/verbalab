@@ -4,16 +4,19 @@ import { redirect } from 'next/navigation';
 import { AuthShell } from '@/components/auth/auth-shell';
 import { afterClerkAuthPath } from '@/lib/auth-redirect';
 import { lugemiClerkAppearance } from '@/lib/clerk-appearance';
-import { isClerkConfigured } from '@/lib/clerk-config';
+import { isClerkConfigured, isClerkGoogleOAuthEnabled } from '@/lib/clerk-config';
 
 const afterAuth = afterClerkAuthPath();
 
 export default function SignInPage() {
   if (!isClerkConfigured()) redirect('/setup');
 
+  const hasSocial = isClerkGoogleOAuthEnabled();
+
   return (
     <AuthShell
       mode="sign-in"
+      hasSocial={hasSocial}
       footer={
         <p>
           Stuck on email OTP?{' '}
