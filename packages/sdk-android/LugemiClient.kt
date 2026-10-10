@@ -10,7 +10,7 @@ import java.net.URL
 import java.nio.charset.StandardCharsets
 
 /**
- * Official Android / Kotlin client for Lugemi speech + translate.
+ * Official Android / Kotlin client for Lugemi speech, translate, VoiceBridge, and DealBridge.
  * Same REST contracts as @lugemi/sdk — ready for video and mobile apps.
  */
 data class SpeechRequest(
@@ -54,12 +54,32 @@ interface LugemiClient {
     voice: String,
     source: String = "auto",
   ): Pair<TranslateResult, SpeechResult>
+
+  val voiceBridge: VoiceBridgeClient
+  val dealBridge: DealBridgeClient
 }
 
 class LugemiHttpClient(
   private val apiKey: String,
   private val baseUrl: String = "https://api.lugemi.com",
+  actorId: String? = null,
+  organizationId: String? = null,
+  workspaceId: String? = null,
 ) : LugemiClient {
+  override val voiceBridge = VoiceBridgeClient(
+    apiKey = apiKey,
+    baseUrl = baseUrl,
+    actorId = actorId,
+    organizationId = organizationId,
+    workspaceId = workspaceId,
+  )
+  override val dealBridge = DealBridgeClient(
+    apiKey = apiKey,
+    baseUrl = baseUrl,
+    actorId = actorId,
+    organizationId = organizationId,
+    workspaceId = workspaceId,
+  )
 
   override fun speech(request: SpeechRequest): SpeechResult {
     val body = JSONObject()
