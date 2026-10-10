@@ -33,7 +33,7 @@ async function bootstrap() {
     'http://127.0.0.1:3000',
     'http://localhost:3000',
   ];
-  for (let port = 43123; port <= 43130; port += 1) {
+  for (let port = 43123; port <= 43150; port += 1) {
     localStudioCorsOrigins.push(`http://127.0.0.1:${port}`, `http://localhost:${port}`);
   }
   const corsRaw = process.env.CORS_ORIGIN ?? 'http://localhost:3000';
