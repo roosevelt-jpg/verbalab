@@ -5,11 +5,174 @@ import { useEffect, useState } from 'react';
 import { API_URL } from '@/lib/api';
 import { BrandMark } from '@/components/brand-mark';
 import { CodePanel } from '@/components/code-panel';
+import './docs.css';
+
+interface EndpointItem {
+  method: string;
+  path: string;
+  summary: string;
+  description: string;
+}
+
+interface EndpointCategory {
+  id: string;
+  title: string;
+  tagline: string;
+  items: EndpointItem[];
+}
+
+const CATEGORIES: EndpointCategory[] = [
+  {
+    id: 'speech-audio',
+    title: 'Voice & Audio',
+    tagline: 'First-party neural speech synthesis, transcription, accents, and voice cloning.',
+    items: [
+      {
+        method: 'POST',
+        path: '/v1/audio/speech',
+        summary: 'Generate speech synthesis',
+        description:
+          'First-party Lugemi speech synthesis via own:* models, stock regional catalog, or authorized workspace voice clones.',
+      },
+      {
+        method: 'POST',
+        path: '/v1/audio/transcriptions',
+        summary: 'Speech-to-text transcription',
+        description:
+          'Multipart audio transcription with word-level timestamps, dialect detection, and usage metered in minutes.',
+      },
+      {
+        method: 'POST',
+        path: '/v1/voice/simulate',
+        summary: 'Voice FAQ simulator',
+        description: 'Multi-turn interactive simulation with voice response turns, sentiment, and confidence scoring.',
+      },
+      {
+        method: 'POST',
+        path: '/v1/interpret',
+        summary: 'Live real-time interpreter',
+        description: 'End-to-end speech cascade: Audio In -> STT -> Machine Translation -> Neural TTS -> Audio Out.',
+      },
+      {
+        method: 'GET / POST',
+        path: '/v1/voice-clones',
+        summary: 'Voice clone management',
+        description:
+          'List and create authorized voice profiles with cryptographic watermark headers and verified consent attestations.',
+      },
+    ],
+  },
+  {
+    id: 'translation',
+    title: 'Translation & Localization',
+    tagline: 'Cultural, dialect-aware machine translation and structured content localization.',
+    items: [
+      {
+        method: 'POST',
+        path: '/v1/translate',
+        summary: 'Dialect-aware translation',
+        description:
+          'Translate text across languages with full African language fidelity (e.g. English <-> Twi, Swahili, Yoruba).',
+      },
+      {
+        method: 'POST',
+        path: '/v1/detect',
+        summary: 'Language detection',
+        description: 'Identify source text dialect, script, and language confidence scores with offline fallback.',
+      },
+      {
+        method: 'POST',
+        path: '/v1/localize',
+        summary: 'i18n tree localization',
+        description:
+          'Translate nested JSON/YAML key-value files while strictly preserving ICU syntax and variables.',
+      },
+      {
+        method: 'POST',
+        path: '/v1/documents/translate',
+        summary: 'Document translation',
+        description: 'Upload DOCX or PDF files for async document translation preserving layouts and styles.',
+      },
+      {
+        method: 'GET / POST',
+        path: '/v1/glossary/terms',
+        summary: 'Terminology glossaries',
+        description: 'Workspace-scoped terminology and brand lexicons applied deterministically during translation.',
+      },
+    ],
+  },
+  {
+    id: 'language-intelligence',
+    title: 'Intelligence & Models',
+    tagline: 'First-party model registry, RAG knowledge systems, and chat completions.',
+    items: [
+      {
+        method: 'POST',
+        path: '/v1/chat/completions',
+        summary: 'Language intelligence chat',
+        description:
+          'Chat completion pipeline tailored for regional languages with optional automatic reply translation.',
+      },
+      {
+        method: 'POST',
+        path: '/v1/knowledge/query',
+        summary: 'Knowledge base RAG query',
+        description: 'Query enterprise documents with grounded neural citations and source paragraph references.',
+      },
+      {
+        method: 'POST',
+        path: '/v1/embeddings',
+        summary: 'Vector embeddings',
+        description: 'Generate high-dimensional semantic embeddings for cross-lingual vector retrieval and matching.',
+      },
+      {
+        method: 'GET',
+        path: '/v1/models/live',
+        summary: 'Model catalog matrix',
+        description: 'Live availability matrix for Baobab, Echo, Atlas, and specialized dialect reasoning models.',
+      },
+    ],
+  },
+  {
+    id: 'integrity-governance',
+    title: 'Integrity & Enterprise Governance',
+    tagline: 'Watermark verification, audit trails, and workspace compliance.',
+    items: [
+      {
+        method: 'POST',
+        path: '/v1/language-integrity/verify',
+        summary: 'Provenance verification',
+        description:
+          'Verify cryptographic provenance, synthetic media watermarks, and consent attestations for audit compliance.',
+      },
+      {
+        method: 'GET',
+        path: '/v1/language-integrity/protocol',
+        summary: 'Government adoption protocol',
+        description: 'Formal protocol specification for official bilingual filings and synthetic audio compliance.',
+      },
+      {
+        method: 'GET',
+        path: '/v1/audit-events',
+        summary: 'Audit log stream',
+        description: 'Full workspace audit trail including voice clone approvals, API key rotations, and data exports.',
+      },
+      {
+        method: 'GET',
+        path: '/v1/usage/summary',
+        summary: 'Usage & quota metering',
+        description: 'Month-to-date character, token, and STT minute usage against workspace plan limits.',
+      },
+    ],
+  },
+];
 
 export default function DocsPage() {
   const [specUrl, setSpecUrl] = useState(`${API_URL}/v1/openapi.json`);
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [activeSection, setActiveSection] = useState<string>('getting-started');
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     setSpecUrl(`${API_URL}/v1/openapi.json`);
@@ -23,7 +186,7 @@ export default function DocsPage() {
   }, []);
 
   const translateExample = `{
-  "text": "Hello",
+  "text": "Hello world",
   "source": "auto",
   "target": "ak"
 }`;
@@ -35,202 +198,252 @@ const client = new Lugemi({
   baseUrl: '${API_URL}',
 });
 
-await client.translate({ text: 'Hello', source: 'en', target: 'ak' });`;
+// Translate English to Akan/Twi
+const res = await client.translate({
+  text: 'Welcome to Lugemi Language Intelligence',
+  source: 'en',
+  target: 'ak',
+});
+
+console.log(res.text);`;
 
   const envExample = `#.env
 LUGEMI_API_KEY=lg_live_...
 LUGEMI_BASE_URL=${API_URL}`;
 
   return (
-    <div className="vl-api-public vl-fade-up">
-      <div className="vl-api-public-header">
-        <BrandMark href="/" />
-        <div className="vl-api-public-links">
+    <div className="docs-shell">
+      {/* Top Header */}
+      <header className="docs-header">
+        <div className="docs-header-left">
+          <button
+            type="button"
+            className="docs-mobile-toggle"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            aria-label="Toggle navigation menu"
+          >
+            Menu
+          </button>
+          <BrandMark href="/" />
+        </div>
+
+        <nav className="docs-header-links" aria-label="Documentation navigation">
+          <Link href="/docs/api" className="vl-btn vl-btn-primary" style={{ padding: '0.4rem 0.85rem' }}>
+            Interactive API Reference
+          </Link>
           <Link href="/playground">Playground</Link>
           <Link href="/models">Models</Link>
           <Link href="/mcp">MCP</Link>
-          <Link href="/translate">Translate</Link>
           <Link href="/connectors">Connectors</Link>
-          <Link href="/docs/connectors">Connector guides</Link>
-          <Link href="/docs/mcp">MCP guide</Link>
-          <Link href="/coverage">Coverage</Link>
-          <Link href="/developers">Developers</Link>
-          <Link href="/docs/api" className="vl-btn vl-btn-primary" style={{ textDecoration: 'none', padding: '0.45rem 0.9rem', minHeight: 40 }}>
-            API reference
-          </Link>
-          <a href={`${API_URL}/docs`} target="_blank" rel="noopener noreferrer" className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none', padding: '0.45rem 0.9rem', minHeight: 40 }}>
-            Interactive docs
+          <Link href="/developers">Developers Hub</Link>
+          <a
+            href={`${API_URL}/docs`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="vl-btn vl-btn-secondary"
+            style={{ padding: '0.4rem 0.85rem' }}
+          >
+            Swagger / OpenAPI UI
           </a>
-          <a href={specUrl} className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none', padding: '0.45rem 0.9rem', minHeight: 40 }}>
-            openapi.json
-          </a>
-        </div>
-      </div>
+        </nav>
+      </header>
 
-      <p className="vl-tag" style={{ margin: '1.5rem 0 0' }}>
-        Lugemi API
-      </p>
-      <h1 style={{ margin: '0.65rem 0 0', fontFamily: 'var(--font-display)', letterSpacing: '-0.03em', fontSize: '2.35rem', color: 'var(--brand-navy)' }}>
-        Build speaking agents with the Lugemi API
-      </h1>
-      <p style={{ color: 'var(--muted)', lineHeight: 1.65, maxWidth: '40rem' }}>
-        First-party language intelligence for developers: generate speech, transcribe, translate, and simulate voice
-        agents across languages and accents with cultural context. Africa-first completeness; LATAM, Southeast Asia,
-        the Middle East, and the EU in scope. Authenticate with{' '}
-        <code className="vl-code">Authorization: Bearer lg_live_...</code> or soft-sandbox{' '}
-        <code className="vl-code">lg_test_...</code>. Browse every endpoint in the <Link href="/docs/api">API reference</Link> or{' '}
-        <a href={`${API_URL}/docs`} target="_blank" rel="noopener noreferrer">interactive OpenAPI docs</a>, or
-        download the OpenAPI document at <code className="vl-code">/v1/openapi.json</code>.
-      </p>
+      {/* Main Grid Layout with Sidebar */}
+      <div className="docs-layout">
+        <aside className={`docs-sidebar ${mobileMenuOpen ? 'is-open' : ''}`} aria-label="Documentation Sidebar">
+          <div className="docs-nav-group">
+            <h3 className="docs-nav-group-title">Overview</h3>
+            <ul className="docs-nav-list">
+              <li>
+                <a
+                  href="#getting-started"
+                  className={`docs-nav-link ${activeSection === 'getting-started' ? 'is-active' : ''}`}
+                  onClick={() => {
+                    setActiveSection('getting-started');
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  Getting Started
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#authentication"
+                  className={`docs-nav-link ${activeSection === 'authentication' ? 'is-active' : ''}`}
+                  onClick={() => {
+                    setActiveSection('authentication');
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  Authentication
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#sdk-quickstart"
+                  className={`docs-nav-link ${activeSection === 'sdk-quickstart' ? 'is-active' : ''}`}
+                  onClick={() => {
+                    setActiveSection('sdk-quickstart');
+                    setMobileMenuOpen(false);
+                  }}
+                >
+                  TypeScript SDK
+                </a>
+              </li>
+            </ul>
+          </div>
 
-      <div className="vl-endpoint-card" style={{ marginTop: '1.5rem' }}>
-        <div style={{ marginBottom: '0.65rem' }}>
-          <span className="vl-endpoint-method">POST</span>
-          <span className="vl-endpoint-path">/v1/translate</span>
-        </div>
-        <p style={{ color: 'var(--muted)', lineHeight: 1.55, margin: '0 0 1rem' }}>
-          Translate text between registry languages via the Lugemi API. Console default is English → Twi (ak / ak-GH). BCP-47 locales are accepted and normalized. Use{' '}
-          <code className="vl-code">source: &quot;auto&quot;</code> to detect first. Returns translated text, provider
-          id, character count, and optional <code className="vl-code">detection</code>.
-        </p>
-        <CodePanel code={translateExample} label="Request body" />
-      </div>
+          <div className="docs-nav-group">
+            <h3 className="docs-nav-group-title">API Endpoints</h3>
+            <ul className="docs-nav-list">
+              {CATEGORIES.map((cat) => (
+                <li key={cat.id}>
+                  <a
+                    href={`#${cat.id}`}
+                    className={`docs-nav-link ${activeSection === cat.id ? 'is-active' : ''}`}
+                    onClick={() => {
+                      setActiveSection(cat.id);
+                      setMobileMenuOpen(false);
+                    }}
+                  >
+                    <span>{cat.title}</span>
+                    <span className="docs-nav-badge">{cat.items.length}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-      <div style={{ display: 'grid', gap: '0.75rem', marginTop: '1.25rem' }}>
-        <Endpoint
-          method="GET/POST"
-          title="/v1/prompts…"
-          body="Versioned chat/RAG/voice_faq system prompts with rollback. Console /prompts."
-        />
-        <Endpoint method="GET" title="/v1/analytics/overview" body="SQL aggregates for the current org (Clerk or API key; ?from=&to=)." />
-        <Endpoint method="POST" title="/v1/voice/simulate" body="Text or audio FAQ turn (API key or Clerk)." />
-        <Endpoint method="POST" title="/v1/voice/twilio/inbound|turn" body="Signed Twilio webhooks → TwiML." />
-        <Endpoint method="GET/POST" title="/v1/voice-clones" body="List / create clones (Clerk; Pro + consent for create)." />
-        <Endpoint method="GET" title="/v1/voice-clones/{id}" body="Get clone profile." />
-        <Endpoint method="POST" title="/v1/voice-clones/{id}/review" body="Approve/reject pending_review (clone pipeline or fixture)." />
-        <Endpoint method="POST" title="/v1/voice-clones/{id}/disable" body="Disable clone for abuse/policy." />
-        <Endpoint
-          method="GET"
-          title="/v1/voice-cloning/consent/policy"
-          body="Required consent fields, ownership bars, watermark policy for clones."
-        />
-        <Endpoint
-          method="GET"
-          title="/v1/language-integrity/engine"
-          body="Language Integrity catalog: watermark disclosure, consent, audit, translation review — honesty flags included."
-        />
-        <Endpoint
-          method="GET"
-          title="/v1/language-integrity/protocol"
-          body="Government adoption protocol: require Lugemi attestation for synthetic media; human review for official bilingual filings."
-        />
-        <Endpoint
-          method="POST"
-          title="/v1/language-integrity/verify"
-          body="Verify provenance claim (watermarkHeader, consentAttested, cloneId, notes). Metadata check — not universal deepfake detection."
-        />
-        <Endpoint
-          method="POST"
-          title="/v1/language-integrity/verify/workspace"
-          body="Clerk: same verify with workspace clone library lookup."
-        />
-        <Endpoint
-          method="POST"
-          title="/v1/audio/speech"
-          body="Generate speech. Intended production: own:* via OWN_TTS_URL. Also stock catalog or voice=clone:{id} (watermark → X-Lugemi-Watermark: required)."
-        />
-        <Endpoint method="GET/POST" title="/v1/workflows" body="List/create saved workflow definitions (Clerk)." />
-        <Endpoint method="POST" title="/v1/workflows/{id}/run" body="Enqueue workflow job from saved definition (API key)." />
-        <Endpoint method="POST" title="/v1/connectors/slack/commands" body="Slack slash command (signed)." />
-        <Endpoint method="POST" title="/v1/connectors/slack/events" body="Slack Events url_verification." />
-        <Endpoint method="GET" title="/v1/organization/members" body="List org members (Clerk session)." />
-        <Endpoint method="GET" title="/v1/admin/workspaces" body="Paginated workspace directory (platform admin)." />
-        <Endpoint method="GET" title="/v1/admin/workspaces/analytics" body="Cross-workspace usage analytics." />
-        <Endpoint method="GET" title="/v1/admin/organizations" body="Search orgs (platform admin allowlist)." />
-        <Endpoint
-          method="GET/PATCH"
-          title="/v1/organization/data-settings"
-          body="Org data settings (Clerk; owners/admins for PATCH)."
-        />
-        <Endpoint method="POST" title="/v1/organization/export" body="JSON export of current workspace data (Clerk)." />
-        <Endpoint method="DELETE" title="/v1/organization" body="Delete org + cascade (owner; confirmName)." />
-        <Endpoint method="GET" title="/v1/metrics/translate" body="In-process translate latency p50/p95/p99 (observability)." />
-        <Endpoint
-          method="POST"
-          title="/v1/translate"
-          body="Per-key and per-org Redis rate limits (429 + Retry-After). Monthly character quota remains 402."
-        />
-        <Endpoint method="POST" title="/v1/knowledge/documents" body="Upload DOCX/PDF/TXT into the workspace knowledge base (embed)." />
-        <Endpoint method="POST" title="/v1/knowledge/query" body="Ask the knowledge base; returns answer + citations (RAG)." />
-        <Endpoint
-          method="POST"
-          title="/v1/embeddings"
-          body="Create text embeddings (request shape compatible with common embedding APIs; used by RAG)."
-        />
-        <Endpoint method="POST" title="/v1/interpret" body="Live interpreter: audio → STT → MT → TTS (JSON + audioBase64)." />
-        <Endpoint method="POST" title="/v1/chat/completions" body="Language-intelligence chat (optional translateReplyTo)." />
-        <Endpoint method="POST" title="/v1/detect" body="Detect source language (Lugemi detect pipeline with offline fallback)." />
-        <Endpoint method="GET" title="/v1/languages" body="List seeded language codes, names, and tiers." />
-        <Endpoint method="GET" title="/v1/locales" body="Locale packs (BCP-47, cultural notes) for every registry language." />
-        <Endpoint method="GET" title="/v1/models/live" body="Live Lugemi Language Intelligence model matrix (voice, video, chat, verticals)." />
-        <Endpoint method="GET/POST" title="/v1/glossary/terms" body="Workspace terminology (Clerk); applied on translate." />
-        <Endpoint method="GET/POST" title="/v1/tm/entries" body="Approved translation memory; exact match bypasses MT." />
-        <Endpoint method="GET" title="/v1/reviews" body="Quality reviews; accept/reject (accept can upsert TM). Human review path for official bilingual filings." />
-        <Endpoint method="POST" title="/v1/localize" body="Translate JSON/YAML i18n trees (ICU passthrough)." />
-        <Endpoint method="POST" title="/v1/ocr" body="Image OCR (optional source/target to translate)." />
-        <Endpoint method="POST" title="/v1/audio/transcriptions" body="Speech-to-text (multipart audio; usage in minutes)." />
-        <Endpoint method="POST" title="/v1/documents/translate" body="Upload DOCX/PDF; returns a document_translate job." />
-        <Endpoint method="POST" title="/v1/jobs" body="Enqueue batch_translate, document_translate, or workflow (API key)." />
-        <Endpoint method="GET" title="/v1/jobs/{id}" body="Poll job status and result." />
-        <Endpoint method="GET" title="/v1/audit-events" body="Org audit trail (Clerk session; owners/admins). Includes voice_clone.* integrity events." />
-        <Endpoint method="GET" title="/v1/openapi.json" body="This OpenAPI 3.1 document." />
-        <Endpoint method="POST" title="/v1/api-keys" body="Create a key (Clerk session). Secret returned once." />
-        <Endpoint method="GET" title="/v1/usage/summary" body="Month-to-date characters and request counts." />
-      </div>
+          <div className="docs-nav-group">
+            <h3 className="docs-nav-group-title">Developer Guides</h3>
+            <ul className="docs-nav-list">
+              <li>
+                <Link href="/docs/connectors" className="docs-nav-link">
+                  Connector Guides
+                </Link>
+              </li>
+              <li>
+                <Link href="/docs/mcp" className="docs-nav-link">
+                  Model Context Protocol (MCP)
+                </Link>
+              </li>
+              <li>
+                <Link href="/keys" className="docs-nav-link">
+                  Manage API Keys
+                </Link>
+              </li>
+              <li>
+                <Link href="/coverage" className="docs-nav-link">
+                  Language Coverage
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </aside>
 
-      <div className="vl-endpoint-card" style={{ marginTop: '1.5rem' }}>
-        <h2 style={{ marginTop: 0, fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--brand-navy)' }}>
-          TypeScript SDK
-        </h2>
-        <CodePanel code={sdkExample} label="TypeScript" />
-      </div>
+        {/* Content Area */}
+        <main className="docs-main">
+          {/* Hero Section */}
+          <section id="getting-started" className="docs-hero">
+            <p className="vl-tag">Lugemi Language Intelligence API</p>
+            <h1 className="docs-title">Build speaking agents with Lugemi</h1>
+            <p className="docs-lead">
+              First-party language intelligence for developers: synthesize native accents, transcribe, translate, and
+              orchestrate speaking AI agents with complete cultural context. Complete African language coverage with
+              global multilingual reach across LATAM, Southeast Asia, Middle East, and EU corridors.
+            </p>
 
-      <div className="vl-endpoint-card" style={{ marginTop: '1rem' }}>
-        <h2 style={{ marginTop: 0, fontFamily: 'var(--font-display)', fontSize: '1.2rem', color: 'var(--brand-navy)' }}>
-          Quickstart
-        </h2>
-        <ol style={{ color: 'var(--muted)', lineHeight: 1.7, paddingLeft: '1.2rem' }}>
-          <li>Create an API key in the console.</li>
-          <li>Copy the secret (shown once).</li>
-          <li>Call the Lugemi API (translate, transcribe, or generate speech) or use the playground.</li>
-        </ol>
-        <CodePanel code={envExample} label="Environment" />
-        {error ? (
-          <p style={{ color: 'var(--bad)', marginBottom: 0 }}>Could not reach OpenAPI ({error}). Is the API running?</p>
-        ): (
-          <p style={{ color: 'var(--ok)', marginBottom: 0 }}>
-            {loaded ? (
-              <>
-                OpenAPI reachable — <Link href="/docs/api">open the API reference</Link>.
-              </>
-            ) : (
-              'Checking OpenAPI…'
-            )}
-          </p>
-        )}
-      </div>
-    </div>
-  );
-}
+            <div className="docs-quick-actions">
+              <Link href="/docs/api" className="vl-btn vl-btn-primary">
+                Explore Full API Reference &rarr;
+              </Link>
+              <a href={`${API_URL}/docs`} target="_blank" rel="noopener noreferrer" className="vl-btn vl-btn-secondary">
+                Live OpenAPI Interactive Docs
+              </a>
+              <a href={specUrl} download="lugemi-openapi.json" className="vl-btn vl-btn-secondary">
+                Download openapi.json
+              </a>
+            </div>
+          </section>
 
-function Endpoint({ method, title, body }: { method: string; title: string; body: string }) {
-  return (
-    <div className="vl-endpoint-card">
-      <div style={{ marginBottom: '0.4rem' }}>
-        <span className="vl-endpoint-method">{method}</span>
-        <span className="vl-endpoint-path">{title}</span>
+          {/* Authentication & Status */}
+          <section id="authentication" className="docs-section">
+            <div className="docs-auth-banner">
+              <div className="docs-auth-banner-text">
+                <strong>Authentication:</strong> All API calls accept Bearer tokens:{' '}
+                <code className="vl-code">Authorization: Bearer lg_live_...</code> for production or{' '}
+                <code className="vl-code">lg_test_...</code> for sandboxed testing.
+              </div>
+              <Link href="/keys" className="vl-btn vl-btn-primary" style={{ padding: '0.4rem 0.85rem' }}>
+                Create API Key
+              </Link>
+            </div>
+
+            <div className="vl-endpoint-card">
+              <div className="docs-card-header">
+                <span className="vl-endpoint-method">POST</span>
+                <span className="vl-endpoint-path">/v1/translate</span>
+              </div>
+              <p className="docs-card-body">
+                Translate text between registry languages. English to Akan/Twi (<code className="vl-code">ak-GH</code>)
+                or Swahili (<code className="vl-code">sw-KE</code>). Use{' '}
+                <code className="vl-code">source: &quot;auto&quot;</code> to detect origin dialect.
+              </p>
+              <CodePanel code={translateExample} label="Translate Request Body" />
+            </div>
+          </section>
+
+          {/* Categorized Endpoints */}
+          {CATEGORIES.map((cat) => (
+            <section key={cat.id} id={cat.id} className="docs-section">
+              <h2 className="docs-section-title">{cat.title}</h2>
+              <p className="docs-section-desc">{cat.tagline}</p>
+
+              <div className="docs-grid">
+                {cat.items.map((item) => (
+                  <article key={item.path} className="docs-card">
+                    <div className="docs-card-header">
+                      <span className="vl-endpoint-method">{item.method}</span>
+                      <span className="vl-endpoint-path">{item.path}</span>
+                    </div>
+                    <h3 style={{ fontSize: '1rem', margin: '0 0 0.35rem', color: 'var(--brand-navy)' }}>
+                      {item.summary}
+                    </h3>
+                    <p className="docs-card-body">{item.description}</p>
+                    <Link href={`/docs/api#${encodeURIComponent(item.path)}`} className="docs-card-link">
+                      View parameters &amp; responses &rarr;
+                    </Link>
+                  </article>
+                ))}
+              </div>
+            </section>
+          ))}
+
+          {/* SDK Quickstart */}
+          <section id="sdk-quickstart" className="docs-section">
+            <h2 className="docs-section-title">TypeScript SDK Quickstart</h2>
+            <p className="docs-section-desc">
+              Get up and running in minutes using the first-party <code className="vl-code">@lugemi/sdk</code>.
+            </p>
+            <div className="vl-endpoint-card" style={{ marginBottom: '1.25rem' }}>
+              <CodePanel code={sdkExample} label="TypeScript Example" />
+            </div>
+            <div className="vl-endpoint-card">
+              <h3 style={{ margin: '0 0 0.75rem', fontSize: '1.1rem', color: 'var(--brand-navy)' }}>
+                Configuration &amp; Environment
+              </h3>
+              <CodePanel code={envExample} label=".env Configuration" />
+              <p style={{ marginTop: '0.85rem', color: loaded ? 'var(--ok)' : error ? 'var(--bad)' : 'var(--muted)' }}>
+                {loaded
+                  ? 'OpenAPI service verified live and responding.'
+                  : error
+                    ? `Notice: OpenAPI status check (${error}).`
+                    : 'Verifying OpenAPI status…'}
+              </p>
+            </div>
+          </section>
+        </main>
       </div>
-      <p style={{ margin: 0, color: 'var(--muted)', lineHeight: 1.5 }}>{body}</p>
     </div>
   );
 }
