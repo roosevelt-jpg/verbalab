@@ -49,6 +49,8 @@ export const CMS_DEFAULTS: CmsDocument = {
         href: '/p/hubs',
         children: [
           { label: 'Creative · Studio', href: '/p/lugemi-studio' },
+          { label: 'Creative workspace', href: '/creative' },
+          { label: 'Voice Marketplace', href: '/voice-marketplace' },
           { label: 'Agents', href: '/p/lugemi-agents' },
           { label: 'Builders · Infrastructure', href: '/p/builders' },
           { label: 'API', href: '/p/lugemi-api' },
@@ -1063,7 +1065,7 @@ export const CMS_DEFAULTS: CmsDocument = {
           steps: [
             'Open /voice, select an Africa-first own:* accent voice and tone profile.',
             'Simulate a turn; review utterance emotion/sentiment/tone beside the reply.',
-            'Call POST /v1/voice/simulate and POST /v1/emotion/detect from Docs or @lugemi/sdk.',
+            'Call POST /v1/voice/turn (or /simulate) and POST /v1/emotion/detect from Docs or @lugemi/sdk.',
           ],
           links: [
             { label: 'Agents console', href: '/voice' },

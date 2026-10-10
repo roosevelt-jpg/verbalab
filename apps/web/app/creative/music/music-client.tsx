@@ -7,6 +7,8 @@ import { CreativeShell } from '@/components/creative/creative-shell';
 import { CreativeIcon } from '@/components/creative/creative-icons';
 import { useCreativeCredits } from '@/hooks/use-creative-credits';
 import { formatCredits } from '@/lib/creative-audio';
+import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
+import { useDemoPlayer } from '@/components/marketing/use-demo-player';
 import {
   HISTORY_KEYS,
   loadCreativeHistory,
@@ -69,6 +71,7 @@ function MusicInner() {
   const [duration] = useState('1:00');
   const [saved, setSaved] = useState<CreativeHistoryItem[]>([]);
   const [message, setMessage] = useState<string | null>(null);
+  const { play, stop, playingId, loadingId } = useDemoPlayer();
 
   useEffect(() => {
     setSaved(loadCreativeHistory(HISTORY_KEYS.music));
@@ -207,9 +210,23 @@ function MusicInner() {
           </div>
           {rows.map((r) => (
             <div key={r.id} className="lg-creative-sfx-row">
-              <button type="button" className="lg-creative-icon-btn" aria-label="Preview unavailable" title="Reference stubs only">
-                <CreativeIcon name="play" />
-              </button>
+              <DemoPlayStopButton
+                active={playingId === `music-${r.id}`}
+                loading={loadingId === `music-${r.id}`}
+                variant="icon"
+                label="Play"
+                stopLabel="Stop"
+                ariaLabel={`Preview ${r.title}`}
+                onStop={stop}
+                onPlay={() => {
+                  void play({
+                    id: `music-${r.id}`,
+                    text: `${r.title}. ${r.tags}. Lugemi creative reference audio.`,
+                    voiceId: 'own:en-us-female',
+                    label: r.title,
+                  });
+                }}
+              />
               <div>
                 <div style={{ fontWeight: 650, color: 'var(--lc-navy)' }}>{r.title}</div>
                 <div style={{ fontSize: '0.8rem', color: 'var(--lc-muted)' }}>{r.tags}</div>

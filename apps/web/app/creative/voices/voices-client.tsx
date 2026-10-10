@@ -7,6 +7,8 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { CreativeShell } from '@/components/creative/creative-shell';
 import { CreativeIcon } from '@/components/creative/creative-icons';
+import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
+import { useDemoPlayer } from '@/components/marketing/use-demo-player';
 
 type Listing = {
   id: string;
@@ -50,6 +52,7 @@ function CreativeVoicesClientInner({ getToken, isLoaded }: { getToken: () => Pro
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const { play, stop, playingId, loadingId, status, error: playError } = useDemoPlayer();
 
   const load = useCallback(async () => {
     const token = await getToken();
@@ -153,14 +156,42 @@ function CreativeVoicesClientInner({ getToken, isLoaded }: { getToken: () => Pro
             <>
               <h2 style={{ margin: '0 0 0.75rem', fontSize: '1rem', color: 'var(--lc-navy)' }}>Trending voices</h2>
               <div className="lg-creative-voice-grid">
-                {exploreRows.slice(0, 12).map((r) => (
-                  <article key={r.id} className="lg-creative-voice-card">
-                    <div className="lg-creative-voice-avatar">{r.letter}</div>
-                    <div style={{ minWidth: 0 }}>
-                      <div style={{ fontWeight: 650, color: 'var(--lc-navy)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {r.name}
+                {exploreRows.slice(0, 24).map((r) => (
+                  <article key={r.id} className="lg-creative-voice-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', gap: '0.65rem', alignItems: 'center' }}>
+                      <div className="lg-creative-voice-avatar">{r.letter}</div>
+                      <div style={{ minWidth: 0, flex: 1 }}>
+                        <div style={{ fontWeight: 650, color: 'var(--lc-navy)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {r.name}
+                        </div>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--lc-muted)' }}>{r.meta || 'Voice'}</div>
                       </div>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--lc-muted)' }}>{r.meta || 'Voice'}</div>
+                    </div>
+                    <div style={{ marginTop: '0.65rem', display: 'flex', gap: '0.4rem', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <DemoPlayStopButton
+                        active={playingId === `voice-${r.id}`}
+                        loading={loadingId === `voice-${r.id}`}
+                        variant="chip"
+                        label="Preview"
+                        stopLabel="Stop"
+                        ariaLabel={`Preview voice ${r.name}`}
+                        onStop={stop}
+                        onPlay={() => {
+                          void play({
+                            id: `voice-${r.id}`,
+                            text: `Welcome to Lugemi. Speaking with ${r.name}.`,
+                            voiceId: r.id.startsWith('own:') ? r.id : `own:${r.id}`,
+                            label: r.name,
+                          });
+                        }}
+                      />
+                      <Link
+                        href={`/creative/text-to-speech?voice=${encodeURIComponent(r.id)}`}
+                        className="lg-creative-btn"
+                        style={{ padding: '0.25rem 0.55rem', fontSize: '0.78rem', textDecoration: 'none' }}
+                      >
+                        Use in TTS
+                      </Link>
                     </div>
                   </article>
                 ))}

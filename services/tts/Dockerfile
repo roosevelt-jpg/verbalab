@@ -1,7 +1,7 @@
 FROM python:3.11-slim AS base
 
 RUN apt-get update \
-  && apt-get install -y --no-install-recommends ffmpeg curl ca-certificates \
+  && apt-get install -y --no-install-recommends ffmpeg curl ca-certificates espeak-ng espeak-ng-data \
   && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /srv

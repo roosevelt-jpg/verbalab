@@ -104,6 +104,38 @@ export class VoiceController {
     });
   }
 
+  /**
+   * Conversational voice turn endpoint for parity with leading voice agent platforms.
+   * Direct turn execution with full STT -> Chat -> TTS pipeline, emotion/tone controls,
+   * cultural voice resolution, and base64 audio response.
+   */
+  @Post('turn')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(TranslateAuthGuard)
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: memoryStorage(),
+      limits: { fileSize: audioMaxBytes() },
+    }),
+  )
+  async directTurn(
+    @Req()
+    req: Request & {
+      translateAuth: TranslateAuthContext;
+      sessionAuth?: SessionContext;
+    },
+    @UploadedFile() file: Express.Multer.File | undefined,
+    @Body()
+    body: {
+      text?: string;
+      voice?: string;
+      emotion?: string;
+      format?: 'mp3' | 'wav' | 'opus' | 'aac' | 'flac';
+    },
+  ) {
+    return this.simulate(req, file, body);
+  }
+
   @Post('calls')
   @HttpCode(HttpStatus.CREATED)
   @UseGuards(ClerkAuthGuard)

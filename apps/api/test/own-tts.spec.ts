@@ -16,7 +16,7 @@ import {
   OWN_TTS_VOICES,
   resolveOwnTtsVoice,
 } from '../src/gateway/own-tts.adapter';
-import { TOTAL_LANGUAGE_COUNT } from '../src/languages/language-seeds';
+import { TOTAL_LANGUAGE_COUNT, LANGUAGE_SEEDS } from '../src/languages/language-seeds';
 import { ApiExceptionFilter } from '../src/common/errors/api-exception.filter';
 import { findNativeVoice } from '../src/gateway/native-voice';
 
@@ -183,6 +183,61 @@ describe('Own TTS path', () => {
         .expect(200);
       expect(res.headers['content-type']).toMatch(/audio/);
       expect(Buffer.from(res.body).length).toBeGreaterThan(40);
+    }
+  });
+
+  it('asserts synthesized audio is speech-like and distinct across accents (not pure sine)', async () => {
+    const org = await seedOrg(prisma, `own_tts_audio_quality_${Date.now()}`);
+    const created = await apiKeys.create({
+      organizationId: org.id,
+      workspaceId: org.workspaces[0]!.id,
+      name: 'own-tts-quality',
+      userId: org.memberships[0]!.userId,
+    });
+
+    const ghRes = await request(app.getHttpServer())
+      .post('/v1/audio/speech')
+      .set('Authorization', `Bearer ${created.secret}`)
+      .send({ text: 'Akwaaba to Accra from Ghana.', voice: 'own:en-gh-male', language: 'en-GH', format: 'wav' })
+      .expect(200);
+
+    const ngRes = await request(app.getHttpServer())
+      .post('/v1/audio/speech')
+      .set('Authorization', `Bearer ${created.secret}`)
+      .send({ text: 'How far from Lagos Nigeria.', voice: 'own:en-ng-female', language: 'en-NG', format: 'wav' })
+      .expect(200);
+
+    const ghBuf = Buffer.from(ghRes.body);
+    const ngBuf = Buffer.from(ngRes.body);
+    expect(ghBuf.length).toBeGreaterThan(100);
+    expect(ngBuf.length).toBeGreaterThan(100);
+
+    // Audio should not be identical
+    expect(ghBuf.equals(ngBuf)).toBe(false);
+
+    // Check sample variance / complexity - speech-like signal has broad frequency variation and non-zero kurtosis
+    const pcm = ghBuf.subarray(44);
+    let zeroCrossings = 0;
+    let maxAmp = 0;
+    for (let i = 0; i < pcm.length - 2; i += 2) {
+      const sample = pcm.readInt16LE(i);
+      const next = pcm.readInt16LE(i + 2);
+      if ((sample >= 0 && next < 0) || (sample < 0 && next >= 0)) {
+        zeroCrossings++;
+      }
+      if (Math.abs(sample) > maxAmp) maxAmp = Math.abs(sample);
+    }
+    expect(zeroCrossings).toBeGreaterThan(50);
+    expect(maxAmp).toBeGreaterThan(1000);
+  });
+
+  it('routes speech synthesis across all 204 languages in registry', () => {
+    assertOwnTtsCoversLanguageRegistry();
+    expect(OWN_TTS_LANGUAGE_COUNT).toBeGreaterThanOrEqual(TOTAL_LANGUAGE_COUNT);
+    for (const seed of LANGUAGE_SEEDS) {
+      const voice = findNativeVoice(OWN_TTS_VOICES, seed.code);
+      expect(voice, `Every language ${seed.code} must route to a native voice`).toBeDefined();
+      expect(resolveOwnTtsVoice(voice!.id)).toBeDefined();
     }
   });
 

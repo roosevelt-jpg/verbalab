@@ -88,6 +88,8 @@ function CreativeTtsClientInner({ getToken, isLoaded }: { getToken: () => Promis
   useEffect(() => {
     const seeded = search.get('text');
     if (seeded) setText(seeded);
+    const seededVoice = search.get('voice');
+    if (seededVoice) setVoiceId(seededVoice);
   }, [search]);
 
   async function generate() {

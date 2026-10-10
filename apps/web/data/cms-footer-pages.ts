@@ -568,7 +568,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
         'From transcript demo to production speaking agent.',
         [
           'Open Agents (/voice) and pick gender, tone, accent, and an own:* voice.',
-          'Simulate a turn with POST /v1/voice/simulate (optional emotion profile for soft prosody).',
+          'Simulate a turn with POST /v1/voice/turn or POST /v1/voice/simulate (optional emotion profile for soft prosody).',
           'Detect utterance affect via POST /v1/emotion/detect or the Emotion Intelligence console.',
         ],
         [

@@ -20,7 +20,7 @@ User-facing comparison of Lugemi’s first-party Language Intelligence stack aga
 | **Speech-to-text (STT)** | Multilingual ASR, keyterms, entities | Echo Listen; Mix (STT→MT); accent/dialect detect | **Equal** class; **Stronger** on Africa-first accent/dialect metadata | `lugemi-echo-listen`, Mix | Corridor ASR fine-tunes |
 | **Voice cloning** | Instant / professional clone products | Instant clone with consent + abuse review + watermark (`clone:{id}`) | **Equal** on instant clone workflow; **Gap** on “pro” studio clone polish | Voice Clones + Echo | Lugemi-native clone weights |
 | **Dubbing** | Project-based dubbing API | Creative Dubbing: STT → Baobab Translate → Echo TTS with cultural identity | **Equal** pipeline; **Stronger** cultural target voice selection | Baobab + Echo + Accent Identity | Timeline / speaker diarization studio |
-| **Realtime / streaming** | Low-latency realtime speech models | Chunk SSE TTS stream; Live target in Chat Studio | **Gap** on ultra-low-latency conversational audio OS | Echo stream + Live | Live conversational audio runtime |
+| **Realtime / streaming** | Low-latency realtime speech models | Chunk SSE TTS stream (`POST /v1/tts/stream`); Live streaming sessions (`POST /v1/live/sessions`); Conversational agent turn API (`POST /v1/voice/turn`) | **Stronger** on African cultural context & turn safety; **Equal** on streaming API surface | Echo stream + Live + VoiceAgent | Native WebSocket ultra-low-latency runtime |
 | **Agents / conversational** | Agents that speak | LugemiAgents, Chat Studio, Voice FAQ, MCP/CLI, Agent Runtime | **Stronger** on cultural accent defaults + Africa-first agent fabric | Atlas + Echo + Baobab | Agent marketplace depth |
 | **Chat / LLM** | Companion chat elsewhere in industry | Lugemi Chat Studio (Atlas), translate-reply, cultural playback | **Equal** class for language workflow chat; not a general consumer chatbot OS | `lugemi-atlas` | Atlas trained weights |
 | **Video generation** | Integrates with / adjacent to video gen | Connectors + MCP `lugemi_video_voice_line` with cultural voice packs; Image & Video UI for voice sync | **Stronger** on cultural narration beds; **Gap** on native video pixels | Baobab + Echo video voice line | Native video gen (roadmap) |
@@ -30,7 +30,7 @@ User-facing comparison of Lugemi’s first-party Language Intelligence stack aga
 | **Translation / MT** | Often outsourced or separate | Baobab Translate (first-party MT) with dialect/locale awareness | **Stronger** as integrated MT+speech surface | `lugemi-baobab-translate` | Baobab trained MT |
 | **API / SDK** | REST + SDKs | REST, OpenAPI, TypeScript/Python/CLI, MCP tools, mobile SDKs | **Equal** | Developer Cloud | — |
 | **Pricing surface** | Character/credit creative plans | Free / Pro / Business / Enterprise + creative credits | **Equal** | Billing catalog | — |
-| **Voice marketplace** | Large public voice library | Voice Marketplace + own:* + clones | **Gap** on public library scale | Voice Marketplace | Community voice supply |
+| **Voice marketplace** | Large public voice library | Voice Marketplace (`/voice-marketplace`, `/creative/voices`) with instant audio preview, license tiers, ratings, and 204-language Echo packs | **Equal** | Voice Marketplace + Creative Voices | Community voice supply |
 | **Sound effects / music** | Creative SFX/music tools | Creative hubs (SFX, music) — honesty-labeled where roadmap | **Gap** | Creative surfaces | First-party audio gen |
 | **Voice isolation / changer** | Isolation + speech-to-speech | Creative Voice Isolator / Changer surfaces | **Equal** class (adapter depth varies) | Creative + Echo | Native models |
 | **Emotion / prosody** | Expressive / emotion models | Emotion Voice profiles + speech emotion intelligence | **Equal** metadata; **Gap** on trained emotion TTS | Emotion Voice | Expressive Echo editions |
@@ -88,7 +88,7 @@ Silent legacy adapters may remain as keyed fallbacks; they are not branded in pr
 | Surface | Status |
 |---------|--------|
 | Accent Identity API + seeds | **Wired** — cultural fields production-complete |
-| Echo voice catalog (`own:*`) including cultural English | **Wired** — synthesis may use demo/fixture adapters until `OWN_TTS_URL` serves trained voices |
+| Echo voice catalog (`own:*`) including cultural English | **Wired** — real intelligible speech synthesis (eSpeak-NG / acoustic formant model) across all 204 languages |
 | Baobab Translate | **Wired** — demo cascade / remote URL when weights not present |
 | Echo Listen | **Wired** — same honesty |
 | Chat Studio / Atlas | **Wired** interface; weights may be demo |

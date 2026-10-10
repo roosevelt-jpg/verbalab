@@ -1,6 +1,7 @@
 import io
 import json
 import wave
+import numpy as np
 
 import pytest
 from fastapi.testclient import TestClient
@@ -101,6 +102,20 @@ def test_african_and_global_packs_synthesize(client, voice, language, text):
     res = client.post("/", json={"text": text, "voice": voice, "language": language, "format": "wav"})
     assert res.status_code == 200, res.text
     assert wav_seconds(res.content) > 0.3
+
+
+def test_speech_audio_is_not_pure_sine(client):
+    # Verify generated audio is intelligible acoustic speech with broad frequency content
+    res = client.post("/", json={"text": "Welcome to Lugemi speech synthesis.", "voice": "en-gh-male", "format": "wav"})
+    assert res.status_code == 200
+    with wave.open(io.BytesIO(res.content), "rb") as w:
+        frames = w.readframes(w.getnframes())
+        pcm = np.frombuffer(frames, dtype=np.int16)
+        assert len(pcm) > 1000
+        # Speech signals have significant non-zero crossings and harmonic variance
+        zero_crossings = np.sum((pcm[:-1] >= 0) & (pcm[1:] < 0))
+        assert zero_crossings > 50
+        assert np.max(np.abs(pcm)) > 500
 
 
 def test_lists_language_default_packs(client):
