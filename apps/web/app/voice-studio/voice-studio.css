@@ -3,7 +3,9 @@
   min-height: min(72vh, 640px);
   display: grid;
   align-items: end;
-  margin: -1.25rem -1.25rem 1.5rem;
+  /* Match .vl-console-main horizontal padding so the bleed never overflows */
+  margin: -1.25rem -1.35rem 1.5rem;
+  max-width: none;
   overflow: hidden;
   background: #0c1a14;
 }
@@ -11,6 +13,7 @@
 .vs-hero__media {
   position: absolute;
   inset: 0;
+  overflow: hidden;
 }
 
 .vs-hero__img {
@@ -18,7 +21,9 @@
   height: 100%;
   object-fit: cover;
   transform: scale(1.04);
+  transform-origin: center;
   animation: vs-drift 18s ease-in-out infinite alternate;
+  will-change: transform;
 }
 
 .vs-hero__veil {
@@ -121,7 +126,7 @@
 }
 
 .vs-form-row {
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 10rem), 1fr));
   align-items: end;
 }
 
@@ -284,9 +289,65 @@
   }
 }
 
+@media (max-width: 959px) {
+  .vs-hero {
+    margin-left: -1rem;
+    margin-right: -1rem;
+  }
+}
+
+@media (max-width: 719px) {
+  .vs-hero {
+    margin-left: calc(-1 * max(0.85rem, env(safe-area-inset-left)));
+    margin-right: calc(-1 * max(0.85rem, env(safe-area-inset-right)));
+  }
+
+  .vs-shell {
+    min-width: 0;
+  }
+
+  .vs-cta .vs-btn {
+    flex: 1 1 calc(50% - 0.65rem);
+    min-width: min(100%, 9rem);
+  }
+}
+
 @media (max-width: 640px) {
   .vs-hero {
-    min-height: 70vh;
-    margin: -1rem -1rem 1.25rem;
+    min-height: auto;
+    min-height: min(70vh, 34rem);
+    margin-bottom: 1.25rem;
+  }
+
+  .vs-cta {
+    flex-direction: column;
+  }
+
+  .vs-cta .vs-btn {
+    width: 100%;
+  }
+
+  .vs-steps {
+    gap: 0.35rem;
+  }
+
+  .vs-step {
+    flex: 1 1 auto;
+    text-align: center;
+    min-height: 40px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vs-hero__img {
+    animation: none;
+    transform: none;
+  }
+
+  .vs-brand,
+  .vs-title,
+  .vs-lede,
+  .vs-cta {
+    animation: none;
   }
 }
