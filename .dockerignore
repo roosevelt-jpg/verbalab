@@ -8,8 +8,11 @@ node_modules
 **/dist
 # Test coverage reports only — do NOT ignore apps/web/app/coverage (marketing route).
 /coverage
+/coverage/**
 apps/api/coverage
-packages/**/coverage
+apps/api/coverage/**
+packages/*/coverage
+packages/*/coverage/**
 **/storage
 apps/api/storage
 *.md
