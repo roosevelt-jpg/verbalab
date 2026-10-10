@@ -14,27 +14,28 @@ export function StudioSampleDemo({
   const { play, stop, playingId, loadingId, status, error } = useDemoPlayer();
   const [script, setScript] = useState(sample);
   // Each chip speaks a line written in that language, never the English draft read with a foreign accent.
+  // Only demo-safe languages (eSpeak/neural). Yoruba/Zulu stay catalogued but off demos until weights publish.
   const chipVoice: Record<string, { voiceId: string; lang: string; text: string }> = {
-    English: { voiceId: 'abe', lang: 'en-NG', text: sample },
+    English: { voiceId: 'en-ng-female', lang: 'en-NG', text: sample },
     Swahili: {
       voiceId: 'amara',
       lang: 'sw-KE',
-      text: 'Habari — chapa yako inaweza kuzungumza na wateja kwa Kiswahili, Kiyoruba na Kifaransa kutoka rasimu moja.',
+      text: 'Habari — chapa yako inaweza kuzungumza na wateja kwa Kiswahili na Kifaransa kutoka rasimu moja.',
     },
-    Yoruba: {
-      voiceId: 'yo-ng-male',
-      lang: 'yo-NG',
-      text: 'Ẹ n lẹ — orúkọ ilé-iṣẹ́ rẹ lè bá àwọn oníbàárà sọ̀rọ̀ ní èdè Swahili, Yorùbá àti Faransé láti inú àkọsílẹ̀ kan ṣoṣo.',
+    Afrikaans: {
+      voiceId: 'af-za-female',
+      lang: 'af-ZA',
+      text: 'Goeiedag — jou handelsmerk kan met kliënte praat in Swahili, Afrikaans en Frans vanaf een konsep.',
     },
     French: {
-      voiceId: 'fr-sn-female',
-      lang: 'fr-SN',
-      text: 'Bonjour — votre marque peut parler à vos clients en swahili, en yoruba et en français à partir d’un seul brouillon.',
+      voiceId: 'fr-fr-female',
+      lang: 'fr-FR',
+      text: 'Bonjour — votre marque peut parler à vos clients en swahili, en afrikaans et en français à partir d’un seul brouillon.',
     },
     Amharic: {
       voiceId: 'am-et-female',
       lang: 'am-ET',
-      text: 'ሰላም — የእርስዎ ብራንድ ከአንድ ረቂቅ ብቻ ደንበኞችን በስዋሂሊ፣ በዮሩባ እና በፈረንሳይኛ ማነጋገር ይችላል።',
+      text: 'ሰላም — የእርስዎ ብራንድ ከአንድ ረቂቅ ብቻ ደንበኞችን በስዋሂሊ፣ በአፍሪካንስ እና በፈረንሳይኛ ማነጋገር ይችላል።',
     },
   };
 
@@ -44,7 +45,7 @@ export function StudioSampleDemo({
       <p className="mkt-fake-ui-script">{script}</p>
       <div className="mkt-fake-chips">
         {chips.map((chip, i) => {
-          const meta = chipVoice[chip] ?? { voiceId: 'abe', lang: 'en-NG', text: sample };
+          const meta = chipVoice[chip] ?? { voiceId: 'en-ng-female', lang: 'en-NG', text: sample };
           const id = `studio-${chip}`;
           const active = playingId === id;
           const loading = loadingId === id;

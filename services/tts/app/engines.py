@@ -110,22 +110,28 @@ class SpeechSynthesisEngine:
             return ["-v", f"en-us{gender_mod}", "-p", "58", "-s", "165"]
         if "en-za" in vid or "za" in loc:
             return ["-v", f"en-gb{gender_mod}", "-p", "50", "-s", "158"]
+        # Prefer verified eSpeak voices only. Never substitute a neighboring language
+        # (e.g. Zulu → Afrikaans) — that fabricates false native support.
+        if "en-au" in vid or loc.startswith("en-au"):
+            return ["-v", f"en-au{gender_mod}", "-p", "52", "-s", "160"]
+        if "en-nz" in vid or loc.startswith("en-nz"):
+            return ["-v", f"en-nz{gender_mod}", "-p", "50", "-s", "158"]
+        if "en-gb" in vid or loc.startswith("en-gb"):
+            return ["-v", f"en-gb{gender_mod}", "-p", "50", "-s", "160"]
+        if "en-us" in vid or loc.startswith("en-us") or loc.startswith("en-ca") or loc.startswith("en-ph"):
+            return ["-v", f"en-us{gender_mod}", "-p", pitch, "-s", speed]
         if loc.startswith("sw"):
             return ["-v", f"sw{gender_mod}"]
-        if loc.startswith("yo"):
-            return ["-v", f"yo{gender_mod}"]
         if loc.startswith("am"):
             return ["-v", f"am{gender_mod}"]
-        if loc.startswith("zu"):
-            return ["-v", f"af{gender_mod}"]
-        if loc.startswith("ha"):
-            return ["-v", f"ha{gender_mod}"]
         if loc.startswith("ar"):
             return ["-v", f"ar{gender_mod}"]
+        if loc.startswith("af"):
+            return ["-v", f"af{gender_mod}"]
         if loc.startswith("fr"):
             return ["-v", f"fr-fr{gender_mod}"]
         if loc.startswith("pt"):
-            return ["-v", f"pt-pt{gender_mod}"]
+            return ["-v", f"pt{gender_mod}"]
         if loc.startswith("es"):
             return ["-v", f"es{gender_mod}"]
         if loc.startswith("de"):
@@ -138,11 +144,15 @@ class SpeechSynthesisEngine:
             return ["-v", f"vi{gender_mod}"]
         if loc.startswith("hi"):
             return ["-v", f"hi{gender_mod}"]
-        
-        # General BCP-47 lookup
-        base = loc.split("-")[0]
-        return ["-v", f"{base}{gender_mod}"]
+        if loc.startswith("om"):
+            return ["-v", f"om{gender_mod}"]
+        if loc.startswith("tn"):
+            return ["-v", f"tn{gender_mod}"]
 
+        # Unknown language: use English only as last-resort acoustic carrier with
+        # explicit locale tag in logs — callers should prefer capability errors.
+        base = loc.split("-")[0] if loc else "en"
+        return ["-v", f"en-us{gender_mod}"]
     def synthesize(self, text: str, speed: float) -> Audio:
         import shutil
         import subprocess
@@ -157,7 +167,15 @@ class SpeechSynthesisEngine:
                 cmd = [espeak_bin, *voice_args, "-s", str(wpm), "--stdout", text]
                 res = subprocess.run(cmd, capture_output=True, check=False, timeout=15)
                 if res.returncode == 0 and len(res.stdout) > 44:
-                    with wave.open(io.BytesIO(res.stdout), "rb") as w:
+                    # eSpeak --stdout uses streaming placeholder RIFF/data sizes.
+                    raw = bytearray(res.stdout)
+                    if raw[0:4] == b"RIFF" and raw[8:12] == b"WAVE" and raw[36:40] == b"data":
+                        import struct
+
+                        data_size = len(raw) - 44
+                        struct.pack_into("<I", raw, 4, len(raw) - 8)
+                        struct.pack_into("<I", raw, 40, data_size)
+                    with wave.open(io.BytesIO(raw), "rb") as w:
                         rate = w.getframerate()
                         frames = w.readframes(w.getnframes())
                         pcm = np.frombuffer(frames, dtype=np.int16)

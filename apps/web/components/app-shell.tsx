@@ -44,7 +44,8 @@ const NAV_GROUPS: NavGroup[] = [
     id: 'voice',
     label: 'Voice & audio',
     links: [
-      { href: '/audio', label: 'Voice Studio' },
+      { href: '/voice-studio', label: 'Voice Studio' },
+      { href: '/audio', label: 'African studio' },
       { href: '/speech', label: 'Speech' },
       { href: '/voice-cloud', label: 'Voice Cloud' },
       { href: '/neural-tts', label: 'Neural TTS' },

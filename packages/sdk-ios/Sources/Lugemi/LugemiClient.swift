@@ -53,6 +53,10 @@ public struct LugemiClient: @unchecked Sendable {
     )
   }
 
+  public var voiceStudio: VoiceStudioClient {
+    VoiceStudioClient(http: http)
+  }
+
   public func speech(_ request: SpeechRequest) async throws -> SpeechResult {
     var body: [String: Any] = [
       "text": request.text,

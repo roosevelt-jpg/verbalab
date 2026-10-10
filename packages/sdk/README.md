@@ -1,6 +1,6 @@
 # @lugemi/sdk
 
-TypeScript client for the **Lugemi API** (`@lugemi/sdk`). Generate speech, transcribe, and translate with `lg_live_` / `lg_test_` keys (legacy `vl_*` prefixes still accepted). Not a vendor-SDK wrapper.
+TypeScript client for the **Lugemi API** (`@lugemi/sdk`, v0.3.0). Generate speech, transcribe, translate, and drive **Voice Studio** workspace APIs with `lg_live_` / `lg_test_` keys (legacy `vl_*` prefixes still accepted). Not a vendor-SDK wrapper.
 
 ```ts
 import { Lugemi } from '@lugemi/sdk';
@@ -32,6 +32,16 @@ const speech = await client.speech({ text: 'Hello', voice: 'alloy' });
 Also: `chat`, `embeddings`, `languages`, `ocr`, `transcribe`, `recognizeSpeech`, `interpret`, `voices`,
 `listJobs`, `getJob`, `platformConnectors`, `platformConnector`, `platformConnectorDemo`,
 `ttsSynthesize`, `listVoiceClones`.
+
+### Voice Studio
+
+```ts
+await client.voiceStudioWorkspaceCapabilities();
+await client.createVoiceStudioWorkspaceProject({ name: 'Announcement', sourceLanguage: 'en' });
+await client.voiceStudioWorkspaceProjects();
+```
+
+Android / iOS expose the full workflow via `client.voiceStudio` (v0.3.0).
 
 ### VoiceBridge & DealBridge
 

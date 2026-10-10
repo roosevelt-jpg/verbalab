@@ -1,8 +1,11 @@
-import { redirect } from 'next/navigation';
-import { isClerkConfigured } from '@/lib/clerk-config';
 import { VoiceStudioClient } from './voice-studio-client';
 
+export const metadata = {
+  title: 'Voice Studio · Lugemi',
+  description:
+    'Collaborative Lugemi Voice Studio — script to translated speech with native review and approved exports.',
+};
+
 export default function VoiceStudioPage() {
-  if (!isClerkConfigured()) redirect('/setup');
   return <VoiceStudioClient />;
 }

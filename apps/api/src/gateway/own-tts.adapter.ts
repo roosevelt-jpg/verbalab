@@ -1,8 +1,14 @@
 import { HttpStatus, Logger } from '@nestjs/common';
+import { spawnSync } from 'child_process';
 import { ApiException } from '../common/errors/api-exception';
 import { LANGUAGE_SEEDS, TOTAL_LANGUAGE_COUNT } from '../languages/language-seeds';
 import { baseTtsLanguage, nativeVoiceUnavailable } from './native-voice';
 import { TtsInput, TtsOutput, TtsProvider, TtsVoice } from './tts-provider';
+import {
+  capabilityForVoice,
+  resolveEspeakVoice,
+  type SynthEngine,
+} from './voice-capability-registry';
 
 type CatalogVoice = Omit<TtsVoice, 'provider' | 'status'> & { locale: string };
 
@@ -46,7 +52,10 @@ const CURATED: CatalogVoice[] = [
   { id: 'own:am-et-female', name: 'Hanna · Addis', gender: 'female', languages: ['am', 'en'], locale: 'am-ET' },
   { id: 'own:zu-za-female', name: 'Thandi · Durban', gender: 'female', languages: ['zu', 'en'], locale: 'zu-ZA' },
   { id: 'own:ar-eg-male', name: 'Omar · Cairo', gender: 'male', languages: ['ar', 'en'], locale: 'ar-EG' },
+  { id: 'own:fr-fr-female', name: 'Camille · France', gender: 'female', languages: ['fr'], locale: 'fr-FR' },
+  { id: 'own:fr-fr-male', name: 'Louis · France', gender: 'male', languages: ['fr'], locale: 'fr-FR' },
   { id: 'own:fr-sn-female', name: 'Awa · Dakar', gender: 'female', languages: ['fr', 'wo', 'en'], locale: 'fr-SN' },
+  { id: 'own:fr-ci-female', name: 'Aya · Abidjan', gender: 'female', languages: ['fr'], locale: 'fr-CI' },
   { id: 'own:ha-ng-male', name: 'Sani · Kano', gender: 'male', languages: ['ha', 'en'], locale: 'ha-NG' },
   { id: 'own:ak-gh-female', name: 'Akosua · Accra', gender: 'female', languages: ['ak', 'en'], locale: 'ak-GH' },
   { id: 'own:ig-ng-female', name: 'Ada · Enugu', gender: 'female', languages: ['ig', 'en'], locale: 'ig-NG' },
@@ -103,11 +112,20 @@ function buildCatalog(): CatalogVoice[] {
 
 const CATALOG: CatalogVoice[] = buildCatalog();
 
-export const OWN_TTS_VOICES: TtsVoice[] = CATALOG.map((v) => ({
-  ...v,
-  provider: 'own_tts',
-  status: 'live' as const,
-}));
+/** Legacy duplicate ids share one engine voice; every other `own:<key>` is served as `<key>`. */
+const OWN_TTS_SYNTH_KEY: Record<string, string> = {
+  'own:sw-ke-female': 'sw-aisha',
+  'own:yo-ng-male': 'yo-tunde',
+  'own:am-et-female': 'am-hanna',
+};
+
+export function ownTtsSynthKey(voiceId: string): string {
+  return OWN_TTS_SYNTH_KEY[voiceId] ?? voiceId.replace(/^own:/, '');
+}
+
+export const OWN_TTS_VOICES: TtsVoice[] = CATALOG.map((v) =>
+  catalogStatus(v, 'own_tts', false),
+);
 
 /** Languages with a playable first-party Echo path (curated or language-default pack). */
 export const OWN_TTS_LANGUAGE_COUNT = (() => {
@@ -125,17 +143,6 @@ export function assertOwnTtsCoversLanguageRegistry() {
       `Echo catalog covers ${OWN_TTS_LANGUAGE_COUNT} languages; expected ≥ ${TOTAL_LANGUAGE_COUNT}`,
     );
   }
-}
-
-/** Legacy duplicate ids share one engine voice; every other `own:<key>` is served as `<key>`. */
-const OWN_TTS_SYNTH_KEY: Record<string, string> = {
-  'own:sw-ke-female': 'sw-aisha',
-  'own:yo-ng-male': 'yo-tunde',
-  'own:am-et-female': 'am-hanna',
-};
-
-export function ownTtsSynthKey(voiceId: string): string {
-  return OWN_TTS_SYNTH_KEY[voiceId] ?? voiceId.replace(/^own:/, '');
 }
 
 const MIME: Record<string, string> = {
@@ -175,103 +182,145 @@ export function resolveOwnTtsVoice(voice: string): TtsVoice | undefined {
     (s) => s.code === code || (baseTtsLanguage(s.code) ?? s.code) === code,
   );
   if (!seed) return undefined;
+  return catalogStatus(
+    {
+      id: languagePackVoiceId(seed.code),
+      name: `${seed.nameEn} · Echo`,
+      gender: 'female',
+      languages: [seed.code],
+      locale: seed.code,
+    },
+    'own_tts',
+    false,
+  );
+}
+
+function catalogStatus(voice: CatalogVoice, provider: string, neuralLive?: boolean): TtsVoice {
+  const cap = capabilityForVoice({
+    voiceId: voice.id,
+    locale: voice.locale,
+    neuralLive,
+  });
+  const status: TtsVoice['status'] =
+    cap.verificationStatus === 'neural_unreviewed' || cap.verificationStatus === 'native_reviewed'
+      ? 'live'
+      : cap.verificationStatus === 'espeak_demo'
+        ? 'demo'
+        : 'placeholder';
   return {
-    id: languagePackVoiceId(seed.code),
-    name: `${seed.nameEn} · Echo`,
-    gender: 'female',
-    languages: [seed.code],
-    locale: seed.code,
-    provider: 'own_tts',
-    status: 'live',
+    ...voice,
+    provider,
+    status,
+    verificationStatus: cap.verificationStatus,
+    synthEngine: cap.localEngine,
+    limitations: cap.limitations,
   };
 }
 
-function asLive(provider: string): TtsVoice[] {
-  return OWN_TTS_VOICES.map((v) => ({ ...v, provider, status: 'live' as const }));
+function asCatalog(provider: string, neuralLiveIds?: Set<string>): TtsVoice[] {
+  return CATALOG.map((v) =>
+    catalogStatus(v, provider, neuralLiveIds?.has(ownTtsSynthKey(v.id))),
+  );
 }
 
-/** Real speech synthesis: invokes eSpeak-NG when available, falling back to a formant acoustic vocal model. */
-import { spawnSync } from 'child_process';
+export type SpeechWavResult = {
+  audio: Buffer;
+  engine: SynthEngine;
+  espeakVoice?: string;
+  verificationStatus: string;
+};
 
-function generateSpeechWav(text: string, voiceId: string, locale?: string): Buffer {
-  const cleanVoice = voiceId.toLowerCase();
-  const cleanLoc = (locale || '').toLowerCase();
-  
-  // Try espeak-ng subprocess first
-  try {
-    const isFemale =
-      cleanVoice.includes('female') ||
-      cleanVoice.includes('aisha') ||
-      cleanVoice.includes('hanna') ||
-      cleanVoice.includes('ama') ||
-      cleanVoice.includes('chioma') ||
-      cleanVoice.includes('lerato');
-    const genderMod = isFemale ? '+f2' : '+m3';
-    let espeakVoice = 'en-us';
-    let pitch = '50';
-    let speed = '160';
-
-    if (cleanVoice.includes('gh') || cleanLoc.includes('gh')) {
-      espeakVoice = `en-029${genderMod}`;
-      pitch = '48';
-      speed = '155';
-    } else if (cleanVoice.includes('ng') || cleanLoc.includes('ng')) {
-      espeakVoice = `en-029${genderMod}`;
-      pitch = '52';
-      speed = '160';
-    } else if (cleanVoice.includes('ke') || cleanLoc.includes('ke')) {
-      espeakVoice = `en-gb${genderMod}`;
-      pitch = '46';
-      speed = '150';
-    } else if (cleanVoice.includes('ph') || cleanLoc.includes('ph')) {
-      espeakVoice = `en-us${genderMod}`;
-      pitch = '58';
-      speed = '165';
-    } else if (cleanVoice.includes('za') || cleanLoc.includes('za')) {
-      espeakVoice = `en-gb${genderMod}`;
-      pitch = '50';
-      speed = '158';
-    } else if (cleanLoc.startsWith('sw')) {
-      espeakVoice = `sw${genderMod}`;
-    } else if (cleanLoc.startsWith('yo')) {
-      espeakVoice = `yo${genderMod}`;
-    } else if (cleanLoc.startsWith('am')) {
-      espeakVoice = `am${genderMod}`;
-    } else if (cleanLoc.startsWith('ha')) {
-      espeakVoice = `ha${genderMod}`;
-    } else if (cleanLoc.startsWith('ar')) {
-      espeakVoice = `ar${genderMod}`;
-    } else if (cleanLoc.startsWith('fr')) {
-      espeakVoice = `fr-fr${genderMod}`;
-    } else if (cleanLoc.startsWith('pt')) {
-      espeakVoice = `pt-pt${genderMod}`;
-    } else if (cleanLoc.startsWith('es')) {
-      espeakVoice = `es${genderMod}`;
-    } else if (cleanLoc.startsWith('de')) {
-      espeakVoice = `de${genderMod}`;
-    } else if (cleanLoc.startsWith('ja')) {
-      espeakVoice = `ja${genderMod}`;
-    } else if (cleanLoc.startsWith('th')) {
-      espeakVoice = `th${genderMod}`;
-    } else if (cleanLoc.startsWith('vi')) {
-      espeakVoice = `vi${genderMod}`;
-    } else if (cleanLoc.startsWith('hi')) {
-      espeakVoice = `hi${genderMod}`;
-    } else if (cleanLoc) {
-      espeakVoice = `${cleanLoc.split(/[-_]/)[0]}${genderMod}`;
-    }
-
-    const res = spawnSync('espeak-ng', ['-v', espeakVoice, '-p', pitch, '-s', speed, '--stdout', text], {
-      timeout: 10_000,
-    });
-    if (res.status === 0 && res.stdout && res.stdout.length > 100) {
-      return res.stdout;
-    }
-  } catch {
-    // Fall back to acoustic vocal tract synthesis
+/**
+ * eSpeak `--stdout` writes streaming WAV with placeholder RIFF/data sizes
+ * (~0x7FFFFFFF). Browsers that trust those sizes mis-estimate duration and can
+ * sound like echo, hang, or play garbage. Rewrite sizes to the real buffer length.
+ */
+export function finalizeStreamingWav(buf: Buffer): Buffer {
+  if (
+    buf.length < 44 ||
+    buf.toString('ascii', 0, 4) !== 'RIFF' ||
+    buf.toString('ascii', 8, 12) !== 'WAVE'
+  ) {
+    return buf;
   }
 
-  return acousticFormantWav(text, voiceId);
+  // Prefer walking chunks so we fix the data chunk wherever it sits.
+  let offset = 12;
+  while (offset + 8 <= buf.length) {
+    const id = buf.toString('ascii', offset, offset + 4);
+    const claimed = buf.readUInt32LE(offset + 4);
+    if (id === 'data') {
+      const out = Buffer.from(buf);
+      const actualData = out.length - (offset + 8);
+      out.writeUInt32LE(actualData >>> 0, offset + 4);
+      out.writeUInt32LE((out.length - 8) >>> 0, 4);
+      return out;
+    }
+    // Streaming placeholders claim more bytes than remain — stop walking.
+    if (claimed > buf.length - offset - 8) break;
+    offset += 8 + claimed + (claimed % 2);
+  }
+
+  // Standard 44-byte PCM header fallback.
+  if (buf.toString('ascii', 36, 40) === 'data') {
+    const out = Buffer.from(buf);
+    const dataSize = out.length - 44;
+    out.writeUInt32LE(dataSize >>> 0, 40);
+    out.writeUInt32LE((out.length - 8) >>> 0, 4);
+    return out;
+  }
+  return buf;
+}
+
+/**
+ * Local intelligible speech: eSpeak-NG when a verified voice exists.
+ * Formant is only used when explicitly allowed — it is NOT native speech.
+ */
+export function generateSpeechWav(
+  text: string,
+  voiceId: string,
+  locale?: string,
+  opts?: { allowFormant?: boolean },
+): SpeechWavResult {
+  const resolved = resolveEspeakVoice(voiceId, locale);
+  const pitch = '50';
+  const speed = '160';
+
+  if (resolved.kind === 'espeak') {
+    try {
+      const res = spawnSync(
+        'espeak-ng',
+        ['-v', resolved.espeakVoice, '-p', pitch, '-s', speed, '--stdout', text],
+        { timeout: 10_000, maxBuffer: 16 * 1024 * 1024 },
+      );
+      if (res.status === 0 && res.stdout && res.stdout.length > 100) {
+        return {
+          audio: finalizeStreamingWav(res.stdout),
+          engine: 'espeak',
+          espeakVoice: resolved.espeakVoice,
+          verificationStatus: 'espeak_demo',
+        };
+      }
+    } catch {
+      /* fall through */
+    }
+  }
+
+  if (opts?.allowFormant === false) {
+    throw new ApiException(
+      'capability_unavailable',
+      resolved.kind === 'formant'
+        ? resolved.reason
+        : `eSpeak voice unavailable for ${voiceId}; neural checkpoint required`,
+      HttpStatus.UNPROCESSABLE_ENTITY,
+    );
+  }
+
+  return {
+    audio: acousticFormantWav(text, voiceId),
+    engine: 'formant',
+    verificationStatus: 'formant_placeholder',
+  };
 }
 
 /** Formant acoustic speech synthesizer producing rich speech audio rather than pure sine. */
@@ -364,14 +413,14 @@ const _tinyWav = (seed: string): Buffer => {
   const parts = seed.split(':');
   const voice = parts[0] || 'own:en-us-female';
   const text = parts.slice(1).join(':') || 'Hello';
-  return generateSpeechWav(text, voice);
+  return generateSpeechWav(text, voice).audio;
 };
 
 export class FixtureOwnTtsAdapter implements TtsProvider {
   readonly name = 'own_tts_fixture';
 
   listVoices(): TtsVoice[] {
-    return asLive(this.name);
+    return asCatalog(this.name);
   }
 
   async synthesize(input: TtsInput): Promise<TtsOutput> {
@@ -384,14 +433,20 @@ export class FixtureOwnTtsAdapter implements TtsProvider {
       );
     }
     const started = Date.now();
+    const allowFormant = input.requireIntelligible !== true;
+    const wav = generateSpeechWav(input.text, input.voice, input.language ?? voice.locale, {
+      allowFormant,
+    });
     return {
-      audio: generateSpeechWav(input.text, input.voice, input.language ?? voice.locale),
+      audio: wav.audio,
       mimeType: 'audio/wav',
       format: 'wav',
       voice: input.voice,
       characters: [...input.text].length,
       provider: this.name,
       latencyMs: Date.now() - started,
+      synthEngine: wav.engine,
+      verificationStatus: wav.verificationStatus,
     };
   }
 }
@@ -452,13 +507,16 @@ export class HttpOwnTtsAdapter implements TtsProvider {
 
   listVoices(): TtsVoice[] {
     if (this.stale()) void this.refreshLive();
-    return asLive(this.name);
+    return asCatalog(this.name, this.live ?? undefined);
   }
 
   private async demoFallback(input: TtsInput, reason: string): Promise<TtsOutput> {
     this.logger.warn(`Echo demo fallback for ${input.voice}: ${reason}`);
-    const out = await fixtureFallback.synthesize(input);
-    return { ...out, provider: this.name };
+    const out = await fixtureFallback.synthesize({
+      ...input,
+      requireIntelligible: input.requireIntelligible,
+    });
+    return { ...out, provider: `${this.name}_demo_fallback` };
   }
 
   async synthesize(input: TtsInput): Promise<TtsOutput> {
@@ -563,7 +621,7 @@ export class UnconfiguredOwnTtsAdapter implements TtsProvider {
   private readonly fixture = new FixtureOwnTtsAdapter();
 
   listVoices(): TtsVoice[] {
-    return asLive(this.name);
+    return asCatalog(this.name);
   }
 
   async synthesize(input: TtsInput): Promise<TtsOutput> {

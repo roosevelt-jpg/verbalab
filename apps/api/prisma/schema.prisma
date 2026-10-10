@@ -82,6 +82,14 @@ model Organization {
   voiceStudioProjects         VoiceStudioProject[]
   voiceStudioLexemes          VoiceStudioLexeme[]
   voiceStudioProfiles         VoiceStudioProfile[]
+  studioSourceRevisions       StudioSourceRevision[]
+  studioEditions              StudioEdition[]
+  studioAudioTakes            StudioAudioTake[]
+  studioNativeReviews         StudioNativeReview[]
+  studioAssemblies            StudioAssembly[]
+  studioReleases              StudioRelease[]
+  studioExports               StudioExportArtifact[]
+  studioPronunciationEntries  StudioPronunciationEntry[]
   voiceListingsPublished      VoiceListing[] @relation("VoiceListingPublisher")
   voiceListingInstalls        VoiceListingInstall[] @relation("VoiceListingInstaller")
   voiceListingReviews         VoiceListingReview[]
@@ -247,6 +255,14 @@ model Workspace {
   voiceStudioProjects VoiceStudioProject[]
   voiceStudioLexemes  VoiceStudioLexeme[]
   voiceStudioProfiles VoiceStudioProfile[]
+  studioSourceRevisions       StudioSourceRevision[]
+  studioEditions              StudioEdition[]
+  studioAudioTakes            StudioAudioTake[]
+  studioNativeReviews         StudioNativeReview[]
+  studioAssemblies            StudioAssembly[]
+  studioReleases              StudioRelease[]
+  studioExports               StudioExportArtifact[]
+  studioPronunciationEntries  StudioPronunciationEntry[]
   voiceListingsPublished VoiceListing[] @relation("VoiceListingPublisherWorkspace")
   voiceListingInstalls   VoiceListingInstall[] @relation("VoiceListingInstallerWorkspace")
   memoryRecords          MemoryRecord[]
@@ -1118,8 +1134,8 @@ model VoiceListingSale {
 }
 
 /**
- * Voice Studio project with linear timeline JSON (VL-174).
- * Not a DAW — ordered speak/pause clips only.
+ * Voice Studio project with linear timeline JSON (VL-174) + collaborative workflow (guide v1).
+ * Not a DAW — ordered speak/pause clips only. Workflow: script → translate → speech → review → export.
  */
 model VoiceStudioProject {
   id             String   @id @default(cuid())
@@ -1129,14 +1145,246 @@ model VoiceStudioProject {
   description    String   @default("")
   /// [{ id?, text?, ssml?, voice?, language?, pauseMsAfter? }]
   timeline       Json     @default("[]")
+  sourceLanguage String   @default("en") @map("source_language")
+  /// draft | generating | review_required | changes_requested | assembly_review | release_approved | exported | failed | cancelled | unsupported
+  status         String   @default("draft")
+  /// independent_reviewer | dual_review | producer_self_preview
+  reviewPolicy   String   @default("independent_reviewer") @map("review_policy")
+  ownerUserId    String?  @map("owner_user_id")
+  retentionDays  Int?     @map("retention_days")
   createdAt      DateTime @default(now()) @map("created_at")
   updatedAt      DateTime @updatedAt @map("updated_at")
 
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   workspace    Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  sourceRevisions StudioSourceRevision[]
+  editions        StudioEdition[]
+  assemblies      StudioAssembly[]
+  releases        StudioRelease[]
 
   @@index([organizationId, workspaceId])
+  @@index([status])
   @@map("voice_studio_projects")
+}
+
+/** Immutable source script revision. */
+model StudioSourceRevision {
+  id             String   @id @default(cuid())
+  organizationId String   @map("organization_id")
+  workspaceId    String   @map("workspace_id")
+  projectId      String   @map("project_id")
+  script         String
+  contentHash    String   @map("content_hash")
+  authorUserId   String?  @map("author_user_id")
+  parentId       String?  @map("parent_id")
+  /// Stable segment payload: [{ stableId, text, orderIndex }]
+  segments       Json     @default("[]")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  organization Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  workspace    Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  project      VoiceStudioProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  editions     StudioEdition[]
+
+  @@index([projectId, createdAt])
+  @@index([organizationId, workspaceId])
+  @@map("studio_source_revisions")
+}
+
+/** Target language/variety edition of a project. */
+model StudioEdition {
+  id                String   @id @default(cuid())
+  organizationId    String   @map("organization_id")
+  workspaceId       String   @map("workspace_id")
+  projectId         String   @map("project_id")
+  sourceRevisionId  String   @map("source_revision_id")
+  languageVariety   String   @map("language_variety")
+  voiceId           String   @map("voice_id")
+  /// draft | generating | review_required | changes_requested | assembly_review | release_approved | exported | unsupported
+  status            String   @default("draft")
+  dictionaryHash    String?  @map("dictionary_hash")
+  /// [{ stableId, sourceText, translatedText, translationHash, takeId?, reviewStatus? }]
+  segments          Json     @default("[]")
+  selectedTakeIds   Json     @default("[]") @map("selected_take_ids")
+  expectedRevision  Int      @default(1) @map("expected_revision")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  organization   Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  workspace      Workspace          @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  project        VoiceStudioProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  sourceRevision StudioSourceRevision @relation(fields: [sourceRevisionId], references: [id], onDelete: Cascade)
+  takes          StudioAudioTake[]
+  assemblies     StudioAssembly[]
+  releases       StudioRelease[]
+
+  @@index([projectId])
+  @@index([organizationId, workspaceId])
+  @@map("studio_editions")
+}
+
+/** Immutable audio take for one segment. */
+model StudioAudioTake {
+  id                   String   @id @default(cuid())
+  organizationId       String   @map("organization_id")
+  workspaceId          String   @map("workspace_id")
+  editionId            String   @map("edition_id")
+  stableSegmentId      String   @map("stable_segment_id")
+  translationText      String   @map("translation_text")
+  translationHash      String   @map("translation_hash")
+  voiceId              String   @map("voice_id")
+  modelVersion         String   @map("model_version")
+  synthEngine          String   @map("synth_engine")
+  verificationStatus   String   @map("verification_status")
+  dictionaryHash       String?  @map("dictionary_hash")
+  settings             Json     @default("{}")
+  audioSha256          String   @map("audio_sha256")
+  mimeType             String   @map("mime_type")
+  durationMs           Int      @default(0) @map("duration_ms")
+  /// Private media payload (MVP). Prefer object storage in high-volume tenants.
+  audioBase64          String   @map("audio_base64")
+  stale                Boolean  @default(false)
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  workspace    Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  edition      StudioEdition @relation(fields: [editionId], references: [id], onDelete: Cascade)
+  reviews      StudioNativeReview[]
+
+  @@index([editionId, stableSegmentId])
+  @@index([organizationId, workspaceId])
+  @@map("studio_audio_takes")
+}
+
+/** Native-speaker review of a take (human judgment — never AI-as-native). */
+model StudioNativeReview {
+  id               String   @id @default(cuid())
+  organizationId   String   @map("organization_id")
+  workspaceId      String   @map("workspace_id")
+  takeId           String   @map("take_id")
+  reviewerUserId   String   @map("reviewer_user_id")
+  qualifications   Json     @default("[]")
+  /// intelligibility, naturalness, lexicalTone, varietyAuthenticity, meaningPreservation, joinQuality (1–5)
+  ratings          Json
+  spanNotes        Json     @default("[]") @map("span_notes")
+  pronunciationNotes String? @map("pronunciation_notes")
+  meaningNotes     String?  @map("meaning_notes")
+  /// approved | rejected | changes_requested | needs_adjudication
+  decision         String
+  takeHash         String   @map("take_hash")
+  trainingEligible Boolean  @default(false) @map("training_eligible")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  organization Organization   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  workspace    Workspace      @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  take         StudioAudioTake @relation(fields: [takeId], references: [id], onDelete: Cascade)
+
+  @@index([takeId])
+  @@index([organizationId, workspaceId])
+  @@map("studio_native_reviews")
+}
+
+/** Immutable ordered assembly of selected takes. */
+model StudioAssembly {
+  id             String   @id @default(cuid())
+  organizationId String   @map("organization_id")
+  workspaceId    String   @map("workspace_id")
+  projectId      String   @map("project_id")
+  editionId      String   @map("edition_id")
+  takeIds        Json     @map("take_ids")
+  settings       Json     @default("{}")
+  audioSha256    String   @map("audio_sha256")
+  mimeType       String   @map("mime_type")
+  audioBase64    String   @map("audio_base64")
+  contentHash    String   @map("content_hash")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  organization Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  workspace    Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  project      VoiceStudioProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  edition      StudioEdition     @relation(fields: [editionId], references: [id], onDelete: Cascade)
+  releases     StudioRelease[]
+
+  @@index([editionId])
+  @@map("studio_assemblies")
+}
+
+/** Exact-hash release approval. */
+model StudioRelease {
+  id             String   @id @default(cuid())
+  organizationId String   @map("organization_id")
+  workspaceId    String   @map("workspace_id")
+  projectId      String   @map("project_id")
+  editionId      String   @map("edition_id")
+  assemblyId     String   @map("assembly_id")
+  assemblyHash   String   @map("assembly_hash")
+  policyVersion  String   @default("studio-review-v1") @map("policy_version")
+  approverUserId String   @map("approver_user_id")
+  producerUserId String?  @map("producer_user_id")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  organization Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  workspace    Workspace         @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  project      VoiceStudioProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  edition      StudioEdition     @relation(fields: [editionId], references: [id], onDelete: Cascade)
+  assembly     StudioAssembly    @relation(fields: [assemblyId], references: [id], onDelete: Cascade)
+  exports      StudioExportArtifact[]
+
+  @@unique([assemblyId])
+  @@index([projectId])
+  @@map("studio_releases")
+}
+
+/** Approved immutable export artifact + provenance manifest. */
+model StudioExportArtifact {
+  id             String   @id @default(cuid())
+  organizationId String   @map("organization_id")
+  workspaceId    String   @map("workspace_id")
+  releaseId      String   @map("release_id")
+  format         String
+  checksum       String
+  manifest       Json
+  audioBase64    String   @map("audio_base64")
+  mimeType       String   @map("mime_type")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  workspace    Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  release      StudioRelease @relation(fields: [releaseId], references: [id], onDelete: Cascade)
+
+  @@index([releaseId])
+  @@map("studio_export_artifacts")
+}
+
+/**
+ * Versioned pronunciation memory entry (extends workspace lexemes with review + model compatibility).
+ */
+model StudioPronunciationEntry {
+  id                   String   @id @default(cuid())
+  organizationId       String   @map("organization_id")
+  workspaceId          String   @map("workspace_id")
+  /// project | tenant | shared
+  scope                String   @default("tenant")
+  projectId            String?  @map("project_id")
+  languageVariety      String   @map("language_variety")
+  writtenForm          String   @map("written_form")
+  /// pronunciation_alias | provider_phonemes | reference_recording
+  representation       String   @default("pronunciation_alias")
+  value                String
+  compatibleModelIds   Json     @default("[]") @map("compatible_model_ids")
+  /// awaiting_native_review | approved | rejected | unsupported
+  status               String   @default("awaiting_native_review")
+  revision             Int      @default(1)
+  notes                String   @default("")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  workspace    Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@index([workspaceId, languageVariety, writtenForm])
+  @@index([organizationId, workspaceId])
+  @@map("studio_pronunciation_entries")
 }
 
 /**

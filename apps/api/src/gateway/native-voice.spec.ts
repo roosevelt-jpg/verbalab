@@ -118,7 +118,7 @@ describe('native English accents', () => {
     }
   });
 
-  it('marks every catalog voice live and falls back to demo audio when the engine lacks a weight', async () => {
+  it('marks neural-live voices as live; eSpeak as demo; formant-only as placeholder', async () => {
     const fetchMock = vi.fn(async (url: string | URL) => {
       if (String(url).endsWith('/voices')) {
         return new Response(JSON.stringify({ voices: [{ id: 'en-us-female' }, { id: 'en-gb-male' }] }), {
@@ -134,10 +134,10 @@ describe('native English accents', () => {
     const status = Object.fromEntries(adapter.listVoices().map((v) => [v.id, v.status]));
     expect(status['own:en-us-female']).toBe('live');
     expect(status['own:en-gb-male']).toBe('live');
-    expect(status['own:en-au-female']).toBe('live');
-    expect(status['own:ak-gh-female']).toBe('live');
-    expect(status['own:en-gh-male']).toBe('live');
-    expect(status['own:en-ng-female']).toBe('live');
+    expect(status['own:en-au-female']).toBe('demo');
+    expect(status['own:ak-gh-female']).toBe('placeholder');
+    expect(status['own:en-gh-male']).toBe('demo');
+    expect(status['own:en-ng-female']).toBe('demo');
 
     const out = await adapter.synthesize({ text: 'Hello', voice: 'own:en-us-female', language: 'en-US' });
     expect(out.mimeType).toBe('audio/mpeg');

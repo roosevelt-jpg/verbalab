@@ -6,8 +6,21 @@ export type TtsVoice = {
   provider: string;
   /** Country/accent the speaker is native to, e.g. `en-AU`, `ak-GH`. */
   locale?: string;
-  /** Lugemi Echo catalog voices are shipped as `live`; `training` is retained only for legacy clients. */
-  status?: 'live' | 'training';
+  /**
+   * `live` = neural checkpoint available on the speech engine.
+   * `demo` = eSpeak-backed intelligible demo speech (not native-reviewed neural).
+   * `placeholder` = formant-only — not customer-demo-safe without neural weights.
+   * `training` retained for legacy clients.
+   */
+  status?: 'live' | 'demo' | 'placeholder' | 'training';
+  verificationStatus?:
+    | 'native_reviewed'
+    | 'espeak_demo'
+    | 'formant_placeholder'
+    | 'neural_unreviewed'
+    | 'unsupported';
+  synthEngine?: string;
+  limitations?: string;
 };
 
 export type TtsInput = {
@@ -15,6 +28,8 @@ export type TtsInput = {
   voice: string;
   language?: string;
   format?: 'mp3' | 'wav' | 'opus' | 'aac' | 'flac';
+  /** When true, refuse formant placeholders instead of fabricating speech-like audio. */
+  requireIntelligible?: boolean;
 };
 
 export type TtsOutput = {
@@ -25,6 +40,8 @@ export type TtsOutput = {
   characters: number;
   provider: string;
   latencyMs: number;
+  synthEngine?: string;
+  verificationStatus?: string;
 };
 
 export interface TtsProvider {

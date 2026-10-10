@@ -1,6 +1,6 @@
 # Lugemi Android SDK (Kotlin)
 
-Official Android / Kotlin client for Lugemi speech, translate, ASR, detect, streaming translate, **VoiceBridge**, and **DealBridge**.
+Official Android / Kotlin client for Lugemi speech, translate, ASR, detect, streaming translate, **VoiceBridge**, **DealBridge**, and **Voice Studio**.
 
 ## Install
 
@@ -17,7 +17,7 @@ Then in your app:
 
 ```kotlin
 dependencies {
-  implementation("com.lugemi:sdk-android:0.2.0")
+  implementation("com.lugemi:sdk-android:0.3.0")
 }
 ```
 
@@ -37,6 +37,23 @@ Requires `INTERNET` permission. On Android, `org.json` is bundled.
 
 Typed results: `SpeechResult`, `TranslateResult`, `DetectResult`, `TranscribeResult`, `SpeechRecognizeResult`.  
 Errors: `LugemiException` with `code`, `status`, `isConflict`, `isFeatureDisabled`, `isAuthError`.
+
+## Voice Studio
+
+`client.voiceStudio` covers the collaborative workspace: projects, script import, editions, translation, generation, native review, assembly, exact-hash release approval, and WAV export. Also `preview` / `library` / `engine`.
+
+Audio helpers reject JSON/HTML error bodies so apps never play fixture/error payloads as speech.
+
+```kotlin
+val studio = client.voiceStudio
+val project = studio.createProject(name = "Market announcement", sourceLanguage = "en")
+studio.importScript(project.getString("id"), "Welcome to Lugemi.")
+val edition = studio.createEdition(
+  projectId = project.getString("id"),
+  languageVariety = "sw-KE",
+  voiceId = "own:sw-ke-female",
+)
+```
 
 ## VoiceBridge / DealBridge
 

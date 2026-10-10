@@ -100,7 +100,7 @@ describe('Voice Studio', () => {
     expect(existsSync(adr)).toBe(true);
     const text = readFileSync(doc, 'utf8');
     expect(text).toContain('SSML lite');
-    expect(text).toMatch(/is \*\*not\*\* a full nonlinear/i);
+    expect(text).toMatch(/not\*\* a nonlinear DAW|Not\*\* a nonlinear DAW|not a nonlinear DAW/i);
   });
 
   it('compiles SSML lite without spoken stage directions', () => {

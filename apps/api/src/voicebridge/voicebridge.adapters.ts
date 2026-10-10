@@ -167,11 +167,21 @@ export class VoiceBridgeAdapters {
       };
     } catch {
       if (process.env.VOICEBRIDGE_ALLOW_FIXTURE_TTS === '1' || process.env.NODE_ENV === 'test') {
+        // Never return text bytes as audio/wav — that produces browser beeps/noise.
+        const { generateSpeechWav } = await import('../gateway/own-tts.adapter');
+        const wav = generateSpeechWav(
+          input.text,
+          process.env.VOICEBRIDGE_TTS_VOICE?.startsWith('own:')
+            ? process.env.VOICEBRIDGE_TTS_VOICE
+            : 'own:en-us-female',
+          'en-US',
+          { allowFormant: true },
+        );
         return {
-          audio: Buffer.from(`fixture-tts:${input.text}`),
+          audio: wav.audio,
           mimeType: 'audio/wav',
           provider: 'voicebridge-fixture-tts',
-          modelVersion: 'fixture-v1',
+          modelVersion: `fixture-${wav.engine}`,
           status: 'fixture',
         };
       }

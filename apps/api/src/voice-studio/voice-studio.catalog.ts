@@ -13,8 +13,24 @@ export function voiceStudioEngineCatalog() {
   return {
     product: 'Lugemi Voice Studio',
     note:
-      'Professional Voice Studio hub over Neural TTS, clones, and African studio UX. Linear timeline + SSML lite + pronunciation lexicon + voice comparison — not a nonlinear DAW / NLE / overdub parity product.',
+      'Collaborative workspace: script → translation → speech → native review → approved export. Also ships library/SSML lite/lexicon/linear timeline tools. Not a nonlinear DAW / NLE / overdub product. Native review is human-only.',
     capabilities: [
+      {
+        id: 'workspace-workflow',
+        name: 'Studio workspace workflow',
+        status: 'shipped',
+        api: 'GET|POST /v1/voice-studio/workspace/*',
+        notes:
+          'Private projects, immutable source revisions, editions, generation, native reviews, assembly, exact-hash release + WAV export with provenance manifest.',
+      },
+      {
+        id: 'pronunciation-memory',
+        name: 'Pronunciation memory',
+        status: 'shipped',
+        api: 'POST /v1/voice-studio/workspace/pronunciations',
+        notes:
+          'Versioned entries with model compatibility + native-review status; approved aliases pin into the workspace lexicon.',
+      },
       {
         id: 'voice-library',
         name: 'Voice Library',
