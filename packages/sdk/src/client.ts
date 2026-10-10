@@ -1,4 +1,7 @@
 import { LugemiError } from './errors.js';
+import { VoiceBridgeClient } from './voicebridge.js';
+import { DealBridgeClient } from './dealbridge.js';
+import type { BridgeTransport } from './bridge-transport.js';
 import type {
   ChatCompletionRequest,
   ChatCompletionResponse,
@@ -140,6 +143,11 @@ export class Lugemi {
   private readonly apiKey: string;
   private readonly baseUrl: string;
   private readonly fetchImpl: typeof fetch;
+  private actorId?: string;
+  private organizationId?: string;
+  private workspaceId?: string;
+  private _voiceBridge?: VoiceBridgeClient;
+  private _dealBridge?: DealBridgeClient;
 
   constructor(options: LugemiClientOptions) {
     const key = options.apiKey ?? '';
@@ -156,6 +164,65 @@ export class Lugemi {
     this.apiKey = options.apiKey;
     this.baseUrl = (options.baseUrl ?? 'https://api.lugemi.com').replace(/\/$/, '');
     this.fetchImpl = options.fetch ?? fetch;
+    this.actorId = options.actorId;
+    this.organizationId = options.organizationId;
+    this.workspaceId = options.workspaceId;
+  }
+
+  /** Update actor / tenant context used by VoiceBridge and DealBridge. */
+  setBridgeContext(next: { actorId?: string; organizationId?: string; workspaceId?: string }) {
+    if (next.actorId !== undefined) this.actorId = next.actorId;
+    if (next.organizationId !== undefined) this.organizationId = next.organizationId;
+    if (next.workspaceId !== undefined) this.workspaceId = next.workspaceId;
+    this._voiceBridge?.setContext(next);
+    this._dealBridge?.setContext(next);
+  }
+
+  get voiceBridge(): VoiceBridgeClient {
+    if (!this._voiceBridge) {
+      this._voiceBridge = new VoiceBridgeClient({
+        transport: this.bridgeTransport(),
+        headers: {
+          actorId: this.actorId,
+          organizationId: this.organizationId,
+          workspaceId: this.workspaceId,
+        },
+      });
+    }
+    return this._voiceBridge;
+  }
+
+  get dealBridge(): DealBridgeClient {
+    if (!this._dealBridge) {
+      this._dealBridge = new DealBridgeClient({
+        transport: this.bridgeTransport(),
+        headers: {
+          actorId: this.actorId,
+          organizationId: this.organizationId,
+          workspaceId: this.workspaceId,
+        },
+      });
+    }
+    return this._dealBridge;
+  }
+
+  private bridgeTransport(): BridgeTransport {
+    return {
+      requestJson: <T>(
+        path: string,
+        init: { method?: string; body?: unknown; headers?: Record<string, string> } = {},
+      ) =>
+        this.requestJson<T>(path, {
+          method: init.method,
+          body: init.body as JsonRequestInit['body'],
+          headers: init.headers,
+        }),
+      requestForm: <T>(
+        path: string,
+        form: FormData,
+        init: { headers?: Record<string, string> } = {},
+      ) => this.requestFormWithHeaders<T>(path, form, init.headers),
+    };
   }
 
   async translate(input: TranslateRequest): Promise<TranslateResponse> {
@@ -5211,11 +5278,20 @@ export class Lugemi {
   }
 
   private async requestForm<T>(path: string, form: FormData): Promise<T> {
+    return this.requestFormWithHeaders<T>(path, form);
+  }
+
+  private async requestFormWithHeaders<T>(
+    path: string,
+    form: FormData,
+    headers?: Record<string, string>,
+  ): Promise<T> {
     const response = await this.fetchImpl(`${this.baseUrl}${path}`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${this.apiKey}`,
         Accept: 'application/json',
+        ...(headers ?? {}),
       },
       body: form,
     });
