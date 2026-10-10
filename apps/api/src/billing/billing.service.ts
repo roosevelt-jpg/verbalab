@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { HttpStatus } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import Stripe from 'stripe';
@@ -19,7 +19,7 @@ import { UsageService } from '../usage/usage.service';
 import { AuditService } from '../audit/audit.service';
 
 @Injectable()
-export class BillingService {
+export class BillingService implements OnModuleInit {
   private stripe: Stripe | null = null;
 
   constructor(
@@ -34,6 +34,44 @@ export class BillingService {
     }
   }
 
+  async onModuleInit() {
+    await this.ensureBasePlanCatalog();
+  }
+
+  /**
+   * Seed the four base plans into PlanCatalogEntry when missing.
+   * Never overwrites rows an admin has already edited (create-only upsert).
+   */
+  async ensureBasePlanCatalog() {
+    for (const p of listPlans()) {
+      await this.prisma.planCatalogEntry.upsert({
+        where: { id: p.id },
+        create: {
+          id: p.id,
+          name: p.name,
+          rank: p.rank,
+          characterQuota: p.characterQuota,
+          sttMinutesQuota: p.sttMinutesQuota,
+          ttsCharsQuota: p.ttsCharsQuota,
+          translateCharsQuota: p.translateCharsQuota,
+          chatTokensQuota: p.chatTokensQuota,
+          ocrPagesQuota: p.ocrPagesQuota,
+          workspaceLimit: p.workspaceLimit,
+          priceMonthlyUsd: p.priceMonthlyUsd,
+          priceLabel: p.priceLabel,
+          blurb: p.blurb,
+          features: p.features,
+          highlight: Boolean(p.highlight),
+          stripePriceId: null,
+          active: true,
+          isCustom: false,
+        },
+        // Keep admin edits intact on subsequent boots.
+        update: {},
+      });
+    }
+  }
+
   getAvailableTopUpPacks(): TopUpPack[] {
     return TOP_UP_PACKS;
   }
@@ -41,11 +79,20 @@ export class BillingService {
   isConfigured(): boolean {
     return Boolean(
       this.stripe &&
-        (process.env.STRIPE_PRICE_ID_PRO || process.env.STRIPE_PRICE_ID_BUSINESS) &&
         process.env.STRIPE_WEBHOOK_SECRET &&
         process.env.BILLING_SUCCESS_URL &&
         process.env.BILLING_CANCEL_URL,
     );
+  }
+
+  private stripePriceForPlan(p: PlanDefinition): string | undefined {
+    const fromCatalog = p.stripePriceId?.trim();
+    if (fromCatalog) return fromCatalog;
+    if (p.stripePriceEnv) {
+      const fromEnv = process.env[p.stripePriceEnv]?.trim();
+      if (fromEnv) return fromEnv;
+    }
+    return undefined;
   }
 
   async listAllPlans(): Promise<PlanDefinition[]> {
@@ -71,6 +118,8 @@ export class BillingService {
         priceLabel: override.priceLabel,
         blurb: override.blurb,
         features: (override.features as PlanFeature[]) ?? p.features,
+        highlight: override.highlight,
+        stripePriceId: override.stripePriceId ?? undefined,
       };
     });
 
@@ -91,6 +140,8 @@ export class BillingService {
         priceLabel: override.priceLabel,
         blurb: override.blurb,
         features: (override.features as PlanFeature[]) ?? ['speech', 'translate', 'playground'],
+        highlight: override.highlight,
+        stripePriceId: override.stripePriceId ?? undefined,
         rateLimitPerKey: 300,
         rateLimitPerOrg: 1000,
         isCustom: true,
@@ -120,6 +171,8 @@ export class BillingService {
       priceLabel: dbEntry.priceLabel,
       blurb: dbEntry.blurb,
       features: (dbEntry.features as PlanFeature[]) ?? fallback.features,
+      highlight: dbEntry.highlight,
+      stripePriceId: dbEntry.stripePriceId ?? undefined,
       isCustom: dbEntry.isCustom,
     };
   }
@@ -144,8 +197,7 @@ export class BillingService {
       highlight: Boolean(p.highlight),
       isCustom: Boolean(p.isCustom),
       checkoutAvailable: Boolean(
-        (p.stripePriceEnv && process.env[p.stripePriceEnv]?.trim() && this.stripe) ||
-          p.id === 'free',
+        p.id === 'free' || (this.stripe && this.stripePriceForPlan(p)),
       ),
     }));
   }
@@ -710,6 +762,7 @@ export class BillingService {
         priceLabel: override.priceLabel,
         blurb: override.blurb,
         features: (override.features as PlanFeature[]) ?? p.features,
+        highlight: override.highlight,
         stripePriceId: override.stripePriceId ?? undefined,
         active: override.active,
         isCustom: false,
@@ -733,6 +786,7 @@ export class BillingService {
         priceLabel: override.priceLabel,
         blurb: override.blurb,
         features: (override.features as PlanFeature[]) ?? ['speech', 'translate', 'playground'],
+        highlight: override.highlight,
         stripePriceId: override.stripePriceId ?? undefined,
         rateLimitPerKey: 300,
         rateLimitPerOrg: 1000,
@@ -758,6 +812,8 @@ export class BillingService {
     priceLabel?: string;
     blurb?: string;
     features?: PlanFeature[];
+    stripePriceId?: string | null;
+    highlight?: boolean;
     actorUserId: string;
     ip?: string;
   }) {
@@ -786,6 +842,8 @@ export class BillingService {
         priceLabel: input.priceLabel ?? '$99',
         blurb: input.blurb ?? '',
         features: input.features ?? ['speech', 'translate', 'playground'],
+        stripePriceId: input.stripePriceId?.trim() || null,
+        highlight: Boolean(input.highlight),
         isCustom: !BASE_PLAN_IDS.includes(slug as any),
         active: true,
       },
@@ -821,6 +879,7 @@ export class BillingService {
       blurb: string;
       features: PlanFeature[];
       stripePriceId: string | null;
+      highlight: boolean;
       active: boolean;
     }>,
     actorUserId: string,
@@ -848,6 +907,10 @@ export class BillingService {
         input.stripePriceId !== undefined
           ? input.stripePriceId
           : (existing?.stripePriceId ?? null),
+      highlight:
+        input.highlight !== undefined
+          ? Boolean(input.highlight)
+          : (existing?.highlight ?? Boolean(fallback.highlight)),
       active: input.active ?? existing?.active ?? true,
       isCustom: !BASE_PLAN_IDS.includes(slug as any),
     };
@@ -922,22 +985,22 @@ export class BillingService {
       );
     }
 
-    const targetPlan = planFromId(input.planId ?? 'pro');
-    if (targetPlan.id === 'free' || targetPlan.id === 'enterprise' || !targetPlan.stripePriceEnv) {
+    const targetPlan = await this.resolvePlan(input.planId ?? 'pro');
+    if (targetPlan.id === 'free') {
       throw new ApiException(
         'validation_error',
-        targetPlan.id === 'enterprise'
-          ? 'Enterprise is sold via sales — talk to us.'
-          : 'Select a paid plan to checkout.',
+        'Select a paid plan to checkout.',
         HttpStatus.BAD_REQUEST,
       );
     }
 
-    const priceId = process.env[targetPlan.stripePriceEnv]?.trim();
+    const priceId = this.stripePriceForPlan(targetPlan);
     if (!priceId) {
       throw new ApiException(
         'billing_not_configured',
-        `${targetPlan.stripePriceEnv} is not set for ${targetPlan.name}.`,
+        targetPlan.id === 'enterprise' && !targetPlan.stripePriceId
+          ? 'Enterprise is sold via sales — talk to us, or set a Stripe price on the plan in Admin.'
+          : `No Stripe price configured for ${targetPlan.name}. Set stripePriceId on the plan or ${targetPlan.stripePriceEnv ?? 'STRIPE_PRICE_ID_*'}.`,
         HttpStatus.SERVICE_UNAVAILABLE,
       );
     }
@@ -1015,7 +1078,7 @@ export class BillingService {
     stripeSubscriptionId?: string | null;
     billingStatus?: string;
   }) {
-    const plan = planFromId(input.plan);
+    const plan = await this.resolvePlan(input.plan);
     const updated = await this.prisma.organization.update({
       where: { id: input.organizationId },
       data: {
@@ -1173,12 +1236,12 @@ export class BillingService {
   }
 
   /** Test helper — apply entitlement without Stripe. */
-  applyEntitlementForTests(input: {
+  async applyEntitlementForTests(input: {
     organizationId: string;
     plan: PlanId;
     characterQuota?: number;
   }) {
-    const plan = planFromId(input.plan);
+    const plan = await this.resolvePlan(input.plan);
     return this.prisma.organization.update({
       where: { id: input.organizationId },
       data: {

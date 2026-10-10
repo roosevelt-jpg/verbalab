@@ -114,6 +114,7 @@ type AdminPlan = {
   blurb?: string;
   features?: string[];
   stripePriceId?: string | null;
+  highlight?: boolean;
   active?: boolean;
   isCustom?: boolean;
 };
@@ -707,6 +708,7 @@ export function AdminWorkspacesClient() {
                         )}
                       </ul>
                       <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginTop: '0.35rem' }}>
+                        {p.highlight ? <span className="vl-tag">Popular</span> : null}
                         {p.active === false ? <span className="vl-tag">Hidden</span> : null}
                         {p.isCustom ? <span className="vl-tag">Custom</span> : null}
                       </div>
@@ -838,6 +840,14 @@ export function AdminWorkspacesClient() {
                     <label style={{ display: 'flex', gap: '0.45rem', alignItems: 'center', fontSize: '0.9rem' }}>
                       <input
                         type="checkbox"
+                        checked={Boolean(editingPlan.highlight)}
+                        onChange={(e) => setEditingPlan({ ...editingPlan, highlight: e.target.checked })}
+                      />
+                      Highlight as Popular on Pricing
+                    </label>
+                    <label style={{ display: 'flex', gap: '0.45rem', alignItems: 'center', fontSize: '0.9rem' }}>
+                      <input
+                        type="checkbox"
                         checked={editingPlan.active !== false}
                         onChange={(e) => setEditingPlan({ ...editingPlan, active: e.target.checked })}
                       />
@@ -870,6 +880,7 @@ export function AdminWorkspacesClient() {
                                 blurb: editingPlan.blurb ?? '',
                                 features: editingPlan.features ?? [],
                                 stripePriceId: editingPlan.stripePriceId ?? null,
+                                highlight: Boolean(editingPlan.highlight),
                                 active: editingPlan.active !== false,
                               }),
                             });

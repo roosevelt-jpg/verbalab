@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import {
+  ApolloServerPluginLandingPageLocalDefault,
+  ApolloServerPluginLandingPageProductionDefault,
+} from '@apollo/server/plugin/landingPage/default';
 import { ApiKeysModule } from '../api-keys/api-keys.module';
 import { IdentityModule } from '../identity/identity.module';
 import { RateLimitModule } from '../rate-limit/rate-limit.module';
@@ -373,8 +377,15 @@ import { AnalyticsModule } from '../analytics/analytics.module';
       sortSchema: true,
       path: '/graphql',
       playground: false,
-      introspection: process.env.NODE_ENV !== 'production',
+      // Keep CSRF on — browser GET without Apollo headers used to return a bare BAD_REQUEST JSON.
+      // Landing page serves Sandbox HTML (safe headers) instead of treating the visit as a query.
       csrfPrevention: true,
+      introspection: process.env.GRAPHQL_INTROSPECTION === '1' || process.env.NODE_ENV !== 'production',
+      plugins: [
+        process.env.NODE_ENV === 'production'
+          ? ApolloServerPluginLandingPageProductionDefault({ footer: false })
+          : ApolloServerPluginLandingPageLocalDefault({ embed: true }),
+      ],
       context: ({ req, res }: { req: unknown; res: unknown }) => ({ req, res }),
     }),
     LanguageCloudApplicationModule,

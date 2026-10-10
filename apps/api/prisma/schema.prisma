@@ -1834,6 +1834,7 @@ model PlanCatalogEntry {
   blurb            String   @default("")
   features         Json     @default("[]")
   stripePriceId    String?  @map("stripe_price_id")
+  highlight        Boolean  @default(false)
   active           Boolean  @default(true)
   isCustom         Boolean  @default(false) @map("is_custom")
   createdAt        DateTime @default(now()) @map("created_at")

@@ -109,8 +109,10 @@ describe('Admin + customer portal', () => {
       data: { plan: 'business', characterQuota: 11_000_000 },
     });
 
-    const plans = admin.listPlanFilters();
-    expect(plans.map((p) => p.id)).toEqual(['free', 'pro', 'business', 'enterprise']);
+    const plans = await admin.listPlanFilters();
+    expect(plans.map((p) => p.id)).toEqual(
+      expect.arrayContaining(['free', 'pro', 'business', 'enterprise']),
+    );
 
     const freeOnly = await admin.searchOrganizations('adminPlan', undefined, 'free');
     expect(freeOnly.some((o) => o.id === freeOrg.id)).toBe(true);

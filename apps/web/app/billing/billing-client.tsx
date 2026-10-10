@@ -74,8 +74,6 @@ type MemberRow = {
   user: { id: string; email: string | null; name: string | null };
 };
 
-const CANONICAL_PLAN_IDS = new Set(WEB_BILLING_PLANS.map((p) => p.id));
-
 function localMockSummary(): BillingSummary {
   const free = WEB_BILLING_PLANS[0]!;
   return {
@@ -107,12 +105,9 @@ function isNetworkLoadError(err: unknown): boolean {
   );
 }
 
-/** Keep base plans and custom CMS/admin created plans */
-function onlyFourPlans(plans: PlanCard[]): PlanCard[] {
-  if (plans && plans.length >= 4) return plans;
-  const filtered = plans.filter((p) => CANONICAL_PLAN_IDS.has(p.id as (typeof WEB_BILLING_PLANS)[number]['id']));
-  if (filtered.length === 4) return filtered;
-  return WEB_BILLING_PLANS;
+/** Prefer live admin catalog; fall back to the hardcoded four-plan seed. */
+function catalogOrFallback(plans: PlanCard[]): PlanCard[] {
+  return plans?.length ? plans : WEB_BILLING_PLANS;
 }
 
 function normalizeSummary(summary: BillingSummary): BillingSummary {
@@ -144,7 +139,7 @@ export function BillingClient() {
     // Public plans catalog — no auth required.
     try {
       const planRes = await apiFetch<{ plans: PlanCard[] }>('/v1/billing/plans');
-      setPlans(onlyFourPlans(planRes.plans));
+      setPlans(catalogOrFallback(planRes.plans));
     } catch {
       setPlans(WEB_BILLING_PLANS);
     }

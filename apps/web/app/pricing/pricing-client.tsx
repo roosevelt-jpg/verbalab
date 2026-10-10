@@ -10,7 +10,6 @@ import {
   WEB_BILLING_PLANS,
   formatWorkspaceLimit,
   planById,
-  type WebPlan,
 } from '@/data/billing-plans';
 
 type PlanCard = {
@@ -33,8 +32,6 @@ type BillingLite = {
   stripeConfigured: boolean;
   hasCustomer: boolean;
 };
-
-const CANONICAL_IDS = new Set(WEB_BILLING_PLANS.map((p) => p.id));
 
 const COMPARE_ROWS: { key: string; label: string; kind: 'feature' | 'quota' | 'workspaces' }[] = [
   { key: 'quota', label: 'Characters / month', kind: 'quota' },
@@ -73,15 +70,10 @@ const FAQ: { q: string; a: string }[] = [
   },
 ];
 
-function onlyFourPlans(plans: unknown): PlanCard[] {
+function catalogOrFallback(plans: unknown): PlanCard[] {
   // Guard: API used to return a bare Promise (serialized as {}) when not awaited.
   if (!Array.isArray(plans) || plans.length === 0) return WEB_BILLING_PLANS;
-  const list = plans as PlanCard[];
-  // If plans from backend contains custom plans or the 4 base plans, preserve them
-  if (list.length >= 4) return list;
-  const filtered = list.filter((p) => CANONICAL_IDS.has(p.id as WebPlan['id']));
-  if (filtered.length === 4) return filtered;
-  return WEB_BILLING_PLANS;
+  return plans as PlanCard[];
 }
 
 function cellValue(plan: PlanCard, row: (typeof COMPARE_ROWS)[number]): string {
@@ -146,7 +138,7 @@ function PricingFlow({
       const planRes = await apiFetch<{ plans: PlanCard[]; stripeConfigured?: boolean }>(
         '/v1/billing/plans',
       );
-      setPlans(onlyFourPlans(planRes.plans));
+      setPlans(catalogOrFallback(planRes.plans));
     } catch (err) {
       setPlans(WEB_BILLING_PLANS);
       if (!(err instanceof Error && /load failed|failed to fetch|network/i.test(err.message))) {
