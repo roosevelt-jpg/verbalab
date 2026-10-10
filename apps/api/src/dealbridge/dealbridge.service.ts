@@ -1087,16 +1087,17 @@ export class DealBridgeService {
       },
     });
     if (existing) {
+      const existingReceiptId =
+        (
+          await this.prisma.dealReceipt.findFirst({
+            where: { sessionId, snapshotId: body.snapshotId },
+            select: { id: true },
+          })
+        )?.id ?? null;
       return {
-        confirmationId: existing.id,
-        receiptId:
-          (
-            await this.prisma.dealReceipt.findFirst({
-              where: { sessionId, snapshotId: body.snapshotId },
-              select: { id: true },
-            })
-          )?.id ?? null,
         ...(await this.sessionView(sessionId, actor)),
+        confirmationId: existing.id,
+        receiptId: existingReceiptId,
       };
     }
     const conflict = await this.prisma.dealConfirmation.findFirst({
@@ -1164,7 +1165,11 @@ export class DealBridgeService {
         },
       });
       await this.transition(sessionId, session.state as DealState, 'declined', actor.userId);
-      return { confirmationId: confirmation.id, ...(await this.sessionView(sessionId, actor)) };
+      return {
+        ...(await this.sessionView(sessionId, actor)),
+        confirmationId: confirmation.id,
+        receiptId: null as string | null,
+      };
     }
 
     if (body.action === 'change') {
@@ -1182,7 +1187,11 @@ export class DealBridgeService {
         },
       });
       await this.transition(sessionId, session.state as DealState, 'active', actor.userId);
-      return { confirmationId: confirmation.id, ...(await this.sessionView(sessionId, actor)) };
+      return {
+        ...(await this.sessionView(sessionId, actor)),
+        confirmationId: confirmation.id,
+        receiptId: null as string | null,
+      };
     }
 
     // confirm
@@ -1403,9 +1412,9 @@ export class DealBridgeService {
     );
 
     return {
+      ...(await this.sessionView(sessionId, actor)),
       confirmationId: result.confirmation.id,
       receiptId: result.receipt?.id ?? null,
-      ...(await this.sessionView(sessionId, actor)),
     };
   }
 
