@@ -9,6 +9,8 @@ import { VoiceBridgeService } from '../voicebridge/voicebridge.service';
 import { MeetingBridgeAdapters } from './meetingbridge.adapters';
 import { meetingbridgeCatalog } from './meetingbridge.catalog';
 import { contentHash, hashInviteToken, mintEventId, mintInviteToken, mintTurnId } from './meetingbridge.hash';
+import { MeetingBridgeIntegrations, type ConferencingProvider } from './meetingbridge.integrations';
+import { MeetingBridgeMediaService } from './meetingbridge.media';
 import { assertItemTransition, assertMeetingTransition } from './meetingbridge.state-machine';
 import {
   CONFIRM_ACTIONS,
@@ -35,7 +37,13 @@ export type MeetingActor = {
   ip?: string;
 };
 
-const SYNC_DESTINATIONS = ['private_download', 'internal_queue'] as const;
+const SYNC_DESTINATIONS = [
+  'private_download',
+  'internal_queue',
+  'slack',
+  'email',
+  'calendar',
+] as const;
 type SyncDestination = (typeof SYNC_DESTINATIONS)[number];
 
 @Injectable()
@@ -46,10 +54,15 @@ export class MeetingBridgeService {
     private readonly adapters: MeetingBridgeAdapters,
     private readonly dealbridge: DealBridgeService,
     private readonly voicebridge: VoiceBridgeService,
+    private readonly media: MeetingBridgeMediaService,
+    private readonly integrations: MeetingBridgeIntegrations,
   ) {}
 
   catalog() {
-    return meetingbridgeCatalog();
+    return meetingbridgeCatalog({
+      media: this.media.capability(),
+      integrations: this.integrations.capabilities(),
+    });
   }
 
   async assertEnabled(organizationId: string) {
@@ -230,8 +243,12 @@ export class MeetingBridgeService {
           terminologySnapshot: input.terminology ?? {},
           approvalPolicy: DEFAULT_APPROVAL_POLICY,
           maxParticipants,
-          interpretationMode: 'turn_taking',
-          mediaMode: process.env.MEETINGBRIDGE_MEDIA_URL?.trim() ? 'webrtc' : 'phrase_upload',
+          interpretationMode:
+            this.media.capability().simultaneousInterpretation &&
+            process.env.MEETINGBRIDGE_SIMULTANEOUS === '1'
+              ? 'simultaneous_optional'
+              : 'turn_taking',
+          mediaMode: this.media.capability().mode,
           isDemo: Boolean(input.isDemo),
           isFixture: process.env.NODE_ENV === 'test',
         },
@@ -1382,10 +1399,15 @@ export class MeetingBridgeService {
   async syncItem(
     meetingId: string,
     actor: MeetingActor,
-    input: { itemId: string; destination?: string; idempotencyKey: string },
+    input: {
+      itemId: string;
+      destination?: string;
+      idempotencyKey: string;
+      target?: string;
+    },
   ) {
     await this.assertEnabled(actor.organizationId);
-    await this.requireMeeting(meetingId, actor.organizationId);
+    const meeting = await this.requireMeeting(meetingId, actor.organizationId);
     const member = await this.requireMember(meetingId, actor.userId);
     if (member.role !== 'organizer') {
       throw new ApiException('forbidden', 'Only the organizer can sync tasks', HttpStatus.FORBIDDEN);
@@ -1398,7 +1420,7 @@ export class MeetingBridgeService {
     if (!SYNC_DESTINATIONS.includes(destination)) {
       throw new ApiException(
         'unsupported_destination',
-        `Destination "${input.destination}" is not allowlisted. Allowed: ${SYNC_DESTINATIONS.join(', ')}. No Slack/email/calendar writes.`,
+        `Destination "${input.destination}" is not allowlisted. Allowed: ${SYNC_DESTINATIONS.join(', ')}.`,
         HttpStatus.UNPROCESSABLE_ENTITY,
       );
     }
@@ -1458,13 +1480,110 @@ export class MeetingBridgeService {
       `"${item.kind}","${String(item.activeRevision.wording).replace(/"/g, '""')}","${item.activeRevision.dueDate ?? ''}","${(item.activeRevision.ownerParticipantIds as string[]).join(';')}","${item.id}","${item.activeRevision.revisionNumber}"`,
     ].join('\n');
 
+    const textSummary = [
+      `MeetingBridge action: ${item.activeRevision.wording}`,
+      item.activeRevision.dueDate ? `Due: ${item.activeRevision.dueDate}` : null,
+      `Owners: ${(item.activeRevision.ownerParticipantIds as string[]).join(', ') || '—'}`,
+      `Meeting: ${meeting.title}`,
+    ]
+      .filter(Boolean)
+      .join('\n');
+
+    let external: { provider: string; externalId: string | null | undefined; fixture: boolean } | null =
+      null;
+    let note = 'Private download ready.';
+
+    if (destination === 'slack') {
+      const channel = input.target?.trim();
+      if (!channel) {
+        throw new ApiException(
+          'validation_error',
+          'target (Slack channel id or name) is required for slack sync',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      external = await this.integrations.postSlack({ channel, text: textSummary });
+      note = external.fixture
+        ? 'Fixture Slack post recorded (labeled).'
+        : 'Posted to Slack via chat.postMessage.';
+    } else if (destination === 'email') {
+      const to = input.target?.trim();
+      if (!to) {
+        throw new ApiException(
+          'validation_error',
+          'target (email address) is required for email sync',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+      external = await this.integrations.sendEmail({
+        to,
+        subject: `MeetingBridge: ${meeting.title}`,
+        text: textSummary,
+      });
+      note = external.fixture ? 'Fixture email recorded (labeled).' : 'Email sent via configured provider.';
+    } else if (destination === 'calendar') {
+      const startsAt = new Date();
+      const endsAt = new Date(startsAt.getTime() + 30 * 60_000);
+      const ics = this.integrations.buildIcs({
+        title: `Action: ${item.activeRevision.wording}`,
+        description: textSummary,
+        startsAt,
+        endsAt,
+        uid: `${item.id}@meetingbridge.lugemi`,
+      });
+      external = await this.integrations.writeGoogleCalendar({
+        title: `Action: ${item.activeRevision.wording}`,
+        description: textSummary,
+        startsAt,
+        endsAt,
+      });
+      note =
+        external.provider === 'ics_only'
+          ? 'ICS calendar artifact ready. Google Calendar write skipped (no access token).'
+          : external.fixture
+            ? 'Fixture Google Calendar write recorded (labeled).'
+            : 'Google Calendar event created.';
+      const row = await this.prisma.meetingExport.create({
+        data: {
+          meetingId,
+          minutesRevisionId: minutes.id,
+          format: 'csv_tasks',
+          destination,
+          status: 'ready',
+          storageKey: `meetingbridge/${meetingId}/sync/${randomBytes(8).toString('hex')}.ics`,
+          idempotencyKey: input.idempotencyKey,
+          createdById: actor.userId,
+        },
+      });
+      await this.audit({
+        organizationId: actor.organizationId,
+        meetingId,
+        actorId: actor.userId,
+        operation: 'item.sync',
+        meta: { itemId: item.id, destination, exportId: row.id, external },
+      });
+      return {
+        sync: { ...row, body: ics },
+        item: {
+          id: item.id,
+          wording: item.activeRevision.wording,
+          dueDate: item.activeRevision.dueDate,
+          owners: item.activeRevision.ownerParticipantIds,
+        },
+        external,
+        note,
+      };
+    } else if (destination === 'internal_queue') {
+      note = 'Queued on the allowlisted internal destination.';
+    }
+
     const row = await this.prisma.meetingExport.create({
       data: {
         meetingId,
         minutesRevisionId: minutes.id,
         format: 'csv_tasks',
         destination,
-        status: destination === 'internal_queue' ? 'queued' : 'ready',
+        status: destination === 'internal_queue' || external ? 'queued' : 'ready',
         storageKey: `meetingbridge/${meetingId}/sync/${randomBytes(8).toString('hex')}.csv`,
         idempotencyKey: input.idempotencyKey,
         createdById: actor.userId,
@@ -1476,7 +1595,7 @@ export class MeetingBridgeService {
       meetingId,
       actorId: actor.userId,
       operation: 'item.sync',
-      meta: { itemId: item.id, destination, exportId: row.id },
+      meta: { itemId: item.id, destination, exportId: row.id, external },
     });
 
     return {
@@ -1487,10 +1606,8 @@ export class MeetingBridgeService {
         dueDate: item.activeRevision.dueDate,
         owners: item.activeRevision.ownerParticipantIds,
       },
-      note:
-        destination === 'internal_queue'
-          ? 'Queued on the allowlisted internal destination. No third-party task system was written.'
-          : 'Private download ready. No third-party task system was written.',
+      external,
+      note,
     };
   }
 
@@ -1620,6 +1737,358 @@ export class MeetingBridgeService {
       });
       throw err;
     }
+  }
+
+  async mintMediaToken(meetingId: string, actor: MeetingActor) {
+    await this.assertEnabled(actor.organizationId);
+    await this.requireMeeting(meetingId, actor.organizationId);
+    const member = await this.requireMember(meetingId, actor.userId);
+    const minted = this.media.mintRoomToken({
+      meetingId,
+      userId: actor.userId,
+      role: member.role,
+    });
+    await this.audit({
+      organizationId: actor.organizationId,
+      meetingId,
+      actorId: actor.userId,
+      operation: 'media.token',
+      meta: { mode: minted.mode },
+    });
+    return {
+      ...minted,
+      capability: this.media.capability(),
+      peers: (
+        await this.prisma.meetingMembership.findMany({
+          where: { meetingId, active: true },
+          select: { userId: true, role: true, presence: true },
+        })
+      ).filter((m) => m.userId !== actor.userId),
+    };
+  }
+
+  async postMediaSignal(
+    meetingId: string,
+    actor: MeetingActor,
+    input: {
+      token: string;
+      toUserId: string;
+      kind: 'offer' | 'answer' | 'ice';
+      payload: unknown;
+    },
+  ) {
+    await this.assertEnabled(actor.organizationId);
+    await this.requireMeeting(meetingId, actor.organizationId);
+    await this.requireMember(meetingId, actor.userId);
+    if (!input.toUserId?.trim()) {
+      throw new ApiException('validation_error', 'toUserId is required', HttpStatus.BAD_REQUEST);
+    }
+    if (!['offer', 'answer', 'ice'].includes(input.kind)) {
+      throw new ApiException('validation_error', 'kind must be offer|answer|ice', HttpStatus.BAD_REQUEST);
+    }
+    return this.media.postSignal({
+      meetingId,
+      fromUserId: actor.userId,
+      toUserId: input.toUserId,
+      kind: input.kind,
+      payload: input.payload,
+      token: input.token,
+    });
+  }
+
+  async pullMediaSignals(
+    meetingId: string,
+    actor: MeetingActor,
+    input: { token: string; afterId?: string },
+  ) {
+    await this.assertEnabled(actor.organizationId);
+    await this.requireMeeting(meetingId, actor.organizationId);
+    await this.requireMember(meetingId, actor.userId);
+    return this.media.pullSignals({
+      meetingId,
+      userId: actor.userId,
+      token: input.token,
+      afterId: input.afterId,
+    });
+  }
+
+  async lobbyMicCheck(
+    meetingId: string,
+    actor: MeetingActor,
+    input: {
+      deviceLabel?: string;
+      sampleRate?: number;
+      levelPeak?: number;
+      muted?: boolean;
+    } = {},
+  ) {
+    await this.assertEnabled(actor.organizationId);
+    const meeting = await this.requireMeeting(meetingId, actor.organizationId);
+    await this.requireMember(meetingId, actor.userId);
+    if (!['scheduled', 'lobby', 'live'].includes(meeting.state)) {
+      throw new ApiException(
+        'conflict',
+        'Mic check is only available before or during an open room',
+        HttpStatus.CONFLICT,
+      );
+    }
+    const peak = Number(input.levelPeak ?? 0);
+    const ok = !input.muted && peak > 0.01;
+    const mediaToken = this.media.capability().provisioned
+      ? this.media.mintRoomToken({
+          meetingId,
+          userId: actor.userId,
+          role: (await this.requireMember(meetingId, actor.userId)).role,
+        })
+      : null;
+    await this.audit({
+      organizationId: actor.organizationId,
+      meetingId,
+      actorId: actor.userId,
+      operation: 'lobby.mic_check',
+      meta: {
+        deviceLabel: input.deviceLabel ?? null,
+        sampleRate: input.sampleRate ?? null,
+        levelPeak: peak,
+        muted: Boolean(input.muted),
+        ok,
+      },
+    });
+    return {
+      ok,
+      note: ok
+        ? 'Microphone level detected. You can enter the room.'
+        : 'No usable microphone level detected. Unmute and speak briefly, then retry.',
+      deviceLabel: input.deviceLabel ?? null,
+      levelPeak: peak,
+      media: this.media.capability(),
+      mediaToken,
+      ghanaVoices: this.adapters.ghanaVoicePack(),
+    };
+  }
+
+  async confirmationInbox(meetingId: string, actor: MeetingActor) {
+    await this.assertEnabled(actor.organizationId);
+    await this.requireMeeting(meetingId, actor.organizationId);
+    await this.requireMember(meetingId, actor.userId);
+
+    const items = await this.prisma.meetingItem.findMany({
+      where: {
+        meetingId,
+        state: { in: ['proposed', 'reviewing', 'clarification_required', 'partially_confirmed'] },
+      },
+      include: {
+        activeRevision: { include: { presentations: true, confirmations: true } },
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+
+    const pending = items
+      .filter((item) => {
+        const required = (item.activeRevision?.requiredApproverIds as string[] | undefined) ?? [];
+        if (!required.includes(actor.userId)) return false;
+        const confirmed = (item.activeRevision?.confirmations ?? []).some(
+          (c) => c.actorId === actor.userId && c.action === 'confirm',
+        );
+        return !confirmed;
+      })
+      .map((item) => ({
+        id: item.id,
+        kind: item.kind,
+        state: item.state,
+        wording: item.activeRevision?.wording ?? '',
+        revisionNumber: item.activeRevision?.revisionNumber ?? 0,
+        dueDate: item.activeRevision?.dueDate ?? null,
+        presentation:
+          item.activeRevision?.presentations.find((p) => p.participantId === actor.userId) ??
+          item.activeRevision?.presentations[0] ??
+          null,
+        confirmations: (item.activeRevision?.confirmations ?? []).map((c) => ({
+          actorId: c.actorId,
+          action: c.action,
+          createdAt: c.createdAt,
+        })),
+      }));
+
+    return {
+      meetingId,
+      pendingCount: pending.length,
+      items: pending,
+      notice: 'Silence is never agreement. Confirm, request a change, or decline each item explicitly.',
+    };
+  }
+
+  async diagnostics(meetingId: string, actor: MeetingActor) {
+    await this.assertEnabled(actor.organizationId);
+    const meeting = await this.requireMeeting(meetingId, actor.organizationId);
+    const member = await this.requireMember(meetingId, actor.userId);
+    if (member.role !== 'organizer') {
+      throw new ApiException(
+        'forbidden',
+        'Only the organizer can view admin diagnostics',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    const [membershipCount, utteranceCount, itemCounts, recentEvents] = await Promise.all([
+      this.prisma.meetingMembership.count({ where: { meetingId, active: true } }),
+      this.prisma.meetingUtterance.count({ where: { meetingId } }),
+      this.prisma.meetingItem.groupBy({
+        by: ['state'],
+        where: { meetingId },
+        _count: true,
+      }),
+      this.prisma.meetingEvent.findMany({
+        where: { meetingId },
+        orderBy: { sequence: 'desc' },
+        take: 20,
+      }),
+    ]);
+
+    return {
+      meeting: {
+        id: meeting.id,
+        state: meeting.state,
+        corridor: meeting.corridor,
+        mediaMode: meeting.mediaMode,
+        interpretationMode: meeting.interpretationMode,
+        sequence: meeting.sequence,
+        maxParticipants: meeting.maxParticipants,
+      },
+      counts: {
+        activeMembers: membershipCount,
+        utterances: utteranceCount,
+        itemsByState: Object.fromEntries(itemCounts.map((r) => [r.state, r._count])),
+      },
+      media: this.media.capability(),
+      integrations: this.integrations.capabilities(),
+      ghanaVoices: this.adapters.ghanaVoicePack(),
+      recentEvents: recentEvents.map((e) => ({
+        sequence: e.sequence,
+        type: e.type,
+        actorId: e.actorId,
+        createdAt: e.createdAt,
+      })),
+      envFlags: {
+        mesh: process.env.MEETINGBRIDGE_MESH !== '0',
+        sfuUrl: Boolean(process.env.MEETINGBRIDGE_MEDIA_URL?.trim()),
+        simultaneous: process.env.MEETINGBRIDGE_SIMULTANEOUS === '1',
+        ghanaAsr: process.env.MEETINGBRIDGE_GHANA_ASR === '1',
+        fixtureIntegrations: process.env.MEETINGBRIDGE_ALLOW_FIXTURE_INTEGRATIONS === '1',
+        ownTts: Boolean(process.env.OWN_TTS_URL?.trim()),
+      },
+    };
+  }
+
+  async joinConferencing(
+    meetingId: string,
+    actor: MeetingActor,
+    input: { provider: ConferencingProvider; meetingUrl?: string },
+  ) {
+    await this.assertEnabled(actor.organizationId);
+    const meeting = await this.requireMeeting(meetingId, actor.organizationId);
+    const member = await this.requireMember(meetingId, actor.userId);
+    if (member.role !== 'organizer') {
+      throw new ApiException(
+        'forbidden',
+        'Only the organizer can request conferencing bots or broadcasts',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+    if (!['zoom', 'teams', 'broadcast'].includes(input.provider)) {
+      throw new ApiException(
+        'validation_error',
+        'provider must be zoom|teams|broadcast',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const result = await this.integrations.joinConferencingBot({
+      provider: input.provider,
+      meetingUrl: input.meetingUrl,
+      meetingId,
+      organizationId: actor.organizationId,
+      createdById: actor.userId,
+      title: meeting.title,
+    });
+    await this.audit({
+      organizationId: actor.organizationId,
+      meetingId,
+      actorId: actor.userId,
+      operation: 'conferencing.join',
+      meta: { provider: input.provider, result },
+    });
+    return result;
+  }
+
+  async publicBroadcast(token: string) {
+    const record = this.integrations.resolveBroadcast(token);
+    if (!record) {
+      throw new ApiException('not_found', 'Broadcast token not found', HttpStatus.NOT_FOUND);
+    }
+    const meeting = await this.prisma.meetingMeeting.findFirst({
+      where: { id: record.meetingId, deletedAt: null },
+    });
+    if (!meeting) {
+      throw new ApiException('not_found', 'Meeting not found', HttpStatus.NOT_FOUND);
+    }
+    const utterances = await this.prisma.meetingUtterance.findMany({
+      where: { meetingId: meeting.id },
+      include: { activeRevision: { include: { translations: true } } },
+      orderBy: { createdAt: 'desc' },
+      take: 40,
+    });
+    return {
+      meetingId: meeting.id,
+      title: meeting.title,
+      state: meeting.state,
+      corridor: meeting.corridor,
+      note: 'Public caption broadcast only — audio is not streamed.',
+      captions: utterances
+        .reverse()
+        .map((u) => ({
+          turnId: u.turnId,
+          language: u.activeRevision?.language ?? null,
+          text: u.activeRevision?.originalText ?? '',
+          translations: (u.activeRevision?.translations ?? []).map((t) => ({
+            language: t.targetLanguage,
+            text: t.text,
+          })),
+        })),
+    };
+  }
+
+  async synthesizeListenChannel(
+    meetingId: string,
+    actor: MeetingActor,
+    input: { text: string; language: string },
+  ) {
+    await this.assertEnabled(actor.organizationId);
+    await this.requireMeeting(meetingId, actor.organizationId);
+    await this.requireMember(meetingId, actor.userId);
+    if (!input.text?.trim() || !input.language?.trim()) {
+      throw new ApiException(
+        'validation_error',
+        'text and language are required',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    const result = await this.adapters.synthesizeSpeech({
+      text: input.text.trim(),
+      language: input.language.trim(),
+      organizationId: actor.organizationId,
+      workspaceId: actor.workspaceId,
+      apiKeyId: actor.apiKeyId,
+      userId: actor.userId,
+      ip: actor.ip,
+    });
+    return {
+      voice: result.voice,
+      status: result.status,
+      provider: result.provider,
+      note: result.note,
+      mimeType: result.mimeType,
+      audioBase64: result.audio ? result.audio.toString('base64') : null,
+    };
   }
 
   private csvTasks(payload: Prisma.JsonValue) {

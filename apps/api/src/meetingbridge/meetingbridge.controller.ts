@@ -316,7 +316,12 @@ export class MeetingBridgeController {
     @Param('itemId') itemId: string,
     @Headers('x-meetingbridge-actor-id') actorHeader?: string,
     @Body()
-    body: { meetingId?: string; destination?: string; idempotencyKey?: string } = {},
+    body: {
+      meetingId?: string;
+      destination?: string;
+      idempotencyKey?: string;
+      target?: string;
+    } = {},
   ) {
     if (!body.meetingId || !body.idempotencyKey) {
       throw new ApiException(
@@ -329,6 +334,7 @@ export class MeetingBridgeController {
       itemId,
       destination: body.destination,
       idempotencyKey: body.idempotencyKey,
+      target: body.target,
     });
   }
 
@@ -424,5 +430,139 @@ export class MeetingBridgeController {
       format: body.format,
       idempotencyKey: body.idempotencyKey,
     });
+  }
+
+  @Post('meetings/:id/media/token')
+  mediaToken(
+    @Req() req: AuthedRequest,
+    @Param('id') id: string,
+    @Headers('x-meetingbridge-actor-id') actorHeader?: string,
+  ) {
+    return this.meetingbridge.mintMediaToken(id, resolveActor(req, actorHeader));
+  }
+
+  @Post('meetings/:id/media/signal')
+  mediaSignal(
+    @Req() req: AuthedRequest,
+    @Param('id') id: string,
+    @Headers('x-meetingbridge-actor-id') actorHeader?: string,
+    @Body()
+    body: {
+      token?: string;
+      toUserId?: string;
+      kind?: 'offer' | 'answer' | 'ice';
+      payload?: unknown;
+    } = {},
+  ) {
+    if (!body.token || !body.toUserId || !body.kind) {
+      throw new ApiException(
+        'validation_error',
+        'token, toUserId, and kind are required',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return this.meetingbridge.postMediaSignal(id, resolveActor(req, actorHeader), {
+      token: body.token,
+      toUserId: body.toUserId,
+      kind: body.kind,
+      payload: body.payload,
+    });
+  }
+
+  @Post('meetings/:id/media/signals/pull')
+  mediaSignalsPull(
+    @Req() req: AuthedRequest,
+    @Param('id') id: string,
+    @Headers('x-meetingbridge-actor-id') actorHeader?: string,
+    @Body() body: { token?: string; afterId?: string } = {},
+  ) {
+    if (!body.token) {
+      throw new ApiException('validation_error', 'token is required', HttpStatus.BAD_REQUEST);
+    }
+    return this.meetingbridge.pullMediaSignals(id, resolveActor(req, actorHeader), {
+      token: body.token,
+      afterId: body.afterId,
+    });
+  }
+
+  @Post('meetings/:id/lobby/mic-check')
+  micCheck(
+    @Req() req: AuthedRequest,
+    @Param('id') id: string,
+    @Headers('x-meetingbridge-actor-id') actorHeader?: string,
+    @Body()
+    body: {
+      deviceLabel?: string;
+      sampleRate?: number;
+      levelPeak?: number;
+      muted?: boolean;
+    } = {},
+  ) {
+    return this.meetingbridge.lobbyMicCheck(id, resolveActor(req, actorHeader), body);
+  }
+
+  @Get('meetings/:id/inbox')
+  inbox(
+    @Req() req: AuthedRequest,
+    @Param('id') id: string,
+    @Headers('x-meetingbridge-actor-id') actorHeader?: string,
+  ) {
+    return this.meetingbridge.confirmationInbox(id, resolveActor(req, actorHeader));
+  }
+
+  @Get('meetings/:id/diagnostics')
+  diagnostics(
+    @Req() req: AuthedRequest,
+    @Param('id') id: string,
+    @Headers('x-meetingbridge-actor-id') actorHeader?: string,
+  ) {
+    return this.meetingbridge.diagnostics(id, resolveActor(req, actorHeader));
+  }
+
+  @Post('meetings/:id/conferencing')
+  conferencing(
+    @Req() req: AuthedRequest,
+    @Param('id') id: string,
+    @Headers('x-meetingbridge-actor-id') actorHeader?: string,
+    @Body() body: { provider?: 'zoom' | 'teams' | 'broadcast'; meetingUrl?: string } = {},
+  ) {
+    if (!body.provider) {
+      throw new ApiException('validation_error', 'provider is required', HttpStatus.BAD_REQUEST);
+    }
+    return this.meetingbridge.joinConferencing(id, resolveActor(req, actorHeader), {
+      provider: body.provider,
+      meetingUrl: body.meetingUrl,
+    });
+  }
+
+  @Post('meetings/:id/tts')
+  listenTts(
+    @Req() req: AuthedRequest,
+    @Param('id') id: string,
+    @Headers('x-meetingbridge-actor-id') actorHeader?: string,
+    @Body() body: { text?: string; language?: string } = {},
+  ) {
+    if (!body.text || !body.language) {
+      throw new ApiException(
+        'validation_error',
+        'text and language are required',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return this.meetingbridge.synthesizeListenChannel(id, resolveActor(req, actorHeader), {
+      text: body.text,
+      language: body.language,
+    });
+  }
+}
+
+/** Unauthenticated caption broadcast reads (token-gated). */
+@Controller('v1/meetingbridge/public')
+export class MeetingBridgePublicController {
+  constructor(private readonly meetingbridge: MeetingBridgeService) {}
+
+  @Get('broadcast/:token')
+  broadcast(@Param('token') token: string) {
+    return this.meetingbridge.publicBroadcast(token);
   }
 }

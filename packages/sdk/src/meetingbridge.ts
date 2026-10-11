@@ -206,11 +206,93 @@ export class MeetingBridgeClient {
 
   syncItem(
     itemId: string,
-    input: { meetingId: string; destination?: 'private_download' | 'internal_queue'; idempotencyKey: string },
+    input: {
+      meetingId: string;
+      destination?: 'private_download' | 'internal_queue' | 'slack' | 'email' | 'calendar';
+      idempotencyKey: string;
+      target?: string;
+    },
   ) {
     return this.transport.requestJson<Record<string, unknown>>(
       `/v1/meetingbridge/items/${encodeURIComponent(itemId)}/sync`,
       { method: 'POST', body: input, headers: this.h() },
+    );
+  }
+
+  mintMediaToken(meetingId: string) {
+    return this.transport.requestJson<Record<string, unknown>>(
+      `/v1/meetingbridge/meetings/${encodeURIComponent(meetingId)}/media/token`,
+      { method: 'POST', headers: this.h() },
+    );
+  }
+
+  postMediaSignal(
+    meetingId: string,
+    input: {
+      token: string;
+      toUserId: string;
+      kind: 'offer' | 'answer' | 'ice';
+      payload: unknown;
+    },
+  ) {
+    return this.transport.requestJson<Record<string, unknown>>(
+      `/v1/meetingbridge/meetings/${encodeURIComponent(meetingId)}/media/signal`,
+      { method: 'POST', body: input, headers: this.h() },
+    );
+  }
+
+  pullMediaSignals(meetingId: string, input: { token: string; afterId?: string }) {
+    return this.transport.requestJson<Record<string, unknown>>(
+      `/v1/meetingbridge/meetings/${encodeURIComponent(meetingId)}/media/signals/pull`,
+      { method: 'POST', body: input, headers: this.h() },
+    );
+  }
+
+  lobbyMicCheck(
+    meetingId: string,
+    input?: { deviceLabel?: string; sampleRate?: number; levelPeak?: number; muted?: boolean },
+  ) {
+    return this.transport.requestJson<Record<string, unknown>>(
+      `/v1/meetingbridge/meetings/${encodeURIComponent(meetingId)}/lobby/mic-check`,
+      { method: 'POST', body: input ?? {}, headers: this.h() },
+    );
+  }
+
+  confirmationInbox(meetingId: string) {
+    return this.transport.requestJson<Record<string, unknown>>(
+      `/v1/meetingbridge/meetings/${encodeURIComponent(meetingId)}/inbox`,
+      { method: 'GET', headers: this.h() },
+    );
+  }
+
+  diagnostics(meetingId: string) {
+    return this.transport.requestJson<Record<string, unknown>>(
+      `/v1/meetingbridge/meetings/${encodeURIComponent(meetingId)}/diagnostics`,
+      { method: 'GET', headers: this.h() },
+    );
+  }
+
+  joinConferencing(
+    meetingId: string,
+    input: { provider: 'zoom' | 'teams' | 'broadcast'; meetingUrl?: string },
+  ) {
+    return this.transport.requestJson<Record<string, unknown>>(
+      `/v1/meetingbridge/meetings/${encodeURIComponent(meetingId)}/conferencing`,
+      { method: 'POST', body: input, headers: this.h() },
+    );
+  }
+
+  synthesizeListenChannel(meetingId: string, input: { text: string; language: string }) {
+    return this.transport.requestJson<Record<string, unknown>>(
+      `/v1/meetingbridge/meetings/${encodeURIComponent(meetingId)}/tts`,
+      { method: 'POST', body: input, headers: this.h() },
+    );
+  }
+
+  publicBroadcast(token: string) {
+    return this.transport.requestJson<Record<string, unknown>>(
+      `/v1/meetingbridge/public/broadcast/${encodeURIComponent(token)}`,
+      { method: 'GET' },
     );
   }
 

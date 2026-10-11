@@ -190,14 +190,66 @@ class MeetingBridgeClient(
     meetingId: String,
     idempotencyKey: String,
     destination: String = "private_download",
+    target: String? = null,
   ): JSONObject {
     val body = JSONObject()
       .put("meetingId", meetingId)
       .put("idempotencyKey", idempotencyKey)
       .put("destination", destination)
+    if (target != null) body.put("target", target)
     return http.requestJson(
       "POST",
       "/v1/meetingbridge/items/${enc(itemId)}/sync",
+      body,
+      extraHeaders = headers(),
+    )
+  }
+
+  fun mintMediaToken(meetingId: String): JSONObject =
+    http.requestJson(
+      "POST",
+      "/v1/meetingbridge/meetings/${enc(meetingId)}/media/token",
+      JSONObject(),
+      extraHeaders = headers(),
+    )
+
+  fun lobbyMicCheck(
+    meetingId: String,
+    levelPeak: Double = 0.0,
+    muted: Boolean = false,
+    deviceLabel: String? = null,
+  ): JSONObject {
+    val body = JSONObject().put("levelPeak", levelPeak).put("muted", muted)
+    if (deviceLabel != null) body.put("deviceLabel", deviceLabel)
+    return http.requestJson(
+      "POST",
+      "/v1/meetingbridge/meetings/${enc(meetingId)}/lobby/mic-check",
+      body,
+      extraHeaders = headers(),
+    )
+  }
+
+  fun confirmationInbox(meetingId: String): JSONObject =
+    http.requestJson("GET", "/v1/meetingbridge/meetings/${enc(meetingId)}/inbox", null, extraHeaders = headers())
+
+  fun diagnostics(meetingId: String): JSONObject =
+    http.requestJson(
+      "GET",
+      "/v1/meetingbridge/meetings/${enc(meetingId)}/diagnostics",
+      null,
+      extraHeaders = headers(),
+    )
+
+  fun joinConferencing(
+    meetingId: String,
+    provider: String,
+    meetingUrl: String? = null,
+  ): JSONObject {
+    val body = JSONObject().put("provider", provider)
+    if (meetingUrl != null) body.put("meetingUrl", meetingUrl)
+    return http.requestJson(
+      "POST",
+      "/v1/meetingbridge/meetings/${enc(meetingId)}/conferencing",
       body,
       extraHeaders = headers(),
     )

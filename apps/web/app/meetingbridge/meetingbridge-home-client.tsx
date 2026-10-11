@@ -115,8 +115,14 @@ export function MeetingBridgeHomeClient() {
         <div className="lg-grid-stats">
           <StatCard
             label="Media"
-            value={catalog?.media?.provisioned ? 'WebRTC' : 'Turn-taking'}
-            hint={catalog?.media?.note ?? 'Phrase captions when SFU is not provisioned'}
+            value={
+              catalog?.media?.mode === 'webrtc_sfu'
+                ? 'SFU WebRTC'
+                : catalog?.media?.mode === 'webrtc_mesh'
+                  ? 'Mesh WebRTC'
+                  : 'Turn-taking'
+            }
+            hint={catalog?.media?.note ?? 'Mesh WebRTC signaling works without an SFU URL'}
           />
           <StatCard label="Corridor" value={corridor.toUpperCase()} hint="Gated per ASR / translate / TTS" />
           <StatCard label="Consent" value="Explicit" hint="Silence is never agreement" />

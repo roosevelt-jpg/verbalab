@@ -69,7 +69,10 @@ export type CorridorCapability = {
   note: string;
 };
 
-/** Verified corridor: English ↔ Akan/Twi (Ghana). ASR/TTS gated until neural voices pass review. */
+/**
+ * Meeting corridors. Ghana listen-channel TTS uses dedicated Echo pack voices.
+ * Neural ASR for Akan/Ewe majors remains gated by MEETINGBRIDGE_GHANA_ASR=1.
+ */
 export const MEETINGBRIDGE_CORRIDORS: CorridorCapability[] = [
   {
     id: 'en-ak',
@@ -77,9 +80,9 @@ export const MEETINGBRIDGE_CORRIDORS: CorridorCapability[] = [
     listeningLanguage: 'ak',
     asr: true,
     translation: true,
-    tts: false,
+    tts: true,
     label: 'English ↔ Akan/Twi (Ghana)',
-    note: 'Primary corridor. Translation and captions are wired. Spoken synthesis for Twi stays gated until native-reviewed neural voices are live; Ghanaian English TTS is available via Echo.',
+    note: 'Primary corridor. Captions + translation wired. Echo voice own:ak-gh-female for listen-channel TTS. Akan ASR gated by MEETINGBRIDGE_GHANA_ASR=1 until measured.',
   },
   {
     id: 'en-ee',
@@ -87,9 +90,29 @@ export const MEETINGBRIDGE_CORRIDORS: CorridorCapability[] = [
     listeningLanguage: 'ee',
     asr: false,
     translation: true,
-    tts: false,
+    tts: true,
     label: 'English ↔ Ewe (Ghana)',
-    note: 'Translation corridor. ASR and TTS remain gated until measured coverage is published.',
+    note: 'Translation corridor with Echo voice own:ee-gh-female. ASR gated by MEETINGBRIDGE_GHANA_ASR=1.',
+  },
+  {
+    id: 'en-gaa',
+    speakingLanguage: 'en',
+    listeningLanguage: 'gaa',
+    asr: false,
+    translation: true,
+    tts: true,
+    label: 'English ↔ Ga (Ghana)',
+    note: 'Ga corridor with Echo voice own:gaa-gh-female. ASR gated until measured.',
+  },
+  {
+    id: 'en-dag',
+    speakingLanguage: 'en',
+    listeningLanguage: 'dag',
+    asr: false,
+    translation: true,
+    tts: true,
+    label: 'English ↔ Dagbani (Ghana)',
+    note: 'Dagbani corridor with Echo voice own:dag-gh-male. ASR gated until measured.',
   },
   {
     id: 'en-fr',

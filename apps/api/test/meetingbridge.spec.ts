@@ -57,8 +57,10 @@ describe('MeetingBridge domain units', () => {
     const catalog = meetingbridgeCatalog();
     expect(catalog.featureFlag).toBe('meetingBridge');
     expect(catalog.approvalPolicyDefault.silenceIsNotConsent).toBe(true);
-    expect(catalog.media.mode === 'phrase_upload' || catalog.media.mode === 'webrtc').toBe(true);
+    expect(['phrase_upload', 'webrtc_mesh', 'webrtc_sfu']).toContain(catalog.media.mode);
     expect(catalog.corridors.some((c) => c.id === 'en-ak')).toBe(true);
+    expect(catalog.ghanaVoices.length).toBeGreaterThan(5);
+    expect(catalog.integrations.taskSync.allowlistedDestinations).toContain('slack');
   });
 });
 
@@ -459,7 +461,7 @@ describe('MeetingBridge API', () => {
       .post(`/v1/meetingbridge/items/${itemId}/sync`)
       .set('Authorization', `Bearer ${key.secret}`)
       .set('X-MeetingBridge-Actor-Id', organizer)
-      .send({ meetingId, destination: 'slack', idempotencyKey: 'bad-dest' })
+      .send({ meetingId, destination: 'notion', idempotencyKey: 'bad-dest' })
       .expect(422);
 
     const synced = await request(app.getHttpServer())
@@ -483,5 +485,225 @@ describe('MeetingBridge API', () => {
       .set('X-MeetingBridge-Actor-Id', organizer)
       .expect(201);
     expect(voice.body.voicebridgePath).toContain('/voicebridge/threads/');
+  });
+
+  it('wires media mesh, lobby mic-check, inbox, diagnostics, integrations, and broadcast', async () => {
+    process.env.MEETINGBRIDGE_ALLOW_FIXTURE_INTEGRATIONS = '1';
+    process.env.MEETINGBRIDGE_ALLOW_FIXTURE_TTS = '1';
+    process.env.MEETINGBRIDGE_MESH = '1';
+    delete process.env.MEETINGBRIDGE_MEDIA_URL;
+
+    const org = await seedOrg(prisma, 'meetingbridge_media');
+    const key = await apiKeys.create({
+      organizationId: org.id,
+      workspaceId: org.workspaces[0]!.id,
+      userId: org.memberships[0]!.userId,
+      name: 'meetingbridge-media',
+    });
+    const organizer = 'org-media';
+    const participant = 'part-media';
+
+    const created = await request(app.getHttpServer())
+      .post('/v1/meetingbridge/meetings')
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .send({
+        title: 'Media meeting',
+        corridor: 'en-ak',
+        speakingLanguage: 'en',
+        listeningLanguage: 'ak',
+      })
+      .expect(201);
+    const meetingId = created.body.meeting.id as string;
+    expect(created.body.meeting.mediaMode).toBe('webrtc_mesh');
+
+    await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/lobby`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .expect(201);
+
+    const mic = await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/lobby/mic-check`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .send({ deviceLabel: 'test-mic', levelPeak: 0.2, muted: false })
+      .expect(201);
+    expect(mic.body.ok).toBe(true);
+    expect(mic.body.mediaToken?.token).toMatch(/^mbmedia\./);
+
+    const invite = await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/invites`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .send({})
+      .expect(201);
+
+    await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/join`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', participant)
+      .send({
+        token: invite.body.token,
+        speakingLanguage: 'ak',
+        listeningLanguage: 'en',
+      })
+      .expect(201);
+
+    await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/start`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .expect(201);
+
+    const tokenA = await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/media/token`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .expect(201);
+    expect(tokenA.body.mode).toBe('webrtc_mesh');
+    expect(tokenA.body.iceServers?.length).toBeGreaterThan(0);
+
+    const tokenB = await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/media/token`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', participant)
+      .expect(201);
+
+    await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/media/signal`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .send({
+        token: tokenA.body.token,
+        toUserId: participant,
+        kind: 'offer',
+        payload: { sdp: 'v=0' },
+      })
+      .expect(201);
+
+    const pulled = await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/media/signals/pull`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', participant)
+      .send({ token: tokenB.body.token })
+      .expect(201);
+    expect(pulled.body.messages.some((m: { kind: string }) => m.kind === 'offer')).toBe(true);
+
+    const proposed = await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/items`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .send({
+        kind: 'action',
+        wording: 'Confirm warehouse slot',
+        ownerParticipantIds: [participant],
+        requiredApproverIds: [organizer, participant],
+        dueDate: '2026-10-22',
+      })
+      .expect(201);
+    const itemId = proposed.body.proposedItemId as string;
+
+    const inbox = await request(app.getHttpServer())
+      .get(`/v1/meetingbridge/meetings/${meetingId}/inbox`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', participant)
+      .expect(200);
+    expect(inbox.body.pendingCount).toBeGreaterThanOrEqual(1);
+    expect(inbox.body.items.some((i: { id: string }) => i.id === itemId)).toBe(true);
+
+    const diagnostics = await request(app.getHttpServer())
+      .get(`/v1/meetingbridge/meetings/${meetingId}/diagnostics`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .expect(200);
+    expect(diagnostics.body.media.mode).toBe('webrtc_mesh');
+    expect(diagnostics.body.ghanaVoices.some((v: { code: string }) => v.code === 'ak')).toBe(true);
+    expect(diagnostics.body.integrations.slack.available).toBe(true);
+
+    await request(app.getHttpServer())
+      .get(`/v1/meetingbridge/meetings/${meetingId}/diagnostics`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', participant)
+      .expect(403);
+
+    for (const actor of [organizer, participant]) {
+      await request(app.getHttpServer())
+        .post(`/v1/meetingbridge/items/${itemId}/confirmations`)
+        .set('Authorization', `Bearer ${key.secret}`)
+        .set('X-MeetingBridge-Actor-Id', actor)
+        .send({
+          meetingId,
+          action: 'confirm',
+          idempotencyKey: `media-confirm-${actor}-${itemId}`,
+        })
+        .expect(201);
+    }
+
+    await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/close`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .expect(201);
+    await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/minutes`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .expect(201);
+
+    const slackSync = await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/items/${itemId}/sync`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .send({
+        meetingId,
+        destination: 'slack',
+        target: '#ops',
+        idempotencyKey: `slack-${itemId}`,
+      })
+      .expect(201);
+    expect(slackSync.body.external?.fixture).toBe(true);
+
+    const calendarSync = await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/items/${itemId}/sync`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .send({
+        meetingId,
+        destination: 'calendar',
+        idempotencyKey: `cal-${itemId}`,
+      })
+      .expect(201);
+    expect(String(calendarSync.body.sync.body)).toContain('BEGIN:VCALENDAR');
+
+    const zoom = await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/conferencing`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .send({ provider: 'zoom' })
+      .expect(201);
+    expect(zoom.body.status).toBe('fixture_joined');
+
+    const broadcast = await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/conferencing`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .send({ provider: 'broadcast' })
+      .expect(201);
+    expect(broadcast.body.broadcastPath).toContain('/meetingbridge/broadcast/');
+
+    const publicCaps = await request(app.getHttpServer())
+      .get(`/v1/meetingbridge/public/broadcast/${broadcast.body.externalId}`)
+      .expect(200);
+    expect(publicCaps.body.title).toBe('Media meeting');
+
+    const tts = await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/tts`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .send({ text: 'Yɛda wo ase', language: 'ak' })
+      .expect(201);
+    expect(tts.body.voice).toBe('own:ak-gh-female');
+    expect(tts.body.audioBase64 || tts.body.status === 'unsupported').toBeTruthy();
   });
 });

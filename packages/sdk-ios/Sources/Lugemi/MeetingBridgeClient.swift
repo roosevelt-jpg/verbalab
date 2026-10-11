@@ -228,16 +228,77 @@ public struct MeetingBridgeClient: @unchecked Sendable {
     itemId: String,
     meetingId: String,
     idempotencyKey: String,
-    destination: String = "private_download"
+    destination: String = "private_download",
+    target: String? = nil
   ) async throws -> [String: Any] {
-    try await http.requestJSON(
+    var json: [String: Any] = [
+      "meetingId": meetingId,
+      "idempotencyKey": idempotencyKey,
+      "destination": destination,
+    ]
+    if let target { json["target"] = target }
+    return try await http.requestJSON(
       path: "/v1/meetingbridge/items/\(enc(itemId))/sync",
       method: "POST",
-      json: [
-        "meetingId": meetingId,
-        "idempotencyKey": idempotencyKey,
-        "destination": destination,
-      ],
+      json: json,
+      extraHeaders: headers
+    )
+  }
+
+  public func mintMediaToken(meetingId: String) async throws -> [String: Any] {
+    try await http.requestJSON(
+      path: "/v1/meetingbridge/meetings/\(enc(meetingId))/media/token",
+      method: "POST",
+      json: [:],
+      extraHeaders: headers
+    )
+  }
+
+  public func lobbyMicCheck(
+    meetingId: String,
+    levelPeak: Double = 0,
+    muted: Bool = false,
+    deviceLabel: String? = nil
+  ) async throws -> [String: Any] {
+    var json: [String: Any] = ["levelPeak": levelPeak, "muted": muted]
+    if let deviceLabel { json["deviceLabel"] = deviceLabel }
+    return try await http.requestJSON(
+      path: "/v1/meetingbridge/meetings/\(enc(meetingId))/lobby/mic-check",
+      method: "POST",
+      json: json,
+      extraHeaders: headers
+    )
+  }
+
+  public func confirmationInbox(meetingId: String) async throws -> [String: Any] {
+    try await http.requestJSON(
+      path: "/v1/meetingbridge/meetings/\(enc(meetingId))/inbox",
+      method: "GET",
+      json: nil,
+      extraHeaders: headers
+    )
+  }
+
+  public func diagnostics(meetingId: String) async throws -> [String: Any] {
+    try await http.requestJSON(
+      path: "/v1/meetingbridge/meetings/\(enc(meetingId))/diagnostics",
+      method: "GET",
+      json: nil,
+      extraHeaders: headers
+    )
+  }
+
+  public func joinConferencing(
+    meetingId: String,
+    provider: String,
+    meetingUrl: String? = nil
+  ) async throws -> [String: Any] {
+    var json: [String: Any] = ["provider": provider]
+    if let meetingUrl { json["meetingUrl"] = meetingUrl }
+    return try await http.requestJSON(
+      path: "/v1/meetingbridge/meetings/\(enc(meetingId))/conferencing",
+      method: "POST",
+      json: json,
       extraHeaders: headers
     )
   }

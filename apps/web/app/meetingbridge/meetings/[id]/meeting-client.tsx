@@ -99,6 +99,12 @@ export function MeetingBridgeMeetingClient({ meetingId }: { meetingId: string })
   const [exportPreview, setExportPreview] = useState<string | null>(null);
   const [correctUtteranceId, setCorrectUtteranceId] = useState('');
   const [correctText, setCorrectText] = useState('');
+  const [mediaStatus, setMediaStatus] = useState<string | null>(null);
+  const [syncDestination, setSyncDestination] = useState<
+    'private_download' | 'internal_queue' | 'slack' | 'email' | 'calendar'
+  >('private_download');
+  const [syncTarget, setSyncTarget] = useState('');
+  const [broadcastUrl, setBroadcastUrl] = useState<string | null>(null);
 
   const signedIn = Boolean(isClerkConfigured() && isSignedIn);
 
@@ -314,12 +320,62 @@ export function MeetingBridgeMeetingClient({ meetingId }: { meetingId: string })
           headers: a.actor ? { 'X-MeetingBridge-Actor-Id': a.actor } : undefined,
           body: {
             meetingId,
-            destination: 'private_download',
+            destination: syncDestination,
+            target: syncTarget || undefined,
             idempotencyKey: `sync-${itemId}-${Date.now()}`,
           },
         },
       );
       setExportPreview(res.sync?.body ?? res.note ?? JSON.stringify(res, null, 2));
+    });
+  }
+
+  async function connectMedia() {
+    await withBusy(async () => {
+      const a = await authHeaders();
+      const res = await apiFetch<{
+        token: string;
+        mode: string;
+        capability?: { note?: string; mode?: string };
+        peers?: Array<{ userId: string }>;
+      }>(`/v1/meetingbridge/meetings/${meetingId}/media/token`, {
+        method: 'POST',
+        token: a.token,
+        headers: a.actor ? { 'X-MeetingBridge-Actor-Id': a.actor } : undefined,
+      });
+      setMediaStatus(
+        `${res.mode} token minted · peers ${(res.peers ?? []).length} · ${res.capability?.note ?? ''}`,
+      );
+    });
+  }
+
+  async function startBroadcast() {
+    await withBusy(async () => {
+      const a = await authHeaders();
+      const res = await apiFetch<{ broadcastPath?: string; note?: string }>(
+        `/v1/meetingbridge/meetings/${meetingId}/conferencing`,
+        {
+          method: 'POST',
+          token: a.token,
+          headers: a.actor ? { 'X-MeetingBridge-Actor-Id': a.actor } : undefined,
+          body: { provider: 'broadcast' },
+        },
+      );
+      setBroadcastUrl(res.broadcastPath ?? null);
+      setExportPreview(res.note ?? JSON.stringify(res, null, 2));
+    });
+  }
+
+  async function requestBot(provider: 'zoom' | 'teams') {
+    await withBusy(async () => {
+      const a = await authHeaders();
+      const res = await apiFetch<{ note?: string }>(`/v1/meetingbridge/meetings/${meetingId}/conferencing`, {
+        method: 'POST',
+        token: a.token,
+        headers: a.actor ? { 'X-MeetingBridge-Actor-Id': a.actor } : undefined,
+        body: { provider },
+      });
+      setExportPreview(res.note ?? JSON.stringify(res, null, 2));
     });
   }
 
@@ -407,6 +463,20 @@ export function MeetingBridgeMeetingClient({ meetingId }: { meetingId: string })
             <Link href="/meetingbridge" className="vl-btn vl-btn-secondary">
               All meetings
             </Link>
+            <Link href={`/meetingbridge/meetings/${meetingId}/lobby`} className="vl-btn vl-btn-secondary">
+              Lobby
+            </Link>
+            <Link href={`/meetingbridge/meetings/${meetingId}/inbox`} className="vl-btn vl-btn-secondary">
+              Inbox
+            </Link>
+            {isOrganizer ? (
+              <Link
+                href={`/meetingbridge/meetings/${meetingId}/diagnostics`}
+                className="vl-btn vl-btn-secondary"
+              >
+                Diagnostics
+              </Link>
+            ) : null}
             <button type="button" className="vl-btn vl-btn-secondary" disabled={busy} onClick={() => void refresh()}>
               Refresh
             </button>
@@ -506,6 +576,28 @@ export function MeetingBridgeMeetingClient({ meetingId }: { meetingId: string })
                     <button type="button" className="vl-btn vl-btn-secondary" disabled={busy} onClick={() => void handoffVoice()}>
                       VoiceBridge follow-up
                     </button>
+                    <button type="button" className="vl-btn vl-btn-secondary" disabled={busy} onClick={() => void connectMedia()}>
+                      Mint media token
+                    </button>
+                    <button type="button" className="vl-btn vl-btn-secondary" disabled={busy} onClick={() => void startBroadcast()}>
+                      Caption broadcast
+                    </button>
+                    <button
+                      type="button"
+                      className="vl-btn vl-btn-secondary"
+                      disabled={busy}
+                      onClick={() => void requestBot('zoom')}
+                    >
+                      Zoom bot
+                    </button>
+                    <button
+                      type="button"
+                      className="vl-btn vl-btn-secondary"
+                      disabled={busy}
+                      onClick={() => void requestBot('teams')}
+                    >
+                      Teams bot
+                    </button>
                   </>
                 ) : (
                   <p className="lg-type-compact">Participant controls: speak, review items, and confirm explicitly.</p>
@@ -514,6 +606,19 @@ export function MeetingBridgeMeetingClient({ meetingId }: { meetingId: string })
               {inviteUrl ? (
                 <p className="lg-card" style={{ marginTop: '0.75rem' }}>
                   Invite (single-use): <code style={{ wordBreak: 'break-all' }}>{inviteUrl}</code>
+                </p>
+              ) : null}
+              {mediaStatus ? (
+                <p className="lg-type-compact" style={{ marginTop: '0.75rem' }}>
+                  Media: {mediaStatus}
+                </p>
+              ) : null}
+              {broadcastUrl ? (
+                <p className="lg-card" style={{ marginTop: '0.75rem' }}>
+                  Broadcast:{' '}
+                  <Link href={broadcastUrl}>
+                    <code style={{ wordBreak: 'break-all' }}>{broadcastUrl}</code>
+                  </Link>
                 </p>
               ) : null}
             </section>
@@ -556,8 +661,8 @@ export function MeetingBridgeMeetingClient({ meetingId }: { meetingId: string })
                   Captions &amp; turns
                 </h2>
                 <p className="lg-type-compact">
-                  Controlled turn-taking with phrase-level committed translation. Not simultaneous interpretation unless
-                  media is provisioned.
+                  Controlled turn-taking with phrase-level committed translation. Mesh WebRTC signaling is available
+                  without an SFU URL; simultaneous listen-channel TTS requires MEETINGBRIDGE_SIMULTANEOUS=1.
                 </p>
               </div>
               <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gap: '0.65rem' }}>
@@ -705,6 +810,40 @@ export function MeetingBridgeMeetingClient({ meetingId }: { meetingId: string })
                   </li>
                 ))}
               </ul>
+              {isOrganizer ? (
+                <div
+                  className="lg-card"
+                  style={{ display: 'grid', gap: '0.5rem', marginTop: '0.75rem' }}
+                >
+                  <label className="vl-field-label">
+                    Sync destination
+                    <select
+                      className="vl-field"
+                      value={syncDestination}
+                      onChange={(e) =>
+                        setSyncDestination(e.target.value as typeof syncDestination)
+                      }
+                    >
+                      <option value="private_download">Private download</option>
+                      <option value="internal_queue">Internal queue</option>
+                      <option value="slack">Slack</option>
+                      <option value="email">Email</option>
+                      <option value="calendar">Calendar (ICS / Google)</option>
+                    </select>
+                  </label>
+                  {(syncDestination === 'slack' || syncDestination === 'email') && (
+                    <label className="vl-field-label">
+                      Target ({syncDestination === 'slack' ? 'channel' : 'address'})
+                      <input
+                        className="vl-field"
+                        value={syncTarget}
+                        onChange={(e) => setSyncTarget(e.target.value)}
+                        placeholder={syncDestination === 'slack' ? '#ops' : 'ops@example.com'}
+                      />
+                    </label>
+                  )}
+                </div>
+              ) : null}
               <form onSubmit={proposeItem} className="lg-card" style={{ display: 'grid', gap: '0.65rem', marginTop: '0.75rem' }}>
                 <label className="vl-field-label">
                   Kind
