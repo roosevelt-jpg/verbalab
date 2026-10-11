@@ -3,6 +3,7 @@ import { VoiceBridgeClient } from './voicebridge.js';
 import { DealBridgeClient } from './dealbridge.js';
 import { AccessLineClient } from './accessline.js';
 import { MeetingBridgeClient } from './meetingbridge.js';
+import { LanguageAssuranceClient } from './language-assurance.js';
 import type { BridgeTransport } from './bridge-transport.js';
 import type {
   ChatCompletionRequest,
@@ -152,6 +153,7 @@ export class Lugemi {
   private _dealBridge?: DealBridgeClient;
   private _accessLine?: AccessLineClient;
   private _meetingBridge?: MeetingBridgeClient;
+  private _languageAssurance?: LanguageAssuranceClient;
 
   constructor(options: LugemiClientOptions) {
     const key = options.apiKey ?? '';
@@ -182,6 +184,7 @@ export class Lugemi {
     this._dealBridge?.setContext(next);
     this._accessLine?.setContext(next);
     this._meetingBridge?.setContext(next);
+    this._languageAssurance?.setContext(next);
   }
 
   get voiceBridge(): VoiceBridgeClient {
@@ -238,6 +241,20 @@ export class Lugemi {
       });
     }
     return this._meetingBridge;
+  }
+
+  get languageAssurance(): LanguageAssuranceClient {
+    if (!this._languageAssurance) {
+      this._languageAssurance = new LanguageAssuranceClient({
+        transport: this.bridgeTransport(),
+        headers: {
+          actorId: this.actorId,
+          organizationId: this.organizationId,
+          workspaceId: this.workspaceId,
+        },
+      });
+    }
+    return this._languageAssurance;
   }
 
   private bridgeTransport(): BridgeTransport {

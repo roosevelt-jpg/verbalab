@@ -118,6 +118,11 @@ export const CMS_DEFAULTS: CmsDocument = {
       description:
         'Lugemi MeetingBridge — multilingual meetings with revision-linked transcripts, reviewed decisions, and explicit confirmations.',
     },
+    '/language-assurance': {
+      title: 'Language Assurance',
+      description:
+        'Lugemi Language Assurance — quality-control checks for source, translation, and speech before release, with native review and evidence reports.',
+    },
   },
   nav: {
     centerLinks: [

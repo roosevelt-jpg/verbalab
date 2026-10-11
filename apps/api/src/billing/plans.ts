@@ -9,6 +9,7 @@ export type PlanFeature =
   | 'voiceBridge'
   | 'accessLine'
   | 'meetingBridge'
+  | 'languageAssurance'
   | 'voiceClones'
   | 'marketplace'
   | 'fineTunes'
@@ -109,6 +110,7 @@ function proPlan(): PlanDefinition {
       'voiceBridge',
       'accessLine',
       'meetingBridge',
+      'languageAssurance',
       'voiceClones',
       'marketplace',
       'fineTunes',
@@ -144,6 +146,7 @@ function businessPlan(): PlanDefinition {
       'voiceBridge',
       'accessLine',
       'meetingBridge',
+      'languageAssurance',
       'voiceClones',
       'marketplace',
       'fineTunes',
@@ -179,6 +182,7 @@ function enterprisePlan(): PlanDefinition {
       'voiceBridge',
       'accessLine',
       'meetingBridge',
+      'languageAssurance',
       'voiceClones',
       'marketplace',
       'fineTunes',

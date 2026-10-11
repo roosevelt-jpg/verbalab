@@ -121,6 +121,11 @@ model Organization {
   accesslineAuditEvents        AccessLineAuditEvent[]
   meetingMeetings               MeetingMeeting[]
   meetingAuditEvents            MeetingAuditEvent[]
+  assuranceBundles              AssuranceArtifactBundle[]
+  assuranceRuns                 AssuranceVerificationRun[]
+  assurancePolicies             AssurancePolicySnapshot[]
+  assuranceReviews              AssuranceHumanReview[]
+  assuranceAuditEvents          AssuranceAuditEvent[]
 
   @@index([plan])
   @@index([billingStatus])
@@ -3404,4 +3409,228 @@ model MeetingAuditEvent {
   @@index([organizationId, createdAt])
   @@index([meetingId])
   @@map("meeting_audit_events")
+}
+
+/// Language Assurance — quality-control runs before workflow release.
+model AssuranceArtifactBundle {
+  id                 String   @id @default(cuid())
+  organizationId     String   @map("organization_id")
+  workspaceId        String   @map("workspace_id")
+  product            String
+  contentCategory    String   @map("content_category")
+  corridor           String   @default("en-ak")
+  sourceLanguage     String   @map("source_language")
+  targetLanguage     String   @map("target_language")
+  sourceVariety      String?  @map("source_variety")
+  targetVariety      String?  @map("target_variety")
+  sourceText         String   @map("source_text")
+  sourceTextHash     String   @map("source_text_hash")
+  targetText         String   @map("target_text")
+  targetTextHash     String   @map("target_text_hash")
+  /// Optional base64 or storage key reference — never an arbitrary caller URL
+  audioStorageKey    String?  @map("audio_storage_key")
+  audioSha256        String?  @map("audio_sha256")
+  audioMimeType      String?  @map("audio_mime_type")
+  modelVersion       String?  @map("model_version")
+  voiceVersion       String?  @map("voice_version")
+  terminologySnapshot Json?   @map("terminology_snapshot")
+  provenance         Json?
+  bundleHash         String   @map("bundle_hash")
+  createdById        String   @map("created_by_id")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  organization Organization             @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  runs         AssuranceVerificationRun[]
+
+  @@unique([organizationId, bundleHash])
+  @@index([organizationId, createdAt])
+  @@index([workspaceId, createdAt])
+  @@map("assurance_artifact_bundles")
+}
+
+model AssurancePolicySnapshot {
+  id                    String   @id @default(cuid())
+  organizationId        String?  @map("organization_id")
+  version               String
+  task                  String
+  corridor              String
+  contentCategory       String   @map("content_category")
+  requiredStages        Json     @map("required_stages")
+  requireNativeReview   Boolean  @default(true) @map("require_native_review")
+  allowOverrides        Boolean  @default(false) @map("allow_overrides")
+  maxRetries            Int      @default(1) @map("max_retries")
+  thresholds            Json?
+  budgetNote            String?  @map("budget_note")
+  isSystem              Boolean  @default(false) @map("is_system")
+  createdById           String?  @map("created_by_id")
+  createdAt             DateTime @default(now()) @map("created_at")
+
+  organization Organization?             @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  runs         AssuranceVerificationRun[]
+
+  @@unique([organizationId, version, task, corridor])
+  @@index([task, corridor])
+  @@map("assurance_policy_snapshots")
+}
+
+model AssuranceVerificationRun {
+  id                 String    @id @default(cuid())
+  organizationId     String    @map("organization_id")
+  workspaceId        String    @map("workspace_id")
+  bundleId           String    @map("bundle_id")
+  policyId           String    @map("policy_id")
+  /// queued | running | completed | failed | cancelled | stale
+  executionState     String    @default("queued") @map("execution_state")
+  /// eligible_under_policy | needs_clarification | human_review_required | blocked | indeterminate
+  disposition        String?
+  calibrationVersion String    @default("assurance-cal-unmeasured-v1") @map("calibration_version")
+  modelVersions      Json?     @map("model_versions")
+  unavailableChecks  Json      @default("[]") @map("unavailable_checks")
+  stageStates        Json      @default("{}") @map("stage_states")
+  idempotencyKey     String    @map("idempotency_key")
+  reportHash         String?   @map("report_hash")
+  reportMarkdown     String?   @map("report_markdown")
+  reportJson         Json?     @map("report_json")
+  createdById        String    @map("created_by_id")
+  startedAt          DateTime? @map("started_at")
+  completedAt        DateTime? @map("completed_at")
+  cancelledAt        DateTime? @map("cancelled_at")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  organization Organization              @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  bundle       AssuranceArtifactBundle   @relation(fields: [bundleId], references: [id], onDelete: Cascade)
+  policy       AssurancePolicySnapshot   @relation(fields: [policyId], references: [id], onDelete: Restrict)
+  findings     AssuranceCheckFinding[]
+  assignments  AssuranceReviewAssignment[]
+  reviews      AssuranceHumanReview[]
+  releases     AssuranceReleaseEvidence[]
+  events       AssuranceEvent[]
+
+  @@unique([organizationId, idempotencyKey])
+  @@index([organizationId, executionState, createdAt])
+  @@index([bundleId])
+  @@map("assurance_verification_runs")
+}
+
+model AssuranceCheckFinding {
+  id              String   @id @default(cuid())
+  runId           String   @map("run_id")
+  stage           String
+  category        String
+  severity        String
+  sourceEvidence  String?  @map("source_evidence")
+  targetEvidence  String?  @map("target_evidence")
+  audioTimestampMs Int?    @map("audio_timestamp_ms")
+  uncertainty     String?
+  scoreMeaning    String   @default("uncalibrated_detector_score") @map("score_meaning")
+  reasonCode      String?  @map("reason_code")
+  evidence        Json?
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  run AssuranceVerificationRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@index([runId, stage, severity])
+  @@map("assurance_check_findings")
+}
+
+model AssuranceReviewAssignment {
+  id               String   @id @default(cuid())
+  runId            String   @map("run_id")
+  reviewerUserId   String   @map("reviewer_user_id")
+  language         String
+  variety          String?
+  /// translation | speech | both
+  scope            String   @default("both")
+  /// open | completed | revoked
+  status           String   @default("open")
+  createdById      String   @map("created_by_id")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  run AssuranceVerificationRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@index([reviewerUserId, status])
+  @@index([runId])
+  @@map("assurance_review_assignments")
+}
+
+model AssuranceHumanReview {
+  id                 String   @id @default(cuid())
+  organizationId     String   @map("organization_id")
+  runId              String   @map("run_id")
+  assignmentId       String?  @map("assignment_id")
+  reviewerUserId     String   @map("reviewer_user_id")
+  /// Must match run bundle hashes at submission
+  sourceTextHash     String   @map("source_text_hash")
+  targetTextHash     String   @map("target_text_hash")
+  audioSha256        String?  @map("audio_sha256")
+  /// approve | request_changes | reject | uncertain
+  judgment           String
+  meaningOk          Boolean? @map("meaning_ok")
+  pronunciationOk    Boolean? @map("pronunciation_ok")
+  toneOk             Boolean? @map("tone_ok")
+  naturalnessOk      Boolean? @map("naturalness_ok")
+  audioIntegrityOk   Boolean? @map("audio_integrity_ok")
+  notes              String?
+  correctionSuggestion String? @map("correction_suggestion")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  organization Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  run          AssuranceVerificationRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@index([runId, createdAt])
+  @@index([organizationId, createdAt])
+  @@map("assurance_human_reviews")
+}
+
+model AssuranceReleaseEvidence {
+  id             String   @id @default(cuid())
+  runId          String   @map("run_id")
+  bundleHash     String   @map("bundle_hash")
+  reportHash     String   @map("report_hash")
+  policyVersion  String   @map("policy_version")
+  disposition    String
+  decidedById    String   @map("decided_by_id")
+  reason         String?
+  evidenceHash   String   @map("evidence_hash")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  run AssuranceVerificationRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@unique([runId, bundleHash, reportHash])
+  @@index([runId])
+  @@map("assurance_release_evidence")
+}
+
+model AssuranceEvent {
+  id        String   @id @default(cuid())
+  runId     String   @map("run_id")
+  sequence  Int
+  eventId   String   @unique @map("event_id")
+  type      String
+  payload   Json?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  run AssuranceVerificationRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  @@unique([runId, sequence])
+  @@index([runId])
+  @@map("assurance_events")
+}
+
+model AssuranceAuditEvent {
+  id             String   @id @default(cuid())
+  organizationId String   @map("organization_id")
+  runId          String?  @map("run_id")
+  actorId        String   @map("actor_id")
+  operation      String
+  meta           Json?
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, createdAt])
+  @@index([runId])
+  @@map("assurance_audit_events")
 }
