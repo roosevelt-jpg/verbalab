@@ -206,7 +206,17 @@ export function runAudioIntegrityChecks(input: {
     asText.trimStart().startsWith('{') ||
     asText.includes('"error"') ||
     asText.startsWith('FIXTURE_TTS:') ||
-    /^[\x00-\x08\x0b\x0c\x0e-\x1f]*error/i.test(asText.slice(0, 64))
+    // Detect C0 control chars before "error" without a control-character regex literal.
+    (() => {
+      const head = asText.slice(0, 64);
+      const idx = head.toLowerCase().indexOf('error');
+      if (idx < 0) return false;
+      for (let i = 0; i < idx; i++) {
+        const code = head.charCodeAt(i);
+        if (code <= 0x1f && code !== 0x09 && code !== 0x0a && code !== 0x0d) return true;
+      }
+      return false;
+    })()
   ) {
     findings.push({
       stage: 'structural_audio_integrity',

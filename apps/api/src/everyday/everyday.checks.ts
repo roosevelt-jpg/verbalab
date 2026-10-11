@@ -16,11 +16,11 @@ export type QualityReport = {
 };
 
 const DEADLINE_RE =
-  /\b(?:by|before|due|deadline|pay\s+by|respond\s+by)\s+(\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}|\d{4}-\d{2}-\d{2}|[A-Z][a-z]+\s+\d{1,2},?\s+\d{4})/gi;
+  /\b(?:by|before|due|deadline|pay\s+by|respond\s+by)\s+(\d{1,2}[/-]\d{1,2}[/-]\d{2,4}|\d{4}-\d{2}-\d{2}|[A-Z][a-z]+\s+\d{1,2},?\s+\d{4})/gi;
 const AMOUNT_RE =
   /\b(?:GHS|GH₵|USD|\$|€|£)\s?([\d,]+(?:\.\d{2})?)|\b([\d,]+(?:\.\d{2})?)\s?(?:GHS|cedis)\b/gi;
 const REF_RE =
-  /\b(?:ref(?:erence)?(?:\s*(?:no|number|#))?|account|invoice)\s*[:#]?\s*([A-Z0-9\-]{4,})/gi;
+  /\b(?:ref(?:erence)?(?:\s*(?:no|number|#))?|account|invoice)\s*[:#]?\s*([A-Z0-9-]{4,})/gi;
 const NEGATION_RE = /\b(do not|don't|must not|never|not required|no longer)\b/i;
 
 /** Heuristic image/PDF quality gates. Fixture markers force recapture in tests. */

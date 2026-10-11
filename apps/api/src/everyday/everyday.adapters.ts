@@ -130,7 +130,21 @@ export class EverydayAdapters {
       }
       const fixtureText =
         process.env.EVERYDAY_FIXTURE_OCR_TEXT?.trim() ||
-        input.buffer.toString('utf8').replace(/[^\x09\x0A\x0D\x20-\x7E\u00A0-\uFFFF]/g, '').trim() ||
+        input.buffer
+          .toString('utf8')
+          .split('')
+          .filter((ch) => {
+            const code = ch.charCodeAt(0);
+            return (
+              code === 0x09 ||
+              code === 0x0a ||
+              code === 0x0d ||
+              (code >= 0x20 && code <= 0x7e) ||
+              code >= 0xa0
+            );
+          })
+          .join('')
+          .trim() ||
         'School notice. Please attend on 2026-10-20. Amount due: GHS 150. Reference: REF-00042. Do not ignore this letter.';
       const blocks = buildBlocksFromText(fixtureText, 1);
       return {

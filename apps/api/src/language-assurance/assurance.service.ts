@@ -480,10 +480,6 @@ export class LanguageAssuranceService {
     // Disposition (deterministic — models cannot approve)
     let disposition: Disposition = 'eligible_under_policy';
     const criticalFindings = allFindings.filter((f) => f.severity === 'critical');
-    const requiredUnavailable = unavailable.filter((u) => {
-      const stage = u.split(':')[0] as CheckStage;
-      return requiredStages.includes(stage) && stage !== 'structural_audio_integrity';
-    });
     // structural skipped_no_audio for text-only is OK; spoken unavailable when required is NOT a pass
     const spokenRequiredUnavailable = unavailable.some((u) => u.startsWith('spoken_realization:'));
     const fidelityUnavailable = unavailable.some((u) => u.startsWith('semantic_fidelity:'));
@@ -760,7 +756,7 @@ export class LanguageAssuranceService {
   }
 
   async getReport(runId: string, actor: AssuranceActor, format: 'json' | 'markdown' = 'json') {
-    const view = await this.runView(runId, actor);
+    await this.runView(runId, actor);
     const run = await this.prisma.assuranceVerificationRun.findFirstOrThrow({
       where: { id: runId, organizationId: actor.organizationId },
     });
