@@ -12,7 +12,7 @@ CREATE TABLE "voice_clones" (
     "watermark_required" BOOLEAN NOT NULL DEFAULT true,
     "sample_storage_keys" JSONB NOT NULL,
     "sample_count" INTEGER NOT NULL DEFAULT 0,
-    "provider" TEXT NOT NULL DEFAULT 'elevenlabs',
+    "provider" TEXT NOT NULL DEFAULT 'vendor_clone',
     "provider_voice_id" TEXT,
     "review_notes" TEXT,
     "reviewed_by" TEXT,
