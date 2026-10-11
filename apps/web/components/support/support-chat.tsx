@@ -12,9 +12,9 @@ type ChatMsg = {
 const SUGGESTIONS = [
   'How do I create an API key?',
   'Explain billing plans',
-  'Character quota exceeded',
-  'Workspace limits',
-  'Escalate to human',
+  'Language catalog count',
+  'Native catalog every country',
+  'Talk to a human',
 ];
 
 export function SupportChatWidget() {
@@ -27,7 +27,7 @@ export function SupportChatWidget() {
     {
       role: 'assistant',
       content:
-        'Hi — I am Lugemi Support. I resolve most API, billing, quota, workspace, speech, and translate questions without a human. For refunds, security incidents, or complex account issues, escalate and a teammate will follow up.',
+        'Hi — I am Lugemi Support. Every message is closed 100%: either concrete self-serve steps, or an auto-filed ticket with an id (refunds, security, Enterprise, or anything I cannot finish in-chat). Ask about API keys, catalogs (213 languages / 206 countries), billing, speech, or translate.',
     },
   ]);
   const endRef = useRef<HTMLDivElement>(null);
@@ -58,20 +58,31 @@ export function SupportChatWidget() {
       const body = (await res.json()) as {
         reply?: string;
         escalate?: boolean;
+        resolved?: boolean;
+        resolution?: string;
         ticketHint?: string | null;
-        ticketId?: string;
+        ticketId?: string | null;
         suggestions?: string[];
         error?: { message: string };
       };
       if (!res.ok) throw new Error(body.error?.message ?? `Support error (${res.status})`);
       const parts = [body.reply ?? '…'];
-      if (body.escalate && body.ticketHint) parts.push(body.ticketHint);
+      if (body.ticketHint) parts.push(body.ticketHint);
+      if (body.resolved && body.resolution) {
+        parts.push(
+          body.resolution === 'ticket'
+            ? 'Closure: 100% — tracked ticket filed.'
+            : 'Closure: 100% — self-serve steps above.',
+        );
+      }
       setMessages((m) => [
         ...m,
         { role: 'assistant', content: parts.join('\n\n'), escalate: body.escalate },
       ]);
-      if (body.escalate && !opts?.escalateOnly) setShowEscalateForm(true);
+      // Ticket already auto-filed for complex cases; only show email form for explicit human request.
       if (opts?.escalateOnly) setShowEscalateForm(false);
+      else if (body.escalate && !body.ticketId) setShowEscalateForm(true);
+      else setShowEscalateForm(false);
     } catch (err) {
       setMessages((m) => [
         ...m,
@@ -110,7 +121,7 @@ export function SupportChatWidget() {
           <header className="lg-support-head">
             <div>
               <strong>Lugemi Support</strong>
-              <p>Self-serve first · human when it is complex</p>
+              <p>100% closure · fix or tracked ticket every turn</p>
             </div>
             <button type="button" className="lg-support-close" onClick={() => setOpen(false)} aria-label="Close">
               ×
@@ -136,19 +147,6 @@ export function SupportChatWidget() {
                   className="lg-support-chip"
                   disabled={busy}
                   onClick={() => {
-                    if (s.toLowerCase().includes('escalate')) {
-                      setShowEscalateForm(true);
-                      setMessages((m) => [
-                        ...m,
-                        {
-                          role: 'assistant',
-                          content:
-                            'OK — add an optional email and confirm to queue a human. I stay available for API and billing questions.',
-                          escalate: true,
-                        },
-                      ]);
-                      return;
-                    }
                     void sendMessage(s);
                   }}
                 >
