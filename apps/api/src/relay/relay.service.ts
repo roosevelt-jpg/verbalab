@@ -111,7 +111,7 @@ export class RelayService implements OnModuleInit {
 
   /**
    * Ensure labeled demo staffed interpreters exist for every product market corridor
-   * (Africa, LATAM, SEA, Middle East). Never presented as a hired global pool.
+   * (Africa, LATAM, SEA, Middle East, Anglosphere). Never presented as a hired global pool.
    */
   async ensureDemoSupply(actor: RelayActor) {
     if (!demoInterpretersAllowed()) return { seeded: false, markets: 0 };

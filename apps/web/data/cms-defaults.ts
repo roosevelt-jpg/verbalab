@@ -28,12 +28,12 @@ export const CMS_DEFAULTS: CmsDocument = {
     domain: 'lugemi.com',
     tagline: 'Next-generation language intelligence for speaking agents.',
     positioning:
-      'Developers build AI agents that speak and talk across languages and accents — with cultural understanding of countries, ethnic groups, and tribes. Africa-first completeness; LATAM, SEA, Middle East, and the EU in scope. Own API and own models.',
+      'Developers build AI agents that speak and talk across languages and accents — with cultural understanding of countries, ethnic groups, and tribes. Africa-first completeness; LATAM, SEA, Middle East, Anglosphere country Englishes, and the EU in scope. Own API and own models.',
   },
   seo: {
     title: 'Lugemi — Africa-first language intelligence for speaking agents',
     description:
-      'Lugemi is Africa-first language intelligence infrastructure with a first-party API and first-party models for speech, text, and translation. Built for African languages, dialects, accents, and scripts; also supporting LATAM, Southeast Asia, the Middle East, and the EU.',
+      'Lugemi is Africa-first language intelligence infrastructure with a first-party API and first-party models for speech, text, and translation. Built for African languages, dialects, accents, and scripts; also supporting LATAM, Southeast Asia, the Middle East, Anglosphere country- and culture-identifying Englishes, and the EU.',
     ogImageUrl: '/brand/lugemi-email-logo.png',
     ogImageAlt: 'Lugemi',
   },
@@ -445,7 +445,7 @@ export const CMS_DEFAULTS: CmsDocument = {
       },
       {
         title: 'Freedom of priority',
-        body: 'Ship for Africa first, then expand into LATAM, Southeast Asia, the Middle East, and the EU with the same API surface.',
+        body: 'Ship for Africa first, then expand into LATAM, Southeast Asia, the Middle East, Anglosphere markets with distinct national Englishes, and the EU with the same API surface.',
       },
       {
         title: 'Digital infrastructure',

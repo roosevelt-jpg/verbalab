@@ -177,14 +177,35 @@ export function menaMarkets(): ProductMarket[] {
   });
 }
 
-/** Non-African product markets (LATAM + SEA + Middle East). */
+export function anglosphereMarkets(): ProductMarket[] {
+  const wanted = new Set<string>(
+    allWorldMarketCodes().filter((c) => WORLD_PRODUCT_REGION_BY_CODE[c] === 'anglosphere'),
+  );
+  return COUNTRY_PACK_SEEDS.filter((p) => wanted.has(p.code)).map((pack) => {
+    const worldRegion = 'anglosphere' as const;
+    return buildMarketFromPack(
+      pack,
+      worldRegion,
+      BRIDGE_BY_MARKET[pack.code] ?? ['en'],
+      MARKET_TIMEZONES[pack.code] ?? 'UTC',
+      buildCountryEnglishAccent({
+        code: pack.code,
+        nameEn: pack.nameEn,
+        region: pack.region,
+        worldRegion,
+      }),
+    );
+  });
+}
+
+/** Non-African product markets (LATAM + SEA + Middle East + Anglosphere). */
 export function worldMarkets(): ProductMarket[] {
-  return [...latamMarkets(), ...seaMarkets(), ...menaMarkets()];
+  return [...latamMarkets(), ...seaMarkets(), ...menaMarkets(), ...anglosphereMarkets()];
 }
 
 /**
  * All Everyday / LearnBack / Relay product markets:
- * Africa + LATAM + SEA + Middle East.
+ * Africa + LATAM + SEA + Middle East + Anglosphere.
  */
 export function productMarkets(african: ProductMarket[]): ProductMarket[] {
   const seen = new Set<string>();

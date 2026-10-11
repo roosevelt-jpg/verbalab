@@ -205,6 +205,7 @@ export const LANGUAGE_SEEDS: LanguageSeed[] = [
   { code: 'lo', nameEn: 'Lao', nameNative: 'ລາວ', script: 'Laoo', familyCode: 'tai_kadai', tier: 'vendor' },
   { code: 'lt', nameEn: 'Lithuanian', nameNative: 'Lietuvių', script: 'Latn', familyCode: 'indo_european', tier: 'vendor' },
   { code: 'lv', nameEn: 'Latvian', nameNative: 'Latviešu', script: 'Latn', familyCode: 'indo_european', tier: 'vendor' },
+  { code: 'mi', nameEn: 'Māori', nameNative: 'Te Reo Māori', script: 'Latn', familyCode: 'austronesian', tier: 'vendor' },
   { code: 'ms', nameEn: 'Malay', nameNative: 'Bahasa Melayu', script: 'Latn', familyCode: 'austronesian', tier: 'vendor' },
   { code: 'mt', nameEn: 'Maltese', nameNative: 'Malti', script: 'Latn', familyCode: 'afro_asiatic', tier: 'vendor' },
   { code: 'my', nameEn: 'Burmese', nameNative: 'မြန်မာ', script: 'Mymr', familyCode: 'sino_tibetan', tier: 'vendor' },

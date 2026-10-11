@@ -1,6 +1,7 @@
 /**
- * LATAM / SEA / Middle East market codes, bridges, timezones, and quote rates
- * for Everyday / LearnBack / Relay — same product contracts as African markets.
+ * LATAM / SEA / Middle East / Anglosphere market codes, bridges, timezones,
+ * and quote rates for Everyday / LearnBack / Relay — same product contracts
+ * as African markets.
  */
 
 export const LATAM_MARKET_CODES = [
@@ -65,12 +66,16 @@ export const MENA_MARKET_CODES = [
   'TR',
 ] as const;
 
-export type WorldProductRegion = 'latam' | 'sea' | 'mena';
+/** Major English-speaking markets with country- and culture-identifying Englishes. */
+export const ANGLOSPHERE_MARKET_CODES = ['US', 'CA', 'AU', 'NZ', 'GB', 'IE'] as const;
+
+export type WorldProductRegion = 'latam' | 'sea' | 'mena' | 'anglosphere';
 
 export const WORLD_PRODUCT_REGION_BY_CODE: Record<string, WorldProductRegion> = {
   ...Object.fromEntries(LATAM_MARKET_CODES.map((c) => [c, 'latam' as const])),
   ...Object.fromEntries(SEA_MARKET_CODES.map((c) => [c, 'sea' as const])),
   ...Object.fromEntries(MENA_MARKET_CODES.map((c) => [c, 'mena' as const])),
+  ...Object.fromEntries(ANGLOSPHERE_MARKET_CODES.map((c) => [c, 'anglosphere' as const])),
 };
 
 /** English always bridged; add admin languages where they are official bridges. */
@@ -115,6 +120,13 @@ export const BRIDGE_BY_MARKET: Record<string, string[]> = {
   MM: ['en', 'my'],
   BN: ['en', 'ms'],
   TL: ['en', 'pt', 'tet'],
+  // Anglosphere — country English + community / Indigenous / Celtic languages
+  US: ['en', 'es'],
+  CA: ['en', 'fr'],
+  AU: ['en', 'zh'],
+  NZ: ['en', 'mi'],
+  GB: ['en'],
+  IE: ['en', 'ga'],
   // Middle East
   SA: ['en', 'ar'],
   AE: ['en', 'ar'],
@@ -186,6 +198,12 @@ export const MARKET_TIMEZONES: Record<string, string> = {
   YE: 'Asia/Aden',
   PS: 'Asia/Hebron',
   TR: 'Europe/Istanbul',
+  US: 'America/New_York',
+  CA: 'America/Toronto',
+  AU: 'Australia/Sydney',
+  NZ: 'Pacific/Auckland',
+  GB: 'Europe/London',
+  IE: 'Europe/Dublin',
 };
 
 /** Approximate scheduled-session rate per 15 minutes in ISO minor units. */
@@ -238,8 +256,18 @@ export const RATE_PER_15_MIN_MINOR: Record<string, number> = {
   YER: 800_00,
   TRY: 100_00,
   USD: 1_500,
+  CAD: 2_000,
+  AUD: 2_500,
+  NZD: 2_500,
+  GBP: 1_200,
+  EUR: 1_400,
 };
 
 export function allWorldMarketCodes(): string[] {
-  return [...LATAM_MARKET_CODES, ...SEA_MARKET_CODES, ...MENA_MARKET_CODES];
+  return [
+    ...LATAM_MARKET_CODES,
+    ...SEA_MARKET_CODES,
+    ...MENA_MARKET_CODES,
+    ...ANGLOSPHERE_MARKET_CODES,
+  ];
 }

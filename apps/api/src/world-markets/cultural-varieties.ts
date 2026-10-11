@@ -3,14 +3,16 @@ import { LANGUAGE_SEEDS } from '../languages/language-seeds';
 import {
   latamLanguageSeed,
   menaLanguageSeed,
+  naLanguageSeed,
   seaLanguageSeed,
+  ukLanguageSeed,
 } from '../regional-language-registry/region-catalogs';
 import type { RegionalLanguageEntry } from '../regional-language-registry/regional-language-registry.types';
 import type { WorldProductRegion } from './region-defs';
 
 /**
  * Per-country languages, dialects, accents, and cultural context for
- * LATAM / SEA / Middle East product markets.
+ * LATAM / SEA / Middle East / Anglosphere product markets.
  */
 
 export type CulturalVariety = {
@@ -890,11 +892,313 @@ const CURATED_VARIETIES: Record<string, CulturalVariety[]> = {
       primaryLabel: true,
     },
   ],
+  // —— Anglosphere ——
+  US: [
+    {
+      languageCode: 'en',
+      languageName: 'English',
+      varietyName: 'American English',
+      dialects: ['General American', 'Western US', 'Midwestern'],
+      accents: ['General American (spoken)'],
+      bcp47: 'en-US',
+      accentIdentityId: 'us-general-american',
+      primaryLabel: true,
+      culturalNotes:
+        'General American is the product baseline — distinct from British/Canadian/Australian. Regional and ethnic Englishes are separate packs.',
+    },
+    {
+      languageCode: 'en',
+      languageName: 'English',
+      varietyName: 'Southern US English',
+      dialects: ['Southern American English', 'Texas English', 'Appalachian bridge'],
+      accents: ['Southern US English (spoken)'],
+      bcp47: 'en-US-south',
+      accentIdentityId: 'us-southern-english',
+      primaryLabel: false,
+      culturalNotes: 'Regional Southern US English — not interchangeable with General American.',
+    },
+    {
+      languageCode: 'en',
+      languageName: 'English',
+      varietyName: 'African American Vernacular English (AAVE)',
+      dialects: ['AAVE', 'African American Language bridge'],
+      accents: ['AAVE (spoken)'],
+      bcp47: 'en-US-aave',
+      accentIdentityId: 'us-aave',
+      primaryLabel: false,
+      culturalNotes:
+        'Catalog identity for culturally aware routing — not a caricature. Distinct from General American; community care required for corpora.',
+    },
+    {
+      languageCode: 'en',
+      languageName: 'English',
+      varietyName: 'Chicano English contact',
+      dialects: ['Chicano English', 'US Mexican Spanish contact'],
+      accents: ['Chicano English (spoken)'],
+      bcp47: 'en-US-chicano',
+      accentIdentityId: 'us-chicano-english',
+      primaryLabel: false,
+      culturalNotes: 'English in sustained contact with Mexican Spanish in the US Southwest.',
+    },
+    {
+      languageCode: 'es',
+      languageName: 'Spanish',
+      varietyName: 'US Mexican / Latino Spanish',
+      dialects: ['US Mexican Spanish', 'Caribbean US Spanish', 'US Salvadoran Spanish'],
+      accents: ['US Mexican Spanish (spoken)', 'Miami Spanish (spoken)'],
+      bcp47: 'es-US',
+      accentIdentityId: 'us-latino-spanish',
+      primaryLabel: true,
+      culturalNotes: 'Prefer es-US / es-MX locale packs for North American Spanish.',
+    },
+    {
+      languageCode: 'chr',
+      languageName: 'Cherokee',
+      varietyName: 'Cherokee (US)',
+      dialects: ['Oklahoma Cherokee', 'Eastern Cherokee'],
+      accents: ['Oklahoma Cherokee (spoken)'],
+      bcp47: 'chr-US',
+      accentIdentityId: 'us-cherokee',
+      primaryLabel: true,
+      culturalNotes: 'Indigenous language — cultural fields require community consent.',
+    },
+    {
+      languageCode: 'nv',
+      languageName: 'Navajo',
+      varietyName: 'Navajo (Diné)',
+      dialects: ['Western Navajo', 'Eastern Navajo'],
+      accents: ['Navajo (spoken)'],
+      bcp47: 'nv-US',
+      accentIdentityId: 'us-navajo',
+      primaryLabel: true,
+      culturalNotes: 'Indigenous language — cultural fields require community consent.',
+    },
+    {
+      languageCode: 'haw',
+      languageName: 'Hawaiian',
+      varietyName: 'Hawaiian (ʻŌlelo Hawaiʻi)',
+      dialects: ['Standard Hawaiian', 'Niʻihau'],
+      accents: ['Hawaiian (spoken)'],
+      bcp47: 'haw-US',
+      accentIdentityId: 'us-hawaiian',
+      primaryLabel: true,
+      culturalNotes: 'Indigenous language of Hawaiʻi — community care for cultural corpora.',
+    },
+    {
+      languageCode: 'hmn',
+      languageName: 'Hmong',
+      varietyName: 'Hmong (US diaspora)',
+      dialects: ['White Hmong', 'Green Hmong'],
+      accents: ['Hmong (spoken)'],
+      bcp47: 'hmn-US',
+      accentIdentityId: 'us-hmong',
+      primaryLabel: true,
+    },
+  ],
+  CA: [
+    {
+      languageCode: 'en',
+      languageName: 'English',
+      varietyName: 'Canadian English',
+      dialects: ['General Canadian', 'Atlantic Canadian', 'Prairie'],
+      accents: ['Canadian English (spoken)'],
+      bcp47: 'en-CA',
+      accentIdentityId: 'ca-canadian_english',
+      primaryLabel: true,
+      culturalNotes: 'Distinct from General American — Canadian raising and lexicon.',
+    },
+    {
+      languageCode: 'fr',
+      languageName: 'French',
+      varietyName: 'Québécois French',
+      dialects: ['Québécois', 'Acadian', 'Franco-Ontarian'],
+      accents: ['Québécois French (spoken)'],
+      bcp47: 'fr-CA',
+      accentIdentityId: 'ca-quebecois',
+      primaryLabel: true,
+      culturalNotes: 'fr-CA spelling and vocabulary differ from Metropolitan French.',
+    },
+    {
+      languageCode: 'iu',
+      languageName: 'Inuktitut',
+      varietyName: 'Inuktitut (Canada)',
+      dialects: ['Nunavut Inuktitut', 'Nunavik'],
+      accents: ['Inuktitut (spoken)'],
+      bcp47: 'iu-CA',
+      accentIdentityId: 'ca-inuktitut',
+      primaryLabel: true,
+      culturalNotes: 'Indigenous language — cultural fields require community consent.',
+    },
+  ],
+  AU: [
+    {
+      languageCode: 'en',
+      languageName: 'English',
+      varietyName: 'Australian English',
+      dialects: ['General Australian', 'Broad Australian', 'Cultivated Australian'],
+      accents: ['Australian English (spoken)'],
+      bcp47: 'en-AU',
+      accentIdentityId: 'au-australian_english',
+      primaryLabel: true,
+      culturalNotes: 'Distinct from British and New Zealand English.',
+    },
+    {
+      languageCode: 'en',
+      languageName: 'English',
+      varietyName: 'Aboriginal English contact',
+      dialects: ['Aboriginal English', 'Torres Strait contact bridge'],
+      accents: ['Aboriginal English (spoken)'],
+      bcp47: 'en-AU-aboriginal',
+      accentIdentityId: 'au-aboriginal-english',
+      primaryLabel: false,
+      culturalNotes:
+        'Contact variety — catalog for culturally aware routing; community consent required for cultural corpora.',
+    },
+    {
+      languageCode: 'zh',
+      languageName: 'Chinese (Simplified)',
+      varietyName: 'Australian Mandarin (community)',
+      dialects: ['Community Mandarin', 'Cantonese-heritage bridge'],
+      accents: ['Australian community Mandarin (spoken)'],
+      bcp47: 'zh-AU',
+      accentIdentityId: 'au-mandarin',
+      primaryLabel: true,
+      culturalNotes: 'Major community language corridor — not a claim that Mandarin is official.',
+    },
+  ],
+  NZ: [
+    {
+      languageCode: 'en',
+      languageName: 'English',
+      varietyName: 'New Zealand English',
+      dialects: ['General NZ English', 'Southland'],
+      accents: ['New Zealand English (spoken)'],
+      bcp47: 'en-NZ',
+      accentIdentityId: 'nz-new_zealand_english',
+      primaryLabel: true,
+      culturalNotes: 'Distinct from Australian English; Māori loans are common.',
+    },
+    {
+      languageCode: 'en',
+      languageName: 'English',
+      varietyName: 'Pasifika English contact',
+      dialects: ['Pasifika English', 'Samoan/Tongan contact bridge'],
+      accents: ['Pasifika English (spoken)'],
+      bcp47: 'en-NZ-pasifika',
+      accentIdentityId: 'nz-pasifika-english',
+      primaryLabel: false,
+      culturalNotes: 'English in sustained contact with Pasifika communities in Aotearoa.',
+    },
+    {
+      languageCode: 'mi',
+      languageName: 'Māori',
+      varietyName: 'Te Reo Māori',
+      dialects: ['Standard Māori', 'Western / Eastern dialect groups'],
+      accents: ['Te Reo Māori (spoken)'],
+      bcp47: 'mi-NZ',
+      accentIdentityId: 'nz-maori',
+      primaryLabel: true,
+      culturalNotes: 'Official language of Aotearoa New Zealand — community care for cultural corpora.',
+    },
+  ],
+  GB: [
+    {
+      languageCode: 'en',
+      languageName: 'English',
+      varietyName: 'British English',
+      dialects: ['Received Pronunciation influence', 'Estuary English', 'Southern English'],
+      accents: ['British English (spoken)'],
+      bcp47: 'en-GB',
+      accentIdentityId: 'gb-british',
+      primaryLabel: true,
+      culturalNotes:
+        'UK baseline — not American/Australian. Scottish, Welsh, and Northern Englishes are separate packs.',
+    },
+    {
+      languageCode: 'en',
+      languageName: 'English',
+      varietyName: 'Scottish English',
+      dialects: ['Scottish Standard English', 'Glaswegian bridge'],
+      accents: ['Scottish English (spoken)'],
+      bcp47: 'en-GB-scotland',
+      accentIdentityId: 'gb-scottish-english',
+      primaryLabel: false,
+      culturalNotes: 'Distinct from RP-influenced British English and from Scottish Gaelic.',
+    },
+    {
+      languageCode: 'en',
+      languageName: 'English',
+      varietyName: 'Welsh English',
+      dialects: ['Welsh English', 'South Wales English'],
+      accents: ['Welsh English (spoken)'],
+      bcp47: 'en-GB-wales',
+      accentIdentityId: 'gb-welsh-english',
+      primaryLabel: false,
+      culturalNotes: 'English in Wales with Welsh substrate influence — distinct from RP.',
+    },
+    {
+      languageCode: 'en',
+      languageName: 'English',
+      varietyName: 'Northern English',
+      dialects: ['Northern English', 'Yorkshire', 'Geordie bridge'],
+      accents: ['Northern English (spoken)'],
+      bcp47: 'en-GB-north',
+      accentIdentityId: 'gb-northern-english',
+      primaryLabel: false,
+      culturalNotes: 'Northern English varieties — not interchangeable with Southern/RP baseline.',
+    },
+    {
+      languageCode: 'cy',
+      languageName: 'Welsh',
+      varietyName: 'Welsh (Cymraeg)',
+      dialects: ['North Welsh', 'South Welsh'],
+      accents: ['Welsh (spoken)'],
+      bcp47: 'cy-GB',
+      accentIdentityId: 'gb-welsh',
+      primaryLabel: true,
+    },
+    {
+      languageCode: 'gd',
+      languageName: 'Scottish Gaelic',
+      varietyName: 'Scottish Gaelic (Gàidhlig)',
+      dialects: ['Hebridean', 'Mainland'],
+      accents: ['Scottish Gaelic (spoken)'],
+      bcp47: 'gd-GB',
+      accentIdentityId: 'gb-scottish-gaelic',
+      primaryLabel: true,
+    },
+  ],
+  IE: [
+    {
+      languageCode: 'en',
+      languageName: 'English',
+      varietyName: 'Irish English',
+      dialects: ['Dublin English', 'Hiberno-English', 'Cork'],
+      accents: ['Irish English (spoken)'],
+      bcp47: 'en-IE',
+      accentIdentityId: 'ie-irish_english',
+      primaryLabel: true,
+      culturalNotes: 'Distinct from British English — Hiberno-English syntax and lexicon.',
+    },
+    {
+      languageCode: 'ga',
+      languageName: 'Irish',
+      varietyName: 'Irish (Gaeilge)',
+      dialects: ['Connacht', 'Munster', 'Ulster'],
+      accents: ['Irish (spoken)'],
+      bcp47: 'ga-IE',
+      accentIdentityId: 'ie-gaeilge',
+      primaryLabel: true,
+      culturalNotes: 'Official language of Ireland alongside English.',
+    },
+  ],
 };
 
 function registryEntriesForRegion(worldRegion: WorldProductRegion): RegionalLanguageEntry[] {
   if (worldRegion === 'latam') return latamLanguageSeed();
   if (worldRegion === 'sea') return seaLanguageSeed();
+  if (worldRegion === 'mena') return menaLanguageSeed();
+  if (worldRegion === 'anglosphere') return [...naLanguageSeed(), ...ukLanguageSeed()];
   return menaLanguageSeed();
 }
 
@@ -914,7 +1218,15 @@ function countryMatchesRegistry(entry: RegionalLanguageEntry, market: MarketInpu
           rl.includes('mexico'))) ||
       (market.worldRegion === 'sea' && rl.includes('southeast')) ||
       (market.worldRegion === 'mena' &&
-        (rl.includes('gulf') || rl.includes('levant') || rl.includes('arab')))
+        (rl.includes('gulf') || rl.includes('levant') || rl.includes('arab'))) ||
+      (market.worldRegion === 'anglosphere' &&
+        (rl.includes('united states') ||
+          rl.includes('canada') ||
+          rl.includes('united kingdom') ||
+          rl.includes('australia') ||
+          rl.includes('new zealand') ||
+          rl.includes('ireland') ||
+          rl.includes('british')))
     );
   });
 }
@@ -974,8 +1286,8 @@ export function buildCulturalVarietyAccentIdentitySeeds(
     for (const variety of market.culturalVarieties) {
       const id = variety.accentIdentityId ?? `${market.code.toLowerCase()}-${variety.languageCode}`;
       if (seen.has(id)) continue;
-      // Skip generic English — handled by country English accents.
-      if (variety.languageCode === 'en') continue;
+      // Primary country English packs are generated separately; keep ethnic/regional English varieties.
+      if (variety.languageCode === 'en' && variety.primaryLabel) continue;
       seen.add(id);
       seeds.push({
         id,

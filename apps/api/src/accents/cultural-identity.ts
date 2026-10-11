@@ -47,6 +47,18 @@ export type SpeechVariety =
   | 'mexican_spanish'
   | 'british_english'
   | 'american_english'
+  | 'canadian_english'
+  | 'australian_english'
+  | 'new_zealand_english'
+  | 'irish_english'
+  | 'southern_us_english'
+  | 'african_american_vernacular_english'
+  | 'chicano_english'
+  | 'aboriginal_english'
+  | 'pasifika_english'
+  | 'scottish_english'
+  | 'welsh_english'
+  | 'northern_english'
   | 'cameroonian_pidgin'
   | 'central_thai'
   | 'northern_vietnamese'
@@ -95,6 +107,18 @@ export const SPEECH_VARIETY_BY_PACK_ID: Record<string, SpeechVariety> = {
   'mx-spanish': 'mexican_spanish',
   'gb-british': 'british_english',
   'us-general-american': 'american_english',
+  'ca-canadian_english': 'canadian_english',
+  'au-australian_english': 'australian_english',
+  'nz-new_zealand_english': 'new_zealand_english',
+  'ie-irish_english': 'irish_english',
+  'us-southern-english': 'southern_us_english',
+  'us-aave': 'african_american_vernacular_english',
+  'us-chicano-english': 'chicano_english',
+  'au-aboriginal-english': 'aboriginal_english',
+  'nz-pasifika-english': 'pasifika_english',
+  'gb-scottish-english': 'scottish_english',
+  'gb-welsh-english': 'welsh_english',
+  'gb-northern-english': 'northern_english',
   'cm-pidgin': 'cameroonian_pidgin',
   'th-central': 'central_thai',
   'vn-hanoi': 'northern_vietnamese',

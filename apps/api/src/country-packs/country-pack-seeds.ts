@@ -380,6 +380,55 @@ const CURATED_OVERRIDES: Record<string, CuratedOverride> = {
     relatedAccentCodes: ['tr-tr', 'en-tr'],
     culturalNotes: 'Istanbul Turkish plus Kurmanji Kurdish; Turkish English for the bridge.',
   },
+  // —— Anglosphere (country- and culture-identifying Englishes) ——
+  US: {
+    primaryLanguages: ['en', 'es', 'chr', 'nv', 'haw', 'hmn'],
+    bcp47Tags: ['en-US', 'es-US', 'chr-US', 'nv-US', 'haw-US', 'hmn-US'],
+    relatedDialectCodes: ['en-us-general-american', 'es-us'],
+    relatedAccentCodes: ['en-us', 'es-us'],
+    culturalNotes:
+      'General American English is the product baseline — distinct from British, Canadian, Australian, and New Zealand. Regional and ethnic Englishes (Southern, AAVE, Chicano English contact) are separate identity packs. Spanish is the major community bridge; Indigenous languages require community consent for cultural corpora.',
+  },
+  CA: {
+    primaryLanguages: ['en', 'fr', 'iu'],
+    bcp47Tags: ['en-CA', 'fr-CA', 'iu-CA'],
+    relatedDialectCodes: ['en-ca', 'fr-ca'],
+    relatedAccentCodes: ['en-ca', 'fr-ca'],
+    culturalNotes:
+      'Canadian English is country-identifying (Canadian raising, lexicon) — not interchangeable with General American. Québécois French (fr-CA) is the major French variety; Inuktitut and other Indigenous languages require community consent.',
+  },
+  AU: {
+    primaryLanguages: ['en', 'zh'],
+    bcp47Tags: ['en-AU', 'zh-AU'],
+    relatedDialectCodes: ['en-au'],
+    relatedAccentCodes: ['en-au'],
+    culturalNotes:
+      'Australian English is country-identifying — distinct from British and New Zealand English. Aboriginal English contact is a separate cultural pack; Mandarin is a major community corridor language.',
+  },
+  NZ: {
+    primaryLanguages: ['en', 'mi'],
+    bcp47Tags: ['en-NZ', 'mi-NZ'],
+    relatedDialectCodes: ['en-nz', 'mi-nz'],
+    relatedAccentCodes: ['en-nz', 'mi-nz'],
+    culturalNotes:
+      'New Zealand English is country-identifying with Māori loans — distinct from Australian English. Te Reo Māori is an official language; Pasifika English contact is a separate cultural pack.',
+  },
+  GB: {
+    primaryLanguages: ['en', 'cy', 'gd'],
+    bcp47Tags: ['en-GB', 'cy-GB', 'gd-GB'],
+    relatedDialectCodes: ['en-gb-british', 'cy-gb', 'gd-gb'],
+    relatedAccentCodes: ['en-gb', 'cy-gb', 'gd-gb'],
+    culturalNotes:
+      'British English is the UK baseline — not American/Australian. Scottish, Welsh, and Northern Englishes are separate cultural packs; Welsh and Scottish Gaelic are national languages requiring community care.',
+  },
+  IE: {
+    primaryLanguages: ['en', 'ga'],
+    bcp47Tags: ['en-IE', 'ga-IE'],
+    relatedDialectCodes: ['en-ie', 'ga-ie'],
+    relatedAccentCodes: ['en-ie', 'ga-ie'],
+    culturalNotes:
+      'Irish English (Hiberno-English) is country-identifying — distinct from British English. Irish (Gaeilge) is an official language alongside English.',
+  },
 };
 
 function regionFromBcp47(tag: string): string | null {

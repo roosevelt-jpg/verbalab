@@ -6,7 +6,7 @@
 - Web: `/relay`, `/relay/bookings/[id]`, `/relay/offers`, `/relay/ops`
 - SDK: TypeScript `client.relay`
 - Entitlement: plan feature `relay` (Pro+), org `featureOverrides.relay`, `RELAY_OPEN`, `RELAY_DISABLED`
-- Markets: `allProductMarkets()` — Africa (`AFRICAN_MARKET_CODES`) + LATAM + SEA + Middle East (`apps/api/src/world-markets`). Corridors are local country varieties ↔ country-identifying English (e.g. Nigerian English / `en-NG`, Mexican Spanish ↔ Mexican English, Filipino/Cebuano ↔ Filipino English, Gulf Arabic ↔ Saudi English). Demo interpreters seed per market via `ensureDemoSupply`.
+- Markets: `allProductMarkets()` — Africa (`AFRICAN_MARKET_CODES`) + LATAM + SEA + Middle East + Anglosphere (`apps/api/src/world-markets`). Corridors are local country varieties ↔ country-identifying English (e.g. Nigerian English / `en-NG`, Mexican Spanish ↔ Mexican English, Filipino/Cebuano ↔ Filipino English, Gulf Arabic ↔ Saudi English, Spanish ↔ American English / `en-US`, French ↔ Canadian English / `en-CA`, Māori ↔ New Zealand English / `en-NZ`, Welsh ↔ British English / `en-GB`). Ethnic and regional Englishes (AAVE, Southern US, Scottish, Aboriginal English contact, Pasifika English) are separate cultural accent packs. Demo interpreters seed per market via `ensureDemoSupply`.
 
 ## Environment
 

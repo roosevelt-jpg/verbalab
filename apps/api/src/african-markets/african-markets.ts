@@ -313,7 +313,7 @@ export function africanMarkets(): AfricanMarket[] {
   }).map((m) => asAfricaProductMarkets([m])[0]!);
 }
 
-/** Africa + LATAM + SEA + Middle East product markets. */
+/** Africa + LATAM + SEA + Middle East + Anglosphere product markets. */
 export function allProductMarkets(): ProductMarket[] {
   return productMarkets(africanMarkets() as ProductMarket[]);
 }
@@ -346,6 +346,15 @@ export function languageLabel(
   if (code === 'nah') return 'Nahuatl';
   if (code === 'ckb') return 'Central Kurdish (Sorani)';
   if (code === 'tet') return 'Tetum';
+  if (code === 'mi') return 'Māori';
+  if (code === 'ga') return 'Irish';
+  if (code === 'cy') return 'Welsh';
+  if (code === 'gd') return 'Scottish Gaelic';
+  if (code === 'chr') return 'Cherokee';
+  if (code === 'nv') return 'Navajo';
+  if (code === 'haw') return 'Hawaiian';
+  if (code === 'hmn') return 'Hmong';
+  if (code === 'iu') return 'Inuktitut';
   const hit = LANGUAGE_BY_CODE.get(code);
   return hit?.nameEn ?? code;
 }
@@ -418,7 +427,7 @@ export function buildRelayCorridors(): BuiltRelayCorridor[] {
             delivery: 'browser_audio',
             telephoneBridging: false,
             note: usesEnglish
-              ? `${pairNote(market.nameEn)} English side uses ${market.englishAccent.nameEn} (${market.englishAccent.bcp47}) — country-identifying, not US/UK.`
+              ? `${pairNote(market.nameEn)} English side uses ${market.englishAccent.nameEn} (${market.englishAccent.bcp47}) — country-identifying variety, not interchangeable with other national Englishes.`
               : pairNote(market.nameEn),
             marketCode: market.code,
             marketName: market.nameEn,

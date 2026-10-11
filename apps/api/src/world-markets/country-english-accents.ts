@@ -2,7 +2,7 @@ import type { AccentIdentitySeed } from '../accents/accent-identity-seeds';
 import type { WorldProductRegion } from './region-defs';
 
 /**
- * Country-identifying English accents for LATAM / SEA / Middle East.
+ * Country-identifying English accents for LATAM / SEA / Middle East / Anglosphere.
  * English is a universal bridge; each market keeps its own variety.
  */
 
@@ -295,11 +295,97 @@ const CURATED: Record<string, AccentOverride> = {
     lifestyleTags: ['tehran_professional', 'mena_english', 'persian_contact'],
     voiceProvisioning: 'nearest_world_english',
   },
+  US: {
+    demonym: 'American',
+    nameEn: 'American English',
+    speechVariety: 'american_english',
+    echoVoiceId: 'own:en-kofi',
+    echoModelVariant: 'lugemi-echo-voice-us-english',
+    culturalIdentity: 'American English · General American broadcast · Multi-ethnic',
+    identityProfile:
+      'General American English — broadcast and professional baseline. Distinct from British, Canadian, Australian, and New Zealand Englishes; regional and ethnic varieties (Southern, AAVE, Chicano English contact) are separate identity packs.',
+    pronunciationMarkers: ['yeah', 'okay', 'awesome', 'got it', 'sure thing'],
+    samplePhrase: 'Hey, yeah — okay, awesome! Got it. Sure thing, we can start now.',
+    lifestyleTags: ['general_american', 'anglosphere_english', 'us_broadcast'],
+    voiceProvisioning: 'nearest_world_english',
+  },
+  CA: {
+    demonym: 'Canadian',
+    nameEn: 'Canadian English',
+    speechVariety: 'canadian_english',
+    echoVoiceId: 'own:en-kofi',
+    echoModelVariant: 'lugemi-echo-voice-ca-english',
+    culturalIdentity: 'Canadian English · Toronto / national media · Distinct from US',
+    identityProfile:
+      'Canadian English — national media and professional speech. Canadian raising and lexical markers (eh, toque, washroom); not interchangeable with General American.',
+    pronunciationMarkers: ['eh', 'sorry', 'washroom', 'toque', 'about'],
+    samplePhrase: 'Good morning. Sorry — shall we start? The washroom is down the hall, eh.',
+    lifestyleTags: ['canadian_english', 'anglosphere_english', 'canadian_raising'],
+    voiceProvisioning: 'nearest_world_english',
+  },
+  AU: {
+    demonym: 'Australian',
+    nameEn: 'Australian English',
+    speechVariety: 'australian_english',
+    echoVoiceId: 'own:en-kofi',
+    echoModelVariant: 'lugemi-echo-voice-au-english',
+    culturalIdentity: 'Australian English · National broadcast · Distinct vowel system',
+    identityProfile:
+      'Australian English — Sydney/Melbourne national media. Distinct vowel system and lexicon (arvo, mate, no worries); not British or New Zealand English.',
+    pronunciationMarkers: ['mate', 'arvo', 'no worries', 'reckon', 'yeah nah'],
+    samplePhrase: 'G’day mate. No worries — we can start this arvo. Reckon we’re ready.',
+    lifestyleTags: ['australian_english', 'anglosphere_english', 'aussie_broadcast'],
+    voiceProvisioning: 'nearest_world_english',
+  },
+  NZ: {
+    demonym: 'New Zealand',
+    nameEn: 'New Zealand English',
+    speechVariety: 'new_zealand_english',
+    echoVoiceId: 'own:en-kofi',
+    echoModelVariant: 'lugemi-echo-voice-nz-english',
+    culturalIdentity: 'New Zealand English · Aotearoa · Māori contact',
+    identityProfile:
+      'New Zealand English — national media with Māori loanwords (kia ora, whānau). Distinct from Australian English; vowel shifts identify NZ speakers.',
+    pronunciationMarkers: ['kia ora', 'sweet as', 'yeah nah', 'bro', 'chur'],
+    samplePhrase: 'Kia ora. Sweet as — we can start now. Yeah nah, we’re ready.',
+    lifestyleTags: ['new_zealand_english', 'anglosphere_english', 'maori_loans'],
+    voiceProvisioning: 'nearest_world_english',
+  },
+  GB: {
+    demonym: 'British',
+    nameEn: 'British English',
+    speechVariety: 'british_english',
+    echoVoiceId: 'own:en-kofi',
+    echoModelVariant: 'lugemi-echo-voice-gb-english',
+    culturalIdentity: 'British English · UK national / RP-influenced · Multi-nation',
+    identityProfile:
+      'British English — UK professional and media baseline. Distinct from American, Canadian, Australian, and Irish Englishes; Scottish, Welsh, and Northern English are separate cultural varieties.',
+    pronunciationMarkers: ['cheers', 'brilliant', 'quite', 'rather', 'mate'],
+    samplePhrase: 'Cheers! Brilliant — shall we crack on? Quite straightforward, really.',
+    lifestyleTags: ['british_english', 'anglosphere_english', 'uk_broadcast'],
+    voiceProvisioning: 'nearest_world_english',
+  },
+  IE: {
+    demonym: 'Irish',
+    nameEn: 'Irish English',
+    speechVariety: 'irish_english',
+    echoVoiceId: 'own:en-kofi',
+    echoModelVariant: 'lugemi-echo-voice-ie-english',
+    culturalIdentity: 'Irish English · Dublin / national · Distinct from British',
+    identityProfile:
+      'Irish English — Dublin and national media. Distinct from British English; Hiberno-English syntax and lexicon (grand, yer man) identify Irish speakers.',
+    pronunciationMarkers: ['grand', 'yer man', 'sure', 'thanks a million', 'deadly'],
+    samplePhrase: 'How’s it going? Grand — sure we can start now. Thanks a million.',
+    lifestyleTags: ['irish_english', 'anglosphere_english', 'hiberno_english'],
+    voiceProvisioning: 'nearest_world_english',
+  },
 };
 
 /** Hand-authored identity ids that must not be duplicated by generators. */
 export const HAND_AUTHORED_WORLD_ENGLISH_IDS: Record<string, string> = {
   PH: 'ph-filipino-english',
+  US: 'us-general-american',
+  GB: 'gb-british',
 };
 
 const DEMONYMS: Record<string, string> = {
@@ -355,12 +441,19 @@ const DEMONYMS: Record<string, string> = {
   YE: 'Yemeni',
   PS: 'Palestinian',
   TR: 'Turkish',
+  US: 'American',
+  CA: 'Canadian',
+  AU: 'Australian',
+  NZ: 'New Zealand',
+  GB: 'British',
+  IE: 'Irish',
 };
 
 const REGION_VOICE: Record<string, string> = {
   latam: 'own:en-ph-female',
   sea: 'own:en-ph-female',
   mena: 'own:en-ke-female',
+  anglosphere: 'own:en-kofi',
 };
 
 function slugify(name: string): string {

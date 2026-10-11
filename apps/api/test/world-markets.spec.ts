@@ -7,9 +7,11 @@ import {
 import { ACCENT_IDENTITY_SEEDS } from '../src/accents/accent-identity-seeds';
 import { CULTURAL_ENGLISH_BCP47_DEFAULTS } from '../src/accents/cultural-identity';
 import {
+  ANGLOSPHERE_MARKET_CODES,
   LATAM_MARKET_CODES,
   MENA_MARKET_CODES,
   SEA_MARKET_CODES,
+  anglosphereMarkets,
   latamMarkets,
   menaMarkets,
   seaMarkets,
@@ -18,13 +20,30 @@ import { everydayCatalog } from '../src/everyday/everyday.catalog';
 import { learnbackCatalog } from '../src/learnback/learnback.catalog';
 import { relayCatalog } from '../src/relay/relay.catalog';
 
-describe('LATAM / SEA / Middle East markets', () => {
-  it('covers LATAM, SEA, and Middle East market codes with local languages', () => {
+describe('LATAM / SEA / Middle East / Anglosphere markets', () => {
+  it('covers LATAM, SEA, Middle East, and Anglosphere market codes with local languages', () => {
     expect(latamMarkets().length).toBe(LATAM_MARKET_CODES.length);
     expect(seaMarkets().length).toBe(SEA_MARKET_CODES.length);
     expect(menaMarkets().length).toBe(MENA_MARKET_CODES.length);
+    expect(anglosphereMarkets().length).toBe(ANGLOSPHERE_MARKET_CODES.length);
 
-    for (const code of ['MX', 'BR', 'AR', 'PH', 'ID', 'TH', 'SA', 'AE', 'IQ'] as const) {
+    for (const code of [
+      'MX',
+      'BR',
+      'AR',
+      'PH',
+      'ID',
+      'TH',
+      'SA',
+      'AE',
+      'IQ',
+      'US',
+      'CA',
+      'AU',
+      'NZ',
+      'GB',
+      'IE',
+    ] as const) {
       const m = allProductMarkets().find((x) => x.code === code);
       expect(m, code).toBeTruthy();
       expect(m!.localLanguages.length + m!.bridgeLanguages.length).toBeGreaterThan(0);
@@ -38,6 +57,28 @@ describe('LATAM / SEA / Middle East markets', () => {
       expect(m!.culturalVarieties.length).toBeGreaterThan(0);
       expect(m!.culturalVarieties.some((v) => v.varietyName.endsWith('English'))).toBe(true);
     }
+
+    const us = allProductMarkets().find((x) => x.code === 'US')!;
+    expect(us.englishAccent.accentIdentityId).toBe('us-general-american');
+    expect(us.culturalVarieties.some((v) => v.accentIdentityId === 'us-aave')).toBe(true);
+    expect(us.culturalVarieties.some((v) => v.accentIdentityId === 'us-southern-english')).toBe(
+      true,
+    );
+
+    const gb = allProductMarkets().find((x) => x.code === 'GB')!;
+    expect(gb.englishAccent.accentIdentityId).toBe('gb-british');
+    expect(gb.culturalVarieties.some((v) => v.accentIdentityId === 'gb-scottish-english')).toBe(
+      true,
+    );
+    expect(gb.localLanguages).toEqual(expect.arrayContaining(['cy', 'gd']));
+
+    const ca = allProductMarkets().find((x) => x.code === 'CA')!;
+    expect(ca.englishAccent.nameEn).toBe('Canadian English');
+    expect(ca.bridgeLanguages).toEqual(expect.arrayContaining(['en', 'fr']));
+
+    const nz = allProductMarkets().find((x) => x.code === 'NZ')!;
+    expect(nz.englishAccent.nameEn).toBe('New Zealand English');
+    expect(nz.localLanguages).toContain('mi');
   });
 
   it('labels corridors with country English and local dialect varieties', () => {
@@ -81,10 +122,74 @@ describe('LATAM / SEA / Middle East markets', () => {
         (c) => c.marketCode === 'ID' && c.label.toLowerCase().includes('javanese'),
       ),
     ).toBe(true);
+
+    expect(
+      relay.some(
+        (c) =>
+          c.marketCode === 'US' &&
+          c.label.includes('American English') &&
+          (c.label.includes('Spanish') || c.label.includes('Navajo') || c.label.includes('Cherokee')),
+      ),
+    ).toBe(true);
+    expect(
+      relay.some(
+        (c) =>
+          c.marketCode === 'CA' &&
+          c.label.includes('Canadian English') &&
+          c.label.toLowerCase().includes('québécois'),
+      ),
+    ).toBe(true);
+    expect(
+      relay.some(
+        (c) =>
+          c.marketCode === 'NZ' &&
+          c.label.includes('New Zealand English') &&
+          (c.label.includes('Māori') || c.label.includes('Maori')),
+      ),
+    ).toBe(true);
+    expect(
+      relay.some(
+        (c) =>
+          c.marketCode === 'GB' &&
+          c.label.includes('British English') &&
+          (c.label.includes('Welsh') || c.label.includes('Scottish Gaelic')),
+      ),
+    ).toBe(true);
+    expect(
+      relay.some(
+        (c) =>
+          c.marketCode === 'IE' &&
+          c.label.includes('Irish English') &&
+          c.label.includes('Irish'),
+      ),
+    ).toBe(true);
+    expect(
+      relay.some(
+        (c) =>
+          c.marketCode === 'AU' &&
+          c.label.includes('Australian English') &&
+          c.label.toLowerCase().includes('mandarin'),
+      ),
+    ).toBe(true);
   });
 
   it('wires cultural English defaults and accent-identity packs for world markets', () => {
-    for (const code of ['MX', 'BR', 'PH', 'SG', 'SA', 'AE', 'LB', 'TR'] as const) {
+    for (const code of [
+      'MX',
+      'BR',
+      'PH',
+      'SG',
+      'SA',
+      'AE',
+      'LB',
+      'TR',
+      'US',
+      'CA',
+      'AU',
+      'NZ',
+      'GB',
+      'IE',
+    ] as const) {
       const def = CULTURAL_ENGLISH_BCP47_DEFAULTS[`en-${code}`];
       expect(def, `en-${code}`).toBeTruthy();
       expect(ACCENT_IDENTITY_SEEDS.some((s) => s.id === def!.accentIdentityId)).toBe(true);
@@ -92,15 +197,23 @@ describe('LATAM / SEA / Middle East markets', () => {
     expect(ACCENT_IDENTITY_SEEDS.some((s) => s.id === 'ar-rioplatense')).toBe(true);
     expect(ACCENT_IDENTITY_SEEDS.some((s) => s.id === 'ae-gulf-arabic')).toBe(true);
     expect(ACCENT_IDENTITY_SEEDS.some((s) => s.id === 'pe-quechua')).toBe(true);
+    expect(ACCENT_IDENTITY_SEEDS.some((s) => s.id === 'us-aave')).toBe(true);
+    expect(ACCENT_IDENTITY_SEEDS.some((s) => s.id === 'us-southern-english')).toBe(true);
+    expect(ACCENT_IDENTITY_SEEDS.some((s) => s.id === 'gb-scottish-english')).toBe(true);
+    expect(ACCENT_IDENTITY_SEEDS.some((s) => s.id === 'au-aboriginal-english')).toBe(true);
+    expect(ACCENT_IDENTITY_SEEDS.some((s) => s.id === 'nz-pasifika-english')).toBe(true);
+    expect(ACCENT_IDENTITY_SEEDS.some((s) => s.id === 'nz-maori')).toBe(true);
+    expect(ACCENT_IDENTITY_SEEDS.some((s) => s.id === 'ca-quebecois')).toBe(true);
     expect(ACCENT_IDENTITY_SEEDS.length).toBeGreaterThan(150);
   });
 
   it('expands product catalogs beyond Africa-only counts', () => {
     const markets = allProductMarkets();
-    expect(markets.length).toBeGreaterThanOrEqual(90);
+    expect(markets.length).toBeGreaterThanOrEqual(96);
     expect(markets.some((m) => m.worldRegion === 'latam')).toBe(true);
     expect(markets.some((m) => m.worldRegion === 'sea')).toBe(true);
     expect(markets.some((m) => m.worldRegion === 'mena')).toBe(true);
+    expect(markets.some((m) => m.worldRegion === 'anglosphere')).toBe(true);
     expect(markets.some((m) => m.worldRegion === 'africa')).toBe(true);
 
     const relay = relayCatalog();
@@ -127,11 +240,8 @@ describe('LATAM / SEA / Middle East markets', () => {
       ).toBe(true);
       expect(m.culturalVarieties.length, m.code).toBeGreaterThan(0);
 
-      // English-only markets still get Relay/Everyday corridors via local↔bridge
-      // when locals exist; when only English, bridge-only pairs may be sparse —
-      // at least LearnBack or Everyday should reference the market when it has
-      // non-English languages OR English cultural variety.
-      const hasNonEn = m.localLanguages.some((l) => l !== 'en') ||
+      const hasNonEn =
+        m.localLanguages.some((l) => l !== 'en') ||
         m.bridgeLanguages.some((l) => l !== 'en');
       if (hasNonEn) {
         expect(relay.some((c) => c.marketCode === m.code), `relay ${m.code}`).toBe(true);
@@ -144,10 +254,15 @@ describe('LATAM / SEA / Middle East markets', () => {
       }
     }
 
-    // Spot-check world corridors exist
     expect(relay.some((c) => c.marketCode === 'MX')).toBe(true);
     expect(relay.some((c) => c.marketCode === 'PH')).toBe(true);
     expect(relay.some((c) => c.marketCode === 'AE')).toBe(true);
     expect(relay.some((c) => c.marketCode === 'BR')).toBe(true);
+    expect(relay.some((c) => c.marketCode === 'US')).toBe(true);
+    expect(relay.some((c) => c.marketCode === 'CA')).toBe(true);
+    expect(relay.some((c) => c.marketCode === 'AU')).toBe(true);
+    expect(relay.some((c) => c.marketCode === 'NZ')).toBe(true);
+    expect(relay.some((c) => c.marketCode === 'GB')).toBe(true);
+    expect(relay.some((c) => c.marketCode === 'IE')).toBe(true);
   });
 });
