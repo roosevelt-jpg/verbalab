@@ -116,7 +116,7 @@ function CreativeSpeechEmbedInner({
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 220px', gap: '1.25rem' }}>
+      <div className="lg-creative-split">
         <div>
           <CreativeApiKeyField value={apiKey} onChange={setApiKey} />
           <div style={{ display: 'grid', gap: '0.75rem', marginTop: '1rem' }}>

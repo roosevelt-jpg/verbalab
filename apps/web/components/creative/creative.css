@@ -1505,6 +1505,24 @@
   }
 }
 
+.lg-creative-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  gap: 1.25rem;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .lg-creative-split {
+    grid-template-columns: 1fr;
+  }
+
+  .lg-creative-split > .lg-ana {
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
 @media (max-width: 480px) {
   .lg-creative-quick {
     gap: 0.65rem 0.5rem;

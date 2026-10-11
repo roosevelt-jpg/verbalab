@@ -108,7 +108,7 @@ function CreativeCaptionsInner({
         </div>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0,1fr) 220px', gap: '1.25rem' }}>
+      <div className="lg-creative-split">
         <div>
           <CreativeApiKeyField value={apiKey} onChange={setApiKey} />
           <label style={{ display: 'block', marginTop: '1rem', fontSize: '0.85rem', color: 'var(--lc-muted)' }}>
