@@ -488,7 +488,7 @@ export function resolveDemoSpeechTarget(input: {
   const requestedVoice = normalizeVoiceId(input.voice);
   const resolvedRequested = requestedVoice ? resolveOwnTtsVoice(requestedVoice) : undefined;
 
-  let voice =
+  const voice =
     requestedVoice && resolvedRequested
       ? requestedVoice
       : resolvedRequested?.id ?? null;
