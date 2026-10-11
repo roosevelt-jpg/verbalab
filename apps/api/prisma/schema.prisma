@@ -131,6 +131,10 @@ model Organization {
   learnbackProfiles             LearnBackLearnerProfile[]
   learnbackSessions             LearnBackPracticeSession[]
   learnbackAuditEvents          LearnBackAuditEvent[]
+  relayInterpreterProfiles      RelayInterpreterProfile[]
+  relayRequests                 RelayRequest[]
+  relayBookings                 RelayBooking[]
+  relayAuditEvents              RelayAuditEvent[]
 
   @@index([plan])
   @@index([billingStatus])
@@ -4218,4 +4222,359 @@ model LearnBackAuditEvent {
   @@index([organizationId, createdAt])
   @@index([sessionId])
   @@map("learnback_audit_events")
+}
+
+/// Lugemi Relay — scheduled human-interpreter fallback with consented context and private sessions.
+model RelayInterpreterProfile {
+  id                      String    @id @default(cuid())
+  organizationId          String    @map("organization_id")
+  workspaceId             String    @map("workspace_id")
+  ownerUserId             String    @map("owner_user_id")
+  displayName             String    @map("display_name")
+  /// demo_staffed | reviewed_human — demo never pretends to be a hired interpreter pool
+  supplyKind              String    @default("reviewed_human") @map("supply_kind")
+  /// pending_review | approved | suspended
+  status                  String    @default("pending_review")
+  identityVerification    String    @default("unverified") @map("identity_verification")
+  languagePairs           Json      @map("language_pairs")
+  domains                 Json
+  directionality          String    @default("bidirectional")
+  qualifications          Json      @default("[]")
+  reviewerNote            String?   @map("reviewer_note")
+  reviewedAt              DateTime? @map("reviewed_at")
+  reviewedById            String?   @map("reviewed_by_id")
+  timezone                String    @default("Africa/Accra")
+  confidentialityAccepted Boolean   @default(false) @map("confidentiality_accepted")
+  serviceLimits           Json?     @map("service_limits")
+  createdAt               DateTime  @default(now()) @map("created_at")
+  updatedAt               DateTime  @updatedAt @map("updated_at")
+
+  organization Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  slots        RelayAvailabilitySlot[]
+  offers       RelayOffer[]
+  bookings     RelayBooking[]
+
+  @@unique([organizationId, ownerUserId])
+  @@index([organizationId, status])
+  @@map("relay_interpreter_profiles")
+}
+
+model RelayAvailabilitySlot {
+  id             String    @id @default(cuid())
+  interpreterId  String    @map("interpreter_id")
+  startAt        DateTime  @map("start_at")
+  endAt          DateTime  @map("end_at")
+  displayTimezone String   @map("display_timezone")
+  capacity       Int       @default(1)
+  /// open | held | reserved | closed
+  state          String    @default("open")
+  holdExpiresAt  DateTime? @map("hold_expires_at")
+  heldByRequestId String?  @map("held_by_request_id")
+  revision       Int       @default(1)
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  interpreter RelayInterpreterProfile @relation(fields: [interpreterId], references: [id], onDelete: Cascade)
+  offers      RelayOffer[]
+  bookings    RelayBooking[]
+
+  @@index([interpreterId, startAt, endAt])
+  @@index([state, startAt])
+  @@map("relay_availability_slots")
+}
+
+model RelayRequest {
+  id                   String   @id @default(cuid())
+  organizationId       String   @map("organization_id")
+  workspaceId          String   @map("workspace_id")
+  requesterUserId      String   @map("requester_user_id")
+  corridorId           String   @map("corridor_id")
+  sourceLanguage       String   @map("source_language")
+  targetLanguage       String   @map("target_language")
+  /// general_business only at launch; regulated domains stay disabled
+  category             String   @default("general_business")
+  preferredStartAt     DateTime @map("preferred_start_at")
+  preferredTimezone    String   @map("preferred_timezone")
+  durationMinutes      Int      @map("duration_minutes")
+  originProduct        String?  @map("origin_product")
+  originRefs           Json?
+  notes                String?
+  /// requested | seeking_match | offer_pending | awaiting_user_acceptance | awaiting_payment | confirmed | in_progress | completed | cancelled | expired | no_show | disputed | unmatched
+  status               String   @default("requested")
+  unmatchedReason      String?  @map("unmatched_reason")
+  idempotencyKey       String   @map("idempotency_key")
+  revision             Int      @default(1)
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  offers       RelayOffer[]
+  quotes       RelayQuoteSnapshot[]
+  bookings     RelayBooking[]
+  events       RelayEvent[]
+
+  @@unique([organizationId, idempotencyKey])
+  @@index([organizationId, requesterUserId, createdAt])
+  @@index([organizationId, status, createdAt])
+  @@map("relay_requests")
+}
+
+model RelayOffer {
+  id              String    @id @default(cuid())
+  requestId       String    @map("request_id")
+  interpreterId   String    @map("interpreter_id")
+  slotId          String    @map("slot_id")
+  /// pending | accepted | declined | expired
+  state           String    @default("pending")
+  expiresAt       DateTime  @map("expires_at")
+  acceptedAt      DateTime? @map("accepted_at")
+  declinedAt      DateTime? @map("declined_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  request     RelayRequest            @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  interpreter RelayInterpreterProfile @relation(fields: [interpreterId], references: [id], onDelete: Cascade)
+  slot        RelayAvailabilitySlot   @relation(fields: [slotId], references: [id], onDelete: Cascade)
+  quotes      RelayQuoteSnapshot[]
+
+  @@index([requestId, state])
+  @@index([interpreterId, state])
+  @@index([expiresAt])
+  @@map("relay_offers")
+}
+
+model RelayQuoteSnapshot {
+  id                   String   @id @default(cuid())
+  requestId            String   @map("request_id")
+  offerId              String   @map("offer_id")
+  currency             String   @default("GHS")
+  /// integer minor units (pesewas/cents)
+  amountMinor          Int      @map("amount_minor")
+  minimumMinutes       Int      @map("minimum_minutes")
+  billingIncrementMin  Int      @default(15) @map("billing_increment_min")
+  includedMinutes      Int      @map("included_minutes")
+  overrunCeilingMinor  Int?     @map("overrun_ceiling_minor")
+  taxesFeesMinor       Int      @default(0) @map("taxes_fees_minor")
+  cancellationTerms    String   @map("cancellation_terms")
+  version              String
+  contentHash          String   @map("content_hash")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  request  RelayRequest  @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  offer    RelayOffer    @relation(fields: [offerId], references: [id], onDelete: Cascade)
+  bookings RelayBooking[]
+
+  @@index([requestId, createdAt])
+  @@map("relay_quote_snapshots")
+}
+
+model RelayBooking {
+  id                 String    @id @default(cuid())
+  organizationId     String    @map("organization_id")
+  workspaceId        String    @map("workspace_id")
+  requestId          String    @map("request_id")
+  interpreterId      String    @map("interpreter_id")
+  slotId             String    @map("slot_id")
+  quoteId            String    @map("quote_id")
+  requesterUserId    String    @map("requester_user_id")
+  /// awaiting_payment | confirmed | in_progress | completed | cancelled | expired | no_show | disputed
+  status             String    @default("awaiting_payment")
+  /// manual_invoice | deferred_processor
+  paymentMode        String    @default("manual_invoice") @map("payment_mode")
+  /// unpaid | invoiced | marked_paid | reconciliation_required | refunded | void
+  paymentState       String    @default("unpaid") @map("payment_state")
+  reservedStartAt    DateTime  @map("reserved_start_at")
+  reservedEndAt      DateTime  @map("reserved_end_at")
+  cancellationTerms  String    @map("cancellation_terms")
+  /// Extra minutes approved beyond quote included duration (explicit extension)
+  extensionApprovedMinutes Int   @default(0) @map("extension_approved_minutes")
+  revision           Int       @default(1)
+  cancelledAt        DateTime? @map("cancelled_at")
+  completedAt        DateTime? @map("completed_at")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  organization Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  request      RelayRequest            @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  interpreter  RelayInterpreterProfile @relation(fields: [interpreterId], references: [id], onDelete: Restrict)
+  slot         RelayAvailabilitySlot   @relation(fields: [slotId], references: [id], onDelete: Restrict)
+  quote        RelayQuoteSnapshot      @relation(fields: [quoteId], references: [id], onDelete: Restrict)
+  contextGrants RelayContextGrant[]
+  sessions     RelaySession[]
+  usage        RelayUsageLedger[]
+  payments     RelayPaymentRecord[]
+  disputes     RelayDispute[]
+  feedback     RelayFeedback[]
+  corrections  RelayCorrectionRecord[]
+
+  @@index([organizationId, requesterUserId, createdAt])
+  @@index([organizationId, status, reservedStartAt])
+  @@index([interpreterId, reservedStartAt])
+  @@map("relay_bookings")
+}
+
+model RelayContextGrant {
+  id               String    @id @default(cuid())
+  bookingId        String    @map("booking_id")
+  ownerUserId      String    @map("owner_user_id")
+  purpose          String
+  /// selected evidence summaries — never entire private vaults
+  evidence         Json
+  originProduct    String?   @map("origin_product")
+  scopeNote        String    @map("scope_note")
+  expiresAt        DateTime  @map("expires_at")
+  revokedAt        DateTime? @map("revoked_at")
+  stale            Boolean   @default(false)
+  revision         Int       @default(1)
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  booking RelayBooking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId, createdAt])
+  @@map("relay_context_grants")
+}
+
+model RelaySession {
+  id              String    @id @default(cuid())
+  bookingId       String    @map("booking_id")
+  roomId          String    @unique @map("room_id")
+  /// lobby | live | ended
+  state           String    @default("lobby")
+  mediaMode       String    @default("browser_audio") @map("media_mode")
+  recordingOptIn  Boolean   @default(false) @map("recording_opt_in")
+  startedAt       DateTime? @map("started_at")
+  endedAt         DateTime? @map("ended_at")
+  participants    Json      @default("[]")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  booking RelayBooking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@map("relay_sessions")
+}
+
+model RelayUsageLedger {
+  id                String   @id @default(cuid())
+  bookingId         String   @map("booking_id")
+  connectedSeconds  Int      @map("connected_seconds")
+  billableSeconds   Int      @map("billable_seconds")
+  rateSnapshotHash  String   @map("rate_snapshot_hash")
+  evidence          Json
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  booking RelayBooking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@map("relay_usage_ledgers")
+}
+
+model RelayPaymentRecord {
+  id               String   @id @default(cuid())
+  bookingId        String   @map("booking_id")
+  /// manual_invoice | processor
+  mode             String
+  currency         String
+  amountMinor      Int      @map("amount_minor")
+  /// invoiced | marked_paid | refunded | void | reconciliation_required
+  state            String
+  providerRef      String?  @map("provider_ref")
+  idempotencyKey   String   @map("idempotency_key")
+  note             String?
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  booking RelayBooking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@unique([bookingId, idempotencyKey])
+  @@index([bookingId, createdAt])
+  @@map("relay_payment_records")
+}
+
+model RelayDispute {
+  id             String   @id @default(cuid())
+  bookingId      String   @map("booking_id")
+  openedById     String   @map("opened_by_id")
+  issue          String
+  evidence       Json     @default("[]")
+  /// open | under_review | resolved | closed
+  status         String   @default("open")
+  assignedStaffId String? @map("assigned_staff_id")
+  outcome        String?
+  outcomeReason  String?  @map("outcome_reason")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  booking RelayBooking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId, status])
+  @@map("relay_disputes")
+}
+
+model RelayFeedback {
+  id          String   @id @default(cuid())
+  bookingId   String   @map("booking_id")
+  authorId    String   @map("author_id")
+  role        String
+  rating      Int?
+  comment     String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  booking RelayBooking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId])
+  @@map("relay_feedback")
+}
+
+model RelayCorrectionRecord {
+  id                 String    @id @default(cuid())
+  bookingId          String    @map("booking_id")
+  grantId            String?   @map("grant_id")
+  authorId           String    @map("author_id")
+  /// suggestion from interpreter / requester note about meaning
+  suggestion         String
+  sourceEvidenceNote String?   @map("source_evidence_note")
+  /// pending_review | accepted | rejected
+  reviewStatus       String    @default("pending_review") @map("review_status")
+  /// separate from session participation — training use needs extra permission
+  trainingRightsGranted Boolean @default(false) @map("training_rights_granted")
+  reviewedAt         DateTime? @map("reviewed_at")
+  reviewedById       String?   @map("reviewed_by_id")
+  createdAt          DateTime  @default(now()) @map("created_at")
+
+  booking RelayBooking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+
+  @@index([bookingId, createdAt])
+  @@map("relay_correction_records")
+}
+
+model RelayEvent {
+  id        String   @id @default(cuid())
+  requestId String   @map("request_id")
+  sequence  Int
+  eventId   String   @unique @map("event_id")
+  type      String
+  payload   Json?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  request RelayRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+
+  @@unique([requestId, sequence])
+  @@index([requestId])
+  @@map("relay_events")
+}
+
+model RelayAuditEvent {
+  id             String   @id @default(cuid())
+  organizationId String   @map("organization_id")
+  bookingId      String?  @map("booking_id")
+  requestId      String?  @map("request_id")
+  actorId        String   @map("actor_id")
+  operation      String
+  meta           Json?
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, createdAt])
+  @@index([bookingId])
+  @@map("relay_audit_events")
 }

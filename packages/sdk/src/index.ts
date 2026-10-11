@@ -7,6 +7,7 @@ export { MeetingBridgeClient } from './meetingbridge.js';
 export { LanguageAssuranceClient } from './language-assurance.js';
 export { EverydayClient } from './everyday.js';
 export { LearnBackClient } from './learnback.js';
+export { RelayClient } from './relay.js';
 export type {
   CreateVoiceThreadInput,
   VoiceBridgeConsent,
@@ -27,6 +28,10 @@ export type {
   CreateLearnBackSessionInput,
   LearnBackClientOptions,
 } from './learnback.js';
+export type {
+  CreateRelayRequestInput,
+  RelayClientOptions,
+} from './relay.js';
 export type { UploadAuth, UploadProgress, BridgeTransport } from './bridge-transport.js';
 export type {
   ChatCompletionRequest,

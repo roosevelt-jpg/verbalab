@@ -42,6 +42,16 @@ Spoken practice for interviews and real situations with meaning-first feedback i
 - Local entitlement bypass: `LEARNBACK_OPEN=1`
 - Transcript correction before scoring; pronunciation stays `not_assessed` without a validated assessor; no job-application submission
 
+## Relay
+
+Scheduled human-interpreter fallback for general business conversations.
+
+- Console: `/relay`, `/relay/bookings/[id]`, `/relay/offers`, `/relay/ops`
+- API: `/v1/relay/*` — see `docs/relay/RUNBOOK.md` and `docs/relay/VERIFICATION.md`
+- SDK: TypeScript `client.relay`
+- Local entitlement bypass: `RELAY_OPEN=1`
+- Atomic holds/offers, pinned quotes, manual invoice payment state, consented context grants, private browser join tokens; no fictional instant coverage
+
 ## Language Assurance
 
 Quality-control checks for source, translation, and speech before release.

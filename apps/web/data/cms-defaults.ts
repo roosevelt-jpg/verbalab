@@ -133,6 +133,11 @@ export const CMS_DEFAULTS: CmsDocument = {
       description:
         'Lugemi LearnBack — practise interviews and real situations with meaning-first feedback in your language, honest pronunciation status, and a private phrasebook.',
     },
+    '/relay': {
+      title: 'Relay',
+      description:
+        'Lugemi Relay — book a qualified interpreter for general business conversations, approve price and context sharing, and join a private browser session.',
+    },
   },
   nav: {
     centerLinks: [

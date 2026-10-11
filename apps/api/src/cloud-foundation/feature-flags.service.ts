@@ -19,6 +19,7 @@ export const TOGGLEABLE_FEATURES: PlanFeature[] = [
   'languageAssurance',
   'everyday',
   'learnBack',
+  'relay',
   'voiceClones',
   'marketplace',
   'fineTunes',
@@ -79,6 +80,7 @@ export class FeatureFlagsService {
         planFeatureFlags.languageAssurance && process.env.LANGUAGE_ASSURANCE_DISABLED !== '1',
       everyday: planFeatureFlags.everyday && process.env.EVERYDAY_DISABLED !== '1',
       learnBack: planFeatureFlags.learnBack && process.env.LEARNBACK_DISABLED !== '1',
+      relay: planFeatureFlags.relay && process.env.RELAY_DISABLED !== '1',
       marketplace:
         planFeatureFlags.marketplace && process.env.MARKETPLACE_DISABLED !== '1',
       voiceClones:

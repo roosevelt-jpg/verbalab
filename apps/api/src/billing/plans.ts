@@ -12,6 +12,7 @@ export type PlanFeature =
   | 'languageAssurance'
   | 'everyday'
   | 'learnBack'
+  | 'relay'
   | 'voiceClones'
   | 'marketplace'
   | 'fineTunes'
@@ -115,6 +116,7 @@ function proPlan(): PlanDefinition {
       'languageAssurance',
       'everyday',
       'learnBack',
+      'relay',
       'voiceClones',
       'marketplace',
       'fineTunes',
@@ -153,6 +155,7 @@ function businessPlan(): PlanDefinition {
       'languageAssurance',
       'everyday',
       'learnBack',
+      'relay',
       'voiceClones',
       'marketplace',
       'fineTunes',
@@ -191,6 +194,7 @@ function enterprisePlan(): PlanDefinition {
       'languageAssurance',
       'everyday',
       'learnBack',
+      'relay',
       'voiceClones',
       'marketplace',
       'fineTunes',

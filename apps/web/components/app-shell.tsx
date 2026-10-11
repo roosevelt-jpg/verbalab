@@ -36,6 +36,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/meetingbridge', label: 'MeetingBridge' },
       { href: '/everyday', label: 'Everyday' },
       { href: '/learnback', label: 'LearnBack' },
+      { href: '/relay', label: 'Relay' },
       { href: '/language-assurance', label: 'Language Assurance' },
       { href: '/accessline', label: 'AccessLine' },
       { href: '/voicebridge', label: 'VoiceBridge' },

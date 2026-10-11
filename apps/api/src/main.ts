@@ -88,6 +88,7 @@ async function bootstrap() {
       'X-LanguageAssurance-Actor-Id',
       'X-Everyday-Actor-Id',
       'X-LearnBack-Actor-Id',
+      'X-Relay-Actor-Id',
     ],
   });
 

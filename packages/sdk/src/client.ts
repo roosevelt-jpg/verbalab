@@ -6,6 +6,7 @@ import { MeetingBridgeClient } from './meetingbridge.js';
 import { LanguageAssuranceClient } from './language-assurance.js';
 import { EverydayClient } from './everyday.js';
 import { LearnBackClient } from './learnback.js';
+import { RelayClient } from './relay.js';
 import type { BridgeTransport } from './bridge-transport.js';
 import type {
   ChatCompletionRequest,
@@ -158,6 +159,7 @@ export class Lugemi {
   private _languageAssurance?: LanguageAssuranceClient;
   private _everyday?: EverydayClient;
   private _learnBack?: LearnBackClient;
+  private _relay?: RelayClient;
 
   constructor(options: LugemiClientOptions) {
     const key = options.apiKey ?? '';
@@ -191,6 +193,7 @@ export class Lugemi {
     this._languageAssurance?.setContext(next);
     this._everyday?.setContext(next);
     this._learnBack?.setContext(next);
+    this._relay?.setContext(next);
   }
 
   get voiceBridge(): VoiceBridgeClient {
@@ -289,6 +292,20 @@ export class Lugemi {
       });
     }
     return this._learnBack;
+  }
+
+  get relay(): RelayClient {
+    if (!this._relay) {
+      this._relay = new RelayClient({
+        transport: this.bridgeTransport(),
+        headers: {
+          actorId: this.actorId,
+          organizationId: this.organizationId,
+          workspaceId: this.workspaceId,
+        },
+      });
+    }
+    return this._relay;
   }
 
   private bridgeTransport(): BridgeTransport {
