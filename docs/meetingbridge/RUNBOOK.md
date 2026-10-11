@@ -44,6 +44,8 @@ Open `/meetingbridge` on the Studio port.
 | `invite_expired` / `invite_used` | Mint a fresh invite |
 | `conflict` on confirm | Item revision stale after transcript correction — propose/review again |
 | Captions-only only | Expected without `MEETINGBRIDGE_MEDIA_URL` |
+| `unsupported_destination` | Sync only allows `private_download` / `internal_queue` |
+| Handoff 403/422 | DealBridge/VoiceBridge entitlement or corridor mismatch |
 
 ## Rollback
 

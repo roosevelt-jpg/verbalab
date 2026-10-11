@@ -16,6 +16,9 @@ Covers:
 - Partial then full confirmation under owners+organizer policy
 - Source correction supersedes confirmed dependent items
 - Close → minutes → markdown export
+- Item amendment (expected revision) reopens review
+- Task sync allowlists destinations (rejects Slack); private download works
+- Explicit DealBridge + VoiceBridge handoffs
 - Cross-tenant meeting read returns 404
 - Unsupported corridor returns 400
 
