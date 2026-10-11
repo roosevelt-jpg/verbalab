@@ -14,6 +14,7 @@ import {
   buildCountryEnglishAccentIdentitySeeds,
   buildCulturalVarietyAccentIdentitySeeds,
   HAND_AUTHORED_WORLD_ENGLISH_IDS,
+  inferEnglishVoiceRoutingRegion,
   WORLD_PRODUCT_REGION_BY_CODE,
   worldMarkets,
 } from '../world-markets';
@@ -849,6 +850,30 @@ const WORLD_ENGLISH_ACCENT_IDENTITY_SEEDS = buildCountryEnglishAccentIdentitySee
 );
 for (const s of WORLD_ENGLISH_ACCENT_IDENTITY_SEEDS) existingAccentIdentityIds.add(s.id);
 
+/** Every remaining ISO country pack gets a country-identifying English accent. */
+const coveredEnglishCountries = new Set<string>([
+  ...AFRICAN_ENGLISH_ACCENT_IDENTITY_SEEDS.map((s) => s.country),
+  ...WORLD_ENGLISH_ACCENT_IDENTITY_SEEDS.map((s) => s.country),
+  ...HAND_AUTHORED_ACCENT_IDENTITY_SEEDS.filter((s) => s.languageCode === 'en').map((s) => s.country),
+  ...Object.keys(HAND_AUTHORED_ENGLISH_IDENTITY_IDS),
+  ...Object.keys(HAND_AUTHORED_WORLD_ENGLISH_IDS),
+]);
+
+const GLOBAL_ENGLISH_MARKETS = COUNTRY_PACK_SEEDS.filter(
+  (p) => !coveredEnglishCountries.has(p.code),
+).map((p) => ({
+  code: p.code,
+  nameEn: p.nameEn,
+  region: p.region,
+  worldRegion: inferEnglishVoiceRoutingRegion(p.region),
+}));
+
+const GLOBAL_ENGLISH_ACCENT_IDENTITY_SEEDS = buildCountryEnglishAccentIdentitySeeds(
+  GLOBAL_ENGLISH_MARKETS,
+  existingAccentIdentityIds,
+);
+for (const s of GLOBAL_ENGLISH_ACCENT_IDENTITY_SEEDS) existingAccentIdentityIds.add(s.id);
+
 const WORLD_CULTURAL_VARIETY_SEEDS = buildCulturalVarietyAccentIdentitySeeds(
   worldMarkets().map((m) => ({
     code: m.code,
@@ -867,6 +892,7 @@ export const ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
   ...HAND_AUTHORED_ACCENT_IDENTITY_SEEDS,
   ...AFRICAN_ENGLISH_ACCENT_IDENTITY_SEEDS,
   ...WORLD_ENGLISH_ACCENT_IDENTITY_SEEDS,
+  ...GLOBAL_ENGLISH_ACCENT_IDENTITY_SEEDS,
   ...WORLD_CULTURAL_VARIETY_SEEDS,
 ];
 

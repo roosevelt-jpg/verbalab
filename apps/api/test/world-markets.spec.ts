@@ -6,6 +6,7 @@ import {
 } from '../src/african-markets';
 import { ACCENT_IDENTITY_SEEDS } from '../src/accents/accent-identity-seeds';
 import { CULTURAL_ENGLISH_BCP47_DEFAULTS } from '../src/accents/cultural-identity';
+import { COUNTRY_PACK_SEEDS } from '../src/country-packs/country-pack-seeds';
 import {
   ANGLOSPHERE_MARKET_CODES,
   LATAM_MARKET_CODES,
@@ -205,6 +206,18 @@ describe('LATAM / SEA / Middle East / Anglosphere markets', () => {
     expect(ACCENT_IDENTITY_SEEDS.some((s) => s.id === 'nz-maori')).toBe(true);
     expect(ACCENT_IDENTITY_SEEDS.some((s) => s.id === 'ca-quebecois')).toBe(true);
     expect(ACCENT_IDENTITY_SEEDS.length).toBeGreaterThan(150);
+  });
+
+  it('covers every country pack with a country-identifying English accent identity', () => {
+    const englishByCountry = new Set(
+      ACCENT_IDENTITY_SEEDS.filter(
+        (s) => s.languageCode === 'en' || (s.bcp47 ?? '').toLowerCase().startsWith('en-'),
+      ).map((s) => s.country),
+    );
+    for (const pack of COUNTRY_PACK_SEEDS) {
+      expect(englishByCountry.has(pack.code), `missing English identity for ${pack.code}`).toBe(true);
+    }
+    expect(englishByCountry.size).toBe(COUNTRY_PACK_SEEDS.length);
   });
 
   it('expands product catalogs beyond Africa-only counts', () => {

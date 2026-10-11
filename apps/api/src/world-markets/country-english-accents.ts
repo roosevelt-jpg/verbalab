@@ -2,15 +2,28 @@ import type { AccentIdentitySeed } from '../accents/accent-identity-seeds';
 import type { WorldProductRegion } from './region-defs';
 
 /**
- * Country-identifying English accents for LATAM / SEA / Middle East / Anglosphere.
+ * Country-identifying English accents for every country pack.
  * English is a universal bridge; each market keeps its own variety.
  */
+
+/** Product regions plus ISO-region routing buckets for remaining country packs. */
+export type EnglishVoiceRoutingRegion =
+  | WorldProductRegion
+  | 'africa'
+  | 'europe'
+  | 'east_asia'
+  | 'south_asia'
+  | 'central_asia'
+  | 'oceania'
+  | 'caribbean'
+  | 'north_america'
+  | 'global';
 
 export type CountryEnglishAccent = {
   marketCode: string;
   marketName: string;
   region: string;
-  worldRegion: WorldProductRegion;
+  worldRegion: EnglishVoiceRoutingRegion;
   nameEn: string;
   bcp47: string;
   accentCode: string;
@@ -31,7 +44,7 @@ type MarketInput = {
   code: string;
   nameEn: string;
   region: string;
-  worldRegion: WorldProductRegion;
+  worldRegion: EnglishVoiceRoutingRegion;
 };
 
 type AccentOverride = Partial<
@@ -341,7 +354,7 @@ const CURATED: Record<string, AccentOverride> = {
     demonym: 'New Zealand',
     nameEn: 'New Zealand English',
     speechVariety: 'new_zealand_english',
-    echoVoiceId: 'own:en-kofi',
+    echoVoiceId: 'own:en-nz-female',
     echoModelVariant: 'lugemi-echo-voice-nz-english',
     culturalIdentity: 'New Zealand English · Aotearoa · Māori contact',
     identityProfile:
@@ -349,13 +362,13 @@ const CURATED: Record<string, AccentOverride> = {
     pronunciationMarkers: ['kia ora', 'sweet as', 'yeah nah', 'bro', 'chur'],
     samplePhrase: 'Kia ora. Sweet as — we can start now. Yeah nah, we’re ready.',
     lifestyleTags: ['new_zealand_english', 'anglosphere_english', 'maori_loans'],
-    voiceProvisioning: 'nearest_world_english',
+    voiceProvisioning: 'dedicated',
   },
   GB: {
     demonym: 'British',
     nameEn: 'British English',
     speechVariety: 'british_english',
-    echoVoiceId: 'own:en-kofi',
+    echoVoiceId: 'own:en-gb-female',
     echoModelVariant: 'lugemi-echo-voice-gb-english',
     culturalIdentity: 'British English · UK national / RP-influenced · Multi-nation',
     identityProfile:
@@ -363,13 +376,13 @@ const CURATED: Record<string, AccentOverride> = {
     pronunciationMarkers: ['cheers', 'brilliant', 'quite', 'rather', 'mate'],
     samplePhrase: 'Cheers! Brilliant — shall we crack on? Quite straightforward, really.',
     lifestyleTags: ['british_english', 'anglosphere_english', 'uk_broadcast'],
-    voiceProvisioning: 'nearest_world_english',
+    voiceProvisioning: 'dedicated',
   },
   IE: {
     demonym: 'Irish',
     nameEn: 'Irish English',
     speechVariety: 'irish_english',
-    echoVoiceId: 'own:en-kofi',
+    echoVoiceId: 'own:en-gb-female',
     echoModelVariant: 'lugemi-echo-voice-ie-english',
     culturalIdentity: 'Irish English · Dublin / national · Distinct from British',
     identityProfile:
@@ -447,14 +460,55 @@ const DEMONYMS: Record<string, string> = {
   NZ: 'New Zealand',
   GB: 'British',
   IE: 'Irish',
+  // -stan / -land (and other demonyms the naive suffix rule mangles)
+  AF: 'Afghan',
+  PK: 'Pakistani',
+  KZ: 'Kazakh',
+  KG: 'Kyrgyz',
+  UZ: 'Uzbek',
+  TJ: 'Tajik',
+  TM: 'Turkmen',
+  PL: 'Polish',
+  FI: 'Finnish',
+  IS: 'Icelandic',
+  CH: 'Swiss',
 };
 
 const REGION_VOICE: Record<string, string> = {
   latam: 'own:en-ph-female',
   sea: 'own:en-ph-female',
   mena: 'own:en-ke-female',
-  anglosphere: 'own:en-kofi',
+  anglosphere: 'own:en-us-female',
+  africa: 'own:en-ke-female',
+  europe: 'own:en-gb-female',
+  east_asia: 'own:en-ph-female',
+  south_asia: 'own:en-gb-female',
+  central_asia: 'own:en-gb-female',
+  oceania: 'own:en-au-female',
+  caribbean: 'own:en-gh-female',
+  north_america: 'own:en-us-female',
+  global: 'own:en-us-female',
 };
+
+/** Map ISO country-pack region labels onto Echo voice routing buckets. */
+export function inferEnglishVoiceRoutingRegion(region: string): EnglishVoiceRoutingRegion {
+  const r = region.trim().toLowerCase();
+  if (!r) return 'global';
+  if (r.includes('africa')) return 'africa';
+  if (r.includes('caribbean')) return 'caribbean';
+  if (r.includes('central america') || r.includes('south america')) return 'latam';
+  if (r.includes('northern america') || r === 'north america') return 'north_america';
+  if (r.includes('southeast asia')) return 'sea';
+  if (r.includes('eastern asia') || r.includes('east asia')) return 'east_asia';
+  if (r.includes('southern asia') || r.includes('south asia')) return 'south_asia';
+  if (r.includes('central asia')) return 'central_asia';
+  if (r.includes('western asia') || r.includes('middle east')) return 'mena';
+  if (r.includes('europe')) return 'europe';
+  if (r.includes('oceania') || r.includes('melanesia') || r.includes('micronesia') || r.includes('polynesia')) {
+    return 'oceania';
+  }
+  return 'global';
+}
 
 function slugify(name: string): string {
   return name
@@ -465,6 +519,13 @@ function slugify(name: string): string {
 
 function demonymFor(code: string, marketName: string): string {
   if (DEMONYMS[code]) return DEMONYMS[code]!;
+  // Prefer curated DEMONYMS above; these heuristics only cover remaining packs.
+  if (/stan$/i.test(marketName)) {
+    // e.g. rare -stan packs not listed above → strip "stan" + "i" (Uzbekistani-style)
+    const stem = marketName.slice(0, -4);
+    return stem.endsWith('i') ? `${stem}ani` : `${stem}i`;
+  }
+  if (/land$/i.test(marketName)) return `${marketName}ic`;
   if (marketName.endsWith('a')) return `${marketName}n`;
   if (marketName.endsWith('o')) return `${marketName.slice(0, -1)}an`;
   if (marketName.endsWith('y')) return `${marketName.slice(0, -1)}ian`;

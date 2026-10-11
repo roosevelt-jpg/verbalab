@@ -12,6 +12,7 @@ import {
 import {
   buildCountryEnglishAccent,
   type CountryEnglishAccent,
+  type EnglishVoiceRoutingRegion,
 } from './country-english-accents';
 import { buildCulturalVarieties, type CulturalVariety } from './cultural-varieties';
 
@@ -20,8 +21,8 @@ const LANGUAGE_BY_CODE = new Map(LANGUAGE_SEEDS.map((l) => [l.code, l]));
 export type ProductWorldRegion = 'africa' | WorldProductRegion;
 
 /** Unified English accent shape used across Africa + world markets. */
-export type ProductEnglishAccent = (AfricanEnglishAccent | CountryEnglishAccent) & {
-  worldRegion?: ProductWorldRegion;
+export type ProductEnglishAccent = Omit<AfricanEnglishAccent | CountryEnglishAccent, 'worldRegion'> & {
+  worldRegion?: ProductWorldRegion | EnglishVoiceRoutingRegion;
 };
 
 export type ProductMarket = {

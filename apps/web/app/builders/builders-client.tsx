@@ -1,13 +1,14 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AppShell } from '@/components/app-shell';
 import {
   NativeAccentVoicePicker,
   type VoicePickerValue,
 } from '@/components/console/native-accent-voice-picker';
 import { SITE_CONTENT } from '@/data/site-content';
+import { apiFetch } from '@/lib/api';
 import {
   CONNECTOR_CATEGORIES,
   PLATFORM_CONNECTORS,
@@ -44,6 +45,61 @@ const VIDEO_CONNECTORS = PLATFORM_CONNECTORS.filter(
   (c) => c.category === 'video' || c.category === 'voice',
 ).slice(0, 6);
 
+type IdentityPack = {
+  id: string;
+  nameEn: string;
+  languageCode: string;
+  country: string;
+  countryLabel: string;
+  countryFlag: string;
+  regionTags: string[];
+  identityProfile: string;
+  echoVoiceId?: string;
+  demoVoiceKey: string | null;
+  culturalIdentity?: string;
+  speechVariety?: string;
+  bcp47?: string;
+  samplePhrase: string;
+};
+
+type IdentityList = {
+  data: IdentityPack[];
+  countries: { code: string; label: string; flag: string; packCount: number }[];
+  total: number;
+};
+
+type CatalogRow = {
+  countryCode: string;
+  countryLabel: string;
+  countryFlag: string;
+  region: string;
+  label: string;
+  language: string;
+  ethnicContext: string;
+  voiceId: string;
+  packId: string;
+  packCount: number;
+};
+
+function primaryPackForCountry(packs: IdentityPack[]): IdentityPack {
+  const english = packs.find(
+    (p) => p.languageCode === 'en' || (p.bcp47 ?? '').toLowerCase().startsWith('en-'),
+  );
+  return english ?? packs[0]!;
+}
+
+function regionForPack(pack: IdentityPack): string {
+  const skip = new Set(
+    [pack.countryLabel, pack.nameEn, pack.culturalIdentity, 'latam', 'sea', 'mena', 'anglosphere', 'africa', 'europe', 'global']
+      .filter(Boolean)
+      .map((s) => s!.toLowerCase()),
+  );
+  for (const tag of pack.regionTags) {
+    if (!skip.has(tag.toLowerCase()) && tag.length > 2) return tag;
+  }
+  return pack.regionTags[1] || pack.regionTags[0] || 'Worldwide';
+}
+
 export function BuildersClient() {
   const samples = SITE_CONTENT.sampleVoices;
   const [picker, setPicker] = useState<VoicePickerValue>({
@@ -55,6 +111,92 @@ export function BuildersClient() {
     toneStyle: 'empathetic',
     emotionProfile: 'customer_support',
   });
+  const [catalog, setCatalog] = useState<CatalogRow[]>([]);
+  const [catalogNote, setCatalogNote] = useState<string | null>(null);
+  const [catalogError, setCatalogError] = useState<string | null>(null);
+  const [query, setQuery] = useState('');
+  const [regionFilter, setRegionFilter] = useState('all');
+
+  useEffect(() => {
+    void apiFetch<IdentityList>('/v1/accents/identity')
+      .then((res) => {
+        const byCountry = new Map<string, IdentityPack[]>();
+        for (const pack of res.data) {
+          const arr = byCountry.get(pack.country) ?? [];
+          arr.push(pack);
+          byCountry.set(pack.country, arr);
+        }
+        const rows: CatalogRow[] = res.countries
+          .map((c) => {
+            const packs = byCountry.get(c.code) ?? [];
+            if (!packs.length) return null;
+            const primary = primaryPackForCountry(packs);
+            const voiceId =
+              primary.echoVoiceId ||
+              (primary.demoVoiceKey
+                ? primary.demoVoiceKey.startsWith('own:')
+                  ? primary.demoVoiceKey
+                  : `own:${primary.demoVoiceKey}`
+                : 'own:en-us-female');
+            return {
+              countryCode: c.code,
+              countryLabel: c.label,
+              countryFlag: c.flag,
+              region: regionForPack(primary),
+              label: primary.culturalIdentity || primary.nameEn,
+              language: primary.bcp47 || primary.languageCode,
+              ethnicContext: primary.identityProfile,
+              voiceId,
+              packId: primary.id,
+              packCount: c.packCount,
+            } satisfies CatalogRow;
+          })
+          .filter((r): r is CatalogRow => r != null)
+          .sort((a, b) => a.countryLabel.localeCompare(b.countryLabel));
+        setCatalog(rows);
+        setCatalogNote(
+          `${rows.length} countries · ${res.total} accent identity packs · live from GET /v1/accents/identity`,
+        );
+      })
+      .catch((err: Error) => {
+        setCatalogError(err.message);
+        setCatalog(
+          samples.map((v) => ({
+            countryCode: v.id,
+            countryLabel: v.region,
+            countryFlag: '🌍',
+            region: v.region,
+            label: v.label,
+            language: v.language,
+            ethnicContext: v.ethnicContext,
+            voiceId: v.voiceId,
+            packId: v.id,
+            packCount: 1,
+          })),
+        );
+        setCatalogNote('CMS sample fallback — accent identity API unavailable.');
+      });
+  }, [samples]);
+
+  const regions = useMemo(() => {
+    return [...new Set(catalog.map((r) => r.region))].sort((a, b) => a.localeCompare(b));
+  }, [catalog]);
+
+  const filteredCatalog = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    return catalog.filter((row) => {
+      if (regionFilter !== 'all' && row.region !== regionFilter) return false;
+      if (!needle) return true;
+      return (
+        row.countryLabel.toLowerCase().includes(needle) ||
+        row.countryCode.toLowerCase().includes(needle) ||
+        row.label.toLowerCase().includes(needle) ||
+        row.language.toLowerCase().includes(needle) ||
+        row.voiceId.toLowerCase().includes(needle) ||
+        row.region.toLowerCase().includes(needle)
+      );
+    });
+  }, [catalog, query, regionFilter]);
 
   return (
     <AppShell>
@@ -153,10 +295,74 @@ export function BuildersClient() {
 
       <section className="vl-endpoint-card" style={{ marginBottom: '1.25rem' }}>
         <h2 style={sectionLabel}>Human-sounding native catalog</h2>
-        <p style={{ margin: '0 0 1rem', color: 'var(--muted)', fontSize: '0.92rem', lineHeight: 1.55 }}>
-          Africa-first sample registry from CMS — region and ethnic context on every voice. Full catalog loads
-          live from <code className="vl-code">/v1/tts/voices</code> in the picker above.
+        <p style={{ margin: '0 0 0.75rem', color: 'var(--muted)', fontSize: '0.92rem', lineHeight: 1.55 }}>
+          Every country pack — one country-identifying Echo voice per country, with cultural English (or local
+          L1) metadata. Full accent varieties live under{' '}
+          <Link href="/accent-identity">Accent Identity</Link>; live TTS ids also load in the picker above from{' '}
+          <code className="vl-code">/v1/tts/voices</code>.
         </p>
+        {catalogNote ? (
+          <p style={{ margin: '0 0 0.85rem', fontSize: '0.85rem', color: 'var(--muted)' }}>{catalogNote}</p>
+        ) : (
+          <p style={{ margin: '0 0 0.85rem', fontSize: '0.85rem', color: 'var(--muted)' }}>
+            Loading country catalog…
+          </p>
+        )}
+        {catalogError ? (
+          <p role="alert" style={{ margin: '0 0 0.85rem', color: 'var(--danger, #b42318)', fontSize: '0.85rem' }}>
+            {catalogError}
+          </p>
+        ) : null}
+
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '0.65rem',
+            marginBottom: '0.85rem',
+            alignItems: 'center',
+          }}
+        >
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search country, language, voice…"
+            aria-label="Search native catalog by country"
+            style={{
+              flex: '1 1 14rem',
+              minWidth: '12rem',
+              padding: '0.55rem 0.75rem',
+              borderRadius: '8px',
+              border: '1px solid var(--border, #e5e2da)',
+              background: 'var(--surface, #fff)',
+              color: 'var(--text)',
+            }}
+          />
+          <select
+            value={regionFilter}
+            onChange={(e) => setRegionFilter(e.target.value)}
+            aria-label="Filter catalog by region"
+            style={{
+              padding: '0.55rem 0.75rem',
+              borderRadius: '8px',
+              border: '1px solid var(--border, #e5e2da)',
+              background: 'var(--surface, #fff)',
+              color: 'var(--text)',
+            }}
+          >
+            <option value="all">All regions ({catalog.length})</option>
+            {regions.map((r) => (
+              <option key={r} value={r}>
+                {r}
+              </option>
+            ))}
+          </select>
+          <span style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>
+            {filteredCatalog.length} countr{filteredCatalog.length === 1 ? 'y' : 'ies'}
+          </span>
+        </div>
+
         <ul
           style={{
             margin: 0,
@@ -165,20 +371,28 @@ export function BuildersClient() {
             display: 'grid',
             gap: '0.65rem',
             gridTemplateColumns: 'repeat(auto-fit, minmax(14rem, 1fr))',
+            maxHeight: '36rem',
+            overflow: 'auto',
           }}
         >
-          {samples.map((v) => (
+          {filteredCatalog.map((v) => (
             <li
-              key={v.id}
+              key={v.countryCode}
               style={{
                 border: '1px solid var(--border, #e5e2da)',
                 borderRadius: '0.65rem',
                 padding: '0.75rem 0.85rem',
               }}
             >
-              <p style={{ margin: 0, fontWeight: 650, color: 'var(--brand-navy)' }}>{v.label}</p>
+              <p style={{ margin: 0, fontWeight: 650, color: 'var(--brand-navy)' }}>
+                <span aria-hidden="true">{v.countryFlag}</span> {v.countryLabel}
+              </p>
               <p style={{ margin: '0.2rem 0 0', fontSize: '0.85rem', color: 'var(--muted)' }}>
+                {v.label}
+              </p>
+              <p style={{ margin: '0.2rem 0 0', fontSize: '0.8rem', color: 'var(--muted)' }}>
                 {v.language} · {v.region}
+                {v.packCount > 1 ? ` · ${v.packCount} packs` : ''}
               </p>
               <p style={{ margin: '0.35rem 0 0', fontSize: '0.8rem', color: 'var(--muted)', lineHeight: 1.45 }}>
                 {v.ethnicContext}
@@ -189,6 +403,16 @@ export function BuildersClient() {
             </li>
           ))}
         </ul>
+        {catalog.length > 0 && filteredCatalog.length === 0 ? (
+          <p style={{ margin: '0.85rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
+            No countries match that search.
+          </p>
+        ) : null}
+        <div style={{ marginTop: '1rem' }}>
+          <Link href="/accent-identity" className="vl-btn vl-btn-secondary" style={{ textDecoration: 'none' }}>
+            Open Accent Identity
+          </Link>
+        </div>
       </section>
 
       <section className="vl-endpoint-card" style={{ marginBottom: '1.25rem' }}>
