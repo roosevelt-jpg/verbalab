@@ -272,9 +272,39 @@ export function finalizeStreamingWav(buf: Buffer): Buffer {
   return buf;
 }
 
+/** Cultural pitch/speed so fixture Echo sounds closer to human prosody per corridor. */
+function espeakProsody(voiceId: string, locale?: string): { pitch: string; speed: string } {
+  const vid = voiceId.toLowerCase();
+  const loc = (locale ?? '').toLowerCase();
+  const key = `${vid} ${loc}`;
+  if (/en-gh|kofi/.test(key)) return { pitch: '48', speed: '155' };
+  if (/en-ng/.test(key)) return { pitch: '52', speed: '160' };
+  if (/en-ke/.test(key)) return { pitch: '46', speed: '150' };
+  if (/en-za/.test(key)) return { pitch: '50', speed: '158' };
+  if (/en-ph/.test(key)) return { pitch: '58', speed: '165' };
+  if (/en-au/.test(key)) return { pitch: '52', speed: '160' };
+  if (/en-nz/.test(key)) return { pitch: '50', speed: '158' };
+  if (/en-gb/.test(key)) return { pitch: '50', speed: '160' };
+  if (/en-us|en-ca/.test(key)) return { pitch: '50', speed: '165' };
+  if (/fr-sn|fr-ci/.test(key)) return { pitch: '48', speed: '155' };
+  if (/sw|am|ar|af|pt/.test(key)) return { pitch: '50', speed: '158' };
+  return { pitch: '50', speed: '160' };
+}
+
+/** Insert short clause pauses so eSpeak reads less robotic. */
+function humanizeSpeechText(text: string): string {
+  return text
+    .replace(/\s+/g, ' ')
+    .trim()
+    .replace(/([.!?])\s+/g, '$1 ')
+    .replace(/,\s*/g, ', ')
+    .slice(0, 5000);
+}
+
 /**
  * Local intelligible speech: eSpeak-NG when a verified voice exists.
  * Formant is only used when explicitly allowed — it is NOT native speech.
+ * Prefer OWN_TTS_URL (Kokoro/Piper) in production for human neural voices.
  */
 export function generateSpeechWav(
   text: string,
@@ -283,14 +313,14 @@ export function generateSpeechWav(
   opts?: { allowFormant?: boolean },
 ): SpeechWavResult {
   const resolved = resolveEspeakVoice(voiceId, locale);
-  const pitch = '50';
-  const speed = '160';
+  const { pitch, speed } = espeakProsody(voiceId, locale);
+  const spoken = humanizeSpeechText(text);
 
   if (resolved.kind === 'espeak') {
     try {
       const res = spawnSync(
         'espeak-ng',
-        ['-v', resolved.espeakVoice, '-p', pitch, '-s', speed, '--stdout', text],
+        ['-v', resolved.espeakVoice, '-p', pitch, '-s', speed, '-g', '6', '--stdout', spoken],
         { timeout: 10_000, maxBuffer: 16 * 1024 * 1024 },
       );
       if (res.status === 0 && res.stdout && res.stdout.length > 100) {

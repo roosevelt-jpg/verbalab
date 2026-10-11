@@ -4,7 +4,9 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
+import { CreativeAuthGate } from '@/components/creative/creative-auth-gate';
 import { playDemoSpeech, stopDemoSpeech } from '@/lib/demo-speech';
+import { loadStudioApiKeySecret } from '@/lib/studio-api-key';
 
 type IdentityPack = {
   id: string;
@@ -66,6 +68,18 @@ const REGION_COLORS: Record<string, string> = {
 };
 
 export function AccentIdentityClient() {
+  return (
+    <CreativeAuthGate>
+      {(auth) => <AccentIdentityBody getToken={auth.getToken} />}
+    </CreativeAuthGate>
+  );
+}
+
+function AccentIdentityBody({
+  getToken,
+}: {
+  getToken: (options?: { template?: string }) => Promise<string | null>;
+}) {
   const [catalog, setCatalog] = useState<IdentityList | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [country, setCountry] = useState<string>('all');
@@ -129,11 +143,13 @@ export function AccentIdentityClient() {
               ? pack.demoVoiceKey
               : `own:${pack.demoVoiceKey}`
             : undefined);
+        const clerkToken = await getToken().catch(() => null);
         await playDemoSpeech({
           text: pack.samplePhrase,
           voiceId,
           lang: pack.bcp47 ?? pack.languageCode,
           label: pack.nameEn,
+          token: clerkToken || loadStudioApiKeySecret() || null,
           onStarted: () => {
             setLoadingId(null);
             setActiveId(pack.id);
@@ -147,7 +163,7 @@ export function AccentIdentityClient() {
         setActiveId(null);
       }
     },
-    [activeId, stopPlayback],
+    [activeId, getToken, stopPlayback],
   );
 
   useEffect(() => () => stopDemoSpeech(), []);

@@ -88,6 +88,29 @@ jobs:
           flyctl status -a "${FLY_WEB_APP}"
           echo "Token can reach both apps."
 
+      # Point API at the private Kokoro/Piper speech engine so Play/Studio use neural
+      # human voices instead of in-process eSpeak fixtures. Idempotent secrets set.
+      - name: Wire OWN_TTS_URL → lugemi-tts (neural Echo)
+        if: steps.fly.outputs.configured == 'true'
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+          OWN_TTS_API_KEY: ${{ secrets.OWN_TTS_API_KEY }}
+          TTS_API_KEY: ${{ secrets.TTS_API_KEY }}
+        run: |
+          set -euo pipefail
+          echo "Ensuring speech engine app is reachable…"
+          if ! flyctl status -a lugemi-tts >/dev/null 2>&1; then
+            echo "::warning::lugemi-tts app not found — deploy Speech engine workflow first."
+            exit 0
+          fi
+          KEY="${OWN_TTS_API_KEY:-${TTS_API_KEY:-}}"
+          ARGS=(OWN_TTS_URL=http://lugemi-tts.internal:8080 OWN_TTS_FIXTURE=1)
+          if [ -n "${KEY}" ]; then
+            ARGS+=(OWN_TTS_API_KEY="${KEY}")
+          fi
+          flyctl secrets set -a "${FLY_API_APP}" "${ARGS[@]}"
+          echo "OWN_TTS_URL wired to lugemi-tts.internal for ${FLY_API_APP}"
+
       # Live API Fly app is still named "verbalab" (jnb). Override via repo variable FLY_API_APP
       # after renaming to lugemi-api. Config: infra/fly/api.jnb.toml (region jnb).
       - name: Deploy API (Africa jnb → api.lugemi.com)

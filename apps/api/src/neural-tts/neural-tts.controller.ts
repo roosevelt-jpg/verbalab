@@ -164,6 +164,13 @@ export class NeuralTtsController {
     res.setHeader('X-Lugemi-Voice', result.voice);
     res.setHeader('X-Lugemi-Characters', String(result.characters));
     res.setHeader('X-Lugemi-Mode', 'batch');
+    res.setHeader('X-Lugemi-Synthetic-Speech', 'true');
+    if (result.synthEngine) {
+      res.setHeader('X-Lugemi-Synth-Engine', result.synthEngine);
+    }
+    if (result.verificationStatus) {
+      res.setHeader('X-Lugemi-Verification-Status', result.verificationStatus);
+    }
     if (result.watermarkApplied) {
       res.setHeader('X-Lugemi-Watermark', 'required');
     }

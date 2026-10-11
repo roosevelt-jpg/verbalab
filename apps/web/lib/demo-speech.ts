@@ -361,35 +361,101 @@ async function readError(res: Response): Promise<string> {
   return `Native voice playback failed (HTTP ${res.status})`;
 }
 
+export type StudioSpeechResult = {
+  mode: 'server' | 'neural' | 'studio';
+  profile: DemoVoiceProfile;
+  engine?: string | null;
+  verification?: string | null;
+};
+
+async function fetchSpeechAudio(input: {
+  text: string;
+  language: string;
+  voice: string;
+  token?: string | null;
+  signal: AbortSignal;
+}): Promise<{ blob: Blob; engine: string | null; verification: string | null; mode: StudioSpeechResult['mode'] }> {
+  // Authenticated Studio / Console: metered neural path when OWN_TTS is wired.
+  if (input.token) {
+    const studioRes = await fetch(`${API_URL}/v1/tts/synthesize`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${input.token}`,
+      },
+      body: JSON.stringify({
+        text: input.text.slice(0, 2500),
+        language: input.language,
+        voice: input.voice,
+        format: 'mp3',
+      }),
+      signal: input.signal,
+    });
+    if (studioRes.ok) {
+      const contentType = studioRes.headers.get('content-type') ?? '';
+      if (!contentType.includes('json') && !contentType.includes('text')) {
+        const blob = await studioRes.blob();
+        if (blob.size >= 64) {
+          const engine = studioRes.headers.get('x-lugemi-synth-engine');
+          const verification = studioRes.headers.get('x-lugemi-verification-status');
+          const neural = /neural|kokoro|piper/i.test(engine ?? '') || verification === 'neural_unreviewed';
+          return {
+            blob,
+            engine,
+            verification,
+            mode: neural ? 'neural' : 'studio',
+          };
+        }
+      }
+    }
+  }
+
+  const res = await fetch(`${API_URL}/v1/demo/speech`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text: input.text.slice(0, 300), language: input.language, voice: input.voice }),
+    signal: input.signal,
+  });
+  if (!res.ok) throw new Error(await readError(res));
+  const contentType = res.headers.get('content-type') ?? '';
+  if (contentType.includes('json') || contentType.includes('text')) {
+    throw new Error('Speech endpoint returned non-audio content');
+  }
+  const blob = await res.blob();
+  if (blob.size < 64) throw new Error('Speech audio payload too small');
+  const engine = res.headers.get('x-lugemi-synth-engine');
+  const verification = res.headers.get('x-lugemi-verification-status');
+  const neural = /neural|kokoro|piper/i.test(engine ?? '') || verification === 'neural_unreviewed';
+  return { blob, engine, verification, mode: neural ? 'neural' : 'server' };
+}
+
+/**
+ * Platform Play: prefers authenticated `/v1/tts/synthesize` (Kokoro/Piper when
+ * OWN_TTS_URL is live), else public `/v1/demo/speech` with the same own:* voices.
+ */
 export async function playDemoSpeech(input: {
   text: string;
   voiceId?: string;
   lang?: string;
   label?: string;
+  /** Clerk session JWT or lg_live_/lg_test_ machine key for neural Studio path. */
+  token?: string | null;
   onStarted?: () => void;
-}): Promise<{ mode: 'server'; profile: DemoVoiceProfile }> {
+}): Promise<StudioSpeechResult> {
   const profile = resolveProfile(input);
   const { language, voice } = resolveRequest(profile, input.lang);
 
   stopDemoSpeech();
   const controller = new AbortController();
   activeRequest = controller;
-  const res = await fetch(`${API_URL}/v1/demo/speech`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text: input.text.slice(0, 300), language, voice }),
+  const { blob, engine, verification, mode } = await fetchSpeechAudio({
+    text: input.text,
+    language,
+    voice,
+    token: input.token,
     signal: controller.signal,
   });
-  if (!res.ok) throw new Error(await readError(res));
-
-  const contentType = res.headers.get('content-type') ?? '';
-  if (contentType.includes('json') || contentType.includes('text')) {
-    throw new Error('Speech endpoint returned non-audio content');
-  }
-
-  const blob = await res.blob();
-  if (blob.size < 64) throw new Error('Speech audio payload too small');
-  if (activeRequest !== controller) return { mode: 'server', profile };
+  if (activeRequest !== controller) return { mode, profile, engine, verification };
   activeRequest = null;
 
   const url = URL.createObjectURL(blob);
@@ -410,5 +476,5 @@ export async function playDemoSpeech(input: {
       .then(() => input.onStarted?.())
       .catch(reject);
   });
-  return { mode: 'server', profile };
+  return { mode, profile, engine, verification };
 }

@@ -1,7 +1,10 @@
 # Lugemi speech engine
 
 Self-hosted text-to-speech for every `own:*` voice. Runs as the private Fly app `lugemi-tts`;
-the API reaches it at `OWN_TTS_URL=http://lugemi-tts.internal:8080`. No third-party speech API is called.
+the API reaches it at `OWN_TTS_URL=http://lugemi-tts.internal:8080` (wired automatically by
+`.github/workflows/deploy.yml` on every main deploy). No third-party speech API is called.
+Kokoro neural weights ship in the image for English and cultural English corridors; African L1
+voices upgrade to Piper ONNX via the training publish path below.
 
 | Voices | How they are produced |
 | --- | --- |

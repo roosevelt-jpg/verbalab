@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
 import { playDemoSpeech, stopDemoSpeech } from '@/lib/demo-speech';
+import { loadStudioApiKeySecret } from '@/lib/studio-api-key';
 
 export function useDemoPlayer() {
   const [playingId, setPlayingId] = useState<string | null>(null);
@@ -20,6 +21,8 @@ export function useDemoPlayer() {
       voiceId?: string;
       lang?: string;
       label?: string;
+      /** Optional Clerk JWT; machine key is auto-loaded from Studio identity. */
+      token?: string | null;
     }) => {
       const token = ++gen.current;
       stopDemoSpeech();
@@ -28,11 +31,13 @@ export function useDemoPlayer() {
       setLoadingId(input.id);
       setStatus('Loading…');
       try {
+        const machineKey = loadStudioApiKeySecret() || null;
         const result = await playDemoSpeech({
           text: input.text,
           voiceId: input.voiceId,
           lang: input.lang,
           label: input.label,
+          token: input.token || machineKey,
           onStarted: () => {
             if (token !== gen.current) return;
             setLoadingId(null);
@@ -40,7 +45,13 @@ export function useDemoPlayer() {
           },
         });
         if (token !== gen.current) return;
-        setStatus(`Played with a Lugemi native voice · ${result.profile.label}`);
+        const quality =
+          result.mode === 'neural'
+            ? 'neural Echo'
+            : result.mode === 'studio'
+              ? 'Studio Echo'
+              : 'Echo';
+        setStatus(`Played with Lugemi ${quality} · ${result.profile.label}`);
       } catch (err) {
         if (token !== gen.current) return;
         if (err instanceof DOMException && err.name === 'AbortError') return;

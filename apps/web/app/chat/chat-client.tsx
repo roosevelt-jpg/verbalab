@@ -430,10 +430,12 @@ export function ChatClient() {
     setLoadingMsgId(msgId);
     try {
       const culturalVoice = culturalPack?.echoVoiceId?.replace(/^own:/, '');
+      const auth = await getToken().catch(() => null);
       await playDemoSpeech({
         text,
         lang: culturalPack?.bcp47 || lang,
         voiceId: culturalVoice || (lang.startsWith('sw') ? 'amara' : 'abe'),
+        token: auth,
         onStarted: () => {
           if (token !== playbackGen.current) return;
           setLoadingMsgId(null);

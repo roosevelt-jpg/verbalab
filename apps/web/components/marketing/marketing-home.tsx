@@ -40,16 +40,22 @@ export function MarketingHome({ content }: { content: CmsDocument }) {
       <main id="main">
         <section className="mkt-hero" aria-labelledby="mkt-hero-title">
           <div className="mkt-hero-anamorphic-bg" aria-hidden="true">
-            {hero.media?.videoUrl || hero.media?.imageUrl ? null : (
-              <AnamorphicCanopyCanvas className="mkt-hero-anamorphic-canvas" intensity={1.1} />
-            )}
+            <AnamorphicCanopyCanvas className="mkt-hero-anamorphic-canvas" intensity={1.05} />
           </div>
           {hero.media?.videoUrl || hero.media?.imageUrl ? (
-            <div className="mkt-hero-media" aria-hidden="true">
+            <div className="mkt-hero-media mkt-hero-media--motion" aria-hidden="true">
               {hero.media.videoUrl ? (
-                <video src={hero.media.videoUrl} autoPlay muted loop playsInline />
+                <video
+                  src={hero.media.videoUrl}
+                  poster={hero.media.imageUrl}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                />
               ) : (
-                <img src={hero.media.imageUrl} alt="" />
+                <img className="mkt-hero-kenburns" src={hero.media.imageUrl} alt="" />
               )}
             </div>
           ) : null}

@@ -200,11 +200,12 @@ export const CMS_DEFAULTS: CmsDocument = {
     secondaryCta: { label: 'Explore Baobab', href: '/baobab' },
     media: {
       imageUrl: '/brand/media/platform/platform-hero.jpg',
-      alt: 'Lugemi — 3D anamorphic voice foundation',
+      videoUrl: '/brand/media/platform/platform-hero.webm',
+      alt: 'Lugemi — living voice foundation motion bed',
     },
     demo: {
       title: 'Text to speech',
-      badge: 'Interactive demo',
+      badge: 'Live sample',
       defaultText:
         'Lugemi voices carry creative work, customer conversations, and public speech with literacy and presence across African languages.',
       playHint:
@@ -249,7 +250,8 @@ export const CMS_DEFAULTS: CmsDocument = {
         art: 'voice',
         media: {
           imageUrl: '/brand/media/products/product-voice.jpg',
-          alt: 'Lugemi Voice — 3D anamorphic sound ribbon',
+          videoUrl: '/brand/media/products/product-voice.webm',
+          alt: 'Lugemi Voice — living sound ribbon motion bed',
         },
       },
       {
@@ -261,7 +263,8 @@ export const CMS_DEFAULTS: CmsDocument = {
         art: 'speech',
         media: {
           imageUrl: '/brand/media/products/product-speech.jpg',
-          alt: 'Lugemi Speech — 3D anamorphic transcription plane',
+          videoUrl: '/brand/media/products/product-speech.webm',
+          alt: 'Lugemi Speech — living transcription plane',
         },
       },
       {
@@ -273,7 +276,8 @@ export const CMS_DEFAULTS: CmsDocument = {
         art: 'translate',
         media: {
           imageUrl: '/brand/media/products/product-translate.jpg',
-          alt: 'Lugemi Translate — 3D anamorphic language bridge',
+          videoUrl: '/brand/media/products/product-translate.webm',
+          alt: 'Lugemi Translate — living language bridge',
         },
       },
     ],
@@ -290,7 +294,8 @@ export const CMS_DEFAULTS: CmsDocument = {
         art: 'agents',
         media: {
           imageUrl: '/brand/media/usecases/usecase-trade.jpg',
-          alt: 'Trade & negotiations — 3D anamorphic dialect bridge',
+          videoUrl: '/brand/media/usecases/usecase-trade.webm',
+          alt: 'Trade & negotiations — living dialect bridge',
         },
       },
       {
@@ -300,7 +305,8 @@ export const CMS_DEFAULTS: CmsDocument = {
         art: 'speech',
         media: {
           imageUrl: '/brand/media/usecases/usecase-education.jpg',
-          alt: 'Education — 3D anamorphic mother-tongue learning',
+          videoUrl: '/brand/media/usecases/usecase-education.webm',
+          alt: 'Education — living mother-tongue learning',
         },
       },
       {
@@ -310,7 +316,8 @@ export const CMS_DEFAULTS: CmsDocument = {
         art: 'translate',
         media: {
           imageUrl: '/brand/media/usecases/usecase-sales.jpg',
-          alt: 'Sales & marketing — 3D anamorphic campaign voice',
+          videoUrl: '/brand/media/usecases/usecase-sales.webm',
+          alt: 'Sales & marketing — living campaign voice',
         },
       },
       {
@@ -320,7 +327,8 @@ export const CMS_DEFAULTS: CmsDocument = {
         art: 'voice',
         media: {
           imageUrl: '/brand/media/usecases/usecase-public-speech.jpg',
-          alt: 'Public speech — 3D anamorphic civic podium',
+          videoUrl: '/brand/media/usecases/usecase-public-speech.webm',
+          alt: 'Public speech — living civic podium',
         },
       },
       {
@@ -330,7 +338,8 @@ export const CMS_DEFAULTS: CmsDocument = {
         art: 'agents',
         media: {
           imageUrl: '/brand/media/usecases/usecase-cx.jpg',
-          alt: 'Customer experience — 3D anamorphic support voice',
+          videoUrl: '/brand/media/usecases/usecase-cx.webm',
+          alt: 'Customer experience — living support voice',
         },
       },
       {
@@ -340,7 +349,8 @@ export const CMS_DEFAULTS: CmsDocument = {
         art: 'api',
         media: {
           imageUrl: '/brand/media/usecases/usecase-creative.jpg',
-          alt: 'Creative voice — 3D anamorphic studio production',
+          videoUrl: '/brand/media/usecases/usecase-creative.webm',
+          alt: 'Creative voice — living studio production',
         },
       },
     ],

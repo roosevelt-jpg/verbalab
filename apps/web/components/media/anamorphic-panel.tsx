@@ -1,6 +1,7 @@
 'use client';
 
 import { stillForVariant, type AnamorphicStillVariant } from '@/lib/anamorphic-stills';
+import { motionForStill } from '@/lib/anamorphic-motion';
 import './anamorphic.css';
 
 type Variant = AnamorphicStillVariant;
@@ -17,6 +18,10 @@ const LABELS: Record<Variant, string> = {
   hero: 'Lugemi depth',
 };
 
+/**
+ * Product / use-case media plane. Always motion: muted looping webm when present,
+ * otherwise CSS Ken Burns + grain/beam over the photoreal still (ElevenLabs-class ambient).
+ */
 export function AnamorphicPanel({
   variant = 'hub',
   size = 'md',
@@ -34,7 +39,8 @@ export function AnamorphicPanel({
 }) {
   const sizeClass =
     size === 'sm' ? 'lg-ana--sm' : size === 'lg' ? 'lg-ana--lg' : size === 'hero' ? 'lg-ana--hero' : '';
-  const resolvedImage = videoUrl ? undefined : imageUrl || stillForVariant(variant);
+  const resolvedImage = imageUrl || stillForVariant(variant);
+  const resolvedVideo = videoUrl || motionForStill(resolvedImage, variant);
 
   return (
     <div
@@ -44,16 +50,25 @@ export function AnamorphicPanel({
       role={label ? 'img' : undefined}
       aria-label={label}
     >
-      <div className={`lg-ana__stage${resolvedImage || videoUrl ? ' lg-ana__stage--photo' : ''}`}>
-        {videoUrl ? (
-          <video className="lg-ana__media" src={videoUrl} autoPlay muted loop playsInline />
-        ) : resolvedImage ? (
-          <>
-            <img className="lg-ana__media" src={resolvedImage} alt="" />
-            <div className="lg-ana__photo-veil" />
-            <div className="lg-ana__photo-frame" />
-          </>
-        ) : null}
+      <div className="lg-ana__stage lg-ana__stage--photo lg-ana__stage--motion">
+        {resolvedVideo ? (
+          <video
+            className="lg-ana__media lg-ana__media--motion"
+            src={resolvedVideo}
+            poster={resolvedImage}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+          />
+        ) : (
+          <img className="lg-ana__media lg-ana__media--kenburns" src={resolvedImage} alt="" />
+        )}
+        <div className="lg-ana__photo-veil" />
+        <div className="lg-ana__grain" aria-hidden="true" />
+        <div className="lg-ana__beam lg-ana__beam--soft" aria-hidden="true" />
+        <div className="lg-ana__photo-frame" />
       </div>
       <span className="lg-ana__label">{label ?? LABELS[variant]}</span>
     </div>
