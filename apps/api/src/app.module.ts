@@ -251,6 +251,7 @@ import { LanguageIntelligenceModule } from './language-intelligence/language-int
 import { CountryPacksModule } from './country-packs/country-packs.module';
 import { GraphqlModule } from './graphql/graphql.module';
 import { DialogueModule } from './dialogue/dialogue.module';
+import { CreativeMediaModule } from './creative-media/creative-media.module';
 import { AlignModule } from './align/align.module';
 import { VoiceDesignModule } from './voice-design/voice-design.module';
 import { SpeechEmbedModule } from './speech-embed/speech-embed.module';
@@ -465,6 +466,7 @@ import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
     CountryPacksModule,
     GraphqlModule,
     DialogueModule,
+    CreativeMediaModule,
     AlignModule,
     VoiceDesignModule,
     SpeechEmbedModule,

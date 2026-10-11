@@ -5,12 +5,18 @@ import { useAuth } from '@clerk/nextjs';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { apiFetch } from '@/lib/api';
+import { API_URL, apiFetch } from '@/lib/api';
 import { resolveCreativeToken } from '@/lib/creative-auth';
 import { CreativeShell } from '@/components/creative/creative-shell';
 import { CreativeIcon } from '@/components/creative/creative-icons';
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
 import { useDemoPlayer } from '@/components/marketing/use-demo-player';
+import {
+  HISTORY_KEYS,
+  loadCreativeHistory,
+  pushCreativeHistory,
+  type CreativeHistoryItem,
+} from '@/lib/creative-tool-history';
 
 type Engine = {
   product: string;
@@ -82,14 +88,24 @@ function CreativeSfxClientInner({ getToken, isLoaded }: { getToken: () => Promis
   const [category, setCategory] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [generations, setGenerations] = useState<CreativeHistoryItem[]>([]);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const { play, stop, playingId, loadingId } = useDemoPlayer();
 
   const load = useCallback(async () => {
     const token = await resolveCreativeToken(() => getToken());
     if (!token) return;
-    const eng = await apiFetch<Engine>('/v1/audio-intelligence/engine', { token });
-    setEngine(eng);
+    const [eng] = await Promise.all([
+      apiFetch<Engine>('/v1/creative-media/engine', { token }).catch(() => null),
+      apiFetch<Engine>('/v1/audio-intelligence/engine', { token }).catch(() => null),
+    ]);
+    if (eng) setEngine(eng);
   }, [getToken]);
+
+  useEffect(() => {
+    setGenerations(loadCreativeHistory(HISTORY_KEYS.sfx));
+  }, []);
 
   useEffect(() => {
     if (!isLoaded) return;
@@ -107,16 +123,56 @@ function CreativeSfxClientInner({ getToken, isLoaded }: { getToken: () => Promis
     });
   }, [query, category]);
 
-  function onGenerate(e: FormEvent) {
+  async function onGenerate(e: FormEvent) {
     e.preventDefault();
     const p = prompt.trim();
     if (!p) {
-      setMessage('Describe a sound to queue a generation request.');
+      setMessage('Describe a sound to generate.');
       return;
     }
-    setMessage(
-      `Lugemi does not ship a metered text-to-SFX model yet. Your prompt (“${p}”) is saved as Explore intent — use Audio Intelligence for isolation/enhancement, or pair Studio narration with your existing Foley stack.`,
-    );
+    setBusy(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const token = await resolveCreativeToken(() => getToken());
+      if (!token) throw new Error('Sign in or apply a Studio API key under /keys.');
+      const res = await fetch(`${API_URL}/v1/creative-media/sfx`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ prompt: p }),
+      });
+      const body = (await res.json()) as {
+        audioBase64?: string;
+        mimeType?: string;
+        durationSec?: number;
+        profile?: string;
+        error?: { message?: string };
+      };
+      if (!res.ok || !body.audioBase64) {
+        throw new Error(body.error?.message || `SFX generation failed (${res.status})`);
+      }
+      const url = `data:${body.mimeType || 'audio/wav'};base64,${body.audioBase64}`;
+      if (audioUrl?.startsWith('blob:')) URL.revokeObjectURL(audioUrl);
+      setAudioUrl(url);
+      const next = pushCreativeHistory(HISTORY_KEYS.sfx, {
+        name: p.slice(0, 80),
+        kind: 'sfx',
+        format: 'wav',
+        durationLabel: body.durationSec != null ? `${body.durationSec.toFixed(1)}s` : undefined,
+        meta: body.profile ? `profile · ${body.profile}` : 'generated',
+        previewUrl: url,
+        extra: { audioDataUrl: url },
+      });
+      setGenerations(next);
+      setMessage(`Generated “${p.slice(0, 48)}” — play or download the WAV below.`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'SFX generation failed');
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
@@ -125,13 +181,16 @@ function CreativeSfxClientInner({ getToken, isLoaded }: { getToken: () => Promis
         <div>
           <h1>Sound Effects</h1>
           <p>
-            Browse curated Foley-style references and describe sounds to generate. Generative SFX is a roadmap
-            companion — Audio Intelligence is live today.
+            Generate Foley, ambience, UI, and impact beds from a prompt — live on{' '}
+            <code>/v1/creative-media/sfx</code>. Pair with Studio narration or Audio Intelligence cleanup.
           </p>
         </div>
         <div className="lg-creative-actions">
-          <Link href="/audio-intelligence" className="lg-creative-btn primary">
-            Open Audio Intelligence
+          <Link href="/audio-intelligence" className="lg-creative-btn">
+            Audio Intelligence
+          </Link>
+          <Link href="/creative/studio" className="lg-creative-btn primary">
+            Open Studio
           </Link>
         </div>
       </div>
@@ -241,13 +300,44 @@ function CreativeSfxClientInner({ getToken, isLoaded }: { getToken: () => Promis
         />
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem' }}>
           <span style={{ fontSize: '0.75rem', color: 'var(--lc-muted)' }}>
-            Generations may be shared to Explore when SFX ships. Disable in Data settings later.
+            {busy ? 'Synthesizing…' : 'Live generative SFX · WAV download'}
           </span>
-          <button type="submit" className="lg-creative-send" aria-label="Generate">
+          <button type="submit" className="lg-creative-send" aria-label="Generate" disabled={busy}>
             <CreativeIcon name="send" width={16} height={16} />
           </button>
         </div>
         {message ? <p className="lg-creative-note">{message}</p> : null}
+        {audioUrl ? (
+          <div style={{ marginTop: '0.75rem', display: 'grid', gap: '0.5rem' }}>
+            <audio controls src={audioUrl} style={{ width: '100%' }} />
+            <a href={audioUrl} download="lugemi-sfx.wav" className="lg-creative-btn">
+              Download WAV
+            </a>
+          </div>
+        ) : null}
+        {generations.length ? (
+          <div style={{ marginTop: '0.85rem' }}>
+            <strong style={{ fontSize: '0.85rem', color: 'var(--lc-navy)' }}>Recent generations</strong>
+            {generations.slice(0, 6).map((g) => (
+              <div key={g.id} className="lg-creative-sfx-row" style={{ marginTop: '0.45rem' }}>
+                <div>
+                  <div style={{ fontWeight: 650, color: 'var(--lc-navy)' }}>{g.name}</div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--lc-muted)' }}>{g.meta}</div>
+                </div>
+                <span style={{ color: 'var(--lc-muted)', fontSize: '0.85rem' }}>{g.durationLabel}</span>
+                {g.extra?.audioDataUrl ? (
+                  <button
+                    type="button"
+                    className="lg-creative-btn"
+                    onClick={() => setAudioUrl(g.extra?.audioDataUrl ?? null)}
+                  >
+                    Play
+                  </button>
+                ) : null}
+              </div>
+            ))}
+          </div>
+        ) : null}
       </form>
     </CreativeShell>
   );

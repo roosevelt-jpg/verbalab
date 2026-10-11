@@ -32,7 +32,12 @@ export function loadCreativeHistory(key: string): CreativeHistoryItem[] {
 export function saveCreativeHistory(key: string, items: CreativeHistoryItem[]) {
   if (typeof window === 'undefined') return;
   try {
-    const slim = items.slice(0, 60).map(({ previewUrl: _p, ...rest }) => rest);
+    const slim = items.slice(0, 60).map(({ previewUrl: _p, extra, ...rest }) => {
+      if (!extra) return rest;
+      // Drop bulky data-URLs from durable history (session preview stays in memory).
+      const { audioDataUrl: _a, imageDataUrl: _i, ...meta } = extra;
+      return Object.keys(meta).length ? { ...rest, extra: meta } : rest;
+    });
     window.localStorage.setItem(key, JSON.stringify(slim));
   } catch {
     /* ignore quota */
@@ -78,4 +83,5 @@ export const HISTORY_KEYS = {
   dubbing: 'lugemi.creative.dubbing.history.v1',
   audiobooks: 'lugemi.creative.audiobooks.bookshelf.v1',
   music: 'lugemi.creative.music.prompts.v1',
+  sfx: 'lugemi.creative.sfx.generations.v1',
 } as const;

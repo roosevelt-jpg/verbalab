@@ -3,6 +3,10 @@
 import Link from 'next/link';
 import { FormEvent, Suspense, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { useAuth } from '@clerk/nextjs';
+import { isClerkConfigured } from '@/lib/clerk-config';
+import { API_URL } from '@/lib/api';
+import { resolveCreativeToken } from '@/lib/creative-auth';
 import { CreativeShell } from '@/components/creative/creative-shell';
 import { CreativeIcon } from '@/components/creative/creative-icons';
 import { useCreativeCredits } from '@/hooks/use-creative-credits';
@@ -60,7 +64,7 @@ const MARKETPLACE = [
   },
 ];
 
-function MusicInner() {
+function MusicInner({ getToken }: { getToken: () => Promise<string | null> }) {
   const search = useSearchParams();
   const credits = useCreativeCredits();
   const [tab, setTab] = useState<'marketplace' | 'generations' | 'saved'>('marketplace');
@@ -68,9 +72,12 @@ function MusicInner() {
   const [query, setQuery] = useState('');
   const [genre, setGenre] = useState<string | null>(null);
   const [variations] = useState(2);
-  const [duration] = useState('1:00');
+  const [duration] = useState('0:16');
   const [saved, setSaved] = useState<CreativeHistoryItem[]>([]);
   const [message, setMessage] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
   const { play, stop, playingId, loadingId } = useDemoPlayer();
 
   useEffect(() => {
@@ -93,24 +100,60 @@ function MusicInner() {
     });
   }, [query, genre]);
 
-  function onGenerate(e: FormEvent) {
+  async function onGenerate(e: FormEvent) {
     e.preventDefault();
     const p = prompt.trim();
     if (!p) {
-      setMessage('Describe a track to save generation intent.');
+      setMessage('Describe a track to generate.');
       return;
     }
-    const next = pushCreativeHistory(HISTORY_KEYS.music, {
-      name: p.slice(0, 80),
-      kind: 'music-prompt',
-      meta: `${variations} variations · ${duration}`,
-      format: 'intent',
-    });
-    setSaved(next);
-    setTab('generations');
-    setMessage(
-      `Lugemi does not ship a metered music model yet. Your prompt is saved locally — use Text to Speech for spoken intros, or upload stems in Assets / Studio.`,
-    );
+    setBusy(true);
+    setError(null);
+    setMessage(null);
+    try {
+      const token = await resolveCreativeToken(() => getToken());
+      if (!token) throw new Error('Sign in or apply a Studio API key under /keys.');
+      const res = await fetch(`${API_URL}/v1/creative-media/music`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: p,
+          genre: genre || undefined,
+          durationSec: 16,
+        }),
+      });
+      const body = (await res.json()) as {
+        audioBase64?: string;
+        mimeType?: string;
+        durationSec?: number;
+        genre?: string;
+        error?: { message?: string };
+      };
+      if (!res.ok || !body.audioBase64) {
+        throw new Error(body.error?.message || `Music generation failed (${res.status})`);
+      }
+      const url = `data:${body.mimeType || 'audio/wav'};base64,${body.audioBase64}`;
+      setAudioUrl(url);
+      const next = pushCreativeHistory(HISTORY_KEYS.music, {
+        name: p.slice(0, 80),
+        kind: 'music',
+        meta: `${body.genre || 'bed'} · ${variations} take · ${duration}`,
+        format: 'wav',
+        durationLabel: body.durationSec != null ? `${Math.round(body.durationSec)}s` : duration,
+        previewUrl: url,
+        extra: { audioDataUrl: url },
+      });
+      setSaved(next);
+      setTab('generations');
+      setMessage(`Generated music bed for “${p.slice(0, 48)}” — play or download below.`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Music generation failed');
+    } finally {
+      setBusy(false);
+    }
   }
 
   return (
@@ -118,7 +161,10 @@ function MusicInner() {
       <div className="lg-creative-page-head">
         <div>
           <h1>Music</h1>
-          <p>Browse reference beds and queue generation intent. Music synthesis is a roadmap companion.</p>
+          <p>
+            Generate underscore beds from a prompt — live on <code>/v1/creative-media/music</code>. Pair with Echo
+            speech intros or drop WAVs into Studio / Assets.
+          </p>
         </div>
         <div className="lg-creative-actions">
           <Link href="/creative/text-to-speech" className="lg-creative-btn">
@@ -158,18 +204,27 @@ function MusicInner() {
         />
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.75rem', flexWrap: 'wrap' }}>
           <span style={{ fontSize: '0.8rem', color: 'var(--lc-muted)' }}>
-            {variations} variations · {duration} · ~1,800 credits (estimate)
+            {busy ? 'Composing…' : `${variations} takes · ${duration} bed · live synthesis`}
           </span>
           <div style={{ display: 'flex', gap: '0.45rem', alignItems: 'center' }}>
             <span className="lg-creative-credits">
               {formatCredits(credits.remaining)} credits
             </span>
-            <button type="submit" className="lg-creative-send" aria-label="Generate">
+            <button type="submit" className="lg-creative-send" aria-label="Generate" disabled={busy}>
               <CreativeIcon name="music" width={16} height={16} />
             </button>
           </div>
         </div>
+        {error ? <p className="lg-creative-error">{error}</p> : null}
         {message ? <p className="lg-creative-note">{message}</p> : null}
+        {audioUrl ? (
+          <div style={{ marginTop: '0.75rem', display: 'grid', gap: '0.5rem' }}>
+            <audio controls src={audioUrl} style={{ width: '100%' }} />
+            <a href={audioUrl} download="lugemi-music-bed.wav" className="lg-creative-btn">
+              Download WAV
+            </a>
+          </div>
+        ) : null}
       </form>
 
       {tab === 'marketplace' ? (
@@ -255,10 +310,16 @@ function MusicInner() {
                 <div style={{ fontWeight: 650, color: 'var(--lc-navy)' }}>{h.name}</div>
                 <div style={{ fontSize: '0.8rem', color: 'var(--lc-muted)' }}>{h.meta}</div>
               </div>
-              <span style={{ color: 'var(--lc-muted)', fontSize: '0.85rem' }}>Intent</span>
-              <Link href={`/creative/text-to-speech?text=${encodeURIComponent(h.name)}`} className="lg-creative-ghost">
-                Speech instead
-              </Link>
+              <span style={{ color: 'var(--lc-muted)', fontSize: '0.85rem' }}>{h.format || 'wav'}</span>
+              {h.extra?.audioDataUrl ? (
+                <button type="button" className="lg-creative-btn" onClick={() => setAudioUrl(h.extra?.audioDataUrl ?? null)}>
+                  Play
+                </button>
+              ) : (
+                <Link href={`/creative/text-to-speech?text=${encodeURIComponent(h.name)}`} className="lg-creative-ghost">
+                  Speech intro
+                </Link>
+              )}
               <span />
             </div>
           ))
@@ -268,10 +329,15 @@ function MusicInner() {
   );
 }
 
+function MusicAuthed() {
+  const { getToken } = useAuth();
+  return <MusicInner getToken={getToken} />;
+}
+
 export function CreativeMusicClient() {
   return (
     <Suspense fallback={<p style={{ padding: '2rem' }}>Loading Music…</p>}>
-      <MusicInner />
+      {isClerkConfigured() ? <MusicAuthed /> : <MusicInner getToken={async () => null} />}
     </Suspense>
   );
 }

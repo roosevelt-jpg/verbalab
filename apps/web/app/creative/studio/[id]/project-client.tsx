@@ -63,7 +63,7 @@ function ProjectInner({
   const [missing, setMissing] = useState(false);
   const [voices, setVoices] = useState<Voice[]>([]);
   const [identityPack, setIdentityPack] = useState<CulturalIdentityPack | null>(null);
-  const [busy, setBusy] = useState<'tts' | 'export' | null>(null);
+  const [busy, setBusy] = useState<'tts' | 'export' | 'image' | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [note, setNote] = useState<string | null>(null);
   const [exportProgress, setExportProgress] = useState(0);
@@ -132,6 +132,90 @@ function ProjectInner({
     if (!file || !project) return;
     const dataUrl = await blobToDataUrl(file);
     updateScene(sceneId, { imageDataUrl: dataUrl });
+  }
+
+  async function generateSceneStill(sceneId: string) {
+    if (!project) return;
+    const scene = project.scenes.find((s) => s.id === sceneId);
+    if (!scene) return;
+    setBusy('image');
+    setError(null);
+    setNote(null);
+    try {
+      const token = await resolveToken();
+      if (!token) throw new Error('Sign in or apply a Studio API key under /keys.');
+      const res = await fetch(`${API_URL}/v1/creative-media/image`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: `${scene.caption || scene.title} — ${project.title}`,
+          style: /news/i.test(project.title) ? 'news' : /film|trailer/i.test(project.title) ? 'cinematic' : 'studio',
+        }),
+      });
+      const body = (await res.json()) as {
+        imageBase64?: string;
+        mimeType?: string;
+        error?: { message?: string };
+      };
+      if (!res.ok || !body.imageBase64) {
+        throw new Error(body.error?.message || `Image generation failed (${res.status})`);
+      }
+      updateScene(sceneId, {
+        imageDataUrl: `data:${body.mimeType || 'image/png'};base64,${body.imageBase64}`,
+      });
+      setNote(`Generated still for ${scene.title}.`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Image generation failed');
+    } finally {
+      setBusy(null);
+    }
+  }
+
+  async function generateAllStills() {
+    if (!project) return;
+    setBusy('image');
+    setError(null);
+    setNote(null);
+    try {
+      const token = await resolveToken();
+      if (!token) throw new Error('Sign in or apply a Studio API key under /keys.');
+      const res = await fetch(`${API_URL}/v1/creative-media/video-plan`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title: project.title,
+          script: project.script || project.title,
+        }),
+      });
+      const body = (await res.json()) as {
+        scenes?: Array<{ caption: string; mimeType: string; imageBase64: string; durationSec: number; title: string }>;
+        error?: { message?: string };
+      };
+      if (!res.ok || !body.scenes?.length) {
+        throw new Error(body.error?.message || `Video plan failed (${res.status})`);
+      }
+      const scenes = project.scenes.map((scene, i) => {
+        const gen = body.scenes![Math.min(i, body.scenes!.length - 1)]!;
+        return {
+          ...scene,
+          caption: scene.caption || gen.caption,
+          durationSec: scene.durationSec || gen.durationSec,
+          imageDataUrl: `data:${gen.mimeType};base64,${gen.imageBase64}`,
+        };
+      });
+      persist({ ...project, scenes });
+      setNote(`Generated stills for ${scenes.length} scenes.`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Could not generate stills');
+    } finally {
+      setBusy(null);
+    }
   }
 
   async function generateNarration() {
@@ -318,6 +402,14 @@ function ProjectInner({
           </button>
           <button
             type="button"
+            className="lg-creative-btn"
+            disabled={busy !== null || !project.script.trim()}
+            onClick={() => void generateAllStills()}
+          >
+            {busy === 'image' ? 'Stills…' : 'Generate all stills'}
+          </button>
+          <button
+            type="button"
             className="lg-creative-btn primary"
             disabled={busy !== null || !project.script.trim()}
             onClick={() => void generateNarration()}
@@ -444,13 +536,21 @@ function ProjectInner({
                   <button
                     type="button"
                     className="lg-creative-btn"
+                    disabled={busy === 'image'}
+                    onClick={() => void generateSceneStill(scene.id)}
+                  >
+                    {busy === 'image' ? 'Generating…' : scene.imageDataUrl ? 'Regenerate still' : 'Generate still'}
+                  </button>
+                  <button
+                    type="button"
+                    className="lg-creative-btn"
                     onClick={() => {
                       setPreviewScene(idx);
                       fileRef.current?.setAttribute('data-scene', scene.id);
                       fileRef.current?.click();
                     }}
                   >
-                    {scene.imageDataUrl ? 'Replace still' : 'Add still'}
+                    {scene.imageDataUrl ? 'Upload still' : 'Add still'}
                   </button>
                 </div>
               </li>

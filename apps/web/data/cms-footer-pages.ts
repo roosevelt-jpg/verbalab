@@ -142,7 +142,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
     title: 'Text to Sound Effects',
     eyebrow: 'LugemiCreative',
     lead: 'Sound design for stories that already speak African and global languages.',
-    body: 'Lugemi’s primary surface is speech and language intelligence — not a general Foley generator. Text to Sound Effects is positioned as a creative companion roadmap: pair Studio narration with your existing audio stack today, and treat generative SFX as planned capability rather than a live, metered product.',
+    body: 'Lugemi Creative Sound Effects generates Foley, ambience, UI, and impact beds via /v1/creative-media/sfx. Pair generated WAVs with Studio narration or Audio Intelligence cleanup.',
     sections: [
       content(
         'today',
@@ -276,7 +276,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
       content(
         'position',
         'Brand position',
-        'Africa-first speech and translation are the investment priority. Generative music is roadmap-adjacent, not a substitute for Voice and Studio.',
+        'Africa-first speech and translation remain the core. Creative Music generates underscore beds via /v1/creative-media/music for intros and Studio pairing.',
       ),
       content(
         'today',
@@ -418,8 +418,8 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
     slug: 'ai-video-generator',
     title: 'AI Video Generator',
     eyebrow: 'LugemiCreative',
-    lead: 'Video voice and localization first — full generative video is not claimed as GA.',
-    body: 'Lugemi helps teams put accurate speech and translation onto video workflows (dubbing scripts, voice-over, agent video voice via MCP/CLI helpers). A complete text-to-video foundation model is not marketed as ready. Use Lugemi for the language layer; compose picture in your editor.',
+    lead: 'Image & Video: scene stills, Echo narration, and WebM export — live in Creative Studio.',
+    body: 'Lugemi Creative Image & Video generates prompt-conditioned scene stills via /v1/creative-media/video-plan, synthesizes Echo narration, and exports WebM. Dubbing scripts, voice-over, and agent video voice remain first-class language paths.',
     sections: [
       content(
         'voice-on-video',
@@ -427,14 +427,14 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
         'Synthesize narration, clone with consent, and localize scripts before mix — Lugemi’s contribution to video.',
       ),
       content(
-        'roadmap',
-        'Roadmap honesty',
-        'End-to-end generative video remains adjacent. Product claims follow published endpoints and coverage.',
+        'live-stills',
+        'Live scene stills + export',
+        'POST /v1/creative-media/image and /video-plan feed Studio scenes; generate voice and export WebM end-to-end.',
       ),
       guide(
         'guide-video',
         'Video localization path',
-        'Script → translate → voice → your editor.',
+        'Script → stills → voice → WebM or your editor.',
         [
           'Localize the script with Translate.',
           'Generate voice-over in Voice / Studio.',
@@ -1194,7 +1194,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
     slug: 'sound-effects-api',
     title: 'Sound Effects API',
     eyebrow: 'LugemiAPI',
-    lead: 'SFX generation is roadmap-adjacent — speech APIs ship today.',
+    lead: 'SFX generation is live on /v1/creative-media/sfx — speech APIs remain the core product.',
     body: 'A dedicated Sound Effects API is not advertised as production-ready. Developers building sound-rich apps should use Lugemi speech endpoints for voice and keep Foley in specialized tools until Lugemi publishes an SFX route with metering and docs.',
     sections: [
       content(
