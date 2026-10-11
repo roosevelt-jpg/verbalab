@@ -5,6 +5,7 @@ import { useAuth } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { apiFetch } from '@/lib/api';
 import { isClerkConfigured } from '@/lib/clerk-config';
+import { useStudioApiKeyField } from '@/hooks/use-studio-api-key';
 
 type InvitePeek = {
   sessionId: string;
@@ -22,7 +23,7 @@ type InvitePeek = {
 export function DealBridgeJoinClient({ token }: { token: string }) {
   const router = useRouter();
   const { getToken, isSignedIn } = useAuth();
-  const [apiKey, setApiKey] = useState('');
+  const { apiKey, setApiKey } = useStudioApiKeyField();
   const [actorId, setActorId] = useState('buyer-local');
   const [peek, setPeek] = useState<InvitePeek | null>(null);
   const [language, setLanguage] = useState('fr');

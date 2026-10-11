@@ -10,19 +10,17 @@ import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
 import { useDemoPlayer } from '@/components/marketing/use-demo-player';
 import { LocaleSelect } from '@/components/language-locale-select';
 import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
+import { useStudioApiKeyField } from '@/hooks/use-studio-api-key';
 import { SITE_CONTENT } from '@/data/site-content';
+import { formatStudioApiKeyLabel, isLugemiApiKey } from '@/lib/studio-api-key';
 
 type Mode = 'translate' | 'detect' | 'languages';
-
-function isApiKey(value: string) {
-  return value.startsWith('lg_live_') || value.startsWith('lg_test_');
-}
 
 export function PlaygroundClient() {
   const searchParams = useSearchParams();
   const catalog = useLocaleCatalog();
   const [mode, setMode] = useState<Mode>('translate');
-  const [apiKey, setApiKey] = useState('');
+  const { apiKey, setApiKey, identity } = useStudioApiKeyField();
   const [source, setSource] = useState(
     () => searchParams.get('source') || SITE_CONTENT.playgroundDefaults.source,
   );
@@ -62,8 +60,8 @@ export function PlaygroundClient() {
         setResponse(JSON.stringify(res, null, 2));
         return;
       }
-      if (!isApiKey(apiKey)) {
-        throw new Error('Paste a lg_live_ or lg_test_ API key from the console');
+      if (!isLugemiApiKey(apiKey)) {
+        throw new Error('Paste a lg_live_ or lg_test_ API key from the console (or create one under API keys)');
       }
       if (mode === 'detect') {
         const res = await apiFetch<unknown>('/v1/detect', {
@@ -107,8 +105,14 @@ export function PlaygroundClient() {
       <p style={{ color: 'var(--muted)', margin: '0.5rem 0 0', maxWidth: '38rem', lineHeight: 1.6 }}>
         Try translate, detect, and languages against the Lugemi API — the same surface speaking agents use for
         multilingual turns. Prefill text is editable. Paste a <code className="vl-code">lg_live_</code> or{' '}
-        <code className="vl-code">lg_test_</code> key; list languages without a key.
+        <code className="vl-code">lg_test_</code> key (auto-filled when applied under{' '}
+        <Link href="/keys">API keys</Link>); list languages without a key.
       </p>
+      {identity ? (
+        <p style={{ margin: '0.65rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
+          Studio machine key: <strong>{formatStudioApiKeyLabel(identity)}</strong>
+        </p>
+      ) : null}
 
       <div className="vl-player-bar" style={{ marginTop: '1.25rem' }}>
         {(['translate', 'detect', 'languages'] as Mode[]).map((m) => (
@@ -143,6 +147,11 @@ export function PlaygroundClient() {
               placeholder="lg_live_... or lg_test_..."
               required
             />
+            {identity ? (
+              <span style={{ display: 'block', marginTop: '0.35rem', color: 'var(--muted)', fontSize: '0.85rem' }}>
+                Using Studio identity · {identity.name} · {identity.environment}
+              </span>
+            ) : null}
           </label>
         ) : null}
 

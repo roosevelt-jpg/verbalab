@@ -6,6 +6,7 @@ import { useEffect, useState } from 'react';
 import { UserButton, useAuth } from '@clerk/nextjs';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { usePlatformAdmin } from '@/lib/use-platform-admin';
+import { StudioApiKeyChip } from '@/components/studio-api-key-chip';
 import { WorkspaceSwitcher } from '@/components/workspace-switcher';
 import { BrandMark } from '@/components/brand-mark';
 
@@ -259,6 +260,7 @@ function ShellFrame({
         <div className="vl-console-header-right">
           {inConsole ? (
             <>
+              <StudioApiKeyChip />
               <WorkspaceSwitcher />
               {clerk ? <UserButton afterSignOutUrl="/" /> : null}
             </>

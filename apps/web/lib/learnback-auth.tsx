@@ -3,6 +3,7 @@
 import { ReactNode, useCallback, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { isClerkConfigured } from '@/lib/clerk-config';
+import { useStudioApiKeyField } from '@/hooks/use-studio-api-key';
 
 export type LearnBackAuthBag = {
   signedIn: boolean;
@@ -20,7 +21,7 @@ function LearnBackAuthAuthed({
   children: (auth: LearnBackAuthBag) => ReactNode;
 }) {
   const { getToken, isSignedIn } = useAuth();
-  const [apiKey, setApiKey] = useState('');
+  const { apiKey, setApiKey } = useStudioApiKeyField();
   const [actorId, setActorId] = useState('');
   const signedIn = Boolean(isSignedIn);
 
@@ -67,7 +68,7 @@ function LearnBackAuthApiKeyOnly({
 }: {
   children: (auth: LearnBackAuthBag) => ReactNode;
 }) {
-  const [apiKey, setApiKey] = useState('');
+  const { apiKey, setApiKey } = useStudioApiKeyField();
   const [actorId, setActorId] = useState('');
 
   const authHeaders = useCallback(async () => {

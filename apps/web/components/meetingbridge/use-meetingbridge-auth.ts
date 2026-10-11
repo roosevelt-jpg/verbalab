@@ -3,10 +3,11 @@
 import { useCallback, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { isClerkConfigured } from '@/lib/clerk-config';
+import { useStudioApiKeyField } from '@/hooks/use-studio-api-key';
 
 export function useMeetingBridgeAuth() {
   const { getToken, isSignedIn, userId } = useAuth();
-  const [apiKey, setApiKey] = useState('');
+  const { apiKey, setApiKey } = useStudioApiKeyField();
   const [actorId, setActorId] = useState('organizer-local');
   const signedIn = Boolean(isClerkConfigured() && isSignedIn);
 

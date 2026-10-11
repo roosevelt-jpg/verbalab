@@ -1,31 +1,31 @@
 /** Shared Creative workspace auth: Clerk session or pasted lg_* API key. */
 
-const KEY = 'lugemi.creative.apiKey.v1';
+import {
+  applyStudioApiKey,
+  clearStudioApiKey,
+  isLugemiApiKey,
+  loadStudioApiKeySecret,
+} from '@/lib/studio-api-key';
+
+export { isLugemiApiKey } from '@/lib/studio-api-key';
 
 export function loadCreativeApiKey(): string {
-  if (typeof window === 'undefined') return '';
-  try {
-    return window.localStorage.getItem(KEY) ?? '';
-  } catch {
-    return '';
-  }
+  return loadStudioApiKeySecret();
 }
 
 export function saveCreativeApiKey(value: string) {
-  if (typeof window === 'undefined') return;
-  try {
-    if (value) window.localStorage.setItem(KEY, value);
-    else window.localStorage.removeItem(KEY);
-  } catch {
-    /* ignore */
+  const next = value.trim();
+  if (!next) {
+    clearStudioApiKey();
+    return;
   }
-}
-
-export function isLugemiApiKey(value: string): boolean {
-  return (
-    value.startsWith('lg_live_') ||
-    value.startsWith('lg_test_') ||
-    value.startsWith('vl_live_') ||
-    value.startsWith('vl_test_')
-  );
+  if (!isLugemiApiKey(next)) return;
+  const existingPrefix = next.slice(0, 16);
+  applyStudioApiKey({
+    id: '',
+    name: next.startsWith('lg_live_') || next.startsWith('vl_live_') ? 'Live key' : 'Test key',
+    prefix: existingPrefix,
+    environment: next.startsWith('lg_test_') || next.startsWith('vl_test_') ? 'test' : 'live',
+    secret: next,
+  });
 }

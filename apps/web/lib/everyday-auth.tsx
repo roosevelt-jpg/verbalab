@@ -3,6 +3,7 @@
 import { ReactNode, useCallback, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { isClerkConfigured } from '@/lib/clerk-config';
+import { useStudioApiKeyField } from '@/hooks/use-studio-api-key';
 
 export type EverydayAuthBag = {
   signedIn: boolean;
@@ -20,7 +21,7 @@ function EverydayAuthAuthed({
   children: (auth: EverydayAuthBag) => ReactNode;
 }) {
   const { getToken, isSignedIn } = useAuth();
-  const [apiKey, setApiKey] = useState('');
+  const { apiKey, setApiKey } = useStudioApiKeyField();
   const [actorId, setActorId] = useState('everyday-local');
   const signedIn = Boolean(isSignedIn);
 
@@ -66,7 +67,7 @@ function EverydayAuthApiKeyOnly({
 }: {
   children: (auth: EverydayAuthBag) => ReactNode;
 }) {
-  const [apiKey, setApiKey] = useState('');
+  const { apiKey, setApiKey } = useStudioApiKeyField();
   const [actorId, setActorId] = useState('everyday-local');
 
   const authHeaders = useCallback(async () => {

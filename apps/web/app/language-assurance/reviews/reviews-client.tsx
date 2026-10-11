@@ -7,6 +7,7 @@ import { AppShell } from '@/components/app-shell';
 import { PageHeader } from '@/components/platform';
 import { apiFetch } from '@/lib/api';
 import { isClerkConfigured } from '@/lib/clerk-config';
+import { useStudioApiKeyField } from '@/hooks/use-studio-api-key';
 
 type Assignment = {
   id: string;
@@ -24,7 +25,7 @@ export function AssuranceReviewsClient() {
   const { getToken, isSignedIn } = useAuth();
   const [items, setItems] = useState<Assignment[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [apiKey, setApiKey] = useState('');
+  const { apiKey, setApiKey } = useStudioApiKeyField();
   const [actorId, setActorId] = useState('native-reviewer');
   const [busy, setBusy] = useState(false);
   const signedIn = Boolean(isClerkConfigured() && isSignedIn);

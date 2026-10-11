@@ -7,6 +7,7 @@ import { AppShell } from '@/components/app-shell';
 import { PageHeader } from '@/components/platform';
 import { apiFetch } from '@/lib/api';
 import { isClerkConfigured } from '@/lib/clerk-config';
+import { useStudioApiKeyField } from '@/hooks/use-studio-api-key';
 
 type RunView = {
   run: {
@@ -47,7 +48,7 @@ export function AssuranceRunClient({ runId }: { runId: string }) {
   const { getToken, isSignedIn } = useAuth();
   const [view, setView] = useState<RunView | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [apiKey, setApiKey] = useState('');
+  const { apiKey, setApiKey } = useStudioApiKeyField();
   const [actorId, setActorId] = useState('producer-local');
   const [reviewerId, setReviewerId] = useState('native-reviewer');
   const [report, setReport] = useState<string | null>(null);

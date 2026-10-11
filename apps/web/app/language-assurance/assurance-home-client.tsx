@@ -7,6 +7,7 @@ import { AppShell } from '@/components/app-shell';
 import { PageHeader, FeaturePanel } from '@/components/platform';
 import { apiFetch } from '@/lib/api';
 import { isClerkConfigured } from '@/lib/clerk-config';
+import { useStudioApiKeyField } from '@/hooks/use-studio-api-key';
 
 type Catalog = {
   name?: string;
@@ -33,7 +34,7 @@ export function LanguageAssuranceHomeClient() {
   const [runs, setRuns] = useState<RunRow[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [apiKey, setApiKey] = useState('');
+  const { apiKey, setApiKey } = useStudioApiKeyField();
   const [actorId, setActorId] = useState('producer-local');
   const [sourceText, setSourceText] = useState('Dispatch 15 bags of rice by 2026-10-20. Do not ship early.');
   const [targetText, setTargetText] = useState('Fa bags 50 no rice so 2026-10-20. Ship early.');

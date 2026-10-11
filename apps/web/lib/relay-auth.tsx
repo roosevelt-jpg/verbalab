@@ -3,6 +3,7 @@
 import { ReactNode, useCallback, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { isClerkConfigured } from '@/lib/clerk-config';
+import { useStudioApiKeyField } from '@/hooks/use-studio-api-key';
 
 export type RelayAuthBag = {
   signedIn: boolean;
@@ -16,7 +17,7 @@ export type RelayAuthBag = {
 
 function RelayAuthAuthed({ children }: { children: (auth: RelayAuthBag) => ReactNode }) {
   const { getToken, isSignedIn } = useAuth();
-  const [apiKey, setApiKey] = useState('');
+  const { apiKey, setApiKey } = useStudioApiKeyField();
   const [actorId, setActorId] = useState('');
   const signedIn = Boolean(isSignedIn);
 
@@ -53,7 +54,7 @@ export function RelayAuthGate({ children }: { children: (auth: RelayAuthBag) => 
 }
 
 function RelayAuthApiKeyOnly({ children }: { children: (auth: RelayAuthBag) => ReactNode }) {
-  const [apiKey, setApiKey] = useState('');
+  const { apiKey, setApiKey } = useStudioApiKeyField();
   const [actorId, setActorId] = useState('');
 
   const authHeaders = useCallback(async () => {

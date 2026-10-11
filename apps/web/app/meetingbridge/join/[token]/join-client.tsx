@@ -8,6 +8,7 @@ import { AppShell } from '@/components/app-shell';
 import { PageHeader } from '@/components/platform';
 import { apiFetch } from '@/lib/api';
 import { isClerkConfigured } from '@/lib/clerk-config';
+import { useStudioApiKeyField } from '@/hooks/use-studio-api-key';
 
 type InvitePeek = {
   meetingId: string;
@@ -27,7 +28,7 @@ type InvitePeek = {
 export function MeetingBridgeJoinClient({ token }: { token: string }) {
   const router = useRouter();
   const { getToken, isSignedIn } = useAuth();
-  const [apiKey, setApiKey] = useState('');
+  const { apiKey, setApiKey } = useStudioApiKeyField();
   const [actorId, setActorId] = useState('participant-local');
   const [peek, setPeek] = useState<InvitePeek | null>(null);
   const [speakingLanguage, setSpeakingLanguage] = useState('en');

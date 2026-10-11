@@ -7,6 +7,7 @@ import { AppShell } from '@/components/app-shell';
 import { PageHeader } from '@/components/platform';
 import { apiFetch } from '@/lib/api';
 import { isClerkConfigured } from '@/lib/clerk-config';
+import { useStudioApiKeyField } from '@/hooks/use-studio-api-key';
 
 type MeetingView = {
   meeting: {
@@ -85,7 +86,7 @@ type MeetingView = {
 
 export function MeetingBridgeMeetingClient({ meetingId }: { meetingId: string }) {
   const { getToken, isSignedIn, userId } = useAuth();
-  const [apiKey, setApiKey] = useState('');
+  const { apiKey, setApiKey } = useStudioApiKeyField();
   const [actorId, setActorId] = useState('organizer-local');
   const [view, setView] = useState<MeetingView | null>(null);
   const [error, setError] = useState<string | null>(null);

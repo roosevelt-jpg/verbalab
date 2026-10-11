@@ -7,6 +7,7 @@ import { apiFetch } from '@/lib/api';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { AppShell } from '@/components/app-shell';
 import { FeaturePanel, PageHeader, PremiumCard, StatCard } from '@/components/platform';
+import { useStudioApiKeyField } from '@/hooks/use-studio-api-key';
 
 type SessionRow = {
   id: string;
@@ -62,7 +63,7 @@ const STATE_BUCKETS: Array<{ id: string; label: string; match: (s: SessionRow) =
 
 export function DealBridgeHomeClient() {
   const { getToken, isSignedIn } = useAuth();
-  const [apiKey, setApiKey] = useState('');
+  const { apiKey, setApiKey } = useStudioApiKeyField();
   const [actorId, setActorId] = useState('merchant-local');
   const [sessions, setSessions] = useState<SessionRow[]>([]);
   const [headline, setHeadline] = useState('Speak your language. Confirm the same deal.');

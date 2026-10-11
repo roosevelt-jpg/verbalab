@@ -5,6 +5,7 @@ import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { apiFetch } from '@/lib/api';
 import { isClerkConfigured } from '@/lib/clerk-config';
+import { useStudioApiKeyField } from '@/hooks/use-studio-api-key';
 
 type SessionView = {
   id: string;
@@ -51,7 +52,7 @@ type SessionView = {
 
 export function DealBridgeSessionClient({ sessionId }: { sessionId: string }) {
   const { getToken, isSignedIn } = useAuth();
-  const [apiKey, setApiKey] = useState('');
+  const { apiKey, setApiKey } = useStudioApiKeyField();
   const [actorId, setActorId] = useState('merchant-local');
   const [view, setView] = useState<SessionView | null>(null);
   const [error, setError] = useState<string | null>(null);
