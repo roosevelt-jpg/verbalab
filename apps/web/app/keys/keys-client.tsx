@@ -244,10 +244,37 @@ export function KeysClient() {
               </div>
             </>
           ) : (
-            <p className="lg-card__body" style={{ marginTop: 0 }}>
-              No machine key applied yet. Create a live key below — Lugemi will identify it and apply it
-              across the platform automatically.
-            </p>
+            <>
+              <p className="lg-card__body" style={{ marginTop: 0 }}>
+                No machine key applied yet. Create a live key below, or paste a secret you already saved —
+                Lugemi will identify it by prefix and apply it across Studio.
+              </p>
+              <form
+                onSubmit={(e) => void onApplyExisting(e)}
+                className="vl-player-bar"
+                style={{ marginTop: '0.85rem', alignItems: 'stretch' }}
+              >
+                <label className="vl-field-label" style={{ flex: '1 1 14rem' }}>
+                  Paste existing secret
+                  <input
+                    className="vl-field vl-code"
+                    type="password"
+                    autoComplete="off"
+                    value={pasteSecret}
+                    onChange={(e) => setPasteSecret(e.target.value)}
+                    placeholder="lg_live_… (shown once at creation)"
+                  />
+                </label>
+                <button
+                  type="submit"
+                  className="vl-btn vl-btn-primary"
+                  style={{ alignSelf: 'end' }}
+                  disabled={verifying || !pasteSecret.trim()}
+                >
+                  {verifying ? 'Applying…' : 'Identify & apply'}
+                </button>
+              </form>
+            </>
           )}
         </PremiumCard>
 
