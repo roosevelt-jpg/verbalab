@@ -286,10 +286,10 @@ export class LearnBackAdapters {
         ip: input.ip,
         skipAudit: true,
       });
-      const coaching = (result.coaching ?? []).slice(0, 2).map((c: { tip?: string; feature?: string; target?: string }) => ({
-        feature: c.feature ?? 'comprehensibility',
-        targetForm: c.target ?? input.reference.slice(0, 40),
-        evidence: c.tip,
+      const coaching = (result.coaching ?? []).slice(0, 2).map((c) => ({
+        feature: c.id || 'comprehensibility',
+        targetForm: input.reference.slice(0, 40),
+        evidence: c.message,
         limitation: 'Assessor output is advisory; accent variety is not graded as wrong.',
       }));
       return {
