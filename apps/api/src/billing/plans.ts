@@ -11,6 +11,7 @@ export type PlanFeature =
   | 'meetingBridge'
   | 'languageAssurance'
   | 'everyday'
+  | 'learnBack'
   | 'voiceClones'
   | 'marketplace'
   | 'fineTunes'
@@ -113,6 +114,7 @@ function proPlan(): PlanDefinition {
       'meetingBridge',
       'languageAssurance',
       'everyday',
+      'learnBack',
       'voiceClones',
       'marketplace',
       'fineTunes',
@@ -150,6 +152,7 @@ function businessPlan(): PlanDefinition {
       'meetingBridge',
       'languageAssurance',
       'everyday',
+      'learnBack',
       'voiceClones',
       'marketplace',
       'fineTunes',
@@ -187,6 +190,7 @@ function enterprisePlan(): PlanDefinition {
       'meetingBridge',
       'languageAssurance',
       'everyday',
+      'learnBack',
       'voiceClones',
       'marketplace',
       'fineTunes',

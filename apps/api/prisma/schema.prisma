@@ -128,6 +128,9 @@ model Organization {
   assuranceAuditEvents          AssuranceAuditEvent[]
   everydaySessions              EverydaySession[]
   everydayAuditEvents           EverydayAuditEvent[]
+  learnbackProfiles             LearnBackLearnerProfile[]
+  learnbackSessions             LearnBackPracticeSession[]
+  learnbackAuditEvents          LearnBackAuditEvent[]
 
   @@index([plan])
   @@index([billingStatus])
@@ -3935,4 +3938,284 @@ model EverydayAuditEvent {
   @@index([organizationId, createdAt])
   @@index([sessionId])
   @@map("everyday_audit_events")
+}
+
+/// Lugemi LearnBack — spoken practice with meaning-first feedback and private phrasebook.
+model LearnBackLearnerProfile {
+  id                    String   @id @default(cuid())
+  organizationId        String   @map("organization_id")
+  workspaceId           String   @map("workspace_id")
+  ownerUserId           String   @map("owner_user_id")
+  explanationLanguage   String   @default("ak") @map("explanation_language")
+  practiceLanguage      String   @default("en") @map("practice_language")
+  optionalAccentTarget  String?  @map("optional_accent_target")
+  goal                  String?
+  accessibilityPrefs    Json?    @map("accessibility_prefs")
+  trainingConsent       Boolean  @default(false) @map("training_consent")
+  retentionDays         Int      @default(30) @map("retention_days")
+  reminderOptIn         Boolean  @default(false) @map("reminder_opt_in")
+  reminderTimezone      String?  @map("reminder_timezone")
+  reminderChannel       String?  @map("reminder_channel")
+  quietHoursStart       Int?     @map("quiet_hours_start")
+  quietHoursEnd         Int?     @map("quiet_hours_end")
+  createdAt             DateTime @default(now()) @map("created_at")
+  updatedAt             DateTime @updatedAt @map("updated_at")
+
+  organization Organization              @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  phrasebook   LearnBackPhrasebookEntry[]
+  progress     LearnBackProgressObservation[]
+
+  @@unique([organizationId, ownerUserId])
+  @@index([organizationId, workspaceId])
+  @@map("learnback_learner_profiles")
+}
+
+model LearnBackScenarioPack {
+  id                   String   @id @default(cuid())
+  packKey              String   @map("pack_key")
+  revision             String
+  situation            String
+  corridorId           String   @map("corridor_id")
+  levelLabel           String   @map("level_label")
+  questionText         String   @map("question_text")
+  questionExplanation  String   @map("question_explanation")
+  intent               String
+  targetSkills         Json     @map("target_skills")
+  followUpPrompts      Json     @map("follow_up_prompts")
+  exampleAnswers       Json     @map("example_answers")
+  phraseExamples       Json     @map("phrase_examples")
+  rubricVersion        String   @map("rubric_version")
+  reviewerNote         String   @map("reviewer_note")
+  isSystem             Boolean  @default(true) @map("is_system")
+  organizationId       String?  @map("organization_id")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  sessions LearnBackPracticeSession[]
+
+  @@unique([packKey, revision, corridorId])
+  @@index([situation, corridorId])
+  @@map("learnback_scenario_packs")
+}
+
+model LearnBackPracticeSession {
+  id                   String    @id @default(cuid())
+  organizationId       String    @map("organization_id")
+  workspaceId          String    @map("workspace_id")
+  ownerUserId          String    @map("owner_user_id")
+  scenarioPackId       String    @map("scenario_pack_id")
+  corridorId           String    @map("corridor_id")
+  explanationLanguage  String    @map("explanation_language")
+  practiceLanguage     String    @map("practice_language")
+  situation            String
+  fictionalMode        Boolean   @default(false) @map("fictional_mode")
+  /// ready | recording | processing | feedback_available | completed | deleted | failed
+  state                String    @default("ready")
+  policyVersion        String    @default("learnback_private_v1") @map("policy_version")
+  retentionDays        Int       @default(30) @map("retention_days")
+  trainingConsent      Boolean   @default(false) @map("training_consent")
+  deletedAt            DateTime? @map("deleted_at")
+  createdAt            DateTime  @default(now()) @map("created_at")
+  updatedAt            DateTime  @updatedAt @map("updated_at")
+
+  organization Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  scenarioPack LearnBackScenarioPack   @relation(fields: [scenarioPackId], references: [id], onDelete: Restrict)
+  attempts     LearnBackAttempt[]
+  events       LearnBackEvent[]
+
+  @@index([organizationId, ownerUserId, createdAt])
+  @@index([organizationId, state, createdAt])
+  @@map("learnback_practice_sessions")
+}
+
+model LearnBackAttempt {
+  id                String   @id @default(cuid())
+  sessionId         String   @map("session_id")
+  attemptNumber     Int      @map("attempt_number")
+  audioStorageKey   String?  @map("audio_storage_key")
+  audioHash         String?  @map("audio_hash")
+  audioMimeType     String?  @map("audio_mime_type")
+  promptRevision    String   @map("prompt_revision")
+  /// uploaded | transcribing | transcript_ready | evaluating | feedback_available | superseded | failed
+  state             String   @default("uploaded")
+  idempotencyKey    String   @map("idempotency_key")
+  createdById       String   @map("created_by_id")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  session     LearnBackPracticeSession    @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  transcripts LearnBackTranscriptRevision[]
+  evaluations LearnBackEvaluation[]
+  feedback    LearnBackFeedbackRevision[]
+
+  @@unique([sessionId, idempotencyKey])
+  @@unique([sessionId, attemptNumber])
+  @@index([sessionId, createdAt])
+  @@map("learnback_attempts")
+}
+
+model LearnBackTranscriptRevision {
+  id             String   @id @default(cuid())
+  attemptId      String   @map("attempt_id")
+  parentId       String?  @map("parent_id")
+  asrText        String   @map("asr_text")
+  editedText     String   @map("edited_text")
+  contentHash    String   @map("content_hash")
+  asrModel       String   @map("asr_model")
+  /// low | medium | high
+  uncertainty    String   @default("medium")
+  /// asr | learner_correction
+  origin         String   @default("asr")
+  isActive       Boolean  @default(true) @map("is_active")
+  createdById    String   @map("created_by_id")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  attempt     LearnBackAttempt      @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  evaluations LearnBackEvaluation[]
+
+  @@index([attemptId, isActive])
+  @@map("learnback_transcript_revisions")
+}
+
+model LearnBackEvaluation {
+  id                   String   @id @default(cuid())
+  attemptId            String   @map("attempt_id")
+  transcriptRevisionId String   @map("transcript_revision_id")
+  transcriptHash       String   @map("transcript_hash")
+  audioHash            String?  @map("audio_hash")
+  rubricVersion        String   @map("rubric_version")
+  modelVersion         String   @map("model_version")
+  calibrationVersion   String   @default("learnback-cal-descriptive-v1") @map("calibration_version")
+  /// feedback_available | abstain
+  status               String
+  findings             Json
+  unassessedDimensions Json     @map("unassessed_dimensions")
+  pronunciationStatus  String   @map("pronunciation_status")
+  pronunciationReason  String?  @map("pronunciation_reason")
+  pronunciationFindings Json    @default("[]") @map("pronunciation_findings")
+  stale                Boolean  @default(false)
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  attempt            LearnBackAttempt             @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  transcriptRevision LearnBackTranscriptRevision  @relation(fields: [transcriptRevisionId], references: [id], onDelete: Cascade)
+  feedback           LearnBackFeedbackRevision[]
+
+  @@index([attemptId, createdAt])
+  @@map("learnback_evaluations")
+}
+
+model LearnBackFeedbackRevision {
+  id                   String   @id @default(cuid())
+  attemptId            String   @map("attempt_id")
+  evaluationId         String   @map("evaluation_id")
+  explanationLanguage  String   @map("explanation_language")
+  localizedExplanation String   @map("localized_explanation")
+  improvedExample      String   @map("improved_example")
+  exampleLabel         String   @map("example_label")
+  placeholders         Json     @default("[]")
+  contentHash          String   @map("content_hash")
+  modelVersion         String   @map("model_version")
+  stale                Boolean  @default(false)
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  attempt    LearnBackAttempt    @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  evaluation LearnBackEvaluation @relation(fields: [evaluationId], references: [id], onDelete: Cascade)
+
+  @@index([attemptId, createdAt])
+  @@map("learnback_feedback_revisions")
+}
+
+model LearnBackPhrasebookEntry {
+  id                  String    @id @default(cuid())
+  organizationId      String    @map("organization_id")
+  ownerUserId         String    @map("owner_user_id")
+  profileId           String?   @map("profile_id")
+  phrase              String
+  intendedMeaning     String    @map("intended_meaning")
+  context             String?
+  practiceLanguage    String    @map("practice_language")
+  explanationLanguage String    @map("explanation_language")
+  sourceAttemptId     String?   @map("source_attempt_id")
+  audioStorageKey     String?   @map("audio_storage_key")
+  audioHash           String?   @map("audio_hash")
+  /// unreviewed | system | learner
+  reviewStatus        String    @default("learner") @map("review_status")
+  revisionNumber      Int       @default(1) @map("revision_number")
+  deletedAt           DateTime? @map("deleted_at")
+  createdAt           DateTime  @default(now()) @map("created_at")
+  updatedAt           DateTime  @updatedAt @map("updated_at")
+
+  profile LearnBackLearnerProfile? @relation(fields: [profileId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, ownerUserId, createdAt])
+  @@map("learnback_phrasebook_entries")
+}
+
+model LearnBackProgressObservation {
+  id             String   @id @default(cuid())
+  organizationId String   @map("organization_id")
+  ownerUserId    String   @map("owner_user_id")
+  profileId      String?  @map("profile_id")
+  skill          String
+  rubricVersion  String   @map("rubric_version")
+  evidence       String
+  attemptId      String?  @map("attempt_id")
+  assisted       Boolean  @default(true)
+  note           String?
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  profile LearnBackLearnerProfile? @relation(fields: [profileId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, ownerUserId, createdAt])
+  @@map("learnback_progress_observations")
+}
+
+model LearnBackAudioArtifact {
+  id          String   @id @default(cuid())
+  ownerUserId String   @map("owner_user_id")
+  organizationId String @map("organization_id")
+  kind        String
+  textHash    String   @map("text_hash")
+  exactText   String   @map("exact_text")
+  storageKey  String?  @map("storage_key")
+  audioHash   String?  @map("audio_hash")
+  mimeType    String?  @map("mime_type")
+  voiceId     String   @map("voice_id")
+  status      String   @default("ok")
+  modelVersion String  @map("model_version")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([organizationId, ownerUserId, createdAt])
+  @@map("learnback_audio_artifacts")
+}
+
+model LearnBackEvent {
+  id        String   @id @default(cuid())
+  sessionId String   @map("session_id")
+  sequence  Int
+  eventId   String   @unique @map("event_id")
+  type      String
+  payload   Json?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  session LearnBackPracticeSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, sequence])
+  @@index([sessionId])
+  @@map("learnback_events")
+}
+
+model LearnBackAuditEvent {
+  id             String   @id @default(cuid())
+  organizationId String   @map("organization_id")
+  sessionId      String?  @map("session_id")
+  actorId        String   @map("actor_id")
+  operation      String
+  meta           Json?
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, createdAt])
+  @@index([sessionId])
+  @@map("learnback_audit_events")
 }

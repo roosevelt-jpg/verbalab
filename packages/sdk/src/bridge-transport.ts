@@ -16,7 +16,8 @@ export type BridgeHeaders = {
     | 'X-AccessLine-Actor-Id'
     | 'X-MeetingBridge-Actor-Id'
     | 'X-LanguageAssurance-Actor-Id'
-    | 'X-Everyday-Actor-Id';
+    | 'X-Everyday-Actor-Id'
+    | 'X-LearnBack-Actor-Id';
 };
 
 export type BridgeTransport = {

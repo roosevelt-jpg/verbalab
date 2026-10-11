@@ -128,6 +128,11 @@ export const CMS_DEFAULTS: CmsDocument = {
       description:
         'Lugemi Everyday — photograph a notice or bill, hear a faithful translation, ask grounded questions, and approve a reply in your language.',
     },
+    '/learnback': {
+      title: 'LearnBack',
+      description:
+        'Lugemi LearnBack — practise interviews and real situations with meaning-first feedback in your language, honest pronunciation status, and a private phrasebook.',
+    },
   },
   nav: {
     centerLinks: [

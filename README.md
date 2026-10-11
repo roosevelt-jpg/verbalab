@@ -32,6 +32,16 @@ Private daily document workflow: **Read this to me. Help me reply. Explain this 
 - Local entitlement bypass: `EVERYDAY_OPEN=1`
 - Faithful translation and plain-language explanation stay separate; replies require explicit approval; no automatic external send
 
+## LearnBack
+
+Spoken practice for interviews and real situations with meaning-first feedback in the learner’s language.
+
+- Console: `/learnback`, `/learnback/scenarios`, `/learnback/sessions/[id]`, `/learnback/phrasebook`, `/learnback/progress`
+- API: `/v1/learnback/*` — see `docs/learnback/RUNBOOK.md` and `docs/learnback/VERIFICATION.md`
+- SDK: TypeScript `client.learnBack`
+- Local entitlement bypass: `LEARNBACK_OPEN=1`
+- Transcript correction before scoring; pronunciation stays `not_assessed` without a validated assessor; no job-application submission
+
 ## Language Assurance
 
 Quality-control checks for source, translation, and speech before release.

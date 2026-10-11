@@ -28,6 +28,7 @@ import { VoiceBridgeModule } from './voicebridge/voicebridge.module';
 import { MeetingBridgeModule } from './meetingbridge/meetingbridge.module';
 import { LanguageAssuranceModule } from './language-assurance/assurance.module';
 import { EverydayModule } from './everyday/everyday.module';
+import { LearnBackModule } from './learnback/learnback.module';
 import { EmbeddingsModule } from './embeddings/embeddings.module';
 import { KnowledgeModule } from './knowledge/knowledge.module';
 import { ObservabilityModule } from './observability/observability.module';
@@ -482,6 +483,7 @@ import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
     MeetingBridgeModule,
     LanguageAssuranceModule,
     EverydayModule,
+    LearnBackModule,
     EmbeddingsModule,
     KnowledgeModule,
     GovernanceModule,

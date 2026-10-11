@@ -6,6 +6,7 @@ export { AccessLineClient } from './accessline.js';
 export { MeetingBridgeClient } from './meetingbridge.js';
 export { LanguageAssuranceClient } from './language-assurance.js';
 export { EverydayClient } from './everyday.js';
+export { LearnBackClient } from './learnback.js';
 export type {
   CreateVoiceThreadInput,
   VoiceBridgeConsent,
@@ -22,6 +23,10 @@ export type {
   CreateEverydaySessionInput,
   EverydayClientOptions,
 } from './everyday.js';
+export type {
+  CreateLearnBackSessionInput,
+  LearnBackClientOptions,
+} from './learnback.js';
 export type { UploadAuth, UploadProgress, BridgeTransport } from './bridge-transport.js';
 export type {
   ChatCompletionRequest,
