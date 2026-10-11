@@ -21,6 +21,7 @@ const isPublicRoute = createRouteMatcher([
   '/api/support(.*)',
   '/api/openapi(.*)',
   '/api/language-coverage(.*)',
+  '/brand(.*)',
   '/embed(.*)',
   '/docs(.*)',
   '/pricing(.*)',
@@ -116,7 +117,9 @@ export default clerkConfigured
 export const config = {
   matcher: [
     // Skip static assets and /health so Fly/Docker liveness never waits on Clerk.
-    '/((?!_next|health(?:/.*)?$|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    // Skip static assets (incl. brand motion webm/mp4) and /health so Fly/Docker
+    // liveness and public media never wait on Clerk.
+    '/((?!_next|health(?:/.*)?$|brand(?:/.*)?$|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest|webm|mp4|mov)).*)',
     '/(api|trpc)(.*)',
     '/__clerk/:path*',
   ],
