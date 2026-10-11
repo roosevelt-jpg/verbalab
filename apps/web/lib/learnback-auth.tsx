@@ -21,7 +21,7 @@ function LearnBackAuthAuthed({
 }) {
   const { getToken, isSignedIn } = useAuth();
   const [apiKey, setApiKey] = useState('');
-  const [actorId, setActorId] = useState('learnback-local');
+  const [actorId, setActorId] = useState('');
   const signedIn = Boolean(isSignedIn);
 
   const authHeaders = useCallback(async () => {
@@ -31,7 +31,8 @@ function LearnBackAuthAuthed({
       return { token, actor: undefined as string | undefined };
     }
     if (!apiKey.startsWith('lg_')) throw new Error('Sign in or paste an API key');
-    return { token: apiKey, actor: actorId };
+    const actor = actorId.trim() || 'learnback-local';
+    return { token: apiKey, actor };
   }, [apiKey, actorId, getToken, signedIn]);
 
   return (
@@ -67,11 +68,12 @@ function LearnBackAuthApiKeyOnly({
   children: (auth: LearnBackAuthBag) => ReactNode;
 }) {
   const [apiKey, setApiKey] = useState('');
-  const [actorId, setActorId] = useState('learnback-local');
+  const [actorId, setActorId] = useState('');
 
   const authHeaders = useCallback(async () => {
     if (!apiKey.startsWith('lg_')) throw new Error('Sign in or paste an API key');
-    return { token: apiKey, actor: actorId };
+    const actor = actorId.trim() || 'learnback-local';
+    return { token: apiKey, actor };
   }, [apiKey, actorId]);
 
   return (
