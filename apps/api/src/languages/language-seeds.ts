@@ -12,6 +12,7 @@ export type LanguageSeed = {
 export const LANGUAGE_SEEDS: LanguageSeed[] = [
   { code: 'aa', nameEn: 'Afar', nameNative: 'Qafar', script: 'Latn', familyCode: 'afro_asiatic', tier: 'strategic_african' },
   { code: 'ach', nameEn: 'Acholi', nameNative: 'Acholi', script: 'Latn', familyCode: 'nilo_saharan', tier: 'strategic_african' },
+  { code: 'ada', nameEn: 'Dangme', nameNative: 'Dangme', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'af', nameEn: 'Afrikaans', nameNative: 'Afrikaans', script: 'Latn', familyCode: 'indo_european', tier: 'strategic_african' },
   { code: 'ak', nameEn: 'Akan (Twi)', nameNative: 'Twi', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'am', nameEn: 'Amharic', nameNative: 'አማርኛ', script: 'Ethi', familyCode: 'afro_asiatic', tier: 'strategic_african' },
@@ -31,6 +32,7 @@ export const LANGUAGE_SEEDS: LanguageSeed[] = [
   { code: 'bm', nameEn: 'Bambara', nameNative: 'Bamanankan', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'bss', nameEn: 'Bassa', nameNative: 'Bassa', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'bvb', nameEn: 'Bubi', nameNative: 'Bubi', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
+  { code: 'bwu', nameEn: 'Buli', nameNative: 'Buli', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'byn', nameEn: 'Bilen', nameNative: 'ብሊን', script: 'Ethi', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'cop', nameEn: 'Coptic', nameNative: 'ⲘⲉⲧⲢⲉⲙ̀ⲛⲭⲏⲙⲓ', script: 'Copt', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'cri', nameEn: 'Forro Creole', nameNative: 'Forro', script: 'Latn', familyCode: 'creole', tier: 'strategic_african' },
@@ -58,6 +60,7 @@ export const LANGUAGE_SEEDS: LanguageSeed[] = [
   { code: 'gaa', nameEn: 'Ga', nameNative: 'Gã', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'gba', nameEn: 'Gbaya', nameNative: 'Gbaya', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'gez', nameEn: 'Geʽez', nameNative: 'ግዕዝ', script: 'Ethi', familyCode: 'afro_asiatic', tier: 'strategic_african' },
+  { code: 'gjn', nameEn: 'Gonja', nameNative: 'Ngbanyito', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'gur', nameEn: 'Farefare', nameNative: 'Gurene', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'ha', nameEn: 'Hausa', nameNative: 'Hausa', script: 'Latn', familyCode: 'afro_asiatic', tier: 'strategic_african' },
   { code: 'har', nameEn: 'Harari', nameNative: 'ሃረሪ', script: 'Ethi', familyCode: 'afro_asiatic', tier: 'strategic_african' },
@@ -97,6 +100,7 @@ export const LANGUAGE_SEEDS: LanguageSeed[] = [
   { code: 'luy', nameEn: 'Luhya', nameNative: 'Luluhya', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'man', nameEn: 'Maninka', nameNative: 'Maninkakan', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'mas', nameEn: 'Maasai', nameNative: 'ɔl Maa', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
+  { code: 'maw', nameEn: 'Mampruli', nameNative: 'Mampruli', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'men', nameEn: 'Mende', nameNative: 'Mɛnde', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'mfe', nameEn: 'Mauritian Creole', nameNative: 'Kreol Morisien', script: 'Latn', familyCode: 'creole', tier: 'strategic_african' },
   { code: 'mg', nameEn: 'Malagasy', nameNative: 'Malagasy', script: 'Latn', familyCode: 'austronesian', tier: 'strategic_african' },
@@ -117,6 +121,7 @@ export const LANGUAGE_SEEDS: LanguageSeed[] = [
   { code: 'nzi', nameEn: 'Nzema', nameNative: 'Nzema', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'om', nameEn: 'Oromo', nameNative: 'Afaan Oromoo', script: 'Latn', familyCode: 'afro_asiatic', tier: 'strategic_african' },
   { code: 'pcm', nameEn: 'Nigerian Pidgin', nameNative: 'Naijá', script: 'Latn', familyCode: 'creole', tier: 'strategic_african' },
+  { code: 'sil', nameEn: 'Sisaala', nameNative: 'Sisaala', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'pov', nameEn: 'Guinea-Bissau Creole', nameNative: 'Kriol', script: 'Latn', familyCode: 'creole', tier: 'strategic_african' },
   { code: 'pt', nameEn: 'Portuguese', nameNative: 'Português', script: 'Latn', familyCode: 'indo_european', tier: 'vendor' },
   { code: 'puu', nameEn: 'Punu', nameNative: 'Punu', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
@@ -157,8 +162,11 @@ export const LANGUAGE_SEEDS: LanguageSeed[] = [
   { code: 've', nameEn: 'Venda', nameNative: 'Tshivenḓa', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'vmw', nameEn: 'Makhuwa', nameNative: 'Emakhuwa', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'wal', nameEn: 'Wolaytta', nameNative: 'Wolayttatto Doonaa', script: 'Latn', familyCode: 'afro_asiatic', tier: 'strategic_african' },
+  { code: 'wlx', nameEn: 'Wali', nameNative: 'Wali', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'wo', nameEn: 'Wolof', nameNative: 'Wolof', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'xh', nameEn: 'Xhosa', nameNative: 'isiXhosa', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
+  { code: 'xon', nameEn: 'Konkomba', nameNative: 'Likpakpaanl', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
+  { code: 'xsm', nameEn: 'Kasem', nameNative: 'Kasem', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'yao', nameEn: 'Yao', nameNative: 'chiYao', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'yo', nameEn: 'Yoruba', nameNative: 'Yorùbá', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
   { code: 'zdj', nameEn: 'Comorian', nameNative: 'Shikomori', script: 'Latn', familyCode: 'niger_congo', tier: 'strategic_african' },
@@ -217,5 +225,5 @@ export const LANGUAGE_SEEDS: LanguageSeed[] = [
   { code: 'vi', nameEn: 'Vietnamese', nameNative: 'Tiếng Việt', script: 'Latn', familyCode: 'austroasiatic', tier: 'vendor' },
 ];
 
-export const AFRICAN_LANGUAGE_COUNT = 141;
-export const TOTAL_LANGUAGE_COUNT = 204;
+export const AFRICAN_LANGUAGE_COUNT = 149;
+export const TOTAL_LANGUAGE_COUNT = 212;

@@ -1,6 +1,12 @@
 import { LOCALE_PACK_SEEDS } from '../locales/locale-pack-seeds';
 import { LANGUAGE_SEEDS } from '../languages/language-seeds';
 import {
+  GHANA_BCP47_TAGS,
+  GHANA_PRIMARY_LANGUAGE_CODES,
+  GHANA_RELATED_ACCENT_CODES,
+  GHANA_RELATED_DIALECT_CODES,
+} from '../ghana/ghana-language-stack';
+import {
   africaFirstCountrySort,
   ISO_COUNTRIES,
   type IsoCountryDef,
@@ -66,15 +72,15 @@ const CURATED_OVERRIDES: Record<string, CuratedOverride> = {
       'Multilingual federation; tone marks matter in formal Yoruba; English is a bridge language.',
   },
   GH: {
-    primaryLanguages: ['en', 'ak', 'ee'],
-    bcp47Tags: ['en-GH', 'ak-GH-twi', 'ee-GH'],
-    relatedDialectCodes: [],
-    relatedAccentCodes: ['en-gh'],
+    primaryLanguages: [...GHANA_PRIMARY_LANGUAGE_CODES],
+    bcp47Tags: [...GHANA_BCP47_TAGS],
+    relatedDialectCodes: [...GHANA_RELATED_DIALECT_CODES],
+    relatedAccentCodes: [...GHANA_RELATED_ACCENT_CODES],
     dateNotes: 'DMY common.',
     numberNotes: 'Arabic digits.',
     currencyNotes: 'Ghanaian cedi (GH₵ / GHS).',
     culturalNotes:
-      'English official; Akan (Twi), Ewe, and other local languages appear in community contexts — keep brand names stable.',
+      'English is the official bridge language. Translate and speak across Akan (Asante/Akuapem Twi, Fante), Ewe, Ga, Dangme, Dagbani, Dagaare, Gonja, Kasem, Farefare, Nzema, Mampruli, Buli, Konkomba, Sisaala, Wali, and Ghana Hausa — with Ghanaian English and Ghanaian Pidgin accent identities. Keep brand names and place names stable.',
   },
   ZA: {
     primaryLanguages: ['en', 'zu', 'af'],

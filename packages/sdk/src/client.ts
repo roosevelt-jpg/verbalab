@@ -2,6 +2,7 @@ import { LugemiError } from './errors.js';
 import { VoiceBridgeClient } from './voicebridge.js';
 import { DealBridgeClient } from './dealbridge.js';
 import { AccessLineClient } from './accessline.js';
+import { MeetingBridgeClient } from './meetingbridge.js';
 import type { BridgeTransport } from './bridge-transport.js';
 import type {
   ChatCompletionRequest,
@@ -150,6 +151,7 @@ export class Lugemi {
   private _voiceBridge?: VoiceBridgeClient;
   private _dealBridge?: DealBridgeClient;
   private _accessLine?: AccessLineClient;
+  private _meetingBridge?: MeetingBridgeClient;
 
   constructor(options: LugemiClientOptions) {
     const key = options.apiKey ?? '';
@@ -179,6 +181,7 @@ export class Lugemi {
     this._voiceBridge?.setContext(next);
     this._dealBridge?.setContext(next);
     this._accessLine?.setContext(next);
+    this._meetingBridge?.setContext(next);
   }
 
   get voiceBridge(): VoiceBridgeClient {
@@ -221,6 +224,20 @@ export class Lugemi {
       });
     }
     return this._accessLine;
+  }
+
+  get meetingBridge(): MeetingBridgeClient {
+    if (!this._meetingBridge) {
+      this._meetingBridge = new MeetingBridgeClient({
+        transport: this.bridgeTransport(),
+        headers: {
+          actorId: this.actorId,
+          organizationId: this.organizationId,
+          workspaceId: this.workspaceId,
+        },
+      });
+    }
+    return this._meetingBridge;
   }
 
   private bridgeTransport(): BridgeTransport {

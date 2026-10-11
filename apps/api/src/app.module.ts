@@ -25,6 +25,7 @@ import { InterpretModule } from './interpret/interpret.module';
 import { DealBridgeModule } from './dealbridge/dealbridge.module';
 import { AccessLineModule } from './accessline/accessline.module';
 import { VoiceBridgeModule } from './voicebridge/voicebridge.module';
+import { MeetingBridgeModule } from './meetingbridge/meetingbridge.module';
 import { EmbeddingsModule } from './embeddings/embeddings.module';
 import { KnowledgeModule } from './knowledge/knowledge.module';
 import { ObservabilityModule } from './observability/observability.module';
@@ -476,6 +477,7 @@ import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
     DealBridgeModule,
     AccessLineModule,
     VoiceBridgeModule,
+    MeetingBridgeModule,
     EmbeddingsModule,
     KnowledgeModule,
     GovernanceModule,

@@ -3,6 +3,7 @@ export { LugemiError } from './errors.js';
 export { VoiceBridgeClient } from './voicebridge.js';
 export { DealBridgeClient } from './dealbridge.js';
 export { AccessLineClient } from './accessline.js';
+export { MeetingBridgeClient } from './meetingbridge.js';
 export type {
   CreateVoiceThreadInput,
   VoiceBridgeConsent,
@@ -10,6 +11,7 @@ export type {
 } from './voicebridge.js';
 export type { CreateDealSessionInput, DealBridgeClientOptions } from './dealbridge.js';
 export type { AccessLineClientOptions } from './accessline.js';
+export type { CreateMeetingInput, MeetingBridgeClientOptions } from './meetingbridge.js';
 export type { UploadAuth, UploadProgress, BridgeTransport } from './bridge-transport.js';
 export type {
   ChatCompletionRequest,

@@ -1,3 +1,5 @@
+import { GHANA_VOICE_DATA_DIALECTS } from '../ghana/ghana-language-stack';
+
 export type VoiceDataDialect = {
   code: string;
   languageCode: string;
@@ -7,13 +9,7 @@ export type VoiceDataDialect = {
 
 /** Each dialect is collected and modelled separately so the voice sounds like that community. */
 export const VOICE_DATA_DIALECTS: VoiceDataDialect[] = [
-  { code: 'ak-gh-asante', languageCode: 'ak', name: 'Asante Twi', country: 'GH' },
-  { code: 'ak-gh-akuapem', languageCode: 'ak', name: 'Akuapem Twi', country: 'GH' },
-  { code: 'ak-gh-fante', languageCode: 'ak', name: 'Fante', country: 'GH' },
-  { code: 'ee-gh', languageCode: 'ee', name: 'Ewe (Ghana)', country: 'GH' },
-  { code: 'gaa-gh', languageCode: 'gaa', name: 'Ga', country: 'GH' },
-  { code: 'dag-gh', languageCode: 'dag', name: 'Dagbani', country: 'GH' },
-  { code: 'en-gh', languageCode: 'en', name: 'Ghanaian English', country: 'GH' },
+  ...GHANA_VOICE_DATA_DIALECTS,
   { code: 'yo-ng', languageCode: 'yo', name: 'Yorùbá', country: 'NG' },
   { code: 'ha-ng', languageCode: 'ha', name: 'Hausa', country: 'NG' },
   { code: 'ig-ng', languageCode: 'ig', name: 'Igbo', country: 'NG' },

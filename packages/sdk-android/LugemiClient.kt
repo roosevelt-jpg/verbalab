@@ -5,7 +5,7 @@ import org.json.JSONObject
 
 /**
  * Official Android / Kotlin client for Lugemi.
- * Core: speech, translate, detect, ASR; plus VoiceBridge, DealBridge, Voice Studio, and AccessLine.
+ * Core: speech, translate, detect, ASR; plus VoiceBridge, DealBridge, Voice Studio, AccessLine, and MeetingBridge.
  */
 interface LugemiClient {
   fun speech(request: SpeechRequest): SpeechResult
@@ -35,6 +35,7 @@ interface LugemiClient {
   val dealBridge: DealBridgeClient
   val voiceStudio: VoiceStudioClient
   val accessLine: AccessLineClient
+  val meetingBridge: MeetingBridgeClient
   val uploads: ResumableUploader
 }
 
@@ -66,6 +67,7 @@ class LugemiHttpClient(
   )
   override val voiceStudio = VoiceStudioClient(http = http)
   override val accessLine = AccessLineClient(http = http, actorId = actorId)
+  override val meetingBridge = MeetingBridgeClient(http = http, actorId = actorId)
 
   override fun speech(request: SpeechRequest): SpeechResult {
     val body = JSONObject()

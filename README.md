@@ -7,10 +7,20 @@ First-party **language intelligence infrastructure**. Site: [lugemi.com](https:/
 Flagship commercial workflow: **Speak your language. Confirm the same deal.**
 
 - Console: `/dealbridge` (merchant home), `/dealbridge/join/[token]`, `/dealbridge/sessions/[id]`
-- Admin pilot: `/admin/dealbridge`
+- Admin: `/admin/dealbridge`
 - API: `/v1/dealbridge/*` — see `docs/dealbridge/RUNBOOK.md` and ADR `docs/adr/0256-dealbridge.md`
 - Simulated investor demo: `POST /v1/dealbridge/demo/run` (always labeled; never unmarked)
-- Local entitlement bypass for pilots: `DEALBRIDGE_OPEN=1`
+- Local entitlement bypass: `DEALBRIDGE_OPEN=1`
+
+## MeetingBridge
+
+Multilingual meetings: **Speak your language. Confirm the same plan.**
+
+- Console: `/meetingbridge`, `/meetingbridge/join/[token]`, `/meetingbridge/meetings/[id]`
+- API: `/v1/meetingbridge/*` — see `docs/meetingbridge/RUNBOOK.md` and ADR `docs/adr/0257-meetingbridge.md`
+- SDKs: TypeScript / Android / iOS `client.meetingBridge`
+- Local entitlement bypass: `MEETINGBRIDGE_OPEN=1`
+- Without `MEETINGBRIDGE_MEDIA_URL`, rooms use turn-taking captions (not simultaneous interpretation)
 
 Lugemi is in the a first-party speech and language API platform: **our API** and **our models** — generate speech, transcribe, and translate. We do not position the product as a wrapper around Google Translate, OpenAI, or other vendor APIs.
 

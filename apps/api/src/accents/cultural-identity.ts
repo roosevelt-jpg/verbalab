@@ -147,7 +147,11 @@ export function deriveSpeechVariety(input: {
   if (explicit) return explicit;
 
   const dialect = input.dialectCode?.toLowerCase() ?? '';
-  if (dialect.includes('ghanaian-english') || dialect === 'en-gh-ghanaian-english') {
+  if (
+    dialect.includes('ghanaian-english') ||
+    dialect === 'en-gh-ghanaian-english' ||
+    dialect === 'en-gh'
+  ) {
     return 'ghanaian_english';
   }
   if (dialect.includes('pidgin') && input.country === 'NG') return 'nigerian_pidgin';

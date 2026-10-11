@@ -113,6 +113,11 @@ export const CMS_DEFAULTS: CmsDocument = {
       description:
         'Lugemi DealBridge — bilingual negotiation sessions with live speech and translation.',
     },
+    '/meetingbridge': {
+      title: 'MeetingBridge',
+      description:
+        'Lugemi MeetingBridge — multilingual meetings with revision-linked transcripts, reviewed decisions, and explicit confirmations.',
+    },
   },
   nav: {
     centerLinks: [

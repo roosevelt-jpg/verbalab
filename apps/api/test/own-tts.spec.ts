@@ -231,7 +231,7 @@ describe('Own TTS path', () => {
     expect(maxAmp).toBeGreaterThan(1000);
   });
 
-  it('routes speech synthesis across all 204 languages in registry', () => {
+  it('routes speech synthesis across all 212 languages in registry', () => {
     assertOwnTtsCoversLanguageRegistry();
     expect(OWN_TTS_LANGUAGE_COUNT).toBeGreaterThanOrEqual(TOTAL_LANGUAGE_COUNT);
     for (const seed of LANGUAGE_SEEDS) {

@@ -10,7 +10,11 @@ export type BridgeHeaders = {
   organizationId?: string | null;
   workspaceId?: string | null;
   /** Header name for actor id (VoiceBridge / DealBridge / AccessLine). */
-  actorHeaderName: 'X-VoiceBridge-Actor-Id' | 'X-DealBridge-Actor-Id' | 'X-AccessLine-Actor-Id';
+  actorHeaderName:
+    | 'X-VoiceBridge-Actor-Id'
+    | 'X-DealBridge-Actor-Id'
+    | 'X-AccessLine-Actor-Id'
+    | 'X-MeetingBridge-Actor-Id';
 };
 
 export type BridgeTransport = {

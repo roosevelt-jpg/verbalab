@@ -119,6 +119,8 @@ model Organization {
   accessLines                  AccessLineBusinessLine[]
   accessCalls                  AccessLineCallSession[]
   accesslineAuditEvents        AccessLineAuditEvent[]
+  meetingMeetings               MeetingMeeting[]
+  meetingAuditEvents            MeetingAuditEvent[]
 
   @@index([plan])
   @@index([billingStatus])
@@ -3054,4 +3056,352 @@ model AccessLineProviderEvent {
 
   @@index([callId])
   @@map("accessline_provider_events")
+}
+
+
+/// MeetingBridge — multilingual meetings with revision-linked transcripts and explicit confirmations.
+model MeetingMeeting {
+  id                    String    @id @default(cuid())
+  organizationId        String    @map("organization_id")
+  workspaceId           String    @map("workspace_id")
+  organizerId           String    @map("organizer_id")
+  title                 String
+  agenda                String    @default("")
+  timeZone              String    @default("Africa/Accra") @map("time_zone")
+  /// scheduled | lobby | live | processing | reviewing | minutes_issued | cancelled
+  state                 String    @default("scheduled")
+  corridor              String    @default("en-ak")
+  supportedLanguages    Json      @map("supported_languages")
+  terminologySnapshot   Json?     @map("terminology_snapshot")
+  /// JSON approval policy: actionOwnersPlusOrganizer / decisionAuthorityPlusAffected
+  approvalPolicy        Json      @map("approval_policy")
+  maxParticipants       Int       @default(6) @map("max_participants")
+  /// turn_taking | post_meeting_review | live_simultaneous (live only when media provisioned)
+  interpretationMode    String    @default("turn_taking") @map("interpretation_mode")
+  mediaMode             String    @default("phrase_upload") @map("media_mode")
+  sequence              Int       @default(0)
+  retentionPolicy       String    @default("default_90d") @map("retention_policy")
+  featureFlag           String    @default("meetingbridge") @map("feature_flag")
+  isDemo                Boolean   @default(false) @map("is_demo")
+  isFixture             Boolean   @default(false) @map("is_fixture")
+  closedAt              DateTime? @map("closed_at")
+  deletedAt             DateTime? @map("deleted_at")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  updatedAt             DateTime  @updatedAt @map("updated_at")
+
+  organization   Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  memberships    MeetingMembership[]
+  invitations    MeetingInvitation[]
+  utterances     MeetingUtterance[]
+  items          MeetingItem[]
+  minutes        MeetingMinutesRevision[]
+  events         MeetingEvent[]
+  consents       MeetingConsent[]
+  auditEvents    MeetingAuditEvent[]
+  exports        MeetingExport[]
+
+  @@index([organizationId, state, createdAt])
+  @@index([workspaceId, createdAt])
+  @@index([organizerId])
+  @@map("meeting_meetings")
+}
+
+model MeetingMembership {
+  id                  String   @id @default(cuid())
+  meetingId           String   @map("meeting_id")
+  userId              String   @map("user_id")
+  /// organizer | participant | observer
+  role                String   @default("participant")
+  active              Boolean  @default(true)
+  speakingLanguage    String   @map("speaking_language")
+  listeningLanguage   String   @map("listening_language")
+  speakingVariety     String?  @map("speaking_variety")
+  listeningVariety    String?  @map("listening_variety")
+  /// original | translated | captions_only
+  listeningMode       String   @default("captions_only") @map("listening_mode")
+  presence            String   @default("offline")
+  languagePrefVersion Int      @default(1) @map("language_pref_version")
+  joinedAt            DateTime @default(now()) @map("joined_at")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  meeting  MeetingMeeting   @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  consents MeetingConsent[]
+
+  @@unique([meetingId, userId])
+  @@index([userId, active])
+  @@map("meeting_memberships")
+}
+
+model MeetingInvitation {
+  id               String    @id @default(cuid())
+  meetingId        String    @map("meeting_id")
+  tokenHash        String    @unique @map("token_hash")
+  expiresAt        DateTime  @map("expires_at")
+  redeemedAt       DateTime? @map("redeemed_at")
+  redeemedByUserId String?   @map("redeemed_by_user_id")
+  scope            String    @default("participant")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  meeting MeetingMeeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+
+  @@index([meetingId, expiresAt])
+  @@map("meeting_invitations")
+}
+
+model MeetingUtterance {
+  id               String   @id @default(cuid())
+  meetingId        String   @map("meeting_id")
+  speakerId        String   @map("speaker_id")
+  turnId           String   @map("turn_id")
+  activeRevisionId String?  @unique @map("active_revision_id")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  meeting          MeetingMeeting              @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  revisions        MeetingUtteranceRevision[]
+  activeRevision   MeetingUtteranceRevision?   @relation("MeetingUtteranceActive", fields: [activeRevisionId], references: [id], onDelete: SetNull)
+
+  @@unique([meetingId, turnId])
+  @@index([meetingId, createdAt])
+  @@index([speakerId])
+  @@map("meeting_utterances")
+}
+
+model MeetingUtteranceRevision {
+  id                String    @id @default(cuid())
+  utteranceId       String    @map("utterance_id")
+  revisionNumber    Int       @map("revision_number")
+  originalText      String    @map("original_text")
+  language          String
+  variety           String?
+  audioKey          String?   @map("audio_key")
+  audioMime         String?   @map("audio_mime")
+  /// provisional | committed | corrected
+  commitState       String    @default("committed") @map("commit_state")
+  parentRevisionId  String?   @map("parent_revision_id")
+  contentHash       String    @map("content_hash")
+  /// current | superseded
+  status            String    @default("current")
+  startedAt         DateTime? @map("started_at")
+  endedAt           DateTime? @map("ended_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+
+  utterance    MeetingUtterance            @relation(fields: [utteranceId], references: [id], onDelete: Cascade)
+  activeFor    MeetingUtterance?           @relation("MeetingUtteranceActive")
+  translations MeetingTranslationRevision[]
+
+  @@unique([utteranceId, revisionNumber])
+  @@index([utteranceId, status])
+  @@map("meeting_utterance_revisions")
+}
+
+model MeetingTranslationRevision {
+  id                 String   @id @default(cuid())
+  sourceRevisionId   String   @map("source_revision_id")
+  targetLanguage     String   @map("target_language")
+  targetVariety      String?  @map("target_variety")
+  text               String
+  audioKey           String?  @map("audio_key")
+  textHash           String   @map("text_hash")
+  modelVersion       String   @default("lugemi-mt") @map("model_version")
+  /// ready | repaired | stale | unsupported
+  status             String   @default("ready")
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  sourceRevision MeetingUtteranceRevision @relation(fields: [sourceRevisionId], references: [id], onDelete: Cascade)
+
+  @@index([sourceRevisionId, targetLanguage])
+  @@map("meeting_translation_revisions")
+}
+
+model MeetingItem {
+  id               String   @id @default(cuid())
+  meetingId        String   @map("meeting_id")
+  /// decision | action | proposal | question
+  kind             String
+  activeRevisionId String?  @unique @map("active_revision_id")
+  /// proposed | reviewing | clarification_required | partially_confirmed | confirmed | declined | disputed | superseded | cancelled
+  state            String   @default("proposed")
+  createdAt        DateTime @default(now()) @map("created_at")
+  updatedAt        DateTime @updatedAt @map("updated_at")
+
+  meeting        MeetingMeeting           @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  revisions      MeetingItemRevision[]
+  activeRevision MeetingItemRevision?     @relation("MeetingItemActive", fields: [activeRevisionId], references: [id], onDelete: SetNull)
+  disagreements  MeetingDisagreement[]
+
+  @@index([meetingId, state])
+  @@map("meeting_items")
+}
+
+model MeetingItemRevision {
+  id                   String    @id @default(cuid())
+  itemId               String    @map("item_id")
+  revisionNumber       Int       @map("revision_number")
+  wording              String
+  ownerParticipantIds  Json      @map("owner_participant_ids")
+  requiredApproverIds  Json      @map("required_approver_ids")
+  dueDate              String?   @map("due_date")
+  timeZone             String?   @map("time_zone")
+  conditions           Json?
+  sourceRevisionIds    Json      @map("source_revision_ids")
+  contentHash          String    @map("content_hash")
+  /// current | superseded | stale
+  status               String    @default("current")
+  createdById          String    @map("created_by_id")
+  createdAt            DateTime  @default(now()) @map("created_at")
+
+  item           MeetingItem               @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  activeFor      MeetingItem?              @relation("MeetingItemActive")
+  presentations  MeetingReviewPresentation[]
+  confirmations  MeetingItemConfirmation[]
+
+  @@unique([itemId, revisionNumber])
+  @@index([itemId, status])
+  @@map("meeting_item_revisions")
+}
+
+model MeetingReviewPresentation {
+  id               String   @id @default(cuid())
+  itemRevisionId   String   @map("item_revision_id")
+  participantId    String   @map("participant_id")
+  language         String
+  wording          String
+  presentationHash String   @map("presentation_hash")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  itemRevision  MeetingItemRevision        @relation(fields: [itemRevisionId], references: [id], onDelete: Cascade)
+  confirmations MeetingItemConfirmation[]
+
+  @@unique([itemRevisionId, participantId, language])
+  @@map("meeting_review_presentations")
+}
+
+model MeetingItemConfirmation {
+  id               String   @id @default(cuid())
+  itemRevisionId   String   @map("item_revision_id")
+  presentationId   String   @map("presentation_id")
+  actorId          String   @map("actor_id")
+  itemHash         String   @map("item_hash")
+  presentationHash String   @map("presentation_hash")
+  /// confirm | change_request | decline
+  action           String
+  note             String?
+  idempotencyKey   String   @map("idempotency_key")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  itemRevision MeetingItemRevision       @relation(fields: [itemRevisionId], references: [id], onDelete: Cascade)
+  presentation MeetingReviewPresentation @relation(fields: [presentationId], references: [id], onDelete: Cascade)
+
+  @@unique([itemRevisionId, actorId, idempotencyKey])
+  @@index([itemRevisionId, action])
+  @@map("meeting_item_confirmations")
+}
+
+model MeetingDisagreement {
+  id             String   @id @default(cuid())
+  itemId         String   @map("item_id")
+  participantId  String   @map("participant_id")
+  itemRevisionId String   @map("item_revision_id")
+  reason         String
+  proposedWording String? @map("proposed_wording")
+  /// open | resolved
+  status         String   @default("open")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  item MeetingItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([itemId, status])
+  @@map("meeting_disagreements")
+}
+
+model MeetingMinutesRevision {
+  id              String   @id @default(cuid())
+  meetingId       String   @map("meeting_id")
+  revisionNumber  Int      @map("revision_number")
+  markdown        String
+  jsonPayload     Json     @map("json_payload")
+  contentHash     String   @map("content_hash")
+  issuedById      String   @map("issued_by_id")
+  supersedesId    String?  @map("supersedes_id")
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  meeting MeetingMeeting  @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  exports MeetingExport[]
+
+  @@unique([meetingId, revisionNumber])
+  @@map("meeting_minutes_revisions")
+}
+
+model MeetingExport {
+  id                String   @id @default(cuid())
+  meetingId         String   @map("meeting_id")
+  minutesRevisionId String   @map("minutes_revision_id")
+  /// markdown | json | csv_tasks
+  format            String
+  destination       String   @default("private_download")
+  status            String   @default("ready")
+  storageKey        String?  @map("storage_key")
+  idempotencyKey    String   @map("idempotency_key")
+  createdById       String   @map("created_by_id")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  meeting         MeetingMeeting         @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  minutesRevision MeetingMinutesRevision @relation(fields: [minutesRevisionId], references: [id], onDelete: Cascade)
+
+  @@unique([meetingId, idempotencyKey])
+  @@map("meeting_exports")
+}
+
+model MeetingEvent {
+  id        String   @id @default(cuid())
+  meetingId String   @map("meeting_id")
+  sequence  Int
+  eventId   String   @unique @map("event_id")
+  type      String
+  actorId   String?  @map("actor_id")
+  payload   Json?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  meeting MeetingMeeting @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+
+  @@unique([meetingId, sequence])
+  @@index([meetingId, createdAt])
+  @@map("meeting_events")
+}
+
+model MeetingConsent {
+  id           String   @id @default(cuid())
+  meetingId    String   @map("meeting_id")
+  membershipId String   @map("membership_id")
+  /// processing | recording | retention | training
+  purpose      String
+  decision     String
+  noticeVersion String  @map("notice_version")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  meeting    MeetingMeeting    @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  membership MeetingMembership @relation(fields: [membershipId], references: [id], onDelete: Cascade)
+
+  @@index([meetingId, purpose])
+  @@map("meeting_consents")
+}
+
+model MeetingAuditEvent {
+  id             String   @id @default(cuid())
+  organizationId String   @map("organization_id")
+  meetingId      String?  @map("meeting_id")
+  actorId        String   @map("actor_id")
+  operation      String
+  meta           Json?
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  organization Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  meeting      MeetingMeeting? @relation(fields: [meetingId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, createdAt])
+  @@index([meetingId])
+  @@map("meeting_audit_events")
 }

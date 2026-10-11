@@ -78,15 +78,15 @@ describe('Voice Marketplace', () => {
     expect(engine.body.product).toBe('Lugemi Voice Marketplace');
     expect(engine.body.honesty.celebrityWithoutRights).toBe(false);
     expect(engine.body.honesty.crossTenantCloneSynthesis).toBe(false);
-    expect(engine.body.languagePackCount).toBe(204);
+    expect(engine.body.languagePackCount).toBe(212);
     const celeb = engine.body.capabilities.find((c: { id: string }) => c.id === 'celebrity-voices');
     expect(celeb.status).toBe('deferred');
 
     const packs = await request(app.getHttpServer())
       .get('/v1/voice-marketplace/language-packs')
       .expect(200);
-    expect(packs.body.count).toBe(204);
-    expect(packs.body.packs).toHaveLength(204);
+    expect(packs.body.count).toBe(212);
+    expect(packs.body.packs).toHaveLength(212);
     expect(packs.body.packs.some((p: { id: string }) => p.id === 'sw')).toBe(true);
     expect(packs.body.packs.some((p: { id: string }) => p.id === 'th')).toBe(true);
     expect(packs.body.packs.some((p: { id: string }) => p.id === 'yo')).toBe(true);

@@ -1,6 +1,6 @@
 # Lugemi Android SDK (Kotlin)
 
-Official Android / Kotlin client for Lugemi speech, translate, ASR, detect, streaming translate, **VoiceBridge**, **DealBridge**, **Voice Studio**, and **AccessLine**.
+Official Android / Kotlin client for Lugemi speech, translate, ASR, detect, streaming translate, **VoiceBridge**, **DealBridge**, **MeetingBridge**, **Voice Studio**, and **AccessLine**.
 
 ## Install
 
@@ -60,7 +60,11 @@ val edition = studio.createEdition(
 ## AccessLine
 
 `client.accessLine` — business lines, simulator call journey (DTMF/speech), grounded delivery lookup, allowlisted handoff.
-Live PSTN webhooks require Twilio credentials and separate pilot authorization.
+Live PSTN webhooks require Twilio credentials and separate authorization.
+
+## MeetingBridge
+
+`client.meetingBridge` — create meetings, invite/join, commit turns, propose decisions/actions, explicit confirmations, minutes/exports.
 
 ## VoiceBridge / DealBridge
 

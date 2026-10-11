@@ -61,6 +61,10 @@ public struct LugemiClient: @unchecked Sendable {
     AccessLineClient(http: http, actorId: actorId)
   }
 
+  public var meetingBridge: MeetingBridgeClient {
+    MeetingBridgeClient(http: http, actorId: actorId)
+  }
+
   public func speech(_ request: SpeechRequest) async throws -> SpeechResult {
     var body: [String: Any] = [
       "text": request.text,

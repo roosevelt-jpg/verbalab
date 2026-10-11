@@ -48,7 +48,25 @@ Android / iOS expose the full workflow via `client.voiceStudio` (v0.3.0).
 ## AccessLine
 
 `client.accessLine` — business lines, simulator call journey (DTMF/speech), grounded delivery lookup, allowlisted handoff.
-Live PSTN webhooks require Twilio credentials and separate pilot authorization.
+Live PSTN webhooks require Twilio credentials and separate authorization.
+
+## MeetingBridge
+
+`client.meetingBridge` — multilingual meetings with revision-linked transcripts, decisions/actions, and explicit confirmations.
+
+```ts
+const meeting = await client.meetingBridge.createMeeting({
+  title: 'Supplier coordination',
+  corridor: 'en-ak',
+  speakingLanguage: 'en',
+  listeningLanguage: 'ak',
+});
+await client.meetingBridge.commitUtterance(meeting.meeting.id as string, {
+  text: 'Dispatch 50 bags by Friday',
+});
+```
+
+Without `MEETINGBRIDGE_MEDIA_URL`, rooms use turn-taking captions — not simultaneous interpretation.
 
 ## VoiceBridge & DealBridge
 

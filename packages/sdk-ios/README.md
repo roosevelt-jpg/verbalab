@@ -1,6 +1,6 @@
 # Lugemi iOS SDK (Swift)
 
-Official Swift Package for Lugemi speech, translate, ASR, detect, streaming translate, **VoiceBridge**, **DealBridge**, **Voice Studio**, and **AccessLine** on iOS / macOS (**v0.4.0**).
+Official Swift Package for Lugemi speech, translate, ASR, detect, streaming translate, **VoiceBridge**, **DealBridge**, **MeetingBridge**, **Voice Studio**, and **AccessLine** on iOS / macOS (**v0.4.0**).
 
 ## Install (SPM)
 
@@ -45,7 +45,11 @@ let project = try await studio.createProject(name: "Market announcement", source
 ## AccessLine
 
 `client.accessLine` — business lines, simulator call journey (DTMF/speech), grounded delivery lookup, allowlisted handoff.
-Live PSTN webhooks require Twilio credentials and separate pilot authorization.
+Live PSTN webhooks require Twilio credentials and separate authorization.
+
+## MeetingBridge
+
+`client.meetingBridge` — create meetings, invite/join, commit turns, propose decisions/actions, explicit confirmations, minutes/exports.
 
 ## VoiceBridge / DealBridge
 
