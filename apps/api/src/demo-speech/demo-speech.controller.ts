@@ -36,21 +36,37 @@ export class DemoSpeechController {
 
   /**
    * Honest capability catalogue for marketing demos.
-   * Only voices with eSpeak or neural checkpoints are demoSafe.
+   * Merges live OWN_TTS neural status so Kokoro voices report neural_unreviewed.
    */
   @Get('speech/capabilities')
   capabilities() {
+    const liveById = new Map(
+      this.gateway.listVoices().map((v) => [v.id, v] as const),
+    );
     return {
       product: 'lugemi-demo-speech',
       note:
         'Customer-facing demos play verified eSpeak or neural-live paths. Identity packs without native weights remap to the cultural English/French variety of the same country — never formant noise.',
       catalogue: DEMO_CATALOGUE,
       voices: DEMO_CATALOGUE.map((entry) => {
+        const live = liveById.get(entry.voiceId);
+        const neuralLive =
+          live?.verificationStatus === 'neural_unreviewed' ||
+          live?.verificationStatus === 'native_reviewed' ||
+          live?.synthEngine === 'neural_kokoro' ||
+          live?.synthEngine === 'neural_piper' ||
+          live?.status === 'live';
         const cap = capabilityForVoice({
           voiceId: entry.voiceId,
           locale: entry.locale,
+          neuralLive,
         });
-        return { ...entry, ...cap };
+        return {
+          ...entry,
+          ...cap,
+          status: live?.status ?? cap.verificationStatus,
+          synthEngine: live?.synthEngine ?? cap.localEngine,
+        };
       }),
     };
   }

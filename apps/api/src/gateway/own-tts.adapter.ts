@@ -629,10 +629,16 @@ export class HttpOwnTtsAdapter implements TtsProvider {
         characters: [...input.text].length,
         provider: this.name,
         latencyMs: Date.now() - started,
+        synthEngine: 'neural_kokoro',
+        verificationStatus: 'neural_unreviewed',
       };
     }
 
     const arrayBuffer = await response.arrayBuffer();
+    const engineHeader =
+      response.headers.get('x-lugemi-synth-engine') ||
+      response.headers.get('x-synth-engine') ||
+      'neural_kokoro';
     return {
       audio: Buffer.from(arrayBuffer),
       mimeType: contentType.split(';')[0]?.trim() || MIME[format]!,
@@ -641,6 +647,8 @@ export class HttpOwnTtsAdapter implements TtsProvider {
       characters: [...input.text].length,
       provider: this.name,
       latencyMs: Date.now() - started,
+      synthEngine: engineHeader,
+      verificationStatus: 'neural_unreviewed',
     };
   }
 }
