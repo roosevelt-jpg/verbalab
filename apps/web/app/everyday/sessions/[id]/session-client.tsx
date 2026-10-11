@@ -2,11 +2,10 @@
 
 import Link from 'next/link';
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
-import { useAuth } from '@clerk/nextjs';
 import { AppShell } from '@/components/app-shell';
 import { PageHeader, FeaturePanel } from '@/components/platform';
 import { apiFetch } from '@/lib/api';
-import { isClerkConfigured } from '@/lib/clerk-config';
+import { EverydayAuthGate, type EverydayAuthBag } from '@/lib/everyday-auth';
 
 type SessionView = {
   session: {
@@ -68,33 +67,33 @@ function fileToBase64(file: File): Promise<string> {
 }
 
 export function EverydaySessionClient({ sessionId }: { sessionId: string }) {
-  const { getToken, isSignedIn } = useAuth();
+  return (
+    <EverydayAuthGate>
+      {(auth) => <EverydaySessionFlow sessionId={sessionId} auth={auth} />}
+    </EverydayAuthGate>
+  );
+}
+
+function EverydaySessionFlow({
+  sessionId,
+  auth,
+}: {
+  sessionId: string;
+  auth: EverydayAuthBag;
+}) {
   const [view, setView] = useState<SessionView | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [apiKey, setApiKey] = useState('');
-  const [actorId, setActorId] = useState('everyday-local');
   const [tab, setTab] = useState<'faithful' | 'explain'>('faithful');
   const [question, setQuestion] = useState('By when?');
   const [replyText, setReplyText] = useState('I will attend on the date shown. Thank you.');
   const [termSpan, setTermSpan] = useState('Amount due');
   const [playbackRate, setPlaybackRate] = useState(1);
-  const signedIn = Boolean(isClerkConfigured() && isSignedIn);
-
-  const authHeaders = useCallback(async () => {
-    if (signedIn) {
-      const token = await getToken();
-      if (!token) throw new Error('Missing session token');
-      return { token, actor: undefined as string | undefined };
-    }
-    if (!apiKey.startsWith('lg_')) throw new Error('Sign in or paste an API key');
-    return { token: apiKey, actor: actorId };
-  }, [apiKey, actorId, getToken, signedIn]);
 
   const load = useCallback(async () => {
     setError(null);
     try {
-      const a = await authHeaders();
+      const a = await auth.authHeaders();
       const res = await apiFetch<SessionView>(`/v1/everyday/sessions/${sessionId}`, {
         token: a.token,
         headers: a.actor ? { 'X-Everyday-Actor-Id': a.actor } : undefined,
@@ -103,11 +102,11 @@ export function EverydaySessionClient({ sessionId }: { sessionId: string }) {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load session');
     }
-  }, [authHeaders, sessionId]);
+  }, [auth, sessionId]);
 
   useEffect(() => {
-    if (signedIn || apiKey.startsWith('lg_')) void load();
-  }, [load, signedIn, apiKey]);
+    if (auth.ready) void load();
+  }, [load, auth.ready]);
 
   const source = view?.documents?.[0]?.sourceRevisions?.[0];
   const translation = source?.translations?.[0];
@@ -131,7 +130,7 @@ export function EverydaySessionClient({ sessionId }: { sessionId: string }) {
     setBusy(true);
     setError(null);
     try {
-      const a = await authHeaders();
+      const a = await auth.authHeaders();
       const contentBase64 = await fileToBase64(file);
       await apiFetch(`/v1/everyday/sessions/${sessionId}/uploads`, {
         method: 'POST',
@@ -156,7 +155,7 @@ export function EverydaySessionClient({ sessionId }: { sessionId: string }) {
     setBusy(true);
     setError(null);
     try {
-      const a = await authHeaders();
+      const a = await auth.authHeaders();
       await apiFetch(`/v1/everyday/sources/${source.id}/translations`, {
         method: 'POST',
         token: a.token,
@@ -177,7 +176,7 @@ export function EverydaySessionClient({ sessionId }: { sessionId: string }) {
     setBusy(true);
     setError(null);
     try {
-      const a = await authHeaders();
+      const a = await auth.authHeaders();
       await apiFetch(`/v1/everyday/sources/${source.id}/explanations`, {
         method: 'POST',
         token: a.token,
@@ -199,7 +198,7 @@ export function EverydaySessionClient({ sessionId }: { sessionId: string }) {
     setBusy(true);
     setError(null);
     try {
-      const a = await authHeaders();
+      const a = await auth.authHeaders();
       await apiFetch(`/v1/everyday/sources/${source.id}/questions`, {
         method: 'POST',
         token: a.token,
@@ -218,7 +217,7 @@ export function EverydaySessionClient({ sessionId }: { sessionId: string }) {
     setBusy(true);
     setError(null);
     try {
-      const a = await authHeaders();
+      const a = await auth.authHeaders();
       const created = await apiFetch<{ audio: { id: string; hasBytes?: boolean; note?: string } }>(
         '/v1/everyday/audio',
         {
@@ -260,7 +259,7 @@ export function EverydaySessionClient({ sessionId }: { sessionId: string }) {
     setBusy(true);
     setError(null);
     try {
-      const a = await authHeaders();
+      const a = await auth.authHeaders();
       await apiFetch(`/v1/everyday/sessions/${sessionId}/replies`, {
         method: 'POST',
         token: a.token,
@@ -279,7 +278,7 @@ export function EverydaySessionClient({ sessionId }: { sessionId: string }) {
     setBusy(true);
     setError(null);
     try {
-      const a = await authHeaders();
+      const a = await auth.authHeaders();
       const res = await apiFetch<{ export: { sourceText: string; targetText: string } }>(
         `/v1/everyday/replies/${replyId}/approvals`,
         {
@@ -310,7 +309,7 @@ export function EverydaySessionClient({ sessionId }: { sessionId: string }) {
     setBusy(true);
     setError(null);
     try {
-      const a = await authHeaders();
+      const a = await auth.authHeaders();
       await apiFetch(`/v1/everyday/sessions/${sessionId}/terms`, {
         method: 'POST',
         token: a.token,
@@ -329,7 +328,7 @@ export function EverydaySessionClient({ sessionId }: { sessionId: string }) {
     if (!confirm('Delete this session and all derivatives?')) return;
     setBusy(true);
     try {
-      const a = await authHeaders();
+      const a = await auth.authHeaders();
       await apiFetch(`/v1/everyday/sessions/${sessionId}`, {
         method: 'DELETE',
         token: a.token,
@@ -365,19 +364,19 @@ export function EverydaySessionClient({ sessionId }: { sessionId: string }) {
           }
         />
 
-        {!signedIn ? (
+        {!auth.signedIn ? (
           <FeaturePanel title="Connect">
             <div className="flex flex-col gap-2 sm:flex-row">
               <input
                 className="vl-input"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
+                value={auth.apiKey}
+                onChange={(e) => auth.setApiKey(e.target.value)}
                 placeholder="lg_…"
               />
               <input
                 className="vl-input"
-                value={actorId}
-                onChange={(e) => setActorId(e.target.value)}
+                value={auth.actorId}
+                onChange={(e) => auth.setActorId(e.target.value)}
                 placeholder="Actor id"
               />
               <button type="button" className="vl-btn vl-btn-secondary" onClick={() => void load()}>

@@ -2,11 +2,10 @@
 
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
-import { useAuth } from '@clerk/nextjs';
 import { AppShell } from '@/components/app-shell';
 import { PageHeader, FeaturePanel } from '@/components/platform';
 import { apiFetch } from '@/lib/api';
-import { isClerkConfigured } from '@/lib/clerk-config';
+import { EverydayAuthGate, type EverydayAuthBag } from '@/lib/everyday-auth';
 
 type SessionRow = {
   id: string;
@@ -17,36 +16,34 @@ type SessionRow = {
 };
 
 export function EverydayHistoryClient() {
-  const { getToken, isSignedIn } = useAuth();
+  return (
+    <EverydayAuthGate>
+      {(auth) => <EverydayHistoryFlow auth={auth} />}
+    </EverydayAuthGate>
+  );
+}
+
+function EverydayHistoryFlow({ auth }: { auth: EverydayAuthBag }) {
   const [sessions, setSessions] = useState<SessionRow[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [apiKey, setApiKey] = useState('');
-  const [actorId, setActorId] = useState('everyday-local');
-  const signedIn = Boolean(isClerkConfigured() && isSignedIn);
 
   const load = useCallback(async () => {
     setError(null);
     try {
-      let token = '';
-      let actor: string | undefined;
-      if (signedIn) {
-        token = (await getToken()) ?? '';
-      } else if (apiKey.startsWith('lg_')) {
-        token = apiKey;
-        actor = actorId;
-      } else {
+      if (!auth.ready) {
         setError('Sign in or paste an API key');
         return;
       }
+      const a = await auth.authHeaders();
       const res = await apiFetch<{ sessions: SessionRow[] }>('/v1/everyday/sessions', {
-        token,
-        headers: actor ? { 'X-Everyday-Actor-Id': actor } : undefined,
+        token: a.token,
+        headers: a.actor ? { 'X-Everyday-Actor-Id': a.actor } : undefined,
       });
       setSessions(res.sessions ?? []);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Load failed');
     }
-  }, [apiKey, actorId, getToken, signedIn]);
+  }, [auth]);
 
   useEffect(() => {
     void load();
@@ -65,19 +62,19 @@ export function EverydayHistoryClient() {
             </Link>
           }
         />
-        {!signedIn ? (
+        {!auth.signedIn ? (
           <FeaturePanel title="Connect">
             <div className="flex flex-col gap-2 sm:flex-row">
               <input
                 className="vl-input"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
+                value={auth.apiKey}
+                onChange={(e) => auth.setApiKey(e.target.value)}
                 placeholder="lg_…"
               />
               <input
                 className="vl-input"
-                value={actorId}
-                onChange={(e) => setActorId(e.target.value)}
+                value={auth.actorId}
+                onChange={(e) => auth.setActorId(e.target.value)}
                 placeholder="Actor id"
               />
               <button type="button" className="vl-btn vl-btn-secondary" onClick={() => void load()}>

@@ -2,11 +2,10 @@
 
 import Link from 'next/link';
 import { FormEvent, useCallback, useEffect, useState } from 'react';
-import { useAuth } from '@clerk/nextjs';
 import { AppShell } from '@/components/app-shell';
 import { PageHeader, FeaturePanel } from '@/components/platform';
 import { apiFetch } from '@/lib/api';
-import { isClerkConfigured } from '@/lib/clerk-config';
+import { EverydayAuthGate, type EverydayAuthBag } from '@/lib/everyday-auth';
 
 type Catalog = {
   name?: string;
@@ -29,31 +28,25 @@ type SessionRow = {
 };
 
 export function EverydayHomeClient() {
-  const { getToken, isSignedIn } = useAuth();
+  return (
+    <EverydayAuthGate>
+      {(auth) => <EverydayHomeFlow auth={auth} />}
+    </EverydayAuthGate>
+  );
+}
+
+function EverydayHomeFlow({ auth }: { auth: EverydayAuthBag }) {
   const [catalog, setCatalog] = useState<Catalog | null>(null);
   const [sessions, setSessions] = useState<SessionRow[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const [apiKey, setApiKey] = useState('');
-  const [actorId, setActorId] = useState('everyday-local');
   const [mode, setMode] = useState('read_this_to_me');
   const [corridor, setCorridor] = useState('en-ak');
-  const signedIn = Boolean(isClerkConfigured() && isSignedIn);
-
-  const authHeaders = useCallback(async () => {
-    if (signedIn) {
-      const token = await getToken();
-      if (!token) throw new Error('Missing session token');
-      return { token, actor: undefined as string | undefined };
-    }
-    if (!apiKey.startsWith('lg_')) throw new Error('Sign in or paste an API key');
-    return { token: apiKey, actor: actorId };
-  }, [apiKey, actorId, getToken, signedIn]);
 
   const load = useCallback(async () => {
     setError(null);
     try {
-      if (!(signedIn || apiKey.startsWith('lg_'))) {
+      if (!auth.ready) {
         setCatalog({
           name: 'Lugemi Everyday',
           headline: 'Read notices, ask grounded questions, and approve replies in your language.',
@@ -69,7 +62,7 @@ export function EverydayHomeClient() {
         });
         return;
       }
-      const a = await authHeaders();
+      const a = await auth.authHeaders();
       const headers = a.actor ? { 'X-Everyday-Actor-Id': a.actor } : undefined;
       const cat = await apiFetch<Catalog>('/v1/everyday/catalog', { token: a.token, headers });
       setCatalog(cat);
@@ -81,7 +74,7 @@ export function EverydayHomeClient() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load Everyday');
     }
-  }, [authHeaders, signedIn, apiKey]);
+  }, [auth]);
 
   useEffect(() => {
     void load();
@@ -92,7 +85,7 @@ export function EverydayHomeClient() {
     setBusy(true);
     setError(null);
     try {
-      const a = await authHeaders();
+      const a = await auth.authHeaders();
       const res = await apiFetch<{ session: { id: string } }>('/v1/everyday/sessions', {
         method: 'POST',
         token: a.token,
@@ -121,7 +114,7 @@ export function EverydayHomeClient() {
           }
         />
 
-        {!signedIn ? (
+        {!auth.signedIn ? (
           <FeaturePanel title="Connect">
             <p className="text-sm opacity-80 mb-3">
               Paste a Lugemi API key to use Everyday without Clerk in this browser.
@@ -130,14 +123,14 @@ export function EverydayHomeClient() {
               <input
                 className="vl-input"
                 placeholder="lg_live_… or lg_test_…"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
+                value={auth.apiKey}
+                onChange={(e) => auth.setApiKey(e.target.value)}
               />
               <input
                 className="vl-input"
                 placeholder="Actor id"
-                value={actorId}
-                onChange={(e) => setActorId(e.target.value)}
+                value={auth.actorId}
+                onChange={(e) => auth.setActorId(e.target.value)}
               />
               <button type="button" className="vl-btn vl-btn-secondary" onClick={() => void load()}>
                 Load

@@ -22,6 +22,25 @@ Multilingual meetings: **Speak your language. Confirm the same plan.**
 - Local entitlement bypass: `MEETINGBRIDGE_OPEN=1`
 - Without `MEETINGBRIDGE_MEDIA_URL`, rooms use turn-taking captions (not simultaneous interpretation)
 
+## Everyday
+
+Private daily document workflow: **Read this to me. Help me reply. Explain this word.**
+
+- Console: `/everyday`, `/everyday/sessions/[id]`, `/everyday/history`
+- API: `/v1/everyday/*` — see `docs/everyday/RUNBOOK.md` and `docs/everyday/VERIFICATION.md`
+- SDK: TypeScript `client.everyday`
+- Local entitlement bypass: `EVERYDAY_OPEN=1`
+- Faithful translation and plain-language explanation stay separate; replies require explicit approval; no automatic external send
+
+## Language Assurance
+
+Quality-control checks for source, translation, and speech before release.
+
+- Console: `/language-assurance`, `/language-assurance/runs/[id]`, `/language-assurance/reviews`
+- API: `/v1/language-assurance/*` — see `docs/language-assurance/RUNBOOK.md`
+- SDK: TypeScript `client.languageAssurance`
+- Local entitlement bypass: `LANGUAGE_ASSURANCE_OPEN=1`
+
 Lugemi is in the a first-party speech and language API platform: **our API** and **our models** — generate speech, transcribe, and translate. We do not position the product as a wrapper around Google Translate, OpenAI, or other vendor APIs.
 
 **Africa first:** Lugemi is a fully built Africa-first language intelligence platform covering languages and dialects across **all African countries and ethnic communities**. We also support **Latin America, Southeast Asia, the Middle East, the EU**, and other global markets. The Africa language catalog documents product scope; live API seed and eval pairs publish gateway availability. Do not treat Africa as one culture or use flags as language selectors.
