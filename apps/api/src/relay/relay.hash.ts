@@ -39,7 +39,13 @@ export function verifyJoinToken(
     const raw = Buffer.from(token, 'base64url').toString('utf8');
     const parts = raw.split('|');
     if (parts.length !== 6) return null;
-    const [bookingId, roomId, actorId, role, expiresAtMs, sig] = parts;
+    const bookingId = parts[0];
+    const roomId = parts[1];
+    const actorId = parts[2];
+    const role = parts[3];
+    const expiresAtMs = parts[4];
+    const sig = parts[5];
+    if (!bookingId || !roomId || !actorId || !role || !expiresAtMs || !sig) return null;
     const payload = [bookingId, roomId, actorId, role, expiresAtMs].join('|');
     const expect = createHash('sha256')
       .update(`${payload}|${secret}`)
