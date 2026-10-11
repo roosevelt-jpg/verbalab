@@ -1,0 +1,19 @@
+{
+  "sourceLang": "en",
+  "targetLang": "ee",
+  "baseModel": "nllb-200-distilled-600M",
+  "entries": [
+    { "source": "Hello", "target": "Woezɔ" },
+    { "source": "Thank you", "target": "Akpe" },
+    { "source": "How are you?", "target": "Aleke nèle?" },
+    { "source": "Good morning", "target": "Ŋdi" },
+    { "source": "Where is the clinic?", "target": "Klinik la le afika?" },
+    { "source": "Please wait here", "target": "Meɖe kuku nɔte afisia" },
+    { "source": "I need help", "target": "Mehiã kpekpeɖeŋu" },
+    { "source": "The office is closed", "target": "Ɔfis la tu" },
+    { "source": "Bring your identity card", "target": "Tsɔ wò ɖeɖefiaŋutinunya kɔta vɛ" },
+    { "source": "Water is available", "target": "Tsi li" },
+    { "source": "School starts tomorrow", "target": "Sukuu adze egɔme etsɔ" },
+    { "source": "The meeting is at noon", "target": "Takpekpe la le ŋdɔ me" }
+  ]
+}

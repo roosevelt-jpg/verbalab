@@ -52,9 +52,9 @@ describe('Coverage + eval harness', () => {
     expect(charSimilarity('Habari', 'Habari')).toBe(1);
   });
 
-  it('ships golden sets for en→sw, en→yo, en→am', () => {
+  it('ships golden sets for core African + Ghana school corridors', () => {
     const keys = GOLDEN_PAIRS.map((p) => `${p.sourceLang}-${p.targetLang}`);
-    expect(keys).toEqual(['en-sw', 'en-yo', 'en-am']);
+    expect(keys).toEqual(['en-sw', 'en-yo', 'en-am', 'en-ak', 'en-ee', 'en-gaa', 'en-ada', 'en-dag']);
     for (const pair of GOLDEN_PAIRS) {
       expect(pair.segments.length).toBeGreaterThanOrEqual(10);
     }
@@ -63,7 +63,7 @@ describe('Coverage + eval harness', () => {
   it('reference oracle reaches perfect scores', async () => {
     const snapshot = await evalService.runAll('reference_oracle');
     expect(snapshot.mode).toBe('reference_oracle');
-    expect(snapshot.pairs).toHaveLength(3);
+    expect(snapshot.pairs).toHaveLength(GOLDEN_PAIRS.length);
     for (const pair of snapshot.pairs) {
       expect(pair.exactMatchRate).toBe(1);
       expect(pair.meanCharSimilarity).toBe(1);
@@ -84,7 +84,7 @@ describe('Coverage + eval harness', () => {
   it('GET /v1/coverage is public and includes focus pairs', async () => {
     const res = await request(app.getHttpServer()).get('/v1/coverage').expect(200);
     expect(res.body.disclaimer).toMatch(/not market leadership/i);
-    expect(res.body.focusPairs).toHaveLength(3);
+    expect(res.body.focusPairs).toHaveLength(GOLDEN_PAIRS.length);
     expect(res.body.focusPairs.every((p: { hasGolden: boolean }) => p.hasGolden)).toBe(true);
     expect(res.body.languages.strategicAfrican).toBeGreaterThanOrEqual(3);
     // Worldwide live set (regional registry + seeds), Africa-first — not Africa-prefill alone.
