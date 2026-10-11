@@ -48,17 +48,18 @@ export function accesslineCatalog() {
     telephony: {
       provider: 'twilio',
       configured: twilioConfigured,
-      mode: twilioConfigured ? 'live_ready_when_authorized' : 'simulated_only',
+      mode: twilioConfigured ? 'live_ready_when_authorized' : 'awaiting_provider',
       note: twilioConfigured
-        ? 'Twilio credentials present. Live number purchase, PSTN calls, and external OTP require separate authorization.'
-        : 'No Twilio credentials — simulator and labeled fixtures only. Live webhooks return provider_not_configured.',
+        ? 'Twilio credentials present. Live DIDs appear on the dialer; PSTN and external OTP still require separate authorization.'
+        : 'No Twilio credentials — dialer stays empty until TWILIO_* is configured. The console does not invent simulated numbers.',
       media: 'turn_based_speech_dtmf',
       duplexStreaming: false,
     },
     honesty: [
       'Caller ID, spoken name, and order reference never bypass authentication.',
       'Null ETA means unavailable — never invent delivery times.',
-      'Fixture/simulator audio and OTP paths are labeled; they are not carrier proof.',
+      'Console dialer shows provider numbers only — never fabricated sim:+ lines.',
+      'QA simulate APIs remain for automated tests; they are not the console path.',
       'Transfer destinations are tenant allowlisted only.',
       'Case references are not bearer credentials on return calls.',
     ],

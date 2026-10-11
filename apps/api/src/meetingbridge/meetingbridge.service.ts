@@ -2,6 +2,7 @@ import { randomBytes } from 'crypto';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { ApiException } from '../common/errors/api-exception';
+import { resolveEntitlementContext, type EntitlementActor } from '../common/entitlements/entitlement-actor';
 import { BillingService } from '../billing/billing.service';
 import { DealBridgeService } from '../dealbridge/dealbridge.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -31,6 +32,7 @@ import {
 
 export type MeetingActor = {
   organizationId: string;
+  platformAdmin?: boolean;
   workspaceId: string;
   userId: string;
   apiKeyId?: string;
@@ -65,7 +67,8 @@ export class MeetingBridgeService {
     });
   }
 
-  async assertEnabled(organizationId: string) {
+  async assertEnabled(actorOrOrg: string | EntitlementActor) {
+    const { organizationId, platformAdmin } = resolveEntitlementContext(actorOrOrg);
     if (process.env.MEETINGBRIDGE_DISABLED === '1') {
       throw new ApiException(
         'feature_disabled',
@@ -80,6 +83,7 @@ export class MeetingBridgeService {
     if (org.disabledAt) {
       throw new ApiException('org_disabled', 'Organization is disabled', HttpStatus.FORBIDDEN);
     }
+    if (platformAdmin) return;
     const overrides = (org.featureOverrides ?? {}) as Record<string, unknown>;
     if (typeof overrides.meetingBridge === 'boolean') {
       if (!overrides.meetingBridge) {
@@ -176,7 +180,7 @@ export class MeetingBridgeService {
   }
 
   async listMeetings(actor: MeetingActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const memberships = await this.prisma.meetingMembership.findMany({
       where: {
         userId: actor.userId,
@@ -215,7 +219,7 @@ export class MeetingBridgeService {
       terminology?: Record<string, string>;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const title = input.title?.trim();
     if (!title) {
       throw new ApiException('validation_error', 'title is required', HttpStatus.BAD_REQUEST);
@@ -285,7 +289,7 @@ export class MeetingBridgeService {
   }
 
   async meetingView(meetingId: string, actor: MeetingActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const meeting = await this.requireMeeting(meetingId, actor.organizationId);
     await this.requireMember(meetingId, actor.userId);
 
@@ -402,7 +406,7 @@ export class MeetingBridgeService {
   }
 
   async createInvite(meetingId: string, actor: MeetingActor, expiresInHours = 72) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const meeting = await this.requireMeeting(meetingId, actor.organizationId);
     const member = await this.requireMember(meetingId, actor.userId);
     if (member.role !== 'organizer') {
@@ -468,7 +472,7 @@ export class MeetingBridgeService {
       consents?: { purpose: ConsentPurpose; decision: 'granted' | 'denied' }[];
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const invite = await this.prisma.meetingInvitation.findUnique({
       where: { tokenHash: hashInviteToken(token) },
       include: { meeting: true },
@@ -577,7 +581,7 @@ export class MeetingBridgeService {
       listeningMode?: ListeningMode;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.requireMeeting(meetingId, actor.organizationId);
     const member = await this.requireMember(meetingId, actor.userId);
     if (input.listeningMode && !LISTENING_MODES.includes(input.listeningMode)) {
@@ -606,7 +610,7 @@ export class MeetingBridgeService {
   }
 
   private async transitionMeeting(meetingId: string, actor: MeetingActor, to: MeetingState) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const meeting = await this.requireMeeting(meetingId, actor.organizationId);
     const member = await this.requireMember(meetingId, actor.userId);
     if (member.role !== 'organizer') {
@@ -634,7 +638,7 @@ export class MeetingBridgeService {
       targetLanguages?: string[];
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const meeting = await this.requireMeeting(meetingId, actor.organizationId);
     const member = await this.requireMember(meetingId, actor.userId);
     if (!['lobby', 'live', 'processing', 'reviewing'].includes(meeting.state)) {
@@ -735,7 +739,7 @@ export class MeetingBridgeService {
     actor: MeetingActor,
     input: { utteranceId: string; text: string; reason?: string },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.requireMeeting(meetingId, actor.organizationId);
     await this.requireMember(meetingId, actor.userId);
 
@@ -837,7 +841,7 @@ export class MeetingBridgeService {
       conditions?: string[];
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const meeting = await this.requireMeeting(meetingId, actor.organizationId);
     await this.requireMember(meetingId, actor.userId);
     const wording = input.wording?.trim();
@@ -935,7 +939,7 @@ export class MeetingBridgeService {
       presentationId?: string;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.requireMeeting(meetingId, actor.organizationId);
     await this.requireMember(meetingId, actor.userId);
 
@@ -1055,7 +1059,7 @@ export class MeetingBridgeService {
   }
 
   async closeMeeting(meetingId: string, actor: MeetingActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const meeting = await this.requireMeeting(meetingId, actor.organizationId);
     const member = await this.requireMember(meetingId, actor.userId);
     if (member.role !== 'organizer') {
@@ -1093,7 +1097,7 @@ export class MeetingBridgeService {
   }
 
   async issueMinutes(meetingId: string, actor: MeetingActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const meeting = await this.requireMeeting(meetingId, actor.organizationId);
     const member = await this.requireMember(meetingId, actor.userId);
     if (member.role !== 'organizer') {
@@ -1228,7 +1232,7 @@ export class MeetingBridgeService {
     actor: MeetingActor,
     input: { minutesId: string; format?: 'markdown' | 'json' | 'csv_tasks'; idempotencyKey: string },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.requireMeeting(meetingId, actor.organizationId);
     await this.requireMember(meetingId, actor.userId);
     if (!input.idempotencyKey?.trim()) {
@@ -1294,7 +1298,7 @@ export class MeetingBridgeService {
       sourceRevisionIds?: string[];
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const meeting = await this.requireMeeting(meetingId, actor.organizationId);
     await this.requireMember(meetingId, actor.userId);
 
@@ -1406,7 +1410,7 @@ export class MeetingBridgeService {
       target?: string;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const meeting = await this.requireMeeting(meetingId, actor.organizationId);
     const member = await this.requireMember(meetingId, actor.userId);
     if (member.role !== 'organizer') {
@@ -1612,7 +1616,7 @@ export class MeetingBridgeService {
   }
 
   async handoffDealBridge(meetingId: string, actor: MeetingActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const meeting = await this.requireMeeting(meetingId, actor.organizationId);
     const member = await this.requireMember(meetingId, actor.userId);
     if (member.role !== 'organizer') {
@@ -1684,7 +1688,7 @@ export class MeetingBridgeService {
   }
 
   async handoffVoiceBridge(meetingId: string, actor: MeetingActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const meeting = await this.requireMeeting(meetingId, actor.organizationId);
     const member = await this.requireMember(meetingId, actor.userId);
     if (member.role !== 'organizer') {
@@ -1740,7 +1744,7 @@ export class MeetingBridgeService {
   }
 
   async mintMediaToken(meetingId: string, actor: MeetingActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.requireMeeting(meetingId, actor.organizationId);
     const member = await this.requireMember(meetingId, actor.userId);
     const minted = this.media.mintRoomToken({
@@ -1777,7 +1781,7 @@ export class MeetingBridgeService {
       payload: unknown;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.requireMeeting(meetingId, actor.organizationId);
     await this.requireMember(meetingId, actor.userId);
     if (!input.toUserId?.trim()) {
@@ -1801,7 +1805,7 @@ export class MeetingBridgeService {
     actor: MeetingActor,
     input: { token: string; afterId?: string },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.requireMeeting(meetingId, actor.organizationId);
     await this.requireMember(meetingId, actor.userId);
     return this.media.pullSignals({
@@ -1822,7 +1826,7 @@ export class MeetingBridgeService {
       muted?: boolean;
     } = {},
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const meeting = await this.requireMeeting(meetingId, actor.organizationId);
     await this.requireMember(meetingId, actor.userId);
     if (!['scheduled', 'lobby', 'live'].includes(meeting.state)) {
@@ -1868,7 +1872,7 @@ export class MeetingBridgeService {
   }
 
   async confirmationInbox(meetingId: string, actor: MeetingActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.requireMeeting(meetingId, actor.organizationId);
     await this.requireMember(meetingId, actor.userId);
 
@@ -1919,7 +1923,7 @@ export class MeetingBridgeService {
   }
 
   async diagnostics(meetingId: string, actor: MeetingActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const meeting = await this.requireMeeting(meetingId, actor.organizationId);
     const member = await this.requireMember(meetingId, actor.userId);
     if (member.role !== 'organizer') {
@@ -1985,7 +1989,7 @@ export class MeetingBridgeService {
     actor: MeetingActor,
     input: { provider: ConferencingProvider; meetingUrl?: string },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const meeting = await this.requireMeeting(meetingId, actor.organizationId);
     const member = await this.requireMember(meetingId, actor.userId);
     if (member.role !== 'organizer') {
@@ -2062,7 +2066,7 @@ export class MeetingBridgeService {
     actor: MeetingActor,
     input: { text: string; language: string },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.requireMeeting(meetingId, actor.organizationId);
     await this.requireMember(meetingId, actor.userId);
     if (!input.text?.trim() || !input.language?.trim()) {

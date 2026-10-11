@@ -1,6 +1,7 @@
 import { HttpStatus, Injectable, OnModuleInit } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { ApiException } from '../common/errors/api-exception';
+import { resolveEntitlementContext, type EntitlementActor } from '../common/entitlements/entitlement-actor';
 import { BillingService } from '../billing/billing.service';
 import { LocalStorageService } from '../documents/local-storage.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -26,6 +27,7 @@ import {
 
 export type LearnBackActor = {
   organizationId: string;
+  platformAdmin?: boolean;
   workspaceId: string;
   userId: string;
   apiKeyId?: string;
@@ -49,7 +51,8 @@ export class LearnBackService implements OnModuleInit {
     return learnbackCatalog();
   }
 
-  async assertEnabled(organizationId: string) {
+  async assertEnabled(actorOrOrg: string | EntitlementActor) {
+    const { organizationId, platformAdmin } = resolveEntitlementContext(actorOrOrg);
     if (process.env.LEARNBACK_DISABLED === '1') {
       throw new ApiException(
         'feature_disabled',
@@ -64,6 +67,7 @@ export class LearnBackService implements OnModuleInit {
     if (org.disabledAt) {
       throw new ApiException('org_disabled', 'Organization is disabled', HttpStatus.FORBIDDEN);
     }
+    if (platformAdmin) return;
     const overrides = (org.featureOverrides ?? {}) as Record<string, unknown>;
     if (typeof overrides.learnBack === 'boolean') {
       if (!overrides.learnBack) {
@@ -199,7 +203,7 @@ export class LearnBackService implements OnModuleInit {
   }
 
   async getProfile(actor: LearnBackActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const profile = await this.ensureProfile(actor);
     return { profile };
   }
@@ -216,7 +220,7 @@ export class LearnBackService implements OnModuleInit {
       accessibilityPrefs?: Record<string, unknown>;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.ensureProfile(actor);
     const profile = await this.prisma.learnBackLearnerProfile.update({
       where: {
@@ -247,7 +251,7 @@ export class LearnBackService implements OnModuleInit {
   }
 
   async listScenarios(actor: LearnBackActor, filters?: { situation?: string; corridorId?: string }) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.ensureSystemScenarios();
     const scenarios = await this.prisma.learnBackScenarioPack.findMany({
       where: {
@@ -261,7 +265,7 @@ export class LearnBackService implements OnModuleInit {
   }
 
   async listSessions(actor: LearnBackActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const sessions = await this.prisma.learnBackPracticeSession.findMany({
       where: {
         organizationId: actor.organizationId,
@@ -291,7 +295,7 @@ export class LearnBackService implements OnModuleInit {
       idempotencyKey?: string;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.ensureProfile(actor);
     await this.ensureSystemScenarios();
 
@@ -357,7 +361,7 @@ export class LearnBackService implements OnModuleInit {
   }
 
   async getSession(actor: LearnBackActor, sessionId: string) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const session = await this.loadSession(actor, sessionId);
     const attempts = await this.prisma.learnBackAttempt.findMany({
       where: { sessionId },
@@ -386,7 +390,7 @@ export class LearnBackService implements OnModuleInit {
       idempotencyKey: string;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const session = await this.loadSession(actor, sessionId);
     if (!input.idempotencyKey?.trim()) {
       throw new ApiException(
@@ -710,7 +714,7 @@ export class LearnBackService implements OnModuleInit {
     attemptId: string,
     input: { editedText: string; expectedTranscriptRevisionId?: string },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     if (!input.editedText?.trim()) {
       throw new ApiException('validation_error', 'editedText is required', HttpStatus.BAD_REQUEST);
     }
@@ -806,7 +810,7 @@ export class LearnBackService implements OnModuleInit {
   }
 
   async getAttemptFeedback(actor: LearnBackActor, attemptId: string) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const attempt = await this.prisma.learnBackAttempt.findFirst({
       where: { id: attemptId },
       include: {
@@ -841,7 +845,7 @@ export class LearnBackService implements OnModuleInit {
     actor: LearnBackActor,
     input: { kind: 'question' | 'explanation' | 'example' | 'phrase'; text: string; language: string },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     if (!input.text?.trim()) {
       throw new ApiException('validation_error', 'text is required', HttpStatus.BAD_REQUEST);
     }
@@ -889,7 +893,7 @@ export class LearnBackService implements OnModuleInit {
   }
 
   async getAudioBytes(actor: LearnBackActor, audioId: string) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const audio = await this.prisma.learnBackAudioArtifact.findFirst({
       where: { id: audioId, organizationId: actor.organizationId, ownerUserId: actor.userId },
     });
@@ -901,7 +905,7 @@ export class LearnBackService implements OnModuleInit {
   }
 
   async listPhrasebook(actor: LearnBackActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const entries = await this.prisma.learnBackPhrasebookEntry.findMany({
       where: {
         organizationId: actor.organizationId,
@@ -925,7 +929,7 @@ export class LearnBackService implements OnModuleInit {
       sourceAttemptId?: string;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     if (!input.phrase?.trim() || !input.intendedMeaning?.trim()) {
       throw new ApiException(
         'validation_error',
@@ -957,7 +961,7 @@ export class LearnBackService implements OnModuleInit {
     entryId: string,
     input: { phrase?: string; intendedMeaning?: string; context?: string | null },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const existing = await this.prisma.learnBackPhrasebookEntry.findFirst({
       where: {
         id: entryId,
@@ -982,7 +986,7 @@ export class LearnBackService implements OnModuleInit {
   }
 
   async deletePhrase(actor: LearnBackActor, entryId: string) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const existing = await this.prisma.learnBackPhrasebookEntry.findFirst({
       where: {
         id: entryId,
@@ -1002,7 +1006,7 @@ export class LearnBackService implements OnModuleInit {
   }
 
   async getProgress(actor: LearnBackActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const observations = await this.prisma.learnBackProgressObservation.findMany({
       where: { organizationId: actor.organizationId, ownerUserId: actor.userId },
       orderBy: { createdAt: 'desc' },
@@ -1025,7 +1029,7 @@ export class LearnBackService implements OnModuleInit {
       quietHoursEnd?: number | null;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.ensureProfile(actor);
     const hasExternalNotifications = process.env.NOTIFICATIONS_DISABLED !== '1';
     if (input.reminderOptIn && input.reminderChannel && input.reminderChannel !== 'in_app') {
@@ -1069,7 +1073,7 @@ export class LearnBackService implements OnModuleInit {
   }
 
   async deleteSession(actor: LearnBackActor, sessionId: string) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const session = await this.loadSession(actor, sessionId);
     const attempts = await this.prisma.learnBackAttempt.findMany({
       where: { sessionId },

@@ -2,6 +2,7 @@ import { createHash, randomBytes } from 'crypto';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { ApiException } from '../common/errors/api-exception';
+import { resolveEntitlementContext, type EntitlementActor } from '../common/entitlements/entitlement-actor';
 import { BillingService } from '../billing/billing.service';
 import { LocalStorageService } from '../documents/local-storage.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -22,6 +23,7 @@ import {
 
 export type VoiceActor = {
   organizationId: string;
+  platformAdmin?: boolean;
   workspaceId: string;
   userId: string;
   apiKeyId?: string;
@@ -53,7 +55,8 @@ export class VoiceBridgeService {
     };
   }
 
-  async assertEnabled(organizationId: string) {
+  async assertEnabled(actorOrOrg: string | EntitlementActor) {
+    const { organizationId, platformAdmin } = resolveEntitlementContext(actorOrOrg);
     if (process.env.VOICEBRIDGE_DISABLED === '1') {
       throw new ApiException(
         'feature_disabled',
@@ -68,6 +71,7 @@ export class VoiceBridgeService {
     if (org.disabledAt) {
       throw new ApiException('org_disabled', 'Organization is disabled', HttpStatus.FORBIDDEN);
     }
+    if (platformAdmin) return;
     const overrides = (org.featureOverrides ?? {}) as Record<string, unknown>;
     if (typeof overrides.voiceBridge === 'boolean') {
       if (!overrides.voiceBridge) {
@@ -162,7 +166,7 @@ export class VoiceBridgeService {
   }
 
   async listThreads(actor: VoiceActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const memberships = await this.prisma.voiceMembership.findMany({
       where: { userId: actor.userId, active: true, thread: { organizationId: actor.organizationId, deletedAt: null } },
       include: { thread: true },
@@ -186,7 +190,7 @@ export class VoiceBridgeService {
     actor: VoiceActor,
     input: { title: string; category?: string; language: string; variety?: string; corridor?: string },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const title = input.title?.trim();
     if (!title) {
       throw new ApiException('validation_error', 'title is required', HttpStatus.BAD_REQUEST);
@@ -234,7 +238,7 @@ export class VoiceBridgeService {
   }
 
   async threadView(threadId: string, actor: VoiceActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const thread = await this.requireThread(threadId, actor.organizationId);
     await this.requireMember(threadId, actor.userId);
 
@@ -350,7 +354,7 @@ export class VoiceBridgeService {
   }
 
   async createInvite(threadId: string, actor: VoiceActor, expiresInHours = 72) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.requireThread(threadId, actor.organizationId);
     const me = await this.requireMember(threadId, actor.userId);
     if (me.role !== 'creator' && me.role !== 'moderator') {
@@ -410,7 +414,7 @@ export class VoiceBridgeService {
     actor: VoiceActor,
     input: { language: string; variety?: string; consents?: { purpose: ConsentPurpose; decision: 'granted' | 'denied' }[] },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const language = input.language?.trim();
     if (!language) {
       throw new ApiException('validation_error', 'language is required', HttpStatus.BAD_REQUEST);
@@ -502,7 +506,7 @@ export class VoiceBridgeService {
     actor: VoiceActor,
     input: { language?: string; variety?: string | null; notificationsEnabled?: boolean },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.requireThread(threadId, actor.organizationId);
     const me = await this.requireMember(threadId, actor.userId);
     const updated = await this.prisma.voiceMembership.update({
@@ -524,7 +528,7 @@ export class VoiceBridgeService {
   }
 
   issueUploadAuth(threadId: string, actor: VoiceActor) {
-    return this.assertEnabled(actor.organizationId).then(async () => {
+    return this.assertEnabled(actor).then(async () => {
       await this.requireThread(threadId, actor.organizationId);
       await this.requireMember(threadId, actor.userId);
       return {
@@ -549,7 +553,7 @@ export class VoiceBridgeService {
       file?: Express.Multer.File;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.requireThread(threadId, actor.organizationId);
     const me = await this.requireMember(threadId, actor.userId);
 
@@ -680,7 +684,7 @@ export class VoiceBridgeService {
     actor: VoiceActor,
     input: { reviewedTranscript: string; expectedDraftRevisionId: string },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const message = await this.prisma.voiceMessage.findUnique({
       where: { id: messageId },
       include: { thread: true, revisions: true },
@@ -720,7 +724,7 @@ export class VoiceBridgeService {
     actor: VoiceActor,
     input: { expectedDraftRevisionId: string; reviewedTranscript?: string },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const message = await this.prisma.voiceMessage.findUnique({
       where: { id: messageId },
       include: { thread: true, revisions: true },
@@ -974,7 +978,7 @@ export class VoiceBridgeService {
       correctionReason?: string;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const message = await this.prisma.voiceMessage.findUnique({
       where: { id: messageId },
       include: { thread: true },
@@ -1079,7 +1083,7 @@ export class VoiceBridgeService {
   }
 
   async acknowledgeRevision(revisionId: string, actor: VoiceActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const revision = await this.prisma.voiceSourceRevision.findUnique({
       where: { id: revisionId },
       include: { message: { include: { thread: true } } },
@@ -1150,7 +1154,7 @@ export class VoiceBridgeService {
       idempotencyKey?: string;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.requireThread(threadId, actor.organizationId);
     await this.requireMember(threadId, actor.userId);
 

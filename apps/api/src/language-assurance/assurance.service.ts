@@ -1,6 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { ApiException } from '../common/errors/api-exception';
+import { resolveEntitlementContext, type EntitlementActor } from '../common/entitlements/entitlement-actor';
 import { BillingService } from '../billing/billing.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { LanguageAssuranceAdapters } from './assurance.adapters';
@@ -31,6 +32,7 @@ import {
 
 export type AssuranceActor = {
   organizationId: string;
+  platformAdmin?: boolean;
   workspaceId: string;
   userId: string;
   apiKeyId?: string;
@@ -49,7 +51,8 @@ export class LanguageAssuranceService {
     return languageAssuranceCatalog();
   }
 
-  async assertEnabled(organizationId: string) {
+  async assertEnabled(actorOrOrg: string | EntitlementActor) {
+    const { organizationId, platformAdmin } = resolveEntitlementContext(actorOrOrg);
     if (process.env.LANGUAGE_ASSURANCE_DISABLED === '1') {
       throw new ApiException(
         'feature_disabled',
@@ -64,6 +67,7 @@ export class LanguageAssuranceService {
     if (org.disabledAt) {
       throw new ApiException('org_disabled', 'Organization is disabled', HttpStatus.FORBIDDEN);
     }
+    if (platformAdmin) return;
     const overrides = (org.featureOverrides ?? {}) as Record<string, unknown>;
     if (typeof overrides.languageAssurance === 'boolean') {
       if (!overrides.languageAssurance) {
@@ -264,7 +268,7 @@ export class LanguageAssuranceService {
       assignReviewerUserId?: string;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     if (!input.sourceText?.trim() || !input.targetText?.trim()) {
       throw new ApiException(
         'validation_error',
@@ -647,7 +651,7 @@ export class LanguageAssuranceService {
   }
 
   async runView(runId: string, actor: AssuranceActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const run = await this.prisma.assuranceVerificationRun.findFirst({
       where: { id: runId, organizationId: actor.organizationId },
       include: {
@@ -709,7 +713,7 @@ export class LanguageAssuranceService {
   }
 
   async listRuns(actor: AssuranceActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const runs = await this.prisma.assuranceVerificationRun.findMany({
       where: { organizationId: actor.organizationId },
       include: { bundle: true, policy: true },
@@ -731,7 +735,7 @@ export class LanguageAssuranceService {
   }
 
   async cancelRun(runId: string, actor: AssuranceActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const run = await this.prisma.assuranceVerificationRun.findFirst({
       where: { id: runId, organizationId: actor.organizationId },
     });
@@ -781,7 +785,7 @@ export class LanguageAssuranceService {
     actor: AssuranceActor,
     input: { reviewerUserId: string; scope?: 'translation' | 'speech' | 'both' },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const run = await this.prisma.assuranceVerificationRun.findFirst({
       where: { id: runId, organizationId: actor.organizationId },
       include: { bundle: true, policy: true },
@@ -830,7 +834,7 @@ export class LanguageAssuranceService {
       correctionSuggestion?: string;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const assignment = await this.prisma.assuranceReviewAssignment.findFirst({
       where: { id: assignmentId },
       include: { run: { include: { bundle: true, policy: true } } },
@@ -958,7 +962,7 @@ export class LanguageAssuranceService {
     actor: AssuranceActor,
     input: { reason?: string },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const run = await this.prisma.assuranceVerificationRun.findFirst({
       where: { id: runId, organizationId: actor.organizationId },
       include: { bundle: true, policy: true, reviews: true },
@@ -1048,7 +1052,7 @@ export class LanguageAssuranceService {
       budgetNote?: string;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     this.corridorOrThrow(input.corridor);
     if (!input.version?.trim() || !input.task?.trim()) {
       throw new ApiException('validation_error', 'version and task are required', HttpStatus.BAD_REQUEST);
@@ -1086,7 +1090,7 @@ export class LanguageAssuranceService {
   }
 
   async listReviewQueue(actor: AssuranceActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const assignments = await this.prisma.assuranceReviewAssignment.findMany({
       where: { reviewerUserId: actor.userId, status: 'open' },
       include: {

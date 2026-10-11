@@ -1,6 +1,7 @@
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { ApiException } from '../common/errors/api-exception';
+import { resolveEntitlementContext, type EntitlementActor } from '../common/entitlements/entitlement-actor';
 import { BillingService } from '../billing/billing.service';
 import { LocalStorageService } from '../documents/local-storage.service';
 import { PrismaService } from '../prisma/prisma.service';
@@ -31,6 +32,7 @@ import {
 
 export type EverydayActor = {
   organizationId: string;
+  platformAdmin?: boolean;
   workspaceId: string;
   userId: string;
   apiKeyId?: string;
@@ -50,7 +52,8 @@ export class EverydayService {
     return everydayCatalog();
   }
 
-  async assertEnabled(organizationId: string) {
+  async assertEnabled(actorOrOrg: string | EntitlementActor) {
+    const { organizationId, platformAdmin } = resolveEntitlementContext(actorOrOrg);
     if (process.env.EVERYDAY_DISABLED === '1') {
       throw new ApiException(
         'feature_disabled',
@@ -65,6 +68,7 @@ export class EverydayService {
     if (org.disabledAt) {
       throw new ApiException('org_disabled', 'Organization is disabled', HttpStatus.FORBIDDEN);
     }
+    if (platformAdmin) return;
     const overrides = (org.featureOverrides ?? {}) as Record<string, unknown>;
     if (typeof overrides.everyday === 'boolean') {
       if (!overrides.everyday) {
@@ -157,7 +161,7 @@ export class EverydayService {
   }
 
   async listSessions(actor: EverydayActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const sessions = await this.prisma.everydaySession.findMany({
       where: {
         organizationId: actor.organizationId,
@@ -191,7 +195,7 @@ export class EverydayService {
       retentionDays?: number;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const mode = (input.mode ?? 'read_this_to_me') as EverydayMode;
     if (!EVERYDAY_MODES.includes(mode)) {
       throw new ApiException('validation_error', `Unsupported mode ${mode}`, HttpStatus.BAD_REQUEST);
@@ -235,7 +239,7 @@ export class EverydayService {
   }
 
   async getSession(actor: EverydayActor, sessionId: string) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const session = await this.loadSession(actor, sessionId);
     const documents = await this.prisma.everydayDocumentAsset.findMany({
       where: { sessionId, deletedAt: null },
@@ -289,7 +293,7 @@ export class EverydayService {
       pageCountHint?: number;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const session = await this.loadSession(actor, sessionId);
     if (!input.contentBase64?.trim() || !input.filename) {
       throw new ApiException(
@@ -505,7 +509,7 @@ export class EverydayService {
       expectedSourceRevisionId?: string;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const document = await this.prisma.everydayDocumentAsset.findFirst({
       where: { id: documentId, organizationId: actor.organizationId, deletedAt: null },
       include: { session: true },
@@ -629,7 +633,7 @@ export class EverydayService {
     sourceRevisionId: string,
     input?: { targetVariety?: string },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const source = await this.loadActiveSource(actor, sourceRevisionId);
     const session = source.document.session;
     const corridor = this.corridorOrThrow(session.corridor);
@@ -686,7 +690,7 @@ export class EverydayService {
     sourceRevisionId: string,
     input?: { translationRevisionId?: string },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const source = await this.loadActiveSource(actor, sourceRevisionId);
     const blocks = source.blocks as EverydayBlock[];
     const built = buildExplanationClaims(blocks);
@@ -746,7 +750,7 @@ export class EverydayService {
   }
 
   async askQuestion(actor: EverydayActor, sourceRevisionId: string, question: string) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     if (!question?.trim()) {
       throw new ApiException('validation_error', 'question is required', HttpStatus.BAD_REQUEST);
     }
@@ -804,7 +808,7 @@ export class EverydayService {
       sourceRevisionId?: string;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     let exactText = '';
     let language = 'en';
     let sessionId = '';
@@ -922,7 +926,7 @@ export class EverydayService {
   }
 
   async getAudioBytes(actor: EverydayActor, audioId: string) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const audio = await this.prisma.everydayAudioVariant.findFirst({
       where: { id: audioId },
     });
@@ -969,7 +973,7 @@ export class EverydayService {
     sessionId: string,
     input: { userSourceText: string; targetVariety?: string; sourceRevisionId?: string },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const session = await this.loadSession(actor, sessionId);
     if (!input.userSourceText?.trim()) {
       throw new ApiException(
@@ -1041,7 +1045,7 @@ export class EverydayService {
       targetPresentationHash: string;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const reply = await this.prisma.everydayReplyRevision.findFirst({
       where: { id: replyId },
       include: { session: true },
@@ -1138,7 +1142,7 @@ export class EverydayService {
       language?: string;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const session = await this.loadSession(actor, sessionId);
     if (!input.selectedSpan?.trim()) {
       throw new ApiException('validation_error', 'selectedSpan is required', HttpStatus.BAD_REQUEST);
@@ -1191,7 +1195,7 @@ export class EverydayService {
   }
 
   async listEvents(actor: EverydayActor, sessionId: string, afterSequence = 0) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.loadSession(actor, sessionId);
     const events = await this.prisma.everydayEvent.findMany({
       where: { sessionId, sequence: { gt: afterSequence } },
@@ -1202,7 +1206,7 @@ export class EverydayService {
   }
 
   async deleteSession(actor: EverydayActor, sessionId: string) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const session = await this.loadSession(actor, sessionId);
     const docs = await this.prisma.everydayDocumentAsset.findMany({
       where: { sessionId, deletedAt: null },

@@ -44,6 +44,7 @@ function resolveActor(req: AuthedRequest, actorHeader?: string) {
     userId,
     apiKeyId: req.translateAuth.apiKeyId,
     ip: clientIp(req),
+    platformAdmin: Boolean(req.sessionAuth?.platformAdmin),
   };
 }
 
@@ -65,6 +66,14 @@ export class AccessLineController {
   @Get('metrics')
   metrics(@Req() req: AuthedRequest, @Headers('x-accessline-actor-id') actorHeader?: string) {
     return this.accessline.metrics(resolveActor(req, actorHeader));
+  }
+
+  @Get('telephony/numbers')
+  listProviderNumbers(
+    @Req() req: AuthedRequest,
+    @Headers('x-accessline-actor-id') actorHeader?: string,
+  ) {
+    return this.accessline.listProviderNumbers(resolveActor(req, actorHeader));
   }
 
   @Get('lines')

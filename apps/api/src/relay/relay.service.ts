@@ -2,6 +2,7 @@ import { HttpStatus, Injectable, OnModuleInit } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { BillingService } from '../billing/billing.service';
 import { ApiException } from '../common/errors/api-exception';
+import { resolveEntitlementContext, type EntitlementActor } from '../common/entitlements/entitlement-actor';
 import { PrismaService } from '../prisma/prisma.service';
 import { RelayAdapters } from './relay.adapters';
 import { relayCatalog } from './relay.catalog';
@@ -26,6 +27,7 @@ import {
 
 export type RelayActor = {
   organizationId: string;
+  platformAdmin?: boolean;
   workspaceId: string;
   userId: string;
   apiKeyId?: string;
@@ -51,10 +53,12 @@ export class RelayService implements OnModuleInit {
     return relayCatalog();
   }
 
-  private async assertEnabled(organizationId: string) {
+  private async assertEnabled(actorOrOrg: string | EntitlementActor) {
+    const { organizationId, platformAdmin } = resolveEntitlementContext(actorOrOrg);
     if (process.env.RELAY_DISABLED === '1') {
       throw new ApiException('feature_disabled', 'Relay is disabled by RELAY_DISABLED=1', HttpStatus.FORBIDDEN);
     }
+    if (platformAdmin) return;
     const org = await this.prisma.organization.findUnique({
       where: { id: organizationId },
       select: { featureOverrides: true },
@@ -207,7 +211,7 @@ export class RelayService implements OnModuleInit {
   }
 
   async coverage(actor: RelayActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.ensureDemoSupply(actor);
     const interpreters = await this.prisma.relayInterpreterProfile.findMany({
       where: { organizationId: actor.organizationId, status: 'approved' },
@@ -242,7 +246,7 @@ export class RelayService implements OnModuleInit {
   }
 
   async listSlots(actor: RelayActor, corridorId?: string) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.ensureDemoSupply(actor);
     const corridor = corridorId ? corridorOrNull(corridorId) : null;
     const slots = await this.prisma.relayAvailabilitySlot.findMany({
@@ -296,7 +300,7 @@ export class RelayService implements OnModuleInit {
       idempotencyKey: string;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.ensureDemoSupply(actor);
     if (!input.idempotencyKey?.trim()) {
       throw new ApiException('validation_error', 'idempotencyKey is required', HttpStatus.BAD_REQUEST);
@@ -535,7 +539,7 @@ export class RelayService implements OnModuleInit {
   }
 
   async getRequest(actor: RelayActor, requestId: string) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const request = await this.prisma.relayRequest.findFirst({
       where: {
         id: requestId,
@@ -559,7 +563,7 @@ export class RelayService implements OnModuleInit {
   }
 
   async acceptOffer(actor: RelayActor, offerId: string) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const offer = await this.prisma.relayOffer.findFirst({
       where: { id: offerId },
       include: {
@@ -626,7 +630,7 @@ export class RelayService implements OnModuleInit {
   }
 
   async declineOffer(actor: RelayActor, offerId: string) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const offer = await this.prisma.relayOffer.findFirst({
       where: { id: offerId },
       include: { interpreter: true, slot: true },
@@ -662,7 +666,7 @@ export class RelayService implements OnModuleInit {
   }
 
   async acceptQuote(actor: RelayActor, requestId: string, quoteId: string) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const request = await this.prisma.relayRequest.findFirst({
       where: { id: requestId, organizationId: actor.organizationId, requesterUserId: actor.userId },
       include: {
@@ -793,7 +797,7 @@ export class RelayService implements OnModuleInit {
   }
 
   async markPaid(actor: RelayActor, bookingId: string, idempotencyKey: string) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     if (!idempotencyKey?.trim()) {
       throw new ApiException('validation_error', 'idempotencyKey is required', HttpStatus.BAD_REQUEST);
     }
@@ -895,7 +899,7 @@ export class RelayService implements OnModuleInit {
   }
 
   async listBookings(actor: RelayActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const bookings = await this.prisma.relayBooking.findMany({
       where: {
         organizationId: actor.organizationId,
@@ -917,7 +921,7 @@ export class RelayService implements OnModuleInit {
   }
 
   async getBooking(actor: RelayActor, bookingId: string) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const booking = await this.loadBooking(actor, bookingId);
     return {
       booking: {
@@ -939,7 +943,7 @@ export class RelayService implements OnModuleInit {
       expiresInHours?: number;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const booking = await this.loadBooking(actor, bookingId, { asRequester: true });
     if (!['confirmed', 'in_progress', 'awaiting_payment'].includes(booking.status)) {
       throw new ApiException(
@@ -967,7 +971,7 @@ export class RelayService implements OnModuleInit {
   }
 
   async revokeContextGrant(actor: RelayActor, bookingId: string, grantId: string) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.loadBooking(actor, bookingId, { asRequester: true });
     const grant = await this.prisma.relayContextGrant.findFirst({
       where: { id: grantId, bookingId, ownerUserId: actor.userId },
@@ -985,7 +989,7 @@ export class RelayService implements OnModuleInit {
   }
 
   async join(actor: RelayActor, bookingId: string, input?: { recordingOptIn?: boolean }) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const booking = await this.loadBooking(actor, bookingId);
     if (!['confirmed', 'in_progress'].includes(booking.status)) {
       throw new ApiException(
@@ -1071,7 +1075,7 @@ export class RelayService implements OnModuleInit {
     bookingId: string,
     input?: { connectedSeconds?: number },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const booking = await this.loadBooking(actor, bookingId);
     const connectedSeconds = Math.max(0, Math.min(input?.connectedSeconds ?? 0, 6 * 3600));
     const billableSeconds = Math.max(
@@ -1129,7 +1133,7 @@ export class RelayService implements OnModuleInit {
   }
 
   async cancel(actor: RelayActor, bookingId: string, reason?: string) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const booking = await this.loadBooking(actor, bookingId);
     if (['completed', 'cancelled'].includes(booking.status)) {
       throw new ApiException('booking_state', 'Booking already finished', HttpStatus.CONFLICT);
@@ -1170,7 +1174,7 @@ export class RelayService implements OnModuleInit {
     bookingId: string,
     input: { rating?: number; comment?: string; role?: string },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const booking = await this.loadBooking(actor, bookingId);
     const role =
       input.role ||
@@ -1195,7 +1199,7 @@ export class RelayService implements OnModuleInit {
     bookingId: string,
     input: { additionalMinutes: number; expectedRevision?: number },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const booking = await this.loadBooking(actor, bookingId, { asRequester: true });
     if (!['confirmed', 'in_progress'].includes(booking.status)) {
       throw new ApiException(
@@ -1245,7 +1249,7 @@ export class RelayService implements OnModuleInit {
       trainingRightsGranted?: boolean;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const booking = await this.loadBooking(actor, bookingId);
     if (!input.suggestion?.trim()) {
       throw new ApiException('validation_error', 'suggestion is required', HttpStatus.BAD_REQUEST);
@@ -1293,7 +1297,7 @@ export class RelayService implements OnModuleInit {
     correctionId: string,
     input: { reviewStatus: 'accepted' | 'rejected' },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.loadBooking(actor, bookingId, { asRequester: true });
     const row = await this.prisma.relayCorrectionRecord.findFirst({
       where: { id: correctionId, bookingId },
@@ -1321,7 +1325,7 @@ export class RelayService implements OnModuleInit {
     bookingId: string,
     input: { issue: string; evidence?: unknown[] },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const booking = await this.loadBooking(actor, bookingId);
     if (!input.issue?.trim()) {
       throw new ApiException('validation_error', 'issue is required', HttpStatus.BAD_REQUEST);
@@ -1363,7 +1367,7 @@ export class RelayService implements OnModuleInit {
       confidentialityAccepted?: boolean;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     if (!input.confidentialityAccepted) {
       throw new ApiException(
         'confidentiality_required',
@@ -1415,7 +1419,7 @@ export class RelayService implements OnModuleInit {
     profileId: string,
     input: { status: 'approved' | 'suspended'; reviewerNote?: string },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     // Org owner/admin path — TranslateAuthGuard already scoped to org
     const profile = await this.prisma.relayInterpreterProfile.findFirst({
       where: { id: profileId, organizationId: actor.organizationId },
@@ -1441,7 +1445,7 @@ export class RelayService implements OnModuleInit {
     interpreterId: string,
     input: { startAt: string; endAt: string; displayTimezone?: string },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const profile = await this.prisma.relayInterpreterProfile.findFirst({
       where: { id: interpreterId, organizationId: actor.organizationId },
     });
@@ -1475,7 +1479,7 @@ export class RelayService implements OnModuleInit {
   }
 
   async listOffersForInterpreter(actor: RelayActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.ensureDemoSupply(actor);
     const offers = await this.prisma.relayOffer.findMany({
       where: {
@@ -1499,7 +1503,7 @@ export class RelayService implements OnModuleInit {
   }
 
   async opsOverview(actor: RelayActor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     await this.ensureDemoSupply(actor);
     const [approved, pendingReview, unmatched, upcoming, disputes, reconciliations] =
       await Promise.all([

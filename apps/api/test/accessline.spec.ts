@@ -87,11 +87,20 @@ describe('AccessLine', () => {
     expect(cat.status).toBe(200);
     expect(cat.body.id).toBe('accessline');
     expect(cat.body.telephony.configured).toBe(false);
+    expect(cat.body.telephony.mode).toBe('awaiting_provider');
     expect(cat.body.deferred).toContain('payment_collection');
 
     const caps = await request(app.getHttpServer()).get('/v1/accessline/capabilities').set(auth());
     expect(caps.status).toBe(200);
     expect(caps.body.workflow).toContain('registered_customer_auth');
+
+    const numbers = await request(app.getHttpServer())
+      .get('/v1/accessline/telephony/numbers')
+      .set(auth());
+    expect(numbers.status).toBe(200);
+    expect(numbers.body.configured).toBe(false);
+    expect(numbers.body.numbers).toEqual([]);
+    expect(String(numbers.body.note)).toMatch(/Connect Twilio|not shown/i);
   });
 
   it('runs simulator delivery-status journey with OTP auth (caller ID is not enough)', async () => {

@@ -14,7 +14,8 @@ Native-language telephone service for logistics **delivery-status** enquiries. C
 
 | Mode | Behavior |
 | --- | --- |
-| **Simulator** | Full dialogue E2E via `/v1/accessline/simulate/*`. Labeled. No carrier, no external OTP SMS. |
+| **Console dialer** | Live keypad on `/accessline`. Numbers pull from Twilio via `GET /v1/accessline/telephony/numbers` when `TWILIO_*` is configured. No fabricated `sim:+` DIDs in the UI. |
+| **Simulator (API/QA)** | Full dialogue E2E via `/v1/accessline/simulate/*` for automated tests. Labeled. No carrier, no external OTP SMS. Not the console path. |
 | **Twilio** | Signature-verified webhooks at `/v1/accessline/twilio/*`. Requires `TWILIO_*`. Live number purchase and customer calls need separate authorization. |
 
 Caller ID, spoken name, and order reference **never** bypass authentication.
@@ -25,8 +26,9 @@ Caller ID, spoken name, and order reference **never** bypass authentication.
 | --- | --- |
 | `GET /v1/accessline/catalog` | Product catalog + telephony honesty |
 | `GET /v1/accessline/capabilities` | Workflow + deferred features |
-| `POST /v1/accessline/lines` | Create business line (simulated by default) |
-| `POST /v1/accessline/simulate/start` | Start simulator call |
+| `GET /v1/accessline/telephony/numbers` | Live provider DIDs (empty until Twilio configured) |
+| `POST /v1/accessline/lines` | Attach business line (`integrationMode: twilio` for live DIDs) |
+| `POST /v1/accessline/simulate/start` | Start simulator call (API/QA) |
 | `POST /v1/accessline/simulate/:id/dtmf` | DTMF (language, OTP, order ref) |
 | `POST /v1/accessline/simulate/:id/speech` | Intent / reference speech |
 | `POST /v1/accessline/simulate/:id/hangup` | End call; reject stale turns |
@@ -56,7 +58,7 @@ await al.simulateStart({ lineId });
 
 ## Console
 
-`/accessline` — create simulated lines and drive the call journey.
+`/accessline` — live dialer pad. Numbers appear after Twilio is connected; attach a DID as a business line.
 
 ## Runbook (pilot)
 

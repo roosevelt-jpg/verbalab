@@ -4,6 +4,7 @@ import { createHash } from 'crypto';
 import { AuditService } from '../audit/audit.service';
 import { BillingService } from '../billing/billing.service';
 import { ApiException } from '../common/errors/api-exception';
+import { resolveEntitlementContext, type EntitlementActor } from '../common/entitlements/entitlement-actor';
 import { LocalStorageService } from '../documents/local-storage.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { DealBridgeAdapters } from './dealbridge.adapters';
@@ -37,6 +38,7 @@ import { verifyExplainBack } from './dealbridge.verifier';
 
 type Actor = {
   organizationId: string;
+  platformAdmin?: boolean;
   workspaceId: string;
   userId: string;
   apiKeyId?: string;
@@ -71,7 +73,8 @@ export class DealBridgeService {
     return dealbridgeCatalog();
   }
 
-  async assertEnabled(organizationId: string) {
+  async assertEnabled(actorOrOrg: string | EntitlementActor) {
+    const { organizationId, platformAdmin } = resolveEntitlementContext(actorOrOrg);
     if (process.env.DEALBRIDGE_DISABLED === '1') {
       throw new ApiException(
         'feature_disabled',
@@ -86,6 +89,7 @@ export class DealBridgeService {
     if (org.disabledAt) {
       throw new ApiException('org_disabled', 'Organization is disabled', HttpStatus.FORBIDDEN);
     }
+    if (platformAdmin) return;
     const overrides = (org.featureOverrides ?? {}) as Record<string, unknown>;
     if (typeof overrides.dealBridge === 'boolean') {
       if (!overrides.dealBridge) {
@@ -124,7 +128,7 @@ export class DealBridgeService {
   }
 
   async listSessions(actor: Actor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const sessions = await this.prisma.dealSession.findMany({
       where: {
         deletedAt: null,
@@ -178,7 +182,7 @@ export class DealBridgeService {
       isDemo?: boolean;
     },
   ) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const category = body.category ?? 'wholesale_rice';
     const corridor = this.resolveCorridor(body.merchantLanguage, body.buyerLanguage, category);
     if (body.idempotencyKey) {
@@ -1900,7 +1904,7 @@ export class DealBridgeService {
    * Reproducible investor demo (Section 20). Always labeled SIMULATED / FIXTURE DEMO.
    */
   async runInvestorDemo(actor: Actor) {
-    await this.assertEnabled(actor.organizationId);
+    await this.assertEnabled(actor);
     const buyerUserId = `demo-buyer-${createHash('sha256')
       .update(`${actor.organizationId}:${Date.now()}:${mintToken(8)}`)
       .digest('hex')

@@ -51,6 +51,7 @@ function resolveActor(req: AuthedRequest, actorHeader?: string) {
     apiKeyId: req.translateAuth.apiKeyId,
     authContext: fromSession ? 'clerk_session' : 'api_key_actor',
     ip: clientIp(req),
+    platformAdmin: Boolean(req.sessionAuth?.platformAdmin),
   };
 }
 

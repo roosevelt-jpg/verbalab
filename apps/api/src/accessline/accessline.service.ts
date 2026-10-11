@@ -28,6 +28,7 @@ export type AccessLineAuth = {
   userId: string;
   apiKeyId?: string | null;
   ip?: string;
+  platformAdmin?: boolean;
 };
 
 @Injectable()
@@ -144,10 +145,27 @@ export class AccessLineService {
     if (mode === 'twilio' && !accesslineCatalog().telephony.configured) {
       throw new ApiException(
         'provider_not_configured',
-        'Twilio credentials missing — create the line in simulated mode or configure TWILIO_*',
+        'Twilio credentials missing — configure TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER, and TWILIO_WEBHOOK_BASE_URL before attaching a live number.',
         HttpStatus.SERVICE_UNAVAILABLE,
       );
     }
+    if (mode === 'simulated' && inboundNumber.startsWith('sim:')) {
+      // Allowed for API/QA fixtures only — console no longer invents these.
+    }
+    const defaultTransfers =
+      mode === 'twilio'
+        ? []
+        : [{ id: 'desk-1', label: 'Logistics desk', destination: 'sim:+254711000001' }];
+    const defaultContacts =
+      mode === 'twilio'
+        ? []
+        : [
+            {
+              phoneE164: '+254700000111',
+              customerScope: 'cust_ke_demo_1',
+              simulateOtpHint: '246810',
+            },
+          ];
     try {
       const line = await this.prisma.accessLineBusinessLine.create({
         data: {
@@ -159,16 +177,10 @@ export class AccessLineService {
           timeZone: input.timeZone ?? 'Africa/Nairobi',
           enabledLanguages: input.enabledLanguages ?? ['sw-KE', 'en'],
           recordingEnabled: Boolean(input.recordingEnabled),
-          transferDestinations: (input.transferDestinations ?? [
-            { id: 'desk-1', label: 'Logistics desk', destination: 'sim:+254711000001' },
-          ]) as unknown as Prisma.InputJsonValue,
-          registeredContacts: (input.registeredContacts ?? [
-            {
-              phoneE164: '+254700000111',
-              customerScope: 'cust_ke_demo_1',
-              simulateOtpHint: '246810',
-            },
-          ]) as unknown as Prisma.InputJsonValue,
+          transferDestinations: (input.transferDestinations ??
+            defaultTransfers) as unknown as Prisma.InputJsonValue,
+          registeredContacts: (input.registeredContacts ??
+            defaultContacts) as unknown as Prisma.InputJsonValue,
           knowledgeSnippet:
             input.knowledgeSnippet ??
             'Open Mon–Sat 08:00–18:00 Africa/Nairobi. Delivery status only — no address changes by phone.',
@@ -1074,5 +1086,78 @@ export class AccessLineService {
         process.env.TWILIO_PHONE_NUMBER?.trim() &&
         process.env.TWILIO_WEBHOOK_BASE_URL?.trim(),
     );
+  }
+
+  /**
+   * Live provider DIDs for the dialer. Empty until Twilio credentials are configured —
+   * never invents simulated numbers for the console.
+   */
+  async listProviderNumbers(_auth: AccessLineAuth) {
+    this.assertEnabled();
+    const sid = process.env.TWILIO_ACCOUNT_SID?.trim();
+    const token = process.env.TWILIO_AUTH_TOKEN?.trim();
+    const envNumber = process.env.TWILIO_PHONE_NUMBER?.trim();
+    if (!sid || !token) {
+      return {
+        provider: 'twilio' as const,
+        configured: false,
+        numbers: [] as Array<{
+          sid: string;
+          phoneNumber: string;
+          friendlyName: string;
+          voiceEnabled: boolean;
+        }>,
+        note: 'Connect Twilio (TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_PHONE_NUMBER, TWILIO_WEBHOOK_BASE_URL) to pull live numbers into the dialer. Simulated numbers are not shown here.',
+      };
+    }
+
+    const url = `https://api.twilio.com/2010-04-01/Accounts/${encodeURIComponent(sid)}/IncomingPhoneNumbers.json?PageSize=50`;
+    const res = await fetch(url, {
+      headers: {
+        Authorization: `Basic ${Buffer.from(`${sid}:${token}`).toString('base64')}`,
+      },
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => '');
+      throw new ApiException(
+        'provider_error',
+        `Twilio number list failed (${res.status})${body ? `: ${body.slice(0, 180)}` : ''}`,
+        HttpStatus.BAD_GATEWAY,
+      );
+    }
+    const data = (await res.json()) as {
+      incoming_phone_numbers?: Array<{
+        sid?: string;
+        phone_number?: string;
+        friendly_name?: string;
+        capabilities?: { voice?: boolean };
+      }>;
+    };
+    const numbers = (data.incoming_phone_numbers ?? [])
+      .filter((n) => typeof n.phone_number === 'string' && n.phone_number.length > 0)
+      .map((n) => ({
+        sid: n.sid ?? n.phone_number!,
+        phoneNumber: n.phone_number!,
+        friendlyName: n.friendly_name ?? n.phone_number!,
+        voiceEnabled: Boolean(n.capabilities?.voice ?? true),
+      }));
+
+    if (envNumber && !numbers.some((n) => n.phoneNumber === envNumber)) {
+      numbers.unshift({
+        sid: 'env-twilio-phone-number',
+        phoneNumber: envNumber,
+        friendlyName: 'Configured TWILIO_PHONE_NUMBER',
+        voiceEnabled: true,
+      });
+    }
+
+    return {
+      provider: 'twilio' as const,
+      configured: this.twilioConfigured(),
+      numbers,
+      note: this.twilioConfigured()
+        ? 'Live Twilio DIDs. Attach a number as a business line to receive AccessLine webhooks.'
+        : 'Twilio account reachable, but TWILIO_PHONE_NUMBER / TWILIO_WEBHOOK_BASE_URL still required for inbound webhooks.',
+    };
   }
 }
