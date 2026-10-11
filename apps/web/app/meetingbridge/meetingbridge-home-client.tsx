@@ -27,8 +27,7 @@ type MeetingRow = {
 };
 
 export function MeetingBridgeHomeClient() {
-  const clerk = isClerkConfigured();
-  const auth = clerk ? useAuth() : null;
+  const { getToken, isSignedIn } = useAuth();
   const [catalog, setCatalog] = useState<Catalog | null>(null);
   const [meetings, setMeetings] = useState<MeetingRow[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -40,7 +39,8 @@ export function MeetingBridgeHomeClient() {
   const load = useCallback(async () => {
     setError(null);
     try {
-      const token = auth?.getToken ? await auth.getToken() : null;
+      const token =
+        isClerkConfigured() && isSignedIn ? await getToken() : null;
       const cat = await apiFetch<Catalog>('/v1/meetingbridge/catalog', { token: token ?? undefined });
       setCatalog(cat);
       if (token) {
@@ -50,7 +50,7 @@ export function MeetingBridgeHomeClient() {
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Could not load MeetingBridge');
     }
-  }, [auth]);
+  }, [getToken, isSignedIn]);
 
   useEffect(() => {
     void load();
@@ -58,14 +58,14 @@ export function MeetingBridgeHomeClient() {
 
   async function onCreate(e: FormEvent) {
     e.preventDefault();
-    if (!auth?.getToken) {
+    if (!(isClerkConfigured() && isSignedIn)) {
       setError('Sign in to create a meeting.');
       return;
     }
     setBusy(true);
     setError(null);
     try {
-      const token = await auth.getToken();
+      const token = await getToken();
       const created = await apiFetch<{ meeting: { id: string } }>('/v1/meetingbridge/meetings', {
         method: 'POST',
         token: token ?? undefined,

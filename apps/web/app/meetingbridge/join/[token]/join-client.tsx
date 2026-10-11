@@ -26,8 +26,7 @@ type InvitePeek = {
 
 export function MeetingBridgeJoinClient({ token }: { token: string }) {
   const router = useRouter();
-  const clerk = isClerkConfigured();
-  const auth = clerk ? useAuth() : null;
+  const { getToken, isSignedIn } = useAuth();
   const [apiKey, setApiKey] = useState('');
   const [actorId, setActorId] = useState('participant-local');
   const [peek, setPeek] = useState<InvitePeek | null>(null);
@@ -42,17 +41,17 @@ export function MeetingBridgeJoinClient({ token }: { token: string }) {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const signedIn = Boolean(auth?.isSignedIn);
+  const signedIn = Boolean(isClerkConfigured() && isSignedIn);
 
   const authHeaders = useCallback(async () => {
-    if (clerk && signedIn && auth?.getToken) {
-      const jwt = await auth.getToken();
+    if (signedIn) {
+      const jwt = await getToken();
       if (!jwt) throw new Error('Missing session token');
       return { token: jwt, actor: undefined as string | undefined };
     }
     if (!apiKey.startsWith('lg_')) throw new Error('Sign in or paste an API key');
     return { token: apiKey, actor: actorId };
-  }, [apiKey, actorId, auth, clerk, signedIn]);
+  }, [apiKey, actorId, getToken, signedIn]);
 
   useEffect(() => {
     async function load() {

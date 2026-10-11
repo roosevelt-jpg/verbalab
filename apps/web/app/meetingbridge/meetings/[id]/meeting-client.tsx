@@ -84,8 +84,7 @@ type MeetingView = {
 };
 
 export function MeetingBridgeMeetingClient({ meetingId }: { meetingId: string }) {
-  const clerk = isClerkConfigured();
-  const auth = clerk ? useAuth() : null;
+  const { getToken, isSignedIn, userId } = useAuth();
   const [apiKey, setApiKey] = useState('');
   const [actorId, setActorId] = useState('organizer-local');
   const [view, setView] = useState<MeetingView | null>(null);
@@ -101,23 +100,23 @@ export function MeetingBridgeMeetingClient({ meetingId }: { meetingId: string })
   const [correctUtteranceId, setCorrectUtteranceId] = useState('');
   const [correctText, setCorrectText] = useState('');
 
-  const signedIn = Boolean(auth?.isSignedIn);
+  const signedIn = Boolean(isClerkConfigured() && isSignedIn);
 
   const authHeaders = useCallback(async () => {
-    if (clerk && signedIn && auth?.getToken) {
-      const token = await auth.getToken();
+    if (signedIn) {
+      const token = await getToken();
       if (!token) throw new Error('Missing session token');
       return { token, actor: undefined as string | undefined };
     }
     if (!apiKey.startsWith('lg_')) throw new Error('Sign in or paste an API key');
     return { token: apiKey, actor: actorId };
-  }, [apiKey, actorId, auth, clerk, signedIn]);
+  }, [apiKey, actorId, getToken, signedIn]);
 
   const me = useMemo(() => {
     if (!view) return null;
-    const uid = signedIn ? auth?.userId : actorId;
+    const uid = signedIn ? userId : actorId;
     return view.memberships.find((m) => m.userId === uid) ?? null;
-  }, [view, signedIn, auth?.userId, actorId]);
+  }, [view, signedIn, userId, actorId]);
 
   const refresh = useCallback(async () => {
     setError(null);
@@ -130,14 +129,14 @@ export function MeetingBridgeMeetingClient({ meetingId }: { meetingId: string })
       setView(res);
       if (res.memberships[0]) {
         const mine =
-          res.memberships.find((m) => m.userId === (signedIn ? auth?.userId : actorId)) ??
+          res.memberships.find((m) => m.userId === (signedIn ? userId : actorId)) ??
           res.memberships[0];
         setListeningMode(mine.listeningMode);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load meeting');
     }
-  }, [authHeaders, meetingId, signedIn, auth?.userId, actorId]);
+  }, [authHeaders, meetingId, signedIn, userId, actorId]);
 
   useEffect(() => {
     if (signedIn || apiKey.startsWith('lg_')) void refresh();
