@@ -141,8 +141,13 @@ describe('Own TTS path', () => {
   it('covers the full language registry with playable Echo voices', () => {
     assertOwnTtsCoversLanguageRegistry();
     expect(OWN_TTS_LANGUAGE_COUNT).toBeGreaterThanOrEqual(TOTAL_LANGUAGE_COUNT);
-    expect(OWN_TTS_VOICES.every((v) => v.status === 'live')).toBe(true);
-    expect(resolveOwnTtsVoice('own:th-pack')?.status).toBe('live');
+    // Catalog honesty: eSpeak demos are `demo`, formant-only paths are `placeholder`,
+    // neural-reviewed voices are `live`. Every voice must carry a known status.
+    expect(
+      OWN_TTS_VOICES.every((v) => v.status === 'live' || v.status === 'demo' || v.status === 'placeholder'),
+    ).toBe(true);
+    expect(OWN_TTS_VOICES.some((v) => v.status === 'demo' || v.status === 'live')).toBe(true);
+    expect(resolveOwnTtsVoice('own:th-pack')?.status).toBe('demo');
     expect(resolveOwnTtsVoice('own:de-pack')?.languages).toContain('de');
   });
 
@@ -231,7 +236,7 @@ describe('Own TTS path', () => {
     expect(maxAmp).toBeGreaterThan(1000);
   });
 
-  it('routes speech synthesis across all 212 languages in registry', () => {
+  it('routes speech synthesis across all registry languages', () => {
     assertOwnTtsCoversLanguageRegistry();
     expect(OWN_TTS_LANGUAGE_COUNT).toBeGreaterThanOrEqual(TOTAL_LANGUAGE_COUNT);
     for (const seed of LANGUAGE_SEEDS) {

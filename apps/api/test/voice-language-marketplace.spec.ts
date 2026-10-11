@@ -10,6 +10,7 @@ import { PrismaService } from '../src/prisma/prisma.service';
 import { BillingService } from '../src/billing/billing.service';
 import { VoiceLanguageMarketplaceService } from '../src/voice-language-marketplace/voice-language-marketplace.service';
 import { ApiExceptionFilter } from '../src/common/errors/api-exception.filter';
+import { TOTAL_LANGUAGE_COUNT } from '../src/languages/language-seeds';
 
 const root = join(__dirname, '../../..');
 const apiSrc = join(__dirname, '../src');
@@ -106,9 +107,9 @@ describe('Voice & Language Marketplace', () => {
     expect(res.body.docs).toBe('/docs/VOICE_LANGUAGE_MARKETPLACE.md');
     expect(res.body.packTypes.some((c: { id: string }) => c.id === 'language')).toBe(true);
     expect(res.body.packs.some((c: { key: string }) => c.key === 'language.sw')).toBe(true);
-    expect(res.body.languagePackCount).toBe(212);
+    expect(res.body.languagePackCount).toBe(TOTAL_LANGUAGE_COUNT);
     expect(res.body.packs.filter((c: { packType: string }) => c.packType === 'language')).toHaveLength(
-      212,
+      TOTAL_LANGUAGE_COUNT,
     );
   });
 

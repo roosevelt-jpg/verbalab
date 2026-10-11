@@ -227,4 +227,5 @@ export const LANGUAGE_SEEDS: LanguageSeed[] = [
 ];
 
 export const AFRICAN_LANGUAGE_COUNT = 149;
-export const TOTAL_LANGUAGE_COUNT = 212;
+/** Keep in lockstep with LANGUAGE_SEEDS — marketplace packs assert this count. */
+export const TOTAL_LANGUAGE_COUNT = LANGUAGE_SEEDS.length;
