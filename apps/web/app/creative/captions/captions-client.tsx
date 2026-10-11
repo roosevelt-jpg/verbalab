@@ -8,7 +8,7 @@ import { apiFetch } from '@/lib/api';
 import { CreativeShell } from '@/components/creative/creative-shell';
 import { CreativeIcon } from '@/components/creative/creative-icons';
 import { AnamorphicPanel } from '@/components/media/anamorphic-panel';
-import { isLugemiApiKey, loadCreativeApiKey, resolveCreativeToken } from '@/lib/creative-auth';
+import { loadCreativeApiKey, resolveCreativeToken } from '@/lib/creative-auth';
 import { CreativeApiKeyField } from '@/components/creative/creative-api-key-field';
 
 type AlignResult = {

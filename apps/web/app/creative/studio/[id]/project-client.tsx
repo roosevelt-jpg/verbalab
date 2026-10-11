@@ -27,7 +27,7 @@ import {
   type VideoScene,
 } from '@/lib/creative-video-project';
 import { loadCreativeAssets, saveCreativeAssets, type CreativeAsset } from '@/lib/creative-assets';
-import { isLugemiApiKey, loadCreativeApiKey, resolveCreativeToken } from '@/lib/creative-auth';
+import { loadCreativeApiKey, resolveCreativeToken } from '@/lib/creative-auth';
 import { CreativeApiKeyField } from '@/components/creative/creative-api-key-field';
 
 type Voice = {
