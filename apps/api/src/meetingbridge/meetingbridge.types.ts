@@ -102,7 +102,7 @@ export const MEETINGBRIDGE_CORRIDORS: CorridorCapability[] = [
     translation: true,
     tts: true,
     label: 'English ↔ Ga (Ghana)',
-    note: 'Ga corridor with Echo voice own:gaa-gh-female. ASR gated until measured.',
+    note: 'Ga corridor with Echo pack own:gaa-pack. ASR gated until measured.',
   },
   {
     id: 'en-dag',
@@ -112,7 +112,7 @@ export const MEETINGBRIDGE_CORRIDORS: CorridorCapability[] = [
     translation: true,
     tts: true,
     label: 'English ↔ Dagbani (Ghana)',
-    note: 'Dagbani corridor with Echo voice own:dag-gh-male. ASR gated until measured.',
+    note: 'Dagbani corridor with Echo pack own:dag-pack. ASR gated until measured.',
   },
   {
     id: 'en-fr',

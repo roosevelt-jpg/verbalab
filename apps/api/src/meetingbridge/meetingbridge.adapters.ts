@@ -26,26 +26,15 @@ export type MeetingTtsResult = {
   note?: string;
 };
 
-/** Dedicated Echo voices for Ghana languages (curated or pack). */
+/**
+ * Echo voice ids that resolve in the own-TTS catalog.
+ * Curated Ghana speakers where shipped; otherwise language-default `own:{code}-pack`.
+ */
 export function ghanaEchoVoiceId(languageCode: string): string {
   const curated: Record<string, string> = {
     en: 'own:en-gh-female',
     ak: 'own:ak-gh-female',
     ee: 'own:ee-gh-female',
-    gaa: 'own:gaa-gh-female',
-    ada: 'own:ada-gh-female',
-    dag: 'own:dag-gh-male',
-    dga: 'own:dga-gh-female',
-    gjn: 'own:gjn-gh-male',
-    xsm: 'own:xsm-gh-female',
-    gur: 'own:gur-gh-female',
-    nzi: 'own:nzi-gh-female',
-    maw: 'own:maw-gh-male',
-    bwu: 'own:bwu-gh-female',
-    xon: 'own:xon-gh-male',
-    sil: 'own:sil-gh-female',
-    wlx: 'own:wlx-gh-male',
-    ha: 'own:ha-gh-male',
   };
   return curated[languageCode] ?? languagePackVoiceId(languageCode);
 }
