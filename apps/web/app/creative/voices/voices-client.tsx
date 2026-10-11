@@ -5,6 +5,7 @@ import { useAuth } from '@clerk/nextjs';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { apiFetch } from '@/lib/api';
+import { resolveCreativeToken } from '@/lib/creative-auth';
 import { CreativeShell } from '@/components/creative/creative-shell';
 import { CreativeIcon } from '@/components/creative/creative-icons';
 import { CreativeInspoCard } from '@/components/creative/creative-inspo-card';
@@ -57,8 +58,8 @@ function CreativeVoicesClientInner({ getToken, isLoaded }: { getToken: () => Pro
   const { play, stop, playingId, loadingId } = useDemoPlayer();
 
   const load = useCallback(async () => {
-    const token = await getToken();
-    if (!token) throw new Error('Sign in to browse voices.');
+    const token = await resolveCreativeToken(() => getToken());
+    if (!token) throw new Error('Sign in or apply a Studio API key to browse voices.');
     const [market, tts] = await Promise.all([
       apiFetch<{ listings: Listing[] }>('/v1/voice-marketplace/listings', { token }).catch(() => ({ listings: [] })),
       apiFetch<{ data: Voice[] }>('/v1/tts/voices', { token }).catch(() => ({ data: [] })),

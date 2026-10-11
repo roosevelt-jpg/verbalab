@@ -149,7 +149,8 @@ function AccentIdentityBody({
           voiceId,
           lang: pack.bcp47 ?? pack.languageCode,
           label: pack.nameEn,
-          token: clerkToken || loadStudioApiKeySecret() || null,
+          // Applied Studio key meters usage; Clerk is fallback only.
+          token: loadStudioApiKeySecret() || clerkToken || null,
           onStarted: () => {
             setLoadingId(null);
             setActiveId(pack.id);

@@ -22,7 +22,7 @@ const FAQ: FaqItem[] = [
   {
     keys: ['api key', 'lg_live', 'lg_test', 'authenticate', 'authorization', 'bearer', '401', 'unauthorized', 'never used', 'apply key', 'studio machine'],
     answer:
-      'API keys: Console → /keys. Create live (lg_live_) or test (lg_test_). New keys auto-apply as Studio machine identity (header chip + Playground/Creative/product paste fields). Paste an existing secret under “Identify & apply” if you still have it. Auth: Authorization: Bearer lg_…. Console browsing uses Clerk; “never used” means no Bearer traffic yet — use Verify key. 401 → missing/expired key or wrong X-Lugemi-Workspace-Id.',
+      'API keys: Console → /keys. Create live (lg_live_) or test (lg_test_). New keys auto-apply as Studio machine identity. Product API calls (Playground, Creative, Chat, Voice Studio, demos) prefer that Bearer even while you are signed in with Clerk, so usage meters and “last used” update. Paste an existing secret under “Identify & apply” if you still have it. Clerk stays for create/revoke keys, billing, and workspace admin. 401 → missing/expired key or wrong X-Lugemi-Workspace-Id.',
   },
   {
     keys: ['rate limit', '429', 'too many', 'throttle'],
@@ -91,7 +91,7 @@ const FAQ: FaqItem[] = [
   {
     keys: ['cors', 'browser', 'frontend', 'next.js', 'origin'],
     answer:
-      'Keep lg_live_ keys on the server — not in public browser bundles. Console UIs use Clerk session auth. Try /playground for authenticated calls.',
+      'Keep lg_live_ keys on the server for SDKs — the console applies one as Studio machine identity in this browser for product API calls. Try /playground after Create & apply under /keys.',
   },
   {
     keys: ['clerk', 'sign in', 'sign-in', 'login', 'setup', 'oauth', 'google'],

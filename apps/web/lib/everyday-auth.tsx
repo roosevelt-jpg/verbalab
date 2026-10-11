@@ -4,6 +4,7 @@ import { ReactNode, useCallback, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { useStudioApiKeyField } from '@/hooks/use-studio-api-key';
+import { resolveWorkspaceBearer } from '@/lib/studio-api-key';
 
 export type EverydayAuthBag = {
   signedIn: boolean;
@@ -26,14 +27,12 @@ function EverydayAuthAuthed({
   const signedIn = Boolean(isSignedIn);
 
   const authHeaders = useCallback(async () => {
-    if (signedIn) {
-      const token = await getToken();
-      if (!token) throw new Error('Missing session token');
-      return { token, actor: undefined as string | undefined };
-    }
-    if (!apiKey.startsWith('lg_')) throw new Error('Sign in or paste an API key');
-    return { token: apiKey, actor: actorId };
-  }, [apiKey, actorId, getToken, signedIn]);
+    const token = await resolveWorkspaceBearer(() => getToken(), apiKey);
+    if (!token) throw new Error('Sign in or paste an API key');
+    // Machine keys need an actor id for some Everyday routes; Clerk sessions do not.
+    const usingMachineKey = token.startsWith('lg_') || token.startsWith('vl_');
+    return { token, actor: usingMachineKey ? actorId : undefined };
+  }, [apiKey, actorId, getToken]);
 
   return (
     <>

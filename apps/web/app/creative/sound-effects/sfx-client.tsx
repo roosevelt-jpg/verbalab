@@ -6,6 +6,7 @@ import { isClerkConfigured } from '@/lib/clerk-config';
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { apiFetch } from '@/lib/api';
+import { resolveCreativeToken } from '@/lib/creative-auth';
 import { CreativeShell } from '@/components/creative/creative-shell';
 import { CreativeIcon } from '@/components/creative/creative-icons';
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
@@ -84,7 +85,7 @@ function CreativeSfxClientInner({ getToken, isLoaded }: { getToken: () => Promis
   const { play, stop, playingId, loadingId } = useDemoPlayer();
 
   const load = useCallback(async () => {
-    const token = await getToken();
+    const token = await resolveCreativeToken(() => getToken());
     if (!token) return;
     const eng = await apiFetch<Engine>('/v1/audio-intelligence/engine', { token });
     setEngine(eng);

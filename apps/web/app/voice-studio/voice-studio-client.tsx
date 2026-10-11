@@ -9,7 +9,7 @@ import { AnamorphicPanel } from '@/components/media/anamorphic-panel';
 import { AudioPreviewBar } from '@/components/media/audio-preview-bar';
 import { ANAMORPHIC_STILLS } from '@/lib/anamorphic-stills';
 import { API_URL } from '@/lib/api';
-import { loadCreativeApiKey } from '@/lib/creative-auth';
+import { loadCreativeApiKey, resolveCreativeToken } from '@/lib/creative-auth';
 import { DEMO_VOICE_PROFILES } from '@/lib/demo-speech';
 import './voice-studio.css';
 
@@ -100,12 +100,10 @@ function StudioInner({ auth }: { auth: CreativeAuth }) {
   );
 
   const authHeaders = useCallback(async () => {
-    const token = await auth.getToken();
-    const key = loadCreativeApiKey();
+    const token = await resolveCreativeToken(() => auth.getToken(), loadCreativeApiKey());
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-    if (token) headers.Authorization = `Bearer ${token}`;
-    else if (key) headers.Authorization = `Bearer ${key}`;
-    else throw new Error('Sign in or add an API key to use Voice Studio.');
+    if (!token) throw new Error('Sign in or apply a Studio API key to use Voice Studio.');
+    headers.Authorization = `Bearer ${token}`;
     return headers;
   // apiKeyTick forces re-auth after key paste
   }, [auth, apiKeyTick]); // eslint-disable-line react-hooks/exhaustive-deps -- apiKeyTick busts auth headers after key paste

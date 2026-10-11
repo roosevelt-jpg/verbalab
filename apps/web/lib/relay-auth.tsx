@@ -4,6 +4,7 @@ import { ReactNode, useCallback, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { useStudioApiKeyField } from '@/hooks/use-studio-api-key';
+import { resolveWorkspaceBearer } from '@/lib/studio-api-key';
 
 export type RelayAuthBag = {
   signedIn: boolean;
@@ -22,14 +23,11 @@ function RelayAuthAuthed({ children }: { children: (auth: RelayAuthBag) => React
   const signedIn = Boolean(isSignedIn);
 
   const authHeaders = useCallback(async () => {
-    if (signedIn) {
-      const token = await getToken();
-      if (!token) throw new Error('Missing session token');
-      return { token, actor: undefined as string | undefined };
-    }
-    if (!apiKey.startsWith('lg_')) throw new Error('Sign in or paste an API key');
-    return { token: apiKey, actor: actorId.trim() || 'relay-local' };
-  }, [apiKey, actorId, getToken, signedIn]);
+    const token = await resolveWorkspaceBearer(() => getToken(), apiKey);
+    if (!token) throw new Error('Sign in or paste an API key');
+    const usingMachineKey = token.startsWith('lg_') || token.startsWith('vl_');
+    return { token, actor: usingMachineKey ? actorId.trim() || 'relay-local' : undefined };
+  }, [apiKey, actorId, getToken]);
 
   return (
     <>

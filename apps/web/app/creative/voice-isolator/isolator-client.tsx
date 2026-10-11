@@ -5,6 +5,7 @@ import { useAuth } from '@clerk/nextjs';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { API_URL } from '@/lib/api';
+import { resolveCreativeToken } from '@/lib/creative-auth';
 import { CreativeShell } from '@/components/creative/creative-shell';
 import { CreativeIcon } from '@/components/creative/creative-icons';
 import { AudioPreviewBar } from '@/components/media/audio-preview-bar';
@@ -99,8 +100,8 @@ function CreativeVoiceIsolatorClientInner({ getToken, isLoaded }: { getToken: ()
     setError(null);
     setNote(null);
     try {
-      const token = await getToken();
-      if (!token) throw new Error('Sign in to isolate speech with Audio Intelligence.');
+      const token = await resolveCreativeToken(() => getToken());
+      if (!token) throw new Error('Sign in or apply a Studio API key to isolate speech.');
       const form = new FormData();
       form.append('file', file);
       const res = await fetch(`${API_URL}/v1/audio-intelligence/isolate`, {

@@ -179,3 +179,33 @@ export function formatStudioApiKeyLabel(identity: StudioApiKeyIdentity | null): 
   if (!identity) return 'Apply an API key for machine identity';
   return `${identity.name} · ${identity.prefix}… · ${identity.environment}`;
 }
+
+/**
+ * Bearer for workspace product API calls (speech, translate, Creative, Playground, Chat, …).
+ *
+ * Prefers the applied Studio machine key (`lg_live_` / `lg_test_`) so an issued key is
+ * actually used for metering and "last used" — not skipped because the human is signed in
+ * with Clerk. Falls back to the Clerk session JWT when no machine key is applied.
+ *
+ * Keep Clerk-only for console identity ops (create/revoke keys, billing, workspace admin).
+ */
+export async function resolveWorkspaceBearer(
+  getSessionToken?: () => Promise<string | null | undefined>,
+  overrideKey?: string,
+): Promise<string | null> {
+  const override = overrideKey?.trim() ?? '';
+  if (override && isLugemiApiKey(override)) return override;
+
+  const applied = loadStudioApiKeySecret();
+  if (applied && isLugemiApiKey(applied)) return applied;
+
+  if (getSessionToken) {
+    try {
+      const session = await getSessionToken();
+      if (session) return session;
+    } catch {
+      /* fall through */
+    }
+  }
+  return null;
+}

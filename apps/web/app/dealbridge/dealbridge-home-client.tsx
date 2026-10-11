@@ -74,16 +74,15 @@ export function DealBridgeHomeClient() {
   const [demoResult, setDemoResult] = useState<string | null>(null);
 
   const authHeaders = useCallback(async () => {
-    if (isClerkConfigured() && isSignedIn) {
-      const token = await getToken();
-      if (!token) throw new Error('Missing session token');
-      return { token, actor: undefined as string | undefined };
-    }
-    if (!apiKey.startsWith('lg_')) {
-      throw new Error('Sign in, or paste a lg_live_ / lg_test_ API key');
-    }
-    return { token: apiKey, actor: actorId };
-  }, [apiKey, actorId, getToken, isSignedIn]);
+    const { resolveWorkspaceBearer } = await import('@/lib/studio-api-key');
+    const token = await resolveWorkspaceBearer(
+      isClerkConfigured() ? () => getToken() : undefined,
+      apiKey,
+    );
+    if (!token) throw new Error('Sign in, or paste a lg_live_ / lg_test_ API key');
+    const usingMachineKey = token.startsWith('lg_') || token.startsWith('vl_');
+    return { token, actor: usingMachineKey ? actorId : undefined };
+  }, [apiKey, actorId, getToken]);
 
   const refresh = useCallback(async () => {
     setError(null);

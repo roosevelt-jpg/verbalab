@@ -22,7 +22,7 @@ import {
   slugifyFilename,
   upsertVideoProject,
 } from '@/lib/creative-video-project';
-import { isLugemiApiKey, loadCreativeApiKey } from '@/lib/creative-auth';
+import { isLugemiApiKey, loadCreativeApiKey, resolveCreativeToken } from '@/lib/creative-auth';
 import { CreativeApiKeyField } from '@/components/creative/creative-api-key-field';
 
 type Voice = {
@@ -80,11 +80,7 @@ function CreativeTtsClientInner({ getToken, isLoaded }: { getToken: () => Promis
   const selected = useMemo(() => voices.find((v) => v.id === voiceId) ?? null, [voices, voiceId]);
 
   const resolveToken = useCallback(async () => {
-    const session = await getToken();
-    if (session) return session;
-    const key = apiKey || loadCreativeApiKey();
-    if (isLugemiApiKey(key)) return key;
-    return null;
+    return resolveCreativeToken(() => getToken(), apiKey || loadCreativeApiKey());
   }, [apiKey, getToken]);
 
   const load = useCallback(async () => {

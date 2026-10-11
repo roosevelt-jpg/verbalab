@@ -4,6 +4,7 @@ import { ReactNode, useCallback, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { useStudioApiKeyField } from '@/hooks/use-studio-api-key';
+import { resolveWorkspaceBearer } from '@/lib/studio-api-key';
 
 export type LearnBackAuthBag = {
   signedIn: boolean;
@@ -26,15 +27,14 @@ function LearnBackAuthAuthed({
   const signedIn = Boolean(isSignedIn);
 
   const authHeaders = useCallback(async () => {
-    if (signedIn) {
-      const token = await getToken();
-      if (!token) throw new Error('Missing session token');
-      return { token, actor: undefined as string | undefined };
-    }
-    if (!apiKey.startsWith('lg_')) throw new Error('Sign in or paste an API key');
-    const actor = actorId.trim() || 'learnback-local';
-    return { token: apiKey, actor };
-  }, [apiKey, actorId, getToken, signedIn]);
+    const token = await resolveWorkspaceBearer(() => getToken(), apiKey);
+    if (!token) throw new Error('Sign in or paste an API key');
+    const usingMachineKey = token.startsWith('lg_') || token.startsWith('vl_');
+    return {
+      token,
+      actor: usingMachineKey ? actorId.trim() || 'learnback-local' : undefined,
+    };
+  }, [apiKey, actorId, getToken]);
 
   return (
     <>

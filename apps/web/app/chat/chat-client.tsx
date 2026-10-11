@@ -15,6 +15,7 @@ import { API_URL, apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
 import { playDemoSpeech, stopDemoSpeech } from '@/lib/demo-speech';
+import { resolveWorkspaceBearer } from '@/lib/studio-api-key';
 import {
   getSpeechRecognitionCtor,
   recognitionLangFor,
@@ -370,8 +371,8 @@ export function ChatClient() {
   }
 
   async function ensureToken() {
-    const token = await getToken();
-    if (!token) throw new Error('Not signed in');
+    const token = await resolveWorkspaceBearer(() => getToken());
+    if (!token) throw new Error('Sign in or apply a Studio API key under /keys');
     return token;
   }
 
@@ -430,7 +431,7 @@ export function ChatClient() {
     setLoadingMsgId(msgId);
     try {
       const culturalVoice = culturalPack?.echoVoiceId?.replace(/^own:/, '');
-      const auth = await getToken().catch(() => null);
+      const auth = await resolveWorkspaceBearer(() => getToken());
       await playDemoSpeech({
         text,
         lang: culturalPack?.bcp47 || lang,

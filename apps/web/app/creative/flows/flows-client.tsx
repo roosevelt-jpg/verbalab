@@ -5,6 +5,7 @@ import { useAuth } from '@clerk/nextjs';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { useCallback, useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
+import { resolveCreativeToken } from '@/lib/creative-auth';
 import { CreativeShell } from '@/components/creative/creative-shell';
 import { CreativeIcon } from '@/components/creative/creative-icons';
 import { CreativeInspoCard } from '@/components/creative/creative-inspo-card';
@@ -45,8 +46,8 @@ function CreativeFlowsClientInner({ getToken, isLoaded }: { getToken: () => Prom
   const [message, setMessage] = useState<string | null>(null);
 
   const load = useCallback(async () => {
-    const token = await getToken();
-    if (!token) throw new Error('Sign in to load flows.');
+    const token = await resolveCreativeToken(() => getToken());
+    if (!token) throw new Error('Sign in or apply a Studio API key to load flows.');
     const list = await apiFetch<Workflow[]>('/v1/workflows', { token });
     setRows(list);
   }, [getToken]);
@@ -61,8 +62,8 @@ function CreativeFlowsClientInner({ getToken, isLoaded }: { getToken: () => Prom
     setError(null);
     setMessage(null);
     try {
-      const token = await getToken();
-      if (!token) throw new Error('Sign in to create a flow.');
+      const token = await resolveCreativeToken(() => getToken());
+      if (!token) throw new Error('Sign in or apply a Studio API key to create a flow.');
       const name = window.prompt('Flow name', 'Transcribe → translate → notify');
       if (!name?.trim()) {
         setBusy(false);

@@ -5,6 +5,7 @@ import { useAuth } from '@clerk/nextjs';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { API_URL, apiFetch } from '@/lib/api';
+import { resolveCreativeToken } from '@/lib/creative-auth';
 import { CreativeShell } from '@/components/creative/creative-shell';
 import { CreativeIcon } from '@/components/creative/creative-icons';
 import { LocaleSelect } from '@/components/language-locale-select';
@@ -57,7 +58,7 @@ function CreativeSpeechToTextClientInner({ getToken, isLoaded }: { getToken: () 
   const [analytics, setAnalytics] = useState<{ requests: number; minutes: number } | null>(null);
 
   const refreshUsage = useCallback(async () => {
-    const token = await getToken();
+    const token = await resolveCreativeToken(() => getToken());
     if (!token) return;
     try {
       const usage = await apiFetch<{ stt: { requests: number; minutes: number } }>(
@@ -89,8 +90,8 @@ function CreativeSpeechToTextClientInner({ getToken, isLoaded }: { getToken: () 
     setError(null);
     setResult(null);
     try {
-      const token = await getToken();
-      if (!token) throw new Error('Sign in to transcribe with Lugemi speech recognition.');
+      const token = await resolveCreativeToken(() => getToken());
+      if (!token) throw new Error('Sign in or apply a Studio API key to transcribe.');
       const form = new FormData();
       form.append('file', source);
       if (language && language !== 'auto') form.append('language', language);

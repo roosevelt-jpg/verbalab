@@ -21,7 +21,7 @@ export function useDemoPlayer() {
       voiceId?: string;
       lang?: string;
       label?: string;
-      /** Optional Clerk JWT; machine key is auto-loaded from Studio identity. */
+      /** Optional Clerk JWT; applied Studio machine key wins when present. */
       token?: string | null;
     }) => {
       const token = ++gen.current;
@@ -37,7 +37,7 @@ export function useDemoPlayer() {
           voiceId: input.voiceId,
           lang: input.lang,
           label: input.label,
-          token: input.token || machineKey,
+          token: machineKey || input.token || null,
           onStarted: () => {
             if (token !== gen.current) return;
             setLoadingId(null);

@@ -5,6 +5,7 @@ import { useAuth } from '@clerk/nextjs';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { API_URL, apiFetch } from '@/lib/api';
+import { resolveCreativeToken } from '@/lib/creative-auth';
 import { CreativeShell } from '@/components/creative/creative-shell';
 import { CreativeIcon } from '@/components/creative/creative-icons';
 import { AudioPreviewBar } from '@/components/media/audio-preview-bar';
@@ -62,7 +63,7 @@ function CreativeVoiceChangerClientInner({ getToken, isLoaded }: { getToken: () 
   const selected = useMemo(() => voices.find((v) => v.id === voiceId) ?? null, [voices, voiceId]);
 
   const loadVoices = useCallback(async () => {
-    const token = await getToken();
+    const token = await resolveCreativeToken(() => getToken());
     if (!token) return;
     const res = await apiFetch<{ data: Voice[] }>('/v1/tts/voices', { token });
     setVoices(res.data);
@@ -107,8 +108,8 @@ function CreativeVoiceChangerClientInner({ getToken, isLoaded }: { getToken: () 
     setNote(null);
     setTranscript(null);
     try {
-      const token = await getToken();
-      if (!token) throw new Error('Sign in to run voice conversion.');
+      const token = await resolveCreativeToken(() => getToken());
+      if (!token) throw new Error('Sign in or apply a Studio API key to run voice conversion.');
 
       let working = file;
       if (removeNoise) {

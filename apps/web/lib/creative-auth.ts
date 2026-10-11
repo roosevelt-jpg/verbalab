@@ -1,13 +1,14 @@
-/** Shared Creative workspace auth: Clerk session or pasted lg_* API key. */
+/** Shared Creative workspace auth: applied lg_* machine key, then Clerk session. */
 
 import {
   applyStudioApiKey,
   clearStudioApiKey,
   isLugemiApiKey,
   loadStudioApiKeySecret,
+  resolveWorkspaceBearer,
 } from '@/lib/studio-api-key';
 
-export { isLugemiApiKey } from '@/lib/studio-api-key';
+export { isLugemiApiKey, resolveWorkspaceBearer } from '@/lib/studio-api-key';
 
 export function loadCreativeApiKey(): string {
   return loadStudioApiKeySecret();
@@ -28,4 +29,12 @@ export function saveCreativeApiKey(value: string) {
     environment: next.startsWith('lg_test_') || next.startsWith('vl_test_') ? 'test' : 'live',
     secret: next,
   });
+}
+
+/** Creative tools: applied Studio key first, then Clerk. */
+export async function resolveCreativeToken(
+  getSessionToken?: () => Promise<string | null | undefined>,
+  overrideKey?: string,
+): Promise<string | null> {
+  return resolveWorkspaceBearer(getSessionToken, overrideKey);
 }

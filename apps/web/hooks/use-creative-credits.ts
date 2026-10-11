@@ -5,6 +5,7 @@ import { useAuth } from '@clerk/nextjs';
 import { apiFetch } from '@/lib/api';
 import { WEB_BILLING_PLANS, planById } from '@/data/billing-plans';
 import { isClerkConfigured } from '@/lib/clerk-config';
+import { resolveWorkspaceBearer } from '@/lib/studio-api-key';
 
 export type CreativeCredits = {
   plan: string;
@@ -61,7 +62,7 @@ function useCreativeCreditsAuthed(): CreativeCredits {
   const refresh = useCallback(async () => {
     setLoading(true);
     try {
-      const token = await getToken();
+      const token = await resolveWorkspaceBearer(() => getToken());
       if (!token) {
         setPlan(free.id);
         setPlanName(free.name);

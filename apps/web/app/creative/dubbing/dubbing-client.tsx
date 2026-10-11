@@ -5,6 +5,7 @@ import { useAuth } from '@clerk/nextjs';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { useEffect, useRef, useState } from 'react';
 import { API_URL, apiFetch } from '@/lib/api';
+import { resolveCreativeToken } from '@/lib/creative-auth';
 import { CreativeShell } from '@/components/creative/creative-shell';
 import { CreativeIcon } from '@/components/creative/creative-icons';
 import { AudioPreviewBar } from '@/components/media/audio-preview-bar';
@@ -68,7 +69,7 @@ function CreativeDubbingClientInner({ getToken, isLoaded }: { getToken: () => Pr
   useEffect(() => {
     if (!isLoaded) return;
     void (async () => {
-      const token = await getToken();
+      const token = await resolveCreativeToken(() => getToken());
       if (!token) return;
       const res = await apiFetch<{ data: Voice[] }>('/v1/tts/voices', { token });
       setVoices(res.data);
@@ -86,8 +87,8 @@ function CreativeDubbingClientInner({ getToken, isLoaded }: { getToken: () => Pr
     setNote(null);
     setScript(null);
     try {
-      const token = await getToken();
-      if (!token) throw new Error('Sign in to run dubbing.');
+      const token = await resolveCreativeToken(() => getToken());
+      if (!token) throw new Error('Sign in or apply a Studio API key to run dubbing.');
 
       // 1) Transcribe source
       const sttForm = new FormData();

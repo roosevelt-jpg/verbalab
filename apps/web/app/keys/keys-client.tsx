@@ -197,13 +197,13 @@ export function KeysClient() {
         <PageHeader
           eyebrow="Lugemi API"
           title="API keys"
-          lede="Create live or test machine keys for your workspace. Creating a key applies it across Studio automatically — Playground, Creative, and product paste fields share the same identity."
+          lede="Create live or test machine keys for your workspace. Creating a key applies it as the Studio machine identity — Playground, Creative, Chat, Voice Studio, and product tools send that Bearer on every API action."
         >
           <p>
-            Console pages you browse while signed in still use your Clerk session. Machine keys (
-            <code className="vl-code">lg_live_</code> / <code className="vl-code">lg_test_</code>) are for
-            SDK, CLI, MCP, Playground, and tools that send{' '}
-            <code className="vl-code">Authorization: Bearer</code>. See{' '}
+            Once applied, product API calls prefer your{' '}
+            <code className="vl-code">lg_live_</code> / <code className="vl-code">lg_test_</code> key so
+            usage meters and “last used” update even while you are signed in with Clerk. Clerk stays for
+            console identity (create/revoke keys, billing, workspace admin). See{' '}
             <Link href="/developers" style={{ color: 'var(--action-primary)', fontWeight: 600 }}>
               Developers
             </Link>

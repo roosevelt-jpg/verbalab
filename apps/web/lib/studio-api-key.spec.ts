@@ -6,6 +6,7 @@ import {
   isLugemiApiKey,
   loadStudioApiKeyIdentity,
   loadStudioApiKeySecret,
+  resolveWorkspaceBearer,
 } from './studio-api-key';
 
 describe('studio-api-key', () => {
@@ -72,5 +73,37 @@ describe('studio-api-key', () => {
   it('migrates legacy Creative localStorage secret', () => {
     window.localStorage.setItem('lugemi.creative.apiKey.v1', 'lg_test_legacyCreativeKey');
     expect(loadStudioApiKeySecret()).toBe('lg_test_legacyCreativeKey');
+  });
+
+  it('resolveWorkspaceBearer prefers applied machine key over Clerk session', async () => {
+    applyStudioApiKey({
+      id: 'key_1',
+      name: 'Default',
+      prefix: 'lg_live_DwGg2oQJ',
+      environment: 'live',
+      secret: 'lg_live_DwGg2oQJexampleSecret',
+    });
+    const session = vi.fn(async () => 'clerk_session_jwt');
+    await expect(resolveWorkspaceBearer(session)).resolves.toBe('lg_live_DwGg2oQJexampleSecret');
+    expect(session).not.toHaveBeenCalled();
+  });
+
+  it('resolveWorkspaceBearer falls back to Clerk when no machine key is applied', async () => {
+    await expect(resolveWorkspaceBearer(async () => 'clerk_session_jwt')).resolves.toBe(
+      'clerk_session_jwt',
+    );
+  });
+
+  it('resolveWorkspaceBearer prefers an override key', async () => {
+    applyStudioApiKey({
+      id: 'key_1',
+      name: 'Default',
+      prefix: 'lg_live_DwGg2oQJ',
+      environment: 'live',
+      secret: 'lg_live_DwGg2oQJexampleSecret',
+    });
+    await expect(
+      resolveWorkspaceBearer(async () => 'clerk_session_jwt', 'lg_test_overrideKey'),
+    ).resolves.toBe('lg_test_overrideKey');
   });
 });
