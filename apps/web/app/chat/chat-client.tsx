@@ -366,7 +366,7 @@ export function ChatClient() {
     } catch (err) {
       const msg = err instanceof Error ? err.message : '';
       // Soft-sandbox: when live translate providers are unset, use curated demo translate.
-      if (!/not set|not configured|provider/i.test(msg)) throw err;
+      if (!/not set|not configured|provider|no rendering|unavailable|Baobab local pack/i.test(msg)) throw err;
       const demoRes = await fetch('/api/demo/translate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

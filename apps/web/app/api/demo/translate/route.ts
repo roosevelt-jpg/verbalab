@@ -99,8 +99,8 @@ const DEMO_PAIRS: Array<{
 /** Soft-sandbox phrasebook when live providers are unset — keeps Chat Studio realtime useful. */
 const PHRASEBOOK: Record<string, Record<string, string>> = {
   ak: {
-    hello: 'Hɛlo',
-    hi: 'Hɛlo',
+    hello: 'Mema wo akye',
+    hi: 'Mema wo akye',
     'good morning': 'Maakye',
     'good afternoon': 'Maaha',
     'good evening': 'Maadwo',
@@ -112,6 +112,11 @@ const PHRASEBOOK: Record<string, Record<string, string>> = {
     welcome: 'Akwaaba',
     friends: 'nnamfoɔ',
     'how are you': 'Wo ho te sɛn?',
+    'how are you doing': 'Wo ho te sɛn?',
+    'how are you doing now': 'Wo ho te sɛn seesei?',
+    'i want to know how you are doing now': 'Mepɛ sɛ mehunu sɛ wo ho te sɛn seesei.',
+    'i want to know': 'Mepɛ sɛ mehunu',
+    now: 'seesei',
   },
   sw: {
     hello: 'Habari',
@@ -124,9 +129,13 @@ const PHRASEBOOK: Record<string, Record<string, string>> = {
     no: 'Hapana',
     welcome: 'Karibu',
     friends: 'marafiki',
+    'how are you': 'Habari yako?',
+    'how are you doing': 'Habari yako?',
+    'how are you doing now': 'Habari yako sasa?',
+    'i want to know how you are doing now': 'Ninataka kujua habari yako sasa.',
   },
   yo: {
-    hello: 'Báwo',
+    hello: 'Ẹ n lẹ',
     hi: 'Báwo',
     'good morning': 'Ẹ káàárọ̀',
     'thank you': 'E ṣe',
@@ -135,6 +144,11 @@ const PHRASEBOOK: Record<string, Record<string, string>> = {
     yes: 'Bẹ́ẹ̀ni',
     no: 'Rárá',
     welcome: 'Káàbọ̀',
+    'how are you': 'Báwo ni?',
+    'how are you doing': 'Báwo ni?',
+    'how are you doing now': 'Báwo ni báyìí?',
+    'i want to know how you are doing now': 'Mo fẹ́ mọ bí o ṣe wà báyìí.',
+    'shipping delays': 'ìdádúró ẹrù',
   },
 };
 

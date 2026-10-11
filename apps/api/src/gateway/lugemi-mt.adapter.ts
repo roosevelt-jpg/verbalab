@@ -5,7 +5,7 @@ import {
   TranslateOutput,
   TranslationProvider,
 } from './translation-provider';
-import { lugemiLocalTranslate } from './lugemi-mt.engine';
+import { lugemiLocalTranslateResult } from './lugemi-mt.engine';
 
 type RemoteMtResponse = {
   text?: string;
@@ -38,14 +38,25 @@ export class LugemiMtAdapter implements TranslationProvider {
         // Fall through to local Baobab engine — keep default path first-party.
       }
     }
-    return {
-      text: lugemiLocalTranslate(input.text, input.source, input.target),
-      source: input.source === 'auto' ? input.source : input.source,
-      target: input.target,
-      provider: this.name,
-      characters: [...input.text].length,
-      latencyMs: Date.now() - started,
-    };
+
+    const local = lugemiLocalTranslateResult(input.text, input.source, input.target);
+    if (local.ok) {
+      return {
+        text: local.text,
+        source: input.source === 'auto' ? 'en' : input.source,
+        target: input.target,
+        provider: this.name,
+        characters: [...input.text].length,
+        latencyMs: Date.now() - started,
+      };
+    }
+
+    // Do not echo English as a fake translation — let Gateway try vendor MT.
+    throw new ApiException(
+      'provider_error',
+      local.reason,
+      HttpStatus.BAD_GATEWAY,
+    );
   }
 
   private async remoteTranslate(input: TranslateInput, started: number): Promise<TranslateOutput> {

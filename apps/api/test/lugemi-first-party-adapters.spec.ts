@@ -7,7 +7,14 @@ describe('Lugemi first-party local engines', () => {
   it('Baobab translates curated Africa-first phrases without vendor keys', () => {
     expect(lugemiLocalTranslate('hello', 'en', 'ak')).toMatch(/akye|Mema/i);
     expect(lugemiLocalTranslate('thank you', 'en', 'sw')).toMatch(/Asante/i);
-    expect(lugemiLocalTranslate('long form text for complex tasks', 'en', 'yo')).toContain('Baobab');
+    expect(lugemiLocalTranslate('I want to know how you are doing now.', 'en', 'ak')).toMatch(
+      /wo ho te sɛn|mepɛ/i,
+    );
+    expect(lugemiLocalTranslate('how are you doing now', 'en', 'yo')).toMatch(/Báwo|báyìí/i);
+    // Unknown long form must not pretend English is a translation.
+    expect(lugemiLocalTranslate('long form text for complex tasks', 'en', 'yo')).toMatch(
+      /unavailable|no rendering/i,
+    );
   });
 
   it('Atlas handles complex vertical prompts locally', () => {
