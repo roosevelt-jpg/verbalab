@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { AppShell } from '@/components/app-shell';
-import { PageHeader, FeaturePanel } from '@/components/platform';
+import { PageHeader } from '@/components/platform';
 import { apiFetch } from '@/lib/api';
 import { EverydayAuthGate, type EverydayAuthBag } from '@/lib/everyday-auth';
 
@@ -17,9 +17,7 @@ type SessionRow = {
 
 export function EverydayHistoryClient() {
   return (
-    <EverydayAuthGate>
-      {(auth) => <EverydayHistoryFlow auth={auth} />}
-    </EverydayAuthGate>
+    <EverydayAuthGate>{(auth) => <EverydayHistoryFlow auth={auth} />}</EverydayAuthGate>
   );
 }
 
@@ -55,46 +53,53 @@ function EverydayHistoryFlow({ auth }: { auth: EverydayAuthBag }) {
         <PageHeader
           eyebrow="Everyday"
           title="Private history"
-          description="Only your sessions. Delete from each session page to remove media and derivatives."
-          actions={
+          lede="Only your sessions. Delete from each session page to remove media and derivatives."
+        >
+          <div className="lg-page-header__actions">
             <Link href="/everyday" className="vl-btn vl-btn-secondary">
               Back
             </Link>
-          }
-        />
+          </div>
+        </PageHeader>
+
         {!auth.signedIn ? (
-          <FeaturePanel title="Connect">
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <input
-                className="vl-input"
-                value={auth.apiKey}
-                onChange={(e) => auth.setApiKey(e.target.value)}
-                placeholder="lg_…"
-              />
-              <input
-                className="vl-input"
-                value={auth.actorId}
-                onChange={(e) => auth.setActorId(e.target.value)}
-                placeholder="Actor id"
-              />
-              <button type="button" className="vl-btn vl-btn-secondary" onClick={() => void load()}>
-                Load
-              </button>
-            </div>
-          </FeaturePanel>
+          <section className="lg-card" style={{ display: 'grid', gap: '0.5rem', margin: '1rem 0' }}>
+            <input
+              className="vl-field"
+              value={auth.apiKey}
+              onChange={(e) => auth.setApiKey(e.target.value)}
+              placeholder="lg_…"
+            />
+            <input
+              className="vl-field"
+              value={auth.actorId}
+              onChange={(e) => auth.setActorId(e.target.value)}
+              placeholder="Actor id"
+            />
+            <button type="button" className="vl-btn vl-btn-secondary" onClick={() => void load()}>
+              Load
+            </button>
+          </section>
         ) : null}
-        {error ? <p className="text-sm text-red-700">{error}</p> : null}
-        <FeaturePanel title="Sessions">
-          <ul className="space-y-2">
+
+        {error ? (
+          <p className="lg-type-compact" role="alert" style={{ color: 'var(--bad, #b91c1c)' }}>
+            {error}
+          </p>
+        ) : null}
+
+        <section className="lg-page-section">
+          <h2 className="lg-type-section">Sessions</h2>
+          <ul style={{ display: 'grid', gap: '0.5rem' }}>
             {sessions.map((s) => (
               <li key={s.id}>
-                <Link href={`/everyday/sessions/${s.id}`} className="underline">
+                <Link href={`/everyday/sessions/${s.id}`}>
                   {s.mode} · {s.corridor} · {s.state}
                 </Link>
               </li>
             ))}
           </ul>
-        </FeaturePanel>
+        </section>
       </div>
     </AppShell>
   );

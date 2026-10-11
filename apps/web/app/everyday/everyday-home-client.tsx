@@ -14,7 +14,6 @@ type Catalog = {
   honesty?: string[];
   modes?: { id: string; label: string }[];
   corridors?: { id: string; label: string; note: string }[];
-  limitations?: string[];
 };
 
 type SessionRow = {
@@ -22,16 +21,13 @@ type SessionRow = {
   mode: string;
   corridor: string;
   state: string;
-  preferredVariety: string;
   createdAt: string;
   documents?: { id: string; originalName: string; status: string }[];
 };
 
 export function EverydayHomeClient() {
   return (
-    <EverydayAuthGate>
-      {(auth) => <EverydayHomeFlow auth={auth} />}
-    </EverydayAuthGate>
+    <EverydayAuthGate>{(auth) => <EverydayHomeFlow auth={auth} />}</EverydayAuthGate>
   );
 }
 
@@ -51,7 +47,7 @@ function EverydayHomeFlow({ auth }: { auth: EverydayAuthBag }) {
           name: 'Lugemi Everyday',
           headline: 'Read notices, ask grounded questions, and approve replies in your language.',
           description:
-            'Sign in or paste an API key to start a private session. Your documents stay in your organization — Everyday never sends messages for you.',
+            'Sign in or paste an API key to start a private session. Everyday never sends messages for you.',
           modes: [
             { id: 'read_this_to_me', label: 'Read this to me' },
             { id: 'help_me_reply', label: 'Help me reply' },
@@ -106,50 +102,67 @@ function EverydayHomeFlow({ auth }: { auth: EverydayAuthBag }) {
         <PageHeader
           eyebrow="Everyday"
           title={catalog?.name ?? 'Everyday'}
-          description={catalog?.headline ?? ''}
-          actions={
+          lede={catalog?.headline ?? 'Read notices, ask grounded questions, and approve replies.'}
+        >
+          <div className="lg-page-header__actions">
             <Link href="/everyday/history" className="vl-btn vl-btn-secondary">
               History
             </Link>
+            <button type="button" className="vl-btn vl-btn-secondary" onClick={() => void load()}>
+              Refresh
+            </button>
+          </div>
+        </PageHeader>
+
+        <FeaturePanel
+          title="Private document help"
+          body={
+            catalog?.description ??
+            'Photograph or upload a notice or bill. Faithful translation and plain-language explanation stay separate. No automatic external send.'
           }
         />
 
         {!auth.signedIn ? (
-          <FeaturePanel title="Connect">
-            <p className="text-sm opacity-80 mb-3">
-              Paste a Lugemi API key to use Everyday without Clerk in this browser.
-            </p>
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <input
-                className="vl-input"
-                placeholder="lg_live_… or lg_test_…"
-                value={auth.apiKey}
-                onChange={(e) => auth.setApiKey(e.target.value)}
-              />
-              <input
-                className="vl-input"
-                placeholder="Actor id"
-                value={auth.actorId}
-                onChange={(e) => auth.setActorId(e.target.value)}
-              />
-              <button type="button" className="vl-btn vl-btn-secondary" onClick={() => void load()}>
-                Load
-              </button>
-            </div>
-          </FeaturePanel>
+          <section className="lg-card" style={{ display: 'grid', gap: '0.5rem', margin: '1rem 0' }}>
+            <p className="lg-type-compact">Paste a Lugemi API key to use Everyday without Clerk.</p>
+            <input
+              className="vl-field"
+              placeholder="lg_live_… or lg_test_…"
+              value={auth.apiKey}
+              onChange={(e) => auth.setApiKey(e.target.value)}
+            />
+            <input
+              className="vl-field"
+              placeholder="Actor id"
+              value={auth.actorId}
+              onChange={(e) => auth.setActorId(e.target.value)}
+            />
+            <button type="button" className="vl-btn vl-btn-secondary" onClick={() => void load()}>
+              Load
+            </button>
+          </section>
         ) : null}
 
-        {error ? <p className="text-sm text-red-700 mt-3">{error}</p> : null}
-
-        <FeaturePanel title="Start">
-          <p className="text-sm opacity-80 mb-4">
-            {catalog?.description ??
-              'Photograph or upload a document. Processing is private to your organization.'}
+        {error ? (
+          <p className="lg-type-compact" role="alert" style={{ color: 'var(--bad, #b91c1c)' }}>
+            {error}
           </p>
-          <form onSubmit={onCreate} className="flex flex-col gap-3 max-w-xl">
-            <label className="text-sm">
+        ) : null}
+
+        <section className="lg-page-section" aria-labelledby="ed-start">
+          <div className="lg-page-section__head">
+            <h2 id="ed-start" className="lg-type-section">
+              Start a private session
+            </h2>
+            <p className="lg-type-compact">
+              Processing stays in your organization. Training consent is off unless you opt in at create
+              time.
+            </p>
+          </div>
+          <form onSubmit={onCreate} className="lg-card" style={{ display: 'grid', gap: '0.65rem' }}>
+            <label className="vl-field-label">
               Mode
-              <select className="vl-input mt-1" value={mode} onChange={(e) => setMode(e.target.value)}>
+              <select className="vl-field" value={mode} onChange={(e) => setMode(e.target.value)}>
                 {(catalog?.modes ?? []).map((m) => (
                   <option key={m.id} value={m.id}>
                     {m.label}
@@ -157,10 +170,10 @@ function EverydayHomeFlow({ auth }: { auth: EverydayAuthBag }) {
                 ))}
               </select>
             </label>
-            <label className="text-sm">
+            <label className="vl-field-label">
               Language corridor
               <select
-                className="vl-input mt-1"
+                className="vl-field"
                 value={corridor}
                 onChange={(e) => setCorridor(e.target.value)}
               >
@@ -175,29 +188,33 @@ function EverydayHomeFlow({ auth }: { auth: EverydayAuthBag }) {
               {busy ? 'Starting…' : 'Open private session'}
             </button>
           </form>
-        </FeaturePanel>
+        </section>
 
         {catalog?.honesty?.length ? (
-          <FeaturePanel title="How Everyday stays honest">
-            <ul className="list-disc pl-5 text-sm space-y-1">
+          <section className="lg-page-section">
+            <h2 className="lg-type-section">How Everyday stays honest</h2>
+            <ul className="lg-type-compact" style={{ paddingLeft: '1.2rem' }}>
               {catalog.honesty.map((h) => (
                 <li key={h}>{h}</li>
               ))}
             </ul>
-          </FeaturePanel>
+          </section>
         ) : null}
 
-        <FeaturePanel title="Your sessions">
+        <section className="lg-page-section" aria-labelledby="ed-sessions">
+          <h2 id="ed-sessions" className="lg-type-section">
+            Your sessions
+          </h2>
           {!sessions.length ? (
-            <p className="text-sm opacity-70">No sessions yet.</p>
+            <p className="lg-type-compact">No sessions yet.</p>
           ) : (
-            <ul className="space-y-2">
+            <ul style={{ display: 'grid', gap: '0.5rem' }}>
               {sessions.map((s) => (
-                <li key={s.id} className="flex flex-wrap items-baseline justify-between gap-2">
-                  <Link href={`/everyday/sessions/${s.id}`} className="underline">
+                <li key={s.id}>
+                  <Link href={`/everyday/sessions/${s.id}`}>
                     {s.mode.replaceAll('_', ' ')} · {s.corridor} · {s.state}
                   </Link>
-                  <span className="text-xs opacity-60">
+                  <span className="lg-type-compact" style={{ marginLeft: '0.5rem', opacity: 0.7 }}>
                     {s.documents?.[0]?.originalName ?? 'No document'} ·{' '}
                     {new Date(s.createdAt).toLocaleString()}
                   </span>
@@ -205,7 +222,7 @@ function EverydayHomeFlow({ auth }: { auth: EverydayAuthBag }) {
               ))}
             </ul>
           )}
-        </FeaturePanel>
+        </section>
       </div>
     </AppShell>
   );

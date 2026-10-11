@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { FormEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { AppShell } from '@/components/app-shell';
-import { PageHeader, FeaturePanel } from '@/components/platform';
+import { PageHeader } from '@/components/platform';
 import { apiFetch } from '@/lib/api';
 import { EverydayAuthGate, type EverydayAuthBag } from '@/lib/everyday-auth';
 
@@ -347,91 +347,114 @@ function EverydaySessionFlow({
         <PageHeader
           eyebrow="Everyday"
           title={view ? view.session.mode.replaceAll('_', ' ') : 'Session'}
-          description={
+          lede={
             view
               ? `${view.session.corridor} · ${view.session.state}. Private processing — not end-to-end encryption.`
               : 'Loading…'
           }
-          actions={
-            <>
-              <Link href="/everyday" className="vl-btn vl-btn-secondary">
-                Home
-              </Link>
-              <button type="button" className="vl-btn vl-btn-secondary" onClick={() => void onDelete()}>
-                Delete
-              </button>
-            </>
-          }
-        />
+        >
+          <div className="lg-page-header__actions">
+            <Link href="/everyday" className="vl-btn vl-btn-secondary">
+              Home
+            </Link>
+            <button type="button" className="vl-btn vl-btn-secondary" onClick={() => void onDelete()}>
+              Delete
+            </button>
+          </div>
+        </PageHeader>
 
         {!auth.signedIn ? (
-          <FeaturePanel title="Connect">
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <input
-                className="vl-input"
-                value={auth.apiKey}
-                onChange={(e) => auth.setApiKey(e.target.value)}
-                placeholder="lg_…"
-              />
-              <input
-                className="vl-input"
-                value={auth.actorId}
-                onChange={(e) => auth.setActorId(e.target.value)}
-                placeholder="Actor id"
-              />
-              <button type="button" className="vl-btn vl-btn-secondary" onClick={() => void load()}>
-                Load
-              </button>
-            </div>
-          </FeaturePanel>
+          <section className="lg-card" style={{ display: 'grid', gap: '0.5rem', margin: '1rem 0' }}>
+            <input
+              className="vl-field"
+              value={auth.apiKey}
+              onChange={(e) => auth.setApiKey(e.target.value)}
+              placeholder="lg_…"
+            />
+            <input
+              className="vl-field"
+              value={auth.actorId}
+              onChange={(e) => auth.setActorId(e.target.value)}
+              placeholder="Actor id"
+            />
+            <button type="button" className="vl-btn vl-btn-secondary" onClick={() => void load()}>
+              Load
+            </button>
+          </section>
         ) : null}
 
-        {error ? <p className="text-sm text-red-700 mt-2">{error}</p> : null}
-
-        <FeaturePanel title="Capture or upload">
-          <p className="text-sm opacity-80 mb-3">
-            Documents are stored privately for your organization. Training consent stays off unless you
-            opt in when creating the session.
+        {error ? (
+          <p className="lg-type-compact" role="alert" style={{ color: 'var(--bad, #b91c1c)' }}>
+            {error}
           </p>
-          <form onSubmit={onUpload} className="flex flex-col gap-3 sm:flex-row sm:items-end">
-            <input name="file" type="file" accept="image/*,.pdf,.txt" capture="environment" className="vl-input" />
+        ) : null}
+
+        <section className="lg-page-section" aria-labelledby="ed-upload">
+          <div className="lg-page-section__head">
+            <h2 id="ed-upload" className="lg-type-section">
+              Capture or upload
+            </h2>
+            <p className="lg-type-compact">
+              Documents stay private to your organization. Training consent is off unless opted in.
+            </p>
+          </div>
+          <form onSubmit={onUpload} className="lg-card" style={{ display: 'grid', gap: '0.65rem' }}>
+            <input
+              name="file"
+              type="file"
+              accept="image/*,.pdf,.txt"
+              capture="environment"
+              className="vl-field"
+            />
             <button type="submit" className="vl-btn vl-btn-primary" disabled={busy}>
               {busy ? 'Working…' : 'Upload'}
             </button>
           </form>
           {document?.status === 'recapture_required' ? (
-            <ul className="mt-3 text-sm text-amber-800 list-disc pl-5">
+            <ul className="lg-type-compact" style={{ color: '#92400e', paddingLeft: '1.2rem' }}>
               {(document.qualityReport?.findings ?? []).map((f) => (
                 <li key={f.message}>{f.message}</li>
               ))}
             </ul>
           ) : null}
-        </FeaturePanel>
+        </section>
 
         {source ? (
           <>
-            <FeaturePanel title="Source and OCR review">
-              <pre className="whitespace-pre-wrap text-sm bg-black/5 p-3 rounded-md max-h-64 overflow-auto">
+            <section className="lg-page-section">
+              <h2 className="lg-type-section">Source and OCR review</h2>
+              <pre className="lg-card lg-type-compact" style={{ whiteSpace: 'pre-wrap', maxHeight: 280, overflow: 'auto' }}>
                 {source.fullText}
               </pre>
               {uncertain.length ? (
-                <p className="text-sm mt-2 opacity-80">
-                  Uncertain values highlighted in OCR: {uncertain.map((b) => b.id).join(', ')}. Correct
-                  before trusting deadlines or amounts.
+                <p className="lg-type-compact">
+                  Uncertain OCR blocks: {uncertain.map((b) => b.id).join(', ')}. Correct before trusting
+                  deadlines or amounts.
                 </p>
               ) : null}
-              <div className="flex flex-wrap gap-2 mt-3">
-                <button type="button" className="vl-btn vl-btn-primary" disabled={busy} onClick={() => void runTranslate()}>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', marginTop: '0.75rem' }}>
+                <button
+                  type="button"
+                  className="vl-btn vl-btn-primary"
+                  disabled={busy}
+                  onClick={() => void runTranslate()}
+                >
                   Translate (faithful)
                 </button>
-                <button type="button" className="vl-btn vl-btn-secondary" disabled={busy} onClick={() => void runExplain()}>
+                <button
+                  type="button"
+                  className="vl-btn vl-btn-secondary"
+                  disabled={busy}
+                  onClick={() => void runExplain()}
+                >
                   Explain (plain language)
                 </button>
               </div>
-            </FeaturePanel>
+            </section>
 
-            <FeaturePanel title="Translation and explanation">
-              <div className="flex gap-2 mb-3" role="tablist" aria-label="Translation or explanation">
+            <section className="lg-page-section">
+              <h2 className="lg-type-section">Translation and explanation</h2>
+              <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.75rem' }} role="tablist">
                 <button
                   type="button"
                   className={`vl-btn ${tab === 'faithful' ? 'vl-btn-primary' : 'vl-btn-secondary'}`}
@@ -449,8 +472,8 @@ function EverydaySessionFlow({
                   Simple explanation
                 </button>
               </div>
-              <label className="text-sm block mb-2">
-                Playback speed
+              <label className="vl-field-label">
+                Playback speed ({playbackRate}x)
                 <input
                   type="range"
                   min={0.75}
@@ -458,19 +481,18 @@ function EverydaySessionFlow({
                   step={0.25}
                   value={playbackRate}
                   onChange={(e) => setPlaybackRate(Number(e.target.value))}
-                  className="ml-2 align-middle"
-                />{' '}
-                {playbackRate}x
+                />
               </label>
               {tab === 'faithful' ? (
                 <div>
-                  <pre className="whitespace-pre-wrap text-sm bg-black/5 p-3 rounded-md">
-                    {translation?.faithfulText ?? 'Run Translate to hear and read the faithful rendering.'}
+                  <pre className="lg-card lg-type-compact" style={{ whiteSpace: 'pre-wrap' }}>
+                    {translation?.faithfulText ?? 'Run Translate for the faithful rendering.'}
                   </pre>
                   {translation ? (
                     <button
                       type="button"
-                      className="vl-btn vl-btn-secondary mt-2"
+                      className="vl-btn vl-btn-secondary"
+                      style={{ marginTop: '0.5rem' }}
                       disabled={busy}
                       onClick={() => void playAudio('translation', translation.id)}
                     >
@@ -480,16 +502,18 @@ function EverydaySessionFlow({
                 </div>
               ) : (
                 <div>
-                  <pre className="whitespace-pre-wrap text-sm bg-black/5 p-3 rounded-md">
+                  <pre className="lg-card lg-type-compact" style={{ whiteSpace: 'pre-wrap' }}>
                     {explanation?.simplifiedText ??
-                      'Run Explain for a separately labeled plain-language summary with evidence.'}
+                      'Run Explain for a separately labeled plain-language summary.'}
                   </pre>
                   {explanation ? (
                     <>
-                      <p className="text-xs mt-2 opacity-70">{explanation.adviceDisclaimer}</p>
+                      <p className="lg-type-compact" style={{ opacity: 0.75 }}>
+                        {explanation.adviceDisclaimer}
+                      </p>
                       <button
                         type="button"
-                        className="vl-btn vl-btn-secondary mt-2"
+                        className="vl-btn vl-btn-secondary"
                         disabled={busy}
                         onClick={() => void playAudio('explanation', explanation.id)}
                       >
@@ -499,12 +523,13 @@ function EverydaySessionFlow({
                   ) : null}
                 </div>
               )}
-            </FeaturePanel>
+            </section>
 
-            <FeaturePanel title="Grounded questions">
-              <form onSubmit={runQuestion} className="flex flex-col gap-2 sm:flex-row">
+            <section className="lg-page-section">
+              <h2 className="lg-type-section">Grounded questions</h2>
+              <form onSubmit={runQuestion} className="lg-card" style={{ display: 'grid', gap: '0.5rem' }}>
                 <input
-                  className="vl-input flex-1"
+                  className="vl-field"
                   value={question}
                   onChange={(e) => setQuestion(e.target.value)}
                   aria-label="Ask a question about the document"
@@ -513,21 +538,23 @@ function EverydaySessionFlow({
                   Ask
                 </button>
               </form>
-              <ul className="mt-3 space-y-2 text-sm">
+              <ul className="lg-type-compact" style={{ display: 'grid', gap: '0.5rem', marginTop: '0.75rem' }}>
                 {(source.questions ?? []).map((q) => (
                   <li key={q.id}>
                     <strong>{q.question}</strong> · {q.answerability}
                     <div>{q.answerText}</div>
-                    {q.reason ? <div className="opacity-70">{q.reason}</div> : null}
+                    {q.reason ? <div style={{ opacity: 0.7 }}>{q.reason}</div> : null}
                   </li>
                 ))}
               </ul>
-            </FeaturePanel>
+            </section>
 
-            <FeaturePanel title="Help me reply">
-              <form onSubmit={onReply} className="flex flex-col gap-2">
+            <section className="lg-page-section">
+              <h2 className="lg-type-section">Help me reply</h2>
+              <form onSubmit={onReply} className="lg-card" style={{ display: 'grid', gap: '0.5rem' }}>
                 <textarea
-                  className="vl-input min-h-[100px]"
+                  className="vl-field"
+                  rows={4}
                   value={replyText}
                   onChange={(e) => setReplyText(e.target.value)}
                   aria-label="Your reply in your words"
@@ -536,15 +563,15 @@ function EverydaySessionFlow({
                   Draft reply
                 </button>
               </form>
-              <ul className="mt-3 space-y-3 text-sm">
+              <ul className="lg-type-compact" style={{ display: 'grid', gap: '1rem', marginTop: '0.75rem' }}>
                 {(view?.replies ?? []).map((r) => (
-                  <li key={r.id} className="border-t border-black/10 pt-3">
-                    <div className="opacity-70">Your wording</div>
-                    <pre className="whitespace-pre-wrap">{r.userSourceText}</pre>
-                    <div className="opacity-70 mt-2">Target draft</div>
-                    <pre className="whitespace-pre-wrap">{r.targetText}</pre>
+                  <li key={r.id} className="lg-card">
+                    <div style={{ opacity: 0.7 }}>Your wording</div>
+                    <pre style={{ whiteSpace: 'pre-wrap' }}>{r.userSourceText}</pre>
+                    <div style={{ opacity: 0.7, marginTop: '0.5rem' }}>Target draft</div>
+                    <pre style={{ whiteSpace: 'pre-wrap' }}>{r.targetText}</pre>
                     {r.criticalFindings?.length ? (
-                      <ul className="text-amber-800 list-disc pl-5 mt-1">
+                      <ul style={{ color: '#92400e', paddingLeft: '1.2rem' }}>
                         {r.criticalFindings.map((f) => (
                           <li key={f.code}>{f.message}</li>
                         ))}
@@ -552,7 +579,8 @@ function EverydaySessionFlow({
                     ) : null}
                     <button
                       type="button"
-                      className="vl-btn vl-btn-secondary mt-2"
+                      className="vl-btn vl-btn-secondary"
+                      style={{ marginTop: '0.5rem' }}
                       disabled={busy || r.approvals.length > 0}
                       onClick={() => void approve(r.id, r.userSourceHash, r.targetHash)}
                     >
@@ -561,12 +589,13 @@ function EverydaySessionFlow({
                   </li>
                 ))}
               </ul>
-            </FeaturePanel>
+            </section>
 
-            <FeaturePanel title="Explain this word">
-              <form onSubmit={onTerm} className="flex flex-col gap-2 sm:flex-row">
+            <section className="lg-page-section">
+              <h2 className="lg-type-section">Explain this word</h2>
+              <form onSubmit={onTerm} className="lg-card" style={{ display: 'grid', gap: '0.5rem' }}>
                 <input
-                  className="vl-input flex-1"
+                  className="vl-field"
                   value={termSpan}
                   onChange={(e) => setTermSpan(e.target.value)}
                   aria-label="Word or phrase from the document"
@@ -575,14 +604,14 @@ function EverydaySessionFlow({
                   Explain in document
                 </button>
               </form>
-              <ul className="mt-3 space-y-2 text-sm">
+              <ul className="lg-type-compact" style={{ display: 'grid', gap: '0.5rem', marginTop: '0.75rem' }}>
                 {(view?.terms ?? []).map((t) => (
                   <li key={t.id}>
                     <strong>{t.selectedSpan}</strong> ({t.scope}) — {t.definition}
                   </li>
                 ))}
               </ul>
-            </FeaturePanel>
+            </section>
           </>
         ) : null}
       </div>
