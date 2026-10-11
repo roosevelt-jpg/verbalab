@@ -6,6 +6,7 @@
 - Web: `/relay`, `/relay/bookings/[id]`, `/relay/offers`, `/relay/ops`
 - SDK: TypeScript `client.relay`
 - Entitlement: plan feature `relay` (Pro+), org `featureOverrides.relay`, `RELAY_OPEN`, `RELAY_DISABLED`
+- Markets: all codes in `AFRICAN_MARKET_CODES` (`apps/api/src/african-markets`) — Ghana, Nigeria, South Africa, Kenya, Tanzania, Uganda, Rwanda, Ethiopia, Zimbabwe, Zambia, plus other large African economies. Corridors are local language ↔ English (and FR/PT/AR bridges where administrative).
 
 ## Environment
 

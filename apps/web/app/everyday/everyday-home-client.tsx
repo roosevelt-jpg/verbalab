@@ -13,7 +13,16 @@ type Catalog = {
   description?: string;
   honesty?: string[];
   modes?: { id: string; label: string }[];
-  corridors?: { id: string; label: string; note: string }[];
+  marketCount?: number;
+  corridorCount?: number;
+  markets?: { code: string; nameEn: string; region: string }[];
+  corridors?: {
+    id: string;
+    label: string;
+    note: string;
+    marketCode?: string;
+    marketName?: string;
+  }[];
 };
 
 type SessionRow = {
@@ -38,6 +47,7 @@ function EverydayHomeFlow({ auth }: { auth: EverydayAuthBag }) {
   const [busy, setBusy] = useState(false);
   const [mode, setMode] = useState('read_this_to_me');
   const [corridor, setCorridor] = useState('en-ak');
+  const [marketCode, setMarketCode] = useState('GH');
 
   const load = useCallback(async () => {
     setError(null);
@@ -62,6 +72,15 @@ function EverydayHomeFlow({ auth }: { auth: EverydayAuthBag }) {
       const headers = a.actor ? { 'X-Everyday-Actor-Id': a.actor } : undefined;
       const cat = await apiFetch<Catalog>('/v1/everyday/catalog', { token: a.token, headers });
       setCatalog(cat);
+      if (cat.corridors?.length) {
+        setCorridor((prev) =>
+          cat.corridors!.some((c) => c.id === prev) ? prev : cat.corridors![0]!.id,
+        );
+        const selected = cat.corridors.find((c) => c.id === corridor) ?? cat.corridors[0];
+        if (selected?.marketCode && selected.marketCode !== 'XX') {
+          setMarketCode(selected.marketCode);
+        }
+      }
       const res = await apiFetch<{ sessions: SessionRow[] }>('/v1/everyday/sessions', {
         token: a.token,
         headers,
@@ -160,6 +179,10 @@ function EverydayHomeFlow({ auth }: { auth: EverydayAuthBag }) {
             </p>
           </div>
           <form onSubmit={onCreate} className="lg-card" style={{ display: 'grid', gap: '0.65rem' }}>
+            <p className="lg-type-compact">
+              {catalog?.marketCount ?? 0} African markets · {catalog?.corridorCount ?? 0} wired
+              corridors
+            </p>
             <label className="vl-field-label">
               Mode
               <select className="vl-field" value={mode} onChange={(e) => setMode(e.target.value)}>
@@ -171,17 +194,41 @@ function EverydayHomeFlow({ auth }: { auth: EverydayAuthBag }) {
               </select>
             </label>
             <label className="vl-field-label">
+              Market
+              <select
+                className="vl-field"
+                value={marketCode}
+                onChange={(e) => {
+                  const next = e.target.value;
+                  setMarketCode(next);
+                  const first = (catalog?.corridors ?? []).find(
+                    (c) => c.marketCode === next || (next === 'XX' && c.marketCode === 'XX'),
+                  );
+                  if (first) setCorridor(first.id);
+                }}
+              >
+                <option value="XX">Pan-African / administrative</option>
+                {(catalog?.markets ?? []).map((m) => (
+                  <option key={m.code} value={m.code}>
+                    {m.nameEn} ({m.region})
+                  </option>
+                ))}
+              </select>
+            </label>
+            <label className="vl-field-label">
               Language corridor
               <select
                 className="vl-field"
                 value={corridor}
                 onChange={(e) => setCorridor(e.target.value)}
               >
-                {(catalog?.corridors ?? []).map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.label}
-                  </option>
-                ))}
+                {(catalog?.corridors ?? [])
+                  .filter((c) => c.marketCode === marketCode || (!c.marketCode && marketCode === 'XX'))
+                  .map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.label}
+                    </option>
+                  ))}
               </select>
             </label>
             <button type="submit" className="vl-btn vl-btn-primary" disabled={busy}>

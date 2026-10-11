@@ -86,11 +86,20 @@ describe('Relay units', () => {
     expect(chosen?.interpreterId).toBe('a');
   });
 
-  it('catalog has no MVP/TODO stubs', () => {
+  it('catalog has no MVP/TODO stubs and covers African markets', () => {
     const catalog = relayCatalog();
     expect(catalog.featureFlag).toBe('relay');
     expect(catalog.delivery.instantStaffing).toBe(false);
     expect(catalog.payments.processorIntegrated).toBe(false);
+    expect(catalog.marketCount).toBeGreaterThanOrEqual(50);
+    expect(catalog.corridorCount).toBeGreaterThan(100);
+    expect(catalog.corridors.some((c: { id: string }) => c.id === 'ak-en-business')).toBe(true);
+    expect(
+      catalog.corridors.some(
+        (c: { marketCode?: string; sourceLanguage?: string }) =>
+          c.marketCode === 'NG' && c.sourceLanguage === 'yo',
+      ),
+    ).toBe(true);
     expect(JSON.stringify(catalog).toLowerCase()).not.toContain('todo');
     expect(JSON.stringify(catalog).toLowerCase()).not.toContain('mvp');
   });
@@ -157,6 +166,30 @@ describe('Relay API', () => {
 
     const preferredStartAt = new Date(Date.now() + 3 * 3600_000);
     preferredStartAt.setMinutes(0, 0, 0);
+
+    // Nigeria Yoruba corridor — same booking pipeline as Ghana
+    const yoCorridor =
+      (
+        await request(app.getHttpServer()).get('/v1/relay/catalog').set(auth).expect(200)
+      ).body.corridors.find(
+        (c: { marketCode: string; sourceLanguage: string; targetLanguage: string }) =>
+          c.marketCode === 'NG' && c.sourceLanguage === 'yo' && c.targetLanguage === 'en',
+      )?.id ?? 'yo-en-business-ng';
+
+    const yoCreated = await request(app.getHttpServer())
+      .post('/v1/relay/requests')
+      .set(auth)
+      .send({
+        corridorId: yoCorridor,
+        category: 'general_business',
+        preferredStartAt: preferredStartAt.toISOString(),
+        preferredTimezone: 'Africa/Lagos',
+        durationMinutes: 30,
+        idempotencyKey: 'relay-flow-yo-ng',
+      })
+      .expect(201);
+    expect(yoCreated.body.request.status).not.toBe('unmatched');
+    expect(yoCreated.body.quote?.currency).toBe('NGN');
 
     const created = await request(app.getHttpServer())
       .post('/v1/relay/requests')

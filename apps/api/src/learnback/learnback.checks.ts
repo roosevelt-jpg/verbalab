@@ -1,4 +1,5 @@
-import type { EvalDimension } from './learnback.types';
+import { buildLearnBackMarketScenarioSeeds } from '../african-markets';
+import { LEARNBACK_CORRIDORS, type EvalDimension } from './learnback.types';
 
 export type RubricFinding = {
   dimension: EvalDimension;
@@ -233,6 +234,7 @@ export const SYSTEM_SCENARIO_SEEDS: ScenarioSeed[] = [
     rubricVersion: 'interview_v1',
     reviewerNote: 'Workplace conversation practice — not HR certification.',
   },
+  ...buildLearnBackMarketScenarioSeeds(LEARNBACK_CORRIDORS),
 ];
 
 const ACTION_RE =

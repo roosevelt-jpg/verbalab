@@ -1,5 +1,7 @@
+import { buildEverydayCorridors, type BuiltEverydayCorridor } from '../african-markets';
+
 export const EVERYDAY_FEATURE = 'everyday' as const;
-export const EVERYDAY_SCHEMA_VERSION = 'everyday-1.0';
+export const EVERYDAY_SCHEMA_VERSION = 'everyday-1.1';
 export const EVERYDAY_NOTICE_VERSION = 'everyday-notice-v1';
 export const EVERYDAY_POLICY_VERSION = 'everyday_private_v1';
 
@@ -60,101 +62,10 @@ export type EverydayBlock = {
   kind: 'paragraph' | 'heading' | 'table_cell' | 'footnote' | 'label' | 'value' | 'unknown';
 };
 
-export type CorridorCapability = {
-  id: string;
-  sourceLanguage: string;
-  targetLanguage: string;
-  label: string;
-  ocr: boolean;
-  faithfulTranslation: boolean;
-  explanation: boolean;
-  groundedQa: boolean;
-  tts: boolean;
-  reply: boolean;
-  note: string;
-};
+export type CorridorCapability = BuiltEverydayCorridor;
 
-/** Fully wired corridors — each runs the same private pipeline with honest adapter status. */
-export const EVERYDAY_CORRIDORS: CorridorCapability[] = [
-  {
-    id: 'en-ak',
-    sourceLanguage: 'en',
-    targetLanguage: 'ak',
-    label: 'English → Akan/Twi',
-    ocr: true,
-    faithfulTranslation: true,
-    explanation: true,
-    groundedQa: true,
-    tts: true,
-    reply: true,
-    note: 'Printed notices and bills. Handwriting and unsupported scripts stay explicit failures.',
-  },
-  {
-    id: 'en-ee',
-    sourceLanguage: 'en',
-    targetLanguage: 'ee',
-    label: 'English → Ewe',
-    ocr: true,
-    faithfulTranslation: true,
-    explanation: true,
-    groundedQa: true,
-    tts: true,
-    reply: true,
-    note: 'Same pipeline as en-ak with Ewe target variety and Echo voice.',
-  },
-  {
-    id: 'en-fr',
-    sourceLanguage: 'en',
-    targetLanguage: 'fr',
-    label: 'English → French',
-    ocr: true,
-    faithfulTranslation: true,
-    explanation: true,
-    groundedQa: true,
-    tts: true,
-    reply: true,
-    note: 'Administrative bilingual corridor.',
-  },
-  {
-    id: 'ak-en',
-    sourceLanguage: 'ak',
-    targetLanguage: 'en',
-    label: 'Akan/Twi → English',
-    ocr: true,
-    faithfulTranslation: true,
-    explanation: true,
-    groundedQa: true,
-    tts: true,
-    reply: true,
-    note: 'Reverse corridor for replies and explanations into English.',
-  },
-  {
-    id: 'ee-en',
-    sourceLanguage: 'ee',
-    targetLanguage: 'en',
-    label: 'Ewe → English',
-    ocr: true,
-    faithfulTranslation: true,
-    explanation: true,
-    groundedQa: true,
-    tts: true,
-    reply: true,
-    note: 'Reverse corridor for replies and explanations into English.',
-  },
-  {
-    id: 'fr-en',
-    sourceLanguage: 'fr',
-    targetLanguage: 'en',
-    label: 'French → English',
-    ocr: true,
-    faithfulTranslation: true,
-    explanation: true,
-    groundedQa: true,
-    tts: true,
-    reply: true,
-    note: 'Reverse bilingual corridor.',
-  },
-];
+/** Fully wired African-market corridors — same private pipeline with honest adapter status. */
+export const EVERYDAY_CORRIDORS: CorridorCapability[] = buildEverydayCorridors();
 
 export const ADVICE_DISCLAIMER =
   'This is a plain-language explanation of the supplied document text. It is not medical, legal, or financial advice. Ask a qualified professional when interpretation is consequential or unclear.';

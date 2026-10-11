@@ -1,5 +1,11 @@
+import {
+  buildRelayCorridors,
+  quoteRateForCurrency,
+  type BuiltRelayCorridor,
+} from '../african-markets';
+
 export const RELAY_FEATURE = 'relay' as const;
-export const RELAY_SCHEMA_VERSION = 'relay-1.0';
+export const RELAY_SCHEMA_VERSION = 'relay-1.1';
 export const RELAY_POLICY_VERSION = 'relay_private_v1';
 export const RELAY_NOTICE_VERSION = 'relay-notice-v1';
 
@@ -35,45 +41,10 @@ export const BOOKING_STATES = [
 export const RELAY_DOMAINS = ['general_business'] as const;
 export const DISABLED_DOMAINS = ['medical', 'legal', 'emergency'] as const;
 
-export type RelayCorridor = {
-  id: string;
-  label: string;
-  sourceLanguage: string;
-  targetLanguage: string;
-  jurisdiction: string;
-  timezone: string;
-  domain: (typeof RELAY_DOMAINS)[number];
-  delivery: 'browser_audio';
-  telephoneBridging: false;
-  note: string;
-};
+export type RelayCorridor = BuiltRelayCorridor;
 
-export const RELAY_CORRIDORS: RelayCorridor[] = [
-  {
-    id: 'ak-en-business',
-    label: 'Akan/Twi ↔ English · general business (Ghana)',
-    sourceLanguage: 'ak',
-    targetLanguage: 'en',
-    jurisdiction: 'GH',
-    timezone: 'Africa/Accra',
-    domain: 'general_business',
-    delivery: 'browser_audio',
-    telephoneBridging: false,
-    note: 'Scheduled browser sessions only. Instant staffing and telephone bridging stay disabled until real adapters and supply exist.',
-  },
-  {
-    id: 'en-ak-business',
-    label: 'English ↔ Akan/Twi · general business (Ghana)',
-    sourceLanguage: 'en',
-    targetLanguage: 'ak',
-    jurisdiction: 'GH',
-    timezone: 'Africa/Accra',
-    domain: 'general_business',
-    delivery: 'browser_audio',
-    telephoneBridging: false,
-    note: 'Scheduled browser sessions only. Not an emergency or regulated-domain service.',
-  },
-];
+/** All wired African-market general-business corridors (Ghana historical ids preserved). */
+export const RELAY_CORRIDORS: RelayCorridor[] = buildRelayCorridors();
 
 export function relayOfferTtlMs(): number {
   const raw = Number(process.env.RELAY_OFFER_TTL_MS ?? 15 * 60 * 1000);
@@ -93,8 +64,12 @@ export function demoInterpretersAllowed(): boolean {
   );
 }
 
-/** Default quote: GHS 180.00 for 30 minutes included. */
-export function defaultQuoteMinor(durationMinutes: number): {
+/** Pinned quote in the corridor's market currency (ISO minor units). */
+export function defaultQuoteMinor(
+  durationMinutes: number,
+  currencyCode = 'GHS',
+): {
+  currency: string;
   amountMinor: number;
   minimumMinutes: number;
   includedMinutes: number;
@@ -103,12 +78,14 @@ export function defaultQuoteMinor(durationMinutes: number): {
 } {
   const included = Math.max(30, durationMinutes);
   const blocks = Math.ceil(included / 15);
-  const amountMinor = blocks * 9000; // GHS 90.00 per 15 min
+  const perBlock = quoteRateForCurrency(currencyCode);
+  const amountMinor = blocks * perBlock;
   return {
+    currency: currencyCode,
     amountMinor,
     minimumMinutes: 30,
     includedMinutes: included,
-    overrunCeilingMinor: amountMinor + 18000,
+    overrunCeilingMinor: amountMinor + perBlock * 2,
     taxesFeesMinor: 0,
   };
 }

@@ -3,7 +3,7 @@
 ## Automated
 
 ```bash
-cd apps/api && pnpm test -- test/relay.spec.ts
+cd apps/api && pnpm test -- test/relay.spec.ts test/african-markets.spec.ts
 ```
 
 Coverage includes:
@@ -12,6 +12,8 @@ Coverage includes:
 - Interval overlap detection with setup buffer
 - Deterministic matching without inventing supply
 - Catalog has no MVP/TODO stubs; instant staffing and processor flags false
+- ≥50 African markets and 100+ Relay corridors wired (incl. NG Yoruba, ZA Zulu, KE Swahili, ET Amharic, RW Kinyarwanda)
+- Nigeria Yoruba request returns NGN quote through the same pipeline as Ghana
 - Request → offer → quote → mark-paid → context → correction (stale grant) → join → extension → complete
 - Idempotent request and payment keys
 - Concurrent second booking on same window rejected (409)

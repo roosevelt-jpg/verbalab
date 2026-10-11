@@ -1,3 +1,4 @@
+import { africanMarketSummaries } from '../african-markets';
 import {
   EVERYDAY_CORRIDORS,
   EVERYDAY_FEATURE,
@@ -10,12 +11,13 @@ import {
 } from './everyday.types';
 
 export function everydayCatalog() {
+  const markets = africanMarketSummaries();
   return {
     id: 'everyday',
     name: 'Lugemi Everyday',
     headline: 'Read notices, ask grounded questions, and approve replies in your language.',
     description:
-      'Photograph or upload a document, hear a faithful translation, request a separately labeled plain-language explanation, ask source-cited questions, and compose a reviewed reply. Private sessions only — no automatic external sending.',
+      'Photograph or upload a document, hear a faithful translation, request a separately labeled plain-language explanation, ask source-cited questions, and compose a reviewed reply. Private sessions across major African markets — no automatic external sending.',
     schemaVersion: EVERYDAY_SCHEMA_VERSION,
     noticeVersion: EVERYDAY_NOTICE_VERSION,
     featureFlag: EVERYDAY_FEATURE,
@@ -29,6 +31,9 @@ export function everydayCatalog() {
             ? 'Help me reply'
             : 'Explain this word',
     })),
+    markets,
+    marketCount: markets.length,
+    corridorCount: EVERYDAY_CORRIDORS.length,
     corridors: EVERYDAY_CORRIDORS,
     limits: {
       maxUploadBytes: everydayMaxUploadBytes(),

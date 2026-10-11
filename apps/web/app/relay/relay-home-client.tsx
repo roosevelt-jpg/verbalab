@@ -12,7 +12,17 @@ type Catalog = {
   headline?: string;
   description?: string;
   honesty?: string[];
-  corridors?: { id: string; label: string; note: string }[];
+  corridorCount?: number;
+  marketCount?: number;
+  markets?: { code: string; nameEn: string; region: string }[];
+  corridors?: {
+    id: string;
+    label: string;
+    note: string;
+    marketCode?: string;
+    marketName?: string;
+    region?: string;
+  }[];
   payments?: { mode: string; note: string };
 };
 
@@ -36,6 +46,7 @@ function RelayHomeFlow({ auth }: { auth: RelayAuthBag }) {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [corridorId, setCorridorId] = useState('ak-en-business');
+  const [marketCode, setMarketCode] = useState('GH');
   const [durationMinutes, setDurationMinutes] = useState(30);
 
   const load = useCallback(async () => {
@@ -55,6 +66,13 @@ function RelayHomeFlow({ auth }: { auth: RelayAuthBag }) {
       const headers = a.actor ? { 'X-Relay-Actor-Id': a.actor } : undefined;
       const cat = await apiFetch<Catalog>('/v1/relay/catalog', { token: a.token, headers });
       setCatalog(cat);
+      if (cat.corridors?.length) {
+        setCorridorId((prev) =>
+          cat.corridors!.some((c) => c.id === prev) ? prev : cat.corridors![0]!.id,
+        );
+        const selected = cat.corridors.find((c) => c.id === corridorId) ?? cat.corridors[0];
+        if (selected?.marketCode) setMarketCode(selected.marketCode);
+      }
       const cov = await apiFetch<{ unmatchedPolicy?: string; interpreters?: { openSlots: number }[] }>(
         '/v1/relay/coverage',
         { token: a.token, headers },
@@ -203,6 +221,29 @@ function RelayHomeFlow({ auth }: { auth: RelayAuthBag }) {
             </p>
           </div>
           <form onSubmit={onCreate} className="lg-card" style={{ display: 'grid', gap: '0.65rem' }}>
+            <p className="lg-type-compact">
+              {catalog?.marketCount ?? 0} African markets · {catalog?.corridorCount ?? 0} wired
+              corridors
+            </p>
+            <label className="vl-field-label">
+              Market
+              <select
+                className="vl-field"
+                value={marketCode}
+                onChange={(e) => {
+                  const next = e.target.value;
+                  setMarketCode(next);
+                  const first = (catalog?.corridors ?? []).find((c) => c.marketCode === next);
+                  if (first) setCorridorId(first.id);
+                }}
+              >
+                {(catalog?.markets ?? []).map((m) => (
+                  <option key={m.code} value={m.code}>
+                    {m.nameEn} ({m.region})
+                  </option>
+                ))}
+              </select>
+            </label>
             <label className="vl-field-label">
               Corridor
               <select
@@ -210,11 +251,13 @@ function RelayHomeFlow({ auth }: { auth: RelayAuthBag }) {
                 value={corridorId}
                 onChange={(e) => setCorridorId(e.target.value)}
               >
-                {(catalog?.corridors ?? []).map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.label}
-                  </option>
-                ))}
+                {(catalog?.corridors ?? [])
+                  .filter((c) => !marketCode || c.marketCode === marketCode || !c.marketCode)
+                  .map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.label}
+                    </option>
+                  ))}
               </select>
             </label>
             <label className="vl-field-label">

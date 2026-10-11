@@ -14,7 +14,9 @@ import {
   selectMatch,
 } from './relay.checks';
 import { hashText, mintEventId, mintRoomId } from './relay.hash';
+import { africanMarketSummaries, africanMarkets } from '../african-markets';
 import {
+  RELAY_CORRIDORS,
   RELAY_FEATURE,
   RELAY_POLICY_VERSION,
   defaultQuoteMinor,
@@ -107,60 +109,101 @@ export class RelayService implements OnModuleInit {
     });
   }
 
-  /** Ensure demo staffed interpreters exist when allowed — clearly labeled. */
+  /**
+   * Ensure labeled demo staffed interpreters exist for every African market corridor.
+   * Never presented as a hired continent-wide pool.
+   */
   async ensureDemoSupply(actor: RelayActor) {
-    if (!demoInterpretersAllowed()) return { seeded: false };
-    const existing = await this.prisma.relayInterpreterProfile.findFirst({
-      where: { organizationId: actor.organizationId, supplyKind: 'demo_staffed' },
-    });
-    if (existing) return { seeded: false, interpreterId: existing.id };
+    if (!demoInterpretersAllowed()) return { seeded: false, markets: 0 };
 
-    const interpreter = await this.prisma.relayInterpreterProfile.create({
-      data: {
-        organizationId: actor.organizationId,
-        workspaceId: actor.workspaceId,
-        ownerUserId: `demo-interpreter-${actor.organizationId.slice(0, 8)}`,
-        displayName: 'Demo staffed interpreter (Accra)',
-        supplyKind: 'demo_staffed',
-        status: 'approved',
-        identityVerification: 'demo_labeled',
-        languagePairs: [
-          { source: 'ak', target: 'en' },
-          { source: 'en', target: 'ak' },
-        ] as unknown as Prisma.InputJsonValue,
-        domains: ['general_business'] as unknown as Prisma.InputJsonValue,
-        directionality: 'bidirectional',
-        qualifications: [
-          {
-            kind: 'demo_sample_review',
-            note: 'Labeled demo supply for local/test — not a hired interpreter pool.',
-          },
-        ] as unknown as Prisma.InputJsonValue,
-        reviewerNote: 'System demo profile for Relay scheduling tests. Distinguish from reviewed_human supply.',
-        reviewedAt: new Date(),
-        reviewedById: 'system',
-        timezone: 'Africa/Accra',
-        confidentialityAccepted: true,
-      },
-    });
-
+    const markets = africanMarkets();
+    let seeded = 0;
     const start = new Date(Date.now() + 2 * 60 * 60 * 1000);
     start.setMinutes(0, 0, 0);
-    for (let i = 0; i < 6; i++) {
-      const slotStart = new Date(start.getTime() + i * 2 * 60 * 60 * 1000);
-      const slotEnd = new Date(slotStart.getTime() + 90 * 60 * 1000);
-      await this.prisma.relayAvailabilitySlot.create({
-        data: {
-          interpreterId: interpreter.id,
-          startAt: slotStart,
-          endAt: slotEnd,
-          displayTimezone: 'Africa/Accra',
-          capacity: 1,
-          state: 'open',
+
+    for (const market of markets) {
+      const ownerUserId = `demo-interpreter-${market.code.toLowerCase()}-${actor.organizationId.slice(0, 8)}`;
+      const corridors = RELAY_CORRIDORS.filter((c) => c.marketCode === market.code);
+      if (corridors.length === 0) continue;
+
+      const languagePairs: { source: string; target: string }[] = [];
+      const seen = new Set<string>();
+      for (const c of corridors) {
+        const key = `${c.sourceLanguage}-${c.targetLanguage}`;
+        const rev = `${c.targetLanguage}-${c.sourceLanguage}`;
+        if (!seen.has(key) && !seen.has(rev)) {
+          seen.add(key);
+          languagePairs.push({ source: c.sourceLanguage, target: c.targetLanguage });
+          languagePairs.push({ source: c.targetLanguage, target: c.sourceLanguage });
+        }
+      }
+
+      const existing = await this.prisma.relayInterpreterProfile.findUnique({
+        where: {
+          organizationId_ownerUserId: {
+            organizationId: actor.organizationId,
+            ownerUserId,
+          },
         },
+        include: { slots: { where: { state: 'open', endAt: { gt: new Date() } }, take: 1 } },
       });
+
+      let interpreterId = existing?.id;
+      if (!existing) {
+        const interpreter = await this.prisma.relayInterpreterProfile.create({
+          data: {
+            organizationId: actor.organizationId,
+            workspaceId: actor.workspaceId,
+            ownerUserId,
+            displayName: `Demo staffed interpreter (${market.nameEn})`,
+            supplyKind: 'demo_staffed',
+            status: 'approved',
+            identityVerification: 'demo_labeled',
+            languagePairs: languagePairs as unknown as Prisma.InputJsonValue,
+            domains: ['general_business'] as unknown as Prisma.InputJsonValue,
+            directionality: 'bidirectional',
+            qualifications: [
+              {
+                kind: 'demo_sample_review',
+                note: `Labeled demo supply for ${market.nameEn} — not a hired interpreter pool.`,
+              },
+            ] as unknown as Prisma.InputJsonValue,
+            reviewerNote:
+              'System demo profile for Relay scheduling. Distinguish from reviewed_human supply.',
+            reviewedAt: new Date(),
+            reviewedById: 'system',
+            timezone: market.timezone,
+            confidentialityAccepted: true,
+          },
+        });
+        interpreterId = interpreter.id;
+        seeded += 1;
+      } else if (JSON.stringify(existing.languagePairs) !== JSON.stringify(languagePairs)) {
+        await this.prisma.relayInterpreterProfile.update({
+          where: { id: existing.id },
+          data: { languagePairs: languagePairs as unknown as Prisma.InputJsonValue },
+        });
+      }
+
+      if (interpreterId && (!existing || existing.slots.length === 0)) {
+        for (let i = 0; i < 6; i++) {
+          const slotStart = new Date(start.getTime() + i * 2 * 60 * 60 * 1000);
+          const slotEnd = new Date(slotStart.getTime() + 90 * 60 * 1000);
+          await this.prisma.relayAvailabilitySlot.create({
+            data: {
+              interpreterId,
+              startAt: slotStart,
+              endAt: slotEnd,
+              displayTimezone: market.timezone,
+              capacity: 1,
+              state: 'open',
+            },
+          });
+        }
+      }
     }
-    return { seeded: true, interpreterId: interpreter.id };
+
+    return { seeded: seeded > 0, markets: markets.length, newlySeeded: seeded };
   }
 
   async coverage(actor: RelayActor) {
@@ -178,6 +221,8 @@ export class RelayService implements OnModuleInit {
     });
     return {
       corridors: relayCatalog().corridors,
+      markets: africanMarketSummaries(),
+      corridorCount: RELAY_CORRIDORS.length,
       interpreters: interpreters.map((i) => ({
         id: i.id,
         displayName: i.displayName,
@@ -437,12 +482,14 @@ export class RelayService implements OnModuleInit {
           expiresAt,
         },
       });
-      const pricing = defaultQuoteMinor(request.durationMinutes);
+      const corridor = corridorOrNull(request.corridorId);
+      const currency = corridor?.currencyCode ?? 'GHS';
+      const pricing = defaultQuoteMinor(request.durationMinutes, currency);
       const version = 'relay-quote-v1';
       const cancellationTerms = CANCELLATION_TERMS;
       const contentHash = hashText(
         quoteHash({
-          currency: 'GHS',
+          currency: pricing.currency,
           amountMinor: pricing.amountMinor,
           minimumMinutes: pricing.minimumMinutes,
           billingIncrementMin: 15,
@@ -457,7 +504,7 @@ export class RelayService implements OnModuleInit {
         data: {
           requestId,
           offerId: offer.id,
-          currency: 'GHS',
+          currency: pricing.currency,
           amountMinor: pricing.amountMinor,
           minimumMinutes: pricing.minimumMinutes,
           billingIncrementMin: 15,
@@ -763,7 +810,7 @@ export class RelayService implements OnModuleInit {
           data: {
             bookingId,
             mode: booking.paymentMode,
-            currency: 'GHS',
+            currency: booking.quote.currency,
             amountMinor: 0,
             state: 'reconciliation_required',
             idempotencyKey,

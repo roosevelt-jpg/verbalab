@@ -13,7 +13,17 @@ type Catalog = {
   description?: string;
   honesty?: string[];
   situations?: string[];
-  corridors?: { id: string; label: string; note: string; situations: string[] }[];
+  marketCount?: number;
+  corridorCount?: number;
+  markets?: { code: string; nameEn: string; region: string }[];
+  corridors?: {
+    id: string;
+    label: string;
+    note: string;
+    situations: string[];
+    marketCode?: string;
+    marketName?: string;
+  }[];
 };
 
 type SessionRow = {
@@ -38,6 +48,7 @@ function LearnBackHomeFlow({ auth }: { auth: LearnBackAuthBag }) {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [corridorId, setCorridorId] = useState('ak-en-interview');
+  const [marketCode, setMarketCode] = useState('GH');
   const [situation, setSituation] = useState('job_interview');
   const [fictionalMode, setFictionalMode] = useState(false);
 
@@ -71,6 +82,11 @@ function LearnBackHomeFlow({ auth }: { auth: LearnBackAuthBag }) {
         setCorridorId((prev) =>
           cat.corridors!.some((c) => c.id === prev) ? prev : cat.corridors![0]!.id,
         );
+        const selected =
+          cat.corridors.find((c) => c.id === corridorId) ?? cat.corridors[0];
+        if (selected?.marketCode && selected.marketCode !== 'XX') {
+          setMarketCode(selected.marketCode);
+        }
       }
       const res = await apiFetch<{ sessions: SessionRow[] }>('/v1/learnback/sessions', {
         token: a.token,
@@ -180,6 +196,37 @@ function LearnBackHomeFlow({ auth }: { auth: LearnBackAuthBag }) {
             </p>
           </div>
           <form onSubmit={onCreate} className="lg-card" style={{ display: 'grid', gap: '0.65rem' }}>
+            <p className="lg-type-compact">
+              {catalog?.marketCount ?? 0} African markets · {catalog?.corridorCount ?? 0} wired
+              corridors
+            </p>
+            <label className="vl-field-label">
+              Market
+              <select
+                className="vl-field"
+                value={marketCode}
+                onChange={(e) => {
+                  const next = e.target.value;
+                  setMarketCode(next);
+                  const first = (catalog?.corridors ?? []).find(
+                    (c) => c.marketCode === next || (next === 'XX' && c.marketCode === 'XX'),
+                  );
+                  if (first) {
+                    setCorridorId(first.id);
+                    if (first.situations?.length && !first.situations.includes(situation)) {
+                      setSituation(first.situations[0]!);
+                    }
+                  }
+                }}
+              >
+                <option value="XX">Pan-African / administrative</option>
+                {(catalog?.markets ?? []).map((m) => (
+                  <option key={m.code} value={m.code}>
+                    {m.nameEn} ({m.region})
+                  </option>
+                ))}
+              </select>
+            </label>
             <label className="vl-field-label">
               Language corridor
               <select
@@ -194,11 +241,15 @@ function LearnBackHomeFlow({ auth }: { auth: LearnBackAuthBag }) {
                   }
                 }}
               >
-                {(catalog?.corridors ?? []).map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.label}
-                  </option>
-                ))}
+                {(catalog?.corridors ?? [])
+                  .filter(
+                    (c) => c.marketCode === marketCode || (!c.marketCode && marketCode === 'XX'),
+                  )
+                  .map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.label}
+                    </option>
+                  ))}
               </select>
             </label>
             <label className="vl-field-label">

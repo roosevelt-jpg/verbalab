@@ -1,3 +1,4 @@
+import { africanMarketSummaries } from '../african-markets';
 import {
   LEARNBACK_CORRIDORS,
   LEARNBACK_FEATURE,
@@ -12,17 +13,21 @@ import {
 
 export function learnbackCatalog() {
   const pronunciationOn = pronunciationEnabled();
+  const markets = africanMarketSummaries();
   return {
     id: 'learnback',
     name: 'Lugemi LearnBack',
     headline: 'Practise real situations with feedback in your language.',
     description:
-      'Spoken practice for interviews, customer service, school meetings, and workplace talk. Meaning-first feedback, honest pronunciation status, and a private phrasebook — not hiring judgment.',
+      'Spoken practice for interviews, customer service, school meetings, and workplace talk across major African markets. Meaning-first feedback, honest pronunciation status, and a private phrasebook — not hiring judgment.',
     schemaVersion: LEARNBACK_SCHEMA_VERSION,
     noticeVersion: LEARNBACK_NOTICE_VERSION,
     featureFlag: LEARNBACK_FEATURE,
     policyVersion: LEARNBACK_POLICY_VERSION,
     situations: SITUATIONS,
+    markets,
+    marketCount: markets.length,
+    corridorCount: LEARNBACK_CORRIDORS.length,
     corridors: LEARNBACK_CORRIDORS.map((c) => ({
       ...c,
       pronunciation: c.pronunciation && pronunciationOn,

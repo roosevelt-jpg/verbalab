@@ -1,3 +1,4 @@
+import { africanMarketSummaries } from '../african-markets';
 import {
   DISABLED_DOMAINS,
   RELAY_CORRIDORS,
@@ -11,16 +12,20 @@ import {
 } from './relay.types';
 
 export function relayCatalog() {
+  const markets = africanMarketSummaries();
   return {
     id: 'relay',
     name: 'Lugemi Relay',
     headline: 'Book a qualified interpreter when machine help is not enough.',
     description:
-      'Scheduled human-interpreter fallback for general business conversations. Approve price and context sharing, then join a private browser session. Interpreters cannot confirm business terms for you.',
+      'Scheduled human-interpreter fallback for general business conversations across major African markets. Approve price and context sharing, then join a private browser session. Interpreters cannot confirm business terms for you.',
     schemaVersion: RELAY_SCHEMA_VERSION,
     noticeVersion: RELAY_NOTICE_VERSION,
     featureFlag: RELAY_FEATURE,
     policyVersion: RELAY_POLICY_VERSION,
+    markets,
+    marketCount: markets.length,
+    corridorCount: RELAY_CORRIDORS.length,
     corridors: RELAY_CORRIDORS,
     domains: {
       enabled: RELAY_DOMAINS,
