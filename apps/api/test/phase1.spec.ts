@@ -88,6 +88,10 @@ describe('Phase 1 API', () => {
     const res = await request(app.getHttpServer()).get('/v1/languages').expect(200);
     expect(res.body.data.some((l: { code: string }) => l.code === 'sw')).toBe(true);
     expect(res.body.data.some((l: { code: string }) => l.code === 'yo')).toBe(true);
+    expect(res.body.count).toBe(res.body.data.length);
+    expect(res.body.total).toBe(res.body.data.length);
+    expect(res.body.languageCount).toBe(res.body.data.length);
+    expect(res.body.complete).toBe(true);
   });
 
   it('API key create / auth / revoke → 401', async () => {

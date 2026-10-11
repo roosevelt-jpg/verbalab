@@ -58,6 +58,11 @@ describe('Accent Identity Packs', () => {
     const res = await request(app.getHttpServer()).get('/v1/accents/identity').expect(200);
     expect(res.body.count).toBe(ACCENT_IDENTITY_SEEDS.length);
     expect(res.body.total).toBe(ACCENT_IDENTITY_SEEDS.length);
+    const languageCodes = [...new Set(ACCENT_IDENTITY_SEEDS.map((s) => s.languageCode))];
+    expect(res.body.languageCount).toBe(languageCodes.length);
+    expect(res.body.languageTotal).toBe(languageCodes.length);
+    expect(res.body.languages).toHaveLength(languageCodes.length);
+    expect(res.body.countryCount).toBe(res.body.countries.length);
     expect(res.body.data.some((p: { id: string }) => p.id === 'gh-ghanaian-english')).toBe(true);
     expect(res.body.data.some((p: { id: string }) => p.id === 'gh-pidgin')).toBe(true);
     expect(res.body.data.some((p: { id: string }) => p.id === 'ng-nigerian-english')).toBe(true);

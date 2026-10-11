@@ -1,5 +1,9 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { LanguagesService } from './languages.service';
+import {
+  AFRICAN_LANGUAGE_COUNT,
+  TOTAL_LANGUAGE_COUNT,
+} from './language-seeds';
 
 @Controller('v1/languages')
 export class LanguagesController {
@@ -13,17 +17,24 @@ export class LanguagesController {
   @Get()
   async list() {
     const items = await this.languages.list();
+    const data = items.map((lang) => ({
+      code: lang.code,
+      name: lang.nameEn,
+      nativeName: lang.nameNative,
+      script: lang.script,
+      familyCode: lang.familyCode,
+      familyName: lang.family?.nameEn ?? null,
+      rtl: lang.rtl,
+      tier: lang.tier,
+    }));
+    const count = data.length;
     return {
-      data: items.map((lang) => ({
-        code: lang.code,
-        name: lang.nameEn,
-        nativeName: lang.nameNative,
-        script: lang.script,
-        familyCode: lang.familyCode,
-        familyName: lang.family?.nameEn ?? null,
-        rtl: lang.rtl,
-        tier: lang.tier,
-      })),
+      data,
+      count,
+      total: TOTAL_LANGUAGE_COUNT,
+      languageCount: count,
+      africanLanguageCount: AFRICAN_LANGUAGE_COUNT,
+      complete: count === TOTAL_LANGUAGE_COUNT,
     };
   }
 

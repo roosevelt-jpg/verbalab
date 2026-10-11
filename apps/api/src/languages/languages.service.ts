@@ -69,7 +69,7 @@ export class LanguagesService implements OnModuleInit {
 
   list() {
     // Soft catalog when Prisma is skipped (Fly first boot / missing DATABASE_URL)
-    // so public coverage and language pickers still return the full 212-code registry.
+    // so public coverage and language pickers still return the full LANGUAGE_SEEDS registry.
     if (!this.prisma.isReady()) {
       return LANGUAGE_SEEDS.map((lang) => ({
         code: lang.code,

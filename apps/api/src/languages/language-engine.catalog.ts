@@ -1,3 +1,8 @@
+import {
+  AFRICAN_LANGUAGE_COUNT,
+  TOTAL_LANGUAGE_COUNT,
+} from './language-seeds';
+
 export type LanguageCapabilityStatus = 'shipped' | 'partial' | 'deferred';
 
 export type LanguageCapability = {
@@ -14,6 +19,9 @@ export function languageEngineCatalog() {
     product: 'Lugemi Language Engine',
     note:
       'Curated language registry with family, dialect, accent, and locale links. Detection runs through the AI Gateway. Not Ethnologue, not unlimited language coverage.',
+    languageCount: TOTAL_LANGUAGE_COUNT,
+    africanLanguageCount: AFRICAN_LANGUAGE_COUNT,
+    complete: true,
     capabilities: [
       {
         id: 'registry-list',

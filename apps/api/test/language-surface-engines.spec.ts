@@ -45,6 +45,8 @@ describe('Language surface engines (country / language / models / dialect / loca
     const lang = await request(app.getHttpServer()).get('/v1/languages/engine').expect(200);
     expect(lang.body.product).toMatch(/Language Engine/i);
     expect(lang.body.honesty.ethnologueParity).toBe(false);
+    expect(lang.body.languageCount).toBeGreaterThan(200);
+    expect(lang.body.complete).toBe(true);
 
     const cloud = await request(app.getHttpServer()).get('/v1/language/engine').expect(200);
     expect(cloud.body.product).toMatch(/Language Cloud/i);

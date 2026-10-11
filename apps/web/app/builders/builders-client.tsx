@@ -66,6 +66,9 @@ type IdentityList = {
   data: IdentityPack[];
   countries: { code: string; label: string; flag: string; packCount: number }[];
   total: number;
+  languageCount?: number;
+  languageTotal?: number;
+  countryCount?: number;
 };
 
 type CatalogRow = {
@@ -154,8 +157,9 @@ export function BuildersClient() {
           .filter((r): r is CatalogRow => r != null)
           .sort((a, b) => a.countryLabel.localeCompare(b.countryLabel));
         setCatalog(rows);
+        const languageTotal = res.languageTotal ?? res.languageCount;
         setCatalogNote(
-          `${rows.length} countries · ${res.total} accent identity packs · live from GET /v1/accents/identity`,
+          `${rows.length} countries · ${languageTotal ?? '—'} languages · ${res.total} accent identity packs · live from GET /v1/accents/identity`,
         );
       })
       .catch((err: Error) => {

@@ -96,8 +96,21 @@ export class NeuralTtsService {
     const accents = [...new Set(all.map((v) => v.accent).filter(Boolean))] as string[];
     const regions = [...new Set(all.map((v) => v.region).filter(Boolean))] as string[];
     const toneStyles = [...new Set(all.flatMap((v) => v.toneStyles))];
+    const languageCodes = [
+      ...new Set(
+        all.flatMap((v) =>
+          (v.languages ?? []).map((lang) =>
+            String(lang).split(/[-_]/)[0]?.toLowerCase() ?? String(lang).toLowerCase(),
+          ),
+        ),
+      ),
+    ]
+      .filter(Boolean)
+      .sort();
     return {
       data,
+      count: data.length,
+      languageCount: languageCodes.length,
       facets: {
         genders: ['male', 'female', 'neutral'],
         ageGroups: ['adult', 'child', 'unknown'],
@@ -106,6 +119,8 @@ export class NeuralTtsService {
         accents: accents.sort(),
         regions: regions.sort(),
         toneStyles: toneStyles.sort(),
+        languages: languageCodes,
+        languageCount: languageCodes.length,
         note:
           'Children voices deferred. Country/accent/ethnic tags are cultural metadata on own:* voices for agent builders — not acoustic accent control. Approved clones appear when authenticated.',
       },

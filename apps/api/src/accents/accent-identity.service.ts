@@ -82,11 +82,22 @@ export class AccentIdentityService {
       ...new Set(ACCENT_IDENTITY_SEEDS.flatMap((s) => s.regionTags)),
     ].sort();
     const speechVarieties = [...new Set(rows.map((r) => r.speechVariety))].sort();
+    const allLanguageCodes = [
+      ...new Set(ACCENT_IDENTITY_SEEDS.map((s) => s.languageCode)),
+    ].sort();
+    const filteredLanguageCodes = [...new Set(rows.map((r) => r.languageCode))].sort();
 
     return {
       data: rows,
       count: rows.length,
       total: ACCENT_IDENTITY_SEEDS.length,
+      countryCount: countries.length,
+      languageCount: filteredLanguageCodes.length,
+      languageTotal: allLanguageCodes.length,
+      languages: allLanguageCodes.map((code) => ({
+        code,
+        packCount: ACCENT_IDENTITY_SEEDS.filter((s) => s.languageCode === code).length,
+      })),
       countries: countries.map((c) => ({
         code: c,
         label: COUNTRY_LABELS[c] ?? c,
