@@ -7,8 +7,10 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { CreativeShell } from '@/components/creative/creative-shell';
 import { CreativeIcon } from '@/components/creative/creative-icons';
+import { CreativeInspoCard } from '@/components/creative/creative-inspo-card';
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
 import { useDemoPlayer } from '@/components/marketing/use-demo-player';
+import type { AnamorphicStillVariant } from '@/lib/anamorphic-stills';
 
 type Listing = {
   id: string;
@@ -201,14 +203,15 @@ function CreativeVoicesClientInner({ getToken, isLoaded }: { getToken: () => Pro
           <section style={{ marginTop: '1.5rem' }}>
             <h2 style={{ margin: '0 0 0.75rem', fontSize: '1rem', color: 'var(--lc-navy)' }}>Handpicked for your use case</h2>
             <div className="lg-creative-inspo">
-              {[
-                { title: 'Great voices for Echo', href: '/creative/text-to-speech', art: 'linear-gradient(135deg,#10264d,#00b8ae)' },
-                { title: 'Narration & docs', href: '/creative/audiobooks', art: 'linear-gradient(135deg,#0a3d3a,#3a5a8a)' },
-                { title: 'Studio conversational', href: '/creative/studio', art: 'linear-gradient(135deg,#007c78,#10264d)' },
-              ].map((c) => (
-                <Link key={c.title} href={c.href}>
-                  <div className="lg-creative-inspo-art" style={{ background: c.art }} />
-                  <figcaption>{c.title}</figcaption>
+              {(
+                [
+                  { title: 'Great voices for Echo', href: '/creative/text-to-speech', variant: 'voice' },
+                  { title: 'Narration & docs', href: '/creative/audiobooks', variant: 'speech' },
+                  { title: 'Studio conversational', href: '/creative/studio', variant: 'agents' },
+                ] as Array<{ title: string; href: string; variant: AnamorphicStillVariant }>
+              ).map((c) => (
+                <Link key={c.title} href={c.href} className="lg-creative-inspo-btn">
+                  <CreativeInspoCard title={c.title} variant={c.variant} />
                 </Link>
               ))}
             </div>

@@ -7,6 +7,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { CreativeShell } from '@/components/creative/creative-shell';
 import { CreativeIcon } from '@/components/creative/creative-icons';
+import { CreativeInspoCard } from '@/components/creative/creative-inspo-card';
+import type { AnamorphicStillVariant } from '@/lib/anamorphic-stills';
 
 type Workflow = {
   id: string;
@@ -15,11 +17,11 @@ type Workflow = {
   createdAt: string;
 };
 
-const TEMPLATES = [
-  { title: 'Product showcase video', href: '/creative/studio', art: 'linear-gradient(135deg,#10264d,#00b8ae)' },
-  { title: 'Explainer video', href: '/creative/dubbing', art: 'linear-gradient(135deg,#0a3d3a,#3a5a8a)' },
-  { title: 'Compare voices', href: '/creative/voices', art: 'linear-gradient(135deg,#007c78,#10264d)' },
-  { title: 'Book cover design', href: '/creative/image-video', art: 'linear-gradient(135deg,#163a5a,#087f78)' },
+const TEMPLATES: Array<{ title: string; href: string; variant: AnamorphicStillVariant }> = [
+  { title: 'Product showcase video', href: '/creative/studio', variant: 'voice' },
+  { title: 'Explainer video', href: '/creative/dubbing', variant: 'speech' },
+  { title: 'Compare voices', href: '/creative/voices', variant: 'hub' },
+  { title: 'Book cover design', href: '/creative/image-video', variant: 'hero' },
 ];
 
 
@@ -108,9 +110,8 @@ function CreativeFlowsClientInner({ getToken, isLoaded }: { getToken: () => Prom
       <h2 style={{ margin: '0 0 0.75rem', fontSize: '1rem', color: 'var(--lc-navy)' }}>Get started</h2>
       <div className="lg-creative-inspo">
         {TEMPLATES.map((t) => (
-          <Link key={t.title} href={t.href}>
-            <div className="lg-creative-inspo-art" style={{ background: t.art }} />
-            <figcaption>{t.title}</figcaption>
+          <Link key={t.title} href={t.href} className="lg-creative-inspo-btn">
+            <CreativeInspoCard title={t.title} variant={t.variant} />
           </Link>
         ))}
       </div>

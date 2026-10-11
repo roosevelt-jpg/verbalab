@@ -22,7 +22,9 @@ import {
 } from './openapi-helpers';
 import './api-reference.css';
 
-const SPEC_URL = `${API_URL}/v1/openapi.json`;
+/** Prefer same-origin proxy so the browser never hangs on cross-origin openapi.json. */
+const SPEC_PROXY = '/api/openapi';
+const SPEC_UPSTREAM = `${API_URL}/v1/openapi.json`;
 const SEARCH_LIMIT = 150;
 const POPULAR = [
   'post /v1/translate',
@@ -66,13 +68,31 @@ export function ApiReference() {
 
   const load = useCallback(async () => {
     setLoadError(null);
-    try {
-      const res = await fetch(SPEC_URL, { cache: 'no-store' });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      setDoc((await res.json()) as OpenApiDoc);
-    } catch (err) {
-      setLoadError(err instanceof Error ? err.message : 'Network error');
+    setDoc(null);
+    const sources = [SPEC_PROXY, SPEC_UPSTREAM];
+    let lastError: unknown;
+    for (const url of sources) {
+      const controller = new AbortController();
+      const timer = window.setTimeout(() => controller.abort(), 12_000);
+      try {
+        const res = await fetch(url, { cache: 'no-store', signal: controller.signal });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const json = (await res.json()) as OpenApiDoc & { error?: { message?: string } };
+        if (!json.paths || json.error) {
+          throw new Error(json.error?.message || 'OpenAPI document missing paths');
+        }
+        setDoc(json);
+        return;
+      } catch (err) {
+        lastError =
+          err instanceof DOMException && err.name === 'AbortError'
+            ? new Error(`Timed out loading ${url}`)
+            : err;
+      } finally {
+        window.clearTimeout(timer);
+      }
     }
+    setLoadError(lastError instanceof Error ? lastError.message : 'Network error');
   }, []);
 
   useEffect(() => {
@@ -143,7 +163,7 @@ export function ApiReference() {
           <a href={`${API_URL}/docs`} target="_blank" rel="noopener noreferrer" className="vl-btn vl-btn-secondary">
             Interactive docs
           </a>
-          <a href={SPEC_URL} className="vl-btn vl-btn-secondary" download="lugemi-openapi.json">
+          <a href={SPEC_PROXY} className="vl-btn vl-btn-secondary" download="lugemi-openapi.json">
             Download openapi.json
           </a>
         </nav>
@@ -153,11 +173,21 @@ export function ApiReference() {
         <section className="apiref-state" role="alert">
           <h1>Could not load the API reference</h1>
           <p>
-            The OpenAPI document at <code className="vl-code">{SPEC_URL}</code> did not respond ({loadError}).
+            Could not load OpenAPI via <code className="vl-code">{SPEC_PROXY}</code> or{' '}
+            <code className="vl-code">{SPEC_UPSTREAM}</code> ({loadError}). This page does not require Clerk —
+            retry, or open Interactive docs while the API recovers.
           </p>
-          <button type="button" className="vl-btn vl-btn-primary" onClick={() => void load()}>
-            Try again
-          </button>
+          <div style={{ display: 'flex', gap: '0.65rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <button type="button" className="vl-btn vl-btn-primary" onClick={() => void load()}>
+              Try again
+            </button>
+            <a href={`${API_URL}/docs`} target="_blank" rel="noopener noreferrer" className="vl-btn vl-btn-secondary">
+              Open API docs on api.lugemi.com
+            </a>
+            <Link href="/docs" className="vl-btn vl-btn-secondary">
+              Guides (no OpenAPI required)
+            </Link>
+          </div>
         </section>
       ) : !doc ? (
         <section className="apiref-state" aria-busy="true">

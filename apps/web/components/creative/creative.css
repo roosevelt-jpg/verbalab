@@ -1438,6 +1438,33 @@
   background-position: center;
 }
 
+/* Inspiration tiles always host AnamorphicPanel motion — never flat color fills. */
+.lg-creative-inspo-art--motion {
+  position: relative;
+  overflow: hidden;
+  background: #0b1a36;
+  height: 7.5rem;
+}
+
+.lg-creative-inspo-art--motion .lg-ana {
+  height: 100%;
+  min-height: 7.5rem;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.lg-creative-inspo-art--motion .lg-ana__label {
+  display: none;
+}
+
+.lg-creative-inspo-art--motion .lg-ana__stage {
+  border-radius: 0;
+}
+
+.lg-creative-inspo-art--motion .lg-ana__media {
+  border-radius: 0;
+}
+
 .lg-creative-inspo figcaption {
   padding: 0.65rem 0.75rem;
   font-size: 0.85rem;

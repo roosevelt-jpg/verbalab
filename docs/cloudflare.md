@@ -167,6 +167,50 @@ curl -fsS https://api.lugemi.com/health
 
 Avoid double-CDN surprises: if Vercel already fronts the web app, either DNS-only at Cloudflare **or** carefully configure caching so API/auth cookies are not over-cached. Prefer **one** origin for `lugemi.com` (Fly **or** Vercel), not both.
 
+## Efficiency + anti-clone / anti-scrape (AI tooling)
+
+Use Cloudflare in front of `lugemi.com` / `api.lugemi.com` to cut origin load **and** raise the cost of scrapers, clone farms, and bulk asset theft. None of this replaces product auth (`lg_live_` / `lg_test_` keys + Nest rate limits) — it is the edge layer.
+
+### Efficiency (lower latency, less Fly burn)
+
+| Control | What to enable | Lugemi effect |
+| --- | --- | --- |
+| **Orange-cloud CDN** | Proxy A/CNAME for web (+ optional API) | Cache `/_next/static/*`, brand webm/jpg, OpenAPI proxy responses with short TTL |
+| **Cache Rules** | Cache Everything (or Custom) for `/brand/media/*`, `/_next/static/*`; bypass cookies for `/api/*`, `/sign-in*`, `/creative*` | Static anamorphic motion beds served from PoPs, not Fly |
+| **Polish / Brotli** | Auto minify + Brotli (Free) | Smaller JS/CSS payloads for console |
+| **Early Hints / HTTP/3** | Zone speed features | Faster first paint on marketing + docs |
+| **R2 (+ custom domain)** | Store CMS uploads / durable media | Egress-free media; keep Fly volumes for hot API only |
+| **Workers (thin)** | Catalog edge cache, Turnstile verify — see [`cloudflare-workers.md`](./cloudflare-workers.md) | Cheap edge hits without moving Nest |
+
+### Protect ideas, media, and API surface from clone/scrape bots
+
+| Control | Plan | How it helps |
+| --- | --- | --- |
+| **Bot Fight Mode** | Free | Challenges obvious automated clients before they hit Next/Nest |
+| **WAF Free Managed Ruleset** | Free | Blocks high-severity exploit probes on public hosts |
+| **1 IP rate-limit rule** | Free (one rule) | Cap bursty `GET` on `/brand/media/*`, `/api/openapi`, and `/v1/*` (API hostname) |
+| **Turnstile** | Free | Gate signup, feedback, abuse-prone demo forms — stops credential stuffing and form spam |
+| **Hotlink protection** | Free | Blocks third-party sites embedding Lugemi media URLs as their “own” imagery |
+| **robots.txt + AI crawler rules** | Free (zone + app) | Disallow known AI training scrapers (`GPTBot`, `CCBot`, `ClaudeBot`, `Bytespider`, etc.) on `/brand/`, `/docs/api`, `/creative/` if you do not want model ingestion; keep marketing indexable |
+| **Firewall custom rules** | Free allotment | Challenge or block ASNs / countries / user-agents that only scrape; allowlist CI and partner IPs |
+| **Zero Trust Access** | Free ≤50 users | Put `/admin`, staging, and internal docs behind SSO — never scrape-able as public HTML |
+| **Hide origin** | Orange cloud | Scrapers never learn Fly IPs for direct bypass |
+| **Signed / short-lived media (R2 + Worker)** | Free Workers quota | Optional: serve high-value webm via time-limited URLs so bulk cloning of `/brand/media` is harder |
+
+**App-layer (already Lugemi, keep using):** machine API keys (`lg_live_` / `lg_test_`), Nest Redis rate limits, CORS allowlists, no secrets in OpenAPI, Clerk only for human console sessions — machine keys never depend on Clerk cookies.
+
+**Honest limit:** Cloudflare cannot stop a determined human from screenshotting the UI or re-implementing ideas. It **does** stop bulk automated cloning of media, OpenAPI polling storms, and cheap AI crawlers at the edge. Pair with copyright notices on media, watermarked demo assets where needed, and API key revocation for abusive keys.
+
+### Suggested free-tier checklist (ops)
+
+1. Orange-cloud `lugemi.com` + `api.lugemi.com` (Full strict TLS).
+2. Cache Rules for `/_next/static/*` and `/brand/media/*` (long TTL); bypass for authenticated HTML.
+3. Bot Fight Mode + Turnstile on public forms.
+4. One rate-limit rule on API hostname `/v1/*` (and optionally web `/api/openapi`).
+5. Hotlink protection on media; review AI bot user-agents in WAF/custom rules.
+6. Zero Trust Access on `/admin` and staging hosts.
+7. Keep Nest + Redis as the real API abuse backstop.
+
 ## Explicit non-goals (free tier)
 
 - Replacing Nest/Postgres/Redis with Workers/D1 for the full API
@@ -174,3 +218,4 @@ Avoid double-CDN surprises: if Vercel already fronts the web app, either DNS-onl
 - Cloudflare Images **storage** (paid) when R2 + free transforms suffice
 - Marketing Lugemi speech/MT as “Workers AI”
 - Long SSE / WebSocket / heavy TTS on Workers (keep on Fly — see [`docs/cloudflare-workers.md`](./cloudflare-workers.md))
+- Guaranteeing that no human can copy product ideas (edge controls stop bots and bulk theft, not screenshots)

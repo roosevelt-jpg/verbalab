@@ -12,27 +12,33 @@ import {
   upsertVideoProject,
   type CreativeVideoProject,
 } from '@/lib/creative-video-project';
+import { CreativeInspoCard } from '@/components/creative/creative-inspo-card';
+import type { AnamorphicStillVariant } from '@/lib/anamorphic-stills';
 
-const INSPIRATIONS = [
+const INSPIRATIONS: Array<{
+  title: string;
+  script: string;
+  variant: AnamorphicStillVariant;
+}> = [
   {
     title: 'Film trailer',
     script: 'Tonight, a story unfolds across languages — trust the voice that sounds like home.',
-    art: 'linear-gradient(120deg,#10264d,#1a4a48)',
+    variant: 'hero',
   },
   {
     title: 'Explainer video',
     script: 'In two minutes, learn how local sellers close deals with clear, native-language voiceovers.',
-    art: 'linear-gradient(120deg,#0a3d3a,#007c78)',
+    variant: 'speech',
   },
   {
     title: 'Product video',
     script: 'Meet the product built for your market — hear it spoken the way your customers speak.',
-    art: 'linear-gradient(120deg,#163a5a,#00b8ae)',
+    variant: 'voice',
   },
   {
     title: 'News desk',
     script: 'Good evening. Here are the headlines shaping your city today.',
-    art: 'linear-gradient(120deg,#0c2a4a,#2d6a66)',
+    variant: 'agents',
   },
 ];
 
@@ -120,8 +126,7 @@ export function CreativeStudioClient() {
             className="lg-creative-inspo-btn"
             onClick={() => openNew({ title: i.title, script: i.script, kind: 'video' })}
           >
-            <div className="lg-creative-inspo-art" style={{ background: i.art }} />
-            <figcaption>{i.title}</figcaption>
+            <CreativeInspoCard title={i.title} variant={i.variant} />
           </button>
         ))}
       </div>

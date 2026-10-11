@@ -35,24 +35,46 @@ export default function DocsPage() {
   const [endpointCount, setEndpointCount] = useState<number | null>(null);
 
   useEffect(() => {
-    setSpecUrl(`${API_URL}/v1/openapi.json`);
-    void fetch(`${API_URL}/v1/openapi.json`)
-      .then(async (res) => {
-        if (!res.ok) throw new Error(`OpenAPI HTTP ${res.status}`);
-        const doc = (await res.json()) as { paths?: Record<string, unknown> };
-        const paths = doc.paths ? Object.keys(doc.paths).length : 0;
-        let ops = 0;
-        for (const item of Object.values(doc.paths ?? {})) {
-          if (item && typeof item === 'object') {
-            ops += Object.keys(item).filter((k) =>
-              ['get', 'post', 'put', 'patch', 'delete'].includes(k),
-            ).length;
+    setSpecUrl('/api/openapi');
+    const sources = ['/api/openapi', `${API_URL}/v1/openapi.json`];
+    void (async () => {
+      let last: Error | null = null;
+      for (const url of sources) {
+        const controller = new AbortController();
+        const timer = window.setTimeout(() => controller.abort(), 12_000);
+        try {
+          const res = await fetch(url, { cache: 'no-store', signal: controller.signal });
+          if (!res.ok) throw new Error(`OpenAPI HTTP ${res.status}`);
+          const doc = (await res.json()) as { paths?: Record<string, unknown>; error?: { message?: string } };
+          if (!doc.paths || doc.error) throw new Error(doc.error?.message || 'OpenAPI missing paths');
+          const paths = Object.keys(doc.paths).length;
+          let ops = 0;
+          for (const item of Object.values(doc.paths)) {
+            if (item && typeof item === 'object') {
+              ops += Object.keys(item).filter((k) =>
+                ['get', 'post', 'put', 'patch', 'delete'].includes(k),
+              ).length;
+            }
           }
+          setSpecUrl(url);
+          setEndpointCount(ops || paths);
+          setLoaded(true);
+          setError(null);
+          return;
+        } catch (err) {
+          if (err instanceof DOMException && err.name === 'AbortError') {
+            last = new Error(`OpenAPI probe timed out (${url})`);
+          } else {
+            last = err instanceof Error ? err : new Error('OpenAPI load failed');
+          }
+        } finally {
+          window.clearTimeout(timer);
         }
-        setEndpointCount(ops || paths);
-        setLoaded(true);
-      })
-      .catch((err: Error) => setError(err.message));
+      }
+      // Guides remain usable without the live OpenAPI probe — never block on Clerk or upstream.
+      setLoaded(true);
+      setError(last?.message ?? 'OpenAPI probe failed');
+    })();
   }, []);
 
   const translateExample = `{
@@ -344,10 +366,12 @@ LUGEMI_BASE_URL=${API_URL}`;
             <h2 className="docs-section-title">Authentication</h2>
             <div className="docs-auth-banner">
               <div className="docs-auth-banner-text">
-                <strong>Bearer keys:</strong>{' '}
+                <strong>Bearer keys (Lugemi machine auth):</strong>{' '}
                 <code className="vl-code">Authorization: Bearer lg_live_…</code> for production or{' '}
-                <code className="vl-code">lg_test_…</code> for soft sandbox. Console browsing uses Clerk; machine keys
-                identify Playground and Studio Bearer traffic.
+                <code className="vl-code">lg_test_…</code> for soft sandbox. These keys are first-party Lugemi auth —
+                Playground, Studio, and API clients never depend on Clerk cookies. Console sign-in may use Clerk for
+                humans; OpenAPI and Guides load via same-origin <code className="vl-code">/api/openapi</code> without
+                a session.
               </div>
               <Link href="/keys" className="vl-btn vl-btn-primary" style={{ padding: '0.4rem 0.85rem' }}>
                 Create API key
