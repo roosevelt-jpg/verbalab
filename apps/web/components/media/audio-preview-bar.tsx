@@ -2,10 +2,12 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
+import { resolvePlayableMediaSrc } from '@/lib/media-playback';
 
 /**
  * Play / Stop icon controls wired to an HTMLAudioElement for console / studio previews.
  * Keeps native controls as a progressive-enhancement fallback.
+ * data: URLs are converted to blob: object URLs so CSP media-src (self + blob) allows playback.
  */
 export function AudioPreviewBar({
   src,
@@ -17,6 +19,7 @@ export function AudioPreviewBar({
   showNative?: boolean;
 }) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playableSrc, setPlayableSrc] = useState(src);
   const [playing, setPlaying] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -30,6 +33,20 @@ export function AudioPreviewBar({
       el.pause();
       el.currentTime = 0;
     }
+
+    let revokeUrl: string | null = null;
+    try {
+      const resolved = resolvePlayableMediaSrc(src);
+      if (resolved.revoke) revokeUrl = resolved.url;
+      setPlayableSrc(resolved.url);
+    } catch {
+      setPlayableSrc(src);
+      setError('Playback failed');
+    }
+
+    return () => {
+      if (revokeUrl) URL.revokeObjectURL(revokeUrl);
+    };
   }, [src]);
 
   useEffect(() => {
@@ -67,7 +84,7 @@ export function AudioPreviewBar({
       el.removeEventListener('canplay', onCanPlay);
       el.removeEventListener('error', onError);
     };
-  }, [src]);
+  }, [playableSrc]);
 
   async function play() {
     const el = audioRef.current;
@@ -113,7 +130,7 @@ export function AudioPreviewBar({
       </div>
       <audio
         ref={audioRef}
-        src={src}
+        src={playableSrc}
         controls={showNative}
         preload="metadata"
         style={showNative ? { width: '100%' } : { display: 'none' }}

@@ -9,6 +9,7 @@ import { API_URL, apiFetch } from '@/lib/api';
 import { resolveCreativeToken } from '@/lib/creative-auth';
 import { CreativeShell } from '@/components/creative/creative-shell';
 import { CreativeIcon } from '@/components/creative/creative-icons';
+import { AudioPreviewBar } from '@/components/media/audio-preview-bar';
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
 import { useDemoPlayer } from '@/components/marketing/use-demo-player';
 import {
@@ -309,7 +310,7 @@ function CreativeSfxClientInner({ getToken, isLoaded }: { getToken: () => Promis
         {message ? <p className="lg-creative-note">{message}</p> : null}
         {audioUrl ? (
           <div style={{ marginTop: '0.75rem', display: 'grid', gap: '0.5rem' }}>
-            <audio controls src={audioUrl} style={{ width: '100%' }} />
+            <AudioPreviewBar src={audioUrl} label="Play generated SFX" />
             <a href={audioUrl} download="lugemi-sfx.wav" className="lg-creative-btn">
               Download WAV
             </a>

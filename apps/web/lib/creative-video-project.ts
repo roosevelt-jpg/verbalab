@@ -1,5 +1,7 @@
 /** Browser-local LugemiCreative video projects (script → native voice → export). */
 
+import { resolvePlayableMediaSrc } from '@/lib/media-playback';
+
 export type VideoScene = {
   id: string;
   title: string;
@@ -222,12 +224,19 @@ export async function exportProjectWebM(
   if (!maybeCtx) throw new Error('Canvas unavailable');
   const ctx: CanvasRenderingContext2D = maybeCtx;
 
-  const audio = new Audio(project.narration.audioDataUrl);
+  // Persist as data: URL, but play via blob: — CSP media-src allows blob, not data.
+  const playable = resolvePlayableMediaSrc(project.narration.audioDataUrl);
+  const audio = new Audio(playable.url);
   audio.crossOrigin = 'anonymous';
-  await new Promise<void>((resolve, reject) => {
-    audio.onloadedmetadata = () => resolve();
-    audio.onerror = () => reject(new Error('Could not load narration audio'));
-  });
+  try {
+    await new Promise<void>((resolve, reject) => {
+      audio.onloadedmetadata = () => resolve();
+      audio.onerror = () => reject(new Error('Could not load narration audio'));
+    });
+  } catch (err) {
+    if (playable.revoke) URL.revokeObjectURL(playable.url);
+    throw err;
+  }
 
   const scenes = project.scenes.length
     ? project.scenes
@@ -387,7 +396,11 @@ export async function exportProjectWebM(
 
   audio.pause();
   recorder.stop();
-  return done;
+  try {
+    return await done;
+  } finally {
+    if (playable.revoke) URL.revokeObjectURL(playable.url);
+  }
 }
 
 export function slugifyFilename(name: string): string {
