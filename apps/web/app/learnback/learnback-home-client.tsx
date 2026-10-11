@@ -213,8 +213,8 @@ function LearnBackHomeFlow({ auth }: { auth: LearnBackAuthBag }) {
           </div>
           <form onSubmit={onCreate} className="lg-card" style={{ display: 'grid', gap: '0.65rem' }}>
             <p className="lg-type-compact">
-              {catalog?.marketCount ?? 0} African markets · {catalog?.corridorCount ?? 0} wired
-              corridors · country English accents kept distinct
+              {catalog?.marketCount ?? 0} markets (Africa · LATAM · SEA · Middle East) ·{' '}
+              {catalog?.corridorCount ?? 0} wired corridors · country English + dialects
             </p>
             <label className="vl-field-label">
               Market

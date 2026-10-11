@@ -17,7 +17,7 @@ export function everydayCatalog() {
     name: 'Lugemi Everyday',
     headline: 'Read notices, ask grounded questions, and approve replies in your language.',
     description:
-      'Photograph or upload a document, hear a faithful translation, request a separately labeled plain-language explanation, ask source-cited questions, and compose a reviewed reply. Private sessions across major African markets — no automatic external sending.',
+      'Photograph or upload a document, hear a faithful translation, request a separately labeled plain-language explanation, ask source-cited questions, and compose a reviewed reply. Private sessions across Africa, LATAM, Southeast Asia, and the Middle East — no automatic external sending.',
     schemaVersion: EVERYDAY_SCHEMA_VERSION,
     noticeVersion: EVERYDAY_NOTICE_VERSION,
     featureFlag: EVERYDAY_FEATURE,
@@ -80,7 +80,8 @@ export function everydayCatalog() {
       'Reply approval is pinned to exact source/target presentation hashes; edits invalidate approval.',
       'Opening a share sheet after approval is not proof of delivery. Everyday never sends external messages.',
       'TTS uses language-specific voices when available; otherwise text is returned with an honest unsupported status — no neighboring-language substitution.',
-      'English corridors use each market’s country-identifying English accent (en-GH, en-NG, en-ZA, …) — not US/UK defaults.',
+      'English corridors use each market’s country-identifying English accent (en-GH, en-NG, en-PH, en-MX, en-AE, …) — not US/UK defaults.',
+      'Local languages surface country dialects and cultural varieties (Mexican Spanish, Brazilian Portuguese, Gulf Arabic, Tagalog/Cebuano, …).',
       'Server processing is private to your organization but is not end-to-end encryption.',
     ],
     limitations: [

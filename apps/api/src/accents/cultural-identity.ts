@@ -10,6 +10,11 @@ import {
   africanCulturalEnglishDefaults,
   buildAfricanEnglishAccents,
 } from '../african-markets/african-english-accents';
+import {
+  buildCountryEnglishAccent,
+  WORLD_PRODUCT_REGION_BY_CODE,
+  worldCulturalEnglishDefaults,
+} from '../world-markets';
 
 export type SpeechVariety =
   | 'ghanaian_english'
@@ -225,12 +230,24 @@ const AFRICAN_ENGLISH_BCP47_DEFAULTS = africanCulturalEnglishDefaults(
   ),
 );
 
+const WORLD_ENGLISH_BCP47_DEFAULTS = worldCulturalEnglishDefaults(
+  COUNTRY_PACK_SEEDS.filter((p) => WORLD_PRODUCT_REGION_BY_CODE[p.code]).map((p) =>
+    buildCountryEnglishAccent({
+      code: p.code,
+      nameEn: p.nameEn,
+      region: p.region,
+      worldRegion: WORLD_PRODUCT_REGION_BY_CODE[p.code]!,
+    }),
+  ),
+);
+
 /** Prefer cultural English / Pidgin packs when localizing or synthesizing for these BCP-47 tags. */
 export const CULTURAL_ENGLISH_BCP47_DEFAULTS: Record<
   string,
   { accentIdentityId: string; speechVariety: SpeechVariety; echoVoiceId: string }
 > = {
   ...AFRICAN_ENGLISH_BCP47_DEFAULTS,
+  ...WORLD_ENGLISH_BCP47_DEFAULTS,
   'en-PH': {
     accentIdentityId: 'ph-filipino-english',
     speechVariety: 'filipino_english',

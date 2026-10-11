@@ -18,7 +18,7 @@ export function relayCatalog() {
     name: 'Lugemi Relay',
     headline: 'Book a qualified interpreter when machine help is not enough.',
     description:
-      'Scheduled human-interpreter fallback for general business conversations across major African markets. Approve price and context sharing, then join a private browser session. Interpreters cannot confirm business terms for you.',
+      'Scheduled human-interpreter fallback for general business conversations across Africa, LATAM, Southeast Asia, and the Middle East. Approve price and context sharing, then join a private browser session. Interpreters cannot confirm business terms for you.',
     schemaVersion: RELAY_SCHEMA_VERSION,
     noticeVersion: RELAY_NOTICE_VERSION,
     featureFlag: RELAY_FEATURE,
@@ -85,7 +85,8 @@ export function relayCatalog() {
       'Payments are manual invoice by default — not card capture or escrow.',
       'Context sharing requires explicit grants; revocation cannot erase what was already heard.',
       'Telephone bridging and payouts remain disabled without authorized adapters.',
-      'English is a bridge language with a country-identifying accent per market (e.g. Nigerian English, Kenyan English) — never routed as generic US/UK.',
+      'English is a bridge language with a country-identifying accent per market (e.g. Nigerian English, Filipino English, Mexican English, Emirati English) — never routed as generic US/UK.',
+      'Local languages keep country dialects and cultural varieties (e.g. Mexican Spanish, Rioplatense, Gulf Arabic, Cebuano, Quechua) — not collapsed into generic es/ar/pt.',
     ],
     limitations: [
       'Recruitment, native skill review and payment processor permissions are human launch prerequisites.',

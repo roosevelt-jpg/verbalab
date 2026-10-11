@@ -19,7 +19,7 @@ export function learnbackCatalog() {
     name: 'Lugemi LearnBack',
     headline: 'Practise real situations with feedback in your language.',
     description:
-      'Spoken practice for interviews, customer service, school meetings, and workplace talk across major African markets. Meaning-first feedback, honest pronunciation status, and a private phrasebook — not hiring judgment.',
+      'Spoken practice for interviews, customer service, school meetings, and workplace talk across Africa, LATAM, Southeast Asia, and the Middle East. Meaning-first feedback, honest pronunciation status, and a private phrasebook — not hiring judgment.',
     schemaVersion: LEARNBACK_SCHEMA_VERSION,
     noticeVersion: LEARNBACK_NOTICE_VERSION,
     featureFlag: LEARNBACK_FEATURE,
@@ -71,7 +71,8 @@ export function learnbackCatalog() {
       'LearnBack never submits job applications or messages employers.',
       'Reminders are opt-in; without notification infrastructure, due items stay in-app only.',
       'Optional training consent is separate and off by default.',
-      'English practice uses each market’s country-identifying accent (Ghanaian, Nigerian, Kenyan, …). Non-US/UK English is never marked wrong for accent alone.',
+      'English practice uses each market’s country-identifying accent (Ghanaian, Filipino, Mexican, Emirati, …). Non-US/UK English is never marked wrong for accent alone.',
+      'Local practice keeps country dialects and cultural varieties (Mexican Spanish, Gulf Arabic, Cebuano, Quechua, …) — not collapsed into generic language labels.',
     ],
     limitations: [
       'Adult practice product — not a compliant children’s product.',

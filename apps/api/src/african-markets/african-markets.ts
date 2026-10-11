@@ -1,6 +1,14 @@
 import { COUNTRY_PACK_SEEDS } from '../country-packs/country-pack-seeds';
 import { LANGUAGE_SEEDS } from '../languages/language-seeds';
 import {
+  asAfricaProductMarkets,
+  productMarkets,
+  quoteRateForWorldCurrency,
+  type CulturalVariety,
+  type ProductMarket,
+  type ProductWorldRegion,
+} from '../world-markets';
+import {
   buildAfricanEnglishAccent,
   type AfricanEnglishAccent,
 } from './african-english-accents';
@@ -241,12 +249,15 @@ export type AfricanMarket = {
   code: string;
   nameEn: string;
   region: string;
+  worldRegion?: ProductWorldRegion;
   currencyCode: string;
   timezone: string;
   bridgeLanguages: string[];
   localLanguages: string[];
   /** Country-identifying English variety — English bridges, never generic US/UK. */
-  englishAccent: AfricanEnglishAccent;
+  englishAccent: AfricanEnglishAccent | ProductMarket['englishAccent'];
+  /** Local languages with country dialects / cultural varieties. */
+  culturalVarieties?: CulturalVariety[];
 };
 
 export type CorridorEnglishAccent = {
@@ -255,10 +266,12 @@ export type CorridorEnglishAccent = {
   accentIdentityId: string;
   speechVariety: string;
   echoVoiceId: string;
-  voiceProvisioning: AfricanEnglishAccent['voiceProvisioning'];
+  voiceProvisioning: string;
 };
 
-function corridorEnglishAccent(accent: AfricanEnglishAccent): CorridorEnglishAccent {
+function corridorEnglishAccent(
+  accent: AfricanMarket['englishAccent'],
+): CorridorEnglishAccent {
   return {
     bcp47: accent.bcp47,
     nameEn: accent.nameEn,
@@ -285,6 +298,7 @@ export function africanMarkets(): AfricanMarket[] {
       code: pack.code,
       nameEn: pack.nameEn,
       region: pack.region,
+      worldRegion: 'africa',
       currencyCode: pack.currencyCode,
       timezone: MARKET_TIMEZONES[pack.code] ?? 'UTC',
       bridgeLanguages: bridges.length ? bridges : ['en'],
@@ -294,12 +308,25 @@ export function africanMarkets(): AfricanMarket[] {
         nameEn: pack.nameEn,
         region: pack.region,
       }),
+      culturalVarieties: [],
     };
-  });
+  }).map((m) => asAfricaProductMarkets([m])[0]!);
 }
 
-export function languageLabel(code: string, market?: Pick<AfricanMarket, 'englishAccent'>): string {
+/** Africa + LATAM + SEA + Middle East product markets. */
+export function allProductMarkets(): ProductMarket[] {
+  return productMarkets(africanMarkets() as ProductMarket[]);
+}
+
+export function languageLabel(
+  code: string,
+  market?: Pick<AfricanMarket, 'englishAccent' | 'culturalVarieties'>,
+): string {
   if (code === 'en' && market?.englishAccent) return market.englishAccent.nameEn;
+  const variety = market?.culturalVarieties?.find(
+    (v) => v.languageCode === code && v.primaryLabel,
+  );
+  if (variety) return variety.varietyName;
   if (code === 'ak') return 'Akan/Twi';
   if (code === 'rw') return 'Kinyarwanda';
   if (code === 'pcm') return 'Nigerian Pidgin';
@@ -312,6 +339,13 @@ export function languageLabel(code: string, market?: Pick<AfricanMarket, 'englis
   if (code === 'lg') return 'Luganda';
   if (code === 'ny') return 'Chichewa';
   if (code === 'bem') return 'Bemba';
+  if (code === 'fil') return 'Filipino';
+  if (code === 'ht') return 'Haitian Creole';
+  if (code === 'qu') return 'Quechua';
+  if (code === 'gn') return 'Guarani';
+  if (code === 'nah') return 'Nahuatl';
+  if (code === 'ckb') return 'Central Kurdish (Sorani)';
+  if (code === 'tet') return 'Tetum';
   const hit = LANGUAGE_BY_CODE.get(code);
   return hit?.nameEn ?? code;
 }
@@ -348,7 +382,7 @@ export function buildRelayCorridors(): BuiltRelayCorridor[] {
   const out: BuiltRelayCorridor[] = [];
   const seen = new Set<string>();
 
-  for (const market of africanMarkets()) {
+  for (const market of allProductMarkets()) {
     const langs = [...new Set([...market.localLanguages, ...market.bridgeLanguages])].filter(
       (l) => l !== 'en',
     );
@@ -463,7 +497,7 @@ export function buildEverydayCorridors(): BuiltEverydayCorridor[] {
     out.push(c);
   }
 
-  for (const market of africanMarkets()) {
+  for (const market of allProductMarkets()) {
     const locals = [...new Set([...market.localLanguages, ...market.bridgeLanguages])].filter(
       (l) => LANGUAGE_BY_CODE.has(l),
     );
@@ -501,7 +535,7 @@ export function buildEverydayCorridors(): BuiltEverydayCorridor[] {
             reply: true,
             note: usesEnglish
               ? `Private document pipeline for ${market.nameEn}. English TTS/STT routes as ${market.englishAccent.nameEn} (${market.englishAccent.bcp47}). Adapter failures stay explicit; fixtures only when allowed.`
-              : `Private document pipeline for ${market.nameEn}. Adapter failures stay explicit; fixtures only when allowed.`,
+              : `Private document pipeline for ${market.nameEn}. Country varieties and dialects stay explicit; fixtures only when allowed.`,
             marketCode: market.code,
             marketName: market.nameEn,
             region: market.region,
@@ -650,7 +684,7 @@ export function buildLearnBackCorridors(): BuiltLearnBackCorridor[] {
     region: 'Africa',
   });
 
-  for (const market of africanMarkets()) {
+  for (const market of allProductMarkets()) {
     const locals = market.localLanguages.filter((l) => LANGUAGE_BY_CODE.has(l));
     const bridges = market.bridgeLanguages.filter((b) => LANGUAGE_BY_CODE.has(b));
     for (const local of locals) {
@@ -678,8 +712,8 @@ export function buildLearnBackCorridors(): BuiltLearnBackCorridor[] {
             asr: true,
             pronunciation: false,
             note: usesEnglish
-              ? `Adult practice for ${market.nameEn}. Practice/explanations that use English use ${market.englishAccent.nameEn} (${market.englishAccent.bcp47}). Pronunciation stays not_assessed without a validated assessor — country English is never marked wrong for non-US/UK accent.`
-              : `Adult practice for ${market.nameEn}. Pronunciation stays not_assessed without a validated assessor.`,
+              ? `Adult practice for ${market.nameEn}. Practice/explanations that use English use ${market.englishAccent.nameEn} (${market.englishAccent.bcp47}). Pronunciation stays not_assessed without a validated assessor — country English and local dialect varieties are never marked wrong for non-prestige accent alone.`
+              : `Adult practice for ${market.nameEn}. Country dialects and cultural varieties are accepted. Pronunciation stays not_assessed without a validated assessor.`,
             marketCode: market.code,
             marketName: market.nameEn,
             region: market.region,
@@ -766,14 +800,20 @@ export function buildLearnBackMarketScenarioSeeds(
 }
 
 export function quoteRateForCurrency(currencyCode: string): number {
-  return RATE_PER_15_MIN_MINOR[currencyCode] ?? RATE_PER_15_MIN_MINOR.USD ?? 1500;
+  return (
+    RATE_PER_15_MIN_MINOR[currencyCode] ??
+    quoteRateForWorldCurrency(currencyCode) ??
+    RATE_PER_15_MIN_MINOR.USD ??
+    1500
+  );
 }
 
 export function africanMarketSummaries() {
-  return africanMarkets().map((m) => ({
+  return allProductMarkets().map((m) => ({
     code: m.code,
     nameEn: m.nameEn,
     region: m.region,
+    worldRegion: m.worldRegion,
     currencyCode: m.currencyCode,
     timezone: m.timezone,
     bridgeLanguages: m.bridgeLanguages,
@@ -781,5 +821,6 @@ export function africanMarketSummaries() {
     localLanguageLabels: m.localLanguages.map((code) => languageLabel(code, m)),
     bridgeLanguageLabels: m.bridgeLanguages.map((code) => languageLabel(code, m)),
     englishAccent: corridorEnglishAccent(m.englishAccent),
+    culturalVarieties: m.culturalVarieties,
   }));
 }

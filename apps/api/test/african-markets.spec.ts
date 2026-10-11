@@ -111,9 +111,9 @@ describe('African market corridors', () => {
     const everyday = everydayCatalog();
     const learnback = learnbackCatalog();
     const relay = relayCatalog();
-    expect(everyday.marketCount).toBeGreaterThanOrEqual(50);
-    expect(learnback.marketCount).toBeGreaterThanOrEqual(50);
-    expect(relay.marketCount).toBeGreaterThanOrEqual(50);
+    expect(everyday.marketCount).toBeGreaterThanOrEqual(90);
+    expect(learnback.marketCount).toBeGreaterThanOrEqual(90);
+    expect(relay.marketCount).toBeGreaterThanOrEqual(90);
     expect(everyday.corridorCount).toBe(EVERYDAY_CORRIDORS.length);
     expect(learnback.corridorCount).toBe(LEARNBACK_CORRIDORS.length);
     expect(relay.corridorCount).toBe(RELAY_CORRIDORS.length);

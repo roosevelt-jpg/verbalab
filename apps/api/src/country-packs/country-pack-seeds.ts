@@ -200,6 +200,154 @@ const CURATED_OVERRIDES: Record<string, CuratedOverride> = {
     currencyNotes: 'Ethiopian birr (Br / ETB).',
     culturalNotes: 'Amharic primary; respectful forms and script fidelity matter.',
   },
+  // —— LATAM ——
+  MX: {
+    primaryLanguages: ['es', 'en', 'nah'],
+    bcp47Tags: ['es-MX', 'en-MX', 'nah-MX'],
+    relatedDialectCodes: ['es-mx', 'nah-mx'],
+    relatedAccentCodes: ['es-mx', 'en-mx'],
+    culturalNotes:
+      'Mexican Spanish (Mexico City / regional) is the primary variety; Nahuatl and other Indigenous languages require community care. English is a bridge — Mexican English, not US English.',
+  },
+  BR: {
+    primaryLanguages: ['pt', 'en'],
+    bcp47Tags: ['pt-BR', 'en-BR'],
+    relatedDialectCodes: ['pt-br'],
+    relatedAccentCodes: ['pt-br', 'en-br'],
+    culturalNotes:
+      'Brazilian Portuguese (Paulista, Carioca, Nordestino, …) — not European Portuguese. Brazilian English is the English bridge variety.',
+  },
+  AR: {
+    primaryLanguages: ['es', 'en'],
+    bcp47Tags: ['es-AR', 'en-AR'],
+    relatedDialectCodes: ['es-ar'],
+    relatedAccentCodes: ['es-ar', 'en-ar'],
+    culturalNotes: 'Rioplatense Spanish with voseo; distinct from Mexican and Andean Spanish.',
+  },
+  CO: {
+    primaryLanguages: ['es', 'en'],
+    bcp47Tags: ['es-CO', 'en-CO'],
+    relatedDialectCodes: ['es-co'],
+    relatedAccentCodes: ['es-co', 'en-co'],
+    culturalNotes: 'Colombian Spanish — Bogotá Andean, coastal, and Paisa varieties.',
+  },
+  PE: {
+    primaryLanguages: ['es', 'qu', 'en'],
+    bcp47Tags: ['es-PE', 'qu-PE', 'en-PE'],
+    relatedDialectCodes: ['es-pe', 'qu-pe'],
+    relatedAccentCodes: ['es-pe', 'en-pe'],
+    culturalNotes: 'Peruvian Spanish plus Quechua; Indigenous languages need community consent for cultural corpora.',
+  },
+  PY: {
+    primaryLanguages: ['es', 'gn', 'en'],
+    bcp47Tags: ['es-PY', 'gn-PY', 'en-PY'],
+    relatedDialectCodes: ['es-py', 'gn-py'],
+    relatedAccentCodes: ['es-py'],
+    culturalNotes: 'Bilingual Spanish/Guarani daily life; Jopará mixing is common.',
+  },
+  HT: {
+    primaryLanguages: ['ht', 'fr', 'en'],
+    bcp47Tags: ['ht-HT', 'fr-HT', 'en-HT'],
+    relatedDialectCodes: ['ht-ht'],
+    relatedAccentCodes: ['ht-ht'],
+    culturalNotes: 'Haitian Creole is the everyday language; French is formal register.',
+  },
+  // —— SEA ——
+  PH: {
+    primaryLanguages: ['en', 'fil', 'tl', 'ceb'],
+    bcp47Tags: ['en-PH', 'fil-PH', 'tl-PH', 'ceb-PH'],
+    relatedDialectCodes: ['en-ph', 'tl-ph', 'ceb-ph'],
+    relatedAccentCodes: ['en-ph', 'tl-ph', 'ceb-ph'],
+    culturalNotes:
+      'Filipino English plus Tagalog/Filipino and Cebuano (Visayas). Po/opo respect particles; do not collapse Visayan into Tagalog.',
+  },
+  ID: {
+    primaryLanguages: ['id', 'jv', 'su', 'en'],
+    bcp47Tags: ['id-ID', 'jv-ID', 'su-ID', 'en-ID'],
+    relatedDialectCodes: ['id-id', 'jv-id', 'su-id'],
+    relatedAccentCodes: ['id-id', 'en-id'],
+    culturalNotes:
+      'Bahasa Indonesia bridges many islands; Javanese and Sundanese are major regional languages with their own speech identity.',
+  },
+  TH: {
+    primaryLanguages: ['th', 'en'],
+    bcp47Tags: ['th-TH', 'en-TH'],
+    relatedDialectCodes: ['th-th'],
+    relatedAccentCodes: ['th-th', 'en-th'],
+    culturalNotes: 'Central Thai (Bangkok) plus Northern, Isan, and Southern varieties — polite particles matter.',
+  },
+  VN: {
+    primaryLanguages: ['vi', 'en'],
+    bcp47Tags: ['vi-VN', 'en-VN'],
+    relatedDialectCodes: ['vi-vn'],
+    relatedAccentCodes: ['vi-vn', 'en-vn'],
+    culturalNotes: 'Northern (Hanoi), Central, and Southern (Saigon) Vietnamese dialects.',
+  },
+  MY: {
+    primaryLanguages: ['ms', 'en'],
+    bcp47Tags: ['ms-MY', 'en-MY'],
+    relatedDialectCodes: ['ms-my'],
+    relatedAccentCodes: ['ms-my', 'en-my'],
+    culturalNotes: 'Malaysian Malay and Malaysian English — distinct from Singapore varieties.',
+  },
+  SG: {
+    primaryLanguages: ['en', 'ms', 'zh'],
+    bcp47Tags: ['en-SG', 'ms-SG', 'zh-SG'],
+    relatedDialectCodes: ['en-sg', 'ms-sg'],
+    relatedAccentCodes: ['en-sg'],
+    culturalNotes:
+      'Singaporean English (Standard vs Singlish), Malay, and Mandarin — four official languages; English is the primary bridge.',
+  },
+  // —— Middle East ——
+  SA: {
+    primaryLanguages: ['ar', 'en'],
+    bcp47Tags: ['ar-SA', 'en-SA'],
+    relatedDialectCodes: ['ar-sa'],
+    relatedAccentCodes: ['ar-sa', 'en-sa'],
+    culturalNotes: 'Najdi, Hijazi, and Gulf Arabic dialects; MSA for formal. Saudi English is the English bridge.',
+  },
+  AE: {
+    primaryLanguages: ['ar', 'en'],
+    bcp47Tags: ['ar-AE', 'en-AE'],
+    relatedDialectCodes: ['ar-ae'],
+    relatedAccentCodes: ['ar-ae', 'en-ae'],
+    culturalNotes: 'Emirati/Gulf Arabic in a highly multilingual Gulf context; Emirati English for the bridge.',
+  },
+  IQ: {
+    primaryLanguages: ['ar', 'ckb', 'en'],
+    bcp47Tags: ['ar-IQ', 'ckb-IQ', 'en-IQ'],
+    relatedDialectCodes: ['ar-iq', 'ckb-iq'],
+    relatedAccentCodes: ['ar-iq', 'en-iq'],
+    culturalNotes: 'Iraqi Arabic plus Sorani Kurdish; Iraqi English for the bridge.',
+  },
+  LB: {
+    primaryLanguages: ['ar', 'en', 'fr'],
+    bcp47Tags: ['ar-LB', 'en-LB', 'fr-LB'],
+    relatedDialectCodes: ['ar-lb'],
+    relatedAccentCodes: ['ar-lb', 'en-lb'],
+    culturalNotes: 'Lebanese Arabic with frequent French/English trilingual contexts.',
+  },
+  IL: {
+    primaryLanguages: ['he', 'ar', 'en'],
+    bcp47Tags: ['he-IL', 'ar-IL', 'en-IL'],
+    relatedDialectCodes: ['he-il', 'ar-il'],
+    relatedAccentCodes: ['he-il', 'en-il'],
+    culturalNotes: 'Modern Israeli Hebrew plus Levantine Arabic; Israeli English for the bridge.',
+  },
+  IR: {
+    primaryLanguages: ['fa', 'en'],
+    bcp47Tags: ['fa-IR', 'en-IR'],
+    relatedDialectCodes: ['fa-ir'],
+    relatedAccentCodes: ['fa-ir', 'en-ir'],
+    culturalNotes: 'Tehrani Persian with taarof politeness; Iranian English for the bridge.',
+  },
+  TR: {
+    primaryLanguages: ['tr', 'ku', 'en'],
+    bcp47Tags: ['tr-TR', 'ku-TR', 'en-TR'],
+    relatedDialectCodes: ['tr-tr', 'ku-tr'],
+    relatedAccentCodes: ['tr-tr', 'en-tr'],
+    culturalNotes: 'Istanbul Turkish plus Kurmanji Kurdish; Turkish English for the bridge.',
+  },
 };
 
 function regionFromBcp47(tag: string): string | null {

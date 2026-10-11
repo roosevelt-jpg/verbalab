@@ -18,7 +18,9 @@ type Catalog = {
     code: string;
     nameEn: string;
     region: string;
+    worldRegion?: string;
     englishAccent?: { nameEn: string; bcp47: string };
+    culturalVarieties?: { varietyName: string; languageCode: string; dialects: string[] }[];
   }[];
   corridors?: {
     id: string;
@@ -244,8 +246,8 @@ function RelayHomeFlow({ auth }: { auth: RelayAuthBag }) {
           </div>
           <form onSubmit={onCreate} className="lg-card" style={{ display: 'grid', gap: '0.65rem' }}>
             <p className="lg-type-compact">
-              {catalog?.marketCount ?? 0} African markets · {catalog?.corridorCount ?? 0} wired
-              corridors · English bridges use each country’s accent
+              {catalog?.marketCount ?? 0} markets (Africa · LATAM · SEA · Middle East) ·{' '}
+              {catalog?.corridorCount ?? 0} wired corridors · country English + local dialects
             </p>
             <label className="vl-field-label">
               Market
@@ -262,7 +264,9 @@ function RelayHomeFlow({ auth }: { auth: RelayAuthBag }) {
                 {(catalog?.markets ?? []).map((m) => (
                   <option key={m.code} value={m.code}>
                     {m.nameEn}
-                    {m.englishAccent ? ` · ${m.englishAccent.nameEn}` : ''} ({m.region})
+                    {m.englishAccent ? ` · ${m.englishAccent.nameEn}` : ''}
+                    {m.culturalVarieties?.[0] ? ` · ${m.culturalVarieties[0].varietyName}` : ''} (
+                    {m.worldRegion ?? m.region})
                   </option>
                 ))}
               </select>

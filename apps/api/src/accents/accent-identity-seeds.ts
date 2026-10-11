@@ -10,6 +10,13 @@ import {
   buildAfricanEnglishAccentIdentitySeeds,
   HAND_AUTHORED_ENGLISH_IDENTITY_IDS,
 } from '../african-markets/african-english-accents';
+import {
+  buildCountryEnglishAccentIdentitySeeds,
+  buildCulturalVarietyAccentIdentitySeeds,
+  HAND_AUTHORED_WORLD_ENGLISH_IDS,
+  WORLD_PRODUCT_REGION_BY_CODE,
+  worldMarkets,
+} from '../world-markets';
 
 export type AccentIdentitySeed = {
   id: string;
@@ -815,6 +822,9 @@ const existingAccentIdentityIds = new Set(HAND_AUTHORED_ACCENT_IDENTITY_SEEDS.ma
 for (const id of Object.values(HAND_AUTHORED_ENGLISH_IDENTITY_IDS)) {
   existingAccentIdentityIds.add(id);
 }
+for (const id of Object.values(HAND_AUTHORED_WORLD_ENGLISH_IDS)) {
+  existingAccentIdentityIds.add(id);
+}
 
 const AFRICAN_ENGLISH_ACCENT_IDENTITY_SEEDS = buildAfricanEnglishAccentIdentitySeeds(
   COUNTRY_PACK_SEEDS.filter((p) =>
@@ -822,11 +832,42 @@ const AFRICAN_ENGLISH_ACCENT_IDENTITY_SEEDS = buildAfricanEnglishAccentIdentityS
   ).map((p) => ({ code: p.code, nameEn: p.nameEn, region: p.region })),
   existingAccentIdentityIds,
 );
+for (const s of AFRICAN_ENGLISH_ACCENT_IDENTITY_SEEDS) existingAccentIdentityIds.add(s.id);
 
-/** Hand-authored packs plus generated country-identifying African English accents. */
+const WORLD_ENGLISH_MARKETS = COUNTRY_PACK_SEEDS.filter(
+  (p) => WORLD_PRODUCT_REGION_BY_CODE[p.code],
+).map((p) => ({
+  code: p.code,
+  nameEn: p.nameEn,
+  region: p.region,
+  worldRegion: WORLD_PRODUCT_REGION_BY_CODE[p.code]!,
+}));
+
+const WORLD_ENGLISH_ACCENT_IDENTITY_SEEDS = buildCountryEnglishAccentIdentitySeeds(
+  WORLD_ENGLISH_MARKETS,
+  existingAccentIdentityIds,
+);
+for (const s of WORLD_ENGLISH_ACCENT_IDENTITY_SEEDS) existingAccentIdentityIds.add(s.id);
+
+const WORLD_CULTURAL_VARIETY_SEEDS = buildCulturalVarietyAccentIdentitySeeds(
+  worldMarkets().map((m) => ({
+    code: m.code,
+    nameEn: m.nameEn,
+    region: m.region,
+    worldRegion: WORLD_PRODUCT_REGION_BY_CODE[m.code]!,
+    localLanguages: m.localLanguages,
+    bridgeLanguages: m.bridgeLanguages,
+    culturalVarieties: m.culturalVarieties,
+  })),
+  existingAccentIdentityIds,
+);
+
+/** Hand-authored packs plus generated country English and cultural-variety accents. */
 export const ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
   ...HAND_AUTHORED_ACCENT_IDENTITY_SEEDS,
   ...AFRICAN_ENGLISH_ACCENT_IDENTITY_SEEDS,
+  ...WORLD_ENGLISH_ACCENT_IDENTITY_SEEDS,
+  ...WORLD_CULTURAL_VARIETY_SEEDS,
 ];
 
 /** Full ISO labels for accent identity filters. */
