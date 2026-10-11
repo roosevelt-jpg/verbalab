@@ -3,9 +3,9 @@ import { buildCmsMetadata } from '@/lib/cms-seo';
 
 export async function generateMetadata(): Promise<Metadata> {
   return buildCmsMetadata('/docs', {
-    fallbackTitle: 'Documentation',
+    fallbackTitle: 'Documentation — overview',
     fallbackDescription:
-      'Lugemi developer documentation — speech, translate, agents, authentication, and API guides.',
+      'Lugemi docs overview: Echo speech, Baobab translate, Atlas chat, voices, agents, MCP, connectors, and the full OpenAPI surface — how Lugemi works, models, and browse by capability.',
   });
 }
 

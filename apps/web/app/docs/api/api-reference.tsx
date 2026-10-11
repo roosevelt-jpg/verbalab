@@ -26,11 +26,17 @@ const SPEC_URL = `${API_URL}/v1/openapi.json`;
 const SEARCH_LIMIT = 150;
 const POPULAR = [
   'post /v1/translate',
+  'post /v1/tts/synthesize',
   'post /v1/audio/speech',
   'post /v1/audio/transcriptions',
   'post /v1/detect',
   'post /v1/chat/completions',
+  'get /v1/tts/voices',
   'get /v1/languages',
+  'get /v1/models/live',
+  'get /v1/accents/identity',
+  'post /v1/embeddings',
+  'post /v1/mcp',
 ];
 
 type TryResult =
@@ -277,7 +283,12 @@ function Overview({
     <article className="apiref-article">
       <p className="vl-tag">API reference · v{doc.info.version}</p>
       <h1>{doc.info.title}</h1>
-      <p className="apiref-lead">{doc.info.description}</p>
+      <p className="apiref-lead">
+        {doc.info.description ||
+          'Complete Lugemi REST surface — every OpenAPI-tagged operation for Echo speech, Baobab translate, Atlas chat, agents, studio, connectors, and enterprise governance.'}{' '}
+        Browse by tag in the sidebar or search by path. Product overview:{' '}
+        <Link href="/docs">/docs</Link>.
+      </p>
       <dl className="apiref-facts">
         <div>
           <dt>Base URL</dt>
