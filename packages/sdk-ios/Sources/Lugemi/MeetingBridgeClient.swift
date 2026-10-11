@@ -203,6 +203,63 @@ public struct MeetingBridgeClient: @unchecked Sendable {
     )
   }
 
+  public func reviseItem(
+    itemId: String,
+    meetingId: String,
+    expectedRevision: Int,
+    wording: String? = nil,
+    dueDate: String? = nil
+  ) async throws -> [String: Any] {
+    var body: [String: Any] = [
+      "meetingId": meetingId,
+      "expectedRevision": expectedRevision,
+    ]
+    if let wording { body["wording"] = wording }
+    if let dueDate { body["dueDate"] = dueDate }
+    return try await http.requestJSON(
+      path: "/v1/meetingbridge/items/\(enc(itemId))/revisions",
+      method: "POST",
+      json: body,
+      extraHeaders: headers
+    )
+  }
+
+  public func syncItem(
+    itemId: String,
+    meetingId: String,
+    idempotencyKey: String,
+    destination: String = "private_download"
+  ) async throws -> [String: Any] {
+    try await http.requestJSON(
+      path: "/v1/meetingbridge/items/\(enc(itemId))/sync",
+      method: "POST",
+      json: [
+        "meetingId": meetingId,
+        "idempotencyKey": idempotencyKey,
+        "destination": destination,
+      ],
+      extraHeaders: headers
+    )
+  }
+
+  public func handoffDealBridge(meetingId: String) async throws -> [String: Any] {
+    try await http.requestJSON(
+      path: "/v1/meetingbridge/meetings/\(enc(meetingId))/handoff/dealbridge",
+      method: "POST",
+      json: [:],
+      extraHeaders: headers
+    )
+  }
+
+  public func handoffVoiceBridge(meetingId: String) async throws -> [String: Any] {
+    try await http.requestJSON(
+      path: "/v1/meetingbridge/meetings/\(enc(meetingId))/handoff/voicebridge",
+      method: "POST",
+      json: [:],
+      extraHeaders: headers
+    )
+  }
+
   public func close(meetingId: String) async throws -> [String: Any] {
     try await http.requestJSON(
       path: "/v1/meetingbridge/meetings/\(enc(meetingId))/close",

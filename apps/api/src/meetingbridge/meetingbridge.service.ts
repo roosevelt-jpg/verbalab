@@ -3,7 +3,9 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { ApiException } from '../common/errors/api-exception';
 import { BillingService } from '../billing/billing.service';
+import { DealBridgeService } from '../dealbridge/dealbridge.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { VoiceBridgeService } from '../voicebridge/voicebridge.service';
 import { MeetingBridgeAdapters } from './meetingbridge.adapters';
 import { meetingbridgeCatalog } from './meetingbridge.catalog';
 import { contentHash, hashInviteToken, mintEventId, mintInviteToken, mintTurnId } from './meetingbridge.hash';
@@ -33,12 +35,17 @@ export type MeetingActor = {
   ip?: string;
 };
 
+const SYNC_DESTINATIONS = ['private_download', 'internal_queue'] as const;
+type SyncDestination = (typeof SYNC_DESTINATIONS)[number];
+
 @Injectable()
 export class MeetingBridgeService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly billing: BillingService,
     private readonly adapters: MeetingBridgeAdapters,
+    private readonly dealbridge: DealBridgeService,
+    private readonly voicebridge: VoiceBridgeService,
   ) {}
 
   catalog() {
@@ -1254,6 +1261,365 @@ export class MeetingBridgeService {
         createdById: actor.userId,
       },
     }).then((row) => ({ ...row, body }));
+  }
+
+  async reviseItem(
+    meetingId: string,
+    actor: MeetingActor,
+    input: {
+      itemId: string;
+      expectedRevision: number;
+      wording?: string;
+      ownerParticipantIds?: string[];
+      requiredApproverIds?: string[];
+      dueDate?: string | null;
+      conditions?: string[];
+      sourceRevisionIds?: string[];
+    },
+  ) {
+    await this.assertEnabled(actor.organizationId);
+    const meeting = await this.requireMeeting(meetingId, actor.organizationId);
+    await this.requireMember(meetingId, actor.userId);
+
+    const item = await this.prisma.meetingItem.findFirst({
+      where: { id: input.itemId, meetingId },
+      include: { activeRevision: true },
+    });
+    if (!item?.activeRevision) {
+      throw new ApiException('not_found', 'Item not found', HttpStatus.NOT_FOUND);
+    }
+    if (item.activeRevision.revisionNumber !== input.expectedRevision) {
+      throw new ApiException(
+        'revision_conflict',
+        `Expected revision ${input.expectedRevision}, active is ${item.activeRevision.revisionNumber}`,
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const wording = (input.wording ?? item.activeRevision.wording).trim();
+    const owners = input.ownerParticipantIds ?? (item.activeRevision.ownerParticipantIds as string[]);
+    const required =
+      input.requiredApproverIds ?? (item.activeRevision.requiredApproverIds as string[]);
+    const dueDate =
+      input.dueDate === undefined ? item.activeRevision.dueDate : input.dueDate || null;
+    const conditions = input.conditions ?? ((item.activeRevision.conditions as string[]) ?? []);
+    const sources =
+      input.sourceRevisionIds ?? (item.activeRevision.sourceRevisionIds as string[]);
+
+    await this.prisma.$transaction(async (tx) => {
+      await tx.meetingItemRevision.update({
+        where: { id: item.activeRevision!.id },
+        data: { status: 'superseded' },
+      });
+      const hash = contentHash({ wording, owners, required, dueDate, conditions });
+      const revision = await tx.meetingItemRevision.create({
+        data: {
+          itemId: item.id,
+          revisionNumber: item.activeRevision!.revisionNumber + 1,
+          wording,
+          ownerParticipantIds: owners,
+          requiredApproverIds: required,
+          dueDate,
+          timeZone: meeting.timeZone,
+          conditions,
+          sourceRevisionIds: sources,
+          contentHash: hash,
+          status: 'current',
+          createdById: actor.userId,
+        },
+      });
+      if (item.state === 'superseded' || item.state === 'cancelled') {
+        throw new ApiException(
+          'conflict',
+          'Cannot amend a superseded or cancelled item — propose a new item',
+          HttpStatus.CONFLICT,
+        );
+      }
+      if (item.state !== 'reviewing') {
+        assertItemTransition(item.state as ItemState, 'reviewing');
+      }
+      await tx.meetingItem.update({
+        where: { id: item.id },
+        data: { activeRevisionId: revision.id, state: 'reviewing' },
+      });
+
+      const members = await tx.meetingMembership.findMany({ where: { meetingId, active: true } });
+      for (const m of members) {
+        const presentationText =
+          m.listeningLanguage === 'en' || m.listeningLanguage === meeting.corridor.split('-')[0]
+            ? wording
+            : (
+                await this.adapters.translateText({
+                  text: wording,
+                  sourceLang: 'en',
+                  targetLang: m.listeningLanguage,
+                  organizationId: actor.organizationId,
+                  workspaceId: actor.workspaceId,
+                })
+              ).text || wording;
+        await tx.meetingReviewPresentation.create({
+          data: {
+            itemRevisionId: revision.id,
+            participantId: m.userId,
+            language: m.listeningLanguage,
+            wording: presentationText,
+            presentationHash: contentHash({ wording: presentationText, language: m.listeningLanguage, hash }),
+          },
+        });
+      }
+
+      await this.appendEvent(tx, {
+        meetingId,
+        type: 'item.proposed',
+        actorId: actor.userId,
+        payload: { itemId: item.id, revisionId: revision.id, amended: true },
+      });
+    });
+
+    return this.meetingView(meetingId, actor);
+  }
+
+  async syncItem(
+    meetingId: string,
+    actor: MeetingActor,
+    input: { itemId: string; destination?: string; idempotencyKey: string },
+  ) {
+    await this.assertEnabled(actor.organizationId);
+    await this.requireMeeting(meetingId, actor.organizationId);
+    const member = await this.requireMember(meetingId, actor.userId);
+    if (member.role !== 'organizer') {
+      throw new ApiException('forbidden', 'Only the organizer can sync tasks', HttpStatus.FORBIDDEN);
+    }
+    if (!input.idempotencyKey?.trim()) {
+      throw new ApiException('validation_error', 'idempotencyKey is required', HttpStatus.BAD_REQUEST);
+    }
+
+    const destination = (input.destination ?? 'private_download') as SyncDestination;
+    if (!SYNC_DESTINATIONS.includes(destination)) {
+      throw new ApiException(
+        'unsupported_destination',
+        `Destination "${input.destination}" is not allowlisted. Allowed: ${SYNC_DESTINATIONS.join(', ')}. No Slack/email/calendar writes.`,
+        HttpStatus.UNPROCESSABLE_ENTITY,
+      );
+    }
+
+    const item = await this.prisma.meetingItem.findFirst({
+      where: { id: input.itemId, meetingId },
+      include: { activeRevision: true },
+    });
+    if (!item?.activeRevision) {
+      throw new ApiException('not_found', 'Item not found', HttpStatus.NOT_FOUND);
+    }
+    if (item.state !== 'confirmed' || item.activeRevision.status !== 'current') {
+      throw new ApiException(
+        'conflict',
+        'Only confirmed active items can be synced',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const minutes = await this.prisma.meetingMinutesRevision.findFirst({
+      where: { meetingId },
+      orderBy: { revisionNumber: 'desc' },
+    });
+    if (!minutes) {
+      throw new ApiException(
+        'conflict',
+        'Issue minutes before syncing tasks so the export pins a reviewed version',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const existing = await this.prisma.meetingExport.findUnique({
+      where: { meetingId_idempotencyKey: { meetingId, idempotencyKey: input.idempotencyKey } },
+    });
+    if (existing) {
+      if (existing.destination !== destination || existing.minutesRevisionId !== minutes.id) {
+        throw new ApiException(
+          'idempotency_conflict',
+          'Idempotency key reused with a different sync payload',
+          HttpStatus.CONFLICT,
+        );
+      }
+      return {
+        sync: existing,
+        item: {
+          id: item.id,
+          wording: item.activeRevision.wording,
+          dueDate: item.activeRevision.dueDate,
+          owners: item.activeRevision.ownerParticipantIds,
+        },
+        note: 'Idempotent replay — no external write performed.',
+      };
+    }
+
+    const body = [
+      'kind,wording,dueDate,owners,itemId,revision',
+      `"${item.kind}","${String(item.activeRevision.wording).replace(/"/g, '""')}","${item.activeRevision.dueDate ?? ''}","${(item.activeRevision.ownerParticipantIds as string[]).join(';')}","${item.id}","${item.activeRevision.revisionNumber}"`,
+    ].join('\n');
+
+    const row = await this.prisma.meetingExport.create({
+      data: {
+        meetingId,
+        minutesRevisionId: minutes.id,
+        format: 'csv_tasks',
+        destination,
+        status: destination === 'internal_queue' ? 'queued' : 'ready',
+        storageKey: `meetingbridge/${meetingId}/sync/${randomBytes(8).toString('hex')}.csv`,
+        idempotencyKey: input.idempotencyKey,
+        createdById: actor.userId,
+      },
+    });
+
+    await this.audit({
+      organizationId: actor.organizationId,
+      meetingId,
+      actorId: actor.userId,
+      operation: 'item.sync',
+      meta: { itemId: item.id, destination, exportId: row.id },
+    });
+
+    return {
+      sync: { ...row, body },
+      item: {
+        id: item.id,
+        wording: item.activeRevision.wording,
+        dueDate: item.activeRevision.dueDate,
+        owners: item.activeRevision.ownerParticipantIds,
+      },
+      note:
+        destination === 'internal_queue'
+          ? 'Queued on the allowlisted internal destination. No third-party task system was written.'
+          : 'Private download ready. No third-party task system was written.',
+    };
+  }
+
+  async handoffDealBridge(meetingId: string, actor: MeetingActor) {
+    await this.assertEnabled(actor.organizationId);
+    const meeting = await this.requireMeeting(meetingId, actor.organizationId);
+    const member = await this.requireMember(meetingId, actor.userId);
+    if (member.role !== 'organizer') {
+      throw new ApiException('forbidden', 'Only the organizer can hand off to DealBridge', HttpStatus.FORBIDDEN);
+    }
+
+    const confirmed = await this.prisma.meetingItem.count({
+      where: { meetingId, state: 'confirmed' },
+    });
+    if (confirmed < 1) {
+      throw new ApiException(
+        'conflict',
+        'Confirm at least one item before DealBridge handoff',
+        HttpStatus.CONFLICT,
+      );
+    }
+
+    const [merchantLanguage, buyerLanguage] = meeting.corridor.includes('fr')
+      ? (['en', 'fr'] as const)
+      : meeting.corridor.startsWith('ak')
+        ? (['ak', 'fr'] as const)
+        : (['en', 'fr'] as const);
+
+    try {
+      const session = await this.dealbridge.createSession(
+        {
+          organizationId: actor.organizationId,
+          workspaceId: actor.workspaceId,
+          userId: actor.userId,
+          apiKeyId: actor.apiKeyId,
+          authContext: actor.apiKeyId ? `api_key:${actor.apiKeyId}` : `user:${actor.userId}`,
+          ip: actor.ip,
+        },
+        {
+          category: 'wholesale_rice',
+          merchantLanguage,
+          buyerLanguage,
+          timeZone: meeting.timeZone,
+          idempotencyKey: `mb-deal-handoff-${meetingId}`,
+        },
+      );
+      const sessionId = (session as { id: string }).id;
+      await this.audit({
+        organizationId: actor.organizationId,
+        meetingId,
+        actorId: actor.userId,
+        operation: 'handoff.dealbridge',
+        meta: { sessionId },
+      });
+      return {
+        dealSession: session,
+        dealbridgePath: `/dealbridge/sessions/${sessionId}`,
+        note: 'Proposed DealBridge session only. MeetingBridge confirmation is not a commercial receipt.',
+      };
+    } catch (err) {
+      await this.prisma.$transaction(async (tx) => {
+        await this.appendEvent(tx, {
+          meetingId,
+          type: 'integration.failed',
+          actorId: actor.userId,
+          payload: {
+            integration: 'dealbridge',
+            message: err instanceof Error ? err.message : 'DealBridge handoff failed',
+          },
+        });
+      });
+      throw err;
+    }
+  }
+
+  async handoffVoiceBridge(meetingId: string, actor: MeetingActor) {
+    await this.assertEnabled(actor.organizationId);
+    const meeting = await this.requireMeeting(meetingId, actor.organizationId);
+    const member = await this.requireMember(meetingId, actor.userId);
+    if (member.role !== 'organizer') {
+      throw new ApiException(
+        'forbidden',
+        'Only the organizer can hand off to VoiceBridge',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    try {
+      const thread = await this.voicebridge.createThread(
+        {
+          organizationId: actor.organizationId,
+          workspaceId: actor.workspaceId,
+          userId: actor.userId,
+          apiKeyId: actor.apiKeyId,
+          ip: actor.ip,
+        },
+        {
+          title: `Follow-up: ${meeting.title}`,
+          category: 'meetingbridge_followup',
+          language: (meeting.supportedLanguages as string[])[0] ?? 'en',
+          corridor: meeting.corridor,
+        },
+      );
+      await this.audit({
+        organizationId: actor.organizationId,
+        meetingId,
+        actorId: actor.userId,
+        operation: 'handoff.voicebridge',
+        meta: { threadId: (thread as { thread?: { id?: string } }).thread?.id },
+      });
+      return {
+        voiceThread: thread,
+        voicebridgePath: `/voicebridge/threads/${(thread as { thread: { id: string } }).thread.id}`,
+        note: 'Authorized asynchronous follow-up thread. Recipients must still be invited on VoiceBridge.',
+      };
+    } catch (err) {
+      await this.prisma.$transaction(async (tx) => {
+        await this.appendEvent(tx, {
+          meetingId,
+          type: 'integration.failed',
+          actorId: actor.userId,
+          payload: {
+            integration: 'voicebridge',
+            message: err instanceof Error ? err.message : 'VoiceBridge handoff failed',
+          },
+        });
+      });
+      throw err;
+    }
   }
 
   private csvTasks(payload: Prisma.JsonValue) {

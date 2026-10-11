@@ -167,6 +167,58 @@ class MeetingBridgeClient(
     )
   }
 
+  fun reviseItem(
+    itemId: String,
+    meetingId: String,
+    expectedRevision: Int,
+    wording: String? = null,
+    dueDate: String? = null,
+  ): JSONObject {
+    val body = JSONObject().put("meetingId", meetingId).put("expectedRevision", expectedRevision)
+    if (wording != null) body.put("wording", wording)
+    if (dueDate != null) body.put("dueDate", dueDate)
+    return http.requestJson(
+      "POST",
+      "/v1/meetingbridge/items/${enc(itemId)}/revisions",
+      body,
+      extraHeaders = headers(),
+    )
+  }
+
+  fun syncItem(
+    itemId: String,
+    meetingId: String,
+    idempotencyKey: String,
+    destination: String = "private_download",
+  ): JSONObject {
+    val body = JSONObject()
+      .put("meetingId", meetingId)
+      .put("idempotencyKey", idempotencyKey)
+      .put("destination", destination)
+    return http.requestJson(
+      "POST",
+      "/v1/meetingbridge/items/${enc(itemId)}/sync",
+      body,
+      extraHeaders = headers(),
+    )
+  }
+
+  fun handoffDealBridge(meetingId: String): JSONObject =
+    http.requestJson(
+      "POST",
+      "/v1/meetingbridge/meetings/${enc(meetingId)}/handoff/dealbridge",
+      JSONObject(),
+      extraHeaders = headers(),
+    )
+
+  fun handoffVoiceBridge(meetingId: String): JSONObject =
+    http.requestJson(
+      "POST",
+      "/v1/meetingbridge/meetings/${enc(meetingId)}/handoff/voicebridge",
+      JSONObject(),
+      extraHeaders = headers(),
+    )
+
   fun close(meetingId: String): JSONObject =
     http.requestJson("POST", "/v1/meetingbridge/meetings/${enc(meetingId)}/close", JSONObject(), extraHeaders = headers())
 

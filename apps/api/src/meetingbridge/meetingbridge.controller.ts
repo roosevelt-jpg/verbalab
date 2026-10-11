@@ -272,6 +272,84 @@ export class MeetingBridgeController {
     });
   }
 
+  @Post('items/:itemId/revisions')
+  @HttpCode(HttpStatus.CREATED)
+  reviseItem(
+    @Req() req: AuthedRequest,
+    @Param('itemId') itemId: string,
+    @Headers('x-meetingbridge-actor-id') actorHeader?: string,
+    @Body()
+    body: {
+      meetingId?: string;
+      expectedRevision?: number;
+      wording?: string;
+      ownerParticipantIds?: string[];
+      requiredApproverIds?: string[];
+      dueDate?: string | null;
+      conditions?: string[];
+      sourceRevisionIds?: string[];
+    } = {},
+  ) {
+    if (!body.meetingId || body.expectedRevision == null) {
+      throw new ApiException(
+        'validation_error',
+        'meetingId and expectedRevision are required',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return this.meetingbridge.reviseItem(body.meetingId, resolveActor(req, actorHeader), {
+      itemId,
+      expectedRevision: body.expectedRevision,
+      wording: body.wording,
+      ownerParticipantIds: body.ownerParticipantIds,
+      requiredApproverIds: body.requiredApproverIds,
+      dueDate: body.dueDate,
+      conditions: body.conditions,
+      sourceRevisionIds: body.sourceRevisionIds,
+    });
+  }
+
+  @Post('items/:itemId/sync')
+  @HttpCode(HttpStatus.CREATED)
+  syncItem(
+    @Req() req: AuthedRequest,
+    @Param('itemId') itemId: string,
+    @Headers('x-meetingbridge-actor-id') actorHeader?: string,
+    @Body()
+    body: { meetingId?: string; destination?: string; idempotencyKey?: string } = {},
+  ) {
+    if (!body.meetingId || !body.idempotencyKey) {
+      throw new ApiException(
+        'validation_error',
+        'meetingId and idempotencyKey are required',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+    return this.meetingbridge.syncItem(body.meetingId, resolveActor(req, actorHeader), {
+      itemId,
+      destination: body.destination,
+      idempotencyKey: body.idempotencyKey,
+    });
+  }
+
+  @Post('meetings/:id/handoff/dealbridge')
+  handoffDeal(
+    @Req() req: AuthedRequest,
+    @Param('id') id: string,
+    @Headers('x-meetingbridge-actor-id') actorHeader?: string,
+  ) {
+    return this.meetingbridge.handoffDealBridge(id, resolveActor(req, actorHeader));
+  }
+
+  @Post('meetings/:id/handoff/voicebridge')
+  handoffVoice(
+    @Req() req: AuthedRequest,
+    @Param('id') id: string,
+    @Headers('x-meetingbridge-actor-id') actorHeader?: string,
+  ) {
+    return this.meetingbridge.handoffVoiceBridge(id, resolveActor(req, actorHeader));
+  }
+
   @Post('items/:itemId/confirmations')
   confirm(
     @Req() req: AuthedRequest,

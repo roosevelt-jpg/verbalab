@@ -341,4 +341,147 @@ describe('MeetingBridge API', () => {
       .send({ title: 'Nope', corridor: 'xx-yy' })
       .expect(400);
   });
+
+  it('amends items, syncs confirmed tasks, and hands off to DealBridge/VoiceBridge', async () => {
+    process.env.DEALBRIDGE_OPEN = '1';
+    process.env.VOICEBRIDGE_OPEN = '1';
+    const org = await seedOrg(prisma, 'meetingbridge_handoff');
+    const key = await apiKeys.create({
+      organizationId: org.id,
+      workspaceId: org.workspaces[0]!.id,
+      userId: org.memberships[0]!.userId,
+      name: 'meetingbridge-handoff',
+    });
+    const organizer = 'org-handoff';
+    const participant = 'part-handoff';
+
+    const created = await request(app.getHttpServer())
+      .post('/v1/meetingbridge/meetings')
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .send({
+        title: 'Handoff meeting',
+        corridor: 'en-fr',
+        speakingLanguage: 'en',
+        listeningLanguage: 'fr',
+        timeZone: 'Africa/Accra',
+      })
+      .expect(201);
+    const meetingId = created.body.meeting.id as string;
+
+    await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/lobby`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .expect(201);
+
+    const invite = await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/invites`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .send({})
+      .expect(201);
+
+    await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/join`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', participant)
+      .send({
+        token: invite.body.token,
+        speakingLanguage: 'fr',
+        listeningLanguage: 'en',
+      })
+      .expect(201);
+
+    await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/start`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .expect(201);
+
+    const proposed = await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/items`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .send({
+        kind: 'action',
+        wording: 'Dispatch 50 bags',
+        ownerParticipantIds: [participant],
+        requiredApproverIds: [organizer, participant],
+        dueDate: '2026-10-20',
+      })
+      .expect(201);
+    const itemId = proposed.body.proposedItemId as string;
+    const rev = proposed.body.items.find((i: { id: string }) => i.id === itemId).revision
+      .revisionNumber as number;
+
+    const amended = await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/items/${itemId}/revisions`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .send({
+        meetingId,
+        expectedRevision: rev,
+        wording: 'Dispatch 50 bags of rice',
+        dueDate: '2026-10-21',
+      })
+      .expect(201);
+    expect(amended.body.items.find((i: { id: string }) => i.id === itemId).state).toBe('reviewing');
+    expect(
+      amended.body.items.find((i: { id: string }) => i.id === itemId).revision.revisionNumber,
+    ).toBe(rev + 1);
+
+    for (const actor of [organizer, participant]) {
+      await request(app.getHttpServer())
+        .post(`/v1/meetingbridge/items/${itemId}/confirmations`)
+        .set('Authorization', `Bearer ${key.secret}`)
+        .set('X-MeetingBridge-Actor-Id', actor)
+        .send({
+          meetingId,
+          action: 'confirm',
+          idempotencyKey: `handoff-confirm-${actor}-${itemId}`,
+        })
+        .expect(201);
+    }
+
+    await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/close`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .expect(201);
+    await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/minutes`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .expect(201);
+
+    await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/items/${itemId}/sync`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .send({ meetingId, destination: 'slack', idempotencyKey: 'bad-dest' })
+      .expect(422);
+
+    const synced = await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/items/${itemId}/sync`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .send({ meetingId, destination: 'private_download', idempotencyKey: `sync-${itemId}` })
+      .expect(201);
+    expect(synced.body.sync.body).toContain('Dispatch 50 bags');
+
+    const deal = await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/handoff/dealbridge`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .expect(201);
+    expect(deal.body.dealbridgePath).toContain('/dealbridge/sessions/');
+
+    const voice = await request(app.getHttpServer())
+      .post(`/v1/meetingbridge/meetings/${meetingId}/handoff/voicebridge`)
+      .set('Authorization', `Bearer ${key.secret}`)
+      .set('X-MeetingBridge-Actor-Id', organizer)
+      .expect(201);
+    expect(voice.body.voicebridgePath).toContain('/voicebridge/threads/');
+  });
 });

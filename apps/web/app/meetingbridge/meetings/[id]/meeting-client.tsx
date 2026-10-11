@@ -291,6 +291,68 @@ export function MeetingBridgeMeetingClient({ meetingId }: { meetingId: string })
     });
   }
 
+  async function amendItem(itemId: string, expectedRevision: number, wording: string) {
+    await withBusy(async () => {
+      const a = await authHeaders();
+      await apiFetch(`/v1/meetingbridge/items/${itemId}/revisions`, {
+        method: 'POST',
+        token: a.token,
+        headers: a.actor ? { 'X-MeetingBridge-Actor-Id': a.actor } : undefined,
+        body: { meetingId, expectedRevision, wording },
+      });
+    });
+  }
+
+  async function syncItem(itemId: string) {
+    await withBusy(async () => {
+      const a = await authHeaders();
+      const res = await apiFetch<{ note?: string; sync?: { body?: string } }>(
+        `/v1/meetingbridge/items/${itemId}/sync`,
+        {
+          method: 'POST',
+          token: a.token,
+          headers: a.actor ? { 'X-MeetingBridge-Actor-Id': a.actor } : undefined,
+          body: {
+            meetingId,
+            destination: 'private_download',
+            idempotencyKey: `sync-${itemId}-${Date.now()}`,
+          },
+        },
+      );
+      setExportPreview(res.sync?.body ?? res.note ?? JSON.stringify(res, null, 2));
+    });
+  }
+
+  async function handoffDeal() {
+    await withBusy(async () => {
+      const a = await authHeaders();
+      const res = await apiFetch<{ dealbridgePath?: string; note?: string }>(
+        `/v1/meetingbridge/meetings/${meetingId}/handoff/dealbridge`,
+        {
+          method: 'POST',
+          token: a.token,
+          headers: a.actor ? { 'X-MeetingBridge-Actor-Id': a.actor } : undefined,
+        },
+      );
+      if (res.dealbridgePath) window.location.href = res.dealbridgePath;
+    });
+  }
+
+  async function handoffVoice() {
+    await withBusy(async () => {
+      const a = await authHeaders();
+      const res = await apiFetch<{ voicebridgePath?: string }>(
+        `/v1/meetingbridge/meetings/${meetingId}/handoff/voicebridge`,
+        {
+          method: 'POST',
+          token: a.token,
+          headers: a.actor ? { 'X-MeetingBridge-Actor-Id': a.actor } : undefined,
+        },
+      );
+      if (res.voicebridgePath) window.location.href = res.voicebridgePath;
+    });
+  }
+
   async function issueMinutes() {
     await withBusy(async () => {
       const a = await authHeaders();
@@ -437,6 +499,12 @@ export function MeetingBridgeMeetingClient({ meetingId }: { meetingId: string })
                       onClick={() => void exportMinutes('csv_tasks')}
                     >
                       Export tasks CSV
+                    </button>
+                    <button type="button" className="vl-btn vl-btn-secondary" disabled={busy} onClick={() => void handoffDeal()}>
+                      Handoff to DealBridge
+                    </button>
+                    <button type="button" className="vl-btn vl-btn-secondary" disabled={busy} onClick={() => void handoffVoice()}>
+                      VoiceBridge follow-up
                     </button>
                   </>
                 ) : (
@@ -607,6 +675,32 @@ export function MeetingBridgeMeetingClient({ meetingId }: { meetingId: string })
                       >
                         Decline
                       </button>
+                      {item.revision ? (
+                        <button
+                          type="button"
+                          className="vl-btn vl-btn-secondary"
+                          disabled={busy}
+                          onClick={() =>
+                            void amendItem(
+                              item.id,
+                              item.revision!.revisionNumber,
+                              `${item.revision!.wording} (amended)`,
+                            )
+                          }
+                        >
+                          Amend wording
+                        </button>
+                      ) : null}
+                      {item.state === 'confirmed' && isOrganizer ? (
+                        <button
+                          type="button"
+                          className="vl-btn vl-btn-secondary"
+                          disabled={busy}
+                          onClick={() => void syncItem(item.id)}
+                        >
+                          Sync task
+                        </button>
+                      ) : null}
                     </div>
                   </li>
                 ))}

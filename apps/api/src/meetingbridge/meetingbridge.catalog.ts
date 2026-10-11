@@ -47,9 +47,26 @@ export function meetingbridgeCatalog() {
       'DealBridge handoff creates a proposed deal only; MeetingBridge confirmation is not a commercial receipt.',
     ],
     integrations: {
-      voiceBridgeFollowUp: true,
-      dealBridgeHandoff: true,
-      taskSync: 'explicit_authorized_only',
+      voiceBridgeFollowUp: {
+        available: true,
+        endpoint: 'POST /v1/meetingbridge/meetings/:id/handoff/voicebridge',
+        note: 'Creates a VoiceBridge follow-up thread from the meeting agenda and confirmed items after explicit organizer action.',
+      },
+      dealBridgeHandoff: {
+        available: true,
+        endpoint: 'POST /v1/meetingbridge/meetings/:id/handoff/dealbridge',
+        note: 'Creates a proposed DealBridge session. Meeting confirmation is not a commercial receipt — DealBridge runs its own confirmations.',
+      },
+      taskSync: {
+        mode: 'explicit_authorized_only',
+        endpoint: 'POST /v1/meetingbridge/items/:itemId/sync',
+        allowlistedDestinations: ['private_download', 'internal_queue'],
+        note: 'No Slack/email/calendar writes. Unauthorized destinations return capability errors.',
+      },
+      itemRevisions: {
+        available: true,
+        endpoint: 'POST /v1/meetingbridge/items/:itemId/revisions',
+      },
     },
   };
 }

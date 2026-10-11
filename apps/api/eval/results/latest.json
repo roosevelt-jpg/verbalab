@@ -1,5 +1,5 @@
 {
-  "asOf": "2026-10-11T03:01:11.442Z",
+  "asOf": "2026-10-11T03:03:12.765Z",
   "mode": "fixture",
   "disclaimer": "Scores are automatic reference metrics on small golden sets (exact match + character similarity). They measure harness output against references — not market leadership or human quality.",
   "focusPairs": [

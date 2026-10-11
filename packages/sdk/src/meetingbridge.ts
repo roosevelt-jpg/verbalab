@@ -187,6 +187,47 @@ export class MeetingBridgeClient {
     );
   }
 
+  reviseItem(
+    itemId: string,
+    input: {
+      meetingId: string;
+      expectedRevision: number;
+      wording?: string;
+      ownerParticipantIds?: string[];
+      requiredApproverIds?: string[];
+      dueDate?: string | null;
+    },
+  ) {
+    return this.transport.requestJson<Record<string, unknown>>(
+      `/v1/meetingbridge/items/${encodeURIComponent(itemId)}/revisions`,
+      { method: 'POST', body: input, headers: this.h() },
+    );
+  }
+
+  syncItem(
+    itemId: string,
+    input: { meetingId: string; destination?: 'private_download' | 'internal_queue'; idempotencyKey: string },
+  ) {
+    return this.transport.requestJson<Record<string, unknown>>(
+      `/v1/meetingbridge/items/${encodeURIComponent(itemId)}/sync`,
+      { method: 'POST', body: input, headers: this.h() },
+    );
+  }
+
+  handoffDealBridge(meetingId: string) {
+    return this.transport.requestJson<Record<string, unknown>>(
+      `/v1/meetingbridge/meetings/${encodeURIComponent(meetingId)}/handoff/dealbridge`,
+      { method: 'POST', headers: this.h() },
+    );
+  }
+
+  handoffVoiceBridge(meetingId: string) {
+    return this.transport.requestJson<Record<string, unknown>>(
+      `/v1/meetingbridge/meetings/${encodeURIComponent(meetingId)}/handoff/voicebridge`,
+      { method: 'POST', headers: this.h() },
+    );
+  }
+
   close(meetingId: string) {
     return this.transport.requestJson<Record<string, unknown>>(
       `/v1/meetingbridge/meetings/${encodeURIComponent(meetingId)}/close`,
