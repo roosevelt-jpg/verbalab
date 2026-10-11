@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { FormEvent, useCallback, useEffect, useState } from 'react';
 import { useAuth } from '@clerk/nextjs';
 import { AppShell } from '@/components/app-shell';
-import { PageHeader, StatCard, FeatureCard } from '@/components/platform';
+import { PageHeader, StatCard, FeaturePanel } from '@/components/platform';
 import { apiFetch } from '@/lib/api';
 import { isClerkConfigured } from '@/lib/clerk-config';
 
@@ -190,7 +190,7 @@ export function MeetingBridgeHomeClient() {
           </div>
           <div className="lg-grid-2">
             {(catalog?.corridors ?? []).map((c) => (
-              <FeatureCard key={c.id} title={c.label} body={c.note} />
+              <FeaturePanel key={c.id} title={c.label} body={c.note} />
             ))}
           </div>
           {catalog?.limitations?.length ? (

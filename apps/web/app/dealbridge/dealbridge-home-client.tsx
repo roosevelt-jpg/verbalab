@@ -186,7 +186,7 @@ export function DealBridgeHomeClient() {
                 {demoRunning ? 'Running demo…' : 'Run simulated demo'}
               </button>
               <Link className="vl-btn vl-btn-secondary" href="/admin/dealbridge">
-                Pilot admin
+                DealBridge admin
               </Link>
             </>
           }
@@ -201,7 +201,7 @@ export function DealBridgeHomeClient() {
           <StatCard label="Sessions" value={sessions.length} hint="In this workspace" />
           <StatCard label="Active" value={active} hint="Not draft or closed" />
           <StatCard label="Receipts" value={issued} hint="Issued and current" />
-          <StatCard label="Corridor" value="Pilot" hint="Gated by ASR / translate / TTS" />
+          <StatCard label="Corridor" value="Gated" hint="Gated by ASR / translate / TTS" />
         </div>
 
         <section className="lg-page-section" aria-label="DealBridge pillars">
