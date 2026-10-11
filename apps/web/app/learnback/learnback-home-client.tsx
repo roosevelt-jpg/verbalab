@@ -15,7 +15,12 @@ type Catalog = {
   situations?: string[];
   marketCount?: number;
   corridorCount?: number;
-  markets?: { code: string; nameEn: string; region: string }[];
+  markets?: {
+    code: string;
+    nameEn: string;
+    region: string;
+    englishAccent?: { nameEn: string; bcp47: string };
+  }[];
   corridors?: {
     id: string;
     label: string;
@@ -23,6 +28,7 @@ type Catalog = {
     situations: string[];
     marketCode?: string;
     marketName?: string;
+    englishAccent?: { nameEn: string; bcp47: string };
   }[];
 };
 
@@ -65,9 +71,19 @@ function LearnBackHomeFlow({ auth }: { auth: LearnBackAuthBag }) {
           corridors: [
             {
               id: 'ak-en-interview',
-              label: 'Twi/Akan explanations · English interview practice',
+              label: 'Twi/Akan explanations · Ghanaian English interview practice (Ghana)',
               note: '',
               situations: ['job_interview'],
+              marketCode: 'GH',
+              englishAccent: { nameEn: 'Ghanaian English', bcp47: 'en-GH' },
+            },
+          ],
+          markets: [
+            {
+              code: 'GH',
+              nameEn: 'Ghana',
+              region: 'West Africa',
+              englishAccent: { nameEn: 'Ghanaian English', bcp47: 'en-GH' },
             },
           ],
           honesty: [],
@@ -198,7 +214,7 @@ function LearnBackHomeFlow({ auth }: { auth: LearnBackAuthBag }) {
           <form onSubmit={onCreate} className="lg-card" style={{ display: 'grid', gap: '0.65rem' }}>
             <p className="lg-type-compact">
               {catalog?.marketCount ?? 0} African markets · {catalog?.corridorCount ?? 0} wired
-              corridors
+              corridors · country English accents kept distinct
             </p>
             <label className="vl-field-label">
               Market
@@ -222,7 +238,8 @@ function LearnBackHomeFlow({ auth }: { auth: LearnBackAuthBag }) {
                 <option value="XX">Pan-African / administrative</option>
                 {(catalog?.markets ?? []).map((m) => (
                   <option key={m.code} value={m.code}>
-                    {m.nameEn} ({m.region})
+                    {m.nameEn}
+                    {m.englishAccent ? ` · ${m.englishAccent.nameEn}` : ''} ({m.region})
                   </option>
                 ))}
               </select>

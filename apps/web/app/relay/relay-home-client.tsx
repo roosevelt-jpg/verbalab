@@ -14,7 +14,12 @@ type Catalog = {
   honesty?: string[];
   corridorCount?: number;
   marketCount?: number;
-  markets?: { code: string; nameEn: string; region: string }[];
+  markets?: {
+    code: string;
+    nameEn: string;
+    region: string;
+    englishAccent?: { nameEn: string; bcp47: string };
+  }[];
   corridors?: {
     id: string;
     label: string;
@@ -22,6 +27,7 @@ type Catalog = {
     marketCode?: string;
     marketName?: string;
     region?: string;
+    englishAccent?: { nameEn: string; bcp47: string };
   }[];
   payments?: { mode: string; note: string };
 };
@@ -57,7 +63,23 @@ function RelayHomeFlow({ auth }: { auth: RelayAuthBag }) {
           name: 'Lugemi Relay',
           headline: 'Book a qualified interpreter when machine help is not enough.',
           description: 'Sign in or paste an API key to request a scheduled browser session.',
-          corridors: [{ id: 'ak-en-business', label: 'Akan/Twi ↔ English · general business', note: '' }],
+          corridors: [
+            {
+              id: 'ak-en-business',
+              label: 'Akan/Twi ↔ Ghanaian English · general business (Ghana)',
+              note: '',
+              marketCode: 'GH',
+              englishAccent: { nameEn: 'Ghanaian English', bcp47: 'en-GH' },
+            },
+          ],
+          markets: [
+            {
+              code: 'GH',
+              nameEn: 'Ghana',
+              region: 'West Africa',
+              englishAccent: { nameEn: 'Ghanaian English', bcp47: 'en-GH' },
+            },
+          ],
           honesty: [],
         });
         return;
@@ -223,7 +245,7 @@ function RelayHomeFlow({ auth }: { auth: RelayAuthBag }) {
           <form onSubmit={onCreate} className="lg-card" style={{ display: 'grid', gap: '0.65rem' }}>
             <p className="lg-type-compact">
               {catalog?.marketCount ?? 0} African markets · {catalog?.corridorCount ?? 0} wired
-              corridors
+              corridors · English bridges use each country’s accent
             </p>
             <label className="vl-field-label">
               Market
@@ -239,7 +261,8 @@ function RelayHomeFlow({ auth }: { auth: RelayAuthBag }) {
               >
                 {(catalog?.markets ?? []).map((m) => (
                   <option key={m.code} value={m.code}>
-                    {m.nameEn} ({m.region})
+                    {m.nameEn}
+                    {m.englishAccent ? ` · ${m.englishAccent.nameEn}` : ''} ({m.region})
                   </option>
                 ))}
               </select>

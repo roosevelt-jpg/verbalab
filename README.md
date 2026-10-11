@@ -24,7 +24,7 @@ Multilingual meetings: **Speak your language. Confirm the same plan.**
 
 ## Everyday
 
-Private daily document workflow: **Read this to me. Help me reply. Explain this word.** Wired across major African markets (same country-pack corridors as Relay/LearnBack).
+Private daily document workflow: **Read this to me. Help me reply. Explain this word.** Wired across major African markets (same country-pack corridors as Relay/LearnBack). English bridges use each market’s country-identifying accent (Ghanaian, Nigerian, Kenyan, …) — not US/UK defaults.
 
 - Console: `/everyday`, `/everyday/sessions/[id]`, `/everyday/history`
 - API: `/v1/everyday/*` — see `docs/everyday/RUNBOOK.md` and `docs/everyday/VERIFICATION.md`
@@ -34,7 +34,7 @@ Private daily document workflow: **Read this to me. Help me reply. Explain this 
 
 ## LearnBack
 
-Spoken practice for interviews and real situations with meaning-first feedback in the learner’s language — corridors for Ghana, Nigeria, South Africa, Kenya, East/Southern/West/North African markets, and more.
+Spoken practice for interviews and real situations with meaning-first feedback in the learner’s language — corridors for Ghana, Nigeria, South Africa, Kenya, East/Southern/West/North African markets, and more. Country English varieties are never marked wrong for non-US/UK accent alone.
 
 - Console: `/learnback`, `/learnback/scenarios`, `/learnback/sessions/[id]`, `/learnback/phrasebook`, `/learnback/progress`
 - API: `/v1/learnback/*` — see `docs/learnback/RUNBOOK.md` and `docs/learnback/VERIFICATION.md`
@@ -50,7 +50,7 @@ Scheduled human-interpreter fallback for general business conversations across m
 - API: `/v1/relay/*` — see `docs/relay/RUNBOOK.md` and `docs/relay/VERIFICATION.md`
 - SDK: TypeScript `client.relay`
 - Local entitlement bypass: `RELAY_OPEN=1`
-- Corridors generated from country packs (`apps/api/src/african-markets`); market-currency pinned quotes; labeled demo supply per market; atomic holds/offers; no fictional instant coverage
+- Corridors generated from country packs (`apps/api/src/african-markets`); local language ↔ country-identifying English (`en-GH`, `en-NG`, …); market-currency pinned quotes; labeled demo supply per market; atomic holds/offers; no fictional instant coverage
 
 ## Language Assurance
 

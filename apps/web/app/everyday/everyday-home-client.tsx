@@ -15,13 +15,19 @@ type Catalog = {
   modes?: { id: string; label: string }[];
   marketCount?: number;
   corridorCount?: number;
-  markets?: { code: string; nameEn: string; region: string }[];
+  markets?: {
+    code: string;
+    nameEn: string;
+    region: string;
+    englishAccent?: { nameEn: string; bcp47: string };
+  }[];
   corridors?: {
     id: string;
     label: string;
     note: string;
     marketCode?: string;
     marketName?: string;
+    englishAccent?: { nameEn: string; bcp47: string };
   }[];
 };
 
@@ -63,7 +69,23 @@ function EverydayHomeFlow({ auth }: { auth: EverydayAuthBag }) {
             { id: 'help_me_reply', label: 'Help me reply' },
             { id: 'explain_this_word', label: 'Explain this word' },
           ],
-          corridors: [{ id: 'en-ak', label: 'English → Akan/Twi', note: '' }],
+          corridors: [
+            {
+              id: 'en-ak',
+              label: 'Ghanaian English → Akan/Twi (Ghana)',
+              note: '',
+              marketCode: 'GH',
+              englishAccent: { nameEn: 'Ghanaian English', bcp47: 'en-GH' },
+            },
+          ],
+          markets: [
+            {
+              code: 'GH',
+              nameEn: 'Ghana',
+              region: 'West Africa',
+              englishAccent: { nameEn: 'Ghanaian English', bcp47: 'en-GH' },
+            },
+          ],
           honesty: [],
         });
         return;
@@ -181,7 +203,7 @@ function EverydayHomeFlow({ auth }: { auth: EverydayAuthBag }) {
           <form onSubmit={onCreate} className="lg-card" style={{ display: 'grid', gap: '0.65rem' }}>
             <p className="lg-type-compact">
               {catalog?.marketCount ?? 0} African markets · {catalog?.corridorCount ?? 0} wired
-              corridors
+              corridors · English uses each country’s accent
             </p>
             <label className="vl-field-label">
               Mode
@@ -210,7 +232,8 @@ function EverydayHomeFlow({ auth }: { auth: EverydayAuthBag }) {
                 <option value="XX">Pan-African / administrative</option>
                 {(catalog?.markets ?? []).map((m) => (
                   <option key={m.code} value={m.code}>
-                    {m.nameEn} ({m.region})
+                    {m.nameEn}
+                    {m.englishAccent ? ` · ${m.englishAccent.nameEn}` : ''} ({m.region})
                   </option>
                 ))}
               </select>
