@@ -118,7 +118,7 @@ function CreativeSpeechEmbedInner({
 
       <div className="lg-creative-split">
         <div>
-          <CreativeApiKeyField value={apiKey} onChange={setApiKey} />
+          <CreativeApiKeyField onChange={setApiKey} />
           <div style={{ display: 'grid', gap: '0.75rem', marginTop: '1rem' }}>
             <label style={{ fontSize: '0.85rem', color: 'var(--lc-muted)' }}>
               Title

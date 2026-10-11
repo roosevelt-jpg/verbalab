@@ -132,7 +132,7 @@ function CreativeVoiceDesignInner({
 
       <div className="lg-creative-split">
         <div>
-          <CreativeApiKeyField value={apiKey} onChange={setApiKey} />
+          <CreativeApiKeyField onChange={setApiKey} />
           <textarea
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}

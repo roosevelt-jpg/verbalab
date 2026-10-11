@@ -110,7 +110,7 @@ function CreativeCaptionsInner({
 
       <div className="lg-creative-split">
         <div>
-          <CreativeApiKeyField value={apiKey} onChange={setApiKey} />
+          <CreativeApiKeyField onChange={setApiKey} />
           <label style={{ display: 'block', marginTop: '1rem', fontSize: '0.85rem', color: 'var(--lc-muted)' }}>
             Script
             <textarea

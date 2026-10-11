@@ -144,7 +144,7 @@ function CreativeDialogueInner({
 
       <div className="lg-creative-split">
         <div>
-          <CreativeApiKeyField value={apiKey} onChange={setApiKey} />
+          <CreativeApiKeyField onChange={setApiKey} />
           <div style={{ display: 'grid', gap: '0.85rem', marginTop: '1rem' }}>
             {turns.map((turn, i) => (
               <article
