@@ -1,10 +1,9 @@
 /**
  * Marketing demo speech — Lugemi Echo voices via `POST /v1/demo/speech`.
  *
- * Only demo-safe varieties (eSpeak-backed or neural-live) are listed here.
- * Voices without verified intelligible synthesis (Yoruba, Zulu, Akan, etc. until
- * neural weights publish) are omitted — the API returns capability_unavailable
- * rather than formant/beep placeholders.
+ * Pass any `own:*` / bare Echo key plus a BCP-47 language. The API remaps
+ * formant-only L1 packs to cultural English/French of the same country so Play
+ * never falls through to the wrong language or silent failure.
  */
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
@@ -36,8 +35,21 @@ export const DEMO_VOICE_PROFILES: Record<string, DemoVoiceProfile> = {
     voice: 'own:sw-ke-female',
     englishLocale: 'en-KE',
   },
+  'sw-aisha': {
+    id: 'sw-aisha',
+    label: 'Aisha · Nairobi',
+    lang: 'sw-KE',
+    voice: 'own:sw-ke-female',
+    englishLocale: 'en-KE',
+  },
   'am-et-female': {
     id: 'am-et-female',
+    label: 'Hanna · Addis',
+    lang: 'am-ET',
+    voice: 'own:am-et-female',
+  },
+  'am-hanna': {
+    id: 'am-hanna',
     label: 'Hanna · Addis',
     lang: 'am-ET',
     voice: 'own:am-et-female',
@@ -54,6 +66,12 @@ export const DEMO_VOICE_PROFILES: Record<string, DemoVoiceProfile> = {
     lang: 'fr-FR',
     voice: 'own:fr-fr-female',
   },
+  'fr-fr-male': {
+    id: 'fr-fr-male',
+    label: 'Louis · France',
+    lang: 'fr-FR',
+    voice: 'own:fr-fr-male',
+  },
   'fr-sn-female': {
     id: 'fr-sn-female',
     label: 'Awa · Dakar',
@@ -67,6 +85,13 @@ export const DEMO_VOICE_PROFILES: Record<string, DemoVoiceProfile> = {
     voice: 'own:en-us-female',
     englishLocale: 'en-US',
   },
+  'en-us-male': {
+    id: 'en-us-male',
+    label: 'Michael · United States',
+    lang: 'en-US',
+    voice: 'own:en-us-male',
+    englishLocale: 'en-US',
+  },
   'en-gb-female': {
     id: 'en-gb-female',
     label: 'Emma · United Kingdom',
@@ -74,11 +99,39 @@ export const DEMO_VOICE_PROFILES: Record<string, DemoVoiceProfile> = {
     voice: 'own:en-gb-female',
     englishLocale: 'en-GB',
   },
+  'en-gb-male': {
+    id: 'en-gb-male',
+    label: 'George · United Kingdom',
+    lang: 'en-GB',
+    voice: 'own:en-gb-male',
+    englishLocale: 'en-GB',
+  },
+  'en-ca-female': {
+    id: 'en-ca-female',
+    label: 'Chloe · Canada',
+    lang: 'en-CA',
+    voice: 'own:en-ca-female',
+    englishLocale: 'en-CA',
+  },
+  'en-ca-male': {
+    id: 'en-ca-male',
+    label: 'Liam · Canada',
+    lang: 'en-CA',
+    voice: 'own:en-ca-male',
+    englishLocale: 'en-CA',
+  },
   'en-au-female': {
     id: 'en-au-female',
     label: 'Mia · Australia',
     lang: 'en-AU',
     voice: 'own:en-au-female',
+    englishLocale: 'en-AU',
+  },
+  'en-au-male': {
+    id: 'en-au-male',
+    label: 'Jack · Australia',
+    lang: 'en-AU',
+    voice: 'own:en-au-male',
     englishLocale: 'en-AU',
   },
   'en-nz-female': {
@@ -88,11 +141,32 @@ export const DEMO_VOICE_PROFILES: Record<string, DemoVoiceProfile> = {
     voice: 'own:en-nz-female',
     englishLocale: 'en-NZ',
   },
+  'en-nz-male': {
+    id: 'en-nz-male',
+    label: 'Oliver · New Zealand',
+    lang: 'en-NZ',
+    voice: 'own:en-nz-male',
+    englishLocale: 'en-NZ',
+  },
   'en-gh-female': {
     id: 'en-gh-female',
     label: 'Ama · Ghanaian English',
     lang: 'en-GH',
     voice: 'own:en-gh-female',
+    englishLocale: 'en-GH',
+  },
+  'en-gh-male': {
+    id: 'en-gh-male',
+    label: 'Kwame · Ghanaian English',
+    lang: 'en-GH',
+    voice: 'own:en-gh-male',
+    englishLocale: 'en-GH',
+  },
+  'en-kofi': {
+    id: 'en-kofi',
+    label: 'Kofi · Ghanaian English',
+    lang: 'en-GH',
+    voice: 'own:en-kofi',
     englishLocale: 'en-GH',
   },
   'en-ng-female': {
@@ -102,12 +176,67 @@ export const DEMO_VOICE_PROFILES: Record<string, DemoVoiceProfile> = {
     voice: 'own:en-ng-female',
     englishLocale: 'en-NG',
   },
+  'en-ng-male': {
+    id: 'en-ng-male',
+    label: 'Emeka · Nigerian English',
+    lang: 'en-NG',
+    voice: 'own:en-ng-male',
+    englishLocale: 'en-NG',
+  },
+  'en-ke-female': {
+    id: 'en-ke-female',
+    label: 'Wanjiku · Kenyan English',
+    lang: 'en-KE',
+    voice: 'own:en-ke-female',
+    englishLocale: 'en-KE',
+  },
+  'en-ke-male': {
+    id: 'en-ke-male',
+    label: 'Kamau · Kenyan English',
+    lang: 'en-KE',
+    voice: 'own:en-ke-male',
+    englishLocale: 'en-KE',
+  },
+  'en-za-female': {
+    id: 'en-za-female',
+    label: 'Lerato · South African English',
+    lang: 'en-ZA',
+    voice: 'own:en-za-female',
+    englishLocale: 'en-ZA',
+  },
+  'en-za-male': {
+    id: 'en-za-male',
+    label: 'Sipho · South African English',
+    lang: 'en-ZA',
+    voice: 'own:en-za-male',
+    englishLocale: 'en-ZA',
+  },
+  'en-ph-female': {
+    id: 'en-ph-female',
+    label: 'Maya · Filipino English',
+    lang: 'en-PH',
+    voice: 'own:en-ph-female',
+    englishLocale: 'en-PH',
+  },
+  'en-ph-male': {
+    id: 'en-ph-male',
+    label: 'Luis · Filipino English',
+    lang: 'en-PH',
+    voice: 'own:en-ph-male',
+    englishLocale: 'en-PH',
+  },
   'af-za-female': {
     id: 'af-za-female',
     label: 'Annelie · Afrikaans',
     lang: 'af-ZA',
     voice: 'own:af-za-female',
     englishLocale: 'en-ZA',
+  },
+  'pt-ao-male': {
+    id: 'pt-ao-male',
+    label: 'Nzinga · Luanda',
+    lang: 'pt-AO',
+    voice: 'own:pt-ao-male',
   },
   // Legacy chip ids remapped to demo-safe English varieties (not fabricated native L1).
   abe: { id: 'abe', label: 'Chioma · Nigerian English', lang: 'en-NG', voice: 'own:en-ng-female', englishLocale: 'en-NG' },
@@ -136,6 +265,14 @@ function baseLang(lang: string): string {
   return LANG_ALIASES[primary] ?? primary;
 }
 
+function normalizeVoiceKey(voiceId: string | undefined): string | null {
+  if (!voiceId?.trim()) return null;
+  const raw = voiceId.trim();
+  const key = raw.startsWith('own:') ? raw.slice(4) : raw;
+  if (!/^[a-z0-9][a-z0-9._-]*$/i.test(key)) return null;
+  return key.toLowerCase();
+}
+
 let activeAudio: HTMLAudioElement | null = null;
 let activeRequest: AbortController | null = null;
 
@@ -162,7 +299,38 @@ const ENGLISH_LOCALE_VOICE: Record<string, string> = {
   'en-CA': 'own:en-ca-female',
   'en-AU': 'own:en-au-female',
   'en-NZ': 'own:en-nz-female',
+  'en-IE': 'own:en-gb-female',
+  'en-IN': 'own:en-gb-female',
 };
+
+function resolveProfile(input: {
+  voiceId?: string;
+  lang?: string;
+  label?: string;
+}): DemoVoiceProfile {
+  const key = normalizeVoiceKey(input.voiceId);
+  if (key && DEMO_VOICE_PROFILES[key]) {
+    return { ...DEMO_VOICE_PROFILES[key]!, label: input.label ?? DEMO_VOICE_PROFILES[key]!.label };
+  }
+  if (key) {
+    return {
+      id: key,
+      label: input.label ?? key,
+      lang: input.lang ?? 'en-US',
+      voice: `own:${key}`,
+    };
+  }
+  if (input.label) {
+    const byLabel = Object.values(DEMO_VOICE_PROFILES).find((p) => p.label === input.label);
+    if (byLabel) return { ...byLabel, label: input.label };
+  }
+  // Never fall back to a random African L1 voice — prefer US English when unspecified.
+  return {
+    ...DEMO_VOICE_PROFILES['en-us-female']!,
+    label: input.label ?? DEMO_VOICE_PROFILES['en-us-female']!.label,
+    lang: input.lang ?? 'en-US',
+  };
+}
 
 function resolveRequest(profile: DemoVoiceProfile, requestedLang: string | undefined) {
   const lang = requestedLang ?? profile.lang;
@@ -174,11 +342,13 @@ function resolveRequest(profile: DemoVoiceProfile, requestedLang: string | undef
       : profile.englishLocale ?? raw;
     return {
       language: localeKey,
-      voice: ENGLISH_LOCALE_VOICE[localeKey] ?? profile.voice,
+      voice: ENGLISH_LOCALE_VOICE[localeKey] ?? profile.voice ?? 'own:en-us-female',
     };
   }
-  const voice = profile.voice && baseLang(profile.lang) === base ? profile.voice : profile.voice;
-  return { language: lang, voice };
+  return {
+    language: lang,
+    voice: profile.voice ?? (profile.id ? `own:${profile.id}` : 'own:en-us-female'),
+  };
 }
 
 async function readError(res: Response): Promise<string> {
@@ -198,11 +368,7 @@ export async function playDemoSpeech(input: {
   label?: string;
   onStarted?: () => void;
 }): Promise<{ mode: 'server'; profile: DemoVoiceProfile }> {
-  const base =
-    (input.voiceId && DEMO_VOICE_PROFILES[input.voiceId]) ||
-    Object.values(DEMO_VOICE_PROFILES).find((p) => p.label === input.label) ||
-    DEMO_VOICE_PROFILES.amara!;
-  const profile: DemoVoiceProfile = { ...base, label: input.label ?? base.label };
+  const profile = resolveProfile(input);
   const { language, voice } = resolveRequest(profile, input.lang);
 
   stopDemoSpeech();

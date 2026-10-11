@@ -4,12 +4,9 @@ import { ApiException } from '../common/errors/api-exception';
 import { clientIp } from '../common/http/client-ip';
 import { GatewayService } from '../gateway/gateway.service';
 import { nativeVoiceUnavailable } from '../gateway/native-voice';
-import { isOwnTtsVoice, resolveOwnTtsVoice } from '../gateway/own-tts.adapter';
-import {
-  capabilityForVoice,
-  isDemoSafeVoice,
-} from '../gateway/voice-capability-registry';
+import { capabilityForVoice } from '../gateway/voice-capability-registry';
 import { DEMO_CATALOGUE } from './demo-catalogue';
+import { resolveDemoSpeechTarget } from './demo-resolve';
 
 const MAX_CHARS = 300;
 const WINDOW_MS = 10 * 60_000;
@@ -45,7 +42,7 @@ export class DemoSpeechController {
     return {
       product: 'lugemi-demo-speech',
       note:
-        'Customer-facing demos only play voices with eSpeak-backed or neural-live synthesis. Formant placeholders are never presented as native speech.',
+        'Customer-facing demos play verified eSpeak or neural-live paths. Identity packs without native weights remap to the cultural English/French variety of the same country — never formant noise.',
       catalogue: DEMO_CATALOGUE,
       voices: DEMO_CATALOGUE.map((entry) => {
         const cap = capabilityForVoice({
@@ -84,25 +81,14 @@ export class DemoSpeechController {
       );
     }
 
-    const requested = typeof body.voice === 'string' && isOwnTtsVoice(body.voice) ? body.voice : undefined;
-    const voice = requested ?? this.gateway.nativeVoiceFor(language)?.id;
-    if (!voice) throw nativeVoiceUnavailable(language);
-
-    const resolved = resolveOwnTtsVoice(voice);
-    const locale = language || resolved?.locale;
-    if (!isDemoSafeVoice(voice, locale)) {
-      const cap = capabilityForVoice({ voiceId: voice, locale });
-      throw new ApiException(
-        'capability_unavailable',
-        `Voice ${voice} has no verified intelligible synthesis path yet (${cap.limitations}). Choose a demo-safe variety from GET /v1/demo/speech/capabilities.`,
-        HttpStatus.UNPROCESSABLE_ENTITY,
-      );
-    }
+    const voiceHint = typeof body.voice === 'string' ? body.voice.trim() : undefined;
+    const target = resolveDemoSpeechTarget({ text, language, voice: voiceHint });
+    if (!target.voice) throw nativeVoiceUnavailable(language);
 
     const out = await this.gateway.synthesize({
-      text,
-      voice,
-      language,
+      text: target.text.slice(0, MAX_CHARS),
+      voice: target.voice,
+      language: target.language,
       format: 'mp3',
       requireIntelligible: true,
     });
@@ -125,6 +111,12 @@ export class DemoSpeechController {
       res.setHeader('X-Lugemi-Verification-Status', out.verificationStatus);
     }
     res.setHeader('X-Lugemi-Synthetic-Speech', 'true');
+    if (target.remapped) {
+      res.setHeader('X-Lugemi-Demo-Remapped', 'true');
+      if (target.requestedVoice) res.setHeader('X-Lugemi-Requested-Voice', target.requestedVoice);
+      res.setHeader('X-Lugemi-Requested-Language', target.requestedLanguage);
+      if (target.note) res.setHeader('X-Lugemi-Demo-Note', target.note.slice(0, 200));
+    }
     res.status(HttpStatus.OK).send(out.audio);
   }
 }

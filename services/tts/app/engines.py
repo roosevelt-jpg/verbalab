@@ -92,67 +92,161 @@ class SpeechSynthesisEngine:
             return f"{parts[0]}-{parts[1].upper()}"
         return parts[0] if parts else "en-US"
 
-    def _espeak_voice_args(self) -> list[str]:
-        vid = self._voice_id.lower()
-        loc = self._locale.lower()
-        # Voice variation / gender tuning: +f2 for female, +m3 for male
-        gender_mod = "+f2" if "female" in vid or "aisha" in vid or "hanna" in vid or "ama" in vid or "chioma" in vid or "lerato" in vid else "+m3"
-        pitch = "50"
-        speed = "165"
+    # Verified eSpeak locale → voice. Never match country codes as substrings of
+    # unrelated languages (ak-GH must not become Caribbean English).
+    _ESPEAK_BY_LOCALE = {
+        "en-us": ("en-us", "50", "165"),
+        "en-ca": ("en-us", "50", "165"),
+        "en-ph": ("en-us", "58", "165"),
+        "en-sg": ("en-us", "52", "165"),
+        "en-gb": ("en-gb", "50", "160"),
+        "en-ie": ("en-gb-scotland", "50", "158"),
+        "en-in": ("en-gb", "52", "155"),
+        "en-ke": ("en-gb", "46", "150"),
+        "en-za": ("en-gb", "50", "158"),
+        "en-ug": ("en-gb", "48", "152"),
+        "en-tz": ("en-gb", "48", "152"),
+        "en-au": ("en-au", "52", "160"),
+        "en-nz": ("en-nz", "50", "158"),
+        "en-gh": ("en-029", "48", "155"),
+        "en-ng": ("en-029", "52", "160"),
+        "en-jm": ("en-029", "50", "158"),
+        "sw": ("sw", "50", "160"),
+        "sw-ke": ("sw", "50", "160"),
+        "sw-tz": ("sw", "50", "160"),
+        "am": ("am", "50", "160"),
+        "am-et": ("am", "50", "160"),
+        "ar": ("ar", "50", "160"),
+        "ar-eg": ("ar", "50", "160"),
+        "af": ("af", "50", "160"),
+        "af-za": ("af", "50", "160"),
+        "fr": ("fr-fr", "50", "160"),
+        "fr-fr": ("fr-fr", "50", "160"),
+        "fr-sn": ("fr-fr", "48", "155"),
+        "fr-ci": ("fr-fr", "48", "155"),
+        "fr-ca": ("fr-fr", "52", "160"),
+        "pt": ("pt", "50", "160"),
+        "pt-pt": ("pt", "50", "160"),
+        "pt-br": ("pt-br", "50", "160"),
+        "pt-ao": ("pt", "50", "158"),
+        "es": ("es", "50", "160"),
+        "es-es": ("es", "50", "160"),
+        "es-mx": ("es-419", "50", "160"),
+        "es-419": ("es-419", "50", "160"),
+        "de": ("de", "50", "160"),
+        "ja": ("ja", "50", "160"),
+        "th": ("th", "50", "160"),
+        "vi": ("vi", "50", "160"),
+        "hi": ("hi", "50", "160"),
+        "om": ("om", "50", "160"),
+        "om-et": ("om", "50", "160"),
+        "tn": ("tn", "50", "160"),
+        "tn-bw": ("tn", "50", "160"),
+        "ko": ("ko", "50", "160"),
+        "id": ("id", "50", "160"),
+        "ms": ("ms", "50", "160"),
+        "tr": ("tr", "50", "160"),
+        "uk": ("uk", "50", "160"),
+        "nl": ("nl", "50", "160"),
+        "pl": ("pl", "50", "160"),
+        "ru": ("ru", "50", "160"),
+        "sv": ("sv", "50", "160"),
+        "nb": ("nb", "50", "160"),
+        "da": ("da", "50", "160"),
+        "fi": ("fi", "50", "160"),
+        "el": ("el", "50", "160"),
+        "it": ("it", "50", "160"),
+        "zh": ("cmn", "50", "160"),
+        "zh-cn": ("cmn", "50", "160"),
+        "cmn": ("cmn", "50", "160"),
+        "zh-hk": ("yue", "50", "160"),
+        "yue": ("yue", "50", "160"),
+        "ht": ("ht", "50", "160"),
+    }
 
-        if "en-gh" in vid or "kofi" in vid or "gh" in loc:
+    # Languages that must NOT ride an English eSpeak carrier (no verified voice).
+    _NO_ESPEAK_PRIMARY = {
+        "yo", "zu", "ak", "tw", "ig", "wo", "pcm", "lg", "ln", "rw", "xh",
+        "ee", "ti", "sn", "ny", "ff", "bm", "so", "ha", "gaa", "ada", "dag",
+    }
+
+    def _gender_mod(self) -> str:
+        vid = self._voice_id.lower()
+        female = (
+            "female" in vid
+            or any(
+                name in vid
+                for name in (
+                    "aisha", "hanna", "ama", "chioma", "lerato", "ava", "emma",
+                    "chloe", "mia", "ruby", "wanjiku", "maya", "blessing", "akosua",
+                    "camille", "thandi", "awa",
+                )
+            )
+        )
+        return "+f2" if female else "+m3"
+
+    def _espeak_voice_args(self) -> list[str] | None:
+        vid = self._voice_id.lower().removeprefix("own:")
+        loc = self._locale.lower().replace("_", "-")
+        gender_mod = self._gender_mod()
+
+        # Voice-id specific English cultural varieties (exact prefix, not country substrings).
+        if vid.startswith("en-gh") or vid == "en-kofi" or "kofi" in vid:
             return ["-v", f"en-029{gender_mod}", "-p", "48", "-s", "155"]
-        if "en-ng" in vid or "ng" in loc:
+        if vid.startswith("en-ng"):
             return ["-v", f"en-029{gender_mod}", "-p", "52", "-s", "160"]
-        if "en-ke" in vid or "ke" in loc:
+        if vid.startswith("en-ke"):
             return ["-v", f"en-gb{gender_mod}", "-p", "46", "-s", "150"]
-        if "en-ph" in vid or "ph" in loc:
+        if vid.startswith("en-ph"):
             return ["-v", f"en-us{gender_mod}", "-p", "58", "-s", "165"]
-        if "en-za" in vid or "za" in loc:
+        if vid.startswith("en-za"):
             return ["-v", f"en-gb{gender_mod}", "-p", "50", "-s", "158"]
+        if vid.startswith("en-au"):
+            return ["-v", f"en-au{gender_mod}", "-p", "52", "-s", "160"]
+        if vid.startswith("en-nz"):
+            return ["-v", f"en-nz{gender_mod}", "-p", "50", "-s", "158"]
+        if vid.startswith("en-gb"):
+            return ["-v", f"en-gb{gender_mod}", "-p", "50", "-s", "160"]
+        if vid.startswith("en-us") or vid.startswith("en-ca"):
+            return ["-v", f"en-us{gender_mod}", "-p", "50", "-s", "165"]
+
+        primary = loc.split("-")[0] if loc else ""
+        if primary in self._NO_ESPEAK_PRIMARY:
+            return None
+
+        for key in (loc, "-".join(loc.split("-")[:2]), primary):
+            if key in self._ESPEAK_BY_LOCALE:
+                voice, pitch, speed = self._ESPEAK_BY_LOCALE[key]
+                return ["-v", f"{voice}{gender_mod}", "-p", pitch, "-s", speed]
+
         # Prefer verified eSpeak voices only. Never substitute a neighboring language
         # (e.g. Zulu → Afrikaans) — that fabricates false native support.
-        if "en-au" in vid or loc.startswith("en-au"):
-            return ["-v", f"en-au{gender_mod}", "-p", "52", "-s", "160"]
-        if "en-nz" in vid or loc.startswith("en-nz"):
-            return ["-v", f"en-nz{gender_mod}", "-p", "50", "-s", "158"]
-        if "en-gb" in vid or loc.startswith("en-gb"):
-            return ["-v", f"en-gb{gender_mod}", "-p", "50", "-s", "160"]
-        if "en-us" in vid or loc.startswith("en-us") or loc.startswith("en-ca") or loc.startswith("en-ph"):
-            return ["-v", f"en-us{gender_mod}", "-p", pitch, "-s", speed]
-        if loc.startswith("sw"):
-            return ["-v", f"sw{gender_mod}"]
-        if loc.startswith("am"):
-            return ["-v", f"am{gender_mod}"]
-        if loc.startswith("ar"):
-            return ["-v", f"ar{gender_mod}"]
-        if loc.startswith("af"):
-            return ["-v", f"af{gender_mod}"]
-        if loc.startswith("fr"):
-            return ["-v", f"fr-fr{gender_mod}"]
-        if loc.startswith("pt"):
-            return ["-v", f"pt{gender_mod}"]
-        if loc.startswith("es"):
-            return ["-v", f"es{gender_mod}"]
-        if loc.startswith("de"):
-            return ["-v", f"de{gender_mod}"]
-        if loc.startswith("ja"):
-            return ["-v", f"ja{gender_mod}"]
-        if loc.startswith("th"):
-            return ["-v", f"th{gender_mod}"]
-        if loc.startswith("vi"):
-            return ["-v", f"vi{gender_mod}"]
-        if loc.startswith("hi"):
-            return ["-v", f"hi{gender_mod}"]
-        if loc.startswith("om"):
-            return ["-v", f"om{gender_mod}"]
-        if loc.startswith("tn"):
-            return ["-v", f"tn{gender_mod}"]
+        return None
 
-        # Unknown language: use English only as last-resort acoustic carrier with
-        # explicit locale tag in logs — callers should prefer capability errors.
-        base = loc.split("-")[0] if loc else "en"
-        return ["-v", f"en-us{gender_mod}"]
+    @staticmethod
+    def _finalize_streaming_wav(raw: bytes) -> bytes:
+        """Rewrite eSpeak --stdout placeholder RIFF/data sizes to real buffer length."""
+        if len(raw) < 44 or raw[0:4] != b"RIFF" or raw[8:12] != b"WAVE":
+            return raw
+        buf = bytearray(raw)
+        offset = 12
+        while offset + 8 <= len(buf):
+            chunk_id = bytes(buf[offset : offset + 4])
+            claimed = int.from_bytes(buf[offset + 4 : offset + 8], "little")
+            if chunk_id == b"data":
+                actual = len(buf) - (offset + 8)
+                buf[offset + 4 : offset + 8] = actual.to_bytes(4, "little")
+                buf[4:8] = (len(buf) - 8).to_bytes(4, "little")
+                return bytes(buf)
+            if claimed > len(buf) - offset - 8:
+                break
+            offset += 8 + claimed + (claimed % 2)
+        if buf[36:40] == b"data":
+            data_size = len(buf) - 44
+            buf[40:44] = data_size.to_bytes(4, "little")
+            buf[4:8] = (len(buf) - 8).to_bytes(4, "little")
+        return bytes(buf)
+
     def synthesize(self, text: str, speed: float) -> Audio:
         import shutil
         import subprocess
@@ -160,27 +254,21 @@ class SpeechSynthesisEngine:
         import wave
 
         espeak_bin = shutil.which("espeak-ng") or shutil.which("espeak")
-        if espeak_bin:
+        voice_args = self._espeak_voice_args() if espeak_bin else None
+        if espeak_bin and voice_args:
             try:
-                voice_args = self._espeak_voice_args()
                 wpm = int(160 * speed)
+                # Prefer -w tempfile over --stdout to avoid streaming WAV bugs when possible.
                 cmd = [espeak_bin, *voice_args, "-s", str(wpm), "--stdout", text]
                 res = subprocess.run(cmd, capture_output=True, check=False, timeout=15)
                 if res.returncode == 0 and len(res.stdout) > 44:
-                    # eSpeak --stdout uses streaming placeholder RIFF/data sizes.
-                    raw = bytearray(res.stdout)
-                    if raw[0:4] == b"RIFF" and raw[8:12] == b"WAVE" and raw[36:40] == b"data":
-                        import struct
-
-                        data_size = len(raw) - 44
-                        struct.pack_into("<I", raw, 4, len(raw) - 8)
-                        struct.pack_into("<I", raw, 40, data_size)
+                    raw = self._finalize_streaming_wav(res.stdout)
                     with wave.open(io.BytesIO(raw), "rb") as w:
                         rate = w.getframerate()
                         frames = w.readframes(w.getnframes())
                         pcm = np.frombuffer(frames, dtype=np.int16)
                         if pcm.size > 0:
-                            return Audio(pcm=pcm, sample_rate=rate)
+                            return Audio(pcm=pcm.copy(), sample_rate=rate)
             except Exception:
                 pass
 

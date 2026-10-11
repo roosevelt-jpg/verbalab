@@ -121,9 +121,16 @@ export function AccentIdentityClient() {
       setLoadingId(pack.id);
       setActiveId(null);
       try {
+        const voiceId =
+          pack.echoVoiceId ||
+          (pack.demoVoiceKey
+            ? pack.demoVoiceKey.startsWith('own:')
+              ? pack.demoVoiceKey
+              : `own:${pack.demoVoiceKey}`
+            : undefined);
         await playDemoSpeech({
           text: pack.samplePhrase,
-          voiceId: pack.demoVoiceKey ?? undefined,
+          voiceId,
           lang: pack.bcp47 ?? pack.languageCode,
           label: pack.nameEn,
           onStarted: () => {
@@ -160,8 +167,9 @@ export function AccentIdentityClient() {
       <p style={{ color: 'var(--muted)', margin: '0 0 1.25rem', maxWidth: '44rem' }}>
         Hear how tribe, culture, and lifestyle shape speech. Each pack exposes{' '}
         <code>cultural_identity</code>, <code>speech_variety</code> (e.g. ghanaian_english,
-        nigerian_pidgin, filipino_english), and lifestyle tags — linked to Lugemi Echo Voice. Search by
-        country, culture, or variety, then press Play to demo.
+        nigerian_pidgin, filipino_english), and lifestyle tags — linked to Lugemi Echo Voice. Play uses
+        verified Echo paths; packs without native weights remap to that country&apos;s cultural
+        English or French so every accent stays audible and language-true.
       </p>
 
       <div

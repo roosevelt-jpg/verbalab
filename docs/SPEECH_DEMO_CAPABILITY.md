@@ -25,9 +25,9 @@ No third-party TTS replacements were added.
 
 American / British / Australian / New Zealand English, Ghanaian & Nigerian English (eSpeak Caribbean approximation — labeled honestly), Kiswahili, Amharic, Arabic, French (France / Senegal routing), Afrikaans.
 
-## Not demo-safe until neural checkpoints publish
+## Not demo-safe as native L1 until neural checkpoints publish
 
-Yoruba, isiZulu, Akan/Twi, Igbo, Hausa, Wolof, Pidgin, and other formant-only curated IDs remain in the Echo catalog with `status: placeholder` and return `capability_unavailable` on `POST /v1/demo/speech`.
+Yoruba, isiZulu, Akan/Twi, Igbo, Hausa, Wolof, Pidgin, and other formant-only curated IDs remain in the Echo catalog with `status: placeholder` for *native* synthesis. On `POST /v1/demo/speech` they **remap** to the cultural English/French variety of the same country (disclosed via `X-Lugemi-Demo-Remapped`) so Play never returns formant noise or `capability_unavailable`. Authenticated `/v1/tts/synthesize` still refuses formant when `requireIntelligible` is set unless the client accepts a remapped demo path.
 
 ## API surfaces
 
