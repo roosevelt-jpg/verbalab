@@ -83,6 +83,11 @@ async function bootstrap() {
       'X-Api-Key',
       'X-DealBridge-Actor-Id',
       'X-VoiceBridge-Actor-Id',
+      'X-AccessLine-Actor-Id',
+      'X-MeetingBridge-Actor-Id',
+      'X-LanguageAssurance-Actor-Id',
+      'X-Everyday-Actor-Id',
+      'X-LearnBack-Actor-Id',
     ],
   });
 
