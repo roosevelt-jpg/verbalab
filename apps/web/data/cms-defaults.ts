@@ -123,6 +123,11 @@ export const CMS_DEFAULTS: CmsDocument = {
       description:
         'Lugemi Language Assurance — quality-control checks for source, translation, and speech before release, with native review and evidence reports.',
     },
+    '/everyday': {
+      title: 'Everyday',
+      description:
+        'Lugemi Everyday — photograph a notice or bill, hear a faithful translation, ask grounded questions, and approve a reply in your language.',
+    },
   },
   nav: {
     centerLinks: [

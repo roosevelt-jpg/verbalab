@@ -126,6 +126,8 @@ model Organization {
   assurancePolicies             AssurancePolicySnapshot[]
   assuranceReviews              AssuranceHumanReview[]
   assuranceAuditEvents          AssuranceAuditEvent[]
+  everydaySessions              EverydaySession[]
+  everydayAuditEvents           EverydayAuditEvent[]
 
   @@index([plan])
   @@index([billingStatus])
@@ -3633,4 +3635,304 @@ model AssuranceAuditEvent {
   @@index([organizationId, createdAt])
   @@index([runId])
   @@map("assurance_audit_events")
+}
+
+/// Lugemi Everyday — private document capture, OCR, faithful translation, grounded explain/Q&A, reply approval.
+model EverydaySession {
+  id                 String    @id @default(cuid())
+  organizationId     String    @map("organization_id")
+  workspaceId        String    @map("workspace_id")
+  ownerUserId        String    @map("owner_user_id")
+  /// read_this_to_me | help_me_reply | explain_this_word
+  mode               String
+  preferredVariety   String    @map("preferred_variety")
+  sourceLanguage     String    @default("en") @map("source_language")
+  corridor           String    @default("en-ak")
+  /// capturing | reviewing | ready | stale | deleted | failed
+  state              String    @default("capturing")
+  policyVersion      String    @default("everyday_private_v1") @map("policy_version")
+  retentionDays      Int       @default(30) @map("retention_days")
+  trainingConsent    Boolean   @default(false) @map("training_consent")
+  sensitivePolicyOk  Boolean   @default(false) @map("sensitive_policy_ok")
+  documentCategory   String    @default("administrative_notice") @map("document_category")
+  pageBudgetUsed     Int       @default(0) @map("page_budget_used")
+  deletedAt          DateTime? @map("deleted_at")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  organization Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  documents    EverydayDocumentAsset[]
+  events       EverydayEvent[]
+  replies      EverydayReplyRevision[]
+  terms        EverydayTermExplanation[]
+
+  @@index([organizationId, ownerUserId, createdAt])
+  @@index([organizationId, state, createdAt])
+  @@map("everyday_sessions")
+}
+
+model EverydayDocumentAsset {
+  id              String    @id @default(cuid())
+  sessionId       String    @map("session_id")
+  organizationId  String    @map("organization_id")
+  storageKey      String    @map("storage_key")
+  contentHash     String    @map("content_hash")
+  mimeType        String    @map("mime_type")
+  originalName    String    @map("original_name")
+  byteSize        Int       @map("byte_size")
+  pageCount       Int       @default(1) @map("page_count")
+  /// private | training_opt_in
+  consentScope    String    @default("private") @map("consent_scope")
+  qualityReport   Json?     @map("quality_report")
+  /// ready | recapture_required | failed | deleted
+  status          String    @default("ready")
+  deletedAt       DateTime? @map("deleted_at")
+  createdAt       DateTime  @default(now()) @map("created_at")
+
+  session       EverydaySession        @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  ocrRevisions  EverydayOcrRevision[]
+  sourceRevisions EverydaySourceRevision[]
+
+  @@index([sessionId, createdAt])
+  @@index([organizationId, contentHash])
+  @@map("everyday_document_assets")
+}
+
+model EverydayOcrRevision {
+  id             String   @id @default(cuid())
+  documentId     String   @map("document_id")
+  parentId       String?  @map("parent_id")
+  modelVersion   String   @map("model_version")
+  contentHash    String   @map("content_hash")
+  /// blocks: [{id,page,text,bbox,readingOrder,uncertainty,kind}]
+  blocks         Json
+  fullText       String   @map("full_text")
+  readingOrderOk Boolean  @default(true) @map("reading_order_ok")
+  layoutStatus   String   @default("resolved") @map("layout_status")
+  createdById    String   @map("created_by_id")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  document EverydayDocumentAsset @relation(fields: [documentId], references: [id], onDelete: Cascade)
+
+  @@index([documentId, createdAt])
+  @@map("everyday_ocr_revisions")
+}
+
+model EverydaySourceRevision {
+  id             String   @id @default(cuid())
+  documentId     String   @map("document_id")
+  ocrRevisionId  String?  @map("ocr_revision_id")
+  parentId       String?  @map("parent_id")
+  contentHash    String   @map("content_hash")
+  fullText       String   @map("full_text")
+  blocks         Json
+  /// ocr | manual_correction
+  origin         String   @default("ocr")
+  authorUserId   String   @map("author_user_id")
+  isActive       Boolean  @default(true) @map("is_active")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  document     EverydayDocumentAsset      @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  translations EverydayTranslationRevision[]
+  explanations EverydayExplanationRevision[]
+  questions    EverydayQuestionAnswer[]
+  audio        EverydayAudioVariant[]
+
+  @@index([documentId, isActive])
+  @@index([contentHash])
+  @@map("everyday_source_revisions")
+}
+
+model EverydayTranslationRevision {
+  id                String   @id @default(cuid())
+  sourceRevisionId  String   @map("source_revision_id")
+  targetVariety     String   @map("target_variety")
+  contentHash       String   @map("content_hash")
+  faithfulText      String   @map("faithful_text")
+  blockMappings     Json     @map("block_mappings")
+  modelVersion      String   @map("model_version")
+  glossaryVersion   String?  @map("glossary_version")
+  criticalFindings  Json     @default("[]") @map("critical_findings")
+  stale             Boolean  @default(false)
+  createdById       String   @map("created_by_id")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  sourceRevision EverydaySourceRevision @relation(fields: [sourceRevisionId], references: [id], onDelete: Cascade)
+  explanations   EverydayExplanationRevision[]
+  audio          EverydayAudioVariant[]
+
+  @@index([sourceRevisionId, targetVariety, createdAt])
+  @@map("everyday_translation_revisions")
+}
+
+model EverydayExplanationRevision {
+  id                   String   @id @default(cuid())
+  sourceRevisionId     String   @map("source_revision_id")
+  translationRevisionId String? @map("translation_revision_id")
+  contentHash          String   @map("content_hash")
+  /// claims: [{id,text,evidenceBlockIds,omission,uncertainty}]
+  claims               Json
+  simplifiedText       String   @map("simplified_text")
+  omissions            Json     @default("[]")
+  uncertaintyNotes     Json     @default("[]") @map("uncertainty_notes")
+  modelVersion         String   @map("model_version")
+  adviceDisclaimer     String   @map("advice_disclaimer")
+  stale                Boolean  @default(false)
+  createdById          String   @map("created_by_id")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  sourceRevision      EverydaySourceRevision       @relation(fields: [sourceRevisionId], references: [id], onDelete: Cascade)
+  translationRevision EverydayTranslationRevision? @relation(fields: [translationRevisionId], references: [id], onDelete: SetNull)
+  audio               EverydayAudioVariant[]
+
+  @@index([sourceRevisionId, createdAt])
+  @@map("everyday_explanation_revisions")
+}
+
+model EverydayQuestionAnswer {
+  id               String   @id @default(cuid())
+  sourceRevisionId String   @map("source_revision_id")
+  question         String
+  /// supported | partially_supported | not_found | unreadable | requires_clarification
+  answerability    String
+  answerText       String   @map("answer_text")
+  claims           Json     @default("[]")
+  evidence         Json     @default("[]")
+  reason           String?
+  modelVersion     String   @map("model_version")
+  stale            Boolean  @default(false)
+  createdById      String   @map("created_by_id")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  sourceRevision EverydaySourceRevision @relation(fields: [sourceRevisionId], references: [id], onDelete: Cascade)
+
+  @@index([sourceRevisionId, createdAt])
+  @@map("everyday_question_answers")
+}
+
+model EverydayAudioVariant {
+  id                    String   @id @default(cuid())
+  sourceRevisionId      String?  @map("source_revision_id")
+  translationRevisionId String?  @map("translation_revision_id")
+  explanationRevisionId String?  @map("explanation_revision_id")
+  replyRevisionId       String?  @map("reply_revision_id")
+  /// translation | explanation | reply | source
+  kind                  String
+  textHash              String   @map("text_hash")
+  exactText             String   @map("exact_text")
+  storageKey            String?  @map("storage_key")
+  audioHash             String?  @map("audio_hash")
+  mimeType              String?  @map("mime_type")
+  durationMs            Int?     @map("duration_ms")
+  voiceId               String   @map("voice_id")
+  modelVersion          String   @map("model_version")
+  /// ok | fixture | unsupported | failed
+  status                String   @default("ok")
+  nativeReviewStatus    String   @default("unreviewed") @map("native_review_status")
+  stale                 Boolean  @default(false)
+  createdById           String   @map("created_by_id")
+  createdAt             DateTime @default(now()) @map("created_at")
+
+  sourceRevision      EverydaySourceRevision?       @relation(fields: [sourceRevisionId], references: [id], onDelete: Cascade)
+  translationRevision EverydayTranslationRevision?  @relation(fields: [translationRevisionId], references: [id], onDelete: Cascade)
+  explanationRevision EverydayExplanationRevision?  @relation(fields: [explanationRevisionId], references: [id], onDelete: Cascade)
+  replyRevision       EverydayReplyRevision?        @relation(fields: [replyRevisionId], references: [id], onDelete: Cascade)
+
+  @@index([textHash, kind])
+  @@map("everyday_audio_variants")
+}
+
+model EverydayReplyRevision {
+  id                String   @id @default(cuid())
+  sessionId         String   @map("session_id")
+  sourceRevisionId  String?  @map("source_revision_id")
+  parentId          String?  @map("parent_id")
+  userSourceText    String   @map("user_source_text")
+  userSourceHash    String   @map("user_source_hash")
+  targetText        String   @map("target_text")
+  targetHash        String   @map("target_hash")
+  targetVariety     String   @map("target_variety")
+  modelVersion      String   @map("model_version")
+  criticalFindings  Json     @default("[]") @map("critical_findings")
+  revisionNumber    Int      @default(1) @map("revision_number")
+  stale             Boolean  @default(false)
+  createdById       String   @map("created_by_id")
+  createdAt         DateTime @default(now()) @map("created_at")
+
+  session     EverydaySession          @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  approvals   EverydayReplyApproval[]
+  audio       EverydayAudioVariant[]
+
+  @@index([sessionId, createdAt])
+  @@map("everyday_reply_revisions")
+}
+
+model EverydayReplyApproval {
+  id                 String   @id @default(cuid())
+  replyRevisionId    String   @map("reply_revision_id")
+  userId             String   @map("user_id")
+  sourcePresentationHash String @map("source_presentation_hash")
+  targetPresentationHash String @map("target_presentation_hash")
+  /// approve_copy | approve_download | approve_share_sheet
+  action             String
+  createdAt          DateTime @default(now()) @map("created_at")
+
+  reply EverydayReplyRevision @relation(fields: [replyRevisionId], references: [id], onDelete: Cascade)
+
+  @@unique([replyRevisionId, action, sourcePresentationHash, targetPresentationHash])
+  @@index([replyRevisionId])
+  @@map("everyday_reply_approvals")
+}
+
+model EverydayTermExplanation {
+  id               String   @id @default(cuid())
+  sessionId        String   @map("session_id")
+  sourceRevisionId String?  @map("source_revision_id")
+  selectedSpan     String   @map("selected_span")
+  language         String
+  /// document | general
+  scope            String   @default("document")
+  definition       String
+  evidenceBlockIds Json     @default("[]") @map("evidence_block_ids")
+  uncertainty      String?
+  modelVersion     String   @map("model_version")
+  createdById      String   @map("created_by_id")
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  session EverydaySession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@index([sessionId, createdAt])
+  @@map("everyday_term_explanations")
+}
+
+model EverydayEvent {
+  id        String   @id @default(cuid())
+  sessionId String   @map("session_id")
+  sequence  Int
+  eventId   String   @unique @map("event_id")
+  type      String
+  payload   Json?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  session EverydaySession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, sequence])
+  @@index([sessionId])
+  @@map("everyday_events")
+}
+
+model EverydayAuditEvent {
+  id             String   @id @default(cuid())
+  organizationId String   @map("organization_id")
+  sessionId      String?  @map("session_id")
+  actorId        String   @map("actor_id")
+  operation      String
+  meta           Json?
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, createdAt])
+  @@index([sessionId])
+  @@map("everyday_audit_events")
 }

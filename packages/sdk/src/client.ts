@@ -4,6 +4,7 @@ import { DealBridgeClient } from './dealbridge.js';
 import { AccessLineClient } from './accessline.js';
 import { MeetingBridgeClient } from './meetingbridge.js';
 import { LanguageAssuranceClient } from './language-assurance.js';
+import { EverydayClient } from './everyday.js';
 import type { BridgeTransport } from './bridge-transport.js';
 import type {
   ChatCompletionRequest,
@@ -154,6 +155,7 @@ export class Lugemi {
   private _accessLine?: AccessLineClient;
   private _meetingBridge?: MeetingBridgeClient;
   private _languageAssurance?: LanguageAssuranceClient;
+  private _everyday?: EverydayClient;
 
   constructor(options: LugemiClientOptions) {
     const key = options.apiKey ?? '';
@@ -185,6 +187,7 @@ export class Lugemi {
     this._accessLine?.setContext(next);
     this._meetingBridge?.setContext(next);
     this._languageAssurance?.setContext(next);
+    this._everyday?.setContext(next);
   }
 
   get voiceBridge(): VoiceBridgeClient {
@@ -255,6 +258,20 @@ export class Lugemi {
       });
     }
     return this._languageAssurance;
+  }
+
+  get everyday(): EverydayClient {
+    if (!this._everyday) {
+      this._everyday = new EverydayClient({
+        transport: this.bridgeTransport(),
+        headers: {
+          actorId: this.actorId,
+          organizationId: this.organizationId,
+          workspaceId: this.workspaceId,
+        },
+      });
+    }
+    return this._everyday;
   }
 
   private bridgeTransport(): BridgeTransport {

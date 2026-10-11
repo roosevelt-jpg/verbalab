@@ -5,6 +5,7 @@ export { DealBridgeClient } from './dealbridge.js';
 export { AccessLineClient } from './accessline.js';
 export { MeetingBridgeClient } from './meetingbridge.js';
 export { LanguageAssuranceClient } from './language-assurance.js';
+export { EverydayClient } from './everyday.js';
 export type {
   CreateVoiceThreadInput,
   VoiceBridgeConsent,
@@ -17,6 +18,10 @@ export type {
   CreateAssuranceRunInput,
   LanguageAssuranceClientOptions,
 } from './language-assurance.js';
+export type {
+  CreateEverydaySessionInput,
+  EverydayClientOptions,
+} from './everyday.js';
 export type { UploadAuth, UploadProgress, BridgeTransport } from './bridge-transport.js';
 export type {
   ChatCompletionRequest,

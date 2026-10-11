@@ -85,9 +85,9 @@ export function languageAssuranceCatalog() {
     ],
     limitations: [
       'Not legal certification or competitive superiority claims.',
-      'Pilot corridor starts with en-ak business announcements; extend after evaluation.',
+      'Corridors en-ak and en-fr are wired; spoken ASR remains gated until measured (LANGUAGE_ASSURANCE_SPOKEN_ASR=1).',
       'Live AccessLine/MeetingBridge duplex guarantees are out of scope for this async service.',
-      'Overrides disabled in MVP system policies.',
+      'Overrides disabled in system policies.',
     ],
   };
 }

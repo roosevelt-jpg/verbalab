@@ -61,7 +61,7 @@ export type CorridorCapability = {
   note: string;
 };
 
-/** Pilot corridor: English ↔ Akan/Twi business announcements. */
+/** Wired corridors: English ↔ Akan/Twi and English ↔ French. */
 export const ASSURANCE_CORRIDORS: CorridorCapability[] = [
   {
     id: 'en-ak',
@@ -71,7 +71,7 @@ export const ASSURANCE_CORRIDORS: CorridorCapability[] = [
     criticalChecks: true,
     fidelity: true,
     spokenAsr: false,
-    note: 'Primary pilot. Critical-field and Fidelity checks run. Independent Akan ASR for spoken realization stays gated until measured (LANGUAGE_ASSURANCE_SPOKEN_ASR=1).',
+    note: 'Primary corridor. Critical-field and Fidelity checks run. Independent Akan ASR for spoken realization stays gated until measured (LANGUAGE_ASSURANCE_SPOKEN_ASR=1).',
   },
   {
     id: 'en-fr',
