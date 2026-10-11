@@ -40,7 +40,14 @@ describe('cultural-identity helpers', () => {
     expect(CULTURAL_ENGLISH_BCP47_DEFAULTS['en-ZA'].accentIdentityId).toBe(
       'za-south-african-english',
     );
+    expect(CULTURAL_ENGLISH_BCP47_DEFAULTS['en-KE'].accentIdentityId).toBe('ke-english');
+    expect(CULTURAL_ENGLISH_BCP47_DEFAULTS['en-TZ'].speechVariety).toBe('tanzanian_english');
+    expect(CULTURAL_ENGLISH_BCP47_DEFAULTS['en-UG'].accentIdentityId).toBe('ug-ugandan_english');
+    expect(CULTURAL_ENGLISH_BCP47_DEFAULTS['en-RW'].echoVoiceId).toBe('own:en-ke-female');
     expect(CULTURAL_ENGLISH_BCP47_DEFAULTS['pcm-NG'].speechVariety).toBe('nigerian_pidgin');
+    expect(Object.keys(CULTURAL_ENGLISH_BCP47_DEFAULTS).filter((k) => k.startsWith('en-')).length).toBeGreaterThan(
+      50,
+    );
   });
 
   it('derives cultural identity labels and lifestyle tags', () => {

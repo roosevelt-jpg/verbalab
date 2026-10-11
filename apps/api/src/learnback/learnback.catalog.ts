@@ -71,6 +71,7 @@ export function learnbackCatalog() {
       'LearnBack never submits job applications or messages employers.',
       'Reminders are opt-in; without notification infrastructure, due items stay in-app only.',
       'Optional training consent is separate and off by default.',
+      'English practice uses each market’s country-identifying accent (Ghanaian, Nigerian, Kenyan, …). Non-US/UK English is never marked wrong for accent alone.',
     ],
     limitations: [
       'Adult practice product — not a compliant children’s product.',

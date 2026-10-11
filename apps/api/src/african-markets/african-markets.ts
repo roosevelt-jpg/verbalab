@@ -1,5 +1,9 @@
 import { COUNTRY_PACK_SEEDS } from '../country-packs/country-pack-seeds';
 import { LANGUAGE_SEEDS } from '../languages/language-seeds';
+import {
+  buildAfricanEnglishAccent,
+  type AfricanEnglishAccent,
+} from './african-english-accents';
 
 /**
  * Priority African markets for Everyday / LearnBack / Relay language corridors.
@@ -241,7 +245,29 @@ export type AfricanMarket = {
   timezone: string;
   bridgeLanguages: string[];
   localLanguages: string[];
+  /** Country-identifying English variety — English bridges, never generic US/UK. */
+  englishAccent: AfricanEnglishAccent;
 };
+
+export type CorridorEnglishAccent = {
+  bcp47: string;
+  nameEn: string;
+  accentIdentityId: string;
+  speechVariety: string;
+  echoVoiceId: string;
+  voiceProvisioning: AfricanEnglishAccent['voiceProvisioning'];
+};
+
+function corridorEnglishAccent(accent: AfricanEnglishAccent): CorridorEnglishAccent {
+  return {
+    bcp47: accent.bcp47,
+    nameEn: accent.nameEn,
+    accentIdentityId: accent.accentIdentityId,
+    speechVariety: accent.speechVariety,
+    echoVoiceId: accent.echoVoiceId,
+    voiceProvisioning: accent.voiceProvisioning,
+  };
+}
 
 export function africanMarkets(): AfricanMarket[] {
   const wanted = new Set<string>(AFRICAN_MARKET_CODES);
@@ -263,11 +289,17 @@ export function africanMarkets(): AfricanMarket[] {
       timezone: MARKET_TIMEZONES[pack.code] ?? 'UTC',
       bridgeLanguages: bridges.length ? bridges : ['en'],
       localLanguages: workingLocals,
+      englishAccent: buildAfricanEnglishAccent({
+        code: pack.code,
+        nameEn: pack.nameEn,
+        region: pack.region,
+      }),
     };
   });
 }
 
-export function languageLabel(code: string): string {
+export function languageLabel(code: string, market?: Pick<AfricanMarket, 'englishAccent'>): string {
+  if (code === 'en' && market?.englishAccent) return market.englishAccent.nameEn;
   if (code === 'ak') return 'Akan/Twi';
   if (code === 'rw') return 'Kinyarwanda';
   if (code === 'pcm') return 'Nigerian Pidgin';
@@ -303,6 +335,7 @@ export type BuiltRelayCorridor = {
   marketCode: string;
   marketName: string;
   region: string;
+  englishAccent?: CorridorEnglishAccent;
 };
 
 /** Historical Ghana ids preserved for existing clients/tests. */
@@ -338,9 +371,10 @@ export function buildRelayCorridors(): BuiltRelayCorridor[] {
             `${source}-${target}-business-${market.code.toLowerCase()}`;
           if (seen.has(id)) continue;
           seen.add(id);
+          const usesEnglish = source === 'en' || target === 'en';
           out.push({
             id,
-            label: `${languageLabel(source)} ↔ ${languageLabel(target)} · general business (${market.nameEn})`,
+            label: `${languageLabel(source, market)} ↔ ${languageLabel(target, market)} · general business (${market.nameEn})`,
             sourceLanguage: source,
             targetLanguage: target,
             jurisdiction: market.code,
@@ -349,10 +383,13 @@ export function buildRelayCorridors(): BuiltRelayCorridor[] {
             domain: 'general_business',
             delivery: 'browser_audio',
             telephoneBridging: false,
-            note: pairNote(market.nameEn),
+            note: usesEnglish
+              ? `${pairNote(market.nameEn)} English side uses ${market.englishAccent.nameEn} (${market.englishAccent.bcp47}) — country-identifying, not US/UK.`
+              : pairNote(market.nameEn),
             marketCode: market.code,
             marketName: market.nameEn,
             region: market.region,
+            englishAccent: usesEnglish ? corridorEnglishAccent(market.englishAccent) : undefined,
           });
         }
       }
@@ -377,6 +414,7 @@ export type BuiltEverydayCorridor = {
   marketCode: string;
   marketName: string;
   region: string;
+  englishAccent?: CorridorEnglishAccent;
 };
 
 const HISTORICAL_EVERYDAY_IDS = new Set(['en-ak', 'ak-en', 'en-ee', 'ee-en', 'en-fr', 'fr-en']);
@@ -449,21 +487,25 @@ export function buildEverydayCorridors(): BuiltEverydayCorridor[] {
           }
           if (seen.has(id)) continue;
           seen.add(id);
+          const usesEnglish = source === 'en' || target === 'en';
           out.push({
             id,
             sourceLanguage: source,
             targetLanguage: target,
-            label: `${languageLabel(source)} → ${languageLabel(target)} (${market.nameEn})`,
+            label: `${languageLabel(source, market)} → ${languageLabel(target, market)} (${market.nameEn})`,
             ocr: true,
             faithfulTranslation: true,
             explanation: true,
             groundedQa: true,
             tts: true,
             reply: true,
-            note: `Private document pipeline for ${market.nameEn}. Adapter failures stay explicit; fixtures only when allowed.`,
+            note: usesEnglish
+              ? `Private document pipeline for ${market.nameEn}. English TTS/STT routes as ${market.englishAccent.nameEn} (${market.englishAccent.bcp47}). Adapter failures stay explicit; fixtures only when allowed.`
+              : `Private document pipeline for ${market.nameEn}. Adapter failures stay explicit; fixtures only when allowed.`,
             marketCode: market.code,
             marketName: market.nameEn,
             region: market.region,
+            englishAccent: usesEnglish ? corridorEnglishAccent(market.englishAccent) : undefined,
           });
         }
       }
@@ -488,6 +530,7 @@ export type BuiltLearnBackCorridor = {
   marketCode: string;
   marketName: string;
   region: string;
+  englishAccent?: CorridorEnglishAccent;
 };
 
 const HISTORICAL_LEARNBACK = new Set([
@@ -509,62 +552,74 @@ export function buildLearnBackCorridors(): BuiltLearnBackCorridor[] {
     out.push(c);
   };
 
+  const ghAccent = corridorEnglishAccent(
+    buildAfricanEnglishAccent({
+      code: 'GH',
+      nameEn: 'Ghana',
+      region: 'West Africa',
+    }),
+  );
+
   // Preserve Ghana + FR historical corridors with richer situations.
   push({
     id: 'ak-en-interview',
     explanationLanguage: 'ak',
     practiceLanguage: 'en',
-    label: 'Twi/Akan explanations · English interview practice (Ghana)',
+    label: 'Twi/Akan explanations · Ghanaian English interview practice (Ghana)',
     situations: ['job_interview'],
     tts: true,
     asr: true,
     pronunciation: false,
-    note: 'Adult interview practice. Pronunciation stays not_assessed until LEARNBACK_PRONUNCIATION=1.',
+    note: 'Adult interview practice in Ghanaian English. Pronunciation stays not_assessed until LEARNBACK_PRONUNCIATION=1. Ghanaian English is not marked wrong for non-US/UK accent.',
     marketCode: 'GH',
     marketName: 'Ghana',
     region: 'West Africa',
+    englishAccent: ghAccent,
   });
   push({
     id: 'en-ak-interview',
     explanationLanguage: 'en',
     practiceLanguage: 'ak',
-    label: 'English explanations · Akan/Twi interview practice (Ghana)',
+    label: 'Ghanaian English explanations · Akan/Twi interview practice (Ghana)',
     situations: ['job_interview'],
     tts: true,
     asr: true,
     pronunciation: false,
-    note: 'Practice answers in Akan/Twi with English feedback.',
+    note: 'Practice answers in Akan/Twi with Ghanaian English feedback.',
     marketCode: 'GH',
     marketName: 'Ghana',
     region: 'West Africa',
+    englishAccent: ghAccent,
   });
   push({
     id: 'ak-en-customer',
     explanationLanguage: 'ak',
     practiceLanguage: 'en',
-    label: 'Twi/Akan explanations · English customer service (Ghana)',
+    label: 'Twi/Akan explanations · Ghanaian English customer service (Ghana)',
     situations: ['customer_service'],
     tts: true,
     asr: true,
     pronunciation: false,
-    note: 'Customer-service scenarios with the same privacy and evaluation contracts.',
+    note: 'Customer-service scenarios in Ghanaian English with the same privacy and evaluation contracts.',
     marketCode: 'GH',
     marketName: 'Ghana',
     region: 'West Africa',
+    englishAccent: ghAccent,
   });
   push({
     id: 'en-ak-school',
     explanationLanguage: 'en',
     practiceLanguage: 'ak',
-    label: 'English explanations · Akan/Twi school meeting (Ghana)',
+    label: 'Ghanaian English explanations · Akan/Twi school meeting (Ghana)',
     situations: ['school_meeting'],
     tts: true,
     asr: true,
     pronunciation: false,
-    note: 'School-meeting practice; not professional advice.',
+    note: 'School-meeting practice; not professional advice. Explanations use Ghanaian English.',
     marketCode: 'GH',
     marketName: 'Ghana',
     region: 'West Africa',
+    englishAccent: ghAccent,
   });
   push({
     id: 'en-fr-interview',
@@ -575,7 +630,7 @@ export function buildLearnBackCorridors(): BuiltLearnBackCorridor[] {
     tts: true,
     asr: true,
     pronunciation: false,
-    note: 'Bilingual interview corridor. Pronunciation gated.',
+    note: 'Bilingual interview corridor. Pronunciation gated. Pick a market corridor for country-identifying English.',
     marketCode: 'XX',
     marketName: 'Pan-African / administrative',
     region: 'Africa',
@@ -589,7 +644,7 @@ export function buildLearnBackCorridors(): BuiltLearnBackCorridor[] {
     tts: true,
     asr: true,
     pronunciation: false,
-    note: 'Bilingual interview corridor. Pronunciation gated.',
+    note: 'Bilingual interview corridor. Pronunciation gated. Pick a market corridor for country-identifying English.',
     marketCode: 'XX',
     marketName: 'Pan-African / administrative',
     region: 'Africa',
@@ -612,19 +667,23 @@ export function buildLearnBackCorridors(): BuiltLearnBackCorridor[] {
           } else if (seen.has(id)) {
             id = `${explanation}-${practice}-interview-${market.code.toLowerCase()}`;
           }
+          const usesEnglish = explanation === 'en' || practice === 'en';
           push({
             id,
             explanationLanguage: explanation,
             practiceLanguage: practice,
-            label: `${languageLabel(explanation)} explanations · ${languageLabel(practice)} interview practice (${market.nameEn})`,
+            label: `${languageLabel(explanation, market)} explanations · ${languageLabel(practice, market)} interview practice (${market.nameEn})`,
             situations: ['job_interview', 'workplace_conversation'],
             tts: true,
             asr: true,
             pronunciation: false,
-            note: `Adult practice for ${market.nameEn}. Pronunciation stays not_assessed without a validated assessor. Regional English varieties are not marked wrong for non-US/UK accent.`,
+            note: usesEnglish
+              ? `Adult practice for ${market.nameEn}. Practice/explanations that use English use ${market.englishAccent.nameEn} (${market.englishAccent.bcp47}). Pronunciation stays not_assessed without a validated assessor — country English is never marked wrong for non-US/UK accent.`
+              : `Adult practice for ${market.nameEn}. Pronunciation stays not_assessed without a validated assessor.`,
             marketCode: market.code,
             marketName: market.nameEn,
             region: market.region,
+            englishAccent: usesEnglish ? corridorEnglishAccent(market.englishAccent) : undefined,
           });
         }
       }
@@ -659,8 +718,14 @@ export function buildLearnBackMarketScenarioSeeds(
   for (const c of corridors) {
     if (HISTORICAL_LEARNBACK.has(c.id)) continue; // hand-authored packs already cover these
     if (!c.situations.includes('job_interview')) continue;
-    const practice = languageLabel(c.practiceLanguage);
-    const explanation = languageLabel(c.explanationLanguage);
+    const practice =
+      c.practiceLanguage === 'en' && c.englishAccent
+        ? c.englishAccent.nameEn
+        : languageLabel(c.practiceLanguage);
+    const explanation =
+      c.explanationLanguage === 'en' && c.englishAccent
+        ? c.englishAccent.nameEn
+        : languageLabel(c.explanationLanguage);
     seeds.push({
       packKey: `interview_problem_solving_${c.id}`,
       revision: 'interview_problem_solving_market_v1',
@@ -713,6 +778,8 @@ export function africanMarketSummaries() {
     timezone: m.timezone,
     bridgeLanguages: m.bridgeLanguages,
     localLanguages: m.localLanguages,
-    localLanguageLabels: m.localLanguages.map(languageLabel),
+    localLanguageLabels: m.localLanguages.map((code) => languageLabel(code, m)),
+    bridgeLanguageLabels: m.bridgeLanguages.map((code) => languageLabel(code, m)),
+    englishAccent: corridorEnglishAccent(m.englishAccent),
   }));
 }

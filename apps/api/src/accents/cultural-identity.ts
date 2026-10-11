@@ -4,6 +4,13 @@
  * can prefer culturally native routing — independent of neural weight maturity.
  */
 
+import { COUNTRY_PACK_SEEDS } from '../country-packs/country-pack-seeds';
+import { AFRICAN_MARKET_CODES } from '../african-markets/african-markets';
+import {
+  africanCulturalEnglishDefaults,
+  buildAfricanEnglishAccents,
+} from '../african-markets/african-english-accents';
+
 export type SpeechVariety =
   | 'ghanaian_english'
   | 'ghanaian_pidgin'
@@ -210,35 +217,24 @@ export function deriveLifestyleTags(input: {
   return [...tags].filter(Boolean).slice(0, 8);
 }
 
+const AFRICAN_ENGLISH_BCP47_DEFAULTS = africanCulturalEnglishDefaults(
+  buildAfricanEnglishAccents(
+    COUNTRY_PACK_SEEDS.filter((p) =>
+      (AFRICAN_MARKET_CODES as readonly string[]).includes(p.code),
+    ).map((p) => ({ code: p.code, nameEn: p.nameEn, region: p.region })),
+  ),
+);
+
 /** Prefer cultural English / Pidgin packs when localizing or synthesizing for these BCP-47 tags. */
 export const CULTURAL_ENGLISH_BCP47_DEFAULTS: Record<
   string,
   { accentIdentityId: string; speechVariety: SpeechVariety; echoVoiceId: string }
 > = {
-  'en-GH': {
-    accentIdentityId: 'gh-ghanaian-english',
-    speechVariety: 'ghanaian_english',
-    echoVoiceId: 'own:en-gh-female',
-  },
-  'en-NG': {
-    accentIdentityId: 'ng-nigerian-english',
-    speechVariety: 'nigerian_english',
-    echoVoiceId: 'own:en-ng-female',
-  },
+  ...AFRICAN_ENGLISH_BCP47_DEFAULTS,
   'en-PH': {
     accentIdentityId: 'ph-filipino-english',
     speechVariety: 'filipino_english',
     echoVoiceId: 'own:en-ph-female',
-  },
-  'en-ZA': {
-    accentIdentityId: 'za-south-african-english',
-    speechVariety: 'south_african_english',
-    echoVoiceId: 'own:en-za-female',
-  },
-  'en-KE': {
-    accentIdentityId: 'ke-english',
-    speechVariety: 'kenyan_english',
-    echoVoiceId: 'own:en-ke-female',
   },
   'pcm-NG': {
     accentIdentityId: 'ng-pidgin',

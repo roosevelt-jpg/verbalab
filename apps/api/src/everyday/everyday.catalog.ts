@@ -80,6 +80,7 @@ export function everydayCatalog() {
       'Reply approval is pinned to exact source/target presentation hashes; edits invalidate approval.',
       'Opening a share sheet after approval is not proof of delivery. Everyday never sends external messages.',
       'TTS uses language-specific voices when available; otherwise text is returned with an honest unsupported status — no neighboring-language substitution.',
+      'English corridors use each market’s country-identifying English accent (en-GH, en-NG, en-ZA, …) — not US/UK defaults.',
       'Server processing is private to your organization but is not end-to-end encryption.',
     ],
     limitations: [

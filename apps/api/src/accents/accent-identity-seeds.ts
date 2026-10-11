@@ -4,6 +4,12 @@
  * culturalIdentity / speechVariety / lifestyleTags make cultural nativeness first-class in routing.
  */
 import { ISO_COUNTRY_BY_CODE, isoCountryName } from '../country-packs/iso-countries';
+import { COUNTRY_PACK_SEEDS } from '../country-packs/country-pack-seeds';
+import { AFRICAN_MARKET_CODES } from '../african-markets/african-markets';
+import {
+  buildAfricanEnglishAccentIdentitySeeds,
+  HAND_AUTHORED_ENGLISH_IDENTITY_IDS,
+} from '../african-markets/african-english-accents';
 
 export type AccentIdentitySeed = {
   id: string;
@@ -36,7 +42,7 @@ export type AccentIdentitySeed = {
   lifestyleTags?: string[];
 };
 
-export const ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
+const HAND_AUTHORED_ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
   // —— Ghana ——
   {
     id: 'gh-twi-asante',
@@ -803,6 +809,24 @@ export const ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
     echoModelVariant: 'lugemi-echo-voice-ao-portuguese',
     bcp47: 'pt-AO',
   },
+];
+
+const existingAccentIdentityIds = new Set(HAND_AUTHORED_ACCENT_IDENTITY_SEEDS.map((s) => s.id));
+for (const id of Object.values(HAND_AUTHORED_ENGLISH_IDENTITY_IDS)) {
+  existingAccentIdentityIds.add(id);
+}
+
+const AFRICAN_ENGLISH_ACCENT_IDENTITY_SEEDS = buildAfricanEnglishAccentIdentitySeeds(
+  COUNTRY_PACK_SEEDS.filter((p) =>
+    (AFRICAN_MARKET_CODES as readonly string[]).includes(p.code),
+  ).map((p) => ({ code: p.code, nameEn: p.nameEn, region: p.region })),
+  existingAccentIdentityIds,
+);
+
+/** Hand-authored packs plus generated country-identifying African English accents. */
+export const ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
+  ...HAND_AUTHORED_ACCENT_IDENTITY_SEEDS,
+  ...AFRICAN_ENGLISH_ACCENT_IDENTITY_SEEDS,
 ];
 
 /** Full ISO labels for accent identity filters. */

@@ -85,6 +85,7 @@ export function relayCatalog() {
       'Payments are manual invoice by default — not card capture or escrow.',
       'Context sharing requires explicit grants; revocation cannot erase what was already heard.',
       'Telephone bridging and payouts remain disabled without authorized adapters.',
+      'English is a bridge language with a country-identifying accent per market (e.g. Nigerian English, Kenyan English) — never routed as generic US/UK.',
     ],
     limitations: [
       'Recruitment, native skill review and payment processor permissions are human launch prerequisites.',
