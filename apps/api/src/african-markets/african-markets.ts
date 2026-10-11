@@ -685,7 +685,13 @@ export function buildLearnBackCorridors(): BuiltLearnBackCorridor[] {
   });
 
   for (const market of allProductMarkets()) {
-    const locals = market.localLanguages.filter((l) => LANGUAGE_BY_CODE.has(l));
+    // Prefer dedicated locals; if a market only lists bridge languages (e.g. en+es),
+    // still build practice pairs from non-English bridges.
+    const locals = (
+      market.localLanguages.length
+        ? market.localLanguages
+        : market.bridgeLanguages.filter((l) => l !== 'en')
+    ).filter((l) => LANGUAGE_BY_CODE.has(l));
     const bridges = market.bridgeLanguages.filter((b) => LANGUAGE_BY_CODE.has(b));
     for (const local of locals) {
       for (const bridge of bridges) {

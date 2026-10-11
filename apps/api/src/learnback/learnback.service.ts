@@ -312,7 +312,7 @@ export class LearnBackService implements OnModuleInit {
       );
     }
 
-    let pack = input.scenarioPackId
+    const pack = input.scenarioPackId
       ? await this.prisma.learnBackScenarioPack.findFirst({
           where: { id: input.scenarioPackId, corridorId: corridor.id },
         })
@@ -414,7 +414,7 @@ export class LearnBackService implements OnModuleInit {
     let audioBuffer: Buffer | null = null;
     let audioHash: string | null = null;
     let storageKey: string | null = null;
-    let mimeType = input.mimeType ?? 'audio/wav';
+    const mimeType = input.mimeType ?? 'audio/wav';
 
     if (input.contentBase64?.trim()) {
       audioBuffer = Buffer.from(input.contentBase64, 'base64');

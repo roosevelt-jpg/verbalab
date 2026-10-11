@@ -252,6 +252,38 @@ const CURATED_OVERRIDES: Record<string, CuratedOverride> = {
     relatedAccentCodes: ['ht-ht'],
     culturalNotes: 'Haitian Creole is the everyday language; French is formal register.',
   },
+  JM: {
+    primaryLanguages: ['en', 'es'],
+    bcp47Tags: ['en-JM', 'es-JM'],
+    relatedDialectCodes: ['en-jm'],
+    relatedAccentCodes: ['en-jm'],
+    culturalNotes:
+      'Jamaican English is the country-identifying bridge (distinct from Patwa). Spanish is a Caribbean contact/tourism corridor language — not an official-language claim.',
+  },
+  TT: {
+    primaryLanguages: ['en', 'es'],
+    bcp47Tags: ['en-TT', 'es-TT'],
+    relatedDialectCodes: ['en-tt'],
+    relatedAccentCodes: ['en-tt'],
+    culturalNotes:
+      'Trinidadian English is country-identifying; Spanish is a Caribbean contact corridor language.',
+  },
+  GY: {
+    primaryLanguages: ['en', 'es'],
+    bcp47Tags: ['en-GY', 'es-GY'],
+    relatedDialectCodes: ['en-gy'],
+    relatedAccentCodes: ['en-gy'],
+    culturalNotes:
+      'Guyanese English is country-identifying; Spanish is a regional contact corridor language with neighboring LATAM markets.',
+  },
+  BZ: {
+    primaryLanguages: ['en', 'es'],
+    bcp47Tags: ['en-BZ', 'es-BZ'],
+    relatedDialectCodes: ['en-bz'],
+    relatedAccentCodes: ['en-bz'],
+    culturalNotes:
+      'Belizean English is country-identifying; Spanish is widely used as a contact language alongside English.',
+  },
   // —— SEA ——
   PH: {
     primaryLanguages: ['en', 'fil', 'tl', 'ceb'],

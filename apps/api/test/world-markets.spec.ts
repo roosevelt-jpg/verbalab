@@ -112,4 +112,42 @@ describe('LATAM / SEA / Middle East markets', () => {
     expect(relay.corridorCount).toBeGreaterThan(700);
     expect(JSON.stringify(relay.honesty).toLowerCase()).toContain('dialect');
   });
+
+  it('wires every product market into Relay/Everyday/LearnBack corridors with accents', () => {
+    const markets = allProductMarkets();
+    const relay = buildRelayCorridors();
+    const everyday = buildEverydayCorridors();
+    const learnback = buildLearnBackCorridors();
+
+    for (const m of markets) {
+      expect(m.englishAccent.bcp47).toBe(`en-${m.code}`);
+      expect(CULTURAL_ENGLISH_BCP47_DEFAULTS[m.englishAccent.bcp47]).toBeTruthy();
+      expect(
+        ACCENT_IDENTITY_SEEDS.some((s) => s.id === m.englishAccent.accentIdentityId),
+      ).toBe(true);
+      expect(m.culturalVarieties.length, m.code).toBeGreaterThan(0);
+
+      // English-only markets still get Relay/Everyday corridors via local↔bridge
+      // when locals exist; when only English, bridge-only pairs may be sparse —
+      // at least LearnBack or Everyday should reference the market when it has
+      // non-English languages OR English cultural variety.
+      const hasNonEn = m.localLanguages.some((l) => l !== 'en') ||
+        m.bridgeLanguages.some((l) => l !== 'en');
+      if (hasNonEn) {
+        expect(relay.some((c) => c.marketCode === m.code), `relay ${m.code}`).toBe(true);
+        expect(everyday.some((c) => c.marketCode === m.code), `everyday ${m.code}`).toBe(
+          true,
+        );
+        expect(learnback.some((c) => c.marketCode === m.code), `learnback ${m.code}`).toBe(
+          true,
+        );
+      }
+    }
+
+    // Spot-check world corridors exist
+    expect(relay.some((c) => c.marketCode === 'MX')).toBe(true);
+    expect(relay.some((c) => c.marketCode === 'PH')).toBe(true);
+    expect(relay.some((c) => c.marketCode === 'AE')).toBe(true);
+    expect(relay.some((c) => c.marketCode === 'BR')).toBe(true);
+  });
 });

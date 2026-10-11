@@ -14,7 +14,7 @@ import {
   selectMatch,
 } from './relay.checks';
 import { hashText, mintEventId, mintRoomId } from './relay.hash';
-import { africanMarketSummaries, africanMarkets } from '../african-markets';
+import { africanMarketSummaries, allProductMarkets } from '../african-markets';
 import {
   RELAY_CORRIDORS,
   RELAY_FEATURE,
@@ -110,13 +110,13 @@ export class RelayService implements OnModuleInit {
   }
 
   /**
-   * Ensure labeled demo staffed interpreters exist for every African market corridor.
-   * Never presented as a hired continent-wide pool.
+   * Ensure labeled demo staffed interpreters exist for every product market corridor
+   * (Africa, LATAM, SEA, Middle East). Never presented as a hired global pool.
    */
   async ensureDemoSupply(actor: RelayActor) {
     if (!demoInterpretersAllowed()) return { seeded: false, markets: 0 };
 
-    const markets = africanMarkets();
+    const markets = allProductMarkets();
     let seeded = 0;
     const start = new Date(Date.now() + 2 * 60 * 60 * 1000);
     start.setMinutes(0, 0, 0);

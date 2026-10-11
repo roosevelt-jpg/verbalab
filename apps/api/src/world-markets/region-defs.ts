@@ -97,9 +97,10 @@ export const BRIDGE_BY_MARKET: Record<string, string[]> = {
   DO: ['en', 'es'],
   PR: ['en', 'es'],
   HT: ['en', 'ht', 'fr'],
-  JM: ['en'],
-  TT: ['en'],
-  GY: ['en'],
+  // English-primary Caribbean: Spanish is a contact/tourism bridge (not a claim of official status).
+  JM: ['en', 'es'],
+  TT: ['en', 'es'],
+  GY: ['en', 'es'],
   BZ: ['en', 'es'],
   SR: ['en', 'nl'],
   // SEA

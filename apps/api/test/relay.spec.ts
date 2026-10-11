@@ -151,6 +151,21 @@ describe('Relay API', () => {
       .expect(200);
     expect(catalog.body.name).toMatch(/Relay/i);
     expect(catalog.body.delivery.telephoneBridging).toBe(false);
+    expect(catalog.body.marketCount).toBeGreaterThanOrEqual(90);
+    expect(catalog.body.markets.some((m: { code: string }) => m.code === 'MX')).toBe(true);
+    expect(catalog.body.markets.some((m: { code: string }) => m.code === 'PH')).toBe(true);
+    expect(catalog.body.markets.some((m: { code: string }) => m.code === 'AE')).toBe(true);
+    expect(
+      catalog.body.markets.find((m: { code: string }) => m.code === 'MX')?.englishAccent
+        ?.nameEn,
+    ).toBe('Mexican English');
+    expect(
+      catalog.body.markets
+        .find((m: { code: string }) => m.code === 'MX')
+        ?.culturalVarieties?.some((v: { varietyName: string }) =>
+          v.varietyName.includes('Mexican Spanish'),
+        ),
+    ).toBe(true);
 
     await request(app.getHttpServer())
       .post('/v1/relay/requests')

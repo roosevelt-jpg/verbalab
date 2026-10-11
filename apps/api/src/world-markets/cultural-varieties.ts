@@ -233,6 +233,18 @@ const CURATED_VARIETIES: Record<string, CulturalVariety[]> = {
       culturalNotes:
         'Jamaican English is the product bridge variety — distinct from US/UK English and from Jamaican Patwa/Creole (spoken widely; not yet a separate registry language code).',
     },
+    {
+      languageCode: 'es',
+      languageName: 'Spanish',
+      varietyName: 'Caribbean contact Spanish (Jamaica)',
+      dialects: ['Tourism/contact Spanish'],
+      accents: ['Caribbean contact Spanish (spoken)'],
+      bcp47: 'es-JM',
+      accentIdentityId: 'jm-caribbean-spanish',
+      primaryLabel: true,
+      culturalNotes:
+        'Spanish is a contact/tourism corridor for Jamaica — not an official-language claim.',
+    },
   ],
   TT: [
     {
@@ -247,6 +259,17 @@ const CURATED_VARIETIES: Record<string, CulturalVariety[]> = {
       culturalNotes:
         'Trinidadian English is country-identifying; Creole contact influences informal speech.',
     },
+    {
+      languageCode: 'es',
+      languageName: 'Spanish',
+      varietyName: 'Caribbean contact Spanish (Trinidad & Tobago)',
+      dialects: ['Contact Spanish'],
+      accents: ['Caribbean contact Spanish (spoken)'],
+      bcp47: 'es-TT',
+      accentIdentityId: 'tt-caribbean-spanish',
+      primaryLabel: true,
+      culturalNotes: 'Spanish contact corridor — not an official-language claim.',
+    },
   ],
   GY: [
     {
@@ -260,6 +283,42 @@ const CURATED_VARIETIES: Record<string, CulturalVariety[]> = {
       primaryLabel: true,
       culturalNotes:
         'Guyanese English is the product bridge variety; Creole contact is common in informal speech.',
+    },
+    {
+      languageCode: 'es',
+      languageName: 'Spanish',
+      varietyName: 'Regional contact Spanish (Guyana)',
+      dialects: ['Contact Spanish'],
+      accents: ['Regional contact Spanish (spoken)'],
+      bcp47: 'es-GY',
+      accentIdentityId: 'gy-contact-spanish',
+      primaryLabel: true,
+      culturalNotes: 'Spanish contact corridor with neighboring LATAM markets.',
+    },
+  ],
+  BZ: [
+    {
+      languageCode: 'en',
+      languageName: 'English',
+      varietyName: 'Belizean English',
+      dialects: ['Belizean English', 'Belizean Kriol contact'],
+      accents: ['Belize City English (spoken)'],
+      bcp47: 'en-BZ',
+      accentIdentityId: 'bz-belizean_english',
+      primaryLabel: true,
+      culturalNotes:
+        'Belizean English is country-identifying; Kriol contact is common in informal speech.',
+    },
+    {
+      languageCode: 'es',
+      languageName: 'Spanish',
+      varietyName: 'Belizean Spanish',
+      dialects: ['Northern Belize Spanish', 'Contact Spanish'],
+      accents: ['Belizean Spanish (spoken)'],
+      bcp47: 'es-BZ',
+      accentIdentityId: 'bz-belizean-spanish',
+      primaryLabel: true,
+      culturalNotes: 'Spanish is widely used alongside English in Belize.',
     },
   ],
   CU: [
