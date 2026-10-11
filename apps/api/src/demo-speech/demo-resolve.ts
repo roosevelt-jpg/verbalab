@@ -12,6 +12,7 @@ import {
   normalizeLocaleKey,
 } from '../gateway/voice-capability-registry';
 import { isOwnTtsVoice, resolveOwnTtsVoice } from '../gateway/own-tts.adapter';
+import { voiceSpeaksNatively } from '../gateway/native-voice';
 
 export type DemoSpeechTarget = {
   voice: string;
@@ -184,6 +185,146 @@ const LANG_REMAP: Record<string, { voice: string; language: string; sample: stri
     ti: VOICE_REMAP['own:ti-et-male']!,
     sn: VOICE_REMAP['own:sn-zw-female']!,
     ny: VOICE_REMAP['own:ny-mw-male']!,
+    // SEA / LATAM / MENA identity packs often ship with a nearest English Echo id —
+    // remap demos onto verified eSpeak (or cultural English) paths for that language.
+    fil: {
+      voice: 'own:en-ph-female',
+      language: 'en-PH',
+      sample: 'Good morning po! Salamat po — welcome to Lugemi Filipino English.',
+      note: 'Tagalog/Filipino neural weights not live; demo uses Filipino English.',
+    },
+    tl: {
+      voice: 'own:en-ph-female',
+      language: 'en-PH',
+      sample: 'Good morning po! Salamat po — welcome to Lugemi Filipino English.',
+      note: 'Tagalog neural weights not live; demo uses Filipino English.',
+    },
+    ceb: {
+      voice: 'own:en-ph-male',
+      language: 'en-PH',
+      sample: 'Kumusta — welcome. This is Filipino English from the Visayas.',
+      note: 'Cebuano neural weights not live; demo uses Filipino English.',
+    },
+    th: {
+      voice: 'own:th-pack',
+      language: 'th-TH',
+      sample: 'สวัสดี ยินดีต้อนรับสู่ Lugemi',
+      note: 'Thai eSpeak demo path (language pack voice).',
+    },
+    vi: {
+      voice: 'own:vi-pack',
+      language: 'vi-VN',
+      sample: 'Xin chào, chào mừng bạn đến với Lugemi.',
+      note: 'Vietnamese eSpeak demo path (language pack voice).',
+    },
+    ms: {
+      voice: 'own:ms-pack',
+      language: 'ms-MY',
+      sample: 'Assalamualaikum. Selamat datang ke Lugemi.',
+      note: 'Malay eSpeak demo path (language pack voice).',
+    },
+    id: {
+      voice: 'own:id-pack',
+      language: 'id-ID',
+      sample: 'Halo, selamat datang di Lugemi.',
+      note: 'Indonesian eSpeak demo path (language pack voice).',
+    },
+    jv: {
+      voice: 'own:id-pack',
+      language: 'id-ID',
+      sample: 'Halo, selamat datang di Lugemi.',
+      note: 'Javanese neural weights not live; demo uses Indonesian eSpeak.',
+    },
+    es: {
+      voice: 'own:es-pack',
+      language: 'es-MX',
+      sample: 'Hola, bienvenido a Lugemi.',
+      note: 'Spanish eSpeak demo path (language pack voice).',
+    },
+    pt: {
+      voice: 'own:pt-ao-male',
+      language: 'pt-BR',
+      sample: 'Olá, bem-vindo à Lugemi.',
+      note: 'Portuguese eSpeak demo path.',
+    },
+    ht: {
+      voice: 'own:ht-pack',
+      language: 'ht-HT',
+      sample: 'Bonjou! Byenveni nan Lugemi.',
+      note: 'Haitian Creole eSpeak demo path (language pack voice).',
+    },
+    ar: {
+      voice: 'own:ar-eg-male',
+      language: 'ar-EG',
+      sample: 'أهلاً وسهلاً بكم في لوجيمي.',
+      note: 'Arabic eSpeak demo path.',
+    },
+    ja: {
+      voice: 'own:ja-pack',
+      language: 'ja-JP',
+      sample: 'こんにちは。Lugemiへようこそ。',
+      note: 'Japanese eSpeak demo path.',
+    },
+    ko: {
+      voice: 'own:ko-pack',
+      language: 'ko-KR',
+      sample: '안녕하세요. Lugemi에 오신 것을 환영합니다.',
+      note: 'Korean eSpeak demo path.',
+    },
+    zh: {
+      voice: 'own:zh-pack',
+      language: 'zh-CN',
+      sample: '你好，欢迎使用 Lugemi。',
+      note: 'Mandarin eSpeak (cmn) demo path.',
+    },
+    cmn: {
+      voice: 'own:zh-pack',
+      language: 'zh-CN',
+      sample: '你好，欢迎使用 Lugemi。',
+      note: 'Mandarin eSpeak (cmn) demo path.',
+    },
+    yue: {
+      voice: 'own:yue-pack',
+      language: 'zh-HK',
+      sample: '你好，欢迎使用 Lugemi。',
+      note: 'Cantonese eSpeak demo path.',
+    },
+    hi: {
+      voice: 'own:hi-pack',
+      language: 'hi-IN',
+      sample: 'नमस्ते, लुगेमी में आपका स्वागत है।',
+      note: 'Hindi eSpeak demo path.',
+    },
+    de: {
+      voice: 'own:de-pack',
+      language: 'de-DE',
+      sample: 'Guten Tag, willkommen bei Lugemi.',
+      note: 'German eSpeak demo path.',
+    },
+    it: {
+      voice: 'own:it-pack',
+      language: 'it-IT',
+      sample: 'Ciao, benvenuto su Lugemi.',
+      note: 'Italian eSpeak demo path.',
+    },
+    nl: {
+      voice: 'own:nl-pack',
+      language: 'nl-NL',
+      sample: 'Hallo, welkom bij Lugemi.',
+      note: 'Dutch eSpeak demo path.',
+    },
+    ru: {
+      voice: 'own:ru-pack',
+      language: 'ru-RU',
+      sample: 'Здравствуйте, добро пожаловать в Lugemi.',
+      note: 'Russian eSpeak demo path.',
+    },
+    tr: {
+      voice: 'own:tr-pack',
+      language: 'tr-TR',
+      sample: 'Merhaba, Lugemi’ye hoş geldiniz.',
+      note: 'Turkish eSpeak demo path.',
+    },
   };
 
 function normalizeVoiceId(voice: string | undefined): string | null {
@@ -208,6 +349,136 @@ function keepCallerText(requestedLanguage: string, remappedLanguage: string): bo
   return false;
 }
 
+/** Dedicated demo-safe Echo voices for English regions (when published in the catalog). */
+const ENGLISH_REGION_VOICE: Record<string, string> = {
+  'en-us': 'own:en-us-female',
+  'en-gb': 'own:en-gb-female',
+  'en-ca': 'own:en-ca-female',
+  'en-au': 'own:en-au-female',
+  'en-nz': 'own:en-nz-female',
+  'en-gh': 'own:en-gh-female',
+  'en-ng': 'own:en-ng-female',
+  'en-ke': 'own:en-ke-female',
+  'en-za': 'own:en-za-female',
+  'en-ph': 'own:en-ph-female',
+  'en-ie': 'own:en-gb-female',
+  'en-in': 'own:en-gb-female',
+  'en-sg': 'own:en-ph-female',
+  'en-cm': 'own:en-ng-female',
+  'en-lr': 'own:en-gh-female',
+  'en-sl': 'own:en-gh-female',
+};
+
+/**
+ * Gateway rejects voices that do not speak the requested language natively.
+ * Align demo targets onto a verified path so Play never 422s for world-market packs
+ * that share a nearest curated Echo id (e.g. Thai → en-kofi, Tagalog → en-ph).
+ */
+function alignVoiceToLanguage(input: {
+  voice: string;
+  language: string;
+  text: string;
+  requestedVoice: string | null;
+  requestedLanguage: string;
+}): DemoSpeechTarget | null {
+  const resolved = resolveOwnTtsVoice(input.voice);
+  if (!resolved) return null;
+  if (voiceSpeaksNatively(resolved, input.language)) return null;
+
+  const primary = primaryLang(input.language);
+
+  if (primary === 'en') {
+    const regionKey = normalizeLocaleKey(input.language);
+    const dedicated = ENGLISH_REGION_VOICE[regionKey];
+    if (dedicated && resolveOwnTtsVoice(dedicated)) {
+      const dest = resolveOwnTtsVoice(dedicated)!;
+      // Gateway requires voice locale region == requested en region — speak in the voice's locale.
+      const language = voiceSpeaksNatively(dest, input.language)
+        ? input.language
+        : dest.locale || 'en-US';
+      if (isDemoSafeVoice(dedicated, language)) {
+        return {
+          voice: dedicated,
+          language,
+          text: input.text,
+          remapped: true,
+          requestedVoice: input.requestedVoice,
+          requestedLanguage: input.requestedLanguage,
+          note: `Demo routes ${input.language} via Echo ${dedicated} (${language}).`,
+        };
+      }
+    }
+    // Pidgin / non-en locale voices used as nearest for English packs → cultural English.
+    let fallbackVoice = input.voice;
+    let fallbackLocale = resolved.locale || 'en-US';
+    if (!fallbackLocale.toLowerCase().startsWith('en')) {
+      fallbackVoice =
+        ENGLISH_REGION_VOICE[normalizeLocaleKey(fallbackLocale)] ||
+        (resolved.id.includes('pcm') || fallbackLocale.toLowerCase().includes('ng')
+          ? 'own:en-ng-female'
+          : 'own:en-us-female');
+      fallbackLocale = resolveOwnTtsVoice(fallbackVoice)?.locale || 'en-US';
+    } else if (!voiceSpeaksNatively(resolved, fallbackLocale)) {
+      fallbackVoice = ENGLISH_REGION_VOICE[normalizeLocaleKey(fallbackLocale)] || 'own:en-us-female';
+      fallbackLocale = resolveOwnTtsVoice(fallbackVoice)?.locale || 'en-US';
+    }
+    return {
+      voice: fallbackVoice,
+      language: fallbackLocale,
+      text: input.text,
+      remapped: true,
+      requestedVoice: input.requestedVoice,
+      requestedLanguage: input.requestedLanguage,
+      note: `No dedicated ${input.language} Echo voice yet; demo uses ${fallbackLocale}.`,
+    };
+  }
+
+  const byLang = LANG_REMAP[primary];
+  if (byLang && isDemoSafeVoice(byLang.voice, byLang.language)) {
+    const destResolved = resolveOwnTtsVoice(byLang.voice);
+    const language =
+      destResolved && voiceSpeaksNatively(destResolved, input.language)
+        ? input.language
+        : byLang.language;
+    return {
+      voice: byLang.voice,
+      language,
+      text: keepCallerText(input.requestedLanguage, language) ? input.text : byLang.sample,
+      remapped: true,
+      requestedVoice: input.requestedVoice,
+      requestedLanguage: input.requestedLanguage,
+      note: byLang.note,
+    };
+  }
+
+  const packId = `own:${primary}-pack`;
+  if (resolveOwnTtsVoice(packId) && isDemoSafeVoice(packId, input.language)) {
+    return {
+      voice: packId,
+      language: input.language,
+      text: input.text,
+      remapped: true,
+      requestedVoice: input.requestedVoice,
+      requestedLanguage: input.requestedLanguage,
+      note: `Demo uses language-default Echo pack ${packId} for ${input.language}.`,
+    };
+  }
+
+  // Last resort: speak with the assigned voice in its own locale.
+  const alignedLocale = resolved.locale || 'en-US';
+  return {
+    voice: input.voice,
+    language: alignedLocale,
+    text: keepCallerText(input.requestedLanguage, alignedLocale)
+      ? input.text
+      : 'Welcome to Lugemi. This accent pack plays on a verified Echo demo path.',
+    remapped: true,
+    requestedVoice: input.requestedVoice,
+    requestedLanguage: input.requestedLanguage,
+    note: `Assigned voice does not speak ${input.language}; demo uses ${alignedLocale}.`,
+  };
+}
+
 export function resolveDemoSpeechTarget(input: {
   text: string;
   language: string;
@@ -229,6 +500,14 @@ export function resolveDemoSpeechTarget(input: {
   }
 
   if (voice && isDemoSafeVoice(voice, language)) {
+    const aligned = alignVoiceToLanguage({
+      voice,
+      language,
+      text: input.text,
+      requestedVoice,
+      requestedLanguage,
+    });
+    if (aligned) return aligned;
     return {
       voice,
       language,

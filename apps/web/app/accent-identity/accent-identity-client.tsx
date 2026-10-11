@@ -118,6 +118,7 @@ export function AccentIdentityClient() {
         return;
       }
       stopDemoSpeech();
+      setError(null);
       setLoadingId(pack.id);
       setActiveId(null);
       try {

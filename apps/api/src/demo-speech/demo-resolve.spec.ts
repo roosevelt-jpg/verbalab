@@ -70,4 +70,60 @@ describe('resolveDemoSpeechTarget', () => {
     expect(out.voice).toBe('own:en-ke-female');
     expect(out.remapped).toBe(false);
   });
+
+  it('aligns Algerian English + Kenyan Echo voice so gateway does not 422', () => {
+    const out = resolveDemoSpeechTarget({
+      text: 'Good morning. Welcome — please take a seat.',
+      language: 'en-DZ',
+      voice: 'own:en-ke-female',
+    });
+    expect(out.voice).toBe('own:en-ke-female');
+    expect(out.language).toBe('en-KE');
+    expect(out.remapped).toBe(true);
+    expect(out.text).toContain('Welcome');
+  });
+
+  it('remaps Tagalog pack away from English-only Echo voice', () => {
+    const out = resolveDemoSpeechTarget({
+      text: 'Magandang umaga po!',
+      language: 'fil-PH',
+      voice: 'own:en-ph-female',
+    });
+    expect(out.remapped).toBe(true);
+    expect(out.voice).toBe('own:en-ph-female');
+    expect(out.language).toBe('en-PH');
+  });
+
+  it('remaps Thai pack that wrongly ships en-kofi onto Thai eSpeak', () => {
+    const out = resolveDemoSpeechTarget({
+      text: 'Sawatdee khrap!',
+      language: 'th-TH',
+      voice: 'own:en-kofi',
+    });
+    expect(out.remapped).toBe(true);
+    expect(out.voice).toBe('own:th-pack');
+    expect(out.language).toBe('th-TH');
+  });
+
+  it('routes Cameroonian Pidgin English away from pcm formant voice', () => {
+    const out = resolveDemoSpeechTarget({
+      text: 'How far my friend? Make we start the demo.',
+      language: 'en-CM',
+      voice: 'own:pcm-ng-female',
+    });
+    expect(out.remapped).toBe(true);
+    expect(out.voice).toBe('own:en-ng-female');
+    expect(out.language).toBe('en-NG');
+  });
+
+  it('routes Irish English through UK Echo locale for gateway nativeness', () => {
+    const out = resolveDemoSpeechTarget({
+      text: 'Good morning — welcome to Lugemi.',
+      language: 'en-IE',
+      voice: 'own:en-kofi',
+    });
+    expect(out.remapped).toBe(true);
+    expect(out.voice).toBe('own:en-gb-female');
+    expect(out.language).toBe('en-GB');
+  });
 });

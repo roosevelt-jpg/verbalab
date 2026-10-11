@@ -10,7 +10,8 @@ import { resolveDemoSpeechTarget } from './demo-resolve';
 
 const MAX_CHARS = 300;
 const WINDOW_MS = 10 * 60_000;
-const MAX_PER_WINDOW = 30;
+/** Accent Identity has 200+ packs — allow browsing without tripping mid-session. */
+const MAX_PER_WINDOW = 400;
 
 /** Public marketing-site demo speech: Lugemi native voices only, per-IP limited. */
 @Controller('v1/demo')
