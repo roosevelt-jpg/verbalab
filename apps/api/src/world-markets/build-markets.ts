@@ -54,7 +54,7 @@ function buildMarketFromPack(
       : pack.primaryLanguages.filter((l) => LANGUAGE_BY_CODE.has(l) && l !== 'en');
   const bridgeLanguages = bridges.length ? bridges : ['en'];
   const localLanguages = workingLocals;
-  const culturalVarieties =
+  let culturalVarieties =
     worldRegion === 'africa'
       ? buildAfricaCulturalVarieties(pack, localLanguages, bridgeLanguages)
       : buildCulturalVarieties({
@@ -65,6 +65,23 @@ function buildMarketFromPack(
           localLanguages,
           bridgeLanguages,
         });
+
+  // English-only markets (e.g. Jamaica) still expose the country English variety.
+  if (culturalVarieties.length === 0) {
+    culturalVarieties = [
+      {
+        languageCode: 'en',
+        languageName: 'English',
+        varietyName: englishAccent.nameEn,
+        dialects: [englishAccent.nameEn],
+        accents: [`${englishAccent.nameEn} (spoken)`],
+        bcp47: englishAccent.bcp47,
+        accentIdentityId: englishAccent.accentIdentityId,
+        primaryLabel: true,
+        culturalNotes: `${englishAccent.nameEn} is the country-identifying bridge variety for ${pack.nameEn}.`,
+      },
+    ];
+  }
 
   return {
     code: pack.code,

@@ -31,6 +31,13 @@ describe('LATAM / SEA / Middle East markets', () => {
       expect(m!.englishAccent.nameEn).toMatch(/English$/);
       expect(m!.culturalVarieties.length).toBeGreaterThan(0);
     }
+
+    // English-only Caribbean markets still expose country English / Creole-contact culture.
+    for (const code of ['JM', 'TT', 'GY'] as const) {
+      const m = allProductMarkets().find((x) => x.code === code);
+      expect(m!.culturalVarieties.length).toBeGreaterThan(0);
+      expect(m!.culturalVarieties.some((v) => v.varietyName.endsWith('English'))).toBe(true);
+    }
   });
 
   it('labels corridors with country English and local dialect varieties', () => {

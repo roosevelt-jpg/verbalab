@@ -219,6 +219,49 @@ const CURATED_VARIETIES: Record<string, CulturalVariety[]> = {
       primaryLabel: true,
     },
   ],
+  JM: [
+    {
+      languageCode: 'en',
+      languageName: 'English',
+      varietyName: 'Jamaican English',
+      dialects: ['Jamaican English', 'Jamaican Patwa contact'],
+      accents: ['Kingston English (spoken)'],
+      bcp47: 'en-JM',
+      accentIdentityId: 'jm-jamaican_english',
+      primaryLabel: true,
+      lifestyleNotes: 'Kingston media and professional registers',
+      culturalNotes:
+        'Jamaican English is the product bridge variety — distinct from US/UK English and from Jamaican Patwa/Creole (spoken widely; not yet a separate registry language code).',
+    },
+  ],
+  TT: [
+    {
+      languageCode: 'en',
+      languageName: 'English',
+      varietyName: 'Trinidadian English',
+      dialects: ['Trinidadian English', 'Tobago English', 'Trinidadian Creole contact'],
+      accents: ['Port of Spain English (spoken)'],
+      bcp47: 'en-TT',
+      accentIdentityId: 'tt-trinidadian_english',
+      primaryLabel: true,
+      culturalNotes:
+        'Trinidadian English is country-identifying; Creole contact influences informal speech.',
+    },
+  ],
+  GY: [
+    {
+      languageCode: 'en',
+      languageName: 'English',
+      varietyName: 'Guyanese English',
+      dialects: ['Guyanese English', 'Guyanese Creole contact'],
+      accents: ['Georgetown English (spoken)'],
+      bcp47: 'en-GY',
+      accentIdentityId: 'gy-guyanese_english',
+      primaryLabel: true,
+      culturalNotes:
+        'Guyanese English is the product bridge variety; Creole contact is common in informal speech.',
+    },
+  ],
   CU: [
     {
       languageCode: 'es',
