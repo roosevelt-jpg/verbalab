@@ -246,7 +246,7 @@ export function KeysClient() {
           ) : (
             <>
               <p className="lg-card__body" style={{ marginTop: 0 }}>
-                No machine key applied yet. Create a live key below, or paste a secret you already saved —
+                No API key applied yet. Create a live key below, or paste a secret you already saved —
                 Lugemi will identify it by prefix and apply it across Studio.
               </p>
               <form

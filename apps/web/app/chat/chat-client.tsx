@@ -82,6 +82,29 @@ function uid() {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
+/** Starter-card / natural prompts that mean “give me a greeting and speak it”. */
+function isTranslatePlayGreetingIntent(text: string): boolean {
+  const lower = text.toLowerCase();
+  const wantsGreeting =
+    /\b(translate|say|give)\b[\s\S]{0,40}\bgreeting\b/i.test(lower) ||
+    /\bgreeting\b[\s\S]{0,40}\b(twi|akan|swahili|yoruba|hausa)\b/i.test(lower);
+  if (!wantsGreeting) return false;
+  return /\b(play|playback|speak|hear|read)\b/i.test(lower) || /\btranslate this greeting\b/i.test(lower);
+}
+
+function resolveTargetFromPrompt(text: string, fallback: string): string {
+  const lower = text.toLowerCase();
+  if (/\b(twi|akan)\b/.test(lower)) return 'ak';
+  if (/\byorù?bá?\b/.test(lower)) return 'yo';
+  if (/\b(swahili|kiswahili)\b/.test(lower)) return 'sw';
+  if (/\bhausa\b/.test(lower)) return 'ha';
+  if (/\bamharic\b/.test(lower)) return 'am';
+  if (/\bzulu\b/.test(lower)) return 'zu';
+  if (/\bfrench\b/.test(lower)) return 'fr';
+  if (/\barabic\b/.test(lower)) return 'ar';
+  return fallback;
+}
+
 function loadConversations(): Conversation[] {
   if (typeof window === 'undefined') return [];
   try {
@@ -435,6 +458,11 @@ export function ChatClient() {
   }
 
   async function sendChat(text: string) {
+    if (isTranslatePlayGreetingIntent(text)) {
+      await runGreetingTranslatePlay(text);
+      return;
+    }
+
     setError(null);
     setLoading(true);
     const convId = ensureConversation();
@@ -483,6 +511,61 @@ export function ChatClient() {
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Chat failed');
+      updateConversation(convId, (conv) => ({
+        ...conv,
+        messages: conv.messages.filter((m) => m.id !== userTurn.id),
+      }));
+      setInput(text);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  /** Greeting starter cards → Baobab translate + playback (skip chat→translateReplyTo). */
+  async function runGreetingTranslatePlay(spoken: string) {
+    const text = spoken.trim();
+    if (!text) return;
+    const target = resolveTargetFromPrompt(text, translateReplyTo || liveTarget || 'ak');
+    setTranslateReplyTo(target);
+    setLoading(true);
+    setError(null);
+    setInput('');
+
+    const convId = ensureConversation();
+    const userTurn: ChatTurn = {
+      id: uid(),
+      role: 'user',
+      content: text,
+      kind: 'live',
+      sourceLang: 'en',
+      targetLang: target,
+    };
+    updateConversation(convId, (conv) => ({
+      ...conv,
+      title: conv.messages.length === 0 ? titleFromText(text) : conv.title,
+      updatedAt: Date.now(),
+      messages: [...conv.messages, userTurn],
+    }));
+
+    try {
+      const token = await ensureToken();
+      const res = await translateText(token, text, 'en', target);
+      const assistant: ChatTurn = {
+        id: uid(),
+        role: 'assistant',
+        content: res.text,
+        kind: 'live',
+        sourceLang: res.source,
+        targetLang: target,
+      };
+      updateConversation(convId, (conv) => ({
+        ...conv,
+        updatedAt: Date.now(),
+        messages: [...conv.messages, assistant],
+      }));
+      await playTranslation(res.text, recognitionLangFor(target), assistant.id);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Greeting translate failed');
       updateConversation(convId, (conv) => ({
         ...conv,
         messages: conv.messages.filter((m) => m.id !== userTurn.id),

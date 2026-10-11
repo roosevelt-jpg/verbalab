@@ -152,7 +152,31 @@ const PHRASEBOOK: Record<string, Record<string, string>> = {
   },
 };
 
+/** Meta-prompts like “translate this greeting into Twi…” → a spoken greeting. */
+function greetingIntentDemo(text: string, target: string): string | null {
+  const lower = text.toLowerCase();
+  const wantsGreeting =
+    /\b(translate|say|give)\b[\s\S]{0,40}\bgreeting\b/i.test(lower) ||
+    /\bgreeting\b[\s\S]{0,40}\b(twi|akan|swahili|yoruba|hausa)\b/i.test(lower);
+  if (!wantsGreeting) return null;
+  const greetings: Record<string, string> = {
+    ak: 'Mema wo akye. Akwaaba ba Lugemi Chat Studio.',
+    tw: 'Mema wo akye. Akwaaba ba Lugemi Chat Studio.',
+    sw: 'Habari. Karibu Lugemi Chat Studio.',
+    yo: 'Ẹ n lẹ. Ẹ kú àbọ̀ sí Lugemi Chat Studio.',
+    ha: 'Sannu. Barka da zuwa Lugemi Chat Studio.',
+    am: 'ሰላም። እንኳን ወደ ሉጀሚ ቻት ስቱዲዮ በደህና መጡ።',
+    fr: 'Bonjour. Bienvenue au Lugemi Chat Studio.',
+    ar: 'مرحباً. أهلاً بك في استوديو دردشة لوجيمي.',
+  };
+  const lang = target.split('-')[0]?.toLowerCase() ?? target;
+  return greetings[lang] ?? null;
+}
+
 function softSandboxTranslate(text: string, target: string): string | null {
+  const greeting = greetingIntentDemo(text, target);
+  if (greeting) return greeting;
+
   const book = PHRASEBOOK[target];
   if (!book) return null;
   const lower = text.toLowerCase().replace(/[.!?]+$/g, '').trim();

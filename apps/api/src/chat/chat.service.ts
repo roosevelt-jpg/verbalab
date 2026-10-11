@@ -127,20 +127,47 @@ export class ChatService {
     let translateProvider: string | null = null;
 
     if (input.translateReplyTo) {
-      const mt = await this.translate.translate({
-        text: reply,
-        source: 'auto',
-        target: input.translateReplyTo,
-        organizationId: input.organizationId,
-        workspaceId: input.workspaceId,
-        apiKeyId: input.apiKeyId,
-        userId: input.userId,
-        ip: input.ip,
-        skipReview: true,
-      });
-      reply = mt.text;
-      translated = true;
-      translateProvider = mt.provider;
+      try {
+        const mt = await this.translate.translate({
+          text: reply,
+          source: 'auto',
+          target: input.translateReplyTo,
+          organizationId: input.organizationId,
+          workspaceId: input.workspaceId,
+          apiKeyId: input.apiKeyId,
+          userId: input.userId,
+          ip: input.ip,
+          skipReview: true,
+        });
+        reply = mt.text;
+        translated = true;
+        translateProvider = mt.provider;
+      } catch (error) {
+        // Soft path: Chat Studio must not hard-fail when Baobab lacks a full-sentence pack.
+        // Retry with a short greeting seed, then keep the English reply rather than 502 the turn.
+        try {
+          const wantsGreeting = conversation.some((m) => /\bgreeting\b/i.test(m.content));
+          const seed = wantsGreeting ? 'Hello. Welcome to Lugemi.' : 'Hello';
+          const mt = await this.translate.translate({
+            text: seed,
+            source: 'en',
+            target: input.translateReplyTo,
+            organizationId: input.organizationId,
+            workspaceId: input.workspaceId,
+            apiKeyId: input.apiKeyId,
+            userId: input.userId,
+            ip: input.ip,
+            skipReview: true,
+          });
+          reply = mt.text;
+          translated = true;
+          translateProvider = `${mt.provider}+soft_seed`;
+        } catch {
+          translated = false;
+          translateProvider =
+            error instanceof Error ? `failed:${error.message.slice(0, 80)}` : 'failed';
+        }
+      }
     }
 
     await this.usage.recordChat({

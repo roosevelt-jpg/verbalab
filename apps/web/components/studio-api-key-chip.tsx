@@ -24,10 +24,10 @@ export function StudioApiKeyChip() {
       <Link
         href="/keys"
         className="vl-tag"
-        title="Apply a live or test API key across Playground and Studio tools"
+        title="Console uses your Clerk session. Apply a live or test API key for Playground Bearer calls and machine identity."
         style={{ textDecoration: 'none', maxWidth: '14rem' }}
       >
-        No machine key
+        Apply API key
       </Link>
     );
   }

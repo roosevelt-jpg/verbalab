@@ -44,6 +44,21 @@ const PHRASE_TABLE: Array<{
       ['shipping delays', 'nhyehyɛe a ɛkyɛ'],
       ['your order is delayed', 'Wo order no akyɛ'],
       ['we apologize for the delay', 'Yɛsrɛ wo firi delay no nti'],
+      // Chat Studio starter cards — exact meta-prompts map to spoken Twi greetings
+      [
+        'translate this greeting into twi and play it back',
+        'Mema wo akye. Akwaaba ba Lugemi Chat Studio.',
+      ],
+      [
+        'translate this greeting into twi and play it back.',
+        'Mema wo akye. Akwaaba ba Lugemi Chat Studio.',
+      ],
+      ['hello. welcome to lugemi.', 'Mema wo akye. Akwaaba Lugemi.'],
+      ['hello. welcome to lugemi', 'Mema wo akye. Akwaaba Lugemi.'],
+      ['hello, welcome to lugemi', 'Mema wo akye. Akwaaba Lugemi.'],
+      ['welcome to lugemi chat studio', 'Akwaaba ba Lugemi Chat Studio'],
+      ['here is a greeting in twi', 'Mema wo akye'],
+      ['here is a twi greeting', 'Mema wo akye'],
     ],
   },
   {
@@ -408,6 +423,27 @@ export function lugemiMtSupportsPair(source: string, target: string): boolean {
  * Dialect-aware local translation. Returns ok:false when this pack cannot
  * honestly render the sentence (caller should use remote/vendor MT).
  */
+/** Meta-prompts like “translate this greeting into Twi…” → a real spoken greeting. */
+function greetingIntentTranslation(text: string, target: string): string | null {
+  const lower = text.toLowerCase();
+  const wantsGreeting =
+    /\b(translate|say|give)\b[\s\S]{0,40}\bgreeting\b/i.test(lower) ||
+    /\bgreeting\b[\s\S]{0,40}\b(twi|akan|swahili|yoruba|hausa)\b/i.test(lower);
+  if (!wantsGreeting) return null;
+  const greetings: Record<string, string> = {
+    ak: 'Mema wo akye. Akwaaba ba Lugemi Chat Studio.',
+    tw: 'Mema wo akye. Akwaaba ba Lugemi Chat Studio.',
+    sw: 'Habari. Karibu Lugemi Chat Studio.',
+    yo: 'Ẹ n lẹ. Ẹ kú àbọ̀ sí Lugemi Chat Studio.',
+    ha: 'Sannu. Barka da zuwa Lugemi Chat Studio.',
+    am: 'ሰላም። እንኳን ወደ ሉጀሚ ቻት ስቱዲዮ በደህና መጡ።',
+    zu: 'Sawubona. Siyakwamukela e-Lugemi Chat Studio.',
+    fr: 'Bonjour. Bienvenue au Lugemi Chat Studio.',
+    ar: 'مرحباً. أهلاً بك في استوديو دردشة لوجيمي.',
+  };
+  return greetings[baseLang(target)] ?? null;
+}
+
 export function lugemiLocalTranslateResult(
   text: string,
   source: string,
@@ -422,9 +458,25 @@ export function lugemiLocalTranslateResult(
   const exact = lookupPhrase(trimmed, src, tgt);
   if (exact) return { ok: true, text: exact, mode: 'exact' };
 
+  const greeting = greetingIntentTranslation(trimmed, tgt);
+  if (greeting) return { ok: true, text: greeting, mode: 'exact' };
+
   const lexical = lexicalTranslate(trimmed, tgt);
   if (lexical && lexical.toLowerCase() !== trimmed.toLowerCase()) {
     return { ok: true, text: lexical, mode: 'lexical' };
+  }
+
+  // Chat Studio often asks to translate an LLM reply that still contains a greeting.
+  // Prefer a honest greeting rendering over failing the whole turn when a greeting is present.
+  if (/\b(hello|hi|good morning|welcome)\b/i.test(trimmed) && LEXICONS[tgt]) {
+    const greetOnly = lookupPhrase('hello', 'en', tgt) ?? lexicalTranslate('hello', tgt);
+    if (greetOnly) {
+      return {
+        ok: true,
+        text: greetOnly,
+        mode: 'exact',
+      };
+    }
   }
 
   return {
