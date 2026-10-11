@@ -137,11 +137,21 @@ async def _synthesize(body: SynthesisRequest, authorization: str | None) -> Resp
     elapsed_ms = int((time.perf_counter() - started) * 1000)
     seconds = len(audio.pcm) / audio.sample_rate if audio.sample_rate else 0
     log.info("synth voice=%s chars=%d audio=%.2fs took=%dms", voice.id, len(text), seconds, elapsed_ms)
+    engine_name = (voice.engine or "unknown").strip().lower()
+    synth_engine = (
+        f"neural_{engine_name}"
+        if engine_name in {"kokoro", "piper"}
+        else engine_name or "unknown"
+    )
     return Response(
         content=data,
         media_type=MIME[fmt],
         headers={
             "X-Lugemi-Voice": voice.id,
+            "X-Lugemi-Synth-Engine": synth_engine,
+            "X-Lugemi-Verification-Status": (
+                "neural_unreviewed" if engine_name in {"kokoro", "piper"} else "espeak_demo"
+            ),
             "X-Audio-Seconds": f"{seconds:.3f}",
             "X-Synthesis-Ms": str(elapsed_ms),
             "Cache-Control": "no-store",
