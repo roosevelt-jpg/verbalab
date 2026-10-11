@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import type { CmsPage, CmsPageSection } from '@/data/cms-types';
+import { AnamorphicPanel } from '@/components/media/anamorphic-panel';
 
 const DEFAULT_LINKS = [
   { label: 'API docs', href: '/docs' },
@@ -15,11 +16,13 @@ function GuideCard({ section }: { section: CmsPageSection }) {
       <p className="mkt-guide-badge">{badge}</p>
       {section.media?.imageUrl || section.media?.videoUrl ? (
         <div className="mkt-page-section-media">
-          {section.media.videoUrl ? (
-            <video src={section.media.videoUrl} controls playsInline />
-          ) : (
-            <img src={section.media.imageUrl} alt={section.media.alt ?? section.title} />
-          )}
+          <AnamorphicPanel
+            variant="hub"
+            size="sm"
+            label={section.media.alt ?? section.title}
+            imageUrl={section.media.imageUrl}
+            videoUrl={section.media.videoUrl}
+          />
         </div>
       ) : null}
       <h3>{section.title}</h3>

@@ -405,6 +405,7 @@ export const CMS_DEFAULTS: CmsDocument = {
     languageChips: ['English', 'Swahili', 'Yoruba', 'French', 'Amharic'],
     media: {
       imageUrl: '/brand/media/usecases/usecase-creative.jpg',
+      videoUrl: '/brand/media/usecases/usecase-creative.webm',
       alt: 'Lugemi Creative — 3D anamorphic studio production',
     },
   },
@@ -427,6 +428,7 @@ export const CMS_DEFAULTS: CmsDocument = {
     transcriptAgent: 'Karibu. Ninaweza kukusaidia na bei, malipo, na ratiba ya usafirishaji.',
     media: {
       imageUrl: '/brand/media/platform/platform-agents.jpg',
+      videoUrl: '/brand/media/platform/platform-agents.webm',
       alt: 'Lugemi Agents — 3D anamorphic speaking agents',
     },
   },
@@ -850,6 +852,7 @@ export const CMS_DEFAULTS: CmsDocument = {
       lead: 'Localize campaigns and product voice without flattening cultural nuance.',
       media: {
         imageUrl: '/brand/media/usecases/usecase-sales.jpg',
+      videoUrl: '/brand/media/usecases/usecase-sales.webm',
         alt: 'Sales & marketing — 3D anamorphic campaign voice',
       },
       body: 'Lugemi helps go-to-market teams ship narration, ads, and product explainers that sound native across African languages — with Studio review, Translate glossaries, and synthetic disclosure when listeners could assume a live person.',
@@ -908,6 +911,7 @@ export const CMS_DEFAULTS: CmsDocument = {
       lead: 'Civic address, broadcast, and advocacy that sound native, not dubbed.',
       media: {
         imageUrl: '/brand/media/usecases/usecase-public-speech.jpg',
+      videoUrl: '/brand/media/usecases/usecase-public-speech.webm',
         alt: 'Public speech — 3D anamorphic civic podium',
       },
       body: 'Governments, NGOs, and broadcasters use Lugemi to deliver public messages with Africa-first accents, orthography, and disclosure — so civic speech travels with trust, not robotic dubbing artifacts.',
@@ -966,6 +970,7 @@ export const CMS_DEFAULTS: CmsDocument = {
       lead: 'Scripts, instant clones, localization, and review — then hand off clone:{id} into video dubbing and song vocals.',
       media: {
         imageUrl: '/brand/media/usecases/usecase-creative.jpg',
+      videoUrl: '/brand/media/usecases/usecase-creative.webm',
         alt: 'Lugemi Studio — 3D anamorphic creative production',
       },
       body: 'Lugemi Studio is where creators and localization teams draft narration, pick registry languages, enroll consent-gated Instant Voice Clones, extract tracks from uploads, and review synthetic disclosure. Open Voice Studio after sign-up to generate with own:* voices or approved clone:{id}.',
@@ -1032,6 +1037,7 @@ export const CMS_DEFAULTS: CmsDocument = {
       body: 'Lugemi Voice is the sound layer of the platform. Generate with own:* voices, enroll Instant clones from recorded samples (consent + review), extract tracks from uploads, and reuse approved clone:{id} in Studio, Dubbing, and developer tools. Native-accent pickers expose country, ethnic/community context, gender, and tone/emotion style — Africa-first. Realtime means instant enroll — not live training theater.',
       media: {
         imageUrl: '/brand/media/products/product-voice.jpg',
+      videoUrl: '/brand/media/products/product-voice.webm',
         alt: 'Lugemi Voice — 3D anamorphic sound ribbon',
       },
       sections: [
@@ -1097,6 +1103,7 @@ export const CMS_DEFAULTS: CmsDocument = {
       body: 'Lugemi Speech turns spoken audio into text that respects regional phrasing. Pair STT with Translate and Agents for end-to-end speaking-agent pipelines.',
       media: {
         imageUrl: '/brand/media/products/product-speech.jpg',
+      videoUrl: '/brand/media/products/product-speech.webm',
         alt: 'Lugemi Speech — 3D anamorphic transcription plane',
       },
       sections: [
@@ -1155,6 +1162,7 @@ export const CMS_DEFAULTS: CmsDocument = {
       body: 'Registry-backed translation with review, glossaries, and metering. Built for African languages first, with the same API surface for LATAM, SEA, the Middle East, and the EU.',
       media: {
         imageUrl: '/brand/media/products/product-translate.jpg',
+      videoUrl: '/brand/media/products/product-translate.webm',
         alt: 'Lugemi Translate — 3D anamorphic language bridge',
       },
       sections: [
@@ -1212,6 +1220,7 @@ export const CMS_DEFAULTS: CmsDocument = {
       lead: 'Deploy agents that listen, reason, and reply aloud with cultural context.',
       media: {
         imageUrl: '/brand/media/platform/platform-agents.jpg',
+      videoUrl: '/brand/media/platform/platform-agents.webm',
         alt: 'Lugemi Agents — 3D anamorphic speaking agents',
       },
       body: 'First-party speaking agents for developers. Simulate Voice FAQ turns, configure Agent Runtime permissions, and ship hotlines that understand countries, ethnic groups, and tribes. Builders choose voice gender, tone/emotion style, and native accent; Emotion Intelligence surfaces emotional state, sentiment, and tone on user speech.',
@@ -1287,6 +1296,7 @@ export const CMS_DEFAULTS: CmsDocument = {
       lead: 'Own endpoints and @lugemi/sdk — speech, translate, detect, voice simulate.',
       media: {
         imageUrl: '/brand/media/platform/platform-api.jpg',
+      videoUrl: '/brand/media/platform/platform-api.webm',
         alt: 'Lugemi API — 3D anamorphic developer surface',
       },
       body: 'Authenticate with Authorization: Bearer lg_live_… or soft-sandbox lg_test_…. Production path is Lugemi endpoints and own:* voices — not a reseller wrapper.',
@@ -1348,6 +1358,7 @@ export const CMS_DEFAULTS: CmsDocument = {
       lead: 'Close deals in the languages partners actually speak — with tone that holds trust.',
       media: {
         imageUrl: '/brand/media/usecases/usecase-trade.jpg',
+      videoUrl: '/brand/media/usecases/usecase-trade.webm',
         alt: 'Trade & negotiations — 3D anamorphic dialect bridge',
       },
       body: 'Lugemi speaking agents and translation help trade desks operate across East Africa corridors, West African markets, and global partners without losing etiquette or clarity. Meaning travels with cultural context, not just word swaps.',
@@ -1406,6 +1417,7 @@ export const CMS_DEFAULTS: CmsDocument = {
       lead: 'Teach and tutor across mother tongues so literacy and STEM travel further.',
       media: {
         imageUrl: '/brand/media/usecases/usecase-education.jpg',
+      videoUrl: '/brand/media/usecases/usecase-education.webm',
         alt: 'Education — 3D anamorphic mother-tongue learning',
       },
       body: 'Lugemi helps educators ship tutors and classroom audio that respect orthography, tone marks, and regional phrasing — from Yorùbá STEM to Amharic civic literacy. Availability is published per language and task, never assumed.',
@@ -1464,6 +1476,7 @@ export const CMS_DEFAULTS: CmsDocument = {
       lead: 'Support and IVR that understand accents, switches, and regional phrasing.',
       media: {
         imageUrl: '/brand/media/usecases/usecase-cx.jpg',
+      videoUrl: '/brand/media/usecases/usecase-cx.webm',
         alt: 'Customer experience — 3D anamorphic support voice',
       },
       body: 'Replace brittle IVR trees with Lugemi speaking agents that listen and reply in the languages your customers already use — with metering, RBAC workspaces, and review for production support desks.',
@@ -1522,6 +1535,7 @@ export const CMS_DEFAULTS: CmsDocument = {
       lead: 'Agencies and creators ship narration, ads, and character voices at production pace.',
       media: {
         imageUrl: '/brand/media/usecases/usecase-creative.jpg',
+      videoUrl: '/brand/media/usecases/usecase-creative.webm',
         alt: 'Creative voice — 3D anamorphic studio production',
       },
       body: 'Lugemi Studio gives creative teams region-aware voices, consent-gated clones, and localization chips — so campaigns sound native across African markets without flattening cultural nuance.',

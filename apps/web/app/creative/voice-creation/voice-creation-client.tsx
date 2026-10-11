@@ -25,12 +25,12 @@ const CARDS = [
   },
   {
     title: 'Voice Design',
-    body: 'Describe the voice you need — age, accent corridor, and delivery — then refine in the marketplace and studio.',
+    body: 'Describe the voice you need — age, accent corridor, and delivery — then preview ranked Lugemi Echo matches.',
     orb: 'mix',
-    href: '/creative/voices',
-    cta: 'Create new',
+    href: '/creative/voice-design',
+    cta: 'Design voice',
     primary: false,
-    arc: 'Prompt → Explore voices',
+    arc: 'Prompt → Ranked Echo matches',
   },
 ] as const;
 

@@ -20,7 +20,7 @@ const LABELS: Record<Variant, string> = {
 
 /**
  * Product / use-case media plane. Always motion: muted looping webm when present,
- * otherwise CSS Ken Burns + grain/beam over the photoreal still (ElevenLabs-class ambient).
+ * otherwise CSS Ken Burns + grain/beam over the photoreal still.
  */
 export function AnamorphicPanel({
   variant = 'hub',

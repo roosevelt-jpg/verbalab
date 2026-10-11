@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 import { CreativeShell } from '@/components/creative/creative-shell';
 import { CreativeIcon } from '@/components/creative/creative-icons';
-import { ANAMORPHIC_STILLS } from '@/lib/anamorphic-stills';
+import { AnamorphicPanel } from '@/components/media/anamorphic-panel';
 import { CREATIVE_QUICK_TOOLS } from '@/lib/creative-nav';
 
 const PROMPT_HINTS = [
@@ -32,8 +32,24 @@ export function CreativeHomeClient() {
       router.push(`/creative/music?q=${encodeURIComponent(q)}`);
       return;
     }
-    if (lower.includes('clone') || lower.includes('voice design')) {
+    if (lower.includes('voice design') || lower.includes('design a voice')) {
+      router.push(`/creative/voice-design?q=${encodeURIComponent(q)}`);
+      return;
+    }
+    if (lower.includes('clone')) {
       router.push('/creative/voice-creation');
+      return;
+    }
+    if (lower.includes('dialogue') || lower.includes('multi-speaker') || lower.includes('podcast scene')) {
+      router.push('/creative/dialogue');
+      return;
+    }
+    if (lower.includes('caption') || lower.includes('align') || lower.includes('srt')) {
+      router.push('/creative/captions');
+      return;
+    }
+    if (lower.includes('embed') || lower.includes('speech player') || lower.includes('audio native')) {
+      router.push('/creative/speech-embed');
       return;
     }
     if (lower.includes('sound') || lower.includes('sfx') || lower.includes('foley')) {
@@ -95,13 +111,14 @@ export function CreativeHomeClient() {
         ))}
       </nav>
 
-      <aside className="lg-creative-promo">
-        <img
+      <aside className="lg-creative-promo" style={{ position: 'relative', overflow: 'hidden' }}>
+        <div
           className="lg-creative-promo-canvas"
-          src={ANAMORPHIC_STILLS.hero}
-          alt=""
+          style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}
           aria-hidden
-        />
+        >
+          <AnamorphicPanel variant="hero" size="hero" label="Baobab motion" />
+        </div>
         <div style={{ position: 'relative', zIndex: 1 }}>
           <h2>Baobab is here. Try it now in LugemiCreative</h2>
           <p>Next-model language intelligence — translate, speech, and agents on one foundation.</p>

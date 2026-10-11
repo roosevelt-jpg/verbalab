@@ -10102,6 +10102,153 @@ export const openApiDocument = {
         },
       },
     },
+    '/v1/dialogue/synthesize': {
+      post: {
+        summary: 'Multi-speaker dialogue synthesis',
+        operationId: 'synthesizeDialogue',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['turns'],
+                properties: {
+                  turns: {
+                    type: 'array',
+                    items: {
+                      type: 'object',
+                      required: ['speaker', 'text', 'voice'],
+                      properties: {
+                        speaker: { type: 'string' },
+                        text: { type: 'string' },
+                        voice: { type: 'string' },
+                        language: { type: 'string' },
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          '200': {
+            description: 'Merged WAV dialogue audio',
+            content: { 'audio/wav': { schema: { type: 'string', format: 'binary' } } },
+          },
+        },
+      },
+    },
+    '/v1/align': {
+      post: {
+        summary: 'Forced alignment for captions (SRT/VTT + word timings)',
+        operationId: 'alignSpeechText',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['text'],
+                properties: {
+                  text: { type: 'string' },
+                  language: { type: 'string' },
+                  durationMs: { type: 'number' },
+                  wpm: { type: 'number' },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          '200': {
+            description: 'Word timings with SRT and VTT exports',
+          },
+        },
+      },
+    },
+    '/v1/voice-design': {
+      post: {
+        summary: 'Design a voice from a creative prompt',
+        operationId: 'designVoiceFromPrompt',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['prompt'],
+                properties: {
+                  prompt: { type: 'string' },
+                  language: { type: 'string' },
+                  gender: { type: 'string' },
+                  limit: { type: 'integer' },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          '200': { description: 'Ranked Lugemi Echo voice matches for the brief' },
+        },
+      },
+    },
+    '/v1/speech-embed': {
+      post: {
+        summary: 'Create a site speech player embed',
+        operationId: 'createSpeechEmbed',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        requestBody: {
+          required: true,
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                required: ['text', 'voice'],
+                properties: {
+                  title: { type: 'string' },
+                  text: { type: 'string' },
+                  voice: { type: 'string' },
+                  language: { type: 'string' },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          '200': { description: 'Embed project, player URL, and HTML snippet' },
+        },
+      },
+    },
+    '/v1/speech-embed/{id}': {
+      get: {
+        summary: 'Public speech embed project metadata',
+        operationId: 'getSpeechEmbed',
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: {
+          '200': { description: 'Title, text, voice, language for the player' },
+          '404': { description: 'Not found' },
+        },
+      },
+    },
+    '/v1/speech-embed/{id}/audio': {
+      post: {
+        summary: 'Synthesize audio for a speech embed',
+        operationId: 'synthesizeSpeechEmbedAudio',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: {
+          '200': {
+            description: 'MP3 audio bytes',
+            content: { 'audio/mpeg': { schema: { type: 'string', format: 'binary' } } },
+          },
+        },
+      },
+    },
     '/v1/voice-cloning/engine': {
       get: {
         summary: 'Voice Cloning engine catalog',

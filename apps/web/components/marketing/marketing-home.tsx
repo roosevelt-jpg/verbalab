@@ -217,13 +217,13 @@ export function MarketingHome({ content }: { content: CmsDocument }) {
               </div>
               <div className="mkt-module-panel">
                 {creative.media?.videoUrl || creative.media?.imageUrl ? (
-                  <div className="mkt-module-media">
-                    {creative.media.videoUrl ? (
-                      <video src={creative.media.videoUrl} controls playsInline />
-                    ) : (
-                      <img src={creative.media.imageUrl} alt={creative.media.alt ?? ''} />
-                    )}
-                  </div>
+                  <AnamorphicPanel
+                    variant="speech"
+                    size="md"
+                    label={creative.media.alt ?? 'Lugemi Creative'}
+                    imageUrl={creative.media.imageUrl}
+                    videoUrl={creative.media.videoUrl}
+                  />
                 ) : (
                   <StudioSampleDemo sample={creative.studioSample} chips={creative.languageChips} />
                 )}
@@ -259,13 +259,13 @@ export function MarketingHome({ content }: { content: CmsDocument }) {
               </div>
               <div className="mkt-module-panel">
                 {agents.media?.videoUrl || agents.media?.imageUrl ? (
-                  <div className="mkt-module-media">
-                    {agents.media.videoUrl ? (
-                      <video src={agents.media.videoUrl} controls playsInline />
-                    ) : (
-                      <img src={agents.media.imageUrl} alt={agents.media.alt ?? ''} />
-                    )}
-                  </div>
+                  <AnamorphicPanel
+                    variant="agents"
+                    size="md"
+                    label={agents.media.alt ?? 'Lugemi Agents'}
+                    imageUrl={agents.media.imageUrl}
+                    videoUrl={agents.media.videoUrl}
+                  />
                 ) : (
                   <AgentChatDemo
                     title={agents.transcriptTitle}

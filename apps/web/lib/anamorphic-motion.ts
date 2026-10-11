@@ -1,7 +1,7 @@
 /**
- * Looping motion beds for every anamorphic still — ElevenLabs-style ambient
- * product imagery. Prefer muted autoplay webm; CSS Ken Burns still covers
- * browsers that refuse video autoplay.
+ * Looping motion beds for every anamorphic still — ambient 3D product imagery.
+ * Prefer muted autoplay webm; CSS Ken Burns still covers browsers that refuse
+ * video autoplay.
  */
 import { ANAMORPHIC_STILLS, type AnamorphicStillVariant } from '@/lib/anamorphic-stills';
 

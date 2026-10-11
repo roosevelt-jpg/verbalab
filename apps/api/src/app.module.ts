@@ -250,6 +250,10 @@ import { StyleModule } from './style/style.module';
 import { LanguageIntelligenceModule } from './language-intelligence/language-intelligence.module';
 import { CountryPacksModule } from './country-packs/country-packs.module';
 import { GraphqlModule } from './graphql/graphql.module';
+import { DialogueModule } from './dialogue/dialogue.module';
+import { AlignModule } from './align/align.module';
+import { VoiceDesignModule } from './voice-design/voice-design.module';
+import { SpeechEmbedModule } from './speech-embed/speech-embed.module';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
 
 @Module({
@@ -460,6 +464,10 @@ import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
     LanguageIntelligenceModule,
     CountryPacksModule,
     GraphqlModule,
+    DialogueModule,
+    AlignModule,
+    VoiceDesignModule,
+    SpeechEmbedModule,
     LocalesModule,
     GatewayModule,
     TranslateModule,
