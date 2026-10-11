@@ -8,6 +8,7 @@ import { isClerkConfigured } from '@/lib/clerk-config';
 import { AppShell } from '@/components/app-shell';
 import { FeaturePanel, PageHeader, PremiumCard, StatCard } from '@/components/platform';
 import { useStudioApiKeyField } from '@/hooks/use-studio-api-key';
+import { resolveWorkspaceBearer } from '@/lib/studio-api-key';
 
 type SessionRow = {
   id: string;
@@ -74,7 +75,6 @@ export function DealBridgeHomeClient() {
   const [demoResult, setDemoResult] = useState<string | null>(null);
 
   const authHeaders = useCallback(async () => {
-    const { resolveWorkspaceBearer } = await import('@/lib/studio-api-key');
     const token = await resolveWorkspaceBearer(
       isClerkConfigured() ? () => getToken() : undefined,
       apiKey,

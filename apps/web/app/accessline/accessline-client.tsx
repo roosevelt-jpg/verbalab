@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
 import { FeaturePanel, PageHeader, PremiumCard, StatCard } from '@/components/platform';
+import { resolveWorkspaceBearer } from '@/lib/studio-api-key';
 
 type Catalog = {
   name: string;
@@ -55,8 +56,8 @@ export function AccessLineClient() {
   const [log, setLog] = useState<string[]>([]);
 
   const tokenHeaders = useCallback(async () => {
-    const token = await getToken();
-    if (!token) throw new Error('Sign in to use AccessLine.');
+    const token = await resolveWorkspaceBearer(() => getToken());
+    if (!token) throw new Error('Sign in or apply a Studio API key to use AccessLine.');
     return token;
   }, [getToken]);
 
