@@ -2,10 +2,14 @@
 
 import { FormEvent, useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
-import { VoiceBridgeAuthGate, type VoiceBridgeAuth } from '@/lib/voicebridge-auth';
+import {
+  VoiceBridgeAuthGate,
+  isMachineApiKey,
+  type VoiceBridgeAuth,
+} from '@/lib/voicebridge-auth';
 
 function VoiceBridgeJoinInner({ token, auth }: { token: string; auth: VoiceBridgeAuth }) {
-  const { getToken, isSignedIn, clerkReady } = auth;
+  const { isSignedIn, isLoaded, resolveBearer } = auth;
   const [peek, setPeek] = useState<{ title: string; noticeVersion: string; threadId: string } | null>(null);
   const [language, setLanguage] = useState('fr');
   const [apiKey, setApiKey] = useState('');
@@ -32,10 +36,17 @@ function VoiceBridgeJoinInner({ token, auth }: { token: string; auth: VoiceBridg
     e.preventDefault();
     setError(null);
     try {
-      const authToken =
-        clerkReady && isSignedIn ? ((await getToken()) ?? undefined) : apiKey.trim() || undefined;
+      if (!isLoaded) throw new Error('Session still loading — try again in a moment.');
+      const authToken = await resolveBearer(apiKey);
+      if (!authToken) {
+        throw new Error(
+          isSignedIn
+            ? 'Session token unavailable — refresh and sign in again.'
+            : 'Sign in or paste an API key to join.',
+        );
+      }
       const headers: Record<string, string> = {};
-      if (!clerkReady || !isSignedIn) headers['X-VoiceBridge-Actor-Id'] = actorId;
+      if (isMachineApiKey(authToken)) headers['X-VoiceBridge-Actor-Id'] = actorId.trim() || 'vb-member-2';
       const threadId = peek?.threadId ?? '_';
       const view = await apiFetch<{ thread: { id: string } }>(`/v1/voicebridge/threads/${threadId}/join`, {
         method: 'POST',
@@ -71,7 +82,8 @@ function VoiceBridgeJoinInner({ token, auth }: { token: string; auth: VoiceBridg
         Processing may access plaintext audio/transcripts on Lugemi servers and model providers. Training consent is
         optional and separate — denying training does not block normal service.
       </p>
-      {!clerkReady || !isSignedIn ? (
+      {!isLoaded ? <p style={{ color: 'var(--muted)' }}>Loading session…</p> : null}
+      {isLoaded && !isSignedIn ? (
         <div style={{ display: 'grid', gap: 8, marginBottom: 12 }}>
           <input className="vl-input" placeholder="API key" value={apiKey} onChange={(e) => setApiKey(e.target.value)} />
           <input className="vl-input" placeholder="Actor id" value={actorId} onChange={(e) => setActorId(e.target.value)} />
@@ -94,7 +106,7 @@ function VoiceBridgeJoinInner({ token, auth }: { token: string; auth: VoiceBridg
           <input type="checkbox" checked={training} onChange={(e) => setTraining(e.target.checked)} />
           Optional training permission
         </label>
-        <button className="vl-btn vl-btn-primary" type="submit">
+        <button className="vl-btn vl-btn-primary" type="submit" disabled={!isLoaded}>
           Join thread
         </button>
       </form>

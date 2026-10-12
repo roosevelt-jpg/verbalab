@@ -1,9 +1,13 @@
 'use client';
 
 import Link from 'next/link';
-import { FormEvent, useCallback, useEffect, useState } from 'react';
+import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { apiFetch } from '@/lib/api';
-import { VoiceBridgeAuthGate, type VoiceBridgeAuth } from '@/lib/voicebridge-auth';
+import {
+  VoiceBridgeAuthGate,
+  isMachineApiKey,
+  type VoiceBridgeAuth,
+} from '@/lib/voicebridge-auth';
 
 type ThreadRow = {
   id: string;
@@ -17,7 +21,7 @@ type ThreadRow = {
 };
 
 function VoiceBridgeHomeInner({ auth }: { auth: VoiceBridgeAuth }) {
-  const { getToken, isSignedIn, clerkReady } = auth;
+  const { isSignedIn, isLoaded, resolveBearer } = auth;
   const [threads, setThreads] = useState<ThreadRow[]>([]);
   const [title, setTitle] = useState('');
   const [language, setLanguage] = useState('en');
@@ -26,50 +30,57 @@ function VoiceBridgeHomeInner({ auth }: { auth: VoiceBridgeAuth }) {
   const [busy, setBusy] = useState(false);
   const [apiKey, setApiKey] = useState('');
   const [actorId, setActorId] = useState('vb-creator-1');
+  const loadGen = useRef(0);
 
-  const tokenFn = useCallback(async () => {
-    if (clerkReady && isSignedIn) {
-      return (await getToken()) ?? undefined;
+  const authRequest = useCallback(async () => {
+    const token = await resolveBearer(apiKey);
+    if (!token) {
+      throw new Error(
+        isSignedIn
+          ? 'Session token unavailable — refresh and sign in again.'
+          : 'Sign in or paste an API key to load threads.',
+      );
     }
-    return apiKey.trim() || undefined;
-  }, [apiKey, clerkReady, getToken, isSignedIn]);
-
-  const headers = useCallback(() => {
-    const h: Record<string, string> = {};
-    if (!clerkReady || !isSignedIn) {
-      h['X-VoiceBridge-Actor-Id'] = actorId;
-    }
-    return h;
-  }, [actorId, clerkReady, isSignedIn]);
+    const headers: Record<string, string> = {};
+    if (isMachineApiKey(token)) headers['X-VoiceBridge-Actor-Id'] = actorId.trim() || 'vb-creator-1';
+    return { token, headers };
+  }, [actorId, apiKey, isSignedIn, resolveBearer]);
 
   const reload = useCallback(async () => {
+    if (!isLoaded) return;
+    const gen = ++loadGen.current;
     setError(null);
     try {
-      const token = await tokenFn();
+      const { token, headers } = await authRequest();
+      if (gen !== loadGen.current) return;
       const data = await apiFetch<{ threads: ThreadRow[] }>('/v1/voicebridge/threads', {
         token,
-        headers: headers(),
+        headers,
       });
+      if (gen !== loadGen.current) return;
       setThreads(data.threads ?? []);
     } catch (e) {
+      if (gen !== loadGen.current) return;
       setError(e instanceof Error ? e.message : 'Failed to load threads');
     }
-  }, [headers, tokenFn]);
+  }, [authRequest, isLoaded]);
 
   useEffect(() => {
+    if (!isLoaded) return;
+    if (!isSignedIn && !apiKey.trim()) return;
     void reload();
-  }, [reload]);
+  }, [apiKey, isLoaded, isSignedIn, reload]);
 
   async function onCreate(e: FormEvent) {
     e.preventDefault();
     setBusy(true);
     setError(null);
     try {
-      const token = await tokenFn();
+      const { token, headers } = await authRequest();
       const created = await apiFetch<{ thread: { id: string } }>('/v1/voicebridge/threads', {
         method: 'POST',
         token,
-        headers: headers(),
+        headers,
         body: JSON.stringify({ title, language, category: category || undefined }),
       });
       setTitle('');
@@ -92,7 +103,9 @@ function VoiceBridgeHomeInner({ auth }: { auth: VoiceBridgeAuth }) {
         language. Corrections supersede outdated versions for every authorized member.
       </p>
 
-      {!clerkReady || !isSignedIn ? (
+      {!isLoaded ? <p style={{ color: 'var(--muted)' }}>Loading session…</p> : null}
+
+      {isLoaded && !isSignedIn ? (
         <div className="vl-panel" style={{ padding: '1rem', marginTop: '1.25rem', display: 'grid', gap: '0.5rem' }}>
           <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--muted)' }}>
             Local or demo: paste an API key and actor id to load threads without signing in.
@@ -119,7 +132,7 @@ function VoiceBridgeHomeInner({ auth }: { auth: VoiceBridgeAuth }) {
           Business category (optional)
           <input className="vl-input" value={category} onChange={(e) => setCategory(e.target.value)} placeholder="wholesale_rice" />
         </label>
-        <button className="vl-btn vl-btn-primary" type="submit" disabled={busy}>
+        <button className="vl-btn vl-btn-primary" type="submit" disabled={busy || !isLoaded}>
           {busy ? 'Creating…' : 'Create thread'}
         </button>
       </form>

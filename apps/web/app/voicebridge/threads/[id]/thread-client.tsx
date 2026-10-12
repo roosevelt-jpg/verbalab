@@ -3,7 +3,11 @@
 import Link from 'next/link';
 import { FormEvent, useCallback, useEffect, useRef, useState } from 'react';
 import { apiFetch } from '@/lib/api';
-import { VoiceBridgeAuthGate, type VoiceBridgeAuth } from '@/lib/voicebridge-auth';
+import {
+  VoiceBridgeAuthGate,
+  isMachineApiKey,
+  type VoiceBridgeAuth,
+} from '@/lib/voicebridge-auth';
 
 type ThreadView = {
   thread: { id: string; title: string; sequence: number; corridor: string };
@@ -44,7 +48,7 @@ function pickRecorderMime(): string | undefined {
 }
 
 function VoiceBridgeThreadInner({ threadId, auth }: { threadId: string; auth: VoiceBridgeAuth }) {
-  const { getToken, isSignedIn, clerkReady } = auth;
+  const { isSignedIn, isLoaded, resolveBearer } = auth;
   const [view, setView] = useState<ThreadView | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [text, setText] = useState('');
@@ -62,45 +66,58 @@ function VoiceBridgeThreadInner({ threadId, auth }: { threadId: string; auth: Vo
   const [dealResult, setDealResult] = useState<string | null>(null);
   const mediaRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
+  const loadGen = useRef(0);
 
-  const tokenFn = useCallback(async () => {
-    if (clerkReady && isSignedIn) return (await getToken()) ?? undefined;
-    return apiKey.trim() || undefined;
-  }, [apiKey, clerkReady, getToken, isSignedIn]);
-
-  const headers = useCallback(() => {
+  const authRequest = useCallback(async () => {
+    const token = await resolveBearer(apiKey);
+    if (!token) {
+      throw new Error(
+        isSignedIn
+          ? 'Session token unavailable — refresh and sign in again.'
+          : 'Sign in or paste an API key to load this thread.',
+      );
+    }
     const h: Record<string, string> = {};
-    if (!clerkReady || !isSignedIn) h['X-VoiceBridge-Actor-Id'] = actorId;
-    return h;
-  }, [actorId, clerkReady, isSignedIn]);
+    if (isMachineApiKey(token)) h['X-VoiceBridge-Actor-Id'] = actorId.trim() || 'vb-creator-1';
+    return { token, headers: h };
+  }, [actorId, apiKey, isSignedIn, resolveBearer]);
 
   const reload = useCallback(async () => {
+    if (!isLoaded) return;
+    const gen = ++loadGen.current;
     setError(null);
     try {
-      const token = await tokenFn();
+      const { token, headers } = await authRequest();
+      if (gen !== loadGen.current) return;
       const data = await apiFetch<ThreadView>(`/v1/voicebridge/threads/${threadId}`, {
         token,
-        headers: headers(),
+        headers,
       });
+      if (gen !== loadGen.current) return;
       setView(data);
       setPartyA((prev) => prev || data.members[0]?.userId || '');
       setPartyB((prev) => prev || data.members[1]?.userId || '');
     } catch (e) {
+      if (gen !== loadGen.current) return;
       setError(e instanceof Error ? e.message : 'Failed to load thread');
     }
-  }, [headers, threadId, tokenFn]);
+  }, [authRequest, isLoaded, threadId]);
 
   useEffect(() => {
+    if (!isLoaded) return;
+    // Guests without a key: wait for paste instead of firing an unauthenticated request.
+    if (!isSignedIn && !apiKey.trim()) return;
     void reload();
-  }, [reload]);
+  }, [apiKey, isLoaded, isSignedIn, reload]);
 
   async function createInvite() {
     setBusy(true);
+    setError(null);
     try {
-      const token = await tokenFn();
+      const { token, headers } = await authRequest();
       const inv = await apiFetch<{ token: string; joinPath: string }>(
         `/v1/voicebridge/threads/${threadId}/invites`,
-        { method: 'POST', token, headers: headers(), body: '{}' },
+        { method: 'POST', token, headers, body: '{}' },
       );
       setInviteUrl(`${window.location.origin}${inv.joinPath}`);
     } catch (e) {
@@ -115,14 +132,14 @@ function VoiceBridgeThreadInner({ threadId, auth }: { threadId: string; auth: Vo
     setBusy(true);
     setError(null);
     try {
-      const token = await tokenFn();
+      const { token, headers } = await authRequest();
       const draft = await apiFetch<{
         messageId: string;
         draftRevision: { id: string; reviewedTranscript: string };
       }>(`/v1/voicebridge/threads/${threadId}/messages`, {
         method: 'POST',
         token,
-        headers: headers(),
+        headers,
         body: JSON.stringify({ text }),
       });
       setDraftMsg({
@@ -142,7 +159,7 @@ function VoiceBridgeThreadInner({ threadId, auth }: { threadId: string; auth: Vo
     setBusy(true);
     setError(null);
     try {
-      const token = await tokenFn();
+      const { token, headers } = await authRequest();
       const form = new FormData();
       const ext = mimeType.includes('mp4') ? 'm4a' : mimeType.includes('ogg') ? 'ogg' : 'webm';
       form.append('file', blob, `recording.${ext}`);
@@ -153,7 +170,7 @@ function VoiceBridgeThreadInner({ threadId, auth }: { threadId: string; auth: Vo
       }>(`/v1/voicebridge/threads/${threadId}/messages`, {
         method: 'POST',
         token,
-        headers: headers(),
+        headers,
         body: form,
       });
       setDraftMsg({
@@ -203,12 +220,13 @@ function VoiceBridgeThreadInner({ threadId, auth }: { threadId: string; auth: Vo
   async function publishDraft() {
     if (!draftMsg) return;
     setBusy(true);
+    setError(null);
     try {
-      const token = await tokenFn();
+      const { token, headers } = await authRequest();
       await apiFetch(`/v1/voicebridge/messages/${draftMsg.messageId}/publish`, {
         method: 'POST',
         token,
-        headers: headers(),
+        headers,
         body: JSON.stringify({
           expectedDraftRevisionId: draftMsg.draftRevisionId,
           reviewedTranscript: draftMsg.transcript,
@@ -227,12 +245,13 @@ function VoiceBridgeThreadInner({ threadId, auth }: { threadId: string; auth: Vo
     const next = window.prompt('Corrected transcript (sender review)', current);
     if (!next?.trim()) return;
     setBusy(true);
+    setError(null);
     try {
-      const token = await tokenFn();
+      const { token, headers } = await authRequest();
       await apiFetch(`/v1/voicebridge/messages/${messageId}/corrections`, {
         method: 'POST',
         token,
-        headers: headers(),
+        headers,
         body: JSON.stringify({
           expectedActiveRevisionId: activeRevisionId,
           reviewedTranscript: next.trim(),
@@ -249,12 +268,13 @@ function VoiceBridgeThreadInner({ threadId, auth }: { threadId: string; auth: Vo
 
   async function acknowledge(revisionId: string) {
     setBusy(true);
+    setError(null);
     try {
-      const token = await tokenFn();
+      const { token, headers } = await authRequest();
       await apiFetch(`/v1/voicebridge/revisions/${revisionId}/acknowledgments`, {
         method: 'POST',
         token,
-        headers: headers(),
+        headers,
         body: '{}',
       });
       await reload();
@@ -274,7 +294,7 @@ function VoiceBridgeThreadInner({ threadId, auth }: { threadId: string; auth: Vo
     setDealResult(null);
     setError(null);
     try {
-      const token = await tokenFn();
+      const { token, headers } = await authRequest();
       const result = await apiFetch<{
         dealSessionId: string | null;
         dealbridgePath: string | null;
@@ -282,7 +302,7 @@ function VoiceBridgeThreadInner({ threadId, auth }: { threadId: string; auth: Vo
       }>(`/v1/voicebridge/threads/${threadId}/deal-drafts`, {
         method: 'POST',
         token,
-        headers: headers(),
+        headers,
         body: JSON.stringify({
           selectedRevisionIds: selectedRevisions,
           partyAUserId: partyA,
@@ -316,9 +336,16 @@ function VoiceBridgeThreadInner({ threadId, auth }: { threadId: string; auth: Vo
         </p>
       ) : null}
 
-      {!clerkReady || !isSignedIn ? (
+      {!isLoaded ? (
+        <p style={{ color: 'var(--muted)' }}>Loading session…</p>
+      ) : null}
+
+      {isLoaded && !isSignedIn ? (
         <div className="vl-panel" style={{ padding: '0.85rem', marginBottom: '1rem', display: 'grid', gap: 8 }}>
-          <input className="vl-input" placeholder="API key" value={apiKey} onChange={(e) => setApiKey(e.target.value)} />
+          <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--muted)' }}>
+            Sign in, or paste an API key and actor id for local access.
+          </p>
+          <input className="vl-input" placeholder="lg_live_… / lg_test_… API key" value={apiKey} onChange={(e) => setApiKey(e.target.value)} />
           <input className="vl-input" placeholder="Actor id" value={actorId} onChange={(e) => setActorId(e.target.value)} />
           <button type="button" className="vl-btn" onClick={() => void reload()}>
             Reload
