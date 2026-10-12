@@ -135,6 +135,8 @@ model Organization {
   relayRequests                 RelayRequest[]
   relayBookings                 RelayBooking[]
   relayAuditEvents              RelayAuditEvent[]
+  languagePassports             LanguagePassport[]
+  languagePassportAuditEvents   LanguagePassportAuditEvent[]
 
   @@index([plan])
   @@index([billingStatus])
@@ -4577,4 +4579,185 @@ model RelayAuditEvent {
   @@index([organizationId, createdAt])
   @@index([bookingId])
   @@map("relay_audit_events")
+}
+
+/// Private, portable user-approved language-context profile (Language Passport).
+/// Not an identity document, biometric, or credential. Owner-scoped memory only.
+model LanguagePassport {
+  id                      String    @id @default(cuid())
+  organizationId          String    @map("organization_id")
+  workspaceId             String    @map("workspace_id")
+  ownerUserId             String    @map("owner_user_id")
+  /// active | paused | deleted
+  state                   String    @default("active")
+  personalizationEnabled  Boolean   @default(true) @map("personalization_enabled")
+  preferencesRevision     Int       @default(1) @map("preferences_revision")
+  /// Accent Identity pack ids / speechVariety ids the owner selected (not nationality).
+  preferredVarieties      Json      @default("[]") @map("preferred_varieties")
+  /// own:* / registry voice ids the owner selected for listening/synthesis prefs.
+  preferredVoiceIds       Json      @default("[]") @map("preferred_voice_ids")
+  retentionDays           Int       @default(365) @map("retention_days")
+  /// Separate from memory storage/application — never implies shared model training.
+  trainingConsent         Boolean   @default(false) @map("training_consent")
+  deletedAt               DateTime? @map("deleted_at")
+  createdAt               DateTime  @default(now()) @map("created_at")
+  updatedAt               DateTime  @updatedAt @map("updated_at")
+
+  organization Organization                   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  entries      LanguagePassportEntry[]
+  snapshots    LanguagePassportSnapshot[]
+  grants       LanguagePassportShareGrant[]
+  resolutions  LanguagePassportResolution[]
+  imports      LanguagePassportImportPreview[]
+  auditEvents  LanguagePassportAuditEvent[]
+
+  @@unique([organizationId, ownerUserId])
+  @@index([organizationId, workspaceId])
+  @@index([ownerUserId, state])
+  @@map("language_passports")
+}
+
+model LanguagePassportEntry {
+  id               String    @id @default(cuid())
+  passportId       String    @map("passport_id")
+  /// Stable logical key within passport (normalized sourceForm + type + variety).
+  entryKey         String    @map("entry_key")
+  /// terminology_meaning | approved_translation | pronunciation | local_unit_definition | preferred_name | preference
+  type             String
+  /// draft | awaiting_user_approval | approved | paused | deleted
+  status           String    @default("awaiting_user_approval")
+  currentRevision  Int       @default(0) @map("current_revision")
+  deletedAt        DateTime? @map("deleted_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  passport   LanguagePassport               @relation(fields: [passportId], references: [id], onDelete: Cascade)
+  revisions  LanguagePassportEntryRevision[]
+
+  @@unique([passportId, entryKey])
+  @@index([passportId, type, status])
+  @@map("language_passport_entries")
+}
+
+model LanguagePassportEntryRevision {
+  id                 String    @id @default(cuid())
+  entryId            String    @map("entry_id")
+  revision           Int
+  sourceForm         String    @map("source_form")
+  languageVariety    String    @map("language_variety")
+  sourceLang         String?   @map("source_lang")
+  targetLang         String?   @map("target_lang")
+  /// bidirectional | source_to_target | target_to_source
+  direction          String    @default("bidirectional")
+  approvedValue      Json      @map("approved_value")
+  /// ContextScope: category/product/unit/business/project + validity window
+  context            Json      @default("{}")
+  examples           Json      @default("[]")
+  provenance         Json      @default("{}")
+  trainingPermission Boolean   @default(false) @map("training_permission")
+  approvedAt         DateTime? @map("approved_at")
+  approvedById       String?   @map("approved_by_id")
+  createdAt          DateTime  @default(now()) @map("created_at")
+
+  entry LanguagePassportEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+
+  @@unique([entryId, revision])
+  @@index([entryId, createdAt])
+  @@map("language_passport_entry_revisions")
+}
+
+model LanguagePassportSnapshot {
+  id                   String   @id @default(cuid())
+  passportId           String   @map("passport_id")
+  resolverVersion      String   @map("resolver_version")
+  purpose              String
+  /// Pinned [{ entryId, revision }]
+  entryRevisions       Json     @map("entry_revisions")
+  preferencesRevision  Int      @map("preferences_revision")
+  contentHash          String   @map("content_hash")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  passport    LanguagePassport             @relation(fields: [passportId], references: [id], onDelete: Cascade)
+  resolutions LanguagePassportResolution[]
+
+  @@index([passportId, createdAt])
+  @@index([contentHash])
+  @@map("language_passport_snapshots")
+}
+
+model LanguagePassportShareGrant {
+  id                 String    @id @default(cuid())
+  passportId         String    @map("passport_id")
+  granteeUserId      String?   @map("grantee_user_id")
+  granteeResource    String?   @map("grantee_resource")
+  purpose            String
+  permittedProducts  Json      @map("permitted_products")
+  entryIds           Json      @map("entry_ids")
+  revision           Int       @default(1)
+  expiresAt          DateTime  @map("expires_at")
+  revokedAt          DateTime? @map("revoked_at")
+  createdAt          DateTime  @default(now()) @map("created_at")
+  updatedAt          DateTime  @updatedAt @map("updated_at")
+
+  passport LanguagePassport @relation(fields: [passportId], references: [id], onDelete: Cascade)
+
+  @@index([passportId, expiresAt])
+  @@index([granteeUserId])
+  @@index([granteeResource])
+  @@map("language_passport_share_grants")
+}
+
+model LanguagePassportResolution {
+  id          String   @id @default(cuid())
+  passportId  String   @map("passport_id")
+  snapshotId  String?  @map("snapshot_id")
+  product     String
+  requestKey  String   @map("request_key")
+  matched     Json     @default("[]")
+  conflicts   Json     @default("[]")
+  /// applied | clarification_required | skipped | paused | unauthorized
+  outcome     String
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  passport LanguagePassport          @relation(fields: [passportId], references: [id], onDelete: Cascade)
+  snapshot LanguagePassportSnapshot? @relation(fields: [snapshotId], references: [id], onDelete: SetNull)
+
+  @@index([passportId, createdAt])
+  @@index([product, requestKey])
+  @@map("language_passport_resolutions")
+}
+
+model LanguagePassportImportPreview {
+  id             String    @id @default(cuid())
+  passportId     String    @map("passport_id")
+  schemaVersion  String    @map("schema_version")
+  payload        Json
+  conflicts      Json      @default("[]")
+  selectedChanges Json     @default("[]") @map("selected_changes")
+  /// pending | confirmed | cancelled
+  status         String    @default("pending")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  confirmedAt    DateTime? @map("confirmed_at")
+
+  passport LanguagePassport @relation(fields: [passportId], references: [id], onDelete: Cascade)
+
+  @@index([passportId, status])
+  @@map("language_passport_import_previews")
+}
+
+model LanguagePassportAuditEvent {
+  id             String   @id @default(cuid())
+  organizationId String   @map("organization_id")
+  passportId     String?  @map("passport_id")
+  actorId        String   @map("actor_id")
+  operation      String
+  meta           Json?
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  organization Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  passport     LanguagePassport? @relation(fields: [passportId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId, createdAt])
+  @@index([passportId, createdAt])
+  @@map("language_passport_audit_events")
 }

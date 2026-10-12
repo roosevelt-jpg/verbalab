@@ -10891,6 +10891,93 @@ export const openApiDocument = {
         },
       },
     },
+    '/v1/passport/catalog': {
+      get: {
+        summary: 'Language Passport catalog and model-sync honesty',
+        operationId: 'languagePassportCatalog',
+        responses: { '200': { description: 'Catalog, entry types, adapters, non-goals' } },
+      },
+    },
+    '/v1/passport/me': {
+      get: {
+        summary: 'Get or create the caller Language Passport',
+        operationId: 'getLanguagePassport',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        parameters: [
+          {
+            name: 'X-Language-Passport-Actor-Id',
+            in: 'header',
+            required: false,
+            schema: { type: 'string' },
+            description: 'Required with API keys (owner user id). Clerk sessions supply userId.',
+          },
+        ],
+        responses: { '200': { description: 'Owner-private passport profile' } },
+      },
+      delete: {
+        summary: 'Delete passport (tombstone entries + revoke grants)',
+        operationId: 'deleteLanguagePassport',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '200': { description: 'Deleted' } },
+      },
+    },
+    '/v1/passport/preferences': {
+      patch: {
+        summary: 'Update passport preferences (varieties, voices, pause personalization)',
+        operationId: 'patchLanguagePassportPreferences',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '200': { description: 'Updated preferences' }, '409': { description: 'Revision conflict' } },
+      },
+    },
+    '/v1/passport/entries': {
+      post: {
+        summary: 'Create passport entry (awaiting approval unless autoApprove)',
+        operationId: 'createLanguagePassportEntry',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '201': { description: 'Created' } },
+      },
+    },
+    '/v1/passport/entries/{id}/approvals': {
+      post: {
+        summary: 'Approve entry revision and sync to workspace models',
+        operationId: 'approveLanguagePassportEntry',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        parameters: [{ name: 'id', in: 'path', required: true, schema: { type: 'string' } }],
+        responses: { '200': { description: 'Approved' } },
+      },
+    },
+    '/v1/passport/resolutions': {
+      post: {
+        summary: 'Resolve text against approved passport memory (explainable plan)',
+        operationId: 'resolveLanguagePassport',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '200': { description: 'Resolution plan' } },
+      },
+    },
+    '/v1/passport/grants': {
+      post: {
+        summary: 'Create selected-entry share grant (expiring)',
+        operationId: 'createLanguagePassportGrant',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '201': { description: 'Grant created' } },
+      },
+    },
+    '/v1/passport/exports': {
+      post: {
+        summary: 'Export approved entries + preferences with checksum',
+        operationId: 'exportLanguagePassport',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '200': { description: 'Versioned JSON export' } },
+      },
+    },
+    '/v1/passport/import-previews': {
+      post: {
+        summary: 'Preview untrusted import (no foreign grants; pending until confirm)',
+        operationId: 'previewLanguagePassportImport',
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '201': { description: 'Import preview' } },
+      },
+    },
     '/v1/glossary/terms': {
       get: {
         summary: 'List glossary terms',

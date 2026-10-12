@@ -16,6 +16,7 @@ import {
   protectGlossaryTerms,
   type GlossaryTermLike,
 } from '../glossary/glossary-apply';
+import { LanguagePassportService } from '../language-passport/passport.service';
 
 @Injectable()
 export class TranslateService {
@@ -32,6 +33,7 @@ export class TranslateService {
     private readonly translateLatency: TranslateLatencyService,
     private readonly notifications: NotificationsService,
     private readonly locales: LocalesService,
+    private readonly languagePassport: LanguagePassportService,
   ) {}
 
   async detect(input: {
@@ -190,6 +192,17 @@ export class TranslateService {
 
     await this.billing.assertWithinQuota(input.organizationId, characters);
 
+    const passportTerms = input.userId
+      ? await this.languagePassport.glossaryTermsForTranslate({
+          organizationId: input.organizationId,
+          workspaceId: input.workspaceId,
+          userId: input.userId,
+          sourceLang: source,
+          targetLang: target,
+          text: input.text,
+        })
+      : [];
+
     const glossary = await this.glossary.applyForPair({
       organizationId: input.organizationId,
       workspaceId: input.workspaceId,
@@ -197,6 +210,19 @@ export class TranslateService {
       target: target,
       text: input.text,
     });
+
+    // Apply private Passport glossary constraints after workspace glossary.
+    const passportProtect =
+      passportTerms.length > 0
+        ? protectGlossaryTerms(
+            glossary.text,
+            passportTerms,
+            glossary.replacements?.length ?? 0,
+          )
+        : {
+            text: glossary.text,
+            replacements: [] as Array<{ placeholder: string; targetTerm: string; sourceTerm: string }>,
+          };
 
     const localeTerms = [
       ...(await this.locales.doNotTranslateTerms(source)),
@@ -207,12 +233,24 @@ export class TranslateService {
     );
     const localeProtect =
       localeTerms.length > 0
-        ? protectGlossaryTerms(glossary.text, localeTerms, glossary.replacements?.length ?? 0)
-        : { text: glossary.text, replacements: [] as Array<{ placeholder: string; targetTerm: string; sourceTerm: string }> };
+        ? protectGlossaryTerms(
+            passportProtect.text,
+            localeTerms,
+            (glossary.replacements?.length ?? 0) + passportProtect.replacements.length,
+          )
+        : {
+            text: passportProtect.text,
+            replacements: [] as Array<{ placeholder: string; targetTerm: string; sourceTerm: string }>,
+          };
 
-    const protectTerms: GlossaryTermLike[] = [...glossary.terms, ...localeTerms];
+    const protectTerms: GlossaryTermLike[] = [
+      ...glossary.terms,
+      ...passportTerms,
+      ...localeTerms,
+    ];
     const protectReplacements = [
       ...(glossary.replacements ?? []),
+      ...passportProtect.replacements,
       ...localeProtect.replacements,
     ];
     const localeApplied = localeProtect.replacements.length;

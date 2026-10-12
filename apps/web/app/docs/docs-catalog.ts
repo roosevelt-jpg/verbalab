@@ -307,6 +307,13 @@ export const DOCS_CAPABILITIES: DocsCapability[] = [
     apiPath: '/v1/glossary/terms',
   },
   {
+    id: 'language-passport',
+    title: 'Language Passport',
+    body: 'Private approved meaning memory synced to glossary, ASR, Accent Identity, and OWN TTS.',
+    href: '/language-passport',
+    apiPath: '/v1/passport/me',
+  },
+  {
     id: 'mcp',
     title: 'MCP',
     body: 'Model Context Protocol bridge for Cursor and agent IDEs.',

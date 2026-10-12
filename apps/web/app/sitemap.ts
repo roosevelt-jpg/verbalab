@@ -13,6 +13,7 @@ const STATIC_ROUTES = [
   '/docs',
   '/docs/api',
   '/accent-identity',
+  '/language-passport',
   '/developers',
   '/sign-up',
   '/dealbridge',

@@ -17,6 +17,7 @@ import { ObservabilityModule } from '../observability/observability.module';
 import { RateLimitModule } from '../rate-limit/rate-limit.module';
 import { NotificationsModule } from '../notifications/notifications.module';
 import { LocalesModule } from '../locales/locales.module';
+import { LanguagePassportModule } from '../language-passport/passport.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { LocalesModule } from '../locales/locales.module';
     ObservabilityModule,
     RateLimitModule,
     NotificationsModule,
+    LanguagePassportModule,
   ],
   controllers: [TranslateController],
   providers: [TranslateService, TranslateFormatsService, TranslateAuthGuard],
