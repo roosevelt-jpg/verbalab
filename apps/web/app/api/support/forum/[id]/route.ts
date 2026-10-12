@@ -7,12 +7,11 @@ import {
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(
-  _request: Request,
-  context: { params: Promise<{ id: string }> | { id: string } },
-) {
-  const params = await Promise.resolve(context.params);
-  const thread = await getForumThread(params.id);
+type RouteContext = { params: Promise<{ id: string }> };
+
+export async function GET(_request: Request, context: RouteContext) {
+  const { id } = await context.params;
+  const thread = await getForumThread(id);
   if (!thread) {
     return NextResponse.json({ error: { message: 'Thread not found' } }, { status: 404 });
   }
@@ -24,11 +23,8 @@ export async function GET(
   });
 }
 
-export async function POST(
-  request: Request,
-  context: { params: Promise<{ id: string }> | { id: string } },
-) {
-  const params = await Promise.resolve(context.params);
+export async function POST(request: Request, context: RouteContext) {
+  const { id } = await context.params;
   let body: { author?: string; body?: string };
   try {
     body = (await request.json()) as typeof body;
@@ -41,7 +37,7 @@ export async function POST(
   }
 
   const thread = await replyForumThread({
-    threadId: params.id,
+    threadId: id,
     author: typeof body.author === 'string' ? body.author : 'Community',
     body: text,
   });
