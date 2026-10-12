@@ -3485,6 +3485,90 @@ export const openApiDocument = {
         },
       },
     },
+    '/v1/speech/capabilities': {
+      get: {
+        summary: 'Native Speech Engine capability registry',
+        operationId: 'nativeSpeechEngineCapabilities',
+        tags: ['Native Speech Engine'],
+        responses: {
+          '200': {
+            description:
+              'Task/variety manifests with verification status, honesty rules, and demo-safe remaps',
+          },
+        },
+      },
+    },
+    '/v1/speech/evaluation': {
+      get: {
+        summary: 'Native review dimensions and fine-tune honesty',
+        operationId: 'nativeSpeechEngineEvaluation',
+        tags: ['Native Speech Engine'],
+        responses: {
+          '200': {
+            description:
+              'Native-speaker evaluation plan; fine-tuning never auto-ingests private speech',
+          },
+        },
+      },
+    },
+    '/v1/speech/diagnose': {
+      post: {
+        summary: 'Diagnose beep/echo/unintelligible speech payloads',
+        operationId: 'nativeSpeechEngineDiagnose',
+        tags: ['Native Speech Engine'],
+        responses: {
+          '200': { description: 'Layered diagnosis (weights/payload/codec/capability)' },
+        },
+      },
+    },
+    '/v1/speech/syntheses': {
+      post: {
+        summary: 'Synthesize via Native Speech Engine (verified path)',
+        operationId: 'nativeSpeechEngineSynthesize',
+        tags: ['Native Speech Engine'],
+        responses: {
+          '200': {
+            description: 'Audio bytes with provenance headers (or JSON when asJson=true)',
+            content: { 'application/octet-stream': { schema: { type: 'string', format: 'binary' } } },
+          },
+        },
+      },
+    },
+    '/v1/speech/recognitions': {
+      post: {
+        summary: 'Recognize speech with advisory dialect/accent cues',
+        operationId: 'nativeSpeechEngineRecognize',
+        tags: ['Native Speech Engine'],
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: {
+          '200': {
+            description: 'Transcript + optional source-variety clarification (never nationality inference)',
+          },
+        },
+      },
+    },
+    '/v1/speech/speech-translations': {
+      post: {
+        summary: 'Speech translation corridor (ASR → MT → target TTS)',
+        operationId: 'nativeSpeechEngineSpeechTranslate',
+        tags: ['Native Speech Engine'],
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: {
+          '200': {
+            description: 'Source accent is not copied into the target variety by default',
+          },
+        },
+      },
+    },
+    '/v1/speech/translations': {
+      post: {
+        summary: 'Meaning-preserving text translation (no fabricated emotion)',
+        operationId: 'nativeSpeechEngineTextTranslate',
+        tags: ['Native Speech Engine'],
+        security: [{ ApiKeyAuth: [] }, { ClerkAuth: [] }],
+        responses: { '200': { description: 'Translated text with provenance' } },
+      },
+    },
     '/v1/voice-cloud/products': {
       get: {
         summary: 'Voice Cloud product catalog',

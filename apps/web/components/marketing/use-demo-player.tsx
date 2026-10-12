@@ -51,7 +51,14 @@ export function useDemoPlayer() {
             : result.mode === 'studio'
               ? 'Studio Echo'
               : 'Echo';
-        setStatus(`Played with Lugemi ${quality} · ${result.profile.label}`);
+        const via =
+          result.speechEngine === 'native_speech_engine' || result.mode === 'server'
+            ? 'Native Speech Engine'
+            : quality;
+        const remap = result.remapped
+          ? ` · remapped from ${result.requestedVoice ?? 'requested pack'} (native L1 weights not live)`
+          : '';
+        setStatus(`Played via ${via} · ${result.profile.label}${remap}`);
       } catch (err) {
         if (token !== gen.current) return;
         if (err instanceof DOMException && err.name === 'AbortError') return;

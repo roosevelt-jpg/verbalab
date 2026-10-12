@@ -185,9 +185,10 @@ function AccentIdentityBody({
       <p style={{ color: 'var(--muted)', margin: '0 0 1.25rem', maxWidth: '44rem' }}>
         Hear how tribe, culture, and lifestyle shape speech. Each pack exposes{' '}
         <code>cultural_identity</code>, <code>speech_variety</code> (e.g. ghanaian_english,
-        nigerian_pidgin, filipino_english), and lifestyle tags — linked to Lugemi Echo Voice. Play uses
-        verified Echo paths; packs without native weights remap to that country&apos;s cultural
-        English or French so every accent stays audible and language-true.
+        nigerian_pidgin, filipino_english), and lifestyle tags — linked to Lugemi Echo Voice. Play
+        runs through the Native Speech Engine: verified Echo paths only; packs without native weights
+        remap to that country&apos;s cultural English or French so every accent stays audible and
+        language-true — never formant noise or nationality-as-voice.
       </p>
 
       <div

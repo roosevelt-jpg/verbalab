@@ -3,22 +3,24 @@ import type { Request, Response } from 'express';
 import { ApiException } from '../common/errors/api-exception';
 import { clientIp } from '../common/http/client-ip';
 import { GatewayService } from '../gateway/gateway.service';
-import { nativeVoiceUnavailable } from '../gateway/native-voice';
 import { capabilityForVoice } from '../gateway/voice-capability-registry';
+import { NativeSpeechEngineService } from '../native-speech-engine/nse.service';
 import { DEMO_CATALOGUE } from './demo-catalogue';
-import { resolveDemoSpeechTarget } from './demo-resolve';
 
 const MAX_CHARS = 300;
 const WINDOW_MS = 10 * 60_000;
 /** Accent Identity has 200+ packs — allow browsing without tripping mid-session. */
 const MAX_PER_WINDOW = 400;
 
-/** Public marketing-site demo speech: Lugemi native voices only, per-IP limited. */
+/** Public marketing-site demo speech — routes through Native Speech Engine. */
 @Controller('v1/demo')
 export class DemoSpeechController {
   private readonly hits = new Map<string, { count: number; resetAt: number }>();
 
-  constructor(private readonly gateway: GatewayService) {}
+  constructor(
+    private readonly gateway: GatewayService,
+    private readonly nse: NativeSpeechEngineService,
+  ) {}
 
   private allow(ip: string): boolean {
     const now = Date.now();
@@ -34,20 +36,17 @@ export class DemoSpeechController {
     return entry.count <= MAX_PER_WINDOW;
   }
 
-  /**
-   * Honest capability catalogue for marketing demos.
-   * Merges live OWN_TTS neural status so Kokoro voices report neural_unreviewed.
-   */
   @Get('speech/capabilities')
   capabilities() {
-    const liveById = new Map(
-      this.gateway.listVoices().map((v) => [v.id, v] as const),
-    );
+    const liveById = new Map(this.gateway.listVoices().map((v) => [v.id, v] as const));
+    const engine = this.nse.capabilities();
     return {
       product: 'lugemi-demo-speech',
+      engine: 'native_speech_engine',
       note:
-        'Customer-facing demos play verified eSpeak or neural-live paths. Identity packs without native weights remap to the cultural English/French variety of the same country — never formant noise.',
+        'Customer-facing demos play via Native Speech Engine: verified eSpeak or neural-live paths. Identity packs without native weights remap to the cultural English/French variety of the same country — never formant noise.',
       catalogue: DEMO_CATALOGUE,
+      engineHonesty: engine.honesty,
       voices: DEMO_CATALOGUE.map((entry) => {
         const live = liveById.get(entry.voiceId);
         const neuralLive =
@@ -99,57 +98,37 @@ export class DemoSpeechController {
     }
 
     const voiceHint = typeof body.voice === 'string' ? body.voice.trim() : undefined;
-    const target = resolveDemoSpeechTarget({ text, language, voice: voiceHint });
-    if (!target.voice) throw nativeVoiceUnavailable(language);
-
-    const out = await this.gateway.synthesize({
-      text: target.text.slice(0, MAX_CHARS),
-      voice: target.voice,
-      language: target.language,
+    const result = await this.nse.synthesize({
+      text: text.slice(0, MAX_CHARS),
+      language,
+      voice: voiceHint,
       format: 'mp3',
       requireIntelligible: true,
+      demoRemap: true,
     });
 
-    // Reject non-audio payloads (e.g. JSON/HTML/fixture text) before browser playback.
-    if (!looksLikeAudio(out.audio, out.mimeType)) {
-      throw new ApiException(
-        'provider_error',
-        'Speech engine returned a non-audio payload; refusing to play',
-        HttpStatus.BAD_GATEWAY,
-      );
-    }
-
-    res.setHeader('Content-Type', out.mimeType);
+    res.setHeader('Content-Type', result.mimeType);
     res.setHeader('Cache-Control', 'no-store');
-    res.setHeader('X-Lugemi-Voice', out.voice);
-    res.setHeader('X-Lugemi-Provider', out.provider);
-    if (out.synthEngine) res.setHeader('X-Lugemi-Synth-Engine', out.synthEngine);
-    if (out.verificationStatus) {
-      res.setHeader('X-Lugemi-Verification-Status', out.verificationStatus);
+    res.setHeader('X-Lugemi-Voice', result._headers.voice);
+    res.setHeader('X-Lugemi-Provider', result._headers.provider);
+    res.setHeader('X-Lugemi-Engine', 'native_speech_engine');
+    res.setHeader('X-Lugemi-Job-Id', result.jobId);
+    if (result._headers.synthEngine) res.setHeader('X-Lugemi-Synth-Engine', result._headers.synthEngine);
+    if (result._headers.verificationStatus) {
+      res.setHeader('X-Lugemi-Verification-Status', result._headers.verificationStatus);
     }
     res.setHeader('X-Lugemi-Synthetic-Speech', 'true');
-    if (target.remapped) {
+    res.setHeader('X-Lugemi-Capability-Status', result.capabilityStatus);
+    if (result._headers.remapped) {
       res.setHeader('X-Lugemi-Demo-Remapped', 'true');
-      if (target.requestedVoice) res.setHeader('X-Lugemi-Requested-Voice', target.requestedVoice);
-      res.setHeader('X-Lugemi-Requested-Language', target.requestedLanguage);
-      if (target.note) res.setHeader('X-Lugemi-Demo-Note', target.note.slice(0, 200));
+      if (result._headers.requestedVoice) {
+        res.setHeader('X-Lugemi-Requested-Voice', result._headers.requestedVoice);
+      }
+      res.setHeader('X-Lugemi-Requested-Language', result._headers.requestedLanguage);
+      if (result._headers.remapNote) {
+        res.setHeader('X-Lugemi-Demo-Note', result._headers.remapNote.slice(0, 200));
+      }
     }
-    res.status(HttpStatus.OK).send(out.audio);
+    res.status(HttpStatus.OK).send(result._audio);
   }
-}
-
-function looksLikeAudio(buf: Buffer, mimeType: string): boolean {
-  if (!buf || buf.length < 64) return false;
-  const mime = (mimeType || '').toLowerCase();
-  if (mime.includes('json') || mime.includes('text') || mime.includes('html')) return false;
-  // WAV
-  if (buf.toString('ascii', 0, 4) === 'RIFF' && buf.toString('ascii', 8, 12) === 'WAVE') return true;
-  // MP3 frame sync or ID3
-  if (buf[0] === 0xff && (buf[1]! & 0xe0) === 0xe0) return true;
-  if (buf.toString('ascii', 0, 3) === 'ID3') return true;
-  // Ogg
-  if (buf.toString('ascii', 0, 4) === 'OggS') return true;
-  // If mime claims audio/* and payload is substantial, accept (remote engines may use containers)
-  if (mime.startsWith('audio/') && buf.length > 256) return true;
-  return false;
 }

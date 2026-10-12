@@ -31,9 +31,15 @@ Yoruba, isiZulu, Akan/Twi, Igbo, Hausa, Wolof, Pidgin, and other formant-only cu
 
 ## API surfaces
 
-- `GET /v1/demo/speech/capabilities` — honest catalogue
-- `POST /v1/demo/speech` — requires intelligible path; sets `X-Lugemi-Synth-Engine`, `X-Lugemi-Verification-Status`, `X-Lugemi-Synthetic-Speech`
+- `GET /v1/speech/capabilities` — Native Speech Engine registry (tasks, varieties, honesty)
+- `GET /v1/speech/evaluation` — native-review dimensions + fine-tune honesty
+- `POST /v1/speech/diagnose` — layered beep/echo diagnosis
+- `POST /v1/speech/syntheses` — verified synthesis path (optional JSON provenance)
+- `GET /v1/demo/speech/capabilities` — honest demo catalogue (routes via NSE)
+- `POST /v1/demo/speech` — public Play; requires intelligible path; sets `X-Lugemi-Engine: native_speech_engine`, `X-Lugemi-Synth-Engine`, `X-Lugemi-Verification-Status`, `X-Lugemi-Synthetic-Speech`, remap headers when applicable
 - `GET|POST /v1/speech-review` (platform admin) — native-speaker review records; `trainingEligible` always false
+
+Full engine spec: `docs/NATIVE_SPEECH_ENGINE.md`.
 
 ## Setup (no secrets)
 

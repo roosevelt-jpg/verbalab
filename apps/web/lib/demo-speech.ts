@@ -1,9 +1,10 @@
 /**
- * Marketing demo speech — Lugemi Echo voices via `POST /v1/demo/speech`.
+ * Platform demo speech — Native Speech Engine via `POST /v1/demo/speech`
+ * (and authenticated `/v1/tts/synthesize` when a Studio key is present).
  *
- * Pass any `own:*` / bare Echo key plus a BCP-47 language. The API remaps
- * formant-only L1 packs to cultural English/French of the same country so Play
- * never falls through to the wrong language or silent failure.
+ * Pass any `own:*` / bare Echo key plus a BCP-47 language. The engine remaps
+ * formant-only L1 packs to cultural English/French of the same country,
+ * blocks beep/error payloads, and never fabricates accents or nationality.
  */
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001';
@@ -366,7 +367,40 @@ export type StudioSpeechResult = {
   profile: DemoVoiceProfile;
   engine?: string | null;
   verification?: string | null;
+  /** native_speech_engine when routed through NSE / demo speech. */
+  speechEngine?: string | null;
+  capabilityStatus?: string | null;
+  remapped?: boolean;
+  remapNote?: string | null;
+  requestedVoice?: string | null;
+  jobId?: string | null;
 };
+
+type FetchedSpeech = {
+  blob: Blob;
+  engine: string | null;
+  verification: string | null;
+  mode: StudioSpeechResult['mode'];
+  speechEngine: string | null;
+  capabilityStatus: string | null;
+  remapped: boolean;
+  remapNote: string | null;
+  requestedVoice: string | null;
+  jobId: string | null;
+};
+
+function headersFromResponse(res: Response): Omit<FetchedSpeech, 'blob' | 'mode'> {
+  return {
+    engine: res.headers.get('x-lugemi-synth-engine'),
+    verification: res.headers.get('x-lugemi-verification-status'),
+    speechEngine: res.headers.get('x-lugemi-engine'),
+    capabilityStatus: res.headers.get('x-lugemi-capability-status'),
+    remapped: res.headers.get('x-lugemi-demo-remapped') === 'true',
+    remapNote: res.headers.get('x-lugemi-demo-note'),
+    requestedVoice: res.headers.get('x-lugemi-requested-voice'),
+    jobId: res.headers.get('x-lugemi-job-id'),
+  };
+}
 
 async function fetchSpeechAudio(input: {
   text: string;
@@ -374,7 +408,7 @@ async function fetchSpeechAudio(input: {
   voice: string;
   token?: string | null;
   signal: AbortSignal;
-}): Promise<{ blob: Blob; engine: string | null; verification: string | null; mode: StudioSpeechResult['mode'] }> {
+}): Promise<FetchedSpeech> {
   // Authenticated Studio / Console: metered neural path when OWN_TTS is wired.
   if (input.token) {
     const studioRes = await fetch(`${API_URL}/v1/tts/synthesize`, {
@@ -388,6 +422,7 @@ async function fetchSpeechAudio(input: {
         language: input.language,
         voice: input.voice,
         format: 'mp3',
+        requireIntelligible: true,
       }),
       signal: input.signal,
     });
@@ -396,13 +431,13 @@ async function fetchSpeechAudio(input: {
       if (!contentType.includes('json') && !contentType.includes('text')) {
         const blob = await studioRes.blob();
         if (blob.size >= 64) {
-          const engine = studioRes.headers.get('x-lugemi-synth-engine');
-          const verification = studioRes.headers.get('x-lugemi-verification-status');
-          const neural = /neural|kokoro|piper/i.test(engine ?? '') || verification === 'neural_unreviewed';
+          const meta = headersFromResponse(studioRes);
+          const neural =
+            /neural|kokoro|piper/i.test(meta.engine ?? '') || meta.verification === 'neural_unreviewed';
           return {
             blob,
-            engine,
-            verification,
+            ...meta,
+            speechEngine: meta.speechEngine || 'studio_tts',
             mode: neural ? 'neural' : 'studio',
           };
         }
@@ -419,19 +454,25 @@ async function fetchSpeechAudio(input: {
   if (!res.ok) throw new Error(await readError(res));
   const contentType = res.headers.get('content-type') ?? '';
   if (contentType.includes('json') || contentType.includes('text')) {
-    throw new Error('Speech endpoint returned non-audio content');
+    throw new Error('Speech endpoint returned non-audio content — delivery blocked by integrity checks');
   }
   const blob = await res.blob();
   if (blob.size < 64) throw new Error('Speech audio payload too small');
-  const engine = res.headers.get('x-lugemi-synth-engine');
-  const verification = res.headers.get('x-lugemi-verification-status');
-  const neural = /neural|kokoro|piper/i.test(engine ?? '') || verification === 'neural_unreviewed';
-  return { blob, engine, verification, mode: neural ? 'neural' : 'server' };
+  const meta = headersFromResponse(res);
+  const neural =
+    /neural|kokoro|piper/i.test(meta.engine ?? '') || meta.verification === 'neural_unreviewed';
+  return {
+    blob,
+    ...meta,
+    speechEngine: meta.speechEngine || 'native_speech_engine',
+    mode: neural ? 'neural' : 'server',
+  };
 }
 
 /**
  * Platform Play: prefers authenticated `/v1/tts/synthesize` (Kokoro/Piper when
- * OWN_TTS_URL is live), else public `/v1/demo/speech` with the same own:* voices.
+ * OWN_TTS_URL is live), else public `/v1/demo/speech` routed through the
+ * Native Speech Engine with diagnosis, remap honesty, and blob playback.
  */
 export async function playDemoSpeech(input: {
   text: string;
@@ -448,17 +489,29 @@ export async function playDemoSpeech(input: {
   stopDemoSpeech();
   const controller = new AbortController();
   activeRequest = controller;
-  const { blob, engine, verification, mode } = await fetchSpeechAudio({
+  const fetched = await fetchSpeechAudio({
     text: input.text,
     language,
     voice,
     token: input.token,
     signal: controller.signal,
   });
-  if (activeRequest !== controller) return { mode, profile, engine, verification };
+  const result: StudioSpeechResult = {
+    mode: fetched.mode,
+    profile,
+    engine: fetched.engine,
+    verification: fetched.verification,
+    speechEngine: fetched.speechEngine,
+    capabilityStatus: fetched.capabilityStatus,
+    remapped: fetched.remapped,
+    remapNote: fetched.remapNote,
+    requestedVoice: fetched.requestedVoice,
+    jobId: fetched.jobId,
+  };
+  if (activeRequest !== controller) return result;
   activeRequest = null;
 
-  const url = URL.createObjectURL(blob);
+  const url = URL.createObjectURL(fetched.blob);
   const audio = new Audio(url);
   activeAudio = audio;
   await new Promise<void>((resolve, reject) => {
@@ -476,5 +529,5 @@ export async function playDemoSpeech(input: {
       .then(() => input.onStarted?.())
       .catch(reject);
   });
-  return { mode, profile, engine, verification };
+  return result;
 }

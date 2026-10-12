@@ -14,7 +14,7 @@ export function StudioSampleDemo({
   const { play, stop, playingId, loadingId, status, error } = useDemoPlayer();
   const [script, setScript] = useState(sample);
   // Each chip speaks a line written in that language, never the English draft read with a foreign accent.
-  // Only demo-safe languages (eSpeak/neural). Yoruba/Zulu stay catalogued but off demos until weights publish.
+  // Native Speech Engine: demo-safe languages only (eSpeak/neural). Yoruba/Zulu remap until L1 weights publish.
   const chipVoice: Record<string, { voiceId: string; lang: string; text: string }> = {
     English: { voiceId: 'en-ng-female', lang: 'en-NG', text: sample },
     Swahili: {

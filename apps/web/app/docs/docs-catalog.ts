@@ -446,7 +446,27 @@ export const DOCS_CATEGORIES: DocsCategory[] = [
         method: 'POST',
         path: '/v1/demo/speech',
         summary: 'Public Play speech',
-        description: 'Rate-limited public sample path; remaps formant-only packs to cultural English/French.',
+        description:
+          'Rate-limited Play via Native Speech Engine; remaps formant-only packs to cultural English/French.',
+      },
+      {
+        method: 'GET',
+        path: '/v1/speech/capabilities',
+        summary: 'Native Speech Engine registry',
+        description:
+          'Task/variety manifests, verification status, and honesty rules (no nationality inference).',
+      },
+      {
+        method: 'POST',
+        path: '/v1/speech/syntheses',
+        summary: 'Native Speech Engine synthesis',
+        description: 'Verified TTS with diagnosis, pronunciation aliases, and provenance headers.',
+      },
+      {
+        method: 'POST',
+        path: '/v1/speech/diagnose',
+        summary: 'Speech delivery diagnosis',
+        description: 'Layered beep/echo/unintelligible checks before playback or retraining.',
       },
     ],
   },

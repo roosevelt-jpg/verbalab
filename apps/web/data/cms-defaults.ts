@@ -700,7 +700,7 @@ export const CMS_DEFAULTS: CmsDocument = {
           title: 'Product APIs & SDKs',
           body: 'Every marketing product maps to the same metered /v1 surface.',
           steps: [
-            'Synthesize with POST /v1/speech/synthesize.',
+            'Synthesize with POST /v1/speech/syntheses or /v1/tts/synthesize.',
             'Recognize with POST /v1/speech/recognize.',
             'Translate with POST /v1/translate — then wire SDKs, MCP, or CLI.',
           ],
@@ -890,7 +890,7 @@ export const CMS_DEFAULTS: CmsDocument = {
           body: 'Translate + synthesize under one workspace key.',
           steps: [
             'POST /v1/translate for campaign copy.',
-            'POST /v1/speech/synthesize for spots and explainers.',
+            'POST /v1/speech/syntheses for spots and explainers.',
             'Meter and audit with lg_live_ keys.',
           ],
           links: [
@@ -949,7 +949,7 @@ export const CMS_DEFAULTS: CmsDocument = {
           body: 'Same speech and translate contracts as creative and CX.',
           steps: [
             'Localize with /v1/translate.',
-            'Synthesize with /v1/speech/synthesize and own:* voices.',
+            'Synthesize with /v1/speech/syntheses and own:* voices.',
             'Keep consent and disclosure paths for clones and generative speech.',
           ],
           links: [
@@ -1014,7 +1014,7 @@ export const CMS_DEFAULTS: CmsDocument = {
           title: 'Studio via API & SDK',
           body: 'The same own:* voices and translate paths power Studio once you leave the console.',
           steps: [
-            'Synthesize with POST /v1/speech/synthesize using an lg_live_ key.',
+            'Synthesize with POST /v1/speech/syntheses using an lg_live_ key.',
             'Localize copy with POST /v1/translate before final mix.',
             'Ship from @lugemi/sdk, MCP, or CLI — same metering as the console.',
           ],
@@ -1572,7 +1572,7 @@ export const CMS_DEFAULTS: CmsDocument = {
           title: 'Creative API & SDK',
           body: 'Synthesize own:* voices and localize scripts from the same /v1 surface.',
           steps: [
-            'POST /v1/speech/synthesize with region own:* voices.',
+            'POST /v1/speech/syntheses with region own:* voices.',
             'Localize scripts via /v1/translate before final mix.',
             'Keep clone speech on consented, watermarked paths only.',
           ],

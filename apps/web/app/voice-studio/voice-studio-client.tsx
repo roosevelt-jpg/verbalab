@@ -554,8 +554,8 @@ function StudioInner({ auth }: { auth: CreativeAuth }) {
           <section className="vs-panel">
             <h2>Target edition</h2>
             <p className="vs-muted">
-              Choose a verified variety and voice. Unsupported combinations return an explicit
-              capability error — never a beep.
+              Choose a verified variety and voice via the Native Speech Engine. Unsupported
+              combinations return an explicit capability error — never a beep or formant placeholder.
             </p>
             <label>
               Language / voice corridor

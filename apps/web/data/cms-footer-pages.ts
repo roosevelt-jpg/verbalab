@@ -48,7 +48,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
         [
           'Play the interactive demo on this page with a region voice.',
           'Open the Voice console (/audio) after sign-in for full generation.',
-          'Call POST /v1/speech/synthesize with an lg_live_ key or @lugemi/sdk.',
+          'Call POST /v1/speech/syntheses or /v1/tts/synthesize with an lg_live_ key or @lugemi/sdk.',
         ],
         [
           { label: 'Voice console', href: '/audio' },
@@ -364,7 +364,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
         [
           'Try the TTS demo on this page.',
           'Open /audio for authenticated generation.',
-          'Integrate POST /v1/speech/synthesize or @lugemi/sdk.',
+          'Integrate POST /v1/speech/syntheses, /v1/tts/synthesize, or @lugemi/sdk.',
         ],
         [
           { label: 'Voice console', href: '/audio' },
@@ -1041,7 +1041,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
     title: 'Speech Engine',
     eyebrow: 'LugemiAPI',
     lead: 'Recognize and synthesize speech on the same first-party engine.',
-    body: 'The Lugemi Speech Engine covers STT and TTS under /v1/speech with registry languages, workspace metering, and own:* voices. Use Speech and Voice consoles to evaluate quality, then call the API from @lugemi/sdk or OpenAPI clients.',
+    body: 'The Lugemi Native Speech Engine covers STT, TTS, speech translation, and delivery diagnosis under /v1/speech with registry languages, workspace metering, and own:* voices. Customer Play routes through the same engine. Use Speech and Voice consoles to evaluate quality, then call the API from @lugemi/sdk or OpenAPI clients.',
     sections: [
       content(
         'recognize',
@@ -1059,7 +1059,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
         'Console → Playground → production.',
         [
           'Try /speech and /audio consoles.',
-          'Call /v1/speech/recognize and /v1/speech/synthesize.',
+          'Call /v1/speech/recognitions, /v1/speech/syntheses, or /v1/tts/synthesize.',
           'Meter with lg_live_ keys; soft-sandbox with lg_test_.',
         ],
         [
@@ -1117,7 +1117,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
     slug: 'tts-api',
     title: 'Text to Speech API',
     eyebrow: 'LugemiAPI',
-    lead: 'POST /v1/speech/synthesize with own:* voices and workspace keys.',
+    lead: 'POST /v1/speech/syntheses or /v1/tts/synthesize with own:* voices and workspace keys.',
     body: 'The TTS API is the programmatic surface for Lugemi Voice. Pass text and a voice id, receive speech, meter usage, and disclose synthetic output where listeners could assume a live person.',
     sections: [
       content(
@@ -1627,7 +1627,7 @@ export const FOOTER_CMS_PAGES: CmsPage[] = [
         'API · SDK · MCP kit',
         'Same contracts agents and video share.',
         [
-          'POST /v1/speech/synthesize with own:* or clone:{id}.',
+          'POST /v1/speech/syntheses or /v1/tts/synthesize with own:* or clone:{id}.',
           'POST /v1/voice/simulate for speaking-agent turns.',
           'POST /v1/translate for scripts and dubbing lines.',
           'MCP/CLI: lugemi speech · lugemi video-voice · lugemi voices.',

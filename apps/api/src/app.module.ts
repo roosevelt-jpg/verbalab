@@ -256,6 +256,7 @@ import { AlignModule } from './align/align.module';
 import { VoiceDesignModule } from './voice-design/voice-design.module';
 import { SpeechEmbedModule } from './speech-embed/speech-embed.module';
 import { LanguagePassportModule } from './language-passport/passport.module';
+import { NativeSpeechEngineModule } from './native-speech-engine/nse.module';
 import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
 
 @Module({
@@ -472,6 +473,7 @@ import { RequestIdMiddleware } from './common/middleware/request-id.middleware';
     VoiceDesignModule,
     SpeechEmbedModule,
     LanguagePassportModule,
+    NativeSpeechEngineModule,
     LocalesModule,
     GatewayModule,
     TranslateModule,
