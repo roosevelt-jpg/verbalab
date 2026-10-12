@@ -159,7 +159,7 @@ export function BuildersClient() {
         setCatalog(rows);
         const languageTotal = res.languageTotal ?? res.languageCount;
         setCatalogNote(
-          `${rows.length} countries · ${languageTotal ?? '—'} languages · ${res.total} accent identity packs · live from GET /v1/accents/identity`,
+          `${rows.length} countries · ${languageTotal ?? '—'} languages · ${res.total} accent identity packs`,
         );
       })
       .catch((err: Error) => {

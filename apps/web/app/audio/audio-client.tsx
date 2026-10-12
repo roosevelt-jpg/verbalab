@@ -162,7 +162,7 @@ export function AudioClient() {
     const token = await getToken();
     if (token) return `Bearer ${token}`;
     if (apiKey.startsWith('lg_live_')) return `Bearer ${apiKey}`;
-    throw new Error('Sign in with Clerk, or paste a lg_live_ API key');
+    throw new Error('Sign in, or paste a live API key');
   }
 
   async function refreshClones(token: string) {

@@ -231,13 +231,11 @@ export function KeysClient() {
         <PageHeader
           eyebrow="Lugemi API"
           title="API keys"
-          lede="Create live or test machine keys for your workspace. Creating a key applies it as the Studio machine identity — Playground, Creative, Chat, Voice Studio, and product tools send that Bearer on every API action."
+          lede="Create live or test API keys for your workspace. New keys are applied in Studio automatically so Playground, Creative, Chat, Voice Studio, and other tools can call the API."
         >
           <p>
-            Once applied, product API calls prefer your{' '}
-            <code className="vl-code">lg_live_</code> / <code className="vl-code">lg_test_</code> key so
-            usage meters and “last used” update even while you are signed in with Clerk. Clerk stays for
-            console identity (create/revoke keys, billing, workspace admin). See{' '}
+            Applied keys meter usage and update “last used” on product calls. Your signed-in session still
+            manages create/revoke, billing, and workspace admin. See{' '}
             <Link href="/developers" style={{ color: 'var(--action-primary)', fontWeight: 600 }}>
               Developers
             </Link>
@@ -246,7 +244,7 @@ export function KeysClient() {
         </PageHeader>
 
         <PremiumCard
-          title="Studio machine identity"
+          title="Applied Studio key"
           meta={<span className="vl-tag">{active ? 'Applied' : 'None'}</span>}
         >
           {active ? (

@@ -165,7 +165,7 @@ function EverydayHomeFlow({ auth }: { auth: EverydayAuthBag }) {
 
         {!auth.signedIn ? (
           <section className="lg-card" style={{ display: 'grid', gap: '0.5rem', margin: '1rem 0' }}>
-            <p className="lg-type-compact">Paste a Lugemi API key to use Everyday without Clerk.</p>
+            <p className="lg-type-compact">Paste a Lugemi API key to use Everyday without signing in.</p>
             <input
               className="vl-field"
               placeholder="lg_live_… or lg_test_…"

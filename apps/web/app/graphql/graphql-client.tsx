@@ -37,8 +37,8 @@ export function GraphqlClient() {
         </p>
         <p style={{ margin: '0.35rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
           Use <code>POST</code> with <code>Content-Type: application/json</code>. Mutations need{' '}
-          <code>Authorization: Bearer</code> (API key or Clerk). Opening the URL in a bare browser tab
-          used to show a CSRF error — the API now serves Apollo Sandbox there for exploration.
+          <code>Authorization: Bearer</code> (API key or signed-in session). Opening the URL in a bare
+          browser tab used to show a CSRF error — the API now serves Apollo Sandbox there for exploration.
         </p>
         <p style={{ margin: '0.75rem 0 0' }}>
           <a href={`${API_URL}/graphql`} style={{ color: 'var(--ink)', fontWeight: 600 }}>

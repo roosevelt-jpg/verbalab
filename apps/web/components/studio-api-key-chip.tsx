@@ -24,7 +24,7 @@ export function StudioApiKeyChip() {
       <Link
         href="/keys"
         className="vl-tag"
-        title="Console uses your Clerk session. Apply a live or test API key for Playground Bearer calls and machine identity."
+        title="Apply a live or test API key so Studio tools can call the API and meter usage."
         style={{ textDecoration: 'none', maxWidth: '14rem' }}
       >
         Apply API key

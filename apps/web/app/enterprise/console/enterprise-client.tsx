@@ -96,11 +96,11 @@ export function EnterpriseClient() {
             <h2 style={label}>Security</h2>
             <p style={{ margin: 0, fontWeight: 600 }}>
               {p.security.orgDisabled ? 'Organization disabled' : 'Organization active'} ·{' '}
-              {p.security.apiKeysActive} active API keys · ABAC {p.security.abac ? 'on' : 'off'}
+              {p.security.apiKeysActive} active API keys · role-based access
             </p>
             <p style={{ margin: '0.65rem 0 0' }}>
               <Link href={(data.links.identity) ?? '#'} style={{ color: 'var(--accent)', fontWeight: 550 }}>
-                Identity & RBAC →
+                Identity & access →
               </Link>
             </p>
           </section>

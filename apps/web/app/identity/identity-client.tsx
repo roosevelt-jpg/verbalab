@@ -193,8 +193,8 @@ export function IdentityClient() {
         Identity
       </h1>
       <p style={{ color: 'var(--muted)', margin: '0 0 1.75rem', maxWidth: '38rem' }}>
-        Human sign-in is Clerk (OIDC/JWT). Lugemi owns org RBAC, API keys as machine identity, and
-        audit. SAML/SCIM/MFA stay with the IdP.
+        Manage your organization, teammate roles, residency preferences, and workspace API keys from one
+        place.
       </p>
 
       {error ? <p style={{ color: '#b42318', marginBottom: '1rem' }}>{error}</p> : null}
@@ -231,7 +231,7 @@ export function IdentityClient() {
             <p style={{ margin: 0, fontSize: '1.15rem', fontWeight: 600 }}>{data.organization.name}</p>
             <p style={{ margin: '0.25rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
               Your role {data.session.role} · plan {data.organization.plan}
-              {data.organization.clerkOrgId ? ' · Clerk org linked' : ' · personal org'}
+              {data.organization.clerkOrgId ? ' · company workspace' : ' · personal workspace'}
             </p>
           </section>
 
@@ -245,28 +245,94 @@ export function IdentityClient() {
                 margin: '0 0 0.5rem',
               }}
             >
-
-          <section>
-            <h2 style={{ fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--muted)', margin: '0 0 0.5rem' }}>Residency</h2>
-            <p style={{ color: 'var(--muted)', fontSize: '0.9rem', margin: '0 0 1rem' }}>Person residency = registration origin. Models are hosted in Lugemi data centers (<code>GET /v1/residency</code>).</p>
-            <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fit, minmax(16rem, 1fr))' }}>
+              Residency
+            </h2>
+            <p style={{ color: 'var(--muted)', fontSize: '0.9rem', margin: '0 0 1rem' }}>
+              Set where you and your organization are based. Lugemi hosts models in Lugemi data centers —
+              residency helps us route and document your preferences.
+            </p>
+            <div
+              style={{
+                display: 'grid',
+                gap: '1rem',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(16rem, 1fr))',
+              }}
+            >
               <div className="vl-panel" style={{ padding: '1rem' }}>
                 <div style={{ fontWeight: 650 }}>Your profile</div>
-                <p style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>Registered from {data.profile?.registeredFrom ?? '—'}</p>
-                <CountrySelect value={residencyCountry} onChange={setResidencyCountry} emptyLabel="Residency country" style={{ marginBottom: '0.5rem', width: '100%' }} />
-                <input className="vl-field" value={residencyRegion} onChange={(e) => setResidencyRegion(e.target.value)} placeholder="Region label" style={{ marginBottom: '0.75rem', width: '100%' }} />
-                <button type="button" className="vl-btn vl-btn-primary" disabled={busyId === 'user-residency'} onClick={() => void saveUserResidency()}>Save my residency</button>
+                <p style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>
+                  Registered from {data.profile?.registeredFrom ?? '—'}
+                </p>
+                <CountrySelect
+                  value={residencyCountry}
+                  onChange={setResidencyCountry}
+                  emptyLabel="Residency country"
+                  style={{ marginBottom: '0.5rem', width: '100%' }}
+                />
+                <input
+                  className="vl-field"
+                  value={residencyRegion}
+                  onChange={(e) => setResidencyRegion(e.target.value)}
+                  placeholder="Region label"
+                  style={{ marginBottom: '0.75rem', width: '100%' }}
+                />
+                <button
+                  type="button"
+                  className="vl-btn vl-btn-primary"
+                  disabled={busyId === 'user-residency'}
+                  onClick={() => void saveUserResidency()}
+                >
+                  Save my residency
+                </button>
               </div>
               <div className="vl-panel" style={{ padding: '1rem' }}>
                 <div style={{ fontWeight: 650 }}>Organization</div>
-                <p style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>Registered from {data.organization.registeredFrom ?? '—'}</p>
-                <CountrySelect value={orgResidencyCountry} onChange={setOrgResidencyCountry} disabled={!canManage} emptyLabel="Org residency country" style={{ marginBottom: '0.5rem', width: '100%' }} />
-                <input className="vl-field" value={orgResidencyRegion} onChange={(e) => setOrgResidencyRegion(e.target.value)} placeholder="Region label" disabled={!canManage} style={{ marginBottom: '0.75rem', width: '100%' }} />
-                {canManage ? <button type="button" className="vl-btn vl-btn-primary" disabled={busyId === 'org-residency'} onClick={() => void saveOrgResidency()}>Save org residency</button> : <p style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>Owners/admins edit org residency.</p>}
+                <p style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>
+                  Registered from {data.organization.registeredFrom ?? '—'}
+                </p>
+                <CountrySelect
+                  value={orgResidencyCountry}
+                  onChange={setOrgResidencyCountry}
+                  disabled={!canManage}
+                  emptyLabel="Org residency country"
+                  style={{ marginBottom: '0.5rem', width: '100%' }}
+                />
+                <input
+                  className="vl-field"
+                  value={orgResidencyRegion}
+                  onChange={(e) => setOrgResidencyRegion(e.target.value)}
+                  placeholder="Region label"
+                  disabled={!canManage}
+                  style={{ marginBottom: '0.75rem', width: '100%' }}
+                />
+                {canManage ? (
+                  <button
+                    type="button"
+                    className="vl-btn vl-btn-primary"
+                    disabled={busyId === 'org-residency'}
+                    onClick={() => void saveOrgResidency()}
+                  >
+                    Save org residency
+                  </button>
+                ) : (
+                  <p style={{ color: 'var(--muted)', fontSize: '0.85rem' }}>
+                    Owners/admins edit org residency.
+                  </p>
+                )}
               </div>
             </div>
           </section>
 
+          <section>
+            <h2
+              style={{
+                fontSize: '0.8rem',
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                color: 'var(--muted)',
+                margin: '0 0 0.5rem',
+              }}
+            >
               Members ({data.members.total})
             </h2>
             <p style={{ color: 'var(--muted)', fontSize: '0.9rem', margin: '0 0 1rem' }}>
@@ -460,14 +526,14 @@ export function IdentityClient() {
                 margin: '0 0 0.5rem',
               }}
             >
-              Machine identity
+              API keys
             </h2>
             <p style={{ margin: 0, fontWeight: 600 }}>
               {data.machineIdentity.activeKeys} active API key
               {data.machineIdentity.activeKeys === 1 ? '' : 's'}
             </p>
             <p style={{ margin: '0.25rem 0 0', color: 'var(--muted)', fontSize: '0.9rem' }}>
-              {data.machineIdentity.revokedKeys} revoked · workspace-scoped <code>lg_live_</code> secrets
+              {data.machineIdentity.revokedKeys} revoked · scoped to this workspace
             </p>
             <p style={{ margin: '0.65rem 0 0' }}>
               <Link href="/keys" style={{ color: 'var(--accent)', fontWeight: 550 }}>
@@ -486,12 +552,11 @@ export function IdentityClient() {
                 margin: '0 0 0.5rem',
               }}
             >
-              Provider map
+              Security & access
             </h2>
             <p style={{ margin: 0, color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.55 }}>
-              IdP {data.provider.humanIdp} · MFA/passkeys via Clerk · SAML/SCIM: {data.provider.saml} · Teams:{' '}
-              {data.teams.supported ? 'yes' : `use ${data.teams.useInstead}`} · ABAC:{' '}
-              {data.rbac.abac ? 'yes' : 'no'}
+              Sign-in supports email, SSO, MFA, and passkeys. Roles are owner, admin, and member. Use
+              workspaces to separate projects. Enterprise SSO provisioning is available on request.
             </p>
             <p style={{ margin: '0.65rem 0 0', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
               <Link href="/audit" style={{ color: 'var(--accent)', fontWeight: 550 }}>

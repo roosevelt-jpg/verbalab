@@ -176,7 +176,7 @@ export function subscribeStudioApiKey(listener: () => void): () => void {
 }
 
 export function formatStudioApiKeyLabel(identity: StudioApiKeyIdentity | null): string {
-  if (!identity) return 'Apply an API key for machine identity';
+  if (!identity) return 'Apply an API key for Studio tools';
   return `${identity.name} · ${identity.prefix}… · ${identity.environment}`;
 }
 

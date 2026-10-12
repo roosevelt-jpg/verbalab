@@ -398,12 +398,7 @@ function AccentIdentityBody({
 
       {catalog ? (
         <p style={{ color: 'var(--muted)', fontSize: '0.85rem', marginTop: '1rem' }}>
-          {catalog.note} API:{' '}
-          <code style={{ fontSize: '0.8rem' }}>GET /v1/accents/identity</code> · TTS:{' '}
-          <code style={{ fontSize: '0.8rem' }}>POST /v1/tts/synthesize</code> with{' '}
-          <code style={{ fontSize: '0.8rem' }}>accentId</code>,{' '}
-          <code style={{ fontSize: '0.8rem' }}>speechVariety</code>, or{' '}
-          <code style={{ fontSize: '0.8rem' }}>locale</code>.
+          {catalog.note} Use Accent Identity in Studio, or see Developers for the speech API.
         </p>
       ) : null}
     </AppShell>

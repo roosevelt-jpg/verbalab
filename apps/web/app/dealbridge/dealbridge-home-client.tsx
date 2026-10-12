@@ -234,8 +234,7 @@ export function DealBridgeHomeClient() {
         {!isSignedIn ? (
           <PremiumCard title="API key auth" meta={<span className="vl-tag">Local / key</span>}>
             <p className="lg-card__body">
-              Sign in with Clerk for the full console, or paste a Lugemi API key for local actor-based
-              testing.
+              Sign in for the full console, or paste a Lugemi API key for local testing.
             </p>
             <label className="vl-field-label" style={{ marginTop: '0.75rem' }}>
               API key
