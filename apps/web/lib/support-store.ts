@@ -1,10 +1,6 @@
 import { appendFile, mkdir, readFile, writeFile } from 'fs/promises';
 import { join } from 'path';
-import {
-  FORUM_CATEGORY_LABELS,
-  isForumCategory,
-  type ForumCategory,
-} from '@/lib/support-types';
+import { isForumCategory, type ForumCategory } from '@/lib/support-types';
 
 export type { ForumCategory } from '@/lib/support-types';
 export { FORUM_CATEGORY_LABELS, isForumCategory } from '@/lib/support-types';
