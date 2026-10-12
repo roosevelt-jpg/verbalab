@@ -97,19 +97,19 @@ const nextConfig = {
             value: [
               "default-src 'self'",
               // Clerk CAPTCHA uses Cloudflare Turnstile (challenges.cloudflare.com).
-              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.lugemi.com https://accounts.lugemi.com https://local.lugemi.com https://challenges.cloudflare.com",
-              // Clerk + Next.pdf/devtools use blob: workers; without this, Next shows a CSP "1 Issue".
+              // Firebase Auth + optional Clerk fallback + Turnstile.
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.googleapis.com https://www.gstatic.com https://apis.google.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.lugemi.com https://accounts.lugemi.com https://local.lugemi.com https://challenges.cloudflare.com",
               "worker-src 'self' blob:",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https:",
               "media-src 'self' blob:",
               "font-src 'self' data:",
-              // Explicit Clerk FAPI + local HTTPS proxy (https: already covers them; keep named for audits).
-              `connect-src 'self' https: https://clerk.lugemi.com https://accounts.lugemi.com https://local.lugemi.com https://challenges.cloudflare.com ${apiConnectOrigins()}`,
-              "frame-src 'self' https://*.clerk.accounts.dev https://*.clerk.com https://clerk.lugemi.com https://accounts.lugemi.com https://challenges.cloudflare.com",
+              // https: covers Identity Toolkit / Secure Token; named hosts kept for audits.
+              `connect-src 'self' https: https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://www.googleapis.com https://*.firebaseio.com https://*.firebaseapp.com https://clerk.lugemi.com https://accounts.lugemi.com https://local.lugemi.com https://challenges.cloudflare.com ${apiConnectOrigins()}`,
+              "frame-src 'self' https://*.firebaseapp.com https://*.google.com https://accounts.google.com https://*.clerk.accounts.dev https://*.clerk.com https://clerk.lugemi.com https://accounts.lugemi.com https://challenges.cloudflare.com",
               "frame-ancestors 'none'",
               "base-uri 'self'",
-              "form-action 'self' https://accounts.lugemi.com https://clerk.lugemi.com https://local.lugemi.com https://accounts.google.com",
+              "form-action 'self' https://accounts.google.com https://*.firebaseapp.com https://accounts.lugemi.com https://clerk.lugemi.com https://local.lugemi.com",
             ].join('; '),
           },
         ],
