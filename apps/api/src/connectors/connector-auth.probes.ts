@@ -212,11 +212,13 @@ const PROBES: Record<string, ProbeFn> = {
     });
   },
   'africas-talking': async (creds) => {
-    const miss = requireFields(creds, ['apiKey', 'projectId']);
+    // accountSid holds AT username in the installer form.
+    const miss = requireFields(creds, ['apiKey', 'accountSid']);
     if (miss) return { ok: false, provider: 'africas-talking', note: miss };
+    const username = encodeURIComponent(creds.accountSid!);
     return httpProbe({
       provider: 'africas-talking',
-      url: 'https://api.africastalking.com/version1/user',
+      url: `https://api.africastalking.com/version1/user?username=${username}`,
       headers: {
         apiKey: creds.apiKey!,
         Accept: 'application/json',
