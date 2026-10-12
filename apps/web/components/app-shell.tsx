@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { UserButton, useAuth } from '@clerk/nextjs';
+import { SignOutButton, UserButton, useAuth } from '@clerk/nextjs';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { usePlatformAdmin } from '@/lib/use-platform-admin';
 import { StudioApiKeyChip } from '@/components/studio-api-key-chip';
@@ -303,7 +303,16 @@ function ShellFrame({
             <>
               <StudioApiKeyChip />
               <WorkspaceSwitcher />
-              {clerk ? <UserButton afterSignOutUrl="/" /> : null}
+              {clerk ? (
+                <>
+                  <UserButton afterSignOutUrl="/" />
+                  <SignOutButton redirectUrl="/">
+                    <button type="button" className="vl-btn vl-btn-secondary vl-console-signout">
+                      Sign out
+                    </button>
+                  </SignOutButton>
+                </>
+              ) : null}
             </>
           ) : null}
           {mode === 'public' ? (
@@ -362,6 +371,18 @@ function ShellFrame({
                 );
               })}
             </nav>
+            {clerk ? (
+              <div className="vl-console-sidebar-foot">
+                <Link href="/identity" className="vl-console-nav-link" onClick={() => setNavOpen(false)}>
+                  Account
+                </Link>
+                <SignOutButton redirectUrl="/">
+                  <button type="button" className="vl-console-signout-link">
+                    Sign out
+                  </button>
+                </SignOutButton>
+              </div>
+            ) : null}
           </aside>
         ) : null}
 

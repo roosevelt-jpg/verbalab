@@ -250,6 +250,39 @@ textarea {
   gap: 0.85rem;
 }
 
+.vl-console-signout {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.vl-console-sidebar-foot {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border-subtle);
+  display: grid;
+  gap: 0.35rem;
+}
+
+.vl-console-signout-link {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: transparent;
+  padding: 0.45rem 0.65rem;
+  border-radius: var(--radius-control);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 550;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.vl-console-signout-link:hover {
+  color: var(--ink);
+  background: var(--surface-muted);
+}
+
 .vl-console-product-label {
   display: none;
   font-size: 0.75rem;
@@ -3242,6 +3275,12 @@ table.vl-table {
 @media (max-width: 479px) {
   .vl-console-header-right {
     gap: 0.45rem;
+  }
+
+  .vl-console-signout {
+    padding-left: 0.65rem;
+    padding-right: 0.65rem;
+    font-size: 0.82rem;
   }
 
   .vl-workspace-switcher__upgrade {
