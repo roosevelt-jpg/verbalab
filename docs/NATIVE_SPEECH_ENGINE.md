@@ -40,3 +40,7 @@ When demos beep, echo, or sound unintelligible, diagnose before retraining:
 All marketing / Studio Play paths (`useDemoPlayer`, Accent Identity, hero TTS, Translate Play, Creative tools using `playDemoSpeech`) share this engine. Remaps surface via `X-Lugemi-Demo-Remapped` and UI status copy.
 
 See also: `docs/SPEECH_DEMO_CAPABILITY.md`.
+
+## Deploy note
+
+Production Deploy is triggered from `main`. If a Fly release_command VM fails to start, re-push or re-run the Deploy workflow.
