@@ -64,6 +64,7 @@ model Organization {
   knowledgeDocuments KnowledgeDocument[]
   knowledgeChunks     KnowledgeChunk[]
   slackInstallations  SlackInstallation[]
+  platformConnectorConnections PlatformConnectorConnection[]
   workflows           Workflow[]
   prompts             Prompt[]
   marketplaceListings MarketplaceListing[] @relation("MarketplacePublisher")
@@ -261,6 +262,7 @@ model Workspace {
   knowledgeDocuments  KnowledgeDocument[]
   knowledgeChunks     KnowledgeChunk[]
   slackInstallations  SlackInstallation[]
+  platformConnectorConnections PlatformConnectorConnection[]
   workflows           Workflow[]
   prompts             Prompt[]
   marketplaceListings MarketplaceListing[] @relation("MarketplacePublisherWorkspace")
@@ -794,6 +796,31 @@ model SlackInstallation {
 
   @@index([organizationId])
   @@map("slack_installations")
+}
+
+/** Realtime-authenticated third-party connector installs (no soft-connect). */
+model PlatformConnectorConnection {
+  id               String    @id @default(cuid())
+  organizationId   String    @map("organization_id")
+  workspaceId      String    @map("workspace_id")
+  connectorId      String    @map("connector_id")
+  /// AES-256-GCM sealed credential JSON
+  credentialsEnc   Json      @map("credentials_enc")
+  status           String    @default("connected") // connected | revoked
+  authProvider     String    @map("auth_provider")
+  verifyNote       String?   @map("verify_note")
+  verifiedAt       DateTime  @map("verified_at")
+  lastVerifiedAt   DateTime  @map("last_verified_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  workspace    Workspace    @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  @@unique([workspaceId, connectorId])
+  @@index([organizationId, connectorId])
+  @@index([status])
+  @@map("platform_connector_connections")
 }
 
 /** Saved directed step list; runs snapshot steps onto a `workflow` job. */

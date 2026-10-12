@@ -45,6 +45,9 @@ export type ConnectorInstall = {
   accountSid?: string;
   projectId?: string;
   connectedAt?: number;
+  /** Non-secret note from the last successful realtime auth probe. */
+  verifyNote?: string;
+  authProvider?: string;
 };
 
 export const PLATFORM_CONNECTOR_KEY = 'lugemi_platform_connectors_v1';
@@ -85,34 +88,34 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
     docs: 'Paste a VAPI private key and optional webhook. Lugemi remains the Africa-first translate/TTS path.',
     integrationGuide: 'Custom STT/TTS → /v1/speech/stream and /v1/tts/stream; localize prompts with /v1/translate. Keep clone refs on Lugemi.',
     demoHref: '/chat', demoLabel: 'Open Chat Studio live demo',
-    fields: ['apiKey', 'webhookUrl'], envHint: 'VAPI_API_KEY — set in env for live calls; soft-sandbox works without it.',
+    fields: ['apiKey', 'webhookUrl'], envHint: 'VAPI_API_KEY — required for realtime Connect; verified against VAPI before status is Connected.',
     href: '/connectors#vapi',
   },
   {
     id: 'google-voice', name: 'Google Voice', category: 'voice',
     blurb: 'Business voice routing into Lugemi interpret + speech.',
-    docs: 'Connect with OAuth project ID and API key when available. Save install state here and wire env later.',
+    docs: 'Connect with project ID and API key. Realtime auth probes the vendor before Connected.',
     integrationGuide: 'Use /v1/interpret for bilingual turns on forwarded calls. Persist projectId for OAuth.',
     demoHref: '/interpret', demoLabel: 'Open Interpreter',
-    fields: ['projectId', 'apiKey', 'webhookUrl'], envHint: 'GOOGLE_VOICE_PROJECT_ID, GOOGLE_VOICE_API_KEY — configure env later for live routing.',
+    fields: ['projectId', 'apiKey', 'webhookUrl'], envHint: 'GOOGLE_VOICE_PROJECT_ID, GOOGLE_VOICE_API_KEY — required for realtime Connect.',
     href: '/connectors#google-voice',
   },
   {
     id: 'vonage', name: 'Vonage', category: 'voice',
     blurb: 'Global voice API bridge for Lugemi dialect agents.',
-    docs: 'API key + webhook URL. Lugemi handles language intelligence; Vonage carries the call media.',
+    docs: 'API key + API secret. Lugemi verifies against Vonage before marking Connected.',
     integrationGuide: 'On NCCO answer events, POST audio to /v1/speech/recognize, translate, then return Lugemi TTS.',
     demoHref: '/docs', demoLabel: 'Read voice API docs',
-    fields: ['apiKey', 'webhookUrl'], envHint: 'VONAGE_API_KEY, VONAGE_API_SECRET — optional until go-live.',
+    fields: ['apiKey', 'accountSid', 'webhookUrl'], envHint: 'VONAGE_API_KEY, VONAGE_API_SECRET — required for realtime Connect.',
     href: '/connectors#vonage',
   },
   {
     id: 'livekit', name: 'LiveKit', category: 'voice',
     blurb: 'Realtime voice-agent rooms with Lugemi STT/TTS/translate plugins.',
-    docs: 'API key + webhook. Point LiveKit agent workers at Lugemi realtime speech and dialect TTS.',
+    docs: 'Host URL + API key. Point LiveKit agent workers at Lugemi realtime speech and dialect TTS.',
     integrationGuide: 'In LiveKit workers stream frames to /v1/speech/stream, translate if needed, speak with /v1/tts/stream using own:* or clone:{id}.',
     demoHref: '/playground?source=en&target=sw', demoLabel: 'Demo en→Kiswahili speech path',
-    fields: ['apiKey', 'webhookUrl'], envHint: 'LIVEKIT_API_KEY, LIVEKIT_API_SECRET',
+    fields: ['projectId', 'apiKey', 'webhookUrl'], envHint: 'LIVEKIT_URL, LIVEKIT_API_KEY — required for realtime Connect.',
     href: '/connectors#livekit',
   },
   {
@@ -316,7 +319,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
   {
     id: 'unreal', name: 'Unreal Engine', category: 'gaming',
     blurb: 'Unreal MetaSound / runtime dialogue driven by Lugemi TTS and clones.',
-    docs: 'API key via trusted backend. Soft-connect in Studio; runtime uses server proxy.',
+    docs: 'API key via trusted backend. Realtime auth verifies the API key before Connected; runtime uses a server proxy.',
     integrationGuide: 'HTTP via trusted backend to Lugemi TTS/STT; clone enrollment stays on Lugemi.',
     demoHref: '/voice-cloning', demoLabel: 'Open voice cloning',
     fields: ['apiKey', 'projectId'], envHint: 'UNREAL_LUGEMI_PROXY_URL, LUGEMI_API_KEY',
@@ -379,25 +382,25 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
   {
     id: 'slack', name: 'Slack', category: 'chat',
     blurb: 'Slash-command translate in channels.',
-    docs: 'Link a Slack Team ID after installing the Lugemi Slack app. Signing secret and bot token live in API env.',
+    docs: 'Paste a Slack bot token for realtime auth, then link a Team ID for slash-command installs.',
     integrationGuide: 'Slash Request URL → POST /v1/connectors/slack/commands; default dialect per Team ID.',
     demoHref: '/connectors#slack', demoLabel: 'Configure Slack install',
-    fields: [], envHint: 'SLACK_SIGNING_SECRET, SLACK_BOT_TOKEN',
+    fields: ['apiKey'], envHint: 'SLACK_BOT_TOKEN — required for realtime Connect (auth.test).',
     href: '/connectors#slack', liveStatus: 'slack',
   },
   {
     id: 'teams', name: 'Microsoft Teams', category: 'chat',
     blurb: 'Meeting captions and channel localization.',
-    docs: 'Save install intent + webhook. Full Graph credentials configure in env later.',
+    docs: 'API key + webhook. Realtime auth probes the vendor endpoint before Connected.',
     integrationGuide: 'Meeting audio → /v1/speech/stream + /v1/translate/stream → Graph captions.',
     demoHref: '/chat', demoLabel: 'Try Chat Studio plugins',
-    fields: ['webhookUrl', 'apiKey'], envHint: 'TEAMS_APP_ID, TEAMS_APP_SECRET — configure env later.',
+    fields: ['webhookUrl', 'apiKey'], envHint: 'TEAMS_APP_ID, TEAMS_APP_SECRET — required for realtime Connect.',
     href: '/connectors#teams',
   },
   {
     id: 'gmail', name: 'Gmail', category: 'email',
     blurb: 'Draft replies in the recipient’s language.',
-    docs: 'OAuth / API key path. Soft-connect stores intent; production uses Google OAuth client secrets in env.',
+    docs: 'OAuth / API key path. Realtime auth verifies credentials before Connected.',
     integrationGuide: 'Draft body through /v1/translate before send.',
     demoHref: '/translate?source=en&target=yo', demoLabel: 'Demo en→Yorùbá translate',
     fields: ['apiKey'], envHint: 'GOOGLE_OAUTH_CLIENT_ID — configure env later.',
@@ -406,7 +409,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
   {
     id: 'outlook', name: 'Outlook', category: 'email',
     blurb: 'Office 365 mail + calendar phrasing.',
-    docs: 'Microsoft Graph app registration. Soft-connect here; MS_GRAPH_* env for live mail.',
+    docs: 'Microsoft Graph app registration. Realtime auth verifies credentials before Connected; MS_GRAPH_* may also be set in env.',
     integrationGuide: 'Localize subject/body with /v1/translate; glossary via workspace TM.',
     demoHref: '/chat', demoLabel: 'Draft in Chat Studio',
     fields: ['apiKey'], envHint: 'MS_GRAPH_CLIENT_ID, MS_GRAPH_CLIENT_SECRET',
@@ -415,7 +418,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
   {
     id: 'gdrive', name: 'Google Drive', category: 'storage',
     blurb: 'Pull docs into Chat Studio for translate.',
-    docs: 'Service account or OAuth. Soft-connect marks the plugin installed.',
+    docs: 'Service account or OAuth. Realtime auth verifies credentials before Connected.',
     integrationGuide: 'Watch folders → /v1/documents/translate or knowledge upload.',
     demoHref: '/chat', demoLabel: 'Upload in Chat Studio',
     fields: ['apiKey', 'projectId'], envHint: 'GOOGLE_DRIVE_SERVICE_ACCOUNT_JSON',
@@ -424,7 +427,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
   {
     id: 'onedrive', name: 'OneDrive', category: 'storage',
     blurb: 'Sync Word/PDF folders for localization.',
-    docs: 'Graph-backed folder watch. Soft-connect until ONEDRIVE_* env is set.',
+    docs: 'Graph-backed folder watch. Realtime auth verifies credentials before Connected.',
     integrationGuide: 'Enqueue document_translate jobs; return localized copies to the folder.',
     demoHref: '/documents', demoLabel: 'Open Documents',
     fields: ['apiKey'], envHint: 'ONEDRIVE_CLIENT_ID',
@@ -433,7 +436,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
   {
     id: 'dropbox', name: 'Dropbox', category: 'storage',
     blurb: 'Watch shared folders for new assets.',
-    docs: 'App token + webhook. Soft-connect stores install; DROPBOX_ACCESS_TOKEN for live sync.',
+    docs: 'App token + webhook. Realtime auth verifies the Dropbox token before Connected.',
     integrationGuide: 'Webhook file adds → STT for media, translate for text.',
     demoHref: '/chat', demoLabel: 'Attach files in Chat Studio',
     fields: ['apiKey', 'webhookUrl'], envHint: 'DROPBOX_ACCESS_TOKEN',
@@ -442,7 +445,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
   {
     id: 'notion', name: 'Notion', category: 'office',
     blurb: 'Translate pages and knowledge bases.',
-    docs: 'Internal integration token. Soft-connect for Chat Studio; NOTION_TOKEN for page sync.',
+    docs: 'Internal integration token. Realtime auth verifies the Notion token before Connected.',
     integrationGuide: 'Export blocks → translate/localize → write localized pages back.',
     demoHref: '/knowledge', demoLabel: 'Open Knowledge',
     fields: ['apiKey'], envHint: 'NOTION_TOKEN',
@@ -451,7 +454,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
   {
     id: 'sheets', name: 'Google Sheets', category: 'office',
     blurb: 'Batch glossary + string tables.',
-    docs: 'Service account with sheet scope. Soft-connect until GOOGLE_SHEETS_* env is ready.',
+    docs: 'Service account with sheet scope. Realtime auth verifies credentials before Connected.',
     integrationGuide: 'Batch cells through /v1/translate; upsert glossary terms.',
     demoHref: '/glossary', demoLabel: 'Open Glossary',
     fields: ['apiKey', 'projectId'], envHint: 'GOOGLE_SHEETS_SERVICE_ACCOUNT',
@@ -460,7 +463,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
   {
     id: 'docs', name: 'Google Docs', category: 'office',
     blurb: 'Export localized copies of long-form docs.',
-    docs: 'Same Google Cloud project as Drive/Sheets. Soft-connect marks plugin ready.',
+    docs: 'Same Google Cloud project as Drive/Sheets. Realtime auth verifies credentials before Connected.',
     integrationGuide: 'document_translate jobs; official filings on human review.',
     demoHref: '/translate/formats', demoLabel: 'Document formats',
     fields: ['apiKey', 'projectId'], envHint: 'GOOGLE_DOCS_API_KEY',
@@ -469,7 +472,7 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
   {
     id: 'box', name: 'Box', category: 'storage',
     blurb: 'Enterprise file sync for localization jobs.',
-    docs: 'JWT / developer token. Soft-connect; BOX_CLIENT_ID for production.',
+    docs: 'JWT / developer token. Realtime auth verifies the Box token before Connected.',
     integrationGuide: 'Enterprise media → Lugemi STT/TTS/translate with audit events.',
     demoHref: '/documents', demoLabel: 'Open Documents',
     fields: ['apiKey'], envHint: 'BOX_CLIENT_ID, BOX_CLIENT_SECRET',
@@ -478,11 +481,21 @@ export const PLATFORM_CONNECTORS: ConnectorDef[] = [
 ];
 
 export const FIELD_LABELS: Record<ConnectorField, string> = {
-  apiKey: 'API key',
+  apiKey: 'API key / bot token',
   webhookUrl: 'Webhook URL',
-  accountSid: 'Account SID',
-  projectId: 'Project ID',
+  accountSid: 'Account SID / API secret',
+  projectId: 'Project / space / host',
 };
+
+/** Strip secrets before persisting connection status locally. */
+export function publicInstallView(row: ConnectorInstall): ConnectorInstall {
+  return {
+    connected: Boolean(row.connected),
+    connectedAt: row.connectedAt,
+    verifyNote: row.verifyNote,
+    authProvider: row.authProvider,
+  };
+}
 
 export function loadInstalls(): Record<string, ConnectorInstall> {
   if (typeof window === 'undefined') return {};
@@ -510,9 +523,13 @@ export function loadInstalls(): Record<string, ConnectorInstall> {
 
 export function saveInstalls(map: Record<string, ConnectorInstall>) {
   if (typeof window === 'undefined') return;
-  window.localStorage.setItem(PLATFORM_CONNECTOR_KEY, JSON.stringify(map));
-  const flags: Record<string, boolean> = {};
+  const publicMap: Record<string, ConnectorInstall> = {};
   for (const [id, row] of Object.entries(map)) {
+    publicMap[id] = publicInstallView(row);
+  }
+  window.localStorage.setItem(PLATFORM_CONNECTOR_KEY, JSON.stringify(publicMap));
+  const flags: Record<string, boolean> = {};
+  for (const [id, row] of Object.entries(publicMap)) {
     flags[id] = Boolean(row.connected);
   }
   window.localStorage.setItem(CHAT_CONNECTOR_KEY, JSON.stringify(flags));

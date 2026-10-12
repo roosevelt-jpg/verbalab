@@ -4,6 +4,7 @@ import {
   PLATFORM_CONNECTORS,
   countConnected,
   connectedFlags,
+  publicInstallView,
   type ConnectorInstall,
 } from './connectors-catalog';
 
@@ -48,6 +49,24 @@ describe('connectors-catalog', () => {
       expect(c.envHint.length).toBeGreaterThan(5);
       expect(c.integrationGuide).not.toMatch(/ADR-\d+/i);
       expect(c.docs).not.toMatch(/\b(shipped|partial)\b/i);
+      expect(c.docs).not.toMatch(/soft-connect/i);
     }
+  });
+
+  it('strips secrets from public install view', () => {
+    expect(
+      publicInstallView({
+        connected: true,
+        apiKey: 'secret',
+        accountSid: 'AC123',
+        connectedAt: 9,
+        verifyNote: 'ok',
+      }),
+    ).toEqual({
+      connected: true,
+      connectedAt: 9,
+      verifyNote: 'ok',
+      authProvider: undefined,
+    });
   });
 });

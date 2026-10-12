@@ -27,10 +27,12 @@ import {
   PLATFORM_CONNECTORS,
   connectedFlags,
   loadInstalls,
+  publicInstallView,
   saveInstalls,
   type ConnectorCategory,
   type ConnectorInstall,
 } from '@/lib/connectors-catalog';
+import { useRouter } from 'next/navigation';
 import { LocaleSelect } from '@/components/language-locale-select';
 import {
   CulturalIdentitySelect,
@@ -258,7 +260,9 @@ export function ChatClient() {
   const [libraryOpen, setLibraryOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [connected, setConnected] = useState<Record<string, boolean>>({});
+  const [connectorBusyId, setConnectorBusyId] = useState<string | null>(null);
   const langPopoverRef = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [recording, setRecording] = useState(false);
@@ -296,6 +300,39 @@ export function ChatClient() {
     setConnected(connectedFlags(loadInstalls()));
     setHydrated(true);
   }, []);
+
+  useEffect(() => {
+    if (!isLoaded) return;
+    void (async () => {
+      try {
+        const token = await getToken();
+        if (!token) return;
+        const platform = await apiFetch<{
+          connections: Array<{
+            connectorId: string;
+            connected: boolean;
+            connectedAt?: number;
+            verifyNote?: string | null;
+            authProvider?: string;
+          }>;
+        }>('/v1/connectors/platform/connections', { token });
+        const map: Record<string, ConnectorInstall> = {};
+        for (const row of platform.connections ?? []) {
+          if (!row.connected) continue;
+          map[row.connectorId] = publicInstallView({
+            connected: true,
+            connectedAt: row.connectedAt,
+            verifyNote: row.verifyNote ?? undefined,
+            authProvider: row.authProvider,
+          });
+        }
+        saveInstalls(map);
+        setConnected(connectedFlags(map));
+      } catch {
+        /* keep local cache if API unavailable */
+      }
+    })();
+  }, [isLoaded, getToken]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -973,16 +1010,30 @@ export function ChatClient() {
     }
   }
 
-  function toggleConnector(id: string) {
-    setConnected((prev) => {
-      const turningOn = !prev[id];
+  async function toggleConnector(id: string) {
+    const turningOn = !connected[id];
+    if (turningOn) {
+      router.push(`/connectors#${id}`);
+      return;
+    }
+    setConnectorBusyId(id);
+    setError(null);
+    try {
+      const token = await getToken();
+      if (!token) throw new Error('Not signed in');
+      await apiFetch(`/v1/connectors/platform/${id}/connection`, {
+        method: 'DELETE',
+        token,
+      });
       const installs: Record<string, ConnectorInstall> = { ...loadInstalls() };
-      installs[id] = turningOn
-        ? { ...(installs[id] ?? {}), connected: true, connectedAt: Date.now() }
-        : { ...(installs[id] ?? {}), connected: false, connectedAt: undefined };
+      installs[id] = publicInstallView({ connected: false });
       saveInstalls(installs);
-      return connectedFlags(installs);
-    });
+      setConnected(connectedFlags(installs));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Disconnect failed');
+    } finally {
+      setConnectorBusyId(null);
+    }
   }
 
   if (!isLoaded || !hydrated) {
@@ -1436,9 +1487,14 @@ export function ChatClient() {
                           type="button"
                           className={`vl-btn ${on ? 'vl-btn-secondary' : 'vl-btn-primary'}`}
                           aria-pressed={on}
-                          onClick={() => toggleConnector(c.id)}
+                          disabled={connectorBusyId === c.id}
+                          onClick={() => void toggleConnector(c.id)}
                         >
-                          {on ? 'Disconnect' : 'Connect'}
+                          {connectorBusyId === c.id
+                            ? 'Working…'
+                            : on
+                              ? 'Disconnect'
+                              : 'Connect…'}
                         </button>
                       </li>
                     );

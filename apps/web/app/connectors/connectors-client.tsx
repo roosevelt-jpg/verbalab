@@ -11,6 +11,7 @@ import {
   PLATFORM_CONNECTORS,
   countConnected,
   loadInstalls,
+  publicInstallView,
   saveInstalls,
   type ConnectorCategory,
   type ConnectorDef,
@@ -45,7 +46,35 @@ type Installation = {
   createdAt: string;
 };
 
+type PlatformConnectionRow = {
+  connectorId: string;
+  connected: boolean;
+  connectedAt?: number;
+  verifyNote?: string | null;
+  authProvider?: string;
+};
+
 const emptyInstall = (): ConnectorInstall => ({ connected: false });
+
+function mergeServerConnections(
+  local: Record<string, ConnectorInstall>,
+  rows: PlatformConnectionRow[],
+): Record<string, ConnectorInstall> {
+  const next: Record<string, ConnectorInstall> = {};
+  for (const [id, row] of Object.entries(local)) {
+    next[id] = publicInstallView({ ...row, connected: false, connectedAt: undefined });
+  }
+  for (const row of rows) {
+    if (!row.connected) continue;
+    next[row.connectorId] = {
+      connected: true,
+      connectedAt: row.connectedAt,
+      verifyNote: row.verifyNote ?? undefined,
+      authProvider: row.authProvider,
+    };
+  }
+  return next;
+}
 
 export function ConnectorsClient() {
   const { getToken, isLoaded } = useAuth();
@@ -58,6 +87,7 @@ export function ConnectorsClient() {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [connectBusyId, setConnectBusyId] = useState<string | null>(null);
   const [installs, setInstalls] = useState<Record<string, ConnectorInstall>>({});
   const [filter, setFilter] = useState<ConnectorCategory | 'all'>('all');
   const [connectorQuery, setConnectorQuery] = useState('');
@@ -69,12 +99,31 @@ export function ConnectorsClient() {
   const load = useCallback(async () => {
     const token = await getToken();
     if (!token) throw new Error('Not signed in');
-    const [st, rows] = await Promise.all([
+    const [st, rows, platform] = await Promise.all([
       apiFetch<SlackStatus>('/v1/connectors/slack/status', { token }),
       apiFetch<Installation[]>('/v1/connectors/slack/installations', { token }),
+      apiFetch<{ connections: PlatformConnectionRow[] }>('/v1/connectors/platform/connections', {
+        token,
+      }),
     ]);
     setStatus(st);
     setInstallations(rows);
+    const merged = mergeServerConnections(loadInstalls(), platform.connections ?? []);
+    setInstalls(merged);
+    saveInstalls(merged);
+    setDrafts((prev) => {
+      const next = { ...prev };
+      for (const [id, row] of Object.entries(merged)) {
+        next[id] = {
+          ...(next[id] ?? emptyInstall()),
+          connected: row.connected,
+          connectedAt: row.connectedAt,
+          verifyNote: row.verifyNote,
+          authProvider: row.authProvider,
+        };
+      }
+      return next;
+    });
   }, [getToken]);
 
   useEffect(() => {
@@ -84,8 +133,9 @@ export function ConnectorsClient() {
 
   useEffect(() => {
     const map = loadInstalls();
-    setInstalls(map);
+    // Drafts may hold in-progress secrets; connected flags come from server after load().
     setDrafts(map);
+    setInstalls(Object.fromEntries(Object.entries(map).map(([id, row]) => [id, publicInstallView(row)])));
   }, []);
 
   useEffect(() => {
@@ -123,34 +173,87 @@ export function ConnectorsClient() {
     }));
   }
 
-  function connectPlugin(def: ConnectorDef) {
-    const draft = drafts[def.id] ?? emptyInstall();
-    const next: ConnectorInstall = {
-      ...draft,
-      connected: true,
-      connectedAt: Date.now(),
-    };
-    const map = { ...installs, [def.id]: next };
-    setInstalls(map);
-    setDrafts((prev) => ({ ...prev, [def.id]: next }));
-    saveInstalls(map);
-    setMessage(
-      `${def.name} marked connected. ${def.envHint.includes('configure') || def.envHint.includes('optional') || def.envHint.includes('later') ? 'Live credentials can stay in deploy env until you are ready.' : 'Store secrets in env for production.'}`,
-    );
+  async function connectPlugin(def: ConnectorDef) {
+    setConnectBusyId(def.id);
     setError(null);
+    setMessage(null);
+    try {
+      const token = await getToken();
+      if (!token) throw new Error('Not signed in');
+      const draft = drafts[def.id] ?? emptyInstall();
+      const body: Record<string, string> = {};
+      for (const field of def.fields) {
+        const value = draft[field]?.trim();
+        if (value) body[field] = value;
+      }
+      if (Object.keys(body).length === 0) {
+        throw new Error(
+          `Enter ${def.fields.map((f) => FIELD_LABELS[f]).join(', ') || 'credentials'} — Connected requires realtime vendor auth.`,
+        );
+      }
+      const res = await apiFetch<{
+        ok: boolean;
+        connected: boolean;
+        verifyNote?: string;
+        authProvider?: string;
+        verifiedAt?: string;
+        message?: string;
+      }>(`/v1/connectors/platform/${def.id}/connect`, {
+        method: 'POST',
+        token,
+        body,
+      });
+      const next = publicInstallView({
+        connected: true,
+        connectedAt: res.verifiedAt ? Date.parse(res.verifiedAt) : Date.now(),
+        verifyNote: res.verifyNote,
+        authProvider: res.authProvider,
+      });
+      const map = { ...installs, [def.id]: next };
+      setInstalls(map);
+      saveInstalls(map);
+      setDrafts((prev) => ({
+        ...prev,
+        [def.id]: {
+          connected: true,
+          connectedAt: next.connectedAt,
+          verifyNote: next.verifyNote,
+          authProvider: next.authProvider,
+        },
+      }));
+      setMessage(res.message ?? `${def.name} connected after realtime auth.`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Connect failed');
+    } finally {
+      setConnectBusyId(null);
+    }
   }
 
-  function disconnectPlugin(def: ConnectorDef) {
-    const next: ConnectorInstall = {
-      ...(drafts[def.id] ?? emptyInstall()),
-      connected: false,
-      connectedAt: undefined,
-    };
-    const map = { ...installs, [def.id]: next };
-    setInstalls(map);
-    setDrafts((prev) => ({ ...prev, [def.id]: next }));
-    saveInstalls(map);
-    setMessage(`${def.name} disconnected.`);
+  async function disconnectPlugin(def: ConnectorDef) {
+    setConnectBusyId(def.id);
+    setError(null);
+    setMessage(null);
+    try {
+      const token = await getToken();
+      if (!token) throw new Error('Not signed in');
+      const res = await apiFetch<{ message?: string }>(
+        `/v1/connectors/platform/${def.id}/connection`,
+        { method: 'DELETE', token },
+      );
+      const next = publicInstallView({ connected: false });
+      const map = { ...installs, [def.id]: next };
+      setInstalls(map);
+      saveInstalls(map);
+      setDrafts((prev) => ({
+        ...prev,
+        [def.id]: { ...(prev[def.id] ?? emptyInstall()), ...next },
+      }));
+      setMessage(res.message ?? `${def.name} disconnected.`);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Disconnect failed');
+    } finally {
+      setConnectBusyId(null);
+    }
   }
 
   async function runDemoHook(def: ConnectorDef) {
@@ -190,15 +293,13 @@ export function ConnectorsClient() {
           defaultTargetLang: target,
         }),
       });
-      setMessage('Slack workspace linked.');
+      setMessage(
+        installs.slack?.connected
+          ? 'Slack workspace linked for slash commands.'
+          : 'Slack workspace linked. Connect with a bot token above for realtime Connected status.',
+      );
       setTeamId('');
       setTeamName('');
-      const map = {
-        ...installs,
-        slack: { connected: true, connectedAt: Date.now() },
-      };
-      setInstalls(map);
-      saveInstalls(map);
       await load();
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Save failed');
@@ -216,8 +317,8 @@ export function ConnectorsClient() {
           <p className="lg-workspace-lead">
             Connect Lugemi Language Intelligence to voice agents, contact centers, messaging and African
             CPaaS, video generators, LMS, healthcare/gov portals, CRM, conferencing, game engines, CMS,
-            subtitle tools, and fintech — one API key or webhook per connector. Demo dialect translate for
-            trade, negotiate, and educate.
+            subtitle tools, and fintech. Connected requires realtime vendor auth — paste credentials and
+            Lugemi verifies them live before the status flips.
           </p>
           <p className="lg-workspace-sync">
             Voice/video sync clarity: Lugemi owns speech and dialect audio. Downstream platforms render
@@ -480,22 +581,30 @@ export function ConnectorsClient() {
                     </div>
                   ) : null}
 
+                  {installs[def.id]?.verifyNote ? (
+                    <p className="lg-connectors-demo-result" style={{ marginTop: '0.75rem' }}>
+                      Auth: {installs[def.id]?.verifyNote}
+                    </p>
+                  ) : null}
+
                   <div className="lg-connectors-actions">
                     {on ? (
                       <button
                         type="button"
                         className="vl-btn vl-btn-secondary"
-                        onClick={() => disconnectPlugin(def)}
+                        disabled={connectBusyId === def.id}
+                        onClick={() => void disconnectPlugin(def)}
                       >
-                        Disconnect
+                        {connectBusyId === def.id ? 'Disconnecting…' : 'Disconnect'}
                       </button>
                     ) : (
                       <button
                         type="button"
                         className="vl-btn vl-btn-primary"
-                        onClick={() => connectPlugin(def)}
+                        disabled={connectBusyId === def.id || def.fields.length === 0}
+                        onClick={() => void connectPlugin(def)}
                       >
-                        Connect / Install
+                        {connectBusyId === def.id ? 'Verifying…' : 'Connect (realtime auth)'}
                       </button>
                     )}
                     <button

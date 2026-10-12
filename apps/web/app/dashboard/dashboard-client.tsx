@@ -28,6 +28,7 @@ import {
   PLATFORM_CONNECTORS,
   countConnected,
   loadInstalls,
+  publicInstallView,
   saveInstalls,
   type ConnectorInstall,
 } from '@/lib/connectors-catalog';
@@ -198,7 +199,7 @@ export function DashboardClient() {
   const load = useCallback(async () => {
     const token = await getToken();
     if (!token) throw new Error('Not signed in');
-    const [overview, idRes, usageRes, analyticsRes, ensured] = await Promise.all([
+    const [overview, idRes, usageRes, analyticsRes, ensured, platform] = await Promise.all([
       apiFetch<Overview>('/v1/cloud/overview', { token }),
       apiFetch<IdentityOverview>('/v1/identity/overview', { token }).catch(() => null),
       apiFetch<UsageSummary>('/v1/usage/summary', { token }).catch(() => null),
@@ -212,11 +213,34 @@ export function DashboardClient() {
         created: boolean;
         note?: string;
       }>('/v1/api-keys/ensure', { method: 'POST', token }).catch(() => null),
+      apiFetch<{
+        connections: Array<{
+          connectorId: string;
+          connected: boolean;
+          connectedAt?: number;
+          verifyNote?: string | null;
+          authProvider?: string;
+        }>;
+      }>('/v1/connectors/platform/connections', { token }).catch(() => null),
     ]);
     setData(overview);
     setIdentity(idRes);
     setUsage(usageRes);
     setAnalytics(analyticsRes);
+    if (platform?.connections) {
+      const map: Record<string, ConnectorInstall> = {};
+      for (const row of platform.connections) {
+        if (!row.connected) continue;
+        map[row.connectorId] = publicInstallView({
+          connected: true,
+          connectedAt: row.connectedAt,
+          verifyNote: row.verifyNote ?? undefined,
+          authProvider: row.authProvider,
+        });
+      }
+      setInstalls(map);
+      saveInstalls(map);
+    }
 
     if (ensured?.secret) {
       const applied = applyStudioApiKey({
@@ -377,14 +401,8 @@ export function DashboardClient() {
   }
 
   function quickInstall(id: string) {
-    const next: ConnectorInstall = {
-      ...(installs[id] ?? { connected: false }),
-      connected: true,
-      connectedAt: Date.now(),
-    };
-    const map = { ...installs, [id]: next };
-    setInstalls(map);
-    saveInstalls(map);
+    // Realtime auth lives on /connectors — never soft-connect from the dashboard.
+    window.location.assign(`/connectors#${id}`);
   }
 
   async function toggleEntitlement(feature: string, enabled: boolean) {
@@ -620,8 +638,8 @@ export function DashboardClient() {
                   Plugin installer
                 </h2>
                 <p>
-                  {connectedCount} connected · {voiceVideoConnected} voice/video paths. Install Lugemi
-                  speech bridges into your stack — one integration each.
+                  {connectedCount} connected · {voiceVideoConnected} voice/video paths. Connected only
+                  after realtime vendor auth on the installer.
                 </p>
                 <Link href="/connectors" className="vl-btn vl-btn-primary" style={{ textDecoration: 'none' }}>
                   Open installer
