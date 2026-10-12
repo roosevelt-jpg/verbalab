@@ -51,7 +51,6 @@ function resolveActor(req: AuthedRequest, actorHeader?: string) {
 }
 
 @Controller('v1/passport')
-@UseGuards(TranslateAuthGuard)
 export class LanguagePassportController {
   constructor(private readonly passport: LanguagePassportService) {}
 
@@ -66,11 +65,13 @@ export class LanguagePassportController {
   }
 
   @Get('me')
+  @UseGuards(TranslateAuthGuard)
   me(@Req() req: AuthedRequest, @Headers('x-language-passport-actor-id') actorHeader?: string) {
     return this.passport.getOrCreate(resolveActor(req, actorHeader));
   }
 
   @Patch('preferences')
+  @UseGuards(TranslateAuthGuard)
   preferences(
     @Req() req: AuthedRequest,
     @Headers('x-language-passport-actor-id') actorHeader?: string,
@@ -88,6 +89,7 @@ export class LanguagePassportController {
   }
 
   @Post('entries')
+  @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   createEntry(
     @Req() req: AuthedRequest,
@@ -134,6 +136,7 @@ export class LanguagePassportController {
   }
 
   @Post('entries/:id/revisions')
+  @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   revise(
     @Req() req: AuthedRequest,
@@ -165,6 +168,7 @@ export class LanguagePassportController {
   }
 
   @Post('entries/:id/approvals')
+  @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   approve(
     @Req() req: AuthedRequest,
@@ -176,6 +180,7 @@ export class LanguagePassportController {
   }
 
   @Get('entries/:id')
+  @UseGuards(TranslateAuthGuard)
   getEntry(
     @Req() req: AuthedRequest,
     @Param('id') id: string,
@@ -185,6 +190,7 @@ export class LanguagePassportController {
   }
 
   @Delete('entries/:id')
+  @UseGuards(TranslateAuthGuard)
   removeEntry(
     @Req() req: AuthedRequest,
     @Param('id') id: string,
@@ -194,6 +200,7 @@ export class LanguagePassportController {
   }
 
   @Post('resolutions')
+  @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   resolve(
     @Req() req: AuthedRequest,
@@ -207,6 +214,7 @@ export class LanguagePassportController {
   }
 
   @Post('grants')
+  @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   createGrant(
     @Req() req: AuthedRequest,
@@ -232,6 +240,7 @@ export class LanguagePassportController {
   }
 
   @Delete('grants/:id')
+  @UseGuards(TranslateAuthGuard)
   revokeGrant(
     @Req() req: AuthedRequest,
     @Param('id') id: string,
@@ -241,6 +250,7 @@ export class LanguagePassportController {
   }
 
   @Post('exports')
+  @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   exportPassport(
     @Req() req: AuthedRequest,
@@ -251,6 +261,7 @@ export class LanguagePassportController {
   }
 
   @Post('import-previews')
+  @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.CREATED)
   importPreview(
     @Req() req: AuthedRequest,
@@ -261,6 +272,7 @@ export class LanguagePassportController {
   }
 
   @Post('imports/:id/confirm')
+  @UseGuards(TranslateAuthGuard)
   @HttpCode(HttpStatus.OK)
   confirmImport(
     @Req() req: AuthedRequest,
@@ -271,6 +283,7 @@ export class LanguagePassportController {
   }
 
   @Get('history')
+  @UseGuards(TranslateAuthGuard)
   history(
     @Req() req: AuthedRequest,
     @Headers('x-language-passport-actor-id') actorHeader?: string,
@@ -280,6 +293,7 @@ export class LanguagePassportController {
   }
 
   @Delete('me')
+  @UseGuards(TranslateAuthGuard)
   deleteMe(@Req() req: AuthedRequest, @Headers('x-language-passport-actor-id') actorHeader?: string) {
     return this.passport.deletePassport(resolveActor(req, actorHeader));
   }
