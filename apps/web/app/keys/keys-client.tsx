@@ -58,8 +58,42 @@ export function KeysClient() {
 
   useEffect(() => {
     if (!isLoaded) return;
-    void load().catch((err: Error) => setError(err.message));
-  }, [isLoaded, load]);
+    void (async () => {
+      try {
+        const token = await getToken();
+        if (!token) return;
+        const [rows, ensured] = await Promise.all([
+          apiFetch<ApiKeyRow[]>('/v1/api-keys', { token }),
+          apiFetch<{
+            id: string;
+            name: string;
+            prefix: string;
+            environment: 'live' | 'test';
+            secret: string | null;
+            created: boolean;
+            note?: string;
+          }>('/v1/api-keys/ensure', { method: 'POST', token }).catch(() => null),
+        ]);
+        setKeys(rows);
+        if (ensured?.secret) {
+          const identity = applyStudioApiKey({
+            id: ensured.id,
+            name: ensured.name,
+            prefix: ensured.prefix,
+            environment: ensured.environment,
+            secret: ensured.secret,
+          });
+          setActive(identity);
+          setSecretOnce(ensured.secret);
+          setNotice(ensured.note ?? 'Live workspace key created and applied for Studio metering.');
+        } else if (ensured?.note) {
+          setNotice(ensured.note);
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load keys');
+      }
+    })();
+  }, [isLoaded, getToken]);
 
   async function verifyAndMarkUsed(secret: string) {
     // Bearer machine auth updates lastUsedAt on the server.

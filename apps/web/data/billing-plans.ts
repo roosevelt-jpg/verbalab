@@ -11,6 +11,8 @@ export type WebPlan = {
   translateCharsQuota?: number;
   chatTokensQuota?: number;
   ocrPagesQuota?: number;
+  storageGbQuota?: number;
+  includedModels?: string[];
   /** -1 = unlimited */
   workspaceLimit: number;
   priceLabel: string;
@@ -152,10 +154,13 @@ export const WEB_BILLING_PLANS: WebPlan[] = [
     translateCharsQuota: 50_000,
     chatTokensQuota: 50_000,
     ocrPagesQuota: 25,
+    storageGbQuota: 1,
+    includedModels: ['own_tts', 'espeak_demo', 'baobab_mt', 'whisper_asr', 'creative_media'],
     workspaceLimit: 1,
     priceLabel: '$0',
     priceMonthlyUsd: 0,
-    blurb: 'Explore Lugemi speech, translate, and playground with a monthly character quota.',
+    blurb:
+      'Explore Lugemi speech, translate, Creative, and playground — metered with an auto-issued live workspace key.',
     features: ['speech', 'translate', 'playground'],
     highlight: false,
     checkoutAvailable: false,
@@ -170,10 +175,22 @@ export const WEB_BILLING_PLANS: WebPlan[] = [
     translateCharsQuota: 2_000_000,
     chatTokensQuota: 1_000_000,
     ocrPagesQuota: 500,
+    storageGbQuota: 25,
+    includedModels: [
+      'own_tts',
+      'espeak_demo',
+      'baobab_mt',
+      'whisper_asr',
+      'creative_media',
+      'neural_kokoro',
+      'neural_piper',
+      'voice_clone',
+    ],
     workspaceLimit: 1,
     priceLabel: '$99',
     priceMonthlyUsd: 99,
-    blurb: 'Production teams — commercial use, voice clones, marketplace, fine-tunes, and priority paths.',
+    blurb:
+      'Production teams — neural Echo, commercial use, voice clones, marketplace, fine-tunes, and priority paths.',
     features: [
       'speech',
       'translate',
@@ -197,10 +214,21 @@ export const WEB_BILLING_PLANS: WebPlan[] = [
     translateCharsQuota: 11_000_000,
     chatTokensQuota: 5_000_000,
     ocrPagesQuota: 2_500,
+    storageGbQuota: 100,
+    includedModels: [
+      'own_tts',
+      'espeak_demo',
+      'baobab_mt',
+      'whisper_asr',
+      'creative_media',
+      'neural_kokoro',
+      'neural_piper',
+      'voice_clone',
+    ],
     workspaceLimit: 3,
     priceLabel: '$330',
     priceMonthlyUsd: 330,
-    blurb: 'High-volume workspaces across regions with extra seats and headroom.',
+    blurb: 'High-volume workspaces across regions with extra seats, storage, and headroom.',
     features: [
       'speech',
       'translate',
@@ -225,6 +253,17 @@ export const WEB_BILLING_PLANS: WebPlan[] = [
     translateCharsQuota: 50_000_000,
     chatTokensQuota: 25_000_000,
     ocrPagesQuota: 10_000,
+    storageGbQuota: 1_000,
+    includedModels: [
+      'own_tts',
+      'espeak_demo',
+      'baobab_mt',
+      'whisper_asr',
+      'creative_media',
+      'neural_kokoro',
+      'neural_piper',
+      'voice_clone',
+    ],
     workspaceLimit: -1,
     priceLabel: 'Custom',
     priceMonthlyUsd: null,
@@ -258,4 +297,19 @@ export function planHasFeature(planId: string, feature: string): boolean {
 
 export function formatWorkspaceLimit(limit: number): string {
   return limit < 0 ? 'Unlimited' : String(limit);
+}
+
+const MODEL_LABELS: Record<string, string> = {
+  own_tts: 'Lugemi Echo TTS',
+  espeak_demo: 'eSpeak demo',
+  neural_kokoro: 'Neural Kokoro',
+  neural_piper: 'Neural Piper',
+  baobab_mt: 'Baobab translate',
+  whisper_asr: 'Whisper speech recognition',
+  creative_media: 'Creative media',
+  voice_clone: 'Voice clone',
+};
+
+export function modelLabel(id: string): string {
+  return MODEL_LABELS[id] ?? id.replace(/[_-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 }

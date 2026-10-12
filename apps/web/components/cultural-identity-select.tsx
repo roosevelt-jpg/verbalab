@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { SearchableCombobox, type ComboboxOption } from '@/components/searchable-combobox';
+import { humanizeSpeechVariety } from '@/lib/humanize';
 
 export type CulturalIdentityPack = {
   id: string;
@@ -111,13 +112,14 @@ export function CulturalIdentitySelect({
     }
     for (const p of sorted) {
       const identity = p.culturalIdentity || p.cultural_identity || p.nameEn;
-      const variety = p.speechVariety || p.speech_variety || '';
+      const varietyRaw = p.speechVariety || p.speech_variety || '';
+      const variety = humanizeSpeechVariety(varietyRaw);
       const tags = (p.lifestyleTags || p.lifestyle_tags || []).slice(0, 3).join(' ');
       rows.push({
         value: p.id,
         label: `${p.countryFlag} ${identity}${variety ? ` · ${variety}` : ''}`,
         group: p.countryLabel || p.country,
-        keywords: `${p.nameEn} ${identity} ${variety} ${tags} ${p.bcp47 ?? ''} ${p.languageCode}`,
+        keywords: `${p.nameEn} ${identity} ${variety} ${varietyRaw} ${tags} ${p.bcp47 ?? ''} ${p.languageCode}`,
       });
     }
     return rows;
@@ -148,7 +150,7 @@ export function CulturalIdentitySelect({
           }}
         >
           {(selected.lifestyleTags || selected.lifestyle_tags || []).slice(0, 4).join(' · ') ||
-            selected.speechVariety}
+            humanizeSpeechVariety(selected.speechVariety || selected.speech_variety)}
           {selected.echoVoiceId ? ` · ${selected.echoVoiceId}` : ''}
         </p>
       ) : null}

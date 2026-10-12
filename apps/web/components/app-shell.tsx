@@ -9,6 +9,8 @@ import { usePlatformAdmin } from '@/lib/use-platform-admin';
 import { StudioApiKeyChip } from '@/components/studio-api-key-chip';
 import { WorkspaceSwitcher } from '@/components/workspace-switcher';
 import { BrandMark } from '@/components/brand-mark';
+import { apiFetch } from '@/lib/api';
+import { applyStudioApiKey, loadStudioApiKeySecret } from '@/lib/studio-api-key';
 
 type NavLink = { href: string; label: string; adminOnly?: boolean };
 
@@ -180,6 +182,41 @@ function AuthedAppShell({ children }: { children: React.ReactNode }) {
   const { isLoaded, isSignedIn, userId, getToken } = useAuth();
   const isAdmin = usePlatformAdmin(isSignedIn ? userId : null, getToken);
   const mode: ShellMode = !isLoaded ? 'loading' : isSignedIn ? 'console' : 'public';
+
+  // Auto-provision a live workspace key as soon as the operator lands in Studio.
+  useEffect(() => {
+    if (!isLoaded || !isSignedIn) return;
+    if (loadStudioApiKeySecret()) return;
+    let cancelled = false;
+    void (async () => {
+      try {
+        const token = await getToken();
+        if (!token || cancelled) return;
+        const ensured = await apiFetch<{
+          id: string;
+          name: string;
+          prefix: string;
+          environment: 'live' | 'test';
+          secret: string | null;
+          created: boolean;
+        }>('/v1/api-keys/ensure', { method: 'POST', token });
+        if (cancelled || !ensured?.secret) return;
+        applyStudioApiKey({
+          id: ensured.id,
+          name: ensured.name,
+          prefix: ensured.prefix,
+          environment: ensured.environment,
+          secret: ensured.secret,
+        });
+      } catch {
+        /* dashboard / keys page will retry */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [isLoaded, isSignedIn, getToken]);
+
   return (
     <ShellFrame mode={mode} isAdmin={isAdmin} clerk>
       {children}

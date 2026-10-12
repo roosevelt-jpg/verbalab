@@ -21,6 +21,17 @@ export type PlanFeature =
   | 'dedicated'
   | 'workspacesExtra';
 
+/** Model corridors included with a plan (honest catalog — not fabricated coverage). */
+export type PlanModelId =
+  | 'own_tts'
+  | 'espeak_demo'
+  | 'neural_kokoro'
+  | 'neural_piper'
+  | 'baobab_mt'
+  | 'whisper_asr'
+  | 'creative_media'
+  | 'voice_clone';
+
 export type PlanProductQuotas = {
   characterQuota: number; // General / combined quota
   sttMinutesQuota: number;
@@ -28,6 +39,8 @@ export type PlanProductQuotas = {
   translateCharsQuota: number;
   chatTokensQuota: number;
   ocrPagesQuota: number;
+  /** Workspace media / asset allowance (GB) for Creative exports. */
+  storageGbQuota: number;
 };
 
 export type PlanDefinition = PlanProductQuotas & {
@@ -46,6 +59,8 @@ export type PlanDefinition = PlanProductQuotas & {
   priceMonthlyUsd: number | null;
   blurb: string;
   features: PlanFeature[];
+  /** Models / engines the plan may call under workspace keys. */
+  includedModels: PlanModelId[];
   highlight?: boolean;
   isCustom?: boolean;
   stripePriceEnv?: 'STRIPE_PRICE_ID_PRO' | 'STRIPE_PRICE_ID_BUSINESS';
@@ -53,6 +68,20 @@ export type PlanDefinition = PlanProductQuotas & {
 };
 
 const ALL_CORE: PlanFeature[] = ['speech', 'translate', 'playground'];
+
+const FREE_MODELS: PlanModelId[] = [
+  'own_tts',
+  'espeak_demo',
+  'baobab_mt',
+  'whisper_asr',
+  'creative_media',
+];
+const PRO_MODELS: PlanModelId[] = [
+  ...FREE_MODELS,
+  'neural_kokoro',
+  'neural_piper',
+  'voice_clone',
+];
 
 /** Legacy plan ids (removed SKUs) → current PlanId. */
 const LEGACY_PLAN_MAP: Record<string, string> = {
@@ -78,13 +107,16 @@ function freePlan(): PlanDefinition {
     translateCharsQuota: envQuota('BILLING_FREE_TRANSLATE_CHARS_QUOTA', 50_000),
     chatTokensQuota: envQuota('BILLING_FREE_CHAT_TOKENS_QUOTA', 50_000),
     ocrPagesQuota: envQuota('BILLING_FREE_OCR_PAGES_QUOTA', 25),
+    storageGbQuota: envQuota('BILLING_FREE_STORAGE_GB_QUOTA', 1),
     rateLimitPerKey: Number(process.env.RATE_LIMIT_FREE_PER_KEY ?? 60),
     rateLimitPerOrg: Number(process.env.RATE_LIMIT_FREE_PER_ORG ?? 120),
     workspaceLimit: 1,
     priceLabel: '$0',
     priceMonthlyUsd: 0,
-    blurb: 'Explore Lugemi speech, translate, and playground with a monthly character quota.',
+    blurb:
+      'Explore Lugemi speech, translate, Creative, and playground — metered with an auto-issued live workspace key.',
     features: [...ALL_CORE],
+    includedModels: [...FREE_MODELS],
   };
 }
 
@@ -100,12 +132,14 @@ function proPlan(): PlanDefinition {
     translateCharsQuota: envQuota('BILLING_PRO_TRANSLATE_CHARS_QUOTA', 2_000_000),
     chatTokensQuota: envQuota('BILLING_PRO_CHAT_TOKENS_QUOTA', 1_000_000),
     ocrPagesQuota: envQuota('BILLING_PRO_OCR_PAGES_QUOTA', 500),
+    storageGbQuota: envQuota('BILLING_PRO_STORAGE_GB_QUOTA', 25),
     rateLimitPerKey: Number(process.env.RATE_LIMIT_PRO_PER_KEY ?? 300),
     rateLimitPerOrg: Number(process.env.RATE_LIMIT_PRO_PER_ORG ?? 1_000),
     workspaceLimit: 1,
     priceLabel: '$99',
     priceMonthlyUsd: 99,
-    blurb: 'Production teams — commercial use, voice clones, marketplace, fine-tunes, and priority paths.',
+    blurb:
+      'Production teams — neural Echo, commercial use, voice clones, marketplace, fine-tunes, and priority paths.',
     features: [
       ...ALL_CORE,
       'commercial',
@@ -122,6 +156,7 @@ function proPlan(): PlanDefinition {
       'fineTunes',
       'prioritySupport',
     ],
+    includedModels: [...PRO_MODELS],
     highlight: true,
     stripePriceEnv: 'STRIPE_PRICE_ID_PRO',
   };
@@ -139,12 +174,13 @@ function businessPlan(): PlanDefinition {
     translateCharsQuota: envQuota('BILLING_BUSINESS_TRANSLATE_CHARS_QUOTA', 11_000_000),
     chatTokensQuota: envQuota('BILLING_BUSINESS_CHAT_TOKENS_QUOTA', 5_000_000),
     ocrPagesQuota: envQuota('BILLING_BUSINESS_OCR_PAGES_QUOTA', 2_500),
+    storageGbQuota: envQuota('BILLING_BUSINESS_STORAGE_GB_QUOTA', 100),
     rateLimitPerKey: Number(process.env.RATE_LIMIT_BUSINESS_PER_KEY ?? 600),
     rateLimitPerOrg: Number(process.env.RATE_LIMIT_BUSINESS_PER_ORG ?? 3_000),
     workspaceLimit: 3,
     priceLabel: '$330',
     priceMonthlyUsd: 330,
-    blurb: 'High-volume workspaces across regions with extra seats and headroom.',
+    blurb: 'High-volume workspaces across regions with extra seats, storage, and headroom.',
     features: [
       ...ALL_CORE,
       'commercial',
@@ -162,6 +198,7 @@ function businessPlan(): PlanDefinition {
       'prioritySupport',
       'workspacesExtra',
     ],
+    includedModels: [...PRO_MODELS],
     stripePriceEnv: 'STRIPE_PRICE_ID_BUSINESS',
   };
 }
@@ -178,6 +215,7 @@ function enterprisePlan(): PlanDefinition {
     translateCharsQuota: envQuota('BILLING_ENTERPRISE_TRANSLATE_CHARS_QUOTA', 50_000_000),
     chatTokensQuota: envQuota('BILLING_ENTERPRISE_CHAT_TOKENS_QUOTA', 25_000_000),
     ocrPagesQuota: envQuota('BILLING_ENTERPRISE_OCR_PAGES_QUOTA', 10_000),
+    storageGbQuota: envQuota('BILLING_ENTERPRISE_STORAGE_GB_QUOTA', 1_000),
     rateLimitPerKey: Number(process.env.RATE_LIMIT_ENTERPRISE_PER_KEY ?? 2_000),
     rateLimitPerOrg: Number(process.env.RATE_LIMIT_ENTERPRISE_PER_ORG ?? 10_000),
     workspaceLimit: -1,
@@ -203,6 +241,7 @@ function enterprisePlan(): PlanDefinition {
       'sso',
       'dedicated',
     ],
+    includedModels: [...PRO_MODELS],
   };
 }
 
@@ -263,6 +302,7 @@ export function planFromId(id: string): PlanDefinition {
     translateCharsQuota: 2_000_000,
     chatTokensQuota: 1_000_000,
     ocrPagesQuota: 500,
+    storageGbQuota: 25,
     rateLimitPerKey: 300,
     rateLimitPerOrg: 1_000,
     workspaceLimit: 1,
@@ -270,8 +310,13 @@ export function planFromId(id: string): PlanDefinition {
     priceMonthlyUsd: 99,
     blurb: 'Custom platform plan',
     features: [...ALL_CORE],
+    includedModels: [...PRO_MODELS],
     isCustom: true,
   };
+}
+
+export function planIncludesModel(orgPlanId: string, model: PlanModelId): boolean {
+  return planFromId(orgPlanId).includedModels.includes(model);
 }
 
 /** True when org plan rank is at least the required plan. */

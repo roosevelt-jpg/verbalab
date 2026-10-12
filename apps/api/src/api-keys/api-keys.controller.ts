@@ -38,6 +38,17 @@ export class ApiKeysController {
     });
   }
 
+  /** Auto-provision a live Studio key when the dashboard loads (idempotent). */
+  @Post('ensure')
+  ensureLive(@CurrentSession() session: SessionContext, @Req() req: Request) {
+    return this.apiKeys.ensureDefaultLiveKey({
+      organizationId: session.organizationId,
+      workspaceId: session.workspaceId,
+      userId: session.userId,
+      ip: clientIp(req),
+    });
+  }
+
   @Delete(':id')
   revoke(
     @CurrentSession() session: SessionContext,

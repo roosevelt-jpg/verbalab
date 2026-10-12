@@ -96,6 +96,54 @@ export class ApiKeysService {
     }));
   }
 
+  /**
+   * Ensure the workspace has an active live machine key for Studio metering.
+   * Secret is returned only when freshly created.
+   */
+  async ensureDefaultLiveKey(input: {
+    organizationId: string;
+    workspaceId: string;
+    userId: string;
+    ip?: string;
+  }) {
+    const existing = await this.prisma.apiKey.findFirst({
+      where: {
+        organizationId: input.organizationId,
+        workspaceId: input.workspaceId,
+        environment: ApiKeyEnvironment.live,
+        revokedAt: null,
+      },
+      orderBy: { createdAt: 'asc' },
+    });
+    if (existing) {
+      return {
+        id: existing.id,
+        name: existing.name,
+        prefix: existing.prefix,
+        environment: existing.environment,
+        kind: 'machine' as const,
+        created: false as const,
+        secret: null as string | null,
+        createdAt: existing.createdAt,
+        note: 'Live key already exists for this workspace.',
+      };
+    }
+
+    const created = await this.create({
+      organizationId: input.organizationId,
+      workspaceId: input.workspaceId,
+      userId: input.userId,
+      name: 'Studio live key',
+      environment: 'live',
+      ip: input.ip,
+    });
+    return {
+      ...created,
+      created: true as const,
+      note: 'Live key created — applied in Studio for metered product calls.',
+    };
+  }
+
   async revoke(organizationId: string, keyId: string, opts?: { userId?: string; ip?: string }) {
     const key = await this.prisma.apiKey.findFirst({
       where: { id: keyId, organizationId },

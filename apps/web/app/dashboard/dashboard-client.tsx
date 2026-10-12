@@ -31,6 +31,11 @@ import {
   saveInstalls,
   type ConnectorInstall,
 } from '@/lib/connectors-catalog';
+import {
+  applyStudioApiKey,
+  loadStudioApiKeyIdentity,
+  type StudioApiKeyIdentity,
+} from '@/lib/studio-api-key';
 import '@/components/media/anamorphic.css';
 import '@/components/stats/stat-charts.css';
 
@@ -185,21 +190,56 @@ export function DashboardClient() {
   const [toggleBusy, setToggleBusy] = useState<string | null>(null);
   const [installs, setInstalls] = useState<Record<string, ConnectorInstall>>({});
   const [profile, setProfile] = useState<ProfileLocal>({ displayName: '', imageDataUrl: null });
+  const [liveKey, setLiveKey] = useState<StudioApiKeyIdentity | null>(null);
+  const [liveKeyNote, setLiveKeyNote] = useState<string | null>(null);
+  const [secretOnce, setSecretOnce] = useState<string | null>(null);
   const welcome = SITE_CONTENT.dashboardWelcome;
 
   const load = useCallback(async () => {
     const token = await getToken();
     if (!token) throw new Error('Not signed in');
-    const [overview, idRes, usageRes, analyticsRes] = await Promise.all([
+    const [overview, idRes, usageRes, analyticsRes, ensured] = await Promise.all([
       apiFetch<Overview>('/v1/cloud/overview', { token }),
       apiFetch<IdentityOverview>('/v1/identity/overview', { token }).catch(() => null),
       apiFetch<UsageSummary>('/v1/usage/summary', { token }).catch(() => null),
       apiFetch<AnalyticsOverview>('/v1/analytics/overview', { token }).catch(() => null),
+      apiFetch<{
+        id: string;
+        name: string;
+        prefix: string;
+        environment: 'live' | 'test';
+        secret: string | null;
+        created: boolean;
+        note?: string;
+      }>('/v1/api-keys/ensure', { method: 'POST', token }).catch(() => null),
     ]);
     setData(overview);
     setIdentity(idRes);
     setUsage(usageRes);
     setAnalytics(analyticsRes);
+
+    if (ensured?.secret) {
+      const applied = applyStudioApiKey({
+        id: ensured.id,
+        name: ensured.name,
+        prefix: ensured.prefix,
+        environment: ensured.environment,
+        secret: ensured.secret,
+      });
+      setLiveKey(applied);
+      setSecretOnce(ensured.secret);
+      setLiveKeyNote(ensured.note ?? 'Live workspace key created and applied for metered Studio calls.');
+    } else if (ensured) {
+      const existing = loadStudioApiKeyIdentity();
+      setLiveKey(existing);
+      setLiveKeyNote(
+        existing
+          ? `Live key ready · ${existing.prefix}… — meters Creative, speech, and translate on your ${overview.organization.plan} plan.`
+          : `${ensured.note ?? 'Live key exists'} Open API keys to re-apply the secret in this browser.`,
+      );
+    } else {
+      setLiveKey(loadStudioApiKeyIdentity());
+    }
   }, [getToken]);
 
   useEffect(() => {
@@ -464,6 +504,58 @@ export function DashboardClient() {
 
         {data ? (
           <div className="lg-workspace-body">
+            <section
+              className="lg-workspace-operator"
+              aria-labelledby="dash-live-key"
+              style={{
+                marginBottom: '1rem',
+                padding: '1rem 1.15rem',
+                borderRadius: 12,
+                border: '1px solid var(--border, rgba(15,23,42,0.12))',
+                background: 'linear-gradient(135deg, rgba(0,184,174,0.08), rgba(15,23,42,0.03))',
+              }}
+            >
+              <h2 id="dash-live-key" className="lg-workspace-section-label">
+                Live workspace key
+              </h2>
+              <p style={{ margin: '0.35rem 0 0.75rem', color: 'var(--muted)', lineHeight: 1.55, maxWidth: '40rem' }}>
+                {liveKeyNote ??
+                  'Your plan meters speech, translate, Creative, and API calls through this live key — models and storage included with your subscription.'}
+              </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', alignItems: 'center' }}>
+                <span className="vl-tag">
+                  {liveKey
+                    ? `${liveKey.environment === 'live' ? 'Live' : 'Test'} · ${liveKey.name} · ${liveKey.prefix}…`
+                    : 'Provisioning…'}
+                </span>
+                <Link href="/keys" style={{ color: 'var(--action-primary)', fontWeight: 600 }}>
+                  Manage keys
+                </Link>
+                <Link href="/billing" style={{ color: 'var(--action-primary)', fontWeight: 600 }}>
+                  Plan & quotas
+                </Link>
+              </div>
+              {secretOnce ? (
+                <div style={{ marginTop: '0.85rem' }}>
+                  <p style={{ margin: '0 0 0.35rem', fontWeight: 600, color: 'var(--brand-navy)' }}>
+                    Secret shown once — copy for external API use
+                  </p>
+                  <code
+                    className="vl-code"
+                    style={{
+                      display: 'block',
+                      padding: '0.65rem 0.75rem',
+                      borderRadius: 8,
+                      wordBreak: 'break-all',
+                      background: 'rgba(15,23,42,0.04)',
+                    }}
+                  >
+                    {secretOnce}
+                  </code>
+                </div>
+              ) : null}
+            </section>
+
             <section className="lg-workspace-operator" aria-labelledby="dash-operator">
               <h2 id="dash-operator" className="lg-workspace-section-label">
                 Operator overview

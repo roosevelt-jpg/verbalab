@@ -125,27 +125,32 @@ export class BillingService implements OnModuleInit {
 
     const customs = dbPlans
       .filter((p) => p.isCustom)
-      .map((override) => ({
-        id: override.id,
-        name: override.name,
-        rank: override.rank,
-        characterQuota: override.characterQuota,
-        sttMinutesQuota: override.sttMinutesQuota,
-        ttsCharsQuota: override.ttsCharsQuota,
-        translateCharsQuota: override.translateCharsQuota,
-        chatTokensQuota: override.chatTokensQuota,
-        ocrPagesQuota: override.ocrPagesQuota,
-        workspaceLimit: override.workspaceLimit,
-        priceMonthlyUsd: override.priceMonthlyUsd,
-        priceLabel: override.priceLabel,
-        blurb: override.blurb,
-        features: (override.features as PlanFeature[]) ?? ['speech', 'translate', 'playground'],
-        highlight: override.highlight,
-        stripePriceId: override.stripePriceId ?? undefined,
-        rateLimitPerKey: 300,
-        rateLimitPerOrg: 1000,
-        isCustom: true,
-      }));
+      .map((override) => {
+        const pro = planFromId('pro');
+        return {
+          id: override.id,
+          name: override.name,
+          rank: override.rank,
+          characterQuota: override.characterQuota,
+          sttMinutesQuota: override.sttMinutesQuota,
+          ttsCharsQuota: override.ttsCharsQuota,
+          translateCharsQuota: override.translateCharsQuota,
+          chatTokensQuota: override.chatTokensQuota,
+          ocrPagesQuota: override.ocrPagesQuota,
+          storageGbQuota: pro.storageGbQuota,
+          includedModels: pro.includedModels,
+          workspaceLimit: override.workspaceLimit,
+          priceMonthlyUsd: override.priceMonthlyUsd,
+          priceLabel: override.priceLabel,
+          blurb: override.blurb,
+          features: (override.features as PlanFeature[]) ?? ['speech', 'translate', 'playground'],
+          highlight: override.highlight,
+          stripePriceId: override.stripePriceId ?? undefined,
+          rateLimitPerKey: 300,
+          rateLimitPerOrg: 1000,
+          isCustom: true,
+        };
+      });
 
     return [...base, ...customs];
   }
@@ -189,11 +194,13 @@ export class BillingService implements OnModuleInit {
       translateCharsQuota: p.translateCharsQuota,
       chatTokensQuota: p.chatTokensQuota,
       ocrPagesQuota: p.ocrPagesQuota,
+      storageGbQuota: p.storageGbQuota,
       workspaceLimit: p.workspaceLimit,
       priceLabel: p.priceLabel,
       priceMonthlyUsd: p.priceMonthlyUsd,
       blurb: p.blurb,
       features: p.features,
+      includedModels: p.includedModels,
       highlight: Boolean(p.highlight),
       isCustom: Boolean(p.isCustom),
       checkoutAvailable: Boolean(
@@ -328,7 +335,15 @@ export class BillingService implements OnModuleInit {
           usedTokens: usage.chat.tokens,
           remainingTokens: Math.max(totalChatTokensQuota - usage.chat.tokens, 0),
         },
+        storage: {
+          quotaGb: plan.storageGbQuota,
+          note: 'Workspace media allowance for Creative exports and Studio assets.',
+        },
+        ocr: {
+          quotaPages: plan.ocrPagesQuota,
+        },
       },
+      includedModels: plan.includedModels,
       topUps,
       availableTopUpPacks: TOP_UP_PACKS,
       periodStart: usage.periodStart,
@@ -771,28 +786,33 @@ export class BillingService implements OnModuleInit {
 
     const customs = dbPlans
       .filter((p) => p.isCustom)
-      .map((override) => ({
-        id: override.id,
-        name: override.name,
-        rank: override.rank,
-        characterQuota: override.characterQuota,
-        sttMinutesQuota: override.sttMinutesQuota,
-        ttsCharsQuota: override.ttsCharsQuota,
-        translateCharsQuota: override.translateCharsQuota,
-        chatTokensQuota: override.chatTokensQuota,
-        ocrPagesQuota: override.ocrPagesQuota,
-        workspaceLimit: override.workspaceLimit,
-        priceMonthlyUsd: override.priceMonthlyUsd,
-        priceLabel: override.priceLabel,
-        blurb: override.blurb,
-        features: (override.features as PlanFeature[]) ?? ['speech', 'translate', 'playground'],
-        highlight: override.highlight,
-        stripePriceId: override.stripePriceId ?? undefined,
-        rateLimitPerKey: 300,
-        rateLimitPerOrg: 1000,
-        active: override.active,
-        isCustom: true,
-      }));
+      .map((override) => {
+        const pro = planFromId('pro');
+        return {
+          id: override.id,
+          name: override.name,
+          rank: override.rank,
+          characterQuota: override.characterQuota,
+          sttMinutesQuota: override.sttMinutesQuota,
+          ttsCharsQuota: override.ttsCharsQuota,
+          translateCharsQuota: override.translateCharsQuota,
+          chatTokensQuota: override.chatTokensQuota,
+          ocrPagesQuota: override.ocrPagesQuota,
+          storageGbQuota: pro.storageGbQuota,
+          includedModels: pro.includedModels,
+          workspaceLimit: override.workspaceLimit,
+          priceMonthlyUsd: override.priceMonthlyUsd,
+          priceLabel: override.priceLabel,
+          blurb: override.blurb,
+          features: (override.features as PlanFeature[]) ?? ['speech', 'translate', 'playground'],
+          highlight: override.highlight,
+          stripePriceId: override.stripePriceId ?? undefined,
+          rateLimitPerKey: 300,
+          rateLimitPerOrg: 1000,
+          active: override.active,
+          isCustom: true,
+        };
+      });
 
     return [...base, ...customs];
   }
