@@ -30,6 +30,7 @@ const isPublicRoute = createRouteMatcher([
   '/baobab(.*)',
   '/models(.*)',
   '/developers(.*)',
+  '/support(.*)',
   '/builders(.*)',
   '/language-integrity(.*)',
   '/african-language-registry(.*)',

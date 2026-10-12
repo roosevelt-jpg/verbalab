@@ -131,6 +131,7 @@ const NAV_GROUPS: NavGroup[] = [
       { href: '/docs/api', label: 'API reference' },
       { href: '/mcp', label: 'MCP' },
       { href: '/keys', label: 'API keys' },
+      { href: '/support', label: 'Support' },
       { href: '/graphql', label: 'GraphQL' },
       { href: '/usage', label: 'Usage' },
       { href: '/analytics', label: 'Analytics' },
@@ -157,6 +158,7 @@ const NAV_GROUPS: NavGroup[] = [
 const PUBLIC_LINKS: NavLink[] = [
   // Docs/Pricing live in the marketing footer — keep the public shell header lean.
   { href: '/developers', label: 'Developers' },
+  { href: '/support', label: 'Support' },
 ];
 
 function linkActive(href: string, pathname: string) {

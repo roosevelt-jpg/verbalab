@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
-import { appendFile, mkdir } from 'fs/promises';
-import { join } from 'path';
+import { fileSupportTicket } from '@/lib/support-store';
 
 export const dynamic = 'force-dynamic';
 
@@ -135,7 +134,7 @@ const FAQ: FaqItem[] = [
   {
     keys: ['human', 'agent', 'support', 'escalate', 'person', 'talk to', 'speak to', 'real person'],
     answer:
-      'Filing a human follow-up ticket now so this conversation is fully closed. You will get a ticket id in this reply. Keep using me for API keys, quotas, plans, speech, and translate while you wait.',
+      'Filing a human follow-up ticket now so this conversation is fully closed. You will get a ticket id in this reply. Add detail or email from /support, or join the community forum at /support#forum for API integration tips while you wait.',
     needsTicket: true,
   },
   {
@@ -167,16 +166,6 @@ function matchFaq(text: string): FaqItem | null {
   return score > 0 ? best : null;
 }
 
-function newTicketId() {
-  return `sup_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`;
-}
-
-async function persistTicket(ticket: Record<string, unknown>) {
-  const dir = join(process.cwd(), '.data', 'support');
-  await mkdir(dir, { recursive: true });
-  await appendFile(join(dir, 'escalations.jsonl'), `${JSON.stringify(ticket)}\n`, 'utf8');
-}
-
 async function fileTicket(input: {
   message: string;
   email?: string;
@@ -184,18 +173,20 @@ async function fileTicket(input: {
   history?: Msg[];
   reason: string;
 }) {
-  const ticketId = newTicketId();
-  await persistTicket({
-    id: ticketId,
-    createdAt: new Date().toISOString(),
-    email: input.email ?? null,
-    orgId: input.orgId ?? null,
-    message: input.message,
-    history: (input.history ?? []).slice(-12),
-    reason: input.reason,
-    source: 'support_chat',
-  }).catch(() => undefined);
-  return ticketId;
+  try {
+    const ticket = await fileSupportTicket({
+      message: input.message,
+      email: input.email,
+      orgId: input.orgId,
+      history: input.history,
+      reason: input.reason,
+      source: 'support_chat',
+    });
+    return ticket.id;
+  } catch {
+    // Still close the turn with a synthetic id if disk write fails in constrained envs.
+    return `sup_${Date.now().toString(36)}_pending`;
+  }
 }
 
 const SUGGESTIONS = [
@@ -213,7 +204,7 @@ function closedPayload(input: {
 }) {
   const ticketLine =
     input.ticketId != null
-      ? `\n\nTicket ${input.ticketId} filed — this issue is closed in chat. Staff complete any remaining async steps.`
+      ? `\n\nTicket ${input.ticketId} filed — this issue is closed in chat. Staff complete any remaining async steps. Track or add detail anytime on /support.`
       : '';
   return {
     reply: `${input.reply}${ticketLine}`,
@@ -225,8 +216,8 @@ function closedPayload(input: {
     ticketId: input.ticketId ?? null,
     ticketHint:
       input.ticketId != null
-        ? `Resolved with ticket ${input.ticketId}.`
-        : 'Resolved with self-serve steps.',
+        ? `Resolved with ticket ${input.ticketId}. Open /support for the community forum or to send more detail.`
+        : 'Resolved with self-serve steps. Community tips: /support#forum',
     suggestions: SUGGESTIONS,
   };
 }

@@ -645,6 +645,8 @@ export const CMS_DEFAULTS: CmsDocument = {
           { label: 'Trust Center', href: '/p/trust-center' },
           { label: 'Coverage', href: '/coverage' },
           { label: 'Developers', href: '/developers' },
+          { label: 'Support', href: '/support' },
+          { label: 'Community forum', href: '/support#forum' },
         ],
       },
       {
@@ -668,6 +670,7 @@ export const CMS_DEFAULTS: CmsDocument = {
         links: [
           { label: 'About', href: '/p/about' },
           { label: 'Log in', href: '/sign-in' },
+          { label: 'Support', href: '/support' },
           { label: 'Safety', href: '/p/safety' },
           { label: 'Legal integrity', href: '/p/legal-integrity' },
           { label: 'Policies', href: '/p/policies' },
@@ -676,7 +679,7 @@ export const CMS_DEFAULTS: CmsDocument = {
     ],
     copyright: '© Lugemi. All rights reserved.',
     metaNote: ' · Global language intelligence. Africa first.',
-    supportFab: { label: 'Chat for support', href: '/sign-up' },
+    supportFab: { label: 'Chat for support', href: '/support' },
   },
   mediaLibrary: [],
   pages: [

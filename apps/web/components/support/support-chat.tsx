@@ -1,5 +1,6 @@
 'use client';
 
+import Link from 'next/link';
 import { useEffect, useRef, useState } from 'react';
 import './support-chat.css';
 
@@ -27,7 +28,7 @@ export function SupportChatWidget() {
     {
       role: 'assistant',
       content:
-        'Hi — I am Lugemi Support. Every message is closed 100%: either concrete self-serve steps, or an auto-filed ticket with an id (refunds, security, Enterprise, or anything I cannot finish in-chat). Ask about API keys, catalogs (213 languages / 206 countries), billing, speech, or translate.',
+        'Hi — I am Lugemi Support. Every message is closed 100%: either concrete self-serve steps, or an auto-filed ticket with an id (refunds, security, Enterprise, or anything I cannot finish in-chat). Say “talk to a human” to escalate, or open /support for email + the community forum.',
     },
   ]);
   const endRef = useRef<HTMLDivElement>(null);
@@ -35,6 +36,14 @@ export function SupportChatWidget() {
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, open, showEscalateForm]);
+
+  useEffect(() => {
+    function onOpen() {
+      setOpen(true);
+    }
+    window.addEventListener('lugemi:open-support-chat', onOpen);
+    return () => window.removeEventListener('lugemi:open-support-chat', onOpen);
+  }, []);
 
   async function sendMessage(text: string, opts?: { escalateOnly?: boolean }) {
     const trimmed = text.trim();
@@ -121,7 +130,16 @@ export function SupportChatWidget() {
           <header className="lg-support-head">
             <div>
               <strong>Lugemi Support</strong>
-              <p>100% closure · fix or tracked ticket every turn</p>
+              <p>
+                100% closure ·{' '}
+                <Link href="/support" style={{ color: 'inherit' }}>
+                  Support page
+                </Link>
+                {' · '}
+                <Link href="/support#forum" style={{ color: 'inherit' }}>
+                  Forum
+                </Link>
+              </p>
             </div>
             <button type="button" className="lg-support-close" onClick={() => setOpen(false)} aria-label="Close">
               ×
@@ -169,6 +187,10 @@ export function SupportChatWidget() {
                 <button type="button" className="lg-support-escalate-btn" disabled={busy} onClick={fileEscalation}>
                   {busy ? 'Filing…' : 'Confirm human escalation'}
                 </button>
+                <p className="lg-support-escalate-label" style={{ marginTop: 8 }}>
+                  Prefer a full form or community tips?{' '}
+                  <Link href="/support?escalate=1">Open Support page</Link>
+                </p>
               </div>
             ) : null}
             <div ref={endRef} />
