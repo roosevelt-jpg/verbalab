@@ -1,20 +1,48 @@
 'use client';
 
-import { useState } from 'react';
-import type { CmsHeroDemo } from '@/data/cms-types';
+import { useMemo, useState } from 'react';
+import type { CmsHeroDemo, CmsHeroDemoVoice } from '@/data/cms-types';
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
+import { resolveVoiceDemoScript } from '@/lib/native-demo-scripts';
 import { useDemoPlayer } from './use-demo-player';
 
+function voiceMeta(voice: CmsHeroDemoVoice | undefined): { lang: string; text: string } {
+  if (!voice) return resolveVoiceDemoScript(undefined);
+  if (voice.sampleText?.trim() && voice.lang?.trim()) {
+    return { lang: voice.lang, text: voice.sampleText };
+  }
+  const resolved = resolveVoiceDemoScript(voice.id);
+  return {
+    lang: voice.lang?.trim() || resolved.lang,
+    text: voice.sampleText?.trim() || resolved.text,
+  };
+}
+
 export function HeroTtsCard({ demo }: { demo: CmsHeroDemo }) {
-  const [text, setText] = useState(demo.defaultText);
-  const [voice, setVoice] = useState(demo.voices[0]?.id ?? '');
+  const initialVoice = demo.voices[0];
+  const initial = voiceMeta(initialVoice);
+  const [voice, setVoice] = useState(initialVoice?.id ?? '');
+  const [text, setText] = useState(initial.text || demo.defaultText);
   const { play, stop, playingId, loadingId, status, error } = useDemoPlayer();
-  const selected = demo.voices.find((item) => item.id === voice);
+
+  const selected = useMemo(
+    () => demo.voices.find((item) => item.id === voice),
+    [demo.voices, voice],
+  );
+  const meta = voiceMeta(selected);
   const mainActive = playingId === 'hero-tts';
   const mainLoading = loadingId === 'hero-tts';
   const previewId = `hero-voice-${voice}`;
   const previewActive = playingId === previewId;
   const previewLoading = loadingId === previewId;
+
+  function selectVoice(nextId: string) {
+    const next = demo.voices.find((item) => item.id === nextId);
+    const nextMeta = voiceMeta(next);
+    setVoice(nextId);
+    // Always swap to the native sample for that language — never keep one English draft.
+    setText(nextMeta.text);
+  }
 
   return (
     <div className="mkt-tts-card">
@@ -42,9 +70,7 @@ export function HeroTtsCard({ demo }: { demo: CmsHeroDemo }) {
               type="button"
               className={item.id === voice ? 'mkt-voice-chip is-active' : 'mkt-voice-chip'}
               aria-pressed={item.id === voice}
-              onClick={() => {
-                setVoice(item.id);
-              }}
+              onClick={() => selectVoice(item.id)}
             >
               {item.label}
             </button>
@@ -64,7 +90,7 @@ export function HeroTtsCard({ demo }: { demo: CmsHeroDemo }) {
               id: 'hero-tts',
               text,
               voiceId: voice,
-              lang: demo.language ?? 'en',
+              lang: meta.lang,
               label: selected?.label,
             });
           }}
@@ -80,15 +106,17 @@ export function HeroTtsCard({ demo }: { demo: CmsHeroDemo }) {
           onPlay={() => {
             void play({
               id: previewId,
-              text: text || demo.defaultText,
+              text: text || meta.text || demo.defaultText,
               voiceId: voice,
-              lang: demo.language ?? 'en',
+              lang: meta.lang,
               label: selected?.label,
             });
           }}
         />
         <p className="mkt-tts-hint" role="status" aria-live="polite">
-          {error ?? status ?? 'Press Play to hear this script in the selected voice.'}
+          {error ??
+            status ??
+            `Press Play to hear this script in ${selected?.label ?? 'the selected voice'} (${meta.lang}).`}
         </p>
       </div>
     </div>

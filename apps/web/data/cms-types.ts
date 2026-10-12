@@ -91,14 +91,23 @@ export type CmsFooterColumn = {
   links: CmsLink[];
 };
 
+export type CmsHeroDemoVoice = {
+  id: string;
+  label: string;
+  /** BCP-47 language this voice speaks natively (drives script + TTS). */
+  lang?: string;
+  /** Script written in this voice's language — required for non-English voices. */
+  sampleText?: string;
+};
+
 export type CmsHeroDemo = {
   title: string;
   badge: string;
   defaultText: string;
-  /** BCP-47 language of `defaultText`; each voice speaks it with its own local accent. Defaults to English. */
+  /** BCP-47 language of `defaultText` when no per-voice sample is set. Defaults to English. */
   language?: string;
   playHint: string;
-  voices: { id: string; label: string }[];
+  voices: CmsHeroDemoVoice[];
 };
 
 export type CmsDocument = {

@@ -7,32 +7,15 @@ import { TranslatePlayDemo } from '@/components/marketing/translate-play-demo';
 import { VoiceChipRow } from '@/components/marketing/voice-chip-row';
 import { VoiceCloneFaqDemo } from '@/components/marketing/voice-clone-faq-demo';
 import { CMS_DEFAULTS } from '@/data/cms-defaults';
-
-/** A short welcome written in each voice's own language — never one script read by every voice. */
-const NATIVE_GREETINGS: Record<string, string> = {
-  sw: 'Habari, karibu Lugemi.',
-  yo: 'Ẹ káàbọ̀ sí Lugemi.',
-  am: 'እንኳን ወደ ሉገሚ በደህና መጡ።',
-  zu: 'Sawubona, wamukelekile kuLugemi.',
-  ar: 'أهلاً بيك في لوجيمي.',
-  fr: 'Bonjour, bienvenue sur Lugemi.',
-  ha: 'Sannu, barka da zuwa Lugemi.',
-  ak: 'Akwaaba, wo ho te sɛn?',
-};
-
-/** `own:fr-sn-female` → `fr-SN`. */
-function voiceLocale(voiceId: string): string {
-  const [lang = 'en', region] = voiceId.replace(/^own:/, '').split('-');
-  return region ? `${lang}-${region.toUpperCase()}` : lang;
-}
+import { nativeScriptForLang, resolveVoiceDemoScript } from '@/lib/native-demo-scripts';
 
 const SAMPLE_VOICES = CMS_DEFAULTS.console.sampleVoices.map((v) => {
-  const lang = voiceLocale(v.voiceId);
+  const resolved = resolveVoiceDemoScript(v.id);
   return {
     id: v.id,
     label: v.label,
-    lang,
-    sample: NATIVE_GREETINGS[lang.split('-')[0]!] ?? `${v.label}.`,
+    lang: resolved.lang,
+    sample: nativeScriptForLang(resolved.lang),
   };
 });
 

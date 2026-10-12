@@ -417,10 +417,14 @@ export function CmsEditor() {
               }
             />
             <Field
-              label="Demo voices (one per line: id|label)"
-              value={doc.hero.demo.voices.map((v) => `${v.id}|${v.label}`).join('\n')}
+              label="Demo voices (one per line: id|label|lang|sampleText)"
+              value={doc.hero.demo.voices
+                .map((v) =>
+                  [v.id, v.label, v.lang ?? '', v.sampleText ?? ''].join('|'),
+                )
+                .join('\n')}
               multiline
-              rows={5}
+              rows={6}
               onChange={(v) =>
                 setDoc({
                   ...doc,
@@ -435,8 +439,10 @@ export function CmsEditor() {
                         .map((line) => {
                           const parts = line.split('|');
                           const id = (parts[0] ?? 'voice').trim();
-                          const label = parts.slice(1).join('|').trim() || id;
-                          return { id, label };
+                          const label = (parts[1] ?? id).trim() || id;
+                          const lang = (parts[2] ?? '').trim() || undefined;
+                          const sampleText = parts.slice(3).join('|').trim() || undefined;
+                          return { id, label, lang, sampleText };
                         }),
                     },
                   },

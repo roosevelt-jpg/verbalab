@@ -208,13 +208,38 @@ export const CMS_DEFAULTS: CmsDocument = {
       badge: 'Live sample',
       defaultText:
         'Lugemi voices carry creative work, customer conversations, and public speech with literacy and presence across African languages.',
+      language: 'en-NG',
       playHint:
-        'No autoplay. Play explains the generation path — it does not invent waveforms or audio levels.',
+        'Pick a voice — the script switches to that language so Play speaks natively, not English with a foreign accent.',
       voices: [
-        { id: 'en-ng-female', label: 'Chioma · Nigerian English' },
-        { id: 'amara', label: 'Aisha · Nairobi (Kiswahili)' },
-        { id: 'en-za-female', label: 'Lerato · South African English' },
-        { id: 'en-gh-female', label: 'Ama · Ghanaian English' },
+        {
+          id: 'en-ng-female',
+          label: 'Chioma · Nigerian English',
+          lang: 'en-NG',
+          sampleText:
+            'Lugemi voices carry creative work, customer conversations, and public speech with literacy and presence across African languages.',
+        },
+        {
+          id: 'amara',
+          label: 'Aisha · Nairobi (Kiswahili)',
+          lang: 'sw-KE',
+          sampleText:
+            'Sauti za Lugemi hubeba kazi za ubunifu, mazungumzo na wateja, na hotuba za umma kwa kusoma na uwepo katika lugha za Kiafrika.',
+        },
+        {
+          id: 'en-za-female',
+          label: 'Lerato · South African English',
+          lang: 'en-ZA',
+          sampleText:
+            'Lugemi voices carry creative work, customer conversations, and public speech with literacy and presence across African languages.',
+        },
+        {
+          id: 'en-gh-female',
+          label: 'Ama · Ghanaian English',
+          lang: 'en-GH',
+          sampleText:
+            'Lugemi voices carry creative work, customer conversations, and public speech with literacy and presence across African languages.',
+        },
       ],
     },
   },

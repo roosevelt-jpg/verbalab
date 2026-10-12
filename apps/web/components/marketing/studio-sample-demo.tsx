@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
+import { nativeScriptForLang } from '@/lib/native-demo-scripts';
 import { useDemoPlayer } from './use-demo-player';
 
 export function StudioSampleDemo({
@@ -20,22 +21,22 @@ export function StudioSampleDemo({
     Swahili: {
       voiceId: 'amara',
       lang: 'sw-KE',
-      text: 'Habari — chapa yako inaweza kuzungumza na wateja kwa Kiswahili na Kifaransa kutoka rasimu moja.',
+      text: nativeScriptForLang('sw-KE'),
     },
     Afrikaans: {
       voiceId: 'af-za-female',
       lang: 'af-ZA',
-      text: 'Goeiedag — jou handelsmerk kan met kliënte praat in Swahili, Afrikaans en Frans vanaf een konsep.',
+      text: nativeScriptForLang('af-ZA'),
     },
     French: {
       voiceId: 'fr-fr-female',
       lang: 'fr-FR',
-      text: 'Bonjour — votre marque peut parler à vos clients en swahili, en afrikaans et en français à partir d’un seul brouillon.',
+      text: nativeScriptForLang('fr-FR'),
     },
     Amharic: {
       voiceId: 'am-et-female',
       lang: 'am-ET',
-      text: 'ሰላም — የእርስዎ ብራንድ ከአንድ ረቂቅ ብቻ ደንበኞችን በስዋሂሊ፣ በአፍሪካንስ እና በፈረንሳይኛ ማነጋገር ይችላል።',
+      text: nativeScriptForLang('am-ET'),
     },
   };
 

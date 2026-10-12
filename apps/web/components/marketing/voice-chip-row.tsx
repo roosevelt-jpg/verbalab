@@ -1,6 +1,7 @@
 'use client';
 
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
+import { nativeScriptForLang, resolveVoiceDemoScript } from '@/lib/native-demo-scripts';
 import { useDemoPlayer } from './use-demo-player';
 
 export function VoiceChipRow({
@@ -13,9 +14,9 @@ export function VoiceChipRow({
   return (
     <div className="mkt-voice-play-row">
       {voices.map((v) => {
-        const sample =
-          v.sample ??
-          `Hello from ${v.label}. This is a Lugemi voice preview for speaking agents.`;
+        const resolved = resolveVoiceDemoScript(v.id);
+        const sample = v.sample ?? nativeScriptForLang(v.lang ?? resolved.lang);
+        const lang = v.lang ?? resolved.lang;
         const id = `chip-${v.id}`;
         const active = playingId === id;
         const loading = loadingId === id;
@@ -34,7 +35,7 @@ export function VoiceChipRow({
                 id,
                 text: sample,
                 voiceId: v.id,
-                lang: v.lang,
+                lang,
                 label: v.label,
               });
             }}
