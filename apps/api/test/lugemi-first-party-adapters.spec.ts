@@ -11,6 +11,15 @@ describe('Lugemi first-party local engines', () => {
       /wo ho te sɛn|mepɛ/i,
     );
     expect(lugemiLocalTranslate('how are you doing now', 'en', 'yo')).toMatch(/Báwo|báyìí/i);
+    // Everyday Studio sentence — must be full Twi, not "What are you doing ɛnnɛ".
+    expect(lugemiLocalTranslate('what are you doing today', 'en', 'ak')).toMatch(
+      /Woreyɛ dɛn ɛnnɛ/i,
+    );
+    expect(lugemiLocalTranslate('what are you doing today', 'en', 'ak')).not.toMatch(
+      /what are you doing/i,
+    );
+    expect(lugemiLocalTranslate('what are you doing today', 'en', 'sw')).toMatch(/Unafanya nini leo/i);
+    expect(lugemiLocalTranslate('what are you doing today', 'en', 'yo')).toMatch(/Kí lo ń ṣe lónìí/i);
     // Chat Studio starter: meta-prompt → spoken Twi greeting (not a hard fail).
     expect(
       lugemiLocalTranslate('Translate this greeting into Twi and play it back', 'en', 'ak'),
@@ -20,6 +29,10 @@ describe('Lugemi first-party local engines', () => {
     );
     // Unknown long form must not pretend English is a translation.
     expect(lugemiLocalTranslate('long form text for complex tasks', 'en', 'yo')).toMatch(
+      /unavailable|no rendering/i,
+    );
+    // Partial lexicon hits must fail closed (no mixed English leftovers).
+    expect(lugemiLocalTranslate('please ship the package today', 'en', 'ak')).toMatch(
       /unavailable|no rendering/i,
     );
   });

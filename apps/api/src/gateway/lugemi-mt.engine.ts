@@ -30,6 +30,36 @@ const PHRASE_TABLE: Array<{
       ['how are you doing', 'Wo ho te sɛn?'],
       ['how are you doing now?', 'Wo ho te sɛn seesei?'],
       ['how are you doing now', 'Wo ho te sɛn seesei?'],
+      ['what are you doing today?', 'Woreyɛ dɛn ɛnnɛ?'],
+      ['what are you doing today', 'Woreyɛ dɛn ɛnnɛ?'],
+      ['what are you doing?', 'Woreyɛ dɛn?'],
+      ['what are you doing', 'Woreyɛ dɛn?'],
+      ['what are you up to today?', 'Woreyɛ dɛn ɛnnɛ?'],
+      ['what are you up to today', 'Woreyɛ dɛn ɛnnɛ?'],
+      ['what are you up to?', 'Woreyɛ dɛn?'],
+      ['what are you up to', 'Woreyɛ dɛn?'],
+      ['where are you going?', 'Worekɔ he?'],
+      ['where are you going', 'Worekɔ he?'],
+      ['where are you?', 'Wowɔ he?'],
+      ['where are you', 'Wowɔ he?'],
+      ['what is your name?', 'Wo din de sɛn?'],
+      ['what is your name', 'Wo din de sɛn?'],
+      ['my name is', 'Me din de'],
+      ['nice to meet you', 'Me nso mefɛ w’anim'],
+      ['good night', 'Da yie'],
+      ['goodbye', 'Nante yie'],
+      ['see you tomorrow', 'Yɛbɛhyia ɔkyena'],
+      ['i love you', 'Medɔ wo'],
+      ['i am hungry', 'Ɛkɔm de me'],
+      ['i am tired', 'Mabrɛ'],
+      ['i don’t understand', 'Mentumi nte aseɛ'],
+      ["i don't understand", 'Mentumi nte aseɛ'],
+      ['can you help me?', 'Wobetumi aboa me?'],
+      ['can you help me', 'Wobetumi aboa me?'],
+      ['where is the market?', 'Gua no wɔ he?'],
+      ['where is the market', 'Gua no wɔ he?'],
+      ['how much is this?', 'Eyi yɛ sɛn?'],
+      ['how much is this', 'Eyi yɛ sɛn?'],
       ['i want to know how you are doing now.', 'Mepɛ sɛ mehunu sɛ wo ho te sɛn seesei.'],
       ['i want to know how you are doing now', 'Mepɛ sɛ mehunu sɛ wo ho te sɛn seesei.'],
       ['i want to know how you are', 'Mepɛ sɛ mehunu sɛ wo ho te sɛn'],
@@ -38,6 +68,7 @@ const PHRASE_TABLE: Array<{
       ['yes', 'Aane'],
       ['no', 'Daabi'],
       ['i am fine', 'Me ho yɛ'],
+      ['i am fine thank you', 'Me ho yɛ, medaase'],
       ['see you later', 'Yɛbɛhyia akyiri'],
       ['sorry', 'Kafra'],
       ['help', 'Boa me'],
@@ -76,6 +107,22 @@ const PHRASE_TABLE: Array<{
       ['how are you doing', 'Habari yako?'],
       ['how are you doing now?', 'Habari yako sasa?'],
       ['how are you doing now', 'Habari yako sasa?'],
+      ['what are you doing today?', 'Unafanya nini leo?'],
+      ['what are you doing today', 'Unafanya nini leo?'],
+      ['what are you doing?', 'Unafanya nini?'],
+      ['what are you doing', 'Unafanya nini?'],
+      ['where are you going?', 'Unaenda wapi?'],
+      ['where are you going', 'Unaenda wapi?'],
+      ['what is your name?', 'Jina lako nani?'],
+      ['what is your name', 'Jina lako nani?'],
+      ['good night', 'Lala salama'],
+      ['goodbye', 'Kwaheri'],
+      ['see you tomorrow', 'Tutaonana kesho'],
+      ['i love you', 'Nakupenda'],
+      ['i don’t understand', 'Sielewi'],
+      ["i don't understand", 'Sielewi'],
+      ['can you help me?', 'Unaweza kunisaidia?'],
+      ['can you help me', 'Unaweza kunisaidia?'],
       ['i want to know how you are doing now.', 'Ninataka kujua habari yako sasa.'],
       ['i want to know how you are doing now', 'Ninataka kujua habari yako sasa.'],
       ['welcome to lugemi', 'Karibu Lugemi'],
@@ -102,6 +149,22 @@ const PHRASE_TABLE: Array<{
       ['how are you doing', 'Báwo ni?'],
       ['how are you doing now?', 'Báwo ni báyìí?'],
       ['how are you doing now', 'Báwo ni báyìí?'],
+      ['what are you doing today?', 'Kí lo ń ṣe lónìí?'],
+      ['what are you doing today', 'Kí lo ń ṣe lónìí?'],
+      ['what are you doing?', 'Kí lo ń ṣe?'],
+      ['what are you doing', 'Kí lo ń ṣe?'],
+      ['where are you going?', 'Níbo lo ń lọ?'],
+      ['where are you going', 'Níbo lo ń lọ?'],
+      ['what is your name?', 'Kí ni orúkọ rẹ?'],
+      ['what is your name', 'Kí ni orúkọ rẹ?'],
+      ['good night', 'Ó dàárọ̀'],
+      ['goodbye', 'Ó dàbọ̀'],
+      ['see you tomorrow', 'A ó rí ọ̀la'],
+      ['i love you', 'Mo nifẹ́ rẹ'],
+      ['i don’t understand', 'Mi ò ye'],
+      ["i don't understand", 'Mi ò ye'],
+      ['can you help me?', 'Ṣé o lè ràn mí lọ́wọ́?'],
+      ['can you help me', 'Ṣé o lè ràn mí lọ́wọ́?'],
       ['i want to know how you are doing now.', 'Mo fẹ́ mọ bí o ṣe wà báyìí.'],
       ['i want to know how you are doing now', 'Mo fẹ́ mọ bí o ṣe wà báyìí.'],
       ['welcome to lugemi', 'Ẹ kú àbọ̀ sí Lugemi'],
@@ -385,6 +448,47 @@ function lookupPhrase(text: string, source: string, target: string): string | nu
   return null;
 }
 
+/** Brand / proper nouns that may remain Latin after an honest lexical pass. */
+const LEXICAL_PASSTHROUGH = new Set(['lugemi', 'order', 'api', 'ok', 'a', 'an', 'the']);
+
+/**
+ * Reject glossary-style leftovers like "What are you doing ɛnnɛ".
+ * Source words that still appear as whole Latin tokens in the output (and are
+ * not intentional passthroughs) mean the sentence was not honestly rendered.
+ */
+function lexicalCoverageOk(source: string, rendered: string): boolean {
+  const srcTokens = (source.toLowerCase().match(/[a-zA-Z’']+/g) ?? [])
+    .map((t) => t.replace(/’/g, "'"))
+    .filter(Boolean);
+  if (srcTokens.length === 0) return true;
+
+  const srcSet = new Set(srcTokens);
+  const outTokens = (rendered.toLowerCase().match(/[a-zA-Z’']+/g) ?? []).map((t) =>
+    t.replace(/’/g, "'"),
+  );
+
+  let leftover = 0;
+  for (const token of outTokens) {
+    if (!srcSet.has(token)) continue;
+    if (LEXICAL_PASSTHROUGH.has(token)) continue;
+    leftover += 1;
+  }
+
+  // Zero English content leftovers required for short utterances; allow at most
+  // one leftover on longer copy when ≥80% of source tokens were rendered away.
+  if (leftover === 0) return true;
+  if (srcTokens.length >= 8 && leftover === 1) {
+    const renderedAway = srcTokens.filter((t) => {
+      if (LEXICAL_PASSTHROUGH.has(t)) return true;
+      return !new RegExp(`\\b${t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i').test(
+        rendered,
+      );
+    }).length;
+    return renderedAway / srcTokens.length >= 0.8;
+  }
+  return false;
+}
+
 function lexicalTranslate(text: string, target: string): string | null {
   const book = LEXICONS[baseLang(target)];
   if (!book) return null;
@@ -400,6 +504,7 @@ function lexicalTranslate(text: string, target: string): string | null {
     }
   }
   if (!hit) return null;
+  if (!lexicalCoverageOk(text, out)) return null;
 
   // Capitalize sentence start if Latin script
   if (/^[a-zàâäéèêëïîôùûüç]/i.test(out)) {
