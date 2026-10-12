@@ -7,6 +7,7 @@ import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
 import { useDemoPlayer } from '@/components/marketing/use-demo-player';
 import { LocaleSelect } from '@/components/language-locale-select';
 import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
+import { demoVoiceForLang } from '@/lib/native-demo-scripts';
 
 type Result = {
   mode: string;
@@ -107,7 +108,14 @@ export function PragmaticsClient() {
             active={playingId === 'prag-out'}
             loading={loadingId === 'prag-out'}
             variant="secondary"
-            onPlay={() => void play({ id: 'prag-out', text: result.translation, lang: target })}
+            onPlay={() =>
+              void play({
+                id: 'prag-out',
+                text: result.translation,
+                lang: target,
+                voiceId: demoVoiceForLang(target),
+              })
+            }
             onStop={() => stop()}
             label="Play"
           />

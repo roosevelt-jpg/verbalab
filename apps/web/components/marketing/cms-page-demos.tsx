@@ -222,11 +222,11 @@ export function CmsPageDemos({ slug }: { slug: string }) {
         <AgentChatDemo
           title="Disclosure-aware speaking turn"
           userText="Can you repeat that in Twi for my customer?"
-          agentText="Aane — me bɛka bio wɔ Twi mu. Generated speech stays labeled when it could be mistaken for a live person."
+          agentText="Aane — me bɛka bio wɔ Twi mu. Lugemi nne ma ɔka adwuma a wɔyɛ wɔ Africa kasa ahorow mu."
           userVoiceId="kwame"
-          agentVoiceId="en-gh-female"
+          agentVoiceId="kwame"
           userLang="en-GH"
-          agentLang="ak-GH"
+          agentLang="en-GH"
         />
       </div>
     );

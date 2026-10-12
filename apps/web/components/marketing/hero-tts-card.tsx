@@ -88,7 +88,7 @@ export function HeroTtsCard({ demo }: { demo: CmsHeroDemo }) {
           onPlay={() => {
             void play({
               id: 'hero-tts',
-              text,
+              text: text || meta.text,
               voiceId: voice,
               lang: meta.lang,
               label: selected?.label,
@@ -104,12 +104,14 @@ export function HeroTtsCard({ demo }: { demo: CmsHeroDemo }) {
           stopLabel="Stop"
           onStop={stop}
           onPlay={() => {
+            // Preview voice always uses the native sample for that language.
             void play({
               id: previewId,
-              text: text || meta.text || demo.defaultText,
+              text: meta.text,
               voiceId: voice,
               lang: meta.lang,
               label: selected?.label,
+              forceNative: true,
             });
           }}
         />

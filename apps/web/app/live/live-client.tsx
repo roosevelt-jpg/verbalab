@@ -7,6 +7,7 @@ import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
 import { useDemoPlayer } from '@/components/marketing/use-demo-player';
 import { LocaleSelect } from '@/components/language-locale-select';
 import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
+import { demoVoiceForLang } from '@/lib/native-demo-scripts';
 
 type LiveEvent = {
   event_id: string;
@@ -202,7 +203,14 @@ export function LiveClient() {
             active={playingId === 'live-spoken'}
             loading={loadingId === 'live-spoken'}
             variant="secondary"
-            onPlay={() => void play({ id: 'live-spoken', text: lastSpoken.text!, lang: targetLanguage })}
+            onPlay={() =>
+              void play({
+                id: 'live-spoken',
+                text: lastSpoken.text!,
+                lang: targetLanguage,
+                voiceId: demoVoiceForLang(targetLanguage),
+              })
+            }
             onStop={() => stop()}
             label="Play last spoken / repair"
           />

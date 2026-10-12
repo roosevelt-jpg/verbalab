@@ -11,6 +11,7 @@ import { AnamorphicPanel } from '@/components/media/anamorphic-panel';
 import { AudioPreviewBar } from '@/components/media/audio-preview-bar';
 import { loadCreativeApiKey, resolveCreativeToken } from '@/lib/creative-auth';
 import { CreativeApiKeyField } from '@/components/creative/creative-api-key-field';
+import { resolveDemoPreview } from '@/lib/native-demo-scripts';
 
 type Match = {
   id: string;
@@ -79,12 +80,17 @@ function CreativeVoiceDesignInner({
     }
   }
 
-  async function preview(voiceId: string) {
+  async function preview(voiceId: string, languages?: string[]) {
     setBusy(true);
     setError(null);
     try {
       const token = await resolveToken();
       if (!token) throw new Error('Sign in or paste a lg_test_ / lg_live_ API key.');
+      const sample = resolveDemoPreview({
+        voiceId,
+        lang: languages?.[0],
+        forceNative: true,
+      });
       const res = await fetch(`${API_URL}/v1/tts/synthesize`, {
         method: 'POST',
         headers: {
@@ -92,8 +98,9 @@ function CreativeVoiceDesignInner({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          text: 'Akwaaba — this is a Lugemi Echo preview for your designed voice.',
-          voice: voiceId,
+          text: sample.text,
+          voice: sample.voiceId.startsWith('own:') ? sample.voiceId : voiceId,
+          language: sample.lang,
           format: 'mp3',
         }),
       });
@@ -170,7 +177,11 @@ function CreativeVoiceDesignInner({
                       {m.rationale.slice(0, 4).join(' · ') || m.personality || m.id}
                     </div>
                     <div style={{ display: 'flex', gap: 8, marginTop: 8, flexWrap: 'wrap' }}>
-                      <button type="button" className="lg-creative-btn" onClick={() => void preview(m.id)}>
+                      <button
+                        type="button"
+                        className="lg-creative-btn"
+                        onClick={() => void preview(m.id, m.languages)}
+                      >
                         Preview
                       </button>
                       <Link

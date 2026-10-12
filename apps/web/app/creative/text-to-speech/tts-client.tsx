@@ -24,6 +24,11 @@ import {
 } from '@/lib/creative-video-project';
 import { loadCreativeApiKey, resolveCreativeToken } from '@/lib/creative-auth';
 import { CreativeApiKeyField } from '@/components/creative/creative-api-key-field';
+import {
+  isGenericEnglishPreview,
+  nativeScriptForLang,
+  resolveVoiceDemoScript,
+} from '@/lib/native-demo-scripts';
 
 type Voice = {
   id: string;
@@ -321,7 +326,22 @@ function CreativeTtsClientInner({ getToken, isLoaded }: { getToken: () => Promis
               </label>
               <label>
                 Voice
-                <select value={voiceId} onChange={(e) => setVoiceId(e.target.value)}>
+                <select
+                  value={voiceId}
+                  onChange={(e) => {
+                    const nextId = e.target.value;
+                    setVoiceId(nextId);
+                    const next = voices.find((v) => v.id === nextId);
+                    const lang = next?.languages?.[0];
+                    const resolved = resolveVoiceDemoScript(nextId);
+                    const nextLang = lang || resolved.lang;
+                    setText((prev) =>
+                      isGenericEnglishPreview(prev) || !prev.trim()
+                        ? nativeScriptForLang(nextLang)
+                        : prev,
+                    );
+                  }}
+                >
                   {voices.length === 0 ? <option value={voiceId}>{voiceId}</option> : null}
                   {voices.map((v) => (
                     <option key={v.id} value={v.id}>

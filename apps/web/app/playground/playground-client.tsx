@@ -12,6 +12,7 @@ import { LocaleSelect } from '@/components/language-locale-select';
 import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
 import { useStudioApiKeyField } from '@/hooks/use-studio-api-key';
 import { SITE_CONTENT } from '@/data/site-content';
+import { demoVoiceForLang } from '@/lib/native-demo-scripts';
 import { formatStudioApiKeyLabel, isLugemiApiKey } from '@/lib/studio-api-key';
 
 type Mode = 'translate' | 'detect' | 'languages';
@@ -246,7 +247,7 @@ export function PlaygroundClient() {
                 id: 'playground-result',
                 text: playText,
                 lang: playLang,
-                voiceId: playLang.startsWith('sw') ? 'amara' : 'abe',
+                voiceId: demoVoiceForLang(playLang),
               });
             }}
           />

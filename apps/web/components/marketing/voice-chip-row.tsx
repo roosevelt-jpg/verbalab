@@ -15,8 +15,10 @@ export function VoiceChipRow({
     <div className="mkt-voice-play-row">
       {voices.map((v) => {
         const resolved = resolveVoiceDemoScript(v.id);
-        const sample = v.sample ?? nativeScriptForLang(v.lang ?? resolved.lang);
         const lang = v.lang ?? resolved.lang;
+        // Always prefer native script for the voice language — never keep a
+        // caller English sample when the voice speaks another language.
+        const sample = nativeScriptForLang(lang);
         const id = `chip-${v.id}`;
         const active = playingId === id;
         const loading = loadingId === id;
@@ -37,6 +39,7 @@ export function VoiceChipRow({
                 voiceId: v.id,
                 lang,
                 label: v.label,
+                forceNative: true,
               });
             }}
           />

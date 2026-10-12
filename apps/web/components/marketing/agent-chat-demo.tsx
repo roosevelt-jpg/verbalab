@@ -1,6 +1,7 @@
 'use client';
 
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
+import { resolveVoiceDemoScript } from '@/lib/native-demo-scripts';
 import { useDemoPlayer } from './use-demo-player';
 
 export function AgentChatDemo({
@@ -9,8 +10,8 @@ export function AgentChatDemo({
   agentText,
   userVoiceId = 'user',
   agentVoiceId = 'agent',
-  userLang = 'en',
-  agentLang = 'en',
+  userLang,
+  agentLang,
 }: {
   title: string;
   userText: string;
@@ -23,6 +24,10 @@ export function AgentChatDemo({
   const { play, stop, playingId, loadingId, status, error } = useDemoPlayer();
   const convActive = playingId === 'chat-user' || playingId === 'chat-agent';
   const convLoading = loadingId === 'chat-user' || loadingId === 'chat-agent';
+  // Lang follows the voice profile when callers omit it — never default to bare "en"
+  // while the agent voice speaks Kiswahili (or another L1).
+  const resolvedUserLang = userLang ?? resolveVoiceDemoScript(userVoiceId).lang;
+  const resolvedAgentLang = agentLang ?? resolveVoiceDemoScript(agentVoiceId).lang;
 
   return (
     <div className="mkt-fake-chat mkt-chat-demo">
@@ -42,7 +47,12 @@ export function AgentChatDemo({
           }
           onStop={stop}
           onPlay={() => {
-            void play({ id: 'chat-user', text: userText, voiceId: userVoiceId, lang: userLang });
+            void play({
+              id: 'chat-user',
+              text: userText,
+              voiceId: userVoiceId,
+              lang: resolvedUserLang,
+            });
           }}
         />
       </div>
@@ -65,7 +75,7 @@ export function AgentChatDemo({
               id: 'chat-agent',
               text: agentText,
               voiceId: agentVoiceId,
-              lang: agentLang,
+              lang: resolvedAgentLang,
             });
           }}
         />
@@ -79,12 +89,17 @@ export function AgentChatDemo({
           stopLabel="Stop"
           onStop={stop}
           onPlay={async () => {
-            await play({ id: 'chat-user', text: userText, voiceId: userVoiceId, lang: userLang });
+            await play({
+              id: 'chat-user',
+              text: userText,
+              voiceId: userVoiceId,
+              lang: resolvedUserLang,
+            });
             await play({
               id: 'chat-agent',
               text: agentText,
               voiceId: agentVoiceId,
-              lang: agentLang,
+              lang: resolvedAgentLang,
             });
           }}
         />

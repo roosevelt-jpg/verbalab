@@ -84,10 +84,11 @@ export function StudioSampleDemo({
           stopLabel="Stop"
           onStop={stop}
           onPlay={() => {
-            setScript(sample);
+            const mainText = sample?.trim() || nativeScriptForLang('en-NG');
+            setScript(mainText);
             void play({
               id: 'studio-main',
-              text: sample,
+              text: mainText,
               voiceId: 'abe',
               lang: 'en-NG',
             });

@@ -15,6 +15,7 @@ import { API_URL, apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
 import { playDemoSpeech, stopDemoSpeech } from '@/lib/demo-speech';
+import { demoVoiceForLang } from '@/lib/native-demo-scripts';
 import { resolveWorkspaceBearer } from '@/lib/studio-api-key';
 import {
   getSpeechRecognitionCtor,
@@ -432,10 +433,11 @@ export function ChatClient() {
     try {
       const culturalVoice = culturalPack?.echoVoiceId?.replace(/^own:/, '');
       const auth = await resolveWorkspaceBearer(() => getToken());
+      const playLang = culturalPack?.bcp47 || lang;
       await playDemoSpeech({
         text,
-        lang: culturalPack?.bcp47 || lang,
-        voiceId: culturalVoice || (lang.startsWith('sw') ? 'amara' : 'abe'),
+        lang: playLang,
+        voiceId: culturalVoice || demoVoiceForLang(playLang),
         token: auth,
         onStarted: () => {
           if (token !== playbackGen.current) return;

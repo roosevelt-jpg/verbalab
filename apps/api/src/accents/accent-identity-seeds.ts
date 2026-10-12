@@ -483,7 +483,7 @@ const HAND_AUTHORED_ACCENT_IDENTITY_SEEDS: AccentIdentitySeed[] = [
     identityProfile:
       'Urban Kenyan Swahili with Sheng street mix — Nairobi, Mombasa. Younger speakers blend English, Swahili, and local languages.',
     pronunciationMarkers: ['sasa', 'poa', 'niaje', 'safi', 'bro', 'msee'],
-    samplePhrase: 'Niaje bro! Safi sana. Sasa tuende town — poa, niko ready.',
+    samplePhrase: 'Niaje! Safi sana. Sasa tuende mjini — poa, niko tayari.',
     echoVoiceId: 'own:sw-ke-female',
     echoModelVariant: 'lugemi-echo-voice-ke-swahili',
     bcp47: 'sw-KE',

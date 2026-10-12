@@ -8,6 +8,7 @@ import { useDemoPlayer } from '@/components/marketing/use-demo-player';
 import { LocaleSelect } from '@/components/language-locale-select';
 import { SearchableCombobox } from '@/components/searchable-combobox';
 import { useLocaleCatalog } from '@/hooks/use-locale-catalog';
+import { demoVoiceForLang } from '@/lib/native-demo-scripts';
 
 type MixResult = {
   original_transcript: string;
@@ -204,7 +205,12 @@ export function MixClient() {
                   loading={loadingId === 'mix-translation'}
                   variant="secondary"
                   onPlay={() =>
-                    void play({ id: 'mix-translation', text: result.translation, lang: target })
+                    void play({
+                      id: 'mix-translation',
+                      text: result.translation,
+                      lang: target,
+                      voiceId: demoVoiceForLang(target),
+                    })
                   }
                   onStop={() => stop()}
                   label="Play translation"

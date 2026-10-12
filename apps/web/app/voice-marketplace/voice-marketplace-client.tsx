@@ -8,6 +8,7 @@ import { AppShell } from '@/components/app-shell';
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
 import { useDemoPlayer } from '@/components/marketing/use-demo-player';
 import { SearchableCombobox, type ComboboxOption } from '@/components/searchable-combobox';
+import { resolveDemoPreview } from '@/lib/native-demo-scripts';
 
 type Listing = {
   id: string;
@@ -265,12 +266,18 @@ export function VoiceMarketplaceClient() {
                       l.previewVoiceId ??
                       l.snapshot?.voices?.[0] ??
                       (l.language ? `own:${l.language}-pack` : 'nova');
+                    const preview = resolveDemoPreview({
+                      voiceId: previewVoice,
+                      lang: l.language,
+                      forceNative: true,
+                    });
                     void play({
                       id: `mp-${l.id}`,
-                      text: `Hello from ${l.title}. This is a Lugemi marketplace voice preview.`,
-                      voiceId: previewVoice,
-                      lang: l.language ?? undefined,
+                      text: preview.text,
+                      voiceId: preview.voiceId,
+                      lang: preview.lang,
                       label: l.title,
+                      forceNative: true,
                     });
                   }}
                 />

@@ -11,6 +11,11 @@ import { ANAMORPHIC_STILLS } from '@/lib/anamorphic-stills';
 import { API_URL } from '@/lib/api';
 import { loadCreativeApiKey, resolveCreativeToken } from '@/lib/creative-auth';
 import { DEMO_VOICE_PROFILES } from '@/lib/demo-speech';
+import {
+  ENGLISH_PRODUCT_SCRIPT,
+  isGenericEnglishPreview,
+  nativeScriptForLang,
+} from '@/lib/native-demo-scripts';
 import './voice-studio.css';
 
 type Project = {
@@ -78,13 +83,13 @@ function StudioInner({ auth }: { auth: CreativeAuth }) {
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [title, setTitle] = useState('Nairobi market announcement');
-  const [sourceLanguage, setSourceLanguage] = useState('en');
-  const [script, setScript] = useState(
-    'Welcome to Lugemi.\n\nWe can deliver fifty bags of rice by Friday for two hundred dollars.\n\nPlease confirm the quantity before noon.',
-  );
-  const [corridorId, setCorridorId] = useState(
-    CORRIDORS.find((c) => c.lang.startsWith('sw'))?.id ?? CORRIDORS[0]?.id ?? 'sw-ke-female',
-  );
+  const [sourceLanguage, setSourceLanguage] = useState('sw');
+  const initialCorridorId =
+    CORRIDORS.find((c) => c.lang.startsWith('sw'))?.id ?? CORRIDORS[0]?.id ?? 'sw-ke-female';
+  const initialCorridorLang =
+    CORRIDORS.find((c) => c.id === initialCorridorId)?.lang ?? 'sw-KE';
+  const [script, setScript] = useState(() => nativeScriptForLang(initialCorridorLang));
+  const [corridorId, setCorridorId] = useState(initialCorridorId);
   const [edition, setEdition] = useState<Edition | null>(null);
   const [assemblyId, setAssemblyId] = useState<string | null>(null);
   const [assemblyHash, setAssemblyHash] = useState<string | null>(null);
@@ -98,6 +103,19 @@ function StudioInner({ auth }: { auth: CreativeAuth }) {
     () => CORRIDORS.find((c) => c.id === corridorId) ?? CORRIDORS[0],
     [corridorId],
   );
+
+  function selectCorridor(nextId: string) {
+    const next = CORRIDORS.find((c) => c.id === nextId);
+    setCorridorId(nextId);
+    if (!next) return;
+    setSourceLanguage(next.lang.split('-')[0] ?? next.lang);
+    // Swap placeholder / English product drafts to the corridor's native script.
+    setScript((prev) =>
+      isGenericEnglishPreview(prev) || prev === ENGLISH_PRODUCT_SCRIPT || !prev.trim()
+        ? nativeScriptForLang(next.lang)
+        : prev,
+    );
+  }
 
   const authHeaders = useCallback(async () => {
     const token = await resolveCreativeToken(() => auth.getToken(), loadCreativeApiKey());
@@ -559,7 +577,7 @@ function StudioInner({ auth }: { auth: CreativeAuth }) {
             </p>
             <label>
               Language / voice corridor
-              <select value={corridorId} onChange={(e) => setCorridorId(e.target.value)}>
+              <select value={corridorId} onChange={(e) => selectCorridor(e.target.value)}>
                 {CORRIDORS.map((c) => (
                   <option key={c.id} value={c.id}>
                     {c.label} · {c.lang}

@@ -12,6 +12,7 @@ import { CreativeInspoCard } from '@/components/creative/creative-inspo-card';
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
 import { useDemoPlayer } from '@/components/marketing/use-demo-player';
 import type { AnamorphicStillVariant } from '@/lib/anamorphic-stills';
+import { resolveDemoPreview } from '@/lib/native-demo-scripts';
 
 type Listing = {
   id: string;
@@ -80,12 +81,14 @@ function CreativeVoicesClientInner({ getToken, isLoaded }: { getToken: () => Pro
       name: l.title,
       meta: [l.language, l.licenseType, l.publisherName].filter(Boolean).join(' · '),
       letter: l.title.slice(0, 1).toUpperCase(),
+      language: l.language,
     }));
     const fromTts = voices.map((v) => ({
       id: v.id,
       name: v.name,
       meta: [v.category || 'Stock', v.personality, v.languages?.[0]].filter(Boolean).join(' · '),
       letter: v.name.slice(0, 1).toUpperCase(),
+      language: v.languages?.[0] ?? null,
     }));
     const merged = [...fromMarket, ...fromTts];
     return merged.filter((r) => {
@@ -180,11 +183,19 @@ function CreativeVoicesClientInner({ getToken, isLoaded }: { getToken: () => Pro
                         ariaLabel={`Preview voice ${r.name}`}
                         onStop={stop}
                         onPlay={() => {
+                          const voiceId = r.id.startsWith('own:') ? r.id : `own:${r.id}`;
+                          const preview = resolveDemoPreview({
+                            voiceId,
+                            lang: r.language,
+                            forceNative: true,
+                          });
                           void play({
                             id: `voice-${r.id}`,
-                            text: `Welcome to Lugemi. Speaking with ${r.name}.`,
-                            voiceId: r.id.startsWith('own:') ? r.id : `own:${r.id}`,
+                            text: preview.text,
+                            voiceId: preview.voiceId,
+                            lang: preview.lang,
                             label: r.name,
+                            forceNative: true,
                           });
                         }}
                       />
