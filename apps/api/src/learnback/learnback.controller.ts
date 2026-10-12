@@ -37,7 +37,7 @@ function resolveActor(req: AuthedRequest, actorHeader?: string) {
   if (!userId) {
     throw new ApiException(
       'actor_required',
-      'LearnBack requires a Clerk session user, or X-LearnBack-Actor-Id when using API keys / LEARNBACK_ALLOW_TEST_ACTORS=1',
+      'LearnBack requires a signed-in session, or an API key with a LearnBack actor header for local testing.',
       HttpStatus.UNAUTHORIZED,
     );
   }

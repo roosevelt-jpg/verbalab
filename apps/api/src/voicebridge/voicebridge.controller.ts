@@ -40,7 +40,7 @@ function resolveActor(req: AuthedRequest, actorHeader?: string) {
   if (!userId) {
     throw new ApiException(
       'actor_required',
-      'VoiceBridge requires a Clerk session user, or X-VoiceBridge-Actor-Id when using API keys / VOICEBRIDGE_ALLOW_TEST_ACTORS=1',
+      'VoiceBridge requires a signed-in session, or an API key with a VoiceBridge actor header for local testing.',
       HttpStatus.UNAUTHORIZED,
     );
   }

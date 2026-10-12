@@ -61,7 +61,7 @@ export class JobsService implements OnModuleInit, OnModuleDestroy {
     if (!this.redisEnabled()) {
       this.logger.warn(
         process.env.JOBS_INLINE === '1'
-          ? 'JOBS_INLINE=1 — processing jobs in-process without Redis/BullMQ'
+          ? 'Processing jobs in-process without a Redis queue (local/demo mode)'
           : 'REDIS_URL unset — processing jobs in-process without Redis/BullMQ',
       );
       return;

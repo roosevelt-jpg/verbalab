@@ -35,7 +35,7 @@ function resolveActor(req: AuthedRequest, actorHeader?: string) {
   if (!userId) {
     throw new ApiException(
       'actor_required',
-      'Language Assurance requires a Clerk session user, or X-LanguageAssurance-Actor-Id when using API keys / LANGUAGE_ASSURANCE_ALLOW_TEST_ACTORS=1',
+      'Language Assurance requires a signed-in session, or an API key with a Language Assurance actor header for local testing.',
       HttpStatus.UNAUTHORIZED,
     );
   }

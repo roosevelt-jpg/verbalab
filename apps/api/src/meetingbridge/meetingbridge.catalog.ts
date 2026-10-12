@@ -75,17 +75,17 @@ export function meetingbridgeCatalog(input?: {
     translation: {
       fixtureAllowed: fixtureMt,
       note: fixtureMt
-        ? 'Fixture MT allowed in test / MEETINGBRIDGE_ALLOW_FIXTURE_MT=1. Labeled in responses.'
+        ? 'Labeled fixture translation is enabled for test and local demos.'
         : 'Uses Lugemi Translate adapters. Unsupported pairs return capability errors.',
     },
     approvalPolicyDefault: DEFAULT_APPROVAL_POLICY,
     limitations: [
       'Silence, presence, playback, reaction emoji, and AI summaries are never agreement.',
       'Leaving the room does not authorize the organizer to confirm for another person.',
-      'Neural Ghana ASR remains gated by MEETINGBRIDGE_GHANA_ASR=1 until measured coverage is published.',
-      'Live simultaneous listen-channel TTS requires MEETINGBRIDGE_SIMULTANEOUS=1 plus corridor TTS capability.',
+      'Neural Ghana speech recognition remains gated until measured coverage is published.',
+      'Live simultaneous listen-channel speech requires the simultaneous interpretation capability plus a corridor voice.',
       'DealBridge handoff creates a proposed deal only; MeetingBridge confirmation is not a commercial receipt.',
-      'Zoom/Teams bots and Slack/email/calendar writes require credentials or MEETINGBRIDGE_ALLOW_FIXTURE_INTEGRATIONS=1.',
+      'Zoom/Teams bots and Slack/email/calendar writes require configured integration credentials.',
     ],
     integrations: {
       voiceBridgeFollowUp: {

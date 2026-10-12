@@ -60,7 +60,7 @@ export class AccessLineService {
     if (process.env.ACCESSLINE_DISABLED === '1') {
       throw new ApiException(
         'feature_disabled',
-        'AccessLine is disabled (ACCESSLINE_DISABLED=1)',
+        'AccessLine is temporarily disabled for this environment.',
         HttpStatus.SERVICE_UNAVAILABLE,
       );
     }

@@ -271,6 +271,6 @@ export function modelEvaluationCeilings() {
     maxLabelLength: 120,
     mode: 'sandbox',
     note:
-      'Sandbox ceilings for eval run plans. Live translation eval still gated by EVAL_LIVE=1 + owner/admin.',
+      'Sandbox ceilings for eval run plans. Live translation eval stays gated to owner or admin when enabled.',
   };
 }

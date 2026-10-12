@@ -244,7 +244,7 @@ export class LearnBackAdapters {
       return {
         status: 'not_assessed',
         reason:
-          'No validated pronunciation assessor enabled for this variety (set LEARNBACK_PRONUNCIATION=1 after evaluation).',
+          'No validated pronunciation assessor is enabled for this variety yet.',
         findings: [],
         modelVersion: 'none',
       };

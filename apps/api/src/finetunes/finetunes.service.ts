@@ -66,7 +66,7 @@ export class FineTunesService implements OnModuleInit {
                 ? 'Needs MODAL_TOKEN_ID, MODAL_TOKEN_SECRET, MODAL_LAUNCH_URL'
                 : name === 'vertex'
                   ? 'Needs VERTEX_LAUNCH_URL, VERTEX_ACCESS_TOKEN'
-                  : 'Needs TRAINING_FIXTURE=1 (CI only)',
+                  : 'Fixture training is available in CI only',
         };
       }),
     };
@@ -272,7 +272,7 @@ export class FineTunesService implements OnModuleInit {
     if (launcher === 'fixture' && process.env.TRAINING_FIXTURE !== '1') {
       throw new ApiException(
         'validation_error',
-        'fixture launcher requires TRAINING_FIXTURE=1',
+        'Fixture training launcher is not enabled for this environment',
         HttpStatus.BAD_REQUEST,
       );
     }

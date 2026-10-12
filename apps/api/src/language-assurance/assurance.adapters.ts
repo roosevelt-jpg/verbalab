@@ -79,7 +79,7 @@ export class LanguageAssuranceAdapters {
       return {
         findings: [],
         unavailable:
-          'Independent ASR for spoken realization gated (set LANGUAGE_ASSURANCE_SPOKEN_ASR=1). Matching transcripts would not certify pronunciation.',
+          'Independent speech recognition for spoken realization is gated until measured. Matching transcripts would not certify pronunciation.',
       };
     }
     if (!input.audioBase64?.trim()) {

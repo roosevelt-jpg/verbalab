@@ -72,7 +72,7 @@ export class MeetingBridgeService {
     if (process.env.MEETINGBRIDGE_DISABLED === '1') {
       throw new ApiException(
         'feature_disabled',
-        'MeetingBridge is disabled by MEETINGBRIDGE_DISABLED=1',
+        'MeetingBridge is temporarily disabled for this environment.',
         HttpStatus.FORBIDDEN,
       );
     }
@@ -99,7 +99,7 @@ export class MeetingBridgeService {
     await this.billing.assertFeature(
       organizationId,
       MEETINGBRIDGE_FEATURE,
-      'MeetingBridge requires a plan with the meetingBridge entitlement (Pro+), or set featureOverrides.meetingBridge=true / MEETINGBRIDGE_OPEN=1.',
+      'MeetingBridge requires a Pro plan or higher, or an organization entitlement override.',
     );
   }
 

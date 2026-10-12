@@ -205,7 +205,7 @@ export class ModelEvaluationPlatformService {
           api: 'POST /v1/eval/run',
           modes: ['fixture', 'live', 'reference_oracle'],
           coverage: 'GET /v1/coverage',
-          note: 'Live mode requires EVAL_LIVE=1. Scores are reference metrics on tiny goldens — not SOTA.',
+          note: 'Live vendor eval is not enabled for this workspace. Scores are reference metrics on tiny goldens — not SOTA.',
         },
         honesty: modelEvaluationPlatformHonesty(),
       };

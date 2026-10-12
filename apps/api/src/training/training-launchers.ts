@@ -204,14 +204,14 @@ export class FixtureTrainingLauncher implements TrainingGpuLauncher {
     if (!this.isConfigured()) {
       throw new ApiException(
         'provider_not_configured',
-        'Fixture launcher requires TRAINING_FIXTURE=1',
+        'Fixture training launcher is not enabled for this environment',
         HttpStatus.SERVICE_UNAVAILABLE,
       );
     }
     return {
       externalJobId: `fixture:${input.jobId}`,
       status: 'running',
-      message: 'Fixture rented-GPU launch (TRAINING_FIXTURE=1). Complete via callback or …/complete.',
+      message: 'Fixture rented-GPU launch. Complete via callback or …/complete.',
       providerMeta: { launcher: 'fixture' },
     };
   }

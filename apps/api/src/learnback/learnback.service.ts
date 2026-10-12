@@ -56,7 +56,7 @@ export class LearnBackService implements OnModuleInit {
     if (process.env.LEARNBACK_DISABLED === '1') {
       throw new ApiException(
         'feature_disabled',
-        'LearnBack is disabled by LEARNBACK_DISABLED=1',
+        'LearnBack is temporarily disabled for this environment.',
         HttpStatus.FORBIDDEN,
       );
     }
@@ -83,7 +83,7 @@ export class LearnBackService implements OnModuleInit {
     await this.billing.assertFeature(
       organizationId,
       LEARNBACK_FEATURE,
-      'LearnBack requires a plan with the learnBack entitlement (Pro+), or set featureOverrides.learnBack=true / LEARNBACK_OPEN=1.',
+      'LearnBack requires a Pro plan or higher, or an organization entitlement override.',
     );
   }
 

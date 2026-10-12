@@ -85,7 +85,7 @@ export function languageAssuranceCatalog() {
     ],
     limitations: [
       'Not legal certification or competitive superiority claims.',
-      'Corridors en-ak and en-fr are wired; spoken ASR remains gated until measured (LANGUAGE_ASSURANCE_SPOKEN_ASR=1).',
+      'English↔Akan and English↔French corridors are wired; spoken realization speech recognition remains gated until measured.',
       'Live AccessLine/MeetingBridge duplex guarantees are out of scope for this async service.',
       'Overrides disabled in system policies.',
     ],

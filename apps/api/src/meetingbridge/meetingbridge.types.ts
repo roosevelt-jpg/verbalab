@@ -71,7 +71,7 @@ export type CorridorCapability = {
 
 /**
  * Meeting corridors. Ghana listen-channel TTS uses dedicated Echo pack voices.
- * Neural ASR for Akan/Ewe majors remains gated by MEETINGBRIDGE_GHANA_ASR=1.
+ * Neural ASR for Akan/Ewe majors stays gated until measured coverage is published.
  */
 export const MEETINGBRIDGE_CORRIDORS: CorridorCapability[] = [
   {
@@ -82,7 +82,7 @@ export const MEETINGBRIDGE_CORRIDORS: CorridorCapability[] = [
     translation: true,
     tts: true,
     label: 'English ↔ Akan/Twi (Ghana)',
-    note: 'Primary corridor. Captions + translation wired. Echo voice own:ak-gh-female for listen-channel TTS. Akan ASR gated by MEETINGBRIDGE_GHANA_ASR=1 until measured.',
+    note: 'Primary corridor. Captions and translation are wired, with an Accra Twi listen-channel voice. Akan speech recognition stays gated until measured coverage is published.',
   },
   {
     id: 'en-ee',
@@ -92,7 +92,7 @@ export const MEETINGBRIDGE_CORRIDORS: CorridorCapability[] = [
     translation: true,
     tts: true,
     label: 'English ↔ Ewe (Ghana)',
-    note: 'Translation corridor with Echo voice own:ee-gh-female. ASR gated by MEETINGBRIDGE_GHANA_ASR=1.',
+    note: 'Translation corridor with a Ho Ewe listen-channel voice. Speech recognition stays gated until measured.',
   },
   {
     id: 'en-gaa',
@@ -102,7 +102,7 @@ export const MEETINGBRIDGE_CORRIDORS: CorridorCapability[] = [
     translation: true,
     tts: true,
     label: 'English ↔ Ga (Ghana)',
-    note: 'Ga corridor with Echo pack own:gaa-pack. ASR gated until measured.',
+    note: 'Ga corridor with a dedicated listen-channel voice. Speech recognition stays gated until measured.',
   },
   {
     id: 'en-dag',
@@ -112,7 +112,7 @@ export const MEETINGBRIDGE_CORRIDORS: CorridorCapability[] = [
     translation: true,
     tts: true,
     label: 'English ↔ Dagbani (Ghana)',
-    note: 'Dagbani corridor with Echo pack own:dag-pack. ASR gated until measured.',
+    note: 'Dagbani corridor with a dedicated listen-channel voice. Speech recognition stays gated until measured.',
   },
   {
     id: 'en-fr',

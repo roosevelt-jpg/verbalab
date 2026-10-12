@@ -56,7 +56,7 @@ export class LanguageAssuranceService {
     if (process.env.LANGUAGE_ASSURANCE_DISABLED === '1') {
       throw new ApiException(
         'feature_disabled',
-        'Language Assurance is disabled by LANGUAGE_ASSURANCE_DISABLED=1',
+        'Language Assurance is temporarily disabled for this environment.',
         HttpStatus.FORBIDDEN,
       );
     }
@@ -83,7 +83,7 @@ export class LanguageAssuranceService {
     await this.billing.assertFeature(
       organizationId,
       LANGUAGE_ASSURANCE_FEATURE,
-      'Language Assurance requires a plan with the languageAssurance entitlement (Pro+), or set featureOverrides.languageAssurance=true / LANGUAGE_ASSURANCE_OPEN=1.',
+      'Language Assurance requires a Pro plan or higher, or an organization entitlement override.',
     );
   }
 

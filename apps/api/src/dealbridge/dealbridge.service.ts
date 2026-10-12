@@ -78,7 +78,7 @@ export class DealBridgeService {
     if (process.env.DEALBRIDGE_DISABLED === '1') {
       throw new ApiException(
         'feature_disabled',
-        'DealBridge is disabled by DEALBRIDGE_DISABLED=1',
+        'DealBridge is temporarily disabled for this environment.',
         HttpStatus.FORBIDDEN,
       );
     }
@@ -106,7 +106,7 @@ export class DealBridgeService {
     await this.billing.assertFeature(
       organizationId,
       DEALBRIDGE_FEATURE,
-      'DealBridge requires a plan with the dealBridge entitlement (Pro+), or set featureOverrides.dealBridge=true / DEALBRIDGE_OPEN=1 for pilot.',
+      'DealBridge requires a Pro plan or higher, or an organization entitlement override.',
     );
   }
 

@@ -40,7 +40,7 @@ function resolveActor(req: AuthedRequest, actorHeader?: string) {
   if (!userId) {
     throw new ApiException(
       'actor_required',
-      'DealBridge requires a Clerk session user, or X-DealBridge-Actor-Id when using API keys / DEALBRIDGE_ALLOW_TEST_ACTORS=1',
+      'DealBridge requires a signed-in session, or an API key with a DealBridge actor header for local testing.',
       HttpStatus.UNAUTHORIZED,
     );
   }

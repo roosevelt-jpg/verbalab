@@ -95,7 +95,7 @@ function VoiceBridgeHomeInner({ auth }: { auth: VoiceBridgeAuth }) {
       {!clerkReady || !isSignedIn ? (
         <div className="vl-panel" style={{ padding: '1rem', marginTop: '1.25rem', display: 'grid', gap: '0.5rem' }}>
           <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--muted)' }}>
-            Local/dev: use an API key and actor id (set <code>VOICEBRIDGE_OPEN=1</code> and fixture ASR/MT/TTS as needed).
+            Local or demo: paste an API key and actor id to load threads without signing in.
           </p>
           <input className="vl-input" placeholder="lg_test_… API key" value={apiKey} onChange={(e) => setApiKey(e.target.value)} />
           <input className="vl-input" placeholder="Actor user id" value={actorId} onChange={(e) => setActorId(e.target.value)} />

@@ -43,7 +43,7 @@ export class CoverageController {
     if (mode === 'live' && process.env.EVAL_LIVE !== '1') {
       throw new ApiException(
         'eval_live_disabled',
-        'Set EVAL_LIVE=1 to run live vendor eval (incurs MT cost).',
+        'Live vendor eval is not enabled for this workspace (it incurs translation cost).',
         HttpStatus.BAD_REQUEST,
       );
     }

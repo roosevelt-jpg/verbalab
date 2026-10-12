@@ -37,7 +37,7 @@ function resolveActor(req: AuthedRequest, actorHeader?: string) {
   if (!userId) {
     throw new ApiException(
       'actor_required',
-      'Everyday requires a Clerk session user, or X-Everyday-Actor-Id when using API keys / EVERYDAY_ALLOW_TEST_ACTORS=1',
+      'Everyday requires a signed-in session, or an API key with an Everyday actor header for local testing.',
       HttpStatus.UNAUTHORIZED,
     );
   }

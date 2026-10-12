@@ -34,7 +34,7 @@ function resolveActor(req: AuthedRequest, actorHeader?: string) {
   if (!userId) {
     throw new ApiException(
       'actor_required',
-      'Relay requires a Clerk session user, or X-Relay-Actor-Id when using API keys / RELAY_ALLOW_TEST_ACTORS=1',
+      'Relay requires a signed-in session, or an API key with a Relay actor header for local testing.',
       HttpStatus.UNAUTHORIZED,
     );
   }

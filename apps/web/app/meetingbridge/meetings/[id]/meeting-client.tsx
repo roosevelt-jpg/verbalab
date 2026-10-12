@@ -663,7 +663,8 @@ export function MeetingBridgeMeetingClient({ meetingId }: { meetingId: string })
                 </h2>
                 <p className="lg-type-compact">
                   Controlled turn-taking with phrase-level committed translation. Mesh WebRTC signaling is available
-                  without an SFU URL; simultaneous listen-channel TTS requires MEETINGBRIDGE_SIMULTANEOUS=1.
+                  without a Selective Forwarding Unit; simultaneous listen-channel speech stays gated until enabled
+                  for this workspace.
                 </p>
               </div>
               <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'grid', gap: '0.65rem' }}>

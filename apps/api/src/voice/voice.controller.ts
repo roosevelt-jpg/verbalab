@@ -86,7 +86,7 @@ export class VoiceController {
     if (this.twilio.disabled()) {
       throw new ApiException(
         'provider_disabled',
-        'Voice agent is disabled (VOICE_AGENT_DISABLED=1).',
+        'Voice agent is temporarily disabled for this environment.',
         HttpStatus.SERVICE_UNAVAILABLE,
       );
     }
@@ -276,7 +276,7 @@ export class VoiceController {
     if (this.twilio.disabled()) {
       throw new ApiException(
         'provider_disabled',
-        'Voice agent is disabled (VOICE_AGENT_DISABLED=1).',
+        'Voice agent is temporarily disabled for this environment.',
         HttpStatus.SERVICE_UNAVAILABLE,
       );
     }

@@ -16,7 +16,7 @@ export function dealbridgeCatalog() {
       keyId: signing.keyId,
       fixtureSigning: signing.fixture,
       note: signing.fixture
-        ? 'DEALBRIDGE_RECEIPT_SIGNING_KEY unset — using labeled local-dev fixture key. Not for production integrity claims.'
+        ? 'Using a labeled local-dev fixture signing key. Not for production integrity claims.'
         : 'HMAC receipt signing configured.',
     },
     limitations: [

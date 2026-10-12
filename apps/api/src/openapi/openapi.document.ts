@@ -1108,7 +1108,7 @@ export const openApiDocument = {
         ],
         responses: {
           '200': { description: 'Eval snapshot written to eval/results/latest.json' },
-          '400': { description: 'Live mode disabled without EVAL_LIVE=1' },
+          '400': { description: 'Live vendor eval is not enabled for this workspace' },
         },
       },
     },

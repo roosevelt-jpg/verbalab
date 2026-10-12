@@ -60,7 +60,7 @@ export class VoiceBridgeService {
     if (process.env.VOICEBRIDGE_DISABLED === '1') {
       throw new ApiException(
         'feature_disabled',
-        'VoiceBridge is disabled by VOICEBRIDGE_DISABLED=1',
+        'VoiceBridge is temporarily disabled for this environment.',
         HttpStatus.FORBIDDEN,
       );
     }
@@ -87,7 +87,7 @@ export class VoiceBridgeService {
     await this.billing.assertFeature(
       organizationId,
       VOICEBRIDGE_FEATURE,
-      'VoiceBridge requires a plan with the voiceBridge entitlement (Pro+), or set featureOverrides.voiceBridge=true / VOICEBRIDGE_OPEN=1 for pilot.',
+      'VoiceBridge requires a Pro plan or higher, or an organization entitlement override.',
     );
   }
 

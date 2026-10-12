@@ -52,8 +52,8 @@ export class MeetingBridgeMediaService {
               credential: process.env.MEETINGBRIDGE_TURN_CREDENTIAL,
             }
           : undefined,
-        note: `SFU at MEETINGBRIDGE_MEDIA_URL. Simultaneous interpretation ${
-          simultaneous ? 'enabled when corridor TTS is available' : 'gated (set MEETINGBRIDGE_SIMULTANEOUS=1)'
+        note: `Selective Forwarding Unit media is provisioned. Simultaneous interpretation ${
+          simultaneous ? 'is available when a corridor voice is ready' : 'remains gated until enabled for this workspace'
         }.`,
       };
     }
@@ -72,7 +72,7 @@ export class MeetingBridgeMediaService {
             }
           : undefined,
         note:
-          'Browser mesh WebRTC with authenticated REST signaling (up to max participants). Not an SFU; works without MEETINGBRIDGE_MEDIA_URL. Simultaneous listen-channel TTS requires MEETINGBRIDGE_SIMULTANEOUS=1.',
+          'Browser mesh WebRTC with authenticated REST signaling (up to max participants). Not a Selective Forwarding Unit. Simultaneous listen-channel speech remains gated until enabled for this workspace.',
       };
     }
 
@@ -81,7 +81,7 @@ export class MeetingBridgeMediaService {
       provisioned: false,
       simultaneousInterpretation: false,
       signaling: 'none',
-      note: 'Mesh disabled (MEETINGBRIDGE_MESH=0) and no SFU URL. Phrase-level turn-taking captions only.',
+      note: 'Live mesh media is off and no Selective Forwarding Unit is configured. Phrase-level turn-taking captions only.',
     };
   }
 
@@ -95,7 +95,7 @@ export class MeetingBridgeMediaService {
     if (!cap.provisioned) {
       throw new ApiException(
         'media_unavailable',
-        'No media path provisioned. Enable mesh (default) or set MEETINGBRIDGE_MEDIA_URL.',
+        'No media path is provisioned for this meeting. Contact support to enable live mesh or Selective Forwarding Unit media.',
         HttpStatus.SERVICE_UNAVAILABLE,
       );
     }

@@ -42,7 +42,7 @@ export class VendorVoiceCloneAdapter implements TtsProvider {
     if (!this.apiKey || !this.apiBase) {
       throw new ApiException(
         'provider_not_configured',
-        'VENDOR_VOICE_CLONE_API_KEY and VENDOR_VOICE_CLONE_API_BASE must be set (or VOICE_CLONE_FIXTURE=1).',
+        'Voice clone provider is not configured for this workspace.',
         HttpStatus.SERVICE_UNAVAILABLE,
       );
     }
@@ -114,7 +114,7 @@ export class VendorVoiceCloneAdapter implements TtsProvider {
     if (!this.apiKey) {
       throw new ApiException(
         'provider_not_configured',
-        'VENDOR_VOICE_CLONE_API_KEY is not set.',
+        'Voice clone provider is not configured for this workspace.',
         HttpStatus.SERVICE_UNAVAILABLE,
       );
     }

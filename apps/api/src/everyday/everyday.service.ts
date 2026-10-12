@@ -57,7 +57,7 @@ export class EverydayService {
     if (process.env.EVERYDAY_DISABLED === '1') {
       throw new ApiException(
         'feature_disabled',
-        'Everyday is disabled by EVERYDAY_DISABLED=1',
+        'Everyday is temporarily disabled for this environment.',
         HttpStatus.FORBIDDEN,
       );
     }
@@ -84,7 +84,7 @@ export class EverydayService {
     await this.billing.assertFeature(
       organizationId,
       EVERYDAY_FEATURE,
-      'Everyday requires a plan with the everyday entitlement (Pro+), or set featureOverrides.everyday=true / EVERYDAY_OPEN=1.',
+      'Everyday requires a Pro plan or higher, or an organization entitlement override.',
     );
   }
 

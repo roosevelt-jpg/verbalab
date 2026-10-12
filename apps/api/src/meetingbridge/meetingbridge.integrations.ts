@@ -87,7 +87,7 @@ export class MeetingBridgeIntegrations {
         note:
           process.env.MEETINGBRIDGE_BROADCAST_ENABLED === '1' || fixture
             ? 'Public caption broadcast tokens can be minted for authorized meetings.'
-            : 'Set MEETINGBRIDGE_BROADCAST_ENABLED=1 to allow public caption broadcasts.',
+            : 'Public caption broadcast is not enabled for this workspace.',
       },
     };
   }

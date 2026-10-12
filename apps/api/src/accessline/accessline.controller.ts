@@ -34,7 +34,7 @@ function resolveActor(req: AuthedRequest, actorHeader?: string) {
   if (!userId) {
     throw new ApiException(
       'actor_required',
-      'AccessLine requires a Clerk session user, or X-AccessLine-Actor-Id when using API keys / ACCESSLINE_ALLOW_TEST_ACTORS=1',
+      'AccessLine requires a signed-in session, or an API key with an AccessLine actor header for local testing.',
       HttpStatus.UNAUTHORIZED,
     );
   }

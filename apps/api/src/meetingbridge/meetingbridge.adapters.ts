@@ -69,15 +69,15 @@ export function ghanaAsrCapability(languageCode: string): {
       tts: true,
       neuralClaim: Boolean(process.env.OWN_TTS_URL?.trim()),
       note: process.env.OWN_TTS_URL?.trim()
-        ? `Dedicated Echo voice ${ghanaEchoVoiceId(languageCode)}. ASR gated by MEETINGBRIDGE_GHANA_ASR=1 until measured.`
-        : `Dedicated Echo voice ${ghanaEchoVoiceId(languageCode)} (eSpeak/formant fallback when neural offline). ASR gated by MEETINGBRIDGE_GHANA_ASR=1.`,
+        ? 'Dedicated Ghana listen-channel voice. Speech recognition stays gated until measured coverage is published.'
+        : 'Dedicated Ghana listen-channel voice with formant fallback when neural synthesis is offline. Speech recognition stays gated until measured.',
     };
   }
   return {
     asr: false,
     tts: true,
     neuralClaim: false,
-    note: `Regional/community language — Echo pack ${ghanaEchoVoiceId(languageCode)}; ASR not asserted.`,
+    note: 'Regional or community language listen-channel voice; speech recognition is not asserted.',
   };
 }
 

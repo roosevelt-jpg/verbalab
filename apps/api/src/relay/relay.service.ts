@@ -56,7 +56,11 @@ export class RelayService implements OnModuleInit {
   private async assertEnabled(actorOrOrg: string | EntitlementActor) {
     const { organizationId, platformAdmin } = resolveEntitlementContext(actorOrOrg);
     if (process.env.RELAY_DISABLED === '1') {
-      throw new ApiException('feature_disabled', 'Relay is disabled by RELAY_DISABLED=1', HttpStatus.FORBIDDEN);
+      throw new ApiException(
+        'feature_disabled',
+        'Relay is temporarily disabled for this environment.',
+        HttpStatus.FORBIDDEN,
+      );
     }
     if (platformAdmin) return;
     const org = await this.prisma.organization.findUnique({
@@ -75,7 +79,7 @@ export class RelayService implements OnModuleInit {
     await this.billing.assertFeature(
       organizationId,
       RELAY_FEATURE,
-      'Relay requires a plan with the relay entitlement (Pro+), or set featureOverrides.relay=true / RELAY_OPEN=1.',
+      'Relay requires a Pro plan or higher, or an organization entitlement override.',
     );
   }
 

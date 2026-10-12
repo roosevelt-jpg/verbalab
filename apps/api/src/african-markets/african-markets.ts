@@ -613,7 +613,7 @@ export function buildLearnBackCorridors(): BuiltLearnBackCorridor[] {
     tts: true,
     asr: true,
     pronunciation: false,
-    note: 'Adult interview practice in Ghanaian English. Pronunciation stays not_assessed until LEARNBACK_PRONUNCIATION=1. Ghanaian English is not marked wrong for non-US/UK accent.',
+    note: 'Adult interview practice in Ghanaian English. Pronunciation stays not assessed until a measured assessor is enabled. Ghanaian English is not marked wrong for differing from US or UK accent.',
     marketCode: 'GH',
     marketName: 'Ghana',
     region: 'West Africa',
