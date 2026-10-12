@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
-import { auth } from '@clerk/nextjs/server';
+import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { isClerkConfigured } from '@/lib/clerk-config';
+import { authBackend, LUGEMI_SESSION_COOKIE } from '@/lib/auth/config';
 import { MarketingHome } from '@/components/marketing/marketing-home';
 import { getCmsDocument } from '@/lib/cms';
 import { buildCmsMetadata } from '@/lib/cms-seo';
@@ -15,9 +16,18 @@ export default async function HomePage() {
     redirect('/setup');
   }
 
-  const session = await auth();
-  if (session.userId) {
-    redirect('/dashboard');
+  const backend = authBackend();
+  if (backend === 'firebase') {
+    const jar = await cookies();
+    if (jar.get(LUGEMI_SESSION_COOKIE)?.value) {
+      redirect('/dashboard');
+    }
+  } else if (backend === 'clerk') {
+    const { auth } = await import('@clerk/nextjs/server');
+    const session = await auth();
+    if (session.userId) {
+      redirect('/dashboard');
+    }
   }
 
   const content = await getCmsDocument();

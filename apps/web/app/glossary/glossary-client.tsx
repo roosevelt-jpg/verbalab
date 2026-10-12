@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useState, type CSSProperties } from 'react';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth } from '@/lib/auth';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
 import { LocaleSelect } from '@/components/language-locale-select';

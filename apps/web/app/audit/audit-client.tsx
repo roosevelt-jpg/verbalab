@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
+import { useAuth } from '@/lib/auth';
 import { useEffect, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';

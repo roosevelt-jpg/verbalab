@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useCallback, useEffect, useState } from 'react';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
 import { apiFetch } from '@/lib/api';
 import { isClerkConfigured } from '@/lib/clerk-config';

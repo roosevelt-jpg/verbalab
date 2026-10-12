@@ -3,8 +3,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { SignOutButton, UserButton, useAuth } from '@clerk/nextjs';
-import { isClerkConfigured } from '@/lib/clerk-config';
+import { SignOutButton, UserButton, useAuth, isAuthConfigured } from '@/lib/auth';
 import { usePlatformAdmin } from '@/lib/use-platform-admin';
 import { StudioApiKeyChip } from '@/components/studio-api-key-chip';
 import { WorkspaceSwitcher } from '@/components/workspace-switcher';
@@ -170,9 +169,9 @@ function groupContainsPath(group: NavGroup, pathname: string) {
 }
 
 export function AppShell({ children }: { children: React.ReactNode }) {
-  if (!isClerkConfigured()) {
+  if (!isAuthConfigured()) {
     return (
-      <ShellFrame mode="console" isAdmin={false} clerk={false}>
+      <ShellFrame mode="console" isAdmin={false} authEnabled={false}>
         {children}
       </ShellFrame>
     );
@@ -220,7 +219,7 @@ function AuthedAppShell({ children }: { children: React.ReactNode }) {
   }, [isLoaded, isSignedIn, getToken]);
 
   return (
-    <ShellFrame mode={mode} isAdmin={isAdmin} clerk>
+    <ShellFrame mode={mode} isAdmin={isAdmin} authEnabled>
       {children}
     </ShellFrame>
   );
@@ -229,12 +228,12 @@ function AuthedAppShell({ children }: { children: React.ReactNode }) {
 function ShellFrame({
   mode,
   isAdmin,
-  clerk,
+  authEnabled,
   children,
 }: {
   mode: ShellMode;
   isAdmin: boolean;
-  clerk: boolean;
+  authEnabled: boolean;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
@@ -303,7 +302,7 @@ function ShellFrame({
             <>
               <StudioApiKeyChip />
               <WorkspaceSwitcher />
-              {clerk ? (
+              {authEnabled ? (
                 <>
                   <UserButton afterSignOutUrl="/" />
                   <SignOutButton redirectUrl="/">
@@ -371,7 +370,7 @@ function ShellFrame({
                 );
               })}
             </nav>
-            {clerk ? (
+            {authEnabled ? (
               <div className="vl-console-sidebar-foot">
                 <Link href="/identity" className="vl-console-nav-link" onClick={() => setNavOpen(false)}>
                   Account

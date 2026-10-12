@@ -10,7 +10,7 @@ import {
   type CSSProperties,
 } from 'react';
 import Link from 'next/link';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth } from '@/lib/auth';
 import { API_URL, apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';

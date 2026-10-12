@@ -1,7 +1,9 @@
 # Build from repo root (Next.js standalone):
 #   docker build -f apps/web/Dockerfile -t lugemi-web \
 #     --build-arg NEXT_PUBLIC_API_URL=https://api.lugemi.com \
-#     --build-arg NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=pk_... .
+#     --build-arg NEXT_PUBLIC_FIREBASE_API_KEY=... \
+#     --build-arg NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=... \
+#     --build-arg NEXT_PUBLIC_FIREBASE_PROJECT_ID=... .
 FROM node:20-bookworm-slim AS base
 RUN apt-get update \
   && apt-get install -y --no-install-recommends ca-certificates \
@@ -16,9 +18,14 @@ ARG NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign-in
 ARG NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign-up
 ARG NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/post-auth
 ARG NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/post-auth
-# Show Continue with Google when Clerk Social Connection (Google) is configured.
-# Pass false to hide the button without a redeploy of Clerk settings.
 ARG NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED=true
+ARG NEXT_PUBLIC_FIREBASE_API_KEY=
+ARG NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=
+ARG NEXT_PUBLIC_FIREBASE_PROJECT_ID=
+ARG NEXT_PUBLIC_FIREBASE_APP_ID=
+ARG NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=
+ARG NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=
+ARG NEXT_PUBLIC_FIREBASE_GOOGLE_OAUTH_ENABLED=true
 ARG NEXT_PUBLIC_SENTRY_DSN=
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL \
   NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=$NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY \
@@ -27,12 +34,23 @@ ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL \
   NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=$NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL \
   NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=$NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL \
   NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED=$NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED \
+  NEXT_PUBLIC_FIREBASE_API_KEY=$NEXT_PUBLIC_FIREBASE_API_KEY \
+  NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=$NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN \
+  NEXT_PUBLIC_FIREBASE_PROJECT_ID=$NEXT_PUBLIC_FIREBASE_PROJECT_ID \
+  NEXT_PUBLIC_FIREBASE_APP_ID=$NEXT_PUBLIC_FIREBASE_APP_ID \
+  NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=$NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID \
+  NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=$NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET \
+  NEXT_PUBLIC_FIREBASE_GOOGLE_OAUTH_ENABLED=$NEXT_PUBLIC_FIREBASE_GOOGLE_OAUTH_ENABLED \
   NEXT_PUBLIC_SENTRY_DSN=$NEXT_PUBLIC_SENTRY_DSN
-# NEXT_PUBLIC_* values ship to browsers; refuse anything that is not a Clerk publishable key (e.g. an sk_ secret).
-RUN case "$NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY" in \
-      ""|pk_test_*|pk_live_*) ;; \
-      *) echo "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY must start with pk_live_ or pk_test_" >&2; exit 1 ;; \
-    esac
+# Prefer Firebase. If unset, Clerk publishable key must look like pk_*.
+RUN if [ -n "$NEXT_PUBLIC_FIREBASE_API_KEY" ] && [ -n "$NEXT_PUBLIC_FIREBASE_PROJECT_ID" ]; then \
+      echo "Building with Firebase Auth"; \
+    else \
+      case "$NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY" in \
+        ""|pk_test_*|pk_live_*) ;; \
+        *) echo "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY must start with pk_live_ or pk_test_" >&2; exit 1 ;; \
+      esac; \
+    fi
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml turbo.json ./
 COPY apps/web/package.json ./apps/web/
 COPY packages/typescript-config ./packages/typescript-config

@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import { FormEvent, Suspense, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth } from '@/lib/auth';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { API_URL } from '@/lib/api';
 import { resolveCreativeToken } from '@/lib/creative-auth';

@@ -1,7 +1,7 @@
 'use client';
 
 import { ReactNode, useCallback } from 'react';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth } from '@/lib/auth';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { resolveWorkspaceBearer } from '@/lib/studio-api-key';
 

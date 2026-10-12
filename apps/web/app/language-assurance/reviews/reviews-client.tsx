@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth } from '@/lib/auth';
 import { AppShell } from '@/components/app-shell';
 import { PageHeader } from '@/components/platform';
 import { apiFetch } from '@/lib/api';

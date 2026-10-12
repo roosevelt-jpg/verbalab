@@ -3,8 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
-import { SignedIn, SignOutButton, UserButton } from '@clerk/nextjs';
-import { isClerkConfigured } from '@/lib/clerk-config';
+import { SignedIn, SignOutButton, UserButton, isAuthConfigured } from '@/lib/auth';
 import {
   CREATIVE_PINNED,
   CREATIVE_PRIMARY,
@@ -213,7 +212,7 @@ export function CreativeShell({
                 <span className="lg-creative-icon-btn" aria-hidden>
                   <CreativeIcon name="bell" />
                 </span>
-                {isClerkConfigured() ? (
+                {isAuthConfigured() ? (
                   <SignedIn>
                     <UserButton afterSignOutUrl="/" />
                     <SignOutButton redirectUrl="/">

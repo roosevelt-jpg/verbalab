@@ -1,16 +1,28 @@
+import {
+  isFirebaseConfigured,
+  isFirebaseGoogleOAuthEnabled,
+} from '@/lib/auth/config';
+
+/**
+ * True when console auth is available (Firebase preferred, else Clerk).
+ * Kept under this name for back-compat across Studio gates.
+ */
 export function isClerkConfigured() {
-  return Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
+  return (
+    isFirebaseConfigured() || Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY)
+  );
 }
 
 /**
  * Whether to show "Continue with Google" on /sign-up and /sign-in.
- * Clerk Dashboard must have Social Connections → Google enabled (custom GCP credentials
- * for lugemi.com). Production Fly builds set NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED=true.
- *
- * Hide the button with NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED=false (or 0), or
- * NEXT_PUBLIC_CLERK_ENABLE_GOOGLE=false.
+ * Firebase: NEXT_PUBLIC_FIREBASE_GOOGLE_OAUTH_ENABLED (default on).
+ * Clerk: NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED (production default true).
  */
 export function isClerkGoogleOAuthEnabled(): boolean {
+  if (isFirebaseConfigured()) {
+    return isFirebaseGoogleOAuthEnabled();
+  }
+
   const envVal = process.env.NEXT_PUBLIC_CLERK_GOOGLE_OAUTH_ENABLED;
   if (!envVal || envVal === 'false' || envVal === '0') {
     return false;

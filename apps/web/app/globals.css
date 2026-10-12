@@ -255,6 +255,38 @@ textarea {
   white-space: nowrap;
 }
 
+.lugemi-user-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.lugemi-user-chip-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: var(--surface-muted, #e8eef2);
+  color: var(--ink, #0f172a);
+  font-size: 0.85rem;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.lugemi-user-chip-menu {
+  border: none;
+  background: transparent;
+  color: var(--text-secondary, #64748b);
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0.2rem 0.35rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+
 .vl-console-sidebar-foot {
   margin-top: 1.25rem;
   padding-top: 1rem;

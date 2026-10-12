@@ -6,6 +6,7 @@ import {
   isPlatformAdminFromCookie,
   shouldForceOnboardingFromCookie,
 } from '@/lib/onboarding-status';
+import { LUGEMI_SESSION_COOKIE } from '@/lib/auth/config';
 
 const isPublicRoute = createRouteMatcher([
   '/',
@@ -16,6 +17,7 @@ const isPublicRoute = createRouteMatcher([
   '/setup(.*)',
   '/dev-login(.*)',
   '/api/dev-login(.*)',
+  '/api/auth(.*)',
   '/api/cms(.*)',
   '/api/demo(.*)',
   '/api/support(.*)',
@@ -66,60 +68,82 @@ const isBypassOnboardingGate = createRouteMatcher([
   '/admin(.*)',
 ]);
 
+const firebaseConfigured = Boolean(
+  process.env.NEXT_PUBLIC_FIREBASE_API_KEY &&
+    process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN &&
+    process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+);
 const clerkConfigured = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
 
-/**
- * Do not 307 bare 127.0.0.1/localhost → local.lugemi.com.
- * That hostname only works inside the agent VM (/etc/hosts + HTTPS :443 proxy).
- * Without Fly DNS, users must keep using http://127.0.0.1:43125 (or Cursor preview).
- * Live-key login on loopback uses /dev-login → Clerk hosted ticket URL instead.
- *
- * /health is also excluded from `config.matcher` so Fly Doctor
- * servicecheck-00-http-3000 never waits on Clerk middleware.
- */
-export default clerkConfigured
-  ? clerkMiddleware(async (auth, request) => {
-      const { userId } = await auth();
+function applyOnboardingGate(request: NextRequest, userId: string | null) {
+  const isAdmin = isPlatformAdminFromCookie(
+    request.cookies.get(PLATFORM_ADMIN_COOKIE)?.value,
+  );
 
-      if (!isPublicRoute(request)) {
-        if (!userId) {
-          if (isOnboardingRoute(request)) {
-            return NextResponse.redirect(new URL('/sign-up', request.url));
-          }
-          const signIn = new URL('/sign-in', request.url);
-          signIn.searchParams.set(
-            'redirect_url',
-            request.nextUrl.pathname + request.nextUrl.search,
-          );
-          return NextResponse.redirect(signIn);
-        }
+  if (
+    userId &&
+    !isAdmin &&
+    !isBypassOnboardingGate(request) &&
+    shouldForceOnboardingFromCookie(request.cookies.get(ONBOARDING_STATUS_COOKIE)?.value)
+  ) {
+    return NextResponse.redirect(new URL('/onboarding', request.url));
+  }
+  return null;
+}
+
+function firebaseMiddleware(request: NextRequest) {
+  const session = request.cookies.get(LUGEMI_SESSION_COOKIE)?.value;
+  const userId = session ? 'firebase' : null;
+
+  if (!isPublicRoute(request)) {
+    if (!session) {
+      if (isOnboardingRoute(request)) {
+        return NextResponse.redirect(new URL('/sign-up', request.url));
       }
-
-      // Post-auth: incomplete Lugemi setup cannot enter product routes (unless platform admin).
-      const isAdmin = isPlatformAdminFromCookie(
-        request.cookies.get(PLATFORM_ADMIN_COOKIE)?.value,
+      const signIn = new URL('/sign-in', request.url);
+      signIn.searchParams.set(
+        'redirect_url',
+        request.nextUrl.pathname + request.nextUrl.search,
       );
+      return NextResponse.redirect(signIn);
+    }
+  }
 
-      if (
-        userId &&
-        !isAdmin &&
-        !isBypassOnboardingGate(request) &&
-        shouldForceOnboardingFromCookie(
-          request.cookies.get(ONBOARDING_STATUS_COOKIE)?.value,
-        )
-      ) {
-        return NextResponse.redirect(new URL('/onboarding', request.url));
-      }
-    })
-  : function middleware(_request: NextRequest) {
-      return NextResponse.next();
-    };
+  return applyOnboardingGate(request, userId) ?? NextResponse.next();
+}
+
+/**
+ * Prefer Firebase middleware when configured — no Clerk edge handshake.
+ * Clerk remains only when Firebase public config is absent.
+ */
+export default firebaseConfigured
+  ? firebaseMiddleware
+  : clerkConfigured
+    ? clerkMiddleware(async (auth, request) => {
+        const { userId } = await auth();
+
+        if (!isPublicRoute(request)) {
+          if (!userId) {
+            if (isOnboardingRoute(request)) {
+              return NextResponse.redirect(new URL('/sign-up', request.url));
+            }
+            const signIn = new URL('/sign-in', request.url);
+            signIn.searchParams.set(
+              'redirect_url',
+              request.nextUrl.pathname + request.nextUrl.search,
+            );
+            return NextResponse.redirect(signIn);
+          }
+        }
+
+        return applyOnboardingGate(request, userId) ?? NextResponse.next();
+      })
+    : function middleware(_request: NextRequest) {
+        return NextResponse.next();
+      };
 
 export const config = {
   matcher: [
-    // Skip static assets and /health so Fly/Docker liveness never waits on Clerk.
-    // Skip static assets (incl. brand motion webm/mp4) and /health so Fly/Docker
-    // liveness and public media never wait on Clerk.
     '/((?!_next|health(?:/.*)?$|brand(?:/.*)?$|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest|webm|mp4|mov)).*)',
     '/(api|trpc)(.*)',
     '/__clerk/:path*',

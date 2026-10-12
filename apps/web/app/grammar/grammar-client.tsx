@@ -1,7 +1,7 @@
 'use client';
 
 import { CSSProperties, FormEvent, useState } from 'react';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth } from '@/lib/auth';
 import { apiFetch } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';
 

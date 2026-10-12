@@ -1,8 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { useAuth } from '@clerk/nextjs';
-import { isClerkConfigured } from '@/lib/clerk-config';
+import { useAuth, isAuthConfigured } from '@/lib/auth';
 
 export type CreativeAuth = {
   getToken: (options?: { template?: string }) => Promise<string | null>;
@@ -21,8 +20,8 @@ function Authed({ children }: { children: (auth: CreativeAuth) => ReactNode }) {
   return <>{children(auth)}</>;
 }
 
-/** Render-prop gate so useAuth is never called without ClerkProvider. */
+/** Render-prop gate so useAuth is never called without AuthProvider. */
 export function CreativeAuthGate({ children }: { children: (auth: CreativeAuth) => ReactNode }) {
-  if (!isClerkConfigured()) return <>{children(GUEST)}</>;
+  if (!isAuthConfigured()) return <>{children(GUEST)}</>;
   return <Authed>{children}</Authed>;
 }

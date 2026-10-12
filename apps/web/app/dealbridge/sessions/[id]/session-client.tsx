@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { FormEvent, useCallback, useEffect, useState } from 'react';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth } from '@/lib/auth';
 import { apiFetch } from '@/lib/api';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { useStudioApiKeyField } from '@/hooks/use-studio-api-key';

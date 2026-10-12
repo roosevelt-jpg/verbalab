@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useState } from 'react';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth } from '@/lib/auth';
 import { isClerkConfigured } from '@/lib/clerk-config';
 import { useStudioApiKeyField } from '@/hooks/use-studio-api-key';
 

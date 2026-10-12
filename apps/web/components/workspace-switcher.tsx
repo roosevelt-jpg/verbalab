@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
+import { useAuth } from '@/lib/auth';
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
 import { apiFetch, getStoredWorkspaceId, setStoredWorkspaceId } from '@/lib/api';

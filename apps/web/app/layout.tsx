@@ -1,11 +1,10 @@
-import { ClerkProvider } from '@clerk/nextjs';
 import type { Metadata, Viewport } from 'next';
 import { headers } from 'next/headers';
 import { Noto_Sans, Noto_Sans_Mono } from 'next/font/google';
 import './globals.css';
 import '@/components/marketing/marketing.css';
-import { lugemiClerkAppearance, lugemiClerkLocalization } from '@/lib/clerk-appearance';
-import { isClerkConfigured } from '@/lib/clerk-config';
+import { AuthProvider } from '@/lib/auth';
+import { authBackend, isClerkConfigured } from '@/lib/auth/config';
 import { mustUseLiveClerkLocalOrigin } from '@/lib/live-clerk-local-origin';
 import { LiveKeyOriginGate } from '@/components/live-key-origin-gate';
 import { SentryInit } from '@/components/sentry-init';
@@ -72,30 +71,25 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const headerStore = await headers();
   const hostHeader = headerStore.get('x-forwarded-host') || headerStore.get('host');
-  const blockClerkOnBareLocal = mustUseLiveClerkLocalOrigin({
-    publishableKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
-    hostHeader,
-  });
+  const backend = authBackend();
+  const blockClerkOnBareLocal =
+    backend === 'clerk' &&
+    mustUseLiveClerkLocalOrigin({
+      publishableKey: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+      hostHeader,
+    });
 
   return (
     <html lang="en" className={`${noto.variable} ${notoMono.variable}`}>
       <body className={noto.className}>
         <SentryInit />
-        {isClerkConfigured() ? (
-          <ClerkProvider
-            appearance={lugemiClerkAppearance}
-            localization={lugemiClerkLocalization}
-            afterSignOutUrl="/"
-          >
-            {blockClerkOnBareLocal ? (
-              <LiveKeyOriginGate blockClerk>{children}</LiveKeyOriginGate>
-            ) : (
-              children
-            )}
-          </ClerkProvider>
-        ) : (
-          children
-        )}
+        <AuthProvider>
+          {blockClerkOnBareLocal && isClerkConfigured() ? (
+            <LiveKeyOriginGate blockClerk>{children}</LiveKeyOriginGate>
+          ) : (
+            children
+          )}
+        </AuthProvider>
         <SupportChatWidget />
       </body>
     </html>

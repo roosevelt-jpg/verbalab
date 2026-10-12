@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth } from '@/lib/auth';
 import { useCallback, useEffect, useState } from 'react';
 import { apiFetch, API_URL } from '@/lib/api';
 import { AppShell } from '@/components/app-shell';

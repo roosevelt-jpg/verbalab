@@ -1,10 +1,9 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
+import { useAuth, isAuthConfigured } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { apiFetch } from '@/lib/api';
-import { isClerkConfigured } from '@/lib/clerk-config';
 import {
   destinationForPlatform,
   loadOnboardingLocal,
@@ -21,7 +20,7 @@ import { ONBOARDING_PATH } from '@/lib/auth-redirect';
  * painting the onboarding wizard (avoids a flash of setup UI for admins).
  */
 export function PostAuthClient() {
-  if (!isClerkConfigured()) {
+  if (!isAuthConfigured()) {
     return <PostAuthRouter getToken={async () => null} isLoaded isSignedIn={false} />;
   }
   return <PostAuthClientAuthed />;

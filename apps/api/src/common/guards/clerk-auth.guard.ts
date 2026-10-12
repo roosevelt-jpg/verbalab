@@ -8,6 +8,10 @@ import { AuditService } from '../../audit/audit.service';
 import { clientIp } from '../http/client-ip';
 import { getHttpPair } from '../http/execution-request';
 import { isPlatformAdmin } from '../admin/platform-admin';
+import {
+  getFirebaseAdminAuth,
+  isFirebaseAdminConfigured,
+} from '../auth/firebase-admin';
 
 export type SessionContext = {
   userId: string;
@@ -19,6 +23,14 @@ export type SessionContext = {
   platformAdmin?: boolean;
 };
 
+type ResolvedIdentity = {
+  externalUserId: string;
+  email?: string;
+  name?: string;
+  clerkOrgId?: string;
+  clerkOrgRole?: string;
+};
+
 @Injectable()
 export class ClerkAuthGuard implements CanActivate {
   constructor(
@@ -27,11 +39,13 @@ export class ClerkAuthGuard implements CanActivate {
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const secretKey = process.env.CLERK_SECRET_KEY;
-    if (!secretKey) {
+    const firebaseReady = isFirebaseAdminConfigured();
+    const clerkSecret = process.env.CLERK_SECRET_KEY;
+
+    if (!firebaseReady && !clerkSecret) {
       throw new ApiException(
         'auth_not_configured',
-        'CLERK_SECRET_KEY is not set. Add Clerk keys to enable console auth.',
+        'Set FIREBASE_* (preferred) or CLERK_SECRET_KEY to enable console auth.',
         HttpStatus.SERVICE_UNAVAILABLE,
       );
     }
@@ -45,24 +59,16 @@ export class ClerkAuthGuard implements CanActivate {
 
     const token = header.slice('Bearer '.length).trim();
 
-    let clerkUserId: string;
-    let email: string | undefined;
-    let name: string | undefined;
-    let clerkOrgId: string | undefined;
-    let clerkOrgRole: string | undefined;
+    let resolved: ResolvedIdentity | null = null;
 
-    try {
-      const payload = await verifyToken(token, { secretKey });
-      clerkUserId = payload.sub;
-      const orgClaim = payload.o as { id?: string; rol?: string } | undefined;
-      clerkOrgId = typeof orgClaim?.id === 'string' ? orgClaim.id : undefined;
-      clerkOrgRole = typeof orgClaim?.rol === 'string' ? orgClaim.rol : undefined;
-
-      const clerk = createClerkClient({ secretKey });
-      const user = await clerk.users.getUser(clerkUserId);
-      email = user.emailAddresses[0]?.emailAddress;
-      name = [user.firstName, user.lastName].filter(Boolean).join(' ') || undefined;
-    } catch {
+    // Prefer Firebase when configured — faster verify, no Clerk user fetch round-trip.
+    if (firebaseReady) {
+      resolved = await this.tryFirebase(token);
+    }
+    if (!resolved && clerkSecret) {
+      resolved = await this.tryClerk(token, clerkSecret);
+    }
+    if (!resolved) {
       throw new ApiException('unauthorized', 'Invalid session token', HttpStatus.UNAUTHORIZED);
     }
 
@@ -86,15 +92,18 @@ export class ClerkAuthGuard implements CanActivate {
         ? signupCountryRaw
         : undefined;
 
-    const platformAdmin = isPlatformAdmin({ email, clerkUserId });
+    const platformAdmin = isPlatformAdmin({
+      email: resolved.email,
+      clerkUserId: resolved.externalUserId,
+    });
 
     const session = await this.identity.ensureSessionIdentity({
-      clerkUserId,
-      email,
-      name,
-      clerkOrgId,
-      clerkOrgRole,
-      orgName: clerkOrgId ? undefined : 'Personal',
+      clerkUserId: resolved.externalUserId,
+      email: resolved.email,
+      name: resolved.name,
+      clerkOrgId: resolved.clerkOrgId,
+      clerkOrgRole: resolved.clerkOrgRole,
+      orgName: resolved.clerkOrgId ? undefined : 'Personal',
       preferredWorkspaceId: preferredWorkspaceId?.trim() || undefined,
       preferredOrganizationId: preferredOrganizationId?.trim() || undefined,
       platformAdmin,
@@ -111,5 +120,43 @@ export class ClerkAuthGuard implements CanActivate {
     });
 
     return true;
+  }
+
+  private async tryFirebase(token: string): Promise<ResolvedIdentity | null> {
+    try {
+      const decoded = await getFirebaseAdminAuth().verifyIdToken(token);
+      return {
+        externalUserId: decoded.uid,
+        email: decoded.email,
+        name: decoded.name,
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  private async tryClerk(token: string, secretKey: string): Promise<ResolvedIdentity | null> {
+    try {
+      const payload = await verifyToken(token, { secretKey });
+      const clerkUserId = payload.sub;
+      const orgClaim = payload.o as { id?: string; rol?: string } | undefined;
+      const clerkOrgId = typeof orgClaim?.id === 'string' ? orgClaim.id : undefined;
+      const clerkOrgRole = typeof orgClaim?.rol === 'string' ? orgClaim.rol : undefined;
+
+      const clerk = createClerkClient({ secretKey });
+      const user = await clerk.users.getUser(clerkUserId);
+      const email = user.emailAddresses[0]?.emailAddress;
+      const name = [user.firstName, user.lastName].filter(Boolean).join(' ') || undefined;
+
+      return {
+        externalUserId: clerkUserId,
+        email,
+        name,
+        clerkOrgId,
+        clerkOrgRole,
+      };
+    } catch {
+      return null;
+    }
   }
 }

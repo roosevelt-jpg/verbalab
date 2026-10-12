@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent, useEffect, useMemo, useState, type CSSProperties } from 'react';
-import { useAuth } from '@clerk/nextjs';
+import { useAuth } from '@/lib/auth';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { apiFetch } from '@/lib/api';
