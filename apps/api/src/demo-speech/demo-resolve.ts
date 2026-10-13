@@ -200,6 +200,13 @@ const LANG_REMAP: Record<string, { voice: string; language: string; sample: stri
     ti: VOICE_REMAP['own:ti-et-male']!,
     sn: VOICE_REMAP['own:sn-zw-female']!,
     ny: VOICE_REMAP['own:ny-mw-male']!,
+    // Prefer neural West African French over France eSpeak fallback in demos.
+    fr: {
+      voice: 'own:fr-sn-female',
+      language: 'fr-SN',
+      sample: 'Bonjour. Bienvenue chez Lugemi — démo en français.',
+      note: 'France French neural weights not live; demo uses West African French (neural).',
+    },
     // SEA / LATAM / MENA identity packs often ship with a nearest English Echo id —
     // remap demos onto verified eSpeak (or cultural English) paths for that language.
     fil: {
@@ -514,6 +521,26 @@ export function resolveDemoSpeechTarget(input: {
     language = resolvedRequested.locale || language;
   }
 
+  /**
+   * Explicit VOICE_REMAP must win even when the source voice is "demo-safe" eSpeak.
+   * Otherwise France French (espeak WAV) never upgrades to Senegal French neural, and
+   * to-language demos keep the shaky robotic path while from-language Kokoro sounds clean.
+   */
+  const forcedVoiceRemap = voice ? VOICE_REMAP[voice] : undefined;
+  if (forcedVoiceRemap && isDemoSafeVoice(forcedVoiceRemap.voice, forcedVoiceRemap.language)) {
+    return {
+      voice: forcedVoiceRemap.voice,
+      language: forcedVoiceRemap.language,
+      text: keepCallerText(requestedLanguage, forcedVoiceRemap.language)
+        ? input.text
+        : forcedVoiceRemap.sample,
+      remapped: true,
+      requestedVoice,
+      requestedLanguage,
+      note: forcedVoiceRemap.note,
+    };
+  }
+
   if (voice && isDemoSafeVoice(voice, language)) {
     const aligned = alignVoiceToLanguage({
       voice,
@@ -535,7 +562,6 @@ export function resolveDemoSpeechTarget(input: {
   }
 
   const remap =
-    (voice && VOICE_REMAP[voice]) ||
     LANG_REMAP[primaryLang(requestedLanguage)] ||
     (voice ? LANG_REMAP[primaryLang(resolveOwnTtsVoice(voice)?.locale ?? '')] : undefined);
 

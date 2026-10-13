@@ -126,4 +126,28 @@ describe('resolveDemoSpeechTarget', () => {
     expect(out.voice).toBe('own:en-gb-female');
     expect(out.language).toBe('en-GB');
   });
+
+  it('upgrades demo-safe France French eSpeak to Senegal French neural', () => {
+    const phrase = 'Merci d’avoir appelé. Un agent Lugemi vous répondra.';
+    const out = resolveDemoSpeechTarget({
+      text: phrase,
+      language: 'fr-FR',
+      voice: 'own:fr-fr-female',
+    });
+    expect(out.remapped).toBe(true);
+    expect(out.voice).toBe('own:fr-sn-female');
+    expect(out.language).toBe('fr-SN');
+    expect(out.text).toBe(phrase);
+    expect(out.note).toMatch(/West African French/i);
+  });
+
+  it('remaps bare French language demos onto Senegal French neural', () => {
+    const out = resolveDemoSpeechTarget({
+      text: 'Bonjour.',
+      language: 'fr',
+    });
+    expect(out.remapped).toBe(true);
+    expect(out.voice).toBe('own:fr-sn-female');
+    expect(out.language).toBe('fr-SN');
+  });
 });

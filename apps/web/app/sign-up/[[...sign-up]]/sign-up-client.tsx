@@ -8,6 +8,7 @@ import { AuthShell } from '@/components/auth/auth-shell';
 import { SignUpForm } from '@/components/auth/sign-up-form';
 import { afterClerkAuthPath } from '@/lib/auth-redirect';
 import { authBackend } from '@/lib/auth/config';
+import { firebaseAuthErrorMessage } from '@/lib/auth/firebase-errors';
 import { getFirebaseAuth } from '@/lib/firebase-client';
 import { syncAuthSessionCookie } from '@/lib/auth/session-cookie';
 
@@ -32,7 +33,7 @@ export function SignUpClient({ hasSocial = false }: { hasSocial?: boolean }) {
         await handleSuccess(result.user.uid);
       } catch (err: unknown) {
         if (cancelled) return;
-        setRedirectError(err instanceof Error ? err.message : 'Google sign-up failed.');
+        setRedirectError(firebaseAuthErrorMessage(err, { action: 'sign-up' }));
       }
     })();
     return () => {

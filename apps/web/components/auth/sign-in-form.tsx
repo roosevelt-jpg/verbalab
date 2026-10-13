@@ -9,6 +9,7 @@ import {
   signInWithRedirect,
 } from 'firebase/auth';
 import { authBackend } from '@/lib/auth/config';
+import { firebaseAuthErrorMessage } from '@/lib/auth/firebase-errors';
 import { getFirebaseAuth } from '@/lib/firebase-client';
 import { syncAuthSessionCookie } from '@/lib/auth/session-cookie';
 
@@ -40,7 +41,14 @@ function FirebaseSignInForm({ hasSocial = false, onSuccess }: SignInFormProps) {
   const finish = async (uid: string) => {
     const auth = getFirebaseAuth();
     const token = await auth.currentUser?.getIdToken(true);
-    if (token) await syncAuthSessionCookie(token);
+    if (token) {
+      const synced = await syncAuthSessionCookie(token);
+      if (!synced.ok) {
+        throw new Error(
+          'Signed in with Firebase, but the session cookie could not be set. Refresh and try again.',
+        );
+      }
+    }
     // Let AuthProvider observe onAuthStateChanged before /post-auth mounts.
     await new Promise((r) => setTimeout(r, 50));
     await onSuccess(uid);
@@ -61,20 +69,15 @@ function FirebaseSignInForm({ hasSocial = false, onSuccess }: SignInFormProps) {
           typeof popupErr === 'object' && popupErr && 'code' in popupErr
             ? String((popupErr as { code: string }).code)
             : '';
-        // Popup blocked / COOP / third-party cookie issues → full-page redirect.
-        if (
-          code === 'auth/popup-blocked' ||
-          code === 'auth/popup-closed-by-user' ||
-          code === 'auth/cancelled-popup-request' ||
-          code === 'auth/unauthorized-domain'
-        ) {
+        // Only fall back when the browser blocked the popup — not on cancel or OAuth misconfig.
+        if (code === 'auth/popup-blocked') {
           await signInWithRedirect(auth, provider);
           return;
         }
         throw popupErr;
       }
     } catch (err: unknown) {
-      setError(firebaseErrorMessage(err));
+      setError(firebaseAuthErrorMessage(err, { action: 'sign-in' }));
       setBusy(false);
     }
   };
@@ -91,7 +94,7 @@ function FirebaseSignInForm({ hasSocial = false, onSuccess }: SignInFormProps) {
       );
       await finish(result.user.uid);
     } catch (err: unknown) {
-      setError(firebaseErrorMessage(err));
+      setError(firebaseAuthErrorMessage(err, { action: 'sign-in' }));
       setBusy(false);
     }
   };
@@ -179,31 +182,6 @@ function FirebaseSignInForm({ hasSocial = false, onSuccess }: SignInFormProps) {
       </div>
     </form>
   );
-}
-
-function firebaseErrorMessage(err: unknown): string {
-  const code =
-    typeof err === 'object' && err && 'code' in err ? String((err as { code: string }).code) : '';
-  if (code === 'auth/invalid-credential' || code === 'auth/wrong-password' || code === 'auth/user-not-found') {
-    return 'Invalid email or password. If you previously used Clerk, create a new account here — accounts do not carry over.';
-  }
-  if (code === 'auth/too-many-requests') {
-    return 'Too many attempts. Try again in a few minutes.';
-  }
-  if (code === 'auth/popup-closed-by-user') {
-    return 'Google sign-in was cancelled.';
-  }
-  if (code === 'auth/operation-not-allowed' || code === 'auth/admin-restricted-operation') {
-    return 'Google sign-in is not enabled yet. Use email and password, or ask an admin to enable Google in Firebase Authentication.';
-  }
-  if (code === 'auth/unauthorized-domain') {
-    return 'This domain is not authorized for Firebase sign-in. Add it under Firebase Authentication → Settings → Authorized domains.';
-  }
-  if (code === 'auth/network-request-failed') {
-    return 'Network error talking to Firebase. Check your connection and try again.';
-  }
-  if (err instanceof Error && err.message) return err.message;
-  return 'Sign-in failed. Please try again.';
 }
 
 function GoogleIcon() {

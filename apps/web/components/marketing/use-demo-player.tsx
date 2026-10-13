@@ -6,6 +6,29 @@ import { pauseDemoSpeech, playDemoSpeech, stopDemoSpeech } from '@/lib/demo-spee
 import { resolveDemoPreview } from '@/lib/native-demo-scripts';
 import { loadStudioApiKeySecret } from '@/lib/studio-api-key';
 
+type PlayInput = {
+  id: string;
+  text?: string;
+  voiceId?: string;
+  lang?: string;
+  label?: string;
+  /**
+   * When true, ignore caller text and speak the native sample for the
+   * voice language. Use for voice-library previews — not for translate/
+   * chat turns that already have language-true copy.
+   */
+  forceNative?: boolean;
+  /** Optional Clerk JWT; applied Studio machine key wins when present. */
+  token?: string | null;
+};
+
+function isAbortError(err: unknown): boolean {
+  return (
+    (err instanceof DOMException && err.name === 'AbortError') ||
+    (err instanceof Error && err.name === 'AbortError')
+  );
+}
+
 export function useDemoPlayer() {
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [loadingId, setLoadingId] = useState<string | null>(null);
@@ -15,79 +38,76 @@ export function useDemoPlayer() {
 
   useEffect(() => () => stopDemoSpeech(), []);
 
-  const play = useCallback(
-    async (input: {
-      id: string;
-      text?: string;
-      voiceId?: string;
-      lang?: string;
-      label?: string;
-      /**
-       * When true, ignore caller text and speak the native sample for the
-       * voice language. Use for voice-library previews — not for translate/
-       * chat turns that already have language-true copy.
-       */
-      forceNative?: boolean;
-      /** Optional Clerk JWT; applied Studio machine key wins when present. */
-      token?: string | null;
-    }) => {
-      const token = ++gen.current;
-      stopDemoSpeech();
-      setError(null);
-      setPlayingId(input.id);
-      setLoadingId(input.id);
-      setStatus('Loading…');
-      try {
-        const machineKey = loadStudioApiKeySecret() || null;
-        const preview = resolveDemoPreview({
-          voiceId: input.voiceId,
-          lang: input.lang,
-          text: input.text,
-          forceNative: input.forceNative === true || !input.text?.trim(),
-        });
-        const result = await playDemoSpeech({
-          text: preview.text,
-          voiceId: preview.voiceId,
-          lang: preview.lang,
-          label: input.label,
-          token: machineKey || input.token || null,
-          onStarted: () => {
-            if (token !== gen.current) return;
-            setLoadingId(null);
-            setStatus('Playing…');
-          },
-        });
-        // Hard stop + short gap so the next clip (to-language) never overlaps.
-        stopDemoSpeech();
-        await pauseDemoSpeech(300);
-        if (token !== gen.current) return;
-        const quality =
-          result.mode === 'neural'
-            ? 'neural Echo'
-            : result.mode === 'studio'
-              ? 'Studio Echo'
-              : 'Echo';
-        const via =
-          result.speechEngine === 'native_speech_engine' || result.mode === 'server'
-            ? 'Native Speech Engine'
-            : quality;
-        const remap = result.remapped
-          ? ` · remapped from ${result.requestedVoice ?? 'requested pack'} (native L1 weights not live)`
-          : '';
-        setStatus(`Played via ${via} · ${result.profile.label}${remap}`);
-      } catch (err) {
-        if (token !== gen.current) return;
-        if (err instanceof DOMException && err.name === 'AbortError') return;
-        setError(err instanceof Error ? err.message : 'Playback failed');
-        setStatus(null);
-      } finally {
-        if (token === gen.current) {
-          setPlayingId(null);
+  const play = useCallback(async (input: PlayInput): Promise<boolean> => {
+    const token = ++gen.current;
+    stopDemoSpeech();
+    setError(null);
+    setPlayingId(input.id);
+    setLoadingId(input.id);
+    setStatus('Loading…');
+    try {
+      const machineKey = loadStudioApiKeySecret() || null;
+      const preview = resolveDemoPreview({
+        voiceId: input.voiceId,
+        lang: input.lang,
+        text: input.text,
+        forceNative: input.forceNative === true || !input.text?.trim(),
+      });
+      const result = await playDemoSpeech({
+        text: preview.text,
+        voiceId: preview.voiceId,
+        lang: preview.lang,
+        label: input.label,
+        token: machineKey || input.token || null,
+        onStarted: () => {
+          if (token !== gen.current) return;
           setLoadingId(null);
-        }
+          setStatus('Playing…');
+        },
+      });
+      // Hard stop + short gap so the next clip (to-language) never overlaps.
+      stopDemoSpeech();
+      await pauseDemoSpeech(300);
+      if (token !== gen.current) return false;
+      const quality =
+        result.mode === 'neural'
+          ? 'neural Echo'
+          : result.mode === 'studio'
+            ? 'Studio Echo'
+            : 'Echo';
+      const via =
+        result.speechEngine === 'native_speech_engine' || result.mode === 'server'
+          ? 'Native Speech Engine'
+          : quality;
+      const remap = result.remapped
+        ? ` · remapped from ${result.requestedVoice ?? 'requested pack'} (native L1 weights not live)`
+        : '';
+      setStatus(`Played via ${via} · ${result.profile.label}${remap}`);
+      return true;
+    } catch (err) {
+      if (token !== gen.current) return false;
+      if (isAbortError(err)) return false;
+      setError(err instanceof Error ? err.message : 'Playback failed');
+      setStatus(null);
+      return false;
+    } finally {
+      if (token === gen.current) {
+        setPlayingId(null);
+        setLoadingId(null);
       }
+    }
+  }, []);
+
+  /** Play clips one-by-one; Stop or failure aborts the rest (no overlapping to-language). */
+  const playSequence = useCallback(
+    async (clips: PlayInput[]) => {
+      for (const clip of clips) {
+        const ok = await play(clip);
+        if (!ok) return false;
+      }
+      return true;
     },
-    [],
+    [play],
   );
 
   const stop = useCallback(() => {
@@ -100,6 +120,7 @@ export function useDemoPlayer() {
 
   return {
     play,
+    playSequence,
     stop,
     playingId,
     loadingId,

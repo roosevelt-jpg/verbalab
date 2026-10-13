@@ -276,11 +276,15 @@ function normalizeVoiceKey(voiceId: string | undefined): string | null {
 
 let activeAudio: HTMLAudioElement | null = null;
 let activeRequest: AbortController | null = null;
+/** Settles the in-flight playDemoSpeech promise when stop tears the element down. */
+let activeFinish: ((ok: boolean, err?: Error) => void) | null = null;
 
 export function stopDemoSpeech() {
   if (typeof window === 'undefined') return;
   activeRequest?.abort();
   activeRequest = null;
+  const finish = activeFinish;
+  activeFinish = null;
   if (activeAudio) {
     try {
       activeAudio.onended = null;
@@ -293,12 +297,63 @@ export function stopDemoSpeech() {
     }
     activeAudio = null;
   }
+  // Unblock awaiters (sequential from→to) without treating Stop as a hard failure.
+  finish?.(false, new DOMException('Demo speech stopped', 'AbortError'));
 }
 
 /** Brief silence so sequential from→to clips never bleed into each other. */
 export function pauseDemoSpeech(ms = 280): Promise<void> {
+  if (typeof window === 'undefined') return Promise.resolve();
   return new Promise((resolve) => {
     window.setTimeout(resolve, ms);
+  });
+}
+
+function blobWithMime(source: Blob, contentType: string): Blob {
+  const mime = contentType.split(';')[0]?.trim() || '';
+  if (!mime || mime === source.type) return source;
+  return new Blob([source], { type: mime });
+}
+
+function waitUntilPlayable(audio: HTMLAudioElement, signal?: AbortSignal): Promise<void> {
+  if (signal?.aborted) {
+    return Promise.reject(new DOMException('Demo speech stopped', 'AbortError'));
+  }
+  if (audio.readyState >= HTMLMediaElement.HAVE_FUTURE_DATA) return Promise.resolve();
+  return new Promise((resolve, reject) => {
+    let settled = false;
+    const timer = window.setTimeout(() => {
+      if (audio.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA) onReady();
+    }, 1200);
+    const onReady = () => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      resolve();
+    };
+    const onError = () => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      reject(new Error('Audio failed to buffer'));
+    };
+    const onAbort = () => {
+      if (settled) return;
+      settled = true;
+      cleanup();
+      reject(new DOMException('Demo speech stopped', 'AbortError'));
+    };
+    const cleanup = () => {
+      window.clearTimeout(timer);
+      audio.removeEventListener('canplaythrough', onReady);
+      audio.removeEventListener('loadeddata', onReady);
+      audio.removeEventListener('error', onError);
+      signal?.removeEventListener('abort', onAbort);
+    };
+    audio.addEventListener('canplaythrough', onReady);
+    audio.addEventListener('loadeddata', onReady);
+    audio.addEventListener('error', onError);
+    signal?.addEventListener('abort', onAbort);
   });
 }
 
@@ -443,8 +498,9 @@ async function fetchSpeechAudio(input: {
     if (studioRes.ok) {
       const contentType = studioRes.headers.get('content-type') ?? '';
       if (!contentType.includes('json') && !contentType.includes('text')) {
-        const blob = await studioRes.blob();
-        if (blob.size >= 64) {
+        const raw = await studioRes.blob();
+        if (raw.size >= 64) {
+          const blob = blobWithMime(raw, contentType);
           const meta = headersFromResponse(studioRes);
           const neural =
             /neural|kokoro|piper/i.test(meta.engine ?? '') || meta.verification === 'neural_unreviewed';
@@ -470,8 +526,9 @@ async function fetchSpeechAudio(input: {
   if (contentType.includes('json') || contentType.includes('text')) {
     throw new Error('Speech endpoint returned non-audio content — delivery blocked by integrity checks');
   }
-  const blob = await res.blob();
-  if (blob.size < 64) throw new Error('Speech audio payload too small');
+  const raw = await res.blob();
+  if (raw.size < 64) throw new Error('Speech audio payload too small');
+  const blob = blobWithMime(raw, contentType);
   const meta = headersFromResponse(res);
   const neural =
     /neural|kokoro|piper/i.test(meta.engine ?? '') || meta.verification === 'neural_unreviewed';
@@ -523,24 +580,42 @@ export async function playDemoSpeech(input: {
     jobId: fetched.jobId,
   };
   if (activeRequest !== controller) return result;
-  activeRequest = null;
 
   const url = URL.createObjectURL(fetched.blob);
-  const audio = new Audio(url);
+  const audio = new Audio();
   audio.preload = 'auto';
   // Avoid residual gain / dual-element bleed if a prior clip was mid-decode.
   audio.volume = 1;
+  audio.src = url;
   activeAudio = audio;
+
+  try {
+    await waitUntilPlayable(audio, controller.signal);
+  } catch (err) {
+    URL.revokeObjectURL(url);
+    if (activeAudio === audio) activeAudio = null;
+    activeRequest = null;
+    throw err;
+  }
+  if (activeRequest !== controller) {
+    URL.revokeObjectURL(url);
+    if (activeAudio === audio) activeAudio = null;
+    return result;
+  }
+  activeRequest = null;
+
   await new Promise<void>((resolve, reject) => {
     let settled = false;
     const finish = (ok: boolean, err?: Error) => {
       if (settled) return;
       settled = true;
+      if (activeFinish === finish) activeFinish = null;
       URL.revokeObjectURL(url);
       if (activeAudio === audio) activeAudio = null;
       if (ok) resolve();
       else reject(err ?? new Error('Audio playback failed'));
     };
+    activeFinish = finish;
     audio.onended = () => finish(true);
     audio.onerror = () => finish(false, new Error('Audio playback failed'));
     void audio

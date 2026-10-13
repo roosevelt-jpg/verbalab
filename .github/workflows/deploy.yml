@@ -130,6 +130,8 @@ jobs:
         run: |
           set -euo pipefail
           # Public Firebase web config (safe to bake). Omitting Clerk PK skips Clerk JS.
+          # Google OAuth stays false until Firebase Console has a real Google provider
+          # OAuth client (project currently returns client_id=…-placeholder.apps.googleusercontent.com).
           flyctl deploy . -c infra/fly/web.jnb.toml \
             --dockerfile apps/web/Dockerfile \
             -a "${{ vars.FLY_WEB_APP || 'lugemi-web' }}" \

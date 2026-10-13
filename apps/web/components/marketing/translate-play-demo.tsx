@@ -41,7 +41,7 @@ export function TranslatePlayDemo({ compact = false }: { compact?: boolean }) {
   const [chatLog, setChatLog] = useState<Array<{ role: 'user' | 'agent'; text: string; lang: string; voice: string }>>(
     [],
   );
-  const { play, stop, playingId, loadingId, status, error } = useDemoPlayer();
+  const { play, playSequence, stop, playingId, loadingId, status, error } = useDemoPlayer();
   const bothActive = playingId === 'tr-source' || playingId === 'tr-target';
   const bothLoading = loadingId === 'tr-source' || loadingId === 'tr-target';
 
@@ -86,18 +86,20 @@ export function TranslatePlayDemo({ compact = false }: { compact?: boolean }) {
   async function translateAndPlay() {
     const body = await runTranslate();
     if (!body) return;
-    await play({
-      id: 'tr-source',
-      text: body.text,
-      voiceId: body.sourceVoice,
-      lang: body.sourceLang,
-    });
-    await play({
-      id: 'tr-target',
-      text: body.translated,
-      voiceId: body.targetVoice,
-      lang: body.targetLang,
-    });
+    await playSequence([
+      {
+        id: 'tr-source',
+        text: body.text,
+        voiceId: body.sourceVoice,
+        lang: body.sourceLang,
+      },
+      {
+        id: 'tr-target',
+        text: body.translated,
+        voiceId: body.targetVoice,
+        lang: body.targetLang,
+      },
+    ]);
   }
 
   return (

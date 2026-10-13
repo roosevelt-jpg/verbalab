@@ -6,9 +6,11 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   signInWithPopup,
+  signInWithRedirect,
   updateProfile,
 } from 'firebase/auth';
 import { authBackend } from '@/lib/auth/config';
+import { firebaseAuthErrorMessage } from '@/lib/auth/firebase-errors';
 import { getFirebaseAuth } from '@/lib/firebase-client';
 import { syncAuthSessionCookie } from '@/lib/auth/session-cookie';
 
@@ -41,7 +43,14 @@ function FirebaseSignUpForm({ hasSocial = false, onSuccess }: SignUpFormProps) {
 
   const finish = async (uid: string) => {
     const token = await getFirebaseAuth().currentUser?.getIdToken(true);
-    if (token) await syncAuthSessionCookie(token);
+    if (token) {
+      const synced = await syncAuthSessionCookie(token);
+      if (!synced.ok) {
+        throw new Error(
+          'Account created, but the session cookie could not be set. Refresh and try signing in.',
+        );
+      }
+    }
     await new Promise((r) => setTimeout(r, 50));
     await onSuccess(uid);
   };
@@ -50,10 +59,25 @@ function FirebaseSignUpForm({ hasSocial = false, onSuccess }: SignUpFormProps) {
     setBusy(true);
     setError(null);
     try {
-      const result = await signInWithPopup(getFirebaseAuth(), new GoogleAuthProvider());
-      await finish(result.user.uid);
+      const auth = getFirebaseAuth();
+      const provider = new GoogleAuthProvider();
+      provider.setCustomParameters({ prompt: 'select_account' });
+      try {
+        const result = await signInWithPopup(auth, provider);
+        await finish(result.user.uid);
+      } catch (popupErr: unknown) {
+        const code =
+          typeof popupErr === 'object' && popupErr && 'code' in popupErr
+            ? String((popupErr as { code: string }).code)
+            : '';
+        if (code === 'auth/popup-blocked') {
+          await signInWithRedirect(auth, provider);
+          return;
+        }
+        throw popupErr;
+      }
     } catch (err: unknown) {
-      setError(firebaseErrorMessage(err));
+      setError(firebaseAuthErrorMessage(err, { action: 'sign-up' }));
       setBusy(false);
     }
   };
@@ -74,7 +98,7 @@ function FirebaseSignUpForm({ hasSocial = false, onSuccess }: SignUpFormProps) {
       }
       await finish(result.user.uid);
     } catch (err: unknown) {
-      setError(firebaseErrorMessage(err));
+      setError(firebaseAuthErrorMessage(err, { action: 'sign-up' }));
       setBusy(false);
     }
   };
@@ -206,23 +230,4 @@ function FirebaseSignUpForm({ hasSocial = false, onSuccess }: SignUpFormProps) {
       </div>
     </form>
   );
-}
-
-function firebaseErrorMessage(err: unknown): string {
-  const code =
-    typeof err === 'object' && err && 'code' in err ? String((err as { code: string }).code) : '';
-  if (code === 'auth/email-already-in-use') {
-    return 'An account with this email already exists. Sign in instead.';
-  }
-  if (code === 'auth/weak-password') {
-    return 'Password must be at least 6 characters.';
-  }
-  if (code === 'auth/invalid-email') {
-    return 'Enter a valid email address.';
-  }
-  if (code === 'auth/popup-closed-by-user') {
-    return 'Google sign-up was cancelled.';
-  }
-  if (err instanceof Error && err.message) return err.message;
-  return 'Sign-up failed. Please try again.';
 }

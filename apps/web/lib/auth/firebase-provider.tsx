@@ -6,6 +6,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react';
@@ -19,22 +20,31 @@ const FirebaseAuthContext = createContext<AuthState>(GUEST_AUTH);
 export function FirebaseAuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  /** Bumps on every auth tick so a slow signed-out DELETE cannot race past a later sign-in POST. */
+  const syncGeneration = useRef(0);
 
   useEffect(() => {
     const auth = getFirebaseAuth();
     const unsub = onAuthStateChanged(auth, (next) => {
       setUser(next);
       setIsLoaded(true);
+      const generation = ++syncGeneration.current;
       void (async () => {
         if (next) {
           try {
             const token = await next.getIdToken();
+            if (generation !== syncGeneration.current) return;
             await syncAuthSessionCookie(token);
           } catch {
+            if (generation !== syncGeneration.current) return;
             await syncAuthSessionCookie(null);
           }
         } else {
+          // Only clear the middleware cookie on an explicit signed-out state.
+          // Skip if a newer auth event already superseded this tick.
+          if (generation !== syncGeneration.current) return;
           await syncAuthSessionCookie(null);
+          if (generation !== syncGeneration.current) return;
         }
       })();
     });
@@ -51,6 +61,7 @@ export function FirebaseAuthProvider({ children }: { children: ReactNode }) {
   }, [user]);
 
   const signOut = useCallback(async () => {
+    syncGeneration.current += 1;
     clearAuthSessionCookieClient();
     await syncAuthSessionCookie(null);
     await firebaseSignOut(getFirebaseAuth());

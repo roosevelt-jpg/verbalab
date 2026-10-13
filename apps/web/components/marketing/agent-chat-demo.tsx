@@ -21,7 +21,7 @@ export function AgentChatDemo({
   userLang?: string;
   agentLang?: string;
 }) {
-  const { play, stop, playingId, loadingId, status, error } = useDemoPlayer();
+  const { play, playSequence, stop, playingId, loadingId, status, error } = useDemoPlayer();
   const convActive = playingId === 'chat-user' || playingId === 'chat-agent';
   const convLoading = loadingId === 'chat-user' || loadingId === 'chat-agent';
   // Lang follows the voice profile when callers omit it — never default to bare "en"
@@ -88,19 +88,21 @@ export function AgentChatDemo({
           label="Play conversation"
           stopLabel="Stop"
           onStop={stop}
-          onPlay={async () => {
-            await play({
-              id: 'chat-user',
-              text: userText,
-              voiceId: userVoiceId,
-              lang: resolvedUserLang,
-            });
-            await play({
-              id: 'chat-agent',
-              text: agentText,
-              voiceId: agentVoiceId,
-              lang: resolvedAgentLang,
-            });
+          onPlay={() => {
+            void playSequence([
+              {
+                id: 'chat-user',
+                text: userText,
+                voiceId: userVoiceId,
+                lang: resolvedUserLang,
+              },
+              {
+                id: 'chat-agent',
+                text: agentText,
+                voiceId: agentVoiceId,
+                lang: resolvedAgentLang,
+              },
+            ]);
           }}
         />
         <p className="mkt-tts-hint" role="status" aria-live="polite">

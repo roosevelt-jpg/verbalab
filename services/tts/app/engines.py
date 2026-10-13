@@ -247,30 +247,67 @@ class SpeechSynthesisEngine:
             buf[4:8] = (len(buf) - 8).to_bytes(4, "little")
         return bytes(buf)
 
-    def synthesize(self, text: str, speed: float) -> Audio:
+    def _try_espeak(self, text: str, speed: float, voice_args: list[str]) -> Audio | None:
+        import io
         import shutil
         import subprocess
-        import io
+        import tempfile
         import wave
+        from pathlib import Path
 
         espeak_bin = shutil.which("espeak-ng") or shutil.which("espeak")
-        voice_args = self._espeak_voice_args() if espeak_bin else None
-        if espeak_bin and voice_args:
+        if not espeak_bin:
+            return None
+        wpm = int(160 * speed)
+        # Word gap (-g) reduces run-on syllables that listeners hear as shake/echo.
+        base = [espeak_bin, *voice_args, "-s", str(wpm), "-g", "8"]
+        try:
+            with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
+                path = Path(tmp.name)
             try:
-                wpm = int(160 * speed)
-                # Prefer -w tempfile over --stdout to avoid streaming WAV bugs when possible.
-                cmd = [espeak_bin, *voice_args, "-s", str(wpm), "--stdout", text]
-                res = subprocess.run(cmd, capture_output=True, check=False, timeout=15)
-                if res.returncode == 0 and len(res.stdout) > 44:
-                    raw = self._finalize_streaming_wav(res.stdout)
-                    with wave.open(io.BytesIO(raw), "rb") as w:
+                res = subprocess.run(
+                    [*base, "-w", str(path), text],
+                    capture_output=True,
+                    check=False,
+                    timeout=15,
+                )
+                if res.returncode == 0 and path.exists() and path.stat().st_size > 44:
+                    with wave.open(str(path), "rb") as w:
                         rate = w.getframerate()
                         frames = w.readframes(w.getnframes())
                         pcm = np.frombuffer(frames, dtype=np.int16)
                         if pcm.size > 0:
                             return Audio(pcm=pcm.copy(), sample_rate=rate)
-            except Exception:
-                pass
+            finally:
+                path.unlink(missing_ok=True)
+
+            # Fallback: stdout streaming WAV (rewrite placeholder sizes).
+            res = subprocess.run([*base, "--stdout", text], capture_output=True, check=False, timeout=15)
+            if res.returncode == 0 and len(res.stdout) > 44:
+                raw = self._finalize_streaming_wav(res.stdout)
+                with wave.open(io.BytesIO(raw), "rb") as w:
+                    rate = w.getframerate()
+                    frames = w.readframes(w.getnframes())
+                    pcm = np.frombuffer(frames, dtype=np.int16)
+                    if pcm.size > 0:
+                        return Audio(pcm=pcm.copy(), sample_rate=rate)
+        except Exception:
+            return None
+        return None
+
+    def synthesize(self, text: str, speed: float) -> Audio:
+        voice_args = self._espeak_voice_args()
+        if voice_args:
+            audio = self._try_espeak(text, speed, voice_args)
+            if audio is not None:
+                return audio
+            # Gender variants like sw+f2 fail on some eSpeak builds — retry bare voice.
+            if len(voice_args) >= 2 and ("+" in voice_args[1]):
+                bare = voice_args[1].split("+", 1)[0]
+                retry = ["-v", bare, *voice_args[2:]]
+                audio = self._try_espeak(text, speed, retry)
+                if audio is not None:
+                    return audio
 
         # Native acoustic formant speech synthesis fallback (formant filtering, glottal excitation, fricatives)
         return self._formant_synthesis(text, speed)
@@ -294,7 +331,8 @@ class SpeechSynthesisEngine:
             f0 *= 0.98
 
         word_dur = 0.28 / max(speed, 0.4)
-        total_dur = len(words) * word_dur + 0.1
+        gap_sec = 0.06
+        total_dur = len(words) * word_dur + max(0, len(words) - 1) * gap_sec + 0.1
         n = int(sr * total_dur)
         out = np.zeros(n, dtype=np.float32)
 
@@ -307,33 +345,36 @@ class SpeechSynthesisEngine:
             (300.0, 870.0, 2240.0),  # /u/
         ]
 
+        gap = int(sr * 0.06)  # silence between words — never overlap (overlap sounds like echo)
         curr_idx = 0
         for w in words:
             w_len = int(sr * word_dur)
             t = np.arange(w_len, dtype=np.float32) / sr
             # Glottal pulse excitation train (buzz + aspirated air)
-            glottal = (np.sin(2 * np.pi * f0 * t) + 
-                       0.5 * np.sin(4 * np.pi * f0 * t) + 
-                       0.25 * np.sin(6 * np.pi * f0 * t) + 
-                       0.12 * np.sin(8 * np.pi * f0 * t))
+            glottal = (
+                np.sin(2 * np.pi * f0 * t)
+                + 0.5 * np.sin(4 * np.pi * f0 * t)
+                + 0.25 * np.sin(6 * np.pi * f0 * t)
+                + 0.12 * np.sin(8 * np.pi * f0 * t)
+            )
             fricative = np.random.uniform(-0.15, 0.15, size=w_len).astype(np.float32)
-            
+
             # Formant resonance mapping from word characters
             v_idx = (ord(w[0].lower()) if w else 0) % len(vowels)
             f1, f2, f3 = vowels[v_idx]
             formants = (
-                np.sin(2 * np.pi * f1 * t) * 0.40 +
-                np.sin(2 * np.pi * f2 * t) * 0.25 +
-                np.sin(2 * np.pi * f3 * t) * 0.15
+                np.sin(2 * np.pi * f1 * t) * 0.40
+                + np.sin(2 * np.pi * f2 * t) * 0.25
+                + np.sin(2 * np.pi * f3 * t) * 0.15
             )
-            
+
             # Envelope: attack, decay, release
-            env = np.sin(np.pi * np.clip(t / (word_dur), 0.0, 1.0)) ** 1.5
+            env = np.sin(np.pi * np.clip(t / word_dur, 0.0, 1.0)) ** 1.5
             syllable_signal = (glottal * 0.35 + formants * 0.5 + fricative * 0.15) * env
-            
+
             end_idx = min(n, curr_idx + w_len)
-            out[curr_idx:end_idx] += syllable_signal[:end_idx - curr_idx]
-            curr_idx += int(w_len * 0.9)
+            out[curr_idx:end_idx] += syllable_signal[: end_idx - curr_idx]
+            curr_idx = end_idx + gap
             if curr_idx >= n:
                 break
 

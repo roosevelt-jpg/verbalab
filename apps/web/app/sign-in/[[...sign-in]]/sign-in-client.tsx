@@ -8,6 +8,7 @@ import { AuthShell } from '@/components/auth/auth-shell';
 import { SignInForm } from '@/components/auth/sign-in-form';
 import { afterClerkAuthPath } from '@/lib/auth-redirect';
 import { authBackend } from '@/lib/auth/config';
+import { firebaseAuthErrorMessage } from '@/lib/auth/firebase-errors';
 import { getFirebaseAuth } from '@/lib/firebase-client';
 import { syncAuthSessionCookie } from '@/lib/auth/session-cookie';
 
@@ -32,8 +33,7 @@ export function SignInClient({ hasSocial = false }: { hasSocial?: boolean }) {
         await handleSuccess(result.user.uid);
       } catch (err: unknown) {
         if (cancelled) return;
-        const msg = err instanceof Error ? err.message : 'Google sign-in failed.';
-        setRedirectError(msg);
+        setRedirectError(firebaseAuthErrorMessage(err, { action: 'sign-in' }));
       }
     })();
     return () => {

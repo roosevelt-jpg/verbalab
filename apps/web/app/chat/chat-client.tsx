@@ -745,7 +745,8 @@ export function ChatClient() {
           },
         ],
       }));
-      void playTranslation(res.text, recognitionLangFor(target));
+      // Await so successive to-language turns never overlap (echo / shake between voices).
+      await playTranslation(res.text, recognitionLangFor(target));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Live translate failed');
     }
