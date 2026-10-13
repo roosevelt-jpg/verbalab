@@ -142,7 +142,7 @@ jobs:
             --build-arg "NEXT_PUBLIC_FIREBASE_APP_ID=1:562594724616:web:ea3725665ffa331f01cabd" \
             --build-arg "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=562594724616" \
             --build-arg "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=lugemi-c39bf.firebasestorage.app" \
-            --build-arg "NEXT_PUBLIC_FIREBASE_GOOGLE_OAUTH_ENABLED=true"
+            --build-arg "NEXT_PUBLIC_FIREBASE_GOOGLE_OAUTH_ENABLED=false"
 
       # Orphan ams/iad Machines on lugemi-web fail servicecheck-00-http-3000 and
       # make 80/443 look intermittent. Africa primary keeps jnb only.
@@ -176,7 +176,7 @@ jobs:
             --build-arg "NEXT_PUBLIC_FIREBASE_APP_ID=1:562594724616:web:ea3725665ffa331f01cabd" \
             --build-arg "NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=562594724616" \
             --build-arg "NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=lugemi-c39bf.firebasestorage.app" \
-            --build-arg "NEXT_PUBLIC_FIREBASE_GOOGLE_OAUTH_ENABLED=true"
+            --build-arg "NEXT_PUBLIC_FIREBASE_GOOGLE_OAUTH_ENABLED=false"
 
       - name: Smoke production health + /coverage
         if: steps.fly.outputs.configured == 'true'

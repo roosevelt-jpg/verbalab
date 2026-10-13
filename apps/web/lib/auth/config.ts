@@ -25,10 +25,10 @@ export function authBackend(): AuthBackend {
 
 export function isFirebaseGoogleOAuthEnabled(): boolean {
   const envVal = process.env.NEXT_PUBLIC_FIREBASE_GOOGLE_OAUTH_ENABLED;
-  if (envVal === 'false' || envVal === '0') return false;
-  // Default on when Firebase is configured (Google provider must be enabled in Firebase Console).
-  if (!envVal) return isFirebaseConfigured();
-  return true;
+  // Opt-in: Google provider must be enabled in Firebase Console (OAuth client required).
+  // Default off so we never show a broken "Continue with Google" button.
+  if (!envVal || envVal === 'false' || envVal === '0') return false;
+  return isFirebaseConfigured();
 }
 
 export const LUGEMI_SESSION_COOKIE = 'lugemi_session';

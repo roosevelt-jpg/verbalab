@@ -282,10 +282,24 @@ export function stopDemoSpeech() {
   activeRequest?.abort();
   activeRequest = null;
   if (activeAudio) {
-    activeAudio.pause();
-    activeAudio.src = '';
+    try {
+      activeAudio.onended = null;
+      activeAudio.onerror = null;
+      activeAudio.pause();
+      activeAudio.removeAttribute('src');
+      activeAudio.load();
+    } catch {
+      /* ignore */
+    }
     activeAudio = null;
   }
+}
+
+/** Brief silence so sequential from→to clips never bleed into each other. */
+export function pauseDemoSpeech(ms = 280): Promise<void> {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
 }
 
 /** Cultural English Echo voices for marketing demos (region → preferred own:*). */
@@ -513,21 +527,28 @@ export async function playDemoSpeech(input: {
 
   const url = URL.createObjectURL(fetched.blob);
   const audio = new Audio(url);
+  audio.preload = 'auto';
+  // Avoid residual gain / dual-element bleed if a prior clip was mid-decode.
+  audio.volume = 1;
   activeAudio = audio;
   await new Promise<void>((resolve, reject) => {
-    audio.onended = () => {
+    let settled = false;
+    const finish = (ok: boolean, err?: Error) => {
+      if (settled) return;
+      settled = true;
       URL.revokeObjectURL(url);
       if (activeAudio === audio) activeAudio = null;
-      resolve();
+      if (ok) resolve();
+      else reject(err ?? new Error('Audio playback failed'));
     };
-    audio.onerror = () => {
-      URL.revokeObjectURL(url);
-      reject(new Error('Audio playback failed'));
-    };
+    audio.onended = () => finish(true);
+    audio.onerror = () => finish(false, new Error('Audio playback failed'));
     void audio
       .play()
       .then(() => input.onStarted?.())
-      .catch(reject);
+      .catch((err: unknown) =>
+        finish(false, err instanceof Error ? err : new Error('Audio playback failed')),
+      );
   });
   return result;
 }

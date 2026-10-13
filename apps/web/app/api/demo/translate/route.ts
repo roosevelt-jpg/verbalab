@@ -60,13 +60,14 @@ const DEMO_PAIRS: Array<{
     source: 'en',
     target: 'fr',
     sourceLabel: 'English',
-    targetLabel: 'French (France)',
+    targetLabel: 'French',
     text: 'Thank you for calling. A Lugemi agent will reply in your language.',
     translated: 'Merci d’avoir appelé. Un agent Lugemi vous répondra dans votre langue.',
     sourceLang: 'en-US',
-    targetLang: 'fr-FR',
+    // Prefer fr-SN neural over fr-FR eSpeak fallback (shaky / robotic).
+    targetLang: 'fr-SN',
     sourceVoice: 'en-us-female',
-    targetVoice: 'fr-fr-female',
+    targetVoice: 'fr-sn-female',
   },
   {
     id: 'en-fr-sn',

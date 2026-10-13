@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth, isAuthConfigured } from '@/lib/auth';
+import { useAuth, isAuthConfigured, authBackend } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { apiFetch } from '@/lib/api';
@@ -16,8 +16,11 @@ import {
 import { ONBOARDING_PATH } from '@/lib/auth-redirect';
 
 /**
- * Post-Clerk landing: resolve platform admin vs product onboarding before
+ * Post-auth landing: resolve platform admin vs product onboarding before
  * painting the onboarding wizard (avoids a flash of setup UI for admins).
+ *
+ * Firebase: wait for AuthProvider to observe onAuthStateChanged after
+ * sign-in redirects here — do not bounce to /sign-in on the first tick.
  */
 export function PostAuthClient() {
   if (!isAuthConfigured()) {
@@ -50,22 +53,38 @@ function PostAuthRouter({
   const ran = useRef(false);
   const [message, setMessage] = useState('Signing you in…');
 
+  // Wait for session propagation (Firebase onAuthStateChanged) before failing.
   useEffect(() => {
-    if (!isLoaded || ran.current) return;
+    if (!isLoaded || isSignedIn) return;
+    const waitMs = authBackend() === 'firebase' ? 4000 : 800;
+    const timer = window.setTimeout(() => {
+      if (!ran.current) {
+        router.replace('/sign-in');
+      }
+    }, waitMs);
+    return () => window.clearTimeout(timer);
+  }, [isLoaded, isSignedIn, router]);
+
+  useEffect(() => {
+    if (!isLoaded || !isSignedIn || ran.current) return;
     ran.current = true;
 
     void (async () => {
-      if (!isSignedIn) {
-        router.replace('/sign-in');
-        return;
-      }
-
       const token = await getToken();
       if (!token) {
-        router.replace(ONBOARDING_PATH);
-        return;
+        // One more try — Firebase ID token can lag a frame behind isSignedIn.
+        await new Promise((r) => setTimeout(r, 300));
+        const retry = await getToken();
+        if (!retry) {
+          router.replace(ONBOARDING_PATH);
+          return;
+        }
+        return routeAfterAuth(retry);
       }
+      return routeAfterAuth(token);
+    })();
 
+    async function routeAfterAuth(token: string) {
       try {
         setMessage('Checking admin access…');
         const adminRes = await apiFetch<{ admin: boolean }>('/v1/admin/status', { token });
@@ -106,7 +125,7 @@ function PostAuthRouter({
       setOnboardingStatusCookie('pending');
       setMessage('Continuing setup…');
       router.replace(ONBOARDING_PATH);
-    })();
+    }
   }, [getToken, isLoaded, isSignedIn, router]);
 
   return (

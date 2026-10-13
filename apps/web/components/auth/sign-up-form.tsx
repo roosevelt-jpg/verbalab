@@ -40,8 +40,9 @@ function FirebaseSignUpForm({ hasSocial = false, onSuccess }: SignUpFormProps) {
   const [error, setError] = useState<string | null>(null);
 
   const finish = async (uid: string) => {
-    const token = await getFirebaseAuth().currentUser?.getIdToken();
+    const token = await getFirebaseAuth().currentUser?.getIdToken(true);
     if (token) await syncAuthSessionCookie(token);
+    await new Promise((r) => setTimeout(r, 50));
     await onSuccess(uid);
   };
 

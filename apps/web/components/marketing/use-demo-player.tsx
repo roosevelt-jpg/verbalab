@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { DemoPlayStopButton } from '@/components/media/demo-play-stop-button';
-import { playDemoSpeech, stopDemoSpeech } from '@/lib/demo-speech';
+import { pauseDemoSpeech, playDemoSpeech, stopDemoSpeech } from '@/lib/demo-speech';
 import { resolveDemoPreview } from '@/lib/native-demo-scripts';
 import { loadStudioApiKeySecret } from '@/lib/studio-api-key';
 
@@ -57,6 +57,9 @@ export function useDemoPlayer() {
             setStatus('Playing…');
           },
         });
+        // Hard stop + short gap so the next clip (to-language) never overlaps.
+        stopDemoSpeech();
+        await pauseDemoSpeech(300);
         if (token !== gen.current) return;
         const quality =
           result.mode === 'neural'

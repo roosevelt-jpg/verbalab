@@ -67,11 +67,15 @@ describe('isClerkGoogleOAuthEnabled', () => {
     expect(isClerkGoogleOAuthEnabled()).toBe(false);
   });
 
-  it('defaults Google on when Firebase is configured', () => {
+  it('defaults Google off until explicitly enabled (Firebase Console OAuth required)', () => {
     process.env.NEXT_PUBLIC_FIREBASE_API_KEY = 'test';
     process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN = 'test.firebaseapp.com';
     process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID = 'test';
     delete process.env.NEXT_PUBLIC_FIREBASE_GOOGLE_OAUTH_ENABLED;
+    expect(isClerkGoogleOAuthEnabled()).toBe(false);
+
+    process.env.NEXT_PUBLIC_FIREBASE_GOOGLE_OAUTH_ENABLED = 'true';
     expect(isClerkGoogleOAuthEnabled()).toBe(true);
   });
 });
+

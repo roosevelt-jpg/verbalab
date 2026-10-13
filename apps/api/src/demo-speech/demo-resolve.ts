@@ -124,11 +124,26 @@ const VOICE_REMAP: Record<string, { voice: string; language: string; sample: str
       note: 'Luganda neural weights not live; demo uses Kenyan English.',
     },
     'own:ln-cd-male': {
-      voice: 'own:fr-fr-male',
-      language: 'fr-FR',
+      voice: 'own:fr-sn-female',
+      language: 'fr-SN',
       sample: 'Mbote — bonjour. Bienvenue sur Lugemi, depuis Kinshasa.',
-      note: 'Lingala neural weights not live; demo uses French.',
+      note: 'Lingala neural weights not live; demo uses West African French (neural).',
     },
+    // France French often lacks a live Kokoro weight and falls back to eSpeak WAV
+    // (robotic / "shaky"). Prefer Senegal French neural for customer demos.
+    'own:fr-fr-female': {
+      voice: 'own:fr-sn-female',
+      language: 'fr-SN',
+      sample: 'Bonjour. Bienvenue chez Lugemi — démo en français.',
+      note: 'France French neural weights not live; demo uses West African French (neural).',
+    },
+    'own:fr-fr-male': {
+      voice: 'own:fr-sn-female',
+      language: 'fr-SN',
+      sample: 'Bonjour. Bienvenue chez Lugemi — démo en français.',
+      note: 'France French neural weights not live; demo uses West African French (neural).',
+    },
+
     'own:rw-rw-female': {
       voice: 'own:en-ke-female',
       language: 'en-KE',
