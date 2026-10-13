@@ -28,3 +28,4 @@ scripts/__pycache__/
 .local/
 **/firebase-adminsdk*.json
 .data/
+*.pyc
